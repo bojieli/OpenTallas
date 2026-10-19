@@ -21,7 +21,9 @@ module ot_hbm_su_static_pgslice_lg #(
  parameter integer RF_LOCAL=0,
  parameter integer RSYNC=1,
  parameter integer RSYNC_MUT=0,
- parameter integer STRAP=0
+ parameter integer STRAP=0,
+ // PRETREE (HH-6 / TW-HBM-PGLG 10-19, default 0): pgslice PRETREE pass-through (tree_cmd in, tree_o out)
+ parameter integer PRETREE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane,
@@ -44,6 +46,8 @@ module ot_hbm_su_static_pgslice_lg #(
  input wire [255:0] rf_dsec,
  input wire [11:0] red_sel,
  output wire [31:0] slice_x,
+ input wire [11:0] tree_cmd,
+ output wire [66:0] tree_o,
  input wire [1:0] inj_rd,
  input wire [159:0] inj_addr,
  output wire [1023:0] inj_q,
@@ -63,7 +67,7 @@ module ot_hbm_su_static_pgslice_lg #(
  output wire lg_fault
 );
  wire [33:0] s_rq; wire [561:0] s_wq; wire [513:0] s_rr; wire [1:0] s_done;
- ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.STRAP(STRAP)) u_slice(
+ ot_hbm_su_static_pgslice #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG),.COLLPORT(COLLPORT),.B39_NOOP(B39_NOOP),.RF_LOCAL(RF_LOCAL),.PG_RSYNC(RSYNC),.STRAP(STRAP),.PRETREE(PRETREE)) u_slice(
   .pg_clk(pg_clk),
   .clk_lane(clk_lane),
   .clk_insert(clk_insert),
@@ -85,6 +89,8 @@ module ot_hbm_su_static_pgslice_lg #(
   .rf_dsec(rf_dsec),
   .red_sel(red_sel),
   .slice_x(slice_x),
+  .tree_cmd(tree_cmd),
+  .tree_o(tree_o),
   .lg_rq(s_rq),
   .lg_wq(s_wq),
   .lg_rr(s_rr),
