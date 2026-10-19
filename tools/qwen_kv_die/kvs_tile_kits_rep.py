@@ -39,7 +39,7 @@ OUT = 'results/arch/qwen_kv_kits_b_1018'
 if os.environ.get('OT_KV_DOMSPLIT', '0') == '1':
     OUT = 'results/arch/qwen_kv_domsplit_1019/ports'
 SRAM = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2'
-TAG = 'k1'
+TAG = os.environ.get('KVS_KIT_TAG', 'k1')
 LAT = 2.16
 
 
@@ -266,6 +266,11 @@ def sram_macros(S, kind, pins, rng, W, H):
         return []
     lef = (ROOT / SRAM / (Path(SRAM).name + '.lef')).read_text()
     mw, mh = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', lef).groups())
+    if os.environ.get('OT_KV_GRP_SQUARE', '0') == '1':
+        # SAFE 10-19: 2x2 SRAM bank below one full-width standard-cell band.
+        return [dict(view=SRAM, count=1, inst=f'*g_pc?{j}?*u_rows',
+                     at=[43.2 + 129.6 * (j % 2), 43.2 + 86.4 * (j // 2)], orient='R0')
+                for j in range(4)]
     out = []
     for j in range(4):
         # landing_seg actual_* {.._0, .._1, .._2, .._3} <- i_pc3 .. i_pc0: PC slot j of the segment = i_pc<3 - j>
@@ -281,6 +286,10 @@ def spec(S, kind):
     kit = f'{mst}_{TAG}'
     fw, fh = FRAMES[kind]
     W, H = down(fw), down(fh)
+    if kind in ('grp', 'grp_h') and os.environ.get('OT_KV_GRP_SQUARE', '0') == '1':
+        # Pin-bound: E has 2,169 bits, requiring >=361.5 um at six pins/um.
+        # 388.8 square is the next 43.2-lattice side; parent die must re-slot.
+        fw = fh = W = H = 388.8
     pins, rng, t = faces(S, kind, W, H, narrow=kind in ('grp', 'grp_h'))
     pj = json.loads((ROOT / OUT / f'{kind}_ports.json').read_text())
     P = pj['ports']
