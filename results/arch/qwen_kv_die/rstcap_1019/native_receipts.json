@@ -4904,7 +4904,15 @@
   "pass": true,
   "fail_why": "",
   "audited_at": "7763b94327065e364a62eba117ee35198de11967",
-  "tool": "tools/hier_contract/native_pin_audit.py --view"
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "view_sha256": {
+   "qkd_hr_core_order.lef": "542f1abe9c138e723957ac414fb914751a9ab6eae23d7b20d1f13fbc6494746c",
+   "qkd_hr_core_order_ff.lib": "0e1d5daf1f30268095f470ed1c5f22621a0fb16bb6be34ff8b2f3c7ab5e1579c",
+   "qkd_hr_core_order_ss.lib": "856d86cf5e3c1b80d079a7b11459627b50e01995580498e43080018abd491478",
+   "qkd_hr_core_order_tt.lib": "1d3442da143f3ad2c556ee2f6ecca8111c365d21ebfbd31dd699c07a3b3707b0"
+  },
+  "view_commit": "31fac4878ee584f2421c0e789a4e8b6f2eccfc11",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_order-r4-d9e4f6a44 (qkd_hr_core_order CLOSED)"
  },
  "qkd_hr_core_queue": {
   "cell": "qkd_hr_core_queue",
@@ -5359,6 +5367,14 @@
   "pass": true,
   "fail_why": "",
   "audited_at": "7763b94327065e364a62eba117ee35198de11967",
-  "tool": "tools/hier_contract/native_pin_audit.py --view"
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "view_sha256": {
+   "qkd_hr_core_queue_fl.lef": "3a21f77358951b1f270ac8b7d5e30b7a5401a28e49341783a0836b1f344824fe",
+   "qkd_hr_core_queue_fl_ff.lib": "1841c8fec73754896f1237d8faf03962578365dedc0942597627f28f5d378407",
+   "qkd_hr_core_queue_fl_ss.lib": "5a440a250a79789411f67a4eff7a55f0970fb10da2aea51a7a8b9560a4c4a291",
+   "qkd_hr_core_queue_fl_tt.lib": "d3df025d2dc2460686c43119bc07e5d6ceaf5b51fa02f9953fcfea61d3365edb"
+  },
+  "view_commit": "fd4fafa02adca40fc78aa9a7fba7da84185fcd5d",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_queue-fl1-e1880062d (qkd_hr_core_queue_fl CLOSED)"
  }
 }
