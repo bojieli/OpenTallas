@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsdv_mu_hslot",
  "verdict": "WARN",
- "generated": "2026-10-19T08:06:19-0700",
- "host": "ot-epyc5",
+ "generated": "2026-10-19T08:21:49-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "747ac5e746bcb597f18d6b8ba1b251be7cfcd453",
+  "start_commit": "02a228e56e1a496a6facf1f9f3058f20057db8ea",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "d7611cfa951e3d3af08b17f7e12f90f38d601e41b13b6eebacf93daed284f597",
-  "manifest_sha256": "1002e5b72a368d1e457810159512f3eb6ff435a1e91c901687fbe8430507c4ce",
+  "archive_sha256": "090c58359effb0c84e3e65e8de52c5fb66fc9ba05c3da54705b865b183f8087c",
+  "manifest_sha256": "c3c00e9e3c691ccf9bd08ff369ce8d598f8538de4562ffa1b416c32b16e8676d",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json",
@@ -126,7 +126,7 @@
     "sha256": "5cafc2932207d78de37e44a1f94d9992c51432564abe4972197b7d33b034bdb5",
     "git_blob": "8de832eee5c35e431a593e6882d0ff7eea27af55",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/common_flow/clock_spine.tcl",
@@ -350,7 +350,7 @@
     "sha256": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
     "git_blob": "d23b05eb0c1a0e9e6df038d1af76b4f24f13e580",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/common_flow/ot_pin_regs.tcl",
@@ -358,7 +358,7 @@
     "sha256": "fd3d4566e9e86ff649f0c04eed1d16592ec019de70ff7c1153ada315782d9a6f",
     "git_blob": "e029179e161e8ceb30457137945d07f84811dee9",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/common_flow/ot_rst_copies.py",
@@ -366,7 +366,7 @@
     "sha256": "9099d37630513dbc98cbfdf9aec79318295b2f2078a55b8bff0eb99bba99a94f",
     "git_blob": "f9d648348635690088353461c8e882ff2e655f55",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/common_flow/ot_rst_copies.tcl",
@@ -374,7 +374,7 @@
     "sha256": "8e5c8aed5ba12de54ce5dd93d1768bba0f103c2421810ef73ddde49b839e09f9",
     "git_blob": "f1bbf4013fd96a5c4e45803919a84c86ae289c74",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/common_flow/out_pin_driver.tcl",
@@ -1339,8 +1339,8 @@
    {
     "path": "physical/ref_tile/dsdv_mu_hslot/README_CODEX.md",
     "kind": "file",
-    "sha256": "2fe73e446fa611dbbbff0c58fe99aa4982e88daddc13e643ad5c377b151695a7",
-    "git_blob": "8184e96de9a44985b2e6419843d9bcb9a1f729ba",
+    "sha256": "e484e719ba09fa91316857fd32c4f558ac56044c0468ccc89a2025fbc79673ca",
+    "git_blob": "cadccce93a9e767537f48399d3cb31a91271d625",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1363,10 +1363,10 @@
    {
     "path": "physical/ref_tile/dsdv_mu_hslot/job.json",
     "kind": "file",
-    "sha256": "7fe0ca4288df971b90b4f8408c53e30361eaef34627a77498c98f68059e083fc",
-    "git_blob": "3a4f0469f6b2f861d6e771906ffdeea165b27257",
+    "sha256": "655afefb4f9fbc99ea2276aeb2c5eb51f0121e445780cd26e83d7cc042791776",
+    "git_blob": "89e0e0da4628600e5dc4797ca8019e959b217805",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/dsdv_mu_hslot/kit.env",
@@ -1491,10 +1491,10 @@
    {
     "path": "physical/ref_tile/dsdv_mu_hslot/spec.json",
     "kind": "file",
-    "sha256": "cd62d3e3776463ce0399df60cf341b14f32bdc3c6eadd8ec9809bc30df1e8030",
-    "git_blob": "ec18848928b3b99e90f0a0b6a3fa0a6fba051245",
+    "sha256": "8f460fdc5fbb8803ec3f84d34fc7002c6036c466dcd1d65adcb4d84e5b35ac78",
+    "git_blob": "70f78e478aebb0d90e82314f70bb527bd6e89bb4",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/abstract.json",
@@ -1621,6 +1621,806 @@
     "kind": "file",
     "sha256": "f7b5ffc63a98c72b0905e1611d027cb1950759eca08b9f6132f898f1ce16b507",
     "git_blob": "e882a7e0134266b2980fe1223a67200b1a632fbc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/dsfd_dw_ep.sv",
+    "kind": "file",
+    "sha256": "b45c12598887ee1cebdfcbd4bf0d6daef688d315d65aac20ac597abe53fb5139",
+    "git_blob": "eb6b8e8ea34f619d953d7a38df3fd2246c733587",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/dsfd_sp_collective_ctrl.sv",
+    "kind": "file",
+    "sha256": "22eb361d78e261fdacb84aefd419359864cc6fd37ccd52585714b040be9087b4",
+    "git_blob": "31046a42d6da7b0540ac9dd10465d4f337956301",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/dsfd_stage_seq_c.sv",
+    "kind": "file",
+    "sha256": "707862311f39a09c15064471b56a70ef25c7a608854854654a57fafe098c8fc3",
+    "git_blob": "25969722d3f0cd27a692876c5c7d23d6abd3fc0e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv",
+    "kind": "file",
+    "sha256": "ce7b71e1327260636eaf1ac9f45aa543261bf6be5629dec43ddcb91e5b81ec56",
+    "git_blob": "96cdf065f948b071cb2d170ee2ae14dc1beca069",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv",
+    "kind": "file",
+    "sha256": "d918f0d6eaa19243b5714700b64ec7a10cee53251300f9bb6c7b5fc980ea1705",
+    "git_blob": "e0106de61e4ed0205956205e125f4799cad509a2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv",
+    "kind": "file",
+    "sha256": "41e78b9e3ebd84a59cd97299e30561bc1296d5d33d9346be067d1eb96fd146f5",
+    "git_blob": "5f05508e6d934a3f82c510edeb671e1ce8bb2726",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl_lane_adapter.sv",
+    "kind": "file",
+    "sha256": "a78b47b7ede6c1200da6a26018cd6024b17554a8f63ecc2334fddaeaf8fb039a",
+    "git_blob": "a6b03bd08013adcf4a1b875124a3d99eef3b25fc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_done_word.sv",
+    "kind": "file",
+    "sha256": "9d09ee0ef4972cb3e58fa7364014da2a513bc5aba34714461e67c4d7f53726d9",
+    "git_blob": "c1ffd2e4979619162f502686b5421ff30aec88e7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+    "kind": "file",
+    "sha256": "23aa6cf6006c2ecd9012903246a18efcfd616c1ff9c453ca5a5a5b18ada134d6",
+    "git_blob": "471d96b7a11ebf322153e4d82f30d94c28a61899",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_hc_cmd_bridge.sv",
+    "kind": "file",
+    "sha256": "ffe36c9b1ea797990817790849367926a3ab74708737ea31a6f26e36f109fdbe",
+    "git_blob": "bb8f4c0882c1d0371ef03c768412b6c60601fb9b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_hdr.svh",
+    "kind": "file",
+    "sha256": "70238803e31b249046fe49db3fc3296fe60ebf82b13f3fa7b47d650bf75a66b1",
+    "git_blob": "6c0a6ffd6dfda6047070b1d2f6a2584ff798a6bb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv",
+    "kind": "file",
+    "sha256": "fc24437ca9ce4c655fa625fa603363cbccc5629ede94c4e24a85449e7a0b2ead",
+    "git_blob": "8eb852f6db3dcf73c6e46756696766d7042214dc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv",
+    "kind": "file",
+    "sha256": "bef4e939d7c81c669b2affc95ebaa8a219f83d050659f2864d5194bb076b3fa4",
+    "git_blob": "d9731ad2ec8aeb2b6c2abe8fed42914bbe78a25f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv",
+    "kind": "file",
+    "sha256": "5c9eee113e08bcd24712fea81a554726a6d22c76afc894d6f176a8534dd0b810",
+    "git_blob": "7692362190877ee9eb2742364c5b67c964d8c172",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+    "kind": "file",
+    "sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+    "git_blob": "89a23f14c935e3a2d3bd0617d94823c8bdac641c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+    "kind": "file",
+    "sha256": "4b89753084f617ab61c061adef844adea8c642e46d12612352323df3bb8f09ac",
+    "git_blob": "b95fe3fdb1708f0a9a1752c853a1e6d49b25c7e1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv",
+    "kind": "file",
+    "sha256": "5b79131e49bc5ec6f62c9bca05ea443680fc99e21b68687280d248bbae25065e",
+    "git_blob": "6642a37a02585b756279abd417c12c23c2d73e21",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv",
+    "kind": "file",
+    "sha256": "d55293e4677bb0bc1aa54bfe54e32822b69fa3f6bf43a344aa0891c8aea38759",
+    "git_blob": "6879ead16064077e638d3c9a12ca447bcaff6d55",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_startup_barrier.sv",
+    "kind": "file",
+    "sha256": "816c798b4b553fda26c418ee294acfbe4e3f9a0297e30777dd72b721cc665e83",
+    "git_blob": "50a069f1c5a9f184445d4ec22034b633e45171c1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv",
+    "kind": "file",
+    "sha256": "e0e4aa5a37b07c4d00aa7dd1c95dc035e637d3e4d8ddaeaf74f9248d0b0b2a4c",
+    "git_blob": "ea9417338bfdf750ac79ef9ece184a7ddbc50e1e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+    "kind": "file",
+    "sha256": "6ae753c3fea9594fdfab849f8338dfb002af8d974a807de6725fc5df2f1258df",
+    "git_blob": "9c37d1e86e6ca38a2eeb6749ef31446eeb67d467",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_vm_adapter.sv",
+    "kind": "file",
+    "sha256": "ce70a66a765532a3b4905422848c9080052a7bab33debbea38230ed3faac57ee",
+    "git_blob": "162c1176de98385565a4a09cea7adf6293489359",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_boot_secded.sh",
+    "kind": "file",
+    "sha256": "23638a696a8cd7a2616e71adf369b931bdac1b9388edd74033c4b662f64ecf6c",
+    "git_blob": "c87c4f8230959260a141562ce357155faadee55d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_boot_visibility.sh",
+    "kind": "file",
+    "sha256": "6d9e9b72d33e4493b3a112368ec2fb463418683594e0dcde3a9b87d221492103",
+    "git_blob": "19071fd98254a010dfb32f9890e1a9e0ebc16787",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_control_lane.sh",
+    "kind": "file",
+    "sha256": "a1c6b6f74b86dda9c87fe15a30abc107d5c9d9453764d1ff17ac875e8b533a00",
+    "git_blob": "f2604cf20846c22b5f60adf501013edea28eee13",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_ctrl_chain.sh",
+    "kind": "file",
+    "sha256": "25a9b77d570a65ee878db7e234272e4ec427a87ed25b94195b0dc982218802ea",
+    "git_blob": "8240eee3fa50d07f621e5ef8db01b70f5a20334d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_die_fld.sh",
+    "kind": "file",
+    "sha256": "edbb548bc55b0eb538fba594a454bb2a0f3c3833ffeaa0d2f787b58a9c5b8b69",
+    "git_blob": "0a256f88204c58f20dde3dca2b841bb9ca20ac7f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_die_layer.sh",
+    "kind": "file",
+    "sha256": "610d2666e2a375818c0021175a2c66f4712672d38b6a33e74624f73edd659c92",
+    "git_blob": "915cf140d061c389bc3e23a2ad1062efe5d5bfd2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_engine_adapter.sh",
+    "kind": "file",
+    "sha256": "5501ed210311ee75909f3adb9eb8ee02039445df4a42b478b757638121cc40f0",
+    "git_blob": "43b40aa1d31c7cfd2745aa637996b05d57a89bb6",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_hc_cmd_bridge.sh",
+    "kind": "file",
+    "sha256": "7395854241fd3b4875e4f2ccc26cb948054f4288e87703cd33abcfb64a54a10d",
+    "git_blob": "ce43297f5bffbd310e782aa569d70437085f0452",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_hop_vm.sh",
+    "kind": "file",
+    "sha256": "173502e6434ac427cd1c33c90caf9680ca588fc9d634a493a2546c4956b2109f",
+    "git_blob": "79c588f37475e797ec54ce091dad37cb4cf72289",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_selcol_ctrl_gate.sh",
+    "kind": "file",
+    "sha256": "3bb38ebedc765d395e10aec4cc604a969e1b44ddacf8468bbc1e1053e3f6012f",
+    "git_blob": "5d4ddd454fea9ffd5441356c457a9a1281e317d2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq.sh",
+    "kind": "file",
+    "sha256": "4ec76e55e87e72edad55ba96c36d58960666b80a7d6f7cc6bce927075f335afe",
+    "git_blob": "dae290c48f45687f1be4810f137385e8d9649140",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq_c8.sh",
+    "kind": "file",
+    "sha256": "eba95fc03e55a68971a3bf2dc05f09d4425827965ea7d5e154714089e5c9fe23",
+    "git_blob": "1a1c88fea37c88011734d70b52952282dd73f421",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/run_svc_job_gate.sh",
+    "kind": "file",
+    "sha256": "bdecd85db375a52db2fc676e2f1c93b39d21324de01d4ea600a585f6f4c56b61",
+    "git_blob": "b0174737d4a7df9ef78abc18c110813cb31e8519",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_secded.sv",
+    "kind": "file",
+    "sha256": "273b5c1cfd9c819bedae9a04b00a091e4ddfc3c45c594e93b063f5fa45cadcb8",
+    "git_blob": "bb999a61820288ec0bc678875e9bae92739463d3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_visibility.sv",
+    "kind": "file",
+    "sha256": "1cbb37426befca1911703ca73512c1dbf3861f3c31e871f78acc3dffdfe50cbb",
+    "git_blob": "a0ea4c502ac6e57ff497c6020de81f41efc6112b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_control_lane.sv",
+    "kind": "file",
+    "sha256": "3851035e4bad79abc9ab006f33a6c954430f932f141efc35af584f9e0bbd5bb4",
+    "git_blob": "985726e060b3d6143b42d03908632fa0f99284c2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_chain.sv",
+    "kind": "file",
+    "sha256": "cc6a14a0f3ddd7814a674d575673343472dc56284e3da6e9ddfc47095ce90496",
+    "git_blob": "a7df782e32674c066e9fde8cd10ca2bc9b83421b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_startup_shell.sv",
+    "kind": "file",
+    "sha256": "7d4800c286afbf9a9774fab9d9d94dbb4f209818e41c90670cf9d506b7222c66",
+    "git_blob": "44cb60db088494c7055754f0a44af60f632b0bbc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_fld.sv",
+    "kind": "file",
+    "sha256": "6e7063956127b52a0d64ec9f5ea48db457cf7cd89b101104a704470f2d09e81b",
+    "git_blob": "fc96b60a779de574779a2edee1dcb71bac9b3caa",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv",
+    "kind": "file",
+    "sha256": "dd1513794051497751de384d799dad6f3146a077d4c6f8d3992d09cfcec7d227",
+    "git_blob": "b110c5fe77b0093445a651eef25435cebee4e522",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_embed_dump.sv",
+    "kind": "file",
+    "sha256": "d5f8c1883ba2e146814961593791e03f7cd86a4c9a5f3f1dc79d9243dec8e5f2",
+    "git_blob": "0fe71402b937970481405a51634185528b711548",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_engine_adapter.sv",
+    "kind": "file",
+    "sha256": "11861574f6b5b4abead281d73609cdf7274c0145cd444e0887caeff4981057d0",
+    "git_blob": "495687a9a9b42e9982d958e2faa8be0f4e14b559",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hc_cmd_bridge.sv",
+    "kind": "file",
+    "sha256": "8dd383dc4d491645d603566adcfe643a6c09e456062a1ab186984ed9c0e172c8",
+    "git_blob": "49e71a679b98acb804bd788e2ee9abb837952f64",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hop_vm.sv",
+    "kind": "file",
+    "sha256": "d0edb3fc5896312f0042abff1644789e36faed4f39448c97f77584f30efae08a",
+    "git_blob": "4ef8819d305d5d8ce4ba8f578df2ff978ad9ced5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_stage_seq.sv",
+    "kind": "file",
+    "sha256": "5b4c85f53413d656e79598455d5c5f5662dbb3304b0d4162206bb4337cb10e49",
+    "git_blob": "33e1585c61cf2fdc3e3cdec79478a9c2492bef43",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_stage_seq_c8.sv",
+    "kind": "file",
+    "sha256": "8383b5be9e26b8051c69e5a1386be815a0b38949d87f63e4e6642fea81bec1fc",
+    "git_blob": "f2e3deab94f02aa8851477912eb70f42bdd40503",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_startup_barrier.sv",
+    "kind": "file",
+    "sha256": "d95add5dd3255320ee3c69e1dfd1aff7ca8cf2e10b7079d9d7eefe2e75e11d00",
+    "git_blob": "0ba7242b104bf2c6a3fc8776a425750eb3afba37",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job.sv",
+    "kind": "file",
+    "sha256": "4433555afc59791bf48980752a1c7f16c9cde369ae8f26fe7747d56dbece3112",
+    "git_blob": "44607ed67be245ff2f848c6bed21603b929d21eb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+    "kind": "file",
+    "sha256": "bdd5fd48fe22e22e3206bcdc0bb1c41c2645fd29386fd587669c250b6bc9a089",
+    "git_blob": "bc2ab551cd5fde175355c8130b8416a2e47dd1b4",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sdc",
+    "kind": "file",
+    "sha256": "1fb39c7f65af21affac849c078c4198a6858d68e7a40d0c1d001b48bfda9bbef",
+    "git_blob": "a10e63cc18d85bf90245f485486cf758e0146a51",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sv",
+    "kind": "file",
+    "sha256": "240941e01acf8d8e29a410f7237c9c022e2012c1c50e80587076a157bcfae80d",
+    "git_blob": "fb7fd49c247829ba55c7334548937d8f197917a2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp_bench.sh",
+    "kind": "file",
+    "sha256": "11e5d8cabd849aa7f2b766d7df709d8a83f3b9e649a30b7d00264e4eb056aa2b",
+    "git_blob": "37498c7225d8305500fce69f9b6ad50e1365c961",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c1x/tb_ot_s81sl_slice_c1x_lp.sv",
+    "kind": "file",
+    "sha256": "c44cc7884fc8a34955ee4b78c7c645bb17ab5914c7cfa05b69c36a169d48f373",
+    "git_blob": "df38c875317790bb79327f47e99d33525ec36708",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sdc",
+    "kind": "file",
+    "sha256": "59efe2409e3c9c1dc2aef4d1b54f9bd3a7544bc5cafb9c418c7b1efb471b194d",
+    "git_blob": "4f4a8adbe3753a6678f939730f5596e4a27e4fd1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sv",
+    "kind": "file",
+    "sha256": "312e111db2d24fd8a4e0159e8d8ba8733f73af1f0f00a76fdf5e2760f8ceaaf2",
+    "git_blob": "a53e6baea7b17d08ee8fca25b17962d0b46e93e7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp_bench.sh",
+    "kind": "file",
+    "sha256": "e0e933e0b03474f7c0946a89b37c8a15f1238c2ebffc481d16fe4d5aa20d2455",
+    "git_blob": "c2006df43c9a2da99f43d5078bc5ff41994aca33",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/c3x/tb_ot_s81sl_slice_c3x_lp.sv",
+    "kind": "file",
+    "sha256": "80bb4da0cfe0e03af00a5e57ffc27c015df1239d30647be0c832ccd835ce53c7",
+    "git_blob": "1aa244e523596f01cb37cbec8c560b077c5520d5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/landed/test/ot_s81sl_slice_lpwrap.sv",
+    "kind": "file",
+    "sha256": "b5fed09edccce0a983b823486493ea3b89cfe79695e44724b22fb11403163dff",
+    "git_blob": "3f7798b8a08db3cd7e2cbff227094e3df1f336b6",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+    "kind": "file",
+    "sha256": "e13f6501ce670063cbdefbc1374ba2641aaded37bf40878397d19c236d1d0886",
+    "git_blob": "fe65dda2213ac369e0b4e3bd409257333c882a4c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+    "kind": "file",
+    "sha256": "72f97dbdf311a075174fe6a1fc8845c86a159c8fa48180d53414b875cbcce09c",
+    "git_blob": "483edc8aa21ed22911f1c80669c546cdf6af422d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+    "kind": "file",
+    "sha256": "c8e8c3f966bad04c176d7d558b2bda90d46eebdc0df3d04b55d5edcf0d140797",
+    "git_blob": "5d77867749df4bb688035566d7790cfabfb34eef",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+    "kind": "file",
+    "sha256": "2cd61834483230175732b18c8060c81f7238177f64713c9e3745043117360c3c",
+    "git_blob": "6925fb789fa0d84a558d2bbfe195feb93cc949d7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+    "kind": "file",
+    "sha256": "0ab696264db80f719031bc62d432c993d3aa1eb84f44461471302d280abca812",
+    "git_blob": "d089448887d52b44ab40a1748a5801c48e6813e1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "kind": "file",
+    "sha256": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+    "git_blob": "e2959d3ba72ca65e6f1178ea35bfa1ba7a8a3f71",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+    "kind": "file",
+    "sha256": "6e22bfc28a5b6a2c9bf21ae07fcae9b60fffd04e645c353bef43341521a8bb15",
+    "git_blob": "f22e0601c1d449c8811a7a4df2fa43593e85357f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c3x.sv",
+    "kind": "file",
+    "sha256": "b647368f53b6c1d05b6e4afa6ac08c24d5b3b19dd1f518e00e709609093dcdab",
+    "git_blob": "625f7b50681b35c36f8f65df7f60a85a504b857c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+    "kind": "file",
+    "sha256": "fc306fb6bea870482126fe91ac7f2877e8e9c84c1209a45100e3149919dea229",
+    "git_blob": "e9958a7aadbc5a21c1871a05c6b4ced531544a8a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+    "kind": "file",
+    "sha256": "b1f5c89cc32254643a2006b220dc17d7bb55ca6936938bf142f7731031809788",
+    "git_blob": "df1ab6b7af4c86b0d06198467cc26d4599dfe4db",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv",
+    "kind": "file",
+    "sha256": "f8b562223347b5044a96dd3b0d808dcabf6c8b64dd55c8ecc885737b93a9b3c2",
+    "git_blob": "9b8f8617d20d3e1e8898a20bb18ef6c4139849ce",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+    "kind": "file",
+    "sha256": "5a6683229d62201c9da5b1a0e0d132c75906d31afd07b5c3633018048932a69d",
+    "git_blob": "4b8cd085828fb01e1c4598579bc9caf8b1bb424f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+    "kind": "file",
+    "sha256": "a42280979ba82db0db0ea6753e4213aa155617d5b5d3f18fd40710e723ff21b7",
+    "git_blob": "25621e2a177e5f39a3630853e861ef64cc3f28f8",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+    "kind": "file",
+    "sha256": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+    "git_blob": "0f0aa0f0ce51873859c4e8e9d5aa8fbffb6f52a4",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+    "kind": "file",
+    "sha256": "8f5ec8b78ae104de9268e26efcda699669d463bdec510a7f717290aab2d7dab6",
+    "git_blob": "f9ce6c98f9dfdcc3e87d06099532d02f5c30136e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv",
+    "kind": "file",
+    "sha256": "ac0eacf15609196b72ba28738eed1c2fcaa88d7d0cb95135e335dc09b2df719c",
+    "git_blob": "078fbeab89d5740cfc28eba2cf7e5b5d18600a8f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+    "kind": "file",
+    "sha256": "39e4531d95bb3365571e455665217213960611451126b1d4a1db957de46cdc67",
+    "git_blob": "c984356d230660163cbd40e1484ac38e7a62e5d5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+    "kind": "file",
+    "sha256": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+    "git_blob": "5757b99037b84625c9aee5bb5c58171387c745e5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+    "kind": "file",
+    "sha256": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+    "git_blob": "9b626b6e2c2013e91600029b5b6eca80c27b4086",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
+    "kind": "file",
+    "sha256": "ceff2f86604bb37596ef9aab5cf8003bf28c99d8d344a700c59e409076a5c24c",
+    "git_blob": "dceeffa89519d9c81ca1015bef622472e328fca3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f",
+    "kind": "file",
+    "sha256": "b283b0cfe72b31253739c0b5a77c8b0128fec7fcaf98307ab02571ee35fdae9d",
+    "git_blob": "0131f5a9d861962b98952001c40010e7c07b30bb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/lint_lep_mu.sh",
+    "kind": "file",
+    "sha256": "6cfb08ec9aa80d5a6f53ce6be473ceb9d16af2f49ec1c5bde84f4c434f15495e",
+    "git_blob": "3bab4e3212c9c698cbbac94511b36a77247cf938",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/lint_lep_mu_die.sh",
+    "kind": "file",
+    "sha256": "1da2fc0f30d0e84df67fa4f07fc8e6024fa69ddd84460d5bb745e8c68400fef1",
+    "git_blob": "07607a1f01200d9538886d9762ff2d42fbf4ae63",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/run_lep_mu_bench.sh",
+    "kind": "file",
+    "sha256": "1d2c8f3354e0c274387c27ffbf63c2345d82b3ad96c0e8db10de311b937fbeb2",
+    "git_blob": "507f4d21170a3502019b5aaf4c7eb36256ea56e0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_aq12_xmem_eq.sv",
+    "kind": "file",
+    "sha256": "a9ca11a0d87fe877bd1b1f47e5548505f2e5c4094aa4c965a5d5f547b2fa3e48",
+    "git_blob": "399db872faf37644c7bdd23288acaf48136bf3f7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv",
+    "kind": "file",
+    "sha256": "0a238f0c565af963ce5178fe966521e6e5b657a1a9649ad48d45ce339876c121",
+    "git_blob": "23b68db1ff5dbb8ee377bc82b57f0bfff206c36d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap.sv",
+    "kind": "file",
+    "sha256": "ac588a07332dc62606289f55693c70642f521b497c8ce03c0e4420b1b0879c22",
+    "git_blob": "e626356f4fda904885367ce23afe711ca7bcb63b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_leaf.sv",
+    "kind": "file",
+    "sha256": "baf1c9731abf9db1d91406c9e6016ff061373650e36c1bbc253c234b542ab28f",
+    "git_blob": "352224943a9367f240ff3bcefb134c0cb725e3f0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_leaf_eng.sv",
+    "kind": "file",
+    "sha256": "f5bdb67508ed33cdfda4992624d09a4c95ae63640f368882dd6c73f977a6b420",
+    "git_blob": "9a25cb8bb0b45bb2ffd264235b0ee6a695b8a981",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep.sv",
+    "kind": "file",
+    "sha256": "8f41be7c276bd399dadc608d0cedde35b636d0197e96e38751fe199169db12cc",
+    "git_blob": "6cc45b82cb43eb8c6a7927948501e65a4644513a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_host.sv",
+    "kind": "file",
+    "sha256": "2c6c9c18f14071b195f63383098ae66a814ba89c59dab1e67145940c0e0e4784",
+    "git_blob": "74dab421e188f9dfe7e9189d9fca6fc89ec82d87",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_mu.sv",
+    "kind": "file",
+    "sha256": "a1fec234cc2a9f2972e06e7d9323ef9349941a6c399c492d51e4715173bfe4d3",
+    "git_blob": "8b5d1cd6a32c1f5256f631fb29d78c298687a75f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_nh.sv",
+    "kind": "file",
+    "sha256": "375ff5bc4e7aa748b8c83b54197fa90cc779662c46a4d9f6a3ff403133a02bcd",
+    "git_blob": "cefce4c49ffc3b637e6fd3ffa1c927176695b828",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_sid.sv",
+    "kind": "file",
+    "sha256": "082c8aa993cfce104893b2a249f4c96fe76ee6d485862d61fc42f51ca31d18db",
+    "git_blob": "ca38799546c25ba0fc846c4303292cce1f65b68a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_eng.sv",
+    "kind": "file",
+    "sha256": "52b5ccab552acefe341377d0559237575d01355d054fec20072fd6a62d6598ca",
+    "git_blob": "8c1a970fb568ec2a52ac2fae086d786b8f2032bb",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv",
+    "kind": "file",
+    "sha256": "1a9b00b42655137d1fd1372533225b23cc9dea2c401ab23cda0da6a965b46e42",
+    "git_blob": "47e44902fab53efea5e23fdc9173b04be5c20b75",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_x.sv",
+    "kind": "file",
+    "sha256": "f486220917bb26d063ae5304f70e7958e5d4f7e02090b5ca7405c21f76cbbf8e",
+    "git_blob": "0ff6bfb717249a436f53f7dd5f18a6b40cef6a2d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_vs.sv",
+    "kind": "file",
+    "sha256": "a732e51f9bc5439e4ee9cffc03d5c95a4cc5fe49268b4b482ca301d1d9e90961",
+    "git_blob": "a68c7bb3db7a807d5d5c6106af4eab6e6cf15858",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv",
+    "kind": "file",
+    "sha256": "6eeded75fd341c255a044b134d321265c89fc6624a7dd534bfe97ad869bb2966",
+    "git_blob": "6ccfb4d6025ad7f05ab57476e60ada7af8d381ba",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_vq_pinreg_eq.sv",
+    "kind": "file",
+    "sha256": "09ef2ff2a8547a9e412dd314946c27225585bfcd2c4fc9853f54399783417482",
+    "git_blob": "dc25cc7df24c0afe8c440cc3ee2e08a714d5432b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1915,16 +2715,16 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/test/run_mu_host_bench.sh",
     "kind": "file",
-    "sha256": "1437b2d64507cc183a7dbb97a86a338ac864be701db0f5fe8c1c6dbb168df315",
-    "git_blob": "879e95c5465a2d966cc2575dfb307ee3890e4b8b",
+    "sha256": "7783d569ff6541964b0c1fefc77c36ac890e2db492043cfe04f4375e7e2fb635",
+    "git_blob": "be52e892920b0d1401e270bd1992c3ed3cf1f2c6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_bench.sh",
     "kind": "file",
-    "sha256": "1fb68c12ee530bf58fc953b777a8fa5a70d3c454936268ea574ab9b52cd31bf5",
-    "git_blob": "4a868131e2b3af10630a27fa2cd937d2b165c210",
+    "sha256": "56571f608e41e34751e624bd40d53be1807b308e72fd2ab74cc9865eface5589",
+    "git_blob": "40e9af059bf8e30c347264155703d5d9cf613f0d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -1939,16 +2739,16 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_bench.sh",
     "kind": "file",
-    "sha256": "676c9f3f5e2ada5d4b4af41108209ac9a661cb4a91cf209a386da07db4a30f30",
-    "git_blob": "a4261514f0a50a6dbf09441b35369938c9428f41",
+    "sha256": "ec2ea1ac394412505333f650be1d9952235c7b00f52e37c4cd3046350529c347",
+    "git_blob": "b531ff6e77cd153f44a89ae9f9c8c91adb96f4c2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_mut.sh",
     "kind": "file",
-    "sha256": "8b6462932d2be27b59af3b1e3b0e1c1462c94fc5be33d1b6de8a30d984ca686e",
-    "git_blob": "1579fcb3efd017c370458021da779099fee56dac",
+    "sha256": "7b90066ccc6d7c5cd7655601c94004ae137d9cfffaecaecd11817d08e2538ffe",
+    "git_blob": "15fb093d0e44f044ea88f2bf75a5f0d366c3c345",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -2037,6 +2837,542 @@
     "kind": "file",
     "sha256": "df87f96dd80dd5f2dcd4ad01f4932d339441d1c05c37861e9c8a278ca5ca9078",
     "git_blob": "f24ccc4d3664f3db0bc6b19de25a9c56b1ede677",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
+    "kind": "file",
+    "sha256": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+    "git_blob": "7aa209e4846e2e88e571edbb63e4b6e13b858d45",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv",
+    "kind": "file",
+    "sha256": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+    "git_blob": "ce870465c1c707d1ede50beef129afc15d1619e5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv",
+    "kind": "file",
+    "sha256": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+    "git_blob": "8c82498453137401056703523eb7d63f713e01bc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
+    "kind": "file",
+    "sha256": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+    "git_blob": "1aaea58ced419a51031beaa29a58fd594d57b39b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+    "kind": "file",
+    "sha256": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+    "git_blob": "72c17619b1b51ec7d9117501a52e130a19c82057",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+    "kind": "file",
+    "sha256": "b4fbdbb34aabe27581cbd51408d0f7364d48f80db4fe900eaae5b6e6d90b9568",
+    "git_blob": "c75406aa93a8dbd4d2416115a3e80a8f71cc8349",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv",
+    "kind": "file",
+    "sha256": "af900da861cbed2122ce7d1de707b67b3c19e2d9681127021398f09db9fc2b1d",
+    "git_blob": "ae90ed0e0ca7a0a53719234f36ed197b2128b83d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+    "kind": "file",
+    "sha256": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+    "git_blob": "4c30a6cbe2b207504d8310b7d1556204f0827cd8",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_lane.sv",
+    "kind": "file",
+    "sha256": "59a1b33b02c78b7936cd5b55ab4b3ec063127a8df07c9c823b7d9802b35e4231",
+    "git_blob": "9abd57337e19b3d9c01c761ad3689d59d3aedbe9",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_res.sv",
+    "kind": "file",
+    "sha256": "33a359f8c1984325808c8af27474f616bd02ba27d6b49abc44855ed0ac1fc0b4",
+    "git_blob": "fa0d4ef3ec31aa49475c79b859985933cbddbc28",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_strip.sv",
+    "kind": "file",
+    "sha256": "f5849b7256235fdcfed3274ebfbee67f69c1496fc58d23ae1c95990c869a72e6",
+    "git_blob": "30a8b03988019dd27f321644171f1df6c5392290",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_rfp.sv",
+    "kind": "file",
+    "sha256": "cc4acc0915ca427131cced035f5b0686bad8a1d7a0bf254053e6ffdba477de70",
+    "git_blob": "1ffabfb6636de56dbdbc330e4dabd12ccc69a0d5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+    "kind": "file",
+    "sha256": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+    "git_blob": "3f8c98f05f389b94f2dff4c511c04f6a38c9381b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v17.sv",
+    "kind": "file",
+    "sha256": "1488a69da2aca8542c81eeafbb941e81c37344f493a8df41b7f349a33cc84964",
+    "git_blob": "2d177adbd49d8e63a0a2a7080852c62351f99e44",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+    "kind": "file",
+    "sha256": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
+    "git_blob": "dd70cc2dc04aec1d96996db7b81d6a92bfc14379",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv",
+    "kind": "file",
+    "sha256": "6af6571d7d88ffbacf57c4c2baf0d612fff27b6a84fca366226d549356c7db7d",
+    "git_blob": "62f7d15f98af2db21b3c2b7eec393478af0fd426",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/test/actual_rly1_reference.sv",
+    "kind": "file",
+    "sha256": "a5e31f7a6b5072efd6f8320ebef98f8d7b73e56f11a57b645bdf29e5152e4db3",
+    "git_blob": "c8681f915a3fb82b8208adf6d8a8e3bdbdd3cdc6",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/test/bench_rly.sh",
+    "kind": "file",
+    "sha256": "5b7bc2d43bedee1091e7a8dbd6cee16e7d0fa0befbf677a19fc06bc4bdb71b2b",
+    "git_blob": "ecc4d762d557d5dce6f5952ddc51de67d29330d2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh",
+    "kind": "file",
+    "sha256": "6768d050d351044cf99071f998625c26442e9caf703d8cb1ef4192ac09149d6a",
+    "git_blob": "18fe5c8b0da58167fcd85b6b243f4ea49ac500ff",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+    "kind": "file",
+    "sha256": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+    "git_blob": "a23986fabef41436449bdbb602f284eeaaa8549c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv",
+    "kind": "file",
+    "sha256": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725",
+    "git_blob": "e65fe405029b224d76673d68188de11a6469d5a9",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+    "kind": "file",
+    "sha256": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+    "git_blob": "5bc7d5d326d6ccf2d852998eccc2718cbb625eed",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_s.sv",
+    "kind": "file",
+    "sha256": "1bd4c07991164d2c79fd6f184a726d8b7dad7789d7be4719c8ec3dc1316960a8",
+    "git_blob": "089a265dd1901a6a16e210b9273a3f78f539088b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+    "kind": "file",
+    "sha256": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+    "git_blob": "9349ca54e0c655a9ae6888f2247a2f502c87a462",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv",
+    "kind": "file",
+    "sha256": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+    "git_blob": "56550549cf3c357aaf22906f33eb1bde42f70247",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv",
+    "kind": "file",
+    "sha256": "07481bc9a82d1faf5ca505f032b8432ca52b0cf2e15f32c582c648d7d84a7655",
+    "git_blob": "ef2d611cbcf55b06a0f18f36833e302f9c909d56",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_engram_aperture.sv",
+    "kind": "file",
+    "sha256": "5e84b06d591d6dd517cae3e5a2107bd69f8b97de4c16f411c9897d2d367e4672",
+    "git_blob": "8948aa803a209cf2cbd50e1f4de25872999941de",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv",
+    "kind": "file",
+    "sha256": "e58634bf0ea8e1e5b67278e3dd7ddd80c4211bcc5e98b9ce9b5dc2b23af87009",
+    "git_blob": "11a303402e7fe6cac69b2541d2a293eec470d6cc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv",
+    "kind": "file",
+    "sha256": "5a9642a12351d85d31c44fcc25012ff0baa1f53736c0a16fe7f937c754748c15",
+    "git_blob": "a2d5de5032023b5e134d462dbe358ba37b0601a1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+    "kind": "file",
+    "sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+    "git_blob": "49952724970d342b39b1835fcdfd3cc25db26075",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv",
+    "kind": "file",
+    "sha256": "1ccefeb4dabf9c9b012bf05d1a062abd0573350c4c62792c66e724d8e4cd6bc6",
+    "git_blob": "cf7116e0f38aeea58d0eb3fecfc4aad55f24ede8",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv",
+    "kind": "file",
+    "sha256": "71ec5cc7c1e9d8c21f3012db751e53572a379857f902f02c3f8c325efebd70a2",
+    "git_blob": "424ea986318e146b6c8768f33c0096186881c573",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv",
+    "kind": "file",
+    "sha256": "139e6000feef8b1a210bf974c3064d953065fe2c91c1b47254f22229cd8dd89a",
+    "git_blob": "c5c9fac6ac4c95db7c067f57d3b2f174a026648b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/test/run_host_c_gate.sh",
+    "kind": "file",
+    "sha256": "56ae5690f4b1adca934509bae93cf2b7adff2d7f1e6b3dc776ee12d5e44c52d5",
+    "git_blob": "4b03b0cc2e80996257205f5a967a85f4d701ac79",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh",
+    "kind": "file",
+    "sha256": "4bc0d9229184c1d53d2979b6c0140265721217188617015bb49dd925296561b0",
+    "git_blob": "5a2a0c9272240b216127a78f75400e545ceed891",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c.sv",
+    "kind": "file",
+    "sha256": "4304c6bbd706f5b64a5a247313af7d3d8069121b075b1673f1d5560ac1f2f217",
+    "git_blob": "6b0b2d8c952f88a46bc3f0da6fe98fc9cbbe6b7f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c_static.sv",
+    "kind": "file",
+    "sha256": "175a75318d256fd0b355f4370a5e0f4d3478beb957ba9077966d679d0eec4a1e",
+    "git_blob": "192658697f34ea26fa045ead8b37eaa20513681a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+    "kind": "file",
+    "sha256": "9b0f0e559b253aaad0c1f3d133ea235ea73fb99a0a913ba5be5323a40e400c18",
+    "git_blob": "2f49b5854047c2beffd457f21ef23f77705fba30",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/col/tb_s81_pdie_col.sv",
+    "kind": "file",
+    "sha256": "67ebb398c6ca99fef4c3f6cf0f65099caa80219114e03fb76712a1f6d753b6c4",
+    "git_blob": "3164065406990e3ffd92a311bd70b2f5766d7396",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sdc",
+    "kind": "file",
+    "sha256": "2896fd103c39feb750c56ec6328100f0b4aa44b2834487f3466d74bb855e07f5",
+    "git_blob": "a562a95df2365fcdebff99b024ebf2be981f6446",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv",
+    "kind": "file",
+    "sha256": "e3cdb1ece2ba8d5b385896b1466e234bb98ebf9f3c892363dbfd29742af9507f",
+    "git_blob": "18520bb5882cc7db307924b3f0fb2dd0e44a6b1c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp_bench.sh",
+    "kind": "file",
+    "sha256": "56004acbfc7ab966ed53aa0f47b39b5ac3a750f796efd8d39dc83a2da5757a3f",
+    "git_blob": "a8d989929761a57ade5d9541732ca57c2bf73345",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/lp/tb_ot_s81_kp4_dec_native_flat_lp.sv",
+    "kind": "file",
+    "sha256": "23c659d5fcdf8f62f81fc574c38a0e1a5e25ce3a040004452c7844848b211e20",
+    "git_blob": "7a3bdf8d48fbd946ef6ea7d6d2dfb6d230050529",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/native/ot_s81_kp4_dec_native_flat.sv",
+    "kind": "file",
+    "sha256": "065a34f981cd136f13966e63ad18a9899d4b0435fc890c264214d6e876b71421",
+    "git_blob": "af9939bdb759c774d145d0582c4627066f0bd621",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5.sv",
+    "kind": "file",
+    "sha256": "9b792f8979d729b8e9bc99a3b820e5d020d26f257429e960a606a49e43f2a2e0",
+    "git_blob": "3f50c3391ecb4671534fa90d6a519ff210fb73dc",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+    "kind": "file",
+    "sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "git_blob": "52337a680ca2ede60436c4e1c4693d3a02a25e9b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+    "kind": "file",
+    "sha256": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "git_blob": "c8476c6d0bdf4c015bf4abd4668bf16fd7cde468",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_hbm_pcc.sv",
+    "kind": "file",
+    "sha256": "503638aaccfc0af752c6433e48fae06a10b0e7d0ea255739cc71045d76f57974",
+    "git_blob": "bcf4957c2fc173ff08e5e50ec66d5757de758fda",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "kind": "file",
+    "sha256": "b2b76fcd25e601a1d9e02625e3f3524305df3ffd84c6a763b9b6dff322e54a98",
+    "git_blob": "50c8a9faed25a85b1bdac35617c3b9184b8b7981",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+    "kind": "file",
+    "sha256": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb",
+    "git_blob": "fa31a28200f3373ad3fda0b3b1cd446fd008cd01",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+    "kind": "file",
+    "sha256": "83caa7fe35c87cc9178bc035da41dea02f3d6c552f3729e06722268299db0172",
+    "git_blob": "81e40e8b2312d4d488e8e6674c2584517f299466",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+    "kind": "file",
+    "sha256": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93",
+    "git_blob": "a34d73fad0cd93650d2b3865720df4ae8f89e808",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+    "kind": "file",
+    "sha256": "69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf",
+    "git_blob": "aeac98cd6401d54afd142b6fe84aced80714b13d",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+    "kind": "file",
+    "sha256": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf",
+    "git_blob": "6447188a1cbfe9e43c460b38432da07bc598cfe0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+    "kind": "file",
+    "sha256": "904afcf6c24331f77dbf55381ba3e574a4d1263eb5bc055068a62d7494e6fa76",
+    "git_blob": "f55dd93a2bc330ccb46e93e3b389c755c6e22c77",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+    "kind": "file",
+    "sha256": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd",
+    "git_blob": "1002e55f0335f9573644ff6723c62b0c5d0565ea",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+    "kind": "file",
+    "sha256": "f35e2b018bbc00ac7da81ecbd7b2b9a114a3aa4edcc43a7f1effb23aaedc2f70",
+    "git_blob": "ed16dcf695aaa5919df867e0a64a8760b3ee0bf2",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+    "kind": "file",
+    "sha256": "5f8c6c1718cb04488bb34a074571736bca6299d2fec487bf9534696a9d10068e",
+    "git_blob": "63284cd362504ccda8edfdb40cb08250c8ac2089",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/ref/ot_s81_kp4_dec_r33.sv",
+    "kind": "file",
+    "sha256": "30881ae0c3b8f5f4ffa3687cf0ebf3a014ad14a27cc9951737f462c111963c7b",
+    "git_blob": "f89b0f81201652a9980774bdaa4bc5cf59a4ead5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/run_hbm_gate.sh",
+    "kind": "file",
+    "sha256": "49e861a6a04ef08bebdd324cd4631457092c90f831ceb69745e8f84bc7aa7d03",
+    "git_blob": "54013751b9e07cdc48cc7cf6d97a0a9a28fd95d9",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/run_kp4_gate.sh",
+    "kind": "file",
+    "sha256": "e6dba3620db5ba0fd0e761f21206be46f09c70c4f0f0894595e1ff5bb1a0ce67",
+    "git_blob": "98ca65171bf8a6dafa4987a0323fd784cbdd411e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/run_pdie_link_gate.sh",
+    "kind": "file",
+    "sha256": "aaaa890f06ea93c05109e7effd4626dba7374d6fc10fc6d14d4bfc1396e39c00",
+    "git_blob": "4f31271b9d2d3875563719cb1dcd5589419e1e28",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/tb_s81_hbm.sv",
+    "kind": "file",
+    "sha256": "e08ea0a68d8a76c7f772dba86fca68bde86239a2147ef1c8e118ddc2a890d27a",
+    "git_blob": "6f4faf961eccf0436462e22ee4c94c92da4f48ee",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/tb_s81_kp4.sv",
+    "kind": "file",
+    "sha256": "5d4a578db1ca4ae596e0e2deec174c282085f860b2f9c14718974477135f3ad7",
+    "git_blob": "b048d16e6370caed585ffd81c789394057e80287",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/tb_s81_kp4_eq.sv",
+    "kind": "file",
+    "sha256": "4bbc56cc6435fe5495d6b7cce8f8431a010d3b2dd4644b3969ffed0ae9ecc201",
+    "git_blob": "c9ac36148ff170280aa4e972a597269ba48f0ef8",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/tb_s81_pdie_link.sv",
+    "kind": "file",
+    "sha256": "fba4402b1f76cfa0e0835afd1a74a49bf3a1ccbdbe4949c49a37c68925da9823",
+    "git_blob": "abd8ad2568445d8587dd417905eb5b083e2bee49",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_link/tb_s81_rate_match.sv",
+    "kind": "file",
+    "sha256": "bb491538899fc33a01974f969cb73a180d43e5a77d5713bcf3f17a9d0410916f",
+    "git_blob": "07219eae506763e72d0db9836eddc564f91b69f2",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -4825,6 +6161,46 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "rtl/hdc/ingest/ot_hbm_ingest_xlat.sv",
+    "kind": "file",
+    "sha256": "5f2673861531358704a2d05aa60cd25fcae4c62ca5ed9092e8456db57d110681",
+    "git_blob": "6d18539d977b050051909db82a4c6dc63f515311",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/hdc/ingest/ot_hdc_ingest_arb.sv",
+    "kind": "file",
+    "sha256": "cceb819fcb2375b62a7feed1dcf482bbcc63a1abb69e76484793fa462abc3484",
+    "git_blob": "d88b722bcab528ce0baff64c5b02308ca99fcc5b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+    "kind": "file",
+    "sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "git_blob": "2d30ce89a95ea711ecc5c839dad7600e7554a587",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+    "kind": "file",
+    "sha256": "5f09a09f5be20c6a56a7503e108b3be00ccb4bc1ac412fc3100396230a324aa3",
+    "git_blob": "aea4ae87f6752c997dc26f09ce6e4bbb9159f994",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+    "kind": "file",
+    "sha256": "3c7615d077adb51895f52892954ca96d9f7b526535ef9e42d236fda94b87fa2b",
+    "git_blob": "6046fccf56fffff1444145a3cb284f8555502a36",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
     "kind": "file",
     "sha256": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
@@ -4997,6 +6373,102 @@
     "kind": "file",
     "sha256": "fc8c821ab016e13be4120875675249ec90f36c675cfd0524582c38a69681b8c7",
     "git_blob": "9d33e7ebfc14fa91245618dd103b2f2f13163d1e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_fifo_sram_fwft.sv",
+    "kind": "file",
+    "sha256": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+    "git_blob": "688ffe6f838e1f82bb0cea0b4dcebf27e1250a60",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_afifo.sv",
+    "kind": "file",
+    "sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "git_blob": "627bd41026eebad723ccfab9a4865efa8334e4db",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_chan_model.sv",
+    "kind": "file",
+    "sha256": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+    "git_blob": "db66e493ce8b6ba9b2ba07064b7633b0d6c75387",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_crc32.sv",
+    "kind": "file",
+    "sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "git_blob": "664a31b571419ab5998f7b842d9118f0a946eae3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_crc32_pipe.sv",
+    "kind": "file",
+    "sha256": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+    "git_blob": "ad50f5c37bc35c793a7a785112a9db532db253d4",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_nvls_switch.sv",
+    "kind": "file",
+    "sha256": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+    "git_blob": "94d95a746930061e05900ce0d452592f40c4ed99",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_port_harden.sv",
+    "kind": "file",
+    "sha256": "9706dd8276b6e5d0be1ef185fd8115885d4b9232a19f2753942de15eed1ff0ff",
+    "git_blob": "2436e50e30ed41bc16613648d3e4ff88adc30559",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_rx.sv",
+    "kind": "file",
+    "sha256": "7f724bcc4027eac7bfb211937c9301cc01a59ad5ad63d887c7c9a83edfc102fb",
+    "git_blob": "c8d2a472ac4153dea049fb369d62aaccf52e421a",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_link_tx.sv",
+    "kind": "file",
+    "sha256": "0e19d581a21dc48f0b1a2a4730b58e764f64c2612596f7b4b121f82b80883a9e",
+    "git_blob": "766585711de7766e9b32e12f94438533ef1f4c4c",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_w15_link_port_harden.sv",
+    "kind": "file",
+    "sha256": "70069811f8d04e49f28146a1e1b2fd05db877e1c56bb10215f407a46e144482f",
+    "git_blob": "9a28a4a90066da7d03c9057d0b3a032eeacc787f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_w15_link_rx.sv",
+    "kind": "file",
+    "sha256": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+    "git_blob": "6cc8467df6615391f65d18ea8775c65e0fcd748f",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/link/ot_w15_link_tx.sv",
+    "kind": "file",
+    "sha256": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+    "git_blob": "e290bcd7108e251f17d67abc3e8136d0227bd3a3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -10325,6 +11797,14 @@
     "kind": "file",
     "sha256": "52f99a4c7fc63c4b3fe59e46dee97e1eaa80cff0ac18d302e73dd6d0a34b6324",
     "git_blob": "fdf4aa3737f7f166082c6e9624af76e1b8a5d4ae",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/closure_loop/test_ck_insertion_boundary.py",
+    "kind": "file",
+    "sha256": "4c6c7827de9afc3141045dcc8bf5b65ecbae0c8ec908de46a55a8e30d2229a90",
+    "git_blob": "c19b612196301d0144964b0aae8720fd6ec50e97",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -52827,8 +54307,8 @@
    {
     "path": "tools/ref_tile/cdc_sync_constraints.py",
     "kind": "file",
-    "sha256": "a19cd09032f4060592af8e1590392e673095e686a15c75f0d041018de7bceb22",
-    "git_blob": "6ba7b41c76e28654aa9cf11d39a303281b464ef8",
+    "sha256": "88bc003d051a4046f5b3a089c25839fce9a06cd7b245eafa470d2b4a2405c748",
+    "git_blob": "49893fbffd83a9d2e72d7a68ff3e2fe1ef454bab",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -53059,8 +54539,8 @@
    {
     "path": "tools/ref_tile/lint_receipt.py",
     "kind": "file",
-    "sha256": "778b2eee4b83581aa157655fe144b8dfea0f79c4be08c3a33feb78ecd5bcaeb3",
-    "git_blob": "5a4b88a7c60b3ee1ed4da477899419d074a20019",
+    "sha256": "d4b61ba9293673218f63df395dce80a4a1ddf2bc37c999cc8ba3039b8301efe9",
+    "git_blob": "291baf75e6e2b10b253ebee90894e9fba92ad7f3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -53147,8 +54627,8 @@
    {
     "path": "tools/ref_tile/ref_tile.py",
     "kind": "file",
-    "sha256": "e03630a87b403d4097db74a07c5d859c377b65f1a596de13582d20672958c2ef",
-    "git_blob": "650cc343b84c2d5acc1fd46b286b5d439108fdce",
+    "sha256": "76da341792be91619e2169d053f68117bfc14dfddd4380744f4c0d08ad768cd9",
+    "git_blob": "4be3f63fdd21c7eea2ae9ad4334346d2a10d2a9c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -57317,6 +58797,22 @@
     "kind": "file",
     "sha256": "327403acb7beb7274f0157d4cb62bb44d0c26a6580e172219afa357178406b8c",
     "git_blob": "5015aa124726ef0d5bcf8c95bf984248379f7a42",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_hcoll_v5/hcoll_v5r_ctl2_v74.json",
+    "kind": "file",
+    "sha256": "721df68db6c5cccff88b6ca47b21e1012b7be3ff69b50dc57287f0c5e18b261a",
+    "git_blob": "8f1f54fd7b714e5a9e88f979a2b65941c7db9b96",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/specs_hcoll_v5/hcoll_v5r_ctl3_v74.json",
+    "kind": "file",
+    "sha256": "47a6df08476d668c28f5c96b57ab068e3d1a32131f4b0ae4df9d40a6f7525806",
+    "git_blob": "4bb3a7ebf7901813fa5690d3640e5bdbb9c8c459",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -63243,16 +64739,16 @@
    {
     "path": "tools/ref_tile/specs_s81dv_unit/dsdv_sh_lk.json",
     "kind": "file",
-    "sha256": "fdd5d1122b34456235a7bc4863a049ce768c624810419f5da6655c190e372233",
-    "git_blob": "d8a5e1e9372cea57cc25883af360c51e77c8cfb8",
+    "sha256": "d283cb38f955dcc60431248ffdc460af09280c4edc3698cd84093a3ed5218d50",
+    "git_blob": "ce71a0c90978a86b1c7b48a6dd6938c6bc23520d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs_s81dv_unit/dsdv_sh_sq.json",
     "kind": "file",
-    "sha256": "ca065661f1c10370c731a45b26d002fce03f81306d2016876b168476ddec4b9b",
-    "git_blob": "dcc78ce9378e450f5dd047afd2daed3b9e230b38",
+    "sha256": "fd15374536e4be0c5d607f0ee30aaa203a2cfbff04d8ebb6839bc5f0c49d515b",
+    "git_blob": "248718e408350998c11f7064ff9d8595e380d77a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -66569,10 +68065,18 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/ref_tile/test_cdc_seam_constraints.py",
+    "kind": "file",
+    "sha256": "f105369aded572e2967803a1fbdfd2905aaad2e4417af19b9f161315ad7fbde8",
+    "git_blob": "649700b7f67da80cb7d2a9c0760701752dede4a0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/ref_tile/test_cdc_sync_constraints.py",
     "kind": "file",
-    "sha256": "8b0656c714b8b3be33ea20a800ac527d324a84a8a00daf0591378a4d6795c009",
-    "git_blob": "e75672cd30bce3cb7126c39e31618685799d0651",
+    "sha256": "9ec297d4b19ee36ad729030aa157e3807820ccde42a7388dd9ff8cc5da35c5ba",
+    "git_blob": "99775e802efbb93294500be1ff40626fd17f4c66",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -66669,6 +68173,14 @@
     "kind": "file",
     "sha256": "5faf571493630b18bde9b5e65d15282a7e5036bb90bad014233a36fa29d9b807",
     "git_blob": "3eb53cb12e77ce050639b39beb3622a0588fc786",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/ref_tile/test_lattice_channel_fill.py",
+    "kind": "file",
+    "sha256": "340befb81ac9cf8e9df2427f3d7444506dbc01ca7c3f97472ec6092b992fb5c2",
+    "git_blob": "02f278611f96e1c82d819af3aa86b95026664cf9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -93827,14 +95339,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 61638736,
-   "unpacked_bytes": 267071488,
+   "archive_bytes": 62123711,
+   "unpacked_bytes": 270123008,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "47c0b67c45ceb1aa4ec2611bcf912655b9ab273a",
+   "origin_main": "4d36c47f2b25ba664ad15368c0cdae13ab3011f7",
    "content_sha256": "ef697196c215b82dbf3e80ce847fa911acfa4716787d7bffbc99f70ab8e60960",
    "files": [
     {
@@ -94226,7 +95738,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 786,
+   "count": 961,
    "paths": [
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
@@ -94288,6 +95800,106 @@
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/provenance/abstract_pin_stub.json",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/provenance/raw/dsdv_mu_hslot.lef",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/provenance/view_export.abstract.json",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_dw_ep.sv",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_sp_collective_ctrl.sv",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_stage_seq_c.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl_lane_adapter.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_done_word.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hc_cmd_bridge.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hdr.svh",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_startup_barrier.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_vm_adapter.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/run_boot_secded.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_boot_visibility.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_control_lane.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_ctrl_chain.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_die_fld.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_die_layer.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_engine_adapter.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_hc_cmd_bridge.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_hop_vm.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_selcol_ctrl_gate.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq_c8.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/run_svc_job_gate.sh",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_secded.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_visibility.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_control_lane.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_chain.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_startup_shell.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_fld.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_embed_dump.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_engine_adapter.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hc_cmd_bridge.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hop_vm.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_stage_seq.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_stage_seq_c8.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_startup_barrier.sv",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job.sv",
+    "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sdc",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp_bench.sh",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/tb_ot_s81sl_slice_c1x_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sdc",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp_bench.sh",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/tb_ot_s81sl_slice_c3x_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/test/ot_s81sl_slice_lpwrap.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c3x.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f",
+    "rtl/dsrom_sys/s81_dv/slice/test/lint_lep_mu.sh",
+    "rtl/dsrom_sys/s81_dv/slice/test/lint_lep_mu_die.sh",
+    "rtl/dsrom_sys/s81_dv/slice/test/run_lep_mu_bench.sh",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_aq12_xmem_eq.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_leaf.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_leaf_eng.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_host.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_mu.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_nh.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_sid.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_eng.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_x.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_vs.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_vq_pinreg_eq.sv",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
@@ -94340,6 +95952,43 @@
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_vstop.sv",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_gunit_native_eq.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_lane.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_res.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_strip.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_rfp.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v17.sv",
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv",
+    "rtl/dsrom_sys/s81_glue/test/actual_rly1_reference.sv",
+    "rtl/dsrom_sys/s81_glue/test/bench_rly.sh",
+    "rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_s.sv",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_engram_aperture.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv",
+    "rtl/dsrom_sys/s81_ingest/test/run_host_c_gate.sh",
+    "rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh",
+    "rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c.sv",
+    "rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c_static.sv",
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbfj_def.sv",
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbh.sv",
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbh_parent_def.sv",
@@ -94688,6 +96337,11 @@
     "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv",
     "rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv",
     "rtl/dsrom_sys/s81_ph/vm/run_vm_bench.sh",
+    "rtl/hdc/ingest/ot_hbm_ingest_xlat.sv",
+    "rtl/hdc/ingest/ot_hdc_ingest_arb.sv",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv",
     "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
     "rtl/lib/face_land/qkd_hr_core_queue_fl.sv",
     "rtl/lib/face_land/qkd_kvs_attn_fl.sv",
@@ -94710,6 +96364,18 @@
     "rtl/lib/ot_wide_mul_seq.sv",
     "rtl/lib/ot_wide_mul_tree_seq.sv",
     "rtl/lib/test/tb_ot_rst_relay.sv",
+    "rtl/link/ot_fifo_sram_fwft.sv",
+    "rtl/link/ot_link_afifo.sv",
+    "rtl/link/ot_link_chan_model.sv",
+    "rtl/link/ot_link_crc32.sv",
+    "rtl/link/ot_link_crc32_pipe.sv",
+    "rtl/link/ot_link_nvls_switch.sv",
+    "rtl/link/ot_link_port_harden.sv",
+    "rtl/link/ot_link_rx.sv",
+    "rtl/link/ot_link_tx.sv",
+    "rtl/link/ot_w15_link_port_harden.sv",
+    "rtl/link/ot_w15_link_rx.sv",
+    "rtl/link/ot_w15_link_tx.sv",
     "tools/abstract_pin_windows.py",
     "tools/arch_budget_qwen3.py",
     "tools/arch_budget_v41.py",
@@ -94719,8 +96385,13 @@
     "tools/arch_utilization_v41.py",
     "tools/build_a3_v41_ngram_hash_vectors.py",
     "tools/chip_assembly/__init__.py",
+    "tools/chip_assembly/boundary.py",
+    "tools/chip_assembly/case.py",
+    "tools/chip_assembly/etm.py",
     "tools/chip_assembly/floorplans.py",
+    "tools/chip_assembly/harden.py",
     "tools/chip_assembly/macros.py",
+    "tools/chip_assembly/orfs.py",
     "tools/chip_assembly/v41_die.py",
     "tools/closure_loop/ck_insertion.py",
     "tools/collective_exposure.py",
@@ -94751,11 +96422,16 @@
     "tools/dsrom_protected_vm.py",
     "tools/dsrom_qx10_parent_context.py",
     "tools/dsrom_reindex_parent_model.py",
+    "tools/dsrom_reindex_screen.py",
     "tools/dsrom_s81_fulldie.py",
     "tools/dsrom_s81_minimum_protected_group.py",
     "tools/dsrom_s81_unified_components.py",
     "tools/dsrom_s82_token_pricing.py",
     "tools/dsrom_softmax_parent.py",
+    "tools/dsrom_su_hcpost.py",
+    "tools/dsrom_su_norm.py",
+    "tools/dsrom_su_softmax.py",
+    "tools/dsrom_su_swiglu.py",
     "tools/dsrom_v9_field_boundary.py",
     "tools/dsrom_v9_parent_context.py",
     "tools/dsrom_wfc_producers.py",
@@ -94883,8 +96559,12 @@
     "tools/s81_collective_gearbox_model.py",
     "tools/s81_collective_gearbox_pipeline_model.py",
     "tools/s81_collective_lane_sizing.py",
+    "tools/s81_ctrl/die_bench_stim.py",
     "tools/s81_ctrl/die_binding_contract.py",
     "tools/s81_ctrl/die_ctrl_gate.py",
+    "tools/s81_ctrl/die_layer_chain.py",
+    "tools/s81_ctrl/die_layer_stim.py",
+    "tools/s81_ctrl/rope_boot_image.py",
     "tools/s81_dv/crs4_bench.py",
     "tools/s81_dv/crs4_gate.sh",
     "tools/s81_dv/dv_bind.py",
@@ -94942,12 +96622,19 @@
     "tools/s81_dv/whitespace.py",
     "tools/s81_dv/xfin_eng_bench.sh",
     "tools/s81_dv/xfin_eng_golden.py",
+    "tools/s81_ftok/su_footprints.py",
+    "tools/s81_ftok/su_layer.py",
     "tools/s81_native_ingest_model.py",
     "tools/s81_ph/gen_gather_cl.py",
     "tools/s81_probability_ingress_model.py",
     "tools/s81_root_selective_model.py",
     "tools/s81_selector_quarter_retime_model.py",
+    "tools/s81_slice/pl_slice/c1x.json",
+    "tools/s81_slice/pl_slice/c3x.json",
     "tools/s81_static_collective/control_rom_model.py",
+    "tools/s81_suhc/hc_gate.py",
+    "tools/s81_suhc/su_gate.py",
+    "tools/s81_suhc/su_tile_tops.py",
     "tools/s81_vm/s81_vm_gate.py",
     "tools/s81_vm/static_face_model.py",
     "tools/s81_vm/static_transport_model.py",
@@ -95041,7 +96728,7 @@
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
-    "physical/ref_tile/dsdv_mu_hslot/README_CODEX.md": "2fe73e446fa611dbbbff0c58fe99aa4982e88daddc13e643ad5c377b151695a7",
+    "physical/ref_tile/dsdv_mu_hslot/README_CODEX.md": "e484e719ba09fa91316857fd32c4f558ac56044c0468ccc89a2025fbc79673ca",
     "physical/ref_tile/dsdv_mu_hslot/clock.sdc": "1796b60426a14f120783c7ac82873817bfdaf80d9877b38322fae3a3ad1356c5",
     "physical/ref_tile/dsdv_mu_hslot/floorplan.json": "7707dff9d960e74dd94ec4fe339885931694da71b02847e294caeef7d7b23c9f",
     "physical/ref_tile/dsdv_mu_hslot/kit.env": "a3bc53fe6f27db47fe594a7d777cf58e49fa631e104b200f36d452a6e1baf8cd",
@@ -95059,7 +96746,7 @@
     "physical/ref_tile/dsdv_mu_hslot/reset_landing.json": "f57f609dddfa6d99691f6bf705fd7637c8ee4c2ed4681201b4cb8366d4dc4863",
     "physical/ref_tile/dsdv_mu_hslot/signoff.sdc": "2a65fa220aabe95e1ab534d78007bed2b300cff76696b87cab48567e363f23ce",
     "physical/ref_tile/dsdv_mu_hslot/signoff_ffrepair.sdc": "12fe0445aa2261411b53a21cc5444011a451d0520527b668ad7d61206337f1a8",
-    "physical/ref_tile/dsdv_mu_hslot/spec.json": "cd62d3e3776463ce0399df60cf341b14f32bdc3c6eadd8ec9809bc30df1e8030",
+    "physical/ref_tile/dsdv_mu_hslot/spec.json": "8f460fdc5fbb8803ec3f84d34fc7002c6036c466dcd1d65adcb4d84e5b35ac78",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/abstract.json": "99319b0c0c3ea59022f3a19be6db409c44cd95d97d2c5b63b786a80077dddc96",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/child_lint.json": "c6601599d60260ebf56bebf4ce1313c2092a0193eb4cf57b4e4526463ee508bf",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/dsdv_mu_hslot.lef": "b3f35cb53d2781f117c758c5d346887d0d5519dd10e968ce4db64e1cb591002b",
@@ -95076,6 +96763,106 @@
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/provenance/abstract_pin_stub.json": "ee69975c6fad3824812dcda6881138c6d65684998c6e80ee54f0ba01eb6d5550",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/provenance/raw/dsdv_mu_hslot.lef": "8bf97920d76b37ef3095c78c8793a1fc065fc4c188691353fc96bd1c398b87aa",
     "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot/provenance/view_export.abstract.json": "f7b5ffc63a98c72b0905e1611d027cb1950759eca08b9f6132f898f1ce16b507",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_dw_ep.sv": "b45c12598887ee1cebdfcbd4bf0d6daef688d315d65aac20ac597abe53fb5139",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_sp_collective_ctrl.sv": "22eb361d78e261fdacb84aefd419359864cc6fd37ccd52585714b040be9087b4",
+    "rtl/dsrom_sys/s81_ctrl/dsfd_stage_seq_c.sv": "707862311f39a09c15064471b56a70ef25c7a608854854654a57fafe098c8fc3",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv": "ce7b71e1327260636eaf1ac9f45aa543261bf6be5629dec43ddcb91e5b81ec56",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv": "d918f0d6eaa19243b5714700b64ec7a10cee53251300f9bb6c7b5fc980ea1705",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv": "41e78b9e3ebd84a59cd97299e30561bc1296d5d33d9346be067d1eb96fd146f5",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl_lane_adapter.sv": "a78b47b7ede6c1200da6a26018cd6024b17554a8f63ecc2334fddaeaf8fb039a",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_done_word.sv": "9d09ee0ef4972cb3e58fa7364014da2a513bc5aba34714461e67c4d7f53726d9",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "23aa6cf6006c2ecd9012903246a18efcfd616c1ff9c453ca5a5a5b18ada134d6",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hc_cmd_bridge.sv": "ffe36c9b1ea797990817790849367926a3ab74708737ea31a6f26e36f109fdbe",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hdr.svh": "70238803e31b249046fe49db3fc3296fe60ebf82b13f3fa7b47d650bf75a66b1",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv": "fc24437ca9ce4c655fa625fa603363cbccc5629ede94c4e24a85449e7a0b2ead",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv": "bef4e939d7c81c669b2affc95ebaa8a219f83d050659f2864d5194bb076b3fa4",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv": "5c9eee113e08bcd24712fea81a554726a6d22c76afc894d6f176a8534dd0b810",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv": "4b89753084f617ab61c061adef844adea8c642e46d12612352323df3bb8f09ac",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv": "5b79131e49bc5ec6f62c9bca05ea443680fc99e21b68687280d248bbae25065e",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv": "d55293e4677bb0bc1aa54bfe54e32822b69fa3f6bf43a344aa0891c8aea38759",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_startup_barrier.sv": "816c798b4b553fda26c418ee294acfbe4e3f9a0297e30777dd72b721cc665e83",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv": "e0e4aa5a37b07c4d00aa7dd1c95dc035e637d3e4d8ddaeaf74f9248d0b0b2a4c",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv": "6ae753c3fea9594fdfab849f8338dfb002af8d974a807de6725fc5df2f1258df",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_vm_adapter.sv": "ce70a66a765532a3b4905422848c9080052a7bab33debbea38230ed3faac57ee",
+    "rtl/dsrom_sys/s81_ctrl/test/run_boot_secded.sh": "23638a696a8cd7a2616e71adf369b931bdac1b9388edd74033c4b662f64ecf6c",
+    "rtl/dsrom_sys/s81_ctrl/test/run_boot_visibility.sh": "6d9e9b72d33e4493b3a112368ec2fb463418683594e0dcde3a9b87d221492103",
+    "rtl/dsrom_sys/s81_ctrl/test/run_control_lane.sh": "a1c6b6f74b86dda9c87fe15a30abc107d5c9d9453764d1ff17ac875e8b533a00",
+    "rtl/dsrom_sys/s81_ctrl/test/run_ctrl_chain.sh": "25a9b77d570a65ee878db7e234272e4ec427a87ed25b94195b0dc982218802ea",
+    "rtl/dsrom_sys/s81_ctrl/test/run_die_fld.sh": "edbb548bc55b0eb538fba594a454bb2a0f3c3833ffeaa0d2f787b58a9c5b8b69",
+    "rtl/dsrom_sys/s81_ctrl/test/run_die_layer.sh": "610d2666e2a375818c0021175a2c66f4712672d38b6a33e74624f73edd659c92",
+    "rtl/dsrom_sys/s81_ctrl/test/run_engine_adapter.sh": "5501ed210311ee75909f3adb9eb8ee02039445df4a42b478b757638121cc40f0",
+    "rtl/dsrom_sys/s81_ctrl/test/run_hc_cmd_bridge.sh": "7395854241fd3b4875e4f2ccc26cb948054f4288e87703cd33abcfb64a54a10d",
+    "rtl/dsrom_sys/s81_ctrl/test/run_hop_vm.sh": "173502e6434ac427cd1c33c90caf9680ca588fc9d634a493a2546c4956b2109f",
+    "rtl/dsrom_sys/s81_ctrl/test/run_selcol_ctrl_gate.sh": "3bb38ebedc765d395e10aec4cc604a969e1b44ddacf8468bbc1e1053e3f6012f",
+    "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq.sh": "4ec76e55e87e72edad55ba96c36d58960666b80a7d6f7cc6bce927075f335afe",
+    "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq_c8.sh": "eba95fc03e55a68971a3bf2dc05f09d4425827965ea7d5e154714089e5c9fe23",
+    "rtl/dsrom_sys/s81_ctrl/test/run_svc_job_gate.sh": "bdecd85db375a52db2fc676e2f1c93b39d21324de01d4ea600a585f6f4c56b61",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_secded.sv": "273b5c1cfd9c819bedae9a04b00a091e4ddfc3c45c594e93b063f5fa45cadcb8",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_visibility.sv": "1cbb37426befca1911703ca73512c1dbf3861f3c31e871f78acc3dffdfe50cbb",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_control_lane.sv": "3851035e4bad79abc9ab006f33a6c954430f932f141efc35af584f9e0bbd5bb4",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_chain.sv": "cc6a14a0f3ddd7814a674d575673343472dc56284e3da6e9ddfc47095ce90496",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_startup_shell.sv": "7d4800c286afbf9a9774fab9d9d94dbb4f209818e41c90670cf9d506b7222c66",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_fld.sv": "6e7063956127b52a0d64ec9f5ea48db457cf7cd89b101104a704470f2d09e81b",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv": "dd1513794051497751de384d799dad6f3146a077d4c6f8d3992d09cfcec7d227",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_embed_dump.sv": "d5f8c1883ba2e146814961593791e03f7cd86a4c9a5f3f1dc79d9243dec8e5f2",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_engine_adapter.sv": "11861574f6b5b4abead281d73609cdf7274c0145cd444e0887caeff4981057d0",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hc_cmd_bridge.sv": "8dd383dc4d491645d603566adcfe643a6c09e456062a1ab186984ed9c0e172c8",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hop_vm.sv": "d0edb3fc5896312f0042abff1644789e36faed4f39448c97f77584f30efae08a",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_stage_seq.sv": "5b4c85f53413d656e79598455d5c5f5662dbb3304b0d4162206bb4337cb10e49",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_stage_seq_c8.sv": "8383b5be9e26b8051c69e5a1386be815a0b38949d87f63e4e6642fea81bec1fc",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_startup_barrier.sv": "d95add5dd3255320ee3c69e1dfd1aff7ca8cf2e10b7079d9d7eefe2e75e11d00",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_svc_job.sv": "4433555afc59791bf48980752a1c7f16c9cde369ae8f26fe7747d56dbece3112",
+    "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv": "bdd5fd48fe22e22e3206bcdc0bb1c41c2645fd29386fd587669c250b6bc9a089",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sdc": "1fb39c7f65af21affac849c078c4198a6858d68e7a40d0c1d001b48bfda9bbef",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sv": "240941e01acf8d8e29a410f7237c9c022e2012c1c50e80587076a157bcfae80d",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp_bench.sh": "11e5d8cabd849aa7f2b766d7df709d8a83f3b9e649a30b7d00264e4eb056aa2b",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/tb_ot_s81sl_slice_c1x_lp.sv": "c44cc7884fc8a34955ee4b78c7c645bb17ab5914c7cfa05b69c36a169d48f373",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sdc": "59efe2409e3c9c1dc2aef4d1b54f9bd3a7544bc5cafb9c418c7b1efb471b194d",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sv": "312e111db2d24fd8a4e0159e8d8ba8733f73af1f0f00a76fdf5e2760f8ceaaf2",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp_bench.sh": "e0e933e0b03474f7c0946a89b37c8a15f1238c2ebffc481d16fe4d5aa20d2455",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/tb_ot_s81sl_slice_c3x_lp.sv": "80bb4da0cfe0e03af00a5e57ffc27c015df1239d30647be0c832ccd835ce53c7",
+    "rtl/dsrom_sys/s81_dv/slice/landed/test/ot_s81sl_slice_lpwrap.sv": "b5fed09edccce0a983b823486493ea3b89cfe79695e44724b22fb11403163dff",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv": "e13f6501ce670063cbdefbc1374ba2641aaded37bf40878397d19c236d1d0886",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv": "72f97dbdf311a075174fe6a1fc8845c86a159c8fa48180d53414b875cbcce09c",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv": "c8e8c3f966bad04c176d7d558b2bda90d46eebdc0df3d04b55d5edcf0d140797",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv": "2cd61834483230175732b18c8060c81f7238177f64713c9e3745043117360c3c",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "0ab696264db80f719031bc62d432c993d3aa1eb84f44461471302d280abca812",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv": "6e22bfc28a5b6a2c9bf21ae07fcae9b60fffd04e645c353bef43341521a8bb15",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c3x.sv": "b647368f53b6c1d05b6e4afa6ac08c24d5b3b19dd1f518e00e709609093dcdab",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv": "fc306fb6bea870482126fe91ac7f2877e8e9c84c1209a45100e3149919dea229",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv": "b1f5c89cc32254643a2006b220dc17d7bb55ca6936938bf142f7731031809788",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv": "f8b562223347b5044a96dd3b0d808dcabf6c8b64dd55c8ecc885737b93a9b3c2",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv": "5a6683229d62201c9da5b1a0e0d132c75906d31afd07b5c3633018048932a69d",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "a42280979ba82db0db0ea6753e4213aa155617d5b5d3f18fd40710e723ff21b7",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "448b90246e07844f1ed061b767ba5e72abbec6b1fe5a8afdc8a352121422f14a",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv": "8f5ec8b78ae104de9268e26efcda699669d463bdec510a7f717290aab2d7dab6",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv": "ac0eacf15609196b72ba28738eed1c2fcaa88d7d0cb95135e335dc09b2df719c",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv": "39e4531d95bb3365571e455665217213960611451126b1d4a1db957de46cdc67",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv": "dcce7f019522c98a8377fe42d39a9b1ad9eb8a2dcd8a5464c244e9c4375ff4c7",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv": "ceff2f86604bb37596ef9aab5cf8003bf28c99d8d344a700c59e409076a5c24c",
+    "rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f": "b283b0cfe72b31253739c0b5a77c8b0128fec7fcaf98307ab02571ee35fdae9d",
+    "rtl/dsrom_sys/s81_dv/slice/test/lint_lep_mu.sh": "6cfb08ec9aa80d5a6f53ce6be473ceb9d16af2f49ec1c5bde84f4c434f15495e",
+    "rtl/dsrom_sys/s81_dv/slice/test/lint_lep_mu_die.sh": "1da2fc0f30d0e84df67fa4f07fc8e6024fa69ddd84460d5bb745e8c68400fef1",
+    "rtl/dsrom_sys/s81_dv/slice/test/run_lep_mu_bench.sh": "1d2c8f3354e0c274387c27ffbf63c2345d82b3ad96c0e8db10de311b937fbeb2",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_aq12_xmem_eq.sv": "a9ca11a0d87fe877bd1b1f47e5548505f2e5c4094aa4c965a5d5f547b2fa3e48",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv": "0a238f0c565af963ce5178fe966521e6e5b657a1a9649ad48d45ce339876c121",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap.sv": "ac588a07332dc62606289f55693c70642f521b497c8ce03c0e4420b1b0879c22",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_leaf.sv": "baf1c9731abf9db1d91406c9e6016ff061373650e36c1bbc253c234b542ab28f",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_leaf_eng.sv": "f5bdb67508ed33cdfda4992624d09a4c95ae63640f368882dd6c73f977a6b420",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep.sv": "8f41be7c276bd399dadc608d0cedde35b636d0197e96e38751fe199169db12cc",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_host.sv": "2c6c9c18f14071b195f63383098ae66a814ba89c59dab1e67145940c0e0e4784",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_mu.sv": "a1fec234cc2a9f2972e06e7d9323ef9349941a6c399c492d51e4715173bfe4d3",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_nh.sv": "375ff5bc4e7aa748b8c83b54197fa90cc779662c46a4d9f6a3ff403133a02bcd",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_rstop_sid.sv": "082c8aa993cfce104893b2a249f4c96fe76ee6d485862d61fc42f51ca31d18db",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_eng.sv": "52b5ccab552acefe341377d0559237575d01355d054fec20072fd6a62d6598ca",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv": "1a9b00b42655137d1fd1372533225b23cc9dea2c401ab23cda0da6a965b46e42",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_x.sv": "f486220917bb26d063ae5304f70e7958e5d4f7e02090b5ca7405c21f76cbbf8e",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_vs.sv": "a732e51f9bc5439e4ee9cffc03d5c95a4cc5fe49268b4b482ca301d1d9e90961",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv": "6eeded75fd341c255a044b134d321265c89fc6624a7dd534bfe97ad869bb2966",
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_vq_pinreg_eq.sv": "09ef2ff2a8547a9e412dd314946c27225585bfcd2c4fc9853f54399783417482",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv": "7952b48b35b9a0055492ec1ac36c3f9b0355a2746288773d09d481641bb0bc48",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv": "0c76721fb7233442f213d458edfc294c8a9c8959c6de674c69f3fa0cddb21f08",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv": "56b2d2003cca27ef9f145ab51722e8e7ef9bd0c0f6c4696377f986dae9720c79",
@@ -95112,11 +96899,11 @@
     "rtl/dsrom_sys/s81_dv/unit/test/gunit_vectors.py": "c66a3dd30bcccce1c6fbe67b0098f0b2c6046dfbce4567821667e13b395bbb89",
     "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh": "c0debfe6ea62aa75fe0eec35d265f95dc42ca3ce26770031e1ea95f0faf24837",
     "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_native_eq.sh": "0108259a3974f9f268031c2f3b301d896e756e09baff2ce9cea80ce9c33e8413",
-    "rtl/dsrom_sys/s81_dv/unit/test/run_mu_host_bench.sh": "1437b2d64507cc183a7dbb97a86a338ac864be701db0f5fe8c1c6dbb168df315",
-    "rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_bench.sh": "1fb68c12ee530bf58fc953b777a8fa5a70d3c454936268ea574ab9b52cd31bf5",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_mu_host_bench.sh": "7783d569ff6541964b0c1fefc77c36ac890e2db492043cfe04f4375e7e2fb635",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_bench.sh": "56571f608e41e34751e624bd40d53be1807b308e72fd2ab74cc9865eface5589",
     "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh": "8bde0a829c9367e1c3d9717cf8c3e3b848d22e05c38f5944408986f6d7a37e9e",
-    "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_bench.sh": "676c9f3f5e2ada5d4b4af41108209ac9a661cb4a91cf209a386da07db4a30f30",
-    "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_mut.sh": "8b6462932d2be27b59af3b1e3b0e1c1462c94fc5be33d1b6de8a30d984ca686e",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_bench.sh": "ec2ea1ac394412505333f650be1d9952235c7b00f52e37c4cd3046350529c347",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_mu_mut.sh": "7b90066ccc6d7c5cd7655601c94004ae137d9cfffaecaecd11817d08e2538ffe",
     "rtl/dsrom_sys/s81_dv/unit/test/run_vstop_bench.sh": "18c2c2620d0dff9fc838cc1b3b5b0ef9528b87a3bccc594557079031cc703bc6",
     "rtl/dsrom_sys/s81_dv/unit/test/seq_host_mu_cases.py": "c26781f35d7a7ad5856a217e34f4de292f99affa3293f066a107c740c153c595",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_gunit.cpp": "3fb7b6aeea24659500c147a9ab04c1a27633b67499d91f5110bab9b0494c4af3",
@@ -95128,6 +96915,43 @@
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv": "62cf7b55ae0fc03a45c2be864858db7a24bdd6bbbb039d89f1c5bb02a74b3cd6",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_vstop.sv": "3464cf3bbaa0656ca04b6dbfb5ca09b5af1decfee22c545b262ed7b7e7db335f",
     "rtl/dsrom_sys/s81_dv/unit/test/tb_gunit_native_eq.sv": "df87f96dd80dd5f2dcd4ad01f4932d339441d1c05c37861e9c8a278ca5ca9078",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv": "b4fbdbb34aabe27581cbd51408d0f7364d48f80db4fe900eaae5b6e6d90b9568",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv": "af900da861cbed2122ce7d1de707b67b3c19e2d9681127021398f09db9fc2b1d",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_lane.sv": "59a1b33b02c78b7936cd5b55ab4b3ec063127a8df07c9c823b7d9802b35e4231",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_res.sv": "33a359f8c1984325808c8af27474f616bd02ba27d6b49abc44855ed0ac1fc0b4",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_strip.sv": "f5849b7256235fdcfed3274ebfbee67f69c1496fc58d23ae1c95990c869a72e6",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_rfp.sv": "cc4acc0915ca427131cced035f5b0686bad8a1d7a0bf254053e6ffdba477de70",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v17.sv": "1488a69da2aca8542c81eeafbb941e81c37344f493a8df41b7f349a33cc84964",
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv": "6af6571d7d88ffbacf57c4c2baf0d612fff27b6a84fca366226d549356c7db7d",
+    "rtl/dsrom_sys/s81_glue/test/actual_rly1_reference.sv": "a5e31f7a6b5072efd6f8320ebef98f8d7b73e56f11a57b645bdf29e5152e4db3",
+    "rtl/dsrom_sys/s81_glue/test/bench_rly.sh": "5b7bc2d43bedee1091e7a8dbd6cee16e7d0fa0befbf677a19fc06bc4bdb71b2b",
+    "rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh": "6768d050d351044cf99071f998625c26442e9caf703d8cb1ef4192ac09149d6a",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_s.sv": "1bd4c07991164d2c79fd6f184a726d8b7dad7789d7be4719c8ec3dc1316960a8",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+    "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv": "07481bc9a82d1faf5ca505f032b8432ca52b0cf2e15f32c582c648d7d84a7655",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_engram_aperture.sv": "5e84b06d591d6dd517cae3e5a2107bd69f8b97de4c16f411c9897d2d367e4672",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv": "e58634bf0ea8e1e5b67278e3dd7ddd80c4211bcc5e98b9ce9b5dc2b23af87009",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv": "5a9642a12351d85d31c44fcc25012ff0baa1f53736c0a16fe7f937c754748c15",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv": "1ccefeb4dabf9c9b012bf05d1a062abd0573350c4c62792c66e724d8e4cd6bc6",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv": "71ec5cc7c1e9d8c21f3012db751e53572a379857f902f02c3f8c325efebd70a2",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv": "139e6000feef8b1a210bf974c3064d953065fe2c91c1b47254f22229cd8dd89a",
+    "rtl/dsrom_sys/s81_ingest/test/run_host_c_gate.sh": "56ae5690f4b1adca934509bae93cf2b7adff2d7f1e6b3dc776ee12d5e44c52d5",
+    "rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh": "4bc0d9229184c1d53d2979b6c0140265721217188617015bb49dd925296561b0",
+    "rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c.sv": "4304c6bbd706f5b64a5a247313af7d3d8069121b075b1673f1d5560ac1f2f217",
+    "rtl/dsrom_sys/s81_ingest/test/tb_dsfd_host_c_static.sv": "175a75318d256fd0b355f4370a5e0f4d3478beb957ba9077966d679d0eec4a1e",
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbfj_def.sv": "d5dcffe4bdcabf07cbca6bcf93265023915ad936dcf23fbb12dd24e37da059f4",
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbh.sv": "ee0ae621b19de26e8001581a624c28fa5c64306f7ef690d2e1821b6ab4e805bc",
     "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbh_parent_def.sv": "0c34244fe5fd8c131c8173d453516d45e9259df94b145177be883c2ebb0dc2a3",
@@ -95476,6 +97300,11 @@
     "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "db36f2611d91193aa7b9fe8031b75c9ad901d0449aa90fbe77db0a12109c1b52",
     "rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv": "ca94317fdd3631e64160c8321b31294f7e493de94346d82a60aa1e0d3bb3225e",
     "rtl/dsrom_sys/s81_ph/vm/run_vm_bench.sh": "12f26f91894f06b55663235013dd029c74ee95424b05129aae62b860972d0b23",
+    "rtl/hdc/ingest/ot_hbm_ingest_xlat.sv": "5f2673861531358704a2d05aa60cd25fcae4c62ca5ed9092e8456db57d110681",
+    "rtl/hdc/ingest/ot_hdc_ingest_arb.sv": "cceb819fcb2375b62a7feed1dcf482bbcc63a1abb69e76484793fa462abc3484",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "5f09a09f5be20c6a56a7503e108b3be00ccb4bc1ac412fc3100396230a324aa3",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "3c7615d077adb51895f52892954ca96d9f7b526535ef9e42d236fda94b87fa2b",
     "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
     "rtl/lib/face_land/qkd_hr_core_queue_fl.sv": "1ccee3722f337be5355048d1ec0203f944cc56f5514e12c203664cebff5862a3",
     "rtl/lib/face_land/qkd_kvs_attn_fl.sv": "81aa4188030e45eec1ad91c5795791e49a5c65aed14f15168eff2db631848ee0",
@@ -95498,6 +97327,18 @@
     "rtl/lib/ot_wide_mul_seq.sv": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
     "rtl/lib/ot_wide_mul_tree_seq.sv": "95b494676f51cd77510884f182d5f0427c15c4c5693f3b743aecd6c2b8d16ec5",
     "rtl/lib/test/tb_ot_rst_relay.sv": "fc8c821ab016e13be4120875675249ec90f36c675cfd0524582c38a69681b8c7",
+    "rtl/link/ot_fifo_sram_fwft.sv": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+    "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "rtl/link/ot_link_crc32_pipe.sv": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+    "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+    "rtl/link/ot_link_port_harden.sv": "9706dd8276b6e5d0be1ef185fd8115885d4b9232a19f2753942de15eed1ff0ff",
+    "rtl/link/ot_link_rx.sv": "7f724bcc4027eac7bfb211937c9301cc01a59ad5ad63d887c7c9a83edfc102fb",
+    "rtl/link/ot_link_tx.sv": "0e19d581a21dc48f0b1a2a4730b58e764f64c2612596f7b4b121f82b80883a9e",
+    "rtl/link/ot_w15_link_port_harden.sv": "70069811f8d04e49f28146a1e1b2fd05db877e1c56bb10215f407a46e144482f",
+    "rtl/link/ot_w15_link_rx.sv": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+    "rtl/link/ot_w15_link_tx.sv": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
     "tools/abstract_pin_windows.py": "7c5afa0b601478177c87f8b57e19d6b304d3a34ed82f381656686ca734361d49",
     "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
     "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
@@ -95507,8 +97348,13 @@
     "tools/arch_utilization_v41.py": "ecad26a759b5c57194c99def5100c6ff7685a2736233ee05ceb80b05551deef9",
     "tools/build_a3_v41_ngram_hash_vectors.py": "dcaa5a6a35b19215aa7775874366a443387b793baed39ea3701c2f244a49feb1",
     "tools/chip_assembly/__init__.py": "0557fca5358bcf5cd9256fe123815c038a2b346ceee25b6df6d8f369d23b175c",
+    "tools/chip_assembly/boundary.py": "71874d922d80fb68c03d2589865b441d1f8fa13c90ede4fe8f9f0bbb247fe395",
+    "tools/chip_assembly/case.py": "ae7fc13e7cf588921e4ff744ea5b8d99ee3ee0d6d0bde0247187a73d0445c0cb",
+    "tools/chip_assembly/etm.py": "1ae430addd444528c5f8024c55e0e6beee159381c7bc8e1ad66baaf732afcd57",
     "tools/chip_assembly/floorplans.py": "3a78ac42e27e5a01b8970620eff075e62c149abe8dc8d45da756f40a3865c94f",
+    "tools/chip_assembly/harden.py": "2936ea1ae5c4da7a2a17f75cf7bb521326d0d6a4db650d931f45e3604d6ca5c7",
     "tools/chip_assembly/macros.py": "85073590e55bbd11cb29efa49c6b9035739d5138967ea73ca75124bfe728de68",
+    "tools/chip_assembly/orfs.py": "88aa79c998509ca444197e271c104ca4ff361f38d8b4ea48d11b774098f6559d",
     "tools/chip_assembly/v41_die.py": "c2e45b6502db022904dd1db0e270f1da72ca56cd5ec1f3acca945d538a34339b",
     "tools/closure_loop/ck_insertion.py": "a6b13f9ece757b7522f153ecaa4b97086d11c08e540c578285a305fe2da96221",
     "tools/collective_exposure.py": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b",
@@ -95539,11 +97385,16 @@
     "tools/dsrom_protected_vm.py": "a39428643ce208bad8cc972fd893927262cfb7b1965bbaa9ccbec0846f9d2c0a",
     "tools/dsrom_qx10_parent_context.py": "87cc61f203efc2c9331f8b460616546d253a509ae858c7ddd53ebacba835bb90",
     "tools/dsrom_reindex_parent_model.py": "eee3dc53782e19ce11bfe888dd65a99415824751694cb4ab9ce66b18d7112c6d",
+    "tools/dsrom_reindex_screen.py": "3cc7ffcb9a37381a4cd644d97dede42bd52316b41ee075c7810853fbae2a4f1d",
     "tools/dsrom_s81_fulldie.py": "e7bbefd69d74dc48d92c1db64e459553a0bd580ec3a0e72720f3f3fb4c858424",
     "tools/dsrom_s81_minimum_protected_group.py": "289e39a04fcca5c560f3fe1a1c46b992473fa1c0c6dd0624363941df037951ec",
     "tools/dsrom_s81_unified_components.py": "5e2b321331d2ed2550e05abd20fc25aafc0bcfad71e361982ba506f5d0e3ada9",
     "tools/dsrom_s82_token_pricing.py": "49eb71374afbc6102183be936bb663f6de8f8dfe1afef61fd1aadb61cfcd41be",
     "tools/dsrom_softmax_parent.py": "b3931b28cfdc9c61838788acb2c9281e92c282164629e01aa07ec0acb2ca70da",
+    "tools/dsrom_su_hcpost.py": "1ea3d2729345c7e307dfe44a603ae819be5d03aa5272b0dc24073c63bf7e1d65",
+    "tools/dsrom_su_norm.py": "8af4ca463cb0ef4aba7b11b0fe0d7207b27cd5f283f34c493ac741116b5d28f3",
+    "tools/dsrom_su_softmax.py": "4fcff840af06426a090effba3f58b91ac81a2dcd810f3b817b18051f2ea6ab63",
+    "tools/dsrom_su_swiglu.py": "1ea70f18415c6e34660177a4dda094ace84e19bad1b9d4aa3cf37b1460583efb",
     "tools/dsrom_v9_field_boundary.py": "b216b6fe22418091f7c65269f8c4b1c18fe619d0dfd677c4bc73ea6047425f7b",
     "tools/dsrom_v9_parent_context.py": "365868f94feda8bcb30d553ada8372915feaa4dcb5fceac6feb72e0f37cd9502",
     "tools/dsrom_wfc_producers.py": "bf215c13b164683bdfe0530e8963aa077305ae01c39f44b92afa2929398d2fcd",
@@ -95671,8 +97522,12 @@
     "tools/s81_collective_gearbox_model.py": "1ce4ca51bb4b066d18df72b4bf7ec7acb05323f2eec672c4fa13fe790342bef1",
     "tools/s81_collective_gearbox_pipeline_model.py": "60ce0bf68d6583f6bc816ceae388d2e950f02df7ff4b9e09497825fe8d2f064e",
     "tools/s81_collective_lane_sizing.py": "f0f87d945b070e9dda6fbbaf6277786501a7a59aa32e066de87b52f4a211411f",
+    "tools/s81_ctrl/die_bench_stim.py": "2463ca5d79c96cabb57586a8bf7c3dfbd147deafe896490e28771b4ccadb4614",
     "tools/s81_ctrl/die_binding_contract.py": "9a1d5d7a76a3a254cc2056d35f210a3b48731a6c45c316aca96920aa26575089",
     "tools/s81_ctrl/die_ctrl_gate.py": "73a48d4b7745785ec5a0533d4bc26c3afba8ded38db9442eb7039ed16be6ca27",
+    "tools/s81_ctrl/die_layer_chain.py": "31610df4d027ab2e54318cbc714ec05247e149d975a42165226290993735957a",
+    "tools/s81_ctrl/die_layer_stim.py": "5ce0994556546b030d91168f49284f936b25fb2c23382b5dd5cbf2be38768e24",
+    "tools/s81_ctrl/rope_boot_image.py": "c5e0dc8fa9fe1bdd5dd4e3b1e00e96e9b02ef7b70984f1fef6c416161fdf5ef3",
     "tools/s81_dv/crs4_bench.py": "008eec19277a6b06b0a7e3e9bc430d0157ae3d85e4059ee2385b6fb7a501f169",
     "tools/s81_dv/crs4_gate.sh": "79ca75d307fcaa85caf26473dc84bbacc37fcec9d857c35d89cda9b4871a0c1b",
     "tools/s81_dv/dv_bind.py": "fc581a67d3c6ca936543752f82e66c06bf6ef9d07f0cb92b3e5abe68ca8f3905",
@@ -95730,12 +97585,19 @@
     "tools/s81_dv/whitespace.py": "fe01e74a558317dfcfc260cdea348425457514c3286dc3d225c04661ea886a07",
     "tools/s81_dv/xfin_eng_bench.sh": "349e915dcb314400cfe0abfb5a5cd216d7418f6c7f766df22e14990830cca8fe",
     "tools/s81_dv/xfin_eng_golden.py": "e4ef350fc5bb62b3c7c0f33b76acf7d6dfc96659b63c4ceee0dc5c425c8f679b",
+    "tools/s81_ftok/su_footprints.py": "97d18c95d2a6ee4e7d127ca67707f07bd23a514e6e9ade451d22cdca48ece319",
+    "tools/s81_ftok/su_layer.py": "8eec57ca9e5f28e78c1a790694fce1f583fd7424f3a454ba37a45f627be0cc88",
     "tools/s81_native_ingest_model.py": "8ad5c417c3850de3e6accf9392ccd4cc7a78b5e76c9c89fc93f36c6a12cf2e07",
     "tools/s81_ph/gen_gather_cl.py": "8859aef177c3efcc772ca19ab8b212a9d3235952c027fba8aec552d1a305fd77",
     "tools/s81_probability_ingress_model.py": "ba02a139d794a6d35a9829d1aee1cc76fea56b1e2c9b914d70bf68a082a324f3",
     "tools/s81_root_selective_model.py": "9d453ec4663a9319c9e185a14917266211ff3514f6c7079992e98eb59599962b",
     "tools/s81_selector_quarter_retime_model.py": "4eac4ac89c661218f356c7ae09427badac852610e00cdce20ac7c61917a60862",
+    "tools/s81_slice/pl_slice/c1x.json": "a70631029cd8fbd781cc868a8874fdac648e391a98f63896b397a2684d6fd4ff",
+    "tools/s81_slice/pl_slice/c3x.json": "35ff87f0dc82ce8fafb5aa5701befe7d1d69221824a8f8c2fe01bf59381abfb3",
     "tools/s81_static_collective/control_rom_model.py": "bf8f3e77773a327f315cdf7e48f4ff1877235ad297ebbb34016f370a9c2ada97",
+    "tools/s81_suhc/hc_gate.py": "fb75ae871652986052f0d3576ca17bc7ad4cd8995d6970437713514df8cbaea1",
+    "tools/s81_suhc/su_gate.py": "961233e64c012351f8434662eac9ec0223908ce8222ebe6fa7e653c1698d2347",
+    "tools/s81_suhc/su_tile_tops.py": "5b306ccad9b30aa6f387766ae7b79bab22bfd769b2051c6d2fbe222889d91e38",
     "tools/s81_vm/s81_vm_gate.py": "9e543a9ec2a70c44e46ebac9e383fd702cc4d40c273ec7fdca6f3dbc3dd17457",
     "tools/s81_vm/static_face_model.py": "530c0da15a6b082fad82b03884e6b2c7b554f82396c862fa35dad295a4ccbf8b",
     "tools/s81_vm/static_transport_model.py": "2b86ebff12d5331a996d2e420ce0bf221d3f069ffbe7b26f018d8b60855cda5c",
@@ -95803,18 +97665,18 @@
     "tools/w2_phase_seat_model.py": "a42a1ebbd86a1f5d20d39072052401a8789697632c026f7339782aa18bc5faf4",
     "tools/wafer_vs_array_study.py": "173b92baecfe94931785e56da36b831cdc4f1af2eebcece0abaa35eb067c3e41"
    },
-   "digest": "dbfb4bd233e96e5a6ab53e8253ff3b417623900bcf7ed9e663a9b730e7040b4c"
+   "digest": "488d100da9dcd675c134706b848d01b96ac90e96a40cee806580d9aa2defca3c"
   },
-  "captured": "2026-10-19T08:02:18-0700",
+  "captured": "2026-10-19T08:16:19-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/dsdv_mu_hslot/signoff.sdc"
   },
-  "remote_script_sha256": "fb4afaf4265d125785c8cac4532060ccd4f6d35c422ecc725e372f840a2cd421",
+  "remote_script_sha256": "f41f8f5ea92339463eba1600285ffb5216bd773fb9ea847b916a867a2158ad75",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hslot-20261019-080157",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hslot-20261019-081557",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -95998,12 +97860,6 @@
  "items": [
   {
    "severity": "WARN",
-   "check": "sources",
-   "message": "16 referenced file(s) do not exist: ['physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v', 'physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v', 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v', 'physical/rom_host_ingest/rtl/dsfd_host.sv', 'results/arch/mu_s81_1018/calendar_ar.json', 'results/arch/mu_s81_1018/calendar_mtp.json']",
-   "fix": "commit them / fix the path"
-  },
-  {
-   "severity": "WARN",
    "check": "clock_rule",
    "message": "root port:ck: 2,424 sinks on the largest root; measured TT insertion 306.6 ps, FF insertion 256.3 ps, TT pin-flop spread 53.1 ps, FF pin-flop spread 48.9 ps; WARN: insertion 306.6 ps > 300 (guidance; boundary matched by parent compensation / landing)",
    "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
@@ -96015,7 +97871,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 41,
+  "grt_s": 63,
   "layers": [
    {
     "layer": "M1",
