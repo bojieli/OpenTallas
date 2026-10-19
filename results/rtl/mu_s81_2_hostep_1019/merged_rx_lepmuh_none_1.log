@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   599 GB (avail 532, growth 113, headroom 0, waiters 0/0 GB) load 109/128 running 35 disk 458 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2613227-1792416758 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 0 hostplane 0 | faults 000
+PASS lep_muh: host-plane MU endpoint == single-user lep: 412 H->die ring beats (332 cut-through same cycle+bits with mu_rt, 80 landed + replayed), 19 HOST + 27 KS identical every cycle; die->H 644 frames same cycles (521 ring incl. 160 stamped, 62 THOST, 61 TKD); F1 faulted
+BENCH_PASS lepmuh MUT=none seed 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2613227-1792416758): exit 0

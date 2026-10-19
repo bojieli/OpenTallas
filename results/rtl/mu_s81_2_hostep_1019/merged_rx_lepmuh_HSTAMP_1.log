@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   599 GB (avail 532, growth 113, headroom 0, waiters 0/0 GB) load 109/128 running 35 disk 458 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2613378-1792416758 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH M->H TKD 7 (tag field 000190001)
+MISMATCH M->H THOST 7 (tag field 000190001)
+MISMATCH M->H TKD 8 (tag field 000190001)
+MISMATCH M->H THOST 8 (tag field 000190001)
+MISMATCH M->H TKD 9 (tag field 000190001)
+MISMATCH M->H TKD 10 (tag field 000190001)
+MISMATCH M->H THOST 9 (tag field 000190001)
+LEPMUH_STATS H->die ring 412 (M cut 332 same-cycle 332, landed 80, replayed 80) host 19/19 ks 27/27 | die->H ring 521/521/521 thost 62/62/62 tkd 61/61/61 frames M 644 R 644 | mismatch rx 0 tx 40 hostplane 0 | faults 000
+FAIL lep_muh: ok 1 rx 0 tx 40 hostplane 0 faults 000 F1 1
+BENCH_FAIL lepmuh MUT=HSTAMP seed 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2613378-1792416758): exit 1
