@@ -161,5 +161,7 @@
  },
  "fill_reason": {
   "pin_bound": "the outline is the exact KV die frame slot of the closed i2 view (388.8 x 302.4, kvs_tile_kits SEED_OUTLINE / kv_static_die FRAME; a smaller outline is a slot_change of the KV die plan). The height is set by the E face: 786 pins over 227.7 of 302.4 um (75%) at pin_min_tracks 3; the width by the 216 x 151.2 hard u_rowtx plus its channels and the S face 673 pins. Gate e1 3d52043cd fill 29% (macro 32659 + std 1890 um2)"
- }
+ },
+ "child_clock_ref": "boundary",
+ "child_clock_ref_reason": "HKV-EMBHOLD 10-18: e1-939c4f0de NEEDS_RTL FF hold -6.74 = 41 reg->reg pairs u_rowtx/emb_tx_payload[*] -> rowtx__emb_tx_payload[*] pin registers (launch child ck 535.8 + child boundary-flop insertion FF 159-221, capture parent flop 787.9): the spine targeted the child's TT lib max_clock_tree_path 293.5 ps, but the flops the parent talks to are the child's boundary pin registers at TT mean 226.0 (insertion.json), so the child launched ~67 ps TT / ~50 ps FF early against every parent capture flop. Target = the child's routed boundary-register insertion (the s81 die clock delivery rule)."
 }

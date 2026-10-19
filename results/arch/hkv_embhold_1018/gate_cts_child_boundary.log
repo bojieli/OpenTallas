@@ -1,0 +1,26 @@
+GATE WARN macro_grid: qkd_embedding_row_tx#0: origin (129.624, 86.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qkd_embedding_row_tx': 'M5'}
+GATE WARN pins: 1-bit vector ports ['d2d__emb_tx_slot', 'rowtx__emb_tx_v']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_kvs_emb_20261018-234643.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_kvs_emb_20261018-234643.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_emb-20261018-234643
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 32 s (gate total 688 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2029, 'pin_rectangles': 2029, 'pin_track_checked': 2029, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4f0a91f7439938d5772c07ae80013433fc99144edb5ec55c0274080ed19445b1
+GATE INFO util: synthesized std area 1941 um2 + macros 32659 in core 114606: util 2% (std-cell density 2.5% of placeable 77864 um2; total fill 30.2%)
+GATE INFO port_latency: elaborated pin registers: 8 input / 4 output ports +1 edge; 1 ports pass through (clock/reset/excluded/inout)
+GATE INFO textbook: PASS qkd_kvs_emb cells 12,415 flops 4,292 depth 463.4 ps util 0.3015 reach 0.0 um (0.2 s)
+GATE INFO cts_calibration: ss insertion all 856.3..1327.2 ps (spread 470.9), boundary mean 1277.7; tt insertion all 680.5..920.4 ps (spread 239.9), boundary mean 904.3; ff insertion all 567.6..731.6 ps (spread 164.0), boundary mean 691.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: spine built on port ck
+GATE INFO clock_spine: OT_SPINE iter 4 (fine) leaves 522 sinks 4111 cells 6514 leaf arrival 889.6..920.1 ps (spread 30.5) pad 58.3 / 16.6 ps
+GATE INFO clock_spine: OT_SPINE iter 5 (fine) leaves 522 sinks 4111 cells 6516 leaf arrival 892.7..920.1 ps (spread 27.4) pad 58.3 / 16.2 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_kvs_emb/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      534 paths, worst slack 78.4 ps (e.g. u_ot_pr_core.u_join.u_join4.u_join.word_data[22]$_SDFF_PP0_/D)
+GATE INFO path_classes: setup WNS 7.836276072481496e-11 hold WNS 1.768707402760583e-11
+GATE WARN clock_rule: root port:ck: 4,293 sinks on the largest root; measured TT insertion 920.4 ps, FF insertion 751.5 ps, TT pin-flop spread 29.5 ps, FF pin-flop spread 56.3 ps; WARN: insertion 920.4 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/hkv-embhold/physical/ref_tile/qkd_kvs_emb/gate_layout/floorplan.png; density /home/ubuntu/wt/hkv-embhold/physical/ref_tile/qkd_kvs_emb/gate_layout/density.png
+GATE WARN fill: fill 29% = (hard macros 32659.2 + synthesized std cells 1890.4) / outline 117573.1 um2; pin demand per face: S 673 pins over 130.8/388.8 um (34%), N 16 pins over 81.0/388.8 um (21%), W 626 pins over 107.9/302.4 um (36%), E 786 pins over 227.7/302.4 um (75%) (pin-bound: the outline is the exact KV die frame slot of the closed i2 view (388.8 x 302.4, kvs_tile_kits SEED_OUTLINE / kv_static_die FRAME; a smaller outline is a slot_change of the KV die plan). The height is set by the E face: 786 pins over 227.7 of 302.4 um (75%) at pin_min_tracks 3; the width by the 216 x 151.2 hard u_rowtx plus its channels and the S face 673 pins. Gate e1 3d52043cd fill 29% (macro 32659 + std 1890 um2))
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 5.53% used; GRT 206 s
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: qkd_kvs_emb/gate_result.json written (exact staged source binding; commit it with the kit)
