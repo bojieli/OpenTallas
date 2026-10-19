@@ -52,6 +52,15 @@ spills only to AVX-512 hosts), runs it there, and copies every file the run wrot
 (tar --keep-newer-files both ways, so newer files on either side are never clobbered).  The copy carries a marker
 (.ot-run-spill-copy): normal placement ignores marked copies, so later jobs of the lane never run on stale data
 without a fresh sync.  --hosts (explicit pin), --no-spill or OT_RUN_NO_SPILL=1 disable it.
+SPILL v10 (OTRUN-SPILL 2026-10-19, MU-SLICE-GATE bug: "SPILL copy FAILED" yet the job ran on the spill host and its result
+was never copied back): (1) GNU tar 1.35 with --keep-newer-files fails every directory that already exists, so every spill
+of a lane to a host holding an earlier copy "failed" -- that error is now forgiven for paths that are directories, all
+others still fail; (2) the marker is written BEFORE extraction, so a failed/partial copy is never a normal data host
+(v8 left it unmarked and the next re-place ran the job there with no copy-back); an unmarked lane root on the spill host
+is refused (real data); (3) per-lane flock around extraction, copy retried 3x, back-copy retried 4x and the dst stamp is
+removed only after a successful back-copy; (4) a pending record (~/.local/state/ot-run/spill_pending/<tag>.json) outlives
+a killed client: `ot-run --spill-sweep [--dry-run]` (started detached by job clients at most every 10 min) copies the
+outputs back once the client is gone and the unit has ended; failures go to spill_stuck.log.
 OT_SCRATCH (v8): the job's environment carries OT_SCRATCH = the host's /srv/opentallas-scratch* volume with the most
 free space; put NEW lane / job / die-chain directories under $OT_SCRATCH/claude/<lane>.
 RE-PLACE (v9, FLEET-NEW2 2026-10-19): a client whose hosts are not pinned (--hosts) re-places its unstarted waiter every
@@ -403,7 +412,7 @@ SCRATCH_ENV = ("export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/openta
                "OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
 
 
-def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False):
+def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
@@ -453,6 +462,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         if "OT_RUN_START" in ln and tag in ln:
             state["started"] = True
             state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
+            if on_start:
+                on_start(state["unit"])
             ln = ln.split(" OT_RUN_START")[0] + "\n"
         if not quiet:
             sys.stderr.write(ln)
@@ -513,6 +524,8 @@ def main():
         sys.exit(choose_selftest() if a[1:2] == ["choose"] else choose_selftest() | selftest(a[1].split(",") if len(a) > 1 else HOSTS))
     if a[:1] == ["--status"]:
         return status(HOSTS)
+    if a[:1] == ["--spill-sweep"]:
+        sys.exit(1 if spill_sweep(dry="--dry-run" in a[1:]) else 0)
     if a[:1] == ["--cancel"] and len(a) >= 2:
         sys.exit(cancel(a[1], "--all-dirs" in a[2:]))
     mem, d, disk, hosts, pick, max_wait, threads = None, None, 20, HOSTS, False, None, THREADS
@@ -548,6 +561,8 @@ def main():
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
+    if not pick:
+        trigger_sweep()
     t0 = time.time()
     first = True
     pinned = hosts is not HOSTS
@@ -735,36 +750,209 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say):
     return (dst, sorted(roots), size_gb), "", False
 
 
+SPILL_PENDING = os.path.expanduser("~/.local/state/ot-run/spill_pending")
+SPILL_STUCK_LOG = os.path.expanduser("~/.local/state/ot-run/spill_stuck.log")
+SPILL_COPY_TRIES, SPILL_BACK_TRIES = 3, 4
+SWEEP_STAMP, SWEEP_EVERY_S = "/tmp/ot-run-spill-sweep.stamp", 600
+
+
+def spill_lock(roots):
+    """one flock file per lane-root set on a host: concurrent spills of the same lane (MU-SLICE-GATE 10-19 04:0x: b2 and
+    faces0 spilled the same lane ot-epyc5 -> ot-epyc6 at once) must not extract into the same tree together -- two
+    concurrent `tar --keep-newer-files -x` fail with 'Unexpected inconsistency when making directory'"""
+    import hashlib
+    return "/tmp/ot-run-spill-lock." + hashlib.sha1(" ".join(sorted(roots)).encode()).hexdigest()[:16]
+
+
+# TAR 1.35 (OTRUN-SPILL 2026-10-19, the real cause of the MU-SLICE-GATE "SPILL copy FAILED"): GNU tar 1.35 (every fleet
+# EPYC) with --keep-newer-files fails EVERY directory member that already exists ("tar: DIR: Unexpected inconsistency when
+# making directory", exit 2) although it updates/keeps the files correctly -- so every spill of a lane to a host that
+# already held a copy of it (a second job of the lane, a re-place) "failed".  --overwrite-dir / --no-overwrite-dir are
+# refused together with --keep-newer-files, so the extraction filters exactly that error: it counts only for a path that
+# is NOT a directory after the run; any other tar or zstd error still fails the copy.
+TAR_X = ("e=$(mktemp); zstd -q -d | tar -C / --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
+         "if [ ${s[0]} -ne 0 ]; then cat $e >&2; rm -f $e; exit ${s[0]}; fi; rc=${s[1]}; "
+         "if [ $rc -ne 0 ]; then bad=$(grep -v -x 'tar: Exiting with failure status due to previous errors' $e | "
+         "while IFS= read -r l; do p=${l#tar: }; q=${p%: Unexpected inconsistency when making directory}; "
+         "if [ \"$q\" = \"$p\" ] || ! [ -d \"/$q\" ]; then echo \"$l\"; fi; done); "
+         "if [ -z \"$bad\" ]; then rc=0; else echo \"$bad\" >&2; fi; fi; rm -f $e; exit $rc")
+
+
+def tar_x(roots):
+    """the extraction command (stdin = zstd tar stream) under the per-lane flock"""
+    return f"flock {spill_lock(roots)} bash -c {shlex.quote(TAR_X)}"
+
+
+def spill_fwd_cmd(src, dst, roots, stamp):
+    """src -> dst copy.  v10: on dst the marker is written BEFORE extraction, so a failed or partial copy is never a
+    'real' data host for normal placement (v8 wrote it after a successful tar: a failed copy left an UNMARKED tree, the next
+    re-place ran the job there as a normal job and nothing copied its outputs back); a lane root that exists unmarked on
+    dst is real lane data there -> exit 3 (refused, never marked/overwritten); extraction holds the per-lane flock."""
+    rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
+    pre = " ".join(f"if test -e {shlex.quote(r)} && ! test -e {shlex.quote(r + '/' + SPILL_MARK)}; then echo OT_SPILL_REAL "
+                   f"{shlex.quote(r)} >&2; exit 3; fi; mkdir -p {shlex.quote(r)} && echo {src} > {shlex.quote(r + '/' + SPILL_MARK)} || exit 4;"
+                   for r in roots)
+    dcmd = f"{pre} {tar_x(roots)} && touch {stamp}"
+    return (f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(f'tar -C / -cf - {rels} | zstd -q -1 -T8')} | "
+            f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)}")
+
+
+def spill_back_cmd(src, dst, roots, stamp):
+    """dst -> src: every file the run wrote (newer than the stamp).  The stamp is removed only after src extracted it
+    (v8 removed it on dst even when the src side failed, so a retry had nothing to compare against)."""
+    rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
+    dcmd = (f"test -e {stamp} || {{ echo OT_SPILL_NOSTAMP >&2; exit 5; }}; cd / && find {rels} -newer {stamp} ! -name {SPILL_MARK} "
+            f"\\( -type f -o -type l \\) -print0 | tar --null -T - -cf - | zstd -q -1 -T8")
+    scmd = tar_x(roots)
+    return (f"ssh -o ControlPath=none -o BatchMode=yes {dst} {shlex.quote(dcmd)} | "
+            f"ssh -o ControlPath=none -o BatchMode=yes {src} {shlex.quote(scmd)}")
+
+
+def pending_write(rec):
+    try:
+        os.makedirs(SPILL_PENDING, exist_ok=True)
+        tmp = os.path.join(SPILL_PENDING, rec["tag"] + ".tmp")
+        with open(tmp, "w") as f:
+            json.dump(rec, f)
+        os.replace(tmp, os.path.join(SPILL_PENDING, rec["tag"] + ".json"))
+    except OSError:
+        pass
+
+
+def spill_copy_back(src, dst, roots, stamp, say=lambda m: None):
+    """-> (ok, error).  Retries; removes the dst stamp only after a successful copy."""
+    err = ""
+    for k in range(SPILL_BACK_TRIES):
+        b = subprocess.run(["bash", "-o", "pipefail", "-c", spill_back_cmd(src, dst, roots, stamp)], capture_output=True, text=True)
+        if not b.returncode:
+            ssh_sh(dst, f"rm -f {stamp}", timeout=60)
+            return True, ""
+        err = b.stderr.strip()[-300:]
+        if "OT_SPILL_NOSTAMP" in err:
+            break
+        if k + 1 < SPILL_BACK_TRIES:
+            say(f"ot-run: SPILL back-copy {dst} -> {src} failed (try {k + 1}/{SPILL_BACK_TRIES}): {err[-160:]}; retrying")
+            time.sleep(10 * (k + 1))
+    return False, err
+
+
 def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say):
     """copy the roots src->dst, run there, copy the files the run wrote back to src.  Returns the exit status, or None
-    when the copy failed (nothing ran)."""
+    when the copy failed (nothing ran).  v10: the forward copy is marked first, serialised per lane and retried; a
+    pending record (~/.local/state/ot-run/spill_pending) survives a killed client, and `ot-run --spill-sweep` copies the
+    outputs back once the unit has ended; a back-copy that keeps failing is retried and logged to spill_stuck.log."""
     tag = "%d-%d" % (os.getpid(), int(time.time()))
     stamp = f"/tmp/ot-run-spill.{tag}"
-    rels = " ".join(shlex.quote(r.lstrip("/")) for r in roots)
-    marks = " ".join(shlex.quote(r + "/" + SPILL_MARK) for r in roots)
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
     t0 = time.time()
-    fwd = (f"ssh -o ControlPath=none -o BatchMode=yes {src} \"tar -C / -cf - {rels} | zstd -q -1 -T8\" | "
-           f"ssh -o ControlPath=none -o BatchMode=yes {dst} \"zstd -q -d | tar -C / --keep-newer-files --warning=no-ignore-newer -xf - "
-           f"&& for m in {marks}; do echo {src} > \\$m; done && touch {stamp}\"")
-    r = subprocess.run(["bash", "-o", "pipefail", "-c", fwd], capture_output=True, text=True)
+    for k in range(SPILL_COPY_TRIES):
+        r = subprocess.run(["bash", "-o", "pipefail", "-c", spill_fwd_cmd(src, dst, roots, stamp)], capture_output=True, text=True)
+        if not r.returncode or "OT_SPILL_REAL" in r.stderr:
+            break
+        if k + 1 < SPILL_COPY_TRIES:
+            say(f"ot-run: SPILL copy {src} -> {dst} failed (try {k + 1}/{SPILL_COPY_TRIES}): {r.stderr.strip()[-160:]}; retrying")
+            time.sleep(5 * (k + 1))
     if r.returncode:
-        say(f"ot-run: SPILL copy {src} -> {dst} FAILED ({r.stderr.strip()[-200:]}); NOT RUN there")
+        say(f"ot-run: SPILL copy {src} -> {dst} FAILED ({r.stderr.strip()[-200:]}); NOT RUN there (the partial copy on {dst} "
+            f"is marked {SPILL_MARK}, so no job is placed on it)")
+        log_signal(f"SPILL-COPY-FAILED {roots} {src} -> {dst} pid {os.getpid()}: {r.stderr.strip()[-160:]}")
         return None
     say(f"ot-run: SPILL: copied in {time.time() - t0:.0f} s; running on {dst}; written files go back to {src} after the run")
     log_signal(f"SPILL {roots} {src} -> {dst} pid {os.getpid()}: {' '.join(cmd)[:200]}")
-    rc, ran = run(dst, mem, cmd, d, max_wait)
-    if not ran:
+    rec = dict(tag=tag, pid=os.getpid(), src=src, dst=dst, roots=roots, stamp=stamp, unit=None, t=int(time.time()),
+               cmd=" ".join(cmd)[:300])
+    pending_write(rec)
+
+    def on_start(unit):
+        rec["unit"] = unit
+        pending_write(rec)
+    rc, ran = run(dst, mem, cmd, d, max_wait, on_start=on_start)
+    if not ran and rec["unit"] is None:          # never started: nothing to copy back
+        ssh_sh(dst, f"rm -f {stamp}", timeout=60)
+        try:
+            os.unlink(os.path.join(SPILL_PENDING, tag + ".json"))
+        except OSError:
+            pass
         return rc or 255
-    back = (f"ssh -o ControlPath=none -o BatchMode=yes {dst} \"cd / && find {rels} -newer {stamp} ! -name {SPILL_MARK} "
-            f"\\( -type f -o -type l \\) -print0 | tar --null -T - -cf - | zstd -q -1 -T8; rm -f {stamp}\" | "
-            f"ssh -o ControlPath=none -o BatchMode=yes {src} \"zstd -q -d | tar -C / --keep-newer-files --warning=no-ignore-newer -xf -\"")
-    b = subprocess.run(["bash", "-o", "pipefail", "-c", back], capture_output=True, text=True)
-    if b.returncode:
-        say(f"ot-run: SPILL back-copy {dst} -> {src} FAILED ({b.stderr.strip()[-200:]}); outputs are on {dst}: NOT COMPLETED")
+    if not ran:                                  # started, connection lost: it may still run; the sweep copies back later
+        say(f"ot-run: SPILL: outputs stay on {dst} until the unit ends; `ot-run --spill-sweep` copies them back to {src}")
+        return rc or 255
+    ok, err = spill_copy_back(src, dst, roots, stamp, say)
+    if not ok:
+        say(f"ot-run: SPILL back-copy {dst} -> {src} FAILED ({err[-200:]}); outputs are on {dst}: NOT COMPLETED "
+            f"(recorded in {SPILL_STUCK_LOG}; `ot-run --spill-sweep` retries)")
+        try:
+            with open(SPILL_STUCK_LOG, "a") as f:
+                f.write(time.strftime("%Y-%m-%dT%H:%M:%S%z ") + json.dumps(rec) + " " + err[-200:].replace("\n", " ") + "\n")
+        except OSError:
+            pass
         return rc or 98
+    try:
+        os.unlink(os.path.join(SPILL_PENDING, tag + ".json"))
+    except OSError:
+        pass
     say(f"ot-run: SPILL: outputs copied back {dst} -> {src}; RAN on {dst}: exit {rc}")
     return rc
+
+
+def pid_alive(pid):
+    return any(os.path.basename(x) == "ot-run" for x in proc_args(pid)[:3])
+
+
+def spill_sweep(dry=False, say=print):
+    """copy back the outputs of spilled runs whose client is gone (killed agent, session limit, failed back-copy) once
+    their unit has ended on dst.  Returns the number of records still pending."""
+    try:
+        names = sorted(f for f in os.listdir(SPILL_PENDING) if f.endswith(".json"))
+    except OSError:
+        names = []
+    left = 0
+    for f in names:
+        p = os.path.join(SPILL_PENDING, f)
+        try:
+            with open(p) as fh:
+                rec = json.load(fh)
+        except (OSError, ValueError):
+            continue
+        if pid_alive(rec["pid"]):
+            left += 1
+            continue
+        if rec.get("unit"):
+            a = ssh_sh(rec["dst"], f"systemctl --user is-active {shlex.quote(rec['unit'])}", timeout=60).stdout.strip()
+            if a in ("active", "activating", "deactivating", "reloading"):
+                say(f"ot-run --spill-sweep: {rec['tag']} unit {rec['unit']} still {a} on {rec['dst']}")
+                left += 1
+                continue
+        say(f"ot-run --spill-sweep: {rec['tag']} {rec['roots']} {rec['dst']} -> {rec['src']} (unit {rec.get('unit')})"
+            + (" DRY" if dry else ""))
+        if dry:
+            left += 1
+            continue
+        ok, err = spill_copy_back(rec["src"], rec["dst"], rec["roots"], rec["stamp"])
+        if ok or "OT_SPILL_NOSTAMP" in err:
+            os.replace(p, p[:-5] + (".done" if ok else ".nostamp"))
+            say(f"ot-run --spill-sweep: {rec['tag']} " + ("copied back" if ok else "no stamp on dst (copied before?)"))
+        else:
+            left += 1
+            say(f"ot-run --spill-sweep: {rec['tag']} back-copy FAILED: {err[-200:]}")
+    return left
+
+
+def trigger_sweep():
+    """every ot-run job client starts a detached --spill-sweep at most every SWEEP_EVERY_S when records are pending"""
+    try:
+        if not any(f.endswith(".json") for f in os.listdir(SPILL_PENDING)):
+            return
+        if time.time() - os.path.getmtime(SWEEP_STAMP) < SWEEP_EVERY_S:
+            return
+    except OSError:
+        pass
+    try:
+        open(SWEEP_STAMP, "w").write("sweep\n")
+        subprocess.Popen(["flock", "-n", SWEEP_STAMP + ".lock", sys.executable, os.path.realpath(__file__), "--spill-sweep"],
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    except OSError:
+        pass
 
 
 def place(hosts, d, disk, mem, quiet=False):
