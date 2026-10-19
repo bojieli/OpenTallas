@@ -1,0 +1,1364 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-agidock128  admits    96 GB (avail 80, growth 13, headroom 0, waiters 0/0 GB) load 14/64 running 8 disk 267 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1538829-1792431875 after 0 s
+BC3SAFE_PROFILE_PASS exact ordinary primitives/image
+BC3SAFE_PROFILE_NEGATIVE_PASS d2d_cal_image_mu.svh
+BC3SAFE_PROFILE_NEGATIVE_PASS ot_qwen_d2d_cal_seq.sv
+mkdir -p ./results/asap7/dcal_bc3safe_source/base/
+echo 770.0 > ./results/asap7/dcal_bc3safe_source/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl ./logs/asap7/dcal_bc3safe_source/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: ./results/asap7/dcal_bc3safe_source/base/clock_period.txt
+Setting clock period to 770.0
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/out/release_miter0/frozen_core.sv
+12. Executing Verilog-2005 frontend: /src/results/arch/kv_dcal_bc3safe_1019/frozen_outer_wrapper.v
+13. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv
+14. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv
+15. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+16. Executing HIERARCHY pass (managing design hierarchy).
+17. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_d2d_cal_seq_pin_bc'.
+17.1. Analyzing design hierarchy..
+17.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_d2d_cal_seq_pin_bc__ot_pr_core'.
+17.3. Analyzing design hierarchy..
+17.4. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_d2d_cal_seq'.
+17.5. Analyzing design hierarchy..
+17.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_d2d_cal_seq'.
+17.7. Analyzing design hierarchy..
+17.8. Analyzing design hierarchy..
+source /src/physical/common_flow/ot_keep_regs.tcl
+18. Executing PROC pass (convert processes to netlists).
+18.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+18.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+18.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+18.4. Executing PROC_INIT pass (extract init attributes).
+18.5. Executing PROC_ARST pass (detect async resets in processes).
+18.6. Executing PROC_ROM pass (convert switches to ROMs).
+18.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+18.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+18.9. Executing PROC_DFF pass (convert process syncs to FFs).
+18.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+18.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+18.12. Executing OPT_EXPR pass (perform const folding).
+19. Executing OPT_CLEAN pass (remove unused cells and wires).
+20. Executing TECHMAP pass (map to technology primitives).
+20.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+20.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 2 register cells driving keep wires
+21. Executing OPT_CLEAN pass (remove unused cells and wires).
+22. Executing RTLIL backend.
+End of script. Logfile hash: e5993a726e, time: 0.88s, user: 0.80s, system: 0.06s, MEM: 82.42 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 92% 12x read_liberty (0 sec), 2% 2x opt_clean (0 sec), ...
+Elapsed time: 0:00.89[h:]min:sec. CPU time: user 0.81 sys 0.08 (99%). Peak memory: 86956KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          0             84 a6dd4485d71944637a13
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl ./logs/asap7/dcal_bc3safe_source/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: ./results/asap7/dcal_bc3safe_source/base/clock_period.txt
+Setting clock period to 770.0
+1. Executing RTLIL frontend.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.13. Executing OPT_MERGE pass (detect identical cells).
+4.3.14. Executing OPT_SHARE pass.
+4.3.15. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.17. Executing OPT_EXPR pass (perform const folding).
+4.3.18. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.21. Executing OPT_MERGE pass (detect identical cells).
+4.3.22. Executing OPT_SHARE pass.
+4.3.23. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.25. Executing OPT_EXPR pass (perform const folding).
+4.3.26. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.29. Executing OPT_MERGE pass (detect identical cells).
+4.3.30. Executing OPT_SHARE pass.
+4.3.31. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.33. Executing OPT_EXPR pass (perform const folding).
+4.3.34. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.5. Executing OPT_MERGE pass (detect identical cells).
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.8. Executing OPT_EXPR pass (perform const folding).
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.12. Executing OPT_MERGE pass (detect identical cells).
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.15. Executing OPT_EXPR pass (perform const folding).
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr ./objects/asap7/dcal_bc3safe_source/base/abc.constr -D 770.0
+11. Executing ABC pass (technology mapping using ABC).
+11.1. Extracting gate netlist of module `\qkd_d2d_cal_seq_pin_bc' to `<abc-temp-dir>/input.blif'..
+11.1.1. Executed ABC.
+11.1.2. Re-integrating ABC results.
+12. Executing SPLITNETS pass (splitting up multi-bit signals).
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+14. Executing HILOMAP pass (mapping to constant drivers).
+15. Executing INSBUF pass (insert buffer cells for connected wires).
+16. Executing CHECK pass (checking for obvious problems).
+17. Printing statistics.
+18. Executing CHECK pass (checking for obvious problems).
+19. Executing Verilog backend.
+19.1. Executing BMUXMAP pass.
+19.2. Executing DEMUXMAP pass.
+End of script. Logfile hash: 9a69c47ac7, time: 4.27s, user: 1.59s, system: 0.35s, MEM: 150.41 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 54% 1x abc (2 sec), 11% 1x dfflibmap (0 sec), ...
+Elapsed time: 0:04.30[h:]min:sec. CPU time: user 3.84 sys 0.46 (100%). Peak memory: 155552KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v              4            151 21b6502c0d388f89efc9
+cp /src/physical/ref_tile/qkd_d2d_cal_seq_pin_bc/clock.sdc results/asap7/dcal_bc3safe_source/base/1_2_yosys.sdc
+touch -r /src/physical/ref_tile/qkd_d2d_cal_seq_pin_bc/clock.sdc results/asap7/dcal_bc3safe_source/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+mkdir -p ./objects/asap7/dcal_bc3safe_source/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+link_design qkd_d2d_cal_seq_pin_bc
+read_sdc ./results/asap7/dcal_bc3safe_source/base/1_2_yosys.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 0 unused instances and 0 unused nets.
+Design area 214 um^2 100% utilization.
+write_db ./results/asap7/dcal_bc3safe_source/base/1_synth.odb
+write_sdc -no_timestamp ./results/asap7/dcal_bc3safe_source/base/1_synth.sdc
+Elapsed time: 0:01.73[h:]min:sec. CPU time: user 1.60 sys 0.13 (99%). Peak memory: 202836KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            1            198 07c5013be3e686c8325b
+1_synth                   .sdc                             e451fecc0eb42d370eb5
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "schema": "opentallas.dcal-bc3safe-source-census.v1",
+  "odb_sha256": "8c76672034f4fe4bbf4e246c3acc0842d0109b48eba0bbb4827979ac3807eaba",
+  "ff_count": 253,
+  "functional_source_over32": [
+    {
+      "net": "_0230_",
+      "driver": [
+        "u_ot_pr_core.release_q\\[1\\]$_DFF_PN0_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 206,
+      "sinks": [
+        "u_ot_pr_core.adm_act$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.adm_done$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.brx_seen$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.btx_seen$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cal_seg$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.cal_start$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.cfg_addr\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_addr\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_addr\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_addr\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_addr\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_addr\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[10\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[11\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[12\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[13\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[14\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[15\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[16\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[17\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[18\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[19\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[20\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[21\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[22\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[23\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[24\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[25\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[26\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[27\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[28\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[29\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[30\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[31\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[6\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[7\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[8\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_data\\[9\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.cfg_rx_we$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.cfg_tx_we$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.fault$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.layer\\[0\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.layer\\[1\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.layer\\[2\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.layer\\[3\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.layer\\[4\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.layer\\[5\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.rdy_q$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.running$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.tok_start$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.adm_done$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.adm_pend$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.adm_run$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cal_ready$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cal_seg$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cal_start$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_addr\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[10\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[11\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[12\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[13\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[14\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[15\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[17\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[18\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[19\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[20\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[21\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[22\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[23\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[24\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[25\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[26\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[27\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[28\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[29\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_data\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_rx_we$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.cfg_tx_we$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[10\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[11\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[12\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[13\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[14\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[15\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[16\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[17\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[18\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[19\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[20\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[21\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[22\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[23\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[24\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[25\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[26\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[27\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[28\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[29\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[30\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[31\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[6\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[7\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[8\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.e\\[9\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.eact$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ep_q$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.fault$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.init$_DFF_PN1_/SETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.ip\\[6\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.layer\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.layer\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.layer\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.layer\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.layer\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.layer\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.li\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.li\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.li\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.li\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.li\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.li\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[10\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[11\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[12\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[13\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[14\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[15\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[16\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[17\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[18\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[19\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[20\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[21\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[22\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[23\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[24\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[25\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[26\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[27\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[28\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[29\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[30\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[31\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[6\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[7\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[8\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.pcnt\\[9\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.prun$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.running$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[0\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[10\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[11\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[12\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[13\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[14\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[15\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[16\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[17\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[18\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[19\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[1\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[2\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[3\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[4\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[5\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[6\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[7\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[8\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.t\\[9\\]$_DFFE_PN0P_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.tok_start$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.u_seq.u_seq.tokbase$_DFFE_PN0P_/RESETN"
+      ]
+    },
+    {
+      "net": "_0103_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.li\\[2\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 68,
+      "sinks": [
+        "_1841_/A",
+        "_1847_/B",
+        "_1856_/B",
+        "_1859_/A1",
+        "_1863_/A",
+        "_1868_/A1",
+        "_1873_/B",
+        "_1883_/A",
+        "_1891_/B",
+        "_1897_/A",
+        "_1898_/B",
+        "_1904_/B2",
+        "_1908_/B",
+        "_1913_/B",
+        "_1940_/A",
+        "_1943_/A",
+        "_1944_/B",
+        "_1945_/B",
+        "_1947_/B",
+        "_1948_/B",
+        "_1954_/B",
+        "_1955_/A",
+        "_1956_/A",
+        "_1958_/A2",
+        "_1961_/A",
+        "_1962_/A1",
+        "_1979_/A1",
+        "_1981_/A",
+        "_1982_/B",
+        "_1989_/A",
+        "_1990_/A1",
+        "_1991_/C",
+        "_1993_/A",
+        "_2004_/B",
+        "_2005_/A",
+        "_2007_/A1",
+        "_2009_/B",
+        "_2015_/C",
+        "_2017_/A1",
+        "_2021_/B",
+        "_2036_/B",
+        "_2038_/A1",
+        "_2039_/A1",
+        "_2043_/A1",
+        "_2046_/A1",
+        "_2047_/A1",
+        "_2051_/B",
+        "_2053_/B",
+        "_2056_/A",
+        "_2064_/A2",
+        "_2069_/A2",
+        "_2096_/A",
+        "_2097_/C",
+        "_2098_/A1",
+        "_2108_/B",
+        "_2113_/B",
+        "_2114_/A1",
+        "_2126_/B",
+        "_2127_/C",
+        "_2143_/A1",
+        "_2160_/B",
+        "_2191_/A",
+        "_2202_/C",
+        "_2207_/A",
+        "_2220_/B",
+        "_2224_/B",
+        "_2226_/A1",
+        "_2697_/A"
+      ]
+    },
+    {
+      "net": "_0104_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.li\\[3\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 59,
+      "sinks": [
+        "_1840_/B",
+        "_1853_/A",
+        "_1854_/A2",
+        "_1855_/B",
+        "_1859_/A2",
+        "_1873_/C",
+        "_1890_/A1",
+        "_1893_/A2",
+        "_1903_/A2",
+        "_1904_/A1",
+        "_1905_/A1",
+        "_1907_/B",
+        "_1915_/B",
+        "_1934_/B",
+        "_1936_/A",
+        "_1937_/A",
+        "_1941_/B",
+        "_1942_/A",
+        "_1944_/C",
+        "_1945_/C",
+        "_1946_/A",
+        "_1954_/C",
+        "_1955_/B",
+        "_1956_/B",
+        "_1958_/A3",
+        "_1962_/A2",
+        "_1988_/A",
+        "_1991_/D",
+        "_1993_/B",
+        "_1994_/A",
+        "_2004_/C",
+        "_2005_/B",
+        "_2007_/A2",
+        "_2009_/C",
+        "_2017_/A2",
+        "_2021_/C",
+        "_2036_/C",
+        "_2037_/A1",
+        "_2038_/A2",
+        "_2043_/B",
+        "_2045_/A1",
+        "_2046_/A2",
+        "_2051_/C",
+        "_2055_/B",
+        "_2096_/B",
+        "_2098_/A2",
+        "_2099_/A1",
+        "_2107_/A",
+        "_2111_/B",
+        "_2112_/A2",
+        "_2125_/B",
+        "_2126_/C",
+        "_2127_/D",
+        "_2143_/A2",
+        "_2187_/A",
+        "_2204_/B",
+        "_2213_/B2",
+        "_2215_/B",
+        "_2217_/A"
+      ]
+    },
+    {
+      "net": "_0102_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.li\\[1\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 58,
+      "sinks": [
+        "_1840_/A",
+        "_1854_/A1",
+        "_1856_/A",
+        "_1867_/B",
+        "_1873_/A",
+        "_1886_/B",
+        "_1890_/B",
+        "_1891_/A",
+        "_1893_/A1",
+        "_1898_/A",
+        "_1903_/A1",
+        "_1907_/A",
+        "_1917_/B",
+        "_1934_/A",
+        "_1935_/B",
+        "_1938_/B",
+        "_1941_/A",
+        "_1944_/A",
+        "_1945_/A",
+        "_1947_/A",
+        "_1948_/A",
+        "_1954_/A",
+        "_1957_/A",
+        "_1958_/A1",
+        "_1960_/A2",
+        "_1979_/C",
+        "_1980_/A",
+        "_1991_/B",
+        "_1995_/B",
+        "_2011_/A1",
+        "_2015_/B",
+        "_2017_/B",
+        "_2020_/B",
+        "_2021_/A",
+        "_2038_/B",
+        "_2039_/C",
+        "_2042_/B",
+        "_2046_/B",
+        "_2048_/B2",
+        "_2055_/A",
+        "_2057_/B2",
+        "_2063_/A2",
+        "_2068_/A2",
+        "_2073_/B",
+        "_2075_/B",
+        "_2077_/C",
+        "_2097_/B",
+        "_2111_/A",
+        "_2112_/B",
+        "_2125_/A",
+        "_2127_/B",
+        "_2160_/A1",
+        "_2161_/A1",
+        "_2164_/B",
+        "_2195_/A",
+        "_2228_/B",
+        "_2230_/B",
+        "_2232_/A1"
+      ]
+    },
+    {
+      "net": "_0005_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.li\\[0\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 50,
+      "sinks": [
+        "_1847_/A",
+        "_1855_/A",
+        "_1867_/A",
+        "_1886_/A",
+        "_1893_/B2",
+        "_1902_/B",
+        "_1909_/B",
+        "_1913_/A",
+        "_1917_/A",
+        "_1950_/B",
+        "_1952_/A1",
+        "_1958_/B1",
+        "_1959_/A1",
+        "_1960_/A1",
+        "_1963_/A",
+        "_1964_/A1",
+        "_1979_/B",
+        "_1982_/A",
+        "_1992_/B",
+        "_2002_/B",
+        "_2004_/A",
+        "_2008_/B",
+        "_2009_/A",
+        "_2018_/A",
+        "_2022_/A1",
+        "_2036_/A",
+        "_2037_/B",
+        "_2042_/A",
+        "_2045_/B",
+        "_2051_/A",
+        "_2053_/A",
+        "_2063_/A1",
+        "_2064_/A1",
+        "_2068_/A1",
+        "_2069_/A1",
+        "_2073_/A",
+        "_2074_/A",
+        "_2077_/B",
+        "_2097_/A",
+        "_2108_/A1",
+        "_2113_/A",
+        "_2128_/A",
+        "_2129_/A",
+        "_2165_/B2",
+        "_2199_/A",
+        "_2229_/A",
+        "_2231_/A",
+        "_2233_/B",
+        "_2234_/B",
+        "_2236_/A1"
+      ]
+    },
+    {
+      "net": "_0105_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.li\\[4\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 49,
+      "sinks": [
+        "_1840_/C",
+        "_1853_/B",
+        "_1859_/B",
+        "_1863_/B",
+        "_1868_/A2",
+        "_1873_/D",
+        "_1883_/B",
+        "_1890_/A2",
+        "_1891_/C",
+        "_1897_/B",
+        "_1898_/C",
+        "_1903_/B",
+        "_1904_/A2",
+        "_1905_/A2",
+        "_1908_/A1",
+        "_1914_/A1",
+        "_1934_/C",
+        "_1936_/B",
+        "_1937_/B",
+        "_1941_/C",
+        "_1942_/B",
+        "_1944_/D",
+        "_1945_/D",
+        "_1946_/B",
+        "_1964_/C",
+        "_1965_/A1",
+        "_1980_/B",
+        "_1988_/B",
+        "_1994_/B",
+        "_2006_/B",
+        "_2011_/A2",
+        "_2014_/B",
+        "_2018_/B",
+        "_2022_/A2",
+        "_2043_/A2",
+        "_2051_/D",
+        "_2055_/C",
+        "_2098_/B",
+        "_2099_/A2",
+        "_2108_/A2",
+        "_2113_/C",
+        "_2114_/A2",
+        "_2125_/C",
+        "_2143_/B",
+        "_2162_/A1",
+        "_2183_/A",
+        "_2205_/A",
+        "_2209_/B",
+        "_2213_/A1"
+      ]
+    },
+    {
+      "net": "_0251_",
+      "driver": [
+        "rst_n__ot_rl1$_DFF_P_/QN"
+      ],
+      "masters": [
+        "DFFHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 45,
+      "sinks": [
+        "u_ot_pr_core.b_addr_q\\[0\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_addr_q\\[1\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_addr_q\\[2\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_addr_q\\[3\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_addr_q\\[4\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_addr_q\\[5\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[0\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[10\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[11\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[12\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[13\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[14\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[15\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[16\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[17\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[18\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[19\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[1\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[20\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[21\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[22\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[23\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[24\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[25\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[26\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[27\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[28\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[29\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[2\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[30\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[31\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[3\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[4\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[5\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[6\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[7\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[8\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_data_q\\[9\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_rx_q$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.b_tx_q$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.epoch_go_q$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.halt_q$_DFF_PN1_/SETN",
+        "u_ot_pr_core.release_q\\[0\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.release_q\\[1\\]$_DFF_PN0_/RESETN",
+        "u_ot_pr_core.reload_q$_DFF_PN0_/RESETN"
+      ]
+    },
+    {
+      "net": "_0014_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.li\\[5\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 42,
+      "sinks": [
+        "_1887_/A1",
+        "_1899_/A",
+        "_1902_/A",
+        "_1905_/B",
+        "_1915_/A",
+        "_1918_/A",
+        "_1923_/C",
+        "_1935_/A",
+        "_1938_/A",
+        "_1950_/A",
+        "_1960_/B",
+        "_1985_/B",
+        "_1986_/A1",
+        "_1990_/C",
+        "_1991_/A",
+        "_2002_/A",
+        "_2008_/A1",
+        "_2015_/A",
+        "_2020_/A",
+        "_2041_/A",
+        "_2043_/C",
+        "_2057_/A1",
+        "_2063_/B",
+        "_2068_/B",
+        "_2084_/A",
+        "_2086_/A",
+        "_2091_/A",
+        "_2099_/B1",
+        "_2110_/A1",
+        "_2112_/A1",
+        "_2123_/A1",
+        "_2126_/A",
+        "_2127_/A",
+        "_2144_/A",
+        "_2148_/A",
+        "_2157_/A1",
+        "_2164_/A1",
+        "_2171_/A1",
+        "_2202_/A",
+        "_2699_/A",
+        "_2701_/A1",
+        "_2706_/A"
+      ]
+    },
+    {
+      "net": "_0782_",
+      "driver": [
+        "_2312_/Y"
+      ],
+      "masters": [
+        "AO21x1_ASAP7_75t_R"
+      ],
+      "loads": 41,
+      "sinks": [
+        "_2315_/B",
+        "_2316_/A2",
+        "_2320_/B",
+        "_2321_/A2",
+        "_2325_/B",
+        "_2326_/A2",
+        "_2330_/B",
+        "_2332_/A2",
+        "_2336_/B",
+        "_2337_/A2",
+        "_2341_/B",
+        "_2342_/A2",
+        "_2346_/B",
+        "_2347_/A2",
+        "_2351_/B",
+        "_2352_/A2",
+        "_2356_/B",
+        "_2357_/A2",
+        "_2367_/B",
+        "_2368_/A2",
+        "_2374_/B",
+        "_2375_/A2",
+        "_2379_/B",
+        "_2380_/A2",
+        "_2386_/B",
+        "_2388_/A2",
+        "_2392_/B",
+        "_2393_/A2",
+        "_2397_/B",
+        "_2398_/A2",
+        "_2402_/B",
+        "_2403_/A2",
+        "_2407_/B",
+        "_2408_/A2",
+        "_2412_/B",
+        "_2413_/A2",
+        "_2425_/B",
+        "_2426_/A2",
+        "_2447_/B",
+        "_2448_/A2",
+        "_2635_/A3"
+      ]
+    },
+    {
+      "net": "_0769_",
+      "driver": [
+        "_2298_/Y"
+      ],
+      "masters": [
+        "AND2x2_ASAP7_75t_R"
+      ],
+      "loads": 39,
+      "sinks": [
+        "_2308_/A2",
+        "_2316_/C",
+        "_2321_/C",
+        "_2326_/C",
+        "_2332_/C",
+        "_2337_/C",
+        "_2342_/C",
+        "_2347_/C",
+        "_2352_/C",
+        "_2357_/C",
+        "_2362_/C",
+        "_2368_/C",
+        "_2375_/C",
+        "_2380_/C",
+        "_2383_/A2",
+        "_2388_/C",
+        "_2393_/C",
+        "_2398_/C",
+        "_2403_/C",
+        "_2408_/C",
+        "_2413_/C",
+        "_2416_/A2",
+        "_2418_/A2",
+        "_2420_/A2",
+        "_2422_/A2",
+        "_2426_/C",
+        "_2431_/C",
+        "_2435_/C",
+        "_2439_/C",
+        "_2443_/C",
+        "_2448_/C",
+        "_2452_/C",
+        "_2456_/C",
+        "_2460_/C",
+        "_2464_/C",
+        "_2468_/C",
+        "_2620_/C",
+        "_2677_/A2",
+        "_2680_/C"
+      ]
+    },
+    {
+      "net": "_0003_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.ip\\[0\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 38,
+      "sinks": [
+        "_1808_/A",
+        "_1825_/A",
+        "_1827_/A",
+        "_1830_/A1",
+        "_2488_/A",
+        "_2494_/A1",
+        "_2496_/A",
+        "_2499_/A",
+        "_2505_/A",
+        "_2507_/A",
+        "_2508_/A",
+        "_2513_/A",
+        "_2517_/A",
+        "_2518_/A",
+        "_2525_/A1",
+        "_2529_/A1",
+        "_2532_/A",
+        "_2533_/A1",
+        "_2538_/A",
+        "_2539_/A1",
+        "_2542_/A",
+        "_2543_/A1",
+        "_2544_/A1",
+        "_2548_/A1",
+        "_2551_/B",
+        "_2555_/B",
+        "_2559_/A1",
+        "_2564_/B",
+        "_2565_/A",
+        "_2570_/B",
+        "_2571_/A1",
+        "_2577_/B2",
+        "_2580_/B",
+        "_2593_/B",
+        "_2594_/A1",
+        "_2598_/A2",
+        "_2609_/A2",
+        "_2694_/A"
+      ]
+    },
+    {
+      "net": "_0772_",
+      "driver": [
+        "_2301_/Y"
+      ],
+      "masters": [
+        "NAND2x1_ASAP7_75t_R"
+      ],
+      "loads": 38,
+      "sinks": [
+        "_2307_/B",
+        "_2317_/A2",
+        "_2322_/A2",
+        "_2327_/A2",
+        "_2333_/A2",
+        "_2338_/A2",
+        "_2343_/A2",
+        "_2348_/A2",
+        "_2353_/A2",
+        "_2358_/A2",
+        "_2363_/A2",
+        "_2369_/A2",
+        "_2376_/A2",
+        "_2381_/A2",
+        "_2382_/B",
+        "_2389_/A2",
+        "_2394_/A2",
+        "_2399_/A2",
+        "_2404_/A2",
+        "_2409_/A2",
+        "_2414_/A2",
+        "_2415_/B",
+        "_2417_/B",
+        "_2419_/B",
+        "_2421_/B",
+        "_2427_/A2",
+        "_2432_/A2",
+        "_2436_/A2",
+        "_2440_/A2",
+        "_2444_/A2",
+        "_2449_/A2",
+        "_2453_/A2",
+        "_2457_/A2",
+        "_2461_/A2",
+        "_2465_/A2",
+        "_2469_/A2",
+        "_2676_/B",
+        "_2681_/A2"
+      ]
+    },
+    {
+      "net": "_1106_",
+      "driver": [
+        "_1516_/Y"
+      ],
+      "masters": [
+        "NAND2x1_ASAP7_75t_R"
+      ],
+      "loads": 35,
+      "sinks": [
+        "_1531_/A",
+        "_1533_/A",
+        "_1536_/A",
+        "_1538_/A",
+        "_1541_/A",
+        "_1543_/A",
+        "_1548_/A",
+        "_1550_/A",
+        "_1552_/A",
+        "_1554_/A",
+        "_1556_/A",
+        "_1558_/A",
+        "_1563_/A",
+        "_1565_/A",
+        "_1567_/A",
+        "_1569_/A",
+        "_1574_/A",
+        "_1576_/A",
+        "_1580_/A",
+        "_1582_/A",
+        "_1584_/A",
+        "_1587_/A",
+        "_1589_/A",
+        "_1593_/A",
+        "_1595_/A",
+        "_1597_/A",
+        "_1599_/A",
+        "_1603_/A",
+        "_1605_/A",
+        "_1610_/A",
+        "_2668_/A2",
+        "_2674_/B1",
+        "_2704_/B1",
+        "_2713_/A2",
+        "_2737_/A"
+      ]
+    },
+    {
+      "net": "_0112_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.ip\\[2\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 34,
+      "sinks": [
+        "_1791_/A1",
+        "_1809_/A",
+        "_1818_/A",
+        "_1822_/A",
+        "_1823_/A1",
+        "_2472_/A",
+        "_2476_/A",
+        "_2479_/A",
+        "_2486_/B",
+        "_2491_/B",
+        "_2496_/C",
+        "_2497_/A",
+        "_2499_/B",
+        "_2509_/A",
+        "_2516_/B",
+        "_2518_/C",
+        "_2522_/B",
+        "_2524_/B",
+        "_2538_/B",
+        "_2539_/B",
+        "_2542_/C",
+        "_2544_/A2",
+        "_2546_/A",
+        "_2547_/A",
+        "_2549_/B",
+        "_2550_/B",
+        "_2554_/A",
+        "_2560_/A",
+        "_2561_/A1",
+        "_2565_/B",
+        "_2577_/A1",
+        "_2579_/B",
+        "_2581_/A1",
+        "_2607_/A1"
+      ]
+    },
+    {
+      "net": "_0111_",
+      "driver": [
+        "u_ot_pr_core.u_seq.u_seq.ip\\[1\\]$_DFFE_PN0P_/QN"
+      ],
+      "masters": [
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      "loads": 33,
+      "sinks": [
+        "_1794_/A1",
+        "_1808_/B",
+        "_1825_/B",
+        "_1828_/B",
+        "_2486_/A",
+        "_2487_/A1",
+        "_2491_/A",
+        "_2496_/B",
+        "_2502_/B2",
+        "_2507_/B",
+        "_2508_/B",
+        "_2512_/A1",
+        "_2514_/A1",
+        "_2516_/A",
+        "_2518_/B",
+        "_2522_/A1",
+        "_2523_/A",
+        "_2524_/A",
+        "_2528_/A",
+        "_2530_/A",
+        "_2531_/A1",
+        "_2537_/A",
+        "_2542_/B",
+        "_2548_/B2",
+        "_2549_/A",
+        "_2550_/A",
+        "_2566_/A",
+        "_2570_/A1",
+        "_2576_/A1",
+        "_2579_/A",
+        "_2580_/A1",
+        "_2596_/A1",
+        "_2608_/A1"
+      ]
+    }
+  ],
+  "functional_max_load": 206
+}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1538829-1792431875): exit 0

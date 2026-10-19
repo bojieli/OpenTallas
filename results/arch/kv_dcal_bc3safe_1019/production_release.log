@@ -1,0 +1,46 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-agidock128  admits    98 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 15/64 running 8 disk 267 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1537500-1792431833 after 0 s
+production_mut0=0
+- Verilator: $finish at 3ms; walltime 0.206 s; speed 12.553 ms/s
+- Verilator: cpu 0.206 s on 1 threads; allocated 7 MB
+DCALBC_PASS mut0
+production_mut1=1
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut1: BAD token start 1: DUT bases TX 9 RX 10, SEG1 2 / 4 (token run would replay segment 9)
+production_mut2=1
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut2: BAD table entry 2: boot-loaded TX 000c7000 RX 0004bc00, reference image TX 00087020 RX 0004bc00
+production_mut3=1
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut3: BAD tile fault: col 1 run 0 stale 0 early 0 seq 0
+production_mut4=1
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut4: BAD calendar fault DUT 10 ref 00
+production_mut5=1
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut5: BAD tile forwarded 65 boot writes (66 expected)
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "schema": "opentallas.dcal-bc3safe-source-census.v1",
+  "odb_sha256": "c6a86fb5628cdb9cc1c84c8b89f2b8408507f43ef7cd0fe947b1bbe47571ad04",
+  "ff_count": 351,
+  "functional_source_over32": [],
+  "functional_max_load": 28
+}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1537500-1792431833): exit 0

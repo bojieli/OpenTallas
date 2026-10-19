@@ -1,0 +1,13 @@
+BAD tile forwarded 65 boot writes (66 expected)
+BAD admission start 1: DUT bases TX 9 RX 0, SEG2 9 / 10
+BAD event stream differs at t=58895000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58905000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58915000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58925000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58935000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58945000 (DUT 01 vs ref 00, phase 1)
+BAD tile fault: col 0 run 0 stale 0 early 1 seq 0
+FAIL kv_dcal_bootcfg mut5 errors502
+[2583310000] %Fatal: tb_kv_dcal_bc3safe.sv:157: Assertion failed in tb_kv_dcal_bootcfg
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...

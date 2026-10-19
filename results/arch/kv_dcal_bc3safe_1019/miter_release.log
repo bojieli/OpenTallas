@@ -1,0 +1,38 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/dcal-bc3safe-1019
+ot-run: ot-agidock128  admits    97 GB (avail 80, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 267 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1534322-1792431751 after 0 s
+miter_mut0=0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6ms; walltime 0.559 s; speed 10.734 ms/s
+- Verilator: cpu 0.559 s on 1 threads; allocated 7 MB
+miter_mut1=1
+[781000] %Fatal: miter.sv:55: Assertion failed in tb_dcal_bc3safe: BC3SAFE_MITER mismatch edge 69 a=0ba00000000000 b=0ba00000000400
+%Error: /srv/opentallas-scratch/claude/dcal-bc3safe-1019/out/release_miter1/miter.sv:55: Verilog $stop
+Aborting...
+miter_mut2=1
+[91000] %Fatal: miter.sv:55: Assertion failed in tb_dcal_bc3safe: BC3SAFE_MITER mismatch edge 0 a=00000000000000 b=00000000000001
+%Error: /srv/opentallas-scratch/claude/dcal-bc3safe-1019/out/release_miter2/miter.sv:55: Verilog $stop
+Aborting...
+miter_mut3=1
+[91000] %Fatal: miter.sv:55: Assertion failed in tb_dcal_bc3safe: BC3SAFE_MITER mismatch edge 0 a=00000000000000 b=00000000002000
+%Error: /srv/opentallas-scratch/claude/dcal-bc3safe-1019/out/release_miter3/miter.sv:55: Verilog $stop
+Aborting...
+miter_mut4=1
+[0] %Fatal: candidate.sv:48: Assertion failed in tb_dcal_bc3safe.u_b: BC3SAFE unsupported ordinary top profile
+%Error: /srv/opentallas-scratch/claude/dcal-bc3safe-1019/out/release_miter4/candidate.sv:48: Verilog $stop
+Aborting...
+miter_mut5=1
+[0] %Fatal: candidate.sv:48: Assertion failed in tb_dcal_bc3safe.u_b: BC3SAFE unsupported ordinary top profile
+%Error: /srv/opentallas-scratch/claude/dcal-bc3safe-1019/out/release_miter5/candidate.sv:48: Verilog $stop
+Aborting...
+miter_mut6=1
+[0] %Fatal: candidate.sv:48: Assertion failed in tb_dcal_bc3safe.u_b: BC3SAFE unsupported ordinary top profile
+%Error: /srv/opentallas-scratch/claude/dcal-bc3safe-1019/out/release_miter6/candidate.sv:48: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1534322-1792431751): exit 0

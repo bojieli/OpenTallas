@@ -1,0 +1,45 @@
+{
+  "source_commit": "190b12e9f",
+  "frozen_source": "569419a7d",
+  "host": "ot-agidock128",
+  "remote": "/srv/opentallas-scratch/claude/dcal-bc3safe-1019",
+  "source_sha256": {
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+    "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh": "b68b9fb8422f648ffc8ce750bd01522f09687e033d301705c4dd9e2fe4bb7913",
+    "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh": "ba41d303b864e538ccf799fdb17655d046d029f19d66ffa24143404a63675ddf",
+    "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv": "9c43fc17792f780f3b53d635437ed9a6da37737480e480a2ce95b122c4960ae4",
+    "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv": "17a3d11dcab01a092b96408b56ac9debc8d9b50c547cf064187731ac23df5f64",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a",
+    "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc3safe.sv": "46233f0fa2d19172a2e846daf92bb85ed8f9fcd81d2374540c5c84e074a6b3bc",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_bc3safe.sv": "225f85cbbe00df480549d803e24a8a2da435c9de297c16bf78523c3c93b86be6",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+    "rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv": "1a687f7827d840ff0a835d87d495a215fc3597129860bce6171845b8815d2489",
+    "rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv": "696882a68c7cfcfba87e729232028a91014286cf3ff793308e31a240622a9a8c",
+    "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+    "tools/qwen_static_kv/gen_dcal_bc3safe.py": "25bed50540d536d0b7b8ce9f01eca973370fc812b63f85aedc433aeea750287e",
+    "tools/qwen_static_kv/run_dcal_bc3safe.sh": "8be4ed5e373614419c14218cd24cb5df530c8bd44d0f9fa02bffb84f2c7668a9",
+    "tools/qwen_static_kv/run_dcal_bc3safe_production.sh": "2c6f8e0c4b1dbb619bee04c25eab19830310b4fb387686e0ea8c8164f92b5f13",
+    "tools/qwen_static_kv/census_dcal_bc3safe.py": "48cd481420aa3a1d9ab498a9807901653d77ae86b1b9cc69e33c7456007b189a",
+    "tools/qwen_static_kv/synth_dcal_bc3safe.mk": "da3e55ade012c30f7ea96318949b0155afe14dc6ad9fa9c71ab42fbcdaccf504",
+    "tools/qwen_static_kv/check_dcal_bc3safe_profile.py": "0e8b02dca603b4e202f604fc1205afcb64ae6e88e8efe7e1e425243c2689c6dd",
+    "results/arch/kv_dcal_bc3safe_1019/frozen_outer_wrapper.v": "e7ccff2f1b02dda2539a186203e3e994bfdeaabde91a972e11b751fe3296ed52"
+  },
+  "docker_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "candidate_odb_sha256": "c6a86fb5628cdb9cc1c84c8b89f2b8408507f43ef7cd0fe947b1bbe47571ad04",
+  "baseline_odb_sha256": "8c76672034f4fe4bbf4e246c3acc0842d0109b48eba0bbb4827979ac3807eaba",
+  "candidate_ff": 351,
+  "baseline_ff": 253,
+  "candidate_clock_loads": [
+    {
+      "net": "ck",
+      "loads": 351
+    }
+  ],
+  "candidate_functional_max": 28,
+  "static_tie_loads": [
+    347
+  ],
+  "physical_gate_run": false,
+  "qualified_for_parent": false
+}

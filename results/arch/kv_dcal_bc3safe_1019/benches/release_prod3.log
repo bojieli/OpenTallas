@@ -1,0 +1,5 @@
+BAD tile fault: col 1 run 0 stale 0 early 0 seq 0
+FAIL kv_dcal_bootcfg mut3 errors1
+[2583310000] %Fatal: tb_kv_dcal_bc3safe.sv:157: Assertion failed in tb_kv_dcal_bootcfg
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bc3safe.sv:157: Verilog $stop
+Aborting...
