@@ -1,0 +1,8 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+LEGAL_BOOT words=3 seals=1 fault_core=0 fault_hbm=0 applied=1
+KVS_TILE PASS tile=grp edges=4000 checks=575509 active_out=60611 outs=16 child_inputs=115 forced=69 errors=0 mut=0 vs=die_bound_tile
+- verified/grp/m0/tb.sv:564: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.070 s; speed 115.532 us/s
+- Verilator: cpu 0.070 s on 1 threads; allocated 7 MB
+

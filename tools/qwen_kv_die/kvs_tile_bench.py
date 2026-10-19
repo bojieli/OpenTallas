@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """KV-INTEG/KITS-A 2026-10-18: lockstep bench of a singleton static tile KIT TOP (qkd_kvs_ctl / _attn / _emb generated
-with OT_KV_TILE_KITS=1: one clock port ck, hard children without #()) against the DIE-BOUND tile of the same design point
+with OT_KV_TILE_KITS=1: clock ports ck/hck, hard children without #()) against the DIE-BOUND tile of the same design point
 (OT_KV_TILE_KITS unset: one '<child>__ck' port per child, every one on the same die trunk clk_core_c).  Both tiles are
 regenerated here from tools/qwen_kv_die/kv_static_die.py (the bench never reads a stale tile file).
 
@@ -8,6 +8,10 @@ Every edge from reset, both tiles get the same random inputs (resets low for 6 e
   * every tile output equal (!==, X / Z count as values);
   * every input port of every child instance equal (u_old.u_<c>.<p> vs u_new.u_<c>.<p>): the wiring INTO the children
     is compared directly, independent of what the children do with it.
+Group reference: each child input's declared leg age is injected by an independent per-pin register array,
+including the hop's reset-ready edge. Stateful boot CDC/FIFO outputs are compared directly: delaying only data inputs
+while reset/readiness starts at the same edge cannot be modeled by shifting the original output history. Physical
+output-chain relays retain explicit edge histories. A legal three-word boot checks payload, one seal, no fault and applied.
 Phase A (edges [0, E)): natural behaviour.  Phase B (edges [E, 2E)): every child output wire w_* is FORCED to the same
 random value in both tiles each edge (sparse for the writer's es / expected_valid events), so every child -> child and
 child -> tile-output wire carries random data.
@@ -120,6 +124,47 @@ def mutate(txt, mut):
     raise SystemExit(f'kvs_tile_bench: mutant {mut} found no site')
 
 
+def delayed_input_reference(text, children, delays):
+    """Independent per-pin reference delays, with the consumer's reset age.
+
+    Stateful CDC readiness/reset cannot be translated by delaying its outputs.
+    Delay each reference input explicitly and compare all resulting state/output
+    values directly. The DUT uses packed qkd_static_kv_hop chains; this reference
+    uses independent arrays and never reads the DUT relay implementation.
+    """
+    decl = []
+    delayed_locs = set()
+    widths = {(loc, pin): w for loc, _mod, pins in children for pin, w in pins}
+    for line in text.splitlines():
+        m = re.match(r'(\s*\w+(?: #\(.*?\))? u_(\w+) \()(.*)(\);)$', line)
+        if not m:
+            continue
+        loc = m.group(2)
+        pins = dict(re.findall(r'\.(\w+)\(([^()]*)\)', m.group(3)))
+        conn = m.group(3)
+        for key, depth in delays.items():
+            cloc, pin = key.split('.', 1)
+            if cloc != loc or not depth:
+                continue
+            delayed_locs.add(loc)
+            name = f'ref_leg_{loc}_{pin}'
+            width = widths[(loc, pin)]
+            decl += [f'    reg [{width-1}:0] {name} [0:{depth-1}];',
+                     f'    reg {name}_reset_ready;',
+                     f'    always @(posedge {pins["ck"]} or negedge {pins["rst_n"]})',
+                     f'        if (!{pins["rst_n"]}) {name}_reset_ready <= 0; else {name}_reset_ready <= 1;',
+                     f'    always @(posedge {pins["ck"]} or negedge {name}_reset_ready) begin',
+                     f'        if (!{name}_reset_ready) begin']
+            decl += [f'            {name}[{i}] <= 0;' for i in range(depth)]
+            decl += ['        end else begin', f'            {name}[0] <= {pins[pin]};']
+            decl += [f'            {name}[{i}] <= {name}[{i-1}];' for i in range(1, depth)]
+            decl += ['        end', '    end']
+            conn = conn.replace(f'.{pin}({pins[pin]})', f'.{pin}({name}[{depth-1}])', 1)
+        text = text.replace(line, m.group(1)+conn+m.group(4))
+    text = text.replace('endmodule', '\n'.join(decl)+'\nendmodule')
+    return text, delayed_locs
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--tile', required=True, choices=sorted(INST))
@@ -135,7 +180,9 @@ def main():
     old, new = gen(t, False), gen(t, True)
     ntext, gone, what = (new['text'], None, 'none') if a.mut == 0 else mutate(new['text'], a.mut)
     nm = MASTER[t]
-    (out / 'tiles.sv').write_text('`timescale 1ns/1ps\n' + old['text'].replace(f'module {nm} (', 'module old_tile (', 1) +
+    dl = new.get('delays') or dict(out={}, child={})
+    oldtext, delayed_locs = delayed_input_reference(old['text'], old['children'], dl['child'])
+    (out / 'tiles.sv').write_text('`timescale 1ns/1ps\n' + oldtext.replace(f'module {nm} (', 'module old_tile (', 1) +
                                   '\n' + ntext.replace(f'module {nm} (', 'module new_tile (', 1) + '\n')
     po, pn = old['ports'], new['ports']
     pnd = {p: (d, w, c) for p, d, w, c in pn}
@@ -155,8 +202,11 @@ def main():
         L.append(f'  wire [{w - 1}:0] o__{p}, n__{p};')
     # KV-GRPREACH: kit-added edges (kv_static_die.kit_delays): kit slice [msb:lsb] at edge t == die-bound tile at t - D
     dl = new.get('delays') or dict(out={}, child={})
-    dout = {p: v for p, v in dl['out'].items()}
-    dch = {tuple(k.split('.', 1)): v for k, v in dl['child'].items()}
+    # State/output effects of explicit reference input delays are already present.
+    # Preserve histories only for physical output-chain relays (o_dn, i_up, lcal).
+    dout = {p: [v for v in vs if not any(str(v[3]).startswith(f'w_{loc}__') for loc in delayed_locs)]
+            for p, vs in dl['out'].items()}
+    dch = {}
     hist = []                                   # (history name, reference expr, width, depth)
     for p, w in outs:
         for hi, lo, D, *_src in dout.get(p, []):
@@ -185,6 +235,17 @@ def main():
     for n in frc:
         L.append(f'  reg [{ow[n]}:0] f_{n};')
     cin = [(loc, p, w) for loc, mod, ps in new['children'] for p, w in ps if loc != gone]
+    legal_boot = t in ('grp', 'grp_h') and ('bcdc0', 'cfg_we') in [(x[0], x[1]) for x in cin]
+    if legal_boot:
+        L += ['  reg legal_phase = 0; integer legal_words = 0, legal_seals = 0;',
+              '  always @(negedge ck) if (legal_phase) begin',
+              '    #0.25;',
+              '    if (u_new.u_bcdc0.sink_we) begin',
+              "      if (u_new.u_bcdc0.sink_addr !== 8'(legal_words) || u_new.u_bcdc0.sink_data !== (64'h1234567800000000 + 64'(legal_words))) begin bad++; $display(\"MISMATCH legal boot word %0d\", legal_words); end",
+              '      legal_words++;',
+              '    end',
+              '    if (u_new.u_bcdc0.sink_seal) legal_seals++;',
+              '  end']
     L.append('  initial begin')
     L.append('    bad = 0; chk = 0; act = 0; phb = 0;')
     for p, w, c in ins:
@@ -193,6 +254,28 @@ def main():
         L.append(f'    od__{p} = 0;')
     L.append('    repeat (6) @(negedge ck);')
     L.append('    ' + ' '.join(f"{p} = 1;" for p, w, c in ins if c in ('reset', 'pad')))
+    if legal_boot:
+        # A real three-word exceptional boot replay after the documented reset
+        # and FIFO-ready age, including its last-word seal and applied status.
+        L.append('    legal_phase = 1;')
+        L.append('    for (t = 0; t < 16; t++) begin @(negedge ck);')
+        for p, D in drst.items():
+            L.append(f'      if (t == {D-1}) od__{p} = 1;')
+        L.append('    end')
+        L += ['    for (t = 0; t < 3; t++) begin',
+              "      @(negedge ck); i_ctl = 0; i_ctl[7:0] = 8'(t); i_ctl[71:8] = 64'h1234567800000000 + 64'(t); i_ctl[184] = 1; i_ctl[183] = (t == 2);",
+              '      @(negedge ck); i_ctl = 0;',
+              '    end',
+              '    repeat (30) @(negedge ck); #0.5;',
+              '    legal_phase = 0;',
+              '    chk++; if (legal_words != 3 || legal_seals != 1 || u_new.u_bcdc0.fault_core || u_new.u_bcdc0.fault_hbm || !u_new.u_bcdc0.applied_hbm) begin bad++; $display("MISMATCH legal boot words=%0d seals=%0d", legal_words, legal_seals); end',
+              '    $display("LEGAL_BOOT words=%0d seals=%0d fault_core=%0d fault_hbm=%0d applied=%0d", legal_words, legal_seals, u_new.u_bcdc0.fault_core, u_new.u_bcdc0.fault_hbm, u_new.u_bcdc0.applied_hbm);']
+        for p, w, c in ins:
+            L.append(f'    {p} = 0;')
+        for p in drst:
+            L.append(f'    od__{p} = 0;')
+        L.append('    repeat (6) @(negedge ck);')
+        L.append('    ' + ' '.join(f"{p} = 1;" for p, w, c in ins if c in ('reset', 'pad')))
     L.append(f'    for (t = 0; t < {2 * a.edges}; t = t + 1) begin')
     L.append('      @(negedge ck);')
     for p, D in drst.items():

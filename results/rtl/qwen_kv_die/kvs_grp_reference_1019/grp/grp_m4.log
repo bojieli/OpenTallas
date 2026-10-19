@@ -1,0 +1,13 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+LEGAL_BOOT words=3 seals=1 fault_core=0 fault_hbm=0 applied=1
+MISMATCH t=9 out o_dn[270:0] D=4
+MISMATCH t=10 out o_dn[270:0] D=4
+MISMATCH t=11 out o_dn[270:0] D=4
+MISMATCH t=12 out o_dn[270:0] D=4
+MISMATCH t=13 out o_dn[270:0] D=4
+KVS_TILE FAIL tile=grp edges=4000 checks=575509 errors=3991 mut=4 (o_dn relay chain one stage short)
+- verified/grp/m4/tb.sv:564: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.053 s; speed 153.931 us/s
+- Verilator: cpu 0.053 s on 1 threads; allocated 7 MB
+

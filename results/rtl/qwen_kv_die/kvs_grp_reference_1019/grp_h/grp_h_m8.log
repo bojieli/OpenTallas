@@ -1,0 +1,13 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+LEGAL_BOOT words=3 seals=1 fault_core=0 fault_hbm=0 applied=1
+MISMATCH t=6 out o_pc0[32:23] D=1
+MISMATCH t=6 out o_pc0[21:16] D=1
+MISMATCH t=6 out o_pc0[15:0] D=1
+MISMATCH t=7 out o_pc0[32:23] D=1
+MISMATCH t=7 out o_pc0[21:16] D=1
+KVS_TILE FAIL tile=grp_h edges=4000 checks=571518 errors=10571 mut=8 (o_pc0 lcal relay bypassed)
+- verified/grp_h/m8/tb.sv:550: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.057 s; speed 142.535 us/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 7 MB
+

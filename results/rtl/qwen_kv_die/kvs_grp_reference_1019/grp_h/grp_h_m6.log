@@ -1,0 +1,13 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+LEGAL_BOOT words=3 seals=1 fault_core=0 fault_hbm=0 applied=1
+MISMATCH t=3 out o_ctl
+MISMATCH t=3 child u_bcdc0.cfg_addr
+MISMATCH t=3 child u_bcdc0.cfg_data
+MISMATCH t=3 child u_bcdc1.cfg_we
+MISMATCH t=3 child u_bcdc1.cfg_addr
+KVS_TILE FAIL tile=grp_h edges=4000 checks=571518 errors=4360 mut=6 (core reset relay bypassed)
+- verified/grp_h/m6/tb.sv:550: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.072 s; speed 112.875 us/s
+- Verilator: cpu 0.072 s on 1 threads; allocated 7 MB
+
