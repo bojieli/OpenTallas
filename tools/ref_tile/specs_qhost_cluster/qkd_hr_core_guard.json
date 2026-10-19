@@ -247,8 +247,9 @@
    }
   ],
   "reroute_reason": {
-   "kind": "rtl_change",
-   "why": "regenerated HOST cluster (KV-HOSTCL-REGEN/PL-KVHOST b7178afad on G2b): qkd_hr_core_guard.v ctrl_completion_fault 128 b -> 1 b (flat root narrowed by KVJ-G2b 06c36f404); the closed r2-342580b92 view has the 128-b port and cannot bind into the regenerated cluster"
+   "kind": "flow_failure",
+   "failed_job": "qkd_hr_core_guard-r4-011e8419d",
+   "failure": "routed on ot-epyc5 without the TT overlay / OT_CTS_FIX_HOOKS (daemon pipefail path-pick bug, fixed main 59a8139a8); ttb_routed_at_TC failed"
   }
  }
 }

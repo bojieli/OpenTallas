@@ -69,6 +69,22 @@ def bus(si, sp, di, dp, st, age=None, w=1):
 
 
 class Compile(unittest.TestCase):
+    def test_txdp_bound_literal_and_image(self):
+        lit = ("qfd_d2d_static_core #(.MUT(MUT), .TXDP(PR ? {8'd4, 8'd1, 8'd3, 8'd3} : 0)) u_core ();\n"
+               "qkd_d2d_static_core #(.MUT(MUT), .TXDP(PR ? {8'd3, 8'd3, 8'd4, 8'd3} : 0)) u_core ();\n")
+        self.assertEqual(C.txdp_bound(lit, None, 'C'), ([3, 3, 1, 4], 'rtl_literal'))
+        self.assertEqual(C.txdp_bound(lit, None, 'K'), ([3, 4, 3, 3], 'rtl_literal'))
+        par = ("module qfd_d2d_static #(parameter integer MUT = 0, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0) ();\n"
+               "module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer NTX = 4, "
+               "parameter integer PR = 1, parameter [31:0] TXDP = 32'd0) ();\n")
+        img = "localparam [31:0] D2D_TXDP_C = 32'h09010306;\nlocalparam [31:0] D2D_TXDP_K = 32'h03030418;\n"
+        self.assertEqual(C.txdp_bound(par, img, 'K'), ([24, 4, 3, 3], 'image_parameter'))
+        self.assertEqual(C.txdp_bound(par, img, 'C'), ([6, 3, 1, 9], 'image_parameter'))
+        with self.assertRaises(SystemExit):
+            C.txdp_bound(par, None, 'K')                 # required parameter, no image: fail closed
+        with self.assertRaises(SystemExit):
+            C.txdp_bound('module other; endmodule', img, 'K')
+
     def test_landed_codec_source_and_calendar(self):
         def tile(params):
             return ('module qkd_kvs_attn (); qkd_native_attention_programme #(' + params + ') u_attn (); endmodule')

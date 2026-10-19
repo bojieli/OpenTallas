@@ -40,6 +40,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import subprocess
 import sys
 import tempfile
@@ -62,13 +63,43 @@ from tools.qwen_kv_die import static_kv_calendar as SKC    # noqa: E402
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = SKC.GROUP_ORDER                                     # landing group order inside a stack strip
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
+# HKV-ASTK 2026-10-18: the expanded ASTK strip (OT_KV_ASTK_EXPAND=1, as kv_static_die: RL 3 die-relayed chain hops, closed
+# ctl Z stride 4, distributed e-read qkd_astk_er_chain_st ERL 42) moves the attention calendar by MEASURED shifts relative to
+# the RL 1 / ERL 7 strip the attn_calendar laws were measured on (astk_calendar_sweep.sh on the actual strip + mapped SRAM,
+# Verilator 5.050): LMAX / EXP / Z (+ the hub ages that follow them), the P.V e-read issue gap and the e-read latency.
+ASTK_EXPAND = os.environ.get('OT_KV_ASTK_EXPAND', '1') == '1'   # HKV-DIE3 10-19: production default ON (= kv_static_die)
+ASTK_LAW = 'results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json'
+
+
+def astk_law():
+    law = json.loads((ROOT / ASTK_LAW).read_text())
+    if law.get('schema') != 'opentallas.qwen_kv.astk_calendar_law.v1':
+        raise ValueError('kv_static_programme: unknown ASTK calendar law schema')
+    return law
+
+
+def astk_pv_gap_shift(T, law):
+    """P.V e-read issue gap shift at T: the larger of the measured neighbours (clamped at the measured range)"""
+    pts = sorted((int(t), v) for t, v in law['d_pv_gap'].items())
+    lo = [v for t, v in pts if t <= T] or [pts[0][1]]
+    hi = [v for t, v in pts if t >= T] or [pts[-1][1]]
+    return max(lo[-1], hi[0])
 # ROOT-QLINE 10-18: the SAME compile as the committed production image rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
 # (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
 # so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
 # '--txd-c 1,1,1,2 --txd-k 1,2,1,1' args predate the compiled TXDP and no longer match the image.
-LINK_DIE_STAGES = '2,2,2,2,0,2/11,11,9,9,9,11,11'
+LINK_DIE_STAGES = '2,2,2,2,2,2/11,11,9,9,9,11,11'   # HKV-DIE 10-19: dv2f14bq seam (SC_TX 2) + kvs14p (= production script)
+
+
+def _link_kv_codec():
+    """the KV attention codec edges as instantiated in the KV tile source (.LAND(1) -> 2), as the production image"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_layerbench'))
+    import layer_compile as _LC
+    return str(_LC.kv_codec_edges((ROOT / 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read_text()))
+
+
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
-LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES,
+LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
              '--pinreg']                                    # + --token-path (decompressed in link_calendar)
 T_MAX = 8192
@@ -163,19 +194,41 @@ def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0)):
 
 
 # ---- profile: every age the compile uses -----------------------------------------------------------------------------
+def _face_land():
+    """HKV-RSTCAP 10-19: kvs_attn_fl lands i_ctl (+1: every lprg -> attention launch one edge earlier = att + 1) and fin
+    (+1: F_DLY + 1); every _fl tile releases reset +3 edges later (startup only; checked against the region hold budget).
+    HKV-DIE3 10-19: per tile -- only the SELECTED tiles (kv_static_die.FACE_LAND_SEL) add their edges."""
+    from tools.qwen_kv_die import kv_static_die as KSD
+    sel = sorted(getattr(KSD, 'FACE_LAND_SEL', set(KSD.FACE_LAND_TILES) if KSD.FACE_LAND else set()))
+    if not sel:
+        return dict(enabled=False, selected=[], i_ctl=0, fin=0, rst_release_max=0)
+    t = {k: KSD.FACE_LAND_TILES[k] for k in sel}
+    rr = max(v['rst_release'] for v in t.values())
+    if rr > KSD.FACE_LAND_RST_BUDGET:
+        raise ValueError(f'face_land reset release +{rr} exceeds the region hold budget {KSD.FACE_LAND_RST_BUDGET}')
+    a = t.get('kvs_attn', {})
+    return dict(enabled=True, selected=sel, i_ctl=a.get('i_ctl', 0), fin=a.get('fin', 0), rst_release_max=rr,
+                F_DLY_delta=a.get('fin', 0), tiles=sel,
+                rst_release={k: v['rst_release'] for k, v in t.items()})
+
+
 def profile(kind, ages=None):
     if kind == 'component':
         return dict(kind='component', start_relays=0, att=0, rx=0, writer=0, kvn=0, groups=0, crossing=False,
                     qk_age=KC.SOURCED['qk_consume_age'], qk_row_latency=KC.SOURCED['qk_row_latency'],
                     v_rl=19, d_rl=0, d_qk=0, phase=None, ld=1, rc=3, landing_uncertainty=0)
     L = ages['link']
-    return dict(kind='die', start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'],
+    fl = _face_land()
+    from tools.qwen_kv_die import kv_static_die as KSD
+    ofs = KSD.ahub_ofs_bound()
+    return dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
+                face_land=fl,
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
                 groups=L['programme_to_groups']['edges'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=ages['qk']['QK_ISSUE_AGE'] - AC.QK_CONSUME,
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
-                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V))
+                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None)
 
 
 def kv_params(pr):
@@ -184,6 +237,25 @@ def kv_params(pr):
 
 
 # ---- attention calendar (the N1 law) ----------------------------------------------------------------------------------
+# HKV-DIE3 10-19 (HKV-AHUB4 findings, coordinator (b)): ONE schedule for the hub export and the pvfin join.
+#  * the link's RESULT slot is fixed, so R stays stretched to it (R = service_end - 49 - PV_START); qkd_pv_fin_s (QXF-FACE
+#    F3, b6d08acc2) joins on max(P0, P1, R) through its 32-beat sum buffer, so a stretched R is legal there (the
+#    'R <= LASTP + ADD_LAT + 1' refusal HKV-AHUB4 hit is the pre-F3 pvfin of its bench base, not the die's RTL);
+#  * qkd_ahub_static_dw exports fr at io age PV_START + R + FR_OFS and faults unless that is after its rz_publish:
+#    PV_START + R + FR_OFS >= HUB_PUB + HUB_EXPORT_AFTER_PUB (3).  The minimal R / PV_START therefore use the margin
+#    max(RZ_MARGIN, 3 - FR_OFS) with the BOUND FR_OFS (pr['fr_ofs']; component profile / unbound: RZ_MARGIN 2);
+#  * qkd_pv_fin_s refuses |P0 - P1| > SKEW (die binding SKEW 1).  P0 - P1 is set by the PAIR hardware (w16_nq: pair 1
+#    has 0 / 16 / 32 fewer issue cycles when T <= 128 or T mod 256 in 1..128) -- no compiled field moves it; attention_checks
+#    reports those contexts and kv_static_params FAILS (ATTN_CALENDAR PVFIN_PAIR_SKEW) until the RTL absorbs the skew.
+HUB_EXPORT_AFTER_PUB = 3
+PVFIN_SKEW = 1            # kv_static_die bindings qkd_pvfin SKEW
+
+
+def rz_margin(pr):
+    fr = (pr or {}).get('fr_ofs')
+    return AC.RZ_MARGIN if fr is None else max(AC.RZ_MARGIN, HUB_EXPORT_AFTER_PUB - fr)
+
+
 def attention_calendar(T, pr, service_end=None):
     """attn_calendar.calendar_w16(T, head_g3s2=True) with the die's QK age shift (LMAX moves with the last consume)
     and V word latency shift (pair outputs move with RL); service_end stretches R so the last result beat lands on
@@ -192,9 +264,17 @@ def attention_calendar(T, pr, service_end=None):
     c = AC.calendar(T, lmax=lmax, pv='w1')
     for f in ('LMAX', 'EXP', 'Z', 'HUB_LMAX', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
         c[f] += AC.HEAD_G3S2_SHIFT
-    po = [AC.w16_pair_out(T, 0) + pr['d_rl'], AC.w16_pair_out(T, 1) + pr['d_rl']]
-    pv = max(c['EXP'] + AC.pv_after_exp_w16(T), c['HUB_PUB'] + AC.RZ_MARGIN - max(po))
-    r = max(max(po), c['HUB_PUB'] + AC.RZ_MARGIN - pv)
+    law = pr.get('astk_law')
+    d_gap = d_erl = 0
+    if law:
+        for f, k in (('LMAX', 'dLMAX'), ('HUB_LMAX', 'dLMAX'), ('EXP', 'dEXP'), ('Z', 'dZ'), ('HUB_Z', 'dZ'),
+                     ('HUB_RECIP', 'dZ'), ('HUB_PUB', 'dZ')):
+            c[f] += law[k]
+        d_gap, d_erl = astk_pv_gap_shift(T, law), law['dERL']
+    po = [AC.w16_pair_out(T, 0) + pr['d_rl'] + d_erl, AC.w16_pair_out(T, 1) + pr['d_rl'] + d_erl]
+    mg = rz_margin(pr)
+    pv = max(c['EXP'] + AC.pv_after_exp_w16(T) + d_gap, c['HUB_PUB'] + mg - max(po))
+    r = max(max(po), c['HUB_PUB'] + mg - pv)
     if service_end is not None:
         r_link = service_end - 49 - pv                      # service_cycles = PV_START + max(P, R) + 16 + 33
         if r_link < r:
@@ -203,6 +283,55 @@ def attention_calendar(T, pr, service_end=None):
     c.update(P0=po[0], P1=po[1], PV_START=pv, R=r)
     AC.check(c)
     return c
+
+
+def service_end_of(pr, workdir=None):
+    """the attention service end the link's fixed RESULT slot leaves (= compile_all's service_end for this profile)"""
+    with tempfile.TemporaryDirectory(dir=workdir) as td:
+        cal = link_calendar(td)
+    seg0 = [m for m in cal['messages'] if m.get('seg', 0) == 0]
+    cmd = [m for m in seg0 if m['src'] == 'C' and m['rx_port'] == 0 and m['kind'] == 1]
+    res = sorted((m for m in seg0 if m['src'] == 'K' and m['tx_port'] == 0 and m['kind'] == 3), key=lambda m: m['beat'])
+    run_ev = cmd[0]['rx_out'] + LR.D2D_OUT + pr['rx'] - LR.RX_CMD
+    tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev
+    return tx_first - LR.RX_CMD - 2 + 31
+
+
+def attention_checks(pr, service_end, fr_ofs=None, pvfin_skew=PVFIN_SKEW, pair_delta=0, Ts=range(1, 8193)):
+    """HKV-DIE3: every context's emitted calendar against the BOUND hub / pvfin RTL refusals (fail-closed, no RTL
+    threshold touched).  pair_delta = D(pvw_0 -> pvfin.p0) - D(pvw_1 -> pvfin.p1) on the die table (0 when equalised).
+    -> dict(fails=[{id, contexts, examples}], ...)"""
+    pr = dict(pr, fr_ofs=fr_ofs)
+    bad = {}
+
+    def add(k, T, **kw):
+        b = bad.setdefault(k, dict(id=k, contexts=0, examples=[]))
+        b['contexts'] += 1
+        if len(b['examples']) < 8:
+            b['examples'].append(dict(T=T, **kw))
+    worst = dict(hub_export_margin=None, pvfin_skew=0)
+    for T in Ts:
+        try:
+            c = attention_calendar(T, pr, service_end)
+        except ValueError as e:
+            add('CALENDAR_UNMEETABLE', T, what=str(e)[:200])
+            continue
+        hm = c['PV_START'] + c['R'] + (fr_ofs or 0) - (c['HUB_PUB'] + HUB_EXPORT_AFTER_PUB)
+        worst['hub_export_margin'] = hm if worst['hub_export_margin'] is None else min(worst['hub_export_margin'], hm)
+        if fr_ofs is not None and hm < 0:
+            add('HUB_FR_EXPORT', T, PV_START=c['PV_START'], R=c['R'], FR_OFS=fr_ofs, HUB_PUB=c['HUB_PUB'], short=-hm)
+        p0, p1 = c['P0'] + pair_delta, c['P1']
+        sk = abs(p0 - p1)
+        worst['pvfin_skew'] = max(worst['pvfin_skew'], sk)
+        if sk > pvfin_skew:
+            add('PVFIN_PAIR_SKEW', T, P0=p0, P1=p1, skew=sk, limit=pvfin_skew)
+        if min(p0, p1, c['R']) < 1 or max(p0, p1, c['R']) + 64 + 13 > 0xffff:
+            add('PVFIN_CAL_RANGE', T, P0=p0, P1=p1, R=c['R'])
+    return dict(schema='opentallas.qwen_kv.attention_checks.v1', service_end=service_end, fr_ofs=fr_ofs,
+                pvfin_skew_limit=pvfin_skew, pair_delta=pair_delta, contexts=len(list(Ts)), worst=worst,
+                fails=sorted(bad.values(), key=lambda b: b['id']),
+                rule='hub: PV_START + R + FR_OFS >= HUB_PUB + 3 (qkd_ahub_static_dw emit after rz_publish); pvfin: '
+                     '|P0 - P1| <= SKEW, P/R >= 1, max + 77 <= 0xffff (qkd_pv_fin_s cal_bad); R stretched to the link slot')
 
 
 # ---- crossing: core-edge offset of an HBM event after a go capture -----------------------------------------------------
@@ -685,6 +814,8 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     for T in (1, 128, 1000, 2048, 4096, 6144, 8192):
         c = attention_calendar(T, pr, service_end)
         att['samples'][str(T)] = dict(cal=AC.hexcal(c), fields=c)
+    if pr['kind'] == 'die':                                 # HKV-DIE3: every context vs the bound hub / pvfin refusals
+        att['checks'] = attention_checks(pr, service_end, pr.get('fr_ofs'), Ts=sorted(set(range(1, 8193, 16)) | {8192}))
 
     # ---- boot bundle ----
     sfi_pw = sfi.PW

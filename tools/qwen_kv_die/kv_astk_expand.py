@@ -19,18 +19,30 @@ LEAVES={'qkd_astk_ctl_s':f'{SR}/qkd_astk_static_leaves.sv',
         'qkd_astk_er_owner_st':f'{SR}/qkd_astk_er_owner_st.sv'}
 
 
-def configure(K, views, rtl, sublevels):
+FL_MASTER='qkd_astk_rly_296_fl'
+FL_RTL='rtl/lib/face_land/qkd_astk_rly_296_fl.sv'   # generated wrapper (tools/ref_tile/face_land.py) + rtl/lib/ot_rst_relay.sv
+
+
+def configure(K, views, rtl, sublevels, alias=None):
     if not K.KSD.ON:
         raise ValueError('physical ASTK expansion requires the static source graph')
     import kv_static_die as S
     import os
-    if os.environ.get('OT_KV_ASTK_EXPAND','0')!='1':
+    if not S.ASTK_EXPAND:
         raise ValueError('physical ASTK source requires OT_KV_ASTK_EXPAND=1')
     if not S.ASTK_ST:
         raise ValueError('physical ASTK expansion requires OT_KV_ASTK_ST')
     for m,p in LEAVES.items():
         views[m]=f'physical/ref_tile/{m}/views/{m}'
         rtl[m]=p
+    # HKV-DIE3 10-19: the relay child binds its CLOSED face-landed view (qkd_astk_rly_296_fl, reset landed at the face,
+    # +3 reset-release edges, same ports) when kv_static_die selects tile astk_rly_296 (OT_KV_FACE_LAND).
+    if 'astk_rly_296' in getattr(S,'FACE_LAND_SEL',()):
+        S.face_land_require_closed()
+        views[FL_MASTER]=S.face_land_view('astk_rly_296')
+        rtl[FL_MASTER]=FL_RTL
+        if alias is not None:
+            alias['qkd_astk_rly_296']=FL_MASTER
     sublevels['qkd_astk_strip_er_die']=tuple((p,m) for p,m in (
         (f'{SR}/qkd_astk_strip_er_st.sv','qkd_astk_strip_er_st'),
         (f'{SR}/qkd_astk_strip_st.sv','qkd_astk_strip_st'),
@@ -77,7 +89,9 @@ def prepare(J, leaf, fw, fh):
             y=center(k)-172.8-(2-j)*153.36 if j<2 else center(k)+172.8+(j-2)*153.36+4.32
         elif t=='qkd_astk_ctl_s':x=0;y=fh-h
         elif t=='qkd_astk_zn' and z:
-            k=int(z[1]);x=(k%2)*166.32;y=fh-237.6+(k//2)*90.72
+            # KVR-VIEWS 10-19: the 2 x 2 zn block sits RIGHT of the 103.68-um ctl (top-left): at x 0 / 166.32 the second zn
+            # row (fh-146.88 .. fh-60.48) overlapped ctl (fh-86.4 .. fh) and every expansion refused ('does not fit')
+            k=int(z[1]);x=fw-2*86.4+(k%2)*86.4;y=fh-237.6+(k//2)*90.72
         else:
             pending.append(n);continue
         if not put(n,x,y):raise ValueError(f'{n}: actual functional leaf does not fit ASTK envelope')

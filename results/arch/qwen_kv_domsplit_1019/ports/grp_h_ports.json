@@ -1,0 +1,433 @@
+{
+ "top": "qkd_kvs_grp_h",
+ "registers": 621,
+ "clock_ports": [
+  "?const",
+  "ck",
+  "hck"
+ ],
+ "ports": {
+  "ck": {
+   "dir": "input",
+   "width": 1,
+   "role": "clock"
+  },
+  "rst_n": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 12,
+   "async_reset": true
+  },
+  "afk": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "afv": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "hck": {
+   "dir": "input",
+   "width": 1,
+   "role": "clock"
+  },
+  "hrst_n": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 2,
+   "async_reset": true
+  },
+  "slg__cfg_stack": {
+   "dir": "input",
+   "width": 2,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 8,
+   "async_reset": false
+  },
+  "slg__cfg_group": {
+   "dir": "input",
+   "width": 3,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 12,
+   "async_reset": false
+  },
+  "kreq": {
+   "dir": "input",
+   "width": 38,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 38,
+   "async_reset": false
+  },
+  "vreq": {
+   "dir": "input",
+   "width": 15,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 15,
+   "async_reset": false
+  },
+  "x__est": {
+   "dir": "input",
+   "width": 13,
+   "domains": [
+    "none"
+   ],
+   "feedthrough": [
+    "y__est__0_1"
+   ],
+   "depth": 0,
+   "reg_sinks": 0,
+   "async_reset": false
+  },
+  "x__tok": {
+   "dir": "input",
+   "width": 18,
+   "domains": [
+    "none"
+   ],
+   "feedthrough": [
+    "y__tok"
+   ],
+   "depth": 0,
+   "reg_sinks": 0,
+   "async_reset": false
+  },
+  "x__tep": {
+   "dir": "input",
+   "width": 16,
+   "domains": [
+    "none"
+   ],
+   "feedthrough": [
+    "y__tep"
+   ],
+   "depth": 0,
+   "reg_sinks": 0,
+   "async_reset": false
+  },
+  "rsp": {
+   "dir": "output",
+   "width": 1056,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1056
+  },
+  "krsp": {
+   "dir": "output",
+   "width": 1062,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1062
+  },
+  "af__fault": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "y__est__0_1": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "x__est"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "y__tok": {
+   "dir": "output",
+   "width": 18,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "x__tok"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "y__tep": {
+   "dir": "output",
+   "width": 16,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "x__tep"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "i_ctl": {
+   "dir": "input",
+   "width": 271,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [
+    "o_dn"
+   ],
+   "depth": 6,
+   "reg_sinks": 432383,
+   "async_reset": false,
+   "bit_domains": [
+    [
+     193,
+     0,
+     [
+      "ck"
+     ]
+    ],
+    [
+     270,
+     194,
+     [
+      "none"
+     ]
+    ]
+   ]
+  },
+  "i_pc0": {
+   "dir": "input",
+   "width": 295,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 296,
+   "async_reset": false
+  },
+  "i_pc0_h": {
+   "dir": "input",
+   "width": 10,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 10,
+   "async_reset": false
+  },
+  "i_pc1": {
+   "dir": "input",
+   "width": 295,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 296,
+   "async_reset": false
+  },
+  "i_pc1_h": {
+   "dir": "input",
+   "width": 10,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 10,
+   "async_reset": false
+  },
+  "i_pc2": {
+   "dir": "input",
+   "width": 295,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 296,
+   "async_reset": false
+  },
+  "i_pc2_h": {
+   "dir": "input",
+   "width": 10,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 10,
+   "async_reset": false
+  },
+  "i_pc3": {
+   "dir": "input",
+   "width": 295,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 296,
+   "async_reset": false
+  },
+  "i_pc3_h": {
+   "dir": "input",
+   "width": 10,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 10,
+   "async_reset": false
+  },
+  "o_pc0": {
+   "dir": "output",
+   "width": 33,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 33
+  },
+  "o_pc0_h": {
+   "dir": "output",
+   "width": 95,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 95
+  },
+  "o_pc1": {
+   "dir": "output",
+   "width": 33,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 33
+  },
+  "o_pc1_h": {
+   "dir": "output",
+   "width": 95,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 95
+  },
+  "o_pc2": {
+   "dir": "output",
+   "width": 33,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 33
+  },
+  "o_pc2_h": {
+   "dir": "output",
+   "width": 95,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 95
+  },
+  "o_pc3": {
+   "dir": "output",
+   "width": 33,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 33
+  },
+  "o_pc3_h": {
+   "dir": "output",
+   "width": 95,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 95
+  },
+  "o_dn": {
+   "dir": "output",
+   "width": 271,
+   "domains": [
+    "none"
+   ],
+   "from_inputs": [
+    "i_ctl"
+   ],
+   "depth": 0,
+   "reg_sources": 0
+  },
+  "o_ctl": {
+   "dir": "output",
+   "width": 144,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 144
+  }
+ }
+}
