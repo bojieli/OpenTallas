@@ -9,13 +9,15 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  output wire[TW-1:0]request0,request1,
  input wire[W-1:0]row0,row1,input wire[QW-1:0]ok0,ok1,input wire[TW-1:0]token0,token1,
  output reg[W-1:0]calendar,output reg[XW-1:0]calendar_ctx,output reg[15:0]calendar_iter,
- output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n
+ output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n,output wire[7:0]app_reset_branches,output wire[W-1:0]app_next_calendar,output wire app_next_valid
 );
  initial if(AW!=11||W<1||W>223)$fatal(1,"banked provider requires AW11 and protected payload");
  (* keep=1 *) reg[1:0]reset_landing;
  always @(posedge clk or negedge rst_n)if(!rst_n)reset_landing<=0;else reset_landing<={reset_landing[0],1'b1};
  wire[7:0]reset_branch;
  assign app_reset_n=reset_branch[0];
+ assign app_reset_branches=reset_branch;
+ assign app_next_valid=expected_v;
  for(genvar g=0;g<8;g=g+1)begin:g_reset
   (* keep=1 *) ot_smh_banked_reset_branch u_reset(.clk(clk),.rst_n(rst_n),.phase0(reset_landing[0]),.q(reset_branch[g]));
  end
@@ -27,6 +29,12 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  reg[1:0]online;
  always @(posedge clk or negedge reset_branch[0])if(!reset_branch[0])online<=0;else if(online!=3)online<=online+1'b1;
  wire end_word={1'b0,pc}+1'b1==limit;
+ wire[1:0]end_copy;
+ wire next_end=accepted?({1'b0,sb}+1'b1==sl):running?
+   (end_word?({1'b0,base}+1'b1==limit):({1'b0,pc}+2'd2==limit)):end_word;
+ for(genvar g=0;g<2;g=g+1)begin:g_endword
+  (* keep=1 *) ot_smh_banked_bit u_end(.clk(clk),.d(next_end),.q(end_copy[g]));
+ end
  wire final_issue=end_word&&loops_left==1;
  wire legal_start=sl>{1'b0,sb}&&sl<=2048&&sn!=0;
  wire[TW-1:0] source_token={running,lastword_q,lastit_q,iter_r,ctx_r,issued,pc};
@@ -77,19 +85,19 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  assign request0={bank0_v,lastword_q,lastit_q,iter_r,ctx_r,issued,pc};
  assign request1={bank1_v,lastword_q,lastit_q,iter_r,ctx_r,issued,pc};
  wire[31:0]issued_inc=issued+1'b1;
- always @(posedge clk)begin if(accept_copy[0])pc<=sb;if(run_copy[0])pc<=end_word?base:pc+1'b1;end
+ always @(posedge clk)begin if(accept_copy[0])pc<=sb;if(run_copy[0])pc<=end_copy[0]?base:pc+1'b1;end
  always @(posedge clk)if(accept_copy[1])base<=sb;
  always @(posedge clk)if(accept_copy[2])limit<=sl;
  // Distinct same-edge running copies keep each decrement enable local to8bits.
  wire[15:0]loops_dec=loops_left-1'b1;
  always @(posedge clk)begin
   if(accept_copy[3])loops_left<=sn;
-  if(run_copy[1]&&end_word&&loops_left!=1)loops_left[7:0]<=loops_dec[7:0];
-  if(run_copy[5]&&end_word&&loops_left!=1)loops_left[15:8]<=loops_dec[15:8];
+  if(run_copy[1]&&end_copy[0]&&loops_left!=1)loops_left[7:0]<=loops_dec[7:0];
+  if(run_copy[5]&&end_copy[1]&&loops_left!=1)loops_left[15:8]<=loops_dec[15:8];
  end
  always @(posedge clk)begin if(accept_copy[4])issued[15:0]<=0;if(run_copy[2])issued[15:0]<=issued_inc[15:0];end
  always @(posedge clk)begin if(accept_copy[5])issued[31:16]<=0;if(run_copy[3])issued[31:16]<=issued_inc[31:16];end
- always @(posedge clk)begin if(accept_copy[6])iter_r<=0;if(run_copy[4]&&end_word&&loops_left!=1)iter_r<=iter_r+1'b1;end
+ always @(posedge clk)begin if(accept_copy[6])iter_r<=0;if(run_copy[4]&&end_copy[1]&&loops_left!=1)iter_r<=iter_r+1'b1;end
  for(genvar g=0;g<(XW+15)/16;g=g+1)begin:g_context
   localparam integer BW=(XW-16*g<16)?XW-16*g:16;
   always @(posedge clk)if(accept_copy[7+g])ctx_r[16*g+:BW]<=sx[16*g+:BW];
@@ -107,7 +115,8 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  for(genvar g=0;g<QW;g=g+1)begin:g_calendar_out
   localparam integer BW=(W-16*g<16)?W-16*g:16;
   wire good=select_good_q[g]?ok1_q[g]:ok0_q[g];
-  always @(posedge clk)calendar[16*g+:BW]<=exp_valid[g]&&good?(select_q[g]?row1_q[16*g+:BW]:row0_q[16*g+:BW]):{BW{1'b0}};
+  assign app_next_calendar[16*g+:BW]=exp_valid[g]&&good?(select_q[g]?row1_q[16*g+:BW]:row0_q[16*g+:BW]):{BW{1'b0}};
+  always @(posedge clk)calendar[16*g+:BW]<=app_next_calendar[16*g+:BW];
  end
  // Payload metadata outputs have local validity copies, no shared wide reset/enable cone.
  for(genvar g=0;g<(XW+15)/16;g=g+1)begin:g_ctx_out
