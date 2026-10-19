@@ -48,7 +48,13 @@ if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_
   [ -f $KVV/qkd_kvn_ctx_cal.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC: no closed view at $KVV (frame ASSUMED)"; fi
 # OT_KV_SEQ_STATIC=1 (Q-KVSYS PVJOIN 10-16, needs DCAL + KVNC): qkd_seq_static in slot seq (cluster frame, as qkd_seq) and
 # the compile-time-image layer programme lprg on its closed view when available (OT_KV_LPRG_KIT, default qkd_layer_prog_img_r3)
-if [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_KIT:-qkd_layer_prog_img_r3}/views/qkd_static_kv_layer_programme_img
+# DIE-KV-LEAD 10-19 (coordinator 0je; QLB-C4b item 4): on the static die (OT_KV_STATIC_DIE=1) qkd_lprg is SUPERSEDED
+# (kv_static_die.SUPERSEDED: the layer programme is boot-loaded into qkd_kvs_ctl, no qkd_lprg instance), so the obsolete
+# qkd_layer_prog_img_r3 view must not be bound nor its old committed image checked. Fail closed if a lprg view is forced.
+if [ "${OT_KV_SEQ_STATIC:-0}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  [ -z "${OT_KV_LPRG_KIT:-}" ] || { echo "OT_KV_LPRG_KIT=$OT_KV_LPRG_KIT set on the static die: qkd_lprg is superseded (boot-loaded kvs_ctl programme)"; exit 5; }
+  echo "OT_KV_SEQ_STATIC: static die -> qkd_lprg superseded (programme boot-loaded by qkd_kvs_ctl); no lprg view bound, no lprg image check"
+elif [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_KIT:-qkd_layer_prog_img_r3}/views/qkd_static_kv_layer_programme_img
   [ -f $LPV/qkd_static_kv_layer_programme_img.lef ] && BV="$BV --view qkd_lprg=$LPV" || echo "OT_KV_SEQ_STATIC: no closed view at $LPV (frame ASSUMED)"
   # the layer image binds the INSTALLED program (digest / epoch checked at the programme start): recompile the roots for
   # OT_KV_LPRG_PROGRAM (PW1024 + DW8 hex; default the sys_face bench program) / OT_KV_LPRG_EPOCH (default 0x0b0b) on the
