@@ -5,6 +5,8 @@
  "sources": [
   "rtl/link/ot_link_crc32.sv",
   "rtl/common/ot_link_credit.sv",
+  "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
   "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
@@ -159,10 +161,10 @@
   "io_hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Claude:HF-3",
-  "branch": "claude/hf3-coll-lane-1018",
-  "tag": "ltr",
-  "purpose": "HF-3 (HANDOFF 0id, HARD-REVIEW row 3): dsfd_coll_lane_w lt RTL (GFMT 1, EPPIPE 2, LCR 1, CH_BOARD 700; ch_b strap) on the 10-13 CLOSED cxea3 geometry (dscoll_lane_w_cxea-cxea3-a011f9e61 TT +24.34 / FF +17.42 / DRC 0): 6.0 um M5 no-entry strip inside both vertical SRAM edges (physical/dscoll_cx/sram_edge_strip.tcl, pre_grt/post_drt) + macro halo 5.4 um, which the lt kit dropped (halo 2.16, no strip = rth/cxea DRC 21 geometry). Outline 432 x 336.96, 10 SRAM macro origins and faces identical to cxea3/lt; N-face ck/rs/chb pinned at the cxea3 position (ck x 154.8) so E mirrors it exactly. Clock = lt spine (CTS gate 6b4725cef spread 164.7/150.1 FAIL without it). No RTL change vs lt 9356760de. HF-3b: tf[0] forwarded-clock output excluded from the core_clk data IO hold check (physical/dscoll_cx/tf_fwdclk_out.sdc; lt W route FF -88.94 = the single path ck[0]->tf[0], every data class >= +8.86), route.io_hold_margin_ns 0.03.",
+  "owner": "Claude:S81-SAFE-FIX/COLL",
+  "branch": "claude/s81sf-coll-1019",
+  "tag": "sf",
+  "purpose": "S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 row dsfd_coll_lane_w: items 3/1/7): structural fix of the reset / select fan-out on the HF-3 ltr kit (cxea3 geometry, E exact MY mirror). RTL SAFE 1 (tile-top default): the single reset synchroniser flop u.rst_s[1] drove 6,837 loads (939 async clears + ~5,750 rst-gated hold enables of the ep frame data) -> ot_rst_relay 5 kept per-consumer copies, rx beat landing reset only on its 3 flag bits, ot_s81ph_link_ep DNR 1 (frame data registers reset-free), LCR landing read pointer rp (4,426 loads) kept per 8-bit slice (ot_link_credit_rx RREP 70). Kit: reset_landing 2 stages at the N face, io_hold_margin 0.03, tf forwarded-clock SDC (HF-3b). 0 data cycles; reset release +3 edges. ",
   "views_to": "physical/ref_tile/dscoll_lane_w_ltr/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_w_ltr",
   "benches": [
@@ -242,5 +244,11 @@
  },
  "sdc_extra": [
   "physical/dscoll_cx/tf_fwdclk_out.sdc"
- ]
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "S81-SAFE-FIX/COLL 10-19 (owner safe-design checklist item 1, ROOT-RST): rs lands at its N face in 2 plain ck flops (rs__ot_rl0 -> rs__ot_rl1) before the lane's own 2-flop synchroniser + 1 relay stage (ot_rst_relay, 5 kept per-consumer copies); reset release = 2 + 2 + 1 = 5 edges after rs (was 2), a scheduled constant; data latency unchanged"
+ }
 }

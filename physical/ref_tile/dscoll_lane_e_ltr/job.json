@@ -1,13 +1,13 @@
 {
- "name": "dscoll_lane_e_ltr-ltr-COMMIT",
+ "name": "dscoll_lane_e_ltr-sf-COMMIT",
  "block": "dsfd_coll_lane_e",
  "ref_tile": true,
- "owner": "Claude:HF-3",
- "purpose": "HF-3 (HANDOFF 0id, HARD-REVIEW row 3): dsfd_coll_lane_e lt RTL (GFMT 1, EPPIPE 2, LCR 1, CH_BOARD 700; ch_b strap) on the 10-13 CLOSED cxea3 geometry (dscoll_lane_w_cxea-cxea3-a011f9e61 TT +24.34 / FF +17.42 / DRC 0): 6.0 um M5 no-entry strip inside both vertical SRAM edges (physical/dscoll_cx/sram_edge_strip.tcl, pre_grt/post_drt) + macro halo 5.4 um, which the lt kit dropped (halo 2.16, no strip = rth/cxea DRC 21 geometry). Outline 432 x 336.96, 10 SRAM macro origins and faces identical to cxea3/lt; N-face ck/rs/chb pinned at the cxea3 position (ck x 154.8) mirrored: E = exact MY of dscoll_lane_w_ltr (macros MY at x 432-x-174.12 on the 0.432 lattice, faces swapped, ck/rs/chb at 432-x). Clock = lt spine (CTS gate 6b4725cef spread 164.7/150.1 FAIL without it). No RTL change vs lt 9356760de. HF-3b: tf[0] forwarded-clock output excluded from the core_clk data IO hold check (physical/dscoll_cx/tf_fwdclk_out.sdc; lt W route FF -88.94 = the single path ck[0]->tf[0], every data class >= +8.86), route.io_hold_margin_ns 0.03.",
+ "owner": "Claude:S81-SAFE-FIX/COLL",
+ "purpose": "S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 row dsfd_coll_lane_w: items 3/1/7): structural fix of the reset / select fan-out on the HF-3 ltr kit (cxea3 geometry, E exact MY mirror). RTL SAFE 1 (tile-top default): the single reset synchroniser flop u.rst_s[1] drove 6,837 loads (939 async clears + ~5,750 rst-gated hold enables of the ep frame data) -> ot_rst_relay 5 kept per-consumer copies, rx beat landing reset only on its 3 flag bits, ot_s81ph_link_ep DNR 1 (frame data registers reset-free), LCR landing read pointer rp (4,426 loads) kept per 8-bit slice (ot_link_credit_rx RREP 70). Kit: reset_landing 2 stages at the N face, io_hold_margin 0.03, tf forwarded-clock SDC (HF-3b). 0 data cycles; reset release +3 edges. ",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/hf3-coll-lane-1018",
+  "branch": "claude/s81sf-coll-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
@@ -22,7 +22,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_e #(.GFMT(1), .EPPIPE(2), .LCR(1), .CH_BOARD(700)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_coll_lane_e #(.GFMT(1), .EPPIPE(2), .LCR(1), .CH_BOARD(700)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -120,7 +120,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_lane_e_ltr/dscoll_lane_e_ltr-ltr-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_lane_e_ltr/dscoll_lane_e_ltr-sf-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -131,6 +131,6 @@
  "merge_target": null,
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "TOKEN-XDIE-S81 / coordinator 0hn decision 1: tile-top ACK timeout CH_BOARD 400 -> 700 (timer 10 -> 11 b) + LCR 1 credit core faces as the p4l end-slice masters instantiate it; closed dscoll_lane_w_rt (s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt) times out below the 1,106-cycle switched round trip (gate_g4 asbuilt 8,240/12,096 beats late); gate_g5 on built tiles PASS 12,096 exact || HF-3 (HANDOFF 0id): same lt RTL on the 10-13 CLOSED cxea3 geometry (SRAM M5 edge strip + macro halo 5.4; dscoll_lane_w_cxea-cxea3-a011f9e61 DRC 0) that the lt kit dropped ; E = exact MY mirror of dscoll_lane_w_ltr (macros MY, faces swapped, ck/rs/chb at 432-x) || HF-3b: tf[0] forwarded-clock output excluded from the core_clk data IO hold check (lt W route NEEDS_RTL FF -88.94 = single path ck[0]->tf[0]; physical/dscoll_cx/tf_fwdclk_out.sdc) + route.io_hold_margin_ns 0.03"
+  "why": "TOKEN-XDIE-S81 / coordinator 0hn decision 1: tile-top ACK timeout CH_BOARD 400 -> 700 (timer 10 -> 11 b) + LCR 1 credit core faces as the p4l end-slice masters instantiate it; closed dscoll_lane_w_rt (s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt) times out below the 1,106-cycle switched round trip (gate_g4 asbuilt 8,240/12,096 beats late); gate_g5 on built tiles PASS 12,096 exact || HF-3 (HANDOFF 0id): same lt RTL on the 10-13 CLOSED cxea3 geometry (SRAM M5 edge strip + macro halo 5.4; dscoll_lane_w_cxea-cxea3-a011f9e61 DRC 0) that the lt kit dropped ; E = exact MY mirror of dscoll_lane_w_ltr (macros MY, faces swapped, ck/rs/chb at 432-x) || HF-3b: tf[0] forwarded-clock output excluded from the core_clk data IO hold check (lt W route NEEDS_RTL FF -88.94 = single path ck[0]->tf[0]; physical/dscoll_cx/tf_fwdclk_out.sdc) + route.io_hold_margin_ns 0.03 || S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 items 3/1/7; >1 failed route on dsfd_coll_lane_w -> structural redesign): RTL SAFE 1 = reset synchroniser u.rst_s[1] (6,837 loads) replaced by ot_rst_relay 5 kept per-consumer copies + reset-free data registers (rx beat landing, ot_s81ph_link_ep DNR 1) + LCR landing read pointer kept per 8-bit slice (RREP 70; rp[1] had 4,426 loads); kit reset_landing 2 stages; 0 data cycles, reset release +3 edges"
  }
 }
