@@ -74,7 +74,51 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 6
+   "count": 1,
+   "at": [
+    92.88,
+    38.88
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    92.88,
+    101.52
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    92.88,
+    164.16
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    92.88,
+    226.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    92.88,
+    289.44
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    92.88,
+    352.08
+   ]
   }
  ],
  "layer_cap": "M5",
@@ -95,13 +139,13 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.025
  },
- "structural_change": "S81-BKSQ 10-18 REGIONAL RESET TREE (gate3 @368403ff4 FAIL textbook.high_fanout: rst_s[1] -> 9,751 reset loads > 8,000): dsdv_bksel_q sets dsfd_selt_q2 RSTR 1: 55 (* keep *) copies of the second reset-synchroniser stage, each async-cleared by the rst pin and loading rst_s[0] (same assert / release edges, 0 cycles), each resetting one region of <= ~220 flops (sq / sq1 4 bit groups, oq / oq1 2, slice RSTW 42: own + sweep state, 16 bin groups per histogram, 4 accumulator lane groups per packer). Mutant OT_DSDV_BK 5 holds one copy in reset. Earlier: S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Quarter: one master for all 4 quarters (S row R0, N row MX): t_s / f_c on the W part of the N face and t_o on the W face top (to the control), lane on the E part (from the glue).",
+ "structural_change": "TW-S81/BK 10-19 MACRO COLUMN: route q1 s81dvbk_sq-q1-04ac44f80 EARLY_FAIL_CONGESTION GRT-0116 at 5_1_grt (total overflow 5,183: M4 2,171 H, M3 1,834, M5 1,101; max 8 H / 11 V; 4,407 congested gcells, densest at x 120-160 / y 120-180 = the 20.1-um centre channel between the two macro columns, plus the 35-um W channel beside the middle row). Cause = geometry: the 2 x 3 macro grid put 4 SRAM pin faces (each 410 M4 pins: W rd_out 256 + wd 137 + addr; E w_mask 256 + wd 119 + rr/cr) in 91.2 um of free width (35.4 / 20.1 / 35.6), the centre channel taking two faces (~780 pins per row) in 9.3 um usable after halos, at util 0.50. Fix: one centred column of the 6 macros (x 92.88, y 38.88 + k*62.64, 21.6-um gaps for W<->E crossings): W / E channels 92.9 / 93.1 um, one face each (per-face free width ~23 -> ~93 um); the lane (N east) feeds the E channel, t_s (N west) / t_o (W top) the W channel; outline, pins and RTL unchanged. io_hold_margin 0.0 -> 0.025 (KITS 10-18). S81-BKSQ 10-18 REGIONAL RESET TREE (gate3 @368403ff4 FAIL textbook.high_fanout: rst_s[1] -> 9,751 reset loads > 8,000): dsdv_bksel_q sets dsfd_selt_q2 RSTR 1: 55 (* keep *) copies of the second reset-synchroniser stage, each async-cleared by the rst pin and loading rst_s[0] (same assert / release edges, 0 cycles), each resetting one region of <= ~220 flops (sq / sq1 4 bit groups, oq / oq1 2, slice RSTW 42: own + sweep state, 16 bin groups per histogram, 4 accumulator lane groups per packer). Mutant OT_DSDV_BK 5 holds one copy in reset. Earlier: S81U-BK3 VERTICAL CUT (coordinator 0cj (b), 10-17 ~20:10): the bk clusters were ~1,160 um wide (the closed tiles' lane faces point away from the merger / control); they now stack inside the 680-um column (plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json): S row 2 tiles, middle row merger-or-control + glue, N row 2 tiles (MX). Re-pinned top-down for the new neighbours; square-ish re-cut; the lane relays are gone (every hop <= ~405 um). Quarter: one master for all 4 quarters (S row R0, N row MX): t_s / f_c on the W part of the N face and t_o on the W face top (to the control), lane on the E part (from the glue).",
  "job": {
-  "owner": "Claude:S81-BKSQ",
+  "owner": "Claude:TW-S81/BK",
   "branch": "claude/s81-bksq-1018",
-  "tag": "q1",
+  "tag": "q2",
   "purpose": "S81-DV bk_sel quarter tile, vertical cut (dsfd_selt_q2 frprildb configuration re-pinned / re-cut; lane S81U-BK3): closure.",
   "benches": [
    {
