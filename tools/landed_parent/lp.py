@@ -287,23 +287,61 @@ def idents(expr: str) -> set:
     return {n for n in re.findall(r"(?<![\w'$`.])([A-Za-z_]\w*)\b", expr) if n not in KW}
 
 
+def c_to_py(x: str) -> str:
+    """C / Verilog constant expression -> Python: c ? a : b (innermost first), &&, ||, ! (TW2-COLLAR 10-19: a child
+    port [PW-1:0] with PW=(ROWS>64)?7:6, the XDIE-HBM4 issuer / fj, failed eval)"""
+    x = x.replace("&&", " and ").replace("||", " or ")
+    x = re.sub(r"!(?!=)", " not ", x)
+    while "?" in x:
+        q = x.rindex("?")
+        d, i = 0, q - 1                       # condition: back to the enclosing '(' (or the start)
+        while i >= 0 and not (x[i] == "(" and d == 0):
+            d += {")": 1, "(": -1}.get(x[i], 0)
+            i -= 1
+        d, j, c = 0, q + 1, None              # ':' at depth 0, then the false branch to the enclosing ')' (or the end)
+        while j < len(x) and not (x[j] == ")" and d == 0):
+            if x[j] == ":" and d == 0 and c is None:
+                c = j
+            d += {"(": 1, ")": -1}.get(x[j], 0)
+            j += 1
+        if c is None:
+            raise ValueError(f"ternary without ':' in {x!r}")
+        x = x[:i + 1] + f"(({x[q + 1:c]}) if ({x[i + 1:q]}) else ({x[c + 1:j]}))" + x[j:]
+    return x
+
+
+def split_range(rng: str):
+    """[msb:lsb] -> (msb, lsb): the range ':' is the one at paren depth 0 not paired with a ternary '?'"""
+    t, d, q = rng.strip()[1:-1], 0, 0
+    for i, ch in enumerate(t):
+        d += {"(": 1, ")": -1}.get(ch, 0)
+        if d == 0 and ch == "?":
+            q += 1
+        elif d == 0 and ch == ":":
+            if q:
+                q -= 1
+            else:
+                return t[:i], t[i + 1:]
+    raise ValueError(f"no range ':' in {rng!r}")
+
+
 def eval_width(rng: str | None, env: dict) -> int:
     if not rng:
         return 1
-    a, b = rng.strip()[1:-1].split(":")
+    a, b = split_range(rng)
     def ev(x):
         x = x.replace("$clog2", "_clog2")
         for _ in range(8):
             for k, v in env.items():
                 x = re.sub(rf"\b{re.escape(k)}\b", f"({v})", x)
-        return int(eval(x, {"_clog2": lambda v: max(0, math.ceil(math.log2(v))) if v > 0 else 0}))
+        return int(eval(c_to_py(x), {"_clog2": lambda v: max(0, math.ceil(math.log2(v))) if v > 0 else 0}))
     return abs(ev(a) - ev(b)) + 1
 
 
 def width_text(rng: str | None) -> str:
     if not rng:
         return "1"
-    a, b = rng.strip()[1:-1].split(":")
+    a, b = split_range(rng)
     return f"(({a.strip()}) - ({b.strip()}) + 1)"
 
 

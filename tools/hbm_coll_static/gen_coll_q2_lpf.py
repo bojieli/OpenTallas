@@ -14,6 +14,14 @@ SOLO 0) into the WIRES-ONLY flat parent tools/landed_parent/lp.py needs, at the 
   cycle (the expansion is exact: zero offsets).
 
   python3 tools/hbm_coll_static/gen_coll_q2_lpf.py      (writes both files into rtl/hbm_accel/generic/collective/p2p)
+
+TW2-COLLAR (10-19): the XDIE-HBM4 parameters (v8g #(.AR_ITER(1), .ROWS(128)), commit 26a9b51eb):
+  python3 tools/hbm_coll_static/gen_coll_q2_lpf.py q2 q3 --ar-iter --rows 128 --suffix _ar
+  -> ot_hfd_coll_<v>_lpf_ar: u_issuer / u_fj #(.ROWS(128)) with 7-bit uop_pc / hgi_start_pc; the v8g g_ariter flops as
+  the leaf u_ariter (ot_hgi_coll_ariter_tag: it_d1/it_d2 on clk_issue, tags on clk_reduce[0]); u_control.inst =
+  inst_ctl (inst_d2 with [717:714] zeroed).  tb_hfd_coll_<v>_lpf_ar_eq: lockstep vs the v8g/v8x #(AR_ITER 1, ROWS 128)
+  parent under the scripted programme rtl/.../p2p/landed/stim_<v>_lp_ar.vh (looped AR rows, iter_ar_tag_step != 0).
+  Defaults (no options) = the original output, byte-identical.
 """
 from pathlib import Path
 
@@ -76,9 +84,11 @@ def cat(bits):
     return "{" + ",".join(reversed(bits)) + "}"
 
 
-def flat(v="q2") -> str:
+def flat(v="q2", ar=False, rows=64, suffix="") -> str:
     VV = VARIANTS[v]
     SOLO, NS = VV["SOLO"], VV["NS"]
+    PW = 7 if rows > 64 else 6
+    rp = f" #(.ROWS({rows}))" if rows != 64 else ""
     L = []
     w = L.append
     w("`timescale 1ns/1ps")
@@ -88,16 +98,21 @@ def flat(v="q2") -> str:
         w("// WIRES-ONLY flat expansion of ot_hfd_coll_q2_hard_v8g (q2 COLL quadrant parent, NLINK 2, SOLO 0) at closed-view")
     else:
         w("// WIRES-ONLY flat expansion of ot_hfd_coll_q3_hard_v8x #(NLINK 2, TP 192) (q3 SW COLL quadrant parent, SOLO 1) at closed-view")
-    w(f"// granularity: same ports / clock entries; lockstep-identical (tb_hfd_coll_{v}_lpf_eq). Input of lp.py (landed parent).")
-    w(f"module ot_hfd_coll_{v}_lpf(")
+    if ar or rows != 64:
+        w(f"// TW2-COLLAR (10-19): parameters AR_ITER={int(ar)}, ROWS={rows} (XDIE-HBM4 26a9b51eb); lockstep-identical to the"
+          f" parent #(AR_ITER {int(ar)}, ROWS {rows}) (tb_hfd_coll_{v}_lpf{suffix}_eq).")
+        w(f"// granularity: same ports / clock entries. Input of lp.py (landed parent).")
+    else:
+        w(f"// granularity: same ports / clock entries; lockstep-identical (tb_hfd_coll_{v}_lpf_eq). Input of lp.py (landed parent).")
+    w(f"module ot_hfd_coll_{v}_lpf{suffix}(")
     w(header(v))
     w(");")
     w(" localparam integer PWT=545;")
     # issuer / fj / upipe
-    w(" wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;")
-    w(" wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [5:0] uop_pc;wire busy_d2,start_d3;")
+    w(f" wire [36:0] program_cfg;wire hgi_start;wire [{PW - 1}:0] hgi_start_pc;")
+    w(f" wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [{PW - 1}:0] uop_pc;wire busy_d2,start_d3;")
     w(" wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;")
-    w(" ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue),.rst_n(rst_n),")
+    w(f" ot_hgi_coll_issuer_m{rp} u_issuer(.clk_control(clk_issue),.rst_n(rst_n),")
     w("  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),")
     w("  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),")
     w("  .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));")
@@ -123,10 +138,20 @@ def flat(v="q2") -> str:
         w(" wire p_tkm_cfg_has_r=inst[873];")
     w(" wire [30:0] p_ar_low=inst[1505+:31];")
     w(" wire [54:0] ar={p_ring[81:58],p_ar_low};")
-    w(" wire a_load_v=ar[0];wire [3:0] a_load_tag=ar[1+:4];wire a_add_read=ar[5];wire [3:0] a_read_tag=ar[6+:4];")
-    w(" wire a_add_issue=ar[10];wire a_pub_read=ar[11];wire [3:0] a_pub_tag_a=ar[12+:4],a_pub_tag_b=ar[16+:4];")
-    w(" wire a_pub_bf16=ar[20],a_pub_release=ar[21],a_pub_issue=ar[22];wire [7:0] a_pub_src=ar[23+:8];")
-    w(" wire [15:0] a_pub_index=ar[31+:16];")
+    if ar:
+        # v8g g_ariter (XDIE-HBM4): iterated reduce tags, the flops in the leaf u_ariter (clk_issue / clk_reduce[0])
+        w(" wire a_load_v=ar[0];wire a_add_read=ar[5];wire [3:0] a_load_tag,a_read_tag,a_pub_tag_a,a_pub_tag_b;wire [15:0] a_pub_index;")
+        w(" wire a_add_issue=ar[10];wire a_pub_read=ar[11];")
+        w(" wire a_pub_bf16=ar[20],a_pub_release=ar[21],a_pub_issue=ar[22];wire [7:0] a_pub_src=ar[23+:8];")
+        w(" wire [1535:0] inst_ctl={inst_d2[1535:718],4'b0,inst_d2[713:0]};")
+        w(" ot_hgi_coll_ariter_tag u_ariter(.clk_issue(clk_issue),.clk_tag(clk_reduce[0]),.iteration(tap_iteration[15:0]),")
+        w("  .ar2({inst_d2[688+:24],inst_d2[1505+:31]}),.st2(inst_d2[714+:4]),.load_tag(a_load_tag),.read_tag(a_read_tag),")
+        w("  .pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_index(a_pub_index));")
+    else:
+        w(" wire a_load_v=ar[0];wire [3:0] a_load_tag=ar[1+:4];wire a_add_read=ar[5];wire [3:0] a_read_tag=ar[6+:4];")
+        w(" wire a_add_issue=ar[10];wire a_pub_read=ar[11];wire [3:0] a_pub_tag_a=ar[12+:4],a_pub_tag_b=ar[16+:4];")
+        w(" wire a_pub_bf16=ar[20],a_pub_release=ar[21],a_pub_issue=ar[22];wire [7:0] a_pub_src=ar[23+:8];")
+        w(" wire [15:0] a_pub_index=ar[31+:16];")
     if SOLO:
         w(" wire a_arg_mode=ar[47],a_arg_start=ar[48],a_arg_flush=ar[49],a_arg_publish=ar[50];")
         w(" wire [3:0] a_arg_in_slot=ar[51+:4];")
@@ -175,7 +200,7 @@ def flat(v="q2") -> str:
         w(" wire [9:0] capture_calendar={p_ring[82],p_capture_slot[8:0]};")
     else:
         w(" wire [8:0] capture_calendar=p_capture_slot[8:0];")
-    w(f" {VV['ctl']} u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),")
+    w(f" {VV['ctl']} u_control(.clk_control(clk_control),.rst_n(rst_n),.inst({'inst_ctl' if ar else 'inst_d2'}),")
     w("  .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),"
       + (".tkm_done(tkx_done),.tkm_busy(tkx_busy)," if SOLO else ".tkm_done(1'b0),.tkm_busy(1'b0),"))
     w("  .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),")
@@ -199,7 +224,7 @@ def flat(v="q2") -> str:
         w(f" assign tkx_del_flit=dest_d[{10 * PWT}+:{4 * PWT}];")
     else:
         w(" wire [9:0] tkm_dest_v_w;")
-    w(f" {VV['fj']} u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),")
+    w(f" {VV['fj']}{rp} u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),")
     w("  .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),")
     w("  .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),")
     w("  .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),")
@@ -378,9 +403,82 @@ def tb_eq(v="q2", cycles=3000) -> str:
     return "\n".join(L) + "\n"
 
 
+def ref_inst(v, ar=False, rows=64):
+    """the hard parent with the XDIE-HBM4 parameters (defaults = VARIANTS[v]['ref'])"""
+    r = VARIANTS[v]["ref"]
+    if not ar and rows == 64:
+        return r
+    ps = ([".AR_ITER(1)"] if ar else []) + ([f".ROWS({rows})"] if rows != 64 else [])
+    if "#(" in r:
+        return r[:-1] + "," + ",".join(ps) + ")"
+    return f"{r} #({','.join(ps)})"
+
+
+def tb_eq_scripted(v, ar, rows, suffix, stim) -> str:
+    """TW2-COLLAR: lockstep of the hard parent #(AR_ITER, ROWS) vs ot_hfd_coll_<v>_lpf<suffix> under a SCRIPTED programme
+    (the lp.py tb_stimulus include: fi_<port> inputs, rst = rst_n, fo_<port> = the reference's outputs, lp_finish); every
+    output compared every cycle after reset release.  Random words alone never start the issuer (cfg_target 1 / 256)."""
+    import re
+    ports = []
+    for it in header(v).replace("\n", " ").strip().rstrip(",").split(","):
+        it = " ".join(it.split())
+        m = re.match(r"(input|output)?\s*(?:wire)?\s*(\[[^\]]*\])?\s*(\w+)$", it)
+        if m.group(1):
+            d, r = m.group(1), m.group(2)
+        elif m.group(2):
+            r = m.group(2)
+        ports.append((d, r, m.group(3)))
+    W = {n: (1 if not r else int(r[1:-1].split(":")[0]) + 1) for d, r, n in ports}
+    ins = [n for d, r, n in ports if d == "input" and not n.startswith("clk_") and n != "rst_n"]
+    outs = [n for d, r, n in ports if d == "output"]
+    cks = [n for d, r, n in ports if n.startswith("clk_")]
+    top = f"ot_hfd_coll_{v}_lpf{suffix}"
+    L = ["`timescale 1ns/1ps",
+         f"// GENERATED by tools/hbm_coll_static/gen_coll_q2_lpf.py (TW2-COLLAR): {ref_inst(v, ar, rows)} vs {top},",
+         f"// scripted programme {stim}; every output, every cycle after reset release.",
+         f"module tb_hfd_coll_{v}_lpf{suffix}_eq;", " reg clk=1'b0; always #0.5 clk=~clk; reg rst=1'b0;"]
+    for n in ins:
+        L.append(f" reg [{W[n] - 1}:0] fi_{n};")
+    for n in outs:
+        L.append(f" wire [{W[n] - 1}:0] fo_{n},lo_{n};")
+    conn_a = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst)"] + \
+             [f".{n}(fi_{n})" for n in ins if n not in ("qid_rg", "qid_wr")] + [f".{n}(fo_{n})" for n in outs]
+    conn_b = [f".{c}({{{W[c]}{{clk}}}})" for c in cks] + [".rst_n(rst)"] + [f".{n}(fi_{n})" for n in ins] + \
+             [f".{n}(lo_{n})" for n in outs]
+    L.append(f" {ref_inst(v, ar, rows)} u_ref(" + ",".join(conn_a) + ");")
+    L.append(f" {top} u_flat(" + ",".join(conn_b) + ");")
+    L.append(" integer cyc=0,nc=0,bad=0;")
+    L.append(" always @(negedge clk) begin")
+    L.append("  cyc<=cyc+1;")
+    L.append("  if(cyc>20)begin")
+    for n in outs:
+        L.append(f"   nc=nc+1; if(lo_{n}!==fo_{n})begin bad=bad+1; if(bad<=5)$display(\"EQ_MISMATCH port={n} cyc=%0d\",cyc); end")
+    L.append("  end")
+    L.append(" end")
+    L.append(" task lp_finish; input [8*48-1:0] what; begin")
+    L.append("  if(bad==0&&nc>0)$display(\"LPF_EQ PASS compared=%0d cycles=%0d stimulus=%0s\",nc,cyc,what);")
+    L.append("  else $display(\"LPF_EQ FAIL mismatches=%0d of %0d stimulus=%0s\",bad,nc,what);")
+    L.append("  $finish; end endtask")
+    L.append(f" `include \"{stim}\"")
+    L.append("endmodule")
+    return "\n".join(L) + "\n"
+
+
 if __name__ == "__main__":
-    import sys
-    for v in (sys.argv[1:] or ["q2", "q3"]):
-        (OUT / f"ot_hfd_coll_{v}_lpf.sv").write_text(flat(v))
-        (OUT / f"tb_hfd_coll_{v}_lpf_eq.sv").write_text(tb_eq(v))
-        print("wrote", OUT / f"ot_hfd_coll_{v}_lpf.sv", f"and tb_hfd_coll_{v}_lpf_eq.sv")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("variants", nargs="*", default=["q2", "q3"])
+    ap.add_argument("--ar-iter", action="store_true", help="v8g AR_ITER=1: u_ariter leaf + inst_ctl")
+    ap.add_argument("--rows", type=int, default=64, choices=[64, 128], help="issuer / fj ROWS")
+    ap.add_argument("--suffix", default="", help="module / file suffix (required with --ar-iter or --rows 128)")
+    a = ap.parse_args()
+    if (a.ar_iter or a.rows != 64) and not a.suffix:
+        ap.error("--ar-iter / --rows 128 need --suffix (never overwrite the closed-view lpf)")
+    for v in a.variants:
+        (OUT / f"ot_hfd_coll_{v}_lpf{a.suffix}.sv").write_text(flat(v, a.ar_iter, a.rows, a.suffix))
+        if a.suffix:
+            stim = f"rtl/hbm_accel/generic/collective/p2p/landed/stim_{v}_lp{a.suffix}.vh"
+            (OUT / f"tb_hfd_coll_{v}_lpf{a.suffix}_eq.sv").write_text(tb_eq_scripted(v, a.ar_iter, a.rows, a.suffix, stim))
+        else:
+            (OUT / f"tb_hfd_coll_{v}_lpf_eq.sv").write_text(tb_eq(v))
+        print("wrote", OUT / f"ot_hfd_coll_{v}_lpf{a.suffix}.sv", f"and tb_hfd_coll_{v}_lpf{a.suffix}_eq.sv")
