@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.qwen.existing_edge_field_copies.v1",
+  "status": "PRIVATE_COMPONENT_MODEL_NOT_PARENT_ADOPTION_OR_NATIVE_PROOF",
+  "purpose": "Replicate a landed control bit on its existing read-capture edge, then replicate again on the existing core input-capture edge. No extra data edge is credited.",
+  "reference": "rtl/common/landed_parent/ot_pl_land.sv: ot_pl_land_local_r W1 D4 K2",
+  "implementation": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "contract": {
+    "D": 4,
+    "K": 2,
+    "max_copies_per_selector": 24,
+    "max_selector_groups": 31,
+    "added_data_edges": 0,
+    "added_reset_release_edges": 0,
+    "reset_and_warm_age": "Identical to local_r; copies capture the same selected/valid expression on the same edge, rather than capturing its registered output.",
+    "synthesis_retention": "Each output is an individually kept, uniquely parameterized one-bit flop hierarchy. Every group independently owns counter, warm, reset and onehot selector state. Actual synthesis retention must be measured."
+  },
+  "logical_cost": {
+    "counter_reset_warm_selector_bits_per_group": 9,
+    "formula": "COPIES + 9 * ceil(COPIES/24) FFs at D4",
+    "three_pre_copies": {"groups": 1, "FFs": 12},
+    "seventy_direct_copies_component_test_only": {"groups": 3, "FFs": 97},
+    "parent_proposal_not_implemented": "Three read-edge pre-copies feed at most 24 new same-edge core-input capture flops each. Those capture flops require explicitly allocated existing-depth reset leaves, actual producer port binding, and a recursive upstream/control census."
+  },
+  "not_proven": [
+    "Global LP reset source distribution: this component does not make a shared parent reset root bounded.",
+    "Actual parent consumer partitions, configuration enables, write priority and reset leaf assignment.",
+    "Native mapped area, clock entries, TT/FF phase/hold/setup, reset reach, pin access and routing.",
+    "Any additional transport or read-loop latency credit."
+  ],
+  "qualification": "Compare every output against the unchanged local_r over nonperiodic input, two resets and destination phase -80/0/+80ps. A wrong-K mutant must fail. Synthesize retained hierarchy and audit physical data/control load counts separately from conservative all-combinational logical influence."
+}
