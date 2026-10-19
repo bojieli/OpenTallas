@@ -1,0 +1,116 @@
+{
+ "summary": {
+  "seed": 1019,
+  "sigma": 0.3,
+  "topk": 500,
+  "imut": 0,
+  "pvmut": 0,
+  "kvmut": 0,
+  "variant": "shared",
+  "smut": 4,
+  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "union_lines": 849,
+  "lane_lines": [
+   628,
+   628,
+   628,
+   628
+  ],
+  "ops": 3,
+  "passed": 2,
+  "wall_s": 155.0,
+  "pv_span_max": 515,
+  "pv_union_rows_max": 55,
+  "verdict": "FAIL",
+  "mutant_detected": true
+ },
+ "ops": [
+  {
+   "name": "p17",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 55,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 55,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 117,
+    "first_in": 544,
+    "last_in": 907,
+    "last_out": 1059,
+    "span": 515,
+    "beats": 440
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p18",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 54,
+   "lane_rows": {
+    "0": 32,
+    "1": 32,
+    "2": 32,
+    "3": 32
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 54,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 115,
+    "first_in": 544,
+    "last_in": 905,
+    "last_out": 1051,
+    "span": 507,
+    "beats": 432
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 0,
+   "pass": true
+  },
+  {
+   "name": "p19",
+   "kind": "pv",
+   "kv4": 1,
+   "union_rows": 32,
+   "lane_rows": {
+    "0": 20,
+    "1": 20,
+    "2": 20,
+    "3": 20
+   },
+   "rc": 0,
+   "fault": false,
+   "cycles": {
+    "rows": 32,
+    "qk": 0,
+    "kv4": 1,
+    "lines": 68,
+    "first_in": 544,
+    "last_in": 718,
+    "last_out": 883,
+    "span": 339,
+    "beats": 256
+   },
+   "results": 128,
+   "expected": 128,
+   "mismatches": 2048,
+   "pass": false
+  }
+ ]
+}
