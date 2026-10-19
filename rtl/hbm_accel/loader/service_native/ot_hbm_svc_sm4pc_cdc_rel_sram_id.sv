@@ -205,7 +205,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
   for(ci=0;ci<8;ci=ci+1)if(bank_complete[ci])complete_event[bank_complete_bank[ci]][ci]=1;
  end
  generate if(NATIVE_RETURN!=0)begin:g_regional
-  wire[2047:0] banks;wire[2:0] return_ordinal;wire return_valid;
+  wire[2047:0] banks;wire[2:0] return_ordinal;wire return_valid,tree_fault;reg alignment_fault;
+  assign return_fault=tree_fault||alignment_fault;
+  always @(posedge stream_clk or negedge srst)
+   if(!srst)alignment_fault<=0;
+   else if(out_v!=return_valid||(out_v&&out_ordinal[2:0]!=return_ordinal))alignment_fault<=1;
   reg[MW-1:0] labels[0:6];integer mi;
   for(genvar mb=0;mb<8;mb=mb+1)begin:g_bank
    assign banks[mb*256+:256]=macro_data[mb];
@@ -219,7 +223,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_sram_id #(parameter integer NATIVE_RETURN=0,RETU
   ot_hbm_svg_return_regional #(.MUT(RETURN_MUT)) u_return(
    .pair_clk(return_pair_clk),.pair_rst_n({4{srst}}),.cache_clk(stream_clk),.cache_rst_n(srst),
    .bank_data(banks),.in_ordinal({4{read_ordinal_pick[2:0]}}),.in_valid({4{pre_v}}),
-   .out_data(out_data),.out_ordinal(return_ordinal),.out_valid(return_valid),.fault(return_fault));
+   .out_data(out_data),.out_ordinal(return_ordinal),.out_valid(return_valid),.fault(tree_fault));
   assign {out_v,out_mask,out_ordinal,out_bank,out_epoch,out_last}=labels[6];
  end else begin:g_flat
   assign return_fault=0;
