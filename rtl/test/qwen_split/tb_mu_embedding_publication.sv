@@ -29,9 +29,9 @@ module tb_mu_embedding_publication;
  wire ep_publish=(round<4&&cyc==base+12)||(round<7&&cyc==base+175)||(mut==15&&cyc==base+40);
  qfd_mu_embedding_epoch_publication #(.ENABLE(1)) epoch_ledger(.ck(clk),.rst_n(rst_n),
  .accepted_v(ep_accept),.accepted_user(user_id),.accepted_epoch(EEP+((cyc==base+15)?16'd4:16'd0)),
- .publish_slot(ep_publish),.publish_user(user_id),.fetch_slot(fetch_slot),.fetch_user(user_id),
+ .publish_slot(ep_publish),.publish_mask(4'b1<<user_id),.fetch_slot(fetch_slot),.fetch_user(user_id),
  .consume_slot(core_start),.consume_user(user_id),.release_slot(cyc==base+170),
- .retire_slot((round==7&&cyc==base+171)||(mut==16&&cyc==base+40)),.retire_user(user_id),
+ .retire_slot((round==7&&cyc==base+171)||(mut==16&&cyc==base+40)),.retire_mask(4'b1<<user_id),
  .fetch_epoch(ep_fetch),.expected_epoch(ep_expected),.core_epoch(ep_core),.fault(ep_fault));
  wire ledger_fill;wire [17:0] ledger_token,expected_token;wire [15:0] ledger_epoch,expected_epoch;wire ledger_fault;
  qfd_mu_embedding_ledger #(.ENABLE(1)) ledger(.ck(clk),.rst_n(rst_n),

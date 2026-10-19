@@ -15,3 +15,12 @@ for mut in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16;do
  if "$out/obj/Vtb_mu_embedding_publication" +TOKEN=65536 +VECTORS=results/arch/qwen_tp8_native_dispatch_1014/embedding_vectors/token65536 +MUT="$mut" > "$out/mut$mut.log" 2>&1;then echo "FAIL mutant$mut escaped";exit 1;fi
  grep 'JOIN_FAIL' "$out/mut$mut.log"
 done
+
+verilator --binary --timing -j 4 -Wno-fatal --top-module tb_mu_embedding_epoch_masks --Mdir "$out/mask_obj" rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_epoch_publication.sv rtl/test/qwen_split/tb_mu_embedding_epoch_masks.sv > "$out/mask_build.log" 2>&1
+"$out/mask_obj/Vtb_mu_embedding_epoch_masks" > "$out/masks.log" 2>&1
+grep MASK_PASS "$out/masks.log"
+for mut in 1 2 3 4 5 6;do
+ if "$out/mask_obj/Vtb_mu_embedding_epoch_masks" +MUT="$mut" > "$out/mask_mut$mut.log" 2>&1;then echo "FAIL mask mutant$mut escaped";exit 1;fi
+ grep MASK_FAIL "$out/mask_mut$mut.log"
+done
+sha256sum rtl/test/qwen_split/tb_mu_embedding_epoch_masks.sv >> "$out/source.sha256"
