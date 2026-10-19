@@ -1,0 +1,1724 @@
+{
+  "schema": "opentallas.a0.native_reset.v1",
+  "input_sha256": "c07b6bc766314f270d5c7889ba7891f9e431d99de536716b75ff6d651d80bd5b",
+  "original_cells": 38544,
+  "added_cells": [
+    "a0_reset_face1_tie",
+    "a0_reset_face1",
+    "a0_reset_face1_positive",
+    "a0_reset_face2_tie",
+    "a0_reset_face2_positive",
+    "a0_reset_branch_tie",
+    "a0_reset_branch",
+    "a0_reset_branch_positive",
+    "a0_reset_leaf_00_tie",
+    "a0_reset_leaf_00",
+    "a0_reset_leaf_00_positive",
+    "a0_reset_leaf_01_tie",
+    "a0_reset_leaf_01",
+    "a0_reset_leaf_01_positive",
+    "a0_reset_leaf_02_tie",
+    "a0_reset_leaf_02",
+    "a0_reset_leaf_02_positive",
+    "a0_reset_leaf_03_tie",
+    "a0_reset_leaf_03",
+    "a0_reset_leaf_03_positive",
+    "a0_reset_leaf_04_tie",
+    "a0_reset_leaf_04",
+    "a0_reset_leaf_04_positive",
+    "a0_reset_leaf_05_tie",
+    "a0_reset_leaf_05",
+    "a0_reset_leaf_05_positive",
+    "a0_reset_leaf_06_tie",
+    "a0_reset_leaf_06",
+    "a0_reset_leaf_06_positive",
+    "a0_reset_leaf_07_tie",
+    "a0_reset_leaf_07",
+    "a0_reset_leaf_07_positive",
+    "a0_reset_leaf_08_tie",
+    "a0_reset_leaf_08",
+    "a0_reset_leaf_08_positive",
+    "a0_reset_leaf_09_tie",
+    "a0_reset_leaf_09",
+    "a0_reset_leaf_09_positive",
+    "a0_reset_leaf_10_tie",
+    "a0_reset_leaf_10",
+    "a0_reset_leaf_10_positive",
+    "a0_reset_leaf_11_tie",
+    "a0_reset_leaf_11",
+    "a0_reset_leaf_11_positive",
+    "a0_reset_leaf_12_tie",
+    "a0_reset_leaf_12",
+    "a0_reset_leaf_12_positive",
+    "a0_reset_leaf_13_tie",
+    "a0_reset_leaf_13",
+    "a0_reset_leaf_13_positive",
+    "a0_reset_leaf_14_tie",
+    "a0_reset_leaf_14",
+    "a0_reset_leaf_14_positive",
+    "a0_reset_leaf_15_tie",
+    "a0_reset_leaf_15",
+    "a0_reset_leaf_15_positive",
+    "a0_reset_leaf_16_tie",
+    "a0_reset_leaf_16",
+    "a0_reset_leaf_16_positive",
+    "a0_reset_leaf_17_tie",
+    "a0_reset_leaf_17",
+    "a0_reset_leaf_17_positive",
+    "a0_reset_leaf_18_tie",
+    "a0_reset_leaf_18",
+    "a0_reset_leaf_18_positive"
+  ],
+  "changed_original_inputs": {
+    "_31787_/C": [
+      "_14782_",
+      "a0_reset_leaf_03_qn"
+    ],
+    "_31808_/C": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "_31850_/A": [
+      "_14782_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31855_/A": [
+      "_14782_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31909_/B": [
+      "_14858_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31914_/B": [
+      "_14858_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31919_/B": [
+      "_14858_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31976_/B": [
+      "_14858_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31979_/B": [
+      "_14858_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31982_/B": [
+      "_14858_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31986_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31991_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_31998_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_32003_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_32006_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_32009_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_32020_/B": [
+      "_14907_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_32454_/B": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "_32961_/B": [
+      "_14782_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_33758_/B": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "_51543_/B": [
+      "_14782_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_51561_/B": [
+      "_14782_",
+      "a0_reset_leaf_00_qn"
+    ],
+    "_51783_/B": [
+      "_14858_",
+      "a0_reset_leaf_05_qn"
+    ],
+    "_51799_/A": [
+      "_14858_",
+      "a0_reset_leaf_04_qn"
+    ],
+    "_51801_/A": [
+      "_14858_",
+      "a0_reset_leaf_05_qn"
+    ],
+    "_51802_/A": [
+      "u_g.reset_q",
+      "a0_reset_leaf_04_q"
+    ],
+    "_51803_/A": [
+      "u_g.reset_q",
+      "a0_reset_leaf_05_q"
+    ],
+    "_51805_/B": [
+      "_14858_",
+      "a0_reset_leaf_05_qn"
+    ],
+    "u_g.reset_q$_DFF_P_/D": [
+      "rst_n",
+      "a0_reset_face2_hi"
+    ],
+    "u_g.u_tile.fault$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_10_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_09_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_10_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_09_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_10_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_09_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_08_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_07_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_08_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_07_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[0\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[1\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[2\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[3\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[4\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[0\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[1\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[2\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[3\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[4\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node/rst_n": [
+      "u_g.reset_q",
+      "a0_reset_leaf_06_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.go_i$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.active_o$_DFFE_PN0P_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.e_v$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.fault$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[0\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[1\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[2\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[3\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_03_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[4\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[0\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_11_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[1\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_12_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[2\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_13_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_14_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_15_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_16_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_17_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_18_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[0\\]$_DFFE_PN0P_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[1\\]$_DFFE_PN0P_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[2\\]$_DFFE_PN0P_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[3\\]$_DFFE_PN0P_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.pend$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.s1_v$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.s1b_v$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.s2_v$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.s3_v$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.split_fault$_DFFE_PN0P_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[1\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[2\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[3\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[4\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[5\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[6\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[7\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[8\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[10\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[11\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[12\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[13\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[14\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_02_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[15\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[16\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[17\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[18\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[19\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[1\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[20\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[21\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[22\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[23\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[24\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[25\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[26\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[27\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[28\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[29\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[2\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[30\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[31\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[32\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[33\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[34\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[3\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[4\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_01_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[5\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_00_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[6\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_00_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[7\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_00_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[8\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_00_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[9\\]$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_00_q"
+    ],
+    "u_g.u_tile.u_tile.u_logic.u_me.wrom_re$_DFF_PN0_/RESETN": [
+      "u_g.reset_q",
+      "a0_reset_leaf_00_q"
+    ]
+  },
+  "leaf_endpoints": [
+    {
+      "endpoint": "_51561_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14782_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_51543_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14782_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_32961_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14782_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_32020_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_32009_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_32006_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_32003_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31998_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31991_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31986_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14907_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31982_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31979_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31976_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31919_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31914_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31909_/B",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31855_/A",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14782_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "_31850_/A",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "_14782_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_00_qn"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.wrom_re$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_00_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[9\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_00_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[8\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_00_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[7\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_00_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[6\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_00_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[5\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 0,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_00_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[4\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[3\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[34\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[33\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[32\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[31\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[30\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[2\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[29\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[28\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[27\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[26\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[25\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[24\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[23\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[22\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[21\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[20\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[1\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[19\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[18\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[17\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[16\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[15\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 1,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_01_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[14\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[13\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[12\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[11\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line\\[10\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[8\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[7\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[6\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[5\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[4\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[3\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[2\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.u_mv.line\\[1\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.split_fault$_DFFE_PN0P_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.s3_v$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.s2_v$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.s1b_v$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.s1_v$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.pend$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[3\\]$_DFFE_PN0P_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[2\\]$_DFFE_PN0P_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[1\\]$_DFFE_PN0P_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.pcnt\\[0\\]$_DFFE_PN0P_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[4\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 2,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_02_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[3\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[2\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[1\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.fault_q\\[0\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.fault$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.e_v$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.active_o$_DFFE_PN0P_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.go_i$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[4\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[3\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[2\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[1\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s\\[1\\]\\[0\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[4\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[3\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[2\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[1\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n\\[1\\]\\[0\\]$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.fault$_DFF_PN0_/RESETN",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "_33758_/B",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "_32454_/B",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "_31808_/C",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_03_q"
+    },
+    {
+      "endpoint": "_31787_/C",
+      "clock": "ck",
+      "leaf": 3,
+      "original_net": "_14782_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_03_qn"
+    },
+    {
+      "endpoint": "_51799_/A",
+      "clock": "ck_fa2",
+      "leaf": 4,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_04_qn"
+    },
+    {
+      "endpoint": "_51802_/A",
+      "clock": "ck_fa2",
+      "leaf": 4,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_04_q"
+    },
+    {
+      "endpoint": "_51805_/B",
+      "clock": "ck_fa3",
+      "leaf": 5,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_05_qn"
+    },
+    {
+      "endpoint": "_51801_/A",
+      "clock": "ck_fa3",
+      "leaf": 5,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_05_qn"
+    },
+    {
+      "endpoint": "_51783_/B",
+      "clock": "ck_fa3",
+      "leaf": 5,
+      "original_net": "_14858_",
+      "root_qn_parity": 0,
+      "new_net": "a0_reset_leaf_05_qn"
+    },
+    {
+      "endpoint": "_51803_/A",
+      "clock": "ck_fa3",
+      "leaf": 5,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_05_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node/rst_n",
+      "clock": "ck_node",
+      "leaf": 6,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_06_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rn",
+      "leaf": 7,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_07_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rn",
+      "leaf": 7,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_07_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rnw",
+      "leaf": 8,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_08_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rnw",
+      "leaf": 8,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_08_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rs",
+      "leaf": 9,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_09_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rs",
+      "leaf": 9,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_09_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[1\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rs",
+      "leaf": 9,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_09_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rsw",
+      "leaf": 10,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_10_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rsw",
+      "leaf": 10,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_10_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[0\\].g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_rsw",
+      "leaf": 10,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_10_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[0\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx0",
+      "leaf": 11,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_11_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[1\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx1",
+      "leaf": 12,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_12_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[2\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx2",
+      "leaf": 13,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_13_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx3",
+      "leaf": 14,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_14_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx4",
+      "leaf": 15,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_15_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx5",
+      "leaf": 16,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_16_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx6",
+      "leaf": 17,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_17_q"
+    },
+    {
+      "endpoint": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.g_lrr.rq$_DFF_PN0_/RESETN",
+      "clock": "ck_tx7",
+      "leaf": 18,
+      "original_net": "u_g.reset_q",
+      "root_qn_parity": 1,
+      "new_net": "a0_reset_leaf_18_q"
+    }
+  ],
+  "inserted_ff": [
+    {
+      "name": "a0_reset_face1",
+      "clock": "ck_fa4",
+      "d": "rst_n",
+      "q": "a0_reset_face1_q",
+      "qn": "a0_reset_face1_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_branch",
+      "clock": "ck_fa4",
+      "d": "a0_reset_face2_q",
+      "q": "a0_reset_branch_q",
+      "qn": "a0_reset_branch_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_00",
+      "clock": "ck",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_00_q",
+      "qn": "a0_reset_leaf_00_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_01",
+      "clock": "ck",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_01_q",
+      "qn": "a0_reset_leaf_01_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_02",
+      "clock": "ck",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_02_q",
+      "qn": "a0_reset_leaf_02_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_03",
+      "clock": "ck",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_03_q",
+      "qn": "a0_reset_leaf_03_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_04",
+      "clock": "ck_fa2",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_04_q",
+      "qn": "a0_reset_leaf_04_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_05",
+      "clock": "ck_fa3",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_05_q",
+      "qn": "a0_reset_leaf_05_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_06",
+      "clock": "ck_node",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_06_q",
+      "qn": "a0_reset_leaf_06_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_07",
+      "clock": "ck_rn",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_07_q",
+      "qn": "a0_reset_leaf_07_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_08",
+      "clock": "ck_rnw",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_08_q",
+      "qn": "a0_reset_leaf_08_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_09",
+      "clock": "ck_rs",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_09_q",
+      "qn": "a0_reset_leaf_09_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_10",
+      "clock": "ck_rsw",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_10_q",
+      "qn": "a0_reset_leaf_10_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_11",
+      "clock": "ck_tx0",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_11_q",
+      "qn": "a0_reset_leaf_11_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_12",
+      "clock": "ck_tx1",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_12_q",
+      "qn": "a0_reset_leaf_12_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_13",
+      "clock": "ck_tx2",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_13_q",
+      "qn": "a0_reset_leaf_13_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_14",
+      "clock": "ck_tx3",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_14_q",
+      "qn": "a0_reset_leaf_14_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_15",
+      "clock": "ck_tx4",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_15_q",
+      "qn": "a0_reset_leaf_15_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_16",
+      "clock": "ck_tx5",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_16_q",
+      "qn": "a0_reset_leaf_16_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_17",
+      "clock": "ck_tx6",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_17_q",
+      "qn": "a0_reset_leaf_17_qn",
+      "async_leaf": true
+    },
+    {
+      "name": "a0_reset_leaf_18",
+      "clock": "ck_tx7",
+      "d": "a0_reset_branch_q",
+      "q": "a0_reset_leaf_18_q",
+      "qn": "a0_reset_leaf_18_qn",
+      "async_leaf": true
+    }
+  ],
+  "face_stage2": "u_g.reset_q$_DFF_P_",
+  "face_clock": "ck_fa4",
+  "raw_input_loads": 1,
+  "raw_input_pin": "a0_reset_face1/RESETN",
+  "original_reset_master_change": {
+    "u_g.reset_q$_DFF_P_": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFASRHQNx1_ASAP7_75t_R"
+    ]
+  },
+  "face_stages": 2,
+  "branch_stages": 2,
+  "max_leaf_native_inputs": 24,
+  "cohort_clocks": {
+    "ck": 95,
+    "ck_fa2": 2,
+    "ck_fa3": 4,
+    "ck_node": 1,
+    "ck_rn": 2,
+    "ck_rnw": 2,
+    "ck_rs": 3,
+    "ck_rsw": 3,
+    "ck_tx0": 1,
+    "ck_tx1": 1,
+    "ck_tx2": 1,
+    "ck_tx3": 1,
+    "ck_tx4": 1,
+    "ck_tx5": 1,
+    "ck_tx6": 1,
+    "ck_tx7": 1
+  },
+  "stage4_local_release": "asynchronous assertion through face1, face2, branch and local leaf regardless of stopped clocks; release after two face edges plus branch edge plus next local edge (four aligned edges), phase/resume-order explicit, not qualified",
+  "adoption": false,
+  "physical_phase_bound": false
+}

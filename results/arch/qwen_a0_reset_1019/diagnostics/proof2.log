@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-epyc6       admits   836 GB (avail 698, growth 113, headroom 0, waiters 0/0 GB) load 19/128 running 9 disk 6021 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-306339-1792431100 after 0 s
+A0_NATIVE_BENCH_GENERATED 2622 ports; TX-clock reset leaf 11
+A0_RESET_TRACE_PASS checks248501
+A0_RESET_NATIVE_NUMERIC_PASS checks12798 valids5120 nonzero5120 leaves'{'h1400, 'h1400, 'h1400, 'h1400, 'h1400, 'h1400, 'h1400, 'h1400}
+- native/tb_numeric.sv:2755: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 2.045 s; speed 6.399 us/s
+- Verilator: cpu 2.045 s on 1 threads; allocated 24 MB
+A0_RESET_ALL_PROOFS_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-306339-1792431100): exit 0

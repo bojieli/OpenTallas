@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-epyc6       admits   820 GB (avail 672, growth 98, headroom 0, waiters 0/0 GB) load 19/128 running 9 disk 6024 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-a0-reset-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-294813-1792430887 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+A0_RESET_NATIVE_CREATED 120 consumers 19 clock-owned leaves 43 added cells
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-294813-1792430887): exit 0

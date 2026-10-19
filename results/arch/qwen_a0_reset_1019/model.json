@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.a0.reset_source_model.v1",
+  "source_base": "5b6ab23df",
+  "specialized_top": "qfd_tile_nk_regroot5_reset_native",
+  "production_defaults_changed": false,
+  "prior_native_ff": 15630,
+  "candidate_native_ff": 15651,
+  "added_ff": 21,
+  "added_inv": 22,
+  "added_tie": 22,
+  "original_reset_master_replaced": {
+    "u_g.reset_q$_DFF_P_": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFASRHQNx1_ASAP7_75t_R"
+    ]
+  },
+  "raw_reset_native_loads": 1,
+  "raw_reset_pin": "a0_reset_face1/RESETN",
+  "face_release_stages": 2,
+  "branch_release_stages": 2,
+  "leaf_cohorts": 19,
+  "max_original_native_loads_per_leaf": 24,
+  "steady_data_edges_added": 0,
+  "reset_release_formula": "face1 event; face2 next ck_fa4 event; branch next ck_fa4 event; leaf next destination event; async assert independent of clocks",
+  "boot_guard_physical_bound": false,
+  "std_area_um2": 6293.136239997923,
+  "hard_area_um2": 322971.4944000001,
+  "predecessor_floorplan_model": "../qwen_a0_safe_1019/model.json",
+  "physical_root_model_qualified": false,
+  "next_gate_authorized": false
+}
