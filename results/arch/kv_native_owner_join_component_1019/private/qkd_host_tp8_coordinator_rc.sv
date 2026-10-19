@@ -5,6 +5,7 @@
 // witness comes from the actual class9 decoder; no external retirement ACK.
 module qkd_host_tp8_coordinator_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=0)(
  output wire alloc_fire,output wire[58:0]alloc_tag,output wire[1:0]alloc_gen,
+ output wire[58:0]terminal_accept_tag,output wire[1:0]terminal_accept_gen,
  input wire[15:0]join_client,input wire[7:0]join_slot,input wire[17:0]join_pos,
  output wire terminal_accepted,post_retired,output wire[58:0]post_tag,acknowledged_tag,output wire[1:0]post_gen,acknowledged_gen,
  input wire ck_codec,ck_lifecycle,ck_post,por_n,
@@ -66,7 +67,7 @@ module qkd_host_tp8_coordinator_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=
  .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_native_valid(step_retire_native_valid),.cq_native_valid_observed(cq_native_valid_observed),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(codec_fault));
  qkd_host_coordinator_services_rc #(.ENABLE_NATIVE_OWNER_JOIN(ENABLE_NATIVE_OWNER_JOIN)) u_lifecycle(
- .alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.join_client(join_client),.join_slot(join_slot),.join_pos(join_pos),
+ .alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.terminal_accept_tag(terminal_accept_tag),.terminal_accept_gen(terminal_accept_gen),.join_client(join_client),.join_slot(join_slot),.join_pos(join_pos),
  .clk(ck_lifecycle),.ck_post(ck_post),.por_n(por_n),.warm_ready(warm_ready),
  .request_valid(token_request_valid&&request_admission),.request_ready(local_request_ready),.request_token(token_request_token),.request_position(token_request_position),.request_generation(token_request_gen),
  .grant_valid(token_grant_valid),.grant_ready(token_grant_ready),.grant_epoch(token_grant_epoch),.grant_token(token_grant_token),.grant_position(token_grant_position),.grant_generation(token_grant_gen),.grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),

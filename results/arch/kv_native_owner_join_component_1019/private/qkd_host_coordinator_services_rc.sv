@@ -5,6 +5,7 @@
 // Rank-indexed inputs use native rank, not physical HOST ID.
 module qkd_host_coordinator_services_rc #(parameter integer ENABLE_NATIVE_OWNER_JOIN=0, parameter [15:0] INITIAL_EPOCH = 16'd0) (
  output wire alloc_fire,output wire[58:0]alloc_tag,output wire[1:0]alloc_gen,
+ output wire[58:0]terminal_accept_tag,output wire[1:0]terminal_accept_gen,
  input wire clk, por_n, warm_ready,
  input wire request_valid, output wire request_ready,
  input wire [17:0] request_token, request_position,
@@ -59,7 +60,7 @@ module qkd_host_coordinator_services_rc #(parameter integer ENABLE_NATIVE_OWNER_
 );
  wire[58:0]expected_terminal={grant_tag[58:43],6'd37,grant_tag[36:0]};
  qkd_host_lifecycle_collected_rc #(.INITIAL_EPOCH(INITIAL_EPOCH))u_lifecycle(
- .alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.clk(clk),
+ .alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.terminal_accept_tag(terminal_accept_tag),.terminal_accept_gen(terminal_accept_gen),.clk(clk),
  .por_n(por_n),
  .warm_ready(warm_ready&&!post_fault),
  .request_valid(request_valid),

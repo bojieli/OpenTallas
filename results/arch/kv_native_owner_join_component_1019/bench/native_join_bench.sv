@@ -121,6 +121,7 @@ reg allow_aw=1,allow_w=1;
  wire[15:0]bound_client,pending_client;wire[7:0]bound_slot,pending_slot;wire[17:0]pending_pos;
  wire[1:0]bound_descgen,bound_gen;wire[58:0]bound_request_tag,bound_terminal_tag;
  wire[7:0]peer_rx_valid,peer_rx_ready,peer_tx_valid,peer_tx_ready;wire[4095:0]peer_rx_data,peer_tx_data;
+ wire[58:0]terminal_accept_tag;wire[1:0]terminal_accept_gen;
  wire alloc_fire,terminal_accepted,post_retired;wire[58:0]alloc_tag,acknowledged_tag,post_tag;wire[1:0]alloc_gen,acknowledged_gen,post_gen;
  wire dispatch_valid,dispatched,coordinator_fault,post_pending;
  wire[7:0]accepted_ranks;wire[58:0]cohort_tag;wire[1:0]cohort_gen;
@@ -165,7 +166,7 @@ reg allow_aw=1,allow_w=1;
    .certificate_v(fixture_certificate_v),.certificate(66'd0),.certificate_prefix(32'd0),.allocated_valid(allocated_rank_v[d]),.allocated_delivered(allocated_rank_delivered[d]),.allocated_epoch(allocated_rank_epoch[d]),.allocated_token(allocated_rank_token[d]),.allocated_position(allocated_rank_pos[d]),.allocated_gen(allocated_rank_gen[d]),.reset_request(reset_request[d]),.retrain_request(retrain_request[d]),.recovery_clear(recovery_clear[d]),.fault(rank_fault[d]));
  end
  qkd_host_tp8_coordinator_rc #(.ENABLE_NATIVE_OWNER_JOIN(1)) coordinator(
-  .alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.join_client(pending_client),.join_slot(pending_slot),.join_pos(pending_pos),
+  .terminal_accept_tag(terminal_accept_tag),.terminal_accept_gen(terminal_accept_gen),.alloc_fire(alloc_fire),.alloc_tag(alloc_tag),.alloc_gen(alloc_gen),.join_client(pending_client),.join_slot(pending_slot),.join_pos(pending_pos),
   .terminal_accepted(terminal_accepted),.acknowledged_tag(acknowledged_tag),.acknowledged_gen(acknowledged_gen),.post_retired(post_retired),.post_tag(post_tag),.post_gen(post_gen),
   .ck_codec(clk),.ck_lifecycle(clk),.ck_post(clk),.por_n(raw_por_n),.peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),
   .token_request_valid(token_request_v[0]&&request_allow),.token_request_token(token_request_token[0]),.token_request_position(token_request_pos[0]),.token_request_gen(token_request_gen[0]),.token_request_ready(coordinator_request_ready),
@@ -179,7 +180,7 @@ reg allow_aw=1,allow_w=1;
   .clk(clk),.raw_por_n(raw_por_n),.issue_fire(issue_fire_v),.issue_client(issue_client),.issue_slot(issue_slot),.issue_desc_gen(issue_descgen),.issue_position(issue_pos),.issue_input_token(issue_token),
   .package_accept_v(package_start_v),.package_position(package_pos),.package_input_token(package_token),.package_gen(package_gen),.hc_accept_v(hc_accept_v),.hc_position(hc_pos),.hc_input_token(hc_token),.hc_gen(hc_gen),
   .request_v(token_request_v[0]),.request_position(token_request_pos[0]),.request_input_token(token_request_token[0]),.request_gen(token_request_gen[0]),.allocation_fire(alloc_fire),.allocation_tag(alloc_tag),.allocation_gen(alloc_gen),
-  .terminal_v(terminal_accepted),.terminal_tag(acknowledged_tag),.terminal_gen(acknowledged_gen),
+  .terminal_v(terminal_accepted),.terminal_tag(terminal_accept_tag),.terminal_gen(terminal_accept_gen),
   .raw_done_v(raw_done_v),.raw_client(raw_done_client),.raw_slot(raw_done_slot),.raw_desc_gen(raw_done_descgen),.raw_position(raw_done_pos),.raw_unready(raw_done_v&&ctl_res[86]),.raw_report_needed(raw_done_report_needed),
   .certificate_v(native_certificate_v),.certificate_health_bound(health_native_valid),.certificate_key({native_certificate_client,native_certificate_slot,native_certificate_descgen,native_certificate_tag,native_certificate_gen}),
   .event_copy_v(event_insert_v&&event_native_valid),.event_key({event_client,event_slot,event_descgen,event_native_tag,event_native_gen}),

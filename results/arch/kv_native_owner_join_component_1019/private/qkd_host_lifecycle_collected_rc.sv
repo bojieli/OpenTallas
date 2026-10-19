@@ -5,6 +5,7 @@
 // Rank-indexed inputs use native rank, not physical HOST ID.
 module qkd_host_lifecycle_collected_rc #(parameter [15:0] INITIAL_EPOCH = 16'd0) (
  output wire alloc_fire,output wire[58:0]alloc_tag,output wire[1:0]alloc_gen,
+ output wire[58:0]terminal_accept_tag,output wire[1:0]terminal_accept_gen,
  input wire clk, por_n, warm_ready,
  input wire request_valid, output wire request_ready,
  input wire [17:0] request_token, request_position,
@@ -69,6 +70,9 @@ module qkd_host_lifecycle_collected_rc #(parameter [15:0] INITIAL_EPOCH = 16'd0)
  assign link_reset_request = recovery_active && (&links_drained);
  assign retraining_request = link_reset_request && (&reset_witness);
  assign identity_fault = allocator_fault || cohort_fault || lifecycle_fault;
+ // Actual retained allocator terminal inputs stay held through its accept pulse.
+ assign terminal_accept_tag=terminal_tag;
+ assign terminal_accept_gen=terminal_generation;
  wire admission_ready = warm_ready && !post_pending && !recovery_active && !lifecycle_fault && !cohort_fault;
  wire begin_valid = grant_valid && grant_ready;
  ot_qwen_tp8_token_epoch_allocator_rc #(.INITIAL_EPOCH(INITIAL_EPOCH)) allocator (
