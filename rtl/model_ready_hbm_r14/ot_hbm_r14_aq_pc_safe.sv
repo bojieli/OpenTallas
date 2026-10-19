@@ -278,7 +278,7 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [3:0] ac_v_local[0:4];
   wire [31:0] act_row_match;
   for(genvar b=0;b<32;b=b+1)begin:ACT_MATCH
-    assign act_row_match[b]=look_row[b]==ac2_row_local[b/8];
+    assign act_row_match[b]=look_row[b]==ac2_row_local[b/16];
   end
   always @* begin
     held=0;need=0;
@@ -297,6 +297,9 @@ module ot_hbm_r14_aq_pc_safe #(
     end else begin
       for(integer g=0;g<4;g=g+1)begin:SG
         reg found;found=0;ac_v[g]<=0;
+        // Invalid candidate fields are not consumed; deterministic captures
+        // eliminate a wide conditional hold-enable without another edge.
+        ac_b[g]<=0;ac_row[g]<=0;
         for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=0;
         for(integer j=0;j<8;j=j+1)if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
           found=1;ac_v[g]<=1;

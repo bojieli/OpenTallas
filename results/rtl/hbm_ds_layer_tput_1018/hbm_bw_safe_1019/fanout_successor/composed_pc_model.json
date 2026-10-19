@@ -85,5 +85,12 @@
     "added_data_edges": 0,
     "reset_proof": "During !rst all pop consumers count/rp reset; no mem write depends on pop. Canonical fault reset dominates. Occupied-reset native producer exact proof+mutants required.",
     "status": "model before RTL; actual combined census pending"
+  },
+  "act_invalid_capture_successor": {
+    "actual_f84_failure": "ACTgroup capture enable _40912_43 and _60645_39,24row/bank+valid bits into DFFEmuxes",
+    "change": "Capture deterministic zero bank/row when noACTcandidate; ac_v/ac_v_local remain0, so invalid fields unconsumed. Remove real wide feedback-enable cone without new stage/state. ExplicitACTrowcopy selectorb/16 for2 real copies instead invalidb/8 values2,3; copies share identical Dstate so intendedconsumedvalue unchanged.",
+    "added_ff": 0,
+    "added_data_edges": 0,
+    "status": "modelbeforeRTL, exactQD64+mutants and actualmappedcensus required"
   }
 }
