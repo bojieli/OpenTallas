@@ -1,0 +1,29 @@
+{
+ "source_commit": "c11f8ddb0",
+ "consumer_wire_mutant_commit": "f74c3cc98",
+ "production_bound": false,
+ "EMB_ID_default": 0,
+ "modeled_GI_state_bits_added": 2,
+ "modeled_LP_landing_FF_added": 23,
+ "LP_added_identity_edges_vs_other_embedding_outputs": 0,
+ "GI_to_output_edges": 3,
+ "scope": "Actual GI/receiver/calendar/user sideband source proof; scripted arithmetic and class PW cap0; no actual epoch/SYSFACE/physical binding",
+ "positive": "Actual9140490edges all4users/acceptedreuse and INIT",
+ "negative": "Consumer-wire userbit corruption faults at firstEMB; count1024 guard fails before run",
+ "source_sha256": {
+  "rtl/qwen_dv/qfd_tt_ctlm_dv.sv": "0b833f5ea7e30f3d06f34ca603581dfd73eefe2dcbcdaddf2bbc7fa547e90db9",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv": "e8a3ad1614054f6a69480697c2ed461d29bd83df59aa9e3e396fa63014e505cf",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv": "754c9b8c0cf2cfb5ae36e9d3d12f8d19c933d99076c0393cc7e02afa58ca5364",
+  "rtl/test/mu_qwen_seq/tb_mu_gi_init.sv": "cde71268820e8f322217bb1c79b2653d06c945a5cb16df3f6a9b6e46ba98406c",
+  "rtl/test/mu_qwen_seq/run_mu_gi_init.sh": "e8fbbf01c64c1e419e7a718e92488864eae4ff8a425d42d476533d4abea9844f",
+  "results/rtl/mu_qwen_1018/admission/F16_P2/dw.hex": "5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928"
+ },
+ "witnesses": {
+  "witness/bad_count.log": "d55d9db03a6cde7cf62f4121797520db10d50eb29bfe8b5502d1ff2752480bb1",
+  "witness/mut4.log": "8a6ea67a39950ae82a6d6db021f7e4d7215cf697083c26c41036e0b9c4d4f2fa",
+  "witness/client.log": "8fa6554898da1c8237ee1749921190c17158d5ebf9fbdc0a9ab19b26566f6aa4",
+  "witness/mut0.log": "ec773d429b71be075e5b72218378fb45d8bb1ef5de41e73dd3643d4fa3e39f47",
+  "witness/wiremut4.log": "8083956d56e440ae2127c2f825b16d3381e1fe14ea08fcb8b3dca218015b5ac2",
+  "witness/wiremut_client.log": "fe9b3e173b7de69baa8ee52c37b1eb392a3f06b49a92ef5433d047fa73966a83"
+ }
+}

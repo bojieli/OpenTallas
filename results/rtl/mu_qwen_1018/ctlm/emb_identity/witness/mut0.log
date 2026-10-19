@@ -1,0 +1,14 @@
+GI_INIT_EDGE dh_pin=1666 cal_accept=1667 stage0_head=1
+GI_INIT_EDGE local_emb_consume=1729 token=777
+GI_INIT_EDGE emb_start_pin=1729 token=777
+GI_CONTEXT_EDGE user=1 offer=253423 bankload=253426 age=3
+GI_CONTEXT_EDGE user=2 offer=505099 bankload=505102 age=3
+GI_CONTEXT_EDGE user=3 offer=1008451 bankload=1008454 age=3
+GI_CONTEXT_EDGE user=1 offer=8307055 bankload=8307058 age=3
+GI_CONTEXT_EDGE user=2 offer=8558731 bankload=8558734 age=3
+GI_CONTEXT_EDGE user=3 offer=9062083 bankload=9062086 age=3
+TB_MU_GI_INIT PASS edges=9140490 prefix=1 headstarts=5112 ctxloads=2/2/2 firstemb=2/2/2 emits=36/32/16/12 results=36/32/16/12 accepted_receiver_bank_age=3 arithmetic=scripted absolute_epoch=unbound
+- /srv/opentallas-scratch/claude/qw-emb-identity-1019/src/rtl/test/mu_qwen_seq/tb_mu_gi_init.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9ms; walltime 59.429 s; speed 153.806 us/s
+- Verilator: cpu 59.422 s on 1 threads; allocated 7 MB
