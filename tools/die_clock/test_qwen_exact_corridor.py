@@ -50,7 +50,7 @@ def test_exact_binary_spine_reserves_and_bounds_every_stage():
     b=ExactForwardedBuilder(g,'test')
     leaves=[[('left/A','BUF',100,50,'l')],[('right/A','BUF',1100,50,'r')]]
     r=b.build('gen/Y',(20,50),leaves)
-    assert r['max_placed_routed_bound_um']<=405
+    assert r['max_planned_routed_bound_um']<=400
     assert all(len(loads)<=2 for _,_,loads in b.nets)
     boxes=[(x,y,x+1.62,y+.27) for _,_,x,y in b.bufs]
     assert not any(overlap(a,c) for i,a in enumerate(boxes) for c in boxes[i+1:])

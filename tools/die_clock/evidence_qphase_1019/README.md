@@ -134,3 +134,28 @@ at most3.780um. Small existing standard-cell footprints also gain exact bay
 refinement; they forbid their actual rectangles instead of an entire10um cell.
 The occupied/fully occupied footprint tests and all12 focused tests pass.
 The full regional checkpoint remains immutable during these spine-only replays.
+
+Final998281bbb full-spine replay and independent actual ODB audit are in
+`physical/full_spine_998`. All763 required regional endpoints are connected
+exactly once with no missing/extra/duplicate endpoint. The actual candidate has
+41835 clock cells (35302 regional,6533 spine), zero all-clock footprint overlaps,
+spine fanout2 and7295 routed stages. Maximum actual placed-pin routed length is
+400.964um. Regional maximum direct distance is364.058um, fanout12, with zero
+direct wires>405um. The printed topology model's400um value is the planned
+origin bound; the independent400.964um actual-pin bound is authoritative.
+
+The audit remains FAIL:6522 spine cells and41807 total clock cells lack physical
+placement rows. Timing, production phase and prefetch admission remain false.
+The concrete readonly actual-candidate row/rail proposal contains16721 segments
+in1.563948807mm2 existing hard-free area and5.792402988m horizontal rail length;
+it covers all41807 off-row cells with zero uncovered cells. Compressed full
+coordinates, the actual geometry manifest and hashes accompany the readable
+proof/summary. No hard macro moves or die-outline expansion are required by
+this geometry. ROOT must resolve the clock-corridor row/rail/PDN integration
+before a timing retry; this is not a qualified clock or production Q certificate.
+
+The original8de whole-spine replay also completed and is preserved in
+`physical/old8de_full_spine_fail`: strict continuation(448,18) FAIL. All jobs
+were collected; no earlier clock/control replay is left waiting for another
+owner. The final source gives the topology-model bound its correct planned
+name; no routing/placement behavior changes from the audited998281bbb run.

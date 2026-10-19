@@ -1,0 +1,30 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+{
+ "identity": {
+  "tool_source": "998281bbb",
+  "regional_odb_sha256": "94823491b38b5ef624c0faaf9fd5d689eb94140081f17a5430846fa4c15767c4",
+  "regional_manifest_sha256": "740c8d09a7b43a74df1d55bab375b1ca65e56f831bee5a5153265d70785af356",
+  "planner_sha256": "7c08c17b4fead7f55a7ff829715388137177d225978871eb08e711b47bf907da"
+ },
+ "regional_clock_cells": 35302,
+ "spine_cells": 6533,
+ "endpoints": 763,
+ "model": {
+  "top": "dc_spine_E6430",
+  "topology": "forwarded_exact_bays",
+  "leaves": 763,
+  "buffers": 6532,
+  "pads": 0,
+  "region_insertion_compensated": false,
+  "max_route_segment_um": 405,
+  "planned_route_segment_um": 400.0,
+  "blocked_run_um": 340.0,
+  "max_placed_routed_bound_um": 400.0000000000018,
+  "exact_bay_refined_cells": 35629
+ },
+ "timing_qualified": false,
+ "production_admitted": false
+}

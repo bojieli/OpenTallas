@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.qwen.clock_corridor_row_requirements.v1",
+ "readonly_proposal": true,
+ "new_row_segments": 16721,
+ "horizontal_rail_length_um": 5792402.988000694,
+ "row_area_mm2": 1.5639488067596503,
+ "proposed_new_clock_cells": 41807,
+ "clock_cells_without_hard_free_row_segment": [],
+ "remaining": [
+  "ROOT approval of top clock-corridor row/rail/PDN integration",
+  "Generate actual physical rows and power rails; verify continuity to top PDN",
+  "Reaudit all overlaps/sites/reach and sign off clock timing"
+ ],
+ "physical_rows_created": false,
+ "power_qualified": false,
+ "timing_qualified": false,
+ "odb_sha256": "9e4a7fb4514b0d74ace8136d21270f3be5640afc3dd7a8570a8872365baf5da3",
+ "manifest_sha256": "d57ba5b587c32c27a01171a9b24195c93c2b1e8c6647110d7dc49e62275e4648",
+ "row_examples": [
+  {
+   "y_um": 7420.14,
+   "x0_um": 0.0,
+   "x1_um": 746.496,
+   "site_width_um": 0.054,
+   "site_count": 13824,
+   "orientation": "R0",
+   "supersedes_existing_rows": [],
+   "new_clock_cells": [
+    "dc_coll_L1"
+   ]
+  },
+  {
+   "y_um": 7420.14,
+   "x0_um": 967.68,
+   "x1_um": 983.232,
+   "site_width_um": 0.054,
+   "site_count": 288,
+   "orientation": "R0",
+   "supersedes_existing_rows": [],
+   "new_clock_cells": [
+    "dc_coll_L3",
+    "dc_serdes2_B1",
+    "dc_serdes2_B2"
+   ]
+  },
+  {
+   "y_um": 7420.14,
+   "x0_um": 1163.376,
+   "x1_um": 2030.4,
+   "site_width_um": 0.054,
+   "site_count": 16056,
+   "orientation": "R0",
+   "supersedes_existing_rows": [],
+   "new_clock_cells": [
+    "dc_r1_R67"
+   ]
+  }
+ ],
+ "full_rows_sha256": "d4f89b67758a4ad56bb8c9b292b0fae701043f96e42a129a1b10c4448a55cd87",
+ "full_rows_gzip_sha256": "a7c52ab35d3394a4cf77a0f011edfb1a50c64944473f4c901040dc6b08be46fe"
+}

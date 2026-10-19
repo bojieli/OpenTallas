@@ -184,5 +184,5 @@ class ExactForwardedBuilder:
         return dict(top=root[1],topology='forwarded_exact_bays',leaves=len(leaves),buffers=len(self.bufs),
                     pads=0,region_insertion_compensated=False,max_route_segment_um=405,
                     planned_route_segment_um=SPINE_PLAN_REACH,blocked_run_um=SPINE_BLOCKED_RUN,
-                    max_placed_routed_bound_um=max(e['routed_bound_um'] for e in self.edges),
+                    max_planned_routed_bound_um=max(e['routed_bound_um'] for e in self.edges),
                     exact_bay_refined_cells=self.g.refined_cells)
