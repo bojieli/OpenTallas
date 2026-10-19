@@ -1,0 +1,4 @@
+# fail witness: ot-epyc7:/srv/opentallas-scratch/claude/s81-hwin-private-package-1019/core02/winner_and_mechanism/actual_mechanism_mut2/run_seed1.log (core02 campaign, source 9e7921b40/replay 06f8ca8dc, Verilator 5.050, seed1; defines = +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+EC_MUT=2 )
+[1068000] %Fatal: tb_dsdv_mu_hwin_early_capture.sv:146: Assertion failed in tb_dsdv_mu_hwin_early_capture: EARLY_MITER QUALIFIED_HEAD c1068 e0
+%Error: /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:146: Verilog $stop
+Aborting...
