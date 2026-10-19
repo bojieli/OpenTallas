@@ -90,6 +90,8 @@ module qkd_host_native_owner_join_rc #(
     allocation_tag[36:19]==p_q.input_token &&
     allocation_tag[18:6]==p_q.position[12:0] && allocation_gen==p_q.package_gen;
 
+  wire accepted_request_held = a_q.valid && request_position=={5'd0,a_q.request_tag[18:6]} &&
+    request_input_token==a_q.request_tag[36:19] && request_gen==a_q.native_gen;
   wire request_match = request_position==p_q.position &&
     request_input_token==p_q.input_token && request_gen==p_q.package_gen;
   assign issue_ready = ENABLE_NATIVE_OWNER_JOIN && !fault_q && p_q.phase==EMPTY;
@@ -117,7 +119,9 @@ module qkd_host_native_owner_join_rc #(
   always_comb begin
     p_d=p_q; a_d=a_q; fault_d=fault_q;
     if (ENABLE_NATIVE_OWNER_JOIN) begin
-      if (request_v && (p_q.phase!=HC || !request_match)) fault_d=1'b1;
+      // Actual token transport samples ready; its accepted VALID can remain high.
+      // Repeated presentation of the same owned tuple is not a new allocation.
+      if (request_v && !(p_q.phase==HC && request_match) && !accepted_request_held) fault_d=1'b1;
       if (issue_fire) begin
         if (p_q.phase!=EMPTY || fault_q) fault_d=1'b1;
         else begin
@@ -164,7 +168,7 @@ module qkd_host_native_owner_join_rc #(
       end
       if (certificate_v) begin
         if (!a_q.valid || a_q.cert_seen || certificate_key!=expected_key ||
-            !certificate_health_bound) fault_d=1'b1;
+            !certificate_health_bound || !a_d.raw_seen || !a_d.terminal_seen) fault_d=1'b1;
         else a_d.cert_seen=1'b1;
       end
       if (event_copy_v) begin
@@ -189,7 +193,11 @@ module qkd_host_native_owner_join_rc #(
         else a_d.post_seen=1'b1;
       end
       // Credit, terminal, raw completion and event-copy never independently free.
-      if (a_q.valid && a_d.post_seen && a_d.report_drained) a_d.valid=1'b0;
+      // Prompt POST can precede the health cutoff. Keep its key until
+      // actual certification too, so cutoff cannot lose its bound identity.
+      if (a_q.valid && a_d.raw_seen && a_d.terminal_seen && a_d.cert_seen &&
+          a_d.post_seen && a_d.report_drained &&
+          (!a_d.report_needed || a_d.event_copied)) a_d.valid=1'b0;
     end
   end
   always_ff @(posedge clk or negedge raw_por_n) begin

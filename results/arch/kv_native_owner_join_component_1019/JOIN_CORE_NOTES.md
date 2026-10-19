@@ -43,3 +43,10 @@ Parent must connect certificate_health_bound only at a genuine bound cutoff.
 The parent bench must exercise actual source reachability, all phase/cause
 controls and first authoritative edges. Source declaration census is not an
 HDL correctness or physical closure claim.
+
+Integration review: repeated accepted request VALID from the actual transport
+sampled-ready seam is checked against the retained active tuple, without
+allocating again. Prompt POST/report completion does not release the bound key
+until its real health certificate, raw result and terminal are also observed.
+Certificate acceptance requires actual raw and terminal witnesses. These fixes
+add no registers; the frozen 162-bit census remains unchanged.
