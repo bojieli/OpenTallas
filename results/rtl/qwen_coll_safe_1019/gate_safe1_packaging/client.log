@@ -1,0 +1,11 @@
+GATE WARN macro_grid: qfd_static_ch546#0: origin (129.624, 302.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qfd_static_ch546': 'M5', 'ot_qkvd_llr_replay_sram_leaf': 'M5'}
+GATE WARN children: qfd_static_ch546: (f) face-pin access: 1112 of 1115 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i_data[0] M4 (0.060,48.000), i_data[100] M4 (0.060,48.000), i_data[101] M4 (0.060,48.000))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: qfd_static_ch546: (f) face-pin access: 1112 of 1115 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i_data[0] M4 (0.060,48.000), i_data[100] M4 (0.060,48.000), i_data[101] M4 (0.060,48.000))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE INFO remote: ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_face_s1_safe_20261019-084218.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_face_s1_safe_20261019-084218.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_safe-20261019-084218
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS synthesis failed with exit 2:  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (1 fail, 5 warn)

@@ -333,7 +333,8 @@
    "rtl/test/run_coll_static_face.sh",
    "rtl/test/tb_coll_static_face.sv",
    "rtl/physical/qwen_coll_safe_1019",
-   "results/rtl/qwen_coll_safe_1019"
+   "results/rtl/qwen_coll_safe_1019",
+   "tools/orfs_allcorner_spef.py"
   ],
   "views_to": "physical/ref_tile/qfd_coll_face_s1_safe/views",
   "record_to": "results/rtl/ref_tile/qfd_coll_face_s1_safe"

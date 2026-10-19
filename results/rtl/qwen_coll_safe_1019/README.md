@@ -1,11 +1,12 @@
 # SAFE collective structural candidate (2026-10-19)
 
-This is a candidate, with no REVIEW.json or submit authorization. Default SAFE=0 behavior is retained. SAFE=1 replaces delay chains of depth >=3 with exact stationary rings, lands core/link tokens, partitions reset copies, removes unobserved metadata resets, and captures PHY-up. PHY-up fault observation adds one diagnostic edge. No throughput/data calendar stages are added in the recorded phase-0 production test: LU=53, LS=378. The generated physical wrapper adds two startup reset guard edges. A separate real 0.2T core/link phase production test is pending; the previous duty50 harness ignored phi and has been corrected.
+This is a candidate, with no REVIEW.json or submit authorization. Default SAFE=0 behavior is retained. SAFE=1 replaces delay chains of depth >=3 with exact stationary rings, lands core/link tokens, partitions reset copies, removes unobserved metadata resets, and captures PHY-up. PHY-up fault observation adds one diagnostic edge. No throughput/data calendar stages are added in the recorded phase-0 production test: LU=53, LS=378. The generated physical wrapper adds two startup reset guard edges. A separate real 0.2T core/link phase production test FAILED (phase1/): AR2048/argmax48 mismatches, all8 faulted; SAFE0 comparator pending. Candidate is not mesochronous qualified; the previous duty50 harness ignored phi and has been corrected.
 
 Evidence:
 - ring/: sixteen depths (0..378), 4096 edges and repeated reset, golden shift equivalence; early-ring mutant caught.
 - r3/: SAFE S1 L378, phase0/1, 240 words per face; six behavioral mutants caught (early RX, CDC, PHY, bank, ring, unlanded).
 - phy_up/: normal legacy fault edge28 versus captured SAFE fault edge29, reset/epoch recovery; missing-fault mutant caught.
+- hard1/: exact fixed five physical wrappers bound into all eight production parents, guarded dv2f18dh2 profile; AR2048+argmax64 outputs PASS phase0, no faults. This proves wrapper binding semantics, not physical closure.
 - integration/: eight production parents, all five actual face profiles, six/five gearbox at 50% duty and actual dv2f18dh2 forwarded lanes. AR256=2048 outputs, argmax1=64 outputs, bit exact and fault-free. Source/executable hashes are recorded.
 - dv2f18dh2_coll_lane_latency.json: immutable live-run latency fixture. Live die run untouched.
 

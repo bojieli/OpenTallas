@@ -85,7 +85,7 @@ def main():
         if label!='s1':
             spec['job']['benches']=[]
             spec['job']['no_bench_reason']='DRAFT PROFILE: full production RTL passes all five profiles; dedicated fixed-wrapper witness required before gate/submit.'
-        spec['job']['extra_paths']+=['rtl/physical/qwen_coll_safe_1019','results/rtl/qwen_coll_safe_1019']
+        spec['job']['extra_paths']+=['rtl/physical/qwen_coll_safe_1019','results/rtl/qwen_coll_safe_1019','tools/orfs_allcorner_spef.py']
         path=ROOT/'tools/ref_tile/specs_qcollio'/(name+'.json')
         path.write_text(json.dumps(spec,indent=1)+'\n')
         print(path.relative_to(ROOT))
