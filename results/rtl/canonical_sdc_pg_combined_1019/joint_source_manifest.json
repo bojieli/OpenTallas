@@ -1,0 +1,72 @@
+{
+  "diagnostic_source": "0520def3a",
+  "SDC_source": "1f1ddb1c2",
+  "PG_source": "da986b066",
+  "status": "PASS: three joint native cases, actual ot-epyc7 unitoth-ubuntu-236187-1792450943 exit0",
+  "files": [
+    {
+      "path": "inputs/allbound_fixture.odb",
+      "bytes": 795270,
+      "sha256": "7af0e43cf7e8278b3fb3045d05ea6b5faf64aa994a029abc749d81f0e4832c4a"
+    },
+    {
+      "path": "inputs/checkpoint.odb",
+      "bytes": 795270,
+      "sha256": "09b8507cf2f62428641a60ccc59d83e0767dbdb939f7c45fe23c0cc29f7cdc83"
+    },
+    {
+      "path": "physical/common_flow/native_pg_binding.tcl",
+      "bytes": 17360,
+      "sha256": "5cd7df80b9ab3c3bfa039eeec4bb05ee2b2325c0cfbd4591f839895caf510a58"
+    },
+    {
+      "path": "physical/common_flow/native_pg_bootstrap.tcl",
+      "bytes": 659,
+      "sha256": "8c90454027999d4620c85e269f1be7486d417338d7d581b1974614f6099ec9d7"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/coupon.sdc",
+      "bytes": 405,
+      "sha256": "ee5392e98ddb58a09dc228a5a27b468b568ad63b8157e2ea3549b36ec62d2777"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/joint/compose.tcl",
+      "bytes": 3893,
+      "sha256": "cb7c9e88181361904bf558fe1a6470426cb3f29ec4fa7dc3d47854e9807ad036"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/joint/final_connect.tcl",
+      "bytes": 284,
+      "sha256": "cc85781e0387a787e2ac32a43db004390c5e62130f69a109b08cdaed836f4580"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/joint/final_outputs.tcl",
+      "bytes": 32,
+      "sha256": "916caf815283a67ba419035fda35737b43377d47a632058d23ce49fac2ece2f9"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/joint/final_report.tcl",
+      "bytes": 337,
+      "sha256": "6635cf09989eeb9cb5d4e6f03081cfebf1dbe8d796828e6a0b34854956c93e9e"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/joint/load.tcl",
+      "bytes": 429,
+      "sha256": "7d831bc6a4e492a25a868c30934c9e18d4faa6e9dd58d217ac8e9a0d3f8cbea3"
+    },
+    {
+      "path": "tests/canonical_sdc_scene_load_1019/joint/run_joint.sh",
+      "bytes": 1473,
+      "sha256": "58329315ac7bacddcf9264b60c11be7ca90c1dc4f2370a580b2a747e95c7894c"
+    },
+    {
+      "path": "tools/orfs_hold_mm.tcl",
+      "bytes": 30812,
+      "sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290"
+    }
+  ],
+  "combined_source": "b7c6b7c00b9281ef6c2d61779283b1219cab98bf",
+  "combined_helper_bytes_verified": true,
+  "invocation": "ot-run --mem 4 --threads 1 --disk 2 --dir /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/joint -- bash tests/canonical_sdc_scene_load_1019/joint/run_joint.sh",
+  "runtime_modified": false
+}
