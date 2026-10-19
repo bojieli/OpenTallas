@@ -179,8 +179,10 @@ module ot_hbm_r14_aq_pc_safe #(
     reg [2:0] rrdl; reg [1:0] ccdl;
     wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
     wire ccdl_e = col_v && hb[1:0] == 2'(g);
-    always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin rrdl <= 0; ccdl <= 0; end
+    // Share the ACT summary's same-edge region rather than the main AQ
+    // reset; mapped main-region load then stays below256 after address copies.
+    always @(posedge clk or negedge reset_regions[63])
+      if (!reset_regions[63]) begin rrdl <= 0; ccdl <= 0; end
       else begin
         if (act_g) rrdl <= 3'(T_RRDL - 1); else if (rrdl != 0) rrdl <= rrdl - 1'b1;
         if (ccdl_e) ccdl <= 2'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
