@@ -4,9 +4,9 @@
   "mutants": [
     {
       "define": "HBM_MR,IMUT=2",
-      "fail_witness": "imut2.log",
-      "fail_regex": "R [0-9]+",
-      "measured_failure": "12 of23 matvec ops differ from golden; json bw_imut2.json verdictFAIL while all39go slots exact. Compare exact payloads; R trace is raw witness, not a standalone pass/fail regexp."
+      "fail_witness": "imut2_checker.log",
+      "fail_regex": "SMB_UNIT FAIL ops=23 pass=11",
+      "measured_failure": "12 of23 matvec ops differ from golden; bw_imut2.json verdictFAIL while all39go slots exact. Raw simulator payload witness is imut2.log."
     },
     {
       "define": "HBM_MR",
