@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-epyc6       admits   959 GB (avail 784, growth 113, headroom 0, waiters 0/0 GB) load 75/128 running 36 disk 5816 GB 
+ot-run: ot-epyc7       admits   968 GB (avail 778, growth 101, headroom 0, waiters 0/0 GB) load 55/96 running 31 disk 6330 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2696545-1792437597 after 1 s
+case raw PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=1074
+case v41_win PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=9288
+case raw_fenced_b2b PASS descs=8 fenced=8 hing=ok vis_err=0 ck_cycles=538
+case raw_fenced_mixed PASS descs=10 fenced=6 hing=ok vis_err=0 ck_cycles=639
+case raw_fenced_stall PASS descs=8 fenced=6 hing=ok vis_err=0 ck_cycles=1282
+case ikey_cross_sb PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=4634
+case raw_fenced_stall_boot PASS marks=1 mark_bad=0
+HNP_NEG_MISSED
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2696545-1792437597): exit 0

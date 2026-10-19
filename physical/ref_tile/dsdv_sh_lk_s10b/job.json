@@ -25,7 +25,16 @@
    "physical/sys_takeover/host_native_pipe_bench.py",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1",
-   "results/rtl/s81_shlk_s10b_1019"
+   "results/rtl/s81_shlk_s10b_1019",
+   "physical/strip_protect",
+   "tools/rtl_hdc_kv_ingest_campaign.py",
+   "tools/kv_ingest_ref.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_ref.py",
+   "rtl/test/tb_rom_host_ingest.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "tools/hdc_program.py"
   ]
  },
  "stages": {
@@ -158,38 +167,11 @@
     "peak_ram_gb": 8
    },
    {
-    "name": "seqhost_mutdqc",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut15 1 15",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10b_1019/seqhost/run_mut15.log",
-    "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
     "name": "seqhost_muthrc",
     "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut16 1 16",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL$",
     "fail_witness": "results/rtl/s81_shlk_s10b_1019/seqhost/run_mut16.log",
-    "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "seqhost_muthpref",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut17 1 17",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10b_1019/seqhost/run_mut17.log",
-    "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "seqhost_muthphold",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut18 1 18",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10b_1019/seqhost/run_mut18.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
@@ -200,6 +182,50 @@
     "fail_regex": "^SEQHOST FAIL$",
     "fail_witness": "results/rtl/s81_shlk_s10b_1019/seqhost/run_mut19.log",
     "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "hnp_pos10",
+    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 python3 physical/sys_takeover/host_native_pipe_bench.py pos10 {RUN}/hnp_pos10",
+    "expect": "pass",
+    "pass_regex": "^HNP_PASS$",
+    "threads": 16,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "hnp_dqc10",
+    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 python3 physical/sys_takeover/host_native_pipe_bench.py dqc10 {RUN}/hnp_dqc10",
+    "expect": "fail",
+    "fail_regex": "^HNP_NEG_DETECTED$",
+    "fail_witness": "results/rtl/s81_shlk_s10b_1019/hnp/hnps_dqc10.log",
+    "threads": 16,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "hnp_hpref10",
+    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 python3 physical/sys_takeover/host_native_pipe_bench.py hpref10 {RUN}/hnp_hpref10",
+    "expect": "fail",
+    "fail_regex": "^HNP_NEG_DETECTED$",
+    "fail_witness": "results/rtl/s81_shlk_s10b_1019/hnp/hnps_hpref10.log",
+    "threads": 16,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "hnp_hphold10",
+    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 python3 physical/sys_takeover/host_native_pipe_bench.py hphold10 {RUN}/hnp_hphold10",
+    "expect": "fail",
+    "fail_regex": "^HNP_NEG_DETECTED$",
+    "fail_witness": "results/rtl/s81_shlk_s10b_1019/hnp/hnps_hphold10.log",
+    "threads": 16,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "hnp_cxrc10",
+    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 python3 physical/sys_takeover/host_native_pipe_bench.py cxrc10 {RUN}/hnp_cxrc10",
+    "expect": "fail",
+    "fail_regex": "^HNP_NEG_DETECTED$",
+    "fail_witness": "results/rtl/s81_shlk_s10b_1019/hnp/hnps_cxrc10.log",
+    "threads": 16,
     "peak_ram_gb": 8
    }
   ],

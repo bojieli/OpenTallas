@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-epyc6       admits   947 GB (avail 776, growth 113, headroom 0, waiters 0/0 GB) load 113/128 running 41 disk 5808 GB 
+ot-run: ot-epyc7       admits   964 GB (avail 776, growth 101, headroom 0, waiters 0/0 GB) load 48/96 running 31 disk 6328 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-shlk-s10b
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4039959-1792437812 after 1 s
+case raw PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=1074
+case v41_win PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=9288
+case raw_fenced_b2b PASS descs=8 fenced=8 hing=ok vis_err=0 ck_cycles=538
+  done counts [9, 13, 14, 31, 55, 56] != expected [9, 14, 31, 40, 55, 56]
+case raw_fenced_mixed FAIL descs=10 fenced=6 hing=FAIL vis_err=0 ck_cycles=639
+  done counts [24, 26, 29, 53, 54, 56, 86, 87] != expected [24, 26, 53, 54, 86, 87]
+case raw_fenced_stall FAIL descs=8 fenced=6 hing=FAIL vis_err=0 ck_cycles=1270
+case ikey_cross_sb PASS descs=1 fenced=1 hing=ok vis_err=0 ck_cycles=4634
+case raw_fenced_stall_boot FAIL marks=1 mark_bad=0
+HNP_NEG_DETECTED
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4039959-1792437812): exit 1
