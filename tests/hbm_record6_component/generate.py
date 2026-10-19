@@ -29,6 +29,34 @@ def canonical(x):
  while len(chunks)>1: chunks=[np.add(chunks[i],chunks[i+1],dtype=np.float32) for i in range(0,len(chunks),2)]
  return int(np.float32(chunks[0]).view(np.uint32))
 
+
+def addition_trace(out, ledger, original, second):
+ ops=ledger['source_schedule']+[dict(o,source_start=o['start']+3,source_done=o['done']+3,station=40)for o in ledger['global_schedule']]
+ assert len(ops)==1281
+ ops.sort(key=lambda o:(o['station'],o['source_start']))
+ digest=lambda x:hashlib.sha256(repr(x).encode()).hexdigest()
+ producers={o['result']for o in ops}
+ rows=[]
+ for ep,data in enumerate((original,second)):
+  sq=np.multiply(data.view(np.float32),data.view(np.float32),dtype=np.float32).view(np.uint32)
+  values={digest(('square',i)):int(v)for i,v in enumerate(sq)}
+  values.update({digest(('canonical_zero',('square',i))):int(sq[i])for i in range(0,1280,8)})
+  zero=set(d for o in ops for d in o['operands'] if d not in values and d not in producers)
+  assert len(zero)==2,zero
+  values.update({d:0 for d in zero})
+  pending=list(ops);actual={}
+  while pending:
+   ready=[o for o in pending if all(d in values for d in o['operands'])]
+   assert ready,'cyclic/missing expression ownership'
+   for o in ready:
+    aa,bb=[values[d]for d in o['operands']]
+    yy=int(np.add(np.uint32(aa).view(np.float32),np.uint32(bb).view(np.float32),dtype=np.float32).view(np.uint32))
+    values[o['result']]=yy;actual[o['result']]=(aa<<64)|(bb<<32)|yy;pending.remove(o)
+  rows.extend(actual[o['result']]for o in ops)
+  assert values[ledger['global_schedule'][-1]['result']]==canonical(data)
+ (out/'adds.mem').write_text(''.join(f'{r:024x}\n'for r in rows))
+ (out/'adds.json').write_text(json.dumps(ops,indent=2)+'\n')
+
 def generate(a):
  out=a.output;out.mkdir(parents=True,exist_ok=False)
  inv=json.loads(a.inventory.read_text());front=json.loads(a.front_words.read_text())
@@ -97,8 +125,9 @@ def generate(a):
  receipt=dict(scope='SOURCE ONLY until real fleet RTL receipts',source_pgslice_sha256='32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567',episodes=2,gold=[f'{v:08x}'for v in gold],fills=ledger,native_banks=24,command_edges=672,root_prediction=591,native_done_prediction=670,producer='fixture-owned original1280words; second exactpower2 scaled input',physical_hold=['RFcoherentstorage','native timing','reach','reset/fanout','parent H'])
  (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
  # The bench generator only consumes these actual source-derived images.
+ addition_trace(out,json.loads(a.station_ledger.read_text()),original,second)
  from tb_generate import emit
  emit(out,receipt,json.loads(a.source_binding.read_text()))
 
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--source-binding',type=Path,required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--front-words',type=Path,required=True);p.add_argument('--operands',type=Path,required=True);p.add_argument('output',type=Path);generate(p.parse_args())
+ p=argparse.ArgumentParser();p.add_argument('--station-ledger',type=Path,required=True);p.add_argument('--source-binding',type=Path,required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--front-words',type=Path,required=True);p.add_argument('--operands',type=Path,required=True);p.add_argument('output',type=Path);generate(p.parse_args())
