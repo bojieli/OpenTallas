@@ -71,5 +71,23 @@
     "boundary_macro_latency": "unchanged340externalK,341internalring,277KR,13macros,zeroedges",
     "estimated_additional_std_area_um2": 224,
     "qualification": "Model only until componentexact+mapped32 census."
+  },
+  "regional_post_row_source": {
+    "reason": "Actual AQ wr_row bit35loads from32look-row captures plus canonicalhead/prefetch. Real existing-edge metadata selectorstate creates8independent source muxes, not aliases.",
+    "source_groups": 8,
+    "row_bits_each": 19,
+    "payload_bits_actual": 15,
+    "zero_padding_bits_each": 4,
+    "selector_slices_each": 2,
+    "selector_bits_each": 4,
+    "additional_kept_ff_bits": 64,
+    "control_source": "Existing META_SELECT[2*g+k] forwardvalid/address/ep_hi; new onehotepbank captures next_ep atoriginal metadataread edge.",
+    "latency_edges": 0,
+    "new_SRAM_ports": 0,
+    "new_external_pins": 0,
+    "internal_boundary_bits": 152,
+    "additional_internal_wires_vs_scalar": 133,
+    "estimated_ff_area_um2": 44.8,
+    "routing": "Eight local AQbankgroup look-row paths, maxoutline475.2um unchanged until measured reach. Existing raw SRAM and forwarded data rowbit sees9source muxes. All-driver32 census required."
   }
 }

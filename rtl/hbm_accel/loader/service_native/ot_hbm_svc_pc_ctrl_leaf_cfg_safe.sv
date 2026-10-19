@@ -259,6 +259,34 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       assign mh[LO+:BITS]=hbank[rp_sel];
       assign me[LO+:BITS]=ebank[ep_sel];
     end
+    // Real regional row sources: every word selects with its own retained
+    // one-hot metadata bank identity, captured on the existing read edge.
+    // The existing local forwarding identities are reused; no new SRAM port
+    // or data stage is introduced. Each AQ region feeds four look-row banks.
+    wire[8*19-1:0]qrow_post_regions;
+    for(genvar g=0;g<8;g=g+1)begin:POST_ROW_REGION
+      wire[14:0]word_data;
+      for(genvar k=0;k<2;k=k+1)begin:WORD
+        localparam integer LO=k*8;
+        localparam integer BITS=(15-LO<8)?15-LO:8;
+        localparam integer M=2*g+k;
+        (* keep="true",dont_touch="true" *) reg[3:0]bank_oh;
+        wire mrst_n=region_rst_n[4+(g%3)];
+        always @(posedge clk or negedge mrst_n)
+          if(!mrst_n)bank_oh<=4'b0001;
+          else bank_oh<=4'b0001<<next_ep[1:0];
+        wire[BITS-1:0]bank_word[0:3];
+        for(genvar b=0;b<4;b=b+1)begin:BANK
+          wire hit=META_SELECT[M].FORWARD[b].mf_valid&&
+            META_SELECT[M].FORWARD[b].mf_address==META_SELECT[M].ep_hi;
+          assign bank_word[b]=hit?mf_data[b][64+LO+:BITS]:qe[b][64+LO+:BITS];
+        end
+        assign word_data[LO+:BITS]=(bank_word[0]&{BITS{bank_oh[0]}})|
+          (bank_word[1]&{BITS{bank_oh[1]}})|(bank_word[2]&{BITS{bank_oh[2]}})|
+          (bank_word[3]&{BITS{bank_oh[3]}});
+      end
+      assign qrow_post_regions[g*19+:19]={4'b0,word_data};
+    end
     assign queue_head=mh[63:0];assign queue_post=me[63:0];assign qrow_post=me[78:64];
     for(genvar b=0;b<4;b=b+1)begin:METADATA
       wire[1:0]j=2'(b)-wp[1:0];wire we=accepted&&{1'b0,j}<length;
@@ -281,11 +309,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       .r_addr_in(7'(response_read_address)),.rd_out(response_meta),
       .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in({235'b0,pending_meta[20:0]}),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-    ot_hbm_r14_aq_pc_safe #(.WQ(QD),.MRKEY(MRKEY)) controller(
+    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.WQ(QD),.MRKEY(MRKEY)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),
-        .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_rd(push_read),.wr_r(wr),
+        .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
         .col_we(cwe),.col_aq(caq),.dbg_held());
     always @(posedge clk or negedge lrst_n)begin
         if(!lrst_n)begin
