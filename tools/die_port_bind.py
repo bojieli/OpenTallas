@@ -1135,6 +1135,14 @@ def main(argv=None):
     ap.add_argument('--unread-proposal-out', help='write a proposal only; no admission or die verdict')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
+    unread_args = (a.unread_review, a.unread_contract, a.unread_manifest, a.unread_manifest_sha256, a.unread_proposal_out)
+    if any(unread_args):
+        if not a.unread_review or not a.unread_contract or a.no_child_closure or a.closure:
+            ap.error('unread mode requires review, contract and full child closure')
+        if a.unread_proposal_out and (a.unread_manifest or a.unread_manifest_sha256):
+            ap.error('proposal production and reviewed admission are separate operations')
+        if not a.unread_proposal_out and not (a.unread_manifest and a.unread_manifest_sha256):
+            ap.error('unread admission requires manifest and explicit approved SHA256')
     a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)
     pad_doc = json.loads(Path(a.pad_file).read_text()) if a.pad_file else {}
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
@@ -1194,15 +1202,8 @@ def main(argv=None):
     except (ValueError, OSError) as exc:
         ap.error(str(exc))
     reviewed_unread = None
-    unread_args = (a.unread_review, a.unread_contract, a.unread_manifest, a.unread_manifest_sha256, a.unread_proposal_out)
     if any(unread_args):
         import die_bind_unread_manifest as um
-        if not a.unread_review or not a.unread_contract or a.no_child_closure or a.closure:
-            ap.error('unread mode requires review, contract and full child closure')
-        if a.unread_proposal_out and (a.unread_manifest or a.unread_manifest_sha256):
-            ap.error('proposal production and reviewed admission are separate operations')
-        if not a.unread_proposal_out and not (a.unread_manifest and a.unread_manifest_sha256):
-            ap.error('unread admission requires manifest and explicit approved SHA256')
         options = dict(defines=defines, allow_model=sorted(a.allow_model),
                        straps=sorted(straps), pads=sorted((list(k), v) for k, v in pads.items()))
         try:

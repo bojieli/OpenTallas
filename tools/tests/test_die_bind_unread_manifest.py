@@ -179,6 +179,21 @@ endmodule
                          '--unread-manifest', str(self.manifest))
         self.assertNotEqual(p.returncode, 0)
 
+    def test_closure_listing_cannot_bypass_manifest_operation_validation(self):
+        # --closure historically exits before the die checker. An opted manifest
+        # operation must refuse here instead of reporting a misleading exit0.
+        for extra in [('--closure', 'producer'), ('--no-child-closure',)]:
+            with self.subTest(extra=extra):
+                p = self.proposal(*extra)
+                self.assertNotEqual(p.returncode, 0)
+                self.assertIn('full child closure', p.stderr)
+                self.assertFalse(self.manifest.exists())
+
+    def test_proposal_and_admission_cannot_be_combined(self):
+        p = self.proposal('--unread-manifest', str(self.manifest), '--unread-manifest-sha256', '0'*64)
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn('separate operations', p.stderr)
+
     def test_tampered_permission_and_pin_refuse(self):
         self.ready()
         obj = json.loads(self.manifest.read_text())
