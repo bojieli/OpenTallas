@@ -1,0 +1,8 @@
+LP_CTX offer1200 bank_sample1206 age6
+LP_INIT input_sample1666 bank_sample1670 age4
+LP_GI_EMB publication1732 age66
+LP_EXTERNAL_EMB publication1735 age69
+LP_COMMAND sample1736 input_to_command70 epoch048c token65536 user0
+[17615000] %Fatal: tb_sysface_lp_bank_native_join.sv:80: Assertion failed in tb_sysface_lp_bank_native_join.check: LP_NATIVE_FAIL MUT10 cycle1737 actual provider validation at command+1
+%Error: /srv/opentallas-scratch/claude/sysface-lp-native-join-r4-1019/rtl/test/qwen_split/tb_sysface_lp_bank_native_join.sv:80: Verilog $stop
+Aborting...

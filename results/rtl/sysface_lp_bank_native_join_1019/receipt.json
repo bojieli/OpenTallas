@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.sysface.lp-native-component.v1",
+  "production_qualified": false,
+  "tested_source": "8af1a209e",
+  "ctlm": "c11f8ddb0",
+  "native_SAFE2": "9f159ab98",
+  "arm": "e716981a5",
+  "functional_clocks_tied": true,
+  "rows": [
+    0,
+    65536,
+    151935
+  ],
+  "checks_per_row": 4523,
+  "actual_edges_relative_to_INIT_input": {
+    "accepted_offer_to_bank": 6,
+    "INIT_bank": 4,
+    "GI_EMB_publication": 66,
+    "LP_EMB_publication": 69,
+    "provider_command": 70,
+    "validation": 71,
+    "first_code_read": 73,
+    "last_code_read": 136,
+    "scale_read": 137,
+    "last_output": 140
+  },
+  "reservation_release_relative_command": 114,
+  "release_is_priced_minimum": false,
+  "negative": {
+    "extra_input_core_output_epoch_registers": "actual provider fault command+2 before firstread+3",
+    "causal_mutants_R2": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "source_snapshots": {
+    "run_sysface_lp_bank_native_join.sh": "31ba8bbbe279db81449c3f9557d89e53c34bb91ae2448b6b999cc8fc7e5515c9",
+    "tb_sysface_lp_bank_native_join.sv": "7f1365272a848b9356f8495d3fa2c1a7268912a8d5914055830bb4b1ad3c16bc"
+  },
+  "draft_untested": {
+    "commits": [
+      "e989e3430",
+      "ac4833488"
+    ],
+    "policy": "input1 / sole identity output1 / reset2 / fixed validation arm2; complete user token epoch generation role bundle",
+    "not_run": true,
+    "not_qualified": true
+  }
+}

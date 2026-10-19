@@ -1,0 +1,14 @@
+LP_CTX offer1200 bank_sample1206 age6
+LP_INIT input_sample1666 bank_sample1670 age4
+LP_GI_EMB publication1732 age66
+LP_EXTERNAL_EMB publication1735 age69
+LP_COMMAND sample1736 input_to_command70 epoch048c token151935 user0
+LP_NATIVE_VALIDATION sample1737
+LP_NATIVE_FIRST_CODE sample1739
+LP_NATIVE_SCALE_READ sample1803
+LP_NATIVE_LAST_OUTPUT sample1806
+LP_NATIVE_PASS checks4004 CTX6 INITbank4 rawEMB66 outEMB69 command70 validate71 firstcode73 scale137 lastoutput140 functionalclocks_tied productionphase_unbound
+- /srv/opentallas-scratch/claude/sysface-lp-native-join-r2-1019/rtl/test/qwen_split/tb_sysface_lp_bank_native_join.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 0.091 s; speed 211.920 us/s
+- Verilator: cpu 0.091 s on 1 threads; allocated 8 MB
