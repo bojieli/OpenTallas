@@ -191,7 +191,7 @@ def encode(lists, H, mut=None):
                 raise ScheduleError(f"{c}: starts {dt} edges apart < {MIN_DT} (list player prefetch)")
             w.append((dt << 12) | (1 << 11) | (s << 10) | (u << 8))
             prev = t
-        end = H + D0                                            # wrap NOP at the next frame's anchor-equivalent edge
+        end = H                                                 # wrap NOP: entry 0 (dt from here) lands at its time + H
         dt = end - prev
         if dt < MIN_DT:
             raise ScheduleError(f"{c}: wrap {dt} < {MIN_DT}")
@@ -277,6 +277,12 @@ def main():
              P_NW_KRX=len(words["K_rx"]), P_SEG1_CTX=bases["C_tx"], P_SEG1_CRX=bases["C_rx"], P_SEG1_KTX=bases["K_tx"],
              P_SEG1_KRX=bases["K_rx"], P_EX0=ex[0], P_EX1=ex[1], P_EX2=ex[2], P_EX3=ex[3], P_TOK0=tok[0],
              P_TOK1=tok[1], P_TOK2=tok[2], P_TOK3=tok[3])
+    with open(out / "ovl_img.svh", "w") as f:            # the sequencers' constant images (ot_qwen_d2d_ovl_seq)
+        for c in CALS:
+            v = imgs[c] + [0] * (NE - len(imgs[c]))
+            f.write(f"localparam [32*{NE}-1:0] IMG_{c.upper()} = {32 * NE}'h" + "".join(f"{x:08x}" for x in reversed(v))
+                    + ";\n")
+            f.write(f"localparam [31:0] SEG1_{c.upper()} = 32'h{bases[c]:08x};\n")
     with open(out / "ovl_params.svh", "w") as f:
         for k, v in P.items():
             f.write(f"localparam integer {k} = {v};\n" if not k.startswith("P_TXD") else

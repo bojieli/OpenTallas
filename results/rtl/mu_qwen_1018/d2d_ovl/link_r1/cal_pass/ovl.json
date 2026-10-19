@@ -1,0 +1,185 @@
+{
+ "schema": "opentallas.qwen.mu_d2d_ovl.v1",
+ "stages": "2,2,2,3,2,2/11,11,9,9,9,9,9",
+ "txd": {
+  "C": [
+   8,
+   3,
+   1,
+   10
+  ],
+  "K": [
+   21,
+   4,
+   3,
+   3
+  ]
+ },
+ "frame_tokens": 16,
+ "H": 4026800,
+ "mutant": null,
+ "mutant_index": null,
+ "kv_prog": false,
+ "kv_law": {
+  "arr_cmd": 20,
+  "cmd_at_programme": 33,
+  "run": 30,
+  "r0": 1772,
+  "r0_priced": 1765,
+  "X": 7
+ },
+ "attn_extra_X": 7,
+ "segments": {
+  "req": {
+   "C_tx": {
+    "start": -1,
+    "occ": [
+     -1,
+     41
+    ],
+    "events": 38,
+    "entries": 4
+   },
+   "K_rx": {
+    "start": 19,
+    "occ": [
+     19,
+     59
+    ],
+    "events": 38,
+    "entries": 4
+   }
+  },
+  "rsp": {
+   "C_rx": {
+    "start": 1804,
+    "occ": [
+     1804,
+     1839
+    ],
+    "events": 33,
+    "entries": 2
+   },
+   "K_tx": {
+    "start": 1771,
+    "occ": [
+     1771,
+     1806
+    ],
+    "events": 33,
+    "entries": 2
+   }
+  },
+  "tok_tx": {
+   "C_tx": {
+    "start": 1,
+    "occ": [
+     1,
+     31
+    ],
+    "events": 2,
+    "entries": 2
+   },
+   "K_rx": {
+    "start": 14,
+    "occ": [
+     14,
+     46
+    ],
+    "events": 2,
+    "entries": 2
+   }
+  },
+  "tok_rx": {
+   "C_rx": {
+    "start": 18,
+    "occ": [
+     18,
+     271
+    ],
+    "events": 66,
+    "entries": 4
+   },
+   "K_tx": {
+    "start": 2,
+    "occ": [
+     2,
+     256
+    ],
+    "events": 66,
+    "entries": 4
+   }
+  }
+ },
+ "images": {
+  "C_tx": {
+   "entries": 6,
+   "seg1_base": 4
+  },
+  "C_rx": {
+   "entries": 6,
+   "seg1_base": 2
+  },
+  "K_tx": {
+   "entries": 6,
+   "seg1_base": 2
+  },
+  "K_rx": {
+   "entries": 6,
+   "seg1_base": 4
+  }
+ },
+ "encode": {
+  "origin": 4022621,
+  "D0": 16,
+  "period": 4026800,
+  "lists": {
+   "C_tx": {
+    "starts": 1702,
+    "words": 1703,
+    "first": 3924,
+    "last": 4021103
+   },
+   "C_rx": {
+    "starts": 1702,
+    "words": 1703,
+    "first": 3941,
+    "last": 4022908
+   },
+   "K_tx": {
+    "starts": 1702,
+    "words": 1703,
+    "first": 3925,
+    "last": 4022875
+   },
+   "K_rx": {
+    "starts": 1702,
+    "words": 1703,
+    "first": 3937,
+    "last": 4021123
+   }
+  }
+ },
+ "exchanges_per_frame": {
+  "0": 576,
+  "1": 540,
+  "2": 288,
+  "3": 252
+ },
+ "tokens_per_frame": {
+  "0": 16,
+  "1": 15,
+  "2": 8,
+  "3": 7
+ },
+ "rate": {
+  "aggregate_tok_s": 13708.2,
+  "per_user": [
+   4768.1,
+   4470.1,
+   2384.0,
+   2086.0
+  ],
+  "single_playhead_tok_s": 9834.1
+ }
+}
