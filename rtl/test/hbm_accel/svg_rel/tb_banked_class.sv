@@ -23,15 +23,15 @@ module banked_class_case #(parameter SVG=1,PREL=1,MUT=0,W=SVG?135:173,XW=SVG?47:
  always @(posedge clk)begin class_r<=refv?rc:0;class_c<=class_r;if(PREL&&refv&&reford==0&&fl)class_c<=rc;end
  always @(posedge clk or negedge rst_n)if(!rst_n)begin valid_r<=0;valid_c<=0;end else begin valid_r<=refv;valid_c<=valid_r;if(PREL&&refv&&reford==0&&fl)valid_c<=1;end
  wire ec=PREL?class_c:class_r,ev=PREL?valid_c:valid_r;
- reg[W-1:0]aq[0:1];reg cq[0:1],vq[0:1],dq[0:1],fq[0:1];reg semantic_fault=0;
+ reg[W-1:0]aq[0:1];reg cq[0:1],vq[0:1],dq[0:1],fq[0:1];reg semantic_fault=0;reg[W-1:0]consume_word=0;reg consume_valid=0,consume_class=0;
  integer warm=0,cycle=0,checked=0,completed=0,magic_seen=0,inject_seen=0;
  // Consume the previously launched expected pins at this edge, exactly like
  // the native semantic checker. Core/app fault is separately shifted2.
  always @(posedge clk)begin
  if(!rst_n)semantic_fault<=0;
- else if(!SVG&&aq[1][108:101]==8'ha2&&(!vq[1]||aq[1][100:98]==3||aq[1][100]!=cq[1]))semantic_fault<=1;
+ else if(!SVG&&consume_word[108:101]==8'ha2&&(!consume_valid||consume_word[100:98]==3||consume_word[100]!=consume_class))semantic_fault<=1;
  #1;cycle=cycle+1;if(cycle>30000)$fatal(1,"CLASS_FAIL watchdog");
- if(!rst_n)begin warm=0;for(integer j=0;j<2;j=j+1)begin aq[j]=0;cq[j]=0;vq[j]=0;dq[j]=0;fq[j]=0;end end
+ if(!rst_n)begin warm=0;consume_word=0;consume_valid=0;consume_class=0;for(integer j=0;j<2;j=j+1)begin aq[j]=0;cq[j]=0;vq[j]=0;dq[j]=0;fq[j]=0;end end
  else begin
  if(warm>=14)begin
   if(newapp!==aq[1]||cls!==cq[1]||cv!==vq[1]||nd!==dq[1]||nfault!==(fq[1]||(!SVG&&semantic_fault)))
@@ -40,6 +40,7 @@ module banked_class_case #(parameter SVG=1,PREL=1,MUT=0,W=SVG?135:173,XW=SVG?47:
   if(!SVG&&newapp[108:101]==8'ha2)magic_seen=magic_seen+1;
   if(SVG&&newapp[28])inject_seen=inject_seen+1;
  end
+ consume_word=aq[1];consume_valid=vq[1];consume_class=cq[1];
  aq[1]=aq[0];cq[1]=cq[0];vq[1]=vq[0];dq[1]=dq[0];fq[1]=fq[0];aq[0]=oldapp;cq[0]=ec;vq[0]=ev;dq[0]=od;fq[0]=ofault;warm=warm+1;
  end end
  function automatic[255:0]word(input integer a,mode);
