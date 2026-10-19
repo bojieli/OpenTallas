@@ -55,6 +55,8 @@ def main():
         ev = r["events"]
         vm = [e for e in ev if e["k"] == "M"]
         ev = [e for e in ev if e["k"] != "M"]
+        if a.nev and len(ev) + 1 > a.nev:
+            sys.exit(f"gen_slice_tb: replay {name} needs {len(ev) + 1} event slots, --nev={a.nev}; split the replay")
         if any(e.get("cyc", 0) != 0 or e.get("mem") != "vm" for e in vm):
             sys.exit("gen_slice_tb: only cyc-0 VM preload (M) events are supported")
         bad = [e for e in ev if not (e["port"] in (iidx if e["k"] == "D" else oidx) or
@@ -125,6 +127,7 @@ def main():
           "    integer cnt [0:2];",
           "    integer ptr [0:2];",
           "    integer drives = 0, checks = 0, fails = 0, rec_ok = 0, rec_fail = 0, cycles = -1, last_ev = 0;",
+          "    integer expected_drives = 0, expected_checks = 0;",
           "    string rdir;",
           "    initial begin : LOAD",
           "        integer i;",
@@ -134,6 +137,8 @@ def main():
           "            $readmemh({rdir, \"/hdr.mem\"}, hdr); $readmemh({rdir, \"/val.mem\"}, val); $readmemh({rdir, \"/msk.mem\"}, msk);",
           "        end",
           "        for (i = NEV - 1; i >= 0; i = i - 1) if (hdr[i][63:62] == 2'd1 || hdr[i][63:62] == 2'd2) begin",
+          "            if (hdr[i][63:62] == 2'd1) expected_drives = expected_drives + 1;",
+          "            else expected_checks = expected_checks + 1;",
           "            ptr[hdr[i][61:60]] = i;",
           "            if (hdr[i][61:60] == 2'd0 && hdr[i][31:0] > last_ev) last_ev = hdr[i][31:0];",
           "        end",
@@ -249,7 +254,11 @@ def main():
     L += ["        if (cnt[0] >= cycles) begin"]
     for k, e in enumerate(outs):
         L.append(f"            if (n{k} > 0) $display(\"SLICE_OUT {e['name']} first=%0d last=%0d changes=%0d\", f{k}, l{k}, n{k});")
-    L += ["            $display(\"SLICE_SUMMARY drives=%0d checks=%0d fails=%0d rec_commit_ok=%0d rec_fail=%0d stream_edges=%0d serial_edges=%0d hbm_edges=%0d\",",
+    L += ["            if (drives != expected_drives || checks != expected_checks) begin",
+          "                $display(\"SLICE_CHECK_FAIL incomplete replay drives=%0d/%0d checks=%0d/%0d\", drives, expected_drives, checks, expected_checks);",
+          "                fails = fails + 1;",
+          "            end",
+          "            $display(\"SLICE_SUMMARY drives=%0d checks=%0d fails=%0d rec_commit_ok=%0d rec_fail=%0d stream_edges=%0d serial_edges=%0d hbm_edges=%0d\",",
           "                     drives, checks, fails, rec_ok, rec_fail, cnt[0], cnt[1], cnt[2]);",
           "            if (fails == 0) $display(\"SLICE_PASS\"); else $display(\"SLICE_FAIL\");",
           "            $finish;",

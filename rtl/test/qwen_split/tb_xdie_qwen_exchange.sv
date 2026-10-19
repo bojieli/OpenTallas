@@ -58,6 +58,7 @@ endmodule
 module tb_xdie_qwen_exchange;
     `include "xdie_params.svh"
     parameter integer MUT = 0, C_REAL = 1, K_REAL = 1, NL = 35, QGAP = 0, POS_P = 255, FIN_MUT = 0, K_TEAR = 0;
+    parameter integer K_NTX = 4;           // Q-XDIE-GEN 10-18: KV die binds qkd_d2d_static .NTX(3) (S-QTIES QC-12, kvs14p)
     parameter integer XQ_TXDP_UNSET = 0;   // F4 witness: build the masters without the compiled TXDP (must not elaborate)
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583, PR = 1, LEAD = 2 * PR;
@@ -155,7 +156,7 @@ module tb_xdie_qwen_exchange;
         .result_gen(GEN), .result_token(TOK), .result_value(32'(lay * 77)), .result_cycles(32'(lay)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(0), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(0), .NTX(K_NTX), .PR(PR), .TXDP(XQ_TXDP_UNSET ? 32'd0 : P_TXDP_K)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(1'b0),
         .host_link_reset_req(1'b0), .host_recovery_clear(1'b0), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),

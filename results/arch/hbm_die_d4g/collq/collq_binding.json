@@ -31,7 +31,7 @@
  "compiler_notes": [
   "ISA ring-A commands and rc_d take effect +2 edges vs v5 (merge register): every ring-A-relative constant +2",
   "gather: fire = launch sample + 3 + loop*period + t_start; ring-A inject of ring index k = fire + 30 + 3(k>>1) + (k&1); ring B commands are issued by the master one edge earlier (stop CMD_PIPE)",
-  "VM calendar_<q> must reserve: COLL read group at fire+2+... (QBG code flit i: 4 reads at IE+1; plain: IE+16), COLL kq write at IE+34/36/38 (publishes) and IE+27 (self-land), IE = fire + 1 + 3(k>>1) + (k&1)",
+  "VM calendar_<q> must reserve: COLL read group at fire+2+... (QBG code flit i: 4 reads at IE+1; plain: IE+16), COLL kq write at IE+36/38/40 (publishes) and IE+29 (self-land) (KQ_SHARE_EDGES 2 included, HBM-NSFIX/KQS 10-18; the COLL v6 writer kq reservations +2 as well), IE = fire + 1 + 3(k>>1) + (k&1)",
   "slice stride must be a multiple of 8 words (bank-conflict freedom; descriptor faults otherwise)",
   "no two gathers overlap (fault); all four quadrants run the same F/R/t_start"
  ],
@@ -104,7 +104,7 @@
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
    "params": {},
    "slot": "collks_SW",
-   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): combinational, zero added latency, double booking faults and writes neither; 4 bank-pair leaves beside the bank pairs"
+   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): REGISTERED faces since HBM-NSFIX/KQS 10-18 (+2 edges on every COLL kq write, fault +1); double booking faults and writes neither; physically 4 hardened bank-pair leaves ot_hgi_coll_kq_share2_leaf (kit hcoll_kqs_leaf_1018) at the writer end: results/arch/hbm_die_d4g/collq/kqs_leaf_binding.json"
   },
   "hb_coll_SE": {
    "master": "ot_hfd_coll_q2_hard_v8g",
@@ -174,7 +174,7 @@
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
    "params": {},
    "slot": "collks_SE",
-   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): combinational, zero added latency, double booking faults and writes neither; 4 bank-pair leaves beside the bank pairs"
+   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): REGISTERED faces since HBM-NSFIX/KQS 10-18 (+2 edges on every COLL kq write, fault +1); double booking faults and writes neither; physically 4 hardened bank-pair leaves ot_hgi_coll_kq_share2_leaf (kit hcoll_kqs_leaf_1018) at the writer end: results/arch/hbm_die_d4g/collq/kqs_leaf_binding.json"
   },
   "hb_coll_NW": {
    "master": "ot_hfd_coll_q2_hard_v8g",
@@ -244,7 +244,7 @@
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
    "params": {},
    "slot": "collks_NW",
-   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): combinational, zero added latency, double booking faults and writes neither; 4 bank-pair leaves beside the bank pairs"
+   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): REGISTERED faces since HBM-NSFIX/KQS 10-18 (+2 edges on every COLL kq write, fault +1); double booking faults and writes neither; physically 4 hardened bank-pair leaves ot_hgi_coll_kq_share2_leaf (kit hcoll_kqs_leaf_1018) at the writer end: results/arch/hbm_die_d4g/collq/kqs_leaf_binding.json"
   },
   "hb_coll_NE": {
    "master": "ot_hfd_coll_q2_hard_v8g",
@@ -314,7 +314,7 @@
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
    "params": {},
    "slot": "collks_NE",
-   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): combinational, zero added latency, double booking faults and writes neither; 4 bank-pair leaves beside the bank pairs"
+   "note": "COLL kq write static owner split (A = hb_coll vm_kq (v6 writer), B = hcollgl): REGISTERED faces since HBM-NSFIX/KQS 10-18 (+2 edges on every COLL kq write, fault +1); double booking faults and writes neither; physically 4 hardened bank-pair leaves ot_hgi_coll_kq_share2_leaf (kit hcoll_kqs_leaf_1018) at the writer end: results/arch/hbm_die_d4g/collq/kqs_leaf_binding.json"
   }
  },
  "edges": [
@@ -5886,7 +5886,7 @@
    "value": 176,
    "lo": 0,
    "hi": 8,
-   "reason": "F20 target id 176 of the SW gather master (176-179 unused in GEN0 straps; H-D4G confirm against the host target map)"
+   "reason": "F20 target id 176 of the SW gather master: CONFIRMED unused (HBM-COLLQ 10-18): GEN0 contract (wt/hd4g results/arch/hbm_die_d4g/gen0/contract.json.gz, 317 straps) uses tgt {56-59,64-71,80-87,96-100,102..112 even+108-112,116-120,126,127,132-135,160,162,164,192-199,208-215}; no GEN1 layer / ring_b / host_cfg_leaf_map_d4g entry names 176-179"
   },
   {
    "inst": "hcollgi_SE",
@@ -5910,7 +5910,7 @@
    "value": 177,
    "lo": 0,
    "hi": 8,
-   "reason": "F20 target id 177 of the SE gather master (176-179 unused in GEN0 straps; H-D4G confirm against the host target map)"
+   "reason": "F20 target id 177 of the SE gather master: CONFIRMED unused (HBM-COLLQ 10-18): GEN0 contract (wt/hd4g results/arch/hbm_die_d4g/gen0/contract.json.gz, 317 straps) uses tgt {56-59,64-71,80-87,96-100,102..112 even+108-112,116-120,126,127,132-135,160,162,164,192-199,208-215}; no GEN1 layer / ring_b / host_cfg_leaf_map_d4g entry names 176-179"
   },
   {
    "inst": "hcollgi_NW",
@@ -5934,7 +5934,7 @@
    "value": 178,
    "lo": 0,
    "hi": 8,
-   "reason": "F20 target id 178 of the NW gather master (176-179 unused in GEN0 straps; H-D4G confirm against the host target map)"
+   "reason": "F20 target id 178 of the NW gather master: CONFIRMED unused (HBM-COLLQ 10-18): GEN0 contract (wt/hd4g results/arch/hbm_die_d4g/gen0/contract.json.gz, 317 straps) uses tgt {56-59,64-71,80-87,96-100,102..112 even+108-112,116-120,126,127,132-135,160,162,164,192-199,208-215}; no GEN1 layer / ring_b / host_cfg_leaf_map_d4g entry names 176-179"
   },
   {
    "inst": "hcollgi_NE",
@@ -5958,7 +5958,7 @@
    "value": 179,
    "lo": 0,
    "hi": 8,
-   "reason": "F20 target id 179 of the NE gather master (176-179 unused in GEN0 straps; H-D4G confirm against the host target map)"
+   "reason": "F20 target id 179 of the NE gather master: CONFIRMED unused (HBM-COLLQ 10-18): GEN0 contract (wt/hd4g results/arch/hbm_die_d4g/gen0/contract.json.gz, 317 straps) uses tgt {56-59,64-71,80-87,96-100,102..112 even+108-112,116-120,126,127,132-135,160,162,164,192-199,208-215}; no GEN1 layer / ring_b / host_cfg_leaf_map_d4g entry names 176-179"
   }
  ],
  "clock_resets": [
@@ -6140,7 +6140,95 @@
  "cut": "all new edges are quadrant-local (no cross-quadrant bits added beyond ring B's)",
  "open": [
   "kits hcoll_gq_issue_1018 / hcoll_gq_land_1018 r1 --cts gates running (pending_results); slots collgi/collgl/collrs/collks need grants (H-D4G)",
-  "VM calendar_<q> programme must carry the COLL read/kq reservations above (compiler)",
-  "QBG consumers must use the x-load fmt 3 (claude/hbm-collq-xl-1018)"
- ]
+  "QBG consumers must use the x-load fmt 3 (claude/hbm-collq-xl-1018)",
+  "compiler: place each gather's reservations into the layer's calendar_<q> programme with --merge at its fire_index (tool ready)"
+ ],
+ "f20_targets": {
+  "ids": {
+   "SW": 176,
+   "SE": 177,
+   "NW": 178,
+   "NE": 179
+  },
+  "confirmed_unused": true,
+  "gen0_used_tgt": [
+   56,
+   57,
+   58,
+   59,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   80,
+   81,
+   82,
+   83,
+   84,
+   85,
+   86,
+   87,
+   96,
+   97,
+   98,
+   99,
+   100,
+   102,
+   104,
+   106,
+   108,
+   109,
+   110,
+   111,
+   112,
+   116,
+   117,
+   118,
+   119,
+   120,
+   126,
+   127,
+   132,
+   133,
+   134,
+   135,
+   160,
+   162,
+   164,
+   192,
+   193,
+   194,
+   195,
+   196,
+   197,
+   198,
+   199,
+   208,
+   209,
+   210,
+   211,
+   212,
+   213,
+   214,
+   215
+  ],
+  "checked": [
+   "results/arch/hbm_die_d4g/gen0/contract.json.gz straps",
+   "results/arch/hbm_die_d4g/gen1/**/*.json",
+   "results/arch/hbm_die_d4g/ring_b/**",
+   "results/arch/hbm_b_rtl1_host_1017/*.json"
+  ],
+  "host_status": "hcollgi_<q>.configured/active/done/tgt_fault: host status through the quadrant host cfg leaf (open outputs allowed until the leaf order adds them)"
+ },
+ "slots": "results/arch/hbm_die_d4g/collq/collq_slots.json (8 hard slots collgi/collgl_<q> 237.6^2 abutting coll_<q>; hcollrs/hcollks soft parents, 4 bank-pair leaves each)",
+ "vm_calendar": {
+  "tool": "tools/hgi_sim/collq_gather_1018.py calendar OUT.json [--merge calendar_<q>.json] --shape --mode --q --fire-index",
+  "files": "results/arch/hbm_die_d4g/collq/calendar/<shape>_<mode>_q<q>.json (24: 3 DS shapes x plain/QBG x 4 quadrants, R2, fire_index 0)",
+  "owners": "read group 3 (= hb_coll_<q> via hcollrs_<q>), wslot code 2 (COLL kq via hcollks_<q>); word = fire_index + edge + 1",
+  "checked": "each file compiles with tools/hbm_vm_static_calendar.py --universal (main) into the native programme ABI; merge() refuses a bank edge owned by another group"
+ }
 }

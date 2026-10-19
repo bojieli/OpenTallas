@@ -7,7 +7,10 @@ d4g_sfuplan.py checks), so no new empty area opens on the COLL links:
   collgl_<q>  237.6 x 237.6  ot_hgi_coll_gq_land    (kit hcoll_gq_land_1018), beside gi (ld_* 600 b) and the ring B stop
   collb_<q>   129.6 x 129.6  ot_hgi_coll_ring_b_stop (kit hcoll_ring_b_stop_1018), beside gi (rb_* 291 b) / gl (pb_* 524 b)
   collrs_<q>  345.6 x 345.6  ot_hbm_idx_vm_share2_static (6,584 pins -> 5.3/um over 90 % of the perimeter)
-  collks_<q>  345.6 x 345.6  ot_hgi_coll_kq_share2       (6,744 pins -> 5.4/um)
+  collks<p>_<q> 129.6 x 129.6 ot_hgi_coll_kq_share2_leaf (kit hcoll_kqs_leaf_1018), p = bank pair 0..3 (HBM-NSFIX/KQS 10-18:
+              the kq share is 4 hardened leaves with registered faces, +2 edges; was one 345.6 combinational collks_<q>).
+              Placed at the WRITER end (abutting coll_<q> / collgl_<q>): A and B both start there, so only the merged 2,248-b
+              word runs the 3-8 mm to the banks (leaves beside the bank pairs would carry 4,496 b over that distance).
 rs / ks sit on the coll face toward the quadrant VM banks where it is free (they carry the bank-side relay chains).
 Candidates are scanned along the coll slot's faces (21.6-um steps); a slot must clear every other grant slot and every
 plan block (plan/d4g_phy/compact.P.json) that is not the coll block itself by >= 20 um and stay inside the quadrant.
@@ -24,7 +27,8 @@ NEW = [('collgi', 'ot_hgi_coll_gq_issue', 237.6, 'tile', 'hcoll_gq_issue_1018'),
        ('collgl', 'ot_hgi_coll_gq_land', 237.6, 'tile', 'hcoll_gq_land_1018'),
        ('collb', 'ot_hgi_coll_ring_b_stop', 129.6, 'tile', 'hcoll_ring_b_stop_1018'),
        ('collrs', 'ot_hbm_idx_vm_share2_static', 345.6, 'tile', None),
-       ('collks', 'ot_hgi_coll_kq_share2', 345.6, 'tile', None)]
+       ] + [(f'collks{p}', 'ot_hgi_coll_kq_share2_leaf', 129.6, 'tile', 'hcoll_kqs_leaf_1018') for p in range(4)]
+LEGACY = ['collks']   # pre-KQS single combinational collks_<q> slot: removed
 
 
 def rect(s):
@@ -45,7 +49,7 @@ def main():
     ap.add_argument('--report', default=str(D / 'collq/gen2_collq_slots.json'))
     a = ap.parse_args()
     g = json.loads(Path(a.grants).read_text()); P = json.loads(Path(a.plan).read_text())
-    g['slots'] = [s for s in g['slots'] if not any(s['name'] == f'{k}_{q}' for k, *_ in NEW for q in Q)]
+    g['slots'] = [s for s in g['slots'] if not any(s['name'] == f'{k}_{q}' for k in [n for n, *_ in NEW] + LEGACY for q in Q)]
     die = next(s for s in g['slots'] if s['kind'] == 'die'); W, H = die['outline']['w'], die['outline']['h']
     obst = {s['name']: rect(s) for s in g['slots'] if s['kind'] != 'die' and s.get('origin') and s.get('outline')}
     pblk = {n: (r['x'], r['y'], r['x'] + r['w'], r['y'] + r['h']) for n, r in P.items() if isinstance(r, dict) and 'x' in r}
@@ -78,13 +82,17 @@ def main():
 
         for name, cell, sz, kind, kit in NEW:
             best = None
-            anchors = [C] + ([placed['collgi']] if name in ('collgl', 'collb') else []) + \
+            anchors = [C] + ([placed['collgl']] if name.startswith('collks') else []) +                       ([placed['collgi']] if name in ('collgl', 'collb') else []) + \
                       ([placed['collgl']] if name == 'collb' and 'collgl' in placed else [])
             for anc in anchors:
                 for r in cands(anc, sz):
                     if not ok(r):
                         continue
-                    if name in ('collrs', 'collks'):
+                    if name.startswith('collks'):
+                        pb = [pblk[f'vmb_{q}{2 * int(name[-1]) + j}'] for j in (0, 1)]
+                        pc = (sum((b[0] + b[2]) / 2 for b in pb) / 2, sum((b[1] + b[3]) / 2 for b in pb) / 2)
+                        cost = cdist(r, C) + cdist(r, placed['collgl']) +                             0.25 * (abs((r[0] + r[2]) / 2 - pc[0]) + abs((r[1] + r[3]) / 2 - pc[1]))
+                    elif name == 'collrs':
                         cost = cdist(r, C) + 0.25 * (abs((r[0] + r[2]) / 2 - bc[0]) + abs((r[1] + r[3]) / 2 - bc[1]))
                     elif name == 'collgi':
                         cost = cdist(r, C)

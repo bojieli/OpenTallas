@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_rlyi_258s-n1-64609be8b bench bench_neg_mutant_sel host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_rlyi_258s-n1-64609be8b log cl/bench_neg_mutant_sel.a1b1.log captured 2026-10-18T18:23:13-07:00
+# fail_regex 'RTRUNK_LEAF FAIL'
+RTRUNK_LEAF FAIL 10083 errors in 20000 cycles (qkd_rlyi_258s)
