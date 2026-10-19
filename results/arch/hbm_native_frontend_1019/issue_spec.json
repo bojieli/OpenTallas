@@ -1,0 +1,12 @@
+{
+  "top": "ot_hbm_owner_issue_native",
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_four_owner_links.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_owner_issue_native.sv"
+  ],
+  "clock_ports": [
+    "clk"
+  ],
+  "params": {},
+  "purpose": "native finite K issue request bridge; actualreceiverproductionproofOPEN"
+}

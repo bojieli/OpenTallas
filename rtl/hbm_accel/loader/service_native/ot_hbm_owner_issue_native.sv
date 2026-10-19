@@ -42,7 +42,7 @@ module ot_hbm_owner_issue_native #(parameter integer MUT=0)(
   if(!ctrl_rst)begin v_q<=0;ir_q<=0;kv_q<=0;kr_q<=0;stop_q<=0;count<=0;in_ready<=0;k_v<=0;fault<=0;end
   else begin
    v_q<=in_v;ir_q<=in_ready;kv_q<=k_v;kr_q<=k_ready;stop_q<=stop;
-   if(fault||stop_q)begin count<=0;in_ready<=0;k_v<=0;end
+   if(fault||stop_q)begin count<=0;in_ready<=0;k_v<=0;if(stop_q)fault<=1;end
    else begin
     count<=next_count;in_ready<=next_count<((MUT==2)?4:3);
     if(k_v&&MUT!=1)k_v<=0;else k_v<=count>3'(pop);
