@@ -21,7 +21,12 @@ module ot_sram_showahead_1r1w #(
  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
  genvar b,s;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
-  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(ra)),
+`ifdef OT_SRAM_P192
+  // pitch-192 pin-limited 32x128 (51.408x39.960, W/E 4.98/4.95 pins/um); same ports/timing contract
+  ot_sram_1r1w_32x128_m1_p192_rc u_m(.clk(clk),
+`else
+  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),
+`endif.r_ce_in(1'b1),.r_addr_in(5'(ra)),
    .rd_out(raw[b*128+:128]),.w_ce_in(mw),.w_addr_in(5'(mwa)),
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
  end
