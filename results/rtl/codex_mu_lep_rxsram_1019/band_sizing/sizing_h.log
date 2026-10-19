@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-band-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-band-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-band-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-band-1019
+ot-run: ot-epyc8       admits  1191 GB (avail 926, growth 92, headroom 0, waiters 0/0 GB) load 44/128 running 27 disk 328 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-band-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-band-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1683320-1792428535 after 1 s
+view=asap7 corner=TT block=ot_s81sl_lep_mu_h top=ot_s81sl_lep_mu_h purpose=characterization
+  pnr:   wirelength=None um vias=None DRC=None antenna_nets=None Fmax=1296.37 MHz
+  drv:   max_slew=None max_cap=None max_fanout=None
+  macro: ot_sram_1r1w_32x128_m1 4096 bits (51.408 x 20.79 um) lef=ot_sram_1r1w_32x128_m1.lef lib=ot_sram_1r1w_32x128_m1_tt.lib
+  macro: ot_sram_1r1w_512x128_m4_r2c2 65536 bits (174.12 x 29.736 um) lef=ot_sram_1r1w_512x128_m4_r2c2.lef lib=ot_sram_1r1w_512x128_m4_r2c2_tt.lib
+  halo:  10.8 10.8 um (command line); placed macros=None
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/claude/codex-mu-lep-band-1019/src/../sizing_h/physical.json
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1683320-1792428535): exit 0

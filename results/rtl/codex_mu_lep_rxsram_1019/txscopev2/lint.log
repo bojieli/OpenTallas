@@ -1,0 +1,378 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-epyc8       admits  1186 GB (avail 923, growth 93, headroom 0, waiters 0/0 GB) load 44/128 running 27 disk 329 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscopev2-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1682899-1792428515 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+%Warning-DECLFILENAME: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:104:8: Filename 'ot_s81sl_slice_lep' does not match MODULE name: 'ot_s81sl_lep_core'
+  104 | module ot_s81sl_lep_core #(
+      |        ^~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:781:24: Instance pin connected by name with empty reference: 'mu_rt'
+  781 |         .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+      |                        ^~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:781:34: Instance pin connected by name with empty reference: 'ml_wv'
+  781 |         .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+      |                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:781:44: Instance pin connected by name with empty reference: 'ml_wd'
+  781 |         .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+      |                                            ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:782:10: Instance pin connected by name with empty reference: 'lo2_v'
+  782 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:782:34: Instance pin connected by name with empty reference: 'lo2_d'
+  782 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:782:44: Instance pin connected by name with empty reference: 'lo3_v'
+  782 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                            ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:782:68: Instance pin connected by name with empty reference: 'lo3_d'
+  782 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:783:24: Instance pin connected by name with empty reference: 'li2_r'
+  783 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0),
+      |                        ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:783:64: Instance pin connected by name with empty reference: 'li3_r'
+  783 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0),
+      |                                                                ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:783:90: Instance pin connected by name with empty reference: 'rxvb'
+  783 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0),
+      |                                                                                          ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:813:40: Instance pin connected by name with empty reference: 'f_host'
+  813 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                        ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:813:51: Instance pin connected by name with empty reference: 'f_lf'
+  813 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                                   ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:813:60: Instance pin connected by name with empty reference: 'f_ks'
+  813 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                                            ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:814:24: Instance pin connected by name with empty reference: 'mu_rt'
+  814 |         .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+      |                        ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:814:34: Instance pin connected by name with empty reference: 'ml_wv'
+  814 |         .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+      |                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:814:44: Instance pin connected by name with empty reference: 'ml_wd'
+  814 |         .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+      |                                            ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:815:10: Instance pin connected by name with empty reference: 'lo2_v'
+  815 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:815:34: Instance pin connected by name with empty reference: 'lo2_d'
+  815 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:815:44: Instance pin connected by name with empty reference: 'lo3_v'
+  815 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                            ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:815:68: Instance pin connected by name with empty reference: 'lo3_d'
+  815 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:816:24: Instance pin connected by name with empty reference: 'li2_r'
+  816 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0),
+      |                        ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:816:64: Instance pin connected by name with empty reference: 'li3_r'
+  816 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0),
+      |                                                                ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:816:90: Instance pin connected by name with empty reference: 'rxvb'
+  816 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(), .l2_f(3'd0), .l3_f(3'd0),
+      |                                                                                          ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:917:40: Instance pin connected by name with empty reference: 'f_host'
+  917 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                        ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:917:51: Instance pin connected by name with empty reference: 'f_lf'
+  917 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                                   ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:917:60: Instance pin connected by name with empty reference: 'f_ks'
+  917 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                                            ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:959:40: Instance pin connected by name with empty reference: 'f_host'
+  959 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                        ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:959:51: Instance pin connected by name with empty reference: 'f_lf'
+  959 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                                   ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:959:60: Instance pin connected by name with empty reference: 'f_ks'
+  959 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+      |                                                            ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:961:10: Instance pin connected by name with empty reference: 'lo2_v'
+  961 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:961:34: Instance pin connected by name with empty reference: 'lo2_d'
+  961 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:961:44: Instance pin connected by name with empty reference: 'lo3_v'
+  961 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                            ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:961:68: Instance pin connected by name with empty reference: 'lo3_d'
+  961 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:962:24: Instance pin connected by name with empty reference: 'li2_r'
+  962 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+      |                        ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:962:64: Instance pin connected by name with empty reference: 'li3_r'
+  962 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+      |                                                                ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:962:90: Instance pin connected by name with empty reference: 'rxvb'
+  962 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+      |                                                                                          ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1011:10: Instance pin connected by name with empty reference: 'lo2_v'
+ 1011 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1011:34: Instance pin connected by name with empty reference: 'lo2_d'
+ 1011 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                  ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1011:44: Instance pin connected by name with empty reference: 'lo3_v'
+ 1011 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                            ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1011:68: Instance pin connected by name with empty reference: 'lo3_d'
+ 1011 |         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1012:24: Instance pin connected by name with empty reference: 'li2_r'
+ 1012 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+      |                        ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1012:64: Instance pin connected by name with empty reference: 'li3_r'
+ 1012 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+      |                                                                ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1012:90: Instance pin connected by name with empty reference: 'rxvb'
+ 1012 |         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+      |                                                                                          ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1138:40: Instance pin connected by name with empty reference: 'f_host'
+ 1138 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),    
+      |                                        ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1138:51: Instance pin connected by name with empty reference: 'f_lf'
+ 1138 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),    
+      |                                                   ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1138:60: Instance pin connected by name with empty reference: 'f_ks'
+ 1138 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),    
+      |                                                            ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1139:39: Instance pin connected by name with empty reference: 'mu_rt'
+ 1139 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                       ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1139:49: Instance pin connected by name with empty reference: 'tx2'
+ 1139 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                 ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1139:57: Instance pin connected by name with empty reference: 'tx3'
+ 1139 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                         ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1139:93: Instance pin connected by name with empty reference: 'tfb'
+ 1139 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                                                             ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1156:39: Instance pin connected by name with empty reference: 'mu_rt'
+ 1156 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                       ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1156:49: Instance pin connected by name with empty reference: 'tx2'
+ 1156 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                 ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1156:57: Instance pin connected by name with empty reference: 'tx3'
+ 1156 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                         ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1156:93: Instance pin connected by name with empty reference: 'tfb'
+ 1156 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                                                             ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1171:40: Instance pin connected by name with empty reference: 'f_host'
+ 1171 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),    
+      |                                        ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1171:51: Instance pin connected by name with empty reference: 'f_lf'
+ 1171 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),    
+      |                                                   ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1171:60: Instance pin connected by name with empty reference: 'f_ks'
+ 1171 |         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),    
+      |                                                            ^~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1172:39: Instance pin connected by name with empty reference: 'mu_rt'
+ 1172 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                       ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1172:49: Instance pin connected by name with empty reference: 'tx2'
+ 1172 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                 ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1172:57: Instance pin connected by name with empty reference: 'tx3'
+ 1172 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                         ^~~
+%Warning-PINCONNECTEMPTY: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:1172:93: Instance pin connected by name with empty reference: 'tfb'
+ 1172 |         .mu_c(34'd0), .mu_rc(11'd0), .mu_rt(), .tx2(), .tx3(), .rx2(514'd0), .rx3(514'd0), .tfb(), .fault(fault));    
+      |                                                                                             ^~~
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:275:39: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  275 |           if(fb>=4 && fb<81) assign hd=ph_d[fb-4];
+      |                                       ^
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.050
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:276:44: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  276 |           else if(fb>=1 && fb<=3) assign hd=(3'd3>>(fb-1))&1'b1;
+      |                                            ^
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:277:25: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  277 |           else assign hd=1'b0;
+      |                         ^
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:278:39: Unnamed generate block 'genblk2' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  278 |           if(fb>=4 && fb<58) assign kd=pk_d[fb-4];
+      |                                       ^
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:279:44: Unnamed generate block 'genblk2' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  279 |           else if(fb>=1 && fb<=3) assign kd=(3'd4>>(fb-1))&1'b1;
+      |                                            ^
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:280:25: Unnamed generate block 'genblk2' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  280 |           else assign kd=1'b0;
+      |                         ^
+%Warning-GENUNNAMED: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:290:33: Unnamed generate block 'genblk3' (IEEE 1800-2023 27.6)
+                                                                            : ... Suggest assign a label with 'begin : gen_<label_name>'
+  290 |           end else assign fr[fb]=base;
+      |                                 ^
+%Warning-VARHIDDEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:702:38: Declaration of signal hides declaration in upper scope: 'SW'
+  702 |           localparam integer LO=16*c,SW=(514-LO<16)?514-LO:16;
+      |                                      ^~
+                    rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:396:35: ... Location of original declaration
+  396 |     localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
+      |                                   ^~
+                    ... For warning description see https://verilator.org/warn/VARHIDDEN?v=5.050
+                    ... Use "/* verilator lint_off VARHIDDEN */" and lint_on around source to disable this message.
+%Warning-VARHIDDEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:705:43: Declaration of signal hides declaration in upper scope: 'SW'
+  705 |           localparam integer LO=16*(c-33),SW=(52-LO<16)?52-LO:16;
+      |                                           ^~
+                    rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:396:35: ... Location of original declaration
+  396 |     localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:276:59: Operator AND expects 3 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  276 |           else if(fb>=1 && fb<=3) assign hd=(3'd3>>(fb-1))&1'b1;
+      |                                                           ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:276:44: Operator ASSIGNW expects 1 bits on the Assign RHS, but Assign RHS's AND generates 3 bits.
+                                                                            : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  276 |           else if(fb>=1 && fb<=3) assign hd=(3'd3>>(fb-1))&1'b1;
+      |                                            ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:279:59: Operator AND expects 3 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  279 |           else if(fb>=1 && fb<=3) assign kd=(3'd4>>(fb-1))&1'b1;
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:279:44: Operator ASSIGNW expects 1 bits on the Assign RHS, but Assign RHS's AND generates 3 bits.
+                                                                            : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  279 |           else if(fb>=1 && fb<=3) assign kd=(3'd4>>(fb-1))&1'b1;
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:338:29: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'n' generates 10 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  338 |         wire wr = psh && (n != DT || iss);
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:363:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 9 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  363 |                 if (wr) wp <= (wp == DT - 1) ? 0 : wp + 1'b1;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:364:36: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 9 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  364 |                 if (iss) rp <= (rp == DT - 1) ? 0 : rp + 1'b1;
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:365:30: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  365 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:365:30: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  365 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:365:52: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  365 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:365:52: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  365 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:369:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'n' generates 10 bits.
+                                                                             : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  369 |                 if (psh && n == DT && !iss) of <= 1'b1;
+      |                              ^~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:153:28: Signal is not used: 'l2_f'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  153 |     input  wire [2:0]      l2_f,
+      |                            ^~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:154:28: Signal is not used: 'l3_f'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  154 |     input  wire [2:0]      l3_f,
+      |                            ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:198:18: Signal is not used: 'k_event'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  198 |     wire h_event,k_event;
+      |                  ^~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:325:33: Bits of signal are not used: 'lo_r'[3:2]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  325 |     wire [3:0] lo_v; wire [3:0] lo_r = {lo3_r, lo2_r, lo1_r, lo0_r};
+      |                                 ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:397:16: Bits of signal are not used: 'li_v'[3:2]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  397 |     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
+      |                ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:397:72: Bits of signal are not used: 'li_d'[2211:1106]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  397 |     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
+      |                                                                        ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:399:19: Bits of signal are not used: 'rhostx'[1]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  399 |     wire [NL-1:0] rhostx,rksx;
+      |                   ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:399:26: Bits of signal are not used: 'rksx'[1]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  399 |     wire [NL-1:0] rhostx,rksx;
+      |                          ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:400:31: Bits of signal are not used: 'rringx'[1]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  400 |     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
+      |                               ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:400:39: Bits of signal are not used: 'rtagx'[0]
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  400 |     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
+      |                                       ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:417:19: Signal is not driven, nor used: 'mem'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  417 |         reg [H:0] mem [0:DR-1];
+      |                   ^~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:597:19: Signal is not used: 'sbA'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  597 |     wire [1103:0] sbA = tA ? strip(bA) : bA, sbB = tB ? strip(bB) : bB, sbM = tM ? strip(mrd) : mrd;
+      |                   ^~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:597:46: Signal is not used: 'sbB'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  597 |     wire [1103:0] sbA = tA ? strip(bA) : bA, sbB = tB ? strip(bB) : bB, sbM = tM ? strip(mrd) : mrd;
+      |                                              ^~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:597:73: Signal is not used: 'sbM'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  597 |     wire [1103:0] sbA = tA ? strip(bA) : bA, sbB = tB ? strip(bB) : bB, sbM = tM ? strip(mrd) : mrd;
+      |                                                                         ^~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:630:50: Signal is not used: 'ta_r'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  630 |                 (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
+      |                                                  ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:630:56: Signal is not used: 'tb_r'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  630 |                 (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
+      |                                                        ^~~~
+%Warning-UNUSEDSIGNAL: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:630:62: Signal is not used: 'tm_r'
+                                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u'
+  630 |                 (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
+      |                                                              ^~~~
+%Warning-UNUSEDSIGNAL: rtl/lib/ot_sram_oldread_wreg.sv:12:54: Bits of signal are not used: 'raw'[639:553]
+                                                            : ... note: In instance 'ot_s81sl_lep_mu_h.u.g_tx[1].g_safe_write.u_m'
+   12 |  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},wdata},raw;
+      |                                                      ^~~
+%Warning-UNUSEDSIGNAL: rtl/lib/ot_sram_showahead_1r1w.sv:21:53: Bits of signal are not used: 'raw'[639:553]
+                                                              : ... note: In instance 'ot_s81sl_lep_mu_h.u.g_rx[1].g_sa.g_true_sram.u_rx_mem'
+   21 |  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
+      |                                                     ^~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.363 MB sources in 23 modules, into 3.431 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 1.494 s (elab=0.220, cvt=1.194, bld=0.000); cpu 1.494 s on 1 threads; allocated 93.383 MB
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1682899-1792428515): exit 0

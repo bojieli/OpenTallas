@@ -16,7 +16,7 @@
   559.44
  ],
  "why": "spec outline",
- "std_area_um2": 6462.29,
+ "std_area_um2": 5978.19,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -333,7 +333,7 @@
   [
    "FAIL",
    "fill",
-   "fill 26% = (macros/children 62464 + std 6462) / outline 266872 um2 < 35%",
+   "fill 26% = (macros/children 62464 + std 5978) / outline 266872 um2 < 35%",
    "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand"
   ]
  ],
