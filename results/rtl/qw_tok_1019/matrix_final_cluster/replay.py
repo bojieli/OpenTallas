@@ -142,9 +142,28 @@ def run(nu,layer,mode,mut):
         low=original_lower(*a,**kw); state['low']=low
         dump(d/'lowering.json',low);return low
     B.M.lower_matvec=lower
+    if mut=='scale_before_tree':
+        original_mat=B.real_mat
+        def reordered(name,split):
+            gm=original_mat(name,split)
+            changed=op(np.multiply,np.asarray(gm['parts']),gm['s'][None,:])
+            alt=tree(changed.T.copy())
+            diff=np.flatnonzero(alt.view(np.uint32).astype(np.uint64)!=gm['y'])
+            assert len(diff)>0, 'rounding control noncausal on actual fixture'
+            dump(d/'rounding_witness.json',dict(different_rows=len(diff),first_rows=diff[:20].tolist(),
+                 original_bits=[hex(int(gm['y'][i])) for i in diff[:20]],
+                 reordered_bits=[hex(int(alt.view(np.uint32)[i])) for i in diff[:20]]))
+            gm['parts']=list(changed);gm['s']=np.ones_like(gm['s']);return gm
+        B.real_mat=reordered
     if mut=='kc2':
         original_cmd=B.D.cmd_stn
-        def cmd(*a,**kw):kw['kc']=2;return original_cmd(*a,**kw)
+        perturbed=[]
+        def cmd(*a,**kw):
+            old=original_cmd(*a,**kw);kw['kc']=2;new=original_cmd(*a,**kw)
+            assert ((old^new)&~(255<<59))==0 and ((old>>59)&255)==0 and ((new>>59)&255)==1
+            perturbed.append(dict(old=hex(old),new=hex(new),changed_mask=hex(old^new)))
+            dump(d/'command_mutation.json',dict(kind=mut,commands=perturbed))
+            return new
         B.D.cmd_stn=cmd
     original_run=B.LB.run
     def rtl(work,name,ev,ncyc):
