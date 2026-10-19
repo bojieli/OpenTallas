@@ -1,0 +1,5 @@
+CTRL_FIFO_EXACT PASS W277 PHASE180 AF2 checks11547 reads5540
+- rtl/dsrom_sys/s81_ph/ctrl/test/tb_ctrl_fifo_sram.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.026 s; speed 190.103 us/s
+- Verilator: cpu 0.026 s on 1 threads; allocated 7 MB

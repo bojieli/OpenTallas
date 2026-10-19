@@ -1,0 +1,140 @@
+{
+ "name": "s81ctrl_rg2_sram-sram1-COMMIT",
+ "block": "dsfd_ctrl_rg2",
+ "ref_tile": true,
+ "owner": "Codex:S81-CODEX/CTRL",
+ "purpose": "S81 CTRL four real dualclock SRAMs: qualify exact crossing edges and storage geometry; no inherited flop waiver.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/s81-ctrl-witness-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/chip",
+   "rtl/hdc/v41x",
+   "rtl/hdc/kv",
+   "physical/s81_ctrl_rg2",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "results/rtl/s81_ctrl_safe_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_ctrl_rg2 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DS81CTRL_SRAM_FIFO --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_exact",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_exact none 1024 1 48 16",
+    "expect": "pass",
+    "pass_regex": "TB_DSFD_CTRL PASS",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_rd",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_rd S81CTRL_MUT_RD 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_pack",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_pack S81PH_MUT_PACK 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_krdy",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_krdy S81CTRL_MUT_KRDY 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81ctrl_rg2_sram/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81ctrl_rg2_sram/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81ctrl_rg2_sram --out {RUN}/record/views/dsfd_ctrl_rg2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81ctrl_rg2_sram/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81ctrl_rg2_sram/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81ctrl_rg2_sram/s81ctrl_rg2_sram-sram1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-CODEX/CTRL SRAM candidate: replace four over2kb runtime flop FIFOs with actual independent-clock 16x546 SRAMs, preserving original registered-empty Gray2 control and next-head read scheduling. Logical9872bits, physical34944bits; no storage waiver. Four actual176.904x81 LEFs on43.2lattice, xgap39.096/ygap48.6. Outlineheight302.4 (old250 infeasible); parent slot update owed. Actual synthesis/std band, <=405reach, PG/via escape, native clocks and TT/FF closure remain gate obligations. Mechanism six productionAF phasecasesPASS and2realmutantFAIL; full32PC regression still running."
+}
