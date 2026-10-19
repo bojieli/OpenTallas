@@ -190,12 +190,14 @@ def build(a):
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     D = Die(a)
     blk, u, odb = D.block, D.u, D.odb
-    obstacles, taken = [], set()
+    obstacles, taken, fixed_rows = [], set(), []
     insts_by_master = defaultdict(list)
     for inst in blk.getInsts():
         m = inst.getMaster()
         insts_by_master[m.getName()].append(inst)
         b = inst.getBBox()
+        if m.isBlock() or inst.isPlaced():
+            fixed_rows.append((inst.getName(),(b.xMin()/u,b.yMin()/u,b.xMax()/u,b.yMax()/u)))
         if m.isBlock():
             obstacles.append((b.xMin() / u, b.yMin() / u, b.xMax() / u, b.yMax() / u))
         elif inst.isPlaced():
@@ -203,7 +205,12 @@ def build(a):
                 for iy in range(int(b.yMin() / u / YPITCH), int(b.yMax() / u / YPITCH) + 1):
                     taken.add((ix, iy))
     log('obstacles', len(obstacles), 'std cell sites taken', len(taken))
-    g = rt.dct.Grid(D.W, D.H, obstacles)
+    region_exact=bool(spec.get('exact_region_bays',False))
+    if region_exact:
+        from qwen_exact_corridor import ExactBayGrid,ExactRegionalBuilder
+        g=ExactBayGrid(D.W,D.H,fixed_rows)
+    else:
+        g = rt.dct.Grid(D.W, D.H, obstacles)
     sites = Sites(g, D.W, D.H, taken)
     target = load_targets(a.targets)
     # expand tree specs
@@ -267,7 +274,8 @@ def build(a):
                 log('tree', t['name'], 'has no sinks; skipped')
                 continue
             leaves = rt.cluster(sinks)
-            b_ = rt.Builder(g, 'dc_' + t['name'], r_of=lambda key: (target(*key.rsplit('/', 1)) or [0, 0, 0])[2])
+            builder_type=ExactRegionalBuilder if region_exact else rt.Builder
+            b_ = builder_type(g, 'dc_' + t['name'], r_of=lambda key: (target(*key.rsplit('/', 1)) or [0, 0, 0])[2])
             txy = rxy
             if t.get('local_root'):
                 # STAND-IN regional clock entry (landed-regions standard): the region tree starts at a local root
@@ -309,11 +317,14 @@ def build(a):
             masters[cell] = D.design.getDb().findMaster(cell)
             if not masters[cell]:
                 raise ValueError(f'no master {cell}')
-        if exact:
+        if exact or region_exact:
             if masters[cell].getWidth()/u>XPITCH or masters[cell].getHeight()/u>YPITCH:
                 raise ValueError(f'exact bay too small for {cell}')
+        if exact:
             sx,sy=x,y
             sites.occ.add((round(sx/XPITCH),round(sy/YPITCH)))
+        elif region_exact:
+            sx,sy=g.reserve(g.nearest_free(x,y))
         else:
             sx, sy = sites.take(x, y)
         inst = odb.dbInst.create(blk, masters[cell], name)
@@ -330,7 +341,7 @@ def build(a):
         if not b_:
             continue
         for n, cell, x, y in b_.bufs:
-            insts[n] = mk(n, cell, x, y)
+            insts[n] = mk(n, cell, x, y,exact=region_exact)
             rec['cell_tree'][n] = t['name']
         root_it = blk.findITerm(t['root'])
         root_net = root_it.getNet()
@@ -418,6 +429,11 @@ def build(a):
     # trim may add elements on spine nodes only for spec "neighbours" pairs: there is no die-wide balance target.
     spine_roots = set()
     sp_ = spec.get('spine')
+    if region_exact or (sp_ and sp_.get('exact_footprint_bays')):
+        # Preserve the expensive actual occupied regional geometry even if a
+        # later strict spine guard rejects. These are diagnostics, not clocks.
+        D.design.writeDb(str(out/'regional_geometry.odb'))
+        (out/'regional_geometry_manifest.json').write_text(json.dumps(rec)+'\n')
     if sp_:
         src = sp_['source']
         members = rt.spine_members(trees, set(rec['trees']), rec.get('root_buffer', {}), sp_)
@@ -527,9 +543,31 @@ def build(a):
                 edge['placed_pin_routed_bound_um']=check_reach(edge['route_cells'],endpoint(edge['driver'],True),endpoint(edge['load'],False),eg)
             rec['spine']['exact_bay_edges']=sb.edges
             rec['spine']['source_input_routed_bound_um']=source_reach
+            if region_exact:g=eg
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
             'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')
+    if region_exact:
+        # Actual output pin coordinates, not model/grid centres. Preserve the
+        # failing ODB before rejecting any inherited native wire over405um.
+        long=[];max_native_direct=0.0
+        for name,_,_,_ in rec['cells']:
+            output=insts[name].findITerm('Y')
+            if not output or not output.getNet():continue
+            bb=output.getBBox();p=((bb.xMin()+bb.xMax())/2/u,(bb.yMin()+bb.yMax())/2/u)
+            for sink in output.getNet().getITerms():
+                if sink.getIoType()!='INPUT':continue
+                bb=sink.getBBox();q=((bb.xMin()+bb.xMax())/2/u,(bb.yMin()+bb.yMax())/2/u)
+                distance=abs(p[0]-q[0])+abs(p[1]-q[1]);max_native_direct=max(max_native_direct,distance)
+                if distance>405+1e-7:long.append([name+'/Y',sink.getInst().getName()+'/'+sink.getMTerm().getName(),distance])
+        rec['native_geometry']=dict(exact_region_bays=True,max_actual_direct_um=max_native_direct,
+                                    direct_reach_violations=long,routed_native_qualified=False)
+        if long:
+            D.design.writeDb(str(out/'native_reach_fail.odb'))
+            (out/'native_reach_fail.json').write_text(json.dumps(rec)+'\n')
+            raise ValueError(f'actual native clock wires >405um: {len(long)}; worst {max(x[2] for x in long):.3f}')
+        if not getattr(a,'geometry_only',False):
+            raise ValueError('exact regional candidate requires actual physical-row/PDN audit before timing; use geometry-only')
     if getattr(a,'geometry_only',False):
         rec['geometry_only']=True;rec['timing_qualified']=False
         (out/'geometry_manifest.json').write_text(json.dumps(rec)+'\n')

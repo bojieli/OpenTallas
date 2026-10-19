@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import unittest
-from qwen_exact_corridor import ExactBayGrid,ExactForwardedBuilder,check_reach
+from qwen_exact_corridor import ExactBayGrid,ExactForwardedBuilder,ExactRegionalBuilder,check_reach
 from qwen_corridor_audit import bay,overlap
 
 
@@ -50,7 +50,17 @@ def test_exact_binary_spine_reserves_and_bounds_every_stage():
     assert not any(overlap(a,c) for i,a in enumerate(boxes) for c in boxes[i+1:])
 
 
+def test_regional_leaf_uses_exact_pocket_and_reserves_footprints():
+    g=ExactBayGrid(100,100,[('rstt_a',(0,0,10,6.48))])
+    b=ExactRegionalBuilder(g,'region')
+    b.build('virtual_root/A',(50,50),[[('rstt_a/clk','HARD',5,6.48,'leaf')]])
+    assert b.bufs[0][2]<10 and b.bufs[0][3]<10
+    boxes=[(x,y,x+1.62,y+.27) for _,_,x,y in b.bufs]
+    assert not any(overlap(a,c) for i,a in enumerate(boxes) for c in boxes[i+1:])
+
+
 class ExactCorridor(unittest.TestCase):
+    def test_regional_leaf_uses_exact_pocket_and_reserves_footprints(self): test_regional_leaf_uses_exact_pocket_and_reserves_footprints()
     def test_full_footprint_overlap_not_origin_only(self): test_full_footprint_overlap_not_origin_only()
     def test_reserve_occupied_bays(self): test_reserve_occupied_bays()
     def test_region_tree_buffers_after_floorplan_are_obstacles(self): test_region_tree_buffers_after_floorplan_are_obstacles()

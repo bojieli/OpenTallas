@@ -1,0 +1,22 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+{
+ "schema": "opentallas.qwen.regional_pocket_model.v1",
+ "floorplan_sha256": "793ab8aedba4e0f7c8a0706ece9a776ff00c7ca09e9e7b3df175762ee563e53c",
+ "legacy_odb_sha256": "7c52dac7fad8e62d9eea6793c5c7f22e38f2708baf55fd555a8eb044399fe4c8",
+ "legacy_manifest_sha256": "3133eac78d4667c47f6a816129c665f23bd9ac90d769053b1246ecbbe9a27b18",
+ "modeled_long_leaf_sources": 326,
+ "model_reach_failures": 0,
+ "full_tree_placement_proven": false,
+ "physical_rows_created": false,
+ "power_qualified": false,
+ "timing_qualified": false,
+ "production_admitted": false,
+ "remaining": [
+  "Place all region and spine buffers with global whole-footprint reservations",
+  "Prove actual physical rows/rails/PDN and every actual routed stage<=405um",
+  "Native clock references/TTFF+SS sensitivity and programme-bound phase replay"
+ ]
+}

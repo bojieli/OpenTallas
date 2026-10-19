@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Independently audit a completed exact-bay geometry ODB; no timing waiver."""
 import argparse
+from bisect import bisect_left,bisect_right
 from collections import defaultdict,Counter
 import hashlib
 import json
@@ -28,11 +29,16 @@ def propose_rows(block,names,u):
     for row in block.getRows():
         q=row.getBBox();existing[q.yMin()].append((row.getName(),(q.xMin(),q.yMin(),q.xMax(),q.yMax())))
     die=block.getDieArea();site=round(.054*u);height=round(.27*u)
+    needed={y:[(n,r) for n,r in cells if not any(q[0]<=r[0] and q[2]>=r[2] and q[3]>=r[3] for _,q in existing[y])]
+            for y,cells in wanted.items()}
+    needed={y:cells for y,cells in needed.items() if cells}
+    ys=sorted(needed);hard_by_y=defaultdict(list)
+    for r in hard:
+        lo=bisect_right(ys,r[1]-height);hi=bisect_left(ys,r[3])
+        for y in ys[lo:hi]:hard_by_y[y].append((max(die.xMin(),r[0]),min(die.xMax(),r[2])))
     proposed={};uncovered=[]
-    for y,cells in wanted.items():
-        need=[(n,r) for n,r in cells if not any(q[0]<=r[0] and q[2]>=r[2] and q[3]>=r[3] for _,q in existing[y])]
-        if not need:continue
-        intervals=sorted((max(die.xMin(),r[0]),min(die.xMax(),r[2])) for r in hard if r[1]<y+height and r[3]>y)
+    for y,need in needed.items():
+        intervals=sorted(hard_by_y[y])
         merged=[]
         for lo,hi in intervals:
             if merged and lo<=merged[-1][1]:merged[-1][1]=max(hi,merged[-1][1])

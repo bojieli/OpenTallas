@@ -43,15 +43,49 @@ class ExactBayGrid(rt.dct.Grid):
         self.blk[c[1]*self.nx+c[0]]=int(nxt is None)
         return tuple(p)
 
-    def route_reserved(self,a,b):
+    def route_reserved(self,a,b,max_run=380):
         # The two endpoint footprints are already reserved, but are legal
         # stage endpoints. Only these two cells may reset the blocked run.
         saved={c:self.blk[c[1]*self.nx+c[0]] for c in (a,b)}
         try:
             for c in saved:self.blk[c[1]*self.nx+c[0]]=0
-            return self._route(a,b,380)
+            return self._route(a,b,max_run)
         finally:
             for c,v in saved.items():self.blk[c[1]*self.nx+c[0]]=v
+
+    def route(self,a,b,max_run=None):
+        # Local trees reserve another40um for boundary cells and actual pin
+        # offsets. No legacy1200um macro-escape fallback is available.
+        run=min(340,max_run or 340);path=self.route_reserved(a,b,run)
+        if not any(self.free(c) for c in path):
+            # Two already reserved endpoints can occupy the same full cell.
+            # A merge still needs a distinct legal physical footprint.
+            mid=self.nearest_free(*self.xy(a))
+            path=self.route_reserved(a,mid,run)+self.route_reserved(mid,b,run)[1:]
+        return path
+
+
+class ExactRegionalBuilder(rt.Builder):
+    """Keep local DME/native targets, reserve full footprints during modelling."""
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs);self.buf_cells={}
+
+    def newbuf(self,tag,c,cell=rt.BUF):
+        if not self.g.free(c):c=self.g.nearest_free(*self.g.xy(c))
+        p=self.g.reserve(c);self.cnt[tag]+=1;n=f'{self.prefix}_{tag}{self.cnt[tag]}'
+        self.bufs.append([n,cell,*p]);self.buf_cells[n]=c
+        return n
+
+    def leaf(self,pts):
+        result=super().leaf(pts);name=result['buf'];result['cell']=self.buf_cells[name]
+        x,y=next((b[2],b[3]) for b in reversed(self.bufs) if b[0]==name)
+        bound=max(abs(s[2]-x)+abs(s[3]-y)+XP+YP for s in pts)
+        if bound>405+1e-7:raise ValueError(f'exact regional leaf needs corridor/partition: {name} {bound:.3f}um >405')
+        return result
+
+    def merge(self,a,b):
+        result=super().merge(a,b);result['cell']=self.buf_cells[result['buf']]
+        return result
 
 
 def routed_bound(path,start,end,grid):

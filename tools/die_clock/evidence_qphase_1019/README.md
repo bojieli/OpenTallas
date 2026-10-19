@@ -80,3 +80,29 @@ fanout, actual placed-pin routed reach and containing physical rows. It can
 emit a readonly row/rail requirements model with source-bound coordinates,
 area and existing row descriptors that would be superseded. It creates no rows
 or PDN and cannot qualify a timing run from missing physical infrastructure.
+
+The actual regional pocket model (`physical/regional_pocket_model`) finds326
+long legacy leaf sources; whole-footprint candidate reservations put all their
+loads within53.610um direct pin bound. Other long regional sources number433,
+with worst414.890um, exposing the original blocked-run boundary/pin offsets.
+For the worst leaf, origin24322.680,8020.080um replaces an output at
+21866.096,8015.355um next to the actual sink24323.802,8029.692um. This is a
+buffer relocation into existing free geometry, not a macro relocation.
+
+The opt-in `exact_region_bays` extension reserves the regional DME buffers while
+building their topology and keeps their existing native insertion targets.
+It removes the1200um route fallback, reserves boundary/pin-offset margin, and
+rejects actual native direct wires>405um after placement. Regional geometry is
+checkpointed before the spine. An actual isolated full `r343` region using the
+same immutable full-shape source geometry places43 cells/29 sinks, maximum
+actual direct wire212.858um, zero direct-reach violations. Its local root is an
+explicit stand-in, so this is neither a full-spine nor a phase proof. Eleven
+focused fleet tests pass. No exact-regional timing run is enabled until the
+missing physical row/rail/PDN requirements are resolved.
+
+The historical row/rail model in `physical/legacy_row_requirements` has38141
+hard-free row segments,6.833547mm2 existing free area and25.309433m of horizontal
+rail length, covering all109395 off-row historical clock cells. Compressed full
+coordinates and their hashes accompany the readable summary. This is a readonly
+requirements model for the old topology; it creates no physical rows or power
+connections and does not approve a new candidate or expand the die.
