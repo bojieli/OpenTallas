@@ -1,0 +1,63 @@
+KU c4902 user 0 pos 0
+KU c5158 user 1 pos 0
+KU c5414 user 2 pos 0
+KU c5670 user 3 pos 0
+KU c5926 user 4 pos 0
+KU c6182 user 5 pos 0
+KU c6438 user 6 pos 0
+KU c6694 user 7 pos 0
+KU c6950 user 8 pos 0
+KU c7206 user 9 pos 0
+KU c7462 user 10 pos 0
+KU c7718 user 11 pos 0
+KU c7974 user 12 pos 0
+KU c8230 user 13 pos 0
+KU c8486 user 0 pos 1
+KU c8742 user 1 pos 1
+KU c8998 user 2 pos 1
+KU c9254 user 3 pos 1
+KU c9510 user 4 pos 1
+KU c9766 user 5 pos 1
+KU c10022 user 6 pos 1
+KU c10278 user 7 pos 1
+KU c10534 user 8 pos 1
+KU c10790 user 9 pos 1
+KU c11046 user 10 pos 1
+KU c11302 user 11 pos 1
+KU c11558 user 12 pos 1
+KU c11814 user 13 pos 1
+KU c12070 user 0 pos 2
+KU c12326 user 1 pos 2
+KU c12582 user 2 pos 2
+KU c12838 user 3 pos 2
+KU c13094 user 4 pos 2
+KU c13350 user 5 pos 2
+KU c13606 user 6 pos 2
+KU c13862 user 7 pos 2
+KU c14118 user 8 pos 2
+KU c14374 user 9 pos 2
+KU c14630 user 10 pos 2
+KU c14886 user 11 pos 2
+KU c15142 user 12 pos 2
+KU c15398 user 13 pos 2
+KU c15654 user 0 pos 3
+KU c15910 user 1 pos 3
+KU c16166 user 2 pos 3
+KU c16422 user 3 pos 3
+KU c16678 user 4 pos 3
+KU c16934 user 5 pos 3
+KU c17190 user 6 pos 3
+KU c17446 user 7 pos 3
+KU c17702 user 8 pos 3
+KU c17958 user 9 pos 3
+KU c18214 user 10 pos 3
+KU c18470 user 11 pos 3
+KU c18726 user 12 pos 3
+KU c18982 user 13 pos 3
+MUWIN starts 56 fires 756 expected 756 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:459: Verilog $finish
+EARLY_MITER edges 19081
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 1.442 s; speed 13.237 us/s
+- Verilator: cpu 1.441 s on 1 threads; allocated 8 MB

@@ -1,0 +1,69 @@
+{
+  "parent_drivers": [
+    "L_0x5e2a1f2838d0",
+    "L_0x5e2a1f2e1dc0"
+  ],
+  "count_ports": [
+    {
+      "scope": "S_0x5e2a1eca9730 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x5e2a1e95c8d0;",
+      "driver": "L_0x5e2a1f2e1dc0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1eca93b0 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x5e2a1e95c8d0;",
+      "driver": "L_0x5e2a1f2e1dc0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1ec9f550 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x5e2a1eca6b20;",
+      "driver": "L_0x5e2a1f2e1dc0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1e9bd670 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x5e2a1eca6b20;",
+      "driver": "L_0x5e2a1f2e1dc0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1edc6550 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x5e2a1ed79940;",
+      "driver": "L_0x5e2a1f2e1dc0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1ed5ab70 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x5e2a1ed79940;",
+      "driver": "L_0x5e2a1f2e1dc0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1f10e700 .scope module, \"u_crl\" \"dsdv_mu_hwin_capture_1019_boot_enable\" 7 130, 7 687 0, S_0x5e2a1f10d650;",
+      "driver": "L_0x5e2a1f2838d0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1f10f360 .scope module, \"u_crm\" \"dsdv_mu_hwin_capture_1019_boot_enable\" 7 131, 7 687 0, S_0x5e2a1f10d650;",
+      "driver": "L_0x5e2a1f2838d0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1f111180 .scope module, \"u_crl\" \"dsdv_mu_hwin_capture_1019_boot_enable\" 7 130, 7 687 0, S_0x5e2a1f110100;",
+      "driver": "L_0x5e2a1f2838d0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1f111f00 .scope module, \"u_crm\" \"dsdv_mu_hwin_capture_1019_boot_enable\" 7 131, 7 687 0, S_0x5e2a1f110100;",
+      "driver": "L_0x5e2a1f2838d0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1f113e50 .scope module, \"u_crl\" \"dsdv_mu_hwin_capture_1019_boot_enable\" 7 130, 7 687 0, S_0x5e2a1f112d00;",
+      "driver": "L_0x5e2a1f2838d0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x5e2a1f114c90 .scope module, \"u_crm\" \"dsdv_mu_hwin_capture_1019_boot_enable\" 7 131, 7 687 0, S_0x5e2a1f112d00;",
+      "driver": "L_0x5e2a1f2838d0",
+      "bound_parent": true
+    }
+  ],
+  "verdict": "PASS"
+}

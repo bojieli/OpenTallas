@@ -1,0 +1,64 @@
+RX_MODEL input1431 born1226 boundary1430 shift1 user0 pos0
+KU c1431 user 0 pos 0
+RX_MODEL input1684 born1479 boundary1683 shift1 user1 pos0
+KU c1684 user 1 pos 0
+RX_MODEL input1940 born1735 boundary1939 shift1 user2 pos0
+KU c1940 user 2 pos 0
+RX_MODEL input2199 born1994 boundary2198 shift1 user3 pos0
+KU c2199 user 3 pos 0
+RX_MODEL input2452 born2247 boundary2451 shift1 user4 pos0
+KU c2452 user 4 pos 0
+RX_MODEL input2708 born2503 boundary2707 shift1 user5 pos0
+KU c2708 user 5 pos 0
+RX_MODEL input2967 born2762 boundary2966 shift1 user6 pos0
+KU c2967 user 6 pos 0
+RX_MODEL input3220 born3015 boundary3219 shift1 user0 pos1
+KU c3220 user 0 pos 1
+RX_MODEL input3473 born3268 boundary3472 shift1 user1 pos1
+KU c3473 user 1 pos 1
+RX_MODEL input3729 born3524 boundary3728 shift1 user2 pos1
+KU c3729 user 2 pos 1
+RX_MODEL input3988 born3783 boundary3987 shift1 user3 pos1
+KU c3988 user 3 pos 1
+RX_MODEL input4241 born4036 boundary4240 shift1 user4 pos1
+KU c4241 user 4 pos 1
+RX_MODEL input4497 born4292 boundary4496 shift1 user5 pos1
+KU c4497 user 5 pos 1
+RX_MODEL input4756 born4551 boundary4755 shift1 user6 pos1
+KU c4756 user 6 pos 1
+RX_MODEL input5009 born4804 boundary5008 shift1 user0 pos2
+KU c5009 user 0 pos 2
+RX_MODEL input5262 born5057 boundary5261 shift1 user1 pos2
+KU c5262 user 1 pos 2
+RX_MODEL input5518 born5313 boundary5517 shift1 user2 pos2
+KU c5518 user 2 pos 2
+RX_MODEL input5777 born5572 boundary5776 shift1 user3 pos2
+KU c5777 user 3 pos 2
+RX_MODEL input6030 born5825 boundary6029 shift1 user4 pos2
+KU c6030 user 4 pos 2
+RX_MODEL input6286 born6081 boundary6285 shift1 user5 pos2
+KU c6286 user 5 pos 2
+RX_MODEL input6545 born6340 boundary6544 shift1 user6 pos2
+KU c6545 user 6 pos 2
+RX_MODEL input6798 born6593 boundary6797 shift1 user0 pos3
+KU c6798 user 0 pos 3
+RX_MODEL input7051 born6846 boundary7050 shift1 user1 pos3
+KU c7051 user 1 pos 3
+RX_MODEL input7307 born7102 boundary7306 shift1 user2 pos3
+KU c7307 user 2 pos 3
+RX_MODEL input7566 born7361 boundary7565 shift1 user3 pos3
+KU c7566 user 3 pos 3
+RX_MODEL input7819 born7614 boundary7818 shift1 user4 pos3
+KU c7819 user 4 pos 3
+RX_MODEL input8075 born7870 boundary8074 shift1 user5 pos3
+KU c8075 user 5 pos 3
+RX_MODEL input8334 born8129 boundary8333 shift1 user6 pos3
+KU c8334 user 6 pos 3
+MUWIN starts 28 fires 368 expected 368 K 2 t_mf 0100 hslot 0000 hwin 01
+RX_MODEL first_fault1434 expected1434
+MUWIN RX_EXPIRED PASS
+- /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:459: Verilog $finish
+EARLY_MITER edges 8433
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.617 s; speed 13.679 us/s
+- Verilator: cpu 0.617 s on 1 threads; allocated 8 MB

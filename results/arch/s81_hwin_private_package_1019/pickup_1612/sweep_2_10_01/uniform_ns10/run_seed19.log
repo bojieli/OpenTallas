@@ -1,0 +1,47 @@
+KU c3750 user 0 pos 0
+KU c4006 user 1 pos 0
+KU c4262 user 2 pos 0
+KU c4518 user 3 pos 0
+KU c4774 user 4 pos 0
+KU c5030 user 5 pos 0
+KU c5286 user 6 pos 0
+KU c5542 user 7 pos 0
+KU c5798 user 8 pos 0
+KU c6054 user 9 pos 0
+KU c6310 user 0 pos 1
+KU c6566 user 1 pos 1
+KU c6822 user 2 pos 1
+KU c7078 user 3 pos 1
+KU c7334 user 4 pos 1
+KU c7590 user 5 pos 1
+KU c7846 user 6 pos 1
+KU c8102 user 7 pos 1
+KU c8358 user 8 pos 1
+KU c8614 user 9 pos 1
+KU c8870 user 0 pos 2
+KU c9126 user 1 pos 2
+KU c9382 user 2 pos 2
+KU c9638 user 3 pos 2
+KU c9894 user 4 pos 2
+KU c10150 user 5 pos 2
+KU c10406 user 6 pos 2
+KU c10662 user 7 pos 2
+KU c10918 user 8 pos 2
+KU c11174 user 9 pos 2
+KU c11430 user 0 pos 3
+KU c11686 user 1 pos 3
+KU c11942 user 2 pos 3
+KU c12198 user 3 pos 3
+KU c12454 user 4 pos 3
+KU c12710 user 5 pos 3
+KU c12966 user 6 pos 3
+KU c13222 user 7 pos 3
+KU c13478 user 8 pos 3
+KU c13734 user 9 pos 3
+MUWIN starts 40 fires 540 expected 540 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:459: Verilog $finish
+EARLY_MITER edges 13833
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 1.020 s; speed 13.558 us/s
+- Verilator: cpu 1.020 s on 1 threads; allocated 8 MB

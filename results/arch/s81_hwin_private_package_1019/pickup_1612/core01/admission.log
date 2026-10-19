@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 34/128 running 15 disk 433 GB 
+ot-run: ot-epyc5       admits   649 GB (avail 511, growth 19, headroom 0, waiters 0/0 GB) load 41/128 running 7 disk 910 GB 
+ot-run: ot-epyc6       admits  1251 GB (avail 936, growth 60, headroom 0, waiters 0/0 GB) load 34/128 running 16 disk 5719 GB 
+ot-run: ot-epyc7       admits  1082 GB (avail 808, growth 41, headroom 0, waiters 0/0 GB) load 24/96 running 13 disk 6275 GB 
+ot-run: ot-epyc8       admits  1263 GB (avail 941, growth 43, headroom 0, waiters 0/0 GB) load 17/128 running 10 disk 66 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_d79b71386
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_d79b71386
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-169393-1792449348 after 0 s
+mkdir: No such file or directory
+REFUSE existing output /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/core01/default
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-169393-1792449348): exit 73

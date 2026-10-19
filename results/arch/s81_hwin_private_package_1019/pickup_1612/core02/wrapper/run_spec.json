@@ -1,0 +1,19 @@
+{
+  "phase": "wrapper",
+  "environment": {
+    "SWEEP_LOW": null,
+    "SWEEP_HIGH": null,
+    "FOUR_STATE_NS": null,
+    "FOUR_STATE_NEV": null,
+    "BOOT_NS": null,
+    "BOOT_NEV": null,
+    "SHORT_NS": null,
+    "RUN_SEEDS": null,
+    "OT_THREADS": "4",
+    "SIM_RESET_PHASE": null,
+    "SIM_RX_SHIFT": null,
+    "SIM_RELEASE_STAGE": null
+  },
+  "walltime_deadline": null,
+  "receipt_policy": "atomic new root and case directories; refuse existing; all failures retained"
+}

@@ -1,0 +1,83 @@
+KU c6342 user 0 pos 0
+KU c6598 user 1 pos 0
+KU c6854 user 2 pos 0
+KU c7110 user 3 pos 0
+KU c7366 user 4 pos 0
+KU c7622 user 5 pos 0
+KU c7878 user 6 pos 0
+KU c8134 user 7 pos 0
+KU c8390 user 8 pos 0
+KU c8646 user 9 pos 0
+KU c8902 user 10 pos 0
+KU c9158 user 11 pos 0
+KU c9414 user 12 pos 0
+KU c9670 user 13 pos 0
+KU c9926 user 14 pos 0
+KU c10182 user 15 pos 0
+KU c10438 user 16 pos 0
+KU c10694 user 17 pos 0
+KU c10950 user 18 pos 0
+KU c11206 user 0 pos 1
+KU c11462 user 1 pos 1
+KU c11718 user 2 pos 1
+KU c11974 user 3 pos 1
+KU c12230 user 4 pos 1
+KU c12486 user 5 pos 1
+KU c12742 user 6 pos 1
+KU c12998 user 7 pos 1
+KU c13254 user 8 pos 1
+KU c13510 user 9 pos 1
+KU c13766 user 10 pos 1
+KU c14022 user 11 pos 1
+KU c14278 user 12 pos 1
+KU c14534 user 13 pos 1
+KU c14790 user 14 pos 1
+KU c15046 user 15 pos 1
+KU c15302 user 16 pos 1
+KU c15558 user 17 pos 1
+KU c15814 user 18 pos 1
+KU c16070 user 0 pos 2
+KU c16326 user 1 pos 2
+KU c16582 user 2 pos 2
+KU c16838 user 3 pos 2
+KU c17094 user 4 pos 2
+KU c17350 user 5 pos 2
+KU c17606 user 6 pos 2
+KU c17862 user 7 pos 2
+KU c18118 user 8 pos 2
+KU c18374 user 9 pos 2
+KU c18630 user 10 pos 2
+KU c18886 user 11 pos 2
+KU c19142 user 12 pos 2
+KU c19398 user 13 pos 2
+KU c19654 user 14 pos 2
+KU c19910 user 15 pos 2
+KU c20166 user 16 pos 2
+KU c20422 user 17 pos 2
+KU c20678 user 18 pos 2
+KU c20934 user 0 pos 3
+KU c21190 user 1 pos 3
+KU c21446 user 2 pos 3
+KU c21702 user 3 pos 3
+KU c21958 user 4 pos 3
+KU c22214 user 5 pos 3
+KU c22470 user 6 pos 3
+KU c22726 user 7 pos 3
+KU c22982 user 8 pos 3
+KU c23238 user 9 pos 3
+KU c23494 user 10 pos 3
+KU c23750 user 11 pos 3
+KU c24006 user 12 pos 3
+KU c24262 user 13 pos 3
+KU c24518 user 14 pos 3
+KU c24774 user 15 pos 3
+KU c25030 user 16 pos 3
+KU c25286 user 17 pos 3
+KU c25542 user 18 pos 3
+MUWIN starts 76 fires 1016 expected 1016 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:459: Verilog $finish
+EARLY_MITER edges 25641
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 26us; walltime 2.148 s; speed 11.935 us/s
+- Verilator: cpu 2.148 s on 1 threads; allocated 8 MB

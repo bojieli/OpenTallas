@@ -1,0 +1,16 @@
+EARLY_RESET phase4 restart_start1090
+KU c1184 user 0 pos 0
+KU c1248 user 1 pos 0
+KU c1312 user 0 pos 1
+KU c1376 user 1 pos 1
+KU c1440 user 0 pos 2
+KU c1504 user 1 pos 2
+KU c1568 user 0 pos 3
+KU c1632 user 1 pos 3
+MUWIN starts 8 fires 8 expected 8 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:459: Verilog $finish
+EARLY_MITER edges 1731
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 184.642 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

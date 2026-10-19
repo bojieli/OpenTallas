@@ -1,0 +1,9 @@
+Observed 2026-10-19T16:14:30.024335-07:00
+Id=oth-ubuntu-169748-1792449371.scope
+ActiveState=inactive
+SubState=dead
+ControlGroup=
+Oct 19 15:36:11 ot-epyc7 systemd[10858]: Started oth-ubuntu-169748-1792449371.scope - [systemd-run] /usr/bin/env OT_THREADS=4 bash tools/hwin_private_package_1019/run_campaign.sh core /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/core02.
+Oct 19 16:06:21 ot-epyc7 systemd[10858]: oth-ubuntu-169748-1792449371.scope: Consumed 45min 45.688s CPU time over 30min 9.735s wall clock time, 11G memory peak.
+ 283408   11045 Ss         00:00  0.0  3796 bash -c systemctl --user show oth-ubuntu-169748-1792449371.scope -p Id -p ActiveState -p SubState -p ControlGroup; journalctl --user -u oth-ubuntu-169748-1792449371.scope --no-pager -n 40; ps -eo pid,ppid,stat,etime,pcpu,rss,args | grep -F s81-hwin-private-package-1019
+ 283412  283408 S          00:00  0.0  2404 grep -F s81-hwin-private-package-1019

@@ -1,0 +1,47 @@
+Observed 2026-10-19T16:14:30.024335-07:00
+Id=oth-ubuntu-2265421-1792449383.scope
+ActiveState=inactive
+SubState=dead
+ControlGroup=
+
+Id=oth-ubuntu-2266257-1792449383.scope
+ActiveState=inactive
+SubState=dead
+ControlGroup=
+
+Id=oth-ubuntu-2266282-1792449383.scope
+ActiveState=inactive
+SubState=dead
+ControlGroup=
+
+Id=oth-ubuntu-2265565-1792449383.scope
+ActiveState=inactive
+SubState=dead
+ControlGroup=
+
+Id=oth-ubuntu-2266279-1792449383.scope
+ActiveState=active
+SubState=running
+ControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2266279-1792449383.scope
+
+Id=oth-ubuntu-2266277-1792449383.scope
+ActiveState=inactive
+SubState=dead
+ControlGroup=
+Oct 19 15:36:23 ot-epyc8 systemd[15066]: Started oth-ubuntu-2265421-1792449383.scope - [systemd-run] /usr/bin/env OT_THREADS=4 SWEEP_LOW=11 SWEEP_HIGH=19 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_11_19_01.
+Oct 19 15:36:23 ot-epyc8 systemd[15066]: Started oth-ubuntu-2265565-1792449383.scope - [systemd-run] /usr/bin/env OT_THREADS=4 SWEEP_LOW=20 SWEEP_HIGH=28 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_20_28_01.
+Oct 19 15:36:23 ot-epyc8 systemd[15066]: Started oth-ubuntu-2266257-1792449383.scope - [systemd-run] /usr/bin/env OT_THREADS=4 SWEEP_LOW=38 SWEEP_HIGH=47 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_38_47_01.
+Oct 19 15:36:23 ot-epyc8 systemd[15066]: Started oth-ubuntu-2266277-1792449383.scope - [systemd-run] /usr/bin/env OT_THREADS=4 SWEEP_LOW=2 SWEEP_HIGH=10 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_2_10_01.
+Oct 19 15:36:23 ot-epyc8 systemd[15066]: Started oth-ubuntu-2266279-1792449383.scope - [systemd-run] /usr/bin/env OT_THREADS=4 FOUR_STATE_NS=47 FOUR_STATE_NEV=16 bash tools/hwin_private_package_1019/run_campaign.sh four_state /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01.
+Oct 19 15:36:24 ot-epyc8 systemd[15066]: Started oth-ubuntu-2266282-1792449383.scope - [systemd-run] /usr/bin/env OT_THREADS=4 SWEEP_LOW=29 SWEEP_HIGH=37 bash tools/hwin_private_package_1019/run_campaign.sh sweep /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/sweep_29_37_01.
+Oct 19 15:57:41 ot-epyc8 systemd[15066]: oth-ubuntu-2266277-1792449383.scope: Consumed 28min 29.123s CPU time over 21min 17.549s wall clock time, 7.2G memory peak.
+Oct 19 16:00:13 ot-epyc8 systemd[15066]: oth-ubuntu-2265421-1792449383.scope: Consumed 31min 35.830s CPU time over 23min 49.573s wall clock time, 7.3G memory peak.
+Oct 19 16:02:53 ot-epyc8 systemd[15066]: oth-ubuntu-2265565-1792449383.scope: Consumed 33min 51.173s CPU time over 26min 30.342s wall clock time, 7.4G memory peak.
+Oct 19 16:05:43 ot-epyc8 systemd[15066]: oth-ubuntu-2266282-1792449383.scope: Consumed 36min 55.932s CPU time over 29min 19.386s wall clock time, 7.5G memory peak.
+Oct 19 16:12:25 ot-epyc8 systemd[15066]: oth-ubuntu-2266257-1792449383.scope: Consumed 44min 47.625s CPU time over 36min 1.251s wall clock time, 8G memory peak.
+2265581   15443 Ss         38:07  0.0  3852 bash -c export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; cd /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc || { echo OT_RUN_NOCD otrun-ubuntu-2916857-449383218 >&2; exit 96; }; /usr/local/bin/ot-heavy --mem 16 --tag otrun-ubuntu-2916857-449383218 --max-wait 120 -- env OT_THREADS=4 FOUR_STATE_NS=47 FOUR_STATE_NEV=16 bash tools/hwin_private_package_1019/run_campaign.sh four_state /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01; rc=$?; echo "OT_RUN_EXIT otrun-ubuntu-2916857-449383218 $rc" >&2; exit $rc
+2266279 2265581 S          38:07  0.0  3856 bash tools/hwin_private_package_1019/run_campaign.sh four_state /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01
+2266468 2266279 S          38:06  0.0  3964 bash /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01 four_state
+2319984 2266468 R          05:19  100 73324 vvp /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/four_state_ns47_01/four_state/tb.vvp +reset_phase=4
+2323523   15443 Ss         00:00  0.0  3872 bash -c systemctl --user show oth-ubuntu-2265421-1792449383.scope oth-ubuntu-2266257-1792449383.scope oth-ubuntu-2266282-1792449383.scope oth-ubuntu-2265565-1792449383.scope oth-ubuntu-2266279-1792449383.scope oth-ubuntu-2266277-1792449383.scope -p Id -p ActiveState -p SubState -p ControlGroup; journalctl --user -u oth-ubuntu-2265421-1792449383.scope -u oth-ubuntu-2266257-1792449383.scope -u oth-ubuntu-2266282-1792449383.scope -u oth-ubuntu-2265565-1792449383.scope -u oth-ubuntu-2266279-1792449383.scope -u oth-ubuntu-2266277-1792449383.scope --no-pager -n 40; ps -eo pid,ppid,stat,etime,pcpu,rss,args | grep -F s81-hwin-private-package-1019
+2323527 2323523 S          00:00  0.0  2488 grep -F s81-hwin-private-package-1019

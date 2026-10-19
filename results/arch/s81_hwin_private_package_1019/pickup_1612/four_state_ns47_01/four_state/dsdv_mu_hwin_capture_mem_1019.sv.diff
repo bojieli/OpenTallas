@@ -1,0 +1,15 @@
+--- dsdv_mu_hwin_capture_mem_1019.sv
++++ parser/dsdv_mu_hwin_capture_mem_1019.sv
+@@ -10,8 +10,10 @@
+  // Reset-distinct registered addresses keep event-bank ports physically independent.
+  always @(posedge ck or negedge rst_n[0]) if(!rst_n[0]) waddr<={AW{1'b0}}; else waddr<=wa;
+  always @(posedge ck) begin wdata<=wd; fd<=wdata; end
+- wire [N*16-1:0] padded={{(N*16-W){1'b0}},wdata}, raw;
+- wire [N*16-1:0] forwarded={{(N*16-W){1'b0}},fd}, picked;
++ wire [N*16-1:0] padded, raw;
++ assign padded={{(N*16-W){1'b0}},wdata};
++ wire [N*16-1:0] forwarded, picked;
++ assign forwarded={{(N*16-W){1'b0}},fd};
+  genvar k; generate
+  for(k=0;k<S;k=k+1) begin:g_select
+    localparam integer LO=8*k, SW=(W-LO<8)?W-LO:8;

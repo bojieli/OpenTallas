@@ -1,0 +1,11 @@
+# Namespace HWIN receipt pickup
+
+Snapshot collected at 2026-10-19 16:13:17 PT from unchanged source9e7921b40/replay06f8ca8dc; source metadata and read-only journal/process observations collected later at 2026-10-19T16:14:30.024335-07:00. No new execution, source, bench, gold, or native change. Original fullshape06 is excluded.
+
+All 46 shapes now have all 276 legal positive and 276 expected-expiry receipts, with exact nonuniform B-1/B/B+1 dates and first-fault checks PASS. Core02 has all 136/136 source-owned case/seed obligations matching their expected positive or causal/config failure regex, and zero unexpected failures. Core01 mkdir exit73 remains history. This qualifies receipt completeness only: all five sweep and core02 scopes are inactive, but original durable client logs contain no final RAN/OT_RUN_EXIT and local original clients no longer exist. Their outer exit is UNKNOWN, with no inferred terminal0 and no attributed controller failure.
+
+Namespace NS2 has actual original ot-run exit0, all11 reset phases, primitive13, payload/control X causals and all three original/projected trace pairs PASS. Namespace NS47 remains active: phases0–3 PASS and phase4 partial at snapshot; primitive13 and all three original/projected trace pairs PASS; phases4–8/90/93, qualified payload/control X causals, and actual outer exit remain OPEN. Actual six trace files for each namespace were copied separately read-only because the frozen collector excludes .trace.
+
+All 210 source receipt entries match the frozen manifest. The default bench was swapped after inherited sources.sha emission; actual remote default bench and runner on both admitted hosts were separately hashed against the committed source_manifest.json. All frozen source-manifest files also match locally. The first local audit attempt needed the sparse RTL paths materialized; it performed no simulation/source mutation. No numerical, native, mapped-cost, parent or full-token claim is made.
+
+Continue only the existing NS47 job on ot-epyc8, unit oth-ubuntu-2266279-1792449383.scope. Fresh immutable pickup must preserve final11 phase verdicts and actual X causals plus original client exit if obtainable. Preserve UNKNOWN sweep/core outer status unless actual original task-specific terminal authority is recovered; do not rerun to manufacture it. See stable RUNS.json and pending_results.txt.

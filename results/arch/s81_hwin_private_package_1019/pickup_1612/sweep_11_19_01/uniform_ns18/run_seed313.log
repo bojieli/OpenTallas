@@ -1,0 +1,79 @@
+KU c6054 user 0 pos 0
+KU c6310 user 1 pos 0
+KU c6566 user 2 pos 0
+KU c6822 user 3 pos 0
+KU c7078 user 4 pos 0
+KU c7334 user 5 pos 0
+KU c7590 user 6 pos 0
+KU c7846 user 7 pos 0
+KU c8102 user 8 pos 0
+KU c8358 user 9 pos 0
+KU c8614 user 10 pos 0
+KU c8870 user 11 pos 0
+KU c9126 user 12 pos 0
+KU c9382 user 13 pos 0
+KU c9638 user 14 pos 0
+KU c9894 user 15 pos 0
+KU c10150 user 16 pos 0
+KU c10406 user 17 pos 0
+KU c10662 user 0 pos 1
+KU c10918 user 1 pos 1
+KU c11174 user 2 pos 1
+KU c11430 user 3 pos 1
+KU c11686 user 4 pos 1
+KU c11942 user 5 pos 1
+KU c12198 user 6 pos 1
+KU c12454 user 7 pos 1
+KU c12710 user 8 pos 1
+KU c12966 user 9 pos 1
+KU c13222 user 10 pos 1
+KU c13478 user 11 pos 1
+KU c13734 user 12 pos 1
+KU c13990 user 13 pos 1
+KU c14246 user 14 pos 1
+KU c14502 user 15 pos 1
+KU c14758 user 16 pos 1
+KU c15014 user 17 pos 1
+KU c15270 user 0 pos 2
+KU c15526 user 1 pos 2
+KU c15782 user 2 pos 2
+KU c16038 user 3 pos 2
+KU c16294 user 4 pos 2
+KU c16550 user 5 pos 2
+KU c16806 user 6 pos 2
+KU c17062 user 7 pos 2
+KU c17318 user 8 pos 2
+KU c17574 user 9 pos 2
+KU c17830 user 10 pos 2
+KU c18086 user 11 pos 2
+KU c18342 user 12 pos 2
+KU c18598 user 13 pos 2
+KU c18854 user 14 pos 2
+KU c19110 user 15 pos 2
+KU c19366 user 16 pos 2
+KU c19622 user 17 pos 2
+KU c19878 user 0 pos 3
+KU c20134 user 1 pos 3
+KU c20390 user 2 pos 3
+KU c20646 user 3 pos 3
+KU c20902 user 4 pos 3
+KU c21158 user 5 pos 3
+KU c21414 user 6 pos 3
+KU c21670 user 7 pos 3
+KU c21926 user 8 pos 3
+KU c22182 user 9 pos 3
+KU c22438 user 10 pos 3
+KU c22694 user 11 pos 3
+KU c22950 user 12 pos 3
+KU c23206 user 13 pos 3
+KU c23462 user 14 pos 3
+KU c23718 user 15 pos 3
+KU c23974 user 16 pos 3
+KU c24230 user 17 pos 3
+MUWIN starts 72 fires 972 expected 972 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-private-package-1019/src_06f8ca8dc/tools/hwin_private_package_1019/sim/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:459: Verilog $finish
+EARLY_MITER edges 24329
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 1.981 s; speed 12.280 us/s
+- Verilator: cpu 1.981 s on 1 threads; allocated 8 MB
