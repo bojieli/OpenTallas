@@ -22,13 +22,21 @@
 //   4 RESULT slots one edge late (step 0), 5 USER-ROW SWAP (the store serves user 1's requests from user 2's rows and v.v.,
 //   K and V: a wrong row map), 6 SLOT LATE (user 2's RESULT slots one edge late), 7 USER TAG (user 3's CMD/Q records carry
 //   user 0's epoch at the seam).
+// MU-TOK-KV2 10-19: (a) the seam epoch follows the MU-DQ-D2DUSER contract (c93aee75b): epoch = {seq14[u], u} with a
+//   PER-USER sequence -- seq14[u] = KVA_SEQ0 (+SEQ0=, default 9) at the user's first L0 step, +1 at each later L0 step of
+//   that user; every layer of one token carries its token's epoch (was: a global 9+k per step).
+// (b) PER-STACK vehicles (kv_attn_grp_map.py --stacks: `define KVA_PARTIAL, KVA_NG = 8 groups, KVA_NV = 4 V ports):
+//   one attention stack + the shared control; the absent stacks' partials are not driven, so RESULT exactness is not
+//   judged (reported only); measured per step and stack (KVA_STACK lines): K / V request spans at the stack's landing
+//   groups, the stack's partial (astk.ap) first..last non-zero edge, its V ports' out_valid span; faults judged only for
+//   the stack's own ECTLs / V ports / strip.
 `include "kva_grp_map.svh"
 `include "kva_ports.svh"
     localparam integer KMAX = 8, KV_ROWS = 16384;
     reg [1023:0] kva_kv [0:KMAX*KV_ROWS-1];
     reg [31:0] kva_q [0:KMAX*512-1], kva_gold [0:KMAX*512-1];
     integer kva_n = 1, kva_T = 8192, kva_go = 0, kva_lg = 8, kva_kgo = 200, kva_age0 = 1, kva_kvn = 34;
-    integer kva_mut = 0, kva_hckc = 0, kva_txfirst = 1750, kva_rxcmd = 2;
+    integer kva_mut = 0, kva_hckc = 0, kva_txfirst = 1750, kva_rxcmd = 2, kva_seq0 = 9;
     integer kva_A [0:KMAX-1], kva_u [0:KMAX-1], kva_l [0:KMAX-1], kva_rel [0:KMAX-1];
     reg [15:0] kva_ep [0:KMAX-1]; reg [17:0] kva_tok [0:KMAX-1];
     string kva_vec [0:KMAX-1];
@@ -46,6 +54,7 @@
         void'($value$plusargs("KVA_MUT=%d", kva_mut));
         if ($test$plusargs("KVA_HCKC")) kva_hckc = 1;
         if (!$value$plusargs("CTX=%d", kva_T)) kva_T = 8192;
+        void'($value$plusargs("SEQ0=%d", kva_seq0));
         for (k = 0; k < KMAX; k = k + 1) begin
             kva_A[k] = -1000000; kva_u[k] = 0; kva_l[k] = 0; kva_rel[k] = 3283 * k;
             if (k < kva_n) begin
@@ -54,8 +63,12 @@
                     4: `KVA_ARGS(4)  5: `KVA_ARGS(5)  6: `KVA_ARGS(6)  default: `KVA_ARGS(7)
                 endcase
                 if (kva_vec[k] == "") $fatal(1, "+VEC%0d required", k);
-                kva_ep[k] = {14'(9 + k), 2'(kva_u[k])};             // epoch {seq14, user2}
-                kva_tok[k] = 18'(50994 + 64 * k + kva_u[k]);
+                begin : seq   // per-user token sequence (MU-DQ-D2DUSER): +1 at each later L0 of the same user
+                    integer j, n; n = 0;
+                    for (j = 0; j <= k; j = j + 1) if (kva_u[j] == kva_u[k] && kva_l[j] == 0) n = n + 1;
+                    kva_ep[k] = {14'(kva_seq0 + ((n > 0) ? n - 1 : 0)), 2'(kva_u[k])};   // epoch {seq14[u], user2}
+                end
+                kva_tok[k] = 18'(50994 + 64 * kva_ep[k][15:2] + kva_u[k]);
                 $readmemh({kva_vec[k], "/q.hex"}, kva_q, 512 * k, 512 * k + 511);
                 $readmemh({kva_vec[k], "/gold.hex"}, kva_gold, 512 * k, 512 * k + 511);
                 $readmemh({kva_vec[k], "/kv.hex"}, kva_kv, KV_ROWS * k, KV_ROWS * k + 2 * kva_T - 1);
@@ -83,6 +96,11 @@
     function automatic integer kva_step_of_ep(input [15:0] e, input [5:0] l);
         integer k; begin kva_step_of_ep = -1;
             for (k = 0; k < kva_n; k = k + 1) if (kva_ep[k] == e && 6'(kva_l[k]) == l) kva_step_of_ep = k; end endfunction
+    initial begin : uniq_ep   // (epoch, layer) must name one step: the RESULT header check keys on it
+        integer j, k; #1;
+        for (k = 0; k < kva_n; k = k + 1) for (j = 0; j < k; j = j + 1)
+            if (kva_ep[j] == kva_ep[k] && kva_l[j] == kva_l[k]) $fatal(1, "steps %0d / %0d share epoch %04h layer %0d", j, k, kva_ep[k], kva_l[k]);
+    end
     // ---- the compiled edge-relative events at the consumer pins (p = consumer pin cycle) ----
     function automatic [76:0] kva_ctl(input integer p);
         integer k; reg go, iss, run; begin
@@ -154,21 +172,36 @@
         end
     end
     // ---- the KV store path at the 32 landing-group pins: request sampled at edge c -> response visible KVA_LG edges later --
-    reg [37:0] kva_pk [0:31][0:63]; reg [14:0] kva_pv [0:31][0:63]; integer kva_pvk [0:31][0:63];
+    reg [37:0] kva_pk [0:KVA_NG-1][0:63]; reg [14:0] kva_pv [0:KVA_NG-1][0:63]; integer kva_pvk [0:KVA_NG-1][0:63];
     integer kva_g, kva_i, kva_coll = 0, kva_rowerr = 0;
     integer kva_nk [0:KMAX-1], kva_nv [0:KMAX-1], kva_k0 [0:KMAX-1], kva_v0 [0:KMAX-1], kva_klast [0:KMAX-1], kva_vlast [0:KMAX-1];
     initial begin
-        for (kva_g = 0; kva_g < 32; kva_g = kva_g + 1) for (kva_i = 0; kva_i < 64; kva_i = kva_i + 1) begin
+        for (kva_g = 0; kva_g < KVA_NG; kva_g = kva_g + 1) for (kva_i = 0; kva_i < 64; kva_i = kva_i + 1) begin
             kva_pk[kva_g][kva_i] = 0; kva_pv[kva_g][kva_i] = 0; kva_pvk[kva_g][kva_i] = 0; end
         for (kva_i = 0; kva_i < KMAX; kva_i = kva_i + 1) begin
             kva_nk[kva_i] = 0; kva_nv[kva_i] = 0; kva_k0[kva_i] = -1; kva_v0[kva_i] = -1; kva_klast[kva_i] = -1; kva_vlast[kva_i] = -1; end
+    end
+    // per step and stack: K / V request spans, partial (astk.ap) non-zero span, V-port out_valid span
+    integer kva_sk0 [0:KMAX-1][0:3], kva_skl [0:KMAX-1][0:3], kva_sv0 [0:KMAX-1][0:3], kva_svl [0:KMAX-1][0:3];
+    integer kva_sa0 [0:KMAX-1][0:3], kva_sal [0:KMAX-1][0:3], kva_so0 [0:KMAX-1][0:3], kva_sol [0:KMAX-1][0:3];
+    initial for (int k = 0; k < KMAX; k++) for (int s = 0; s < 4; s++) begin
+        kva_sk0[k][s] = -1; kva_skl[k][s] = -1; kva_sv0[k][s] = -1; kva_svl[k][s] = -1;
+        kva_sa0[k][s] = -1; kva_sal[k][s] = -1; kva_so0[k][s] = -1; kva_sol[k][s] = -1; end
+    always @(negedge ck) begin : stk_spans
+        integer s, w, v; w = kva_cur(cyc, 30);
+        if (w >= 0) begin
+            for (s = 0; s < KVA_NSTK; s = s + 1) if (|kva_ap[s] === 1'b1) begin
+                if (kva_sa0[w][s] < 0) kva_sa0[w][s] = cyc; kva_sal[w][s] = cyc; end
+            for (v = 0; v < KVA_NV; v = v + 1) if (kva_vport_ov[v] === 1'b1) begin
+                if (kva_so0[w][v / 4] < 0) kva_so0[w][v / 4] = cyc; kva_sol[w][v / 4] = cyc; end
+        end
     end
     // the HBM row map as the store sees it (mutant 5 = a wrong map: users 1 and 2 exchanged)
     function automatic integer kva_map_user(input integer u);
         kva_map_user = (kva_mut == 5 && u == 1) ? 2 : (kva_mut == 5 && u == 2) ? 1 : u; endfunction
     always @(negedge ck) begin : grp_model
         integer g, d, t, lg, s, sk, w, wr; reg [37:0] ek; reg [14:0] ev; reg [1023:0] row;
-        for (g = 0; g < 32; g = g + 1) begin
+        for (g = 0; g < KVA_NG; g = g + 1) begin
             d = cyc % 64; ek = kva_pk[g][d]; ev = kva_pv[g][d]; s = kva_pvk[g][d]; kva_pk[g][d] = 0; kva_pv[g][d] = 0;
             kva_krsp[g] = 1062'd0; kva_rsp[g] = 1056'd0;
             if (ek[0] && ev[0]) begin kva_coll = kva_coll + 1; smoke_err("landing group: K and V response in one edge"); end
@@ -197,11 +230,13 @@
                     if (kva_rowerr <= 4) $display("KVA_ROW_ERR cyc %0d group %0d K request row %0d (epoch %04h layer %0d), window step %0d row %0d",
                         cyc, g, wr, kva_kreq[g][31:16], kva_kreq[g][37:32], w, (w < 0) ? -1 : kva_row(kva_u[w], kva_l[w]));
                 end
-                if (w >= 0) begin kva_nk[w] = kva_nk[w] + 1; if (kva_k0[w] < 0) kva_k0[w] = cyc; kva_klast[w] = cyc; end
+                if (w >= 0) begin kva_nk[w] = kva_nk[w] + 1; if (kva_k0[w] < 0) kva_k0[w] = cyc; kva_klast[w] = cyc;
+                    if (kva_sk0[w][g / 8] < 0) kva_sk0[w][g / 8] = cyc; kva_skl[w][g / 8] = cyc; end
             end
             if (kva_vreq[g][0] === 1'b1) begin
                 kva_pv[g][(cyc + lg) % 64] = kva_vreq[g]; kva_pvk[g][(cyc + lg) % 64] = w;
-                if (w >= 0) begin kva_nv[w] = kva_nv[w] + 1; if (kva_v0[w] < 0) kva_v0[w] = cyc; kva_vlast[w] = cyc; end
+                if (w >= 0) begin kva_nv[w] = kva_nv[w] + 1; if (kva_v0[w] < 0) kva_v0[w] = cyc; kva_vlast[w] = cyc;
+                    if (kva_sv0[w][g / 8] < 0) kva_sv0[w][g / 8] = cyc; kva_svl[w][g / 8] = cyc; end
             end
         end
     end
@@ -240,7 +275,7 @@
          kva_f_svc = dut.kvs_attn.w_attn_face__service_fault, kva_f_rl = dut.kvs_attn.w_attn_root__local_fault,
          kva_f_ri = dut.kvs_attn.w_attn_root__io_fault, kva_f_cal = dut.kvs_attn.w_attn_cal__fault,
          kva_f_fin = dut.pvfin.fault, kva_f_pw0 = dut.pvw_0.fault, kva_f_pw1 = dut.pvw_1.fault, kva_f_hub = dut.ahub.hf;
-    wire [3:0] kva_f_stk = {dut.astk_EN.af, dut.astk_ES.af, dut.astk_WN.af, dut.astk_WS.af};
+    wire [KVA_NSTK-1:0] kva_f_stk = `KVA_STK_F;
     wire [9:0] kva_f_unit = dut.kvs_attn.w_afr__unit_fault;
     wire [5:0] kva_ev = {dut.kvs_attn.w_attn_face__result_valid === 1'b1, dut.kvs_attn.fin[0] === 1'b1,
                          dut.kvs_attn.w_attn_root__start_pv === 1'b1, dut.kvs_attn.w_attn_root__start_qk === 1'b1,
@@ -249,7 +284,7 @@
     integer kva_evc [0:5][0:KMAX-1]; integer kva_evn [0:5]; integer kva_flast [0:KMAX-1];
     initial begin for (int e = 0; e < 6; e++) begin kva_evn[e] = 0; for (int k = 0; k < KMAX; k++) kva_evc[e][k] = -1; end
         for (int k = 0; k < KMAX; k++) kva_flast[k] = -1; end
-    integer kva_ff = -1, kva_fe = -1, kva_fv = -1;
+    integer kva_ff = -1, kva_fe = -1, kva_fv = -1, kva_fs = -1;
     always @(negedge ck) if (trace_on) begin : evs
         integer e;
         for (e = 0; e < 6; e = e + 1) if (kva_ev[e] && !kva_ev_q[e] && kva_evn[e] < KMAX) begin
@@ -259,11 +294,15 @@
         if (kva_ev[5] && kva_evn[5] > 0) kva_flast[kva_evn[5] - 1] = cyc;
         kva_ev_q <= kva_ev;
         if (kva_fe < 0 && |kva_ectl_f) begin kva_fe = cyc;
-            for (kva_i = 0; kva_i < 32; kva_i = kva_i + 1) if (kva_ectl_f[kva_i])
+            for (kva_i = 0; kva_i < KVA_NG; kva_i = kva_i + 1) if (kva_ectl_f[kva_i])
                 $display("KVA_FAULT ECTL issuer of %0s cyc %0d (rel run0 %0d)", kva_gname(kva_i), cyc, cyc - kva_A[0]); end
         if (kva_fv < 0 && |kva_vport_f) begin kva_fv = cyc;
-            for (kva_i = 0; kva_i < 16; kva_i = kva_i + 1) if (kva_vport_f[kva_i])
+            for (kva_i = 0; kva_i < KVA_NV; kva_i = kva_i + 1) if (kva_vport_f[kva_i])
                 $display("KVA_FAULT V port %0s cyc %0d (rel run0 %0d)", kva_vname(kva_i), cyc, cyc - kva_A[0]); end
+`ifdef KVA_PARTIAL
+        if (kva_fs < 0 && (|kva_f_stk || |kva_ectl_f || |kva_vport_f)) begin kva_fs = cyc;
+            $display("KVA_FAULT_STACK first cyc %0d step %0d strips %b ECTL %h Vport %h", cyc, kva_cur(cyc, 0), kva_f_stk, kva_ectl_f, kva_vport_f); end
+`endif
         if (kva_ff < 0 && (kva_f_prog || kva_f_face || kva_f_svc || kva_f_rl || kva_f_ri || kva_f_cal || kva_f_fin || kva_f_pw0 ||
                            kva_f_pw1 || kva_f_hub || |kva_f_stk || |kva_ectl_f || |kva_vport_f)) begin
             kva_ff = cyc;
@@ -291,14 +330,27 @@
             if (kva_evc[0][k] >= 0 && kva_r31[k] >= 0)
                 $display("KVA_DIE_ATTN_CYCLES step %0d user %0d issue->last RESULT word at the d2d face %0d (run->last %0d)", k, kva_u[k],
                          kva_r31[k] - kva_evc[0][k], kva_r31[k] - kva_A[k]);
+            for (int s = 0; s < KVA_NSTK; s++)
+                $display("KVA_STACK step %0d user %0d layer %0d stack %0s | K req %0d..%0d | V req %0d..%0d | partial ap %0d..%0d | Vport out %0d..%0d",
+                    k, kva_u[k], kva_l[k], kva_sname(s), kva_sk0[k][s] - a, kva_skl[k][s] - a, kva_sv0[k][s] - a, kva_svl[k][s] - a,
+                    kva_sa0[k][s] - a, kva_sal[k][s] - a, kva_so0[k][s] - a, kva_sol[k][s] - a);
             ok = (kva_words[k] == 512 && kva_derr[k] == 0 && kva_st[k] >= 0);
             if (!ok) all = 0;
             $display("KVA_STEP_RESULT %0d user %0d exact %0d words %0d data_errors %0d status %0d", k, kva_u[k], ok, kva_words[k],
                      kva_derr[k], kva_st[k] >= 0);
         end
+`ifdef KVA_PARTIAL
+        // per-stack vehicle: the absent stacks' partials are undriven -> RESULT / shared-unit faults are not judged
+        if (kva_rowerr != 0) smoke_err("K request row != the row of the step whose window holds it");
+        if (kva_fs >= 0) smoke_err("stack fault (own ECTL / V port / strip)");
+        for (k = 0; k < kva_n; k = k + 1) for (int s = 0; s < KVA_NSTK; s++)
+            if (kva_sk0[k][s] < 0 || kva_sv0[k][s] < 0 || kva_sa0[k][s] < 0) smoke_err("a stack produced no K / V request or partial in a step");
+        $display("KVA_PARTIAL stacks %0d: RESULT exactness not judged (absent stacks undriven)", KVA_NSTK);
+`else
         if (!all) smoke_err("a step's RESULT is not exact / complete");
         if (kva_rowerr != 0) smoke_err("K request row != the row of the step whose window holds it");
         if (kva_ff >= 0) smoke_err("attention fault");
+`endif
         dc = 0; for (k = 0; k < kva_n; k = k + 1) dc = dc + kva_derr[k];
         $display("KVA_RESULT exact %0d steps %0d data_errors %0d row_errors %0d hdr_errors %0d records %0d first_fault %0d seq_kst %h",
             (all && kva_rowerr == 0 && kva_ff < 0 && kva_hdrerr == 0), kva_n, dc, kva_rowerr, kva_hdrerr, kva_nrec,

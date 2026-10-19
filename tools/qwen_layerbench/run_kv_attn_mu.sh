@@ -16,14 +16,32 @@ MAC=$KSRC/physical/qkd_astk_strip/macros
 verilator --version > $W/verilator.version
 cp $CASES $W/cases.txt
 O=$W/obj
+# MU-TOK-KV2: KVA_HIER=REGEX verilates every slice master matching REGEX ONCE as a Verilator hierarchical block
+# (hier_block in $W/hier.vlt; default the head-unit leaves, 7k of the vehicle's instances).  Verilator 5.050's _hier.mk
+# runs a block twice under make -j (PCH race, HBM-TKM3), so the blocks are verilated serially and the C++ built -j.
+VFILES="-f $SL/$TOP.f $MAC/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v $MAC/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v
+    $KSRC/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $W/tb_$TOP.sv"
+VOPTS="-O1 ${KVA_VFLAGS:--fno-dfg} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN
+    --x-assign unique --x-initial unique --top-module tb_$TOP -GMUT=0 -Mdir $O
+    +define+SLICE_DRIVE=\"$H/drive_qwk_slice_attn_mu.svh\" +define+IDLE_EDGES=200 +define+TAIL_EDGES=50 +incdir+$H +incdir+$SL"
 if [ ! -x $O/Vtb_$TOP ] || [ -n "${KVA_REBUILD:-}" ]; then
-/usr/bin/time -f "%e s %M KB" -o $W/build.time verilator --binary --timing -j ${KVA_J:-32} -O1 ${KVA_VFLAGS:--fno-dfg} -Wno-fatal -Wno-lint -Wno-style \
-    -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN --x-assign unique --x-initial unique \
-    --top-module tb_$TOP -GMUT=0 -Mdir $O +define+SLICE_DRIVE=\"$H/drive_qwk_slice_attn_mu.svh\" +define+IDLE_EDGES=200 \
-    +define+TAIL_EDGES=50 +incdir+$H +incdir+$SL \
-    -f $SL/$TOP.f $MAC/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v \
-    $MAC/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v \
-    $KSRC/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $W/tb_$TOP.sv > $W/build.log 2>&1
+  if [ -n "${KVA_HIER:-}" ]; then
+    python3 - "$SL/slice.json" "$KVA_HIER" > $W/hier.vlt <<'PY' || exit 2
+import json, re, sys
+m = sorted(x for x in json.load(open(sys.argv[1]))['masters'] if re.fullmatch(sys.argv[2], x))
+if not m:
+    raise SystemExit('KVA_HIER matches no slice master')
+print('`verilator_config')
+print('// MU-TOK-KV2: repeated leaves verilated once each (hierarchical blocks)')
+for x in m:
+    print(f'hier_block -module "{x}"')
+PY
+    echo "hier blocks: $(grep -c hier_block $W/hier.vlt)"
+    /usr/bin/time -f "%e s %M KB" -o $W/build.time bash -c "verilator --cc --exe --main --timing --hierarchical -j ${KVA_J:-16} $VOPTS \
+        $W/hier.vlt $VFILES && make -C $O -f Vtb_${TOP}_hier.mk -j1 hier_verilation && make -C $O -f Vtb_${TOP}_hier.mk -j ${KVA_J:-16} hier_build" > $W/build.log 2>&1
+  else
+    /usr/bin/time -f "%e s %M KB" -o $W/build.time verilator --binary --timing -j ${KVA_J:-32} $VOPTS $VFILES > $W/build.log 2>&1
+  fi
 fi
 echo "build: $(cat $W/build.time 2>/dev/null)"
 if [ ! -x $O/Vtb_$TOP ]; then echo "KVA_BUILD_FAIL $TOP (see $W/build.log)"; grep -m20 -E '%Error' $W/build.log; exit 3; fi
