@@ -141,6 +141,7 @@ def main():
     ap.add_argument('--edges', type=int, default=6000)
     ap.add_argument('--verilator', default=str(Path.home() / '.local/opentallas-tools/verilator-5.050/bin/verilator'))
     ap.add_argument('--tb-only', action='store_true')
+    ap.add_argument('--raw', action='store_true', help='one case: echo the simulator verdict line, exit with its rc')
     a = ap.parse_args()
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -173,6 +174,9 @@ def main():
         else:
             ok = rc != 0 and 'S2_FAIL' in log
         line = next((ln for ln in log.splitlines() if 'S2_' in ln), '')
+        print(line, flush=True)
+        if a.raw:
+            sys.exit(rc)
         results.append(dict(case=case, mut=m, what=S2.MUTANTS.get(m, 'positive'), rc=rc,
                             verdict=('PASS' if m == 0 else 'FAIL (expected)') if ok else 'UNEXPECTED',
                             witness=line[:400], verilator=ver))
