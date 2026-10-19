@@ -4,8 +4,8 @@
 #   bash results/rtl/mu_qwen_1018/adopt_slice/run_group.sh GROUP WORK
 # Groups (one ot-run job each): F0 / F1 / F2 = every dv_bench2 bench (a-g, i, j; h on the 12-slice master chain) at
 # MU_NU 1 and 4 on the master (F0), the W face (F1), the E face (F2), then bench m (4 users) at MU_NU 4 (2 seeds);
-# NEG = bench m negatives (MU_NU 1; qfd_dv_amax_mu mutants 1-4 on the W face, 2 on the E face; slice mutants 11 / 12
-# at MU_NU 4); FACES = tb_qfd_dv2_faces (W1 W0 E0 E1 chain) at MU_NU 1 / 4 + its mutants 11 / 12 at MU_NU 4.
+# NEG = bench m negatives (MU_NU 1; qfd_dv_amax_mu mutants 1-4 on the W face, 2 on the E face; AM_MUT 6 = root merge not
+# restarted per token; gap 12 = STN while results pending -> stn_pend fault; slice mutants 11 / 12 at MU_NU 4); FACES = tb_qfd_dv2_faces (W1 W0 E0 E1 chain) at MU_NU 1 / 4 + its mutants 11 / 12 at MU_NU 4.
 # Logs: results/rtl/mu_qwen_1018/adopt_slice/runs/<case>.out; sim logs of the identity compare in WORK.
 set -u
 G=$1; WORK=$2
@@ -39,7 +39,8 @@ F0|F1|F2)
   wait
   for s in 21 22; do run ${G}_nu4_m_s$s DV2_FACE=$f DV2_MU_NU=4 -- m --work "$WORK/${G}_nu4" < /dev/null; done
   if [ "$f" = 0 ]; then
-    for g in 12 14 16 20 24 30; do DV2_GAP=$g run F0_nu4_m_gap$g DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=$g -- m --work "$WORK/F0_nu4"; done
+    # gaps 12 / 14: the next STN issues while results are pending -> stn_pend fault (NEG_m_gap12_stnpend)
+    for g in 16 20 24 30; do DV2_GAP=$g run F0_nu4_m_gap$g DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=$g -- m --work "$WORK/F0_nu4"; done
   fi ;;
 NEG)
   run NEG_m_nu1_w DV2_FACE=1 DV2_MU_NU=1 -- m --work "$WORK/NEG_nu1" &
@@ -47,6 +48,8 @@ NEG)
   run NEG_m_am2_e DV2_FACE=2 DV2_MU_NU=4 DV2_AM_MUT=2 -- m --work "$WORK/NEG_am2e" &
   run NEG_i_mut11_nu4 DV2_FACE=1 DV2_MU_NU=4 -- i --mut 11 --work "$WORK/NEG_s11" &
   run NEG_j_mut12_nu4 DV2_FACE=1 DV2_MU_NU=4 -- j --mut 12 --work "$WORK/NEG_s12" &
+  run NEG_m_am6_rootnoclr DV2_FACE=1 DV2_MU_NU=4 DV2_AM_MUT=6 -- m --work "$WORK/NEG_am6" &
+  run NEG_m_gap12_stnpend DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=12 -- m --work "$WORK/NEG_g12" &
   wait ;;
 FACES)
   S=$(python3 -c "import sys; sys.path.insert(0,'rtl/test/qwen_dv'); import dv_bench2 as D; print(' '.join(s for s in D.SRCS2 if not s.endswith('tb_qfd_dv2.sv')))")
