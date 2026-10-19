@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import re
+from lane_groups import safe_land_reset_cycles
 from pathlib import Path
 
 # QK-LANDEN 10-19: a one-frame lane's landing (qfd_landh0, no stations) registers en on ck_s before its clock gate, so
@@ -55,8 +56,9 @@ def audit(netlist, lanes, roots):
         if first not in instances:
             raise ValueError(f'{row["bid"]}: source epoch station absent')
         _, source = instances[first]
-        _, sink = instances[row['landing']]
+        sink_master, sink = instances[row['landing']]
         g, r0 = release(source['en']), release(sink['rs'])
+        r0 += safe_land_reset_cycles(row, sink_master)
         g += HOP0_EN_REG              # hop-0 en registered before the gate (landh0 QK-LANDEN, rlyh0 RLYH0-EN): epoch G + 1
         k = (int(row['E']) + g - r0) % 8
         rows.append(dict(bid=row['bid'], landing=row['landing'], E=row['E'], E_sta=row['E_sta'],
@@ -124,22 +126,25 @@ def finalize_model(model, root_release=None):
         gr, g = trace((first, 'en'))
         g += HOP0_EN_REG              # hop-0 en registered before the gate (landh0 QK-LANDEN, rlyh0 RLYH0-EN): epoch G + 1
         rr, r0 = trace((row['landing'], 'rs'))
+        reset_cycles = safe_land_reset_cycles(row, masters.get(row['landing']))
+        r0 += reset_cycles
         if gr != rr:
             raise ValueError(f"{row['bid']}: undeclared reset-root relationship {gr} vs {rr}; "
                              'OT_SPLIT_RESET_RELEASE must declare both fixed release edges')
-        proposals.append((row, g, r0, (int(row['E']) + g-r0) % 8, gr))
+        proposals.append((row, g, r0, (int(row['E']) + g-r0) % 8, gr, reset_cycles))
     # Validate every relationship before mutating any strap.
-    drop = {f"ftk_{row['bid']}_{pol}" for row, _, _, _, _ in proposals for pol in ('hi', 'lo')}
+    drop = {f"ftk_{row['bid']}_{pol}" for row, _, _, _, _, _ in proposals for pol in ('hi', 'lo')}
     buses = [b for b in model['buses'] if b[0] not in drop]
-    for row, g, r0, k, gr in proposals:
+    for row, g, r0, k, gr, reset_cycles in proposals:
         name = row['landing']
         for pol, value in (('hi', 1), ('lo', 0)):
             pins = [(name, f'k{bit}') for bit in range(3) if ((k >> bit) & 1) == value]
             if pins:
                 buses.append((f"ftk_{row['bid']}_{pol}", 'constant', 1, [(name, f'tie_{pol}')] + pins))
-        row.update(K=k, cal=g-r0, G_reset_tree=g, R0_reset_tree=r0,
+        row.update(K=k, cal=g-r0, safe_land_reset_cycles=reset_cycles, G_reset_tree=g, R0_reset_tree=r0,
                    reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8'
-                   + ' with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)')
+                   + ' with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)'
+                   + ('; R0 + 2 (safe300 receiver reset landing)' if row.get('safe_land_reset_cycles') else ''))
     model['buses'] = buses
     if proposals:
         model['fwd_lanes']['reset_calendar_finalized'] = True
