@@ -1,0 +1,229 @@
+{
+ "name": "qfd_tt_ctlm_dv_safe3-safe3-COMMIT",
+ "block": "qfd_tt_ctlm_dv_lpf_lp",
+ "ref_tile": true,
+ "owner": "QW-CTLM3",
+ "purpose": "QW-CTLM3 10-19 safe3: lp RTL 09b184588 (landing_reset_lead: no first-word loss; D2/K1 rings 1,904 b; NO data multicycle, ring->read single-cycle full STA) + native_ret[94:0] N->E M4 y151.9-188.0 beside u_hr native_ret (reach 518 -> ~60 um); gated with origin/main tools. Regions: complete core/hr cone partition (safe2 geometry).",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qw-ctlm3-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/qfd_tt_head_static_h16c",
+   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+   "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/mu_qwen_1018/b1/rom",
+   "results/rtl/mu_qwen_1018/admission/F16_P2",
+   "results/rtl/mu_qwen_1018/admission/gi_init",
+   "tools/qwen_static_schedule/mu_admission.py",
+   "tools/qwen_static_schedule/mu_opcal.py",
+   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+   "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+   "rtl/qwen_dv/qfd_mu_context_guard.sv",
+   "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+   "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+   "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv",
+   "rtl/test/mu_qwen_seq/gi_init_fixture.py",
+   "rtl/test/mu_qwen_seq/tb_mu_gi_init.sv",
+   "rtl/test/mu_qwen_seq/run_mu_gi_init.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37), .MUT(0), .NU(4), .OPSEG(1), .CTX_SRC(1), .FCTX(1), .OPSEG_EXPANDED(1), .INIT_U0(1), .INIT_FIRST(52), .INIT_CNT(3), .OPSEG_VIAMAP(\\\"results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg.viamap.hex\\\"), .OPSEG_VIAMAP1(\\\"results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b1.viamap.hex\\\"), .OPSEG_VIAMAP2(\\\"results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b2.viamap.hex\\\"), .OPSEG_PINREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v rtl/qwen_dv/qfd_dv_hr_pack.sv rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v rtl/qwen_dv/qfd_mu_context_guard.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctlm_abi_m0",
+    "cmd": "CTLM_ONLY=abi0 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_ABI_PASS MUT=0"
+   },
+   {
+    "name": "ctlm_abi_m4",
+    "cmd": "CTLM_ONLY=abi4 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=4",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m4.log"
+   },
+   {
+    "name": "ctlm_abi_m5",
+    "cmd": "CTLM_ONLY=abi5 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=5",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m5.log"
+   },
+   {
+    "name": "ctlm_abi_m6",
+    "cmd": "CTLM_ONLY=abi6 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=6",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m6.log"
+   },
+   {
+    "name": "ctlm_abi_m7",
+    "cmd": "CTLM_ONLY=abi7 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=7",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m7.log"
+   },
+   {
+    "name": "ctlm_abi_m8",
+    "cmd": "CTLM_ONLY=abi8 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=8",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m8.log"
+   },
+   {
+    "name": "ctlm_cal_m0",
+    "cmd": "CTLM_ONLY=cal0 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_CAL MUT=0 NSL=0: PASS"
+   },
+   {
+    "name": "ctlm_cal_m1",
+    "cmd": "CTLM_ONLY=cal1 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=1 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_cal_m1.log"
+   },
+   {
+    "name": "ctlm_cal_m2",
+    "cmd": "CTLM_ONLY=cal2 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=2 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_cal_m2.log"
+   },
+   {
+    "name": "ctlm_cal_m3",
+    "cmd": "CTLM_ONLY=cal3 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=3 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_cal_m3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tt_ctlm_dv_safe3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tt_ctlm_dv_safe3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_ctlm_dv_safe3 --out {RUN}/record/views/qfd_tt_ctlm_dv_lpf_lp --macro-view physical/asap7_memory_macros/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 --macro-view physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tt_ctlm_dv_safe3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tt_ctlm_dv_safe3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe3/qfd_tt_ctlm_dv_safe3-safe3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "benched_by": "GI/cal/guard/leaf and acceptedreceiver/context RTL match source-receipt hashes after1650f9344 merge; original exact mu_opcal compiler receipt source preserved in bench_witness/source_receipt/mu_opcal.py (active compiler differs). NativeGI9,140,490edgesPASS/negativesFAIL; absolute epoch and fullsystem remain unbound."
+}

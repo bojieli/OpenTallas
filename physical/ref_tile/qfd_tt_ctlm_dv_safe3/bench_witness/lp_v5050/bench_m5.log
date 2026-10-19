@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits  1181 GB (avail 940, growth 113, headroom 0, waiters 0/0 GB) load 60/128 running 29 disk 408 GB 
+ot-run: ot-epyc8       admits  1167 GB (avail 930, growth 113, headroom 0, waiters 0/0 GB) load 38/128 running 28 disk 33 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1176022-1792453167 after 1 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 5: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1176022-1792453167): exit 0

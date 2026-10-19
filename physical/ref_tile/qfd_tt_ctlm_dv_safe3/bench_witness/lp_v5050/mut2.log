@@ -1,0 +1,10 @@
+LP_MISMATCH port=cal_program_obs cycle=34 flat=f02a1f42edc9912b7c9 landed=eace1c10dd10fe87ddb
+LP_MISMATCH port=cal_descriptor_obs cycle=34 flat=0ddc14a0ba2ef41456 landed=1b82699d296fd1fcbb
+LP_MISMATCH port=cal_program_obs cycle=35 flat=0000000000000000000 landed=f02a1f42edc9912b7c9
+LP_MISMATCH port=cal_descriptor_obs cycle=35 flat=1a41775f77dfaef8b4 landed=0ddc14a0ba2ef41456
+LP_MISMATCH port=cal_descriptor_obs cycle=36 flat=1fdabac9dfc795c7cc landed=1a41775f77dfaef8b4
+LP_LOCKSTEP FAIL MUT=2 mismatches=8359 of 50422
+- rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_lp.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.060 s; speed 49.703 us/s
+- Verilator: cpu 0.060 s on 1 threads; allocated 8 MB
