@@ -1932,9 +1932,15 @@
    "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
    "evidence_grade": "committed_bench",
    "date": "2026-10-19",
-   "status": "proposed",
+   "status": "superseded",
    "note": "exactness benched on the real N512 SU arithmetic with the RTL PV nodes (golden pairwise tree incl. +0 pads, final == fixture PV): RTL bench RUNNING (tb_su_static_arithmetic build >120 GB, ot-epyc6; pending_results HBM-ATTGAP); python golden tree of the RTL nodes == fixture PV; cycles MODELLED (not a die run). HBM-ATTGAP 10-19.",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "HBM.D4G_SM_ATTENTION (HBM-REPRICE2 10-19)",
+    "reason": "same attention terms re-priced in the composed d4g S2 schedule with component accounting (measured span replaces the 288/386 SM component, not the 547/808 record)",
+    "date": "2026-10-19"
+   }
   },
   {
    "design": "r25gq",
@@ -1959,9 +1965,15 @@
    "evidence": "results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/unit/L2_pos.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-19",
-   "status": "proposed",
+   "status": "superseded",
    "note": "VEH-ATT 07a99bc0a: 20/20 ops bit-exact; QK 684 (KV8) / 660 (KV4), PV 839 / 815 vs base 547 / 808; 38 T640 layers (T128 not measured, kept at price). HBM-ATTGAP 10-19.",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "HBM.D4G_SM_ATTENTION (HBM-REPRICE2 10-19)",
+    "reason": "same attention terms re-priced in the composed d4g S2 schedule with component accounting (measured span replaces the 288/386 SM component, not the 547/808 record)",
+    "date": "2026-10-19"
+   }
   },
   {
    "design": "r25gq",
@@ -1986,9 +1998,15 @@
    "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
    "evidence_grade": "committed_bench",
    "date": "2026-10-19",
-   "status": "proposed",
+   "status": "superseded",
    "note": "replaces a 1,531-word one-op programme that cannot be resident (1,024-word svg/xc programme SRAM; reinstall ~61k ingress edges a SM op). Alternative BIGPROG (2,048-word programme stores, SM-service tile re-close) would save this row; not taken (closure first, owner: HBM accepts AR loss without numerics change). Window staging refresh (DMA, 0 critical cycles) removes per-token descriptor/programme changes. HBM-ATTGAP 10-19.",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "HBM.D4G_SM_ATTENTION (HBM-REPRICE2 10-19)",
+    "reason": "same attention terms re-priced in the composed d4g S2 schedule with component accounting (measured span replaces the 288/386 SM component, not the 547/808 record)",
+    "date": "2026-10-19"
+   }
   },
   {
    "design": "r25gq",
@@ -2256,8 +2274,8 @@
     "qwen_ar": {
      "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_lat vs rec (= d4g_2ring_qbg + collq, the HBM.D4G_PLAN_B price of record)",
      "base_tok_s": 946.2,
-     "tok_s": 937.1,
-     "e2e_loss_pct": 0.96,
+     "tok_s": 936.8,
+     "e2e_loss_pct": 0.99,
      "blocking": true,
      "note": "on the d4g_quadrant Qwen path (946.2 basis); price of record 948.8 (D4G8) -> 948.8 x (1 - loss)"
     }
@@ -2327,6 +2345,11 @@
      "grade": "priced",
      "ds_ar_pct": -1.13,
      "qwen_pct": -0.07
+    },
+    "pt_p2": {
+     "grade": "measured",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": -0.03
     }
    },
    "within_unit_limit": true,
@@ -2335,67 +2358,72 @@
    "date": "2026-10-19",
    "status": "accepted",
    "share_basis": "modelled",
-   "note": "HBM-REPRICE 10-19 (tools/hgi_sim/d4g_reprice_1019.py, every term an explicit knob; S2 static schedule on the PRICE5/COLLQ d4g pricer). Single-term attribution on the 1905.4 basis in price.json attribution (largest: pg_vmwrite -0.96 %, land -1.13 %, pg_cmd -0.47 %, bank_pin -0.34 %). No numerics change. MTP not priced (next release).",
+   "note": "HBM-REPRICE 10-19 (tools/hgi_sim/d4g_reprice_1019.py, every term an explicit knob; S2 static schedule on the PRICE5/COLLQ d4g pricer). Single-term attribution on the 1905.4 basis in price.json attribution (largest: pg_vmwrite -0.96 %, land -1.13 %, pg_cmd -0.47 %, bank_pin -0.34 %). No numerics change. MTP not priced (next release).  HBM-REPRICE2 10-19: + pt_p2 (HBM-PRETREE p2 PT 70 -> 81, COORD 0kb): DS 0.00 / Qwen -0.03 % on top of su_red; DS row unchanged 1785.7, Qwen 936.8.",
    "owner_exception": "OWNER 10-18 03:50: HBM accepts > 15 % AR loss rather than changing numerics; OWNER 10-18 02:15: d4g budget counts DS AR only",
    "accepted_date": "2026-10-19",
    "acceptance_note": "HBM-REPRICE 10-19: unit loss 3.43 % DS AR (< 5 %), design accepted total stays < 15 %; written directly (tok/s row, as HBM.D4G_PLAN_B)"
   },
   {
    "design": "r25gq",
-   "unit": "HBM d4g SM attention as measured on the GEN2b die SM (VEH-ATT: QK 684 / PV 839 busiest-SM spans vs priced components 288 / 386) + HBM-ATTGAP modelled terms (window-ring descriptor rewrites 640/layer, cross-SM PV merge tree, programme loops 0)",
+   "unit": "HBM d4g SM attention: HBM-ATTGAP S32 sub-runs (busiest-SM QK 861 / PV 1,171 vs priced components 288 / 386) + window staging (0) + on-die SU PV merge model (400.8 / 335.5 minus priced 99 / 79) + VEH-ATT3 MEASURED Qwen spans (QK 1,195 / PV 2,364 per SM at P 8192)",
    "group": "HBM.D4G_SM_ATTENTION",
-   "measured": 1697.5,
-   "price": 1849.2,
-   "unit_of_measure": "tok/s (DS AR)",
-   "unit_ratio": 1.0894,
-   "e2e_loss_pct": 10.02,
+   "measured": 826.0,
+   "price": 946.2,
+   "unit_of_measure": "tok/s (Qwen AR)",
+   "unit_ratio": 1.1455,
+   "e2e_loss_pct": 12.7,
    "binding_workload": "qwen_ar",
    "per_workload": {
     "ds_ar": {
      "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_att vs rec (= d4g_2ring_qbg + collq, the HBM.D4G_PLAN_B price of record)",
      "base_tok_s": 1849.2,
-     "tok_s": 1697.5,
-     "e2e_loss_pct": 8.2,
-     "blocking": true
+     "tok_s": 1686.1,
+     "e2e_loss_pct": 8.82,
+     "blocking": true,
+     "note": "BIGPROG (2,048-word programme store, COORD 0jx / HBM-SMBUDGET, expected): rec_att_bigprog DS 1738.0 (6.01 %)"
     },
     "qwen_ar": {
-     "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_att vs rec (= d4g_2ring_qbg + collq, the HBM.D4G_PLAN_B price of record)",
+     "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_att vs rec",
      "base_tok_s": 946.2,
-     "tok_s": 851.4,
-     "e2e_loss_pct": 10.02,
-     "blocking": true,
-     "note": "Qwen att_meas MODELLED (no d4g Qwen attention measurement: per-SM measured line rate x 16 SMs)"
+     "tok_s": 826.0,
+     "e2e_loss_pct": 12.7,
+     "blocking": true
     }
    },
    "terms": {
-    "att_meas": {
+    "att_s32": {
      "grade": "measured",
-     "ds_ar_pct": -4.87,
-     "qwen_pct": -9.44
+     "ds_ar_pct": -7.5,
+     "qwen_pct": 0.0
+    },
+    "att_merge": {
+     "grade": "modelled",
+     "ds_ar_pct": -1.82,
+     "qwen_pct": -0.66
+    },
+    "att_qwen": {
+     "grade": "measured",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": -12.2
     },
     "att_prog": {
-     "grade": "modelled",
+     "grade": "measured",
      "ds_ar_pct": 0.0,
      "qwen_pct": 0.0
     },
     "att_desc": {
      "grade": "modelled",
-     "ds_ar_pct": -3.81,
-     "qwen_pct": -0.05
-    },
-    "att_merge": {
-     "grade": "modelled",
-     "ds_ar_pct": -0.12,
-     "qwen_pct": -0.66
+     "ds_ar_pct": 0.0,
+     "qwen_pct": 0.0
     }
    },
    "within_unit_limit": false,
-   "evidence": "results/arch/hbm_reprice_1019/price.json results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/unit/L2_pos.json",
+   "evidence": "results/arch/hbm_reprice_1019/price.json results/arch/hbm_reprice_1019/record.json results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json claude/veh-att3-1019@fb8fd695b:results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/L0_L0_pos.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-19",
    "status": "proposed",
    "share_basis": "modelled",
-   "note": "HBM-REPRICE 10-19: OVER 5 % -> flagged to the coordinator. DS: att_meas -4.87 % (measured at T640), att_desc -3.81 % (modelled; 0 if the window base is relocated in hardware: all_att_desc_hw), att_merge -0.12 %. Qwen: att_meas -9.44 % (modelled), att_merge -0.66 %. Lower reading (measured span vs the priced TOTAL 547/808, the VEH-ATT lane comparison): DS -0.98 % (info_att_lower). Pull HBM-ATTGAP result when it lands; then re-run d4g_reprice_1019."
+   "note": "HBM-REPRICE2 10-19: att_meas retired; ATTGAP choice S32 + staging + SU merge, Qwen MEASURED (VEH-ATT3). Accounting: the measured span replaces the SM component of the priced record (fa 259 / publish 64 stay: the span excludes them); HBM-ATTGAP's own comparison against the whole record (ATT.D4G.* rows) reproduces as info_attgap_total DS 1790.2 and under-counts. > 5 % -> COORD-REVIEW-QUEUE. Swap S32 -> BIGPROG measured row when HBM-SMBUDGET lands."
   },
   {
    "design": "r25gq",
@@ -2931,16 +2959,16 @@
   },
   "r25gq": {
    "accepted_pct": 10.915,
-   "proposed_pct": 125.667,
-   "accepted_plus_proposed_pct": 136.582,
+   "proposed_pct": 123.773,
+   "accepted_plus_proposed_pct": 134.688,
    "limit_pct": 15.0,
    "accepted_rows": 3,
-   "proposed_rows": 24,
+   "proposed_rows": 23,
    "headroom_pct": 4.085,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": false,
-   "superseded_rows": 1,
-   "superseded_pct_not_counted": 4.574
+   "superseded_rows": 4,
+   "superseded_pct_not_counted": 11.021
   }
  }
 }
