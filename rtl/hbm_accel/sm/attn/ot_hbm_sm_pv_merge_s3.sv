@@ -34,6 +34,12 @@ module ot_hbm_sm_pv_merge_s3 #(
     //  Schedule cost: a fold's sum is written ALAT + 3 cycles after its request (was ALAT + 2).  A fold may name as b a
     //  node whose write-back lands in the request cycle (b is read one cycle later); a and publication must follow the
     //  write-back by >= 1 cycle.  Qwen h128 calendar: publication of node 0 moves from F0 + 22 to F0 + 23 (+1 cycle a block).
+    //  SAFE 2 (L2H-SMATT 2026-10-19, smh_pvm s3 gate: textbook roots fd1 2063 / fd0 1037 / word_next 518 loads, decode
+    //      gates 1045/851/523/518, TT reg->macro -418.8 ps): SAFE 1 plus KEPT same-edge select copies, one per 16-bit operand
+    //      slice (32 slices): fd0_k/fd1_k (fold), qb/qf/qklt/qk0/qck/qnk/qn0 (turn state, registered at nb like q_*), and
+    //      one word_next copy per pub_data bit.  Each copy is the same register as its original (same D, reset, edge), so
+    //      the module is cycle-identical to SAFE 1; every copy drives <= ~32 loads.  Only ev (the input-pin capture) and
+    //      tag_d stay single sources.
     parameter integer SAFE=0
 )(
     input wire clk, rst_n,
@@ -49,7 +55,7 @@ module ot_hbm_sm_pv_merge_s3 #(
     input wire pub_start,
     input wire [2:0] pub_slot,
     output reg pub_v,
-    output reg [31:0] pub_data,
+    output wire [31:0] pub_data,
     output reg [3:0] pub_word,
     output reg [2:0] pub_out_slot,
     output reg [TAGW-1:0] pub_tag,
@@ -60,13 +66,14 @@ module ot_hbm_sm_pv_merge_s3 #(
     initial if (L!=16 || IL!=8 || ALAT!=7 || LV<1 || LV>8 || TAGW<6)
         $fatal(1,"PV merge requires16lanes,8slots,LAT7,LV1..8,TAGW>=6");
     initial if(PUBLISH && LV>7)$fatal(1,"publication reserves unused stack level7");
-    initial if(SAFE!=0 && (SAFE!=1 || TURNREG!=1))$fatal(1,"PV merge SAFE 1 requires TURNREG 1");
+    initial if(SAFE!=0 && ((SAFE!=1 && SAFE!=2) || TURNREG!=1))$fatal(1,"PV merge SAFE 1/2 requires TURNREG 1");
     genvar l;
     wire publish_request=PUBLISH ? pub_start : 1'b0;
     wire fold_request=PUBLISH ? fold_start : 1'b0;
     reg fd0,fd1;                                       // fold read of b, add issue
     reg [2:0] fa0,fb0,fa1;
     reg [511:0] fold_a_data;
+    reg [511:0] fold_a_data2;                          // SAFE 2: the same capture with per-slice kept enables
     reg [ALAT:0] fw_v;                                 // fold sum in flight (bit k: issued k cycles ago)
     reg [2:0] fw_a [0:ALAT];
     // SAFE 1: the ring slot read this cycle holds the add issued ALAT + 1 cycles ago (operand register + ALAT)
@@ -105,6 +112,7 @@ module ot_hbm_sm_pv_merge_s3 #(
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // merge adder operands of this turn
     reg  [L*32-1:0] ma, mb;
+    wire [L*32-1:0] ma2, mb2;                         // SAFE 2: the same operand mux built per 16-bit slice from kept copies
     reg             mv;
     wire [L*32-1:0] my;
     wire [L-1:0]    mf;
@@ -114,7 +122,7 @@ module ot_hbm_sm_pv_merge_s3 #(
         // (a) operand registers: the adders start from flops; y is the result at the entry's next turn
         reg [L*32-1:0] oa, ob;
         reg            ov;
-        always @(posedge clk) begin oa <= ma; ob <= mb; end
+        always @(posedge clk) begin oa <= (SAFE == 2) ? ma2 : ma; ob <= (SAFE == 2) ? mb2 : mb; end
         always @(posedge clk or negedge rst_n) if (!rst_n) ov <= 1'b0; else ov <= mv;
         for (l = 0; l < L; l = l + 1) begin : g_madd
             wire [1:0] er;
@@ -186,6 +194,47 @@ module ot_hbm_sm_pv_merge_s3 #(
             else begin ma = (t_k0 || (MUT == 2 && t_kl1)) ? {L*32{1'b0}} : vres; mb = {L*32{1'b0}}; end
         end
     end
+    // ---- SAFE 2: kept per-slice select copies (cycle-identical to SAFE 1) ----
+    localparam integer NS = 32;                       // operand slices of 16 bits
+    (* keep *) reg [NS-1:0] fd0_k, fd1_k;
+    (* keep *) reg [NS-1:0] qb_k, qf_k, qklt_k, qk0_k, qck_k, qnk_k, qn0_k;
+    genvar s;
+    generate if (SAFE == 2) begin : g_s2
+        for (s = 0; s < NS; s = s + 1) begin : g_sl
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin
+                    fd0_k[s]<=1'b0; fd1_k[s]<=1'b0;
+                    qb_k[s]<=1'b0; qf_k[s]<=1'b0; qklt_k[s]<=1'b1; qk0_k[s]<=1'b1; qck_k[s]<=1'b0; qnk_k[s]<=1'b0; qn0_k[s]<=1'b0;
+                end else begin
+                    fd0_k[s]<=fold_request; fd1_k[s]<=fd0_k[s];
+                    qb_k[s]<=e_busy[qe]; qf_k[s]<=e_fl[qe]; qklt_k[s]<=(e_k[qe]<LV); qk0_k[s]<=(e_k[qe]==0);
+                    qck_k[s]<=e_c[qe][e_k[qe][2:0]]; qnk_k[s]<=e_n[qe][e_k[qe][2:0]]; qn0_k[s]<=e_n[qe][0];
+                end
+            wire [15:0] st_s = st_rd[16*s +: 16], sum_s = sum[16*s +: 16], vr_s = vres[16*s +: 16], fa_s = fold_a_data2[16*s +: 16];
+            wire ec0 = ev_first ? 1'b0 : qn0_k[s];
+            reg [15:0] a_s, b_s;
+            always @(*) begin
+                a_s = 16'd0; b_s = 16'd0;
+                if (fd1_k[s]) begin a_s = fa_s; b_s = st_s; end
+                else if (ev) begin
+                    if (ec0) begin a_s = st_s; b_s = sum_s; end
+                end else if (qb_k[s] && !qf_k[s]) begin
+                    if (qck_k[s]) begin a_s = st_s; b_s = vr_s; end
+                end else if (qb_k[s] && qf_k[s] && qklt_k[s]) begin
+                    if (qnk_k[s]) begin a_s = st_s; b_s = qk0_k[s] ? 16'd0 : vr_s; end
+                    else begin a_s = (qk0_k[s] || (MUT == 2 && t_kl1)) ? 16'd0 : vr_s; b_s = 16'd0; end
+                end
+            end
+            assign ma2[16*s +: 16] = a_s;
+            assign mb2[16*s +: 16] = b_s;
+`ifndef SYNTHESIS
+            always @(posedge clk) if (rst_n && ({a_s,b_s} !== {ma[16*s +: 16], mb[16*s +: 16]}))
+                $fatal(1, "pv_merge SAFE2 slice %0d operand differs from the reference mux", s);
+`endif
+        end
+    end else begin : g_s1
+        assign ma2 = ma; assign mb2 = mb;
+    end endgenerate
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -247,6 +296,11 @@ module ot_hbm_sm_pv_merge_s3 #(
         fw_a[0]<=fa1;
         for(fk=1;fk<=ALAT;fk=fk+1)fw_a[fk]<=fw_a[fk-1];
     end
+    generate if (SAFE == 2) begin : g_s2fa
+        for (s = 0; s < NS; s = s + 1) begin : g_fa
+            always @(posedge clk) if (fd0_k[s]) fold_a_data2[16*s +: 16] <= st_rd[16*s +: 16];
+        end
+    end endgenerate
     // (d) SAFE fold ring: slot fr_c is read (write-back of the add issued 8 cycles ago) and rewritten (this cycle's issue)
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin fr_c<=3'd0;fr_v<=8'd0;end
@@ -258,6 +312,7 @@ module ot_hbm_sm_pv_merge_s3 #(
     reg [TAGW-1:0] tag0,tag1;
     reg [511:0] pub_buffer;
     reg [3:0] word_next;
+    reg [31:0] pub_data_r, pub_data_s2;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
             node_valid<=0;pub_d0<=0;pub_d1<=0;pub_active<=0;pub_fault<=0;
@@ -279,14 +334,35 @@ module ot_hbm_sm_pv_merge_s3 #(
             if(ev && (pub_active || pub_d0 || pub_d1))pub_fault<=1;
             if(pub_d0)begin pub_buffer<=st_rd;slot1<=slot0;tag1<=tag0;end
             if(pub_d1)begin
-                pub_data<=pub_buffer[((MUT==3)?32:0)+:32];pub_word<=0;pub_out_slot<=slot1;pub_tag<=tag1;
+                pub_data_r<=pub_buffer[((MUT==3)?32:0)+:32];
+                pub_word<=0;pub_out_slot<=slot1;pub_tag<=tag1;
                 word_next<=1;pub_active<=1;
             end else if(pub_active)begin
-                pub_data<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];pub_word<=word_next;
+                pub_data_r<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];
+                pub_word<=word_next;
                 if(word_next==15)begin pub_active<=0;word_next<=0;end
                 else word_next<=word_next+1;
             end
         end
+    // SAFE 2: one kept word_next copy per pub_data bit (same reset / transitions as word_next) and a per-bit 16:1 select
+    generate if (SAFE == 2) begin : g_s2pub
+        genvar b;
+        for (b = 0; b < 32; b = b + 1) begin : g_pb
+            (* keep *) reg [3:0] wn_k;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) wn_k <= 4'd0;
+                else if (pub_d1) wn_k <= 4'd1;
+                else if (pub_active) wn_k <= (wn_k == 4'd15) ? 4'd0 : wn_k + 4'd1;
+            wire [3:0] ws = wn_k ^ ((MUT==3) ? 4'd1 : 4'd0);
+            always @(posedge clk)
+                if (pub_d1) pub_data_s2[b] <= pub_buffer[((MUT==3)?32:0) + b];
+                else if (pub_active) pub_data_s2[b] <= pub_buffer[32*ws + b];
+`ifndef SYNTHESIS
+            always @(posedge clk) if (rst_n && wn_k !== word_next) $fatal(1, "pv_merge SAFE2 word_next copy %0d differs", b);
+`endif
+        end
+    end endgenerate
+    assign pub_data = (SAFE == 2) ? pub_data_s2 : pub_data_r;
     assign fault = m_fault | pub_fault | fold_fault;
 endmodule
 `default_nettype wire

@@ -1,0 +1,112 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "smh_pvm_ref_s4b",
+ "top": "ot_hbm_sm_pv_merge_s3",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  388.8,
+  345.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  386.64,
+  343.44
+ ],
+ "why": "spec outline",
+ "std_area_um2": 9023.13918,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "ev",
+   "sum",
+   "tag_d",
+   "clk",
+   "rst_n",
+   "pv_v",
+   "pv_y",
+   "pv_tag",
+   "pub_start",
+   "pub_slot",
+   "fold_start",
+   "fold_a",
+   "fold_b",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_tag",
+   "fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "inst": null,
+   "idx": 0,
+   "x": 129.6,
+   "y": 86.4,
+   "w": 171.288,
+   "h": 153.912,
+   "orient": "R180",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "physical/common_flow/clock_split_km.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/kit.env",
+  "physical/ref_tile/smh_pvm_ref_s4b/clock.sdc",
+  "physical/ref_tile/smh_pvm_ref_s4b/signoff.sdc",
+  "physical/ref_tile/smh_pvm_ref_s4b/pdn.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/pre_cts.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/post_cts.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/post_grt.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/pre_drt.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/pre_fill.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/post_fill.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/pre_grt.tcl",
+  "physical/ref_tile/smh_pvm_ref_s4b/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_tt.lib",
+  "physical/ref_tile/smh_pvm_ref_s4b/place.tcl"
+ ]
+}

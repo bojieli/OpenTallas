@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-epyc6       admits   980 GB (avail 799, growth 113, headroom 0, waiters 0/0 GB) load 170/128 running 37 disk 5633 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2276040-1792453229 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: $finish at 602ns; walltime 0.007 s; speed 81.931 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 8 MB
+PVM PASS checked=240 (8 runs of 1..8 chunks, fold 0<-0+1, 7 publications; {'pv': '8', 'pub': '112', 'fault': '0', 'fault_cyc': '-1', 'cycles': '599'})
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2276040-1792453229): exit 0

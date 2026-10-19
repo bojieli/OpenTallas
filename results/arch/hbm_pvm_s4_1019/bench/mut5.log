@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-epyc6       admits   980 GB (avail 799, growth 113, headroom 0, waiters 0/0 GB) load 170/128 running 37 disk 5633 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-smatt-pvm/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2275670-1792453229 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+%Error: rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv:168: Verilog $stop
+Aborting...
+PVM FAIL mismatches=121 (pv 8, pub 112, done None)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2275670-1792453229): exit 1
