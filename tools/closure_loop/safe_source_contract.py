@@ -33,7 +33,7 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def native_cells(paths, snapshots=None):
+def native_cells(paths, snapshots=None, used_masters=None):
     """Strict scalar adapter; unsupported buses/ports/three-state fail closed.
 
     The shared Liberty tokenizer/Boolean evaluator is reused, not its permissive
@@ -53,7 +53,10 @@ def native_cells(paths, snapshots=None):
             for name, args, body in library['groups']:
                 if name != 'cell':
                     continue
-                require(len(args) == 1 and args[0] not in cells, f'duplicate/invalid master {args}')
+                require(len(args) == 1, f'invalid master {args}')
+                if used_masters is not None and args[0] not in used_masters:
+                    continue
+                require(args[0] not in cells, f'duplicate master {args}')
                 master = args[0]
                 pins, seq, macro = {}, [], False
                 for kind, pargs, pb in body['groups']:
@@ -65,7 +68,9 @@ def native_cells(paths, snapshots=None):
                         require('three_state' not in a, f'tristate {master}/{pargs}')
                         require(a.get('clock', 'false') in ('true', 'false'), f'invalid clock {master}/{pargs}')
                         pins[pargs[0]] = dict(direction=a['direction'], clock=a.get('clock') == 'true',
-                                             function=a.get('function'), role='data')
+                                             function=a.get('function'), role='data',
+                                             native_capacitance={k:a[k] for k in ('capacitance','rise_capacitance','fall_capacitance') if k in a},
+                                             capacitance_unit=library['attrs'].get('capacitive_load_unit'))
                     elif kind == 'ff':
                         seq.append(pb['attrs'])
                     elif kind == 'memory':
@@ -117,16 +122,21 @@ def census(netlist, top, library, max_loads=32):
     mod = netlist['modules'][top]
     drivers, loads, edges = defaultdict(list), defaultdict(list), {}
     driver_info, cell_info = {}, {}
+    open_outputs = []
     all_pins = set()
 
     def bit_ok(bit):
         require(type(bit) is int or bit in ('0', '1'), f'unknown/high-impedance bit {bit!r}')
 
-    def driver(bit, identity, role, transparent=False):
+    def driver(bit, identity, role, transparent=False, disconnected=False):
+        if disconnected:
+            require(bit is None, f'inconsistent open output {identity}')
+            driver_info[identity] = dict(net=None, role=role, transparent=transparent, disconnected=True)
+            return
         bit_ok(bit)
         require(type(bit) is int, f'driven literal {identity}')
         drivers[bit].append(identity)
-        driver_info[identity] = dict(net=bit, role=role, transparent=transparent)
+        driver_info[identity] = dict(net=bit, role=role, transparent=transparent, disconnected=False)
 
     def load(bit, identity, role, owner=None, owner_role=None, owner_master=None):
         bit_ok(bit)
@@ -136,6 +146,7 @@ def census(netlist, top, library, max_loads=32):
 
     for name, p in mod.get('ports', {}).items():
         require(p['direction'] in ('input', 'output'), f'inout/unknown top port {name}')
+        require(p['bits'], f'empty top port {name}')
         for i, bit in enumerate(p['bits']):
             identity = f'port:{name}[{i}]'
             if p['direction'] == 'input':
@@ -149,17 +160,24 @@ def census(netlist, top, library, max_loads=32):
         require(set(connections) == set(native['pins']), f'missing/extra native pins {name}')
         cell_info[name] = native
         for pin, bits in connections.items():
-            require(len(bits) == 1, f'non-scalar native pin {name}/{pin}')
             p = native['pins'][pin]
+            require(len(bits) == 1 or (not bits and p['direction'] == 'output'),
+                    f'non-scalar/open-input native pin {name}/{pin}')
             require(c.get('port_directions', {}).get(pin) == p['direction'], f'direction mismatch {name}/{pin}')
             identity = f'cell:{name}/{pin}'
             if p['direction'] == 'output':
-                driver(bits[0], identity, native['role'], native['transparent'] is not None)
+                driver(bits[0] if bits else None, identity, native['role'], native['transparent'] is not None, not bits)
+                if not bits:
+                    open_outputs.append(dict(pin=identity, master=c['type'], direction='output', disconnected=True,
+                        transparent=native['transparent'] is not None,
+                        physical_input_pins=[dict(pin=f'cell:{name}/{ip}', nets=connections[ip], role=np['role'],
+                            native_capacitance=np['native_capacitance'], capacitance_unit=np['capacitance_unit'])
+                            for ip,np in native['pins'].items() if np['direction']=='input']))
             else:
                 load(bits[0], identity, p['role'], name, native['role'], c['type'])
         if native['transparent']:
             ip, op, inversion = native['transparent']
-            ib, ob = connections[ip][0], connections[op][0]
+            ib, ob = connections[ip][0], connections[op][0] if connections[op] else None
             edges[f'cell:{name}/{ip}'] = (ob, inversion)
     for bit, ids in drivers.items():
         require(len(ids) == 1, f'multiple drivers net {bit}: {ids}')
@@ -172,6 +190,8 @@ def census(netlist, top, library, max_loads=32):
 
     def terminals(bit):
         # Path stack detects even unloaded BUF loops; parity remains explicit.
+        if bit is None:
+            return [], []
         todo, seen, endpoints, clocks = [(bit, 0, frozenset())], {}, {}, {}
         while todo:
             net, polarity, ancestry = todo.pop()
@@ -184,7 +204,8 @@ def census(netlist, top, library, max_loads=32):
                 pin = endpoint['pin']
                 if pin in edges:
                     nxt, inv = edges[pin]
-                    todo.append((nxt, polarity ^ inv, ancestry | {net}))
+                    if nxt is not None:
+                        todo.append((nxt, polarity ^ inv, ancestry | {net}))
                 else:
                     item = dict(endpoint, inverted=bool(polarity))
                     (clocks if endpoint['role'] == 'clock' else endpoints)[pin] = item
@@ -224,16 +245,20 @@ def census(netlist, top, library, max_loads=32):
             owner = candidates[0]
             outputs.append(dict(port=e['pin'], driver=owner['driver'], role=owner['role'],
                                 registered=owner['role'] == 'ff'))
-    bad = [r['driver'] for r in records if r['loads'] > max_loads]
+    bad = [r['driver'] for r in records if r['loads'] > max_loads and not r['driver'].startswith('literal:')]
+    literal_excess = [r['driver'] for r in records if r['loads'] > max_loads and r['driver'].startswith('literal:')]
     literal_holds = [r['driver'] for r in records if r['driver'].startswith('literal:') and r['loads']]
     return dict(schema=SCHEMA, scope='source-prototype-only', top=top, max_allowed=max_loads,
                 verdict='FAIL' if bad else 'HOLD' if literal_holds else 'PASS',
-                unphysicalized_literals=literal_holds,
+                unphysicalized_literals=literal_holds, literal_load_excess=literal_excess,
                 boundary_qualification='not-qualified; input/output records require owner review',
                 source_to_netlist_equivalence='not-proved; hashes identify supplied artifacts only', max_loads=max((r['loads'] for r in records), default=0),
+                max_nonliteral_loads=max((r['loads'] for r in records if not r['driver'].startswith('literal:')), default=0),
                 violations=bad, counts=dict(cells=len(cell_info), drivers=len(records), logical_endpoints=len(all_pins),
                                            roles=dict(Counter(r['role'] for r in records))),
-                drivers=records, input_registration=inputs, output_ownership=outputs)
+                drivers=records, input_registration=inputs, output_ownership=outputs,
+                disconnected_outputs=open_outputs,
+                physical_load_qualification='not-qualified; open outputs do not imply zero physical input capacitance')
 
 
 def run(contract_path):
@@ -265,8 +290,11 @@ def run(contract_path):
             identities[key].append(dict(path=str(p), sha256=digest))
             require(str(p) not in resolved[key], f'duplicate {key} {p}')
             resolved[key].append(str(p))
-    result = census(json.loads(snapshots[resolved['netlist'][0]]), c['top'],
-                    native_cells(resolved['libraries'], snapshots), c.get('max_loads', 32))
+    netlist = json.loads(snapshots[resolved['netlist'][0]])
+    require(c['top'] in netlist.get('modules', {}), 'missing exact top')
+    used = {cell['type'] for cell in netlist['modules'][c['top']].get('cells', {}).values()}
+    result = census(netlist, c['top'],
+                    native_cells(resolved['libraries'], snapshots, used), c.get('max_loads', 32))
     result['provenance'] = dict(contract_sha256=hashlib.sha256(contract_bytes).hexdigest(), inputs=identities, collector_sha256=sha(__file__),
                                liberty_parser_sha256=sha(Path(__file__).resolve().parents[1] / 'dft/liberty.py'))
     return result

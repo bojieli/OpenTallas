@@ -101,6 +101,18 @@ class CensusTests(unittest.TestCase):
         self.assertEqual(self.root(r,'cell:m/Q')['role'],'macro')
         self.assertEqual(self.root(r,'port:i0[0]')['loads'],1)
 
+    def test_literal_only_excess_holds_but_physical_tie_excess_fails(self):
+        cs={f'g{i}':cell('BUF_FAKE',A='1',B='0',Y=10+i) for i in range(33)}
+        r=self.audit(net(cs,inputs=()))
+        self.assertEqual(r['verdict'],'HOLD');self.assertEqual(r['max_loads'],33)
+        self.assertEqual(r['max_nonliteral_loads'],0)
+        self.assertEqual(r['violations'],[])
+        self.assertEqual(set(r['literal_load_excess']),{'literal:0','literal:1'})
+        cs['tie']=cell('TIE',Y=100)
+        for i in range(33):cs[f'g{i}']['connections']['A']=[100]
+        r=self.audit(net(cs,inputs=()))
+        self.assertEqual(r['verdict'],'FAIL');self.assertIn('cell:tie/Y',r['violations'])
+
     def test_no_names_only_buffer_collapse(self):
         r=self.audit(net({'a':cell('BUF_FAKE',A=2,B=3,Y=10),
                           'f':cell('DFF',CLK=3,RN=4,D=10,Q=11)}))
@@ -136,6 +148,39 @@ class CensusTests(unittest.TestCase):
         with self.assertRaises(S.ContractError):S.native_cells([self.lib,self.lib])
         self.lib.write_text('library (x) { cell (bad) { bus (A) { direction : input; } } }')
         with self.assertRaises(S.ContractError):S.native_cells([self.lib])
+
+    def test_disconnected_buffer_outputs_preserve_physical_inputs(self):
+        for is_clock in (False,True):
+            with self.subTest(is_clock=is_clock):
+                b=cell('ODD_BUFFER_NAME',A=2,Y=10); b['connections']['Y']=[]
+                cs={'open':b}
+                if is_clock:cs['f']=cell('DFF',CLK=2,RN=3,D=4,Q=12)
+                r=self.audit(net(cs))
+                root=self.root(r,'port:i0[0]')
+                self.assertEqual((root['loads'],root['clock_loads']),(0,int(is_clock)))
+                orphan=self.root(r,'cell:open/Y')
+                self.assertIsNone(orphan['net']);self.assertTrue(orphan['disconnected'])
+                self.assertEqual(r['disconnected_outputs'][0]['physical_input_pins'][0]['nets'],[2])
+                self.assertIn('not-qualified',r['physical_load_qualification'])
+        b=cell('ODD_BUFFER_NAME',A=2,Y=10);b['connections']['Y']=[]
+        r=self.audit(net({'open':b,'g':cell('BUF_FAKE',A=2,B=3,Y=12)}))
+        self.assertEqual(self.root(r,'port:i0[0]')['loads'],1)
+
+    def test_open_input_empty_top_and_undriven_output_refuse(self):
+        b=cell('ODD_BUFFER_NAME',A=2,Y=10);b['connections']['A']=[]
+        with self.assertRaises(S.ContractError):self.audit(net({'open':b}))
+        with self.assertRaises(S.ContractError):self.audit(net({},outputs=(999,)))
+        n=net({});n['modules']['top']['ports']['empty']=dict(direction='output',bits=[])
+        with self.assertRaises(S.ContractError):self.audit(n)
+
+    def test_only_unused_native_library_constructs_can_be_skipped(self):
+        self.lib.write_text(LIB.rstrip()[:-1] + 'cell (unused_latch) { latch (IQ) {} } }')
+        with self.assertRaises(S.ContractError):S.native_cells([self.lib])
+        native=S.native_cells([self.lib],used_masters={'DFF'})
+        self.assertEqual(set(native),{'DFF'})
+        S.census(net({'a':cell('DFF',CLK=3,RN=4,D=2,Q=10)}),'top',native)
+        with self.assertRaises(S.ContractError):S.native_cells([self.lib],used_masters={'unused_latch'})
+        with self.assertRaises(S.ContractError):S.census(net({'a':cell('BUF_FAKE',A=2,B=3,Y=10)}),'top',native)
 
     def test_reported_max_cannot_override_recomputation(self):
         n=net({'g':cell('BUF_FAKE',A=2,B=2,Y=10)})
