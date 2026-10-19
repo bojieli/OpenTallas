@@ -138,13 +138,15 @@
    386.64,
    302.4
   ],
-  "std_band_fill": 0.5298947482638889,
   "SRAM_banks": 12,
   "FF_bound": 23096,
   "macro_clock_pins": 24,
   "useful_copy_FF_added": 3133,
-  "incremental_clock_cap_ff": 1801.908625,
-  "proof": "candidate outline/storage/CTS/PG/source timing not qualified"
+  "proof": "candidate outline/storage/CTS/PG/source timing not qualified",
+  "model_reported_outline_band_fill": 0.5298947482638889,
+  "actual_core_band_area_um2": 66438.14399999999,
+  "actual_core_band_fill": 0.5358486218398878,
+  "incremental_clock_cap_fF": 1801.908625
  },
  "baseline_warning": "6e355 floorplan forL5 was345.6x302.4 (noLEF); model12ab259.2square is a different diagnostic source, neither is accepted L5 view",
  "calendar": {
