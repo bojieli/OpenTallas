@@ -20,11 +20,11 @@ ROOT = Path(__file__).resolve().parents[3]
 A = "results/arch/hbm_next_1019"
 NEEDS = {
     "CMTP.isa_rows": [f"{A}/cmtp/isa_rows.md", "tools/hbm_next/isa_rows.py"],
-    "CMTP.records_mtp": [f"{A}/cmtp/records/mtp_verify_L*.json"],
-    "CMTP.records_mu4": [f"{A}/cmtp/records/mu4_L*.json"],
+    "CMTP.records_mtp": [f"{A}/cmtp/records/mtp_verify_L*.json", f"{A}/cmtp/emitter/whole/mtp_N6/emitter.json"],
+    "CMTP.records_mu4": [f"{A}/cmtp/records/mu4_L*.json", f"{A}/cmtp/emitter/whole/mu_N4/emitter.json"],
     "CMTP.goldens_mtp": [f"{A}/cmtp/goldens/ar_mtp_g5/manifest.json", f"{A}/cmtp/goldens/mtp_all*/manifest.json"],
     "CMTP.goldens_mu4": [f"{A}/cmtp/goldens/mu4*/manifest.json"],
-    "CMTP.binary_images": [f"{A}/cmtp/images/**/*.json", f"{A}/cmtp/emit/**/*.json"],
+    "CMTP.binary_images": [f"{A}/cmtp/images/**/*.json", f"{A}/cmtp/emit/**/*.json", f"{A}/cmtp/emitter/whole/*/*.hgi1r"],
     "CMTP.static_schedule_checker": ["tools/hbm_next/static_check.py", f"{A}/cmtp/static/static_check.json"],
     "SM4.rtl": ["rtl/hbm_next/sm/*.sv"],
     "SM4.bench_pass": [f"{A}/sm4/bench_summary.json", f"{A}/sm4/bench/leaf*/run_p4_m0_t0.log"],

@@ -66,6 +66,84 @@ The self-check passes 10/10: the grid exactly reproduces the D1 AR of 629,775.1 
 
 With the VM as built (per-layer column swaps), the figures are 2.4 % lower for MTP and 3.2 % lower for the aggregate.
 
+## Step 4 (10-19 ~07:20): value-exact layer front on the CMTP images + composition with all measured IIs and the DIE stage sets
+
+### Value-exact P = 4 layer front, layer 2 (`value_front/L2/`, `tools/hbm_next/vehicle/p4_value_front.py`, `run_value_front.sh`)
+
+Records come from the CMTP whole-token images (`cmtp/emitter/whole/{ar_N1,mtp_N6,mu_N4}`, segment 2, decoded with `isa_rows.decode_one`): the first FUSED.HC_PRE_NORM, HC.HC_MIX and FUSED.HC_POST. Operands are real golden values:
+- AR and MTP use `ar_mtp_g5`: positions 1..6, with draft 1 accepted and draft 2 rejected. The input to layer 2 is `h_{p}_1` / `pre_{p}_1`.
+- Users use `mu4`: 4 users at position 1.
+- The layer-2 weights are the released ones: `hc_attn_fn` / `base` / `scale` and `attn_norm`.
+
+The expected values come from the golden's own Model methods (chunk8). The RTL is the hnx engines: `tb_hnx_fused` (KX 4) and `tb_hnx_hc_eng4` (production K 20,480 / 24 rows). The simulator is Verilator 5.050 on ot-epyc6.
+
+| mode (N) | HC_PRE_NORM | HC_MIX + tail | HC_POST | FUSED MUT1 / HC MUT1 |
+|---|---|---|---|---|
+| AR (1) | PASS, 404 cyc | PASS, 998 | PASS, 196 | n/a (multi-row mutant) / FAIL |
+| MTP verify (6) | PASS, 810 | PASS, 2,248 | PASS, 716 | FAIL / FAIL |
+| 4 users (4) | PASS, 648 | PASS, 1,748 | PASS, 510 | FAIL / FAIL |
+
+All three rows are bit-exact on the real operands. The cycles match the UNITS laws: HC 998 + 250 (N-1) exactly, PRE 404 + 81 (N-1) +1, and POST 196 + 103 (N-1) + 5 at the relocated addresses. HC_POST's y is a **stand-in**: the layer's attn-norm x is used, because the attention output is not in the golden. res, post and comb are real.
+
+**FINDING (CMTP emitter vs FUSED engine contract): every FUSED HC record of every image FAULTs as emitted.** That is 81 HC_PRE_NORM + 80 HC_POST per image, in ar_N1, mtp_N6, mu_N1 and mu_N4. Each emitted record ran on the RTL with fault=1 and no writes (contract witness). The broken rules are those of `ot_hnx_fused_eng` job_ok:
+- **HC_PRE_NORM:**
+  - The output O is not on A's bank phase. For example, mtp L2 O 122,928 has phase 6 while A has phase 0.
+  - The gain B is in HBM space, but the engine reads the gain from VM at A's phase.
+- **HC_POST:**
+  - C = HC_MIX O + 4 (the post / comb words) is not 8-aligned.
+  - A and B (phase 6) differ from O = the pinned h column (phase 0).
+
+The smallest legal relocation is what PASSes above:
+- PRE: O moves up to the next phase-0 address.
+- POST: A and B move up to phase 0, and C moves to the next 8-aligned word (or HC_MIX writes post at an aligned slot).
+- The gain is staged in VM.
+
+Fix owners: CMTP allocator (bank-phase-aware placement of FUSED operands; a DMA.LOAD of the norm gain, or a FUSED HBM gain port), or UNITS-FUSED (accept a word offset on C).
+
+### Composition with all measured IIs and the DIE stage sets (`cmp/`, `tools/hbm_next/vehicle/compose_meas_phys.py`)
+
+The composition stacks three sets of terms:
+- **Unit IIs:** CMTP "ALL measured v2": IDXN 1,297 + 232 (N-1), SU.VOP v2, ARGMAX 22, KVWB, FUSED 81 / 103, COLL rows, ATT4, SM4 skew, HC 250, VM 2^19.
+- **Stage set:** every relay class moved by DIE (f4c_t8 lever row - d4g). The P4 (a) rows use f4c_t8_LaA; the P3+(a) rows use f4c_t8_Lp3a.
+- **SM4 front:** +2 on every SM record.
+
+Self-check: with the d4g stages and front 0, the run reproduces `cmtp/retime/meas5_retime.json` exactly (8 / 8).
+
+| option (die mm²) | stages | AR | MTP (target 3,364) | 4 users agg / per user |
+|---|---|---|---|---|
+| P4 (a) + split (811.8) | d4g (CMTP) | 1,949.7 | 3,483.7 | 4,462.0 / 1,115.5 |
+| P4 (a) + split | **f4c_t8_LaA** | **1,990.9** | **3,566.4** | **4,580.3 / 1,145.1** |
+| P4 (a) rpl 0 (811.8) | d4g (CMTP) | 1,949.7 | 3,377.9 | 4,462.0 / 1,115.5 |
+| P4 (a) rpl 0 | **f4c_t8_LaA** | **1,990.9** | **3,455.9** | **4,580.3 / 1,145.1** |
+| P3+(a), 4 users (767.4) | d4g (CMTP) | 1,949.7 | 3,390.1 | 4,251.2 / 1,062.8 |
+| P3+(a), 4 users | **f4c_t8_Lp3a** | **2,001.8** | **3,493.4** | **4,393.1 / 1,098.3** |
+| P3+(a), 3 users | f4c_t8_Lp3a | 2,001.8 | 3,493.4 | 3,985.1 / 1,328.4 |
+
+With the measured frames (`idx_frame` + `fused_frame`) on the DIE stage sets:
+
+| option | AR | MTP | 4 users agg |
+|---|---|---|---|
+| P4 (a) split | 2,040.7 | 3,607.8 | 4,549.5 |
+| P4 (a) rpl 0 | 2,040.7 | 3,494.8 | 4,549.5 |
+| P3+(a) | 2,052.3 | 3,533.1 | 4,364.7 |
+
+The f4c_t8 base frame, as a reference, gives P4 (a) 2,002.9 / 3,597.8 / 4,625.5. The re-shaped (a) frame therefore costs 0.6-1.0% against the base, while P3+(a)'s frame costs about 0.1%.
+
+**Reading for the OWNER.** The DIE's measured stage sets lift every option by 2-4% over the d4g-class stages CMTP used. Every option meets every target.
+- **MTP:** at rpl 0 (SM4's build order), P3+(a) now leads P4 (a) by 1.1% (3,493 vs 3,456). P4 (a) leads only with the remainder split (3,566, +2.1%).
+- **4 users:** P4 (a) gives +4.3% aggregate (4,580 vs 4,393) for +44.4 mm² (+5.8%).
+- **Per mm²:** P3+(a) is ahead on both. MTP is 4.55 vs 4.26 (rpl 0) / 4.39 (split); 4-user aggregate is 5.72 vs 5.64.
+- **Recommendation:** P3+(a) is unchanged and is strengthened.
+
+### AR SW slice (sw5e, d4g die): binary landed, AR layer NOT measured
+Every replay sampled (7 of ~100, including COLL and HC) died at t = 0 on the unreset `ot_hgi_coll_tkm_tile_rg` `cor` $error, a false fire under `+verilator+rand+reset+2`. VEH re-ran `ds_l0_fixture` on the same binary (`sw5e/out_ds_l0_fixture_{v0,el}`):
+- One run used zero init. The other used random init with `+verilator+error+limit`; in that run only the t = 0 fires appear.
+- Both now run to the end (12,800 cycles, 31 min, 39.5 GB).
+- **All 1,336 record checks FAIL**, on all 8 SU records (23, 31, 40, 79, 82, 84, 85, 87). `fr_SW` faults at cycle 5,117.
+- The VM mutant fails identically, so it is not a witness yet.
+
+Handed to TOK-HBM-VEH, the slice owner. AR stays priced (1,949.7 at L5) until the slice passes.
+
 ## Findings
 
 - **The HC row II has to be ≤ ~400, not 600, to hold the MTP target.** MTP step cycles rise 278.7 per cycle of II (L5), so the MTP target of 3,364 needs II ≤ 398. II 600 gives 3,241 (−3.7 %). The ≥ 1,000-per-user floor holds up to II ≈ 1,041 at L5 (950 at L4). The HCP W256 x6 form (II 250) meets both. → UNITS gate #1 should aim at ≤ 400.

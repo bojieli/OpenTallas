@@ -1,0 +1,782 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.value_front_cases.v1",
+ "layer": 2,
+ "golden": "results/arch/hbm_next_1019/cmtp/goldens/ar_mtp_g5/golden_spec.npz",
+ "golden_sha256": "fb69f088f6cc7b0c6c1a9bd6b94cc6c86f20836db1ad40d719506d31cdce517a",
+ "model_init_sha": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "weights_sha256": {
+  "hc_attn_fn": "0f81c4fced15e75e4002fd7527f995223557eadc3dd09e38bfd823d021a7f1d8",
+  "hc_attn_base": "b83c71a30d8c0cc340c68e8f1a9ca636a5535dcfc45113cc63b33072259f79db",
+  "hc_attn_scale": "9acfbb9d93908e5d08ee20081f44be1943c4143de1f5dadc6ea17e1c0ce5a767",
+  "attn_norm": "5518f03d79b01a8aeced1756ed2940934aec191754c0706c6f1a1f640931fc38"
+ },
+ "eps": {
+  "norm": 9.999999682655225e-21,
+  "hc": 9.999999974752427e-07,
+  "sinkhorn": 20
+ },
+ "modes": {
+  "ar": {
+   "source": {
+    "image": "results/arch/hbm_next_1019/cmtp/emitter/whole/ar_N1/ar_N1_token.hgi1r",
+    "image_sha256": "c64a78a94313560ed9a9e7b7078913a27bd63cba84b38ae96a9f9e585bdcd0b4",
+    "segment": {
+     "segment": "2",
+     "offset": 29328,
+     "bytes": 12736,
+     "sha256": "5e156bb70ac94f09a6a231d4cf64451c1e19df1a605e034aa764fe5d1c6e281f"
+    }
+   },
+   "records": {
+    "FUSED.HC_PRE_NORM": {
+     "index_in_segment": 2,
+     "n": 1,
+     "rs": {},
+     "imm_a": 507307272,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "FP32",
+       "base": 17179869184,
+       "n": 5120,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 40960,
+       "n": 4,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "BF16",
+       "base": 41152,
+       "n": 5120,
+       "m": 1
+      }
+     }
+    },
+    "HC.HC_MIX": {
+     "index_in_segment": 58,
+     "n": 1,
+     "rs": {},
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "BF16",
+       "base": 193459216384,
+       "n": 1,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 41024,
+       "n": 24,
+       "m": 1
+      }
+     }
+    },
+    "FUSED.HC_POST": {
+     "index_in_segment": 76,
+     "n": 1,
+     "rs": {},
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 82240,
+       "n": 5120,
+       "m": 1
+      },
+      "B": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 20480,
+       "n": 20480,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 41028,
+       "n": 20,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      }
+     }
+    }
+   },
+   "positions": [
+    1
+   ],
+   "n": 1,
+   "pre": {
+    "record_B_space": "HBM",
+    "emit": {
+     "op": "pre",
+     "n": 1,
+     "ops": {
+      "A": 0,
+      "C": 40960,
+      "O": 41152,
+      "B": 46336
+     },
+     "rs": {
+      "A": 20480,
+      "B": 0,
+      "C": 8,
+      "O": 5120
+     },
+     "eps_bits": 507307272,
+     "nvmi": 25604,
+     "nvme": 5120,
+     "job_ok_broken": [
+      "bank phase A 0 / B 0 / O 24 differ"
+     ],
+     "note": "record operands as emitted; gain staged in VM (record B in HBM)",
+     "vme_sha256": "5e430d4bd9a67b41337101df739bed12f32b0146b0a55523833c59726c25aeba"
+    },
+    "legal": {
+     "op": "pre",
+     "n": 1,
+     "ops": {
+      "A": 0,
+      "C": 40960,
+      "O": 41216,
+      "B": 46336
+     },
+     "rs": {
+      "A": 20480,
+      "B": 0,
+      "C": 8,
+      "O": 5120
+     },
+     "eps_bits": 507307272,
+     "nvmi": 25604,
+     "nvme": 5120,
+     "job_ok_broken": [],
+     "note": "smallest job_ok relocation",
+     "vme_sha256": "92f3e1b12009b5e9f4ba3bb55b96fd129a8cc66784649c0a51e4a09f0bc1dfff"
+    },
+    "moved": {
+     "O": [
+      41152,
+      41216
+     ]
+    }
+   },
+   "post": {
+    "emit": {
+     "op": "post",
+     "n": 1,
+     "ops": {
+      "A": 82240,
+      "B": 20480,
+      "C": 41028,
+      "O": 0
+     },
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "eps_bits": 0,
+     "nvmi": 25620,
+     "nvme": 20480,
+     "job_ok_broken": [
+      "C base 41028 not 8-aligned",
+      "bank phase A 8 / B 0 / O 0 differ"
+     ],
+     "note": "record operands as emitted",
+     "vme_sha256": "d82100beb35fa19c7d7007fdedc1321860234dc9dc5492c739f72d07587eaaaf"
+    },
+    "legal": {
+     "op": "post",
+     "n": 1,
+     "ops": {
+      "A": 82432,
+      "B": 20480,
+      "C": 41032,
+      "O": 0
+     },
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "eps_bits": 0,
+     "nvmi": 25620,
+     "nvme": 20480,
+     "job_ok_broken": [],
+     "note": "smallest job_ok relocation",
+     "vme_sha256": "d82100beb35fa19c7d7007fdedc1321860234dc9dc5492c739f72d07587eaaaf"
+    },
+    "moved": {
+     "A": [
+      82240,
+      82432
+     ],
+     "C": [
+      41028,
+      41032
+     ]
+    },
+    "y": "STAND-IN: the layer's attn-norm x (attention output not in the golden)"
+   },
+   "hcmix": {
+    "n": 1,
+    "eps_bits": 507307272,
+    "tail_eq_model": true,
+    "exptail_sha256": "3bae660f853849c740e96977ce50d68c91886cfc8f88298836bf5aeb2019ea95"
+   }
+  },
+  "mtp": {
+   "source": {
+    "image": "results/arch/hbm_next_1019/cmtp/emitter/whole/mtp_N6/mtp_N6_token.hgi1r",
+    "image_sha256": "15b3d97eecdf6c96efbff1dc212134e85b2a518de25031bd4841f2c44963f901",
+    "segment": {
+     "segment": "2",
+     "offset": 33136,
+     "bytes": 14080,
+     "sha256": "019b35c81fccc4c177ab8c652d2a60d3de518e53bd8979b28ebf403a529156b7"
+    }
+   },
+   "records": {
+    "FUSED.HC_PRE_NORM": {
+     "index_in_segment": 2,
+     "n": 6,
+     "rs": {
+      "A": 20480,
+      "C": 8,
+      "O": 5120
+     },
+     "imm_a": 507307272,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "FP32",
+       "base": 17179869184,
+       "n": 5120,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 122880,
+       "n": 4,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "BF16",
+       "base": 122928,
+       "n": 5120,
+       "m": 1
+      }
+     }
+    },
+    "HC.HC_MIX": {
+     "index_in_segment": 58,
+     "n": 6,
+     "rs": {
+      "A": 20480,
+      "O": 24
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "BF16",
+       "base": 193459216384,
+       "n": 1,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 350640,
+       "n": 24,
+       "m": 1
+      }
+     }
+    },
+    "FUSED.HC_POST": {
+     "index_in_segment": 80,
+     "n": 6,
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 319536,
+       "n": 5120,
+       "m": 1
+      },
+      "B": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 122928,
+       "n": 20480,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 350644,
+       "n": 20,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      }
+     }
+    }
+   },
+   "positions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "n": 6,
+   "pre": {
+    "record_B_space": "HBM",
+    "emit": {
+     "op": "pre",
+     "n": 6,
+     "ops": {
+      "A": 0,
+      "C": 122880,
+      "O": 122928,
+      "B": 153856
+     },
+     "rs": {
+      "A": 20480,
+      "B": 0,
+      "C": 8,
+      "O": 5120
+     },
+     "eps_bits": 507307272,
+     "nvmi": 128024,
+     "nvme": 30720,
+     "job_ok_broken": [
+      "bank phase A 0 / B 0 / O 6 differ"
+     ],
+     "note": "record operands as emitted; gain staged in VM (record B in HBM)",
+     "vme_sha256": "2bfa9520f4f6b8c1bb6d215c84eb1a2b6b274a8285f46bd90a9f1d3e18ab6879"
+    },
+    "legal": {
+     "op": "pre",
+     "n": 6,
+     "ops": {
+      "A": 0,
+      "C": 122880,
+      "O": 123136,
+      "B": 153856
+     },
+     "rs": {
+      "A": 20480,
+      "B": 0,
+      "C": 8,
+      "O": 5120
+     },
+     "eps_bits": 507307272,
+     "nvmi": 128024,
+     "nvme": 30720,
+     "job_ok_broken": [],
+     "note": "smallest job_ok relocation",
+     "vme_sha256": "5729c4f613239eb7c5d54d42a30d9db0ddbeabfcb419e7a5f3b61aba9af00396"
+    },
+    "moved": {
+     "O": [
+      122928,
+      123136
+     ]
+    }
+   },
+   "post": {
+    "emit": {
+     "op": "post",
+     "n": 6,
+     "ops": {
+      "A": 319536,
+      "B": 122928,
+      "C": 350644,
+      "O": 0
+     },
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "eps_bits": 0,
+     "nvmi": 153720,
+     "nvme": 122880,
+     "job_ok_broken": [
+      "C base 350644 not 8-aligned",
+      "bank phase A 6 / B 6 / O 0 differ"
+     ],
+     "note": "record operands as emitted",
+     "vme_sha256": "80aa732d7ccf6d7c095740d69fcb1b3d7753a4cde2baa66c2e0a833423af1b90"
+    },
+    "legal": {
+     "op": "post",
+     "n": 6,
+     "ops": {
+      "A": 319744,
+      "B": 123136,
+      "C": 350648,
+      "O": 0
+     },
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "eps_bits": 0,
+     "nvmi": 153720,
+     "nvme": 122880,
+     "job_ok_broken": [],
+     "note": "smallest job_ok relocation",
+     "vme_sha256": "80aa732d7ccf6d7c095740d69fcb1b3d7753a4cde2baa66c2e0a833423af1b90"
+    },
+    "moved": {
+     "A": [
+      319536,
+      319744
+     ],
+     "B": [
+      122928,
+      123136
+     ],
+     "C": [
+      350644,
+      350648
+     ]
+    },
+    "y": "STAND-IN: the layer's attn-norm x (attention output not in the golden)"
+   },
+   "hcmix": {
+    "n": 6,
+    "eps_bits": 507307272,
+    "tail_eq_model": true,
+    "exptail_sha256": "1da66b0030b189e7b968c689dd1c38ea7deca104c4249ccba8b75e9104b44ef6"
+   }
+  },
+  "mu": {
+   "source": {
+    "image": "results/arch/hbm_next_1019/cmtp/emitter/whole/mu_N4/mu_N4_token.hgi1r",
+    "image_sha256": "6948780d3a41a8fcf99140ce95dc442db3fc72b7bfbe7f1effaefd3f6ec663e5",
+    "segment": {
+     "segment": "2",
+     "offset": 32480,
+     "bytes": 13616,
+     "sha256": "94d729e44c2d1701673a60087ea2d2ad2f5a6c86f81b9cd91698ced3deacf7e0"
+    }
+   },
+   "records": {
+    "FUSED.HC_PRE_NORM": {
+     "index_in_segment": 2,
+     "n": 4,
+     "rs": {
+      "A": 20480,
+      "C": 8,
+      "O": 5120
+     },
+     "imm_a": 507307272,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "FP32",
+       "base": 17179869184,
+       "n": 5120,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 81920,
+       "n": 4,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "BF16",
+       "base": 81952,
+       "n": 5120,
+       "m": 1
+      }
+     }
+    },
+    "HC.HC_MIX": {
+     "index_in_segment": 58,
+     "n": 4,
+     "rs": {
+      "A": 20480,
+      "O": 24
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      },
+      "B": {
+       "space": "HBM",
+       "fmt": "BF16",
+       "base": 193459216384,
+       "n": 1,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 233888,
+       "n": 24,
+       "m": 1
+      }
+     }
+    },
+    "FUSED.HC_POST": {
+     "index_in_segment": 77,
+     "n": 4,
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "imm_a": 0,
+     "desc": {
+      "A": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 213024,
+       "n": 5120,
+       "m": 1
+      },
+      "B": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 81952,
+       "n": 20480,
+       "m": 1
+      },
+      "C": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 233892,
+       "n": 20,
+       "m": 1
+      },
+      "O": {
+       "space": "VM",
+       "fmt": "FP32",
+       "base": 0,
+       "n": 20480,
+       "m": 1
+      }
+     }
+    }
+   },
+   "positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "n": 4,
+   "pre": {
+    "record_B_space": "HBM",
+    "emit": {
+     "op": "pre",
+     "n": 4,
+     "ops": {
+      "A": 0,
+      "C": 81920,
+      "O": 81952,
+      "B": 102656
+     },
+     "rs": {
+      "A": 20480,
+      "B": 0,
+      "C": 8,
+      "O": 5120
+     },
+     "eps_bits": 507307272,
+     "nvmi": 87056,
+     "nvme": 20480,
+     "job_ok_broken": [
+      "bank phase A 0 / B 0 / O 4 differ"
+     ],
+     "note": "record operands as emitted; gain staged in VM (record B in HBM)",
+     "vme_sha256": "54fe1660a68fcd4e7c12e8f75e8964d65a06a6dcc0e5a167f7045c773bf668e5"
+    },
+    "legal": {
+     "op": "pre",
+     "n": 4,
+     "ops": {
+      "A": 0,
+      "C": 81920,
+      "O": 82176,
+      "B": 102656
+     },
+     "rs": {
+      "A": 20480,
+      "B": 0,
+      "C": 8,
+      "O": 5120
+     },
+     "eps_bits": 507307272,
+     "nvmi": 87056,
+     "nvme": 20480,
+     "job_ok_broken": [],
+     "note": "smallest job_ok relocation",
+     "vme_sha256": "db7a3d1d714dd886b4ad718ce4abe454429484a789e831549ee82918c08fd54d"
+    },
+    "moved": {
+     "O": [
+      81952,
+      82176
+     ]
+    }
+   },
+   "post": {
+    "emit": {
+     "op": "post",
+     "n": 4,
+     "ops": {
+      "A": 213024,
+      "B": 81952,
+      "C": 233892,
+      "O": 0
+     },
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "eps_bits": 0,
+     "nvmi": 102480,
+     "nvme": 81920,
+     "job_ok_broken": [
+      "C base 233892 not 8-aligned",
+      "bank phase A 4 / B 4 / O 0 differ"
+     ],
+     "note": "record operands as emitted",
+     "vme_sha256": "4d41dc565616497fb1f393f5b0d380c7ca55eefff22ce7dbb2b51032af22069b"
+    },
+    "legal": {
+     "op": "post",
+     "n": 4,
+     "ops": {
+      "A": 213248,
+      "B": 82176,
+      "C": 233896,
+      "O": 0
+     },
+     "rs": {
+      "A": 5120,
+      "B": 20480,
+      "C": 24,
+      "O": 20480
+     },
+     "eps_bits": 0,
+     "nvmi": 102480,
+     "nvme": 81920,
+     "job_ok_broken": [],
+     "note": "smallest job_ok relocation",
+     "vme_sha256": "4d41dc565616497fb1f393f5b0d380c7ca55eefff22ce7dbb2b51032af22069b"
+    },
+    "moved": {
+     "A": [
+      213024,
+      213248
+     ],
+     "B": [
+      81952,
+      82176
+     ],
+     "C": [
+      233892,
+      233896
+     ]
+    },
+    "y": "STAND-IN: the layer's attn-norm x (attention output not in the golden)"
+   },
+   "hcmix": {
+    "n": 4,
+    "eps_bits": 507307272,
+    "tail_eq_model": true,
+    "exptail_sha256": "9138610c2132a40e217892f196eb62212dd0a29163105921758a605f3cef5440"
+   }
+  }
+ },
+ "golden_mu": "results/arch/hbm_next_1019/cmtp/goldens/mu4/mu4.npz",
+ "golden_mu_sha256": "fc19651cc8eda35795588ee1a8e03daea0e1fc2d5e599c2c27103bcc298bac6f"
+}

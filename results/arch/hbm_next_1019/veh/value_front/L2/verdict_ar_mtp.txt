@@ -1,0 +1,22 @@
+2026-10-19T06:20:28-07:00 start host=ot-epyc6 bundle=10e2ef13e
+2026-10-19T07:09:26-07:00 build e0 rc=0 bin=ok
+2026-10-19T07:09:32-07:00 build e1 rc=0 bin=ok
+2026-10-19T07:13:26-07:00 build f0 rc=0 bin=ok
+2026-10-19T07:13:40-07:00 build f1 rc=0 bin=ok
+2026-10-19T07:13:41-07:00 mtp pre_emit: HNX_FUSED_CYCLES op=pre N=6 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=pre N=6 mism=30720 fault=1 done=0 bankerr=0 writes=0 expect_sectors=3840  MISMATCH word 122928: got 00000000 exp 3d430000
+2026-10-19T07:13:42-07:00 ar post_emit: HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=post N=1 mism=20480 fault=1 done=0 bankerr=0 writes=0 expect_sectors=2560  MISMATCH word 0: got 00000000 exp 406c0000
+2026-10-19T07:13:42-07:00 ar pre_emit: HNX_FUSED_CYCLES op=pre N=1 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=pre N=1 mism=5120 fault=1 done=0 bankerr=0 writes=0 expect_sectors=640  MISMATCH word 41152: got 00000000 exp 3d430000
+2026-10-19T07:13:42-07:00 mtp post_emit: HNX_FUSED_CYCLES op=post N=6 rgap=0 KX=4 MUT=0 cycles=1 done=0 fault=1 reads=0 writes=0 HNX_FUSED FAIL op=post N=6 mism=122880 fault=1 done=0 bankerr=0 writes=0 expect_sectors=15360  MISMATCH word 0: got 00000000 exp 406c0000
+2026-10-19T07:13:47-07:00 ar post_legal: HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=0 cycles=196 done=1 fault=0 reads=3203 writes=2560 HNX_FUSED PASS op=post N=1 words=20480  
+2026-10-19T07:13:47-07:00 ar post_legal_mut1: HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=1 cycles=196 done=1 fault=0 reads=3203 writes=2560 HNX_FUSED PASS op=post N=1 words=20480  
+2026-10-19T07:13:48-07:00 ar pre_legal_mut1: HNX_FUSED_CYCLES op=pre N=1 rgap=0 KX=4 MUT=1 cycles=404 done=1 fault=0 reads=3201 writes=640 HNX_FUSED PASS op=pre N=1 words=5120  
+2026-10-19T07:13:53-07:00 mtp post_legal_mut1: HNX_FUSED_CYCLES op=post N=6 rgap=0 KX=4 MUT=1 cycles=716 done=1 fault=0 reads=19218 writes=15360 HNX_FUSED FAIL op=post N=6 mism=46026 fault=0 done=1 bankerr=0 writes=15360 expect_sectors=15360  MISMATCH word 20480: got 3e140000 exp 3e0f0000
+2026-10-19T07:13:53-07:00 mtp post_legal: HNX_FUSED_CYCLES op=post N=6 rgap=0 KX=4 MUT=0 cycles=716 done=1 fault=0 reads=19218 writes=15360 HNX_FUSED PASS op=post N=6 words=122880  
+2026-10-19T07:13:54-07:00 ar pre_legal: HNX_FUSED_CYCLES op=pre N=1 rgap=0 KX=4 MUT=0 cycles=404 done=1 fault=0 reads=3201 writes=640 HNX_FUSED PASS op=pre N=1 words=5120  
+2026-10-19T07:14:03-07:00 mtp pre_legal: HNX_FUSED_CYCLES op=pre N=6 rgap=0 KX=4 MUT=0 cycles=810 done=1 fault=0 reads=16006 writes=3840 HNX_FUSED PASS op=pre N=6 words=30720  
+2026-10-19T07:14:05-07:00 mtp pre_legal_mut1: HNX_FUSED_CYCLES op=pre N=6 rgap=0 KX=4 MUT=1 cycles=810 done=1 fault=0 reads=16006 writes=3840 HNX_FUSED FAIL op=pre N=6 mism=14813 fault=0 done=1 bankerr=0 writes=3840 expect_sectors=3840  MISMATCH word 128256: got 3ba70000 exp 3c2d0000
+2026-10-19T07:14:40-07:00 ar hcmix_mut1: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=24 outs=4 outbad=96 TB=1944 last_mix_t=2443 first_out_t=2942 last_out_t=2942 HC_MIX_CYCLES=998  MIX_MISMATCH pos0 row0 got=c0e32a54 exp=c0cb72fe
+2026-10-19T07:14:46-07:00 ar hcmix: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2443 first_out_t=2942 last_out_t=2942 HC_MIX_CYCLES=998 HC_ENG PASS  
+2026-10-19T07:14:59-07:00 mtp hcmix_mut1: HC_ENG_DONE mode=0 npos=6 mixes=144 mixbad=144 outs=24 outbad=576 TB=1944 last_mix_t=3693 first_out_t=2943 last_out_t=4192 HC_MIX_CYCLES=2248  MIX_MISMATCH pos0 row0 got=c0e32a54 exp=c0cb72fe
+2026-10-19T07:15:23-07:00 mtp hcmix: HC_ENG_DONE mode=0 npos=6 mixes=144 mixbad=0 outs=24 outbad=0 TB=1944 last_mix_t=3693 first_out_t=2943 last_out_t=4192 HC_MIX_CYCLES=2248 HC_ENG PASS  
+2026-10-19T07:15:27-07:00 done

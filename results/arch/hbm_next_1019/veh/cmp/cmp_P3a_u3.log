@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-next-veh-1019/tree
+ot-run: ot-epyc5       admits  1349 GB (avail 1001, growth 56, headroom 0, waiters 0/0 GB) load 75/128 running 9 disk 1431 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-next-veh-1019/tree
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-next-veh-1019/tree
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-next-veh-1019/tree
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-next-veh-1019/tree
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-next-veh-1019/tree
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-916900-1792415923 after 0 s
+P3a_u3   d4g          ALL measured v2            AR  1949.7  MTP  3390.1  MU3  3855.8 /  1285.3
+P3a_u3   f4c_t8_Lp3a  ALL measured v2            AR  2001.8  MTP  3493.4  MU3  3985.1 /  1328.4
+P3a_u3   f4c_t8       ALL measured v2            AR  2002.9  MTP  3498.7  MU3  3989.5 /  1329.8
+P3a_u3   d4g          ALL measured v2 + frames   AR  1997.5  MTP  3427.5  MU3  3856.5 /  1285.5
+P3a_u3   f4c_t8_Lp3a  ALL measured v2 + frames   AR  2052.3  MTP  3533.1  MU3  3985.9 /  1328.6
+P3a_u3   f4c_t8       ALL measured v2 + frames   AR  2053.4  MTP  3538.5  MU3  3990.3 /  1330.1
+selfcheck True
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-916900-1792415923): exit 0

@@ -1,0 +1,24 @@
+{
+ "op": "pre",
+ "n": 4,
+ "ops": {
+  "A": 0,
+  "C": 81920,
+  "O": 81952,
+  "B": 102656
+ },
+ "rs": {
+  "A": 20480,
+  "B": 0,
+  "C": 8,
+  "O": 5120
+ },
+ "eps_bits": 507307272,
+ "nvmi": 87056,
+ "nvme": 20480,
+ "job_ok_broken": [
+  "bank phase A 0 / B 0 / O 4 differ"
+ ],
+ "note": "record operands as emitted; gain staged in VM (record B in HBM)",
+ "vme_sha256": "54fe1660a68fcd4e7c12e8f75e8964d65a06a6dcc0e5a167f7045c773bf668e5"
+}

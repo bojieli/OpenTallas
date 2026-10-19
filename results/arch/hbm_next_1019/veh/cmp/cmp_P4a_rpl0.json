@@ -1,0 +1,476 @@
+{
+ "schema": "opentallas.hbm_next_1019.veh.compose_meas_phys.v1",
+ "generated_utc": "2026-10-19T13:18:43Z",
+ "rule": "HBM-NEXT-VEH (10-19 step 4b): token composition with ALL measured unit IIs (CMTP plane_compiler step 5, \"ALL measured\nv2\" [+ frames]) AND the measured next-die physical terms in the same S2 schedule, per SM-area option -> OWNER input.\n\nCMTP's step-5 re-time (results/arch/hbm_next_1019/cmtp/retime/meas5_retime.json) prices every unit at its measured row\nII but keeps the D1 (d4g-class) relay stage set; VEH's compose_grid PHYS axis moved the stages but ran on the priced\nunit IIs.  This driver does both at once, in the same forked-child discipline (fork context, knobs set before the fork):\n  * unit IIs     plane_compiler.Knobs(meas=MEAS_ALL2 [+ idx_frame, fused_frame]): IDXN 1,297 + 232 (N-1), SU.VOP v2\n                 2k ceil(e/512), ARGMAX 22, KVWB 8 +28/wrap, FUSED 81 / 103, HC II 250, IDX TOPK/UNION, COLL rows,\n                 ATT4 merge, SM4 lane skew (+8 a further lane a pass), VM 2^19 (grown).\n  * stage set    every relay class of the D1 plan_b stage set moved by (DIE <plan> - DIE d4g) bit-weighted stages\n                 (results/arch/hbm_next_1019/die/plan/plan_p4.json per_class), the COLL ring / crossing knob re-derived\n                 from the moved set (compose_grid._phys form).  Plans: P4 (a) re-shaped = f4c_t8_LaA, P3+(a) =\n                 f4c_t8_Lp3a (DIE step 4 lever rows), f4c_t8 = the P = 4 base frame (reference).\n  * SM4 front    +2 cycles (lane front + publish merge, SM4 bench_summary.json) on every SM record incl. AR; the +8p lane\n                 skew is NOT added again (sm4skew already charges it).\nSelf-check (fails closed): stage 'd4g' + front 0 must reproduce meas5_retime.json for the same option / case.\n\n    PYTHONPATH=tools python3 tools/hbm_next/vehicle/compose_meas_phys.py --out JSON [--only P4a,..] [--stages d4g,..]\n",
+ "targets": {
+  "ds_ar": 1905.4,
+  "ds_mtp": 3363.5,
+  "mu_agg": 4365.3,
+  "mu_per_user_floor": 1000.0
+ },
+ "rows": [
+  {
+   "option": "P4a_rpl0",
+   "label": "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+   "case": "ALL measured v2",
+   "stage": "d4g",
+   "phys": {
+    "stage": "d4g",
+    "moved_stages": {},
+    "sm4_front": 0.0
+   },
+   "users": 4,
+   "ar_tok_s": 1949.7,
+   "mtp_tok_s": 3377.9,
+   "mtp_step_cycles": 1477467.3,
+   "mu_agg_tok_s": 4462.0,
+   "mu_per_user_tok_s": 1115.5,
+   "ar_cycles": 615483.0,
+   "wall_s": 83.3
+  },
+  {
+   "option": "P4a_rpl0",
+   "label": "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+   "case": "ALL measured v2",
+   "stage": "f4c_t8_LaA",
+   "phys": {
+    "stage": "f4c_t8_LaA",
+    "moved_stages": {
+     "COLL_EP": [
+      9.6,
+      10.4
+     ],
+     "COLL_RING": [
+      9.38,
+      11.13
+     ],
+     "COLL_VM": [
+      14.91,
+      11.32
+     ],
+     "HBM_VM": [
+      18.88,
+      24.2
+     ],
+     "HC_CORE": [
+      15.56,
+      13.8
+     ],
+     "HC_ENG": [
+      5.54,
+      0.5
+     ],
+     "KV_DESC": [
+      8.94,
+      7.44
+     ],
+     "LG_HC": [
+      0.5,
+      3.0
+     ],
+     "LG_SFU": [
+      0.5,
+      2.06
+     ],
+     "LG_SU": [
+      0.09,
+      0.0
+     ],
+     "QUANT_VM": [
+      0.0,
+      2.25
+     ],
+     "SFU_CORE": [
+      9.25,
+      8.83
+     ],
+     "SM_HBM": [
+      4.5,
+      7.5
+     ],
+     "SM_OUT": [
+      9.0,
+      7.69
+     ],
+     "SM_X": [
+      10.16,
+      5.71
+     ],
+     "SU_CORE": [
+      3.67,
+      2.84
+     ],
+     "VM_HBM": [
+      18.69,
+      23.75
+     ],
+     "VM_HUB": [
+      16.41,
+      11.72
+     ],
+     "VM_RING": [
+      9.5,
+      11.88
+     ]
+    },
+    "sm4_front": 2.0
+   },
+   "users": 4,
+   "ar_tok_s": 1990.9,
+   "mtp_tok_s": 3455.9,
+   "mtp_step_cycles": 1444129.6,
+   "mu_agg_tok_s": 4580.3,
+   "mu_per_user_tok_s": 1145.1,
+   "ar_cycles": 602752.4,
+   "wall_s": 87.7
+  },
+  {
+   "option": "P4a_rpl0",
+   "label": "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+   "case": "ALL measured v2",
+   "stage": "f4c_t8",
+   "phys": {
+    "stage": "f4c_t8",
+    "moved_stages": {
+     "COLL_EP": [
+      9.6,
+      9.2
+     ],
+     "COLL_RING": [
+      9.38,
+      11.13
+     ],
+     "COLL_VM": [
+      14.91,
+      10.52
+     ],
+     "HBM_VM": [
+      18.88,
+      20.14
+     ],
+     "HC_CORE": [
+      15.56,
+      14.07
+     ],
+     "HC_ENG": [
+      5.54,
+      0.5
+     ],
+     "KV_DESC": [
+      8.94,
+      7.32
+     ],
+     "LG_HC": [
+      0.5,
+      3.0
+     ],
+     "LG_SFU": [
+      0.5,
+      2.09
+     ],
+     "LG_SU": [
+      0.09,
+      0.0
+     ],
+     "QUANT_VM": [
+      0.0,
+      2.38
+     ],
+     "SFU_CORE": [
+      9.25,
+      8.17
+     ],
+     "SM_HBM": [
+      4.5,
+      6.87
+     ],
+     "SM_OUT": [
+      9.0,
+      8.07
+     ],
+     "SM_X": [
+      10.16,
+      5.35
+     ],
+     "SU_CORE": [
+      3.67,
+      2.84
+     ],
+     "VM_HBM": [
+      18.69,
+      20.69
+     ],
+     "VM_HUB": [
+      16.41,
+      11.54
+     ],
+     "VM_RING": [
+      9.5,
+      10.12
+     ]
+    },
+    "sm4_front": 2.0
+   },
+   "users": 4,
+   "ar_tok_s": 2002.9,
+   "mtp_tok_s": 3485.4,
+   "mtp_step_cycles": 1431910.2,
+   "mu_agg_tok_s": 4625.5,
+   "mu_per_user_tok_s": 1156.4,
+   "ar_cycles": 599116.6,
+   "wall_s": 105.5
+  },
+  {
+   "option": "P4a_rpl0",
+   "label": "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+   "case": "ALL measured v2 + frames",
+   "stage": "d4g",
+   "phys": {
+    "stage": "d4g",
+    "moved_stages": {},
+    "sm4_front": 0.0
+   },
+   "users": 4,
+   "ar_tok_s": 1997.5,
+   "mtp_tok_s": 3415.0,
+   "mtp_step_cycles": 1461414.5,
+   "mu_agg_tok_s": 4432.7,
+   "mu_per_user_tok_s": 1108.2,
+   "ar_cycles": 600753.7,
+   "wall_s": 90.6
+  },
+  {
+   "option": "P4a_rpl0",
+   "label": "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+   "case": "ALL measured v2 + frames",
+   "stage": "f4c_t8_LaA",
+   "phys": {
+    "stage": "f4c_t8_LaA",
+    "moved_stages": {
+     "COLL_EP": [
+      9.6,
+      10.4
+     ],
+     "COLL_RING": [
+      9.38,
+      11.13
+     ],
+     "COLL_VM": [
+      14.91,
+      11.32
+     ],
+     "HBM_VM": [
+      18.88,
+      24.2
+     ],
+     "HC_CORE": [
+      15.56,
+      13.8
+     ],
+     "HC_ENG": [
+      5.54,
+      0.5
+     ],
+     "KV_DESC": [
+      8.94,
+      7.44
+     ],
+     "LG_HC": [
+      0.5,
+      3.0
+     ],
+     "LG_SFU": [
+      0.5,
+      2.06
+     ],
+     "LG_SU": [
+      0.09,
+      0.0
+     ],
+     "QUANT_VM": [
+      0.0,
+      2.25
+     ],
+     "SFU_CORE": [
+      9.25,
+      8.83
+     ],
+     "SM_HBM": [
+      4.5,
+      7.5
+     ],
+     "SM_OUT": [
+      9.0,
+      7.69
+     ],
+     "SM_X": [
+      10.16,
+      5.71
+     ],
+     "SU_CORE": [
+      3.67,
+      2.84
+     ],
+     "VM_HBM": [
+      18.69,
+      23.75
+     ],
+     "VM_HUB": [
+      16.41,
+      11.72
+     ],
+     "VM_RING": [
+      9.5,
+      11.88
+     ]
+    },
+    "sm4_front": 2.0
+   },
+   "users": 4,
+   "ar_tok_s": 2040.7,
+   "mtp_tok_s": 3494.8,
+   "mtp_step_cycles": 1428077.4,
+   "mu_agg_tok_s": 4549.5,
+   "mu_per_user_tok_s": 1137.4,
+   "ar_cycles": 588023.1,
+   "wall_s": 83.6
+  },
+  {
+   "option": "P4a_rpl0",
+   "label": "(a) P=4 shared xs4, rpl 0 (no remainder split hardware; SM4 builds rpl 0 first)",
+   "case": "ALL measured v2 + frames",
+   "stage": "f4c_t8",
+   "phys": {
+    "stage": "f4c_t8",
+    "moved_stages": {
+     "COLL_EP": [
+      9.6,
+      9.2
+     ],
+     "COLL_RING": [
+      9.38,
+      11.13
+     ],
+     "COLL_VM": [
+      14.91,
+      10.52
+     ],
+     "HBM_VM": [
+      18.88,
+      20.14
+     ],
+     "HC_CORE": [
+      15.56,
+      14.07
+     ],
+     "HC_ENG": [
+      5.54,
+      0.5
+     ],
+     "KV_DESC": [
+      8.94,
+      7.32
+     ],
+     "LG_HC": [
+      0.5,
+      3.0
+     ],
+     "LG_SFU": [
+      0.5,
+      2.09
+     ],
+     "LG_SU": [
+      0.09,
+      0.0
+     ],
+     "QUANT_VM": [
+      0.0,
+      2.38
+     ],
+     "SFU_CORE": [
+      9.25,
+      8.17
+     ],
+     "SM_HBM": [
+      4.5,
+      6.87
+     ],
+     "SM_OUT": [
+      9.0,
+      8.07
+     ],
+     "SM_X": [
+      10.16,
+      5.35
+     ],
+     "SU_CORE": [
+      3.67,
+      2.84
+     ],
+     "VM_HBM": [
+      18.69,
+      20.69
+     ],
+     "VM_HUB": [
+      16.41,
+      11.54
+     ],
+     "VM_RING": [
+      9.5,
+      10.12
+     ]
+    },
+    "sm4_front": 2.0
+   },
+   "users": 4,
+   "ar_tok_s": 2053.4,
+   "mtp_tok_s": 3524.9,
+   "mtp_step_cycles": 1415858.0,
+   "mu_agg_tok_s": 4594.0,
+   "mu_per_user_tok_s": 1148.5,
+   "ar_cycles": 584387.3,
+   "wall_s": 88.0
+  }
+ ],
+ "selfcheck": [
+  {
+   "option": "P4a_rpl0",
+   "case": "ALL measured v2",
+   "ok": true,
+   "ref": [
+    1949.7,
+    3377.9,
+    4462.0
+   ],
+   "got": [
+    1949.7,
+    3377.9,
+    4462.0
+   ]
+  },
+  {
+   "option": "P4a_rpl0",
+   "case": "ALL measured v2 + frames",
+   "ok": true,
+   "ref": [
+    1997.5,
+    3415.0,
+    4432.7
+   ],
+   "got": [
+    1997.5,
+    3415.0,
+    4432.7
+   ]
+  }
+ ],
+ "sources_sha256": {
+  "tools/hbm_next/plane_compiler.py": "837c2dee3eb60de6997a42b7d05d4788df21079ac8ff71fdfa2c323a9965c6b7",
+  "tools/hbm_next/vehicle/compose_meas_phys.py": "6f7b71d853caad4c79bc3f3bc29d1d041f0626557e423c59e0ed1c17a83a0f40",
+  "tools/hgi_sim/hbm_plane_model.py": "5ac91ba0f6cbe1769ca35267c1f9c30394d8b12ecd02a08ef87953b9bed8d824",
+  "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400",
+  "results/arch/hbm_next_1019/die/plan/plan_p4.json": "32091f7d576d82ee626afe8e379748d14a96eeea5baabc38ab7e3f2234c204c3",
+  "results/arch/hbm_next_1019/cmtp/retime/meas5_retime.json": "d50a79b5c4d6e6d6d3bb5af650e99bb03050a68f7324771a4932e06e471d9602"
+ },
+ "selfcheck_ok": true
+}

@@ -1,0 +1,25 @@
+{
+ "op": "post",
+ "n": 4,
+ "ops": {
+  "A": 213024,
+  "B": 81952,
+  "C": 233892,
+  "O": 0
+ },
+ "rs": {
+  "A": 5120,
+  "B": 20480,
+  "C": 24,
+  "O": 20480
+ },
+ "eps_bits": 0,
+ "nvmi": 102480,
+ "nvme": 81920,
+ "job_ok_broken": [
+  "C base 233892 not 8-aligned",
+  "bank phase A 4 / B 4 / O 0 differ"
+ ],
+ "note": "record operands as emitted",
+ "vme_sha256": "4d41dc565616497fb1f393f5b0d380c7ca55eefff22ce7dbb2b51032af22069b"
+}

@@ -304,11 +304,13 @@ def collect(a):
         r["pre_emit_broken"], r["post_emit_broken"] = md["pre"]["emit"]["job_ok_broken"], md["post"]["emit"]["job_ok_broken"]
         res["modes"][mode] = r
     ok = all(m_.get(t, {}).get("pass_") for m_ in res["modes"].values() for t in ("pre_legal", "post_legal", "hcmix"))
-    wit = all(m_.get(t, {}).get("fail") or m_.get(t, {}).get("fault") for m_ in res["modes"].values()
-              for t in ("pre_emit", "post_emit") if m_.get(f"{t}_broken".replace("_emit_broken", "_emit_broken")))
-    res["verdict"] = dict(legal_bit_exact=ok, emitted_contract_faults=wit,
-                          mutants_caught=all(m_.get(t, {}).get("fail") for m_ in res["modes"].values()
-                                             for t in ("pre_legal_mut1", "hcmix_mut1") if t in m_))
+    wit = all(m_.get(t, {}).get("fault") == 1 for m_ in res["modes"].values() for t in ("pre_emit", "post_emit"))
+    # FUSED MUT 1 corrupts the multi-row path only (N = 1 passes by construction); HC MUT 1 corrupts every row
+    mut = all(m_.get("hcmix_mut1", {}).get("fail") for m_ in res["modes"].values()) and all(
+        m_.get(t, {}).get("fail") for m_ in res["modes"].values() if m_["n"] > 1 for t in ("pre_legal_mut1", "post_legal_mut1"))
+    res["verdict"] = dict(legal_bit_exact=ok, emitted_contract_faults=wit, mutants_caught=mut,
+                          cycles={k: {t: m_.get(t, {}).get("cycles") for t in ("pre_legal", "hcmix", "post_legal")}
+                                  for k, m_ in res["modes"].items()})
     Path(a.out).write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps(res["verdict"]))
 

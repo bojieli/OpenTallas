@@ -1,0 +1,22 @@
+{
+ "op": "pre",
+ "n": 1,
+ "ops": {
+  "A": 0,
+  "C": 40960,
+  "O": 41216,
+  "B": 46336
+ },
+ "rs": {
+  "A": 20480,
+  "B": 0,
+  "C": 8,
+  "O": 5120
+ },
+ "eps_bits": 507307272,
+ "nvmi": 25604,
+ "nvme": 5120,
+ "job_ok_broken": [],
+ "note": "smallest job_ok relocation",
+ "vme_sha256": "92f3e1b12009b5e9f4ba3bb55b96fd129a8cc66784649c0a51e4a09f0bc1dfff"
+}

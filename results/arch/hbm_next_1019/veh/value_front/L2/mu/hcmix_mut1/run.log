@@ -1,0 +1,15 @@
+MIX_MISMATCH pos0 row0 got=c0e32a54 exp=c0cb72fe
+MIX_MISMATCH pos0 row1 got=c0e0a142 exp=c0cb1283
+MIX_MISMATCH pos0 row2 got=bf7eaa06 exp=bfbfa347
+MIX_MISMATCH pos0 row3 got=40c56c75 exp=40e9d029
+MIX_MISMATCH pos0 row4 got=c0308e42 exp=c079f30d
+TAIL_MISMATCH q0 pos0 word0 got=3ce80872 exp=3cf8eeef
+TAIL_MISMATCH q0 pos0 word1 got=3cafa066 exp=3cbb4e29
+TAIL_MISMATCH q0 pos0 word2 got=3f7062a0 exp=3f6fa64d
+TAIL_MISMATCH q0 pos0 word3 got=3dbb5b46 exp=3dcf2718
+TAIL_MISMATCH q0 pos0 word4 got=3f17ad50 exp=3f14f38f
+HC_ENG_DONE mode=0 npos=4 mixes=96 mixbad=96 outs=16 outbad=384 TB=1944 last_mix_t=3193 first_out_t=2943 last_out_t=3692 HC_MIX_CYCLES=1748
+[8051000] %Fatal: tb_hnx_hc_eng4.sv:173: Assertion failed in tb_hnx_hc_eng4: HC_ENG FAIL
+%Error: rtl/hbm_next/hc/tb/tb_hnx_hc_eng4.sv:173: Verilog $stop
+Aborting...
+RUN_RC=1

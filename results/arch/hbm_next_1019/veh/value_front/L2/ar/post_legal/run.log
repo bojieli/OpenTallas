@@ -1,0 +1,7 @@
+HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=0 cycles=196 done=1 fault=0 reads=3203 writes=2560
+HNX_FUSED PASS op=post N=1 words=20480
+- rtl/hbm_next/fused/tb/tb_hnx_fused.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 521ns; walltime 7.161 s; speed 72.752 ns/s
+- Verilator: cpu 7.161 s on 1 threads; allocated 313 MB
+RUN_RC=0
