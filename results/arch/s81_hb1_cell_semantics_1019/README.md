@@ -56,3 +56,37 @@ No Icarus/Verilator executable was found on the immutable image PATH or its
 `tools/install` subtree within the bounded inspection. The eventual runner
 must pin its actual executable/version and use the coordinator admitted fleet
 installation. No simulation or compile was run for this audit.
+
+
+## Separately requested functional projection
+
+The parent explicitly requested an exact Liberty-driven simulation-only
+projection after the official delayed-pin limitation was identified.
+`generate_functional.py` reads the five original compressed Liberty files,
+checks every used cell port and direction against the41-master ledger, and
+emits `functional_projection.v` plus source-function/hash ledger
+`projection_manifest.json`. The source4 combinational library gzip files are
+copied byte-identically from the same immutable image. The sequential source
+is the frozen SEQ Liberty above. Every combinational output uses its exact
+Liberty Boolean function; !/*/+ translate to bitwise ~/&/| on scalar pins.
+The generator only parses text and emits64,383-instance master dependencies;
+it performs no synthesis, simulation or mapping.
+
+This projection is UNVALIDATED and restricted to binary clock/reset/set
+controls with CLK initially established low before the first measured rising
+edge. It intentionally makes no equivalence claim for uncertain clock edges,
+unknown async controls, notifiers, timing violations or SDF delays. Unreset
+storage remains uninitialized. ASR uses the exact clear-first/preset-second
+truth function and records previous CLK to distinguish a real0-to1 clock
+transition from control deassertion. Watching both control polarities matters:
+SETN0-to1 while RESETN remains0 must change QN from0 to1 immediately; a normal
+negedge-control-only DFF model would incorrectly miss that transition. Control
+release with both controls high holds QN until the next clean rising clock.
+These event choices still require the planned standalone fleet checks in
+projection_manifest.json before use as a faithful miter dependency.
+
+The planned checks cover every combinational input combination against original
+primitive gates, clean data capture/hold, asynchronous assertion and release at
+both CLK levels, simultaneous controls and priority, release from both low,
+and original UDP comparison under a separately approved delayed-net alias
+projection. No such checks or simulation have been executed by this task.
