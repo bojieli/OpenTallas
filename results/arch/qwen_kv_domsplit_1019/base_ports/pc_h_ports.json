@@ -1,0 +1,420 @@
+{
+ "top": "qkd_kvs_pc_h",
+ "registers": 935,
+ "clock_ports": [
+  "?const",
+  "ck",
+  "hck",
+  "pc__front_hbm_data",
+  "pc__return_hbm_data"
+ ],
+ "ports": {
+  "ck": {
+   "dir": "input",
+   "width": 1,
+   "role": "clock"
+  },
+  "rst_n": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 6,
+   "async_reset": true
+  },
+  "hck": {
+   "dir": "input",
+   "width": 1,
+   "role": "clock"
+  },
+  "hrst_n": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 8,
+   "async_reset": false
+  },
+  "pc__pc": {
+   "dir": "input",
+   "width": 5,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 6,
+   "reg_sinks": 4470,
+   "async_reset": false
+  },
+  "pc__pi": {
+   "dir": "input",
+   "width": 289,
+   "domains": [
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 290,
+   "async_reset": false
+  },
+  "pc__ki": {
+   "dir": "input",
+   "width": 33,
+   "domains": [
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 3,
+   "reg_sinks": 292,
+   "async_reset": false
+  },
+  "pc__fi": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 10,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "pc__cfg_stack": {
+   "dir": "input",
+   "width": 2,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 6,
+   "reg_sinks": 26,
+   "async_reset": false
+  },
+  "pc__front_hbm_data": {
+   "dir": "input",
+   "width": 4,
+   "role": "clock"
+  },
+  "pc__return_hbm_data": {
+   "dir": "input",
+   "width": 4,
+   "role": "clock"
+  },
+  "x__est__0_1": {
+   "dir": "input",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "pc__land_er": {
+   "dir": "input",
+   "width": 261,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 3,
+   "async_reset": false,
+   "bit_domains": [
+    [
+     0,
+     0,
+     [
+      "ck"
+     ]
+    ],
+    [
+     258,
+     1,
+     [
+      "none"
+     ]
+    ],
+    [
+     260,
+     259,
+     [
+      "ck"
+     ]
+    ]
+   ]
+  },
+  "pc__hes": {
+   "dir": "input",
+   "width": 288,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 288,
+   "async_reset": false
+  },
+  "pc__fo": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "pc__er": {
+   "dir": "output",
+   "width": 261,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 261
+  },
+  "pc__ko": {
+   "dir": "output",
+   "width": 33,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 33
+  },
+  "pc__po": {
+   "dir": "output",
+   "width": 328,
+   "domains": [
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 328
+  },
+  "pc__completion_v": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "pc__completion_we": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "pc__land_es": {
+   "dir": "output",
+   "width": 288,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 288
+  },
+  "pc__her": {
+   "dir": "output",
+   "width": 261,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 261
+  },
+  "pc__hcompletion_v": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "pc__hcompletion_we": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "i_grp": {
+   "dir": "input",
+   "width": 128,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 128,
+   "async_reset": false,
+   "bit_domains": [
+    [
+     71,
+     0,
+     [
+      "hck"
+     ]
+    ],
+    [
+     104,
+     72,
+     [
+      "ck"
+     ]
+    ],
+    [
+     127,
+     105,
+     [
+      "hck"
+     ]
+    ]
+   ]
+  },
+  "i_next": {
+   "dir": "input",
+   "width": 780,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 785,
+   "async_reset": false
+  },
+  "o_grp": {
+   "dir": "output",
+   "width": 305,
+   "domains": [
+    "ck",
+    "hck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 305,
+   "bit_domains": [
+    [
+     288,
+     0,
+     [
+      "ck"
+     ]
+    ],
+    [
+     289,
+     289,
+     [
+      "hck"
+     ]
+    ],
+    [
+     291,
+     290,
+     [
+      "ck"
+     ]
+    ],
+    [
+     292,
+     292,
+     [
+      "hck"
+     ]
+    ],
+    [
+     293,
+     293,
+     [
+      "ck"
+     ]
+    ],
+    [
+     298,
+     294,
+     [
+      "hck"
+     ]
+    ],
+    [
+     299,
+     299,
+     [
+      "ck"
+     ]
+    ],
+    [
+     300,
+     300,
+     [
+      "hck"
+     ]
+    ],
+    [
+     301,
+     301,
+     [
+      "ck"
+     ]
+    ],
+    [
+     302,
+     302,
+     [
+      "hck"
+     ]
+    ],
+    [
+     303,
+     303,
+     [
+      "ck"
+     ]
+    ],
+    [
+     304,
+     304,
+     [
+      "hck"
+     ]
+    ]
+   ]
+  },
+  "o_next": {
+   "dir": "output",
+   "width": 299,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 299
+  }
+ }
+}
