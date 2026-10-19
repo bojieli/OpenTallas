@@ -4380,6 +4380,14 @@ def auto_merge_closure(j, out, record_paths, dry=False):
         if p.returncode == 0:
             status = f"AUTO-MERGED into main {head[:9]}"
             break
+        # ROOT-GUARDMSG: deterministic policy refusals cannot recover by retrying
+        # the same push. Preserve the physical record, but route this verdict to ROOT.
+        refusal = re.findall(r"gate_rule_guard: REFUSE ([0-9a-f]{7,40})\b", p.stderr or "")
+        if refusal or "root_pre_push: push to main REFUSED by gate_rule_guard" in (p.stderr or ""):
+            commits = ",".join(dict.fromkeys(refusal)) or head[:9]
+            status = f"GATE_RULE_GUARD {j['name']} {commits}: unclassified helper commit; ROOT classification required"
+            log(status)
+            break
         log(f"[{j['name']}] auto-merge push rejected (attempt {attempt}): {p.stderr[-300:]}")
     else:
         status = "AUTO-MERGE PUSH-RACE: could not push after 4 attempts"
@@ -7359,7 +7367,11 @@ def do_commit(j):
     detail = (f"CLOSED {setup_corner_label(m)} {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f} ps DRC {m['drc']}" + setup_sensitivity_text(m) + (f" under IO budget {rbn} (re-derived die-link "
               f"budget, no re-route)" if rbn else "") + " | record "
               f"{j['spec']['source']['branch']} {out.get('branch_commit', '')[:9]} ({out.get('files')} files) | {merge}")
-    if merge.startswith(("CONFLICT", "PUSH-RACE")):
+    if merge.startswith("GATE_RULE_GUARD "):
+        # First ledger field is consumed by the verdict watcher. Do not disguise a
+        # guard refusal as CLOSED or PUSH-RACE; the immutable physical record stays.
+        finish(j, "NEEDS_HUMAN", merge, f"{merge} | {detail}")
+    elif merge.startswith(("CONFLICT", "PUSH-RACE")):
         finish(j, "NEEDS_HUMAN", f"closed and recorded, merge failed: {merge}", detail)
     else:
         finish(j, "CLOSED", detail, detail)
