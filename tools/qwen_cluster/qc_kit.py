@@ -166,6 +166,78 @@ def main():
             # exact bus name ('rs*' would also catch rs_i / rs_o once rs leaves the core region)
             sdc.append(f"set_output_delay [expr {{0.2 * $ot_q_per}}] -clock ck_{q} [get_ports {{{n}[*]}}]")
     sdc.append(f"if {{!$::ot_ref_pre_cts}} {{ set_propagated_clock [get_clocks {{{lst}}}] }}")
+    # QK-CB16 (10-18): post-CTS, every non-core region's boundary is referenced to ITS OWN propagated tree, exactly as the
+    # generic die boundary (signoff.sdc QDM block) references core_clk's ports to the core tree.  The plain 0.2 T above is
+    # the pre-CTS (ideal clock) form only: post-CTS it left the region clock's insertion L (1.1-2.1 ns) out of the input
+    # min / output max, so diag16at stopped in hold repair at -1,531 ps on u_fab.u_ft_0/d[496] (rs_i -> its pin register,
+    # region c1r3: input min 154 ps vs capture L ~1.7 ns) and the bco / rs / rs_o outputs failed setup by ~L.  Reference =
+    # the bus's own pin register(s) (port -> <= 3 buffers -> the first register's clock pin; outputs: the driving register).
+    sdc += [
+        "if {!$::ot_ref_pre_cts} {",
+        "  proc ot_qc_pinreg_cks {bus dir} {",
+        "    set out {}; set seen [dict create]",
+        "    foreach port [get_ports -quiet [format {%s[*]} $bus]] {",
+        "      set nets [get_nets -quiet [get_full_name $port]]",
+        "      for {set hop 0} {$hop < 4 && [llength $nets]} {incr hop} {",
+        "        set next {}",
+        "        foreach n $nets {",
+        "          foreach pin [get_pins -quiet -of_objects $n] {",
+        "            if {[string first / [get_full_name $pin]] < 0} { continue }",
+        "            set pd [get_property $pin direction]",
+        "            if {($dir eq \"in\" && $pd ne \"input\") || ($dir eq \"out\" && $pd ne \"output\")} { continue }",
+        "            set c [get_cells -quiet -of_objects $pin]",
+        "            if {![llength $c]} { continue }",
+        "            set fn [get_full_name $c]",
+        "            set ck [get_pins -quiet \"$fn/ck\"]",
+        "            if {![llength $ck]} { set ck [get_pins -quiet \"$fn/CLK\"] }",
+        "            if {[llength $ck]} {",
+        "              if {![dict exists $seen $fn]} { dict set seen $fn 1; lappend out $ck }",
+        "            } elseif {[regexp {^(BUF|HB|INV)} [get_property $c ref_name]]} {",
+        "              foreach op [get_pins -quiet -of_objects $c] {",
+        "                set od [get_property $op direction]",
+        "                if {($dir eq \"in\" && $od eq \"output\") || ($dir eq \"out\" && $od eq \"input\")} { lappend next [get_nets -quiet -of_objects $op] }",
+        "              }",
+        "            }",
+        "          }",
+        "        }",
+        "        set nets $next",
+        "      }",
+        "    }",
+        "    return $out",
+        "  }",
+        "  catch {sta::worst_slack_cmd max}",
+        "  set ot_qc_ib [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 0.2 * $ot_q_per}]",
+        "  set ot_qc_ob [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 0.2 * $ot_q_per}]",
+        "  set ot_qc_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]",
+        "  set ot_qc_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]",
+        "  set ot_qc_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]",
+        "  set ot_qc_die [expr {[info exists ::env(OT_IO_HOLD_BUDGET)] && $::env(OT_IO_HOLD_BUDGET) eq \"die\"}]",
+        "  set ot_qc_c [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]",
+        "  set ot_qc_u [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]",
+        "  set ot_qc_r [expr {[info exists ::env(OT_BH_ROUTE_RELIEF_PS)] ? $::env(OT_BH_ROUTE_RELIEF_PS) : 0}]",
+        "  set ot_qc_io_n 0",
+        "  foreach {ot_qc_bus ot_qc_dir ot_qc_clk} {" + " ".join(
+            f"{n} {d} ck_{q}" for q in rest for d, key in (("in", "inputs"), ("out", "outputs")) for n in sorted(dom[q][key])) + "} {",
+        "    set ot_qc_a {}",
+        "    foreach p [ot_qc_pinreg_cks $ot_qc_bus $ot_qc_dir] {",
+        "      set a0 [get_property $p arrival_min_rise]; set a1 [get_property $p arrival_max_rise]",
+        "      if {[string is double -strict $a0] && [string is double -strict $a1]} { lappend ot_qc_a $a0 $a1 }",
+        "    }",
+        "    if {![llength $ot_qc_a]} { error \"OT_QC_IO: no pin register clock arrival found for $ot_qc_bus ($ot_qc_dir)\" }",
+        "    set ot_qc_a [lsort -real $ot_qc_a]; set lmin [lindex $ot_qc_a 0]; set lmax [lindex $ot_qc_a end]",
+        "    set pp [get_ports [format {%s[*]} $ot_qc_bus]]",
+        "    if {$ot_qc_dir eq \"in\"} {",
+        "      set_input_delay [expr {$ot_qc_ib + $lmax + $ot_qc_sk}] -max -clock $ot_qc_clk $pp",
+        "      set_input_delay [expr {$ot_qc_die ? $lmin + $ot_qc_c + $ot_qc_u + $ot_qc_r : $lmin - $ot_qc_hki}] -min -clock $ot_qc_clk $pp",
+        "    } else {",
+        "      set_output_delay [expr {$ot_qc_ob - $lmax + $ot_qc_sk}] -max -clock $ot_qc_clk $pp",
+        "      set_output_delay [expr {$ot_qc_die ? $ot_qc_u + $ot_qc_r - $lmin - $ot_qc_c : 0 - $lmin - $ot_qc_hk}] -min -clock $ot_qc_clk $pp",
+        "    }",
+        "    incr ot_qc_io_n",
+        "    puts \"OT_QC_IO $ot_qc_bus $ot_qc_dir $ot_qc_clk L $lmin..$lmax ([expr {[llength $ot_qc_a] / 2}] pin registers) die=$ot_qc_die\"",
+        "  }",
+        "  puts \"OT_QC_IO_SDC $ot_qc_io_n buses referenced to their region tree\"",
+        "}"]
     # Q-CLUSTER4 (coordinator 0de+6 (2)): cid / far are identity straps from the instance's own tie cells (constant per
     # instance; they reach only hard-child pins: A0 tile_id, xstn sidx), so case analysis is the true constraint, not a mask
     sdc += ["set_case_analysis 0 [get_ports {cid[*]}]", "set_case_analysis 0 [get_ports far]"]
