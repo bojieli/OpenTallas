@@ -47,5 +47,20 @@
     "TXDP_C": "0x0a010308",
     "X": 8,
     "aggregate_tok_s": 13708.2
+  },
+  "measured_gate3": {
+    "source": "c21785d47",
+    "std_area_um2": 298,
+    "macros_area_um2": 4783,
+    "core_area_um2": 26519,
+    "placeable_um2": 19323,
+    "std_density": 0.015,
+    "total_fill": 0.1922,
+    "flops": 456,
+    "depth_ps": 308.4,
+    "GRT_overflow": 0,
+    "TT_pin_spread_ps": 84,
+    "FF_pin_spread_ps": 75.1,
+    "qualified": false
   }
 }

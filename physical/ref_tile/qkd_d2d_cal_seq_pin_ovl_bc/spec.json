@@ -104,7 +104,7 @@
  "job": {
   "owner": "Codex:KV-DCAL-OVL-CODEX",
   "branch": "codex/kv-dcal-ovl-1019",
-  "tag": "ovlbc2",
+  "tag": "ovlbc3",
   "purpose": "KV overlap sequencer with two hard list ROMs and registered single boot/runtime configuration producer. Shared codec2 release image and 4-user start-list frame; preserves bootcfg runtime SEG2/SEG1 switches and sticky fault checks. Exact TX/RX/user outputs at EP_SKEW3; no credits/backpressure.",
   "extra_paths": [
    "rtl/qwen_sys/d2d_static_20261015",
@@ -208,7 +208,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "New variant from KV bootcfg7167b4ab7 and overlap95d11133f: two independently scheduled TX/RX playheads, each one synchronous hard4096x72 ROM plus plain32bit capture; registered boot/runtime cfg merge remains single producer. No indexed list flop arrays. Distinct new master/kit; ordinary bootcfg bc2 untouched. Mandatory shared510c0cd51 halt/reload rewind resets list addr/prefetch/current/count toword0; new positive abort/restart + oldbehavior mutant. Exact full-face pinTcl replaces automatic tiny clusters from diagnostic gate2.",
+ "structural_change": "New variant from KV bootcfg7167b4ab7 and overlap95d11133f: two independently scheduled TX/RX playheads, each one synchronous hard4096x72 ROM plus plain32bit capture; registered boot/runtime cfg merge remains single producer. No indexed list flop arrays. Distinct new master/kit; ordinary bootcfg bc2 untouched. Mandatory shared510c0cd51 halt/reload rewind resets list addr/prefetch/current/count toword0; new positive abort/restart + oldbehavior mutant. Exact full-face pinTcl replaces automatic tiny clusters from diagnostic gate2. Full-face gate3 TTspread84.0>80: structural local balancedclock spine replaces automatic TritonCTS. Regional leaves<=8sinks (spine default) and each hardROM owns clockleaf, one clock same latency/no data masks.",
  "reset_landing": {
   "enable": true,
   "stages": 2
@@ -220,9 +220,10 @@
   "4_depth": "PASS architectural:32bit counter/decode, registered32bit ROM capture, no macro-output mux/logic before capture; gate measures depth.",
   "5_storage": "PASS: two hard4096x72 ROMs(589824physicalbits; lists~1703x32each); only current and next32bit words live in flops.",
   "6_floorplan": "REVIEW macro-lattice-bound density exception: each ROM38.016x62.910 at(43.2,43.2)/(129.6,43.2), lattice43.2,5.4um halos,48.384um macro channel and>=20um pin-face core-edge margin. Full bottom stdcell band. Initial129.6square rejected by generator before any synthesis/gate:5.184um channel and3um right-face margin. Safe216x129.6shape aspect1.667; do not squeeze.",
-  "7_clock": "PASS architecture: local root beside bottom logic band, hardROM clock references; io_hold_margin.03; gate must measure TT/FFspread<=80.",
+  "7_clock": "FIXED architecture: balanced local clock spine,<=8sink regional leaves, hardROM own clockleaves and library clockQ references. S-centre clock(108.009,0), no extra clockdomain or runtime edge; io_hold_margin.03. Gate must prove TT/FFspread<=80; previous automaticfullface CTS84.0/75.1 failed and is preserved.",
   "8_schedule": "PASS design intent: EP_SKEW3 at tile boundary, innerEP1 cancels control/output captures; ROM address->ROMq->capture->player prefetch3edges fits4edgeMIN_DT; exact bench+wrap owed."
  },
  "slot_change_request": "KV new OVL_DCAL slot216x129.6um includes2hardlistROMs; ordinary21.6x34.56slot remains unchanged. Shared codec2 frame chargedX8, no addedruntime cycle.",
- "io_tcl": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/io_pins.tcl"
+ "io_tcl": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/io_pins.tcl",
+ "clock": "spine"
 }
