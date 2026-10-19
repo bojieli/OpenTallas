@@ -39,17 +39,46 @@ LEDGER = [
          src="results/arch/hbm_mtp_next_1018/sm_area/bench/run_p*_m*.log; rtl/hbm_accel/sm/mtp_lanes/ot_hbm_sm_bdc_p.sv",
          delta="+1 latency cycle a record for the registered per-lane-group broadcast tree at P >= 4 (D1 synth); "
                "throughput unchanged", status="MEASURED (column); tile hnx_rp4lp4 = SM4 lane, not yet"),
-    dict(term="ATT KV-line-stationary 4-query union stream (E1 exactness)",
+    dict(term="ATT KV-line-stationary 4-query union stream (E1 exactness + 4-query slice)",
          priced="U(N)/U(1) KV union price, top-512 disjoint upper bound (headline)",
-         measured="E1 PASS: ascending union with per-lane masks is bit-exact per lane (reduced ckpt 40 L, N = 6: "
-                  "0 mismatches); cycles NOT measured",
-         src="results/arch/hbm_next_1019/att4/E1.md", delta="aligned 20-SM grouping = 1.17x model upper; balanced "
-         "32-SM (lane, run) assignment needed (CMTP)", status="EXACTNESS ONLY"),
-    dict(term="HC.HC_MIX further-row II", priced="250 (HCP W256 x6 mode, measured (1,578 - 328) / 5)",
-         measured="static HC engine (codex/hc-static-engine-1014 a35449ada) 4,385 a further row; 9,554 one row vs "
-                  "1,160 priced", src="tools/hgi_sim/ds_mtp_verify.py:151,184; results/arch/hbm_next_1019/runs/hc_ii.json",
-         delta="grid axis II in {250, 600, 950, 4385, per-position fallback}; next-die gate = II <= 950 (target 600)",
-         status="UNITS gate #1 OPEN (no N-row HC RTL yet)"),
+         measured="E1 PASS (union stream in golden order exact per lane, reduced ckpt 40 L, N = 6); 4-query slice "
+                  "bit-exact vs 4 single-query goldens, 6 mutants FAIL; span = fixed ~113-127 + 7.8 cycles a union row "
+                  "(4 lanes 401 vs 1,508 serial)",
+         src="results/arch/hbm_next_1019/att4/E1.md, att4/bench/throughput.json",
+         delta="slice cycles inside the priced union bound; PV merge A1 (shared 4-lane merge) still gating; balanced "
+               "32-SM (lane, run) assignment needed (CMTP S1)", status="EXACTNESS + SLICE CYCLES"),
+    dict(term="HC.HC_MIX further-row II (hnx N-row engine = the split HC GEN2 binds: root TPRE 6 + 4 qhub + 32 banks)",
+         priced="250 (HCP W256 x6 mode, D1)",
+         measured="250.0 exactly linear on the hnx RTL: HC_MIX_CYCLES N 1/2/3/4/6/8 = 998/1,248/1,498/1,748/2,248/2,748, "
+                  "lockstep bit-exact vs hdc_golden_v41 chunk8 + tail reference; MUT1/MUT4 FAIL witnesses (Verilator 5.050)",
+         src="results/arch/hbm_next_1019/units/hc/README.md (claude/hbm-next-1019@4efc7ebb3); d4g lockstep "
+             "results/rtl/hbm_hc_split_1017/verdict.json 996/1,246/2,746",
+         delta="0: the composition runs at II 250 (grid axis keeps 600 / 950 / 4,385 / per-position as sensitivities)",
+         status="MEASURED = priced (UNITS gate #1 PASS; the 4,385 engine is not the bound one)"),
+    dict(term="COLL N-row message train (hnx gather master ot_hnx_coll_gq)",
+         priced="COLL.* II = payload x N, fixed part once (CMTP R4)",
+         measured="one fire + one 40-edge drain a record, further row 3K/2 edges (K = ceil(F / R)); N = 1 reproduces the "
+                  "d4g bench bit for bit; trains N 1..6 PASS; m6/m7/m8 FAIL witnesses (Verilator 5.050)",
+         src="results/arch/hbm_next_1019/units/coll/README.md (claude/hbm-next-units-coll-1019@582620634)",
+         delta="0 (= price); the 5th delivery lane L = 5 is a DIE + COLL-body + SU change (in the grid as L5)",
+         status="MEASURED = priced (on-die ring all-gather)"),
+    dict(term="SM4 P = 4 leaf / tile hnx_rp4lp4 (lane-select x beats, slot-major publish)",
+         priced="P lanes = 1 AR record (c_AR)",
+         measured="bit-exact vs production d4g leaves P1-4, MUT1-3 FAIL; 64-chunk span P4 / P1 = 8,262 / 8,238 (K 16, "
+                  "1.003x) and 2,118 / 2,094 (K 4, 1.012x) = +24 = +1 front +1 publish +8p lane skew; tile lockstep "
+                  "landed vs flat PASS",
+         src="results/arch/hbm_next_1019/sm4/bench_summary.json",
+         delta="in the PHYS schedule: +2 + 8 (lanes used - 1) cycles on every SM record (AR +2, N >= 4 +26); layer-"
+               "shape leaf runs (short records, 9-32 chunks) = veh/sm4_layer/",
+         status="MEASURED (leaf + tile lockstep); in schedule"),
+    dict(term="DIE f4c_t5 relay stages (stand-in die case GEN_OK, 693 mm2)",
+         priced="D1 plan_b stage set (d4g-class)",
+         measured="bit-weighted stages per class, f4c_t5 vs DIE's d4g frame: SM_HBM 2.88 -> 5.25, SM_X 11.25 -> 6.46, "
+                  "VM_HUB 16.28 -> 12.0, COLL_VM 15.0 -> 12.25, COLL_RING 8.5 -> 10.25, HBM_VM 19.62 -> 21.0, ... "
+                  "(plan-level geometry, not routed)",
+         src="results/arch/hbm_next_1019/die/plan/plan_p4.json per_class; die/README.md",
+         delta="PHYS axis: the D1 plan_b stages moved by the per-class delta (f4c_t5) or SM_HBM only (f4c_t5_smhbm)",
+         status="PLAN-MEASURED (relays + GRT pending, DIE step 2)"),
     dict(term="FUSED.HC_PRE_NORM further-row II", priced="197", measured="197 (LL P6 RTL: (1,451 - 466) / 5)",
          src="results/arch/hbm_mtp_1015/p6_rtl_2330/measurement.json", delta="0", status="MEASURED = priced"),
     dict(term="SU reducer ingress (HH-5, d4g as built: 1 reducer operand / edge / quarter)",
@@ -109,8 +138,26 @@ def main():
 
     table = {f"L{L}|II{ii}|{vm}": point(L, ii, vm) for L in (4, 5) for ii in grid[str(L)]["II"]
              for vm in ("grown", "asbuilt")}
-    head = "L5|II600|grown"
-    hp = grid["5"]["II"]["600"]["VM"]["grown"]
+    phys = g.get("phys") or {}
+
+    def ppoint(ph, ii, vm):
+        G = phys[ph]["5"]
+        r = G["II"][ii]["VM"][vm]
+        return dict(ar_tok_s=G["ar_tok_s"], mtp_tok_s=r["ds_mtp_tok_s"], mu_agg_tok_s=r["mu_agg_tok_s"],
+                    mu_per_user_tok_s=r["mu_per_user_tok_s"],
+                    meets=dict(ar=G["ar_tok_s"] >= TARGETS["ds_ar"] - 0.05,
+                               mtp=r["ds_mtp_tok_s"] >= TARGETS["ds_mtp"] - 0.05,
+                               mu_agg=r["mu_agg_tok_s"] >= TARGETS["ds_mu_agg"] - 0.05,
+                               per_user_floor=r["mu_per_user_tok_s"] >= TARGETS["ds_mu_per_user_floor"]))
+    for ph in phys:
+        for ii in phys[ph]["5"]["II"]:
+            for vm in ("grown", "asbuilt"):
+                table[f"{ph}|L5|II{ii}|{vm}"] = ppoint(ph, ii, vm)
+    HP = "f4c_t5"
+    head = f"{HP}|L5|II250|grown"
+    L5p = phys[HP]["5"]
+    hp = L5p["II"]["250"]["VM"]["grown"]
+    hb = grid["5"]["II"]["250"]["VM"]["grown"]
 
     # per-layer composition at the headline point (priced; measured column filled by the vehicle)
     def layers(ar_seg, mtp_seg, mu_seg):
@@ -121,14 +168,18 @@ def main():
                              mtp_verify_measured=None, mu4_measured=None,
                              d4g_ar_priced=d1["ds|AR"]["per_segment"][k]))
         return rows
-    per_layer = layers(L5["ar_per_segment"], hp["mtp_per_segment"], hp["mu_per_segment"])
+    per_layer = layers(L5p["ar_per_segment"], hp["mtp_per_segment"], hp["mu_per_segment"])
+    for row in per_layer:                 # the same segment without the PHYS terms (d4g-class stages, no SM4 latency)
+        k = row["segment"]
+        row.update(ar_priced_d4g_phys=L5["ar_per_segment"].get(k), mtp_verify_priced_d4g_phys=hb["mtp_per_segment"].get(k),
+                   mu4_priced_d4g_phys=hb["mu_per_segment"].get(k))
 
     # inter-die traffic: COLL busy share and the fixed part per collective
     fcoll = 108.6 + 377.6e-9 * CLK + 0.15e-6 * CLK
     inter = dict(
         dies=192, switch_tiers=1, crossing_ns=377.6, coll_fixed_cycles=round(fcoll, 1),
         coll_lanes=5, coll_bytes_per_cycle=5 * 64,
-        coll_busy_share=dict(ar=round(L5["ar_unit_busy"]["COLL"] / L5["ar_cycles"], 3),
+        coll_busy_share=dict(ar=round(L5p["ar_unit_busy"]["COLL"] / L5p["ar_cycles"], 3),
                              mtp_verify=round(hp["mtp_unit_busy"]["COLL"] / hp["mtp_verify_cycles"], 3),
                              mu4=round(hp["mu_unit_busy"]["COLL"] / hp["mu_step_cycles"], 3)),
         serdes_note="STUDY (a): at P = 4 MU, COLL busy x full 256 B/cycle <= 34 % of the 400 GB/s raw SerDes; L = 5 "
@@ -138,7 +189,7 @@ def main():
                         mu_agg_tok_s=grid["5"]["II"][ii]["VM"]["grown"]["mu_agg_tok_s"],
                         hc_busy_mu=grid["5"]["II"][ii]["VM"]["grown"]["mu_unit_busy"].get("HC"))
                for ii in grid["5"]["II"]}
-    # per-user rate vs II slope (L5, grown) between 600 and 950 -> the II that holds 1,000 tok/s a user
+    # per-user rate vs II slope (L5, grown, d4g-class stages) between 600 and 950 -> the II that holds 1,000 tok/s a user
     s600, s950 = (grid["5"]["II"][x]["VM"]["grown"]["mu_step_cycles"] for x in ("600", "950"))
     slope = (s950 - s600) / 350.0
     ii_floor = 600 + (CLK / 1000.0 - s600) / slope if slope > 0 else None
@@ -146,32 +197,46 @@ def main():
     m250, m600 = (grid["5"]["II"][x]["VM"]["grown"]["mtp_step_cycles"] for x in ("250", "600"))
     mslope = (m600 - m250) / 350.0
     ii_mtp = 250 + (tau * CLK / TARGETS["ds_mtp"] - m250) / mslope if mslope > 0 else None
-    # physical latency adders of the P = 4 die not in the D1 model: paid once a record on the record's first access.
-    # Bounds: 0 (hidden under the record's own stream / interleaved chains) .. every record serial on the critical path.
-    adders = [dict(term="SM_HBM link 2.88 -> 5.25 bit-weighted relay stages (DIE f4c_t5, results/arch/hbm_next_1019/"
-                        "die/README.md; PROG 10-19 00:21)", cycles_per_record=round((5.25 - 2.88) / 2, 3),
-                   note="half-cycle forwarded hops: +2.37 stages = +1.19 cycles a SM record"),
-              dict(term="SM4 registered per-lane-group weight broadcast tree at P >= 4 (sm_area README)",
-                   cycles_per_record=1.0, note="+1 cycle a SM record; also paid by AR unless the P = 1 path bypasses it")]
-    per_rec = sum(x["cycles_per_record"] for x in adders)
-    recs = dict(ar=d1["ds|AR"]["records"], mtp_verify=d1["ds|MTP|P4"]["records"], mu4=d1["ds|MU|P4"]["records"])
-    base = dict(ar=L5["ar_cycles"], mtp_step=hp["mtp_step_cycles"], mu4=hp["mu_step_cycles"])
-    upper = {k: base[k if k != "mtp_step" else "mtp_step"] + per_rec * recs["mtp_verify" if k == "mtp_step" else k]
-             for k in base}
-    phys = dict(adders=adders, cycles_per_record=per_rec, records_upper_bound=recs,
-                rule="upper bound = every record (not only SM) serial on the critical path; lower bound = 0",
-                headline_bounds=dict(
-                    ar_tok_s=[tok(upper["ar"]), tok(base["ar"])],
-                    mtp_tok_s=[round(tau * CLK / upper["mtp_step"], 1), round(tau * CLK / base["mtp_step"], 1)],
-                    mu_agg_tok_s=[tok(upper["mu4"], 4), tok(base["mu4"], 4)],
-                    mu_per_user_tok_s=[tok(upper["mu4"]), tok(base["mu4"])]))
+    # physical terms IN the S2 schedule (compose_grid PHYS axis), against the same point on d4g-class stages
+    def pv(ph):
+        G = phys[ph]["5"]
+        r = G["II"]["250"]["VM"]["grown"]
+        return dict(ar_tok_s=G["ar_tok_s"], mtp_tok_s=r["ds_mtp_tok_s"], mu_agg_tok_s=r["mu_agg_tok_s"],
+                    mu_per_user_tok_s=r["mu_per_user_tok_s"], moved_stages=G.get("phys", {}).get("moved_stages"),
+                    sm4_latency_cycles_charged=r.get("phys_sm4_latency_cycles_charged"))
+    base_pt = dict(ar_tok_s=L5["ar_tok_s"], mtp_tok_s=hb["ds_mtp_tok_s"], mu_agg_tok_s=hb["mu_agg_tok_s"],
+                   mu_per_user_tok_s=hb["mu_per_user_tok_s"])
+    physd = dict(rule="the measured next-die terms run inside the static S2 schedule (hidden where off the critical "
+                      "path): DIE f4c_t5 per-class relay stage delta on the D1 plan_b stage set + SM4 lane latency "
+                      "+2 + 8 (lanes - 1) a SM record; 'f4c_t5_smhbm' moves only SM_HBM (no credit for the shorter "
+                      "SM_X / VM_HUB)", d4g_class_stages=base_pt, **{ph: pv(ph) for ph in phys})
+    physd["delta_vs_d4g_class_pct"] = {ph: {k: round(100.0 * (physd[ph][k] / base_pt[k] - 1.0), 2)
+                                            for k in base_pt} for ph in phys}
+    # cross-reference: the CMTP compiler-of-record re-time (rpl / union histogram / M1 rules) scaled by the PHYS ratio
+    cm = None
+    cmp_ = ROOT / "results/arch/hbm_next_1019/cmtp/retime/retime.json"
+    if cmp_.exists():
+        c = json.loads(cmp_.read_text())["cases"].get("CMTP P4 headline: + rpl (K-/row-split)")
+        if c:
+            f = {k: physd[HP][k] / base_pt[k] for k in base_pt}
+            cm = dict(src=str(cmp_.relative_to(ROOT)), cmtp=dict(ar_tok_s=c["ar_tok_s"], mtp_tok_s=c["mtp"]["tok_s"],
+                                                                 mu_agg_tok_s=c["mu"]["agg_tok_s"],
+                                                                 mu_per_user_tok_s=c["mu"]["per_user_tok_s"]),
+                      cmtp_x_phys=dict(ar_tok_s=round(c["ar_tok_s"] * f["ar_tok_s"], 1),
+                                       mtp_tok_s=round(c["mtp"]["tok_s"] * f["mtp_tok_s"], 1),
+                                       mu_agg_tok_s=round(c["mu"]["agg_tok_s"] * f["mu_agg_tok_s"], 1),
+                                       mu_per_user_tok_s=round(c["mu"]["per_user_tok_s"] * f["mu_per_user_tok_s"], 1)),
+                      note="CMTP adds the P = 4 compiler rules (rpl remainder pass, union histogram, M1 x-load / "
+                           "publish) on the same D1 chain; the PHYS factor is VEH's (same point, f4c_t5 vs d4g-class)")
     out = dict(
         schema="opentallas.hbm_next_1019.veh.token_composition.v1", lane="HBM-NEXT-VEH", date="2026-10-19",
-        physical_adders=phys,
+        physical_in_schedule=physd, cmtp_cross_reference=cm,
         rule=__doc__, clk_hz=CLK, tau_mtp=tau, targets=TARGETS,
-        status="PRICED composition with measured unit terms; NO layer measured in RTL yet (vehicle runs pending)",
-        headline=dict(point=head, knobs="COLL L = 5 (adopted), HC row II 600 (target, UNITS gate), VM grown",
-                      **point(5, "600", "grown")),
+        status="PRICED composition (D1 compiler chain, static S2 schedule) with the MEASURED unit terms in the schedule "
+               "(HC II 250 hnx, COLL 3K/2, SM4 lane latency, DIE f4c_t5 stages); NO P = 4 layer measured in RTL yet",
+        headline=dict(point=head, knobs="COLL L = 5 (adopted), HC row II 250 (MEASURED hnx), VM grown (>= 412k words, "
+                                        "PROG 01:35), DIE f4c_t5 relay stages + SM4 lane latency in the schedule",
+                      **ppoint(HP, "250", "grown")),
         d4g_reproduction=dict(model_self_check=g["self_check"], ar_repro=(json.loads(a.ar_repro.read_text())
                                                                           if a.ar_repro else None)),
         grid=table, hc_row_cost=dict(by_II_L5_grown=hc_cost, mu_step_cycles_per_II_cycle=round(slope, 1),
