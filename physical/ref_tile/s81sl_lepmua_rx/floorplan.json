@@ -331,10 +331,10 @@
  ],
  "findings": [
   [
-   "WARN",
+   "FAIL",
    "fill",
-   "fill 26% = (macros/children 62464 + std 5978) / outline 266872 um2 (lattice/channel-bound gate-rule exception (placement verification required): ROOT sizing-only approval2026-10-19 09:50 PT: actual kit std5978.19um2/20SRAM, paid475.2x561.6, full core width470.88 by30.24 standard band261.36..291.6 =>41.98%. Exact macro origins43.2lattice,minchannels22.41/24.84 orlarger. Actual placed mass,<=405hops,native clocks,PG/pin access,PNGs and parentfit remain open.)",
-   ""
+   "invalid lattice/channel band: missing coordinator approval/reason",
+   "fix measured sizing geometry; actual placement verification is also required"
   ]
  ],
  "referenced": [

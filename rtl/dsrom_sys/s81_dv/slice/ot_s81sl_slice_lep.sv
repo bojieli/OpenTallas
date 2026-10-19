@@ -504,7 +504,7 @@ module ot_s81sl_lep_core #(
 `else
                 wire [AR-1:0] read_next=rp_nx;
 `endif
-                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR)) u_rx_mem(
+                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
                     .ra(read_next),.q(head));
                 assign rhd[t*(H+1)+:H+1]=head;
