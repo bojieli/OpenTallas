@@ -31,3 +31,18 @@ reset-abort/reinstall and causal mutant coverage are still required; this initia
 bench cannot qualify the complete grant. Calendar phases/latencies remain source
 predictions until the fleet run measures them. Coherent RF physical storage,
 clock/reach/fanout/native timing and parent transport H remain HOLD.
+
+The next source revision adds genuine F0/X/PRE age and source-data assertions,
+all active lane pin captures, root/scalar age assertions and native fill counts.
+Run both the ordinary pair and +RESET_ABORT, which aborts the first prefix at
+serial6100, holds reset for four serial edges, reinstalls programme/calendar and
+input sectors, then runs the two full episodes. Aborted fills are reported and
+excluded explicitly from the two full episodes' expected320 fills.
+
+Runtime MUT values:5 front group held0;6 AA lifetime broken;7 root selection off;
+8 missing root-valid;9 RF address corruption;10 class5 three-edge lead instead of
+required two;11 full-sector mask corruption;13 omitted second descriptor rearm;
+14 omitted programme reinstall (combine +RESET_ABORT). These are candidate
+causal controls until actual fleet logs show the intended functional predicate.
+No timeout/compile error qualifies a negative. Station-local expression ordering,
+feedback and overwrite mutations remain station41's proof responsibility.
