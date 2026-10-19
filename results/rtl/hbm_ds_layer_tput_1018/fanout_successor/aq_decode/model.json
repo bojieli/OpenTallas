@@ -15,7 +15,10 @@
     "bits_each": 22,
     "delta_ff": 44
   },
-  "delta_ff": 156,
+  "delta_ff": {
+    "WQ32": 107,
+    "WQ64": 115
+  },
   "architecture": "Canonical next-state muxes feed unconditional same-edge kept local captures. ACT summary row captures use independent existing ac_v_local state, outside global selected-group enable. One-hot ACT bits capture from two additional retained valid regions; invalid one-hot clears while ac2_v=0.",
   "cost": "124 clock sinks; nominal DFF area subject to mapped census. Original slot not approved; actual standard-cell mass/clock/native reach admission remains required.",
   "boundary_bits_delta": 0,
@@ -32,7 +35,7 @@
     "architecture": "Unconditional width-preserving saturating decrement datapaths with priority reload mux; remove duplicated reload and DFFE enable dependence on local bank commands.",
     "qualification": "Exact trace and three mutants, then actual mapped all-driver loads; no source-level fanout claim."
   },
-  "delta_ff_default_wq32": 156,
+  "delta_ff_default_wq32": 107,
   "delta_ff_production_wq64": 115,
   "production_wq": 64,
   "head_followup": {
