@@ -188,8 +188,10 @@ module qfd_dv_su8_landed #(
         end
     end
 
-    generate if (LT!=1 || LTD!=1 || SW!=8 || ML!=1 || RD!=2) begin:g_landed_shape
-        QFD_SU8_LANDED_REQUIRES_LT1_LTD1_SW8_ML1_RD2 u_bad_shape();
+    generate if (LT!=1 || LTD!=1 || SW!=8 || ML!=1 || RD!=2 ||
+                 WR!=16 || AW!=24 || NW!=18 || LV!=4 || KV_FP8!=1 ||
+                 LOFF!=1 || RTREE!=1 || TLS!=1 || RED_ENTRIES!=0) begin:g_landed_shape
+        QFD_SU8_LANDED_REQUIRES_EXACT_PROVEN_SHAPE u_bad_shape();
     end endgenerate
     // -- lanes --------------------------------------------------------------------------
     wire [SW-1:0]    l_ov, l_redsq, l_last, l_fault, l_wrom_re;

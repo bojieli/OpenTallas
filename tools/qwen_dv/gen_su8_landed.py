@@ -61,8 +61,10 @@ def generate():
     # explicitly constrained; no alternate shape can silently acquire this model.
     anchor = '    // -- lanes '
     i = s.index(anchor)
-    s = s[:i]+'''    generate if (LT!=1 || LTD!=1 || SW!=8 || ML!=1 || RD!=2) begin:g_landed_shape
-        QFD_SU8_LANDED_REQUIRES_LT1_LTD1_SW8_ML1_RD2 u_bad_shape();
+    s = s[:i]+'''    generate if (LT!=1 || LTD!=1 || SW!=8 || ML!=1 || RD!=2 ||
+                 WR!=16 || AW!=24 || NW!=18 || LV!=4 || KV_FP8!=1 ||
+                 LOFF!=1 || RTREE!=1 || TLS!=1 || RED_ENTRIES!=0) begin:g_landed_shape
+        QFD_SU8_LANDED_REQUIRES_EXACT_PROVEN_SHAPE u_bad_shape();
     end endgenerate
 '''+s[i:]
     lane = (ROOT/'rtl/qwen_dv/qfd_dv_su_lane.sv').read_text()
