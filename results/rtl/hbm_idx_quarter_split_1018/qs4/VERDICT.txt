@@ -1,0 +1,14 @@
+IDX_QUARTER_SPLIT_GATE_PASS (qs4 FINAL, src5 683f0b275, ot-epyc4 unit oth-ubuntu-1178275-1792395469, Verilator 5.050; finished 2026-10-19 02:20).
+Source: claude/own-idxscore-leafrst-1019 @683f0b275 (all 17 sources.sha256 entries == git show 683f0b275:<path>, includes the
+leaf reset-relay x9 fix c84a4b0d6). Bench: rtl/test/hbm_idx_static/run_quarter_split_lockstep.sh (wires-only quarter W+8 leaves+E
+vs flat ot_hbm_idx_score_quarter_static, every edge equal at +1 cycle).
+  pos0          PASS errors0, 49/49 events, row0/row1 nonzero 20/20, lane faults 0
+  pos1          PASS errors0, 49/49 events, row0/row1 nonzero 20/19
+  pos0_poison   PASS (+poison_payload: old score all-1 / new E score all-0 for 2 cycles after reset; flushed, errors0)
+  pos1_poison   PASS (same, half1)
+  keyline  mutant FAIL as required (24 errors)   fail regex: QSPLIT_BAD|IDX_QUARTER_SPLIT FAIL
+  auxearly mutant FAIL as required (52 errors)
+  rowswap  mutant FAIL as required (748 errors)
+Note: the passing logs print a stray "IDX_QUARTER_SPLIT FAIL" AFTER "$finish" (Verilator runs the statement after $finish in the
+same block). The wrapper's verdict uses rc + "IDX_QUARTER_SPLIT PASS"; bind the WRAPPER (pass regex IDX_QUARTER_SPLIT_GATE_PASS).
+Build objects left on ot-epyc4 only.

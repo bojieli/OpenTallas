@@ -1,0 +1,46 @@
+ot-run: ot-epyc4       admits   -63 GB (avail 227, growth 272, headroom 0, waiters 29/747 GB) load 147/128 running 50 disk 649 GB 
+ot-run: ot-epyc5       admits    40 GB (avail 416, growth 388, headroom 0, waiters 6/976 GB) load 154/128 running 46 disk 1741 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/own-idxscore/src5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/own-idxscore/src5
+ot-run: -> ot-epyc4 (will queue: admits -63 GB < 54 GB)
+ot-heavy: waiting for memory on regular-crane: need 0.7 x 54 = 38 GB, admissible -63 GB: available 227 GB, growth charged 271 GB (x0.5), young 18 GB, floor 57 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-1178275-1792395469 after 262 s
+BUILDS_DONE
+[pos0] IDX_QUARTER_SPLIT half0 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos0] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events20 lane_fault_events0
+[pos0] IDX_QUARTER_SPLIT PASS
+[pos0] IDX_QUARTER_SPLIT FAIL
+[pos1] IDX_QUARTER_SPLIT half1 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos1] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events19 lane_fault_events0
+[pos1] IDX_QUARTER_SPLIT PASS
+[pos1] IDX_QUARTER_SPLIT FAIL
+[pos0_poison] IDX_QUARTER_SPLIT payload_poison_released
+[pos0_poison] IDX_QUARTER_SPLIT half0 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos0_poison] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events20 lane_fault_events0
+[pos0_poison] IDX_QUARTER_SPLIT PASS
+[pos0_poison] IDX_QUARTER_SPLIT FAIL
+[pos1_poison] IDX_QUARTER_SPLIT payload_poison_released
+[pos1_poison] IDX_QUARTER_SPLIT half1 errors0 old_events49 nonzero20 new_events49 old_first_fault_cyc-1
+[pos1_poison] IDX_QUARTER_SPLIT coverage row0_nonzero_events20 row1_nonzero_events19 lane_fault_events0
+[pos1_poison] IDX_QUARTER_SPLIT PASS
+[pos1_poison] IDX_QUARTER_SPLIT FAIL
+[keyline] QSPLIT_BAD cyc226 new{ev1 last0 f0 idx0 01e3f val0 0000} old_d1{ev1 last0 f0 idx0 01e3f val0 0000}
+[keyline] QSPLIT_BAD cyc230 new{ev1 last0 f0 idx0 04e3f val0 0000} old_d1{ev1 last0 f0 idx0 04e3f val0 0000}
+[keyline] QSPLIT_BAD cyc236 new{ev1 last0 f0 idx0 0963f val0 0000} old_d1{ev1 last0 f0 idx0 0963f val0 0000}
+[keyline] QSPLIT_BAD cyc239 new{ev1 last0 f0 idx0 0ba3f val0 0000} old_d1{ev1 last0 f0 idx0 0ba3f val0 0000}
+[keyline] QSPLIT_BAD cyc1176 new{ev1 last0 f0 idx0 0744f val0 4582} old_d1{ev1 last0 f0 idx0 0744f val0 4548}
+[keyline] mutant rejected
+[auxearly] QSPLIT_BAD cyc132 new{ev0 last1 f0 idx0 00003 val0 ff80} old_d1{ev0 last0 f0 idx0 00003 val0 ff80}
+[auxearly] QSPLIT_BAD cyc184 new{ev0 last0 f0 idx0 00007 val0 0000} old_d1{ev0 last1 f0 idx0 00007 val0 0000}
+[auxearly] QSPLIT_BAD cyc225 new{ev1 last0 f0 idx0 0123f val0 0000} old_d1{ev1 last0 f0 idx0 0123f val0 0000}
+[auxearly] QSPLIT_BAD cyc226 new{ev1 last0 f0 idx0 01e3f val0 0000} old_d1{ev1 last0 f0 idx0 01e3f val0 0000}
+[auxearly] QSPLIT_BAD cyc227 new{ev1 last0 f0 idx0 02a3f val0 0000} old_d1{ev1 last0 f0 idx0 02a3f val0 0000}
+[auxearly] mutant rejected
+[rowswap] QSPLIT_BAD cyc244 new{ev1 last1 f0 idx0 0fc3f val0 0000} old_d1{ev1 last1 f0 idx0 0fc3f val0 0000}
+[rowswap] QSPLIT_BAD cyc245 new{ev0 last1 f0 idx0 0fc3f val0 0000} old_d1{ev0 last1 f0 idx0 0fc3f val0 0000}
+[rowswap] QSPLIT_BAD cyc246 new{ev0 last1 f0 idx0 0fc3f val0 0000} old_d1{ev0 last1 f0 idx0 0fc3f val0 0000}
+[rowswap] QSPLIT_BAD cyc247 new{ev0 last1 f0 idx0 0fc3f val0 0000} old_d1{ev0 last1 f0 idx0 0fc3f val0 0000}
+[rowswap] QSPLIT_BAD cyc248 new{ev0 last1 f0 idx0 0fc3f val0 0000} old_d1{ev0 last1 f0 idx0 0fc3f val0 0000}
+[rowswap] mutant rejected
+IDX_QUARTER_SPLIT_GATE_PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1178275-1792395469): exit 0
