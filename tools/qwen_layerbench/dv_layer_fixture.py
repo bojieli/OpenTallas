@@ -307,16 +307,104 @@ def run_tp8od(a):
     return 0
 
 
+def run_tp8stages(a):
+    """Cut recorded native TP8 snapshots; never substitute a TP4 reduction return."""
+    if PO.TP != 8 or PO.GROUPS != 3072:
+        raise SystemExit('tp8stages needs QWEN_O4_TP=8 QWEN_O4_GROUPS=3072 HDC_SU_WIDTH=64 HDC_KV_FMT=fp8')
+    n, out, gd = a.layer, Path(a.out), Path(a.tp8gold)
+    pos = int(gd.name.lstrip('P'))
+    oracle = gd.parent / 'oracle.json'
+    orc = json.loads(oracle.read_text())
+    if orc.get('tp') != 8 or str(pos) not in orc.get('per_position', {}):
+        raise SystemExit('tp8stages requires a recorded TP8 position')
+    # The address map is part of the frozen golden, not a guessed current map.
+    map_name = 'tools/hdc_qwen_fullshape_program_w12.py'
+    if sha(GROOT / map_name) != orc['source_sha256'][map_name]:
+        raise SystemExit('TP8 snapshot VM-map source differs from the recorded golden')
+    im = Img(a.img.format(layer=n, die=0), n, 8)
+    gsha = orc['layer_image_sha256'][f'L{n}'][0]
+    common = sorted(set(gsha) & set(im.image_sha))
+    if len(common) < 4 or any(gsha[k] != im.image_sha[k] for k in common):
+        raise SystemExit('TP8 stage image differs from the recorded golden')
+    vm, _ = FP.vm_map()
+    inputs = {str(oracle): sha(oracle), map_name: sha(GROOT / map_name)}
+
+    def snapshot(layer, original_pc):
+        pc = orc['original_to_candidate_pc'][str(original_pc)]
+        p = gd / 'die0' / f'L{layer}' / f'candidate_pc{pc}_vm.npz'
+        inputs[str(p)] = sha(p)
+        bits = np.load(p)['vm_bits']
+        if bits.dtype != np.uint32 or bits.ndim != 1:
+            raise SystemExit(f'invalid recorded VM snapshot {p}')
+        return G.from_bits(bits)
+
+    def recorded_hex(p):
+        inputs[str(p)] = sha(p)
+        return read_hex(p)
+
+    out.mkdir(parents=True, exist_ok=True)
+    stages = {}
+
+    def save(name, **arrays):
+        p = out / f'L{n}_{name}_tp8.npz'
+        np.savez_compressed(p, **arrays)
+        stages[name] = dict(file=p.name, sha256=sha(p), keys=sorted(arrays))
+
+    s = {pc: snapshot(n, pc) for pc in (0, 1, 18, 20, 21, 22, 23, 24)}
+    x, rx, gu, act, qkv = (vm[k] for k in ('X', 'RX', 'GU', 'ACT', 'QKV'))
+    ar = [i for i, seg in enumerate(im.descriptors) if seg['kind'] == P.COLL_ALLREDUCE]
+    if len(ar) != 2:
+        raise SystemExit(f'expected two TP8 all-reduce segments, found {ar}')
+    dd = gd / 'die0' / f'L{n}'
+    returns = [recorded_hex(dd / f'collective{i}_return.hex') for i in ar]
+    if any(len(v) != 4096 for v in returns):
+        raise SystemExit('recorded TP8 residual return is not 4096 elements')
+    ps = im.manifest['post_tp_scale_bases']
+    save('resid1', x=s[18][x:x + 4096], t=returns[0], ps1=im.crom[ps[0]:ps[0] + 4096, 0],
+         gold_x=s[20][x:x + 4096], gold_r=np.array([s[22][rx]], dtype=F), pos=pos)
+    save('silu', gu=s[21][gu:gu + 3072], r=np.array([s[22][rx]], dtype=F),
+         gold_act=s[24][act:act + 1536], gu_r=s[23][gu:gu + 3072])
+    for name, pc, base, rows, split, xin in (
+            ('qkv', 1, qkv, 768, 512, s[0][x:x + 4096]),
+            ('gu', 21, gu, 3072, 128, s[20][x:x + 4096])):
+        w, scale = im.mat(name)
+        if w.shape != (rows, 4096):
+            raise SystemExit(f'wrong native TP8 {name} matrix shape {w.shape}')
+        save(f'mat_{name}', w=w.astype(np.int8), s=scale, x=xin,
+             gold_y=s[pc][base:base + rows], split=split)
+    # A final-layer rsqrt is not present in this recording. Only an actual next
+    # layer may supply the second residual's golden normalization result.
+    missing = []
+    if n + 1 < orc['layers']:
+        final_x = recorded_hex(gd / f'L{n:02d}_die0_x.hex')
+        nxt = snapshot(n + 1, 0)
+        if not np.array_equal(G.bits(final_x), G.bits(nxt[x:x + 4096])):
+            raise SystemExit('next TP8 layer input does not equal this layer residual output')
+        next_rx = snapshot(n + 1, 2)[rx]
+        save('resid2', x=s[20][x:x + 4096], t=returns[1], ps1=im.crom[ps[1]:ps[1] + 4096, 0],
+             gold_x=final_x, gold_r=np.array([next_rx], dtype=F), pos=pos)
+    else:
+        missing.append('resid2: no recorded next-layer normalization; no synthetic golden emitted')
+    rec = dict(schema='opentallas.qwen.dv-layer-fixture-tp8stages.v1', layer=n, position=pos,
+               tp_gold=8, tp8_die=0, oracle_collective_profile=orc['collective_profile'],
+               provenance='Recorded native TP8 snapshots and collective returns; no TP4 inputs or re-execution',
+               image_sha256=im.image_sha, inputs_sha256=inputs, stages=stages, missing=missing,
+               tool_sha256=sha(__file__))
+    (out / f'L{n}_tp8stages.json').write_text(json.dumps(rec, indent=1) + '\n')
+    print('TP8STAGES', n, sorted(stages), 'missing', missing)
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('what', choices=('tp4', 'tp8w', 'tp8od'))
+    ap.add_argument('what', choices=('tp4', 'tp8w', 'tp8od', 'tp8stages'))
     ap.add_argument('--img', required=True)
     ap.add_argument('--realmem')
     ap.add_argument('--tp8gold', help='tp8od: the TP8 gold position dir (qwen_tp8_layer_gold OUT/P<p>)')
     ap.add_argument('--layer', type=int, required=True)
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
-    return dict(tp4=run_tp4, tp8w=run_tp8w, tp8od=run_tp8od)[a.what](a)
+    return dict(tp4=run_tp4, tp8w=run_tp8w, tp8od=run_tp8od, tp8stages=run_tp8stages)[a.what](a)
 
 
 if __name__ == '__main__':
