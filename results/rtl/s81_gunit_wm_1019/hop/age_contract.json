@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.s81.gunit-hc-port-age.v1",
+  "lane": "S81-GUNIT-HOP",
+  "source_branch": "claude/s81-gunit-wm-1019",
+  "source_commit": "ed66e7b19",
+  "compile_defines": "OT_S81_GUNIT_FANOUT_SAFE=1 OT_S81_GUNIT_CONTROL_SAFE=1 OT_S81_GUNIT_Q4=1 OT_S81_GUNIT_PIN_COPY=1",
+  "gunit_sources": "ed66e7b19 file list of rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh (adds dsdv_gunit_tail_fs, ot_hdc_sinkhorn_fs, ot_hdc_skf_predecode, ot_hdc_sinkhorn_p, ot_hdc_skp_predecode, ot_rst_region16, ot_sram_1r1w2c_32x64_m1 model); SHA256 in witness/sources.sha256",
+  "host_harness": "49f8f8f84 dsdv_seq_host / dsdv_sh_sd / ot_dsdv_fixed_issue / ot_hdc_kv_ingest / ot_rom_host_ingest + ot_dsdv_vstop superset (JREG=1 default and unconnected ra/dk taps are cycle-identical to the ed66e7b19 vstop the gunit L2 instantiates); witness/host_overlay_49f8f8f84.sha256",
+  "bench": "harness/run_gu_bench_wm.sh (GU_SRC=wm) + harness/tb_gu_layer.sv (49f8f8f84 GU_AGE actual port-capture monitor), Verilator 5.050, ot-epyc6, measure=1",
+  "kits": "harness/age_kit.py from 49f8f8f84 kits/m_old_age (759/757): HC CTL rows moved by HC_LAT - 759/757 (lower_gu.py:301); 975/973 derivation reproduces the committed 49f8f8f84 kit0 byte-identically",
+  "clock": "posedge ck actual DUT/monitor capture edges, cyc-base layer origin",
+  "common_origin": "last valid HP beat captured on vi_n",
+  "HC_LAT_N": 1015,
+  "HC_LAT_S": 1013,
+  "delta_vs_safe3": 40,
+  "delta_note": "+40 edges = the paid Q4 Sinkhorn stage; matches unit bench hc_lat 1004 stop pins / 1016 unit pins = safe3 + 40",
+  "measurements": [
+    {"port": "vo_s", "edge": 1737, "row": 1000, "last_hp_n": 724, "last_hp_s": 726, "issue": 221, "age_from_n": 1013},
+    {"port": "vo_n", "edge": 1739, "row": 1000, "last_hp_n": 724, "last_hp_s": 726, "issue": 221, "age_from_n": 1015},
+    {"port": "vo_s", "edge": 10921, "row": 1008, "last_hp_n": 9908, "last_hp_s": 9910, "issue": 9405, "age_from_n": 1013},
+    {"port": "vo_n", "edge": 10923, "row": 1008, "last_hp_n": 9908, "last_hp_s": 9910, "issue": 9405, "age_from_n": 1015}
+  ],
+  "positive": "kit0 (1015/1013): GU_LAYER PASS 3 jobs, 1655 HP/SC beats, 15 CTL rows each side, roots 50, rsqrt 2, no fault (router rows unchanged)",
+  "mutants": {
+    "m_old_age_975_973": "GU_LAYER FAIL 35 plus four GU_AGE_CONTRACT_FAIL (measured 1015/1013)",
+    "m_wrong_age_p1_1016_1014": "GU_LAYER FAIL 35 plus four GU_AGE_CONTRACT_FAIL (measured 1015/1013)"
+  },
+  "compiler": "tools/s81_dv/layer_prog/lower_gu.py HC_LAT_N, HC_LAT_S = 1015, 1013 (origin/main version, constants only)",
+  "price_vs_safe3": {"extra_edges_per_HC_job": 40, "at_1p2GHz_extra_ns": 33.3},
+  "physical_admission": "age witness only; grants no physical closure"
+}
