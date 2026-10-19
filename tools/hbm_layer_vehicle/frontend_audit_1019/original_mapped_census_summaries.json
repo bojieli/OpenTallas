@@ -1,0 +1,103 @@
+{
+  "frontend_issuer_baseline.log": {
+    "top": "ot_hbm_svc_sm_issuer_rel",
+    "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "reused_mapped": false,
+    "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+    "physical_claim": false,
+    "std_area_um2": 1067.6059200000002,
+    "source_sha256": {
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv": "1ed4aa3b4353527f2c402eeaaec92f880bb967e57800dd97aff907b90c6d4cb3",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+    },
+    "macro_counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 2
+    },
+    "unmapped_or_unknown": {}
+  },
+  "frontend_pc_owner.log": {
+    "top": "ot_hbm_svc_prefetch_overlap_owner_rel_id",
+    "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "reused_mapped": false,
+    "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+    "physical_claim": false,
+    "std_area_um2": 981.61308,
+    "source_sha256": {
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9"
+    },
+    "macro_counts": {},
+    "unmapped_or_unknown": {}
+  },
+  "frontend_issuer_cohort_current_current.log": {
+    "top": "ot_hbm_svc_sm_issuer_rel",
+    "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "reused_mapped": false,
+    "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+    "physical_claim": false,
+    "std_area_um2": 1084.48956,
+    "source_sha256": {
+      "tools/hbm_layer_vehicle/frontend_audit_1019/snapshots/ot_hbm_svc_sm_issuer_rel_825607a54.sv": "6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+    },
+    "macro_counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 2
+    },
+    "unmapped_or_unknown": {}
+  },
+  "frontend_collector_current_current.log": {
+    "top": "ot_hbm_router_ids_static",
+    "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "reused_mapped": false,
+    "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+    "physical_claim": false,
+    "std_area_um2": 236.44386,
+    "source_sha256": {
+      "tools/hbm_layer_vehicle/frontend_audit_1019/snapshots/ot_hbm_router_ids_static_825607a54.sv": "897e7d4151242059210a545f9a7b4ba62f10485c2563502699f6c6f53988ed26"
+    },
+    "macro_counts": {},
+    "unmapped_or_unknown": {}
+  },
+  "frontend_group_frontier_current.log": {
+    "top": "ot_hbm_svc_sm_group_rel_sram_id",
+    "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "reused_mapped": false,
+    "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+    "physical_claim": false,
+    "std_area_um2": 10791.4599,
+    "source_sha256": {
+      "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv": "1ed4aa3b4353527f2c402eeaaec92f880bb967e57800dd97aff907b90c6d4cb3",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_sram_id.sv": "a0bbc2c9ca49a7367da241c9e3eb319499c30fb4c0e01a24835013fce27bc059",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_sram_id.sv": "decd08319399e93534e070c6b7b0fc62be8685688a97fdac9d9b41d0961a3c2a",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_sram_id.sv": "2aaedef162e26c3f642ede55c10155d10835992f003db30ff4b2965429ae4335",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv": "12bdb4dc9e86e1a04b3ef0ef738e6c46c1d3d518edaea437b0946504a756f5be",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv": "9a03551c35a4dfc4ca455a2150e0c5e26807a986940babb740f10113be7d003d",
+      "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84",
+      "tools/hbm_layer_vehicle/frontend_audit_1019/qualified_boundaries_bb.sv": "1de0c073f6df2e5751928525533c75e69a0b04cf04e136eb3db914a7d9857fd7",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+    },
+    "macro_counts": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 2
+    },
+    "unmapped_or_unknown": {
+      "ot_hbm_svc_static_sm_packed136_native_safe": 1,
+      "ot_hbm_svg_landing_pair_native": 4,
+      "ot_smh_calendar_static_x": 1
+    }
+  },
+  "frontend_collector_l17_current.log": {
+    "top": "ot_hbm_router_ids_static",
+    "analyzer_sha256": "b9767970b28e907e3ed758fe78e1d7c3a94ce4eafd1e9475d2f35f45467fbe1c",
+    "reused_mapped": false,
+    "tool": "ORFS docker Yosys + ABC, RVT TT,833.333ps target",
+    "physical_claim": false,
+    "std_area_um2": 235.18997999999993,
+    "source_sha256": {
+      "tools/hbm_layer_vehicle/frontend_audit_1019/snapshots/ot_hbm_router_ids_static_825607a54.sv": "897e7d4151242059210a545f9a7b4ba62f10485c2563502699f6c6f53988ed26"
+    },
+    "macro_counts": {},
+    "unmapped_or_unknown": {}
+  }
+}

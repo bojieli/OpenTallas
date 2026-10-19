@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "scope": "source-bound topology enumeration only; not native timing, miter, tag lifecycle, capacity or reset proof",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_sram_id.sv": "a0bbc2c9ca49a7367da241c9e3eb319499c30fb4c0e01a24835013fce27bc059",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9"
+  },
+  "sm_straps": 8,
+  "pc_lanes": 4,
+  "row_counts": [
+    1,
+    64
+  ],
+  "rowlow_values": 4,
+  "legal_return_cases": 1131520,
+  "wrong_lane_mutant_rejections": 1131520,
+  "wrong_target_mutant_rejections": 1131520,
+  "payload_bits": 285,
+  "link_envelope_bits": 290,
+  "ring_slots": 4,
+  "runtime_bits_per_link": 1160
+}
