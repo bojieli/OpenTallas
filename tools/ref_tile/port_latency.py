@@ -109,12 +109,16 @@ def validate_roles(report, wrapper, spec, read_source):
         raise ValueError('conflicting clock/reset declarations: ' + ','.join(sorted(clocks & resets)))
     excluded = excluded_ports((spec.get('pin_regs') or {}).get('exclude', ''), sorted(report['ports']))
     text = wrapper.read_text()
+    landed = {}
     for role, names in [('clock', clocks), ('reset', resets), ('excluded data', excluded)]:
         for name in names:
             rec = report['ports'].get(name)
             if not rec or rec['register_edges'] != 0:
                 raise ValueError('declared ' + role + ' selected as data or absent: ' + name)
             direct = r'\.' + re.escape(name) + r'\s*\(\s*' + re.escape(name) + r'\s*\)'
+            if role == 'reset' and landed_reset(text, name, spec) is not None:
+                landed[name] = landed_reset(text, name, spec)
+                continue
             if not re.search(direct, text) or re.search(r'(?<![A-Za-z0-9_$])' + re.escape(name) + r'__ot_q\b', text):
                 raise ValueError('declared ' + role + ' is not direct in transformed wrapper: ' + name)
     for name, rec in report['ports'].items():
@@ -122,9 +126,33 @@ def validate_roles(report, wrapper, spec, read_source):
         if rec['register_edges'] != expected:
             raise ValueError(f'intended data pin-register stages differ for {name}: '
                              f"actual {rec['register_edges']}, expected {expected}")
-    return dict(clocks=sorted(clocks), resets=sorted(resets), excluded_data_ports=sorted(excluded - clocks - resets),
-                source_sha256=source_hashes,
-                reset_meaning='source RTL polarity and reset semantics preserved by direct wiring')
+    out = dict(clocks=sorted(clocks), resets=sorted(resets), excluded_data_ports=sorted(excluded - clocks - resets),
+               source_sha256=source_hashes,
+               reset_meaning='source RTL polarity and reset semantics preserved by direct wiring')
+    if landed:
+        out['reset_landing'] = landed
+        out['reset_meaning'] = ('source RTL polarity and reset semantics preserved: direct wiring, or a landed reset '
+                                '(plain registers copy the value; assertion and release delayed by the stage count)')
+    return out
+
+
+def landed_reset(text, name, spec):
+    """ROOT-RST 2026-10-19: the stage count when the wrapper lands reset NAME (ot_pin_regs.tcl OT_RST_LAND: port ->
+    NAME__ot_rl0 -> ... -> core, plain registers) and the spec asks for it (reset_landing.enable); else None"""
+    rl = spec.get('reset_landing') if isinstance(spec.get('reset_landing'), dict) else {}
+    if not rl.get('enable'):
+        return None
+    n = re.escape(name)
+    m = re.search(r'\.' + n + r'\s*\(\s*' + n + r'__ot_rl(\d+)\s*\)', text)
+    if not m:
+        return None
+    k = int(m.group(1))
+    prev = name
+    for i in range(k + 1):
+        if not re.search(r'always @\(posedge \S+\) ' + n + r'__ot_rl' + str(i) + r' <= ' + re.escape(prev) + r';', text):
+            return None
+        prev = f'{name}__ot_rl{i}'
+    return k + 1
 
 
 def main():

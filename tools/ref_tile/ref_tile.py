@@ -93,7 +93,17 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #      leaf tiles: flop-first pins (no inhold / outhold pads), boundary min delays credit the guaranteed launch C, the
 #      link's skew / uncertainty / shortfall are the die's (results/arch/boundary_hold_budget_1016/RULE.md).  A tile that
 #      does not qualify (CDC / async leaf, unregistered pin) opts out with "hold_budget": "tile" + "hold_budget_reason".
+#   RESET LANDING (ROOT-RST 2026-10-19, owner: regional reset with registered relays, pin registers on every pin):
+#      "reset_landing": {"enable": true, "stages": 2} lands every declared reset_ports input at its face in STAGES
+#      registered stages (physical/common_flow/ot_pin_regs.tcl OT_RST_LAND=1: <port>__ot_rl0 -> <port>__ot_rl1 -> core;
+#      plain flops, polarity-agnostic, io_flop_at_pins anchors the first at the pin), so the port net has one sink and
+#      the core fan-out starts at a register (repair_design builds the equal-depth tree).  Reset assertion and release
+#      are delayed by STAGES cycles: a scheduled constant, data latency unchanged.  Default ON for recipe >= 3 kits that
+#      declare reset_ports (tiles and clusters); the pre_route_gate FAILS a reset input reaching > 2 sinks without a
+#      landing (textbook_lint reset_landing).  Opt-out: {"enable": false, "reason": "<the RTL lands it: rst_l0/rst_l1>"}.
 RECIPE_LATEST = 4
+RESET_LANDING_RULE = ("ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth "
+                      "fan-out; reset release latency is a scheduled constant")
 PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
@@ -219,6 +229,8 @@ def apply_recipe(s: dict, recipe: int) -> dict:
             s.setdefault("outhold", True)
     if recipe >= 3 and s.get("kind") == "tile":
         s.setdefault("pin_regs", {"enable": True})
+    if recipe >= 3 and s.get("reset_ports"):
+        s.setdefault("reset_landing", {"enable": True, "stages": 2})
     if s.get("io_flop_at_pins"):
         s.setdefault("keep_pin_regs", True)
         if s.get("inhold") or s.get("outhold"):       # the split runs inside the recipe-2 pin hook (pre_gpl.tcl)
@@ -279,6 +291,46 @@ def pin_regs_vars(s: dict) -> list:
         out.append(f"--orfs-var OT_PIN_REGS_EXCLUDE={shq(plan['exclude'])}")
     if plan["reset"]:
         out.append(f"--orfs-var OT_PIN_REGS_RESET={shq(plan['reset'])}")
+    return out
+
+
+def reset_landing_plan(s: dict) -> dict | None:
+    """the kit's reset landing plan or None; SpecError on a malformed record or an opt-out without a reason"""
+    rl = s.get("reset_landing")
+    if rl is None:
+        return None
+    if not isinstance(rl, dict):
+        raise SpecError('spec: reset_landing must be an object ({"enable": true, "stages": 2} | {"enable": false, '
+                        '"reason": ...})')
+    if not rl.get("enable"):
+        if not str(rl.get("reason") or rl.get("waive") or "").strip():
+            raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
+        return {"enable": False, "reason": rl.get("reason") or rl.get("waive")}
+    st = rl.get("stages", 2)
+    if not isinstance(st, int) or isinstance(st, bool) or not 1 <= st <= 4:
+        raise SpecError("spec: reset_landing.stages must be an integer 1..4 (standard 2)")
+    resets = s.get("reset_ports") or []
+    if not resets:
+        raise SpecError("spec: reset_landing needs the literal reset_ports it lands")
+    cks = declared_clock_ports(s)
+    pr = s.get("pin_regs") if isinstance(s.get("pin_regs"), dict) else {}
+    ck = pr.get("clock") or rl.get("clock") or (cks[0] if len(cks) == 1 else None)
+    if not ck or ck not in cks:
+        raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
+    return {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
+            "reset_release_cycles": st}
+
+
+def reset_landing_vars(s: dict) -> list:
+    plan = reset_landing_plan(s)
+    if not plan or not plan["enable"]:
+        return []
+    out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
+    pp = pin_regs_plan(s)
+    if not pp or not pp.get("enable"):
+        # landing only: the wrapper still needs the literal clock / reset roles (data ports pass straight through)
+        out.append(f"--orfs-var OT_PIN_REGS_CLOCK={shq(','.join([plan['clock']] + [c for c in declared_clock_ports(s) if c != plan['clock']]))}")
+        out.append(f"--orfs-var OT_PIN_REGS_RESET_PORTS={shq(','.join(plan['reset_ports']))}")
     return out
 
 
@@ -1934,6 +1986,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_pad_vars(s)
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
+    extra += reset_landing_vars(s)
     # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
     extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
@@ -2293,6 +2346,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     if prp is not None:
         files["pin_regs.json"] = json.dumps({"schema": "opentallas.ref_tile.pin_regs.v1", "top": s["top"], **prp},
                                             indent=1) + "\n"
+    rlp = reset_landing_plan(s)
+    if rlp is not None:
+        files["reset_landing.json"] = json.dumps({"schema": "opentallas.ref_tile.reset_landing.v1", "top": s["top"],
+                                                  **rlp}, indent=1) + "\n"
     ffr = gen_signoff_ffrepair(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*")
     if ffr:
         files["signoff_ffrepair.sdc"] = ffr
