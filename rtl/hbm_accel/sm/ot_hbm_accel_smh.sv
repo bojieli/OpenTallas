@@ -2560,6 +2560,9 @@ module ot_hbm_accel_smh_leaf #(
     //                       (wa_p <= slot + 1 == the old negedge wa_n at the macro write edge; reset 0 == old wa_n in reset).
     //   OT_SMH_XSRING32   : the ring is built from ot_sram_1r1w_32x128_m1 (7 x 128 b, 51.4 x 20.8 um) instead of
     //                       4 x ot_sram_1r1w_128x256_m1_r2c2 (half the hard area; same registered-read semantics).
+    // L2H-SMATT 10-19 (opt-in): OT_SMH_SRAM_P192 : same-port wide-pin-pitch macro variants (0.192 um face pitch, <= 5.1
+    //                       pins/um vs 9.5-10/um): ring ot_sram_1r1w_32x128_m1_p192_rc, x store ot_sram_1r1w_128x256_m1_r2c2_p192_mir.
+    //                       Identical ports and registered-read behaviour; only the hard-macro footprint changes.
     wire rst_ring_n;
 `ifdef OT_SMH_RING_RST2
     ot_rst_relay #(.REGIONS(1)) u_rr_ring (.clk(clk), .rst_n_in(rst_a), .rst_n(rst_ring_n));
@@ -2609,7 +2612,11 @@ module ot_hbm_accel_smh_leaf #(
             wd_n <= ring_wd[RGB*rw +: RGB];
         end
 `ifdef OT_SMH_XSRING32
+`ifdef OT_SMH_SRAM_P192
+        ot_sram_1r1w_32x128_m1_p192_rc u_w (
+`else
         ot_sram_1r1w_32x128_m1 u_w (
+`endif
             .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(ring_rd[RGB*rw +: RGB]),
             .w_ce_in(1'b1), .w_addr_in({3'd0,wa_n}), .wd_in(wd_n), .w_mask_in({RGB{1'b1}}));
 `else
@@ -2826,7 +2833,11 @@ module ot_hbm_accel_smh_leaf #(
 `else
         assign rce3 = rce2; assign wce3 = wce2; assign ra3 = ra2; assign wa3 = wa2; assign wd3 = wd2; assign wm3 = wm2;
 `endif
+`ifdef OT_SMH_SRAM_P192
+        ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_x (
+`else
         ot_sram_1r1w_128x256_m1_r2c2 u_x (
+`endif
             .clk(clk), .r_ce_in(rce3), .r_addr_in(ra3), .rd_out(xrd[256*m +: 256]),
             .w_ce_in(wce3), .w_addr_in(wa3), .wd_in(wd3), .w_mask_in(wm3),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));

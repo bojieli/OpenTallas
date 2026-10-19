@@ -5,6 +5,7 @@
 # usage: run_xs_ring_safe.sh OUTDIR VARIANT(A|B) REF(ring|legacy) MUT(0|r|w) [SEED] [CYCLES]   (repo root; Verilator 5.050)
 #   A = 4 x 128x256 ring + macro-local posedge read/write address captures + own ring reset relay
 #   B = A with the ring on 7 x ot_sram_1r1w_32x128_m1
+#   C = B on the wide-pitch p192 macro variants (OT_SMH_SRAM_P192; ring 32x128_p192_rc, x store 128x256_r2c2_p192_mir)
 #   MUT r = read-slot mutant (OT_SMH_MUT_XSRING), w = write-slot mutant (OT_SMH_MUT_XSRING_W); both must FAIL.
 set -euo pipefail
 OUT=$1; VAR=$2; REF=$3; MUT=$4; SEED=${5:-1}; NC=${6:-3000}
@@ -14,6 +15,7 @@ SRCS="rtl/hdc/ot_hdc_prefix.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_bter
 BASE="-DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_HIER -DOT_SMH_XSE -DOT_SMH_XSRST"
 DUTD="$BASE -DOT_SMH_XSRING -DOT_SMH_FAN32 -DOT_SMH_RING_LOCAL_ADDR -DOT_SMH_RING_LOCAL_WADDR -DOT_SMH_RING_RST2"; NRG=4
 [ "$VAR" = B ] && { DUTD="$DUTD -DOT_SMH_XSRING32"; NRG=7; }
+[ "$VAR" = C ] && { DUTD="$DUTD -DOT_SMH_XSRING32 -DOT_SMH_SRAM_P192"; NRG=7; SRCS="$SRCS physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v"; }
 [ "$MUT" = r ] && DUTD="$DUTD -DOT_SMH_MUT_XSRING"
 [ "$MUT" = w ] && DUTD="$DUTD -DOT_SMH_MUT_XSRING_W"
 TBFL=(-DXSE_NRG=$NRG)
