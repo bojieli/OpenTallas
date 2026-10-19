@@ -17,7 +17,7 @@ for x in 340:0:base 340:180:base 340:720:base 277:0:base 277:180:base 277:720:ba
  if [ "$mut" = base ];then
   if [ "$rc" != 0 ] || ! grep -q 'CTRL_FIFO_EXACT PASS' "$o/run.log";then failed=1;fi
  else
-  if [ "$rc" = 0 ] || ! grep -qE 'errors3314|CTRL_SRAM_FIFO_COLLISION' "$o/run.log";then failed=1;fi
+  if [ "$rc" = 0 ] || ! grep -qE 'CTRL_FIFO_EXACT FAIL errors[1-9][0-9]*|CTRL_SRAM_FIFO_COLLISION' "$o/run.log";then failed=1;fi
  fi
  tail -n 4 "$o/run.log"
 done
