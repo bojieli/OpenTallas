@@ -16,9 +16,10 @@
     "pending_and_response_identity_sectors_per_cycle": 1
   },
   "boundary_bits": {
-    "K_request": 341,
+    "K_request": 340,
     "K_response": 277,
-    "PHY_payload": 256
+    "PHY_payload": 256,
+    "K_internal_ring_including_legality": 341
   },
   "macro_count": 13,
   "macro_area_um2_each": 3893.8528,
