@@ -72,7 +72,7 @@ does not repair the model. Existing academic abstracts are not transistor/SPICE 
 
 The fully single-clock alternative uses **655 existing32x64 macros** and preserves the
 native same-process OLD read/write behavior; inspect JSON for physical bits/area.
-It costs361825.38816um2 raw and655 clock contacts before any merge SRAM selection.
+It costs361826.61120um2 raw and655 clock contacts before any merge SRAM selection.
 Its pointer/address prefetch still needs source proof. Both candidates require genuine
 mask64 mapping; padded bits have mask0. Replacement non-repair32/128 families do not
 silently inherit the old r2c2 spare/repair contract. Production currently ties repair
