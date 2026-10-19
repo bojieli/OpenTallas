@@ -1,0 +1,22 @@
+{
+ "bench": "att4_pub",
+ "nl": 3,
+ "mut": 0,
+ "seed": 2027,
+ "rounds": 36,
+ "nodes": 864,
+ "streams": 864,
+ "node_mismatches": 0,
+ "word_mismatches": 0,
+ "fault": false,
+ "rc": 0,
+ "runs_by_chunks": {
+  "1": 131,
+  "2": 143,
+  "3": 149,
+  "4": 441
+ },
+ "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+ "examples": [],
+ "pass_": true
+}

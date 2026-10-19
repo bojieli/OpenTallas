@@ -1,0 +1,1 @@
+PASS HNX_SMERGE_SCHED {"trials": 2000, "kinds": {"aligned": 100, "stagger": 100, "random": 1800}, "nl": 4, "lv": 3, "seed": 1019, "nodes": 19728, "faults": 0, "worst_node_latency_turns": 8, "worst_node_latency_cycles": 64, "worst_case": {"trial": 0, "kind": "aligned", "lane": 3, "event_turn": 32, "out_turn": 40}, "illegal_record_faults": true}
