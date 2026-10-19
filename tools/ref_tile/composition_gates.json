@@ -48,7 +48,7 @@
           "threads": 16,
           "peak_ram_gb": 32,
           "pass_regex": "RUN ng64_dpi_m0_a0_hier2 pass",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64 --ng 64 --hier 2"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64 --ng 64 --hier 2"
         },
         {
           "name": "mutant",
@@ -56,8 +56,11 @@
           "threads": 16,
           "peak_ram_gb": 32,
           "fail_regex": "RUN ng64_dpi_m1_a0_hier2 fail",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64m1 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64m1 --ng 64 --hier 2 --mut 1"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64m1 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64m1 --ng 64 --hier 2 --mut 1"
         }
+      ],
+      "extra_paths": [
+        "tools/s81_suhc/fixtures"
       ]
     },
     "s81hc_ng256": {
@@ -69,7 +72,7 @@
           "threads": 16,
           "peak_ram_gb": 64,
           "pass_regex": "RUN ng256_dpi_m0_a0_hier2 pass",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256 --ng 256 --hier 2"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256 --ng 256 --hier 2"
         },
         {
           "name": "mutant",
@@ -77,8 +80,11 @@
           "threads": 16,
           "peak_ram_gb": 64,
           "fail_regex": "RUN ng256_dpi_m1_a0_hier2 fail",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256m1 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256m1 --ng 256 --hier 2 --mut 1"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256m1 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256m1 --ng 256 --hier 2 --mut 1"
         }
+      ],
+      "extra_paths": [
+        "tools/s81_suhc/fixtures"
       ]
     },
     "s81su_full": {
@@ -90,7 +96,7 @@
           "threads": 8,
           "peak_ram_gb": 48,
           "pass_regex": "RUN full_dpi_m0_a0_h pass",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su --shape full --hier"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su --shape full --hier"
         },
         {
           "name": "mutant",
@@ -98,8 +104,11 @@
           "threads": 8,
           "peak_ram_gb": 48,
           "fail_regex": "RUN full_dpi_m5_a0_h fail",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5"
         }
+      ],
+      "extra_paths": [
+        "tools/s81_suhc/fixtures"
       ]
     },
     "vm8_cp": {
@@ -683,7 +692,7 @@
           "threads": 16,
           "peak_ram_gb": 96,
           "pass_regex": "RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_retcol pass",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_rc --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_rc --ng 256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1 --pipe 1 --ntree 1 --nt-k 67 --retcol 1"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_rc --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_rc --ng 256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1 --pipe 1 --ntree 1 --nt-k 67 --retcol 1"
         },
         {
           "name": "mutant",
@@ -691,8 +700,11 @@
           "threads": 16,
           "peak_ram_gb": 96,
           "fail_regex": "RUN ng256_dpi_m1_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_retcol fail",
-          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_rcm1 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_rcm1 --ng 256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1 --pipe 1 --ntree 1 --nt-k 67 --retcol 1 --mut 1"
+          "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_rcm1 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_rcm1 --ng 256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1 --pipe 1 --ntree 1 --nt-k 67 --retcol 1 --mut 1"
         }
+      ],
+      "extra_paths": [
+        "tools/s81_suhc/fixtures"
       ]
     }
   }
