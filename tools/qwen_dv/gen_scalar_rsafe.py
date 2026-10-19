@@ -42,12 +42,18 @@ def bankify(text,module,clock,reset,rootfn,cfgfn=None):
     bits=min(24,w-lo) if cfgfn else w
     ix=len(banks);banks.append({'target':n,'bits':bits,'lsb':lo})
     nxt=f'safe_next_{n}_{lo}' if cfgfn else f'safe_next_{n}'
-    def sub(x):return f'{nxt} = {x.group(3)};' if x.group(1)==n else ';'
+    def sub(x):
+     if x.group(1)!=n:return ';'
+     rhs=f"{bits}'(({x.group(3)}) >> {lo})" if cfgfn else x.group(3)
+     return f'{nxt} = {rhs};'
     comb=NBA.sub(sub,normal)
     if cfgfn:comb=re.sub(r'\bcfg_v\b',cfgfn(),comb)
-    data=f'{nxt}[{lo} +: {bits}]' if cfgfn else nxt
+    data=nxt
+    initial=f'{n}[{lo} +: {bits}]' if cfgfn and w>1 else n
+    nextwidth=bits if cfgfn else w
+    inst=f'safe_b_{n}_{lo}' if cfgfn else f'safe_b_{n}'
     dest=f'{n}[{lo} +: {bits}]' if cfgfn and w>1 else n
-    clones.append(f'reg [{w-1}:0] {nxt};\nalways @* begin {nxt}={n}; {comb} end\nqfd_dv_reset_bank #(.W({bits})) safe_b_{n}_{lo}(.ck({clock}),.rst_n({rootfn(ix)}),.d({data}),.q({dest}));')
+    clones.append(f'reg [{nextwidth-1}:0] {nxt};\nalways @* begin {nxt}={initial}; {comb} end\nqfd_dv_reset_bank #(.W({bits})) {inst}(.ck({clock}),.rst_n({rootfn(ix)}),.d({data}),.q({dest}));')
   changes.append((a.start(),stop,'\n'.join(clones)))
  for a,b,t in reversed(changes):text=text[:a]+t+text[b:]
  return text,banks
