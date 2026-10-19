@@ -1,0 +1,43 @@
+{
+  "README.md": {
+    "sha256": "1b3fdd5354f02bd63e4433e507ca4c4f398690021f1dc62e1204f844974a0f26",
+    "bytes": 5608
+  },
+  "NEXT.md": {
+    "sha256": "d7427d4d8295145a91c674c4dc6a12c758a210546d0f347273607f029047ff28",
+    "bytes": 264
+  },
+  "consumer_partition.json": {
+    "sha256": "ed35f9278e5799cfa1b6d1b22a47a5b88da5b6b2930b874b77a93bc40159e753",
+    "bytes": 374005
+  },
+  "consumer_partition.txt": {
+    "sha256": "fcd7502f78baf8de71ad90b8b2e5fcaf94cbadc1c4cb00cf42162bf33a7e7fab",
+    "bytes": 1870
+  },
+  "consumer_partition.py": {
+    "sha256": "d0ecd92da83985e6cb7510e43d455947cfab596bfad6248f01fcb793cb1ce913",
+    "bytes": 3291
+  },
+  "reset_ancestry.py": {
+    "sha256": "67168ba173966f32e6293bc12e9a9bc53e46277fbc8ff651f00e4ac459968b24",
+    "bytes": 1268
+  },
+  "reset_ancestry.json": {
+    "sha256": "848f2272636fd276383561527faca3b035b5d206ce8cee9ac5e0c49e4eb0ca2d",
+    "bytes": 110626
+  },
+  "ot_rst_pipe.exact.sv": {
+    "sha256": "29203f84edfc6009125d3b26330534d3c6af6900d2ad4c44bf7d490f2ee96664",
+    "bytes": 3418
+  },
+  "reset_landing.exact.json": {
+    "sha256": "aee065933747914b0b64acfc87e87c426c4c4c75fcfcc390a043310409e10d0a",
+    "bytes": 366
+  },
+  "upstream": {
+    "mapped_plain_sha256": "c5449c82545c3b1a978965e608d8cc31fa546983f71979d5bbec48fbfc78cfe0",
+    "witness_commit": "a1e609a806",
+    "scope": "Source graph/analytical reasoning only; no simulation or equivalence verdict"
+  }
+}

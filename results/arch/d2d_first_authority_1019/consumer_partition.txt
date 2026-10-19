@@ -1,0 +1,19 @@
+Read-only consumer partition of exact c5449c82545c mapped D2D.
+
+All eight candidate copied FF roots reach only DFFASRHQN reset-capable first state endpoints. No unreset FF, macro or external output is reached before a first sequential boundary. This is a structural statement only. The actual regional RESETN assertion frontier remains required, particularly because ot_rst_pipe stages are unreset and its input-low reset is not guaranteed at edge 1.
+
+Root            BUF/INV-transparent endpoints    First state endpoints
+q_sf_seg[0]     37                               19
+q_sf_seg[4]     36                               19
+q_sf_start[0]   48                               34
+q_sf_start[4]   48                               34
+begin_now       31                               37
+ebc[1]          48                               48
+ebc[2]          48                               24
+ebc[9]          49                               34
+
+q_sf_seg[0]/[4] reach txcal/rxcal rep, bcur, cur and tf/rf. q_sf_start reaches all the corresponding seg endpoints plus run flags, packet kind/beat/control; its consumer set is broader, but no first unreset destination exists. begin_now has 16 direct BUF/INV-transparent DFF D endpoints, all reset capable. The remaining roots have combinational logic before their first state.
+
+No safe reset-masked startup partition is certified. All roots remain HOLD until actual reset delivery or exact first-edge Boolean masking is established. Graph reachability does not prove sensitivity; independent source/clone old Q values are never equated.
+
+consumer_partition.json contains every BUF/INV-transparent logical endpoint, every first sequential endpoint, exact mapped RESETN/SETN pins, and a shortest combinational path to each first endpoint. consumer_partition.py regenerates the packet without a constructor, synthesis or proof run.

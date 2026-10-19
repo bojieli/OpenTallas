@@ -1,0 +1,1 @@
+HOLD: no certified nonempty clone partition. Exact face2+regional2 reset assertion; first-use and unreset-state erasure/actual configuration authority remain open. No live job; no constructor/integration/synthesis/physical. ROOT review before further source work.

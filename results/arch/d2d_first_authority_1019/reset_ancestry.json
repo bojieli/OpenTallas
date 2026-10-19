@@ -1,0 +1,1992 @@
+{
+  "status": "SOURCE_ANCESTRY_ONLY",
+  "source_sha256": "c5449c82545c3b1a978965e608d8cc31fa546983f71979d5bbec48fbfc78cfe0",
+  "ancestry": [
+    {
+      "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[17]",
+      "cell": "_53780_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": [
+          "_07493_"
+        ],
+        "Y": [
+          "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[17]"
+        ]
+      },
+      "ancestors": {
+        "A": [
+          {
+            "net": "_07493_",
+            "cell": "\\ot_rrs__u_ot_pr_core_u_core_u_reset_regions_g_fam_g_c_1__qv__c5$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pins": {
+              "CLK": [
+                "ck"
+              ],
+              "D": [
+                "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[1]"
+              ],
+              "QN": [
+                "_07493_"
+              ]
+            },
+            "ancestors": {
+              "D": [
+                {
+                  "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[1]",
+                  "cell": "_53806_",
+                  "master": "INVx1_ASAP7_75t_R",
+                  "pins": {
+                    "A": [
+                      "_07520_"
+                    ],
+                    "Y": [
+                      "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[1]"
+                    ]
+                  },
+                  "ancestors": {
+                    "A": [
+                      {
+                        "net": "_07520_",
+                        "cell": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.g_c[1].d$_DFF_P_",
+                        "master": "DFFHQNx1_ASAP7_75t_R",
+                        "pins": {
+                          "CLK": [
+                            "ck"
+                          ],
+                          "D": [
+                            "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                          ],
+                          "QN": [
+                            "_07520_"
+                          ]
+                        },
+                        "ancestors": {
+                          "D": [
+                            {
+                              "net": "\\u_ot_pr_core.u_core.u_reset_regions.s1",
+                              "cell": "_53813_",
+                              "master": "INVx1_ASAP7_75t_R",
+                              "pins": {
+                                "A": [
+                                  "_07527_"
+                                ],
+                                "Y": [
+                                  "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                                ]
+                              },
+                              "ancestors": {
+                                "A": [
+                                  {
+                                    "net": "_07527_",
+                                    "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s1$_DFF_PN0_",
+                                    "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                    "pins": {
+                                      "CLK": [
+                                        "ck"
+                                      ],
+                                      "D": [
+                                        "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                      ],
+                                      "QN": [
+                                        "_07527_"
+                                      ],
+                                      "RESETN": [
+                                        "\\rst_n__ot_rl1[0]"
+                                      ],
+                                      "SETN": [
+                                        "_28840_"
+                                      ]
+                                    },
+                                    "ancestors": {
+                                      "D": [
+                                        {
+                                          "net": "\\u_ot_pr_core.u_core.u_reset_regions.s0",
+                                          "cell": "_53812_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07526_"
+                                            ],
+                                            "Y": [
+                                              "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07526_",
+                                                "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s0$_DFF_PN0_",
+                                                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "_28840_"
+                                                  ],
+                                                  "QN": [
+                                                    "_07526_"
+                                                  ],
+                                                  "RESETN": [
+                                                    "\\rst_n__ot_rl1[0]"
+                                                  ],
+                                                  "SETN": [
+                                                    "_28840_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "_28840_",
+                                                      "cell": "_53831_",
+                                                      "master": "TIEHIx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "H": [
+                                                          "_28840_"
+                                                        ]
+                                                      },
+                                                      "ancestors": {}
+                                                    }
+                                                  ],
+                                                  "RESETN": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl1[0]",
+                                                      "cell": "_51302_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07086_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl1[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07086_",
+                                                            "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "\\rst_n__ot_rl0[0]"
+                                                              ],
+                                                              "QN": [
+                                                                "_07086_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "\\rst_n__ot_rl0[0]",
+                                                                  "cell": "_51294_",
+                                                                  "master": "INVx1_ASAP7_75t_R",
+                                                                  "pins": {
+                                                                    "A": [
+                                                                      "_07085_"
+                                                                    ],
+                                                                    "Y": [
+                                                                      "\\rst_n__ot_rl0[0]"
+                                                                    ]
+                                                                  },
+                                                                  "ancestors": {
+                                                                    "A": [
+                                                                      {
+                                                                        "net": "_07085_",
+                                                                        "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                                        "master": "DFFHQNx1_ASAP7_75t_R",
+                                                                        "pins": {
+                                                                          "CLK": [
+                                                                            "ck"
+                                                                          ],
+                                                                          "D": [
+                                                                            "rst_n"
+                                                                          ],
+                                                                          "QN": [
+                                                                            "_07085_"
+                                                                          ]
+                                                                        },
+                                                                        "ancestors": {
+                                                                          "D": [
+                                                                            {
+                                                                              "net": "rst_n",
+                                                                              "port": "rst_n"
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "RESETN": [
+                                        {
+                                          "net": "\\rst_n__ot_rl1[0]",
+                                          "cell": "_51302_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07086_"
+                                            ],
+                                            "Y": [
+                                              "\\rst_n__ot_rl1[0]"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07086_",
+                                                "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                "master": "DFFHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "\\rst_n__ot_rl0[0]"
+                                                  ],
+                                                  "QN": [
+                                                    "_07086_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl0[0]",
+                                                      "cell": "_51294_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07085_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl0[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07085_",
+                                                            "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "rst_n"
+                                                              ],
+                                                              "QN": [
+                                                                "_07085_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "rst_n",
+                                                                  "port": "rst_n"
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[23]",
+      "cell": "_53786_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": [
+          "_07499_"
+        ],
+        "Y": [
+          "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[23]"
+        ]
+      },
+      "ancestors": {
+        "A": [
+          {
+            "net": "_07499_",
+            "cell": "\\ot_rrs__u_ot_pr_core_u_core_u_reset_regions_g_fam_g_c_1__qv__c11$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pins": {
+              "CLK": [
+                "ck"
+              ],
+              "D": [
+                "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[1]"
+              ],
+              "QN": [
+                "_07499_"
+              ]
+            },
+            "ancestors": {
+              "D": [
+                {
+                  "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[1]",
+                  "cell": "_53806_",
+                  "master": "INVx1_ASAP7_75t_R",
+                  "pins": {
+                    "A": [
+                      "_07520_"
+                    ],
+                    "Y": [
+                      "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[1]"
+                    ]
+                  },
+                  "ancestors": {
+                    "A": [
+                      {
+                        "net": "_07520_",
+                        "cell": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.g_c[1].d$_DFF_P_",
+                        "master": "DFFHQNx1_ASAP7_75t_R",
+                        "pins": {
+                          "CLK": [
+                            "ck"
+                          ],
+                          "D": [
+                            "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                          ],
+                          "QN": [
+                            "_07520_"
+                          ]
+                        },
+                        "ancestors": {
+                          "D": [
+                            {
+                              "net": "\\u_ot_pr_core.u_core.u_reset_regions.s1",
+                              "cell": "_53813_",
+                              "master": "INVx1_ASAP7_75t_R",
+                              "pins": {
+                                "A": [
+                                  "_07527_"
+                                ],
+                                "Y": [
+                                  "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                                ]
+                              },
+                              "ancestors": {
+                                "A": [
+                                  {
+                                    "net": "_07527_",
+                                    "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s1$_DFF_PN0_",
+                                    "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                    "pins": {
+                                      "CLK": [
+                                        "ck"
+                                      ],
+                                      "D": [
+                                        "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                      ],
+                                      "QN": [
+                                        "_07527_"
+                                      ],
+                                      "RESETN": [
+                                        "\\rst_n__ot_rl1[0]"
+                                      ],
+                                      "SETN": [
+                                        "_28840_"
+                                      ]
+                                    },
+                                    "ancestors": {
+                                      "D": [
+                                        {
+                                          "net": "\\u_ot_pr_core.u_core.u_reset_regions.s0",
+                                          "cell": "_53812_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07526_"
+                                            ],
+                                            "Y": [
+                                              "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07526_",
+                                                "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s0$_DFF_PN0_",
+                                                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "_28840_"
+                                                  ],
+                                                  "QN": [
+                                                    "_07526_"
+                                                  ],
+                                                  "RESETN": [
+                                                    "\\rst_n__ot_rl1[0]"
+                                                  ],
+                                                  "SETN": [
+                                                    "_28840_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "_28840_",
+                                                      "cell": "_53831_",
+                                                      "master": "TIEHIx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "H": [
+                                                          "_28840_"
+                                                        ]
+                                                      },
+                                                      "ancestors": {}
+                                                    }
+                                                  ],
+                                                  "RESETN": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl1[0]",
+                                                      "cell": "_51302_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07086_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl1[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07086_",
+                                                            "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "\\rst_n__ot_rl0[0]"
+                                                              ],
+                                                              "QN": [
+                                                                "_07086_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "\\rst_n__ot_rl0[0]",
+                                                                  "cell": "_51294_",
+                                                                  "master": "INVx1_ASAP7_75t_R",
+                                                                  "pins": {
+                                                                    "A": [
+                                                                      "_07085_"
+                                                                    ],
+                                                                    "Y": [
+                                                                      "\\rst_n__ot_rl0[0]"
+                                                                    ]
+                                                                  },
+                                                                  "ancestors": {
+                                                                    "A": [
+                                                                      {
+                                                                        "net": "_07085_",
+                                                                        "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                                        "master": "DFFHQNx1_ASAP7_75t_R",
+                                                                        "pins": {
+                                                                          "CLK": [
+                                                                            "ck"
+                                                                          ],
+                                                                          "D": [
+                                                                            "rst_n"
+                                                                          ],
+                                                                          "QN": [
+                                                                            "_07085_"
+                                                                          ]
+                                                                        },
+                                                                        "ancestors": {
+                                                                          "D": [
+                                                                            {
+                                                                              "net": "rst_n",
+                                                                              "port": "rst_n"
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "RESETN": [
+                                        {
+                                          "net": "\\rst_n__ot_rl1[0]",
+                                          "cell": "_51302_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07086_"
+                                            ],
+                                            "Y": [
+                                              "\\rst_n__ot_rl1[0]"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07086_",
+                                                "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                "master": "DFFHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "\\rst_n__ot_rl0[0]"
+                                                  ],
+                                                  "QN": [
+                                                    "_07086_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl0[0]",
+                                                      "cell": "_51294_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07085_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl0[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07085_",
+                                                            "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "rst_n"
+                                                              ],
+                                                              "QN": [
+                                                                "_07085_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "rst_n",
+                                                                  "port": "rst_n"
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[83]",
+      "cell": "_53727_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": [
+          "_07439_"
+        ],
+        "Y": [
+          "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[83]"
+        ]
+      },
+      "ancestors": {
+        "A": [
+          {
+            "net": "_07439_",
+            "cell": "\\ot_rrs__u_ot_pr_core_u_core_u_reset_regions_g_fam_g_c_6__qv__c11$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pins": {
+              "CLK": [
+                "ck"
+              ],
+              "D": [
+                "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[6]"
+              ],
+              "QN": [
+                "_07439_"
+              ]
+            },
+            "ancestors": {
+              "D": [
+                {
+                  "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[6]",
+                  "cell": "_53811_",
+                  "master": "INVx1_ASAP7_75t_R",
+                  "pins": {
+                    "A": [
+                      "_07525_"
+                    ],
+                    "Y": [
+                      "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[6]"
+                    ]
+                  },
+                  "ancestors": {
+                    "A": [
+                      {
+                        "net": "_07525_",
+                        "cell": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.g_c[6].d$_DFF_P_",
+                        "master": "DFFHQNx1_ASAP7_75t_R",
+                        "pins": {
+                          "CLK": [
+                            "ck"
+                          ],
+                          "D": [
+                            "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                          ],
+                          "QN": [
+                            "_07525_"
+                          ]
+                        },
+                        "ancestors": {
+                          "D": [
+                            {
+                              "net": "\\u_ot_pr_core.u_core.u_reset_regions.s1",
+                              "cell": "_53813_",
+                              "master": "INVx1_ASAP7_75t_R",
+                              "pins": {
+                                "A": [
+                                  "_07527_"
+                                ],
+                                "Y": [
+                                  "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                                ]
+                              },
+                              "ancestors": {
+                                "A": [
+                                  {
+                                    "net": "_07527_",
+                                    "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s1$_DFF_PN0_",
+                                    "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                    "pins": {
+                                      "CLK": [
+                                        "ck"
+                                      ],
+                                      "D": [
+                                        "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                      ],
+                                      "QN": [
+                                        "_07527_"
+                                      ],
+                                      "RESETN": [
+                                        "\\rst_n__ot_rl1[0]"
+                                      ],
+                                      "SETN": [
+                                        "_28840_"
+                                      ]
+                                    },
+                                    "ancestors": {
+                                      "D": [
+                                        {
+                                          "net": "\\u_ot_pr_core.u_core.u_reset_regions.s0",
+                                          "cell": "_53812_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07526_"
+                                            ],
+                                            "Y": [
+                                              "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07526_",
+                                                "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s0$_DFF_PN0_",
+                                                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "_28840_"
+                                                  ],
+                                                  "QN": [
+                                                    "_07526_"
+                                                  ],
+                                                  "RESETN": [
+                                                    "\\rst_n__ot_rl1[0]"
+                                                  ],
+                                                  "SETN": [
+                                                    "_28840_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "_28840_",
+                                                      "cell": "_53831_",
+                                                      "master": "TIEHIx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "H": [
+                                                          "_28840_"
+                                                        ]
+                                                      },
+                                                      "ancestors": {}
+                                                    }
+                                                  ],
+                                                  "RESETN": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl1[0]",
+                                                      "cell": "_51302_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07086_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl1[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07086_",
+                                                            "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "\\rst_n__ot_rl0[0]"
+                                                              ],
+                                                              "QN": [
+                                                                "_07086_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "\\rst_n__ot_rl0[0]",
+                                                                  "cell": "_51294_",
+                                                                  "master": "INVx1_ASAP7_75t_R",
+                                                                  "pins": {
+                                                                    "A": [
+                                                                      "_07085_"
+                                                                    ],
+                                                                    "Y": [
+                                                                      "\\rst_n__ot_rl0[0]"
+                                                                    ]
+                                                                  },
+                                                                  "ancestors": {
+                                                                    "A": [
+                                                                      {
+                                                                        "net": "_07085_",
+                                                                        "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                                        "master": "DFFHQNx1_ASAP7_75t_R",
+                                                                        "pins": {
+                                                                          "CLK": [
+                                                                            "ck"
+                                                                          ],
+                                                                          "D": [
+                                                                            "rst_n"
+                                                                          ],
+                                                                          "QN": [
+                                                                            "_07085_"
+                                                                          ]
+                                                                        },
+                                                                        "ancestors": {
+                                                                          "D": [
+                                                                            {
+                                                                              "net": "rst_n",
+                                                                              "port": "rst_n"
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "RESETN": [
+                                        {
+                                          "net": "\\rst_n__ot_rl1[0]",
+                                          "cell": "_51302_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07086_"
+                                            ],
+                                            "Y": [
+                                              "\\rst_n__ot_rl1[0]"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07086_",
+                                                "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                "master": "DFFHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "\\rst_n__ot_rl0[0]"
+                                                  ],
+                                                  "QN": [
+                                                    "_07086_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl0[0]",
+                                                      "cell": "_51294_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07085_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl0[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07085_",
+                                                            "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "rst_n"
+                                                              ],
+                                                              "QN": [
+                                                                "_07085_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "rst_n",
+                                                                  "port": "rst_n"
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[7]",
+      "cell": "_53688_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": [
+          "_07507_"
+        ],
+        "Y": [
+          "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[7]"
+        ]
+      },
+      "ancestors": {
+        "A": [
+          {
+            "net": "_07507_",
+            "cell": "\\ot_rrs__u_ot_pr_core_u_core_u_reset_regions_g_fam_g_c_0__qv__c7$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pins": {
+              "CLK": [
+                "ck"
+              ],
+              "D": [
+                "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]"
+              ],
+              "QN": [
+                "_07507_"
+              ]
+            },
+            "ancestors": {
+              "D": [
+                {
+                  "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]",
+                  "cell": "_53805_",
+                  "master": "INVx1_ASAP7_75t_R",
+                  "pins": {
+                    "A": [
+                      "_07519_"
+                    ],
+                    "Y": [
+                      "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]"
+                    ]
+                  },
+                  "ancestors": {
+                    "A": [
+                      {
+                        "net": "_07519_",
+                        "cell": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.g_c[0].d$_DFF_P_",
+                        "master": "DFFHQNx1_ASAP7_75t_R",
+                        "pins": {
+                          "CLK": [
+                            "ck"
+                          ],
+                          "D": [
+                            "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                          ],
+                          "QN": [
+                            "_07519_"
+                          ]
+                        },
+                        "ancestors": {
+                          "D": [
+                            {
+                              "net": "\\u_ot_pr_core.u_core.u_reset_regions.s1",
+                              "cell": "_53813_",
+                              "master": "INVx1_ASAP7_75t_R",
+                              "pins": {
+                                "A": [
+                                  "_07527_"
+                                ],
+                                "Y": [
+                                  "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                                ]
+                              },
+                              "ancestors": {
+                                "A": [
+                                  {
+                                    "net": "_07527_",
+                                    "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s1$_DFF_PN0_",
+                                    "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                    "pins": {
+                                      "CLK": [
+                                        "ck"
+                                      ],
+                                      "D": [
+                                        "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                      ],
+                                      "QN": [
+                                        "_07527_"
+                                      ],
+                                      "RESETN": [
+                                        "\\rst_n__ot_rl1[0]"
+                                      ],
+                                      "SETN": [
+                                        "_28840_"
+                                      ]
+                                    },
+                                    "ancestors": {
+                                      "D": [
+                                        {
+                                          "net": "\\u_ot_pr_core.u_core.u_reset_regions.s0",
+                                          "cell": "_53812_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07526_"
+                                            ],
+                                            "Y": [
+                                              "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07526_",
+                                                "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s0$_DFF_PN0_",
+                                                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "_28840_"
+                                                  ],
+                                                  "QN": [
+                                                    "_07526_"
+                                                  ],
+                                                  "RESETN": [
+                                                    "\\rst_n__ot_rl1[0]"
+                                                  ],
+                                                  "SETN": [
+                                                    "_28840_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "_28840_",
+                                                      "cell": "_53831_",
+                                                      "master": "TIEHIx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "H": [
+                                                          "_28840_"
+                                                        ]
+                                                      },
+                                                      "ancestors": {}
+                                                    }
+                                                  ],
+                                                  "RESETN": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl1[0]",
+                                                      "cell": "_51302_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07086_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl1[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07086_",
+                                                            "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "\\rst_n__ot_rl0[0]"
+                                                              ],
+                                                              "QN": [
+                                                                "_07086_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "\\rst_n__ot_rl0[0]",
+                                                                  "cell": "_51294_",
+                                                                  "master": "INVx1_ASAP7_75t_R",
+                                                                  "pins": {
+                                                                    "A": [
+                                                                      "_07085_"
+                                                                    ],
+                                                                    "Y": [
+                                                                      "\\rst_n__ot_rl0[0]"
+                                                                    ]
+                                                                  },
+                                                                  "ancestors": {
+                                                                    "A": [
+                                                                      {
+                                                                        "net": "_07085_",
+                                                                        "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                                        "master": "DFFHQNx1_ASAP7_75t_R",
+                                                                        "pins": {
+                                                                          "CLK": [
+                                                                            "ck"
+                                                                          ],
+                                                                          "D": [
+                                                                            "rst_n"
+                                                                          ],
+                                                                          "QN": [
+                                                                            "_07085_"
+                                                                          ]
+                                                                        },
+                                                                        "ancestors": {
+                                                                          "D": [
+                                                                            {
+                                                                              "net": "rst_n",
+                                                                              "port": "rst_n"
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "RESETN": [
+                                        {
+                                          "net": "\\rst_n__ot_rl1[0]",
+                                          "cell": "_51302_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07086_"
+                                            ],
+                                            "Y": [
+                                              "\\rst_n__ot_rl1[0]"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07086_",
+                                                "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                "master": "DFFHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "\\rst_n__ot_rl0[0]"
+                                                  ],
+                                                  "QN": [
+                                                    "_07086_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl0[0]",
+                                                      "cell": "_51294_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07085_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl0[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07085_",
+                                                            "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "rst_n"
+                                                              ],
+                                                              "QN": [
+                                                                "_07085_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "rst_n",
+                                                                  "port": "rst_n"
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[8]",
+      "cell": "_53794_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": [
+          "_07508_"
+        ],
+        "Y": [
+          "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[8]"
+        ]
+      },
+      "ancestors": {
+        "A": [
+          {
+            "net": "_07508_",
+            "cell": "\\ot_rrs__u_ot_pr_core_u_core_u_reset_regions_g_fam_g_c_0__qv__c8$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pins": {
+              "CLK": [
+                "ck"
+              ],
+              "D": [
+                "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]"
+              ],
+              "QN": [
+                "_07508_"
+              ]
+            },
+            "ancestors": {
+              "D": [
+                {
+                  "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]",
+                  "cell": "_53805_",
+                  "master": "INVx1_ASAP7_75t_R",
+                  "pins": {
+                    "A": [
+                      "_07519_"
+                    ],
+                    "Y": [
+                      "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]"
+                    ]
+                  },
+                  "ancestors": {
+                    "A": [
+                      {
+                        "net": "_07519_",
+                        "cell": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.g_c[0].d$_DFF_P_",
+                        "master": "DFFHQNx1_ASAP7_75t_R",
+                        "pins": {
+                          "CLK": [
+                            "ck"
+                          ],
+                          "D": [
+                            "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                          ],
+                          "QN": [
+                            "_07519_"
+                          ]
+                        },
+                        "ancestors": {
+                          "D": [
+                            {
+                              "net": "\\u_ot_pr_core.u_core.u_reset_regions.s1",
+                              "cell": "_53813_",
+                              "master": "INVx1_ASAP7_75t_R",
+                              "pins": {
+                                "A": [
+                                  "_07527_"
+                                ],
+                                "Y": [
+                                  "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                                ]
+                              },
+                              "ancestors": {
+                                "A": [
+                                  {
+                                    "net": "_07527_",
+                                    "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s1$_DFF_PN0_",
+                                    "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                    "pins": {
+                                      "CLK": [
+                                        "ck"
+                                      ],
+                                      "D": [
+                                        "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                      ],
+                                      "QN": [
+                                        "_07527_"
+                                      ],
+                                      "RESETN": [
+                                        "\\rst_n__ot_rl1[0]"
+                                      ],
+                                      "SETN": [
+                                        "_28840_"
+                                      ]
+                                    },
+                                    "ancestors": {
+                                      "D": [
+                                        {
+                                          "net": "\\u_ot_pr_core.u_core.u_reset_regions.s0",
+                                          "cell": "_53812_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07526_"
+                                            ],
+                                            "Y": [
+                                              "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07526_",
+                                                "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s0$_DFF_PN0_",
+                                                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "_28840_"
+                                                  ],
+                                                  "QN": [
+                                                    "_07526_"
+                                                  ],
+                                                  "RESETN": [
+                                                    "\\rst_n__ot_rl1[0]"
+                                                  ],
+                                                  "SETN": [
+                                                    "_28840_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "_28840_",
+                                                      "cell": "_53831_",
+                                                      "master": "TIEHIx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "H": [
+                                                          "_28840_"
+                                                        ]
+                                                      },
+                                                      "ancestors": {}
+                                                    }
+                                                  ],
+                                                  "RESETN": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl1[0]",
+                                                      "cell": "_51302_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07086_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl1[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07086_",
+                                                            "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "\\rst_n__ot_rl0[0]"
+                                                              ],
+                                                              "QN": [
+                                                                "_07086_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "\\rst_n__ot_rl0[0]",
+                                                                  "cell": "_51294_",
+                                                                  "master": "INVx1_ASAP7_75t_R",
+                                                                  "pins": {
+                                                                    "A": [
+                                                                      "_07085_"
+                                                                    ],
+                                                                    "Y": [
+                                                                      "\\rst_n__ot_rl0[0]"
+                                                                    ]
+                                                                  },
+                                                                  "ancestors": {
+                                                                    "A": [
+                                                                      {
+                                                                        "net": "_07085_",
+                                                                        "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                                        "master": "DFFHQNx1_ASAP7_75t_R",
+                                                                        "pins": {
+                                                                          "CLK": [
+                                                                            "ck"
+                                                                          ],
+                                                                          "D": [
+                                                                            "rst_n"
+                                                                          ],
+                                                                          "QN": [
+                                                                            "_07085_"
+                                                                          ]
+                                                                        },
+                                                                        "ancestors": {
+                                                                          "D": [
+                                                                            {
+                                                                              "net": "rst_n",
+                                                                              "port": "rst_n"
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "RESETN": [
+                                        {
+                                          "net": "\\rst_n__ot_rl1[0]",
+                                          "cell": "_51302_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07086_"
+                                            ],
+                                            "Y": [
+                                              "\\rst_n__ot_rl1[0]"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07086_",
+                                                "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                "master": "DFFHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "\\rst_n__ot_rl0[0]"
+                                                  ],
+                                                  "QN": [
+                                                    "_07086_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl0[0]",
+                                                      "cell": "_51294_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07085_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl0[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07085_",
+                                                            "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "rst_n"
+                                                              ],
+                                                              "QN": [
+                                                                "_07085_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "rst_n",
+                                                                  "port": "rst_n"
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[9]",
+      "cell": "_53795_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pins": {
+        "A": [
+          "_07509_"
+        ],
+        "Y": [
+          "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.fam_all[9]"
+        ]
+      },
+      "ancestors": {
+        "A": [
+          {
+            "net": "_07509_",
+            "cell": "\\ot_rrs__u_ot_pr_core_u_core_u_reset_regions_g_fam_g_c_0__qv__c9$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pins": {
+              "CLK": [
+                "ck"
+              ],
+              "D": [
+                "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]"
+              ],
+              "QN": [
+                "_07509_"
+              ]
+            },
+            "ancestors": {
+              "D": [
+                {
+                  "net": "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]",
+                  "cell": "_53805_",
+                  "master": "INVx1_ASAP7_75t_R",
+                  "pins": {
+                    "A": [
+                      "_07519_"
+                    ],
+                    "Y": [
+                      "\\u_ot_pr_core.u_core.u_reset_regions.g_p[0].q[0]"
+                    ]
+                  },
+                  "ancestors": {
+                    "A": [
+                      {
+                        "net": "_07519_",
+                        "cell": "\\u_ot_pr_core.u_core.u_reset_regions.g_fam.g_c[0].d$_DFF_P_",
+                        "master": "DFFHQNx1_ASAP7_75t_R",
+                        "pins": {
+                          "CLK": [
+                            "ck"
+                          ],
+                          "D": [
+                            "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                          ],
+                          "QN": [
+                            "_07519_"
+                          ]
+                        },
+                        "ancestors": {
+                          "D": [
+                            {
+                              "net": "\\u_ot_pr_core.u_core.u_reset_regions.s1",
+                              "cell": "_53813_",
+                              "master": "INVx1_ASAP7_75t_R",
+                              "pins": {
+                                "A": [
+                                  "_07527_"
+                                ],
+                                "Y": [
+                                  "\\u_ot_pr_core.u_core.u_reset_regions.s1"
+                                ]
+                              },
+                              "ancestors": {
+                                "A": [
+                                  {
+                                    "net": "_07527_",
+                                    "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s1$_DFF_PN0_",
+                                    "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                    "pins": {
+                                      "CLK": [
+                                        "ck"
+                                      ],
+                                      "D": [
+                                        "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                      ],
+                                      "QN": [
+                                        "_07527_"
+                                      ],
+                                      "RESETN": [
+                                        "\\rst_n__ot_rl1[0]"
+                                      ],
+                                      "SETN": [
+                                        "_28840_"
+                                      ]
+                                    },
+                                    "ancestors": {
+                                      "D": [
+                                        {
+                                          "net": "\\u_ot_pr_core.u_core.u_reset_regions.s0",
+                                          "cell": "_53812_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07526_"
+                                            ],
+                                            "Y": [
+                                              "\\u_ot_pr_core.u_core.u_reset_regions.s0"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07526_",
+                                                "cell": "\\u_ot_pr_core.u_core.u_reset_regions.s0$_DFF_PN0_",
+                                                "master": "DFFASRHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "_28840_"
+                                                  ],
+                                                  "QN": [
+                                                    "_07526_"
+                                                  ],
+                                                  "RESETN": [
+                                                    "\\rst_n__ot_rl1[0]"
+                                                  ],
+                                                  "SETN": [
+                                                    "_28840_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "_28840_",
+                                                      "cell": "_53831_",
+                                                      "master": "TIEHIx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "H": [
+                                                          "_28840_"
+                                                        ]
+                                                      },
+                                                      "ancestors": {}
+                                                    }
+                                                  ],
+                                                  "RESETN": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl1[0]",
+                                                      "cell": "_51302_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07086_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl1[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07086_",
+                                                            "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "\\rst_n__ot_rl0[0]"
+                                                              ],
+                                                              "QN": [
+                                                                "_07086_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "\\rst_n__ot_rl0[0]",
+                                                                  "cell": "_51294_",
+                                                                  "master": "INVx1_ASAP7_75t_R",
+                                                                  "pins": {
+                                                                    "A": [
+                                                                      "_07085_"
+                                                                    ],
+                                                                    "Y": [
+                                                                      "\\rst_n__ot_rl0[0]"
+                                                                    ]
+                                                                  },
+                                                                  "ancestors": {
+                                                                    "A": [
+                                                                      {
+                                                                        "net": "_07085_",
+                                                                        "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                                        "master": "DFFHQNx1_ASAP7_75t_R",
+                                                                        "pins": {
+                                                                          "CLK": [
+                                                                            "ck"
+                                                                          ],
+                                                                          "D": [
+                                                                            "rst_n"
+                                                                          ],
+                                                                          "QN": [
+                                                                            "_07085_"
+                                                                          ]
+                                                                        },
+                                                                        "ancestors": {
+                                                                          "D": [
+                                                                            {
+                                                                              "net": "rst_n",
+                                                                              "port": "rst_n"
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ],
+                                      "RESETN": [
+                                        {
+                                          "net": "\\rst_n__ot_rl1[0]",
+                                          "cell": "_51302_",
+                                          "master": "INVx1_ASAP7_75t_R",
+                                          "pins": {
+                                            "A": [
+                                              "_07086_"
+                                            ],
+                                            "Y": [
+                                              "\\rst_n__ot_rl1[0]"
+                                            ]
+                                          },
+                                          "ancestors": {
+                                            "A": [
+                                              {
+                                                "net": "_07086_",
+                                                "cell": "\\rst_n__ot_rl1$_DFF_P_",
+                                                "master": "DFFHQNx1_ASAP7_75t_R",
+                                                "pins": {
+                                                  "CLK": [
+                                                    "ck"
+                                                  ],
+                                                  "D": [
+                                                    "\\rst_n__ot_rl0[0]"
+                                                  ],
+                                                  "QN": [
+                                                    "_07086_"
+                                                  ]
+                                                },
+                                                "ancestors": {
+                                                  "D": [
+                                                    {
+                                                      "net": "\\rst_n__ot_rl0[0]",
+                                                      "cell": "_51294_",
+                                                      "master": "INVx1_ASAP7_75t_R",
+                                                      "pins": {
+                                                        "A": [
+                                                          "_07085_"
+                                                        ],
+                                                        "Y": [
+                                                          "\\rst_n__ot_rl0[0]"
+                                                        ]
+                                                      },
+                                                      "ancestors": {
+                                                        "A": [
+                                                          {
+                                                            "net": "_07085_",
+                                                            "cell": "\\rst_n__ot_rl0$_DFF_P_",
+                                                            "master": "DFFHQNx1_ASAP7_75t_R",
+                                                            "pins": {
+                                                              "CLK": [
+                                                                "ck"
+                                                              ],
+                                                              "D": [
+                                                                "rst_n"
+                                                              ],
+                                                              "QN": [
+                                                                "_07085_"
+                                                              ]
+                                                            },
+                                                            "ancestors": {
+                                                              "D": [
+                                                                {
+                                                                  "net": "rst_n",
+                                                                  "port": "rst_n"
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
