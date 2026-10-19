@@ -28,6 +28,10 @@ VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 FIX=$OUT/src/results/rtl/hbm_ds_layer_tput_1018/fixtures
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/smb_unit.py run --fix $FIX --smw $SMW --bundle $BUNDLE --work $OUT/work"
 case "$JOB" in
+  banked_class_mismatch) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS,SMB_CLASS_MUT=1 --name banked_class_mismatch --out $OUT/out/banked_class_mismatch.json" ;;
+  banked_missing_context) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS,SMB_CLASS_MUT=4 --name banked_missing_context --out $OUT/out/banked_missing_context.json" ;;
+  banked_svg_mirror_early) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS,SMB_ENVELOPE_MUT=1 --name banked_svg_mirror_early --out $OUT/out/banked_svg_mirror_early.json" ;;
+  banked_xc_mirror_early) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS,SMB_XMIRROR_MUT=1 --name banked_xc_mirror_early --out $OUT/out/banked_xc_mirror_early.json" ;;
   banked_class_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS --name banked_class_smoke --out $OUT/out/banked_class_smoke.json" ;;
   banked_class_two_runs) J="$T --layers L00:0,L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS --name banked_class_two_runs --out $OUT/out/banked_class_two_runs.json" ;;
   cache_safe_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE --name cache_safe_smoke --out $OUT/out/cache_safe_smoke.json" ;;

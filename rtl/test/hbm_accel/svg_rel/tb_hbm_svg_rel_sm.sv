@@ -42,6 +42,9 @@ module tb_hbm_svg_rel_sm;
  `ifdef SMB_SRAMFIFO
  `ifdef SMB_BANKED_CLASS
  ot_hbm_svc_sm_group_rel_banked_class #(.CLASS_ENABLE(1),.ID_COHORT(1),
+ .CLASS_MUT(`ifdef SMB_CLASS_MUT `SMB_CLASS_MUT `else 0 `endif),
+ .ISSUER_CLASS_MUT(`ifdef SMB_ISSUER_CLASS_MUT `SMB_ISSUER_CLASS_MUT `else 0 `endif),
+ .ENVELOPE_MUT(`ifdef SMB_ENVELOPE_MUT `SMB_ENVELOPE_MUT `else 0 `endif),
  `else
  ot_hbm_svc_sm_group_rel_sram_id #(
  `endif
@@ -72,7 +75,7 @@ module tb_hbm_svg_rel_sm;
  wire[108:0]cmd_ext;wire[63:0]kv_desc;wire xc_done,xc_cfgd,xc_fault,xc_active;
  `ifdef SMB_BANKED_CLASS
  wire[174:0]xc_command_envelope;
- ot_hbm_svc_sm_xcal_rel_t_banked #(.CLASS_ENABLE(1),.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(
+ ot_hbm_svc_sm_xcal_rel_t_banked #(.CLASS_ENABLE(1),.MIRROR_MUT(`ifdef SMB_XMIRROR_MUT `SMB_XMIRROR_MUT `else 0 `endif),.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(
   .clk_core(stream),.clk_bank0(stream),.clk_bank1(stream),.rst_n(srst),.tgt(8'd192),
   .command_envelope(xc_command_envelope),.command_class_observe(),.command_context_valid_observe(),
  `else
