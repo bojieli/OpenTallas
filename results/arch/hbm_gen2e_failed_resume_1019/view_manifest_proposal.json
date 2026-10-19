@@ -1,0 +1,853 @@
+{
+  "status": "INCOMPLETE_REVIEW_REQUIRED_NO_S3",
+  "source": "6f783d0a1",
+  "old_successes": {
+    "ot_hbm_static_cfg_collar_idx256": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_static_cfg_collar_idx256.json",
+      "metadata_sha256": "5d7ddb3d50b882e52a5009ee9c8d1f06b0c691367ef0e4bb917d90fab5923efe",
+      "receipt": {
+        "cell": "ot_hbm_static_cfg_collar_idx256",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_static_cfg_collar_idx256.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_static_cfg_collar_idx256"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv5": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv5.json",
+      "metadata_sha256": "c5d69244c31420385349d94b373c19e0162f71e4e4080aa7895da7bcf70bc2ec",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv5",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv5.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv5"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv10": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv10.json",
+      "metadata_sha256": "ac7387d677ad73f4805f0dc4731e8de0686ee5d210e7847f04b77b8fc475df59",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv10",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv10.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv10"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv7": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv7.json",
+      "metadata_sha256": "463e1cd07fda06c4baa6efc0316f5153ece08ca82ace77d93a243bfca23730df",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv7",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv7.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv7"
+      }
+    },
+    "ot_hbm_svc_sm_xcal_rel_t": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_svc_sm_xcal_rel_t.json",
+      "metadata_sha256": "c3272c78dd0517d4a86d7fd59cbe05ea6b8dd1d74da401912c52984c5b650a12",
+      "receipt": {
+        "cell": "ot_hbm_svc_sm_xcal_rel_t",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_svc_sm_xcal_rel_t.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_sm_xcal_rel_t"
+      }
+    },
+    "ot_hbm_idx_vm_share2_static": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_idx_vm_share2_static.json",
+      "metadata_sha256": "4303def530b32f83e1887f5cf792af3a67912dc95dee46f0177d52bac96d9f5e",
+      "receipt": {
+        "cell": "ot_hbm_idx_vm_share2_static",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_idx_vm_share2_static.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_idx_vm_share2_static"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv8": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv8.json",
+      "metadata_sha256": "c580046cbee85ad7bb2b1233144070f047302044a54e22728a16d66973425482",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv8",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv8.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv8"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv14": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv14.json",
+      "metadata_sha256": "b8f98bdf02269598dfb2525844dd0313bcdd764f7c66c76be3c08d7961e4abf8",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv14",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv14.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv14"
+      }
+    },
+    "ot_hbm_fault_leaf__pv1": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_fault_leaf__pv1.json",
+      "metadata_sha256": "2f2679ad9c57ac9e61da4f260a65e9dbeb08239e8f9bfbb0bbc367a4baf7d375",
+      "receipt": {
+        "cell": "ot_hbm_fault_leaf__pv1",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_fault_leaf__pv1.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_fault_leaf__pv1"
+      }
+    },
+    "ot_hbm_su_static_cxport_ij__pv3": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_ij__pv3.json",
+      "metadata_sha256": "4fe4b3804c9b7a305ecd7f4908d16fff32027c82606417ea64f78c90066f1667",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_ij__pv3",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_ij__pv3.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_ij__pv3"
+      }
+    },
+    "ot_hbm_su_static_cxport_ij__pv1": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_ij__pv1.json",
+      "metadata_sha256": "a32f5cc52514496f3f2bb9ed5633a70e3abcbbc1eda746bd363d98bbb3d19608",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_ij__pv1",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_ij__pv1.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_ij__pv1"
+      }
+    },
+    "ot_hbm_svc_vm_kshare_splitstrap": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_svc_vm_kshare_splitstrap.json",
+      "metadata_sha256": "64fd72b49f5d0483df8d0b6484599db635e65d450e1b8f672a5794558241f153",
+      "receipt": {
+        "cell": "ot_hbm_svc_vm_kshare_splitstrap",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_svc_vm_kshare_splitstrap.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap"
+      }
+    },
+    "ot_hfd_coll_q2_hard_v8g": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hfd_coll_q2_hard_v8g.json",
+      "metadata_sha256": "6c524f06233b53baccc6d5006c2f3b2697537a1ac5c3a026afff3d38b8bd4e2b",
+      "receipt": {
+        "cell": "ot_hfd_coll_q2_hard_v8g",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hfd_coll_q2_hard_v8g.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hfd_coll_q2_hard_v8g"
+      }
+    },
+    "ot_hbm_fault_leaf__pv2": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_fault_leaf__pv2.json",
+      "metadata_sha256": "60fd5704d0725fea791a09703d0d91f404a651b73c7389b1c13549639a9c453d",
+      "receipt": {
+        "cell": "ot_hbm_fault_leaf__pv2",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_fault_leaf__pv2.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_fault_leaf__pv2"
+      }
+    },
+    "ot_hfd_coll_q3_hard_v8x": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hfd_coll_q3_hard_v8x.json",
+      "metadata_sha256": "887362fb9603122ac698bc6b1d57544e77b4c1d7847c1ef35060adc31245f76c",
+      "receipt": {
+        "cell": "ot_hfd_coll_q3_hard_v8x",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hfd_coll_q3_hard_v8x.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hfd_coll_q3_hard_v8x"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv0": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv0.json",
+      "metadata_sha256": "4d0769f11bbdc828a6c2be13efdcb6d51f173775bfd7a05735ffb49676f073e4",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv0",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv0.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv0"
+      }
+    },
+    "ot_hbm_su_static_cxport_ij__pv0": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_ij__pv0.json",
+      "metadata_sha256": "d7279f6f697f244dbbdcb939152b5a83419c745dd16589262ba383f980e4a0f1",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_ij__pv0",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_ij__pv0.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_ij__pv0"
+      }
+    },
+    "ot_hbm_fault_leaf__pv3": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_fault_leaf__pv3.json",
+      "metadata_sha256": "1fcbc714c244d3ffeb48188a2f174e20dbb95b987f0aeb8ee479f907f7d91b47",
+      "receipt": {
+        "cell": "ot_hbm_fault_leaf__pv3",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_fault_leaf__pv3.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_fault_leaf__pv3"
+      }
+    },
+    "ot_hgi_coll_gq_issue": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hgi_coll_gq_issue.json",
+      "metadata_sha256": "2dd662a5465caa395327ede80a62144c4cbf9d724327525a0f8d1af914e18959",
+      "receipt": {
+        "cell": "ot_hgi_coll_gq_issue",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 1,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hgi_coll_gq_issue.sv"
+            ],
+            "prefer": [],
+            "errors": [
+              "ERROR: Module `\\ot_hbm_xp_aq_tree13' referenced in module `\\ot_hgi_coll_gq_issue' in cell `\\u_aq1' is not part of the design."
+            ]
+          },
+          {
+            "round": 1,
+            "rc": 1,
+            "host": "ot-pve1",
+            "extra": [
+              "v16w/v16w_ot_hgi_coll_gq_issue.sv",
+              "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+            ],
+            "prefer": [],
+            "errors": [
+              "ERROR: Module `\\ot_hdc_delay' referenced in module `\\ot_hbm_xp_aq_tree13' in cell `\\u_x' is not part of the design."
+            ]
+          },
+          {
+            "round": 2,
+            "rc": 1,
+            "host": "ot-pve1",
+            "extra": [
+              "v16w/v16w_ot_hgi_coll_gq_issue.sv",
+              "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+              "rtl/hdc/ot_hdc_delay.sv"
+            ],
+            "prefer": [],
+            "errors": [
+              "ERROR: Module `\\ot_hbm_xp_aq_scale13' referenced in module `\\ot_hbm_xp_aq_tree13' in cell `\\u_scale' is not part of the design."
+            ]
+          },
+          {
+            "round": 3,
+            "rc": 0,
+            "host": "ot-pve1",
+            "extra": [
+              "v16w/v16w_ot_hgi_coll_gq_issue.sv",
+              "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+              "rtl/hdc/ot_hdc_delay.sv",
+              "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-pve1",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_coll_gq_issue"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv1": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv1.json",
+      "metadata_sha256": "5af30d10c44d232c7f8c21ddc703467ae0004c3c93633a658ec9fb6effb14bd6",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv1",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv1.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv1"
+      }
+    },
+    "ot_hgi_coll_kq_share2": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hgi_coll_kq_share2.json",
+      "metadata_sha256": "c0cbe6ab34ba5b4600b830b6ee452b4ed3b62ab1f8d2dc416da94f2f3e21e5a7",
+      "receipt": {
+        "cell": "ot_hgi_coll_kq_share2",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hgi_coll_kq_share2.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_coll_kq_share2"
+      }
+    },
+    "ot_hbm_fault_leaf__pv0": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_fault_leaf__pv0.json",
+      "metadata_sha256": "4547864022b96b0e3094f6f37c79628deb7dbb6a0862c30c388e2809dedb8354",
+      "receipt": {
+        "cell": "ot_hbm_fault_leaf__pv0",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_fault_leaf__pv0.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_fault_leaf__pv0"
+      }
+    },
+    "ot_hgi_dma_back_static_vp4_banks_cp": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hgi_dma_back_static_vp4_banks_cp.json",
+      "metadata_sha256": "0fdd81e8aa447493efc02f31fdb72268c2a2f27f80d72c69fe900d173df311cb",
+      "receipt": {
+        "cell": "ot_hgi_dma_back_static_vp4_banks_cp",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hgi_dma_back_static_vp4_banks_cp.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_dma_back_static_vp4_banks_cp"
+      }
+    },
+    "ot_hgi_coll_tkm_m_tp192": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hgi_coll_tkm_m_tp192.json",
+      "metadata_sha256": "1d1b5fb874ebf8ecb42bcb9ab07236b5a911fd46c4170f927f1bd254ccea7c89",
+      "receipt": {
+        "cell": "ot_hgi_coll_tkm_m_tp192",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hgi_coll_tkm_m_tp192.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_coll_tkm_m_tp192"
+      }
+    },
+    "ot_hbm_router_ids_static": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_router_ids_static.json",
+      "metadata_sha256": "d7c3de18215f411aadaf48d3e306e8578c5b01122f2cee4c6cc1ecfdb9dcc084",
+      "receipt": {
+        "cell": "ot_hbm_router_ids_static",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_router_ids_static.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_router_ids_static"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv4": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv4.json",
+      "metadata_sha256": "5e65180999520a70651b8bd3443a73d9ea83feb9791df170a0848dc336da4f2e",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv4",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv4.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv4"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv12": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv12.json",
+      "metadata_sha256": "5479a32e72c83b5a340c8850c097e9ca7b97b882d4b9128c59f17e3bf227d11c",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv12",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv12.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv12"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv11": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv11.json",
+      "metadata_sha256": "f3f215774029bcdeca1bbd88886de4049bbba15b46c13d1c7043a77764782378",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv11",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv11.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv11"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv13": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv13.json",
+      "metadata_sha256": "024e1ee3d58a326b045293977d0b5028436842dbd435195fb388e262b92af743",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv13",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv13.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv13"
+      }
+    },
+    "ot_hbm_su_static_cxport_ij__pv2": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_ij__pv2.json",
+      "metadata_sha256": "282e660fb057a442e219b3e4813683b79312c0cb2f9a7a548d6ffbaf7eeac95e",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_ij__pv2",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_ij__pv2.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_ij__pv2"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv3": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv3.json",
+      "metadata_sha256": "f6ce19f9009d9059ba8278d95c1b7e30510d3102814b704dce92eb5750251759",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv3",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv3.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv3"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv9": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv9.json",
+      "metadata_sha256": "3268c104f4375e289c92171fa3dd574994756d79b87f2f0246162d250e686e58",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv9",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv9.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv9"
+      }
+    },
+    "ot_static_run_target": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_static_run_target.json",
+      "metadata_sha256": "47fc554ba0137d4b8071571d94c1f604ec6915fdcca8b3b4c8e9b20795d4b2f9",
+      "receipt": {
+        "cell": "ot_static_run_target",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_static_run_target.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_static_run_target"
+      }
+    },
+    "ot_pdie_serdes": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_pdie_serdes.json",
+      "metadata_sha256": "c0e92f665acdbc60d345415c49da61610af376a986c46cbfff995bacd95cc23b",
+      "receipt": {
+        "cell": "ot_pdie_serdes",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_pdie_serdes.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_pdie_serdes"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv6": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv6.json",
+      "metadata_sha256": "75ef73566a1b4e69518d32b209fb929e03a4eeb9a6e61c326c1c970cdb4f3043",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv6",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv6.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv6"
+      }
+    },
+    "ot_hbm_su_static_cxport_dl_s__pv15": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_su_static_cxport_dl_s__pv15.json",
+      "metadata_sha256": "579cb21dd21a2caa787b436608f99d40ea52b2cff9a5396a9186dbf325cb84d9",
+      "receipt": {
+        "cell": "ot_hbm_su_static_cxport_dl_s__pv15",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_su_static_cxport_dl_s__pv15.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_su_static_cxport_dl_s__pv15"
+      }
+    },
+    "ot_hbm_svc_sm_group_rel_id": {
+      "metadata_file": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/drive/ot_hbm_svc_sm_group_rel_id.json",
+      "metadata_sha256": "ec0677a4bcd6a893c4baa5988a37403be4a0d75ea7d4dd57079a39055dd12ae5",
+      "receipt": {
+        "cell": "ot_hbm_svc_sm_group_rel_id",
+        "rounds": [
+          {
+            "round": 0,
+            "rc": 0,
+            "host": "ot-epyc6",
+            "extra": [
+              "v16w/v16w_ot_hbm_svc_sm_group_rel_id.sv"
+            ],
+            "prefer": []
+          }
+        ],
+        "ok": true,
+        "host": "ot-epyc6",
+        "remote": "/srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_sm_group_rel_id"
+      }
+    }
+  },
+  "corrected_cells": [
+    "ot_hbm_hc_bankq_ft_static",
+    "ot_hbm_su_static_pgslice_lg__pv0",
+    "ot_hbm_su_static_pgslice_lg__pv1",
+    "ot_hbm_su_static_pgslice_lg__pv10",
+    "ot_hbm_su_static_pgslice_lg__pv11",
+    "ot_hbm_su_static_pgslice_lg__pv12",
+    "ot_hbm_su_static_pgslice_lg__pv13",
+    "ot_hbm_su_static_pgslice_lg__pv14",
+    "ot_hbm_su_static_pgslice_lg__pv15",
+    "ot_hbm_su_static_pgslice_lg__pv2",
+    "ot_hbm_su_static_pgslice_lg__pv3",
+    "ot_hbm_su_static_pgslice_lg__pv4",
+    "ot_hbm_su_static_pgslice_lg__pv5",
+    "ot_hbm_su_static_pgslice_lg__pv6",
+    "ot_hbm_su_static_pgslice_lg__pv7",
+    "ot_hbm_su_static_pgslice_lg__pv8",
+    "ot_hbm_su_static_pgslice_lg__pv9",
+    "ot_hgi_sfu_core_split3"
+  ],
+  "preserve_original_live": [
+    "ot_hbm_idx_selector_static",
+    "ot_hbm_idx_score_quarter_static",
+    "ot_hgi_coll_tkm_m_tp192"
+  ],
+  "required": "All 18 corrected SYNTH+ETM receipts with host/output/hash/module/port proof, then merge original views and completed original live receipts. ROOT review before S3. Never touch case_a_GO automatically.",
+  "original_views_sha256": "599a0b81b456c26f760d9821279e1e9979515f28c2cf39deefa3c94b603c755c",
+  "original_jobs_sha256": "d230a34a820b3e7ec9e8c88136b742bd06832b7d32f578a19ac46f95626bf0cf"
+}
