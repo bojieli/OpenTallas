@@ -1,0 +1,21 @@
+MEM sectors=5988
+V 246 0
+V 249 1
+V 252 2
+V 255 3
+S 388 0
+B 388 0001
+B 389 0000
+V 440 0
+C 452 01
+S 518 1
+B 518 0010
+B 519 0000
+V 570 1
+C 582 11
+B 679 0100
+G 790 1019 548
+FAULT sm_schedule cycle 804
+[677083000] %Fatal: tb_hbm_svg_rel_sm.sv:98: Assertion failed in tb_hbm_svg_rel_sm: sm schedule_fault
+%Error: /srv/opentallas-scratch/claude/codex-svg-cache-safe-mut-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:98: Verilog $stop
+Aborting...
