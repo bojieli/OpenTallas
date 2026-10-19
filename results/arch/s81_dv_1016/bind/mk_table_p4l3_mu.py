@@ -77,6 +77,38 @@ def build(ab):
     return T
 
 
+def add_idx(T):
+    """MU-DIE-S81/IDX (10-19): bind_table_p4l3_mu_idx.json = _mu + dsdv_idx_rg (S81-IDXRD ef165a825; RTL stand-in until its
+    gate / closure, S81-IDXRD gate3 pending) for the dv_plan --idxrd 1 plan.  Ports: rqi 682 (from svc_rs, landed), rqo 682
+    (to ctrl_rg2), rdi 562 (from ctrl_rg2, landed), rdo 562 (to svc_rs), qi / qo 513 on 2 x 276 lanes, si / so 276.
+    Chain head qi (irg_00) and tail so (irg_15) are unlinked: no IDX frame source on the die, bk_sel vi_s taken by the
+    column-4 rung (COORD, lanes/MU-DIE-S81.md); the head's si is the chain start (OR chain, idle = 0)."""
+    T = copy.deepcopy(T)
+    Q2 = [{'split': [['qi', 0, 0, 276]]}, {'split': [['qi', 276, 0, 237]]}]
+    T['masters']['dsdv_idx_rg'] = {
+        'module': 'dsdv_idx_rg', 'ref': 'claude/s81-idxrd-1018 ef165a825', 'view': None,
+        'view_note': 'S81-IDXRD: RTL stand-in (kit physical/ref_tile/s81dv_idxrg 1058.4 x 1101.6 guess; gate3 pending)',
+        'clk': 'ck', 'rst': ['rst', 'high'], 'params': {'SRAM_MACRO': 1}, 'straps': ['sid'],
+        'strap_values': {'sid': {f'irg_{k:02d}': f"4'd{k}" for k in range(16)}},
+        'ports': {'rqi.i': {'port': 'rqi', 'lane': 682, 'land': True}, 'rqo.o': {'port': 'rqo', 'lane': 682},
+                  'rdi.i': {'port': 'rdi', 'lane': 562, 'land': True}, 'rdo.o': {'port': 'rdo', 'lane': 562},
+                  'qi.i': {'land': True, 'lanes': Q2},
+                  'qo.o': {'lanes': [{'split': [['qo', 0, 0, 276]]}, {'split': [['qo', 276, 0, 237]]}]},
+                  'si.i': {'port': 'si', 'lane': 276, 'land': True}, 'so.o': {'port': 'so', 'lane': 276}},
+        'mode_unused': [
+            {'port': 'qi', 'when': 'unlinked_bits', 'reason': 'COORD (MU-DIE-S81/IDX 10-19): chain head irg_00 qi has no on-die IDX_S / IDX_G frame source (svc_rs / seqhost expose none); owed, NOT a design tie'},
+            {'port': 'si', 'when': 'unlinked_bits', 'reason': 'score chain start (irg_00): beats are ORed onto the passing chain, the head sees the idle (all-zero) chain'}]}
+    T['rtl_widths']['dsdv_idx_rg'] = {'ck': 1, 'rst': 1, 'sid': 4, 'qi': 513, 'qo': 513, 'si': 276, 'so': 276,
+                                      'rqi': 682, 'rqo': 682, 'rdi': 562, 'rdo': 562, 'st': 10}
+    T['rtl_files'] = T['rtl_files'] + [f for f in ('rtl/hdc/ot_hdc_fastfp.sv', 'rtl/hdc/ot_hdc_delay.sv', 'rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv',
+                                                   'rtl/hdc/v41x/ot_hdc_v41x_idx.sv', 'rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg.sv') if f not in T['rtl_files']]
+    T['plan'] = 'S81-DV p4l multi-user + 16 index readers (dv_plan --idxrd 1; results/arch/s81_dv_1016/p4l_mu_idx/plan.json)'
+    T['note'] = T['note'] + '; MU-DIE-S81/IDX 10-19: + dsdv_idx_rg x16 (bind/mk_table_p4l3_mu.py add_idx)'
+    return T
+
+
 for ab, nm in ((False, 'bind_table_p4l3_mu.json'), (True, 'bind_table_p4l3_mab.json')):
     (B / nm).write_text(json.dumps(build(ab), indent=1) + '\n')
     print('wrote', nm)
+(B / 'bind_table_p4l3_mu_idx.json').write_text(json.dumps(add_idx(build(False)), indent=1) + '\n')
+print('wrote bind_table_p4l3_mu_idx.json')

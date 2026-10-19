@@ -68,6 +68,11 @@ MU = 0                            # MU-S81/DIE (10-19): 0 single-user p4l (defau
                                   # = 131 b <- seqhost on a 276 lane ht_7N) served by s_7N (the end slice nearest the seqhost)
                                   # over the top die strip; seqhost per-half jd_W (13 b, 276 lane) beside jd_E (13 b); svc up
                                   # faces 16 b (st_rg producer folded up the tree)
+IDXRD = 0                         # MU-DIE-S81/IDX (10-19): 1 = 16 regional index readers dsdv_idx_rg (S81-IDXRD) as the registered
+                                  # station on each region's rq / rd link (svc_rs -> reader -> ctrl_rg2), query chain qi/qo and
+                                  # score chain si/so W -> E; placed in the bottom strips beside the PHY (no room between the
+                                  # ctrl row and the rsv band: 200 um channel); 0 = default, byte-identical
+IDX_W, IDX_H = 1058.4, 1101.6     # kit outline physical/ref_tile/s81dv_idxrg (S81-IDXRD guess; gate pending)
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
 SVC_MM2, SM_MM2 = 13.43, 8 * 1.231 * 1.058   # service halves (estimate, no RTL) + 8 ot_s81_su_sm tiles: shared out 1/16 each
@@ -1023,7 +1028,72 @@ def build():
         host_lanes(P, facts, colx, streets)
     if P4L and MU:
         mu_lanes(P, facts, colx, streets)
+    if P4L and IDXRD:
+        idx_readers(P, facts)
     return P, facts
+
+
+def idx_readers(P, facts):
+    """MU-DIE-S81/IDX (--idxrd 1): the 16 regional index readers dsdv_idx_rg (one per dsfd_ctrl_rg2, sid = region k)
+    split each region's rq / rd link: svc_rs rq -> reader rqi, reader rqo -> ctrl rq; ctrl rd -> reader rdi, reader
+    rdo -> svc_rs rd.  Placement: no slot exists between the ctrl row (top 1.45 mm) and the rsv band (1.65 mm), so the
+    readers sit in the free bottom strips W (regions 0-7) and E (8-15) of the PHY, abutting it in x order.  Chains
+    (neighbour-only, W -> E, 2 edges a hop + relays; qi and si take the same path so their per-hop delays stay equal):
+    qi/qo 513 b {d, v} on 2 x 276 lanes, si/so 276 b (BK V beats).  Chain head qi (reader 0) and tail so (reader 15)
+    are NOT linked: the die has no IDX_S / IDX_G frame source and the bk_sel V ingress vi_s is the column-4 rung
+    (s_4S) -- both COORD items, not invented here."""
+    phy_x = DIE_W / 2 - 4250
+    gap = 40.0
+    for k in range(CTRL_N):
+        if k < CTRL_N // 2:
+            x = phy_x - gap - (CTRL_N // 2 - k) * (IDX_W + gap) + gap
+        else:
+            x = phy_x + 8500 + gap + (k - CTRL_N // 2) * (IDX_W + gap)
+        P.block(f'irg_{k:02d}', 'dsdv_idx_rg', 'idx', 'south', x, 40.0, IDX_W, IDX_H)
+    old = {l['i']: l for l in P.links if l['i'][:4] in ('hrq_', 'hrd_')}
+    P.links[:] = [l for l in P.links if l['i'][:4] not in ('hrq_', 'hrd_')]
+    rtop = 40.0 + IDX_H
+    for k in range(CTRL_N):
+        rn, cn, irn = f'rsv_{k:02d}', f'ctrl_{k:02d}', f'irg_{k:02d}'
+        I = P.blocks[P.idx[irn]]
+        xi = lambda f: I['x'] + IDX_W * f
+        for cls_, bits, f_s, f_c in (('rq', 2 * PC_RQ, 0.2, 0.4), ('rd', 2 * PC_RD + 2, 0.6, 0.8)):
+            o = old[f'h{cls_}_{k:02d}']
+            # original route svc face -> channel -> ctrl top: keep the svc part up to the channel, then the reader
+            pts = [tuple(v) for v in ([o['e'][0][2:4]] if cls_ == 'rq' else [o['e'][1][2:4]])]
+            hp = [tuple(h[:2]) for h in o['h']] + [tuple(o['h'][-1][2:4])]
+            if cls_ == 'rd':
+                hp = hp[::-1]
+            ych = hp[-2][1]                    # the channel level of the original lane (above the ctrl top)
+            xk, ctop = hp[-1]
+            svc_pts = [pt for pt in hp[:-2]] + [(hp[-2][0], ych)]
+            s_leg = svc_pts + [(xi(f_s), ych), (xi(f_s), rtop)]
+            c_leg = [(xi(f_c), rtop), (xi(f_c), ych + (8 if cls_ == 'rq' else -8)), (xk, ych + (8 if cls_ == 'rq' else -8)), (xk, ctop)]
+            if cls_ == 'rq':
+                P.link(f'hrq_{k:02d}', 'hbm', bits, (rn, 'rq', s_leg[0]), (irn, 'rqi', s_leg[-1]), s_leg, 'HBM requests of 2 PCs (svc slice -> its index reader station)')
+                P.link(f'hrqc_{k:02d}', 'hbm', bits, (irn, 'rqo', c_leg[0]), (cn, 'rq', c_leg[-1]), c_leg, 'HBM requests of 2 PCs (index reader station, slice priority -> its controller)')
+            else:
+                P.link(f'hrdc_{k:02d}', 'hbm', bits, (cn, 'rd', c_leg[-1]), (irn, 'rdi', c_leg[0]), c_leg[::-1], 'HBM reads + rk/wd + {fault, live} of 2 PCs (controller -> index reader station)')
+                P.link(f'hrd_{k:02d}', 'hbm', bits, (irn, 'rdo', s_leg[-1]), (rn, 'rd', s_leg[0]), s_leg[::-1], 'HBM reads (reader responses removed, rk to owner) -> its svc slice')
+    # chains W -> E (reader 7 -> 8 crosses over the ctrl / rsv channel, above the PHY)
+    for k in range(CTRL_N - 1):
+        A, B = P.blocks[P.idx[f'irg_{k:02d}']], P.blocks[P.idx[f'irg_{k + 1:02d}']]
+        for j, (cls_, port_o, port_i, bits, yf) in enumerate((('iq', 'qo', 'qi', 276, 0.30), ('iq', 'qo', 'qi', 276, 0.36),
+                                                              ('is', 'so', 'si', 276, 0.50))):
+            ya = A['y'] + A['h'] * yf
+            if k == CTRL_N // 2 - 1:
+                ych = 1200.0 + CTRL_H + 30 + 20 * j
+                pts = [(A['x'] + A['w'], ya), (A['x'] + A['w'] + 20 + 10 * j, ya), (A['x'] + A['w'] + 20 + 10 * j, ych),
+                       (B['x'] - 20 - 10 * j, ych), (B['x'] - 20 - 10 * j, ya), (B['x'], ya)]
+            else:
+                pts = [(A['x'] + A['w'], ya), (B['x'], ya)]
+            nm = f'{cls_}_{k:02d}_{k + 1:02d}' + (f'_l{j}' if cls_ == 'iq' else '')
+            P._link(nm, 'idx', bits, (A['name'], port_o, pts[0]), (B['name'], port_i, pts[-1]), pts,
+                    'index query chain {d, v} (2 x 276 lanes)' if cls_ == 'iq' else 'index score chain (BK V beats, OR on the chain)')
+    facts['idxrd'] = dict(n=CTRL_N, master='dsdv_idx_rg', um=[IDX_W, IDX_H], mm2=round(CTRL_N * IDX_W * IDX_H / 1e6, 2),
+                          place='bottom strips W / E of the PHY (y 40), regions 0-7 W, 8-15 E, x order',
+                          open=dict(qi_head='irg_00 qi: no on-die IDX_S / IDX_G frame source (COORD)',
+                                    so_tail='irg_15 so: bk_sel V ingress vi_s is the column-4 rung from s_4S (COORD)'))
 
 
 def geometry_facts(P, facts):
@@ -1207,12 +1277,13 @@ def draw(P, facts, out, tag=None):
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
     col = dict(frame='#d9d9d9', slice='#2b7bba', unit='#e6a23c', phy='#8c564b', ctrl='#8c564b', svc='#c49c94', link='#7f7f7f', fill='#c7e9c0')
-    lc = dict(xring='#d62728', x_frame='#2ca02c', ret='#9467bd', ctl='#17becf', attn='#ff7f0e', hbm='#8c564b', coll='#e377c2', dfi='#bcbd22')
+    col['idx'] = '#9edae5'
+    lc = dict(xring='#d62728', x_frame='#2ca02c', ret='#9467bd', ctl='#17becf', attn='#ff7f0e', hbm='#8c564b', coll='#e377c2', dfi='#bcbd22', **({'idx': '#1f77b4'} if IDXRD else {}))
     fig, ax = plt.subplots(figsize=(16.5, 13))
     for b in P.blocks:
         ax.add_patch(Rectangle((b['x'] / 1000, b['y'] / 1000), b['w'] / 1000, b['h'] / 1000, fc=col.get(b['kind'], '#ccc'),
                                ec='k', lw=0.4, alpha=0.9 if b['kind'] != 'frame' else 0.6))
-        if b['kind'] in ('slice', 'unit', 'svc', 'phy'):
+        if b['kind'] in ('slice', 'unit', 'svc', 'phy', 'idx'):
             ax.text((b['x'] + b['w'] / 2) / 1000, (b['y'] + b['h'] / 2) / 1000, b['name'], ha='center', va='center', fontsize=6,
                     color='w' if b['kind'] == 'slice' else 'k', rotation=90 if b['h'] > 2 * b['w'] else 0)
     for l in P.links:
@@ -1251,6 +1322,7 @@ def main():
     ap.add_argument('--p4k', action='store_true', help='p4k: p4j + svc_rs RTL faces, q / P.V format lanes, unit lanes, column-3 E / column-4 W lane margins')
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0N (+2 SerDes)')
+    ap.add_argument('--idxrd', type=int, default=0, choices=(0, 1), help='MU-DIE-S81/IDX (p4l only): 1 = 16 regional index readers dsdv_idx_rg on the rq / rd links + query / score chains (0 default, byte-identical)')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
     ap.add_argument('--p4h-drop', type=int, default=4, choices=(4, 6), help='p4h: row-0 S-tier frames given to the service region (4: 3L-4R; 6: 2R-5L)')
@@ -1265,6 +1337,9 @@ def main():
     global P4K, P4L, MU
     P4L = a.p4l
     MU = a.mu
+    global IDXRD
+    IDXRD = a.idxrd
+    assert not IDXRD or P4L, '--idxrd needs --p4l'
     assert not MU or P4L, '--mu needs --p4l'
     NO_MIX4 = NO_MIX4 or P4L
     P4K = a.p4k or P4L
