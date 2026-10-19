@@ -1,0 +1,131 @@
+{
+  "design_point": {
+    "OT_KV_DOMSPLIT": 1,
+    "sim": "Verilator 5.050",
+    "edges": 4000
+  },
+  "diagnosis": "The former output-history oracle shifted stateful CDC outputs while reset/FIFO readiness stayed fixed. Startup faults are not invariant to that transform. The corrected independent per-input reference retains consumer reset and hop reset-ready ages, compares every child input/output, and retains histories for physical output-only relays.",
+  "rtl_changes": false,
+  "legal_boot": {
+    "words": 3,
+    "seals": 1,
+    "fault_core": 0,
+    "fault_hbm": 0,
+    "applied_hbm": 1
+  },
+  "bench_sha256": "af4b8b8aac818baf60f265b07a32d6c81360722531833d49a82e68a970a6082a",
+  "results": {
+    "grp": {
+      "m0": {
+        "verdict": "PASS",
+        "checks": 575509,
+        "errors": 0,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m0.log"
+      },
+      "m1": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 3322,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m1.log"
+      },
+      "m2": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 7480,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m2.log"
+      },
+      "m3": {
+        "verdict": "FAIL",
+        "checks": 563518,
+        "errors": 3503,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m3.log"
+      },
+      "m4": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 3991,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m4.log"
+      },
+      "m5": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 3930,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m5.log"
+      },
+      "m6": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 10275,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m6.log"
+      },
+      "m7": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 11921,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m7.log"
+      },
+      "m8": {
+        "verdict": "FAIL",
+        "checks": 575509,
+        "errors": 10655,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp/grp_m8.log"
+      }
+    },
+    "grp_h": {
+      "m0": {
+        "verdict": "PASS",
+        "checks": 571518,
+        "errors": 0,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m0.log"
+      },
+      "m1": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 3306,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m1.log"
+      },
+      "m2": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 7440,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m2.log"
+      },
+      "m3": {
+        "verdict": "FAIL",
+        "checks": 559527,
+        "errors": 3019,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m3.log"
+      },
+      "m4": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 3991,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m4.log"
+      },
+      "m5": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 4008,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m5.log"
+      },
+      "m6": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 4360,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m6.log"
+      },
+      "m7": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 16016,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m7.log"
+      },
+      "m8": {
+        "verdict": "FAIL",
+        "checks": 571518,
+        "errors": 10571,
+        "witness": "results/rtl/qwen_kv_die/kvs_grp_reference_1019/grp_h/grp_h_m8.log"
+      }
+    }
+  }
+}
