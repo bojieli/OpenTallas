@@ -118,6 +118,22 @@ def landed_cluster(spec):
     return spec.get("clock") == "multiple_cts_roots" and spec.get("kind") == "cluster"
 
 
+def landed_counts_tcl(spec):
+    """QO-RP4LP 10-18: `set ::ot_ce_counts ...` for a landed cluster's PRE-CTS hook.  clock_entries.tcl admits a bound hard
+    child's clock pin as a region-root sink only when its master is in ::ot_ce_counts, but the entry SDC that defines it
+    is sourced AFTER CTS, and ORFS re-writes 3_place.sdc without Tcl variables -- so every child clock pin was refused
+    ("CTS source ck_n must reach only standard-cell clock pins", smh_tile_rp4lp gate 2).  Same counts as the entry SDC."""
+    if not landed_cluster(spec):
+        return ''
+    counts = {}
+    for child in spec.get('children', []):
+        master = Path(child['view']).name
+        counts[master] = counts.get(master, 0) + int(child.get('count', 1))
+    if not counts:
+        return ''
+    return 'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
+
+
 def landed_record(spec, root):
     """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
     if not landed_cluster(spec):
