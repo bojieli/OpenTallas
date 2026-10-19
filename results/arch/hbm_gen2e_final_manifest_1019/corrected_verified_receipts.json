@@ -683,16 +683,684 @@
     },
     "ot_hbm_su_static_pgslice_lg__pv12": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv12",
-      "status": "INCOMPLETE",
-      "synth_terminal": false,
-      "tt_done": false,
-      "ff_done": false,
+      "status": "PASS_SYNTH_ETM_IDENTITY_NOT_PHYSICAL",
+      "synth_terminal": true,
+      "tt_done": true,
+      "ff_done": true,
       "files_present": [
+        "etm.log",
+        "etm_ff.tcl",
+        "etm_tt.tcl",
+        "etm_worst_ff.rpt",
+        "etm_worst_tt.rpt",
         "ot_hbm_su_static_pgslice_lg__pv12.docker.log",
         "ot_hbm_su_static_pgslice_lg__pv12.files.json",
+        "ot_hbm_su_static_pgslice_lg__pv12.hier.stat",
         "ot_hbm_su_static_pgslice_lg__pv12.log",
-        "ot_hbm_su_static_pgslice_lg__pv12.ys"
-      ]
+        "ot_hbm_su_static_pgslice_lg__pv12.netlist.v",
+        "ot_hbm_su_static_pgslice_lg__pv12.sta.v",
+        "ot_hbm_su_static_pgslice_lg__pv12.stat",
+        "ot_hbm_su_static_pgslice_lg__pv12.ys",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_ff.lib",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_tt.lib"
+      ],
+      "port_directions_bit_ranges": {
+        "pg_clk": [
+          "input",
+          0,
+          0
+        ],
+        "clk_lane": [
+          "input",
+          255,
+          0
+        ],
+        "clk_insert": [
+          "input",
+          127,
+          0
+        ],
+        "rst_lane_n": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bcast": [
+          "input",
+          3,
+          0
+        ],
+        "rst_bcast_n": [
+          "input",
+          3,
+          0
+        ],
+        "clk_bank": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bank_macro": [
+          "input",
+          191,
+          0
+        ],
+        "clk_ctl": [
+          "input",
+          0,
+          0
+        ],
+        "clk_side": [
+          "input",
+          5,
+          0
+        ],
+        "rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "bridge_rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "control": [
+          "input",
+          1741,
+          0
+        ],
+        "vmr_cmd": [
+          "input",
+          59,
+          0
+        ],
+        "vmw_cmd": [
+          "input",
+          77,
+          0
+        ],
+        "rf_bword": [
+          "input",
+          127,
+          0
+        ],
+        "rf_bcmd": [
+          "input",
+          35,
+          0
+        ],
+        "rf_dsec": [
+          "input",
+          255,
+          0
+        ],
+        "red_sel": [
+          "input",
+          11,
+          0
+        ],
+        "slice_x": [
+          "output",
+          31,
+          0
+        ],
+        "inj_rd": [
+          "input",
+          1,
+          0
+        ],
+        "inj_addr": [
+          "input",
+          159,
+          0
+        ],
+        "inj_q": [
+          "output",
+          1023,
+          0
+        ],
+        "dw_v": [
+          "input",
+          1,
+          0
+        ],
+        "dw_row": [
+          "input",
+          17,
+          0
+        ],
+        "dw_d": [
+          "input",
+          1023,
+          0
+        ],
+        "fault": [
+          "output",
+          0,
+          0
+        ],
+        "lg_rq": [
+          "output",
+          33,
+          0
+        ],
+        "lg_wq": [
+          "output",
+          561,
+          0
+        ],
+        "lg_rr": [
+          "input",
+          513,
+          0
+        ],
+        "lg_w_done": [
+          "input",
+          1,
+          0
+        ],
+        "lg_read": [
+          "input",
+          1,
+          0
+        ],
+        "lg_write": [
+          "input",
+          1,
+          0
+        ],
+        "far_rq": [
+          "input",
+          33,
+          0
+        ],
+        "far_wq": [
+          "input",
+          561,
+          0
+        ],
+        "far_rr": [
+          "output",
+          513,
+          0
+        ],
+        "far_w_done": [
+          "output",
+          1,
+          0
+        ],
+        "lg_fault": [
+          "output",
+          0,
+          0
+        ]
+      },
+      "port_bits": 7462,
+      "runtime_helper_hashes": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh": "f6fb1510b906e4dd7b7095bd8e756466426a7cd38ffbb78a58e22576832dc7e5",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24"
+      },
+      "overlay_inputs": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv": "f0e3ce7f344cf98d03512fdc2804fb7c3d58a43c29c6ed204374f0e25a9e082c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv": "eedc69ceb1998e37c9ec7ad42bacbd75eae9eeeb663f64f4d728a10c4335d79f",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_hc_bankq_ft_static.txt": "c51ab75c0a4401a4f5a3e26d04b0a53cb7c4aff4e45143d8b212d4291da521de",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv0.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv1.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv10.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv11.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv12.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv13.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv14.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv15.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv2.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv3.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv4.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv5.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv6.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv7.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv8.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv9.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hgi_sfu_core_split3.txt": "baa5cde31e8ff6c8f0f992895b841e684a608211dedcdba9f8b5bf9cd1104762",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_hc_bankq_ft_static.sv": "a1c53b42d80a0d4e919756ec57aa1790763e24f01ccc0238328ee7e54af69867",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv0.sv": "58125e6e1e422764b869733bcfb60f432479c25463092f0140b94967684df47a",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv1.sv": "fc00d236fd00fdc6a1c48b976c74f7fac2df49b1ac7372a797047d3af092457b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv10.sv": "f81e194d40bd3b565f43a839cd92c7f554e5adb8b6ef10246b1d643de047033b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv11.sv": "b4d7ba19f7de53e3fceb21633f52cd3d325135076480e1c0959f3d62d12bf584",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv": "c88f5d6b8f8d5c8a64bf83e63eea1caf651a2de5b0c94cdbe554a4cf268fefe3",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv13.sv": "5e89307b488d47d65233f1e72f6ed79194d9f6f6f3d410f0ef6dda3f38fd238b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv": "79441f2811542e250cf52df96d83d3d4c2cbbd53ab005e785dc0e360275cc606",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv15.sv": "bce747bac2223a19288400bc6e8f7084542012cca44c26d6e9d2e5c1f76936e8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv2.sv": "14bd985e2a46f9f072604c8028188ed31bf6a67efb5de5907ab800ba4a77b17c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv3.sv": "08bf8b0dec85f5f59401f1bedd3ca19b0bbd90de9080827821c805bf770aac99",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv4.sv": "ff4e60a2bdf0dc706f68ef8f013e6fd94757f6c73e875781aafc58d5ff419f0b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv5.sv": "2fe1137028f6679a3967dfd259d631fed215fd4be37938be5fa265a57865f1c8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv": "aae1f733ef1dd291c72fc432a8d8942217213e95c715a95bfe562aaa5199d1e0",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv": "2eb374f97c685b8bb8195ac0973ef9f6cc6f58b71e82f1803cd1db5785c506d7",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv8.sv": "0da6a1e1b4d79348fa107849ec260722cddbaf42bda2fc24984a9961c9482cfb",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv9.sv": "76f7a2845981e35eddcfaeb2d71e1009206cc088012a3ba389bd87652d7434aa",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hgi_sfu_core_split3.sv": "ce60e3f798f68af459628c76178df87245d40f608e6660c942e65c3862f1ae3c"
+      },
+      "actual_ys_text": "read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv\nread_verilog -sv -DSYNTHESIS v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv\nhierarchy -check -top v16w_ot_hbm_su_static_pgslice_lg__pv12\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv12.hier.stat stat\nsynth -top v16w_ot_hbm_su_static_pgslice_lg__pv12\ndfflibmap -liberty /tmp/lib/seq.lib\nabc -liberty /tmp/lib/all.lib\nopt_clean\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv12.stat stat -liberty /tmp/lib/all.lib\nwrite_verilog -noattr /out/ot_hbm_su_static_pgslice_lg__pv12.netlist.v\n",
+      "top": "v16w_ot_hbm_su_static_pgslice_lg__pv12",
+      "ports": [
+        "pg_clk",
+        "clk_lane",
+        "clk_insert",
+        "rst_lane_n",
+        "clk_bcast",
+        "rst_bcast_n",
+        "clk_bank",
+        "clk_bank_macro",
+        "clk_ctl",
+        "clk_side",
+        "rst_n",
+        "bridge_rst_n",
+        "control",
+        "vmr_cmd",
+        "vmw_cmd",
+        "rf_bword",
+        "rf_bcmd",
+        "rf_dsec",
+        "red_sel",
+        "slice_x",
+        "inj_rd",
+        "inj_addr",
+        "inj_q",
+        "dw_v",
+        "dw_row",
+        "dw_d",
+        "fault",
+        "lg_rq",
+        "lg_wq",
+        "lg_rr",
+        "lg_w_done",
+        "lg_read",
+        "lg_write",
+        "far_rq",
+        "far_wq",
+        "far_rr",
+        "far_w_done",
+        "lg_fault"
+      ],
+      "exact_port_names_order": true,
+      "etm_port_checks": {
+        "tt": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv12",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_tt",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        },
+        "ff": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv12",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_ff",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        }
+      },
+      "etm_hashes": {
+        "v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_tt.lib": "4ea1322ae42a8f1dba39238f5a41b0ec0d8af4b53e5065c44ac806671435894a",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv12_synth_ff.lib": "871b6d2ad62dd14f02f74d37c1a4186238294e2b3d2fac99306f228f5c84cf2d"
+      },
+      "input_hashes": {
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+        "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv": "c88f5d6b8f8d5c8a64bf83e63eea1caf651a2de5b0c94cdbe554a4cf268fefe3"
+      },
+      "artifact_hashes": {
+        "ot_hbm_su_static_pgslice_lg__pv12.netlist.v": "d3519b91bd8da24421e65de57e3ad1f1a9db3a93987201affef441f88a331296",
+        "ot_hbm_su_static_pgslice_lg__pv12.log": "cd036634c9076ef7ca2dcc39400770ec7b1907924a5be9d1aad1de9fde104705",
+        "etm.log": "57459405576f4c4fc69f419bf6167033487443458448c30ad0d3335932830763",
+        "ot_hbm_su_static_pgslice_lg__pv12.stat": "904c87dba8123154f41285299149b1a02a68539e6b404d9f7f99f93fbea2802c",
+        "ot_hbm_su_static_pgslice_lg__pv12.ys": "ee87ab3e66053d2578c4253ac9a633666246517c8ca3de073bf325c9c195b453",
+        "ot_hbm_su_static_pgslice_lg__pv12.files.json": "d5e5c59f48bea405c52e9da389f4332a65e326995cdab6ecb11e6d0af66549d9"
+      },
+      "macro_area": "UNKNOWN_NOT_ZERO"
     },
     "ot_hgi_sfu_core_split3": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/source_unique_d14c90171/sfu",
@@ -5070,14 +5738,15 @@
     },
     "ot_hbm_su_static_pgslice_lg__pv14": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv14",
-      "status": "INCOMPLETE",
+      "status": "PASS_SYNTH_ETM_IDENTITY_NOT_PHYSICAL",
       "synth_terminal": true,
-      "tt_done": false,
-      "ff_done": false,
+      "tt_done": true,
+      "ff_done": true,
       "files_present": [
         "etm.log",
         "etm_ff.tcl",
         "etm_tt.tcl",
+        "etm_worst_ff.rpt",
         "etm_worst_tt.rpt",
         "ot_hbm_su_static_pgslice_lg__pv14.docker.log",
         "ot_hbm_su_static_pgslice_lg__pv14.files.json",
@@ -5086,8 +5755,667 @@
         "ot_hbm_su_static_pgslice_lg__pv14.netlist.v",
         "ot_hbm_su_static_pgslice_lg__pv14.sta.v",
         "ot_hbm_su_static_pgslice_lg__pv14.stat",
-        "ot_hbm_su_static_pgslice_lg__pv14.ys"
-      ]
+        "ot_hbm_su_static_pgslice_lg__pv14.ys",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_ff.lib",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_tt.lib"
+      ],
+      "port_directions_bit_ranges": {
+        "pg_clk": [
+          "input",
+          0,
+          0
+        ],
+        "clk_lane": [
+          "input",
+          255,
+          0
+        ],
+        "clk_insert": [
+          "input",
+          127,
+          0
+        ],
+        "rst_lane_n": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bcast": [
+          "input",
+          3,
+          0
+        ],
+        "rst_bcast_n": [
+          "input",
+          3,
+          0
+        ],
+        "clk_bank": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bank_macro": [
+          "input",
+          191,
+          0
+        ],
+        "clk_ctl": [
+          "input",
+          0,
+          0
+        ],
+        "clk_side": [
+          "input",
+          5,
+          0
+        ],
+        "rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "bridge_rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "control": [
+          "input",
+          1741,
+          0
+        ],
+        "vmr_cmd": [
+          "input",
+          59,
+          0
+        ],
+        "vmw_cmd": [
+          "input",
+          77,
+          0
+        ],
+        "rf_bword": [
+          "input",
+          127,
+          0
+        ],
+        "rf_bcmd": [
+          "input",
+          35,
+          0
+        ],
+        "rf_dsec": [
+          "input",
+          255,
+          0
+        ],
+        "red_sel": [
+          "input",
+          11,
+          0
+        ],
+        "slice_x": [
+          "output",
+          31,
+          0
+        ],
+        "inj_rd": [
+          "input",
+          1,
+          0
+        ],
+        "inj_addr": [
+          "input",
+          159,
+          0
+        ],
+        "inj_q": [
+          "output",
+          1023,
+          0
+        ],
+        "dw_v": [
+          "input",
+          1,
+          0
+        ],
+        "dw_row": [
+          "input",
+          17,
+          0
+        ],
+        "dw_d": [
+          "input",
+          1023,
+          0
+        ],
+        "fault": [
+          "output",
+          0,
+          0
+        ],
+        "lg_rq": [
+          "output",
+          33,
+          0
+        ],
+        "lg_wq": [
+          "output",
+          561,
+          0
+        ],
+        "lg_rr": [
+          "input",
+          513,
+          0
+        ],
+        "lg_w_done": [
+          "input",
+          1,
+          0
+        ],
+        "lg_read": [
+          "input",
+          1,
+          0
+        ],
+        "lg_write": [
+          "input",
+          1,
+          0
+        ],
+        "far_rq": [
+          "input",
+          33,
+          0
+        ],
+        "far_wq": [
+          "input",
+          561,
+          0
+        ],
+        "far_rr": [
+          "output",
+          513,
+          0
+        ],
+        "far_w_done": [
+          "output",
+          1,
+          0
+        ],
+        "lg_fault": [
+          "output",
+          0,
+          0
+        ]
+      },
+      "port_bits": 7462,
+      "runtime_helper_hashes": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh": "f6fb1510b906e4dd7b7095bd8e756466426a7cd38ffbb78a58e22576832dc7e5",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24"
+      },
+      "overlay_inputs": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv": "f0e3ce7f344cf98d03512fdc2804fb7c3d58a43c29c6ed204374f0e25a9e082c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv": "eedc69ceb1998e37c9ec7ad42bacbd75eae9eeeb663f64f4d728a10c4335d79f",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_hc_bankq_ft_static.txt": "c51ab75c0a4401a4f5a3e26d04b0a53cb7c4aff4e45143d8b212d4291da521de",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv0.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv1.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv10.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv11.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv12.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv13.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv14.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv15.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv2.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv3.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv4.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv5.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv6.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv7.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv8.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv9.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hgi_sfu_core_split3.txt": "baa5cde31e8ff6c8f0f992895b841e684a608211dedcdba9f8b5bf9cd1104762",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_hc_bankq_ft_static.sv": "a1c53b42d80a0d4e919756ec57aa1790763e24f01ccc0238328ee7e54af69867",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv0.sv": "58125e6e1e422764b869733bcfb60f432479c25463092f0140b94967684df47a",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv1.sv": "fc00d236fd00fdc6a1c48b976c74f7fac2df49b1ac7372a797047d3af092457b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv10.sv": "f81e194d40bd3b565f43a839cd92c7f554e5adb8b6ef10246b1d643de047033b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv11.sv": "b4d7ba19f7de53e3fceb21633f52cd3d325135076480e1c0959f3d62d12bf584",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv": "c88f5d6b8f8d5c8a64bf83e63eea1caf651a2de5b0c94cdbe554a4cf268fefe3",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv13.sv": "5e89307b488d47d65233f1e72f6ed79194d9f6f6f3d410f0ef6dda3f38fd238b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv": "79441f2811542e250cf52df96d83d3d4c2cbbd53ab005e785dc0e360275cc606",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv15.sv": "bce747bac2223a19288400bc6e8f7084542012cca44c26d6e9d2e5c1f76936e8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv2.sv": "14bd985e2a46f9f072604c8028188ed31bf6a67efb5de5907ab800ba4a77b17c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv3.sv": "08bf8b0dec85f5f59401f1bedd3ca19b0bbd90de9080827821c805bf770aac99",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv4.sv": "ff4e60a2bdf0dc706f68ef8f013e6fd94757f6c73e875781aafc58d5ff419f0b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv5.sv": "2fe1137028f6679a3967dfd259d631fed215fd4be37938be5fa265a57865f1c8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv": "aae1f733ef1dd291c72fc432a8d8942217213e95c715a95bfe562aaa5199d1e0",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv": "2eb374f97c685b8bb8195ac0973ef9f6cc6f58b71e82f1803cd1db5785c506d7",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv8.sv": "0da6a1e1b4d79348fa107849ec260722cddbaf42bda2fc24984a9961c9482cfb",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv9.sv": "76f7a2845981e35eddcfaeb2d71e1009206cc088012a3ba389bd87652d7434aa",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hgi_sfu_core_split3.sv": "ce60e3f798f68af459628c76178df87245d40f608e6660c942e65c3862f1ae3c"
+      },
+      "actual_ys_text": "read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv\nread_verilog -sv -DSYNTHESIS v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv\nhierarchy -check -top v16w_ot_hbm_su_static_pgslice_lg__pv14\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv14.hier.stat stat\nsynth -top v16w_ot_hbm_su_static_pgslice_lg__pv14\ndfflibmap -liberty /tmp/lib/seq.lib\nabc -liberty /tmp/lib/all.lib\nopt_clean\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv14.stat stat -liberty /tmp/lib/all.lib\nwrite_verilog -noattr /out/ot_hbm_su_static_pgslice_lg__pv14.netlist.v\n",
+      "top": "v16w_ot_hbm_su_static_pgslice_lg__pv14",
+      "ports": [
+        "pg_clk",
+        "clk_lane",
+        "clk_insert",
+        "rst_lane_n",
+        "clk_bcast",
+        "rst_bcast_n",
+        "clk_bank",
+        "clk_bank_macro",
+        "clk_ctl",
+        "clk_side",
+        "rst_n",
+        "bridge_rst_n",
+        "control",
+        "vmr_cmd",
+        "vmw_cmd",
+        "rf_bword",
+        "rf_bcmd",
+        "rf_dsec",
+        "red_sel",
+        "slice_x",
+        "inj_rd",
+        "inj_addr",
+        "inj_q",
+        "dw_v",
+        "dw_row",
+        "dw_d",
+        "fault",
+        "lg_rq",
+        "lg_wq",
+        "lg_rr",
+        "lg_w_done",
+        "lg_read",
+        "lg_write",
+        "far_rq",
+        "far_wq",
+        "far_rr",
+        "far_w_done",
+        "lg_fault"
+      ],
+      "exact_port_names_order": true,
+      "etm_port_checks": {
+        "tt": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv14",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_tt",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        },
+        "ff": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv14",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_ff",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        }
+      },
+      "etm_hashes": {
+        "v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_tt.lib": "fcc588a0fb8c69bc16f3d7ef103c87a42f3af6e357e8945ed130d88ee8aa1477",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv14_synth_ff.lib": "603f7388b7d78913ea432351667a34d9eec51dfba76586dd0a6ac86f062296bb"
+      },
+      "input_hashes": {
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+        "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv": "79441f2811542e250cf52df96d83d3d4c2cbbd53ab005e785dc0e360275cc606"
+      },
+      "artifact_hashes": {
+        "ot_hbm_su_static_pgslice_lg__pv14.netlist.v": "9b92e5684f0f5d891b76fbc0a64426a5d1cad6b96a0570fe1d985782cf41ed15",
+        "ot_hbm_su_static_pgslice_lg__pv14.log": "3b30ba769b704992d72f94ef92ba644dee6c8ef48607dcfba881a16935538e28",
+        "etm.log": "57459405576f4c4fc69f419bf6167033487443458448c30ad0d3335932830763",
+        "ot_hbm_su_static_pgslice_lg__pv14.stat": "00c71d441dbd4a5105e79f92116a74f2d6120c5854ce134f71e9b6ffbc47917b",
+        "ot_hbm_su_static_pgslice_lg__pv14.ys": "4fb52f2c2dcb570ebdb8c8aeebf606f59d3fdf59d93143165e8d150786b8d5cf",
+        "ot_hbm_su_static_pgslice_lg__pv14.files.json": "d5e5c59f48bea405c52e9da389f4332a65e326995cdab6ecb11e6d0af66549d9"
+      },
+      "macro_area": "UNKNOWN_NOT_ZERO"
     },
     "ot_hbm_su_static_pgslice_lg__pv15": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv15",
@@ -8496,14 +9824,15 @@
     },
     "ot_hbm_su_static_pgslice_lg__pv6": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv6",
-      "status": "INCOMPLETE",
+      "status": "PASS_SYNTH_ETM_IDENTITY_NOT_PHYSICAL",
       "synth_terminal": true,
       "tt_done": true,
-      "ff_done": false,
+      "ff_done": true,
       "files_present": [
         "etm.log",
         "etm_ff.tcl",
         "etm_tt.tcl",
+        "etm_worst_ff.rpt",
         "etm_worst_tt.rpt",
         "ot_hbm_su_static_pgslice_lg__pv6.docker.log",
         "ot_hbm_su_static_pgslice_lg__pv6.files.json",
@@ -8513,19 +9842,678 @@
         "ot_hbm_su_static_pgslice_lg__pv6.sta.v",
         "ot_hbm_su_static_pgslice_lg__pv6.stat",
         "ot_hbm_su_static_pgslice_lg__pv6.ys",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_ff.lib",
         "v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_tt.lib"
-      ]
+      ],
+      "port_directions_bit_ranges": {
+        "pg_clk": [
+          "input",
+          0,
+          0
+        ],
+        "clk_lane": [
+          "input",
+          255,
+          0
+        ],
+        "clk_insert": [
+          "input",
+          127,
+          0
+        ],
+        "rst_lane_n": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bcast": [
+          "input",
+          3,
+          0
+        ],
+        "rst_bcast_n": [
+          "input",
+          3,
+          0
+        ],
+        "clk_bank": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bank_macro": [
+          "input",
+          191,
+          0
+        ],
+        "clk_ctl": [
+          "input",
+          0,
+          0
+        ],
+        "clk_side": [
+          "input",
+          5,
+          0
+        ],
+        "rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "bridge_rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "control": [
+          "input",
+          1741,
+          0
+        ],
+        "vmr_cmd": [
+          "input",
+          59,
+          0
+        ],
+        "vmw_cmd": [
+          "input",
+          77,
+          0
+        ],
+        "rf_bword": [
+          "input",
+          127,
+          0
+        ],
+        "rf_bcmd": [
+          "input",
+          35,
+          0
+        ],
+        "rf_dsec": [
+          "input",
+          255,
+          0
+        ],
+        "red_sel": [
+          "input",
+          11,
+          0
+        ],
+        "slice_x": [
+          "output",
+          31,
+          0
+        ],
+        "inj_rd": [
+          "input",
+          1,
+          0
+        ],
+        "inj_addr": [
+          "input",
+          159,
+          0
+        ],
+        "inj_q": [
+          "output",
+          1023,
+          0
+        ],
+        "dw_v": [
+          "input",
+          1,
+          0
+        ],
+        "dw_row": [
+          "input",
+          17,
+          0
+        ],
+        "dw_d": [
+          "input",
+          1023,
+          0
+        ],
+        "fault": [
+          "output",
+          0,
+          0
+        ],
+        "lg_rq": [
+          "output",
+          33,
+          0
+        ],
+        "lg_wq": [
+          "output",
+          561,
+          0
+        ],
+        "lg_rr": [
+          "input",
+          513,
+          0
+        ],
+        "lg_w_done": [
+          "input",
+          1,
+          0
+        ],
+        "lg_read": [
+          "input",
+          1,
+          0
+        ],
+        "lg_write": [
+          "input",
+          1,
+          0
+        ],
+        "far_rq": [
+          "input",
+          33,
+          0
+        ],
+        "far_wq": [
+          "input",
+          561,
+          0
+        ],
+        "far_rr": [
+          "output",
+          513,
+          0
+        ],
+        "far_w_done": [
+          "output",
+          1,
+          0
+        ],
+        "lg_fault": [
+          "output",
+          0,
+          0
+        ]
+      },
+      "port_bits": 7462,
+      "runtime_helper_hashes": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh": "f6fb1510b906e4dd7b7095bd8e756466426a7cd38ffbb78a58e22576832dc7e5",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24"
+      },
+      "overlay_inputs": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv": "f0e3ce7f344cf98d03512fdc2804fb7c3d58a43c29c6ed204374f0e25a9e082c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv": "eedc69ceb1998e37c9ec7ad42bacbd75eae9eeeb663f64f4d728a10c4335d79f",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_hc_bankq_ft_static.txt": "c51ab75c0a4401a4f5a3e26d04b0a53cb7c4aff4e45143d8b212d4291da521de",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv0.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv1.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv10.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv11.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv12.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv13.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv14.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv15.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv2.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv3.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv4.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv5.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv6.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv7.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv8.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv9.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hgi_sfu_core_split3.txt": "baa5cde31e8ff6c8f0f992895b841e684a608211dedcdba9f8b5bf9cd1104762",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_hc_bankq_ft_static.sv": "a1c53b42d80a0d4e919756ec57aa1790763e24f01ccc0238328ee7e54af69867",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv0.sv": "58125e6e1e422764b869733bcfb60f432479c25463092f0140b94967684df47a",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv1.sv": "fc00d236fd00fdc6a1c48b976c74f7fac2df49b1ac7372a797047d3af092457b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv10.sv": "f81e194d40bd3b565f43a839cd92c7f554e5adb8b6ef10246b1d643de047033b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv11.sv": "b4d7ba19f7de53e3fceb21633f52cd3d325135076480e1c0959f3d62d12bf584",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv": "c88f5d6b8f8d5c8a64bf83e63eea1caf651a2de5b0c94cdbe554a4cf268fefe3",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv13.sv": "5e89307b488d47d65233f1e72f6ed79194d9f6f6f3d410f0ef6dda3f38fd238b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv": "79441f2811542e250cf52df96d83d3d4c2cbbd53ab005e785dc0e360275cc606",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv15.sv": "bce747bac2223a19288400bc6e8f7084542012cca44c26d6e9d2e5c1f76936e8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv2.sv": "14bd985e2a46f9f072604c8028188ed31bf6a67efb5de5907ab800ba4a77b17c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv3.sv": "08bf8b0dec85f5f59401f1bedd3ca19b0bbd90de9080827821c805bf770aac99",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv4.sv": "ff4e60a2bdf0dc706f68ef8f013e6fd94757f6c73e875781aafc58d5ff419f0b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv5.sv": "2fe1137028f6679a3967dfd259d631fed215fd4be37938be5fa265a57865f1c8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv": "aae1f733ef1dd291c72fc432a8d8942217213e95c715a95bfe562aaa5199d1e0",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv": "2eb374f97c685b8bb8195ac0973ef9f6cc6f58b71e82f1803cd1db5785c506d7",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv8.sv": "0da6a1e1b4d79348fa107849ec260722cddbaf42bda2fc24984a9961c9482cfb",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv9.sv": "76f7a2845981e35eddcfaeb2d71e1009206cc088012a3ba389bd87652d7434aa",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hgi_sfu_core_split3.sv": "ce60e3f798f68af459628c76178df87245d40f608e6660c942e65c3862f1ae3c"
+      },
+      "actual_ys_text": "read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv\nread_verilog -sv -DSYNTHESIS v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv\nhierarchy -check -top v16w_ot_hbm_su_static_pgslice_lg__pv6\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv6.hier.stat stat\nsynth -top v16w_ot_hbm_su_static_pgslice_lg__pv6\ndfflibmap -liberty /tmp/lib/seq.lib\nabc -liberty /tmp/lib/all.lib\nopt_clean\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv6.stat stat -liberty /tmp/lib/all.lib\nwrite_verilog -noattr /out/ot_hbm_su_static_pgslice_lg__pv6.netlist.v\n",
+      "top": "v16w_ot_hbm_su_static_pgslice_lg__pv6",
+      "ports": [
+        "pg_clk",
+        "clk_lane",
+        "clk_insert",
+        "rst_lane_n",
+        "clk_bcast",
+        "rst_bcast_n",
+        "clk_bank",
+        "clk_bank_macro",
+        "clk_ctl",
+        "clk_side",
+        "rst_n",
+        "bridge_rst_n",
+        "control",
+        "vmr_cmd",
+        "vmw_cmd",
+        "rf_bword",
+        "rf_bcmd",
+        "rf_dsec",
+        "red_sel",
+        "slice_x",
+        "inj_rd",
+        "inj_addr",
+        "inj_q",
+        "dw_v",
+        "dw_row",
+        "dw_d",
+        "fault",
+        "lg_rq",
+        "lg_wq",
+        "lg_rr",
+        "lg_w_done",
+        "lg_read",
+        "lg_write",
+        "far_rq",
+        "far_wq",
+        "far_rr",
+        "far_w_done",
+        "lg_fault"
+      ],
+      "exact_port_names_order": true,
+      "etm_port_checks": {
+        "tt": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv6",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_tt",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        },
+        "ff": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv6",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_ff",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        }
+      },
+      "etm_hashes": {
+        "v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_tt.lib": "bd25f4419cb621e69771b6d16a6e8e545dafb947c64d24c0b90a39b6015c21fc",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv6_synth_ff.lib": "4c30c5d159c2c1e3d7f9b7d6ab34db712a36c1a1751ed1d9c1506718896e5711"
+      },
+      "input_hashes": {
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+        "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv": "aae1f733ef1dd291c72fc432a8d8942217213e95c715a95bfe562aaa5199d1e0"
+      },
+      "artifact_hashes": {
+        "ot_hbm_su_static_pgslice_lg__pv6.netlist.v": "2fc4c1f047440428fb128a4c4b7e1834f78b737979c6cc5a9ca64e7e0feede3a",
+        "ot_hbm_su_static_pgslice_lg__pv6.log": "33d928949b18fc0198af7731acbbe7561729343cc168cb56b91c49db924fb192",
+        "etm.log": "57459405576f4c4fc69f419bf6167033487443458448c30ad0d3335932830763",
+        "ot_hbm_su_static_pgslice_lg__pv6.stat": "47941620cac709036da6646aac981b65faa5df414785f520fbac876066fb3eb3",
+        "ot_hbm_su_static_pgslice_lg__pv6.ys": "dec4b081a71fc832b7930dabb8e827c0edd20f71e1ff06c0152ace42f685abdf",
+        "ot_hbm_su_static_pgslice_lg__pv6.files.json": "d5e5c59f48bea405c52e9da389f4332a65e326995cdab6ecb11e6d0af66549d9"
+      },
+      "macro_area": "UNKNOWN_NOT_ZERO"
     },
     "ot_hbm_su_static_pgslice_lg__pv7": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv7",
-      "status": "INCOMPLETE",
+      "status": "PASS_SYNTH_ETM_IDENTITY_NOT_PHYSICAL",
       "synth_terminal": true,
       "tt_done": true,
-      "ff_done": false,
+      "ff_done": true,
       "files_present": [
         "etm.log",
         "etm_ff.tcl",
         "etm_tt.tcl",
+        "etm_worst_ff.rpt",
         "etm_worst_tt.rpt",
         "ot_hbm_su_static_pgslice_lg__pv7.docker.log",
         "ot_hbm_su_static_pgslice_lg__pv7.files.json",
@@ -8535,8 +10523,666 @@
         "ot_hbm_su_static_pgslice_lg__pv7.sta.v",
         "ot_hbm_su_static_pgslice_lg__pv7.stat",
         "ot_hbm_su_static_pgslice_lg__pv7.ys",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_ff.lib",
         "v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_tt.lib"
-      ]
+      ],
+      "port_directions_bit_ranges": {
+        "pg_clk": [
+          "input",
+          0,
+          0
+        ],
+        "clk_lane": [
+          "input",
+          255,
+          0
+        ],
+        "clk_insert": [
+          "input",
+          127,
+          0
+        ],
+        "rst_lane_n": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bcast": [
+          "input",
+          3,
+          0
+        ],
+        "rst_bcast_n": [
+          "input",
+          3,
+          0
+        ],
+        "clk_bank": [
+          "input",
+          31,
+          0
+        ],
+        "clk_bank_macro": [
+          "input",
+          191,
+          0
+        ],
+        "clk_ctl": [
+          "input",
+          0,
+          0
+        ],
+        "clk_side": [
+          "input",
+          5,
+          0
+        ],
+        "rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "bridge_rst_n": [
+          "input",
+          0,
+          0
+        ],
+        "control": [
+          "input",
+          1741,
+          0
+        ],
+        "vmr_cmd": [
+          "input",
+          59,
+          0
+        ],
+        "vmw_cmd": [
+          "input",
+          77,
+          0
+        ],
+        "rf_bword": [
+          "input",
+          127,
+          0
+        ],
+        "rf_bcmd": [
+          "input",
+          35,
+          0
+        ],
+        "rf_dsec": [
+          "input",
+          255,
+          0
+        ],
+        "red_sel": [
+          "input",
+          11,
+          0
+        ],
+        "slice_x": [
+          "output",
+          31,
+          0
+        ],
+        "inj_rd": [
+          "input",
+          1,
+          0
+        ],
+        "inj_addr": [
+          "input",
+          159,
+          0
+        ],
+        "inj_q": [
+          "output",
+          1023,
+          0
+        ],
+        "dw_v": [
+          "input",
+          1,
+          0
+        ],
+        "dw_row": [
+          "input",
+          17,
+          0
+        ],
+        "dw_d": [
+          "input",
+          1023,
+          0
+        ],
+        "fault": [
+          "output",
+          0,
+          0
+        ],
+        "lg_rq": [
+          "output",
+          33,
+          0
+        ],
+        "lg_wq": [
+          "output",
+          561,
+          0
+        ],
+        "lg_rr": [
+          "input",
+          513,
+          0
+        ],
+        "lg_w_done": [
+          "input",
+          1,
+          0
+        ],
+        "lg_read": [
+          "input",
+          1,
+          0
+        ],
+        "lg_write": [
+          "input",
+          1,
+          0
+        ],
+        "far_rq": [
+          "input",
+          33,
+          0
+        ],
+        "far_wq": [
+          "input",
+          561,
+          0
+        ],
+        "far_rr": [
+          "output",
+          513,
+          0
+        ],
+        "far_w_done": [
+          "output",
+          1,
+          0
+        ],
+        "lg_fault": [
+          "output",
+          0,
+          0
+        ]
+      },
+      "port_bits": 7462,
+      "runtime_helper_hashes": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh": "f6fb1510b906e4dd7b7095bd8e756466426a7cd38ffbb78a58e22576832dc7e5",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24"
+      },
+      "overlay_inputs": {
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv": "f0e3ce7f344cf98d03512fdc2804fb7c3d58a43c29c6ed204374f0e25a9e082c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv": "eedc69ceb1998e37c9ec7ad42bacbd75eae9eeeb663f64f4d728a10c4335d79f",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/tools/hbm_die_v15/synth_etm.sh": "bc5b5e3936684b1df795a78353d95cd93bc98d0c00e404f1d9a64590eda5cb24",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_hc_bankq_ft_static.txt": "c51ab75c0a4401a4f5a3e26d04b0a53cb7c4aff4e45143d8b212d4291da521de",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv0.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv1.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv10.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv11.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv12.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv13.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv14.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv15.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv2.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv3.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv4.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv5.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv6.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv7.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv8.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hbm_su_static_pgslice_lg__pv9.txt": "ad588ecc2dff7a0ef3df0d3833c38a1b16ce73ceed4b14f02a890b74f4f27bf9",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/prefer_ot_hgi_sfu_core_split3.txt": "baa5cde31e8ff6c8f0f992895b841e684a608211dedcdba9f8b5bf9cd1104762",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_hc_bankq_ft_static.sv": "a1c53b42d80a0d4e919756ec57aa1790763e24f01ccc0238328ee7e54af69867",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv0.sv": "58125e6e1e422764b869733bcfb60f432479c25463092f0140b94967684df47a",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv1.sv": "fc00d236fd00fdc6a1c48b976c74f7fac2df49b1ac7372a797047d3af092457b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv10.sv": "f81e194d40bd3b565f43a839cd92c7f554e5adb8b6ef10246b1d643de047033b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv11.sv": "b4d7ba19f7de53e3fceb21633f52cd3d325135076480e1c0959f3d62d12bf584",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv": "c88f5d6b8f8d5c8a64bf83e63eea1caf651a2de5b0c94cdbe554a4cf268fefe3",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv13.sv": "5e89307b488d47d65233f1e72f6ed79194d9f6f6f3d410f0ef6dda3f38fd238b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv": "79441f2811542e250cf52df96d83d3d4c2cbbd53ab005e785dc0e360275cc606",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv15.sv": "bce747bac2223a19288400bc6e8f7084542012cca44c26d6e9d2e5c1f76936e8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv2.sv": "14bd985e2a46f9f072604c8028188ed31bf6a67efb5de5907ab800ba4a77b17c",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv3.sv": "08bf8b0dec85f5f59401f1bedd3ca19b0bbd90de9080827821c805bf770aac99",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv4.sv": "ff4e60a2bdf0dc706f68ef8f013e6fd94757f6c73e875781aafc58d5ff419f0b",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv5.sv": "2fe1137028f6679a3967dfd259d631fed215fd4be37938be5fa265a57865f1c8",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv": "aae1f733ef1dd291c72fc432a8d8942217213e95c715a95bfe562aaa5199d1e0",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv": "2eb374f97c685b8bb8195ac0973ef9f6cc6f58b71e82f1803cd1db5785c506d7",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv8.sv": "0da6a1e1b4d79348fa107849ec260722cddbaf42bda2fc24984a9961c9482cfb",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hbm_su_static_pgslice_lg__pv9.sv": "76f7a2845981e35eddcfaeb2d71e1009206cc088012a3ba389bd87652d7434aa",
+        "/srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1/v16w/v16w_ot_hgi_sfu_core_split3.sv": "ce60e3f798f68af459628c76178df87245d40f608e6660c942e65c3862f1ae3c"
+      },
+      "actual_ys_text": "read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv\nread_verilog -sv -DSYNTHESIS v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv\nread_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv\nhierarchy -check -top v16w_ot_hbm_su_static_pgslice_lg__pv7\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv7.hier.stat stat\nsynth -top v16w_ot_hbm_su_static_pgslice_lg__pv7\ndfflibmap -liberty /tmp/lib/seq.lib\nabc -liberty /tmp/lib/all.lib\nopt_clean\ntee -o /out/ot_hbm_su_static_pgslice_lg__pv7.stat stat -liberty /tmp/lib/all.lib\nwrite_verilog -noattr /out/ot_hbm_su_static_pgslice_lg__pv7.netlist.v\n",
+      "top": "v16w_ot_hbm_su_static_pgslice_lg__pv7",
+      "ports": [
+        "pg_clk",
+        "clk_lane",
+        "clk_insert",
+        "rst_lane_n",
+        "clk_bcast",
+        "rst_bcast_n",
+        "clk_bank",
+        "clk_bank_macro",
+        "clk_ctl",
+        "clk_side",
+        "rst_n",
+        "bridge_rst_n",
+        "control",
+        "vmr_cmd",
+        "vmw_cmd",
+        "rf_bword",
+        "rf_bcmd",
+        "rf_dsec",
+        "red_sel",
+        "slice_x",
+        "inj_rd",
+        "inj_addr",
+        "inj_q",
+        "dw_v",
+        "dw_row",
+        "dw_d",
+        "fault",
+        "lg_rq",
+        "lg_wq",
+        "lg_rr",
+        "lg_w_done",
+        "lg_read",
+        "lg_write",
+        "far_rq",
+        "far_wq",
+        "far_rr",
+        "far_w_done",
+        "lg_fault"
+      ],
+      "exact_port_names_order": true,
+      "etm_port_checks": {
+        "tt": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv7",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_tt",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        },
+        "ff": {
+          "cell": "v16w_ot_hbm_su_static_pgslice_lg__pv7",
+          "library": "v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_ff",
+          "port_names": [
+            "bridge_rst_n",
+            "clk_bank",
+            "clk_bank_macro",
+            "clk_bcast",
+            "clk_ctl",
+            "clk_insert",
+            "clk_lane",
+            "clk_side",
+            "control",
+            "dw_d",
+            "dw_row",
+            "dw_v",
+            "far_rq",
+            "far_rr",
+            "far_w_done",
+            "far_wq",
+            "fault",
+            "inj_addr",
+            "inj_q",
+            "inj_rd",
+            "lg_fault",
+            "lg_read",
+            "lg_rq",
+            "lg_rr",
+            "lg_w_done",
+            "lg_wq",
+            "lg_write",
+            "pg_clk",
+            "red_sel",
+            "rf_bcmd",
+            "rf_bword",
+            "rf_dsec",
+            "rst_bcast_n",
+            "rst_lane_n",
+            "rst_n",
+            "slice_x",
+            "vmr_cmd",
+            "vmw_cmd"
+          ],
+          "bus_bit_ranges": {
+            "clk_bank": [
+              31,
+              0
+            ],
+            "clk_bank_macro": [
+              191,
+              0
+            ],
+            "clk_bcast": [
+              3,
+              0
+            ],
+            "clk_insert": [
+              127,
+              0
+            ],
+            "clk_lane": [
+              255,
+              0
+            ],
+            "clk_side": [
+              5,
+              0
+            ],
+            "control": [
+              1741,
+              0
+            ],
+            "dw_d": [
+              1023,
+              0
+            ],
+            "dw_row": [
+              17,
+              0
+            ],
+            "dw_v": [
+              1,
+              0
+            ],
+            "far_rq": [
+              33,
+              0
+            ],
+            "far_rr": [
+              513,
+              0
+            ],
+            "far_w_done": [
+              1,
+              0
+            ],
+            "far_wq": [
+              561,
+              0
+            ],
+            "inj_addr": [
+              159,
+              0
+            ],
+            "inj_q": [
+              1023,
+              0
+            ],
+            "inj_rd": [
+              1,
+              0
+            ],
+            "lg_read": [
+              1,
+              0
+            ],
+            "lg_rq": [
+              33,
+              0
+            ],
+            "lg_rr": [
+              513,
+              0
+            ],
+            "lg_w_done": [
+              1,
+              0
+            ],
+            "lg_wq": [
+              561,
+              0
+            ],
+            "lg_write": [
+              1,
+              0
+            ],
+            "red_sel": [
+              11,
+              0
+            ],
+            "rf_bcmd": [
+              35,
+              0
+            ],
+            "rf_bword": [
+              127,
+              0
+            ],
+            "rf_dsec": [
+              255,
+              0
+            ],
+            "rst_bcast_n": [
+              3,
+              0
+            ],
+            "rst_lane_n": [
+              31,
+              0
+            ],
+            "slice_x": [
+              31,
+              0
+            ],
+            "vmr_cmd": [
+              59,
+              0
+            ],
+            "vmw_cmd": [
+              77,
+              0
+            ]
+          },
+          "exact_pin_directions_and_bit_coverage": true
+        }
+      },
+      "etm_hashes": {
+        "v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_tt.lib": "11b5dbd335ae0c786cde35033d889b786e9e0a5e3328ae8abb01228eaba6cc6b",
+        "v16w_ot_hbm_su_static_pgslice_lg__pv7_synth_ff.lib": "7e3e87c31bf3876c6f252eefea6f7cce78d328c3bf97c35f7a3546191c87612d"
+      },
+      "input_hashes": {
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+        "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72",
+        "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015",
+        "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv": "2eb374f97c685b8bb8195ac0973ef9f6cc6f58b71e82f1803cd1db5785c506d7"
+      },
+      "artifact_hashes": {
+        "ot_hbm_su_static_pgslice_lg__pv7.netlist.v": "50765cd38d107318d4a3014bcd736912f6965b60b2126dcef442d3dcd673d4d5",
+        "ot_hbm_su_static_pgslice_lg__pv7.log": "37da8b3d14612beadc8bc6114a884257e31de4e91c507e19a2a3f76f5c864161",
+        "etm.log": "57459405576f4c4fc69f419bf6167033487443458448c30ad0d3335932830763",
+        "ot_hbm_su_static_pgslice_lg__pv7.stat": "7fe93d75285a16e6cc4c3dfd2e6c62aef4ded49ac77dcee05a601d86d8af3eb3",
+        "ot_hbm_su_static_pgslice_lg__pv7.ys": "cbc63afc023ab0f3227528c7fb21d4896c1c829b5403bd9008f46f3c598ef5f5",
+        "ot_hbm_su_static_pgslice_lg__pv7.files.json": "d5e5c59f48bea405c52e9da389f4332a65e326995cdab6ecb11e6d0af66549d9"
+      },
+      "macro_area": "UNKNOWN_NOT_ZERO"
     },
     "ot_hbm_su_static_pgslice_lg__pv8": {
       "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv8",
