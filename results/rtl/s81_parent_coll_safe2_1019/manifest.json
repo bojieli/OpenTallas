@@ -1,0 +1,54 @@
+{
+  "scope": "PARENT_SOURCE_INTERFACE_CANDIDATE_NOT_ADOPTED",
+  "base_parent_source_commit": "6e3559855",
+  "base_parent_source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv",
+  "base_parent_sha256": "f8b562223347b5044a96dd3b0d808dcabf6c8b64dd55c8ecc885737b93a9b3c2",
+  "parent_source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mux_coll_safe2.sv",
+  "parent_modules": [
+    "ot_s81sl_slice_lep_mux_coll_safe2",
+    "ot_s81sl_slice_lepw_mu_coll_safe2",
+    "ot_s81sl_slice_lepw_mus_coll_safe2",
+    "ot_s81sl_slice_lepe_mu_coll_safe2",
+    "ot_s81sl_slice_lepe_nh_mus_coll_safe2",
+    "ot_s81sl_slice_lepw_mab_coll_safe2"
+  ],
+  "required_define": "OT_S81PH_COLL_TF_CLEANUP",
+  "default": "Legacy file/modules/table unchanged; new parent modules absent unless cleanup define explicitly selected.",
+  "dependency_commits": {
+    "safe_lane": "2822bc004",
+    "SRAM_helpers": "ba7479f59"
+  },
+  "safe_lane_source": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe2.sv",
+  "lane_params": {
+    "GFMT": 1,
+    "EPPIPE": 2,
+    "LCR": 1,
+    "RXSRAM": 1,
+    "RXLOCAL": 1,
+    "EPRX": 1,
+    "EPTO": 1,
+    "EPMW": 1,
+    "CH_BOARD": 700,
+    "SAFE": 1
+  },
+  "no_consumer_proof": {
+    "scope": "Actual9130strict MU1 bind; MU2copyB10slot not claimed",
+    "die_v_sha256": "0d8c5fc3d02ba895b262ce661a354c21b69bb0e3c7756ff587b5f0806e72c96d",
+    "bind_table_sha256": "776c9dbd73fd019b37fcdd1a1bb3d586ffd2e087ad595d2872f5bb3bb6a11d7b",
+    "tf_token_count": 0,
+    "saved_root": "ot-epyc7:/srv/opentallas-scratch/claude/codex-s81-dieplace"
+  },
+  "clock_connectivity": {
+    "endpoint_slice": "s_0S/cl0S,s_0N/cl0N,s_7S/cl7S,s_7N/cl7N roots \u2192 u_sl/u_lep/u_land and lane.ck directly",
+    "TX_lane": "source region root \u2192 ICG \u2192 half-cycle relay ck/ck_o \u2192 landing.ck_f; landing.ck=edge0/8",
+    "SerDes": "west clk=ck_edge0; east clk=ck_edge8; encoder/txl/PMA-TX/rate-match-read/status use clk; RX/decoder/rate-match-write use pma_rck",
+    "physical_qualification": "OWED actual regional/native clock network, parent child fit, routing and all TT/FF link facts"
+  },
+  "remaining": [
+    "Full selected-source strict elaboration",
+    "Safe2 behavioral miter/data/reset contract",
+    "Actual safe2 hard view qualification",
+    "Native parent clocks/child fit/actual route",
+    "Coherent compiler/calendar and fresh complete die strictbind"
+  ]
+}
