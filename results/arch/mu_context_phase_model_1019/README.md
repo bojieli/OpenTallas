@@ -80,3 +80,26 @@ measured into that equation. A rotated steady superframe alone is not first-
 token proof. This remains a blocker for every option above, alongside production
 Q-ready evidence and full-identity context loading. No physical phase wrapper
 or new word/schema is implemented by this comparison.
+
+## Selected model follow-up: F16 fully expanded, no OVL masks
+
+ROOT selected F16 fully expanded (Calpipe notification). The leaf owner handles
+three4096 ROMs,14-bit pointer and23-bit timestamps/header. The OVL entry layout
+stays32 bits. selected_F16_origin0_model contains independently re-encoded and
+decoded origin0/D016 lists from that exact lifecycle input:3260 words/direction,
+AW12, period8053632,3259 GO starts each. Adjacent and wrap playhead occupancy
+checks pass, with wrap slack1014/2580/2561/1019 edges (C_TX/C_RX/K_TX/K_RX).
+Reproduce using expand_lifecycle_ovl_model.py. These remain model files, not a
+production wrapper bind. The cold user0 prelude remains explicitly unbound.
+
+A Verilator5.050 boundary bench (tb_ovl_launch_age.sv) measures the existing
+face input/output pin-flop and D2D pin/calendar stages using the selected lists.
+With raw face fwd_epoch sampled at E, FIRST1176, first C_TX word789:
+controller start E1966; face cal_start output E1967; D2D cal input-flop E1968;
+D2D request tx_slot output E1971. First RX cal_start output is E3773. The ROM
+read+capture prefetch adds no start-edge delay. Against raw CMD reference774,
+the extrapolated L0 reference is E1197=E+FIRST+D0+5 (or internal list-go anchor
++D0+4). This is a boundary-model measurement, not a die-netlist/native-producer
+composition proof. The native codec/seam programme reference and initial epoch
+prelude must still be composed into the final absolute anchor. launch_age.log
+is committed; run_ovl_launch_age.sh reproduces it on the fleet.
