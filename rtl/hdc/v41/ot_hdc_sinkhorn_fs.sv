@@ -575,7 +575,7 @@ module ot_hdc_sinkhorn_fs #(
             end
             ot_hdc_skf_quot #(.MUT_Q4(MUT_Q4)) u_q (.clk(clk), .subn(sn),
                 .xm({x_m[EL][3], x_m[EL][2], x_m[EL][1], x_m[EL][0]}), .xe(x_e[EL]),
-                .xz(x_z[EL] & zmv[ZE(EL, 7)]), .tm(tmc), .te($signed(tec)), .r(rs[2*29*k +: 2*29]),
+                .xz(x_z[EL] & zmv[ZE(EL, 7)]), .tm(tmc), .te(tec), .r(rs[2*29*k +: 2*29]),
                 .y(q[4*k + r]), .range(q_rng[4*k + r]));
         end
     end endgenerate
