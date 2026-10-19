@@ -8,7 +8,7 @@ EXPECTED={5:['LANE_CAPTURE_IDENTITY','F0_SOURCE_AGE_ID'],6:['M1_SOURCE_AGE_DATA'
 def audit(log,abort=False,mut=0):
  text=log.read_text();failures=re.findall(r'Assertion failed[^\n]*|\$fatal[^\n]*|Error[^\n]*',text)
  if mut:
-  witnesses=[p for p in EXPECTED[mut]if p in text]
+  witnesses=[p for p in EXPECTED[mut]if any('Assertion failed'in f and p in f for f in failures)]
   return dict(verdict='CAUSAL_FAIL'if witnesses and 'R6_COMPONENT_PASS'not in text else'UNQUALIFIED_NEGATIVE',mutant=mut,witnesses=witnesses,failures=failures)
  if 'R6_COMPONENT_PASS two_distinct_episodes native_full_sector'not in text:
   return dict(verdict='FAIL_OR_INCOMPLETE',failures=failures)
