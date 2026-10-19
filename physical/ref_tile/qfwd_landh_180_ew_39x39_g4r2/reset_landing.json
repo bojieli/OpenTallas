@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_landh_180_EW_39x39",
+ "enable": false,
+ "reason": "RTL owns rs0/rs1 plus fixed four-write boot readiness synchronizer; compiler prices two reset edges and finalcapture1, without flow duplicate."
+}

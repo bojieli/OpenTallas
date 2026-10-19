@@ -1,0 +1,150 @@
+{
+ "name": "qfwd_landh_180_ns_39x39_g4r2-g180b-COMMIT",
+ "block": "qfd_landh_180_NS_39x39",
+ "ref_tile": true,
+ "owner": "Codex:SAFE-QW-LAND",
+ "purpose": "Gated180 model synthesis area/fanout; physical phase timing not qualified",
+ "threads": 2,
+ "peak_ram_gb": 6,
+ "source": {
+  "branch": "codex/safe-qw-land-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "rtl/qwen_split/qfd_fwd_lane.sv",
+   "rtl/hdc",
+   "tools/qwen_split",
+   "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_landh_180_NS_39x39 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator -DOT_QFD_LAND_GATED_BANKS --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv physical/qwen_fwd_lane/qfd_gated_land180_r2_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fwd_lane_exact",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh pass_gated {RUN}/bench_p 180",
+    "expect": "pass",
+    "pass_regex": "FWD_BENCH PASS 0 errors in [0-9]+ checks",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh sel_gated {RUN}/bench_sel 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_sel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "naive_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh naive_gated {RUN}/bench_naive 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_naive.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh wsel_gated {RUN}/bench_wsel 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_wsel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh rsel_gated {RUN}/bench_rsel 180",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_rsel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfwd_landh_180_ns_39x39_g4r2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfwd_landh_180_ns_39x39_g4r2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 2,
+   "peak_ram_gb": 6
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfwd_landh_180_ns_39x39_g4r2 --out {RUN}/record/views/qfd_landh_180_NS_39x39  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfwd_landh_180_ns_39x39_g4r2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfwd_landh_180_ns_39x39_g4r2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfwd_landh_180_ns_39x39_g4r2/qfwd_landh_180_ns_39x39_g4r2-g180b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "GATED180 structural model: eight actualICGs clock four write banks and four shadowread banks at period4T/pulseT/2; root outputmux capture adds1receivercycle. Total1748bits including9ICG latches,180b/cycle;600=>4chunks. Fixed4write readiness boot, source+1/readreset+2; ringK subtracts finalcapture from totalE. SYNTHESIS/FLOORPLAN ONLY UNTIL GENERATEDCLOCK FAMILY/ALLSCENARIO CONSTRAINTS QUALIFIED; no release adoption. RESET-R2:rawrs drives onlyrs0/rs1; localresetfaces and two-stage fixed-fill readiness use landedrs1. Same steadystate age; independentgoldprologue corrected."
+}
