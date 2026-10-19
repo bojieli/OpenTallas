@@ -28,6 +28,8 @@ VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 FIX=$OUT/src/results/rtl/hbm_ds_layer_tput_1018/fixtures
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/smb_unit.py run --fix $FIX --smw $SMW --bundle $BUNDLE --work $OUT/work"
 case "$JOB" in
+  banked_class_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS --name banked_class_smoke --out $OUT/out/banked_class_smoke.json" ;;
+  banked_class_two_runs) J="$T --layers L00:0,L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_BANKED_CLASS --name banked_class_two_runs --out $OUT/out/banked_class_two_runs.json" ;;
   cache_safe_smoke) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE --name cache_safe_smoke --out $OUT/out/cache_safe_smoke.json" ;;
   processing_early) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_RETURN_MUT=2 --name processing_early --out $OUT/out/processing_early.json" ;;
   processing_late) J="$T --layers L00:0 --define SMB_SRAMFIFO,SMB_NATIVE_LANDING,SMB_NATIVE_RETURN,SMB_NATIVE_CACHE_SAFE,SMB_RETURN_MUT=4 --name processing_late --out $OUT/out/processing_late.json" ;;

@@ -469,6 +469,8 @@ def build(work: Path, bundle: Path, defines):
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel_class.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_banked_class.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_banked_class.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_banked.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t_banked.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_command_class_guard.sv",
             "rtl/hbm_accel/sm/static/ot_smh_calendar_banked_cells.sv",
             "rtl/hbm_accel/sm/static/ot_smh_calendar_bank_leaf.sv",

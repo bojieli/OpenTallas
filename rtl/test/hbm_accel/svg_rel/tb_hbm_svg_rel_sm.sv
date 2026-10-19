@@ -70,15 +70,33 @@ module tb_hbm_svg_rel_sm;
  assign ks[1023:128]=0;assign rrdy[31:4]={28{1'b1}};
  // ---------------- xc (extension calendar, own collar)
  wire[108:0]cmd_ext;wire[63:0]kv_desc;wire xc_done,xc_cfgd,xc_fault,xc_active;
+ `ifdef SMB_BANKED_CLASS
+ wire[174:0]xc_command_envelope;
+ ot_hbm_svc_sm_xcal_rel_t_banked #(.CLASS_ENABLE(1),.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(
+  .clk_core(stream),.clk_bank0(stream),.clk_bank1(stream),.rst_n(srst),.tgt(8'd192),
+  .command_envelope(xc_command_envelope),.command_class_observe(),.command_context_valid_observe(),
+ `else
  `ifdef SMB_NATIVE_CACHE_SAFE
  ot_hbm_svc_sm_xcal_rel_cache2_t
  `else
  ot_hbm_svc_sm_xcal_rel_t
  `endif
  #(.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(.clk(stream),.rst_n(srst),.tgt(8'd192),
+ `endif
   .cfg_v(cfg_v),.cfg_target(target),.cfg_addr(addr),.cfg_data(data),.desc_v(desc_v),.desc_base(dbase),.desc_limit(dlimit),
   .desc_loops(dloops),.launch_v(launch_v),.cmd_ext(cmd_ext),.kv_desc(kv_desc),.done(xc_done),.configured(xc_cfgd),
   .fault(xc_fault),.active(xc_active));
+ `ifdef SMB_BANKED_CLASS
+ reg[84:0]envelope_history0,envelope_history1;reg[3:0]envelope_warm=0;
+ always @(posedge stream or negedge srst)
+  if(!srst)begin envelope_history0<=0;envelope_history1<=0;envelope_warm<=0;end
+  else begin
+   envelope_history0<=svg.feed.app_command_envelope;envelope_history1<=envelope_history0;
+   if(envelope_warm!=15)envelope_warm<=envelope_warm+1'b1;
+   if(envelope_warm>=8&&command_envelope!==envelope_history1)$fatal(1,"FULL85_CACHE_ENVELOPE_PHASE");
+   if(xc_command_envelope[172:0]!=={kv_desc,cmd_ext})$fatal(1,"FULL175_XC_ENVELOPE_ALIAS");
+  end
+ `endif
  // ---------------- HBM: real controller leaves + DRAM command fixture
  wire[31:0]row_v,col_v,col_we,dram_rvalid;wire[95:0]row_op;wire[159:0]row_bank,col_bank,col_col;wire[607:0]row_row;wire[8191:0]col_data,dram_rdata;wire[1023:0]col_strb;wire native_fault;
  ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm),.rst_n(hrst),.pc_clk({32{hbm}}),
