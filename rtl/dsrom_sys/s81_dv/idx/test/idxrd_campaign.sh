@@ -11,7 +11,7 @@ VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 D=$O/$BN; mkdir -p "$D"
 SRC=(rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/v41x/ot_hdc_v41x_idx.sv
      rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv
-     physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+     physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
      rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv
      rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv
      rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg.sv rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg.sv)

@@ -1,3 +1,6 @@
+`ifndef TX_SRAM
+`define TX_SRAM 0
+`endif
 `timescale 1ns/1ps
 // S81-L20DIE (10-19): compose bench of the static index RANK TREE on the REAL die units: per die a dsdv_idx_vmux
 // (bk_sel S-face ingress merge), the selector dsdv_bk_sel (die.v u_bk_sel straps: tap_k 0x11, sink_k 0x10, ik 4, ek 5,
@@ -29,7 +32,7 @@ module tb_idx_tree;
         dsdv_idx_vmux u_vm (.ck(clk), .rst(rst_n), .i_r({V{1'b0}}), .i_s(i_s[g]), .i_a(i_a[g]), .i_b(i_b[g]), .o(vi_s[g]), .fault(f_vm[g]));
         dsdv_bk_sel u_bk_sel (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10), .ik(3'd4), .ek(3'd5), .uid(8'h5B),
             .eg_n(1'b0), .vi_s(vi_s[g]), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]), .fault(f_sel[g]));
-        dsdv_idx_tx #(.MUT(`TX_MUT)) u_tx (.ck(clk), .rst(rst_n), .vi(vi_s[g]), .vo(vo_s[g]), .lo(lo[g]), .st(tst[g]));
+        dsdv_idx_tx #(.MUT(`TX_MUT), .SRAM_MACRO(`TX_SRAM)) u_tx (.ck(clk), .rst(rst_n), .vi(vi_s[g]), .vo(vo_s[g]), .lo(lo[g]), .st(tst[g]));
     end endgenerate
     initial begin
         if (!$value$plusargs("STIM=%s", fn)) fn = "stim.txt";
