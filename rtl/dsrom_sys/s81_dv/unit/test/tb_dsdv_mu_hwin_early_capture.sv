@@ -85,6 +85,9 @@ ROUNDS=4, T0=1000+32*NS;
 `ifdef COLLIDE_EVENTS
       DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
 `endif
+`ifdef CROSS_GENERATION_COLLISION
+      DK[1]=DK[0]+S; KD[0]=0;KD[1]=0;EP[1]=EP[0];
+`endif
     end
     integer first_cfg_fault=-1, first_rx_fault=-1, injected_cfg_cycle=-1, release_word_stage=1,release_i;
     reg ck = 0, rst_n = 0;
@@ -256,6 +259,13 @@ ROUNDS=4, T0=1000+32*NS;
 `endif
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
+    function automatic [1:0] event_att(input integer ev,sl);
+`ifdef ATTR_PER_EVENT
+       event_att={sl[0],sl[1]^ev[0]};
+`else
+       event_att=att(sl);
+`endif
+    endfunction
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
 `ifdef SHORT_RL
     // Independent model: accepted pin capture N becomes outstanding by N+2 and
@@ -299,7 +309,7 @@ ROUNDS=4, T0=1000+32*NS;
             want_c=0; want_r=0;
             for(e=0;e<NE;e=e+1) for(s=0;s<nst;s=s+1)
                 if(EP[e]==port && cyc==stc[s]+DK[e]+2) begin
-                    aa=att(stu[s]);
+                    aa=event_att(e,stu[s]);
                     if(KD[e]==0) want_c={stp[s][20:0],stu[s][9:0],aa,1'b1};
                     else if(aa[1]) want_r={stu[s][9:0],1'b1};
                 end
@@ -339,7 +349,7 @@ ROUNDS=4, T0=1000+32*NS;
         for (q = 0; q < NE; q = q + 1) begin
             wcfg({1'b1, 1'b0, 1'b0, 2'd0, 10'd0, 2'(EP[q]), 1'(KD[q]), 3'd0, 5'(q)});
             wcfg({1'b1, 1'b0, 1'b0, 2'd1, 21'(DK[q])});
-            for (j = 0; j < NS; j = j + 1) wcfg({1'b1, 1'b0, 1'b0, 2'd2, 9'd0, att(j), 10'(j)});
+            for (j = 0; j < NS; j = j + 1) wcfg({1'b1, 1'b0, 1'b0, 2'd2, 9'd0, event_att(q,j), 10'(j)});
         end
 `ifdef IDLE_RECONFIG
         DK[NE-1]=DK[NE-1]+7;
@@ -373,7 +383,7 @@ ROUNDS=4, T0=1000+32*NS;
         for(q=0;q<NE;q=q+1) begin
            wcfg({1'b1,1'b0,1'b0,2'd0,10'd0,2'(EP[q]),1'(KD[q]),3'd0,5'(q)});
            wcfg({1'b1,1'b0,1'b0,2'd1,21'(DK[q])});
-           for(j=0;j<NS;j=j+1) wcfg({1'b1,1'b0,1'b0,2'd2,9'd0,att(j),10'(j)});
+           for(j=0;j<NS;j=j+1) wcfg({1'b1,1'b0,1'b0,2'd2,9'd0,event_att(q,j),10'(j)});
         end
         // New epoch dates are the actual new starts, retaining original D+2/D+3 gold.
         traffic_t0=cyc+1; nfire=0;errs=0;first_cfg_fault=-1;
@@ -396,15 +406,22 @@ ROUNDS=4, T0=1000+32*NS;
 `endif
             end
         repeat (RL + 100) @(posedge ck);
-        for(j=0;j<nst;j=j+1) for(e=0;e<NE;e=e+1) if(KD[e]==0 || att(stu[j])/2) nexp=nexp+1;
+        for(j=0;j<nst;j=j+1) for(e=0;e<NE;e=e+1) if(KD[e]==0 || event_att(e,stu[j])/2) nexp=nexp+1;
 `ifdef COLLIDE_EVENTS
         nexp=nexp-nst; // two TX rows target one output at the same edge
+`endif
+`ifdef CROSS_GENERATION_COLLISION
+        nexp=nexp-(nst-1); // first low row and final high row are separate; other dates collide.
 `endif
         $display("MUWIN starts %0d fires %0d expected %0d K %0d t_mf %b hslot %b hwin %b", nst, nfire, nexp, kconst, mf, hmf, wf);
 `ifdef BAD_D
         if(wf[1] && hmf==0) $display("MUWIN BADD PASS"); else $display("MUWIN BADD FAIL");
 `elsif BAD_D_HIGH
         if(wf[1] && hmf==0) $display("MUWIN BADD_HIGH PASS"); else $display("MUWIN BADD_HIGH FAIL");
+`elsif CROSS_GENERATION_COLLISION
+        $display("MUWIN CROSS_COLLISION first %0d expected %0d",first_cfg_fault,stc[1]+DK[0]+3);
+        if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==stc[1]+DK[0]+3)
+           $display("MUWIN CROSS_COLLISION PASS");else $display("MUWIN CROSS_COLLISION FAIL");
 `elsif COLLIDE_EVENTS
         $display("MUWIN COLLISION first %0d expected %0d",first_cfg_fault,stc[0]+DK[0]+3);
         if(errs==0 && nfire==nexp && hmf==0 && wf==2'b10 && first_cfg_fault==stc[0]+DK[0]+3)

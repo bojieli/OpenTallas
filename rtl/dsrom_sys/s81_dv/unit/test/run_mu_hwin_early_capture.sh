@@ -215,5 +215,11 @@ boot_faults)
  run armed_reconfig tb_dsdv_mu_hwin_early_capture '^MUWIN ARMED_RECONFIG PASS' +define+NSLOT_TEST=${BOOT_NS:-8} +define+NEV=${BOOT_NEV:-16} +define+MIN_D +define+ARMED_RECONFIG
  run already_late tb_dsdv_mu_hwin_early_capture '^MUWIN LATE_SOURCEFAULT PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+LATE_D
  ;;
+winner_and_mechanism)
+ run distinct_attributes tb_dsdv_mu_hwin_early_capture '^MUWIN COLLISION PASS' +define+NSLOT_TEST=2 +define+NEV=2 +define+MIN_D +define+COLLIDE_EVENTS +define+ATTR_PER_EVENT
+ run cross_generation_winner tb_dsdv_mu_hwin_early_capture '^MUWIN CROSS_COLLISION PASS' +define+NSLOT_TEST=2 +define+NEV=2 +define+MIN_D +define+CROSS_GENERATION_COLLISION +define+ATTR_PER_EVENT
+ RUN_SEEDS=1 run actual_no_early_read tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+MIN_D +define+SWEEP256 +define+LONG_D +define+EC_MUT=1
+ for mut in 2 3 4; do RUN_SEEDS=1 run actual_mechanism_mut$mut tb_dsdv_mu_hwin_early_capture 'FAIL:EARLY_MITER' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+EC_MUT=$mut; done
+ ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac
