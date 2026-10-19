@@ -22,6 +22,18 @@ report.sort(key=lambda a:a['loads'],reverse=True)
 ff=collections.Counter(c['type'] for c in cells.values() if seq(c['type']));groups=collections.Counter()
 for name,c in cells.items():
  if seq(c['type']):groups['ingress_slices' if '.g_pin[' in name else 'return_slices' if 'u_ring.g_slice[' in name else 'pair_slices' if 'u_pair.g_slice[' in name else 'other_native_control']+=1
+def q_origin(bit,visited=None):
+ visited=set() if visited is None else visited
+ if bit in visited:return False
+ visited.add(bit)
+ ds=drivers[bit]
+ if len(ds)!=1:return False
+ d=ds[0]
+ if seq(d['type']):return True
+ if not re.match(r'(?:INV|BUF)',d['type']):return False
+ cell=cells[d['cell']]
+ ins=[b for port,bits in cell['connections'].items() if cell['port_directions'].get(port)=='input' for b in bits]
+ return len(ins)==1 and q_origin(ins[0],visited)
 qoutputs={};outputs_not_q=[]
 for p,v in m['ports'].items():
  if v['direction']!='output':continue
@@ -29,6 +41,7 @@ for p,v in m['ports'].items():
  for b in v['bits']:
   ds=drivers[b]
   if any(seq(x['type']) for x in ds):stats['direct_FF_Q']+=1
+  elif q_origin(b):stats['FF_Q_through_polarity_buffer']+=1
   elif ds:stats['non_FF_driver']+=1;outputs_not_q.append(dict(port=p,bit=b,names=aliases[b],drivers=ds))
   else:stats['undriven_or_constant']+=1
  qoutputs[p]=dict(stats)
