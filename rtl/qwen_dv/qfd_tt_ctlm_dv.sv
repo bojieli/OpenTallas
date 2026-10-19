@@ -123,8 +123,11 @@
 //   attention (kv) ops run as a LOCAL SEG at prog_base NCTX_BASE (mu_opcal layer_entries: C.loc_seg(0x10)), so native59
 //   never opened a filler context.  Here: a head start (st) of a filler (hu != 0) at base NCTX_BASE raises
 //   layer_context_v on the edge the head would for base 0 (h_start -> head pin register -> layer_context_v register =
-//   2 edges, FCTX_LAT), with the head's own native_tok / native_pos (latched on every accepted start: the filler's
-//   tok_b / pos_b, user on [17:16]) and command_stage (= that segment's user stage, per-user stage bank).  native59 NU 4
+//   2 edges), with native_tok / native_pos = that start's tok / {user, pos} from this block's own 2-edge copy of st
+//   (held until the next head start reaches the head's latch, exactly as the head's native_tok / native_pos register
+//   behaves for an accepted start; the copy makes the context independent of the head's start acceptance -- found by
+//   the bench: a start the busy head does not accept leaves the head's latch on the previous user) and command_stage
+//   (= that segment's user stage, per-user stage bank).  ~75 flops.  native59 NU 4
 //   (MU-DQ-D2DUSER) keys the context by native_pos[17:16].  The closed qfd_sys_face's host-context check must skip
 //   filler contexts (qfd_host_native_context_rx MU_HEAD 1, re-close owner MU-DQ-SYSFACE).  0 added edges; 2 flops.
 //   MUT 35 (bench only): the filler context is not raised (the pre-fix hardware).
@@ -335,12 +338,25 @@ module qfd_tt_ctlm_dv #(
     wire [17:0] native_pos_h;
     // filler native context (FCTX, see the header): 2 edges after the filler's base-NCTX_BASE head start, as the head's
     wire        lcv_h;
-    reg  [1:0]  fcx;
+    wire [17:0] native_tok_h;
+    reg  [1:0]  fcx, fh;
+    reg  [17:0] f1_tok, f1_pos, ov_tok, ov_pos; reg ov;
+    wire        f0 = (FCTX != 0) && (OPS != 0) && (MUT != 35) && st_h && st_base == NCTX_BASE && hu != 2'd0;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) fcx <= 2'd0;
-        else fcx <= {fcx[0], (FCTX != 0) && (OPS != 0) && (MUT != 35) && st_h && st_base == NCTX_BASE && hu != 2'd0};
+        if (!rst_n) begin
+            fcx <= 2'd0; fh <= 2'd0; f1_tok <= 18'd0; f1_pos <= 18'd0; ov <= 1'b0; ov_tok <= 18'd0; ov_pos <= 18'd0;
+        end else begin
+            fcx <= {fcx[0], f0}; fh <= {fh[0], st_h};
+            f1_tok <= st_tok; f1_pos <= st_pos;
+            if (fh[0]) begin                                   // the edge the head latches this start's tok / pos
+                ov <= fcx[0];
+                if (fcx[0]) begin ov_tok <= f1_tok; ov_pos <= f1_pos; end
+            end
+        end
     assign layer_context_v = lcv_h | fcx[1];
-    assign native_pos = (NU > 1) ? (native_pos_h | {hu, 16'd0}) : native_pos_h;
+    assign native_tok = ov ? ov_tok : native_tok_h;
+    // [17:16] stays the D2DUSER carrier (hu, every edge); [15:0] from the filler copy while it holds
+    assign native_pos = (NU > 1) ? ((ov ? {2'b00, ov_pos[15:0]} : native_pos_h) | {hu, 16'd0}) : native_pos_h;
 
     // ------------------------------------------------------------------ SU observation (was seq_su's xs / su_observe)
     reg  [23:0] su_acc;                       // SU commands issued (the head's other-unit accepted count)
@@ -376,7 +392,7 @@ module qfd_tt_ctlm_dv #(
         ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0 && MUT != 9) ? 1 : 0)) u_hr (
             .stage_start(hd_start), .stage(hd_stage),
             .rom_ret_i(rom_ret), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(lcv_h), .native_tok(native_tok), .native_pos(native_pos_h), .rom_cmd(ib_q),
+            .layer_context_v(lcv_h), .native_tok(native_tok_h), .native_pos(native_pos_h), .rom_cmd(ib_q),
             .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(actual_me_observe),
             .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
@@ -411,7 +427,7 @@ module qfd_tt_ctlm_dv #(
         qfd_tt_ctlm_head_static u_head (
             .me_observe(actual_me_observe), .cp_active(1'b0), .cp(cp),
             .me_image_ready(me_image_ready), .program_obs(program_obs),
-            .layer_context_v(lcv_h), .native_tok(native_tok), .native_pos(native_pos_h),
+            .layer_context_v(lcv_h), .native_tok(native_tok_h), .native_pos(native_pos_h),
             .clk(ck), .ck_sched(ck), .rst_n(rst_n),
             .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
             .pw_v(pw[74]), .pw_addr(pw[73:64]), .pw_data(pw[63:0]),
