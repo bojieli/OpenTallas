@@ -31,9 +31,20 @@ module tb_xcal_public_banked;
  integer errors=0,checks=0,edges=0,scenario=0,launch_edge=0,first_old=-1,first_new=-1;
  integer words=0,old_words=0,done_count=0,old_done_count=0,last_done=-1,last_cal_done=-1,last_word=-1;
  integer naive_premature=0,go_count=0,seen_go_done_simultaneous=0;
+ integer score_outstanding=0,score_completions=0,expected_programmes=1,final_drain_edge=-1,active_gap_repairs=0;
+ reg first_go_seen=0;reg go_before,cal_done_before;reg [4:0] busy_hist=0;
  reg checking=0,tight=0,expect_fault=0;integer i,j;
  always @(posedge clk_core)begin
-  edges=edges+1;
+  edges=edges+1;go_before=dut.u_xcal.go;cal_done_before=dut.u_xcal.cal_done;
+  if(checking)begin
+   if(go_before)begin score_outstanding=score_outstanding+1;go_count=go_count+1;first_go_seen=1;$display("PUBLIC_GO scenario=%0d edge=%0d",scenario,edges);end
+   if(cal_done_before)begin
+    score_outstanding=score_outstanding-1;score_completions=score_completions+1;
+    $display("PUBLIC_CAL_DONE scenario=%0d edge=%0d remaining=%0d",scenario,edges,score_outstanding);
+    if(score_completions==expected_programmes)final_drain_edge=edges;
+   end
+   if(go_before&&cal_done_before)seen_go_done_simultaneous=seen_go_done_simultaneous+1;
+  end
   if(launch_v)launch_edge=edges;
   #100;
   if(checking)begin
@@ -46,10 +57,21 @@ module tb_xcal_public_banked;
     errors=errors+1;if(errors<8)$display("PUBLIC_ENVELOPE_ALIAS_FAIL");
    end
    if(configured!==old_configured)begin errors=errors+1;if(errors<8)$display("PUBLIC_CONFIG_CHRONOLOGY_FAIL");end
-   if(!tight&&{active,done,fault}!==status_hist[3])begin
+   // Done/fault remain strict canonical+4, including tight twoGO runs.
+   if({done,fault}!==status_hist[3][1:0])begin
     errors=errors+1;if(errors<8)$display("PUBLIC_STATUS_MISMATCH scenario=%0d edge=%0d got=%b expected=%b",scenario,edges,{active,done,fault},status_hist[3]);
    end
-   if(tight&&fault!==status_hist[3][0])begin errors=errors+1;if(errors<8)$display("PUBLIC_TIGHT_FAULT_MISMATCH");end
+   if(active!==status_hist[3][2])begin
+    if(active===1'b1&&status_hist[3][2]===1'b0&&busy_hist[4])begin
+     active_gap_repairs=active_gap_repairs+1;
+     $display("PUBLIC_ACTIVE_GAP_REPAIR scenario=%0d edge=%0d independent_outstanding5=%b dut_outstanding=%0d running=%b app_active=%b",scenario,edges,busy_hist[4],dut.u_xcal.n_done,dut.u_xcal.running,dut.u_xcal.cal_active);
+    end else begin errors=errors+1;if(errors<8)$display("PUBLIC_UNEXPLAINED_ACTIVE_MISMATCH scenario=%0d edge=%0d ledger5=%b",scenario,edges,busy_hist[4]);end
+   end
+   if(dut.u_xcal.n_done!==9'(score_outstanding))begin errors=errors+1;if(errors<8)$display("PUBLIC_OUTSTANDING_LEDGER_FAIL expected=%0d got=%0d",score_outstanding,dut.u_xcal.n_done);end
+   if(first_go_seen&&(final_drain_edge<0||edges<final_drain_edge+5)&&active!==1'b1)begin
+    errors=errors+1;if(errors<8)$display("PUBLIC_ACTIVE_DRAIN_INVARIANT_FAIL edge=%0d final=%0d",edges,final_drain_edge);
+   end
+   if(final_drain_edge>=0&&edges==final_drain_edge+5&&active!==1'b0)begin errors=errors+1;$display("PUBLIC_ACTIVE_TAIL_FAIL");end
    if((cmd_ext!=0||kv_desc!=0)&&launch_edge!=0)begin words=words+1;last_word=edges;if(first_new<0)first_new=edges;end
    if((old_cmd!=0||old_kv!=0)&&launch_edge!=0)begin old_words=old_words+1;if(first_old<0)first_old=edges;end
    if(done)begin done_count=done_count+1;last_done=edges;end
@@ -58,8 +80,7 @@ module tb_xcal_public_banked;
     last_cal_done=edges;
     if(!dut.u_xcal.running&&dut.u_xcal.n_done>1)begin naive_premature=naive_premature+1;$display("PUBLIC_OLD_DONE_PREDICATE_WITNESS scenario=%0d outstanding=%0d edge=%0d",scenario,dut.u_xcal.n_done,edges);end
    end
-   if(dut.u_xcal.go)go_count=go_count+1;
-   if(dut.u_xcal.go&&dut.u_xcal.cal_done)seen_go_done_simultaneous=seen_go_done_simultaneous+1;
+   busy_hist={busy_hist[3:0],score_outstanding!=0};
   end
   for(i=3;i>0;i=i-1)begin hist[i]=hist[i-1];status_hist[i]=status_hist[i-1];end
   hist[0]=old_envelope;status_hist[0]={old_active,old_done,old_fault};
@@ -102,16 +123,16 @@ module tb_xcal_public_banked;
  task reset_case(input integer id);begin
   checking=0;rst_n=0;cfg_v=0;desc_v=0;launch_v=0;idle(6);rst_n=1;idle(20);
   scenario=id;launch_edge=0;first_old=-1;first_new=-1;words=0;old_words=0;done_count=0;old_done_count=0;
-  last_done=-1;last_cal_done=-1;last_word=-1;naive_premature=0;go_count=0;seen_go_done_simultaneous=0;
+  last_done=-1;last_cal_done=-1;last_word=-1;naive_premature=0;go_count=0;seen_go_done_simultaneous=0;score_outstanding=0;score_completions=0;final_drain_edge=-1;first_go_seen=0;busy_hist=0;active_gap_repairs=0;
  end endtask
  task run_case(input integer id,multi,bad200,pc,mode,fl,loops);
   integer row,at;reg [255:0] p;begin
-   reset_case(id);tight=multi!=0;expect_fault=bad200!=0;row=multi?127:255;
+   reset_case(id);tight=multi!=0;expected_programmes=multi+1;expect_fault=bad200!=0;row=multi?127:255;
    for(j=0;j<4;j=j+1)wr(8'hc0,window_addr(pc+j),programme(pc+j,j,mode));
    p=programme(pc,0,mode);p[108:0]=109'd999;p[172:109]=64'hfedcba9876543210;
    wr(8'hc1,window_addr(pc),p); // Mut5 must expose an ignored target id.
-   wr(8'hc0,12'h400+12'(row),descriptor(row,pc,pc+4,loops,20,mode,1,fl,bad200));
-   if(multi)wr(8'hc0,12'h400+12'(row+1),descriptor(row+1,pc,pc+4,loops,20+GAP,mode,1,fl,bad200));
+   wr(8'hc0,12'h400+12'(row),descriptor(row,pc,pc+4,loops,20,mode,id==1?0:1,fl,bad200));
+   if(multi)wr(8'hc0,12'h400+12'(row+1),descriptor(row+1,pc,pc+4,loops,20+GAP,mode,id==1?0:1,fl,bad200));
    desc_base=12'(row);desc_limit=13'(row+1+multi);desc_loops=3;
    @(negedge clk_core);desc_v=1;@(negedge clk_core);desc_v=0;idle(8);
    if(!configured)begin errors=errors+1;$display("PUBLIC_CONFIG_NOT_ARMED scenario=%0d",id);end
@@ -120,8 +141,11 @@ module tb_xcal_public_banked;
    if(words!=old_words||first_new-first_old!=4)begin errors=errors+1;$display("PUBLIC_COUNTS_FAIL scenario=%0d words=%0d/%0d first_delta=%0d",id,words,old_words,first_new-first_old);end
    if(fault!==expect_fault)begin errors=errors+1;$display("PUBLIC_FAULT_FAIL scenario=%0d fault=%b expected=%b",id,fault,expect_fault);end
    if(done_count!=1||active)begin errors=errors+1;$display("PUBLIC_COMPLETION_FAIL scenario=%0d done=%0d active=%b old_done=%0d",id,done_count,active,old_done_count);end
+   if(go_count!=expected_programmes||score_completions!=expected_programmes||score_outstanding!=0)begin errors=errors+1;$display("PUBLIC_LEDGER_COUNTS_FAIL");end
+   if(multi&&GAP==9&&naive_premature!=1)begin errors=errors+1;$display("PUBLIC_OLD_DONE_WITNESS_MISSING");end
+   if(multi&&GAP==11&&seen_go_done_simultaneous!=1)begin errors=errors+1;$display("PUBLIC_SIMULTANEOUS_GO_DONE_MISSING");end
    if(multi&&last_done!=last_cal_done+3)begin errors=errors+1;$display("PUBLIC_FINAL_DONE_EDGE_FAIL final=%0d calendar=%0d",last_done,last_cal_done);end
-   $display("PUBLIC_CASE scenario=%0d words=%0d/%0d first_delta=%0d done=%0d old_done=%0d go=%0d naive_early=%0d simultaneous=%0d",id,words,old_words,first_new-first_old,done_count,old_done_count,go_count,naive_premature,seen_go_done_simultaneous);
+   $display("PUBLIC_CASE scenario=%0d words=%0d/%0d first_delta=%0d done=%0d old_done=%0d go=%0d naive_early=%0d simultaneous=%0d active_gap_repairs=%0d",id,words,old_words,first_new-first_old,done_count,old_done_count,go_count,naive_premature,seen_go_done_simultaneous,active_gap_repairs);
    checking=0;
   end
  endtask
