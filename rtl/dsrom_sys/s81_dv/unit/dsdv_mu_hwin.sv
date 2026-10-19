@@ -280,9 +280,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         if(RAW_SELECT!=0) begin:g_current
             assign collision_q[op]=next_collision[op];
         end else begin:g_delayed
-            reg collision_r; assign collision_q[op]=collision_r;
+            reg collision_latched_r; assign collision_q[op]=collision_latched_r;
             always @(posedge ck or negedge rr[SEL_RBASE+NEP*NEV*4+op])
-                if(!rr[SEL_RBASE+NEP*NEV*4+op]) collision_r<=1'b0; else collision_r<=next_collision[op];
+                if(!rr[SEL_RBASE+NEP*NEV*4+op]) collision_latched_r<=1'b0; else collision_latched_r<=next_collision[op];
         end
     end endgenerate
     wire wv = mw_q[25];
