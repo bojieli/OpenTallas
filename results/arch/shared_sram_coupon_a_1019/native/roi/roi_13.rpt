@@ -1,0 +1,9 @@
+violation type: Lef58EolKeepOut
+	srcs: net:case13_net0 net:case13_net1
+	bbox = (6.6240, 4.8600) - (6.6240, 4.8830) on Layer M4
+violation type: Lef58EolKeepOut
+	srcs: net:case13_net0 net:case13_net1
+	bbox = (6.9120, 4.8600) - (6.9120, 4.8830) on Layer M4
+violation type: Metal Spacing
+	srcs: net:case13_net0 net:case13_net1
+	bbox = (6.6240, 4.8600) - (6.9120, 4.8830) on Layer M4

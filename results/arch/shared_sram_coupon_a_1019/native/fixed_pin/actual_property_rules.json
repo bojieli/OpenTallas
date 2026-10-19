@@ -1,0 +1,86 @@
+{
+  "M4": {
+    "property:LEF58_SPACING": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_WIDTHTABLE": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_CORNERSPACING": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_EOLKEEPOUT": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_RIGHTWAYONGRIDONLY": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_RECTONLY": "'dbProperty' object has no attribute 'getValue'",
+    "width_table_0": {
+      "methods": [
+        "addWidth",
+        "create",
+        "destroy",
+        "getDb",
+        "getDebugName",
+        "getId",
+        "getName",
+        "getObjectType",
+        "getTechLayerWidthTableRule",
+        "getTypeName",
+        "getWidthTable",
+        "isOrthogonal",
+        "isValid",
+        "isWrongDirection",
+        "setOrthogonal",
+        "setWrongDirection",
+        "this",
+        "thisown"
+      ],
+      "getDb": "<odb.dbDatabase; proxy of <Swig Object of type 'odb::dbDatabase *' at 0x7e12961f3150> >",
+      "getDebugName": "dbTechLayerWidthTableRule(1, '<dbTechLayerWidthTableRule:1>')",
+      "getId": 1,
+      "getName": "<dbTechLayerWidthTableRule:1>",
+      "getObjectType": 93,
+      "getTechLayerWidthTableRule": {
+        "unavailable": "dbTechLayerWidthTableRule.getTechLayerWidthTableRule() missing 2 required positional arguments: 'inly' and 'dbid'"
+      },
+      "getTypeName": {
+        "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+      },
+      "getWidthTable": "<Swig Object of type 'std::vector< int,std::allocator< int > > *' at 0x7e12961f3120>"
+    }
+  },
+  "M5": {
+    "property:LEF58_SPACING": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_WIDTHTABLE": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_CORNERSPACING": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_EOLKEEPOUT": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_RIGHTWAYONGRIDONLY": "'dbProperty' object has no attribute 'getValue'",
+    "property:LEF58_RECTONLY": "'dbProperty' object has no attribute 'getValue'",
+    "width_table_0": {
+      "methods": [
+        "addWidth",
+        "create",
+        "destroy",
+        "getDb",
+        "getDebugName",
+        "getId",
+        "getName",
+        "getObjectType",
+        "getTechLayerWidthTableRule",
+        "getTypeName",
+        "getWidthTable",
+        "isOrthogonal",
+        "isValid",
+        "isWrongDirection",
+        "setOrthogonal",
+        "setWrongDirection",
+        "this",
+        "thisown"
+      ],
+      "getDb": "<odb.dbDatabase; proxy of <Swig Object of type 'odb::dbDatabase *' at 0x7e12961f3240> >",
+      "getDebugName": "dbTechLayerWidthTableRule(1, '<dbTechLayerWidthTableRule:1>')",
+      "getId": 1,
+      "getName": "<dbTechLayerWidthTableRule:1>",
+      "getObjectType": 93,
+      "getTechLayerWidthTableRule": {
+        "unavailable": "dbTechLayerWidthTableRule.getTechLayerWidthTableRule() missing 2 required positional arguments: 'inly' and 'dbid'"
+      },
+      "getTypeName": {
+        "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+      },
+      "getWidthTable": "<Swig Object of type 'std::vector< int,std::allocator< int > > *' at 0x7e12961f31b0>"
+    }
+  }
+}

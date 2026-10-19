@@ -1,0 +1,1483 @@
+{
+  "status": "NATIVE_VISIBLE_SOURCE_JOIN_RECTONLY_FAIL_BOTH_FAMILIES",
+  "production_qualified": false,
+  "stages_B_C_run": false,
+  "original_geometry_repaired": false,
+  "image_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "binary_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "version": "26Q3-1510-g6cb3f2b704",
+  "original_full_marker_counts": {
+    "Rect Only": 134,
+    "Min Area": 6,
+    "Min Width": 3,
+    "Lef58EolKeepOut": 8,
+    "Metal Spacing": 2,
+    "Lef58SpacingEndOfLine": 1
+  },
+  "original_full_marker_count": 154,
+  "cases": [
+    {
+      "case": 0,
+      "name": "qwen_wclk_source",
+      "family": "qwen",
+      "pin": "wclk",
+      "pin_kind": "clock",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        772,
+        772,
+        1172,
+        1172
+      ],
+      "all_roi_counts": {
+        "Rect Only": 6
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case0_net0"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case0_net0"
+          ],
+          "bbox_nm": [
+            936,
+            951,
+            984,
+            975
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case0_net1"
+          ],
+          "bbox_nm": [
+            936,
+            1047,
+            984,
+            1071
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case0_net2"
+          ],
+          "bbox_nm": [
+            936,
+            1143,
+            984,
+            1167
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case0_net0"
+          ],
+          "bbox_nm": [
+            960,
+            951,
+            984,
+            984
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case0_net1"
+          ],
+          "bbox_nm": [
+            960,
+            1047,
+            984,
+            1080
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case0_net2"
+          ],
+          "bbox_nm": [
+            960,
+            1143,
+            984,
+            1176
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 1,
+      "name": "qwen_r_ce_in_source",
+      "family": "qwen",
+      "pin": "r_ce_in",
+      "pin_kind": "control",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        2692,
+        772,
+        3092,
+        1172
+      ],
+      "all_roi_counts": {
+        "Rect Only": 10
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case1_net2"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net0"
+          ],
+          "bbox_nm": [
+            2856,
+            759,
+            2904,
+            783
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net1"
+          ],
+          "bbox_nm": [
+            2856,
+            855,
+            2904,
+            879
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net2"
+          ],
+          "bbox_nm": [
+            2856,
+            951,
+            2904,
+            975
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net3"
+          ],
+          "bbox_nm": [
+            2856,
+            1047,
+            2904,
+            1071
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net4"
+          ],
+          "bbox_nm": [
+            2856,
+            1143,
+            2904,
+            1167
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net0"
+          ],
+          "bbox_nm": [
+            2880,
+            759,
+            2904,
+            792
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net1"
+          ],
+          "bbox_nm": [
+            2880,
+            855,
+            2904,
+            888
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net2"
+          ],
+          "bbox_nm": [
+            2880,
+            951,
+            2904,
+            984
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net3"
+          ],
+          "bbox_nm": [
+            2880,
+            1047,
+            2904,
+            1080
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case1_net4"
+          ],
+          "bbox_nm": [
+            2880,
+            1143,
+            2904,
+            1176
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 2,
+      "name": "qwen_rd_out[0]_source",
+      "family": "qwen",
+      "pin": "rd_out[0]",
+      "pin_kind": "data_out",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        4612,
+        772,
+        5012,
+        1172
+      ],
+      "all_roi_counts": {
+        "Rect Only": 10
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case2_net5"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net3"
+          ],
+          "bbox_nm": [
+            4776,
+            759,
+            4824,
+            783
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net4"
+          ],
+          "bbox_nm": [
+            4776,
+            855,
+            4824,
+            879
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net5"
+          ],
+          "bbox_nm": [
+            4776,
+            951,
+            4824,
+            975
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net6"
+          ],
+          "bbox_nm": [
+            4776,
+            1047,
+            4824,
+            1071
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net7"
+          ],
+          "bbox_nm": [
+            4776,
+            1143,
+            4824,
+            1167
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net3"
+          ],
+          "bbox_nm": [
+            4800,
+            759,
+            4824,
+            792
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net4"
+          ],
+          "bbox_nm": [
+            4800,
+            855,
+            4824,
+            888
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net5"
+          ],
+          "bbox_nm": [
+            4800,
+            951,
+            4824,
+            984
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net6"
+          ],
+          "bbox_nm": [
+            4800,
+            1047,
+            4824,
+            1080
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case2_net7"
+          ],
+          "bbox_nm": [
+            4800,
+            1143,
+            4824,
+            1176
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 3,
+      "name": "qwen_wd_in[25]_source",
+      "family": "qwen",
+      "pin": "wd_in[25]",
+      "pin_kind": "control",
+      "face": "E",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        6532,
+        772,
+        6932,
+        1172
+      ],
+      "all_roi_counts": {
+        "Rect Only": 6
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case3_net0"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            6720,
+            951,
+            6744,
+            984
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case3_net0"
+          ],
+          "bbox_nm": [
+            6720,
+            951,
+            6768,
+            975
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case3_net1"
+          ],
+          "bbox_nm": [
+            6720,
+            1047,
+            6744,
+            1080
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case3_net1"
+          ],
+          "bbox_nm": [
+            6720,
+            1047,
+            6768,
+            1071
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case3_net2"
+          ],
+          "bbox_nm": [
+            6720,
+            1143,
+            6744,
+            1176
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case3_net2"
+          ],
+          "bbox_nm": [
+            6720,
+            1143,
+            6768,
+            1167
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 4,
+      "name": "qwen_r_ce_in_vias",
+      "family": "qwen",
+      "pin": "r_ce_in",
+      "pin_kind": "control",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        8488,
+        763,
+        8888,
+        1163
+      ],
+      "all_roi_counts": {},
+      "actual_target_counts": {},
+      "target_native_nets": [
+        "case4_net2"
+      ],
+      "geometry_components": 1,
+      "markers": []
+    },
+    {
+      "case": 5,
+      "name": "sc2_clk_source",
+      "family": "sc2",
+      "pin": "clk",
+      "pin_kind": "clock",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        772,
+        2692,
+        1172,
+        3092
+      ],
+      "all_roi_counts": {
+        "Rect Only": 6
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case5_net0"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case5_net0"
+          ],
+          "bbox_nm": [
+            936,
+            2871,
+            984,
+            2895
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case5_net1"
+          ],
+          "bbox_nm": [
+            936,
+            2967,
+            984,
+            2991
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case5_net2"
+          ],
+          "bbox_nm": [
+            936,
+            3063,
+            984,
+            3087
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case5_net0"
+          ],
+          "bbox_nm": [
+            960,
+            2871,
+            984,
+            2904
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case5_net1"
+          ],
+          "bbox_nm": [
+            960,
+            2967,
+            984,
+            3000
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case5_net2"
+          ],
+          "bbox_nm": [
+            960,
+            3063,
+            984,
+            3096
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 6,
+      "name": "sc2_r_ce_in_source",
+      "family": "sc2",
+      "pin": "r_ce_in",
+      "pin_kind": "control",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        2692,
+        2692,
+        3092,
+        3092
+      ],
+      "all_roi_counts": {
+        "Rect Only": 8
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case6_net1"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net0"
+          ],
+          "bbox_nm": [
+            2856,
+            2775,
+            2904,
+            2799
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net1"
+          ],
+          "bbox_nm": [
+            2856,
+            2871,
+            2904,
+            2895
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net2"
+          ],
+          "bbox_nm": [
+            2856,
+            2967,
+            2904,
+            2991
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net3"
+          ],
+          "bbox_nm": [
+            2856,
+            3063,
+            2904,
+            3087
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net0"
+          ],
+          "bbox_nm": [
+            2880,
+            2775,
+            2904,
+            2808
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net1"
+          ],
+          "bbox_nm": [
+            2880,
+            2871,
+            2904,
+            2904
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net2"
+          ],
+          "bbox_nm": [
+            2880,
+            2967,
+            2904,
+            3000
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case6_net3"
+          ],
+          "bbox_nm": [
+            2880,
+            3063,
+            2904,
+            3096
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 7,
+      "name": "sc2_rd_out[0]_source",
+      "family": "sc2",
+      "pin": "rd_out[0]",
+      "pin_kind": "data_out",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        4612,
+        2692,
+        5012,
+        3092
+      ],
+      "all_roi_counts": {
+        "Rect Only": 10
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case7_net5"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net3"
+          ],
+          "bbox_nm": [
+            4776,
+            2679,
+            4824,
+            2703
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net4"
+          ],
+          "bbox_nm": [
+            4776,
+            2775,
+            4824,
+            2799
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net5"
+          ],
+          "bbox_nm": [
+            4776,
+            2871,
+            4824,
+            2895
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net6"
+          ],
+          "bbox_nm": [
+            4776,
+            2967,
+            4824,
+            2991
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net7"
+          ],
+          "bbox_nm": [
+            4776,
+            3063,
+            4824,
+            3087
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net3"
+          ],
+          "bbox_nm": [
+            4800,
+            2679,
+            4824,
+            2712
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net4"
+          ],
+          "bbox_nm": [
+            4800,
+            2775,
+            4824,
+            2808
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net5"
+          ],
+          "bbox_nm": [
+            4800,
+            2871,
+            4824,
+            2904
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net6"
+          ],
+          "bbox_nm": [
+            4800,
+            2967,
+            4824,
+            3000
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case7_net7"
+          ],
+          "bbox_nm": [
+            4800,
+            3063,
+            4824,
+            3096
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 8,
+      "name": "sc2_wd_in[70]_source",
+      "family": "sc2",
+      "pin": "wd_in[70]",
+      "pin_kind": "data_in",
+      "face": "E",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        6532,
+        2692,
+        6932,
+        3092
+      ],
+      "all_roi_counts": {
+        "Rect Only": 6
+      },
+      "actual_target_counts": {
+        "Rect Only": 2
+      },
+      "target_native_nets": [
+        "case8_net0"
+      ],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case8_net0"
+          ],
+          "bbox_nm": [
+            6720,
+            2871,
+            6744,
+            2904
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case8_net0"
+          ],
+          "bbox_nm": [
+            6720,
+            2871,
+            6768,
+            2895
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case8_net1"
+          ],
+          "bbox_nm": [
+            6720,
+            2967,
+            6744,
+            3000
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case8_net1"
+          ],
+          "bbox_nm": [
+            6720,
+            2967,
+            6768,
+            2991
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case8_net2"
+          ],
+          "bbox_nm": [
+            6720,
+            3063,
+            6744,
+            3096
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case8_net2"
+          ],
+          "bbox_nm": [
+            6720,
+            3063,
+            6768,
+            3087
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 9,
+      "name": "sc2_r_ce_in_vias",
+      "family": "sc2",
+      "pin": "r_ce_in",
+      "pin_kind": "control",
+      "face": "W",
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        8488,
+        2683,
+        8888,
+        3083
+      ],
+      "all_roi_counts": {},
+      "actual_target_counts": {},
+      "target_native_nets": [
+        "case9_net1"
+      ],
+      "geometry_components": 1,
+      "markers": []
+    },
+    {
+      "case": 10,
+      "name": "aligned_rectangle",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        808,
+        4648,
+        1208,
+        5048
+      ],
+      "all_roi_counts": {},
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 1,
+      "markers": []
+    },
+    {
+      "case": 11,
+      "name": "exact_9nm_step",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        2728,
+        4648,
+        3128,
+        5048
+      ],
+      "all_roi_counts": {
+        "Rect Only": 2
+      },
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case11_net0"
+          ],
+          "bbox_nm": [
+            2904,
+            4827,
+            2952,
+            4851
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case11_net0"
+          ],
+          "bbox_nm": [
+            2928,
+            4827,
+            2952,
+            4860
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 12,
+      "name": "all_fixed_9nm_step",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "FIXED",
+      "score_roi_nm": [
+        4648,
+        4648,
+        5048,
+        5048
+      ],
+      "all_roi_counts": {
+        "Rect Only": 2
+      },
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case12_net0"
+          ],
+          "bbox_nm": [
+            4824,
+            4827,
+            4872,
+            4851
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Rect Only",
+          "nets": [
+            "case12_net0"
+          ],
+          "bbox_nm": [
+            4848,
+            4827,
+            4872,
+            4860
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 13,
+      "name": "spacing_23nm",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        6568,
+        4648,
+        6968,
+        5048
+      ],
+      "all_roi_counts": {
+        "Lef58EolKeepOut": 2,
+        "Metal Spacing": 1
+      },
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 1,
+      "markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case13_net0",
+            "case13_net1"
+          ],
+          "bbox_nm": [
+            6624,
+            4860,
+            6624,
+            4883
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case13_net0",
+            "case13_net1"
+          ],
+          "bbox_nm": [
+            6912,
+            4860,
+            6912,
+            4883
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case13_net0",
+            "case13_net1"
+          ],
+          "bbox_nm": [
+            6624,
+            4860,
+            6912,
+            4883
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 14,
+      "name": "disconnected_contact",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        8488,
+        4648,
+        8888,
+        5048
+      ],
+      "all_roi_counts": {
+        "Lef58EolKeepOut": 6,
+        "Lef58SpacingEndOfLine": 1,
+        "Metal Spacing": 1,
+        "Min Area": 1
+      },
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 2,
+      "markers": [
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4836,
+            8688,
+            4836
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4836,
+            8688,
+            4860
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4836,
+            8712,
+            4836
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4836,
+            8712,
+            4860
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4860,
+            8688,
+            4860
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58EolKeepOut",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4860,
+            8712,
+            4860
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Lef58SpacingEndOfLine",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4836,
+            8688,
+            4860
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Metal Spacing",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8678,
+            4836,
+            8688,
+            4860
+          ],
+          "layer": "M4"
+        },
+        {
+          "type": "Min Area",
+          "nets": [
+            "case14_net0"
+          ],
+          "bbox_nm": [
+            8688,
+            4836,
+            8712,
+            4860
+          ],
+          "layer": "M4"
+        }
+      ]
+    },
+    {
+      "case": 15,
+      "name": "old_track_phase",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        808,
+        6568,
+        1208,
+        6968
+      ],
+      "all_roi_counts": {},
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 1,
+      "markers": []
+    },
+    {
+      "case": 16,
+      "name": "width_33nm",
+      "family": "control",
+      "pin": "control",
+      "pin_kind": null,
+      "face": null,
+      "native_wire_status": "ROUTED",
+      "score_roi_nm": [
+        2728,
+        6568,
+        3128,
+        6968
+      ],
+      "all_roi_counts": {},
+      "actual_target_counts": {},
+      "target_native_nets": [],
+      "geometry_components": 1,
+      "markers": []
+    }
+  ],
+  "true_fixed_pin_marker_counts": {},
+  "resources": [
+    {
+      "path": "native",
+      "elapsed": "0:00.54",
+      "peak_rss_kib": 248488,
+      "disk_bytes": 3025270
+    },
+    {
+      "path": "native/roi",
+      "elapsed": "0:00.59",
+      "peak_rss_kib": 248840,
+      "disk_bytes": 3052661
+    },
+    {
+      "path": "native/fixed_pin",
+      "elapsed": "0:00.65",
+      "peak_rss_kib": 250152,
+      "disk_bytes": 3244296
+    }
+  ],
+  "coverage_gaps": [
+    "Native non-ORTH WIDTHTABLE import absent; 33nm control silence is not legal width.",
+    "Native old-track phase control silence is not global track qualification.",
+    "No sub-grid control can be represented at integer1nm DBU/manufacturing grid.",
+    "Whole-chip crop-edge width/area artifacts retained, not treated as source-join verdicts.",
+    "Via crop silence qualifies neither all master vias nor PG nor AP/route.",
+    "dbWire FIXED status does not create GC fixed polygons; true fixed BPin is the silent visibility negative.",
+    "Actual native FF/SS timing, K, reset, lifecycle, source phase and full-token release remain unqualified."
+  ]
+}

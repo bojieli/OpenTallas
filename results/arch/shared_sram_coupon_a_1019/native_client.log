@@ -1,0 +1,51 @@
+ot-run: ot-epyc4       admits  1164 GB (avail 872, growth 49, headroom 0, waiters 0/0 GB) load 41/128 running 17 disk 395 GB 
+ot-run: ot-epyc5       admits   224 GB (avail 213, growth 16, headroom 0, waiters 0/0 GB) load 58/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1235 GB (avail 927, growth 62, headroom 0, waiters 0/0 GB) load 27/128 running 21 disk 5721 GB 
+ot-run: ot-epyc7       admits   939 GB (avail 729, growth 72, headroom 0, waiters 0/0 GB) load 33/96 running 22 disk 6269 GB 
+ot-run: ot-epyc8       admits  1331 GB (avail 988, growth 35, headroom 0, waiters 0/0 GB) load 12/128 running 9 disk 109 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sram-coupon-a-1019/original
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sram-coupon-a-1019/original
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1940689-1792444964 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/input/asap7_tech.lef, created 30 layers, 9 vias
+[INFO ODB-0127] Reading DEF file: /work/empty.def
+[INFO ODB-0128] Design: coupon_a
+[INFO ODB-0134] Finished DEF file: /work/empty.def
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+Traceback (most recent call last):
+  File "/work/run_native.py", line 36, in <module>
+    net=odb.dbNet.create(block,f'case{ci}_net{ni}'); net.setSigType(odb.dbSigType('SIGNAL'))
+AttributeError: module 'odb' has no attribute 'dbSigType'
+Command exited with non-zero status 1
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py"
+	User time (seconds): 0.37
+	System time (seconds): 0.16
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.53
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 249132
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 55977
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 48
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1940689-1792444964): exit 1
