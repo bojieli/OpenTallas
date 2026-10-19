@@ -1252,7 +1252,7 @@ def lane_band_over_block(P, pin_pitch=0.096, eps=0.5):
     return over, pairs
 
 
-def legalize_stations(P):
+def legalize_stations(P, attempts=0, original=None):
     """Slide overlapping relay bodies along their own straight lane (no added edge).
 
     Adjacent 16-um margin tracks are narrower than a 25.92-um relay. Stagger
@@ -1268,6 +1268,8 @@ def legalize_stations(P):
              512: ((17.28, 58.32), (58.32, 17.28)),
              562: ((17.28, 62.64), (58.32, 17.28)),
              682: ((17.28, 75.6), (71.28, 17.28))}
+    if original is None:
+        original = {l['i']: l['s'] for l in P.links}
     moved = []
     for l in P.links:
         for k, (x, y) in enumerate(l['sp']):
@@ -1300,14 +1302,33 @@ def legalize_stations(P):
                         xx, yy = a, b
                         break
                 else:
-                    raise ValueError(f'cannot legally stagger {l["i"]} station {k} at {(x,y)}')
+                    # More station phases require slack between registers. Add
+                    # real stations on this lane, rather than relaxing reach.
+                    if attempts >= 80:
+                        raise ValueError(f'cannot legally stagger {l["i"]} station {k} at {(x,y)}')
+                    pts = [[l['h'][0][0], l['h'][0][1]]]
+                    last_axis = None
+                    for q in l['h']:
+                        axis = 0 if abs(q[1] - q[3]) < .11 else 1
+                        if last_axis == axis:
+                            pts[-1] = q[2:4]
+                        else:
+                            pts.append(q[2:4])
+                        last_axis = axis
+                    segs, count, length = chain(pts, hop=max(200, HOP_UM - 45 - 10 * (l['s'] - original[l['i']])))
+                    if count <= l['s']:
+                        raise ValueError(f'no station phase slack on {l["i"]}')
+                    l['sp'] = [[round(a,1),round(b,1)] for a,b in chain.stations]
+                    l['s'] = count
+                    l['h'] = [[round(a,1),round(b,1),round(c,1),round(d,1),l['b']] for a,b,c,d in segs]
+                    return legalize_stations(P, attempts + 1, original)
                 for q in on:
                     if (q[0], q[1]) == (x, y): q[0], q[1] = xx, yy
                     if (q[2], q[3]) == (x, y): q[2], q[3] = xx, yy
                 l['sp'][k] = [xx, yy]
                 moved.append(dict(link=l['i'], station=k, from_xy=[x,y], to_xy=[xx,yy]))
             placer.add(rect(xx, yy))
-    return moved
+    return dict(moves=moved, stage_changes={l['i']: dict(before=original[l['i']], after=l['s']) for l in P.links if l['s'] != original[l['i']]})
 
 
 def fill(P, facts, ws):
