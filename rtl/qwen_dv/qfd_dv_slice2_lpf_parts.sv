@@ -157,7 +157,7 @@ module qfd_dv_slice2_lpc #(
     wire [511:0] r_d;
     qfd_dv_redstn2 #(.MUT(MUT)) u_stn (.ck(ck), .rst_n(rst),
         .cfg_v(c_stn), .cfg_mode(cmd_q[5:4]), .cfg_wsrc(cmd_q[6]), .cfg_nwords(cmd_q[14:7]), .cfg_sbase(cmd_q[23:15]),
-        .cfg_kcm1(cmd_q[66:59]),   // MU-SLICE-GATE 10-19: was [58:51], which overlapped the MU STN user cmd[52:51]
+        .cfg_kcm1((MUT == 15) ? cmd_q[58:51] : cmd_q[66:59]),   // MU-SLICE-GATE 10-19: was [58:51], which overlapped the MU STN user cmd[52:51]; MUT 15 = the old field (bench q FAILs)
         .rs_s(rss_q), .rs_n(rsn_q), .nb_i(nb_q), .nb_o(l9_o),
         .bt_re(bt_re), .bt_word(bt_word), .bt_q(bt_q),
         .r_v(r_v), .r_idx(r_idx), .r_last(r_last), .r_d(r_d), .fault(stn_fault));
@@ -343,7 +343,7 @@ module qfd_dv_slice2_lpc #(
     // status OR chain toward W5 (registered; the chain end's ag_up_i is the zero identity)
     assign ag_n = agu_q | {stn_busy, any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
                                  !su_idle, sc_busy};
-    initial if (MUT < 0 || (MUT > 12 && MUT != 14)) $fatal(1, "qfd_dv_slice2_lpc: MUT %0d undefined", MUT);
+    initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, "qfd_dv_slice2_lpc: MUT %0d undefined", MUT);
     initial if (HD_W130 != 1) $fatal(1, "qfd_dv_slice2_lpc: the landed re-cut is the HD_W130 = 1 slice");
     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
 endmodule

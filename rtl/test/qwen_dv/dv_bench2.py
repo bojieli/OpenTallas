@@ -284,7 +284,7 @@ def bench_c2(work, mut, seed=3):
     return ok, n, errs
 
 
-def bench_k2(work, mut, seed=11):
+def bench_k2(work, mut, seed=11, users=(0, 0, 0), name="k"):
     """(k) redstn2 LAST-K selection (QW-DIEFIX 10-19): every pair streams JB = 8 words per (round, k) -- the tiles' running
     accumulator -- and only the k = kc - 1 block is the level-6 result.  L8 scaled kc 3, L7 gate/up kc 2 (two rounds of
     the lower pair would be a second op), L8 unscaled kc 1 (regression).  The k < kc - 1 blocks carry different
@@ -310,8 +310,8 @@ def bench_k2(work, mut, seed=11):
     B.load_btab(ev, 0, 16, s8)
     ev.step(4)
     l8 = B.l6_parts(w8, x8, 256)
-    for kc, wsrc, base in ((3, 0, 0x2400), (1, 1, 0x2800)):
-        ev.at(B.P_CMD, B.cmd_stn(1, wsrc, 8, 16, 3, base, kcm1=kc - 1)); ev.step(4 + SK)
+    for kc, wsrc, base, u in ((3, 0, 0x2400, users[0]), (1, 1, 0x2800, users[1])):
+        ev.at(B.P_CMD, B.cmd_stn(1, wsrc, 8, 16, 3, base, kcm1=kc - 1) | (u << 51)); ev.step(4 + SK)
         for kk in range(kc):
             src = l8 if kk == kc - 1 else junk(4)
             for k in range(8):
@@ -322,7 +322,7 @@ def bench_k2(work, mut, seed=11):
         tests.append((f"L8 kc{kc} {'unscaled' if wsrc else 'scaled'}", base,
                       G.mul(y, F(1.0)) if wsrc else G.mul(y, s8)))
     lg, lu = B.l6_parts(wg, xg, 128), B.l6_parts(wu, xu, 128)
-    ev.at(B.P_CMD, B.cmd_stn(0, 0, 16, 0, 2, 0x2000, kcm1=1)); ev.step(4 + SK)
+    ev.at(B.P_CMD, B.cmd_stn(0, 0, 16, 0, 2, 0x2000, kcm1=1) | (users[2] << 51)); ev.step(4 + SK)
     for kk in range(2):
         g_, u_ = (lg, lu) if kk == 1 else (junk(2), junk(2))
         for k in range(8):
@@ -331,7 +331,7 @@ def bench_k2(work, mut, seed=11):
     ev.step(60)
     tests.append(("L7 gate/up kc2", 0x2000, np.concatenate([G.mul(G.matvec(wg, xg, 128), sg),
                                                            G.mul(G.matvec(wu, xu, 128), su_)])))
-    log = run_sim2("k", ev, work, mut, ev.t + 20)
+    log = run_sim2(name, ev, work, mut, ev.t + 20)
     errs = status_ok2(log)
     got = {}
     for _, w in log.get("S0AR", []):
@@ -343,6 +343,13 @@ def bench_k2(work, mut, seed=11):
         ok += B.cmp(name, {i: got.get(base + i) for i in range(len(y))}, B.fbits(y), errs)
         n += len(y)
     return ok, n, errs
+
+
+def bench_q2(work, mut):
+    """(q) MU-DQ-SLICEKC 10-19 (COORD 0kg): bench k with MU STN users 1 / 2 / 3 in cmd[52:51] TOGETHER with kc - 1 in
+    cmd[66:59] (kc 3 / 1 / 2): the user field and the last-k count must not overlap.  MUT 15 (kcm1 read from the pre-fix
+    field [58:51], whose low bits are the user) must FAIL; MUT 14 (kcm1 ignored) FAILs too."""
+    return bench_k2(work, mut, users=(1, 2, 3), name="q")
 
 
 def bench_f2(work, mut, seed=6):
@@ -740,7 +747,7 @@ def install():
     B.status_ok = status_ok2
 
 
-BENCHES = {"k": bench_k2, "a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
+BENCHES = {"k": bench_k2, "q": bench_q2, "a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
            "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o, "n": bench_n}
 
 
