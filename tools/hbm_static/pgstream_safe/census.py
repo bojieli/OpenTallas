@@ -18,6 +18,9 @@ g, top = tl.flatten(tl.parse_verilog(a.netlist.read_text()), a.top)
 index = tl.build(g, None)
 clocks, _ = tl.clock_nets(g, index)
 rows = []
+aliases = {}
+for name, net in g.net_id.items():
+    aliases.setdefault(g.find(net), []).append(name)
 for net, driver in index["driver"].items():
     if net <= 3 or net in clocks:
         continue
@@ -26,8 +29,19 @@ for net, driver in index["driver"].items():
     if kind in ("buf", "tie"):
         continue
     loads, flop_loads, example = tl.bufinv_fanout(g, index, net, clocks)
-    rows.append(dict(net=tl.net_label(g, index, net), kind=kind,
-                     loads=loads, flop_loads=flop_loads, example=example))
+    row=dict(net=tl.net_label(g, index, net), kind=kind,
+             loads=loads, flop_loads=flop_loads, example=example)
+    if loads > 32:
+        seen={net}; stack=[net]
+        while stack:
+            current=stack.pop()
+            for ci,_,_ in index['loads'].get(current,()):
+                if index['kind'][ci]=='buf':
+                    for child in tl._out_nets(g,index,ci):
+                        if child not in seen:
+                            seen.add(child);stack.append(child)
+        row['source_aliases']=sorted({name for child in seen for name in aliases.get(child,[]) if not name.startswith('_')})
+    rows.append(row)
 rows.sort(key=lambda row: (-row["loads"], row["net"]))
 out = dict(top=top, netlist_sha256=hashlib.sha256(a.netlist.read_bytes()).hexdigest(),
            census_sha256=hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),

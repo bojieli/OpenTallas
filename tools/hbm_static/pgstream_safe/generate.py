@@ -26,10 +26,10 @@ for side in ('q', 's'):
         out.append('''wire [RQ_BITS+WQ_BITS-1:0] request={serial_wq,serial_rq};
 wire [RQ_BITS+WQ_BITS-1:0] bank0,bank1;
 assign {wq_b0,rq_b0}=bank0; assign {wq_b1,rq_b1}=bank1;
-for(genvar r=0;r<(RQ_BITS+WQ_BITS+14)/15;r=r+1)begin:req
- localparam integer W=((RQ_BITS+WQ_BITS-r*15)>15)?15:RQ_BITS+WQ_BITS-r*15;
+for(genvar r=0;r<(RQ_BITS+WQ_BITS+6)/7;r=r+1)begin:req
+ localparam integer W=((RQ_BITS+WQ_BITS-r*7)>7)?7:RQ_BITS+WQ_BITS-r*7;
  ot_hbm_pgs_request_q_region #(.W(W),.ID(r),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) u_copy(
-  .clk(serial_clk),.rst_n(rst_n),.d(request[r*15+:W]),.b0(bank0[r*15+:W]),.b1(bank1[r*15+:W]));
+  .clk(serial_clk),.rst_n(rst_n),.d(request[r*7+:W]),.b0(bank0[r*7+:W]),.b1(bank1[r*7+:W]));
 end
 for(genvar r=0;r<(RR_BITS+14)/15;r=r+1)begin:ret
  localparam integer W=((RR_BITS-r*15)>15)?15:RR_BITS-r*15;
@@ -102,7 +102,8 @@ newtop=base/'top/ot_hbm_su_static_pg_stream_regional.sv';newtop.write_text('// G
 
 bench=Path('rtl/test/hbm_accel/generic/tb_hbm_su_pg_stream_split.sv')
 b=bench.read_text().replace('module tb_hbm_su_pg_stream_split;', 'module tb_hbm_su_pg_stream_regional;')
-b=b.replace('ot_hbm_su_static_pg_stream_split #(', 'ot_hbm_su_static_pg_stream_split_regional #(.SAFE_COPY(1),')
+b=b.replace('parameter integer QID=1', 'parameter integer SAFE_COPY=1,QID=1')
+b=b.replace('ot_hbm_su_static_pg_stream_split #(', 'ot_hbm_su_static_pg_stream_split_regional #(.SAFE_COPY(SAFE_COPY),')
 newbench=bench.with_name('tb_hbm_su_pg_stream_regional.sv');newbench.write_text(b)
 manifest={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in (old,oldtop,bench,dst,newtop,newbench,Path(__file__))}
 Path('results/rtl/hbm_pgstream_safe_1019/source_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

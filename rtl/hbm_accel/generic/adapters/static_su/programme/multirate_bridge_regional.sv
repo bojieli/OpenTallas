@@ -17,10 +17,10 @@ end else begin:g_safe
 wire [RQ_BITS+WQ_BITS-1:0] request={serial_wq,serial_rq};
 wire [RQ_BITS+WQ_BITS-1:0] bank0,bank1;
 assign {wq_b0,rq_b0}=bank0; assign {wq_b1,rq_b1}=bank1;
-for(genvar r=0;r<(RQ_BITS+WQ_BITS+14)/15;r=r+1)begin:req
- localparam integer W=((RQ_BITS+WQ_BITS-r*15)>15)?15:RQ_BITS+WQ_BITS-r*15;
+for(genvar r=0;r<(RQ_BITS+WQ_BITS+6)/7;r=r+1)begin:req
+ localparam integer W=((RQ_BITS+WQ_BITS-r*7)>7)?7:RQ_BITS+WQ_BITS-r*7;
  ot_hbm_pgs_request_q_region #(.W(W),.ID(r),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT)) u_copy(
-  .clk(serial_clk),.rst_n(rst_n),.d(request[r*15+:W]),.b0(bank0[r*15+:W]),.b1(bank1[r*15+:W]));
+  .clk(serial_clk),.rst_n(rst_n),.d(request[r*7+:W]),.b0(bank0[r*7+:W]),.b1(bank1[r*7+:W]));
 end
 for(genvar r=0;r<(RR_BITS+14)/15;r=r+1)begin:ret
  localparam integer W=((RR_BITS-r*15)>15)?15:RR_BITS-r*15;

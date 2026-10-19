@@ -19,7 +19,7 @@
 // traffic (no faults), then random serial (vmr_cmd, su_wq) and stream (LG returns, far, inject) inputs -> the sticky
 // faults rise mid-run, so the fault offset is exercised.
 module tb_hbm_su_pg_stream_regional;
- parameter integer QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, MUT=0, EDGES=1500, FAULT_REG=0;
+ parameter integer SAFE_COPY=1,QID=1, G=2, READ_RETURN=10, WRITE_RETURN=7, MUT=0, EDGES=1500, FAULT_REG=0;
  localparam integer Q=278;
  localparam integer WSU [0:2] = '{4*Q, 2*Q, 3*Q};   // setup windows: request, return, inject (= seam_windows setup_q)
  localparam integer WHO [0:2] = '{2*Q, 4*Q, 7*Q};   // rewrite-after-read windows (= seam_windows hold_q)
@@ -40,7 +40,7 @@ module tb_hbm_su_pg_stream_regional;
   .far_wq(farwq),.far_rr(N``_farrr),.far_w_done(N``_farwd),.lg_fault(N``_lgf)
  ot_hbm_su_static_pg_stream #(.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MULTIRATE(1),
   .COLLPORT(1),.RSYNC(1),.STRAP(1),.IJ_REG(1)) ref_i(`PGS_CONN(r));
- ot_hbm_su_static_pg_stream_split_regional #(.SAFE_COPY(1),.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT),
+ ot_hbm_su_static_pg_stream_split_regional #(.SAFE_COPY(SAFE_COPY),.QID(QID),.G(G),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),.MUT(MUT),
   .STRAP(1),.FAULT_REG(FAULT_REG)) dut(`PGS_CONN(d));
  // ---------------------------------------------------------------- clocks (coincident every 3 serial / 4 stream edges)
  localparam realtime T0 = 10.008;   // first coincident edge (12q multiple)

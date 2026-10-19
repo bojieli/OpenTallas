@@ -81,3 +81,17 @@ parent source correspondence, boundary registration, actual reset fanout/depth,
 SRAM inventory, sizing/43.2 lattice/channel/pin/reach model and ROOT PNG review.
 TTsetup>=0/FFhold>=0, native TT+FF spread<=80 and neighbor compensation remain
 physical requirements. This source step cannot qualify a token or release die.
+
+## Native-map refinement (before revision3 source)
+
+Revision2 actual parent passes7194 checks/9228 seam windows at18/15; native
+mapping reports8664 FF. It correctly keeps regional state but request-bank
+hold muxes use **four**, not two, control loads per payload bit (two banks,
+complementary select implementation). The15bit request regions therefore
+measure61 loads, not the analytical31. Preserve this failed source/census.
+Revision3 reduces only serial request regions to7bits:43 regions per bridge,
+predicted4*7+1=29loads and46 additional parity FF across both bridges. Return
+and stream regions remain15bits. This is a source control partition, no added
+edge/clock change. Reset port1680 is deliberately still unsafe in this
+unwrapped source map. Inherited tap564/reset92/73 and inject83/82/81 roots
+remain open; revision3 is not a whole-tile SAFE claim.
