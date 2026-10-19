@@ -16,7 +16,7 @@
   343.44
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 5737.0,
  "layer_contract": {
   "children": {
    "ot_qfd_tt_ctlm_static_hr": "M5"
@@ -73,7 +73,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "*u_cal*g_m?0?*u_pm",
+   "inst": "u_gi.u_cal.g_m[0].u_pm",
    "idx": 0,
    "x": 43.2,
    "y": 43.2,
@@ -86,7 +86,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "*u_cal*g_m?1?*u_pm",
+   "inst": "u_gi.u_cal.g_m[1].u_pm",
    "idx": 0,
    "x": 43.2,
    "y": 121.008,
@@ -113,8 +113,8 @@
   [
    "WARN",
    "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+   "fill 34% = (macros/children 84306 + std 5737) / outline 268739 um2 (pin-bound: width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops)",
+   ""
   ]
  ],
  "referenced": [
@@ -178,6 +178,9 @@
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ss.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_ff.lib",
   "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr/ot_qfd_tt_ctlm_static_hr_tt.lib",
-  "physical/ref_tile/qfd_tt_ctlm_dv/place.tcl"
+  "physical/ref_tile/qfd_tt_ctlm_dv/place.tcl",
+  "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib"
  ]
 }

@@ -22,6 +22,7 @@ set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 3
 set ::ot_ce_landed_raw [dict create {ot_qfd_tt_ctlm_static_hr/ck_pm0} {ref ck_head tol 50 record results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a/signoff.sdc} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {ref ck_head tol 50 record results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a/signoff.sdc}]
+set ::ot_ce_check_only [dict create {ot_qfd_tt_ctlm_static_hr/ck_head} 1]
 set ::ot_ce_refs [dict create {ot_qfd_tt_ctlm_static_hr/ck_head} {tt {271.5 303.1 346.6} ff {219.7 248.2 288.5} ss {357.9 394.3 445.0}} {ot_qfd_tt_ctlm_static_hr/ck_pm0} {tt {15.2 15.2 15.2} ff {16.2 16.2 16.2} ss {14.5 14.5 14.5}} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {tt {14.6 14.6 14.6} ff {15.7 15.7 15.7} ss {13.9 13.9 13.9}}]
 set ::ot_ce_counts [dict create {ot_qfd_tt_ctlm_static_hr} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{pw} {dh} {kok} {kwd} {fab} {native_ret} {ss5} {ag5} {rst_n}} outputs {}} {hr} {clock ot_io_hr io_budget_ps 166.667 inputs {} outputs {{program_obs} {control_stores_ready} {layer_context_v} {native_tok} {native_pos} {command_stage} {cal_program_obs} {cal_descriptor_obs} {cal_image_ready} {dc} {native_cmd} {hr} {cmd} {emb_start} {emb_token} {cf}}}]
@@ -29,6 +30,22 @@ set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_hr} {hr}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_core} {ck_hr}}
 set ::ot_ce_ports {{ck_core} {ck_hr}}
+proc ot_ce_net_root_port {pin} {
+  set net [get_nets -quiet -of_objects $pin]
+  for {set i 0} {$i < 256 && [llength $net] == 1} {incr i} {
+    set ports [get_ports -quiet -of_objects $net]
+    if {[llength $ports] == 1} { return [get_full_name [lindex $ports 0]] }
+    if {[llength $ports]} { return "" }
+    set drv [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $drv] != 1} { return "" }
+    set cell [get_cells -quiet -of_objects $drv]
+    if {[llength $cell] != 1 || [dict exists $::ot_ce_counts [get_property $cell ref_name]]} { return "" }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction == input"]
+    if {[llength $ins] != 1} { return "" }
+    set net [get_nets -quiet -of_objects $ins]
+  }
+  return ""
+}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
@@ -131,7 +148,9 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
     foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
       set cell [get_full_name [get_cells -of_objects $pin]]
-      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
+      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {
+        error "OT_MULTI_ROOT: duplicate clock ownership $cell"
+      }
       dict set cells $cell $domain
     }
   }
@@ -449,6 +468,21 @@ proc ot_ce_apply {} {
   foreach name $::ot_ce_cts_roots {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
     set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    set ot_ce_pin_seen [dict create]
+    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}
+    foreach cell [get_cells -quiet -hierarchical *] {
+      set master [get_property $cell ref_name]
+      if {![dict exists $::ot_ce_counts $master]} continue
+      foreach pin [get_pins -quiet -of_objects $cell] {
+        set key "$master/[get_property $pin lib_pin_name]"
+        if {![dict exists $::ot_ce_refs $key] || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue
+        if {[dict exists $::ot_ce_landed_raw $key]} continue
+        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue
+        if {[ot_ce_net_root_port $pin] ne $name} continue
+        lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1
+        puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"
+      }
+    }
     if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
     set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]
     foreach pin $pins {
@@ -529,6 +563,11 @@ proc ot_ce_apply {} {
         error "OT_LANDED: raw child clock pin [get_full_name $pin]: its co-timed pin $cname/$refpin was not reached from a region root"
       }
       lassign [dict get $ot_ce_landed_eff "$cname/$refpin"] rclock rname reff
+      # TW-HBM-COLLP net trace (structural, mode-independent): a raw pin wired to another region root fails
+      set rport [ot_ce_net_root_port $pin]
+      if {$rport ne "" && $rport ne $rname} {
+        error "OT_LANDED: raw child clock pin [get_full_name $pin] is wired to region root $rport, its co-timed pin $cname/$refpin to $rname"
+      }
       set wire [ot_ce_clock_wire $pin [get_clocks $rclock]]
       lassign [dict get $::ot_ce_refs $key $corner] rlo rmean rhi
       set eff [expr {$wire + $rmean}]; set skew [expr {$eff - $reff}]

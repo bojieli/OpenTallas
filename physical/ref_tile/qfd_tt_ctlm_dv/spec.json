@@ -46,7 +46,7 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "*u_cal*g_m?0?*u_pm",
+   "inst": "u_gi.u_cal.g_m[0].u_pm",
    "at": [
     43.2,
     43.2
@@ -56,7 +56,7 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "*u_cal*g_m?1?*u_pm",
+   "inst": "u_gi.u_cal.g_m[1].u_pm",
    "at": [
     43.2,
     121.008
@@ -441,5 +441,24 @@
  "reset_landing": {
   "enable": false,
   "reason": "the RTL lands it: lp.py regional reset runs (rst_n -> u_lpr_root 1 flop on ck_core -> u_lpr_core / u_lpr_hr 2 flops per region -> u_lprc_* per child; port net has one sink, reset depth 3 proven by the landed lockstep bench)"
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_gi.u_cal.g_m[0].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_m[1].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  }
+ },
+ "raw_memory_note": "TW2-QCTLM 10-19: gate 20261019-010025 CTS stopped at 'OT_HYBRID: CTS source ck_core must reach only standard-cell clock pins' = the calendar's 2 raw 64x512 SRAMs (lp region ck_core) were undeclared sinks; now exact raw-memory bindings on region root ck_core (tool: claude/root-landed-rawmem-1019 7729b9de4, landed clusters accept raw sinks of a region root)",
+ "fill_reason": {
+  "pin_bound": "width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops"
  }
 }
