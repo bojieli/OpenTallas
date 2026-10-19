@@ -136,7 +136,8 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^bench2 \\(j\\) MUT=0: PASS"
+    "pass_regex": "^bench2 \\(j\\) MUT=0: PASS",
+    "pass_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_pos.out"
    },
    {
     "name": "slice2_su_lt_loff_mut",
@@ -147,7 +148,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_loff_mut.out"
    },
    {
     "name": "slice2_su_lt_tls_mut",
@@ -158,7 +160,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_tls_mut.out"
    },
    {
     "name": "slice2_su_lt_loreg_mut",
@@ -169,7 +172,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_loreg_mut.out"
    },
    {
     "name": "slice2_su_lt_ireg_mut",
@@ -180,7 +184,8 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL"
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_ireg_mut.out"
    }
   ],
   "extra_paths": [
