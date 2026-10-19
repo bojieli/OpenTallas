@@ -8,7 +8,9 @@ module dsdv_mu_mem #(parameter integer W=64, parameter integer AW=6, parameter i
  wire hit=wv && ra==waddr;
  always @(posedge ck or negedge rst_n[0])
    if (!rst_n[0]) wv<=1'b0; else wv<=we;
- always @(posedge ck) begin waddr<=wa; wdata<=wd; fd<=wdata; end
+ // Reset-distinct registered addresses keep event-bank ports physically independent.
+ always @(posedge ck or negedge rst_n[0]) if(!rst_n[0]) waddr<={AW{1'b0}}; else waddr<=wa;
+ always @(posedge ck) begin wdata<=wd; fd<=wdata; end
  wire [N*16-1:0] padded={{(N*16-W){1'b0}},wdata}, raw;
  wire [N*16-1:0] forwarded={{(N*16-W){1'b0}},fd}, picked;
  genvar k; generate for(k=0;k<N;k=k+1) begin:g_bank

@@ -61,7 +61,9 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer ID_C=(NSLOT+15)/16;
     localparam integer NC_REC=(NSLOT+23)/24;
     localparam integer MEM_RBASE=NEV+ID_C+4;
-    wire [MEM_RBASE+NEV*5+3:0] rr; ot_rst_relay #(.REGIONS(MEM_RBASE+NEV*5+4)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+    localparam integer COPY_RBASE=MEM_RBASE+NEV*5+4;
+    localparam integer COPY_END=COPY_RBASE+NEV*7+NRT*NC_REC;
+    wire [COPY_END-1:0] rr; ot_rst_relay #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
     reg [51:0] ks_payload; reg [24:0] mc_payload, mw_payload;
@@ -132,6 +134,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
+    wire [31:0] ts_event[0:NEV-1], tm_event[0:NEV-1];
+    wire [23:0] rl_event[0:NEV-1]; wire [NEV-1:0] idle_event;
+    wire [SI-1:0] lw_event[0:NEV-1]; wire [NSLOT-1:0] lm_event[0:NEV-1];
+    wire [30:0] rt_compare[0:NRT*NC_REC-1];
     reg [NEV-1:0] evld; reg [NEV-1:0] ek; reg [PI-1:0] eep [0:NEV-1]; reg [20:0] eD [0:NEV-1]; reg [EI-1:0] esel;
     // Attributes are in independent registered SRAM banks.                  // {land / replay-en, ab} per event and calendar slot
     reg [NSLOT-1:0] fd [0:NEV-1];                         // fired flags
@@ -146,13 +152,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @* begin
         bad_d = cs <= nw + 24'd1;
         for (e = 0; e < NEV; e = e + 1)
-            if (evld[e] && ({3'd0, eD[e]} < nw + 24'd2 || {3'd0, eD[e]} + 24'd2 > crl)) bad_d = 1'b1;
+            if (evld[e] && ({3'd0, eD[e]} < (24'(lw_event[e])+24'd1) + 24'd2 || {3'd0, eD[e]} + 24'd2 > rl_event[e])) bad_d = 1'b1;
         for (e = 0; e < NEV; e = e + 1) begin
             ok[e] = evld[e] && |(pe[e] & vld & ~fd[e]);
             hold[e] = (st && |(pe[e] & ss)) || (|(pe[e] & rec_slot));
             fire[e] = okq[e] && h_fr[e] && eqn[e];
             lt[e] = okq[e] && h_fr[e] && ltn[e];
-            dl = h_ts[e] - tm1; dlm[e] = dl[31];
+            dl = h_ts[e] - tm_event[e]; dlm[e] = dl[31];
             adv[e] = fire[e] || (!ok[e] && !hold[e]);
         end
     end
@@ -162,7 +168,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         okq[e4] <= ok[e4];                                  // = ok on the next edge while the head stays fresh (legal config)
         // head compares one edge ahead: h_ts == tm + 1 - D (fire on the next edge) / h_ts - (tm + 1 - D) < 0 (late);
         // used only while the head stays fresh across both edges (h_fr now and next), so the entry is the same
-        eqn[e4] <= h_fr[e4] && h_ts[e4] == tm1;
+        eqn[e4] <= h_fr[e4] && h_ts[e4] == tm_event[e4];
         ltn[e4] <= h_fr[e4] && dlm[e4];
     end
     // outputs from the fired heads: on each endpoint the highest-numbered firing event wins (the former loop order)
@@ -175,7 +181,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         for (r = 0; r < NRT; r = r + 1) begin
             m = 1'b0;
             for (p = 0; p < NSLOT; p = p + 1)
-                if (vld[p] && eu[p] == rt_q[32*r + 21 +: 10] && ep[p] == rt_q[32*r +: 21]) m = 1'b1;
+                if (vld[p] && eu[p] == rt_compare[r*NC_REC+p/24][30:21] && ep[p] == rt_compare[r*NC_REC+p/24][20:0]) m = 1'b1;
             if (rt_q[32*r + 31] && !m) rtbad = 1'b1;
         end
         for (e3 = 0; e3 < NEV; e3 = e3 + 1) begin
@@ -210,8 +216,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         if (wv && idle)
             case (mw_q[22:21])
-                2'd0: begin esel <= mw_q[EI-1:0]; ek[mw_q[EI-1:0]] <= mw_q[8]; eep[mw_q[EI-1:0]] <= mw_q[9 +: PI]; end
-                2'd1: eD[esel] <= mw_q[20:0];
+                2'd0: esel <= mw_q[EI-1:0];
+                2'd1: ; // reset-distinct event-local boot writes below
                 2'd2: ; // SRAM attribute write below
                 default: ;
             endcase
@@ -248,7 +254,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[se+1])
             if(!rr[se+1]) begin pe_r<=OH0; pb_r<=SI'(0); fresh_r<=1'b0; end
             else begin
-                if(adv[se]) begin pe_r<=rot(pe_r,lm); pb_r<=((|(pe_r&lm)) || pe_r[NSLOT-1])?SI'(0):pb_r+1'b1; end
+                if(adv[se]) begin pe_r<=rot(pe_r,lm_event[se]); pb_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):pb_r+1'b1; end
                 fresh_r<=!adv[se] && !(|(pe_r&rec_slot));
             end
         for(rce=0;rce<NC_REC;rce=rce+1) begin:g_record_copy
@@ -257,13 +263,55 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                 if(!rr[MEM_RBASE+4+5*se+rce]) rec_r<=1'b0; else rec_r<=rec;
         end
         wire [62:0] head;
-        wire [31:0] due_at_start=tsq+{11'd0,eD[se]};
+        wire [31:0] due_at_start=ts_event[se]+{11'd0,eD[se]};
         dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_RBASE+4+5*se +: 4]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
         dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_RBASE+8+5*se]),
-            .we(wv && idle && mw_q[22:21]==2'd2 && esel==EI'(se)),
+            .we(wv && idle_event[se] && mw_q[22:21]==2'd2 && esel==EI'(se)),
             .wa(mw_q[SI-1:0]),.wd(mw_q[11:10]),.ra(pbi[se]),.q(h_at[se]));
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
+    end endgenerate
+    // Same-edge physical copies: independent event address, due-time, compare-time,
+    // boot bounds and wrap state. Distinct reset roots prevent cross-event merging.
+    genvar ce, rcg;
+    generate for(ce=0;ce<NEV;ce=ce+1) begin:g_event_broadcast
+        (* keep *) reg [31:0] ts_r, time_r;
+        (* keep *) reg [23:0] rl_r;
+        (* keep *) reg [SI-1:0] lw_r;
+        (* keep *) reg [NSLOT-1:0] lm_r;
+        (* keep *) reg arm_r;
+        assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
+        assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
+        assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && !(|vld);
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce])
+            if(!rr[COPY_RBASE+7*ce]) ts_r<=32'd0; else ts_r<=tm;
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+1])
+            if(!rr[COPY_RBASE+7*ce+1]) time_r<=32'd1; else time_r<=tm2;
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+2])
+            if(!rr[COPY_RBASE+7*ce+2]) rl_r<=24'd0;
+            else if(mc_q[25] && idle && mc_q[24]) rl_r<=mc_q[23:0];
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+3])
+            if(!rr[COPY_RBASE+7*ce+3]) lw_r<=SI'(NSLOT-1);
+            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT))
+                lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+4])
+            if(!rr[COPY_RBASE+7*ce+4]) lm_r<={1'b1,{(NSLOT-1){1'b0}}};
+            else begin lm_r<={NSLOT{1'b0}}; lm_r[lw_r]<=1'b1; end
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
+            if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
+            else if(st && !arm_r && !hcfg_bad) arm_r<=1'b1;
+        always @(posedge ck) if(wv && idle_event[ce]) begin
+            if(mw_q[22:21]==2'd0 && mw_q[EI-1:0]==EI'(ce)) begin
+                ek[ce]<=mw_q[8]; eep[ce]<=mw_q[9+:PI];
+            end
+            if(mw_q[22:21]==2'd1 && esel==EI'(ce)) eD[ce]<=mw_q[20:0];
+        end
+    end endgenerate
+    generate for(rcg=0;rcg<NRT*NC_REC;rcg=rcg+1) begin:g_rx_compare_copy
+        (* keep *) reg [30:0] rt_r; assign rt_compare[rcg]=rt_r;
+        always @(posedge ck or negedge rr[COPY_RBASE+NEV*7+rcg])
+            if(!rr[COPY_RBASE+NEV*7+rcg]) rt_r<=31'd0;
+            else rt_r<=mu_rt[32*(rcg/NC_REC)+:31];
     end endgenerate
     // The former shared reset drove690flops. Time96, outputs180, pointers~206,
     // control~213 now have independent same-edge reset relays; no added schedule cycle.
