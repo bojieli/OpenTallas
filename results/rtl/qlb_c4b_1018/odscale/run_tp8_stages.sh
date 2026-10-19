@@ -33,6 +33,9 @@ job() {
   set -e
   echo "rc=$rc" >>"$d/bench.out"
   head -1 "$d/bench.out"
+  expected=0
+  case "$name" in MUT_L0_silu_nor|MUT_L0_resid1_arwin) expected=1;; esac
+  test "$rc" -eq "$expected"
 }
 export R
 export -f job
@@ -45,5 +48,6 @@ export -f job
   done
   echo "L0_resid2 src/rtl/test/qwen_dv/dv_lower_vec_bench.py --mode resid --ar-order row --fixture $R/fx/L0_resid2_tp8.npz"
   echo "MUT_L0_resid1_nor src/rtl/test/qwen_dv/dv_lower_vec_bench.py --mode resid --ar-order row --mutant nor --fixture $R/fx/L0_resid1_tp8.npz"
+  echo "MUT_L0_resid1_arwin src/rtl/test/qwen_dv/dv_lower_vec_bench.py --mode resid --ar-order row --mutant arwin --fixture $R/fx/L0_resid1_tp8.npz"
   echo "MUT_L0_silu_nor src/rtl/test/qwen_dv/dv_lower_vec_bench.py --mode silu --mutant nor --fixture $R/fx/L0_silu_tp8.npz"
 } | xargs -P4 -L1 bash -c 'job "$@"' _
