@@ -346,7 +346,7 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--mode", default="mtp,mu,ar")
     ap.add_argument("--layers", default="")
-    ap.add_argument("--P", type=int, default=4, help="position lanes (next-release die: 3)")
+    ap.add_argument("--P", type=int, default=3, help="position lanes (owner 0le 10-19: P = 3)")
     a = ap.parse_args()
     return driver(a)
 

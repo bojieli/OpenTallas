@@ -229,6 +229,10 @@ MEAS["fused_tree"] = ("FUSED die tree latency (P3-DIE f4c_t9p3, claude/hbm-next-
                       "hops at 405 um ~ +18.5 cycles each way = +37 cycles on the first row of EVERY FUSED record "
                       "(HC_PRE_NORM / HC_POST, incl. AR); row II unchanged")
 FUSED_TREE_CYC = 37.0
+MEAS["sm3"] = ("SM P=3 tile hnx_rp3lp3x (P3-SM, claude/hbm-next-1019@217fff8b6): +4 cycles (2 gather relay stages a "
+               "half) on EVERY SM.MATVEC record incl. AR, and x 1.008 on N-row SM.MATVEC records (measured throughput "
+               "1.002x K16 / 1.008x K4 of the P1 time for 3 results; the worse K4 figure taken)")
+SM3_CYC, SM3_TPUT = 4.0, 1.008
 MEAS_ALL2 = ("idxn", "idx_topk", "idx_union", "su_vop2", "kvwb", "argmax2", "coll_rg", "coll_am", "att4", "sm4skew",
              "fused")
 IDXN_C1, IDXN_II = 1297.0, 232.0
@@ -348,6 +352,8 @@ def apply_meas(out, N, kn: Knobs, hist, lanes, pe=1.0):
                 c.base_cost += sum(fr * skew(h) for h, fr in hist.items())
             else:
                 c.base_cost += skew(max(1, math.ceil(pe)))
+        if op == "SM.MATVEC" and "sm3" in ms:
+            c.base_cost *= SM3_TPUT
         if c.base_cost != old:
             add(op + ("" if kind == "rows" else f" {kind}"), c.base_cost - old)
     return notes
@@ -359,10 +365,17 @@ def apply_frames(out, kn: Knobs):
     their further rows ((npos - 1) x II, re-applied by apply_meas / meas_post from the new c1)."""
     ms = set(kn.meas)
     notes = {}
-    if not ({"idx_frame", "fused_frame", "fused_tree"} & ms):
+    if not ({"idx_frame", "fused_frame", "fused_tree", "sm3"} & ms):
         return notes
     for c in out:
         op = getattr(c, "orig_op", "")
+        if op == "SM.MATVEC" and "sm3" in ms:
+            d = SM3_CYC                     # the x 1.008 N-row throughput factor is applied in apply_meas (after post_sm)
+            if getattr(c, "ii", None) is not None:
+                c.c1 += SM3_CYC
+            c.base_cost += d
+            notes[op] = round(notes.get(op, 0.0) + d, 1)
+            continue
         rows = getattr(c, "ii", None) is not None
         c1 = c.c1 if rows else c.base_cost
         if op == "IDX.INDEX" and "idx_frame" in ms:
@@ -659,7 +672,9 @@ def meas_cases(key):
                                                          "fused_frame")] + [
             ("ALL measured v2", MEAS_ALL2), ("ALL measured v2 + frames", MEAS_ALL2 + ("idx_frame", "fused_frame")),
             ("ALL measured v2 + die FUSED tree", MEAS_ALL2 + ("fused_tree",)),
-            ("ALL measured v2 + frames + die FUSED tree", MEAS_ALL2 + ("idx_frame", "fused_frame", "fused_tree"))]
+            ("ALL measured v2 + frames + die FUSED tree", MEAS_ALL2 + ("idx_frame", "fused_frame", "fused_tree")),
+            ("ALL measured v2 + frames + die FUSED tree + SM P3 tile",
+             MEAS_ALL2 + ("idx_frame", "fused_frame", "fused_tree", "sm3"))]
         return full
 
     full = [("priced", ())] + [(m, (m,)) for m in MEAS_ALL + ("idx_index_abs",)] + [

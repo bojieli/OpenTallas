@@ -41,7 +41,7 @@ from hgi_sim import records as RC  # noqa: E402
 
 VERSION = "HGI-1R 1.1 (draft for the P = 4 next die, 2026-10-19: rtab 19 b, hsh, IDX.KVUNION, ATT plan mode)"
 SPEC_MD = ROOT / "results/arch/hbm_next_1019/cmtp/isa_rows.md"
-P_LANES = 4                       # physical lanes of the next die (owner 10-19 00:05, P = 4)
+P_LANES = 3                       # physical lanes of the next die (owner 0le 10-19: P = 3, supersedes P = 4)
 N_MAX = 16                        # rows a record (4-bit nm1)
 SLOTS = 16                        # DYN banks (4-bit slot0)
 TABLE_ROW_WORDS = 32              # row-table row (rsel): word 0 = count, words 1..count = entries
@@ -956,7 +956,9 @@ def main():
         print(md_tables())
         return 0
     if "--selftest" in sys.argv:
-        r = selftest()
+        global P_LANES
+        P_LANES = 4         # the selftest vectors include the P = 4 remainder-split (rpl) and 4-lane plan cases; the
+        r = selftest()      # field encodings are P-free.  P = 3 legality is exercised by the emitter + image_check.
         print(json.dumps(r, indent=1, default=str))
         print("SELFTEST PASS")
         return 0
