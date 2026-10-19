@@ -1,0 +1,9 @@
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2049679-1792371679 after 0 s
+MISMATCH cyc 14 busy 1/0 done 0/0 fault 0/0
+MISMATCH cyc 15 busy 1/0 done 0/0 fault 0/0
+vm records 228 (done 0) stream records 72 (fault 72, bad 0) mismatching edges 11878
+ARGMAX_SW_VM FAIL
+rtl/test/hbm_netlist_v16/tb_argmax_sw_vm.sv:86: $finish called at 24364000 (1ps)
+ARGMAX_SW_VM_BENCH MUT=2 FAIL
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2049679-1792371679): exit 1
