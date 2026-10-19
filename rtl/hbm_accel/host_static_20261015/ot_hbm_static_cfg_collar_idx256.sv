@@ -546,16 +546,17 @@ endmodule
  (* keep *) reg [11:0] ca;
  always @(posedge clk or negedge rst_c_n)if(!rst_c_n)cv<=0;else cv<=cfg_v;
  always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
- (* keep *) reg [7:0] rd_oh;
- wire [3:0] rp=(MUT==12 && LO==32)?{1'b0,rptr_next[2:0]+3'd1}:rptr_next;
- always @(posedge clk)rd_oh<=(rptr_next<8)?(8'b1<<rp):8'd0;
- reg [15:0] rows[0:7];
+ (* keep *) reg [3:0] local_rptr;
+ always @(posedge clk)local_rptr<=rptr_next;
+ wire [3:0] rp=(MUT==12 && LO==32)?{1'b0,local_rptr[2:0]+3'd1}:local_rptr;
+ wire [7:0] rd_oh=(local_rptr<8)?(8'b1<<rp):8'd0;
+ wire [15:0] rows[0:7];
  wire record_cfg=cv && ct==tg && !run && ca[11:9]==3'b110 && ca[8:0]<8;
  wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && ca[9:0]<6;
  always @(posedge clk)if(programme_accept && cv)pw_data<=cd;
  genvar r,b;
  generate for(r=0;r<8;r=r+1)begin:g_record
-  always @(posedge clk)if(record_cfg && ca[8:0]==r)rows[r]<=cd;
+  (* keep_hierarchy *) ot_hbm_idx256_word u_word(.clk(clk),.en(record_cfg && ca[8:0]==r),.d(cd),.q(rows[r]));
  end endgenerate
  reg [15:0] selected;
  integer j;
@@ -572,8 +573,8 @@ endmodule
   assign selected_record={selected[15:1],|(val&rd_oh)};
  end else assign selected_record=selected;
  for(r=0;r<6;r=r+1)begin:g_operand
-  reg [15:0] operand;
-  always @(posedge clk)if(operand_cfg && ca[9:0]==r)operand<=cd;
+  wire [15:0] operand;
+  (* keep_hierarchy *) ot_hbm_idx256_word u_word(.clk(clk),.en(operand_cfg && ca[9:0]==r),.d(cd),.q(operand));
   assign prm[r*16+:16]=operand;
  end
  if(LO>=32)begin:g_emit
@@ -586,5 +587,8 @@ endmodule
   assign rec=emitted;
  end else assign rec=16'b0;
  endgenerate
+endmodule
+(* keep_hierarchy *) module ot_hbm_idx256_word(input wire clk,en,input wire [15:0] d,output reg [15:0] q);
+ always @(posedge clk)if(en)q<=d;
 endmodule
 `default_nettype wire
