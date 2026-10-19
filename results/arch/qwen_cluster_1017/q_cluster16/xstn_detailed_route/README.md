@@ -13,3 +13,9 @@ Three admission benches each completed ok in daemon: lint, primary PASS, mutant 
 All six native final PNGs personally viewed: each component/layout/{floorplan,density,congestion}.png. Continuous standard-cell rows, no macros, expected full-face pins,90.72x129.6 shape; final fill3.9% remains ROOT's scoped pin-bound lowutil component approval. Congestion images show no flagged cells; final DRC0 confirms detailed routing.
 
 Parent remains UNQUALIFIED: legal endpoint405reach, selected A0 native views, clock compensation/reserves/phase windows, absolute sample ages/reset+2 equalization, actual reset hardening and compiler composition. Existing full parent MODELv7 is functional only. No parent adoption or timing waiver follows from these two component results.
+
+Final routed-netlist structural replay (afterholdrepair), flatten withoutoptimization using nativeTTcell portdirections:
+
+qfd_c_xstn_safe: final6_final.v699FF, FFmax5, ALLnonclockmax32, rawresetloads{'0': 1}, no>32violations
+
+qfd_c_xstnw_safe: final6_final.v699FF, FFmax5, ALLnonclockmax26, rawresetloads{'0': 1}, no>32violations
