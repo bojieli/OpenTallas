@@ -64,7 +64,8 @@
     "existing_R_C": "unchanged PREL1 two edges or PREL0 one edge",
     "cache_mirror_extra": 2,
     "command_KV_extra_vs_canonical": 4,
-    "single_GO_status_extra": 4,
+    "single_GO_done_fault_extra": 4,
+    "active_status": "old+4 except explicitly corrected false-idle gaps backed by independently tracked outstanding programme; no blanket exemption",
     "host_status_alignment": "running delayed2 before app active OR; host faults delayed2 before OR with captured native app faults; then done/active/fault tail2",
     "configured": "target collar chronology unchanged",
     "target_local_config_faults": "collar chronology unchanged",
@@ -82,7 +83,8 @@
     "literal_commands": "preserve all109bits and all64KV bits"
   },
   "intentional_correction": {
-    "old_bug": "cal_done&&!running may report previous programme complete after final GO while a later programme is still outstanding",
+    "old_bug": "cal_done&&!running may report previous programme complete after final GO while a later programme is outstanding; canonical active can also drop briefly between descriptor-running and calendar-active",
+    "active_correction": "hold active continuously from admitted GO through final cal_done and public status tails; every old+4 mismatch must be active1/old0 with independent outstanding ledger at the matching five-edge public pipeline age",
     "recurrence": "n_done increments acceptedGO, decrements cal_done; simultaneous events leave count unchanged; initialize0 perrun",
     "final_completion": "n_go==0 && n_done==1 && cal_done; exactly one public final completion after mirror tail",
     "run_reject": "reject while running or outstanding n_done!=0"
