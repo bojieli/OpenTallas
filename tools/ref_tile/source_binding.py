@@ -20,7 +20,7 @@ EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
-              "tools/ref_tile/path_classes.tcl")
+              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py")
 # Non-Python source read by an imported generator and embedded in its kit.
 PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
@@ -493,6 +493,25 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                                  text="child_flop_basis: " + ("no macro with an insertion reference: R = 0, verdict "
                                                               "unchanged" if not refs else
                                                               f"{len(refs)} referenced macro(s) {refs[:3]}: re-gate")))
+            continue
+        if n == "landed_cluster_roots":
+            # PL-GATE 10-18: per-root child-flop judgement + the unlanded cross-region FAIL apply only to a cluster kit
+            # with children and clock "multiple_cts_roots"; every other gate is unchanged by that commit
+            ck = clock if isinstance(clock, dict) else {}
+            if ck.get("declared_clock") != "multiple_cts_roots" or "landed_child_links" in ck:
+                rows.append(dict(requires=n, ok=True, text="landed_cluster_roots: not a multi-root cluster gate, or "
+                                                          "already judged per root: unchanged"))
+                continue
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                ok = not (sp.get("kind") == "cluster" and sp.get("children"))
+            except (OSError, ValueError, AttributeError):
+                ok = False
+            rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
+                "multi-root kit without hard children: unchanged" if ok else
+                "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
             continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
