@@ -257,9 +257,14 @@ def reducer_bound(words):
                 rule="1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)")
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False):
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    if timing is not None and not isinstance(timing, NativeTiming):
+        raise TypeError("timing must be a source-defined NativeTiming")
+    fill_commit = FILL_COMMIT if timing is None else timing.fill_commit
+    drain_done = DRAIN_DONE if timing is None else timing.drain_done
     import su_arith_lower as L
     import su_program_inventory as I
     from su_arith_compile import pack, physical_word
@@ -267,6 +272,8 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
     row, sched = L.lower(raw)
     _, unit, sut, desc = I.decode(raw)
     res = dict(lowering={k: v for k, v in row.items() if k != "sut"}, sut=sut, reasons=[])
+    if timing is not None:
+        res["native_timing"] = timing.as_dict()
     if not row["supported"]:
         res.update(status="unsupported_lowering", reasons=row["reasons"])
         return res
@@ -333,7 +340,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
                 fill_e[p] = e + 1
                 QL.vmr(e, p, sec, k, st_row)
                 fills.append((int(la[0]) >> 3, e))
-                last_commit = max(last_commit, e + FILL_COMMIT)
+                last_commit = max(last_commit, e + fill_commit)
                 if (int(la[0]) >> 3) not in place.written:
                     preload[sec] = [int(a) for a in la]      # not produced earlier in this run: enters as an image
         e_issue.append(last_commit)
@@ -383,9 +390,9 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False)
                 place.written.add(int(la[0]) >> 3)
                 mask = int(sum(1 << j for j in range(8) if m[j]))
                 QL.vmw(de, p, 0, k, G["orow"], sec, mask)
-                commits.append(de + DRAIN_DONE)
-                drains.append((int(la[0]) >> 3, de + DRAIN_DONE))
-                expect.append(dict(sector=sec, mask=mask, edge=de + DRAIN_DONE,
+                commits.append(de + drain_done)
+                drains.append((int(la[0]) >> 3, de + drain_done))
+                expect.append(dict(sector=sec, mask=mask, edge=de + drain_done,
                                    words=[int(a) for a in G["addr"]["O"][8 * k:8 * k + 8]]))
     # operand values (fixture or seeded placeholder) and the expected O words (hdc_golden)
     rng = rng or np.random.default_rng(0)
