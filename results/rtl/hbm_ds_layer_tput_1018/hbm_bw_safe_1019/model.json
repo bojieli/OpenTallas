@@ -16,7 +16,7 @@
     "pending_and_response_identity_sectors_per_cycle": 1
   },
   "boundary_bits": {
-    "K_request": 340,
+    "K_request": 341,
     "K_response": 277,
     "PHY_payload": 256
   },
@@ -27,10 +27,13 @@
   "latency": {
     "pins_added_vs_mr": 0,
     "ACT_lookahead_pipeline_edges": 2,
-    "static_go_budget_edges_per_64_lines": 88,
+    "static_go_budget_edges_per_64_lines": 96,
     "refresh_argmin_pipeline_edges": 5,
     "legacy_KR_compatibility_bridge_HBM_edges": 1,
-    "legacy_KR_compatibility_payload_bits_per_pc": 831
+    "legacy_KR_compatibility_payload_bits_per_pc": 831,
+    "op_gap_edges_per_operation": 384,
+    "legacy_KR_bridge_total_state_bits_per_pc": 976,
+    "bridge_state_source": "fa4ccb8cb 8bit ring; incoming regional control successor not yet integrated"
   },
   "routing": {
     "proposed_outline_um": [
@@ -39,18 +42,18 @@
     ],
     "macro_lattice_um": 43.2,
     "max_outline_span_um": 475.2,
-    "track_check": "Older diagnostics PASS1224pin geometry; latestsingleband safe3 physicalmeasurement pending."
+    "track_check": "safe4 top1229pins geometry PASS; actual SRAM W/E819signalface access OPEN and independent of top pin check."
   },
   "schedule": "No service-go stall allowed; upstream prefetch lead must absorb the two-stage ACT selection. Production bench must pass exact go slots.",
   "capacity": "REPRICE3 9b66f8ccf routedexpert3x reserves16512rows2.015625GiB/SM vs4GiB; .8031GiB realpayload; fullimage nonexpert/KV closure remainsconditional.",
-  "synthesis_total_area_um2": 54299.62512,
+  "synthesis_total_area_um2": 54916.16958,
   "synthesis_macro_area_um2": 50620.0864,
-  "synthesis_std_area_um2": 3679.538719999997,
+  "synthesis_std_area_um2": 4296.08318,
   "proposed_outline_um": [
     432,
     475.2
   ],
-  "measured_logic_util_fraction": 0.26450668490460155,
+  "measured_logic_util_fraction": 0.2675100229727834,
   "macro_channel_waiver": "Coordinator 10-19: lowfill accepted from stockmacro43.2lattice20umchannel minimum; final physical evidence still required.",
   "controller_steady_B_per_stream_edge": [
     91.62,
@@ -60,8 +63,8 @@
   "controller_source": "877c9e27d",
   "replicas_note": "GEN2e manifest proves64 cfg_h9b controllers/die,2stacks32PC/stack; clockcontract.json pins64hbm1024ps endpoints.",
   "sector_conservation": "PASS eachPC: requested8300 columns8300 returns8300; owner starts8HBM edges after reset",
-  "physical_status": "OPEN. safe3 source55bafafca uses432x475.2,13macros,onecoreFENCE270..291.06um, actualroute1024ps; existing tool signoff833 overconstraint beingrepaired byroot. Existingstdarea is OLDdiagnostic before72reset/headH9b changes; remeasure beforefinalgate.",
-  "production_status": "OPEN. safe oldL14 exact23/23@88. Latestfull66op unbridged nativeH9b failedCDC720; provenoptinKRbridge component+mutant877c9e27d; full66op bridgedretry pending.",
+  "physical_status": "REJECTED actual source80d7987a4 mapped142roots>32,40staticreset+102conservativecritical; macroface access OPEN. Separate zero-edge fanout successor being proven; noCTS/adoption. Last measured safe4 area is diagnostic, must remeasure current frozen successor. Clocktool actual1024 fix root-reviewed independently; source certificate must recompute final hashes.",
+  "production_status": "Source57c5e70f3 staticOP_GAP384/PACE88/64+8/FETCH96 full66ops154exactGO4runs301results PASS END47428. IMUT2 actual arithmeticFAIL11/23; lateIDs issuerfault9635. DefaultOP_GAP256 FAIL24/66 retained. Combined80 full66 qualifier live, no claim for later3ee AQ/current regional K until rerun.",
   "random_traffic_sensitivity": {
     "requests": 6000,
     "read_beats_exact": 12944,
@@ -71,5 +74,16 @@
     "qualification": "FAIL existing10percent ratecheck; allidentity/data match; IDmutantfails; rejectedopenpagepolicy preservesfailureevidence."
   },
   "die_outline_delta_mm2_64pc": 11.5903954944,
-  "signoff_policy": "TTsetup+FFhold primary, SS sensitivity. HBMperiod1024ps sourcepincontract unchanged; setup60ps/hold25ps uncertainty, holdmargin30ps."
+  "signoff_policy": "TTsetup+FFhold primary, SS sensitivity. HBMperiod1024ps sourcepincontract unchanged; setup60ps/hold25ps uncertainty, holdmargin30ps.",
+  "synthesis_source": "5a9813a31 safe4 diagnostic, not current successor",
+  "pricing": {
+    "primary_released_B_per_stream_edge": 45.03,
+    "conditional_controller_floor_B_per_stream_edge": 91.62,
+    "conditional_static_96cadence_B_per_stream_edge": 90.66666666666667,
+    "fixed_warmup_exact_66ops_added_stream_edges": 3832,
+    "fixed_warmup_exact_66ops_added_us": 3.1933333333333334,
+    "DS43_representative_extrapolation_added_us": 47.193333333333335,
+    "Qwen_warmup_price": "OPEN; distinct actual native HBM Qwen GO calendar not qualified, DS66 cost not transferred",
+    "adoption": "None until actual fanout32,macroface,TT/FF,full exact final source/cadence close"
+  }
 }
