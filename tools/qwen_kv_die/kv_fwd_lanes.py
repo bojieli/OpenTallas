@@ -30,6 +30,7 @@ n, source / receiving block and region, planned E, latency today n + 1 vs landed
 import argparse
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -40,6 +41,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_rly_std as RS        # noqa: E402
 import kv_lane_orientation as LO  # noqa: E402
+import kv_lane_reach as LR  # noqa: E402
 
 RTL = 'rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv'
 CORE_RTL = ['rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
@@ -355,6 +357,20 @@ def main(argv=None):
         end = re.search(r'^END LIBRARY\s*$', t, re.M)
         t = (t[:end.start()] + '\n'.join(add_lef) + '\n' + t[end.start():]) if end else t + '\n' + '\n'.join(add_lef) + '\n'
         (case / 'elements.lef').write_text(t + '\n')
+    if not a.netlist_only:
+        # Bounding-box fit does not qualify a changed pin face. Refuse before
+        # real-case placement if any incident transport bit exceeds its class.
+        classes = sorted((int(k), float(v)) for k, v in
+                         (part.split(':') for part in os.environ.get('OT_KV_REACH_W',
+                                                                    '36:400,296:370,100000:340').split(',')))
+        incident = LR.audit((case / 'die.v').read_text(), (case / 'elements.lef').read_text(),
+                            (case / 'place.tcl.prefwd').read_text(), pf.read_text(), orientation, classes)
+        (case / 'lane_incident_reach.json').write_text(json.dumps(incident, indent=1) + '\n')
+        if incident['status'] != 'PASS':
+            raise SystemExit('kv_fwd_lanes: actual adapted lane pin reach FAIL: '
+                             + json.dumps(incident['summary'])
+                             + '; repair reservation/stages and static E/K ages before physical submission '
+                             '(case_kv/lane_incident_reach.json)')
     if views and (libs / 'views.json').exists():
         vj = json.loads((libs / 'views.json').read_text())
         for mst, vd in views.items():
