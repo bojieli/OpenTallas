@@ -1,0 +1,38 @@
+{
+ "bus_colors": {
+  "VDD": "#e69eb0",
+  "VSS": "#a4a5e6",
+  "bank_free": "#8ce682",
+  "busy": "#d5e6ba",
+  "cfg_a": "#e6a4b0",
+  "cfg_d": "#e6ac4f",
+  "cfg_v": "#6257e6",
+  "clk": "#e64c34",
+  "fault": "#dae6b3",
+  "go": "#aee697",
+  "go_tag": "#e633b5",
+  "perr": "#c1e66f",
+  "pnseg": "#d948e6",
+  "ppos": "#e65d5b",
+  "prow": "#3fe6d5",
+  "pseg": "#b5e6b5",
+  "pv": "#a7e628",
+  "pval": "#d83de6",
+  "rst_n": "#bde3e6",
+  "sh_free": "#7be651",
+  "walking": "#d8e667",
+  "xs_b": "#e6c598",
+  "xs_e0": "#e6c1ce",
+  "xs_e1": "#e6cd5c",
+  "xs_p": "#84d6e6",
+  "xs_pos": "#6ee69b",
+  "xs_q0": "#395ae6",
+  "xs_q1": "#42e6c9",
+  "xs_sv": "#b8dbe6",
+  "xs_v": "#5737e6"
+ },
+ "images": {
+  "floorplan": "/srv/opentallas-scratch/claude/qxpq-fix/gate_post/png_floorplan/floorplan.png",
+  "density": "/srv/opentallas-scratch/claude/qxpq-fix/gate_post/png_floorplan/density.png"
+ }
+}
