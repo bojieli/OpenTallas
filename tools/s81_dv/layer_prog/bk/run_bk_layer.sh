@@ -2,7 +2,7 @@
 # TOK-S81-GAPS/IDX: build + run the bk_sel layer-job bench (tb_bk_layer) on the compiler's stimulus.  Run from the
 # source root.  usage: run_bk_layer.sh <out> <stim dir>... (one build, one run per stim dir; each dir gets run.log).
 # Verilator = the closure daemon's pinned 5.050 (VL overrides).  Every source the bench reads is listed here.
-set -u
+set -u -o pipefail
 OUT=$1; shift
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$OUT"
