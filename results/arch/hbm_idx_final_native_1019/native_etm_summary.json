@@ -1,0 +1,82 @@
+{
+  "tt": {
+    "refs": {
+      "clk": {
+        "rise": 178.4,
+        "fall": 190.92906499999998,
+        "min": 149.69202,
+        "max": 204.7872,
+        "src": "insertion.json boundary mean",
+        "bmin": 158.5,
+        "bmax": 204.8,
+        "n": 2665
+      }
+    },
+    "launch_max": [
+      166.50575999999998,
+      "prm[592]"
+    ],
+    "capture_max": [
+      116.70396,
+      "cfg_target[6]"
+    ],
+    "launch_over220": 0,
+    "capture_over190": 0,
+    "comb_pins": [],
+    "earliest_launch": [
+      75.20756,
+      "prm[1392]"
+    ],
+    "max_hold_requirement": [
+      -9.485370000000017,
+      "tgt[1]"
+    ],
+    "all_flop_measurement": {
+      "n": 5417,
+      "mean": 175.7,
+      "min": 158.5,
+      "max": 204.8
+    },
+    "boundary_spread": 46.30000000000001
+  },
+  "ff": {
+    "refs": {
+      "clk": {
+        "rise": 146.8,
+        "fall": 153.62637500000002,
+        "min": 121.70266,
+        "max": 170.30942,
+        "src": "insertion.json boundary mean",
+        "bmin": 129.1,
+        "bmax": 170.3,
+        "n": 2665
+      }
+    },
+    "launch_max": [
+      118.05617000000001,
+      "prm[592]"
+    ],
+    "capture_max": [
+      86.92250000000001,
+      "cfg_target[7]"
+    ],
+    "launch_over220": 0,
+    "capture_over190": 0,
+    "comb_pins": [],
+    "earliest_launch": [
+      51.492879999999985,
+      "prm[1392]"
+    ],
+    "max_hold_requirement": [
+      -2.0012000000000114,
+      "tgt[1]"
+    ],
+    "all_flop_measurement": {
+      "n": 5417,
+      "mean": 144.0,
+      "min": 129.1,
+      "max": 170.3
+    },
+    "boundary_spread": 41.20000000000002
+  }
+}
