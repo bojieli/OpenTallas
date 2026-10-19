@@ -287,6 +287,23 @@
   },
   {
    "name": "15",
+   "net": "hu",
+   "src_region": "core",
+   "dst_region": "hr",
+   "src_nodes": [
+    "u_gi"
+   ],
+   "width": 2,
+   "readers": [
+    "u_thru.hu_i"
+   ],
+   "ring": "u_lpl_15_w (ck_core)",
+   "read": "u_lpl_15_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+  },
+  {
+   "name": "16",
    "net": "g_cmd",
    "src_region": "core",
    "dst_region": "hr",
@@ -297,13 +314,13 @@
    "readers": [
     "u_thru.cmd_i"
    ],
-   "ring": "u_lpl_15_w (ck_core)",
-   "read": "u_lpl_15_r (ck_hr)",
+   "ring": "u_lpl_16_w (ck_core)",
+   "read": "u_lpl_16_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
   },
   {
-   "name": "16",
+   "name": "17",
    "net": "g_cal_program_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -314,13 +331,13 @@
    "readers": [
     "u_thru.cal_program_obs_i"
    ],
-   "ring": "u_lpl_16_w (ck_core)",
-   "read": "u_lpl_16_r (ck_hr)",
+   "ring": "u_lpl_17_w (ck_core)",
+   "read": "u_lpl_17_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
   },
   {
-   "name": "17",
+   "name": "18",
    "net": "g_cal_descriptor_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -331,13 +348,13 @@
    "readers": [
     "u_thru.cal_descriptor_obs_i"
    ],
-   "ring": "u_lpl_17_w (ck_core)",
-   "read": "u_lpl_17_r (ck_hr)",
+   "ring": "u_lpl_18_w (ck_core)",
+   "read": "u_lpl_18_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
   },
   {
-   "name": "18",
+   "name": "19",
    "net": "g_cal_image_ready",
    "src_region": "core",
    "dst_region": "hr",
@@ -348,13 +365,13 @@
    "readers": [
     "u_thru.cal_image_ready_i"
    ],
-   "ring": "u_lpl_18_w (ck_core)",
-   "read": "u_lpl_18_r (ck_hr)",
+   "ring": "u_lpl_19_w (ck_core)",
+   "read": "u_lpl_19_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
   },
   {
-   "name": "19",
+   "name": "20",
    "net": "g_emb_start",
    "src_region": "core",
    "dst_region": "hr",
@@ -365,13 +382,13 @@
    "readers": [
     "u_thru.emb_start_i"
    ],
-   "ring": "u_lpl_19_w (ck_core)",
-   "read": "u_lpl_19_r (ck_hr)",
+   "ring": "u_lpl_20_w (ck_core)",
+   "read": "u_lpl_20_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
   },
   {
-   "name": "20",
+   "name": "21",
    "net": "g_emb_token",
    "src_region": "core",
    "dst_region": "hr",
@@ -382,13 +399,19 @@
    "readers": [
     "u_thru.emb_token_i"
    ],
-   "ring": "u_lpl_20_w (ck_core)",
-   "read": "u_lpl_20_r (ck_hr)",
+   "ring": "u_lpl_21_w (ck_core)",
+   "read": "u_lpl_21_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
   }
  ],
  "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
  "reset": {
   "port": "rst_n",
   "root_region": "core",
@@ -400,7 +423,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 4178,
+  "landing": 4201,
   "pads": 0,
   "reset": 26
  },
@@ -451,6 +474,7 @@
    "cf": 6
   },
   "reset_release_added_edges": 3,
+  "status_flag_lag_edges": {},
   "schedule": "offsets",
   "ref_params": null,
   "max_added_edges": 6
@@ -464,7 +488,7 @@
  ],
  "audit": {
   "ok": true,
-  "landings": 21,
+  "landings": 22,
   "reset_hops": 1,
   "fails": []
  }

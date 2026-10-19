@@ -48,6 +48,7 @@ module qfd_tt_ctlm_dv_gi #(
     output wire          s_start,                // head stage start (u_hr stage_start; NU > 1 see hd_start)
     output wire [5:0]    s_stage,
     output wire [48:0]   st,
+    output reg  [1:0]    hu,                     // MU-DQ-D2DUSER: user of the latest head start (-> u_thru native_pos[17:16])
     output wire [15:0]   su_obs_o,
     output wire [23:0]   su_acc_o,
     output wire [15:0]   x_oprog,
@@ -167,6 +168,11 @@ module qfd_tt_ctlm_dv_gi #(
             emb_start <= c_emb; emb_token <= tok_b[c_user];
         end
     assign st = {st_h, st_tok, st_pos, st_base};
+    // MU-DQ-D2DUSER (10-19): as qfd_tt_ctlm_dv hu (same edge as st; NU = 1 constant 0)
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) hu <= 2'd0;
+        else if (s_me) hu <= 2'd0;
+        else if (c_seg) hu <= (NU > 1) ? 2'(c_user) : 2'd0;
 
     reg  [23:0] su_acc;
     reg  [15:0] su_obs;
@@ -285,6 +291,9 @@ module qfd_tt_ctlm_dv_thru (
     input  wire [17:0]   emb_token_i,
     input  wire [379:0]  ib_i,                   // QW-DIEFIX 10-19: the head's registered ROM command (cmd380 order)
     output wire [379:0]  ib_hr,                  //   -> hr[452:73] in the slice layout (qfd_dv_hr_pack, zero logic)
+    input  wire [1:0]    hu_i,                   // MU-DQ-D2DUSER: u_gi hu (core) -> native_pos[17:16] (one OR, no state;
+    input  wire [17:0]   npos_i,                 //   hu_i is 0 at NU = 1)
+    output wire [17:0]   native_pos,
     output wire [115:0]  cmd,
     output wire [75:0]   cal_program_obs,
     output wire [68:0]   cal_descriptor_obs,
@@ -293,6 +302,7 @@ module qfd_tt_ctlm_dv_thru (
     output wire [17:0]   emb_token
 );
     assign cmd = cmd_i;
+    assign native_pos = npos_i | {hu_i, 16'd0};
     assign cal_program_obs = cal_program_obs_i;
     assign cal_descriptor_obs = cal_descriptor_obs_i;
     assign cal_image_ready = cal_image_ready_i;

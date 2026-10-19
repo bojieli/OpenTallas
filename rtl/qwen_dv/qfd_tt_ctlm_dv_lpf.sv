@@ -72,6 +72,8 @@ module qfd_tt_ctlm_dv_lpf #(
     wire         s_start;
     wire [5:0]   s_stage;
     wire [48:0]  st;
+    wire [1:0]   hu;                             // MU-DQ-D2DUSER: head-start user, core -> hr (landed like st)
+    wire [17:0]  npos_h;
     wire [15:0]  su_obs, x_oprog, x_orows;
     wire [23:0]  su_acc;
     wire         x_oidle;
@@ -88,12 +90,12 @@ module qfd_tt_ctlm_dv_lpf #(
         u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
-        .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),
+        .s_stage(s_stage), .st(st), .hu(hu), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),
         .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));
     ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0)) u_hr (
         .stage_start(s_start), .stage(s_stage),
         .rom_ret_i({rom_ret_v[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs),
-        .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q),
+        .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(npos_h), .rom_cmd(ib_q),
         .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe),
         .native_ret(native_ret), .ck_head(ck), .ck_pm0(ck), .ck_pm1(ck), .rst_n(rst_n),
         .h_start(st[48]), .token(st[47:30]), .pos(st[29:12]), .prog_base(st[11:0]),
@@ -106,7 +108,7 @@ module qfd_tt_ctlm_dv_lpf #(
     qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck), .rst_n(rst_n), .pw(pw), .st(st),
         .su_obs(su_obs), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault),
         .dcs(dcs), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));
-    qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
+    qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .hu_i(hu), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
         .cal_descriptor_obs_i(g_cal_descriptor_obs), .cal_image_ready_i(g_cal_image_ready), .emb_start_i(g_emb_start),
         .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
         .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));

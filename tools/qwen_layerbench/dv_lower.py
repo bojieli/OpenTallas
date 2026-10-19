@@ -248,7 +248,7 @@ def cmd_ports(dst, ar_base=0, dd_base=0, ar_en=0, dd_en=0, em_base=0, em_en=0):
     return _cmd(4, [(ar_base, 24), (dd_base, 24), (ar_en, 1), (dd_en, 1), (em_base, 24), (em_en, 1)], dst)
 
 
-def cmd_stn(dst, mode, wsrc, nwords, sbase, sdst, dbase, amax=0, kc=1):
+def cmd_stn(dst, mode, wsrc, nwords, sbase, sdst, dbase, *, kc, amax=0):   # kc mandatory (MU-DQ-SLICEKC 10-19)
     # kc: k steps per (round, j) of the op's tiles (they stream the running accumulator every k step; qfd_dv_redstn2
     # keeps only the k = kc - 1 block of every pair: STN [66:59] = kc - 1, QW-DIEFIX 10-19; [52:51] = MU STN user)
     if not 1 <= kc <= 256:
@@ -276,6 +276,9 @@ def decode_cmd(c):
     d = dict(go=c & 1, kind=kind, dst=dst)
     if kind == 1:
         d.update(pidx=b(4, 9))
+    elif kind == 2:     # STN (qfd_dv_slice2 u_stn / u_amax): kc = cmd[66:59] + 1 (redstn2 last-k), MU user [52:51]
+        d.update(mode=b(4, 2), wsrc=b(6, 1), nwords=b(7, 8), sbase=b(15, 9), sdst=b(24, 2), dbase=b(26, 24),
+                 amax=b(50, 1), user=b(51, 2), kc=b(59, 8) + 1)
     elif kind == 3:
         d.update(root=b(4, 1), nb=b(5, 6), ss=b(11, 24), fuse=b(35, 1), rx=b(36, 24), eps=b(60, 32), k=b(92, 5),
                  amnb=b(97, 6), rdir=b(103, 1))

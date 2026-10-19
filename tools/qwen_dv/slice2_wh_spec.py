@@ -53,6 +53,7 @@ def _b(name, case, expect, rx):
 BENCHES = [_b("faces_m0", "faces0", "pass", "FACES MUT=0: PASS"),
            _b("faces_m11", "faces11", "fail", "FACES MUT=11: FAIL"),
            _b("b2_mu4", "b2", "pass", "# exit 0"),
+           _b("b2k_m14", "b2k14", "fail", r"bench2 \(k\) MUT=14: FAIL"),
            _b("b2n_am7", "b2n7", "fail", r"bench2 \(n\) MUT=0: FAIL")]
 
 

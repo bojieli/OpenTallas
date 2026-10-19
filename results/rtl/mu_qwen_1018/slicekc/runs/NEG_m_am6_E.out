@@ -1,0 +1,10 @@
+# case NEG_m_am6_E env DV2_AM_MUT=6 args m --vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=2 --work /srv/opentallas-scratch/claude/mu-dq-slicekc/r2/work/AM6_E host regular-crane 2026-10-19T04:39:39-07:00 commit 549e8e808256d8cc3d7d337799727f2be775fcdd Verilator 5.050 2026-07-01 rev v5.050
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 2 AM_MUT 6: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: FAIL 2/8
+    round 0 user 0: root token / broadcast / slice-1 token [383, 383, 383] users [0, 0, 0], golden argmax 127
+    round 0 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 390
+    round 0 user 3: root token / broadcast / slice-1 token [383, 383, 383] users [3, 3, 3], golden argmax 838
+    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 436
+    round 1 user 0: root token / broadcast / slice-1 token [383, 383, 383] users [0, 0, 0], golden argmax 127
+    round 1 user 3: root token / broadcast / slice-1 token [383, 383, 383] users [3, 3, 3], golden argmax 979
+# exit 1

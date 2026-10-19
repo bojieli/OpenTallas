@@ -16,6 +16,7 @@
 // Chain-end inputs (E5: ch_up_i, st_dn_i, sc_dn_i, l9_i of an unpaired slice; W5: st_up_i, sc_up_i, ch_dn_i before
 // the edge endpoints answer) take the idle word (all zero): a zero word is "no word" on every one of these ports.
 // MUT 14 = qfd_dv_redstn2 last-k selection off (kcm1 ignored; dv_bench2 k must FAIL).
+// MUT 15 = kcm1 read from the pre-fix field cmd[58:51] (overlaps the MU STN user [52:51]; dv_bench2 q must FAIL).
 // MUT as qfd_dv_slice, plus 10: SETID forwards the id unincremented (must FAIL the enumeration bench); 11: XC COLL
 // takes the mode from bit 7 (must FAIL bench i); 12: the cross-die gather lets a later rank win a tie (bench j).
 // Q-SLICE 10-17 (coordinator 0de): the lateral direction is COMPILE-TIME.  This core keeps role names (dn = toward W5);
@@ -183,7 +184,7 @@ module qfd_dv_slice2 #(
     wire [511:0] r_d;
     qfd_dv_redstn2 #(.MUT(MUT)) u_stn (.ck(ck), .rst_n(rst),
         .cfg_v(c_stn), .cfg_mode(cmd_q[5:4]), .cfg_wsrc(cmd_q[6]), .cfg_nwords(cmd_q[14:7]), .cfg_sbase(cmd_q[23:15]),
-        .cfg_kcm1(cmd_q[66:59]),   // MU-SLICE-GATE 10-19: was [58:51], which overlapped the MU STN user cmd[52:51]
+        .cfg_kcm1((MUT == 15) ? cmd_q[58:51] : cmd_q[66:59]),   // MU-SLICE-GATE 10-19: was [58:51], which overlapped the MU STN user cmd[52:51]; MUT 15 = the old field (bench q FAILs)
         .rs_s(rss_q), .rs_n(rsn_q), .nb_i(nb_q), .nb_o(l9_o),
         .bt_re(bt_re), .bt_word(bt_word), .bt_q(bt_q),
         .r_v(r_v), .r_idx(r_idx), .r_last(r_last), .r_d(r_d), .fault(stn_fault));
@@ -383,6 +384,6 @@ module qfd_dv_slice2 #(
         if (!rst) ag_dn_o <= 10'd0;
         else ag_dn_o <= agu_q | {stn_busy, any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
                                  !su_idle, sc_busy};
-    initial if (MUT < 0 || (MUT > 12 && MUT != 14)) $fatal(1, "qfd_dv_slice2: MUT %0d undefined", MUT);  // 14 = redstn2 kcm1 ignored
+    initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, "qfd_dv_slice2: MUT %0d undefined", MUT);  // 14 = redstn2 kcm1 ignored, 15 = kcm1 at [58:51]
     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
 endmodule

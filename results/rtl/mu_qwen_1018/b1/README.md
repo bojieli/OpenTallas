@@ -173,11 +173,10 @@ only.
   - ctlm part:
     - ABI 0 PASS, 4-8 FAIL;
     - cal 0 PASS, 1-3 FAIL.
-- **The ctlm `--nsl12` case has no result yet.** It did not run in `runs/w2`, because the fleet source copy lacked
-  `rtl/test/full_sm_service` (a staging error, not an RTL result).
-  - The w5 rerun then failed with MODMISSING `qfd_dv_amax_mu`. That is a bench source-list bug that predates this
-    lane: `qfd_dv_slice2` has instantiated the block since MU-ADOPT-SLICE. d3044d6af fixes it.
-  - The w7 rerun (ot-epyc5, --mem 96) is listed in `pending_results`.
+- ctlm `--nsl12` (12-slice SETID): MUT 0 PASS 74/74 and MUT 3 FAIL 61/74 (`runs/w7/ctlm.out`, ot-epyc5, after the
+  pre-existing source-list fix d3044d6af).
+  - The first w2 attempt lacked a staged source directory (`rtl/test/full_sm_service`).
+  - The w5 attempt failed MODMISSING on `qfd_dv_amax_mu`, which `qfd_dv_slice2` has instantiated since MU-ADOPT-SLICE.
 - `run_mu_tok_smoke.sh`: 0 PASS; cal11, amax1, glue1 and glue2 FAIL.
 - The existing R3 leaf bench `adopt_slice/tb_dhuser.sv` still compiles the leaf file ALONE at OPSEG 0. The OPSEG branch
   and the ROM are not elaborated.

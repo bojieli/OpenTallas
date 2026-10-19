@@ -150,6 +150,7 @@ BENCHES = [_g("eq_m0", "eq0", "pass", "EQ MUT=0: LPF_EQ PASS"),
            _g("lp_m2", "lp2", "fail", "LP MUT=2: LP_LOCKSTEP FAIL"),
            _g("lp_m3", "lp3", "fail", "LP MUT=3: LP_LOCKSTEP FAIL"),
            _g("b2_mu4", "b2", "pass", "# exit 0"),
+           _g("b2k_m14", "b2k14", "fail", r"bench2 \(k\) MUT=14: FAIL"),
            _g("b2n_am7", "b2n7", "fail", r"bench2 \(n\) MUT=0: FAIL")]
 
 OUTREG = {

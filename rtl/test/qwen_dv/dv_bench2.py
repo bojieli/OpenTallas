@@ -33,6 +33,9 @@ SRCS2 = [s for s in B.SRCS if not s.endswith(("qfd_dv_slice.sv", "qfd_dv_redstn.
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
 # DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
 # qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).
+# MU-DQ-SLICEKC 10-19 (merge of MU-SLICE-GATE c9276ad29 / 4180abc13 with main's FACE wrapper): -GMU_NU=<n> / -GFACE=<f>
+# in --vflags override DV2_MU_NU / DV2_FACE; -GSU_LT=1 / -GHD_W130=1 (the kitted slice) reach every FACE through
+# tb_qfd_dv2 -> tb_dv2_slice and add XSRCS (hard SU lane tile + its lane sources).
 import os  # noqa: E402
 MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
 FACE = int(os.environ.get("DV2_FACE", "0"))
@@ -103,12 +106,8 @@ def conv48(w):
 
 
 VFLAGS: list[str] = []          # S-QSLICE 10-18: --vflags (e.g. -GSU_LT=1 -GHD_W130=1); empty = the original build
-# MU-SLICE-GATE 10-19 (carry of MU-QW-AMIX 95074c8a3 onto the SLICE-E tree): MU_NU follows -GMU_NU=<n> in --vflags
-# (else DV2_MU_NU); this tree's tb_qfd_dv2 has no FACE parameter (master core only: FACE 0); DV2_AM_MUT adds
-# +define+OT_DV_AMAX_MUT=<n> to the build (bench-only qfd_dv_amax_mu / qfd_dv_scalar2 mutants, e.g. 7 = no mixed-merge check).
-MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
-FACE = 0
-AM_MUT = int(os.environ.get("DV2_AM_MUT", "0"))
+# MU-SLICE-GATE 10-19: MU_NU follows -GMU_NU=<n> in --vflags (else DV2_MU_NU), FACE follows -GFACE=<f> (else DV2_FACE);
+# DV2_AM_MUT adds +define+OT_DV_AMAX_MUT=<n> (bench-only qfd_dv_amax_mu / qfd_dv_scalar2 mutants, 7 = no mixed-merge check).
 XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
          "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
          "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"]
@@ -117,7 +116,8 @@ XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "r
 def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
-    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}"
+    vtag = "".join(c for c in "_".join(f.lstrip("-+") for f in VFLAGS) if c.isalnum() or c in "_=")
+    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" / (vtag or "base")
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():
@@ -125,8 +125,14 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
                "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", f"-GMU_NU={MU_NU}", f"-GFACE={FACE}"] + \
               ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
-              ["-Mdir", str(obj), str(HERE / "main2.cpp")] + [str(ROOT / s) for s in SRCS2]
-        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+              VFLAGS + ["-Mdir", str(obj), str(HERE / "main2.cpp")] + \
+              [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
+        obj.mkdir(parents=True, exist_ok=True)
+        with open(obj.parent / f"build_{obj.name}.log", "w") as bl:     # kept: a failed build names its error
+            r = subprocess.run(cmd, stdout=bl, stderr=subprocess.STDOUT)
+        if r.returncode:
+            print("    VERILATOR BUILD FAIL:", "".join(open(obj.parent / f"build_{obj.name}.log").readlines()[-15:]))
+            raise subprocess.CalledProcessError(r.returncode, cmd[:4])
     subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc}"], check=True, stdout=subprocess.DEVNULL)
     out = {}
     for line in lgf.read_text().split("\n"):
@@ -278,7 +284,7 @@ def bench_c2(work, mut, seed=3):
     return ok, n, errs
 
 
-def bench_k2(work, mut, seed=11):
+def bench_k2(work, mut, seed=11, users=(0, 0, 0), name="k"):
     """(k) redstn2 LAST-K selection (QW-DIEFIX 10-19): every pair streams JB = 8 words per (round, k) -- the tiles' running
     accumulator -- and only the k = kc - 1 block is the level-6 result.  L8 scaled kc 3, L7 gate/up kc 2 (two rounds of
     the lower pair would be a second op), L8 unscaled kc 1 (regression).  The k < kc - 1 blocks carry different
@@ -304,8 +310,8 @@ def bench_k2(work, mut, seed=11):
     B.load_btab(ev, 0, 16, s8)
     ev.step(4)
     l8 = B.l6_parts(w8, x8, 256)
-    for kc, wsrc, base in ((3, 0, 0x2400), (1, 1, 0x2800)):
-        ev.at(B.P_CMD, B.cmd_stn(1, wsrc, 8, 16, 3, base, kcm1=kc - 1)); ev.step(4 + SK)
+    for kc, wsrc, base, u in ((3, 0, 0x2400, users[0]), (1, 1, 0x2800, users[1])):
+        ev.at(B.P_CMD, B.cmd_stn(1, wsrc, 8, 16, 3, base, kcm1=kc - 1) | (u << 51)); ev.step(4 + SK)
         for kk in range(kc):
             src = l8 if kk == kc - 1 else junk(4)
             for k in range(8):
@@ -316,7 +322,7 @@ def bench_k2(work, mut, seed=11):
         tests.append((f"L8 kc{kc} {'unscaled' if wsrc else 'scaled'}", base,
                       G.mul(y, F(1.0)) if wsrc else G.mul(y, s8)))
     lg, lu = B.l6_parts(wg, xg, 128), B.l6_parts(wu, xu, 128)
-    ev.at(B.P_CMD, B.cmd_stn(0, 0, 16, 0, 2, 0x2000, kcm1=1)); ev.step(4 + SK)
+    ev.at(B.P_CMD, B.cmd_stn(0, 0, 16, 0, 2, 0x2000, kcm1=1) | (users[2] << 51)); ev.step(4 + SK)
     for kk in range(2):
         g_, u_ = (lg, lu) if kk == 1 else (junk(2), junk(2))
         for k in range(8):
@@ -325,7 +331,7 @@ def bench_k2(work, mut, seed=11):
     ev.step(60)
     tests.append(("L7 gate/up kc2", 0x2000, np.concatenate([G.mul(G.matvec(wg, xg, 128), sg),
                                                            G.mul(G.matvec(wu, xu, 128), su_)])))
-    log = run_sim2("k", ev, work, mut, ev.t + 20)
+    log = run_sim2(name, ev, work, mut, ev.t + 20)
     errs = status_ok2(log)
     got = {}
     for _, w in log.get("S0AR", []):
@@ -337,6 +343,13 @@ def bench_k2(work, mut, seed=11):
         ok += B.cmp(name, {i: got.get(base + i) for i in range(len(y))}, B.fbits(y), errs)
         n += len(y)
     return ok, n, errs
+
+
+def bench_q2(work, mut):
+    """(q) MU-DQ-SLICEKC 10-19 (COORD 0kg): bench k with MU STN users 1 / 2 / 3 in cmd[52:51] TOGETHER with kc - 1 in
+    cmd[66:59] (kc 3 / 1 / 2): the user field and the last-k count must not overlap.  MUT 15 (kcm1 read from the pre-fix
+    field [58:51], whose low bits are the user) must FAIL; MUT 14 (kcm1 ignored) FAILs too."""
+    return bench_k2(work, mut, users=(1, 2, 3), name="q")
 
 
 def bench_f2(work, mut, seed=6):
@@ -734,7 +747,7 @@ def install():
     B.status_ok = status_ok2
 
 
-BENCHES = {"k": bench_k2, "a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
+BENCHES = {"k": bench_k2, "q": bench_q2, "a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
            "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o, "n": bench_n}
 
 
@@ -746,12 +759,12 @@ def main():
     ap.add_argument("--vflags", default="", help="extra Verilator flags (use a separate --work: objects are cached)")
     a = ap.parse_args()
     VFLAGS[:] = a.vflags.split()
-    global MU_NU
-    for f in VFLAGS:
+    global MU_NU, FACE
+    for f in list(VFLAGS):        # MU_NU / FACE are passed by run_sim2 itself (one -G each)
         if f.startswith("-GMU_NU="):
-            MU_NU = int(f.split("=", 1)[1])
-    if AM_MUT:
-        VFLAGS.append(f"+define+OT_DV_AMAX_MUT={AM_MUT}")
+            MU_NU = int(f.split("=", 1)[1]); VFLAGS.remove(f)
+        elif f.startswith("-GFACE="):
+            FACE = int(f.split("=", 1)[1]); VFLAGS.remove(f)
     install()
     allpass = True
     for b in a.benches:
