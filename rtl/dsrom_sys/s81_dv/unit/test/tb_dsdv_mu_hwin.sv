@@ -60,12 +60,12 @@ module tb_dsdv_mu_hwin;
     wire [3:0] mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};      // the die master's t_mf fold
     dsdv_mu_hslot #(.NSLOT(NS), .MUT(0)) u_hs (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_kd({ku[31], 53'd0}), .f_mc(f_mc), .t_ku(ku), .t_mf(hmf));
-    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
+    dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_mc(f_mc), .f_mw(f_mw), .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .t_wf(wf));
 `ifdef HEAD_COMPARE
     wire [4*34-1:0] ref_c; wire [4*11-1:0] ref_rc; wire [1:0] ref_wf;
     integer head_compares=0;
-    dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),.HEAD_STAGE(0),.COMPACT_PTR(0),.CHECK_STAGE(0)) ref_direct
+    dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),.HEAD_STAGE(0),.COMPACT_PTR(0),.CHECK_STAGE(0),.LIVE_COUNT(0),.RAW_SELECT(0)) ref_direct
         (.ck(ck),.rst_n(rst_n),.f_ks(f_ks),.f_mc(f_mc),.f_mw(f_mw),.mu_c(ref_c),.mu_rc(ref_rc),.mu_rt(mu_rt),.t_wf(ref_wf));
     always @(negedge ck) if(rst_n) begin
         if({mu_c,mu_rc,wf} !== {ref_c,ref_rc,ref_wf})

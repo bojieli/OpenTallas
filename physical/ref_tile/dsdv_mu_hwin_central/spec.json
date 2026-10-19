@@ -15,7 +15,9 @@
   "MUT": 0,
   "HEAD_STAGE": 1,
   "COMPACT_PTR": 1,
-  "CHECK_STAGE": 1
+  "CHECK_STAGE": 1,
+  "LIVE_COUNT": 1,
+  "RAW_SELECT": 1
  },
  "clock_port": "ck",
  "reset_ports": [

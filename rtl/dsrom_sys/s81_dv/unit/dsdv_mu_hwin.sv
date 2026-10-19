@@ -39,7 +39,7 @@
 // do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -66,7 +66,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer COPY_RBASE=MEM_EVENT_RBASE+NEV*MEM_EVENT_STRIDE;
     localparam integer SEL_RBASE=COPY_RBASE+NEV*7+NRT*NC_REC;
     localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+NEP;
-    wire [COPY_END-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(COPY_END)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
+    localparam integer RESET_REGIONS=COPY_END+1+((RAW_SELECT!=0)?NEP*NEV:0);
+    wire [RESET_REGIONS-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
     reg [51:0] ks_payload; reg [24:0] mc_payload, mw_payload;
@@ -132,7 +133,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire radv = due || (!rok && !rhold);
     wire [NSLOT-1:0] gxn = (MUT == 5 || |(gx & gm)) ? OH0 : {gx[NSLOT-2:0], 1'b0};   // MUT 5: gap table index stuck at 0
     dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 3]),
-        .we(mc_q[25] && !mc_q[24] && !armed && !(|vld) && gn != SJ'(NSLOT)),
+        .we(mc_q[25] && !mc_q[24] && !armed && table_empty && gn != SJ'(NSLOT)),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
     dsdv_mu_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
@@ -203,6 +204,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     // <=12-bit output slice, at the same edge as eqn/okq/fresh. No output edge added.
     wire [33:0] head_word[0:NEV-1], output_word[0:NEV-1];
     wire [NEV-1:0] c_select[0:NEP*3-1], r_select[0:NEP-1];
+    wire [NEV-1:0] c_state[0:NEP*3-1], r_state[0:NEP-1];
+    wire [NEV-1:0] collision_c[0:NEP-1],collision_r[0:NEP-1];
     wire [NEV-1:0] next_fire;
     reg [NEP-1:0] next_collision;
     wire [NEP-1:0] collision_q; assign col_w=|collision_q;
@@ -234,30 +237,63 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                 assign higher_c=|nsc[op][NEV-1:oe+1]; assign higher_r=|nsr[op][NEV-1:oe+1];
             end
             for(og=0;og<3;og=og+1) begin:g_slice
-                (* keep *) reg select_r; assign c_select[op*3+og][oe]=select_r;
+                (* keep *) reg select_r; assign c_state[op*3+og][oe]=select_r;
+                if(RAW_SELECT!=0 && oe<NEV-1) begin:g_priority
+                    assign c_select[op*3+og][oe]=select_r && !(|c_state[op*3+og][NEV-1:oe+1]);
+                end else begin:g_unmasked assign c_select[op*3+og][oe]=select_r; end
                 always @(posedge ck or negedge rr[SEL_RBASE+(op*NEV+oe)*4+og])
                     if(!rr[SEL_RBASE+(op*NEV+oe)*4+og]) select_r<=1'b0;
-                    else select_r<=nsc[op][oe] && !higher_c;
+                    else select_r<=nsc[op][oe] && ((RAW_SELECT!=0) || !higher_c);
             end
-            (* keep *) reg replay_r; assign r_select[op][oe]=replay_r;
+            (* keep *) reg replay_r; assign r_state[op][oe]=replay_r;
+            if(RAW_SELECT!=0 && oe<NEV-1) begin:g_replay_priority
+                assign r_select[op][oe]=replay_r && !(|r_state[op][NEV-1:oe+1]);
+            end else begin:g_replay_unmasked assign r_select[op][oe]=replay_r; end
             always @(posedge ck or negedge rr[SEL_RBASE+(op*NEV+oe)*4+3])
                 if(!rr[SEL_RBASE+(op*NEV+oe)*4+3]) replay_r<=1'b0;
-                else replay_r<=nsr[op][oe] && !higher_r;
+                else replay_r<=nsr[op][oe] && ((RAW_SELECT!=0) || !higher_r);
+            if(RAW_SELECT!=0) begin:g_collision_raw
+                reg tx_r,rp_r;
+                always @(posedge ck or negedge rr[COPY_END+1+op*NEV+oe])
+                    if(!rr[COPY_END+1+op*NEV+oe]) begin tx_r<=0;rp_r<=0;end
+                    else begin tx_r<=nsc[op][oe];rp_r<=nsr[op][oe];end
+                assign collision_c[op][oe]=tx_r;assign collision_r[op][oe]=rp_r;
+            end else begin:g_collision_direct
+                assign collision_c[op][oe]=nsc[op][oe];assign collision_r[op][oe]=nsr[op][oe];
+            end
         end
     end endgenerate
     integer cp,ca,cb;
     always @* begin
         next_collision={NEP{1'b0}};
         for(cp=0;cp<NEP;cp=cp+1) for(ca=0;ca<NEV;ca=ca+1) for(cb=ca+1;cb<NEV;cb=cb+1)
-            next_collision[cp]=next_collision[cp] || (nsc[cp][ca] && nsc[cp][cb]) || (nsr[cp][ca] && nsr[cp][cb]);
+            next_collision[cp]=next_collision[cp] || (collision_c[cp][ca] && collision_c[cp][cb]) || (collision_r[cp][ca] && collision_r[cp][cb]);
     end
     generate for(op=0;op<NEP;op=op+1) begin:g_collision_region
-        reg collision_r; assign collision_q[op]=collision_r;
-        always @(posedge ck or negedge rr[SEL_RBASE+NEP*NEV*4+op])
-            if(!rr[SEL_RBASE+NEP*NEV*4+op]) collision_r<=1'b0; else collision_r<=next_collision[op];
+        if(RAW_SELECT!=0) begin:g_current
+            assign collision_q[op]=next_collision[op];
+        end else begin:g_delayed
+            reg collision_r; assign collision_q[op]=collision_r;
+            always @(posedge ck or negedge rr[SEL_RBASE+NEP*NEV*4+op])
+                if(!rr[SEL_RBASE+NEP*NEV*4+op]) collision_r<=1'b0; else collision_r<=next_collision[op];
+        end
     end endgenerate
     wire wv = mw_q[25];
-    wire idle = !armed && !(|vld);
+    wire table_empty;
+    generate if(LIVE_COUNT!=0) begin:g_live_count
+        reg [SJ-1:0] count_r;
+        assign table_empty=(count_r==0);
+        always @(posedge ck or negedge rr[COPY_END])
+            if(!rr[COPY_END]) count_r<=0;
+            else count_r<=count_r+SJ'(|rec_slot)-SJ'(due);
+`ifdef DSDV_MU_POINTER_ASSERT
+        always @(posedge ck) if(rn && rr[COPY_END])
+            if(count_r!==SJ'($countones(vld))) $fatal(1,"live-count differs from valid table");
+`endif
+    end else begin:g_live_direct
+        assign table_empty=~(|vld);
+    end endgenerate
+    wire idle = !armed && table_empty;
     always @(posedge ck or negedge rn)
         if(!rn) evld<={NEV{1'b0}};
         else if(wv && idle && mw_q[22:21]==2'd1) evld[esel]<=1'b1;
@@ -383,7 +419,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
-        assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && !(|vld);
+        assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && table_empty;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce])
             if(!rr[COPY_RBASE+7*ce]) ts_r<=32'd0; else ts_r<=tm;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+1])
@@ -520,7 +556,7 @@ module dsdv_seq_host_mux (
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
         .cw_a(cw_a), .cw_d(cw_d));
-    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
+    dsdv_mu_hwin #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
         .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));
     assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};
