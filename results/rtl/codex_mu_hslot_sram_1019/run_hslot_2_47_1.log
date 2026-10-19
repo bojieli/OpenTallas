@@ -1,0 +1,68 @@
+U0 S 40 tok 1000 pos 500
+U0 S 3048 tok 1000 pos 500
+U0 R 3082 tok 32501
+U0 S 6056 tok 32501 pos 501
+ERR return at 6090 tag {user 0 pos 501} != start {user 0 pos 500}
+U0 R 6090 tok 32501
+ERR return at 6154 tag {user 1 pos 512} != start {user 1 pos 511}
+ERR return at 6218 tag {user 2 pos 523} != start {user 2 pos 522}
+ERR return at 6282 tag {user 3 pos 534} != start {user 3 pos 533}
+ERR return at 6346 tag {user 4 pos 545} != start {user 4 pos 544}
+U0 S 9064 tok 32501 pos 502
+U0 R 9098 tok 1009035
+U0 S 12072 tok 1009035 pos 503
+U0 R 12106 tok 1009038
+U0 S 15080 tok 1009038 pos 504
+U0 R 15114 tok 1921467
+U0 R 18122 tok 1921563
+U0 R 18186 tok 966398
+U0 R 18250 tok 11233
+U0 R 18314 tok 1153220
+U0 R 18378 tok 198055
+U0 R 18442 tok 1340042
+U0 R 18506 tok 384877
+U0 R 18570 tok 1526864
+U0 R 18634 tok 571699
+U0 R 18698 tok 1713686
+U0 R 18762 tok 758521
+U0 R 18826 tok 1900508
+U0 R 18890 tok 945343
+U0 R 18954 tok 2087330
+U0 R 19018 tok 1132165
+U0 R 19082 tok 177000
+U0 R 19146 tok 1318987
+U0 R 19210 tok 363822
+U0 R 19274 tok 1505809
+U0 R 19338 tok 550644
+U0 R 19402 tok 1692631
+U0 R 19466 tok 737466
+U0 R 19530 tok 1879453
+U0 R 19594 tok 924288
+U0 R 19658 tok 2066275
+U0 R 19722 tok 1111110
+U0 R 19786 tok 155945
+U0 R 19850 tok 1297932
+U0 R 19914 tok 342767
+U0 R 19978 tok 1484754
+U0 R 20042 tok 529589
+U0 R 20106 tok 1671576
+U0 R 20170 tok 716411
+U0 R 20234 tok 1858398
+U0 R 20298 tok 903233
+U0 R 20362 tok 2045220
+U0 R 20426 tok 1090055
+U0 R 20490 tok 134890
+U0 R 20554 tok 1276877
+U0 R 20618 tok 321712
+U0 R 20682 tok 1463699
+U0 R 20746 tok 508534
+U0 R 20810 tok 1650521
+U0 R 20874 tok 695356
+U0 R 20938 tok 1837343
+U0 R 21002 tok 882178
+U0 R 21066 tok 2024165
+MUHSLOT COLLIDE NS 47 FAIL (no fault) t_mf 1100
+- rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hslot.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.063 s; speed 389.368 us/s
+- Verilator: cpu 0.063 s on 1 threads; allocated 7 MB

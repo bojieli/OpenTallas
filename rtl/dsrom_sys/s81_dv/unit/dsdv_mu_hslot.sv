@@ -58,7 +58,7 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     // gap prefetch, rq = the entry of the next return boundary, loaded every edge: a write lands >= 2 edges before its
     // return because RL > nw >= 2).  (c) The start payload {user, pos} and the gap word land in KEPT pin-flop copies,
     // one per <= 16 entries (payload) / <= 24 entries (gap), so no register drives more than ~32 loads.
-    // Tables (flops, written only at a start / at boot, read only through the registered one-hot reads above): user
+    // Historical HSLOT2 tables (before the SRAM change; written only at a start / at boot, read only through the registered one-hot reads above): user
     // 47 x 10 b (also the outstanding-user compare), pos 47 x 21 b, gap 47 x 24 b = 2.6 kb (was 4.1 kb + a 32 b timer).
     // Schedule: zero added cycles on any pin path; t_ku leaves its flop on the same edge as before.
     localparam integer SI = (NSLOT > 1) ? $clog2(NSLOT) : 1;
@@ -68,7 +68,7 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     localparam [NSLOT-1:0] ONE = {{(NSLOT-1){1'b0}}, 1'b1};
     localparam [NSLOT-1:0] LAST = {1'b1, {(NSLOT-1){1'b0}}};
 `ifndef SYNTHESIS
-    initial if (NSLOT < 2 || NSLOT > 1023) $fatal(1, "dsdv_mu_hslot: NSLOT must be 2..1023 (NSLOT 1 = leaf absent)");
+    initial if (NSLOT < 2 || NSLOT > 512) $fatal(1, "dsdv_mu_hslot: NSLOT must be 2..512 (NSLOT 1 = leaf absent)");
 `endif
     // three reset regions (<= ~250 flops each): rn_ = control scalars + pin gating, rs_ = start-side one-hot vectors,
     // rt_ = return side (timer, return pointers, valid bits, t_ku)
@@ -87,9 +87,9 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     wire [23:0] md = md_q[23:0];
     // ---- state
     reg [23:0] cs, crl; reg armed; reg [23:0] ph, cg, ng; reg kv_d;
-    reg [NSLOT-1:0] sl, gx, gw, gwo, lwo; reg [SJ-1:0] gn; reg [SI-1:0] lw;
+    reg [NSLOT-1:0] sl, gx, gw, gwo, lwo; reg [SI-1:0] slb, rnb; reg [SJ-1:0] gn; reg [SI-1:0] lw;
     reg rpend, rarmed; reg [23:0] rc, rph, rcg, rng; reg [NSLOT-1:0] rn, rgx;
-    reg [NSLOT-1:0] vld; reg [10*NSLOT-1:0] eu; reg [21*NSLOT-1:0] ep; reg [24*NSLOT-1:0] gt;   // gt holds gap - 1
+    reg [NSLOT-1:0] vld; reg [10*NSLOT-1:0] eu; reg [24*NSLOT-1:0] gt;   // gt holds gap - 1
     reg rq_v; reg [30:0] rq;
     function automatic [NSLOT-1:0] onx(input [NSLOT-1:0] p, input [NSLOT-1:0] last);   // one-hot next, wrap at last
         onx = (|(p & last)) ? ONE : {p[NSLOT-2:0], 1'b0};
@@ -104,7 +104,7 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
             if (vld[i] && eu[10*i +: 10] == kp_q[31*(i/16) + 21 +: 10]) udup = 1'b1;
             ngd  = ngd  | ({24{gx[i]}}  & gt[24*i +: 24]);
             rngd = rngd | ({24{rgx[i]}} & gt[24*i +: 24]);
-            rqd  = rqd  | ({31{rn[i]}}  & {eu[10*i +: 10], ep[21*i +: 21]});
+            rqd  = rqd  | ({31{rn[i]}}  & {eu[10*i +: 10], 21'd0});
         end
     end
     wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use
@@ -122,10 +122,18 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     always @(posedge ck) begin                          // registered reads (data, no reset)
         ng <= ngd; rng <= rngd; rq <= rqd; rq_v <= |(vld & rn);
     end
+    // Position payload is the sole dense return-only table.  A registered SRAM read replaces its
+    // registered one-hot read exactly; user IDs remain parallel for duplicate detection.  WREG
+    // forwards the write from the preceding edge; RL > nw leaves the normal write ample slack.
+    // Binary shadows track the one-hot slot walks, so no combinational pointer encoder feeds SRAM.
+    wire [20:0] posq;
+    ot_s81ph_mem1r1w #(.W(21), .DEPTH(NSLOT), .SRAM(1), .WREG(1)) u_pos (
+        .clk(ck), .rst_n(rn_), .we(rec), .wa(slb), .wd(kp_q[20:0]),
+        .re(1'b1), .ra(rnb), .q(posq));
     genvar k;
     generate for (k = 0; k < NSLOT; k = k + 1) begin : g_e
         always @(posedge ck) begin                      // entry payload: written at its start / boot word only
-            if (rec && sl[k]) begin eu[10*k +: 10] <= kp_q[31*(k/16) + 21 +: 10]; ep[21*k +: 21] <= kp_q[31*(k/16) +: 21]; end
+            if (rec && sl[k]) begin eu[10*k +: 10] <= kp_q[31*(k/16) + 21 +: 10]; end
             if (gwr && gw[k]) gt[24*k +: 24] <= md_q[24*(k/24) +: 24] - 24'd1;
         end
     end endgenerate
@@ -165,17 +173,17 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     // ---- region rs_: start-side one-hot vectors
     always @(posedge ck or negedge rs_)
         if (!rs_) begin
-            sl <= ONE; gx <= ONE; gw <= ONE; gwo <= ONE; lwo <= LAST;
+            slb <= SI'(0); sl <= ONE; gx <= ONE; gw <= ONE; gwo <= ONE; lwo <= LAST;
         end else begin
             if (gwr) begin gw <= {gw[NSLOT-2:0], 1'b0}; gwo <= gw; lwo <= (gn == {SJ{1'b0}}) ? LAST : gw; end
-            if (sadv) begin sl <= onx(sl, lwo); gx <= gxn; end
+            if (sadv) begin slb <= slb == lw ? SI'(0) : slb + 1'b1; sl <= onx(sl, lwo); gx <= gxn; end
             if (arm) gx <= gxn;
         end
     // ---- region rt_: return slot timer (the same gap walk, RL - 1 edges behind), valid bits, t_ku
     always @(posedge ck or negedge rt_)
         if (!rt_) begin
             rpend <= 1'b0; rarmed <= 1'b0; rc <= 24'd0; rph <= 24'd0; rcg <= 24'd0; rn <= ONE; rgx <= ONE;
-            vld <= {NSLOT{1'b0}}; t_ku <= 32'd0;
+            rnb <= SI'(0); vld <= {NSLOT{1'b0}}; t_ku <= 32'd0;
         end else begin
             if (arm) begin rpend <= 1'b1; rc <= crl - 24'd1; end
             if (rpend) begin
@@ -187,8 +195,8 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
             end
             // return of the start recorded in slot rn, on its due edge (rq = that entry, read the edge before)
             t_ku <= 32'd0;
-            if (rb) rn <= onx(rn, lwo);
-            if (ret) t_ku <= {1'b1, (MUT == 1) ? 10'd0 : rq[30:21], rq[20:0]};
+            if (rb) begin rn <= onx(rn, lwo); rnb <= rnb == lw ? SI'(0) : rnb + 1'b1; end
+            if (ret) t_ku <= {1'b1, (MUT == 1) ? 10'd0 : rq[30:21], posq};
             vld <= (vld & ~(ret ? rn : {NSLOT{1'b0}})) | (rec ? sl : {NSLOT{1'b0}});
         end
 endmodule

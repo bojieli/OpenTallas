@@ -1,0 +1,48 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-sram-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-sram-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-sram-1019
+ot-run: ot-epyc7       admits   775 GB (avail 643, growth 101, headroom 0, waiters 0/0 GB) load 61/96 running 24 disk 6489 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-sram-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-sram-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-sram-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2692833-1792422026 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MUHSLOT NS 47 NP 47 NU 47 RL 2973: 282 starts, 282 returns, 47/47 users exact, max outstanding 47, errs 0
+MUHSLOT PASS
+BENCH_PASS hslot MUT=none NS 47 COLLIDE 0
+Verilator 5.050 2026-07-01 rev v5.050
+MUHSLOT NS 10 NP 10 NU 10 RL 605: 60 starts, 60 returns, 10/10 users exact, max outstanding 10, errs 0
+MUHSLOT PASS
+BENCH_PASS hslot MUT=none NS 10 COLLIDE 0
+Verilator 5.050 2026-07-01 rev v5.050
+ERR return at 6090 tag {user 0 pos 501} != start {user 0 pos 500}
+ERR return at 6154 tag {user 1 pos 512} != start {user 1 pos 511}
+ERR return at 6218 tag {user 2 pos 523} != start {user 2 pos 522}
+ERR return at 6282 tag {user 3 pos 534} != start {user 3 pos 533}
+ERR return at 6346 tag {user 4 pos 545} != start {user 4 pos 544}
+MUHSLOT COLLIDE NS 47 PASS (fault raised) t_mf 1101
+BENCH_PASS hslot MUT=none NS 47 COLLIDE 1
+Verilator 5.050 2026-07-01 rev v5.050
+ERR return at 3079 tag {user 0 pos 511} != start {user 1 pos 511}
+ERR return at 3143 tag {user 0 pos 522} != start {user 2 pos 522}
+ERR return at 3207 tag {user 0 pos 533} != start {user 3 pos 533}
+ERR return at 3271 tag {user 0 pos 544} != start {user 4 pos 544}
+ERR return at 3335 tag {user 0 pos 555} != start {user 5 pos 555}
+ERR user 0 final tok 87103 != golden 2069713
+ERR user 1 final tok 1037 != golden 947254
+ERR user 2 final tok 1074 != golden 1921947
+ERR user 3 final tok 1111 != golden 799488
+ERR user 4 final tok 1148 != golden 1774181
+ERR user 5 final tok 1185 != golden 651722
+ERR user 6 final tok 1222 != golden 1626415
+BENCH_FAIL hslot MUT=1 NS 47 COLLIDE 0
+Verilator 5.050 2026-07-01 rev v5.050
+ERR return at 6090 tag {user 0 pos 501} != start {user 0 pos 500}
+ERR return at 6154 tag {user 1 pos 512} != start {user 1 pos 511}
+ERR return at 6218 tag {user 2 pos 523} != start {user 2 pos 522}
+ERR return at 6282 tag {user 3 pos 534} != start {user 3 pos 533}
+ERR return at 6346 tag {user 4 pos 545} != start {user 4 pos 544}
+MUHSLOT COLLIDE NS 47 FAIL (no fault) t_mf 1100
+BENCH_FAIL hslot MUT=2 NS 47 COLLIDE 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2692833-1792422026): exit 1

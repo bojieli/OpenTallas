@@ -4,6 +4,7 @@
  "kind": "tile",
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv"
  ],
  "params": {
@@ -44,14 +45,14 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.03
  },
- "structural_change": "MU-S81-2/HSLOT2 10-19: STRUCTURAL RE-DESIGN of dsdv_mu_hslot after the FLOORPLAN_MARGIN refusal of dsdv_mu_hslot-7046f5b72 (util 66%) and SAFE-AUDIT-S81 items 3/5/6/7 (rp[1] 3,007 loads; 4.1 kb runtime-indexed flop tables; io_hold 0.025). RTL: the per-entry due table (47 x 32 b), the 32 b edge counter, the 47:1 x 32 b due compare and the sweep pointer rp are removed: returns follow a second walk of the slot gap table started RL - 1 edges after the arming start (return slot k's boundary = start slot k's boundary + RL - 1 = every recorded start's due edge; RL - 1 >= period raises t_mf[3]). Reset relay in 3 regions (<= ~250 flops each). All pointers are registered one-hot vectors (each bit enables only its own entry, <= 32 loads); every table read is a one-hot AND-OR into a register (gap prefetch ng / rng, return entry rq read the edge before its boundary); start payload and gap words land in (* keep *) pin-flop copies, one per <= 16 / <= 24 entries. Tables now 2.6 kb flops (user, pos, gap), written only at a start / boot word and read only through registered one-hot reads. Pins, faces, boot words, t_ku edge and fault codes unchanged; zero added schedule cycles. Previous: slot gap table re-close (5dd45e769) of the CLOSED view 28a8118d5. Kit: outline from the new synthesis area (gate 2: 2,312 um2; +~90 um2 for the 3-region reset relay) at ~0.52 util, io_hold_margin 0.03, reset_landing 2 stages.",
+ "structural_change": "MU-S81-2/HSLOT2 10-19: STRUCTURAL RE-DESIGN of dsdv_mu_hslot after the FLOORPLAN_MARGIN refusal of dsdv_mu_hslot-7046f5b72 (util 66%) and SAFE-AUDIT-S81 items 3/5/6/7 (rp[1] 3,007 loads; 4.1 kb runtime-indexed flop tables; io_hold 0.025). RTL: the per-entry due table (47 x 32 b), the 32 b edge counter, the 47:1 x 32 b due compare and the sweep pointer rp are removed: returns follow a second walk of the slot gap table started RL - 1 edges after the arming start (return slot k's boundary = start slot k's boundary + RL - 1 = every recorded start's due edge; RL - 1 >= period raises t_mf[3]). Reset relay in 3 regions (<= ~250 flops each). All pointers are registered one-hot vectors (each bit enables only its own entry, <= 32 loads); every table read is a one-hot AND-OR into a register (gap prefetch ng / rng, return entry rq read the edge before its boundary); start payload and gap words land in (* keep *) pin-flop copies, one per <= 16 / <= 24 entries. Tables now 2.6 kb flops (user, pos, gap), written only at a start / boot word and read only through registered one-hot reads. Pins, faces, boot words, t_ku edge and fault codes unchanged; zero added schedule cycles. Previous: slot gap table re-close (5dd45e769) of the CLOSED view 28a8118d5. Kit: outline from the new synthesis area (gate 2: 2,312 um2; +~90 um2 for the 3-region reset relay) at ~0.52 util, io_hold_margin 0.03, reset_landing 2 stages. CODEX: position table47x21 moved into registered-read SRAM with WREG forwarding. Binary shadows advance with the one-hot start/return walks. Dense flop payload remaining user470+gap1128=1598bits. Same output edges; no added schedule latency. New macro floorplan, SRAM on43.2 lattice, full-width std cell band.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered: f_ks / f_kd / f_mc land in pin flops (st_q + kept kp_q copies / kd_q / mv_q, ms_q + kept md_q copies), t_ku / t_mf leave flops."
  },
  "job": {
   "owner": "Claude:MU-S81-2",
-  "branch": "claude/mu-s81-2-hslot-1019",
+  "branch": "codex/mu-hslot-sram-1019",
   "tag": "dsdv_mu_hslot",
   "purpose": "MU-S81-2/HSLOT2: close the structurally re-designed multi-user host-plane slot table (NSLOT 47; one-hot pointers, return gap walk, registered reads, kept payload copies) to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
@@ -73,7 +74,8 @@
    "results/rtl/mu_s81_1019/seq_host",
    "results/rtl/mu_s81_1019/hslot_kit",
    "results/rtl/mu_s81_kit_1019",
-   "results/rtl/mu_s81_1018/host"
+   "results/rtl/mu_s81_1018/host",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
   ],
   "benches": [
    {
@@ -166,9 +168,23 @@
   "allow_none": true
  },
  "keep_pin_regs": true,
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*u_pos.g_sram.g_t?0?.u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
  "reset_landing": {
   "enable": true,
   "stages": 2
+ },
+ "outline": {
+  "w": 259.2,
+  "h": 129.6
  }
 }

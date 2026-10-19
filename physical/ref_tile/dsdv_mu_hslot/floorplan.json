@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  73.44,
-  73.44
+  259.2,
+  129.6
  ],
  "core": [
   2.16,
   2.16,
-  71.28,
-  71.28
+  257.03999999999996,
+  127.44
  ],
- "why": "util 0.52 of std 2400 + macros 0 um2",
+ "why": "spec outline",
  "std_area_um2": 2400.0,
  "layer_contract": {
   "children": {},
@@ -44,10 +44,25 @@
   ]
  },
  "clock_port": "ck",
- "blocks": [],
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "master": "ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*u_pos.g_sram.g_t?0?.u_m",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 174.12,
+   "h": 29.736,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
  "findings": [],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv",
   "physical/ref_tile/dsdv_mu_hslot/kit.env",
   "physical/ref_tile/dsdv_mu_hslot/clock.sdc",
@@ -70,7 +85,14 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+  "physical/ref_tile/dsdv_mu_hslot/place.tcl"
  ]
 }

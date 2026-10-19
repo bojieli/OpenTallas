@@ -2920,7 +2920,8 @@ def restart_if_requested():
     if not _RESTART["why"] or any(f is not None and not f.done() for f in (_HOUSE_FUTURE, _RECOVERY_FUTURE)):
         return False
     log(f"INPROCESS-SYNC restart: {_RESTART['why']}")
-    sys.exit(0)
+    _STOP.set()                     # cmd_daemon drains the in-flight steps (each saves its job), then exits
+    return True
 
 
 # LOOP-PIN-STUB: stdin script patching a stale ref_tile.py export (pre-ba4d5d136) to run abstract_pin_stub.py before the lint
@@ -2936,12 +2937,14 @@ if "abstract_pin_stub" not in t and t.count(a) == 1:
 """
 
 
-def installed_helper_receipt(host, run, frozen):
-    """Inspect the executed helper directory without changing a running snapshot."""
+def installed_helper_receipt(host, run, frozen, allow_publish=False):
+    """Inspect the executed helper directory without changing a running snapshot.  allow_publish: an installed sidecar
+    that differs from `frozen` only in PUBLISH_ONLY rows verifies on its own rows (receipt["installed_plan"])."""
+    fn = "installed_plan_receipt" if allow_publish else "verify_installed_plan"
     if is_local(host):
-        return HO.verify_installed_plan(Path(run) / "cl", frozen)
+        return getattr(HO, fn)(Path(run) / "cl", frozen)
     code = ("exec(" + repr(Path(HO.__file__).read_text()) + ")\n"
-            "print(json.dumps(verify_installed_plan(" + repr(run + "/cl") + ","
+            "print(json.dumps(" + fn + "(" + repr(run + "/cl") + ","
             + repr(frozen) + ")))\n")
     result = ssh(host, "python3 -", input=code, timeout=120)
     if result.returncode:
@@ -2953,18 +2956,87 @@ def installed_helper_receipt(host, run, frozen):
 
 
 def _publish_refresh(frozen):
-    """(current plan, payloads, modes, sanctioned rows) when the effective helper set differs from the frozen plan ONLY
-    in PUBLISH_ONLY paths drifted to exactly origin/main (compare_plans_sanctioned rules); else None."""
+    """(refreshed plan, payloads, modes, sanctioned rows) when a PUBLISH_ONLY helper of the frozen plan drifted to exactly
+    origin/main (compare_plans_sanctioned rules); else None.
+
+    Only the publish rows are refreshed: every other helper keeps its frozen (already executed) bytes, whatever main did
+    to it since.  TW5-BANKLATSU 2026-10-19: the refresh used to compare the WHOLE current helper set, so any unrelated
+    route-helper drift on main (meas_resta.py, w18/corner_sta.py since the route froze) refused it silently and
+    resume-postroute of hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1 re-ran the frozen exporter (6-pin OBS spacing
+    child_lint FAIL) although the exact-window exporter fix ff7aa2deb was on main.  Refreshed rows carry resolution
+    "publish_refresh": their bytes come from the content store on a later reinstall (not the plan's origin tree)."""
     try:
-        current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+        current, cur_payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
         if HO.compare_plans(frozen, current)[0]:
             return None
-        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+        frows = {f["path"]: f for f in frozen["files"]}
+        crows = {f["path"]: f for f in current["files"]}
+        pub = [p for p in HO.PUBLISH_ONLY if p in frows and p in crows
+               and HO.content_rows([frows[p]]) != HO.content_rows([crows[p]])]
+        if not pub:
+            return None
+        files = [dict(crows[f["path"]], resolution="publish_refresh") if f["path"] in pub else f for f in frozen["files"]]
+        refreshed = dict(frozen, files=files, content_sha256=HO.digest(files))
+        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, refreshed, REPO, head=current.get("origin_main"))
+        if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
+            return None
+        payloads, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+        payloads.update({p: cur_payloads[p] for p in pub})
     except (ValueError, OSError, subprocess.SubprocessError, KeyError, TypeError):
         return None
-    if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
-        return None
-    return current, payloads, {f["path"]: f["mode"] for f in current["files"]}, sanctioned
+    return refreshed, payloads, {f["path"]: f["mode"] for f in files}, sanctioned
+
+
+def _adopt_installed_publish_plan(job, frozen, installed, host, run):
+    """INTERRUPTED PUBLISH REFRESH (QXPQ-UNSTICK 2026-10-19): the run's verified cl/ holds a plan that differs from the
+    job's only in PUBLISH_ONLY rows (a publish refresh shipped to the host, then the daemon restarted before the job state
+    was saved -- or the reverse).  Adopt the installed plan when every differing row is a main revision of that publish
+    helper and its bytes are recoverable, so the job follows what its run dir really holds; _publish_refresh then brings
+    the exporter to origin/main again if needed.  Anything else still refuses (sidecar differs)."""
+    head = _ovl_head() or HO.main_head(REPO)
+    fr = {r["path"]: r for r in HO.frozen_rows(frozen)}
+    ir = {r["path"]: r for r in HO.frozen_rows(installed)}
+    for rel in (p for p in ir if ir[p] != fr.get(p)):
+        hist = HO._main_blobs(REPO, head, rel)
+        if rel not in HO.PUBLISH_ONLY or ir[rel]["git_blob"] not in hist or fr[rel]["git_blob"] not in hist:
+            raise ValueError(f"original helper sidecar differs from job frozen plan ({rel} is not a main revision of a "
+                             f"publish helper)")
+    payloads, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, installed)
+    HO.store_payloads(HELPER_STORE, installed, payloads)
+    job.setdefault("route_overlay_plan_gate", frozen)
+    job.setdefault("helper_overlay_publish_adoptions", []).append(dict(
+        at=now_iso(), host=host, run=run, job_plan=frozen.get("content_sha256"), installed=installed.get("content_sha256")))
+    event(job, f"PUBLISH-ADOPT: run cl/ holds plan {str(installed.get('content_sha256'))[:12]} (publish rows only differ "
+               f"from job plan {str(frozen.get('content_sha256'))[:12]}; interrupted publish refresh) -> adopted")
+    job["route_overlay_plan"] = installed
+    return installed
+
+
+# RESTART-SAFE SHIP (DAEMON-FIX2 2026-10-19): the helper tar is unpacked into a staging dir first and only a complete
+# set is moved into cl/, the sidecar helper_overlay_plan.json last, so an interrupted transfer never leaves cl/ half
+# old / half new; and the job state is checkpointed (saved) BEFORE cl/ changes, so a daemon restart between the ship
+# and the end-of-step save can no longer strand a job on a plan its run dir does not hold (QXPQ-UNSTICK).  Either order
+# of a remaining mismatch (job new / run old after a failed ship) is a publish-only difference _adopt_installed_publish_plan
+# reconciles.
+SHIP_HELPERS_SH = ("mkdir -p {cl} && S=$(mktemp -d {cl}/.ship.XXXXXX) || exit 1; "
+                   "tar -xf - -C \"$S\" || {{ rm -rf \"$S\"; exit 1; }}; "
+                   "for f in \"$S\"/*; do [ \"${{f##*/}}\" = helper_overlay_plan.json ] || mv -f \"$f\" {cl}/ || exit 1; done && "
+                   "{{ [ ! -e \"$S/helper_overlay_plan.json\" ] || mv -f \"$S/helper_overlay_plan.json\" {cl}/; }} && rmdir \"$S\"")
+
+
+def checkpoint(j, why=""):
+    """WRITE-AHEAD SAVE (DAEMON-FIX2 2026-10-19): persist a daemon job's in-memory state before a step changes files on a
+    remote host, so a restart (tool sync: systemctl restart several times a day; KillMode=process) between that change
+    and the end-of-step save_job cannot lose what the step decided.  Jobs without a state file (tests, CLI dry runs)
+    are left alone."""
+    try:
+        name = j.get("name") if isinstance(j, dict) else None
+        if not name or not NAME_RE.fullmatch(name) or not jpath(name).exists():
+            return False
+    except Exception:  # noqa: BLE001
+        return False
+    save_job(j)
+    return True
 
 
 def ship_helpers(host, run, job=None):
@@ -2981,7 +3053,10 @@ def ship_helpers(host, run, job=None):
             raise ValueError("FROZEN_HELPER_OVERLAY: original job helper plan is missing; preserve original execution")
         if frozen is not None:
             try:
-                receipt = installed_helper_receipt(host, run, frozen)
+                receipt = installed_helper_receipt(host, run, frozen, allow_publish=True)
+                installed = receipt.pop("installed_plan", None)
+                if installed is not None and receipt["status"] == "verified_original":
+                    frozen = _adopt_installed_publish_plan(job, frozen, installed, host, run)
                 if receipt["status"] == "verified_original":
                     HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
@@ -3114,15 +3189,22 @@ def ship_helpers(host, run, job=None):
             ti = tarfile.TarInfo("helper_overlay_plan.json")
             ti.size = len(data); ti.mode = 0o644
             tf.addfile(ti, io.BytesIO(data))
+    if job is not None:
+        checkpoint(job, "ship_helpers")
     if is_local(host):
         os.makedirs(f"{run}/cl", exist_ok=True)
+        stage = tempfile.mkdtemp(prefix=".ship.", dir=f"{run}/cl")
         with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
-            tf.extractall(f"{run}/cl")
+            tf.extractall(stage)
+        names = sorted(os.listdir(stage), key=lambda n: n == "helper_overlay_plan.json")   # sidecar last
+        for n in names:
+            os.replace(os.path.join(stage, n), f"{run}/cl/{n}")
+        os.rmdir(stage)
         if frozen is not None:
             job["helper_overlay_installed"] = True
         return
     with transport_command(host) as base:
-        r = subprocess.run(base + [f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"],
+        r = subprocess.run(base + [SHIP_HELPERS_SH.format(cl=shlex.quote(f"{run}/cl"))],
                            input=buf.getvalue(), capture_output=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
@@ -9249,7 +9331,8 @@ def host_down_requeue(j, kind, now=None):
 
 
 def tick(fleet):
-    restart_if_requested()
+    if restart_if_requested() or _STOP.is_set():
+        return
     try:
         inprocess_sync_on_main_move()
     except Exception:  # noqa: BLE001
@@ -9329,6 +9412,8 @@ def tick(fleet):
         syncing = sum(1 for x in live if x["name"] in _INFLIGHT and x["status"] in ("QUEUED", "SYNC"))
     order = sorted(live, key=lambda x: (x["status"] in ("QUEUED", "SYNC"), -job_priority(x)))
     for x in order:
+        if _STOP.is_set():
+            break                        # draining for a restart: no new step starts
         if x["status"] in ("QUEUED", "SYNC"):
             if syncing >= SYNC_SLOTS:
                 continue
@@ -9339,7 +9424,7 @@ def tick(fleet):
             if x["name"] in _INFLIGHT:
                 continue
             _INFLIGHT.add(x["name"])
-        _POOL.submit(_advance_and_release, x["name"], fleet)
+        _FUTS[x["name"]] = _POOL.submit(_advance_and_release, x["name"], fleet)
     write_status(fleet=fleet)
 
 
@@ -9408,6 +9493,55 @@ def schedule_recovery():
 _POOL = None
 _INFLIGHT = set()
 _INFLIGHT_LOCK = threading.Lock()
+# RESTART DRAIN (DAEMON-FIX2 2026-10-19): tool syncs restart the daemon several times a day (systemctl restart;
+# KillMode=process).  SIGTERM used to kill the process mid-step, losing every in-memory job change made since the step
+# began while the step's remote effects stayed (QXPQ-UNSTICK: a publish refresh shipped to cl/, the job kept its old plan
+# -> 10 'sidecar differs' errors -> NEEDS_HUMAN).  Now SIGTERM / SIGINT / SIGHUP only set _STOP: no new step starts,
+# every in-flight step runs to its end-of-step save_job, the recovery pass and a deferred record merge finish, then the
+# daemon exits (systemd restarts it; the unit's TimeoutStopSec must cover the longest step).  Disk-release housekeeping
+# is idempotent and is not waited for.
+_STOP = threading.Event()
+_STOP_SIG = []
+_FUTS = {}                       # job name -> its last submitted step future
+
+
+def request_stop(signum=None, _frame=None):
+    """signal handler: only flags (no locks, no logging inside the handler)"""
+    _STOP_SIG.append(signum)
+    _STOP.set()
+
+
+def drain(log_every=60.0):
+    """wait until every in-flight job step, the recovery pass and a running deferred record merge are done"""
+    with _INFLIGHT_LOCK:
+        names = sorted(_INFLIGHT)
+    log(f"DRAIN: stop requested (signal {_STOP_SIG[:1] or ['restart']}): {len(names)} in-flight step(s) finish and save "
+        f"before exit: {', '.join(names[:30])}")
+    t0 = time.time()
+    if _POOL is not None:
+        _POOL.shutdown(wait=False, cancel_futures=True)          # queued, not started steps never start
+        with _INFLIGHT_LOCK:
+            for n, f in list(_FUTS.items()):
+                if f.cancelled():
+                    _INFLIGHT.discard(n)
+    futs = [f for f in (_RECOVERY_FUTURE, _DEFERRED_MERGE_FUTURE) if f is not None]
+    said = t0
+    while True:
+        with _INFLIGHT_LOCK:
+            left = sorted(_INFLIGHT)
+        busy = [f for f in futs if not f.done()]
+        if not left and not busy:
+            break
+        _STOP_DRAIN.wait(min(1.0, log_every))
+        if time.time() - said >= log_every:
+            said = time.time()
+            log(f"DRAIN: still waiting on {len(left)} step(s) {', '.join(left[:10])}"
+                + (f" + {len(busy)} background pass(es)" if busy else ""))
+    log(f"DRAINED in {time.time() - t0:.0f} s: every job state saved; exiting for the restart")
+    return True
+
+
+_STOP_DRAIN = threading.Event()   # never set: an interruptible sleep for drain()
 
 
 def _advance_and_release(name, fleet):
@@ -9439,7 +9573,10 @@ def cmd_daemon(a):
         log("backfill_variants error:\n" + traceback.format_exc())
     recon = None
     last_recon = 0.0
-    while True:
+    import signal
+    for s in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        signal.signal(s, request_stop)
+    while not _STOP.is_set():
         t0 = time.time()
         # hourly: reconcile the shared experiment register (reconcile.py; never kills anything), in the background
         if (recon is None or recon.poll() is not None) and t0 - last_recon >= 3600:
@@ -9450,13 +9587,19 @@ def cmd_daemon(a):
             log("register reconcile started (hourly)")
         tick(fleet)
         _slow_phase("tick", t0)
+        if _STOP.is_set():
+            break
         try:
             publish_measured()
         except Exception:  # noqa: BLE001
             log("publish_measured error:\n" + traceback.format_exc())
         schedule_deferred_record_merges()
         (STATE / "heartbeat").write_text(now_iso() + "\n")
-        time.sleep(max(5, a.interval - (time.time() - t0)))
+        _STOP.wait(max(5, a.interval - (time.time() - t0)))
+    drain()
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0)                     # housekeeping (idempotent disk release) is not joined
 
 
 def cmd_status(a):
