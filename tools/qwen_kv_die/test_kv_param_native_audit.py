@@ -162,5 +162,72 @@ class AuditTest(unittest.TestCase):
             fx.audit('t', 2)
 
 
+# KV-PARAMS2 10-19 joint mode: unreset data pipe d0->d1 and an unreset constant metadata chain m0->m1 that synthesis
+# m0->m1->m2->m3 removed (e's routed D is tied low; deeper than equiv_simple -seq 2), like the fp32 adder's *_err[1] chain.
+JRTL = """module t #(parameter integer D = 2) (input ck, input rst_n, input a, output reg y, output reg e);
+  reg d0, d1, m0, m1, m2, m3;
+  always @(posedge ck) begin d0 <= a; d1 <= d0; m0 <= 1'b0; m1 <= m0; m2 <= m1; m3 <= m2; end
+  always @(posedge ck or negedge rst_n) if (!rst_n) begin y <= 1'b0; e <= 1'b0; end else begin y <= d1; e <= m3; end
+endmodule
+"""
+JGATE = r"""module t (ck, rst_n, a, y, e);
+ input ck;
+ input rst_n;
+ input a;
+ output y;
+ output e;
+ wire d0n, d0q, d1n, d1q, yn, en, hi, lo;
+ TIEHIx1_ASAP7_75t_R tie (.H(hi));
+ TIELOx1_ASAP7_75t_R til (.L(lo));
+ DFFHQNx1_ASAP7_75t_R \d0$_DFF_P_  (.CLK(ck), .D(a), .QN(d0n));
+ INVx1_ASAP7_75t_R i0 (.A(d0n), .Y(d0q));
+ DFFHQNx1_ASAP7_75t_R \d1$_DFF_P_  (.CLK(ck), .D(d0q), .QN(d1n));
+ INVx1_ASAP7_75t_R i1 (.A(d1n), .Y(d1q));
+ DFFASRHQNx1_ASAP7_75t_R \y$_DFF_PN0_  (.CLK(ck), .D(d1q), .QN(yn), .RESETN(rst_n), .SETN(hi));
+ INVx1_ASAP7_75t_R i2 (.A(yn), .Y(y));
+ DFFASRHQNx1_ASAP7_75t_R \e$_DFF_PN0_  (.CLK(ck), .D(lo), .QN(en), .RESETN(rst_n), .SETN(hi));
+ INVx1_ASAP7_75t_R i3 (.A(en), .Y(e));
+endmodule
+"""
+
+
+@unittest.skipUnless(have_tools(), 'yosys 0.68 / ASAP7 liberty not installed (fleet test)')
+class JointModeTest(unittest.TestCase):
+    def run_audit(self, fx, name, extra):
+        out = fx.audits / f'{name}.audit.json'
+        A.main(['audit', '--root', str(fx.root), '--module', 't', '--rtl', 'rtl/t.v', '--view', fx.view,
+                '--params', json.dumps(dict(D=2)), '--archive-run', str(fx.arch), '--work',
+                str(fx.root / 'work' / name), '--out', str(out)] + extra)
+        return json.loads(out.read_text())
+
+    def test_constant_metadata_needs_joint_observation_and_reset_base(self):
+        fx = Fixture(gate=JGATE, rtl=JRTL)
+        plain = self.run_audit(fx, 'plain', [])
+        self.assertFalse(plain['proven'])                         # e: arbitrary m3 in the induction state
+        self.assertEqual(plain['state']['gold_only'], 4)
+        os.remove(fx.audits / 'plain.audit.json')
+        short = self.run_audit(fx, 'short', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '3'])
+        self.assertFalse(short['proven'])                         # 3 edges do not flush the 4-deep metadata chain
+        self.assertFalse(short['base']['proven'])
+        os.remove(fx.audits / 'short.audit.json')
+        r = self.run_audit(fx, 'joint', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '4'])
+        self.assertTrue(r['proven'], r)
+        self.assertEqual(r['observe_zero']['signals'], ['m0', 'm1', 'm2', 'm3'])
+        self.assertTrue(r['base']['proven'])
+        self.assertEqual(r['base']['paired_initial'], 4)
+        A.main(['receipt', '--root', str(fx.root), '--audits', str(fx.audits), '--out', str(fx.root / 'rc')])
+        rec = json.loads((fx.root / 'rc/receipts/t.json').read_text())
+        self.assertEqual(rec['evidence']['observe_zero']['signals'], ['m0', 'm1', 'm2', 'm3'])
+        self.assertTrue(rec['evidence']['reset_base']['proven'])
+
+    def test_netlist_that_differs_after_reset_refuses(self):
+        # routed y presets to 1 instead of resetting to 0: the joint proof must refuse
+        g = JGATE.replace('(.CLK(ck), .D(d1q), .QN(yn), .RESETN(rst_n), .SETN(hi))',
+                          '(.CLK(ck), .D(d1q), .QN(yn), .RESETN(hi), .SETN(rst_n))')
+        fx = Fixture(gate=g, rtl=JRTL)
+        r = self.run_audit(fx, 'joint', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '4'])
+        self.assertFalse(r['proven'])
+
+
 if __name__ == '__main__':
     unittest.main()

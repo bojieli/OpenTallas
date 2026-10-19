@@ -1,0 +1,45 @@
+test_matching_parameters_prove_and_receipt_is_strictly_admitted (test_kv_param_native_audit.AuditTest.test_matching_parameters_prove_and_receipt_is_strictly_admitted) ... ok
+test_unproven_or_drifted_audit_gives_no_receipt (test_kv_param_native_audit.AuditTest.test_unproven_or_drifted_audit_gives_no_receipt) ... ok
+test_view_from_another_run_refuses (test_kv_param_native_audit.AuditTest.test_view_from_another_run_refuses) ... ok
+test_constant_metadata_needs_joint_observation_and_reset_base (test_kv_param_native_audit.JointModeTest.test_constant_metadata_needs_joint_observation_and_reset_base) ... ok
+test_netlist_that_differs_after_reset_refuses (test_kv_param_native_audit.JointModeTest.test_netlist_that_differs_after_reset_refuses) ... ok
+test_other_vectors_refuse (test_kv_param_native_audit.ParserTest.test_other_vectors_refuse) ... ok
+test_unsigned_vector_parameter (test_kv_param_native_audit.ParserTest.test_unsigned_vector_parameter) ... ok
+test_kv_expand_parameters (unittest.loader._FailedTest.test_kv_expand_parameters) ... ERROR
+test_diagnostic_autoprofile_exact_unqualified (test_kv_param_diag.ParamDiag.test_diagnostic_autoprofile_exact_unqualified) ... ok
+test_diagnostic_flag_alone_needs_a_profile (test_kv_param_diag.ParamDiag.test_diagnostic_flag_alone_needs_a_profile) ... ok
+test_strict_missing_profile_refuses (test_kv_param_diag.ParamDiag.test_strict_missing_profile_refuses) ... ok
+
+======================================================================
+ERROR: test_kv_expand_parameters (unittest.loader._FailedTest.test_kv_expand_parameters)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_kv_expand_parameters
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+  File "/srv/opentallas-scratch/claude/kv-params2-1019/tests/tools/qwen_kv_die/test_kv_expand_parameters.py", line 14, in <module>
+    import kv_expand as E
+  File "/srv/opentallas-scratch/claude/kv-params2-1019/tests/tools/qwen_kv_die/kv_expand.py", line 32, in <module>
+    import kv_die as K  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-params2-1019/tests/tools/qwen_kv_die/kv_die.py", line 35, in <module>
+    import qwen_rom_fulldie as F     # noqa: E402  (Inst, Master, lattice, phy_pins, pin_rects, write_netlist)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'qwen_rom_fulldie'
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 29.437s
+
+FAILED (errors=1)
+t expect=pass: PROVEN 4/4 state 3/2 -> OK
+t expect=fail: NOT PROVEN 3/4 state 3/3 -> OK
+1 receipts / 1 audited modules
+t expect=pass: PROVEN 4/4 state 3/2 -> OK
+0 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 1/4 state 3/2 -> UNEXPECTED
+t expect=pass: NOT PROVEN 4/6 state 4/8 -> UNEXPECTED
+t expect=pass: NOT PROVEN 10/10 state 4/8 -> UNEXPECTED
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+1 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 8/10 state 4/8 -> UNEXPECTED

@@ -331,8 +331,22 @@ def audit(a):
          'proc', 'flatten gate', 'read_rtlil gold1.il', 'cd gold']
     for s, n in sorted(pair.items()):
         L += [f'add -wire {s} 1', f'connect -set {s} {n}']
+    # KV-PARAMS2 10-19 joint mode: source registers that synthesis removed as constants (e.g. the adder's unreset
+    # *_err[1] metadata chain x->s1->t->w->s2->u, only E_NONE/E_NONFINITE upstream) are no invariant of an arbitrary
+    # induction state.  --observe-zero-regex names gold-only registers whose ZERO value is then an extra comparison
+    # (gold reg == gate 1'b0): proven together with every original comparison by the induction AND the reset base,
+    # never assumed.  The resolved list is recorded.
+    obs = sorted(n for n in gold_only if a.observe_zero_regex and re.search(a.observe_zero_regex, n))
+    for i, n in enumerate(obs):
+        L += [f'add -wire S__proof_meta_{i:03d} 1', f'connect -set S__proof_meta_{i:03d} {n}']
+    if obs:
+        L += ['cd', 'cd gate'] + [x for i in range(len(obs)) for x in
+                                  (f'add -wire S__proof_meta_{i:03d} 1', f"connect -set S__proof_meta_{i:03d} 1'0")]
+    res['observe_zero'] = dict(regex=a.observe_zero_regex, signals=obs) if a.observe_zero_regex else None
     L += ['cd', 'setattr -set keep 1 w:S__*']
-    L += ['select -set keep w:S__* i:* o:*', 'rename -hide w:* @keep %d', 'async2sync',
+    L += ['select -set keep w:S__* i:* o:*', 'rename -hide w:* @keep %d']
+    prelude = list(L)
+    L += ['async2sync',
           'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', 'equiv_induct',
           'equiv_status', 'equiv_status -assert', '']
     (work / 'equiv.ys').write_text('\n'.join(L))
@@ -348,7 +362,42 @@ def audit(a):
     res['proven'] = rc == 0 and bool(m) and m[-1][2] == '0' and int(m[-1][0]) > 0
     if not log:
         res['error'] = (work / 'equiv.out').read_text()[-1500:]
+    if a.reset_base and res['proven']:
+        res['proven'] = False
+        res['base'] = reset_base(a, work, prelude, states, pair)
+        res['proven'] = res['base']['proven']
+        res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
+                                   f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
     return res
+
+
+def reset_base(a, work, prelude, states, pair):
+    """KV-PARAMS2 10-19: the reset base the induction needs (equiv_induct assumes its comparisons for 3 steps).
+
+    The chip has ONE power-up state, the routed netlist's.  The RTL admits that state on the same registers, so every
+    paired NON-replica register is equal at step 1 (gold.S__x == gate.S__x); gold-only registers (incl. observe-zero
+    metadata) and flow replicas stay FREE (a replica may power up unlike its master).  Independent gold/gate power-up
+    words make two copies of the same unreset datapath disagree until it flushed -- RTL-vs-itself fails that way too
+    (kv-native-comparator-replay 2c2bd3c92: 213 u_cc bits, kp_r 7 stages deep, 6 reset edges) -- so that formulation
+    proves nothing about the netlist.  Every original comparison and observation stays a miter output; the reset port
+    is held active for N target edges, all other inputs arbitrary, steps N+1..N+4 checked."""
+    n = a.reset_base
+    paired = sorted(s_ for s_ in pair if not states[s_][1])
+    sets = ' '.join(f'-set-at {i} in_{a.reset_port} {a.reset_active}' for i in range(1, n + 1))
+    sets += ' ' + ' '.join(f'-set-at 1 gold.{s_} gate.{s_}' for s_ in paired)
+    B = prelude + ['async2sync', 'expose gold/w:S__* gate/w:S__*', 'miter -equiv -flatten -make_assert gold gate miter',
+                   'hierarchy -top miter', 'opt_clean',
+                   f'sat -seq {n + 4} -prove-asserts -prove-skip {n} -set-def-inputs {sets} -dump_json base_cex.json '
+                   '-verify', '']
+    (work / 'base.ys').write_text('\n'.join(B))
+    rc, t = run([a.yosys, '-l', 'base.log', '-q', '-s', 'base.ys'], work, 'base.out', a.timeout)
+    log = (work / 'base.log').read_text() if (work / 'base.log').is_file() else ''
+    ok = rc == 0 and 'no model found: SUCCESS!' in log
+    return dict(rc=rc, seconds=t, proven=ok, reset_edges=n, reset_port=a.reset_port, reset_active=a.reset_active,
+                checked_steps=[n + 1, n + 4], paired_initial=len(paired), free_replicas=len(pair) - len(paired),
+                log_sha256=sha(work / 'base.log') if log else None,
+                cex=str(work / 'base_cex.json') if (work / 'base_cex.json').is_file() else None,
+                error=None if log else (work / 'base.out').read_text()[-1500:])
 
 
 def receipts(a):
@@ -373,7 +422,8 @@ def receipts(a):
                                  closed_commit=r['closed']['commit'], final_v_sha256=r['closed']['final_v_sha256'],
                                  closed_lef_sha256=r['closed']['lef_sha256'], view_tie=r['closed']['view_tie'], sources=r['sources'],
                                  equiv_cells=r['equiv']['cells'], equiv_log_sha256=r['equiv']['log_sha256'],
-                                 state=r['state'], audit=str(p.name), audit_sha256=sha(p)))
+                                 state=r['state'], audit=str(p.name), audit_sha256=sha(p),
+                                 observe_zero=r.get('observe_zero'), reset_base=r.get('base')))
         rp = out / 'receipts' / f'{mod}.json'
         rp.parent.mkdir(parents=True, exist_ok=True)
         rp.write_text(json.dumps(rec, indent=1, sort_keys=True) + '\n')
@@ -399,6 +449,10 @@ def main(argv=None):
     a1.add_argument('--reset-landing', help="the kit's reset_landing.json at the closed commit (flow landing shell)")
     a1.add_argument('--expect', choices=('pass', 'fail'), default='pass', help='fail = parameter mutant control')
     a1.add_argument('--seq', type=int, default=2)
+    a1.add_argument('--observe-zero-regex', help='gold-only registers proven ZERO jointly (see audit())')
+    a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
+    a1.add_argument('--reset-port', default='rst_n')
+    a1.add_argument('--reset-active', type=int, choices=(0, 1), default=0)
     a1.add_argument('--timeout', type=int, default=14400)
     a1.add_argument('--yosys', default=str(YOSYS))
     a2 = sp.add_parser('receipt')
