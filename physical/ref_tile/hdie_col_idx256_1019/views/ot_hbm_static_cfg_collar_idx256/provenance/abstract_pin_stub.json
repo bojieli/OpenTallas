@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hbm_static_cfg_collar_idx256.lef",
+    "sha256": "c92d5ba32836d0d13858071ac6c9cf88c56ab1ac1184879adb95b89f855ca324"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/provenance/raw/ot_hbm_static_cfg_collar_idx256.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/provenance/ot_hbm_static_cfg_collar_idx256.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 869 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256_1019-fan32g1-2727e1f68/record/views/ot_hbm_static_cfg_collar_idx256/provenance/ot_hbm_static_cfg_collar_idx256.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hbm_static_cfg_collar_idx256 129.6 x 129.6: PG M5 VDD 24 stripes (96% spread, 100% cov) / VSS 24 stripes (96% spread, 100% cov); strap M6; face pins 2330 blocked-above 0 blocked-same 0; clock clk insertion 218 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hbm_static_cfg_collar_idx256",
+      "W": 129.6,
+      "H": 129.6,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 24,
+            "dir": "V",
+            "spread": 0.958,
+            "coverage": 1.0,
+            "shapes_on_top": 24
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 24,
+            "dir": "V",
+            "spread": 0.958,
+            "coverage": 1.0,
+            "shapes_on_top": 24
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 2330,
+        "blocked_above": 0,
+        "covered_below": 498,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 217.51,
+          "min_ps": 149.69
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 869
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "ot_hbm_static_cfg_collar_idx256.lef",
+    "sha256": "c8452be1ef74e19f127692d2040c3e2f18242c8211d5af055d77d616b0667754"
+  }
+}
