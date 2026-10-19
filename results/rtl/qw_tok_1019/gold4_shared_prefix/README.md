@@ -17,7 +17,7 @@ source identities, actual shape, primitive arithmetic tests, all 144 output
 records per class, canonical pre-divergence histories and final token identity.
 
 The original golden is still running on ot-epyc5, PID 1583528, in
-`/srv/opentallas-scratch/claude/tokpass-qwen-1018`. At 12:50 PT it had reached
+`/srv/opentallas-scratch/claude/tokpass-qwen-1018`. At 12:43 PT it had reached
 position 6800/8191 after about 27 hours. Preserve that progressing job.
 Do not launch duplicate full prefills. Once it finishes, run the new driver
 on the fleet with 64 GB and 32 threads, using the pinned source export and
