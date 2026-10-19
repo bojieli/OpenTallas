@@ -1,0 +1,514 @@
+{
+ "name": "qkd_kvs_ctl_mu5b-mu5b-COMMIT",
+ "block": "qkd_kvs_ctl",
+ "ref_tile": true,
+ "owner": "Claude:KV-GRP-CTL/MU5",
+ "purpose": "STRUCTURAL mu5b (= mu5 RTL/floorplan, parallel clock fallback OT_SPINE_TREE_PAD=1: subtree-common pads) (successor of mu4_safe, failed gate 10-19): (a) u_lprg -> qkd_static_kv_layer_programme_mus: stage table (9x36x32) + GAP table (144x32) in two ot_sram_1r1w_128x256 macros, one row per stage {P_ctrl..P_quiet | P_end, next-gap x4 users, ==0/==1 flags}, read issued on the edge that sets c_load, landed on the c_load edge (0 added cycles); stage-1 gaps in 4 boot registers; (b) rows hold r-2 so every event is a REGISTERED flag computed one edge early as a plain equality (no subtract/compare/priority chain); wait expiry registered; digest/epoch/position start checks one edge early; (c) u_wprg root table (36x5x32) -> 1 SRAM macro (SRAM=1), reset_pin_n 3 KEPT copies, u_fanr rs_q 4 KEPT copies, u_lprg 4 reset copies (ot_rst_split families, reset_relay_split <= 256); (d) clock: symmetric centre-fed spine (OT_SPINE_SYM, safe balance, leaf 16) instead of TritonCTS; (e) outline 345.6 x 475.2 pin-bound (W/E 2524 b), 3 macros on the 43.2 lattice in one centre column, full-width std rows between them. Outputs identical on every edge (lockstep benches lprg/wprg); mu4 schedule deltas unchanged (+1 quiet ck, +1 fault observation ck).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-grp-ctl-1019-ctl",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_kits_b_1018",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_static_programme_1017/die/target2.hex",
+   "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
+   "results/rtl/mu_qwen_1018/kvboot",
+   "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
+   "rtl",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+   "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+   "rtl/qwen_sys/mu_qwen_20261018",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_result_face_s.sv",
+   "rtl/qwen_sys/split_20261014/qkd_attn_service_root.sv",
+   "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+   "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path.sv",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+   "rtl/test/mu_qwen_1018/lists/lint_mu_kv_tiles.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_ctl_mu2_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_ctl_mu3_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_boot.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_pc_path_rows.f",
+   "rtl/test/mu_qwen_1018/lists/tb_mu_kv_writer_rows.f",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh",
+   "rtl/test/mu_qwen_1018/run_mu_kv.sh",
+   "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu2_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu3_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv",
+   "rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv",
+   "tools",
+   "tools/qwen_kv_die",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_ctl_mu4_safe.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv",
+   "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh",
+   "rtl/test/mu_qwen_1018/tb_kv_lprg_mu5_lockstep.sv",
+   "rtl/test/mu_qwen_1018/tb_kv_wprg_mu5_lockstep.sv",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_lprg_mu5_lockstep.f",
+   "rtl/test/mu_qwen_1018/lists/tb_kv_wprg_mu5_lockstep.f"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mus.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctl_mu5_lprg",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 lprg",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS KV_LPRG_MU5_LOCKSTEP",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/lprg.log"
+   },
+   {
+    "name": "ctl_mu5_wprg",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 wprg",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS KV_WPRG_MU5_LOCKSTEP",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/wprg.log"
+   },
+   {
+    "name": "ctl_mu5_l_off",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 l_off",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/l_off.log"
+   },
+   {
+    "name": "ctl_mu5_l_row",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 l_row",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/l_row.log"
+   },
+   {
+    "name": "ctl_mu5_l_gap",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 l_gap",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/l_gap.log"
+   },
+   {
+    "name": "ctl_mu5_l_wx",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 l_wx",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/l_wx.log"
+   },
+   {
+    "name": "ctl_mu5_w_row",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu5.sh . {RUN}/bench/mu5 w_row",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_WPRG_MU5_LOCKSTEP mismatches[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/w_row.log"
+   },
+   {
+    "name": "ctl_mu_lint",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu lint_mu_kv_tiles; rc=$?; cat {RUN}/bench/mu/lint_mu_kv_tiles.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS LINT_MU_KV_TILES",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu/lint_mu_kv_tiles.log"
+   },
+   {
+    "name": "ctl_mu_writer_rows",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu tb_mu_kv_writer_rows; rc=$?; cat {RUN}/bench/mu/tb_mu_kv_writer_rows.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS MU_KV_WRITE_ROWS users4",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu/tb_mu_kv_writer_rows.log"
+   },
+   {
+    "name": "ctl_mu_mw1",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mw1; rc=$?; cat {RUN}/bench/mu/mw1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL user1 layer0 pos0 errors272 nalias8",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu/mw1.log"
+   },
+   {
+    "name": "ctl_mu_mw2",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mw2; rc=$?; cat {RUN}/bench/mu/mw2.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL user1 layer0 pos0 errors8 nalias0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu/mw2.log"
+   },
+   {
+    "name": "ctl_mu_mw3",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv.sh . {RUN}/bench/mu mw3; rc=$?; cat {RUN}/bench/mu/mw3.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL user0 layer0 pos0 errors272 nalias0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu/mw3.log"
+   },
+   {
+    "name": "ctl_mu2_lockstep",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 tb_kv_ctl_mu2_lockstep; rc=$?; cat {RUN}/bench/mu2/tb_kv_ctl_mu2_lockstep.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS KV_CTL_MU2_LOCKSTEP",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu2/tb_kv_ctl_mu2_lockstep.log"
+   },
+   {
+    "name": "ctl_mu2_c1",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 c1; rc=$?; cat {RUN}/bench/mu2/c1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu2/c1.log"
+   },
+   {
+    "name": "ctl_mu2_c2",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 c2; rc=$?; cat {RUN}/bench/mu2/c2.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu2/c2.log"
+   },
+   {
+    "name": "ctl_mu2_c3",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu2.sh . {RUN}/bench/mu2 c3; rc=$?; cat {RUN}/bench/mu2/c3.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "FAIL lockstep own_diffs0 boot_diffs0 setup_ready_diffs[1-9]",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu2/c3.log"
+   },
+   {
+    "name": "ctl_mu3_tb_mu_kv_boot",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb tb_mu_kv_boot; rc=$?; cat {RUN}/bench/kb/tb_mu_kv_boot.log; exit $rc",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT: 471-word MU image",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/kb/tb_mu_kv_boot.log"
+   },
+   {
+    "name": "ctl_mu3_kb_sealwrong",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_sealwrong; rc=$?; cat {RUN}/bench/kb/kb_sealwrong.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "layer programme not configured .*lprg fault 04",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/kb/kb_sealwrong.log"
+   },
+   {
+    "name": "ctl_mu3_kb_gapnot",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_gapnot; rc=$?; cat {RUN}/bench/kb/kb_gapnot.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "layer programme not configured .*lprg fault 01",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/kb/kb_gapnot.log"
+   },
+   {
+    "name": "ctl_mu3_kb_u0gap",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_u0gap; rc=$?; cat {RUN}/bench/kb/kb_u0gap.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "user 0 differs from MU 0",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/kb/kb_u0gap.log"
+   },
+   {
+    "name": "ctl_mu3_kb_collide",
+    "cmd": "rtl/test/mu_qwen_1018/run_mu_kv_boot.sh . {RUN}/bench/kb kb_collide; rc=$?; cat {RUN}/bench/kb/kb_collide.log; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU_KV_BOOT",
+    "fail_regex": "layer programme / dispatcher fault .*lprg fault 10",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/kb/kb_collide.log"
+   },
+   {
+    "name": "ctl_mu3_tb_kv_ctl_mu3_lockstep",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 tb_kv_ctl_mu3_lockstep; rc=$?; cat {RUN}/bench/mu3/tb_kv_ctl_mu3_lockstep.log; exit $rc",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS KV_CTL_MU3_LOCKSTEP",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu3/tb_kv_ctl_mu3_lockstep.log"
+   },
+   {
+    "name": "ctl_mu3_d1",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 d1; rc=$?; cat {RUN}/bench/mu3/d1.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu3/d1.log"
+   },
+   {
+    "name": "ctl_mu3_d2",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 d2; rc=$?; cat {RUN}/bench/mu3/d2.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL lockstep own_diffs[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu3/d2.log"
+   },
+   {
+    "name": "ctl_mu3_d3",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu3.sh . {RUN}/bench/mu3 d3; rc=$?; cat {RUN}/bench/mu3/d3.log; exit $rc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL lockstep own_diffs0 boot_diffs0 setup_ready_diffs[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu3/d3.log"
+   },
+   {
+    "name": "ctl_mu4safe_exact",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS MU4_SAFE",
+    "pass_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu4safe/exact.log"
+   },
+   {
+    "name": "ctl_mu4safe_guard",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe guard",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU4 errors[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu4safe/guard.log"
+   },
+   {
+    "name": "ctl_mu4safe_group",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe group",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU4 errors[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu4safe/group.log"
+   },
+   {
+    "name": "ctl_mu4safe_copy",
+    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_mu4_safe.sh . {RUN}/bench/mu4safe copy",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL MU4 errors[1-9]",
+    "fail_witness": "results/rtl/mu_qwen_1018/kv/runs/mu5/mu4safe/copy.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_ctl_mu5b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_ctl_mu5b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_ctl_mu5b --out {RUN}/record/views/qkd_kvs_ctl --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_ctl_mu5b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_ctl/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_ctl/qkd_kvs_ctl_mu5b-mu5b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "STRUCTURAL mu5b (= mu5 RTL/floorplan, parallel clock fallback OT_SPINE_TREE_PAD=1: subtree-common pads) (successor of mu4_safe, failed gate 10-19): (a) u_lprg -> qkd_static_kv_layer_programme_mus: stage table (9x36x32) + GAP table (144x32) in two ot_sram_1r1w_128x256 macros, one row per stage {P_ctrl..P_quiet | P_end, next-gap x4 users, ==0/==1 flags}, read issued on the edge that sets c_load, landed on the c_load edge (0 added cycles); stage-1 gaps in 4 boot registers; (b) rows hold r-2 so every event is a REGISTERED flag computed one edge early as a plain equality (no subtract/compare/priority chain); wait expiry registered; digest/epoch/position start checks one edge early; (c) u_wprg root table (36x5x32) -> 1 SRAM macro (SRAM=1), reset_pin_n 3 KEPT copies, u_fanr rs_q 4 KEPT copies, u_lprg 4 reset copies (ot_rst_split families, reset_relay_split <= 256); (d) clock: symmetric centre-fed spine (OT_SPINE_SYM, safe balance, leaf 16) instead of TritonCTS; (e) outline 345.6 x 475.2 pin-bound (W/E 2524 b), 3 macros on the 43.2 lattice in one centre column, full-width std rows between them. Outputs identical on every edge (lockstep benches lprg/wprg); mu4 schedule deltas unchanged (+1 quiet ck, +1 fault observation ck)."
+}
