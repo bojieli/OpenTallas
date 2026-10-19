@@ -17,7 +17,7 @@ module tb;
  initial begin
    // Explicit arbitrary extra-copy startup. No observation before real reset.
    for(k=0;k<8;k=k+1) begin
-     @(negedge clk); d.reset_first=k[0];d.reset_a=k[1];d.reset_b=k[2];
+     @(negedge clk); d.reset_first=k[0];d.u_reset_a.q=k[1];d.u_reset_b.q=k[2];
      #1 rst_n=0; resets=resets+1; #1;
      if(d.reset_first!==0 || d.reset_a!==0 || d.reset_b!==0 || y!==0)
        $fatal(1,"ASYNC_RESET_FAILURE");

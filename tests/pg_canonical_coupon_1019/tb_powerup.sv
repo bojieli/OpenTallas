@@ -5,7 +5,7 @@ module tb_powerup;
  integer k,checks=0;
  initial begin
    for(k=0;k<8;k=k+1) begin
-     @(negedge clk);d.reset_first=k[0];d.reset_a=k[1];d.reset_b=k[2];
+     @(negedge clk);d.reset_first=k[0];d.u_reset_a.q=k[1];d.u_reset_b.q=k[2];
      d.a_q=16'hxxxx;d.b_q=16'hxxxx;d.y=16'hxxxx;
      #1 rst_n=0;
      // A real reset clock erases arbitrary data even if copy was already low.
