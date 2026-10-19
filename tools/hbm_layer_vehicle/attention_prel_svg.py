@@ -86,7 +86,7 @@ def compile_attention(rec, sm=0, mut=''):
     assert len(set(t for t, _ in ing)) == len(ing)
     assert len(set(t for t, _ in xw)) == len(xw)
     return dict(ing=ing, xw=xw, ids=[], mem=mem, n_end=previous_end + 128,
-                blocks=blocks, budget=dict(model=model(len({r for o in ops if o[1] == 'qk' for r in o[3]})),
+                blocks=blocks, budget=dict(model=model(len({r for o in ops if o[1] == 'qk' for r in o[3]}), kv4=bool(ops[0][2])),
                 descriptors=len(blocks), distinct_programmes=len(store.progs), resident_words=store.top,
                 available_words=S.PSTORE, attention_reserved_legacy=S.ATT_RESERVED,
                 fits_legacy_attention_reservation=store.top <= S.ATT_RESERVED,
