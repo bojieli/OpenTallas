@@ -1,0 +1,980 @@
+{
+  "c14180": {
+    "cell": {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        7.83,
+        211.95,
+        8.91,
+        212.22
+      ]
+    },
+    "pins": {
+      "c14180/CLK": {
+        "dir": "INPUT",
+        "role": "CLOCK",
+        "net": "ck",
+        "xy": [
+          7.927,
+          212.085
+        ]
+      },
+      "c14180/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "d2d__rx_payload[24]",
+        "xy": [
+          8.082,
+          212.085
+        ]
+      },
+      "c14180/QN": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n5079",
+        "xy": [
+          8.872,
+          212.085
+        ]
+      }
+    }
+  },
+  "cprl30": {
+    "cell": {
+      "master": "INVx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.262,
+        186.84,
+        8.424,
+        187.11
+      ]
+    },
+    "pins": {
+      "cprl30/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n5079",
+        "xy": [
+          8.299,
+          186.975
+        ]
+      },
+      "cprl30/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq29",
+        "xy": [
+          8.386,
+          186.975
+        ]
+      }
+    }
+  },
+  "cprc44": {
+    "cell": {
+      "master": "OR4x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.424,
+        186.84,
+        8.802,
+        187.11
+      ]
+    },
+    "pins": {
+      "cprc44/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq25",
+        "xy": [
+          8.721,
+          186.975
+        ]
+      },
+      "cprc44/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq31",
+        "xy": [
+          8.667,
+          186.993
+        ]
+      },
+      "cprc44/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq29",
+        "xy": [
+          8.613,
+          186.993
+        ]
+      },
+      "cprc44/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq37",
+        "xy": [
+          8.559,
+          187.011
+        ]
+      },
+      "cprc44/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "npr_c43",
+        "xy": [
+          8.461,
+          186.975
+        ]
+      }
+    }
+  },
+  "cprc46": {
+    "cell": {
+      "master": "OR4x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.154,
+        187.38,
+        8.532,
+        187.65
+      ]
+    },
+    "pins": {
+      "cprc46/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq35",
+        "xy": [
+          8.451,
+          187.515
+        ]
+      },
+      "cprc46/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq33",
+        "xy": [
+          8.397,
+          187.533
+        ]
+      },
+      "cprc46/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq39",
+        "xy": [
+          8.343,
+          187.533
+        ]
+      },
+      "cprc46/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_c43",
+        "xy": [
+          8.289,
+          187.551
+        ]
+      },
+      "cprc46/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "npr_c45",
+        "xy": [
+          8.191,
+          187.515
+        ]
+      }
+    }
+  },
+  "cprc48": {
+    "cell": {
+      "master": "OR4x1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.748,
+        187.11,
+        9.126,
+        187.38
+      ]
+    },
+    "pins": {
+      "cprc48/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq21",
+        "xy": [
+          9.045,
+          187.245
+        ]
+      },
+      "cprc48/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_lq27",
+        "xy": [
+          8.991,
+          187.227
+        ]
+      },
+      "cprc48/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_c41",
+        "xy": [
+          8.937,
+          187.227
+        ]
+      },
+      "cprc48/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_c45",
+        "xy": [
+          8.883,
+          187.209
+        ]
+      },
+      "cprc48/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "npr_c47",
+        "xy": [
+          8.785,
+          187.245
+        ]
+      }
+    }
+  },
+  "cpro49": {
+    "cell": {
+      "master": "INVx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.586,
+        187.65,
+        8.748,
+        187.92
+      ]
+    },
+    "pins": {
+      "cpro49/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npr_c47",
+        "xy": [
+          8.623,
+          187.785
+        ]
+      },
+      "cpro49/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6772",
+        "xy": [
+          8.71,
+          187.785
+        ]
+      }
+    }
+  },
+  "c2161": {
+    "cell": {
+      "master": "AND4x1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.748,
+        188.19,
+        9.126,
+        188.46
+      ]
+    },
+    "pins": {
+      "c2161/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n3954",
+        "xy": [
+          8.829,
+          188.325
+        ]
+      },
+      "c2161/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6771",
+        "xy": [
+          8.883,
+          188.343
+        ]
+      },
+      "c2161/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6767",
+        "xy": [
+          8.937,
+          188.343
+        ]
+      },
+      "c2161/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6772",
+        "xy": [
+          8.991,
+          188.361
+        ]
+      },
+      "c2161/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6773",
+        "xy": [
+          9.086,
+          188.325
+        ]
+      }
+    }
+  },
+  "c2162": {
+    "cell": {
+      "master": "AO32x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.694,
+        187.92,
+        9.126,
+        188.19
+      ]
+    },
+    "pins": {
+      "c2162/A1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6770",
+        "xy": [
+          8.937,
+          188.055
+        ]
+      },
+      "c2162/A2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6768",
+        "xy": [
+          8.883,
+          188.055
+        ]
+      },
+      "c2162/A3": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6774",
+        "xy": [
+          8.829,
+          188.055
+        ]
+      },
+      "c2162/B1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6769",
+        "xy": [
+          8.991,
+          188.037
+        ]
+      },
+      "c2162/B2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6773",
+        "xy": [
+          9.045,
+          188.037
+        ]
+      },
+      "c2162/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6775",
+        "xy": [
+          8.735,
+          188.049
+        ]
+      }
+    }
+  },
+  "c2167": {
+    "cell": {
+      "master": "AND4x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        38.124,
+        164.16,
+        38.502,
+        164.43
+      ]
+    },
+    "pins": {
+      "c2167/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6775",
+        "xy": [
+          38.205,
+          164.295
+        ]
+      },
+      "c2167/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6780",
+        "xy": [
+          38.259,
+          164.277
+        ]
+      },
+      "c2167/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6785",
+        "xy": [
+          38.313,
+          164.277
+        ]
+      },
+      "c2167/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6794",
+        "xy": [
+          38.367,
+          164.259
+        ]
+      },
+      "c2167/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6795",
+        "xy": [
+          38.462,
+          164.295
+        ]
+      }
+    }
+  },
+  "c2168": {
+    "cell": {
+      "master": "AO32x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        87.102,
+        190.62,
+        87.534,
+        190.89
+      ]
+    },
+    "pins": {
+      "c2168/A1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6758",
+        "xy": [
+          87.345,
+          190.755
+        ]
+      },
+      "c2168/A2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6767",
+        "xy": [
+          87.291,
+          190.755
+        ]
+      },
+      "c2168/A3": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6791",
+        "xy": [
+          87.237,
+          190.755
+        ]
+      },
+      "c2168/B1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6766",
+        "xy": [
+          87.399,
+          190.737
+        ]
+      },
+      "c2168/B2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6795",
+        "xy": [
+          87.453,
+          190.737
+        ]
+      },
+      "c2168/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6796",
+        "xy": [
+          87.143,
+          190.749
+        ]
+      }
+    }
+  },
+  "c2202": {
+    "cell": {
+      "master": "AO32x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        106.38,
+        190.62,
+        106.812,
+        190.89
+      ]
+    },
+    "pins": {
+      "c2202/A1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6756",
+        "xy": [
+          106.623,
+          190.755
+        ]
+      },
+      "c2202/A2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6796",
+        "xy": [
+          106.569,
+          190.755
+        ]
+      },
+      "c2202/A3": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6865",
+        "xy": [
+          106.515,
+          190.755
+        ]
+      },
+      "c2202/B1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6805",
+        "xy": [
+          106.677,
+          190.737
+        ]
+      },
+      "c2202/B2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6857",
+        "xy": [
+          106.731,
+          190.737
+        ]
+      },
+      "c2202/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6866",
+        "xy": [
+          106.421,
+          190.749
+        ]
+      }
+    }
+  },
+  "c2203": {
+    "cell": {
+      "master": "AND4x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        52.434,
+        162.54,
+        52.812,
+        162.81
+      ]
+    },
+    "pins": {
+      "c2203/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6867",
+        "xy": [
+          52.515,
+          162.675
+        ]
+      },
+      "c2203/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6868",
+        "xy": [
+          52.569,
+          162.657
+        ]
+      },
+      "c2203/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6869",
+        "xy": [
+          52.623,
+          162.657
+        ]
+      },
+      "c2203/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6866",
+        "xy": [
+          52.677,
+          162.639
+        ]
+      },
+      "c2203/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n6870",
+        "xy": [
+          52.772,
+          162.675
+        ]
+      }
+    }
+  },
+  "c2343": {
+    "cell": {
+      "master": "AND2x2_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        50.544,
+        158.49,
+        50.868,
+        158.76
+      ]
+    },
+    "pins": {
+      "c2343/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n6870",
+        "xy": [
+          50.679,
+          158.625
+        ]
+      },
+      "c2343/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n7134",
+        "xy": [
+          50.583,
+          158.625
+        ]
+      },
+      "c2343/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n7135",
+        "xy": [
+          50.792,
+          158.625
+        ]
+      }
+    }
+  },
+  "c30776": {
+    "cell": {
+      "master": "AND3x1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        17.28,
+        62.91,
+        17.604,
+        63.18
+      ]
+    },
+    "pins": {
+      "c30776/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n7040",
+        "xy": [
+          17.361,
+          63.045
+        ]
+      },
+      "c30776/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n7133",
+        "xy": [
+          17.415,
+          63.045
+        ]
+      },
+      "c30776/C": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n7135",
+        "xy": [
+          17.469,
+          63.045
+        ]
+      },
+      "c30776/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n32517",
+        "xy": [
+          17.56,
+          63.042
+        ]
+      }
+    }
+  },
+  "c29959": {
+    "cell": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        5.67,
+        79.65,
+        5.94,
+        79.92
+      ]
+    },
+    "pins": {
+      "c29959/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n32517",
+        "xy": [
+          5.706,
+          79.785
+        ]
+      },
+      "c29959/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n31700",
+        "xy": [
+          5.883,
+          79.785
+        ]
+      }
+    }
+  },
+  "c23566": {
+    "cell": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        5.4,
+        79.65,
+        5.67,
+        79.92
+      ]
+    },
+    "pins": {
+      "c23566/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n31700",
+        "xy": [
+          5.436,
+          79.785
+        ]
+      },
+      "c23566/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n25307",
+        "xy": [
+          5.613,
+          79.785
+        ]
+      }
+    }
+  },
+  "c9530": {
+    "cell": {
+      "master": "BUFx2_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        5.67,
+        80.46,
+        5.94,
+        80.73
+      ]
+    },
+    "pins": {
+      "c9530/A": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n25307",
+        "xy": [
+          5.706,
+          80.595
+        ]
+      },
+      "c9530/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n17349",
+        "xy": [
+          5.883,
+          80.595
+        ]
+      }
+    }
+  },
+  "c9533": {
+    "cell": {
+      "master": "AO21x1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        5.508,
+        79.92,
+        5.832,
+        80.19
+      ]
+    },
+    "pins": {
+      "c9533/A1": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n17349",
+        "xy": [
+          5.548,
+          80.071
+        ]
+      },
+      "c9533/A2": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n17350",
+        "xy": [
+          5.643,
+          80.037
+        ]
+      },
+      "c9533/B": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n17351",
+        "xy": [
+          5.697,
+          80.037
+        ]
+      },
+      "c9533/Y": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "n17352",
+        "xy": [
+          5.782,
+          80.107
+        ]
+      }
+    }
+  },
+  "cpo216_ff": {
+    "cell": {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        4.752,
+        49.41,
+        6.156,
+        49.68
+      ]
+    },
+    "pins": {
+      "cpo216_ff/CLK": {
+        "dir": "INPUT",
+        "role": "CLOCK",
+        "net": "ck",
+        "xy": [
+          4.846,
+          49.501
+        ]
+      },
+      "cpo216_ff/D": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n17352",
+        "xy": [
+          5.004,
+          49.545
+        ]
+      },
+      "cpo216_ff/RESETN": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "n21881",
+        "xy": [
+          5.537,
+          49.545
+        ]
+      },
+      "cpo216_ff/SETN": {
+        "dir": "INPUT",
+        "role": "SIGNAL",
+        "net": "npo_f10",
+        "xy": [
+          5.576,
+          49.501
+        ]
+      },
+      "cpo216_ff/QN": {
+        "dir": "OUTPUT",
+        "role": "SIGNAL",
+        "net": "npo216_q",
+        "xy": [
+          6.118,
+          49.545
+        ]
+      }
+    }
+  }
+}

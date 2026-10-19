@@ -1,0 +1,36 @@
+{
+  "verdict": "SOURCE_MODEL_INCOMPLETE_NO_BUILD",
+  "consumer": "u_attn_root request acceptance and ctx[10] / ahs[33]",
+  "source_fields": {
+    "request_epoch": 16,
+    "request_layer": 6,
+    "request_position": 18,
+    "request_calendar": 176,
+    "validated_accept": 1
+  },
+  "minimum_new_ff": 217,
+  "minimum_new_clock_pins": 217,
+  "minimum_native_master_area_um2": 63.364680000000014,
+  "minimum_added_admission_edges": 1,
+  "minimum_added_admission_ps": 833.333,
+  "upstream_qualification_arrival_ps": 816.26,
+  "implementation": null,
+  "sufficient_to_close": false,
+  "additional_predicate_cuts": null,
+  "full_reset_clock_pg_area": null,
+  "native_clockcap": null,
+  "full_su_mu_token_delta": null,
+  "guards": [
+    "atomic selected identity/calendar and valid",
+    "same-command fault rejection before admission",
+    "explicit fixed Q/PV/start/end calendar reprice",
+    "arbitrary reset and original causal fault mutants",
+    "all-driver and individual405 reach census",
+    "TT setup FF hold/slew/native clock neighbour proof"
+  ],
+  "position_adder_already_parallel": true,
+  "late_path_is_write_enable_not_position_data": true,
+  "native_position_source": "{5b0,held accepted_tag[18:6]}",
+  "context_bit_binding": "ahs[33]=ctx[10]",
+  "existing_gate": "c9533 AO21: validated_enable * position_plus1_bit OR old_ctx_bit * hold"
+}

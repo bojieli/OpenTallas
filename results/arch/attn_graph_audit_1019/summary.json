@@ -1,0 +1,2459 @@
+{
+  "cells": 34603,
+  "ff": 6403,
+  "signal_ports": 3284,
+  "signal_pin_partitions": 36342,
+  "driver_role_counts": {
+    "ff": 6390,
+    "comb": 7530,
+    "tie": 102,
+    "input": 1736,
+    "reset_ff": 13
+  },
+  "driver_role_max": {
+    "ff": 32,
+    "comb": 24,
+    "tie": 30,
+    "input": 22,
+    "reset_ff": 32
+  },
+  "over32": 0,
+  "multiple_driver_signal_nets": [],
+  "stage_graph_nodes": 87032,
+  "stage_graph_visited": 87032,
+  "stage_graph_cycles": 0,
+  "complete_ff_stage_count": 6912,
+  "stage_wire_max_um": 1054.256,
+  "stage_wire_over405": 635,
+  "top_stages": [
+    {
+      "endpoint": "c12177/D",
+      "origin": "c18857/QN",
+      "wire_um": 1054.256,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c2271/B",
+        "c2271/Y",
+        "c10659/A",
+        "c10659/Y",
+        "c10660/B",
+        "c10660/Y",
+        "c12177/D"
+      ]
+    },
+    {
+      "endpoint": "c16297/D",
+      "origin": "c18857/QN",
+      "wire_um": 997.674,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c2271/B",
+        "c2271/Y",
+        "c8294/A",
+        "c8294/Y",
+        "c10661/A",
+        "c10661/Y",
+        "c16297/D"
+      ]
+    },
+    {
+      "endpoint": "c18854/D",
+      "origin": "c18857/QN",
+      "wire_um": 971.973,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c2271/B",
+        "c2271/Y",
+        "c10658/D",
+        "c10658/Y",
+        "c18854/D"
+      ]
+    },
+    {
+      "endpoint": "c18857/D",
+      "origin": "c18857/QN",
+      "wire_um": 962.472,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c2271/B",
+        "c2271/Y",
+        "c8294/A",
+        "c8294/Y",
+        "c8330/A2",
+        "c8330/Y",
+        "c8331/A",
+        "c8331/Y",
+        "c18857/D"
+      ]
+    },
+    {
+      "endpoint": "cpo336_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 943.42,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30778/A",
+        "c30778/Y",
+        "c30006/A",
+        "c30006/Y",
+        "c23847/A",
+        "c23847/Y",
+        "c9536/A",
+        "c9536/Y",
+        "c9537/B",
+        "c9537/Y",
+        "cpo336_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo337_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 942.176,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30776/A",
+        "c30776/Y",
+        "c29959/A",
+        "c29959/Y",
+        "c23566/A",
+        "c23566/Y",
+        "c9530/A",
+        "c9530/Y",
+        "c9533/A1",
+        "c9533/Y",
+        "cpo337_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo363_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 940.9219999999999,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30778/A",
+        "c30778/Y",
+        "c30008/A",
+        "c30008/Y",
+        "c23849/A",
+        "c23849/Y",
+        "c9545/A",
+        "c9545/Y",
+        "c9546/B",
+        "c9546/Y",
+        "cpo363_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo359_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 940.8839999999999,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30778/A",
+        "c30778/Y",
+        "c30010/A",
+        "c30010/Y",
+        "c23851/A",
+        "c23851/Y",
+        "c9557/A",
+        "c9557/Y",
+        "c9558/B",
+        "c9558/Y",
+        "cpo359_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo364_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 939.831,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30778/A",
+        "c30778/Y",
+        "c30007/A",
+        "c30007/Y",
+        "c23848/A",
+        "c23848/Y",
+        "c9542/A",
+        "c9542/Y",
+        "c9543/B",
+        "c9543/Y",
+        "cpo364_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo361_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 938.8719999999998,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30778/A",
+        "c30778/Y",
+        "c30009/A",
+        "c30009/Y",
+        "c23850/A",
+        "c23850/Y",
+        "c9551/A",
+        "c9551/Y",
+        "c9552/B",
+        "c9552/Y",
+        "cpo361_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo329_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 937.1609999999998,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28441/A",
+        "c28441/Y",
+        "c23632/A",
+        "c23632/Y",
+        "c9217/B",
+        "c9217/Y",
+        "c9218/B",
+        "c9218/Y",
+        "cpo329_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo326_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 936.604,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28444/A",
+        "c28444/Y",
+        "c23635/A",
+        "c23635/Y",
+        "c9223/B",
+        "c9223/Y",
+        "c9224/B",
+        "c9224/Y",
+        "cpo326_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo330_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 935.6199999999999,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28440/A",
+        "c28440/Y",
+        "c23631/A",
+        "c23631/Y",
+        "c9215/B",
+        "c9215/Y",
+        "c9216/B",
+        "c9216/Y",
+        "cpo330_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo324_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 934.6829999999999,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28445/A",
+        "c28445/Y",
+        "c23636/A",
+        "c23636/Y",
+        "c9225/B",
+        "c9225/Y",
+        "c9226/B",
+        "c9226/Y",
+        "cpo324_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo327_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 932.5669999999999,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28443/A",
+        "c28443/Y",
+        "c23634/A",
+        "c23634/Y",
+        "c9221/B",
+        "c9221/Y",
+        "c9222/B",
+        "c9222/Y",
+        "cpo327_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo323_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 932.1220000000001,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28446/A",
+        "c28446/Y",
+        "c23637/A",
+        "c23637/Y",
+        "c9227/B",
+        "c9227/Y",
+        "c9228/B",
+        "c9228/Y",
+        "cpo323_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo322_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 931.78,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28447/A",
+        "c28447/Y",
+        "c23638/A",
+        "c23638/Y",
+        "c9229/B",
+        "c9229/Y",
+        "c9230/B",
+        "c9230/Y",
+        "cpo322_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo328_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 931.2269999999999,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c30933/A",
+        "c30933/Y",
+        "c28442/A",
+        "c28442/Y",
+        "c23633/A",
+        "c23633/Y",
+        "c9219/B",
+        "c9219/Y",
+        "c9220/B",
+        "c9220/Y",
+        "cpo328_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo340_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 929.0210000000001,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c32637/A",
+        "c32637/Y",
+        "c32459/A",
+        "c32459/Y",
+        "c30157/A",
+        "c30157/Y",
+        "c23755/A",
+        "c23755/Y",
+        "c9522/A2",
+        "c9522/Y",
+        "cpo340_ff/D"
+      ]
+    },
+    {
+      "endpoint": "cpo360_ff/D",
+      "origin": "c18857/QN",
+      "wire_um": 920.4240000000001,
+      "path": [
+        "c18857/QN",
+        "c2267/A",
+        "c2267/Y",
+        "c2268/E",
+        "c2268/Y",
+        "c2269/D",
+        "c2269/Y",
+        "c2270/D",
+        "c2270/Y",
+        "c32662/A",
+        "c32662/Y",
+        "c32516/A",
+        "c32516/Y",
+        "c30214/A",
+        "c30214/Y",
+        "c23902/A",
+        "c23902/Y",
+        "c9555/A1",
+        "c9555/Y",
+        "cpo360_ff/D"
+      ]
+    }
+  ],
+  "cross_face_boundary_ff": {},
+  "boundary_dead_port_count": 628,
+  "reset_copies": [
+    {
+      "cell": "cpr32_c12184_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        7.776,
+        46.71,
+        9.18,
+        46.98
+      ],
+      "signal_inputs": {
+        "cpr32_c12184_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.87,
+            46.801
+          ]
+        },
+        "cpr32_c12184_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.028,
+            46.845
+          ]
+        },
+        "cpr32_c12184_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.561,
+            46.845
+          ]
+        },
+        "cpr32_c12184_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.6,
+            46.801
+          ]
+        }
+      },
+      "logical_loads": 32,
+      "endpoints": [
+        "cpo117_ff/RESETN",
+        "cpo118_ff/RESETN",
+        "cpo119_ff/RESETN",
+        "cpo120_ff/RESETN",
+        "cpo121_ff/RESETN",
+        "cpo122_ff/RESETN",
+        "cpo123_ff/RESETN",
+        "cpo124_ff/RESETN",
+        "cpo125_ff/RESETN",
+        "cpo126_ff/RESETN",
+        "cpo127_ff/RESETN",
+        "cpo128_ff/RESETN",
+        "cpo129_ff/RESETN",
+        "cpo130_ff/RESETN",
+        "cpo131_ff/RESETN",
+        "cpo142_ff/RESETN",
+        "cpo14_ff/RESETN",
+        "cpo15_ff/RESETN",
+        "cpo16_ff/RESETN",
+        "cpo17_ff/RESETN",
+        "cpo18_ff/RESETN",
+        "cpo19_ff/RESETN",
+        "cpo1_ff/RESETN",
+        "cpo20_ff/RESETN",
+        "cpo21_ff/RESETN",
+        "cpo220_ff/RESETN",
+        "cpo221_ff/RESETN",
+        "cpo222_ff/RESETN",
+        "cpo224_ff/RESETN",
+        "cpo225_ff/RESETN",
+        "cpo226_ff/RESETN",
+        "cpo227_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c12184",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          7.884,
+          47.79,
+          9.288,
+          48.06
+        ]
+      },
+      "ancestor_inputs": {
+        "c12184/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.978,
+            47.881
+          ]
+        },
+        "c12184/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.136,
+            47.925
+          ]
+        },
+        "c12184/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.669,
+            47.925
+          ]
+        },
+        "c12184/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.708,
+            47.881
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c12184_2",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        7.776,
+        46.98,
+        9.18,
+        47.25
+      ],
+      "signal_inputs": {
+        "cpr32_c12184_2/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.87,
+            47.158
+          ]
+        },
+        "cpr32_c12184_2/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.028,
+            47.115
+          ]
+        },
+        "cpr32_c12184_2/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.561,
+            47.114
+          ]
+        },
+        "cpr32_c12184_2/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.6,
+            47.158
+          ]
+        }
+      },
+      "logical_loads": 32,
+      "endpoints": [
+        "cpo228_ff/RESETN",
+        "cpo229_ff/RESETN",
+        "cpo22_ff/RESETN",
+        "cpo230_ff/RESETN",
+        "cpo232_ff/RESETN",
+        "cpo233_ff/RESETN",
+        "cpo23_ff/RESETN",
+        "cpo24_ff/RESETN",
+        "cpo25_ff/RESETN",
+        "cpo26_ff/RESETN",
+        "cpo27_ff/RESETN",
+        "cpo281_ff/RESETN",
+        "cpo28_ff/RESETN",
+        "cpo29_ff/RESETN",
+        "cpo2_ff/RESETN",
+        "cpo30_ff/RESETN",
+        "cpo31_ff/RESETN",
+        "cpo32_ff/RESETN",
+        "cpo33_ff/RESETN",
+        "cpo34_ff/RESETN",
+        "cpo351_ff/RESETN",
+        "cpo35_ff/RESETN",
+        "cpo38_ff/RESETN",
+        "cpo47_ff/RESETN",
+        "cpo48_ff/RESETN",
+        "cpo49_ff/RESETN",
+        "cpo50_ff/RESETN",
+        "cpo51_ff/RESETN",
+        "cpo52_ff/RESETN",
+        "cpo53_ff/RESETN",
+        "cpo54_ff/RESETN",
+        "cpo55_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c12184",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          7.884,
+          47.79,
+          9.288,
+          48.06
+        ]
+      },
+      "ancestor_inputs": {
+        "c12184/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.978,
+            47.881
+          ]
+        },
+        "c12184/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.136,
+            47.925
+          ]
+        },
+        "c12184/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.669,
+            47.925
+          ]
+        },
+        "c12184/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.708,
+            47.881
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c12184_3",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        7.56,
+        46.44,
+        8.964,
+        46.71
+      ],
+      "signal_inputs": {
+        "cpr32_c12184_3/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.654,
+            46.618
+          ]
+        },
+        "cpr32_c12184_3/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            7.812,
+            46.575
+          ]
+        },
+        "cpr32_c12184_3/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.345,
+            46.574
+          ]
+        },
+        "cpr32_c12184_3/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.384,
+            46.618
+          ]
+        }
+      },
+      "logical_loads": 32,
+      "endpoints": [
+        "cpo56_ff/RESETN",
+        "cpo57_ff/RESETN",
+        "cpo58_ff/RESETN",
+        "cpo59_ff/RESETN",
+        "cpo5_ff/RESETN",
+        "cpo60_ff/RESETN",
+        "cpo61_ff/RESETN",
+        "cpo62_ff/RESETN",
+        "cpo63_ff/RESETN",
+        "cpo64_ff/RESETN",
+        "cpo65_ff/RESETN",
+        "cpo66_ff/RESETN",
+        "cpo67_ff/RESETN",
+        "cpo68_ff/RESETN",
+        "cpo71_ff/RESETN",
+        "cpo80_ff/RESETN",
+        "cpo81_ff/RESETN",
+        "cpo82_ff/RESETN",
+        "cpo83_ff/RESETN",
+        "cpo84_ff/RESETN",
+        "cpo85_ff/RESETN",
+        "cpo86_ff/RESETN",
+        "cpo87_ff/RESETN",
+        "cpo88_ff/RESETN",
+        "cpo89_ff/RESETN",
+        "cpo90_ff/RESETN",
+        "cpo91_ff/RESETN",
+        "cpo92_ff/RESETN",
+        "cpo93_ff/RESETN",
+        "cpo94_ff/RESETN",
+        "cpo95_ff/RESETN",
+        "cpo96_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c12184",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          7.884,
+          47.79,
+          9.288,
+          48.06
+        ]
+      },
+      "ancestor_inputs": {
+        "c12184/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.978,
+            47.881
+          ]
+        },
+        "c12184/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.136,
+            47.925
+          ]
+        },
+        "c12184/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.669,
+            47.925
+          ]
+        },
+        "c12184/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.708,
+            47.881
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c12184_4",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        7.776,
+        46.17,
+        9.18,
+        46.44
+      ],
+      "signal_inputs": {
+        "cpr32_c12184_4/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.87,
+            46.261
+          ]
+        },
+        "cpr32_c12184_4/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.028,
+            46.305
+          ]
+        },
+        "cpr32_c12184_4/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.561,
+            46.305
+          ]
+        },
+        "cpr32_c12184_4/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.6,
+            46.261
+          ]
+        }
+      },
+      "logical_loads": 3,
+      "endpoints": [
+        "cpo97_ff/RESETN",
+        "cpo98_ff/RESETN",
+        "cpo99_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c12184",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          7.884,
+          47.79,
+          9.288,
+          48.06
+        ]
+      },
+      "ancestor_inputs": {
+        "c12184/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            7.978,
+            47.881
+          ]
+        },
+        "c12184/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26738",
+          "xy": [
+            8.136,
+            47.925
+          ]
+        },
+        "c12184/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25007",
+          "xy": [
+            8.669,
+            47.925
+          ]
+        },
+        "c12184/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            8.708,
+            47.881
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c12185_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.208,
+        50.49,
+        9.612,
+        50.76
+      ],
+      "signal_inputs": {
+        "cpr32_c12185_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.302,
+            50.581
+          ]
+        },
+        "cpr32_c12185_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26739",
+          "xy": [
+            8.46,
+            50.625
+          ]
+        },
+        "cpr32_c12185_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25008",
+          "xy": [
+            8.993,
+            50.625
+          ]
+        },
+        "cpr32_c12185_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            9.032,
+            50.581
+          ]
+        }
+      },
+      "logical_loads": 32,
+      "endpoints": [
+        "cpo110_ff/RESETN",
+        "cpo111_ff/RESETN",
+        "cpo112_ff/RESETN",
+        "cpo11_ff/RESETN",
+        "cpo12_ff/RESETN",
+        "cpo133_ff/RESETN",
+        "cpo134_ff/RESETN",
+        "cpo135_ff/RESETN",
+        "cpo136_ff/RESETN",
+        "cpo137_ff/RESETN",
+        "cpo138_ff/RESETN",
+        "cpo139_ff/RESETN",
+        "cpo13_ff/RESETN",
+        "cpo140_ff/RESETN",
+        "cpo141_ff/RESETN",
+        "cpo143_ff/RESETN",
+        "cpo144_ff/RESETN",
+        "cpo145_ff/RESETN",
+        "cpo146_ff/RESETN",
+        "cpo147_ff/RESETN",
+        "cpo234_ff/RESETN",
+        "cpo235_ff/RESETN",
+        "cpo236_ff/RESETN",
+        "cpo237_ff/RESETN",
+        "cpo238_ff/RESETN",
+        "cpo240_ff/RESETN",
+        "cpo241_ff/RESETN",
+        "cpo242_ff/RESETN",
+        "cpo243_ff/RESETN",
+        "cpo244_ff/RESETN",
+        "cpo258_ff/RESETN",
+        "cpo36_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c12185",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.316,
+          51.03,
+          9.72,
+          51.3
+        ]
+      },
+      "ancestor_inputs": {
+        "c12185/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.41,
+            51.121
+          ]
+        },
+        "c12185/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26739",
+          "xy": [
+            8.568,
+            51.165
+          ]
+        },
+        "c12185/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25008",
+          "xy": [
+            9.101,
+            51.165
+          ]
+        },
+        "c12185/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            9.14,
+            51.121
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c12185_2",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.208,
+        51.3,
+        9.612,
+        51.57
+      ],
+      "signal_inputs": {
+        "cpr32_c12185_2/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.302,
+            51.478
+          ]
+        },
+        "cpr32_c12185_2/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26739",
+          "xy": [
+            8.46,
+            51.435
+          ]
+        },
+        "cpr32_c12185_2/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25008",
+          "xy": [
+            8.993,
+            51.434
+          ]
+        },
+        "cpr32_c12185_2/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            9.032,
+            51.478
+          ]
+        }
+      },
+      "logical_loads": 25,
+      "endpoints": [
+        "cpo37_ff/RESETN",
+        "cpo39_ff/RESETN",
+        "cpo3_ff/RESETN",
+        "cpo40_ff/RESETN",
+        "cpo41_ff/RESETN",
+        "cpo42_ff/RESETN",
+        "cpo43_ff/RESETN",
+        "cpo44_ff/RESETN",
+        "cpo45_ff/RESETN",
+        "cpo46_ff/RESETN",
+        "cpo4_ff/RESETN",
+        "cpo69_ff/RESETN",
+        "cpo6_ff/RESETN",
+        "cpo70_ff/RESETN",
+        "cpo72_ff/RESETN",
+        "cpo73_ff/RESETN",
+        "cpo74_ff/RESETN",
+        "cpo75_ff/RESETN",
+        "cpo76_ff/RESETN",
+        "cpo77_ff/RESETN",
+        "cpo78_ff/RESETN",
+        "cpo79_ff/RESETN",
+        "cpo7_ff/RESETN",
+        "cpo8_ff/RESETN",
+        "cpo9_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c12185",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.316,
+          51.03,
+          9.72,
+          51.3
+        ]
+      },
+      "ancestor_inputs": {
+        "c12185/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.41,
+            51.121
+          ]
+        },
+        "c12185/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n26739",
+          "xy": [
+            8.568,
+            51.165
+          ]
+        },
+        "c12185/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n25008",
+          "xy": [
+            9.101,
+            51.165
+          ]
+        },
+        "c12185/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n20608",
+          "xy": [
+            9.14,
+            51.121
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27386_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.424,
+        76.14,
+        9.828,
+        76.41
+      ],
+      "signal_inputs": {
+        "cpr32_c27386_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.518,
+            76.318
+          ]
+        },
+        "cpr32_c27386_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34288",
+          "xy": [
+            8.676,
+            76.275
+          ]
+        },
+        "cpr32_c27386_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34272",
+          "xy": [
+            9.209,
+            76.274
+          ]
+        },
+        "cpr32_c27386_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            9.248,
+            76.318
+          ]
+        }
+      },
+      "logical_loads": 16,
+      "endpoints": [
+        "cpo157_ff/RESETN",
+        "cpo158_ff/RESETN",
+        "cpo159_ff/RESETN",
+        "cpo160_ff/RESETN",
+        "cpo162_ff/RESETN",
+        "cpo163_ff/RESETN",
+        "cpo164_ff/RESETN",
+        "cpo165_ff/RESETN",
+        "cpo166_ff/RESETN",
+        "cpo167_ff/RESETN",
+        "cpo168_ff/RESETN",
+        "cpo170_ff/RESETN",
+        "cpo171_ff/RESETN",
+        "cpo172_ff/RESETN",
+        "cpo173_ff/RESETN",
+        "cpo174_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27386",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.586,
+          77.49,
+          9.99,
+          77.76
+        ]
+      },
+      "ancestor_inputs": {
+        "c27386/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.68,
+            77.581
+          ]
+        },
+        "c27386/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34288",
+          "xy": [
+            8.838,
+            77.625
+          ]
+        },
+        "c27386/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34272",
+          "xy": [
+            9.371,
+            77.625
+          ]
+        },
+        "c27386/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            9.41,
+            77.581
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27387_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.748,
+        81.54,
+        10.152,
+        81.81
+      ],
+      "signal_inputs": {
+        "cpr32_c27387_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.842,
+            81.718
+          ]
+        },
+        "cpr32_c27387_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34289",
+          "xy": [
+            9.0,
+            81.675
+          ]
+        },
+        "cpr32_c27387_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34273",
+          "xy": [
+            9.533,
+            81.674
+          ]
+        },
+        "cpr32_c27387_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            9.572,
+            81.718
+          ]
+        }
+      },
+      "logical_loads": 32,
+      "endpoints": [
+        "cpo184_ff/RESETN",
+        "cpo185_ff/RESETN",
+        "cpo186_ff/RESETN",
+        "cpo187_ff/RESETN",
+        "cpo188_ff/RESETN",
+        "cpo189_ff/RESETN",
+        "cpo190_ff/RESETN",
+        "cpo192_ff/RESETN",
+        "cpo193_ff/RESETN",
+        "cpo194_ff/RESETN",
+        "cpo195_ff/RESETN",
+        "cpo196_ff/RESETN",
+        "cpo245_ff/RESETN",
+        "cpo247_ff/RESETN",
+        "cpo248_ff/RESETN",
+        "cpo249_ff/RESETN",
+        "cpo313_ff/RESETN",
+        "cpo315_ff/RESETN",
+        "cpo316_ff/RESETN",
+        "cpo317_ff/RESETN",
+        "cpo318_ff/RESETN",
+        "cpo319_ff/RESETN",
+        "cpo320_ff/RESETN",
+        "cpo321_ff/RESETN",
+        "cpo322_ff/RESETN",
+        "cpo323_ff/RESETN",
+        "cpo324_ff/RESETN",
+        "cpo326_ff/RESETN",
+        "cpo327_ff/RESETN",
+        "cpo328_ff/RESETN",
+        "cpo329_ff/RESETN",
+        "cpo330_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27387",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.856,
+          81.81,
+          10.26,
+          82.08
+        ]
+      },
+      "ancestor_inputs": {
+        "c27387/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.95,
+            81.901
+          ]
+        },
+        "c27387/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34289",
+          "xy": [
+            9.108,
+            81.945
+          ]
+        },
+        "c27387/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34273",
+          "xy": [
+            9.641,
+            81.945
+          ]
+        },
+        "c27387/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            9.68,
+            81.901
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27388_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.532,
+        79.65,
+        9.936,
+        79.92
+      ],
+      "signal_inputs": {
+        "cpr32_c27388_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.626,
+            79.741
+          ]
+        },
+        "cpr32_c27388_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34290",
+          "xy": [
+            8.784,
+            79.785
+          ]
+        },
+        "cpr32_c27388_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34274",
+          "xy": [
+            9.317,
+            79.785
+          ]
+        },
+        "cpr32_c27388_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            9.356,
+            79.741
+          ]
+        }
+      },
+      "logical_loads": 15,
+      "endpoints": [
+        "cpo260_ff/RESETN",
+        "cpo261_ff/RESETN",
+        "cpo262_ff/RESETN",
+        "cpo264_ff/RESETN",
+        "cpo265_ff/RESETN",
+        "cpo266_ff/RESETN",
+        "cpo267_ff/RESETN",
+        "cpo268_ff/RESETN",
+        "cpo269_ff/RESETN",
+        "cpo270_ff/RESETN",
+        "cpo271_ff/RESETN",
+        "cpo288_ff/RESETN",
+        "cpo289_ff/RESETN",
+        "cpo293_ff/RESETN",
+        "cpo294_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27388",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.64,
+          80.19,
+          10.044,
+          80.46
+        ]
+      },
+      "ancestor_inputs": {
+        "c27388/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.734,
+            80.281
+          ]
+        },
+        "c27388/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34290",
+          "xy": [
+            8.892,
+            80.325
+          ]
+        },
+        "c27388/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34274",
+          "xy": [
+            9.425,
+            80.325
+          ]
+        },
+        "c27388/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            9.464,
+            80.281
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27389_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        10.908,
+        130.41,
+        12.312,
+        130.68
+      ],
+      "signal_inputs": {
+        "cpr32_c27389_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            11.002,
+            130.501
+          ]
+        },
+        "cpr32_c27389_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34291",
+          "xy": [
+            11.16,
+            130.545
+          ]
+        },
+        "cpr32_c27389_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34275",
+          "xy": [
+            11.693,
+            130.545
+          ]
+        },
+        "cpr32_c27389_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            11.732,
+            130.501
+          ]
+        }
+      },
+      "logical_loads": 10,
+      "endpoints": [
+        "cpo302_ff/RESETN",
+        "cpo303_ff/RESETN",
+        "cpo304_ff/RESETN",
+        "cpo305_ff/RESETN",
+        "cpo306_ff/RESETN",
+        "cpo307_ff/RESETN",
+        "cpo309_ff/RESETN",
+        "cpo310_ff/RESETN",
+        "cpo311_ff/RESETN",
+        "cpo312_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27389",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          11.124,
+          129.87,
+          12.528,
+          130.14
+        ]
+      },
+      "ancestor_inputs": {
+        "c27389/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            11.218,
+            129.961
+          ]
+        },
+        "c27389/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34291",
+          "xy": [
+            11.376,
+            130.005
+          ]
+        },
+        "c27389/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34275",
+          "xy": [
+            11.909,
+            130.005
+          ]
+        },
+        "c27389/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32599",
+          "xy": [
+            11.948,
+            129.961
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27394_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "R0",
+      "status": "PLACED",
+      "bbox": [
+        8.748,
+        95.58,
+        10.152,
+        95.85
+      ],
+      "signal_inputs": {
+        "cpr32_c27394_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.842,
+            95.758
+          ]
+        },
+        "cpr32_c27394_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34280",
+          "xy": [
+            9.0,
+            95.715
+          ]
+        },
+        "cpr32_c27394_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34264",
+          "xy": [
+            9.533,
+            95.714
+          ]
+        },
+        "cpr32_c27394_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32600",
+          "xy": [
+            9.572,
+            95.758
+          ]
+        }
+      },
+      "logical_loads": 32,
+      "endpoints": [
+        "cpo200_ff/RESETN",
+        "cpo201_ff/RESETN",
+        "cpo202_ff/RESETN",
+        "cpo203_ff/RESETN",
+        "cpo204_ff/RESETN",
+        "cpo205_ff/RESETN",
+        "cpo206_ff/RESETN",
+        "cpo207_ff/RESETN",
+        "cpo208_ff/RESETN",
+        "cpo209_ff/RESETN",
+        "cpo210_ff/RESETN",
+        "cpo211_ff/RESETN",
+        "cpo212_ff/RESETN",
+        "cpo213_ff/RESETN",
+        "cpo214_ff/RESETN",
+        "cpo215_ff/RESETN",
+        "cpo282_ff/RESETN",
+        "cpo283_ff/RESETN",
+        "cpo284_ff/RESETN",
+        "cpo285_ff/RESETN",
+        "cpo286_ff/RESETN",
+        "cpo287_ff/RESETN",
+        "cpo291_ff/RESETN",
+        "cpo300_ff/RESETN",
+        "cpo336_ff/RESETN",
+        "cpo341_ff/RESETN",
+        "cpo342_ff/RESETN",
+        "cpo346_ff/RESETN",
+        "cpo352_ff/RESETN",
+        "cpo353_ff/RESETN",
+        "cpo354_ff/RESETN",
+        "cpo355_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27394",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.694,
+          95.85,
+          10.098,
+          96.12
+        ]
+      },
+      "ancestor_inputs": {
+        "c27394/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.788,
+            95.941
+          ]
+        },
+        "c27394/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34280",
+          "xy": [
+            8.946,
+            95.985
+          ]
+        },
+        "c27394/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34264",
+          "xy": [
+            9.479,
+            95.985
+          ]
+        },
+        "c27394/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32600",
+          "xy": [
+            9.518,
+            95.941
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27394_2",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.748,
+        96.39,
+        10.152,
+        96.66
+      ],
+      "signal_inputs": {
+        "cpr32_c27394_2/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.842,
+            96.481
+          ]
+        },
+        "cpr32_c27394_2/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34280",
+          "xy": [
+            9.0,
+            96.525
+          ]
+        },
+        "cpr32_c27394_2/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34264",
+          "xy": [
+            9.533,
+            96.525
+          ]
+        },
+        "cpr32_c27394_2/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32600",
+          "xy": [
+            9.572,
+            96.481
+          ]
+        }
+      },
+      "logical_loads": 10,
+      "endpoints": [
+        "cpo356_ff/RESETN",
+        "cpo357_ff/RESETN",
+        "cpo358_ff/RESETN",
+        "cpo359_ff/RESETN",
+        "cpo360_ff/RESETN",
+        "cpo361_ff/RESETN",
+        "cpo362_ff/RESETN",
+        "cpo363_ff/RESETN",
+        "cpo364_ff/RESETN",
+        "cpo365_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27394",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "MX",
+        "status": "PLACED",
+        "bbox": [
+          8.694,
+          95.85,
+          10.098,
+          96.12
+        ]
+      },
+      "ancestor_inputs": {
+        "c27394/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.788,
+            95.941
+          ]
+        },
+        "c27394/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34280",
+          "xy": [
+            8.946,
+            95.985
+          ]
+        },
+        "c27394/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34264",
+          "xy": [
+            9.479,
+            95.985
+          ]
+        },
+        "c27394/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32600",
+          "xy": [
+            9.518,
+            95.941
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    },
+    {
+      "cell": "cpr32_c27395_1",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "orient": "MX",
+      "status": "PLACED",
+      "bbox": [
+        8.856,
+        83.43,
+        10.26,
+        83.7
+      ],
+      "signal_inputs": {
+        "cpr32_c27395_1/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            8.95,
+            83.521
+          ]
+        },
+        "cpr32_c27395_1/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34281",
+          "xy": [
+            9.108,
+            83.565
+          ]
+        },
+        "cpr32_c27395_1/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34265",
+          "xy": [
+            9.641,
+            83.565
+          ]
+        },
+        "cpr32_c27395_1/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32600",
+          "xy": [
+            9.68,
+            83.521
+          ]
+        }
+      },
+      "logical_loads": 21,
+      "endpoints": [
+        "cpo257_ff/RESETN",
+        "cpo263_ff/RESETN",
+        "cpo272_ff/RESETN",
+        "cpo308_ff/RESETN",
+        "cpo314_ff/RESETN",
+        "cpo325_ff/RESETN",
+        "cpo331_ff/RESETN",
+        "cpo332_ff/RESETN",
+        "cpo333_ff/RESETN",
+        "cpo334_ff/RESETN",
+        "cpo337_ff/RESETN",
+        "cpo338_ff/RESETN",
+        "cpo339_ff/RESETN",
+        "cpo340_ff/RESETN",
+        "cpo343_ff/RESETN",
+        "cpo344_ff/RESETN",
+        "cpo345_ff/RESETN",
+        "cpo347_ff/RESETN",
+        "cpo348_ff/RESETN",
+        "cpo349_ff/RESETN",
+        "cpo350_ff/RESETN"
+      ],
+      "declared_same_edge_ancestor": "c27395",
+      "ancestor_cell": {
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "orient": "R0",
+        "status": "PLACED",
+        "bbox": [
+          9.018,
+          83.16,
+          10.422,
+          83.43
+        ]
+      },
+      "ancestor_inputs": {
+        "c27395/CLK": {
+          "dir": "INPUT",
+          "role": "CLOCK",
+          "net": "ck",
+          "xy": [
+            9.112,
+            83.338
+          ]
+        },
+        "c27395/D": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34281",
+          "xy": [
+            9.27,
+            83.295
+          ]
+        },
+        "c27395/RESETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n34265",
+          "xy": [
+            9.803,
+            83.294
+          ]
+        },
+        "c27395/SETN": {
+          "dir": "INPUT",
+          "role": "SIGNAL",
+          "net": "n32600",
+          "xy": [
+            9.842,
+            83.338
+          ]
+        }
+      },
+      "D_CLK_RESETN_SETN_identical_to_ancestor": {
+        "D": true,
+        "CLK": true,
+        "RESETN": true,
+        "SETN": true
+      }
+    }
+  ],
+  "pg_records_count": 250575,
+  "pg_native_connectivity": "UNQUALIFIED: assigned net and metal rectangles are not via/access connectivity proof",
+  "native_clock": "NULL: no CTS, ideal clock only",
+  "rows": 784,
+  "reset_copy_count": 13,
+  "stage_wire_by_type": {
+    "data": {
+      "count": 5145,
+      "max_um": 1054.256,
+      "over405": 635
+    },
+    "async": {
+      "count": 1767,
+      "max_um": 329.164,
+      "over405": 0
+    }
+  },
+  "legal_grid_offenders": [],
+  "core_outside": [],
+  "row_overlap_pairs": [],
+  "direct_input_first_contact_exceptions": [],
+  "pg_record_types": {
+    "PGNET": 2,
+    "PGBOX": 63743,
+    "PGVIA": 186830
+  },
+  "pg_pin_assigned_counts": {
+    "('POWER', 'VDD')": 34603,
+    "('GROUND', 'VSS')": 34603
+  },
+  "actual_clock_port": {
+    "dir": "INPUT",
+    "role": "SIGNAL",
+    "net": "ck",
+    "xy": [
+      107.964,
+      0.042
+    ]
+  },
+  "boundary_dead_port_explanation": "A backwards output cone may terminate at a tie; see boundary ledger, no exemption inferred.",
+  "individual_logical_reach": {
+    "metric": "Manhattan between actual native logical driver and logical endpoint pin, BUF/INV/HB transparent; placement geometry, not routed wire",
+    "max_um": 328.171,
+    "over405": 0,
+    "top20": [
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12856/RESETN",
+        "role": "ff",
+        "manhattan_um": 328.171
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12861/RESETN",
+        "role": "ff",
+        "manhattan_um": 327.902
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12860/RESETN",
+        "role": "ff",
+        "manhattan_um": 327.631
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12855/RESETN",
+        "role": "ff",
+        "manhattan_um": 327.091
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12857/RESETN",
+        "role": "ff",
+        "manhattan_um": 326.551
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12858/RESETN",
+        "role": "ff",
+        "manhattan_um": 326.282
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12862/RESETN",
+        "role": "ff",
+        "manhattan_um": 324.554
+      },
+      {
+        "driver": "c27389/QN",
+        "endpoint": "c12859/RESETN",
+        "role": "ff",
+        "manhattan_um": 324.445
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c32645/B",
+        "role": "comb",
+        "manhattan_um": 314.006
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c32644/B",
+        "role": "comb",
+        "manhattan_um": 313.78999999999996
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c9057/B",
+        "role": "comb",
+        "manhattan_um": 313.70899999999995
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c32643/B",
+        "role": "comb",
+        "manhattan_um": 313.466
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c30943/B",
+        "role": "comb",
+        "manhattan_um": 313.22299999999996
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c33153/B",
+        "role": "comb",
+        "manhattan_um": 311.765
+      },
+      {
+        "driver": "c27362/QN",
+        "endpoint": "c18289/A",
+        "role": "ff",
+        "manhattan_um": 306.461
+      },
+      {
+        "driver": "c2216/Y",
+        "endpoint": "c33151/B",
+        "role": "comb",
+        "manhattan_um": 306.44599999999997
+      },
+      {
+        "driver": "c27362/QN",
+        "endpoint": "c18280/A",
+        "role": "ff",
+        "manhattan_um": 305.27299999999997
+      },
+      {
+        "driver": "c27362/QN",
+        "endpoint": "c18274/A",
+        "role": "ff",
+        "manhattan_um": 305.165
+      },
+      {
+        "driver": "c13287/QN",
+        "endpoint": "c15766/D",
+        "role": "ff",
+        "manhattan_um": 304.216
+      },
+      {
+        "driver": "c27362/QN",
+        "endpoint": "c18265/A",
+        "role": "ff",
+        "manhattan_um": 303.977
+      }
+    ],
+    "by_role": {
+      "ff": {
+        "max_um": 328.171,
+        "over405": 0
+      },
+      "comb": {
+        "max_um": 314.006,
+        "over405": 0
+      },
+      "tie": {
+        "max_um": 303.769,
+        "over405": 0
+      },
+      "input": {
+        "max_um": 9.543000000000006,
+        "over405": 0
+      },
+      "reset_ff": {
+        "max_um": 166.631,
+        "over405": 0
+      }
+    }
+  },
+  "complete_stage_wire_interpretation": "TIMING DIAGNOSTIC ONLY, not a separate405um reach rejection",
+  "unconsumed_input_count": 521,
+  "constant_output_without_last_ff_count": 107
+}
