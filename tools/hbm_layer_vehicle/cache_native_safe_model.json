@@ -1,0 +1,37 @@
+{
+  "stage": "pre-RTL structural candidate",
+  "predecessor": "ot_hbm_svc_static_sm_packed136_native8@f3016524e",
+  "payload_ring": {
+    "slots": 8,
+    "bits": 256,
+    "runtime_bits": 2048
+  },
+  "macros": {
+    "name": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 5,
+    "width_um": 94.824,
+    "height_um": 41.064,
+    "area_um2": 19469.26368,
+    "tt_clk_to_q_ps": 351.7716962013416
+  },
+  "boundary": {
+    "ingress_bits_per_edge": 1024,
+    "packed_row_bits": 1088,
+    "output_bits": 1099
+  },
+  "control_plan": {
+    "local_payload_slice_bits": 8,
+    "critical_fanout_limit": 32,
+    "kept_local_predicates": true,
+    "remove_reset_as_payload_enable": true
+  },
+  "latency": {
+    "operation_edges_added_goal": 0,
+    "ingress_Q": "price after partition selection",
+    "egress_Q": "macro output native Q, valid/tag Q"
+  },
+  "clock_reach_um_limit": 405,
+  "outline": "OPEN until mapped area; five macros on43.2um lattice, channels by pin density",
+  "area": "baseline admitted census first; no mapped estimate or closure claim yet",
+  "no_rate_credit": true
+}
