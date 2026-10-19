@@ -1,0 +1,27 @@
+{
+ "original_source": "5f2ce19bc57cc98c941aad2362d4c7a855498171",
+ "driver_source": "cda9d9f9d7956dfb1a346c9409aa0396a9396cb7",
+ "unchanged_dependencies": [
+  "tools except chain/kvsys_prep.sh",
+  "rtl",
+  "physical"
+ ],
+ "changed_paths": [
+  "results/arch/kv_gen8_v4_1019/README.md",
+  "results/arch/kv_gen8_v4_1019/actual_after_preflight.json",
+  "results/arch/kv_gen8_v4_1019/actual_check_preflight.json",
+  "results/arch/kv_gen8_v4_1019/actual_normal_preflight.json",
+  "results/arch/kv_gen8_v4_1019/continue.py",
+  "results/arch/kv_gen8_v4_1019/preflight.py",
+  "results/arch/kv_gen8_v4_1019/shell_preflight.log",
+  "results/arch/kv_gen8_v4_1019/v3_STATUS.log",
+  "results/arch/kv_gen8_v4_1019/v3_expand.log",
+  "results/arch/kv_gen8_v4_1019/v3_lint.log",
+  "results/arch/kv_gen8_v4_1019/v3_prep.log",
+  "tools/qwen_kv_die/chain/kvsys_prep.sh"
+ ],
+ "old_run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-5f2ce19bc-gen8v3mub",
+ "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub",
+ "reuse": "full byte-identical snapshot before first orientation; no hardlinks",
+ "qualification": "PARAM_DIAG NOT_A_DIE_RESULT; OT_PIN_ALIGN FAIL1001 WARN20340 preserved"
+}

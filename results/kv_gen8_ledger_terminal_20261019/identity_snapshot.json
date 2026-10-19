@@ -1,0 +1,103 @@
+{
+  "observed": "2026-10-19T14:36:28.306459-07:00",
+  "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub",
+  "source": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-cda9d9f9d-gen8v4mub",
+  "run_files": {
+    "STATUS.log": {
+      "bytes": 4153,
+      "sha256": "89ca242197d65b03c1bee12a087625512a2532ba3d8d7dfd1295a05e99e9fab0"
+    },
+    "prep_v4_resume.log": {
+      "bytes": 5272,
+      "sha256": "5f92fce16f79d20312959e13f17503a133370ab0994a75c3ff463abed323ac61"
+    },
+    "port_bind_v2.log": {
+      "bytes": 65295,
+      "sha256": "cf4e194ae41bb96e9fab81ead5aac6781b409c8635bcb2661beefe393f3c982b"
+    },
+    "relay_check.log": {
+      "bytes": 169,
+      "sha256": "9fe5f94df7870e13cc7d44116ee756274e5e44e6fae3cfd081bb681bbd5986bf"
+    },
+    "expand.json": {
+      "bytes": 13987443,
+      "sha256": "21392fbfee99341ddf3b21007621baa10ac1394b509ea1d69ef07ab7f1400433"
+    },
+    "case_kv/die.v": {
+      "bytes": 23612586,
+      "sha256": "80b5ef6306f6e9e5e5d0b98c4e4af7e15468eb5a33db31b7a35695f4538bbe89"
+    },
+    "case_kv/die.v.preexp": {
+      "bytes": 3716857,
+      "sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e"
+    },
+    "case_kv/die.v.params.json": {
+      "bytes": 809154,
+      "sha256": "1b356dc9d75d74765b4e7e79381b2bd3bb12749de5cbd3e62bd1ad2c39991921"
+    },
+    "continuation.json": {
+      "bytes": 1191,
+      "sha256": "c0c9308edc427e2b61fd6831751c9e39e329e6aa684d9041ec91c3a04d4a16f3"
+    },
+    "dependency_manifest.json": {
+      "bytes": 13826874,
+      "sha256": "eb6288430a5eb0e8b98ece897744fb5749f55eea6737418d8003e9c82833fc78"
+    },
+    "NOT_A_DIE_RESULT": {
+      "bytes": 63,
+      "sha256": "1ec22d99476fa21984685375e89c39d4e675546cad0ef993f026981ad2743fcb"
+    },
+    "port_bind_launch.json": {
+      "bytes": 27912,
+      "sha256": "9a135d4ec7d89239a8203109d50111fd0b20a7441479ed3017078ed1136d7e2e"
+    },
+    "case_kv/place.tcl": {
+      "bytes": 3578899,
+      "sha256": "cc4fd134831891d5e0e4a2d8c4f5dd94d81ff85ef76d3c0efe37ead238bbcdbc"
+    },
+    "case_kv/run.log": {
+      "bytes": 347304,
+      "sha256": "2b4d4007055ccf3196f7bd6b1c48e4d4704766b17344bedfe6f13332bd8f4c9e"
+    },
+    "fwd_lanes.json": {
+      "bytes": 718033,
+      "sha256": "497725676189274ae4e573595d132cc16f39765001c7e61c42422a385c7e621e"
+    },
+    "case_kv/boot_ages.json": {
+      "bytes": 1394,
+      "sha256": "57405f718950941fa241f207e49a7e278e6f8d8c152ecf67ab0bcb1851afafd6"
+    }
+  },
+  "source_files": {
+    "tools/qwen_kv_die/kv_expand.py": {
+      "bytes": 37156,
+      "sha256": "1fb707656faad07afdf0e4b24b7cee377c0b25d2bfbf3bfaf00f14de503ab012"
+    },
+    "tools/qwen_kv_die/kv_expand_parameters.py": {
+      "bytes": 8615,
+      "sha256": "b3c41d052e10158ed7bf974254f7e5271223850027f12bb0330e27cf74b6aa73"
+    },
+    "tools/qwen_kv_die/kv_astk_expand.py": {
+      "bytes": 12861,
+      "sha256": "8ef4ce07541238b3333507f521b0f9b9e7a3c448823cf20bb2a6525dcd8783e5"
+    },
+    "tools/qwen_kv_die/die_port_bind_kv.py": {
+      "bytes": 15328,
+      "sha256": "20d6bec028cec4cc294ea0e723e4235bd52ebb6b56a9a7d57eb0bdc1ef84ba8a"
+    },
+    "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": {
+      "bytes": 1213,
+      "sha256": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c"
+    },
+    "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": {
+      "bytes": 2183,
+      "sha256": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+    }
+  },
+  "absent": [
+    "port_bind_v2/die_bound.v",
+    "port_bind_v2/port_bind_v2.json",
+    "relay_check.json"
+  ],
+  "processes": "    PID    PPID STAT     ELAPSED COMMAND\n1602854 1602713 S          46:57 bash /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub/continue_chain.sh cda9d9f9d\n3629658 1602854 S          12:35 bash tools/qwen_kv_die/chain/kv_die_clock_regions.sh /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-cda9d9f9d-gen8v4mub\n3629660 1602854 S          12:35 bash /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-cda9d9f9d-gen8v4mub/tools/qwen_kv_die/chain/die_chain.sh kv /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-cda9d9f9d-gen8v4mub\n3631904 3629660 S          10:39 /bin/bash /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-cda9d9f9d-gen8v4mub/tools/qwen_kv_die/chain/run_case.sh /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub/case_kv run.tcl run.log 16 60\n3631913 3631904 Sl         10:39 /usr/bin/docker run --memory-swap=60g --rm --name qfd_kvs14r-cda9d9f9d-gen8v4mub_case_kv_run --cpus=16 --memory=60g -e OT_ORFS_NUM_CORES=16 -e OT_PDN_BBOX_OBS=1 -v /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-cda9d9f9d-gen8v4mub/case_kv:/work -w /work openroad/orfs:asap7lock bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=$?; chmod -R a+rwX /work; exit $rc\n"
+}

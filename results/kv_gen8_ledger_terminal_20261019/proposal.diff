@@ -1,0 +1,22 @@
+PROPOSAL ONLY: not applied, no continuation authorization.
+--- tools/qwen_kv_die/kv_expand.py
++++ tools/qwen_kv_die/kv_expand.py
+@@ source/profile preservation for the already selected emitted master
+-            literals, profile = EP.preserve(ROOT, base_type(c["type"]), c.get("parameters", {}),
++            literals, profile = EP.preserve(ROOT, ct, c.get("parameters", {}),
+                                             RTL[ct], L["view"], profiles, a.diagnostic_parameter_profiles)
+@@ ledger records must name the physical master
+-                rep["parameter_instances"][cinst] = dict(module=base_type(c["type"]), literals=literals, profile=profile)
++                rep["parameter_instances"][cinst] = dict(module=ct, literals=literals, profile=profile)
+
+Additionally tighten integer_defaults: first require an actual declaration of
+module <requested name> in source; absent module must raise ValueError, while a
+present parameterless module still returns {}. This prevents another alias from
+silently treating the wrong source as parameterless.
+
+For this exact alias, source relay has no parameters or overrides and successor
+adds MUT=0. Preserve must read successor declaration and produce MUT=32sb0;
+validate empty original override set and explicit alias identity. Any nonempty
+inherited overrides need an explicit compatible parameter mapping (or refusal),
+never discard them or infer that a common port shape proves parameter semantics.
+Do not alter verify_bound, exempt MUT, or whitelist hierarchy prefixes.
