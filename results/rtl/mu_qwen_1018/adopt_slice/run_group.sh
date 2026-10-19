@@ -48,4 +48,22 @@ FACES)
         "$WORK/$c/sim"; echo "# exit $?"; } > "$R/$c.out" 2>&1 ) &
   done
   wait ;;
+DHUSER)
+  H=results/rtl/mu_qwen_1018/adopt_slice
+  dcase() { # case mut seed plusargs
+    local c=$1 m=$2 s=$3 pa=$4
+    ( { echo "# case $c MUT=$m SEED=$s plusargs '$pa' host $(hostname) $(date -Is) commit $(cat SOURCE_COMMIT 2>/dev/null)";
+        sha256sum rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv $H/tb_dhuser.sv;
+        verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_dhuser -GMUT=$m -GSEED=$s \
+          -Mdir "$WORK/$c" -o sim rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv $H/tb_dhuser.sv > "$WORK/$c.build.log" 2>&1 \
+          || { echo BUILD FAIL; tail -30 "$WORK/$c.build.log"; };
+        "$WORK/$c/sim" $pa; echo "# exit $?"; } > "$R/$c.out" 2>&1 ) &
+  }
+  grep -q "always @\* seq_dh = {dh_prog, dh_run};" rtl/qwen_split/qfd_sys_face.sv && \
+  grep -q "dh_run\[42\] <= ev_stage; dh_run\[41:36\] <= ev_stage ? ta\[5:0\]" rtl/qwen_split/qfd_sys_face.sv \
+    && echo "seq_dh field map OK (h_start [42], stage [41:36])" > "$R/dhuser_fieldmap.out" \
+    || echo "seq_dh field map MOVED: FAIL" > "$R/dhuser_fieldmap.out"
+  dcase dhuser_pass_s7 0 7 ""; dcase dhuser_pass_s11 0 11 ""; dcase dhuser_slip_pass 0 7 "+slip"
+  dcase dhuser_mut1 1 7 ""; dcase dhuser_mut3 3 7 ""; dcase dhuser_mut2_slip 2 7 "+slip"
+  wait ;;
 esac
