@@ -5,7 +5,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{cp_active} {native_ret} {h_start} {token} {pos} {prog_base} {pw_v} {pw_addr} {pw_data} {x_oacc} {x_oidle} {x_oprog} {x_orows} {kv_ok} {kv_write_drained} {me_mem_ok} {rom_ret_i} {rst_n}} outputs {{me_image_ready} {cp} {program_obs} {layer_context_v} {native_tok} {native_pos} {command_stage} {native_cmd} {m_fin_o} {m_fidx_o} {m_fval_o} {c_fault} {rom_cmd} {me_observe} {me_clk_en} {kvd_v} {kvd_wbase} {kvd_ts} {kvd_ks} {kvd_js} {kvd_wcs} {kvd_split} {kvd_jsh} {kvd_tiles} {kvd_k} {kvd_nout} {kvd_kindk} {kvd_pos}}} {pm0} {clock ot_io_pm0 io_budget_ps 166.667 inputs {} outputs {}} {pm1} {clock ot_io_pm1 io_budget_ps 166.667 inputs {} outputs {}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{cp_active} {native_ret} {h_start} {stage_start} {stage} {token} {pos} {prog_base} {pw_v} {pw_addr} {pw_data} {x_oacc} {x_oidle} {x_oprog} {x_orows} {kv_ok} {kv_write_drained} {me_mem_ok} {rom_ret_i} {rst_n}} outputs {{me_image_ready} {cp} {program_obs} {layer_context_v} {native_tok} {native_pos} {command_stage} {native_cmd} {m_fin_o} {m_fidx_o} {m_fval_o} {c_fault} {rom_cmd} {me_observe} {me_clk_en} {kvd_v} {kvd_wbase} {kvd_ts} {kvd_ks} {kvd_js} {kvd_wcs} {kvd_split} {kvd_jsh} {kvd_tiles} {kvd_k} {kvd_nout} {kvd_kindk} {kvd_pos}}} {pm0} {clock ot_io_pm0 io_budget_ps 166.667 inputs {} outputs {}} {pm1} {clock ot_io_pm1 io_budget_ps 166.667 inputs {} outputs {}}]
 set ::ot_ce_source_domains [dict create {ck_head} {core} {ck_pm0} {pm0} {ck_pm1} {pm1}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_head}}
