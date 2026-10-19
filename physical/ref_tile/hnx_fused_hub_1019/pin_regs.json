@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hnx_fused_hub",
+ "enable": false,
+ "reason": "the RTL registers every pin: quadrant up buses land in the hub tree nodes' pin flops (u_t4a/u_t4b iac/iad/ibc/ibd), the job word in jq, wsc in wt, pad straps in the nodes' pk_q/pb_q; every output is a flop Q (dq* = tnode kept da/db copies, done/fault/busy_q). The tree schedule (pads, wsc) is derived from these fixed edges, so automatic pin registers would shift it"
+}

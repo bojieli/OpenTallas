@@ -33,10 +33,10 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*u_xb}]
-$i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(248.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 22.464 248.4 R0"
+$i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 129.6 259.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*u_gb}]
-$i setOrient R0; $i setLocation [expr {round(22.464 * $dbu)}] [expr {round(185.76 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 22.464 185.76 R0"
+$i setOrient R0; $i setLocation [expr {round(129.6 * $dbu)}] [expr {round(172.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 129.6 172.8 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 2} { error "ref_tile place: expected 2 macros, netlist has $nb" }

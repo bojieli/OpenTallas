@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """HBM-NEXT-UNITS-FUSED (2026-10-19): bench vectors for ot_hnx_fused_top (tb_hnx_fused), one N-row record a case.
 
-    hnx_fused_vec.py --op pre|post --n N [--rgap G] [--seed S] --out DIR
+    hnx_fused_vec.py --op pre|post --n N [--rgap G] [--seed S] [--ph K] --out DIR
+
+--ph K (LH-P3UNITS/FUSHUB): place A / B / O at bank phase K (word offset 8 K; C unchanged).  ph = 0 (default) is the
+layout below, byte for byte.  The die csum tree (ot_hnx_fused_tree_top) is the golden order only at ph = 0; ph != 0
+records are refused (fault) and are bench negatives.
 
 Golden = tools/hdc_golden_v41 under R-ARITH chunk8 (the order the LL engine and this engine implement):
   HC_PRE_NORM row p: x = bf16(seqsum_j pre_p[j] h_p[j]); y = rmsnorm_bf16(x, w, eps)  (gain w shared by all rows)
@@ -45,9 +49,12 @@ def main():
     ap.add_argument("--n", type=int, required=True)
     ap.add_argument("--rgap", type=int, default=0)
     ap.add_argument("--seed", type=int, default=19)
+    ap.add_argument("--ph", type=int, default=0)
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     assert 1 <= a.n <= 8 and 0 <= a.rgap <= 255, "N 1..8 (NMAX), rgap is an 8-b field"
+    assert 0 <= a.ph <= 31, "bank phase 0..31"
+    po = 8 * a.ph
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(a.seed + 100 * a.n + (0 if a.op == "pre" else 7))
@@ -55,7 +62,7 @@ def main():
     vin, vout = {}, {}
     eps = np.float32(1e-6)
     if a.op == "pre":
-        A, B, C, O = 0, 131072, 196608, 163840
+        A, B, C, O = 0 + po, 131072 + po, 196608, 163840 + po
         rsa, rsb, rsc, rso = 4 * D, 0, 8, D
         assert A + n * rsa <= B and O + n * rso <= C
         w = GV.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
@@ -70,7 +77,7 @@ def main():
             vout.update({O + p * rso + i: int(v) for i, v in enumerate(f32w(y))})
         job = job_word(0, n - 1, A, B, C, O, rsa, rsb, rsc, rso, a.rgap, eps)
     else:
-        A, B, C, O = 0, 32768, 327680, 196608
+        A, B, C, O = 0 + po, 32768 + po, 327680, 196608 + po
         rsa, rsb, rsc, rso = D, 4 * D, 24, 4 * D
         assert A + n * rsa <= B and B + n * rsb <= O and O + n * rso <= C and C + n * rsc < (1 << 19)
         for p in range(n):
@@ -89,9 +96,12 @@ def main():
     (out / "vmi.mem").write_text("".join(f"{k:05X}{v:08X}\n" for k, v in sorted(vin.items())))
     (out / "vme.mem").write_text("".join(f"{k:05X}{v:08X}\n" for k, v in sorted(vout.items())))
     (out / "job.mem").write_text(f"{job:055X}\n")
-    (out / "plus.txt").write_text(f"+NVMI={len(vin)} +NVME={len(vout)} +OP={a.op} +N={n} +RGAP={a.rgap}\n")
-    (out / "case.json").write_text(json.dumps(dict(op=a.op, n=n, rgap=a.rgap, seed=a.seed, nvmi=len(vin),
-                                                    nvme=len(vout), job=f"{job:055X}"), indent=1) + "\n")
+    (out / "plus.txt").write_text(f"+NVMI={len(vin)} +NVME={len(vout)} +OP={a.op} +N={n} +RGAP={a.rgap}"
+                                  + (f" +PH={a.ph}" if a.ph else "") + "\n")
+    cj = dict(op=a.op, n=n, rgap=a.rgap, seed=a.seed, nvmi=len(vin), nvme=len(vout), job=f"{job:055X}")
+    if a.ph:
+        cj["ph"] = a.ph
+    (out / "case.json").write_text(json.dumps(cj, indent=1) + "\n")
     print(f"{a.op} N={n} rgap={a.rgap}: vmi {len(vin)} vme {len(vout)}")
 
 

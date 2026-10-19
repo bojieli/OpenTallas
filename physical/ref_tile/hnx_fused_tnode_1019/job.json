@@ -1,0 +1,201 @@
+{
+ "name": "hnx_fused_tnode_1019-t1-COMMIT",
+ "block": "ot_hnx_fused_tnode",
+ "ref_tile": true,
+ "owner": "Claude:LEAD-HBM/LH-P3UNITS/FUSHUB",
+ "purpose": "HBM-NEXT P=3 FUSED csum tree node (x28 on die f4c_t9p3: 16 level-1 pair nodes, 8 level-2, 4 quadrant nodes; one view, strap-padded round-trip alignment in SRAM rings, one registered FP32 add in the golden pair order, scalar/fin/flt pass, down bus re-registered per child)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hbm-next-units-fushub-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv",
+   "rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv",
+   "rtl/hbm_next/fused/tb/tb_hnx_fused.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+   "tools/hbm_next/hnx_fushub_bench.sh",
+   "tools/hbm_next/hnx_fused_vec.py",
+   "tools/hbm_next/hnx_fushub.vlt",
+   "tools/hbm_next/hnx_fused.vlt",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/arch/hbm_next_1019/units/fushub/witness",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_delay_ring.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hnx_fused_tnode u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_next/fused/ot_hnx_fused_tree.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_ring.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_fushub_t0",
+    "cmd": "bash tools/hbm_next/hnx_fushub_bench.sh {RUN}/bench/t0 t0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "t0 SUMMARY pass=10 fail=0 noresult=0"
+   },
+   {
+    "name": "hnx_fushub_phr",
+    "cmd": "bash tools/hbm_next/hnx_fushub_bench.sh {RUN}/bench/phr phr",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "phr SUMMARY refuse=1 accept=0 post_pass=1"
+   },
+   {
+    "name": "hnx_fushub_m4",
+    "cmd": "bash tools/hbm_next/hnx_fushub_bench.sh {RUN}/bench/m4 m4",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m4 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "csum heap not cleared on consume (collision check off)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fushub/witness/m4.log"
+   },
+   {
+    "name": "hnx_fushub_m7",
+    "cmd": "bash tools/hbm_next/hnx_fushub_bench.sh {RUN}/bench/m7 m7",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m7 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "hub accepts HC_PRE_NORM ph != 0 (ph 3 / ph 5 vectors): the fixed csum tree is not the golden order",
+    "fail_witness": "results/arch/hbm_next_1019/units/fushub/witness/m7.log"
+   },
+   {
+    "name": "hnx_fushub_m8",
+    "cmd": "bash tools/hbm_next/hnx_fushub_bench.sh {RUN}/bench/m8 m8",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m8 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "lanes 2 and 4 of quadrant 0 swap tree positions (wrong tree order, timing aligned)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fushub/witness/m8.log"
+   },
+   {
+    "name": "hnx_fushub_m9",
+    "cmd": "bash tools/hbm_next/hnx_fushub_bench.sh {RUN}/bench/m9 m9",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 60,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "m9 SUMMARY pass=[1-9]",
+    "fail_regex": "HNX_FUSED FAIL op=pre N=4 mism=[1-9]",
+    "note": "quadrant 0 n2L alignment pad one edge short (misaligned chunk sums)",
+    "fail_witness": "results/arch/hbm_next_1019/units/fushub/witness/m9.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hnx_fused_tnode_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hnx_fused_tnode_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hnx_fused_tnode_1019 --out {RUN}/record/views/ot_hnx_fused_tnode --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hnx_fused_tnode_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hnx_fused_tnode_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/arch/hbm_next_1019/units/fushub/route_hnx_fused_tnode_1019/hnx_fused_tnode_1019-t1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "NEW tile (LH-P3UNITS/FUSHUB): replaces ot_hnx_fused_top's single-edge 32-lane star + 5-level tree (illegal on the die: 32 x 441 b into one hub over 14.5 mm) by the DIE neighbour-hop tree; SAFE-DESIGN reviewed before the first gate"
+}
