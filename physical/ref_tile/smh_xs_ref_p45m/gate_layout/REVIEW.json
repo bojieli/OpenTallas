@@ -1,3 +1,17 @@
-{"schema":"opentallas.tile_visual_review.v1","tile":"smh_xs_ref_p45m","reviewer":"HOURLY-HBM/HH-2 for lane HF-5 (not a critical tile; 2026-10-18 ~23:15)","verdict":"APPROVED","time":"2026-10-18T23:15:00-07:00","gate_commit":"81d8cf4b9",
- "checklist":{"lattice":"PASS: four 128x256 SRAMs in a regular 2x2 grid, equal channels, centred","std_cell_band":"PASS: one std-cell region around and between the macros; fill 0.51","pin_spread":"PASS (as the closed da183de3c view): S face 2,914 landing pins over 300 um (full face), N 1,639 over 226 um; o_iw/o_ix moved to N; E 19 control pins","clock_entry":"PASS: clk on N face beside the bnd_branch boundary tree; --cts TT pin-flop spread 68.9 / FF 59.4 (was 106.4/101.9 native)","shape":"PASS: 302.4x157.68 unchanged outline (1.9:1, pin-limited); trial GRT overflow 0 (M2 46%); setup WNS +79.7 ps, hold +6.9 ps"},
- "notes":"HF-5b successor of the xs native-audit FAIL (boundary spread >80): bnd_branch.tcl depth 6 + E-face control copy u_ctle + o_iw/o_ix on N; 0 cycles, same macros/outline/SDC. Gate WARN only (15.6k sinks/insertion 435 = guidance). Routed native audit decides bindability."}
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "smh_xs_ref_p45m",
+ "reviewer": "coordinator (2026-10-19 ~04:00)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T04:00:00-07:00",
+ "gate_commit": "fdd62f53a",
+ "checklist": {
+  "lattice": "PASS: 4 SRAM 128x256 in a regular 2x2 grid, equal channels",
+  "std_cell_band": "PASS: one std-cell region around the grid, fill 51%",
+  "pin_spread": "PASS: S face full length (2,914), N 75% (1,639), E 19",
+  "clock_entry": "PASS: N face beside the dense N band; spread TT 68.9 / FF 59.4 (<=80, was 106/102)",
+  "shape": "PASS: 302.4x157.68 = closed outline (pin-limited 1.9:1), GRT ovf 0"
+ },
+ "notes": "smh_attn child (H.STA.BLK.14.1).",
+ "geometry_sha256": "db32c47e53280893147595a1bddecad5d53be19e5b9130577297eb5c7ea90e79"
+}
