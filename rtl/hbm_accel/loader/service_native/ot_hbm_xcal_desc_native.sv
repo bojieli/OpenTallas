@@ -69,8 +69,8 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
       else begin cfg_we_o<=cfg_we;start_v_o<=go;end
     always @(posedge clk or negedge rst_q) begin
         if (!rst_q) begin
-            running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0; rp <= 0; rp_q <= 0; n_rd <= 0; n_go <= 0; n_done <= 0;
-            rc <= 24'd0; e_at <= 24'd0; e_base <= 0; e_limit <= 0; e_loops <= 16'd0; e_ctx <= 5'd0;
+            running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0;  rp_q <= 0;   
+            rc <= 24'd0;     
             active <= 1'b0; done <= 1'b0; fault <= 1'b0; outstanding <= 1'b0;
         end else begin
             done <= 1'b0;
@@ -78,29 +78,88 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
             if (run_q) begin
                 if (running || outstanding || run_count_q == 0 || {1'b0, run_base_q} + run_count_q > DD) fault <= 1'b1;
                 else begin
-                    running <= 1'b1; outstanding <= 1'b1; rp <= run_base_q; n_rd <= run_count_q; n_go <= run_count_q; n_done <= run_count_q;
+                    running <= 1'b1; outstanding <= 1'b1; 
                     rc <= (MUT == 1) ? 24'd0 : 24'd1;
                 end
             end else if (running) rc <= rc + 24'd1;
             rd_q <= rd_go; rp_q <= rp;
-            if (rd_go) begin rp <= rp + 1'b1; n_rd <= n_rd - 1'b1; end
+
             if (rd_q) begin
                 ent_v <= 1'b1;
-                e_at <= rd[142:119]; e_base <= PAW'({rd[189], rd[91:82]}); e_limit <= (PAW+1)'({rd[190], rd[102:92]}); e_loops <= rd[118:103];
-                e_ctx <= {rd[197:195], rd[198], rd[199]};
+                   
+                
                 if (rd[255:240] != 16'h5d15 || rd[232 +: DAW] != rp_q || (DAW == 7 && rd[239]) || rd[231:200] != 0) fault <= 1'b1;
             end
             if (go) begin
-                ent_v <= 1'b0; n_go <= n_go - 1'b1;
+                ent_v <= 1'b0;
                 if (n_go == 1) running <= 1'b0;
             end
             if (ent_v && (e_at < 2 || rc > e_at-2)) fault <= 1'b1;            // missed compiler slot: never a late start
             if (prog_fault_q) fault <= 1'b1;
             if (prog_done_q && outstanding) begin
-                n_done <= n_done - 1'b1;
+
                 if(n_done == 1)begin done <= 1'b1; outstanding <= 1'b0; end
             end          // the run's last programme has issued its last word
         end
     end
+    wire [24-1:0] e_at_decoded=rd[142:119];
+    for(genvar k=0;k<(24+7)/8;k=k+1)begin:g_capture_e_at
+      localparam integer BW=(24-8*k<8)?24-8*k:8;
+      wire cap;
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge rst_q)
+        if(!rst_q)e_at[8*k+:BW]<=0;else if(cap)e_at[8*k+:BW]<=e_at_decoded[8*k+:BW];
+    end
+    wire [PAW-1:0] e_base_decoded=PAW'({rd[189],rd[91:82]});
+    for(genvar k=0;k<(PAW+7)/8;k=k+1)begin:g_capture_e_base
+      localparam integer BW=(PAW-8*k<8)?PAW-8*k:8;
+      wire cap;
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge rst_q)
+        if(!rst_q)e_base[8*k+:BW]<=0;else if(cap)e_base[8*k+:BW]<=e_base_decoded[8*k+:BW];
+    end
+    wire [PAW+1-1:0] e_limit_decoded=(PAW+1)'({rd[190],rd[102:92]});
+    for(genvar k=0;k<(PAW+1+7)/8;k=k+1)begin:g_capture_e_limit
+      localparam integer BW=(PAW+1-8*k<8)?PAW+1-8*k:8;
+      wire cap;
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge rst_q)
+        if(!rst_q)e_limit[8*k+:BW]<=0;else if(cap)e_limit[8*k+:BW]<=e_limit_decoded[8*k+:BW];
+    end
+    wire [16-1:0] e_loops_decoded=rd[118:103];
+    for(genvar k=0;k<(16+7)/8;k=k+1)begin:g_capture_e_loops
+      localparam integer BW=(16-8*k<8)?16-8*k:8;
+      wire cap;
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge rst_q)
+        if(!rst_q)e_loops[8*k+:BW]<=0;else if(cap)e_loops[8*k+:BW]<=e_loops_decoded[8*k+:BW];
+    end
+    wire [5-1:0] e_ctx_decoded={rd[197:195],rd[198],rd[199]};
+    for(genvar k=0;k<(5+7)/8;k=k+1)begin:g_capture_e_ctx
+      localparam integer BW=(5-8*k<8)?5-8*k:8;
+      wire cap;
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge rst_q)
+        if(!rst_q)e_ctx[8*k+:BW]<=0;else if(cap)e_ctx[8*k+:BW]<=e_ctx_decoded[8*k+:BW];
+    end
+    wire [1:0] run_copy;wire [1:0] run_accept;
+    wire legal_run=run_count_q!=0&&{1'b0,run_base_q}+run_count_q<=DD;
+    for(genvar k=0;k<2;k=k+1)begin:g_run_copy
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_run(.clk(clk),.rst_n(rst_q),.d(run_v),.q(run_copy[k]));
+      assign run_accept[k]=run_copy[k]&&!running&&!outstanding&&legal_run;
+    end
+    always @(posedge clk or negedge rst_q)
+      if(!rst_q)begin rp<=0;n_rd<=0;end
+      else begin
+        if(run_accept[0])begin rp<=run_base_q;n_rd<=run_count_q;end
+        if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
+      end
+    always @(posedge clk or negedge rst_q)
+      if(!rst_q)begin n_go<=0;n_done<=0;end
+      else begin
+        if(run_accept[1])begin n_go<=run_count_q;n_done<=run_count_q;end
+        if(go)n_go<=n_go-1'b1;
+        if(prog_done_q&&outstanding)n_done<=n_done-1'b1;
+      end
 endmodule
 `default_nettype wire
