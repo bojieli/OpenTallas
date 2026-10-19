@@ -268,12 +268,25 @@ def cmd_plan(a):
         e = per_sm.setdefault(x["sm"], dict(words=0, lines=0, hbm_bytes=0, svg_blocks=0))
         for k in ("words", "lines", "hbm_bytes", "svg_blocks"):
             e[k] += x[k]
+    # host-CP cost of (re)installing a programme / descriptor through the ingress (layer_images.CpBus: one 256-b row =
+    # 8 AXI writes x 5 edges = CP_FRAME_EDGES; svg and xc each hold their own copy of programme rows and descriptors)
+    sys.path.insert(0, str(HERE))
+    import layer_images as LI  # noqa: E402
     for e in per_sm.values():
         e["fits_1024_word_programme"] = e["words"] <= PROG_WORDS
+        e["install_edges_svg_plus_xc"] = 2 * e["words"] * LI.CP_FRAME_EDGES
+        e["descriptor_rows_svg_plus_xc"] = 2 * e["svg_blocks"]
+        e["descriptor_install_edges"] = 2 * e["svg_blocks"] * LI.CP_FRAME_EDGES
+    tot = dict(programme_install_edges_all_sms=sum(e["install_edges_svg_plus_xc"] for e in per_sm.values()),
+               descriptor_install_edges_all_sms=sum(e["descriptor_install_edges"] for e in per_sm.values()),
+               note="one ingress bus (host_cp_ingress) serves every target: programme rows must be RESIDENT (installed "
+                    "once); anything that changes per token (window-ring rotation -> KV block bases in the issuer "
+                    "descriptors) is a per-token descriptor rewrite at CP_FRAME_EDGES per row unless the base is "
+                    "relocated in hardware")
     doc = dict(schema="opentallas.hbm_vehicle_att_plan.v1", lane="VEH-ATT", source=src, sms=NSM, nrun=nrun,
                rows=len(rec["K"]), window_rows=len(rec["rows8"]), compressed_rows=len(rec["rows4"]),
                placement="d4g W2: aligned chunk runs of 8 x nrun rows on SM s (sm_SW0..7, sm_NW0..7); same split QK/PV",
-               ops=b, per_sm=per_sm, svg_word_bits=SVG_W, xc_word_bits=XC_W, programme_words=PROG_WORDS)
+               ops=b, per_sm=per_sm, host_cp=tot, svg_word_bits=SVG_W, xc_word_bits=XC_W, programme_words=PROG_WORDS)
     Path(a.out).write_text(json.dumps(doc, indent=1, default=int) + "\n")
     print(json.dumps(dict(nrun=nrun, sms=len(per_sm), per_sm=per_sm), default=int))
     return 0

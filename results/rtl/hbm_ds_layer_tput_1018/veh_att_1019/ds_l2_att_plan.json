@@ -364,71 +364,106 @@
    "lines": 498,
    "hbm_bytes": 67728,
    "svg_blocks": 8,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 122480,
+   "descriptor_rows_svg_plus_xc": 16,
+   "descriptor_install_edges": 640
   },
   "sm_SW1": {
    "words": 1531,
    "lines": 498,
    "hbm_bytes": 67728,
    "svg_blocks": 8,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 122480,
+   "descriptor_rows_svg_plus_xc": 16,
+   "descriptor_install_edges": 640
   },
   "sm_SW2": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_SW3": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_SW4": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_SW5": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_SW6": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_SW7": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_NW0": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   },
   "sm_NW1": {
    "words": 1483,
    "lines": 272,
    "hbm_bytes": 36992,
    "svg_blocks": 6,
-   "fits_1024_word_programme": false
+   "fits_1024_word_programme": false,
+   "install_edges_svg_plus_xc": 118640,
+   "descriptor_rows_svg_plus_xc": 12,
+   "descriptor_install_edges": 480
   }
+ },
+ "host_cp": {
+  "programme_install_edges_all_sms": 1194080,
+  "descriptor_install_edges_all_sms": 5120,
+  "note": "one ingress bus (host_cp_ingress) serves every target: programme rows must be RESIDENT (installed once); anything that changes per token (window-ring rotation -> KV block bases in the issuer descriptors) is a per-token descriptor rewrite at CP_FRAME_EDGES per row unless the base is relocated in hardware"
  },
  "svg_word_bits": 135,
  "xc_word_bits": 173,
