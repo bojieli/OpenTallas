@@ -217,7 +217,10 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "job": {
   "owner": "Claude:HF-4",
@@ -229,7 +232,9 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/ref_tile/qfd_tt_head_static_h16c",
-   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf"
+   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+   "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a"
   ],
   "benches": [
    {
