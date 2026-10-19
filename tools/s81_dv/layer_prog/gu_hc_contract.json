@@ -129,7 +129,7 @@
       "witness": "87ed2bccc",
       "native_audit_sha256": null,
       "gate_result_sha256": null,
-      "blocked_reason": "safe3 full mapped critical fanout1852/1537/1095/1060 and depth653.5ps fail SAFE; native pending; no compiler admission",
+      "blocked_reason": "safe3 full mapped critical fanout1852/1537/1095/1060 and depth653.5ps fail SAFE; actual CTS native0over diagnostic passed, terminal gate binding pending; no compiler admission",
       "native_sources": {
         "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv": "8b0b7c2b2d92e25e9ef72d31b689decf5142ae67c258521ba1fa189e3447b6bf",
         "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv": "459b62b22794f3ca054acd9899ed9056b1aa5fe99248af54f55a01f7427b2d13",

@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.s81.gunit.native_cts_diagnostic_pending_gate.v1",
+  "scope": "Actual immutable CTS placement RC; diagnostic only, exact terminal gate binding pending",
+  "source_commit": "1e607068c",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l5-20261019-094110",
+  "thresholds_ps": {
+    "launch": 220,
+    "capture": 190
+  },
+  "launch": [
+    [
+      207.66122000000007,
+      "fault"
+    ],
+    [
+      110.39694000000003,
+      "ct_b[37]"
+    ],
+    [
+      110.18536,
+      "ct_b[39]"
+    ],
+    [
+      110.15154000000001,
+      "ct_b[59]"
+    ],
+    [
+      110.15026,
+      "ct_b[60]"
+    ],
+    [
+      110.02261000000004,
+      "ct_b[57]"
+    ],
+    [
+      109.99087000000003,
+      "ct_b[58]"
+    ],
+    [
+      109.17501000000004,
+      "ct_b[0]"
+    ],
+    [
+      106.01406000000003,
+      "vo_n[272]"
+    ],
+    [
+      104.95046000000002,
+      "xd_b[17]"
+    ]
+  ],
+  "capture": [
+    [
+      89.50021999999996,
+      "vi_n[0]"
+    ],
+    [
+      86.68029999999999,
+      "vi_n[124]"
+    ],
+    [
+      86.30529999999999,
+      "vi_n[112]"
+    ],
+    [
+      85.99688999999995,
+      "yd_v"
+    ],
+    [
+      85.82574999999997,
+      "vi_n[109]"
+    ],
+    [
+      85.62951999999996,
+      "vi_n[97]"
+    ],
+    [
+      85.57284999999996,
+      "vi_n[76]"
+    ],
+    [
+      85.47384999999997,
+      "vi_n[125]"
+    ],
+    [
+      85.46923999999996,
+      "vi_n[114]"
+    ],
+    [
+      85.43921999999998,
+      "vi_n[110]"
+    ]
+  ],
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "clk": {
+      "rise": 346.9,
+      "fall": 370.932135,
+      "min": 313.51813,
+      "max": 367.24261,
+      "src": "insertion.json boundary mean",
+      "bmin": 331.5,
+      "bmax": 367.2,
+      "n": 1746
+    }
+  },
+  "ff_spread_ps": 33.30000000000001,
+  "hashes": {
+    "probe_tt.lib": "868b9fbe8b69289fb44da0e30e5a560b369e9309d18556a16e7dc8d5fea60e54",
+    "probe.tcl": "37bb5bb5df8b2cd3a5970c84b991500923944eb474fd84f7e1450099000155ca",
+    "insertion.json": "98e850f40efdbd9523042e9176f657997cbe3e22306d4160e22ed3ff6acbe225"
+  },
+  "admission": false,
+  "independent_SAFE_blocker": "Full mapped critical controls1852/1537/1095/1060loads and653.5ps depth"
+}
