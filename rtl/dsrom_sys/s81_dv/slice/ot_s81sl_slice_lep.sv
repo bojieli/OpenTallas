@@ -259,15 +259,15 @@ module ot_s81sl_lep_core #(
     genvar fc,fb;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_frame_local
       for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
-        (* keep="true" *) reg rov_r,ph_r,pk_r;
+        (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
         wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
         always @(posedge clk or negedge rr[FRAME_RSTBASE+fc])
-          if(!rr[FRAME_RSTBASE+fc]) begin rov_r<=0;ph_r<=0;pk_r<=0;end
+          if(!rr[FRAME_RSTBASE+fc]) begin rov_r<=0;ph_r<=0;pk_r<=0;kevent_r<=0;end
           else begin
-            rov_r<=ro[0];
+            rov_r<=ro[0];kevent_r<=t_kd[53];
             if(HOST_EN!=0) begin
               if(hp) ph_r<=0;if(h_event) ph_r<=1;
-              if(kp) pk_r<=0;if(k_event) pk_r<=1;
+              if(kp) pk_r<=0;if(kevent_r) pk_r<=1;
             end
           end
         for(fb=16*fc;fb<16*(fc+1) && fb<2*H;fb=fb+1) begin:g_bit
@@ -337,8 +337,20 @@ module ot_s81sl_lep_core #(
         wire psh = pp[t / 2];
         wire wr = psh && (n != DT || iss);
         if(MU_EN!=0 && RX_SRAM!=0 && SRAM!=0) begin:g_safe_write
+            localparam integer NA=(TX_NS+15)/16;
+            wire [NA*AT-1:0] wa_copy,ra_copy;
+            for(c=0;c<NA;c=c+1) begin:g_address
+                (* keep="true" *) reg [AT-1:0] wp_r,rp_r;
+                always @(posedge clk or negedge rr[TX_RSTBASE+t*TX_NS+16*c])
+                    if(!rr[TX_RSTBASE+t*TX_NS+16*c]) begin wp_r<=0;rp_r<=0;end
+                    else begin
+                        if(wr) wp_r<=(wp_r==AT'(DT-1))?AT'(0):wp_r+1'b1;
+                        if(iss) rp_r<=(rp_r==AT'(DT-1))?AT'(0):rp_r+1'b1;
+                    end
+                assign wa_copy[c*AT+:AT]=wp_r;assign ra_copy[c*AT+:AT]=rp_r;
+            end
             ot_sram_oldread_wreg #(.W(H+1),.AW(AT)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_NS+:TX_NS]),
-                .we(wr),.wa(wp),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(rp),.q(q));
+                .we(wr),.wa(wa_copy),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(ra_copy),.q(q));
         end else begin:g_legacy_write
         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
             .wd({sq[t / 2], (t % 2 == 0) ? hf0 : hf1}), .re(iss), .ra(rp), .q(q));

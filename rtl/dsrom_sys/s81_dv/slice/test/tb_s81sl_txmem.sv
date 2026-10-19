@@ -6,7 +6,7 @@ module tb_s81sl_txmem #(parameter integer MUT=0);
  ot_s81ph_mem1r1w #(.W(553),.DEPTH(512),.SRAM(1),.WREG(1)) refmem(
   .clk(clk),.rst_n(rst),.we(we),.wa(wa),.wd(wd),.re(re),.ra(ra),.q(gold));
  ot_sram_oldread_wreg #(.W(553),.AW(9),.MUT(MUT)) dut(
-  .clk(clk),.rst_n({35{rst}}),.we(we),.wa(wa),.wd(wd),.re(re),.ra(ra),.q(q));
+  .clk(clk),.rst_n({35{rst}}),.we(we),.wa({3{wa}}),.wd(wd),.re(re),.ra({3{ra}}),.q(q));
  integer cyc=0,errors=0,checks=0,i,j;reg[31:0]rng=32'h8675309;
  task step;begin
    @(negedge clk);if(cyc>0)begin checks=checks+1;if(q!==gold)begin errors=errors+1;if(errors<5)$display("TXMEM mismatch cycle%0d re%0d",cyc,re);end end
