@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_fault_leaf_w_n6_s3f-hflw-n6s3f-808ffe6c3 bench bench_fault_leaf_mut1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hdie_fault_leaf_w_n6_s3f-hflw-n6s3f-808ffe6c3 log cl/bench_fault_leaf_mut1.a1b1.log captured 2026-10-19T03:51:54-07:00
+# fail_regex '^FAULT_LEAF_BENCH FAIL w_n6_s3f_m1'
+FAULT_LEAF_MISMATCH t=92000 in=000000 fault=0 exp=1
+FAULT_LEAF_PULSE bit 5 fault edges 0 (exp 1)
+FAULT_LEAF_MISMATCH t=216000 in=100000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=218000 in=100000 fault=0 exp=1
+FAULT_LEAF_LEVEL bit 5 not seen
+FAULT_LEAF_MISMATCH t=220000 in=100000 fault=0 exp=1
+FAULT_LEAF_MISMATCH t=222000 in=000000 fault=0 exp=1
+FATAL: /srv/opentallas-scratch/claude/closure-loop/hdie_fault_leaf_w_n6_s3f-hflw-n6s3f-808ffe6c3/bench_src_a1/rtl/hbm_accel/die_glue/tb_hbm_fault_leaf_g2c.sv:84: FAIL tb_hbm_fault_leaf N=6 SYNC_MASK=000000000000003f MUT=1 errors=631 checks=20126
+       Time: 40253200  Scope: tb_hbm_fault_leaf_g2c
+FAULT_LEAF_BENCH FAIL w_n6_s3f_m1 rc=1
