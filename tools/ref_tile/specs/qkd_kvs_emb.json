@@ -160,5 +160,8 @@
   "source": "results/arch/ns_kvemb_1018/qkd_kvs_emb_native_own_fail_i2.json",
   "cell": "qkd_kvs_emb",
   "fix": "input AND output pin flops at the faces on every pin (recipe-3 OT_PIN_REGS, kept), rst_n registered at its pin (registered reset, no 95-pin rst_n tree capture), px_tok/px_tep feedthroughs registered (no comb arc), hard u_rowtx off the boundary so the boundary sinks are the soft pin flops of the one spine root (TT/FF spread <= 80); io_hold_margin 0.03; +1 cycle per input / per output for KV-PLAN5"
+ },
+ "fill_reason": {
+  "pin_bound": "the outline is the exact KV die frame slot of the closed i2 view (388.8 x 302.4, kvs_tile_kits SEED_OUTLINE / kv_static_die FRAME; a smaller outline is a slot_change of the KV die plan). The height is set by the E face: 786 pins over 227.7 of 302.4 um (75%) at pin_min_tracks 3; the width by the 216 x 151.2 hard u_rowtx plus its channels and the S face 673 pins. Gate e1 3d52043cd fill 29% (macro 32659 + std 1890 um2)"
  }
 }

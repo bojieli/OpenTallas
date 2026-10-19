@@ -225,6 +225,7 @@ def build(tiles_sel, tag, write_rtl=True):
             spec.update(reset_ports=[], pin_regs=dict(enable=True, reset='^$', reason=PIN_REG_TILES[t]))
             spec['route']['io_hold_margin_ns'] = 0.03
             spec['job']['cycles_added'] = 2
+            spec['fill_reason'] = dict(pin_bound='exact KV die frame slot; E face 786 pins over 227.7 of 302.4 um (75%); width = hard u_rowtx 216 um + channels')
         if STD_AREA[t] is not None:
             spec['std_area_um2'] = STD_AREA[t]
         p = ROOT / 'tools/ref_tile/specs' / f'{name}.json'
