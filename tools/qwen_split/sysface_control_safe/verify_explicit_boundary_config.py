@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fail closed for exact explicit-boundary native characterization inputs."""
-import argparse,hashlib,json,re
+import argparse,hashlib,json,re,shlex
 from pathlib import Path
 
 def verify(config,receipt,source):
@@ -15,7 +15,11 @@ def verify(config,receipt,source):
  assert field('OT_PIN_REGS')=='0','double input/output wrapping refused'
  assert field('OT_RST_LAND')=='0','double reset landing refused'
  assert field('DESIGN_NAME')==r['public_top'],'wrong wrapper top'
- assert source.name in field('VERILOG_FILES'),'explicit source absent from config'
+ # A basename match can silently certify another snapshot's parent.sv. Require
+ # the actual absolute frozen source path; unresolved make variables cannot
+ # establish that this exact source is the one the native tool will read.
+ files=shlex.split(field('VERILOG_FILES'))
+ assert files.count(str(source.resolve()))==1,'exact absolute explicit source absent/duplicated in config'
  assert r['manifest']['production_origin_bound'] is False,'not a production adoption API'
  return {'status':'PASS','source_sha256':r['emitted_sha256'],'config_sha256':hashlib.sha256(config.read_bytes()).hexdigest(),'contract':'exact source input1/output1/reset2; automatic wrapping OFF; no production adoption'}
 if __name__=='__main__':

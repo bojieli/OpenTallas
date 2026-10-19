@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc7       admits  1083 GB (avail 824, growth 66, headroom 0, waiters 0/0 GB) load 31/96 running 18 disk 6407 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3318231-1792433572 after 0 s
+EXPECTED_REFUSAL double_pin_wrap
+EXPECTED_REFUSAL double_reset_wrap
+EXPECTED_REFUSAL foreign_same_basename
+EXPECTED_REFUSAL duplicate_source
+EXPECTED_REFUSAL wrong_top
+EXPECTED_REFUSAL source_byte_drift
+EXPLICIT_BOUNDARY_CONFIG_GUARDS_PASS mutants6
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3318231-1792433572): exit 0
