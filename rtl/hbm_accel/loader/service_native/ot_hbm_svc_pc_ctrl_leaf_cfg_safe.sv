@@ -110,7 +110,15 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire j_v,j_rdy;
     wire head_valid_next=response_read?1'b1:response_take?1'b0:head_valid;
     wire response_take=j_v&&j_rdy;
-    assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=QD;
+    function automatic credit_room(input[QW:0]n,input[3:0]len);
+      // Legal requests have1..4 beats. Shared length-prefix predicates
+      // avoid broadcasting each encoded length bit into22 carry chains.
+      credit_room=(n<=(QW+1)'(QD-4))||
+        ((n==(QW+1)'(QD-3))&&(len<=3))||
+        ((n==(QW+1)'(QD-2))&&(len<=2))||
+        ((n==(QW+1)'(QD-1))&&(len==1));
+    endfunction
+    assign i_rdy=!sticky&&!pc_fault&&legal&&credit_room(count,length);
     wire kfront_fault;
     generate if(KREG!=0)begin:g_kreg
         // Released H9b native pin contract: pure data/valid capture, then a
@@ -136,7 +144,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           // acceptance uses independent state; shared next-count arithmetic
           // drives only23 D pins per bit, never wide pointer enables.
           (* keep="true",dont_touch="true" *) reg[QW:0]count_q;
-          wire ready_local=!sticky&&!pc_fault&&legal&&count_q+length<=QD;
+          wire ready_local=!sticky&&!pc_fault&&legal&&credit_room(count_q,length);
           assign push_regions[r]=kv_regions[r]&&ready_seen_regions[r];
           assign pop_regions[r]=valid_regions[r]&&ready_local;
           always @(posedge clk or negedge region_rst_n[72+r])
