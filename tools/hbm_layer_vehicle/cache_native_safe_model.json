@@ -1,5 +1,5 @@
 {
-  "stage": "pre-RTL structural candidate",
+  "stage": "FUNCTIONAL AND MAPPED SOURCE QUALIFIED; physical adoption OPEN",
   "predecessor": "ot_hbm_svc_static_sm_packed136_native8@f3016524e",
   "payload_ring": {
     "slots": 8,
@@ -139,5 +139,6 @@
     "external_command": "parent adds2",
     "retire_issue": "unchanged; captured cache2 matches command2",
     "padding": "parent composition model b9c85f2dd owns19, no independent whole-rate claim"
-  }
+  },
+  "proof_commit": "d275cfd33"
 }

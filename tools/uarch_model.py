@@ -17467,3 +17467,17 @@ def hbm_generic_banked_calendar_model(serialized_programmes=None):
     """Model-only SVG/XC native-bank split and separate cache-command alignment."""
     from hbm_layer_vehicle.xcal_banked_calendar_model import model
     return model(serialized_programmes)
+
+
+def hbm_svg_cache_native_safe_model():
+    """Measured opt-in packed136 cache source; native physical checks remain open."""
+    from pathlib import Path
+    import json
+    return json.loads((Path(__file__).resolve().parent / "hbm_layer_vehicle/cache_native_safe_model.json").read_text())
+
+
+def hbm_svg_cache_safe_composition_model():
+    """Separate READ calibration and command/retirement edges; whole proof pending."""
+    from pathlib import Path
+    import json
+    return json.loads((Path(__file__).resolve().parent / "hbm_layer_vehicle/svg_cache_safe_composition_model.json").read_text())
