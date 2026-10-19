@@ -52,6 +52,16 @@ _MEMO = {}
 
 def projection(spec):
     p = {k: spec[k] for k in SPEC_KEYS if k in spec}
+    if spec.get('seam_windows') is not None:
+        # Mixed CDC/calendar lint must see (and fingerprint) the complete window and actual root names.
+        for k in ('seam_windows', 'clock_port', 'clock_ports'):
+            if k in spec:
+                p[k] = spec[k]
+    if any(isinstance(spec.get(k), dict) and spec[k].get('enable') is True
+           for k in ('pin_regs', 'reset_landing')):
+        for k in ('pin_regs', 'reset_landing'):
+            if k in spec:
+                p[k] = spec[k]
     route = {k: spec['route'][k] for k in ROUTE_KEYS if k in spec.get('route', {})}
     if route:
         p['route'] = route
