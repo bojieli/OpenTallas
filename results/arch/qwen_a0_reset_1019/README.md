@@ -73,3 +73,15 @@ obligation, ROM return ages, full-token price, all remaining runtime-indexed
 state and delay>=3 inventory, physical reach<=405, row/PG/channel geometry,
 clock pair reserves and TT/FF native timing are all still open. No data timing
 exceptions, invented phase or stand-in binding is introduced.
+
+
+| Safe checklist item | Source proof / remaining obligation |
+|---|---|
+| Pins/reset | Raw1RESETN, two face release stages and bounded actual leaves proved; physical face positions and pin access open. |
+| Reach | Exact endpoint cohort list supplied; no placed reset/control segment<=405 proof yet. |
+| Fanout | New reset source max24; seven original FF and70 total nonclock driver failures remain. |
+| Depth | Native asynchronous and gate equations pinned; loaded reset recovery/removal and data-cone timing open. |
+| Storage | New21 reset state bits are static tree controls; whole-parent runtime array/delay inventory remains open. |
+| Geometry | Predecessor model retained; new FF/INV/TIE row positions, continuous band, tracks, PG and escape not implemented. |
+| Clock | Existing17 tree-owner clock nets, no added entry; actual phase/native TT/FF and pair reserves unbound. |
+| Schedule | Four aligned reset release events, independent resume ledger and static boot guard tested; no steady data edge added. |
