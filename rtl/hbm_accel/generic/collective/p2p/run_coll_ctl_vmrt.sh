@@ -4,11 +4,14 @@
 # usage: run_coll_ctl_vmrt.sh OUT [LAT] [MUT]
 # HBM-ARGMAX 10-19: MUT given = ONE bench (job benches are split per mutant): MUT 0 prints 'COLL_VMRT GATE PASS LAT<LAT>'
 # (exit 0); MUT 1..3 print 'COLL_VMRT_MUTANT_REJECTED MUT<m>' and exit 1 when the mutant is rejected (exit 0 + SURVIVED
-# otherwise). CTL=q3 benches the q3 leaf ot_hgi_coll_ctl_v5r_q3 (default q2).
+# otherwise). CTL=q3 benches the q3 leaf ot_hgi_coll_ctl_v5r_q3 (default q2); CTL=n2s1 / n1s0 the d4g leaves.
 set -euo pipefail
 HERE=$(cd -- "$(dirname -- "$0")" && pwd); ROOT=$(cd "$HERE/../../../../.." && pwd)
 OUT=$(realpath -m "${1:?out}"); LAT=${2:-74}; ONE=${3:-}; mkdir -p "$OUT"; cd "$ROOT"
 QD=(); [ "${CTL:-q2}" = q3 ] && QD=(+define+CTL_Q3)
+# HBM-COLL256-CTL 10-19: CTL=n2s1 / CTL=n1s0 bench the d4g leaves ot_hgi_coll_ctl_v5r_n2s1 / _n1s0 (q2/q3 unchanged)
+[ "${CTL:-q2}" = n2s1 ] && QD=(+define+CTL_N2S1)
+[ "${CTL:-q2}" = n1s0 ] && QD=(+define+CTL_N1S0)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 P=rtl/hbm_accel/generic/collective/p2p
 src=("$P/tb_hgi_coll_ctl_vmrt.sv" "$P/ot_hgi_coll_ctl_v5.sv" "$P/ot_hfd_coll_q_hard_v5.sv" "$P/ot_hgi_coll_slice_v7.sv" rtl/hdc/ot_hdc_prefix.sv)

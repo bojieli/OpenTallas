@@ -31,8 +31,14 @@ module tb_hgi_coll_ctl_vmrt;
  wire [1:0] inj_req; wire [31:0] inj_idx; wire [159:0] inj_addr, del_obase, rgx_addr; wire [1:0] inj_v; wire [65:0] inj_meta;
  wire [23:0] held; wire [47:0] wseq, rseq, xseq; wire [31:0] cycles;
  // HBM-ARGMAX 10-19: +define+CTL_Q3 benches the q3 leaf (kit hcoll_v5r_ctl3_v74); default = the q2 leaf
+// HBM-COLL256-CTL 10-19: +define+CTL_N2S1 / +define+CTL_N1S0 bench the d4g leaves (kits hcoll_v5r_ctl_n2s1_v74 /
+// hcoll_v5r_ctl_n1s0_v74; narrower dest_v / held / sequence ports connect to the low bits of the same wires)
 `ifdef CTL_Q3
  ot_hgi_coll_ctl_v5r_q3
+`elsif CTL_N2S1
+ ot_hgi_coll_ctl_v5r_n2s1
+`elsif CTL_N1S0
+ ot_hgi_coll_ctl_v5r_n1s0
 `else
  ot_hgi_coll_ctl_v5r_q2
 `endif
