@@ -54,6 +54,26 @@ The kit spec (`physical/hbm_next/att4/hnx_rp4a4_spvm.json`) now carries the publ
 
 ## Outline (DIE input)
 
-Step 2 gated 287.28 x 287.28 um at util 0.38 (std guess 40,000 vs 31,587 synthesised). Step 3: std 33,000 (step 2 +
-input register 2.1k flops + ~0.9k kept select copies, estimate; measured value below) at util 0.55 -> **250.56 x 250.56 um =
-62,780 um2** (-24% vs 82,530). Pins: N 1,060+ / S 1,090+ over 250.56 um = ~4.3 pins/um.
+Step 2 gated 287.28 x 287.28 um at util 0.38 (std guess 40,000 vs 31,587 synthesised). Step 3: spec std 33,000 at util
+0.55 -> **250.56 x 250.56 um = 62,780 um2** (-24% vs 82,530). Measured synthesis (gate, ot-epyc7): **32,083 um2, 67,354
+flops** (+3.2k: the decode-stage input register + 944 kept select copies) -> util 0.53. Pins: N 1,068 bits (4.26/um), S 1,115
+(4.45/um), full faces.
+
+**DIE area (x512 columns, over the release's one merge a column, 23,860 um2 synth / 51,322 um2 outline): shared = +4.2 mm2
+cells / +5.9 mm2 outline** (step 2 as gated: +4.0 / +16.0). DIE reserve 16 -> 5.9 mm2 (`../geometry.json` area_die_step3).
+
+## Gates
+
+- hnx_rp4a4_spvm step 3 (250.56 um, --cts, ot-epyc7 `/srv/opentallas-scratch/claude/ref_gate/hnx_rp4a4_spvm-20261019-020708`):
+  synthesis textbook lint: worst stage now the DECODE (`ph` -> `ka_hw`, ~608 ps / 14 levels; step 2 operand stage 685 ps / 16
+  levels with ~7k select fanout); reset nets 602 (rst_e) / 432 a adder (rst_m) loads, no net > 3,000.  Timing-driven global
+  placement first estimate **-308 ps** vs **-745 ps** for step 2 at the same stage (final post-repair / post-CTS numbers in the
+  gate result, pending).  If the decode stage still misses: put the per-entry descriptors in 8-stage shift rings like the data
+  (entry ph+1 always at stage 1) to remove the 8:1 residue mux from the decode (~3 levels).
+- step-2 gates (collected): hnx_rp4a4_pvm (step-1 per-lane macro merge) WARN 0 fail, TT placement RC reg->reg -155 ps @770 on
+  the release-fork adder input stage (bp -> g_madd, ~692 ps / 16 levels), CTS TT/FF pin-flop spread 24.9/24.3 ps, insertion
+  411.6 TT, GRT overflow 0; hnx_rp4a4_fpvm (fallback) WARN 0 fail, placement repair -122 ps (flop-stack write-enable decode,
+  8,192-load XNOR nets), GRT overflow 0; hnx_rp4a4_spvm step 2 (287 um, superseded by this step) still in GRT repair at
+  -378 ps on u_sm.oa/ob (not collected).
+- fpvm fix NOT done (fallback only; shared is primary and its bench/area/timing all improved): register the write one-hot per
+  word with replicated copies + a read bypass of the pending write, if the fallback is ever needed.
