@@ -1,0 +1,3244 @@
+{
+ "schema": "opentallas.hbm_completion_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 53,
+ "entries": [
+  {
+   "instance": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "done",
+   "net": "hb_coll_NE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7479,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "hgi_done",
+   "net": "hb_coll_NE__hgi_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7479,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "program_init_busy",
+   "net": "hb_coll_NE__program_init_busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7479,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "done",
+   "net": "hb_coll_NW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7384,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "hgi_done",
+   "net": "hb_coll_NW__hgi_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7384,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_NW",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "program_init_busy",
+   "net": "hb_coll_NW__program_init_busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7384,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "done",
+   "net": "hb_coll_SE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7289,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "hgi_done",
+   "net": "hb_coll_SE__hgi_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7289,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SE",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port": "program_init_busy",
+   "net": "hb_coll_SE__program_init_busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7289,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "port": "done",
+   "net": "hb_coll_SW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7172,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "port": "hgi_done",
+   "net": "hb_coll_SW__hgi_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7172,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_coll_SW",
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "port": "program_init_busy",
+   "net": "hb_coll_SW__program_init_busy",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7172,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "done/hgi_done both alias actual issue_done, already consumed by internal control. Programme init_busy tracks install/drain/row scan; configured only rises after successful complete check, consumed by host readiness. Actual busy/fault/configured exports are consumed.",
+   "evidence": {
+    "hgi_busy": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "program_configured": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_ready",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_idx__ctl",
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "port": "topk_done",
+   "net": "hb_idx__ctl__topk_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 26098,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "TOPK completion pulse is observation; actual topk_busy gates existing collar activity and topk_fault is observed. CQ/CR acknowledgements are checked internally by native TOPK.",
+   "evidence": {
+    "topk_busy": [
+     {
+      "instance": "col_idx",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "topk_fault": [
+     {
+      "instance": "col_idx",
+      "port": "c_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_split",
+   "port": "beat_done",
+   "net": "hb_quant_NW__beat_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7674,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/qdq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme done mirrors issue completion. Beat/record done are fixed pipelines of per-beat valid/last, including bank-commit calendar WC; actual write requests and program_active/fault are consumed. Decoder, quant valid and command legality failures raise fault.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "wq": [
+     {
+      "instance": "vmm_NW0",
+      "port": "wq2",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW1",
+      "port": "wq2",
+      "ranges": [
+       [
+        281,
+        561
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW2",
+      "port": "wq2",
+      "ranges": [
+       [
+        562,
+        842
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW3",
+      "port": "wq2",
+      "ranges": [
+       [
+        843,
+        1123
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW4",
+      "port": "wq2",
+      "ranges": [
+       [
+        1124,
+        1404
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW5",
+      "port": "wq2",
+      "ranges": [
+       [
+        1405,
+        1685
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW6",
+      "port": "wq2",
+      "ranges": [
+       [
+        1686,
+        1966
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW7",
+      "port": "wq2",
+      "ranges": [
+       [
+        1967,
+        2247
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_split",
+   "port": "program_done",
+   "net": "hb_quant_NW__program_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7674,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/qdq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme done mirrors issue completion. Beat/record done are fixed pipelines of per-beat valid/last, including bank-commit calendar WC; actual write requests and program_active/fault are consumed. Decoder, quant valid and command legality failures raise fault.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "wq": [
+     {
+      "instance": "vmm_NW0",
+      "port": "wq2",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW1",
+      "port": "wq2",
+      "ranges": [
+       [
+        281,
+        561
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW2",
+      "port": "wq2",
+      "ranges": [
+       [
+        562,
+        842
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW3",
+      "port": "wq2",
+      "ranges": [
+       [
+        843,
+        1123
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW4",
+      "port": "wq2",
+      "ranges": [
+       [
+        1124,
+        1404
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW5",
+      "port": "wq2",
+      "ranges": [
+       [
+        1405,
+        1685
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW6",
+      "port": "wq2",
+      "ranges": [
+       [
+        1686,
+        1966
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW7",
+      "port": "wq2",
+      "ranges": [
+       [
+        1967,
+        2247
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_split",
+   "port": "record_done",
+   "net": "hb_quant_NW__record_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 7674,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/qdq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme done mirrors issue completion. Beat/record done are fixed pipelines of per-beat valid/last, including bank-commit calendar WC; actual write requests and program_active/fault are consumed. Decoder, quant valid and command legality failures raise fault.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "wq": [
+     {
+      "instance": "vmm_NW0",
+      "port": "wq2",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW1",
+      "port": "wq2",
+      "ranges": [
+       [
+        281,
+        561
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW2",
+      "port": "wq2",
+      "ranges": [
+       [
+        562,
+        842
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW3",
+      "port": "wq2",
+      "ranges": [
+       [
+        843,
+        1123
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW4",
+      "port": "wq2",
+      "ranges": [
+       [
+        1124,
+        1404
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW5",
+      "port": "wq2",
+      "ranges": [
+       [
+        1405,
+        1685
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW6",
+      "port": "wq2",
+      "ranges": [
+       [
+        1686,
+        1966
+       ]
+      ]
+     },
+     {
+      "instance": "vmm_NW7",
+      "port": "wq2",
+      "ranges": [
+       [
+        1967,
+        2247
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_NE",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "gather_done",
+   "net": "hc_NE__gather_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13399,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_NE",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "program_done",
+   "net": "hc_NE__program_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13399,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_NE",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "residual_done",
+   "net": "hc_NE__residual_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13399,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_NW",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "gather_done",
+   "net": "hc_NW__gather_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13258,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_NW",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "program_done",
+   "net": "hc_NW__program_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13258,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_NW",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "residual_done",
+   "net": "hc_NW__residual_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13258,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_SE",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "gather_done",
+   "net": "hc_SE__gather_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13117,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_SE",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "program_done",
+   "net": "hc_SE__program_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13117,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_SE",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "residual_done",
+   "net": "hc_SE__residual_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13117,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_SW",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "gather_done",
+   "net": "hc_SW__gather_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12976,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_SW",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "program_done",
+   "net": "hc_SW__program_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12976,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_SW",
+   "master": "ot_hbm_hc_qhub_static",
+   "port": "residual_done",
+   "net": "hc_SW__residual_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12976,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Programme active/fault are consumed. Residual/gather units drive actual valid/data; q_static checks returned write done against its compiled done calendar and enforces phase ownership, ORs all source faults. Exported completion pulses do not control external scheduling.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "hcq_fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hc_eng",
+   "master": "ot_hbm_hc_root_static",
+   "port": "program_done",
+   "net": "hc_eng__program_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 13540,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Program_done mirrors seq_done; seq_active drives actual program_active, and seq/engine/tail/table/target faults OR into actual root fault. Fixed result valid/data are separate from this pulse.",
+   "evidence": {
+    "program_active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hcollgi_NE",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "done",
+   "net": "hcollgi_NE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 27126,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Calendar issue completion pulse; actual active/configured/fault protect host target. Issued ISA validity/metadata drive actual landing path, which separately reports landing faults.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "host_status",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "host_status",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hcollgi_NW",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "done",
+   "net": "hcollgi_NW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 27010,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Calendar issue completion pulse; actual active/configured/fault protect host target. Issued ISA validity/metadata drive actual landing path, which separately reports landing faults.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "host_status",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "host_status",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hcollgi_SE",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "done",
+   "net": "hcollgi_SE__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 26894,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Calendar issue completion pulse; actual active/configured/fault protect host target. Issued ISA validity/metadata drive actual landing path, which separately reports landing faults.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "host_status",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "host_status",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "hcollgi_SW",
+   "master": "ot_hgi_coll_gq_issue",
+   "port": "done",
+   "net": "hcollgi_SW__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 26778,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Calendar issue completion pulse; actual active/configured/fault protect host target. Issued ISA validity/metadata drive actual landing path, which separately reports landing faults.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "host_status",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "host_status",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "sfup_NE",
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "port": "programme_done",
+   "net": "sfup_NE__programme_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17927,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "programme_done is AND of leaf done copies, programme_active is OR of leaf active copies. Active and agreement/leaf fault are consumed; arithmetic/IO calendar command paths run on fixed slots.",
+   "evidence": {
+    "programme_active": [
+     {
+      "instance": "col_sfu_NE",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "sfup_NW",
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "port": "programme_done",
+   "net": "sfup_NW__programme_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17899,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "programme_done is AND of leaf done copies, programme_active is OR of leaf active copies. Active and agreement/leaf fault are consumed; arithmetic/IO calendar command paths run on fixed slots.",
+   "evidence": {
+    "programme_active": [
+     {
+      "instance": "col_sfu_NW",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "sfup_SE",
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "port": "programme_done",
+   "net": "sfup_SE__programme_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17871,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "programme_done is AND of leaf done copies, programme_active is OR of leaf active copies. Active and agreement/leaf fault are consumed; arithmetic/IO calendar command paths run on fixed slots.",
+   "evidence": {
+    "programme_active": [
+     {
+      "instance": "col_sfu_SE",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "sfup_SW",
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "port": "programme_done",
+   "net": "sfup_SW__programme_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 17843,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "programme_done is AND of leaf done copies, programme_active is OR of leaf active copies. Active and agreement/leaf fault are consumed; arithmetic/IO calendar command paths run on fixed slots.",
+   "evidence": {
+    "programme_active": [
+     {
+      "instance": "col_sfu_SW",
+      "port": "c_busy",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW0",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW0__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12036,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW0",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW0",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW1",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW1__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12056,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW1",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW1",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW2",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW2__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12076,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW2",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW2",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW3",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW3__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12096,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW3",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW3",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW4",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW4__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12116,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW4",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW4",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW5",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW5__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12136,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW5",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW5",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW6",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW6__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12156,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW6",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW6",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_NW7",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_NW7__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12176,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_NE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_NW7",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_NW7",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW0",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW0__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11876,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW0",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW0",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW1",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW1__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11896,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW1",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW1",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW2",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW2__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11916,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW2",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW2",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW3",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW3__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11936,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SW",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW3",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW3",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW4",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW4__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11956,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW4",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW4",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW5",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW5__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11976,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW5",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW5",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW6",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW6__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 11996,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW6",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW6",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xc_SW7",
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "port": "done",
+   "net": "xc_SW7__done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 12016,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "classification": "internally_consumed_completion_status_review",
+   "reason": "Internal XCAL active/fault feed its real RUN target, which exports active/fault/configured to host. Done is a pulse observation; actual command and KV descriptor remain consumed.",
+   "evidence": {
+    "active": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_active",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "fault": [
+     {
+      "instance": "hleaf_SE",
+      "port": "t_fault",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "cmd_ext": [
+     {
+      "instance": "sm_SW7",
+      "port": "command",
+      "ranges": [
+       [
+        0,
+        108
+       ]
+      ]
+     }
+    ],
+    "kv_desc": [
+     {
+      "instance": "sm_SW7",
+      "port": "kv_desc",
+      "ranges": [
+       [
+        0,
+        63
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv": "d32133359d7b559a852a4066ffb398dfa3e999173fc5de6c7962292fc9979c25",
+  "rtl/hbm_accel/die_glue/scoped_d4g/qdq.sv": "548180362147cd7447af476f7e0c2a9093db5cb3a5bfa282f1038a949bbc19fa",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv": "d4990b482a26674449f61722eb44c246bce525c41d7682704e7d94bd5abcd0fa",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv": "156ac9146b23c5673f048caa581023819c3ab0047aaa902ca3357675145cf894",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv": "9d8a49c4ab08d1fd79423f1fca6c389f6dc1b110abf28e98aa22d177385a4753",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv": "95e4f0d5ebfb7db54af5d8624802ebf5296177a92756f1da1941c923568b7ab7",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv": "4071c85edfa654bd3afe7ed14e4f77ce6eec829a93c5336f0293ef58d3a12130",
+  "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv": "7a64c3c9e5200841c58cdecafd7117e56b22a3a80778f08b19e9f5ce2254379f",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv": "d2aca3d96273ff3689153a77a7d0617e540edf480a6dad1834c9f68174f7c98c",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "f68a556f4caa32eba68932ddb1efdfeb5be695be74e157d8eaaa494c9a373814",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv": "a074f8642b6f2ab7744d7c4ff1ca58fe4e661e8ad4c6815f089e7e41cc2339a4"
+ },
+ "validation": "Exact current source and consumer proof, no new RTL/native integration tests. Review required; completion schedule/physical latency proofs remain independent."
+}

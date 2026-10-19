@@ -1,0 +1,2509 @@
+{
+ "schema": "opentallas.hbm_write_marker_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 32,
+ "entries": [
+  {
+   "instance": "vmm_NW0",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW0__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19396,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW0",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b0_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW0",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW0__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19396,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW0",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b0_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW1",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW1__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19450,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW1",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b1_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW1",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW1__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19450,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW1",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b1_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW2",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW2__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19504,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW2",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b2_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW2",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW2__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19504,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW2",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b2_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW3",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW3__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19558,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW3",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b3_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW3",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW3__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19558,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW3",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b3_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW4",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW4__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19612,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW4",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b4_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW4",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW4__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19612,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW4",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b4_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW5",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW5__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19666,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW5",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b5_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW5",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW5__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19666,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW5",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b5_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW6",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW6__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19720,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW6",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b6_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW6",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW6__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19720,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW6",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b6_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW7",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done1",
+   "net": "vmm_NW7__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19774,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW7",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b7_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmm_NW7",
+   "master": "hfd_vms_wq2_merge",
+   "port": "wq_done2",
+   "net": "vmm_NW7__wq_done2",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19774,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "Pure registered source-ID demultiplex of actual bank done_m; source-ID shift register and these outputs do not drive merged payload. Actual valid-masked merged write and collision fault are consumed. Static writers use fixed write slots; bank protocol errors remain observed.",
+   "evidence": {
+    "wq_m": [
+     {
+      "instance": "vmb_NW7",
+      "port": "wq1",
+      "ranges": [
+       [
+        0,
+        280
+       ]
+      ]
+     }
+    ],
+    "flt": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b7_flt",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NE_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_NE_p0_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24323,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NE_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_NE_p0_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24323,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW4",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW5",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NE_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_NE_p1_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24538,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NE_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_NE_p1_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24538,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW6",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW7",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NW_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_NW_p0_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18772,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NW_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_NW_p0_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18772,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW0",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW1",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NW_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_NW_p1_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18987,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_NW_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_NW_p1_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18987,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_NW2",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_NW3",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SE_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_SE_p0_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23825,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SE_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_SE_p0_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 23825,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW4",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW5",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SE_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_SE_p1_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24040,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SE_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_SE_p1_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 24040,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW6",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW7",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SW_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_SW_p0_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18342,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SW_p0_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_SW_p0_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18342,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW0",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW1",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SW_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "x_done",
+   "net": "xq_SW_p1_eg__x_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18557,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "xq_SW_p1_eg",
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "port": "xw_last",
+   "net": "xq_SW_p1_eg__xw_last",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 18557,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "classification": "fixed_slot_write_marker_observation_review",
+   "reason": "xw_last is end-of-burst observation; x_done is its registered conjunction with write valid. Actual write valid/group/address/data are consumed. Native VM request encodes each addressed write independently with no last/ready input, so this copy does not gate writes or flow control.",
+   "evidence": {
+    "xw_en": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_en",
+      "ranges": [
+       [
+        0,
+        0
+       ]
+      ]
+     }
+    ],
+    "xw_addr": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_addr",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_grp": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_grp",
+      "ranges": [
+       [
+        0,
+        6
+       ]
+      ]
+     }
+    ],
+    "xw_data": [
+     {
+      "instance": "sm_SW2",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     },
+     {
+      "instance": "sm_SW3",
+      "port": "xw_data",
+      "ranges": [
+       [
+        0,
+        2047
+       ]
+      ]
+     }
+    ]
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv": "5c9956df83adff888ce51b35cba942007dbb44c34a9eb906a9ae501757dbe157",
+  "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv": "4dbb6102d5caa85d3a969f1c5c8283e2b1c95944f7abc47aa8816fccd4c900e8"
+ },
+ "validation": "Read-only source/consumer proof; actual VM native clock/fixed write slot and producer scheduling qualification remain separate."
+}
