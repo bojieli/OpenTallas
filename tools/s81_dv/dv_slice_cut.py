@@ -252,9 +252,12 @@ def main(argv=None):
         return sorted(srcs)
 
     ports, decl, body = {}, [], []
+    # a 1-bit net the die declares as [0:0] and the instance lines bit-select (dv_bind nc fillers `u_x_p_nc3[0:0]`) keeps
+    # its range (LB2-S81 L0 10-18: cut_svc failed Verilator "Illegal bit or array select" x8 on scalar re-declarations)
+    selected = set(re.findall(r'([A-Za-z_]\w*)\s*\[', text))
     for n in sorted(snets):
         w, lo = nets[n]
-        rng = f'[{lo + w - 1}:{lo}] ' if (w > 1 or lo) else ''
+        rng = f'[{lo + w - 1}:{lo}] ' if (w > 1 or lo or n in selected) else ''
         if n in in_bits:
             pn = f'i__{n}'
             kind = 'clock' if clk_bits.get(n) else ('die_input' if peers_in[n] == {'<die_in>'} else 'boundary')
