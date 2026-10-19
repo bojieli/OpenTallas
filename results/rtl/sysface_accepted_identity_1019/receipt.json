@@ -1,0 +1,33 @@
+{
+  "source": "786cd3d77",
+  "status": "PASS component candidate",
+  "fleet_host": "ot-epyc6",
+  "fleet_unit": "oth-ubuntu-2454611-1792432481",
+  "remote": "/srv/opentallas-scratch/claude/sysface-accepted-identity-1019/out2",
+  "checks": 542,
+  "mutants": {
+    "1": "raw acceptance",
+    "5": "wrong epoch",
+    "6": "wrong user",
+    "7": "role bypass",
+    "8": "wrong token",
+    "9": "wrong generation"
+  },
+  "state": {
+    "FF": {
+      "old": 242,
+      "0": 242,
+      "1": 282
+    },
+    "extra_FF": 40,
+    "scope": "generic source census only; no mapped physical area"
+  },
+  "sources": {
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_identity.sv": "8771ccc949e277702753a296f8704ae22fd9e075a9f81cf60dc42fdf598ef75a",
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv": "47dcb86af69604092ab294721f22a1b00fb7774f3f10ea78e22f01bc022421dd",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv": "94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f",
+    "rtl/test/qwen_split/tb_sysface_accepted_identity.sv": "b14c89d5484df1bbca34d3e65c6b64556b7205ecc9c4d1f596962fe480082aa4",
+    "rtl/test/qwen_split/run_sysface_accepted_identity.sh": "9c449a4acd0c19678eaa07b736de6798922c58ce0642c4a59db2e866c317c1e1"
+  },
+  "scope": "Replacement only; original observer/generated physical source untouched; no ABI or native cost adoption"
+}

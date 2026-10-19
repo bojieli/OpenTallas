@@ -1,0 +1,7 @@
+Qualified accepted identity replacement candidate
+
+The isolated default-off companion shares its own offered tuple and the original fresh full-identity acceptance predicate. It exports registered epoch/user/token/generation only for a compiler-selected static role. This is a replacement for the original observer, never a second observer instance. Actual receiver simulation passes542checks: four users, repeated identical good records, ordinary user0 restore, eight rejected same-tag mutations, wrong static role, reset cancellation, and six causal mutants that fail.
+
+An immediate user0 restore uses generation1 while the selected accepted record uses generation2. The qualified registered token/generation remain the earlier identity for its valid sample. Existing offered generation changes with the restore and cannot alias this lifetime. Existing registered ctx_x token fields cover users1..3 and have no user0 cold token; selecting among those banks would introduce a combinational output mux. The candidate therefore adds actual40FF versus original observer242FF (enabled282; defaultoff242), including the20FF epoch-only candidate cost. This is generic source state, not native physical pricing.
+
+Static SEG2 initial/new-user0 selection and SEG1 filler-versus-restore roles come from context_role_ledger d0bd5bba2. The current physical nine-macro source remains immutable. Cold ledger and actual bank publication/component paths are tested separately; no production ABI is enabled.
