@@ -15,6 +15,8 @@ for width in [257,258]:
   d=json.loads((ROOT/path).read_text());master=f'qfd_c_land_{h}{width}_narrow';pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
 for width in [514,516]:
  path=base/'station_child_attempt1'/f'native_pins_stn{width}.json';d=json.loads((ROOT/path).read_text());master=f'qfd_c_stn{width}_safe';pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
+for master in ['qfd_c_xstn_safe','qfd_c_xstnw_safe']:
+ path=base/'xstn_child_attempt1'/f'native_pins_{master}.json';d=json.loads((ROOT/path).read_text());pinsets[master]=d['pins'];assets[master]=dict(path=str(path),sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),signal_clock_pins=d['signal_clock_pins'])
 def split(n):return g['nodes'].get(n,{}).get('kind')in ['qfd_c_land_w','qfd_c_land_r']
 def endpoint(n,net,lo,hi,output):
  if n not in g['nodes']:
@@ -24,7 +26,7 @@ def endpoint(n,net,lo,hi,output):
   half='w'if kind.endswith('_w')else'r';H=int(ps['W'])//2;part=lo//H;assert hi//H==part
   return dict(inst=n+f'_p{part}',port='o'if output else'i',range=[lo%H,hi%H],master=f'qfd_c_land_{half}{H}_narrow',clock_port='ck',clock_domain=v['region'])
  if 'xstn'in kind:
-  port=('tap_d'if net==ps['tap_d']else'a_d')if output else'b_d';return dict(inst=n,port=port,range=[lo,hi],master=kind+'_safe_UNQUALIFIED',native_pin_snapshot=None,clock_domain=v['region'],scope='xstn safe RTL/control/native geometry not yet qualified')
+  port=('tap_d'if net==ps['tap_d']else'a_d')if output else'b_d';return dict(inst=n,port=port,range=[lo,hi],master=kind+'_safe',clock_domain=v['region'],reset_face_stages=2,scope='new opt-in source, component diagnostics only; parent binding unqualified')
  width=int(ps.get('W',v['bits']));assert width in [514,516],(n,width)
  return dict(inst=n,port='q'if output else'd',range=[lo,hi],master=f'qfd_c_stn{width}_safe',clock_port='ck',clock_domain=v['region'])
 bindings=[]
@@ -56,5 +58,5 @@ for binding in bindings:
    name=ep['port']+f'[{bit}]';assert name in pinsets[master],(master,name)
    assert pinsets[master][name]['direction']==direction,(master,name,direction)
    checked+=1
-out=dict(schema='opentallas.cb16.safe_endpoint_plan.v1',diagnostic_only=True,source=g['source'],logical_data_edges=len(g['edges']),logical_bank_edges=sum(e['kind']=='bank'for e in g['edges']),physical_bus_bindings=len(bindings),bank_data_bits=sum(v['bits']for v in bindings if v['kind']=='bank_data'),written_flag_bits=sum(v['bits']for v in bindings if v['kind']=='written_flags'),native_pin_references_checked=checked,unqualified_endpoints=unqualified,native_pin_assets=assets,bindings=bindings,release_ready=False,blockers=['requires CP legal placement plus actual pin-to-pin obstacle-avoiding405um route checks','A0/boundary and xstn safe pin snapshots still missing','clock roots/native phase compensation and local hold paths not composed','written flags explicitly ordinary timing, not bank-data window','reset/epoch/compiler fullfabric result not yet adopted'])
+out=dict(schema='opentallas.cb16.safe_endpoint_plan.v1',diagnostic_only=True,source=g['source'],logical_data_edges=len(g['edges']),logical_bank_edges=sum(e['kind']=='bank'for e in g['edges']),physical_bus_bindings=len(bindings),bank_data_bits=sum(v['bits']for v in bindings if v['kind']=='bank_data'),written_flag_bits=sum(v['bits']for v in bindings if v['kind']=='written_flags'),native_pin_references_checked=checked,unqualified_endpoints=unqualified,native_pin_assets=assets,bindings=bindings,release_ready=False,blockers=['requires CP legal placement plus actual pin-to-pin obstacle-avoiding405um route checks','A0/boundary pin snapshots still missing','clock roots/native phase compensation and local hold paths not composed','written flags explicitly ordinary timing, not bank-data window','reset/epoch/compiler fullfabric result not yet adopted'])
 Path(a.out).write_text(json.dumps(out,indent=1)+'\n');print('SAFE_ENDPOINT_PLAN',len(bindings),'buses',out['bank_data_bits'],'bankbits',out['written_flag_bits'],'writtenflags')

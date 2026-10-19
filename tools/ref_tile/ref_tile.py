@@ -186,8 +186,14 @@ def check_hold_budget(s: dict) -> None:
     pr = s.get("pin_regs") or {}
     # Q-CLUSTER 2026-10-17 (coordinator): a two-level cluster (cluster_level 2) whose own RTL registers every boundary pin
     # (pin_regs off with that reason) qualifies under the same rule and the same native audit
-    if s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
-        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and two-level clusters only')
+    if s.get("kind") == "cluster" and s.get("cluster_level", 1) == 1 and s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import check as check_registered_cluster
+        try:
+            check_registered_cluster(s, ROOT)
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            raise SpecError(str(exc)) from exc
+    elif s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles, two-level clusters, or evidence-guarded level 1 candidates')
     if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
         raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
                         'or disabled with the reason the RTL registers them)')
@@ -1214,13 +1220,41 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
                 "pass --area-um2 / std_area_um2 from the synthesis smoke")
     mac = sum(b["w"] * b["h"] for b in blocks)
     fill = (mac + float(std_area)) / (W * H)
-    reason = str((s.get("fill_reason") or {}).get("pin_bound", "")).strip()
+    fr = s.get("fill_reason") or {}
+    reason = str(fr.get("pin_bound", "")).strip()
+    reason_kind = "pin-bound"
+    structural = fr.get("lattice_channel_bound")
+    if isinstance(structural, dict) and not reason:
+        # Gate-rule exception: root must approve it; verify the geometry rather
+        # than accepting claimed utilisation/channel numbers as a low-fill escape.
+        band = structural.get("std_band_y_um", [])
+        lattice = 43.2
+        valid = (str(structural.get("why", "")).strip()
+                 and str(structural.get("approved_by", "")).strip()
+                 and len(blocks) >= 4 and len(band) == 2)
+        if valid:
+            lo, hi = map(float, band)
+            density = float(std_area) / ((W - 2 * CORE_MARGIN) * (hi - lo)) if hi > lo else 0
+            valid = (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6)
+            for block in blocks:
+                valid = valid and block.get("kind") == "macro"
+                valid = valid and all(abs(block[axis] / lattice - round(block[axis] / lattice)) < 1e-6
+                                      for axis in ("x", "y"))
+                valid = valid and (block["y"] + block["h"] <= lo or block["y"] >= hi)
+            for i, block in enumerate(blocks):
+                for other in blocks[i + 1:]:
+                    gx = max(block["x"] - other["x"] - other["w"], other["x"] - block["x"] - block["w"])
+                    gy = max(block["y"] - other["y"] - other["h"], other["y"] - block["y"] - block["h"])
+                    valid = valid and max(gx, gy) >= CHANNEL_UM - 1e-6
+        if valid:
+            reason = str(structural["why"]).strip()
+            reason_kind = "lattice/channel-bound gate-rule exception"
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
                 "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
     if fill < FILL_WARN:
-        return ("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+        return ("WARN", "fill", msg + (f" ({reason_kind}: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
     return None
 
 
@@ -2319,7 +2353,10 @@ def route_hold_context(s: dict, kd: str) -> dict:
 
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
-    r, j = s["route"], s.get("job", {})
+    r, j = s["route"], dict(s.get("job", {}))
+    if s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])
     tag = j.get("tag", "ref")

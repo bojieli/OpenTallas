@@ -23,10 +23,10 @@
     ]
    },
    {
-    "name": "safe_xstn",
-    "cmd": "bash tools/qwen_cluster/bench_xstn_safe.sh bench_xstn",
+    "name": "safe_xstn_primary",
+    "cmd": "bash tools/qwen_cluster/bench_xstn_safe.sh {RUN}/xstn_pass pass",
     "expect": "pass",
-    "pass_regex": "SAFE_XSTN_EXIT 0",
+    "pass_regex": "SAFE_XSTN_PASS MUT0",
     "threads": 8,
     "peak_ram_gb": 8,
     "sources": [
@@ -34,7 +34,23 @@
      "rtl/physical/qcluster/qfd_c_stn.sv",
      "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
      "rtl/hdc/ot_hdc_delay.sv"
-    ]
+    ],
+    "pass_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_safe_xstn/mut0.log"
+   },
+   {
+    "name": "safe_xstn_mutant",
+    "cmd": "bash tools/qwen_cluster/bench_xstn_safe.sh {RUN}/xstn_mut mut",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "sources": [
+     "tools/qwen_cluster/bench_xstn_safe.sh",
+     "rtl/physical/qcluster/qfd_c_stn.sv",
+     "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+     "rtl/hdc/ot_hdc_delay.sv"
+    ],
+    "fail_regex": "SAFE_XSTN_FAIL MUT1 errors[1-9][0-9]*",
+    "fail_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_safe_xstn/mut1.log"
    }
   ],
   "calibrate": {

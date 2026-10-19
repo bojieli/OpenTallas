@@ -3,6 +3,11 @@ set -uo pipefail
 OUT=$(mkdir -p "$1"&&realpath "$1")
 V=${VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$V" --version
+if [[ ${2:-} == pass || ${2:-} == mut ]];then
+ M=0;[[ $2 == mut ]]&&M=1
+ "$V" --binary --timing -j 8 -Wno-fatal --top-module tb -GMUT=$M -Mdir "$OUT/obj$M" rtl/physical/qcluster/qfd_c_xstn_safe.sv rtl/physical/qcluster/qfd_c_stn.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/hdc/ot_hdc_delay.sv rtl/test/tb_qfd_c_xstn_safe.sv > "$OUT/build$M.log" 2>&1||exit 2
+ exec "$OUT/obj$M/Vtb"
+fi
 err=0
 for M in 0 1;do
  "$V" --binary --timing -j 8 -Wno-fatal --top-module tb -GMUT=$M -Mdir "$OUT/obj$M" rtl/physical/qcluster/qfd_c_xstn_safe.sv rtl/physical/qcluster/qfd_c_stn.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/hdc/ot_hdc_delay.sv rtl/test/tb_qfd_c_xstn_safe.sv > "$OUT/build$M.log" 2>&1||{ err=1;continue; }
