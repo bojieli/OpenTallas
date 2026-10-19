@@ -1,0 +1,796 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_2_place_iop.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_io_flop_at_pins.tcl
+OT_IOFLOP extra capture cfg_v -> cv$_DFF_PN0_ at (2268, 4320) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.addr_cv$_DFF_PN0_ at (2268, 4590) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[0\].u_payload/cv$_DFF_PN0_ at (2268, 4860) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[1\].u_payload/cv$_DFF_PN0_ at (2268, 2430) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[2\].u_payload/cv$_DFF_PN0_ at (2268, 5130) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[3\].u_payload/cv$_DFF_PN0_ at (2268, 5400) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[4\].u_payload/cv$_DFF_PN0_ at (2268, 5670) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[5\].u_payload/cv$_DFF_PN0_ at (3672, 4320) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[6\].u_payload/cv$_DFF_PN0_ at (2268, 5940) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[7\].u_payload/cv$_DFF_PN0_ at (3672, 4590) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[8\].u_payload/cv$_DFF_PN0_ at (2268, 6210) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[9\].u_payload/cv$_DFF_PN0_ at (3672, 4860) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[10\].u_payload/cv$_DFF_PN0_ at (2268, 6480) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[11\].u_payload/cv$_DFF_PN0_ at (3672, 5130) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[12\].u_payload/cv$_DFF_PN0_ at (2268, 6750) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[13\].u_payload/cv$_DFF_PN0_ at (3672, 5400) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[14\].u_payload/cv$_DFF_PN0_ at (4266, 2700) DBU
+OT_IOFLOP extra capture cfg_v -> g_fan32.u_banks.g_bank\[15\].u_payload/cv$_DFF_PN0_ at (2268, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> ca\[0\]$_DFF_P_ at (3672, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[0\]$_DFF_P_ at (2268, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[0\]$_DFF_P_ at (3672, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[0\]$_DFF_P_ at (2268, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[0\]$_DFF_P_ at (3672, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[0\]$_DFF_P_ at (2268, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[0\]$_DFF_P_ at (3672, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[0\]$_DFF_P_ at (2268, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[0\]$_DFF_P_ at (3672, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[0\]$_DFF_P_ at (4752, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[0\]$_DFF_P_ at (3348, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[0\]$_DFF_P_ at (2268, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[0\]$_DFF_P_ at (4752, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[0\]$_DFF_P_ at (3672, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[0\]$_DFF_P_ at (3348, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[0\]$_DFF_P_ at (2268, 8640) DBU
+OT_IOFLOP extra capture cfg_addr[0] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[0\]$_DFF_P_ at (4752, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> ca\[1\]$_DFF_P_ at (3348, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[1\]$_DFF_P_ at (4752, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[1\]$_DFF_P_ at (3348, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[1\]$_DFF_P_ at (4752, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[1\]$_DFF_P_ at (5076, 5400) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[1\]$_DFF_P_ at (4428, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[1\]$_DFF_P_ at (3348, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[1\]$_DFF_P_ at (2268, 9450) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[1\]$_DFF_P_ at (5832, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[1\]$_DFF_P_ at (4752, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[1\]$_DFF_P_ at (5076, 5130) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[1\]$_DFF_P_ at (4428, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[1\]$_DFF_P_ at (3348, 8640) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[1\]$_DFF_P_ at (5832, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[1\]$_DFF_P_ at (5832, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[1\]$_DFF_P_ at (5076, 4860) DBU
+OT_IOFLOP extra capture cfg_addr[1] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[1\]$_DFF_P_ at (4428, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> ca\[2\]$_DFF_P_ at (5832, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[2\]$_DFF_P_ at (4428, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[2\]$_DFF_P_ at (2268, 10260) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[2\]$_DFF_P_ at (5832, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[2\]$_DFF_P_ at (5076, 4590) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[2\]$_DFF_P_ at (5508, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[2\]$_DFF_P_ at (3348, 9450) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[2\]$_DFF_P_ at (2268, 10530) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[2\]$_DFF_P_ at (5832, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[2\]$_DFF_P_ at (5076, 4320) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[2\]$_DFF_P_ at (6156, 5400) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[2\]$_DFF_P_ at (5508, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[2\]$_DFF_P_ at (6912, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[2\]$_DFF_P_ at (4266, 8910) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[2\]$_DFF_P_ at (6912, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[2\]$_DFF_P_ at (6156, 5130) DBU
+OT_IOFLOP extra capture cfg_addr[2] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[2\]$_DFF_P_ at (5508, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> ca\[3\]$_DFF_P_ at (6912, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[3\]$_DFF_P_ at (5508, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[3\]$_DFF_P_ at (3348, 10260) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[3\]$_DFF_P_ at (2268, 11340) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[3\]$_DFF_P_ at (6912, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[3\]$_DFF_P_ at (6588, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[3\]$_DFF_P_ at (3348, 10530) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[3\]$_DFF_P_ at (6912, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[3\]$_DFF_P_ at (5562, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[3\]$_DFF_P_ at (6912, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[3\]$_DFF_P_ at (4266, 9720) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[3\]$_DFF_P_ at (6156, 4860) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[3\]$_DFF_P_ at (6588, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[3\]$_DFF_P_ at (6156, 4590) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[3\]$_DFF_P_ at (6588, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[3\]$_DFF_P_ at (2268, 12150) DBU
+OT_IOFLOP extra capture cfg_addr[3] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[3\]$_DFF_P_ at (7992, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> ca\[4\]$_DFF_P_ at (6588, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[4\]$_DFF_P_ at (3348, 11340) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[4\]$_DFF_P_ at (7992, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[4\]$_DFF_P_ at (5562, 9180) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[4\]$_DFF_P_ at (7992, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[4\]$_DFF_P_ at (6156, 4320) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[4\]$_DFF_P_ at (7236, 5400) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[4\]$_DFF_P_ at (7668, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[4\]$_DFF_P_ at (4428, 10530) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[4\]$_DFF_P_ at (7992, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[4\]$_DFF_P_ at (6642, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[4\]$_DFF_P_ at (7992, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[4\]$_DFF_P_ at (7236, 5130) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[4\]$_DFF_P_ at (7668, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[4\]$_DFF_P_ at (2268, 12960) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[4\]$_DFF_P_ at (7992, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[4] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[4\]$_DFF_P_ at (7236, 4860) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> ca\[5\]$_DFF_P_ at (7668, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[5\]$_DFF_P_ at (3348, 12150) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[5\]$_DFF_P_ at (5562, 9990) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[5\]$_DFF_P_ at (7668, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[5\]$_DFF_P_ at (4428, 11340) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[5\]$_DFF_P_ at (6642, 9180) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[5\]$_DFF_P_ at (9072, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[5\]$_DFF_P_ at (8748, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[5\]$_DFF_P_ at (2268, 13770) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[5\]$_DFF_P_ at (9072, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[5\]$_DFF_P_ at (7722, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[5\]$_DFF_P_ at (9072, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[5\]$_DFF_P_ at (7236, 4590) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[5\]$_DFF_P_ at (8748, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[5\]$_DFF_P_ at (3348, 12960) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[5\]$_DFF_P_ at (5562, 10800) DBU
+OT_IOFLOP extra capture cfg_addr[5] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[5\]$_DFF_P_ at (9072, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> ca\[6\]$_DFF_P_ at (8748, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[6\]$_DFF_P_ at (4428, 12150) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[6\]$_DFF_P_ at (6642, 9990) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[6\]$_DFF_P_ at (4266, 12420) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[6\]$_DFF_P_ at (8100, 8640) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[6\]$_DFF_P_ at (8748, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[6\]$_DFF_P_ at (2268, 14580) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[6\]$_DFF_P_ at (7236, 4320) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[6\]$_DFF_P_ at (8316, 5400) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[6\]$_DFF_P_ at (7722, 9180) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[6\]$_DFF_P_ at (5670, 2700) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[6\]$_DFF_P_ at (8100, 8910) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[6\]$_DFF_P_ at (6804, 10260) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[6\]$_DFF_P_ at (9072, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[6\]$_DFF_P_ at (9828, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[6\]$_DFF_P_ at (3348, 13770) DBU
+OT_IOFLOP extra capture cfg_addr[6] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[6\]$_DFF_P_ at (2268, 14850) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> ca\[7\]$_DFF_P_ at (8802, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[7\]$_DFF_P_ at (5562, 11610) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[7\]$_DFF_P_ at (9828, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[7\]$_DFF_P_ at (4266, 13230) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[7\]$_DFF_P_ at (8100, 9450) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[7\]$_DFF_P_ at (10152, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[7\]$_DFF_P_ at (8316, 5130) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[7\]$_DFF_P_ at (9828, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[7\]$_DFF_P_ at (7722, 9990) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[7\]$_DFF_P_ at (5346, 12420) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[7\]$_DFF_P_ at (9180, 8640) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[7\]$_DFF_P_ at (8100, 9720) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[7\]$_DFF_P_ at (9072, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[7\]$_DFF_P_ at (10152, 6750) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[7\]$_DFF_P_ at (6804, 11070) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[7\]$_DFF_P_ at (8316, 4860) DBU
+OT_IOFLOP extra capture cfg_addr[7] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[7\]$_DFF_P_ at (9828, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> ca\[8\]$_DFF_P_ at (3348, 14580) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[8\]$_DFF_P_ at (2268, 15660) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[8\]$_DFF_P_ at (8802, 9180) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[8\]$_DFF_P_ at (9180, 8910) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[8\]$_DFF_P_ at (7884, 10260) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[8\]$_DFF_P_ at (3348, 14850) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[8\]$_DFF_P_ at (9882, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[8\]$_DFF_P_ at (5562, 12690) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[8\]$_DFF_P_ at (4266, 14040) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[8\]$_DFF_P_ at (10908, 7290) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[8\]$_DFF_P_ at (10908, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[8\]$_DFF_P_ at (10152, 6480) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[8\]$_DFF_P_ at (8316, 4590) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[8\]$_DFF_P_ at (9180, 9450) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[8\]$_DFF_P_ at (8100, 10530) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[8\]$_DFF_P_ at (6804, 11880) DBU
+OT_IOFLOP extra capture cfg_addr[8] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[8\]$_DFF_P_ at (10908, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> ca\[9\]$_DFF_P_ at (2268, 16470) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[9\]$_DFF_P_ at (8802, 9990) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[9\]$_DFF_P_ at (10260, 8640) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[9\]$_DFF_P_ at (9180, 9720) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[9\]$_DFF_P_ at (8100, 10800) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[9\]$_DFF_P_ at (7884, 11070) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[9\]$_DFF_P_ at (10908, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[9\]$_DFF_P_ at (3348, 15660) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[9\]$_DFF_P_ at (9882, 9180) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[9\]$_DFF_P_ at (5562, 13500) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[9\]$_DFF_P_ at (10260, 8910) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[9\]$_DFF_P_ at (8964, 10260) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[9\]$_DFF_P_ at (10152, 6210) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[9\]$_DFF_P_ at (4428, 14850) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[9\]$_DFF_P_ at (8316, 4320) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[9\]$_DFF_P_ at (9396, 5400) DBU
+OT_IOFLOP extra capture cfg_addr[9] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[9\]$_DFF_P_ at (10962, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> ca\[10\]$_DFF_P_ at (6642, 12690) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[10\]$_DFF_P_ at (8100, 11340) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[10\]$_DFF_P_ at (2268, 17280) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[10\]$_DFF_P_ at (10260, 9450) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[10\]$_DFF_P_ at (9180, 10530) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[10\]$_DFF_P_ at (8100, 11610) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[10\]$_DFF_P_ at (7884, 11880) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[10\]$_DFF_P_ at (3348, 16470) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[10\]$_DFF_P_ at (11988, 7830) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[10\]$_DFF_P_ at (9882, 9990) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[10\]$_DFF_P_ at (5562, 14310) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[10\]$_DFF_P_ at (10152, 5940) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[10\]$_DFF_P_ at (11232, 7020) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[10\]$_DFF_P_ at (9396, 5130) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[10\]$_DFF_P_ at (11340, 8640) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[10\]$_DFF_P_ at (10260, 9720) DBU
+OT_IOFLOP extra capture cfg_addr[10] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[10\]$_DFF_P_ at (9180, 10800) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> ca\[11\]$_DFF_P_ at (8964, 11070) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[0\].u_payload/ca\[11\]$_DFF_P_ at (11988, 8100) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[1\].u_payload/ca\[11\]$_DFF_P_ at (4428, 15660) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[2\].u_payload/ca\[11\]$_DFF_P_ at (10962, 9180) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[3\].u_payload/ca\[11\]$_DFF_P_ at (6642, 13500) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[4\].u_payload/ca\[11\]$_DFF_P_ at (11340, 8910) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[5\].u_payload/ca\[11\]$_DFF_P_ at (8100, 12150) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[6\].u_payload/ca\[11\]$_DFF_P_ at (10044, 10260) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[7\].u_payload/ca\[11\]$_DFF_P_ at (2268, 18090) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[8\].u_payload/ca\[11\]$_DFF_P_ at (12042, 8370) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[9\].u_payload/ca\[11\]$_DFF_P_ at (7722, 12690) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[10\].u_payload/ca\[11\]$_DFF_P_ at (9180, 11340) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[11\].u_payload/ca\[11\]$_DFF_P_ at (8100, 12420) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[12\].u_payload/ca\[11\]$_DFF_P_ at (11988, 7560) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[13\].u_payload/ca\[11\]$_DFF_P_ at (3348, 17280) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[14\].u_payload/ca\[11\]$_DFF_P_ at (10152, 5670) DBU
+OT_IOFLOP extra capture cfg_addr[11] -> g_fan32.u_banks.g_bank\[15\].u_payload/ca\[11\]$_DFF_P_ at (11232, 6750) DBU
+OT_IOFLOP extra capture cfg_target[0] -> ct\[0\]$_DFF_P_ at (6804, 2160) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[0\]$_DFF_P_ at (8100, 2700) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[0\]$_DFF_P_ at (8100, 2430) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[0\]$_DFF_P_ at (7884, 2160) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[0\]$_DFF_P_ at (9396, 4320) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[0\]$_DFF_P_ at (9396, 4590) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[0\]$_DFF_P_ at (9396, 4860) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[0\]$_DFF_P_ at (9180, 2700) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[0\]$_DFF_P_ at (9180, 2430) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[0\]$_DFF_P_ at (8964, 2160) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[0\]$_DFF_P_ at (10476, 4320) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[0\]$_DFF_P_ at (10476, 4590) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[0\]$_DFF_P_ at (10476, 4860) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[0\]$_DFF_P_ at (10260, 2700) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[0\]$_DFF_P_ at (10476, 5130) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[0\]$_DFF_P_ at (10260, 2430) DBU
+OT_IOFLOP extra capture cfg_target[0] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[0\]$_DFF_P_ at (10044, 2160) DBU
+OT_IOFLOP extra capture cfg_target[1] -> ct\[1\]$_DFF_P_ at (11556, 4320) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[1\]$_DFF_P_ at (10476, 5400) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[1\]$_DFF_P_ at (11556, 4590) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[1\]$_DFF_P_ at (11556, 4860) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[1\]$_DFF_P_ at (11556, 5130) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[1\]$_DFF_P_ at (11232, 5670) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[1\]$_DFF_P_ at (12636, 4320) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[1\]$_DFF_P_ at (11556, 5400) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[1\]$_DFF_P_ at (11340, 2700) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[1\]$_DFF_P_ at (11232, 5940) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[1\]$_DFF_P_ at (12636, 4590) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[1\]$_DFF_P_ at (11340, 2430) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[1\]$_DFF_P_ at (11124, 2160) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[1\]$_DFF_P_ at (11232, 6210) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[1\]$_DFF_P_ at (12636, 4860) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[1\]$_DFF_P_ at (11232, 6480) DBU
+OT_IOFLOP extra capture cfg_target[1] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[1\]$_DFF_P_ at (12636, 5130) DBU
+OT_IOFLOP extra capture cfg_target[2] -> ct\[2\]$_DFF_P_ at (12312, 5670) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[2\]$_DFF_P_ at (12636, 5400) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[2\]$_DFF_P_ at (13716, 4320) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[2\]$_DFF_P_ at (12312, 5940) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[2\]$_DFF_P_ at (13716, 4590) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[2\]$_DFF_P_ at (12420, 2700) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[2\]$_DFF_P_ at (12312, 6210) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[2\]$_DFF_P_ at (13716, 4860) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[2\]$_DFF_P_ at (12420, 2430) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[2\]$_DFF_P_ at (12312, 6480) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[2\]$_DFF_P_ at (12204, 2160) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[2\]$_DFF_P_ at (13716, 5130) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[2\]$_DFF_P_ at (13392, 5670) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[2\]$_DFF_P_ at (12312, 6750) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[2\]$_DFF_P_ at (13716, 5400) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[2\]$_DFF_P_ at (14796, 4320) DBU
+OT_IOFLOP extra capture cfg_target[2] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[2\]$_DFF_P_ at (11988, 7290) DBU
+OT_IOFLOP extra capture cfg_target[3] -> ct\[3\]$_DFF_P_ at (13392, 5940) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[3\]$_DFF_P_ at (12312, 7020) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[3\]$_DFF_P_ at (14796, 4590) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[3\]$_DFF_P_ at (13392, 6210) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[3\]$_DFF_P_ at (14796, 4860) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[3\]$_DFF_P_ at (13392, 6480) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[3\]$_DFF_P_ at (14796, 5130) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[3\]$_DFF_P_ at (13500, 2700) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[3\]$_DFF_P_ at (14472, 5670) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[3\]$_DFF_P_ at (13392, 6750) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[3\]$_DFF_P_ at (14796, 5400) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[3\]$_DFF_P_ at (13500, 2430) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[3\]$_DFF_P_ at (13068, 7290) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[3\]$_DFF_P_ at (13284, 2160) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[3\]$_DFF_P_ at (14472, 5940) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[3\]$_DFF_P_ at (13392, 7020) DBU
+OT_IOFLOP extra capture cfg_target[3] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[3\]$_DFF_P_ at (15876, 4590) DBU
+OT_IOFLOP extra capture cfg_target[4] -> ct\[4\]$_DFF_P_ at (13068, 7560) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[4\]$_DFF_P_ at (14472, 6210) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[4\]$_DFF_P_ at (5562, 15120) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[4\]$_DFF_P_ at (15876, 4860) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[4\]$_DFF_P_ at (11340, 9450) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[4\]$_DFF_P_ at (10260, 10530) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[4\]$_DFF_P_ at (9180, 11610) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[4\]$_DFF_P_ at (8964, 11880) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[4\]$_DFF_P_ at (13068, 7830) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[4\]$_DFF_P_ at (4428, 16470) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[4\]$_DFF_P_ at (14472, 6480) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[4\]$_DFF_P_ at (10962, 9990) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[4\]$_DFF_P_ at (6642, 14310) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[4\]$_DFF_P_ at (15876, 5130) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[4\]$_DFF_P_ at (4266, 16740) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[4\]$_DFF_P_ at (12420, 8640) DBU
+OT_IOFLOP extra capture cfg_target[4] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[4\]$_DFF_P_ at (11340, 9720) DBU
+OT_IOFLOP extra capture cfg_target[5] -> ct\[5\]$_DFF_P_ at (10260, 10800) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[5\]$_DFF_P_ at (8100, 12960) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[5\]$_DFF_P_ at (10044, 11070) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[5\]$_DFF_P_ at (13068, 8100) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[5\]$_DFF_P_ at (2268, 18900) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[5\]$_DFF_P_ at (15552, 5670) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[5\]$_DFF_P_ at (14472, 6750) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[5\]$_DFF_P_ at (12042, 9180) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[5\]$_DFF_P_ at (7722, 13500) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[5\]$_DFF_P_ at (15876, 5400) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[5\]$_DFF_P_ at (12420, 8910) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[5\]$_DFF_P_ at (9180, 12150) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[5\]$_DFF_P_ at (8100, 13230) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[5\]$_DFF_P_ at (11124, 10260) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[5\]$_DFF_P_ at (6804, 14580) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[5\]$_DFF_P_ at (14148, 7290) DBU
+OT_IOFLOP extra capture cfg_target[5] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[5\]$_DFF_P_ at (3348, 18090) DBU
+OT_IOFLOP extra capture cfg_target[6] -> ct\[6\]$_DFF_P_ at (2268, 19170) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[6\]$_DFF_P_ at (15552, 5940) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[6\]$_DFF_P_ at (14472, 7020) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[6\]$_DFF_P_ at (13122, 8370) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[6\]$_DFF_P_ at (8802, 12690) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[6\]$_DFF_P_ at (5562, 15930) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[6\]$_DFF_P_ at (10260, 11340) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[6\]$_DFF_P_ at (9180, 12420) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[6\]$_DFF_P_ at (14148, 7560) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[6\]$_DFF_P_ at (15552, 6210) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[6\]$_DFF_P_ at (4266, 17550) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[6\]$_DFF_P_ at (12420, 9450) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[6\]$_DFF_P_ at (11340, 10530) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[6\]$_DFF_P_ at (10260, 11610) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[6\]$_DFF_P_ at (8100, 13770) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[6\]$_DFF_P_ at (10044, 11880) DBU
+OT_IOFLOP extra capture cfg_target[6] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[6\]$_DFF_P_ at (14148, 7830) DBU
+OT_IOFLOP extra capture cfg_target[7] -> ct\[7\]$_DFF_P_ at (15552, 6480) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[0\].u_payload/ct\[7\]$_DFF_P_ at (12042, 9990) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[1\].u_payload/ct\[7\]$_DFF_P_ at (7722, 14310) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[2\].u_payload/ct\[7\]$_DFF_P_ at (5346, 16740) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[3\].u_payload/ct\[7\]$_DFF_P_ at (13500, 8640) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[4\].u_payload/ct\[7\]$_DFF_P_ at (12420, 9720) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[5\].u_payload/ct\[7\]$_DFF_P_ at (11340, 10800) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[6\].u_payload/ct\[7\]$_DFF_P_ at (9180, 12960) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[7\].u_payload/ct\[7\]$_DFF_P_ at (8100, 14040) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[8\].u_payload/ct\[7\]$_DFF_P_ at (11124, 11070) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[9\].u_payload/ct\[7\]$_DFF_P_ at (6804, 15390) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[10\].u_payload/ct\[7\]$_DFF_P_ at (14148, 8100) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[11\].u_payload/ct\[7\]$_DFF_P_ at (3348, 18900) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[12\].u_payload/ct\[7\]$_DFF_P_ at (2268, 19980) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[13\].u_payload/ct\[7\]$_DFF_P_ at (16632, 5670) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[14\].u_payload/ct\[7\]$_DFF_P_ at (15552, 6750) DBU
+OT_IOFLOP extra capture cfg_target[7] -> g_fan32.u_banks.g_bank\[15\].u_payload/ct\[7\]$_DFF_P_ at (13122, 9180) DBU
+OT_ANCHOR_PACK: legally packed 869 owned anchors; maximum Manhattan displacement 6002.0 DBU
+OT_IOFLOP fixed 236 output-port and 633 input-port flops at their pins (1819 ports not single-flop)
+Took 8 seconds: source /work/hooks/pre_global_place_io_flop_at_pins.tcl
+[INFO RSZ-0026] Removed 1002 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 296 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 2032 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 127.440 127.440 ) um
+[INFO GPL-0016] Core area:                   15695.078 um^2
+[INFO GPL-0036] Movable instances area:       2895.821 um^2
+[INFO GPL-0037] Total instances area:         3212.965 um^2
+[INFO GPL-0035] Pin density area adjust:       273.107 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             25803
+[INFO GPL-0007] Movable instances:               22841
+[INFO GPL-0008] Fixed instances:                  2962
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  24008
+[INFO GPL-0011] Number of pins:                  74882
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 129.600 129.600 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 127.440 127.440 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 15695.078 um^2
+[INFO GPL-0017] Fixed instances area:          317.144 um^2
+[INFO GPL-0018] Movable instances area:       3168.928 um^2
+[INFO GPL-0019] Utilization:                    20.607 %
+[INFO GPL-0020] Standard cells area:          3168.928 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 22841	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00005313 HPWL: 355667016
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00005126 HPWL: 290705455
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00002988 HPWL: 229081729
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00001852 HPWL: 172763588
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000316 HPWL: 141382067
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.139 um^2
+[INFO GPL-0025] Ideal bin area:                  0.277 um^2
+[INFO GPL-0026] Ideal bin count:                 56563
+[INFO GPL-0027] Total bin area:              15695.078 um^2
+[INFO GPL-0028] Bin count (X, Y):         128 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.979 *  0.979 um
+[INFO GPL-0030] Number of bins:                  16384
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.7392 |  1.156529e+05 |   +0.00% |  7.35e-13 |      
+       10 |   0.7040 |  1.237087e+05 |   +6.97% |  1.20e-12 |      
+       20 |   0.6980 |  1.275149e+05 |   +3.08% |  1.95e-12 |      
+       30 |   0.6904 |  1.278440e+05 |   +0.26% |  3.17e-12 |      
+       40 |   0.6839 |  1.275877e+05 |   -0.20% |  5.17e-12 |      
+       50 |   0.6838 |  1.274496e+05 |   -0.11% |  8.42e-12 |      
+       60 |   0.6856 |  1.278652e+05 |   +0.33% |  1.37e-11 |      
+       70 |   0.6836 |  1.282037e+05 |   +0.26% |  2.23e-11 |      
+       80 |   0.6837 |  1.279011e+05 |   -0.24% |  3.64e-11 |      
+       90 |   0.6851 |  1.276439e+05 |   -0.20% |  5.93e-11 |      
+      100 |   0.6835 |  1.276371e+05 |   -0.01% |  9.65e-11 |      
+      110 |   0.6833 |  1.275461e+05 |   -0.07% |  1.57e-10 |      
+      120 |   0.6839 |  1.275623e+05 |   +0.01% |  2.56e-10 |      
+      130 |   0.6827 |  1.277688e+05 |   +0.16% |  4.17e-10 |      
+      140 |   0.6799 |  1.284520e+05 |   +0.53% |  6.79e-10 |      
+      150 |   0.6740 |  1.290009e+05 |   +0.43% |  1.11e-09 |      
+      160 |   0.6679 |  1.292488e+05 |   +0.19% |  1.80e-09 |      
+      170 |   0.6641 |  1.306206e+05 |   +1.06% |  2.94e-09 |      
+      180 |   0.6544 |  1.329864e+05 |   +1.81% |  4.78e-09 |      
+      190 |   0.6408 |  1.340639e+05 |   +0.81% |  7.79e-09 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 196, overflow: 0.633, keep resizer changes at: 1, HPWL: 133901759
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     24008
+    final |     +8.9% |    2382 |     820 |          2347 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 2422 slew violations.
+[INFO RSZ-0037] Found 265 long wires.
+[INFO RSZ-0039] Resized 2382 instances.
+[INFO RSZ-0038] Inserted 820 buffers in 2347 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     23564
+     2300 |     -0.0% |       4 |        4 |     21264
+     4600 |     -0.0% |       4 |        4 |     18964
+     6900 |     -0.0% |       4 |        4 |     16664
+     9200 |     -1.2% |     240 |      246 |     14364
+    11500 |     +0.7% |     240 |      714 |     12064
+    13800 |     +6.6% |     529 |     2311 |      9764
+    16100 |     +3.8% |    1645 |     2311 |      7464
+    18400 |     -1.7% |    2846 |     2805 |      5164
+    20700 |     -1.7% |    2846 |     2806 |      2864
+    23000 |     -1.6% |    2846 |     2823 |       564
+    final |     -1.6% |    2852 |     2829 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -1.66667e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 225.402 um^2 (+7.11%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 797 (+3.49%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 3649, deleted: 2852
+[INFO GPL-0110] Timing-driven: new target density: 0.5146575
+[INFO GPL-0038] Routability snapshot saved at iter = 198
+      197 |   0.5935 |  1.690768e+05 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      200 |   0.5708 |  1.756686e+05 |  +31.03% |  1.26e-08 |      
+      210 |   0.5496 |  1.730222e+05 |   -1.51% |  2.06e-08 |      
+      220 |   0.5515 |  1.716771e+05 |   -0.78% |  3.35e-08 |      
+      230 |   0.5329 |  1.698557e+05 |   -1.06% |  5.45e-08 |      
+      240 |   0.5103 |  1.683840e+05 |   -0.87% |  8.88e-08 |      
+      250 |   0.4818 |  1.661006e+05 |   -1.36% |  1.45e-07 |      
+      260 |   0.4522 |  1.635114e+05 |   -1.56% |  2.36e-07 |      
+      270 |   0.4091 |  1.632498e+05 |   -0.16% |  3.84e-07 |      
+      280 |   0.3658 |  1.618591e+05 |   -0.85% |  6.25e-07 |      
+      290 |   0.3207 |  1.610509e+05 |   -0.50% |  9.69e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net clk has a large fanout of 5418 terminals.
+[INFO GPL-0041] Total routing overflow: 3.0475
+[INFO GPL-0042] Number of overflowed tiles: 41 (0.08%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.9128
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.8386
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.7693
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.6863
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.8757
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      300 |   0.2853 |  1.607106e+05 |   -0.21% |  1.43e-06 |      
+      310 |   0.2439 |  1.607971e+05 |   +0.05% |  2.10e-06 |      
+      320 |   0.2138 |  1.608293e+05 |   +0.02% |  3.10e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 327, overflow: 0.195, keep resizer changes at: 1, HPWL: 160791972
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     24805
+    final |     +0.4% |       4 |      44 |            62 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 52 slew violations.
+[INFO RSZ-0037] Found 22 long wires.
+[INFO RSZ-0039] Resized 4 instances.
+[INFO RSZ-0038] Inserted 44 buffers in 62 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     23564
+     2300 |     -0.0% |      11 |       10 |     21264
+     4600 |     -0.0% |      11 |       10 |     18964
+     6900 |     -0.0% |      11 |       10 |     16664
+     9200 |     -0.1% |     253 |      246 |     14364
+    11500 |     -0.1% |     286 |      279 |     12064
+    13800 |     -0.1% |     288 |      281 |      9764
+    16100 |     -0.1% |     290 |      288 |      7464
+    18400 |     -0.3% |     817 |      758 |      5164
+    20700 |     -0.3% |     818 |      760 |      2864
+    23000 |     -0.3% |     835 |      776 |       564
+    final |     -0.3% |     841 |      779 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -1.66667e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.709 um^2 (+0.02%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -18 (-0.08%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 823, deleted: 841
+[INFO GPL-0110] Timing-driven: new target density: 0.5147036
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      330 |   0.1850 |  1.735045e+05 |   +7.88% |  4.56e-06 |      
+      340 |   0.1509 |  1.705009e+05 |   -1.73% |  6.71e-06 |      
+      350 |   0.1319 |  1.689186e+05 |   -0.93% |  9.89e-06 |      
+      360 |   0.1142 |  1.681404e+05 |   -0.46% |  1.46e-05 |      
+      368 |   0.0985 |  1.672937e+05 |          |  2.06e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 368
+[INFO GPL-1017] Routability mode iteration count: 98
+[INFO GPL-1005] Routability final weighted congestion: 0.8037
+[INFO GPL-1002] Placed Cell Area             3395.0388
+[INFO GPL-1003] Available Free Area         15377.9342
+[INFO GPL-1004] Minimum Feasible Density        0.2100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.2453
+[INFO GPL-1008]     - For 80% usage of free space: 0.2760
+[INFO GPL-1009]     - For 50% usage of free space: 0.4415
+[INFO GPL-1011] Original area (um^2): 3168.93
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 226.11 (+7.14%)
+[INFO GPL-1014] Final placement area: 3395.04 (+7.14%)
+Took 28 seconds: global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 3443 um^2 22% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_3_place_gp.odb
+Elapsed time: 0:51.74[h:]min:sec. CPU time: user 101.32 sys 7.99 (211%). Peak memory: 743684KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb           51            726 3d1a556dcf4ff3aa7282
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_3_place_gp.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     24787
+     1000 |     +0.0% |       0 |       2 |             1 |     23787
+     2000 |     +0.0% |       0 |       2 |             1 |     22787
+     3000 |     +0.0% |       0 |       2 |             1 |     21787
+     4000 |     +0.0% |       0 |       4 |             2 |     20787
+     5000 |     +0.0% |       0 |       4 |             2 |     19787
+     6000 |     +0.0% |       0 |       8 |             4 |     18787
+     7000 |     +0.1% |       1 |      12 |             6 |     17787
+     8000 |     +0.1% |       6 |      17 |             9 |     16787
+     9000 |     +0.1% |       8 |      23 |            13 |     15787
+    10000 |     +0.1% |       8 |      23 |            13 |     14787
+    11000 |     +0.1% |       8 |      23 |            57 |     13787
+    12000 |     +0.1% |       8 |      23 |            93 |     12787
+    13000 |     +0.3% |       8 |      41 |           134 |     11787
+    14000 |     +0.3% |       8 |      45 |           138 |     10787
+    15000 |     +0.3% |       8 |      45 |           138 |      9787
+    16000 |     +0.3% |       8 |      45 |           138 |      8787
+    17000 |     +0.3% |       8 |      45 |           138 |      7787
+    18000 |     +0.3% |       8 |      45 |           138 |      6787
+    19000 |     +1.2% |      11 |     152 |           208 |      5787
+    20000 |     +1.2% |      11 |     153 |           209 |      4787
+    21000 |     +1.2% |      11 |     153 |           209 |      3787
+    22000 |     +1.2% |      11 |     153 |           209 |      2787
+    23000 |     +1.2% |      11 |     153 |           209 |      1787
+    24000 |     +1.2% |      11 |     153 |           209 |       787
+    final |     +1.2% |      14 |     154 |           210 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 223 slew violations.
+[INFO RSZ-0039] Resized 14 instances.
+[INFO RSZ-0038] Inserted 154 buffers in 210 nets.
+[INFO RSZ-0504] Runtime: 3.15s
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 3485 um^2 22% utilization.
+Instance count before 26582, after 26736
+Pin count before 74110, after 74418
+write_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_4_place_resized.odb
+Elapsed time: 0:25.29[h:]min:sec. CPU time: user 32.26 sys 4.25 (144%). Peak memory: 451916KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           25            441 44ba742cf2603a8a0a12
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_4_place_resized.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_out_flop_release.tcl
+OT_OFLOP released 869 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 15695.08 um^2
+[INFO DPL-0007] Movable instances area: 3423.97 um^2
+[INFO DPL-0008] Fixed instances area within core: 61.03 um^2
+[INFO DPL-0009] Utilization: 22.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 26736 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1231 |       207 |      1024
+        1 |        988 |       100 |       873
+        2 |        918 |        78 |       837
+        3 |        852 |        64 |       761
+        4 |        895 |        69 |       826
+        5 |       1020 |        66 |       912
+        6 |        963 |        67 |       896
+        7 |        805 |        53 |       728
+        8 |        766 |        54 |       712
+        9 |        727 |        57 |       670
+       10 |        753 |        63 |       690
+       20 |        388 |        24 |       364
+       30 |         43 |         3 |        40
+       36 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 36.
+[INFO DPL-0500] Runtime: 1.85s
+Placement Analysis
+---------------------------------
+total displacement       8110.1 u
+average displacement        0.3 u
+max displacement            6.5 u
+original HPWL          172046.9 u
+legalized HPWL         177624.8 u
+delta HPWL                    3 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 4423 fixed cells.
+[INFO DPL-0318] Collected 24643 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (127440, 127440)
+[INFO DPL-0310] Assigned 24643 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 1.773308e+08.
+[INFO DPL-0302] End of matching; objective is 1.771483e+08, improvement is 0.10 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 1.753512e+08.
+[INFO DPL-0306] Pass   2 of global swaps; hpwl is 1.750449e+08.
+[INFO DPL-0307] End of global swaps; objective is 1.750449e+08, improvement is 1.19 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 1.746577e+08.
+[INFO DPL-0309] End of vertical swaps; objective is 1.746577e+08, improvement is 0.22 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 1.745257e+08.
+[INFO DPL-0305] End of reordering; objective is 1.745257e+08, improvement is 0.08 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 492860 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 492860, swaps 41881, moves 172058 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 1.742749e+08, Scratch cost 1.732344e+08, Incremental cost 1.732344e+08, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 1.732344e+08.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.60 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.597041 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 9017 cell flips.
+[INFO DPL-0384] End of flipping; objective is 1.713177e+08, improvement is 1.25 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL           177624.8 u (   86282.0,    91342.7)
+Final HPWL              171051.4 u (   82738.5,    88312.9)
+Delta HPWL                  -3.7 % (      -4.1,       -3.3)
+
+Took 5 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 1483 instances
+[INFO DPL-0021] HPWL before          171051.4 u
+[INFO DPL-0022] HPWL after           170979.1 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 15695.08 um^2
+[INFO DPL-0007] Movable instances area: 3423.97 um^2
+[INFO DPL-0008] Fixed instances area within core: 61.03 um^2
+[INFO DPL-0009] Utilization: 22.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 26736 cells
+[INFO DPL-0500] Runtime: 0.17s
+Placement Analysis
+---------------------------------
+total displacement       3806.0 u
+average displacement        0.1 u
+max displacement            1.4 u
+original HPWL          170979.1 u
+legalized HPWL         173710.2 u
+delta HPWL                    2 %
+
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 3485 um^2 22% utilization.
+write_db /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hbm_static_cfg_collar_idx256_asap7_ref_preflight/base/3_place.sdc
+Elapsed time: 0:28.93[h:]min:sec. CPU time: user 34.70 sys 3.30 (131%). Peak memory: 523024KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           28            510 26e54a9c0c86762130c4
