@@ -18,7 +18,7 @@ python3 - "$R/$S" "$OUT" <<'PY'
 from pathlib import Path
 import sys
 s=Path(sys.argv[1]).read_text();out=Path(sys.argv[2])
-mutations={1:('init_token==resident_token&&','1\'b1&&'),2:('resident_epoch<=pending[0];','resident_epoch<=active[0];'),3:('reserved_pending ||','1\'b0 ||'),4:('if(COLD_PENDING&&(epoch_abort||new_epoch))','if(1\'b0)'),5:('assign expected_epoch=resident_epoch;','assign expected_epoch=pending[resident_user];')}
+mutations={1:('init_token==resident_token&&','1\'b1&&'),2:('resident_epoch<=pending[0];','resident_epoch<=active[0];'),3:('reserved_pending ||','1\'b0 ||'),4:('if(COLD_PENDING&&(epoch_abort||new_epoch))','if(1\'b0)'),5:('assign expected_epoch=resident_epoch;','assign expected_epoch=COLD_PENDING?pending[resident_user]:resident_epoch;')}
 for m,(a,b) in mutations.items():
  assert s.count(a)==1,(m,a,s.count(a))
  (out/f'mut{m}.sv').write_text(s.replace(a,b))
