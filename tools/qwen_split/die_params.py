@@ -122,6 +122,12 @@ def gen_params(insts, hr_rows, image=IMAGE):
             if sm in masters:
                 out[sm] = dict(MU_NU=nu, _source=src)
         rec['mu'] = dict(nu=nu, opseg=1)
+        if 'qfd_sys_face' in masters:
+            # MU-DQ-SYSFACE (COORD 0kg (a)): qfd_sys_face #(MU 1) = MU d2d image (ot_qwen_d2d_cal_seq_dies_mu.sv) + filler
+            # head contexts accepted by user on tt_native_pos[17:16]; the die stand-in view stays the MU 0 rs3 view until mu1 closes
+            out['qfd_sys_face'] = dict(MU=1, _source='MU-DQ-SYSFACE 57d2bf14c: MU d2d image + filler head contexts '
+                                       '(view of record pending mu1 re-close: STAND-IN)')
+            rec['mu']['sys_face_mu'] = 1
         if DHOBS_MASTER in masters:
             # NU from the die; the compiled lists are the RTL defaults (384-b / 128-b vectors: no sidecar literal), checked
             # against mu_opcal.dhobs_lists by audit (e)
