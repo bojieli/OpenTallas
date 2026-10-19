@@ -164,5 +164,11 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "HKV-PVRS2 10-19 rev f2: input pin registers. f1 (CLOSED TT +264.95 / FF +21.21) failed native capture (a1v[19] S + R 253.1 > 190 on 38 data pins: a0v/a1v half selects 23, a0t/a1t, far trunk data a0/a1/b1 191-209): one stage pin to pin in a pin-limited outline at 4 % util put the select copies 8 mux loads and the data muxes far from their S-face pins. f2: every input bit one flop at its pin, then the unchanged f1 half-local select stage on the registered copies; outputs unchanged flops. Function = f1 one edge later (all inputs delayed equally; T and out_epoch captured together). +1 cycle: pv_trunk_gen --rs-hd f header 2 edges (RS_D 49 -> 50 on the committed pair)."
+ "structural_change": "HKV-PVRS2 10-19 rev f2: input pin registers. f1 (CLOSED TT +264.95 / FF +21.21) failed native capture (a1v[19] S + R 253.1 > 190 on 38 data pins: a0v/a1v half selects 23, a0t/a1t, far trunk data a0/a1/b1 191-209): one stage pin to pin in a pin-limited outline at 4 % util put the select copies 8 mux loads and the data muxes far from their S-face pins. f2: every input bit one flop at its pin, then the unchanged f1 half-local select stage on the registered copies; outputs unchanged flops. Function = f1 one edge later (all inputs delayed equally; T and out_epoch captured together). +1 cycle: pv_trunk_gen --rs-hd f header 2 edges (RS_D 49 -> 50 on the committed pair).",
+ "reroute_reason": {
+  "kind": "native_capture",
+  "source": "physical/ref_tile/qkd_pv_rs_hd_f/native_qkd_pv_rs_hd_f_f1-44ac716d6_FAIL.json",
+  "cell": "qkd_pv_rs_hd_f",
+  "fix": "input pin flops at the pins: rev f2 RTL registers every input bit at its pin (stage 1, anchored by io_flop_at_pins: S-face input flop bank beside the pins in the gate placement) before the f1 half-local select stage; the f1 select copies a0v/a1v/a0t/a1t and far data a0/a1/b1 (capture 191-253 ps) now end at a pin-local flop D. +1 cycle (pv_trunk_gen header 2, RS_D + 1). Same outline / pin faces."
+ }
 }
