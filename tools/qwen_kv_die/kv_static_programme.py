@@ -66,9 +66,18 @@ AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 # (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
 # so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
 # '--txd-c 1,1,1,2 --txd-k 1,2,1,1' args predate the compiled TXDP and no longer match the image.
-LINK_DIE_STAGES = '2,2,2,2,0,2/11,11,9,9,9,11,11'
+LINK_DIE_STAGES = '2,2,2,2,2,2/11,11,9,9,9,11,11'   # HKV-DIE 10-19: dv2f14bq seam (SC_TX 2) + kvs14p (= production script)
+
+
+def _link_kv_codec():
+    """the KV attention codec edges as instantiated in the KV tile source (.LAND(1) -> 2), as the production image"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_layerbench'))
+    import layer_compile as _LC
+    return str(_LC.kv_codec_edges((ROOT / 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read_text()))
+
+
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
-LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES,
+LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
              '--pinreg']                                    # + --token-path (decompressed in link_calendar)
 T_MAX = 8192
