@@ -122,7 +122,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire j_v,j_rdy;
     wire head_valid_next=response_read?1'b1:response_take?1'b0:head_valid;
     wire response_take=j_v&&j_rdy;
-    (* keep="true",dont_touch="true" *) wire[2:0]length_prefix={length==1,length<=2,length<=3};
+    (* keep="true",dont_touch="true" *) wire[2:0]length_prefix;
     function automatic credit_room(input[QW:0]n,input[2:0]prefix);
       // Legal requests have1..4 beats. Shared length-prefix predicates
       // avoid broadcasting each encoded length bit into22 carry chains.
@@ -137,18 +137,19 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         // Released H9b native pin contract: pure data/valid capture, then a
         // three-entry ring. No external pin controls a wide payload mux.
         reg kp_we,k_rdy_q;
-        localparam integer KREGIONS=(341+15)/16;
+        localparam integer KREGIONS=(344+15)/16;
         (* keep="true",dont_touch="true" *) reg[KREGIONS-1:0]kv_regions,ready_seen_regions;
         wire[KREGIONS-1:0]push_regions,pop_regions,valid_regions;
-        reg[29:0]kp_addr;reg[3:0]kp_len;reg[16:0]kp_tag;reg[31:0]kp_strb;reg[255:0]kp_data;
+        reg[29:0]kp_addr;(* keep="true",dont_touch="true" *)reg[3:0]kp_len;reg[16:0]kp_tag;reg[31:0]kp_strb;reg[255:0]kp_data;
         always @(posedge clk)begin kp_we<=k_we;kp_addr<=k_addr;kp_len<=k_len;kp_tag<=k_tag;kp_strb<=k_wstrb;kp_data<=k_wdata;end
         wire kp_legal=kp_len>=1&&kp_len<=4&&(!kp_we||kp_len==1)&&
           {1'b0,kp_addr[1:0]}+kp_len<=4&&(kp_addr[6:2]^kp_addr[11:7]^kp_addr[16:12])==pc_id_q&&
           {1'b0,kp_addr}+kp_len<=31'd703125000;
+        (* keep="true",dont_touch="true" *)wire[2:0]kp_prefix={kp_len==1,kp_len<=2,kp_len<=3};
         wire[2:0]n,nn;
-        ot_hbm_svc_ring_bw_safe #(.WIDTH(341),.DEPTH(3),.REGIONAL(1),.REGIONAL_RESET(1)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
-          .in_v(push_regions[0]),.in_data({kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
-          .out_v(i_v),.pop(i_v&&i_rdy),.out_data({legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
+        ot_hbm_svc_ring_bw_safe #(.WIDTH(344),.DEPTH(3),.REGIONAL(1),.REGIONAL_RESET(1)) u_kring(.clk(clk),.rst_n(region_rst_n[2]),
+          .in_v(push_regions[0]),.in_data({kp_prefix,kp_legal,kp_we,kp_addr,kp_len,kp_tag,kp_strb,kp_data}),
+          .out_v(i_v),.pop(i_v&&i_rdy),.out_data({length_prefix,legal,i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}),
           .cnt(n),.cnt_next(nn),.fault(kfront_fault),
           .in_v_regions(push_regions),.pop_regions(pop_regions),.out_v_regions(valid_regions),
           .rst_n_regions(region_rst_n[93:72]));
@@ -172,9 +173,14 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         assign k_rdy=k_rdy_q;
     end else begin:g_raw_k
         assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
-        assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;assign legal=raw_legal;assign kfront_fault=0;
+        assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
+        assign length_prefix={length==1,length<=2,length<=3};assign legal=raw_legal;assign kfront_fault=0;
     end endgenerate
 
+`ifndef SYNTHESIS
+    always @(negedge clk)if(lrst_n&&i_v&&length_prefix!=={length==1,length<=2,length<=3})
+      $fatal(1,"BW_CFG_LENGTH_PREFIX_MISMATCH");
+`endif
     assign j_v=head_valid&&!sticky&&!pc_fault;
     generate if(KRREG!=0)begin:g_krreg
         // Same-edge ready captures feed two adjacent eight-bit slices each.
@@ -249,7 +255,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // read replicas serve posting and completion independently. No indexed flop
     // storage; forwarding covers same-edge SRAM read/write ambiguity.
     wire[255:0]qh[0:3],qe[0:3];
-    wire[78:0]mf_data[0:3];reg[63:0]mf_fields[0:3];
+    wire[78:0]mf_data[0:3];wire[63:0]mf_fields[0:3];reg[57:0]mf_low[0:3];reg[3:0]mf_writes;
     wire[3:0]meta_we;wire[QW-3:0]meta_wa[0:3];
     wire[QW-1:0]next_rp=cv_cfg?rp_plus1:rp,next_ep=posted?ep_plus1:ep;
     wire[78:0]mh,me;
@@ -309,6 +315,19 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       end
       assign qrow_post_regions[g*19+:19]={4'b0,word_data};
     end
+    wire[39:0]qbank_post_regions;
+    for(genvar g=0;g<8;g=g+1)begin:POST_BANK_REGION
+      localparam integer M=16+g/2;
+      wire[4:0]bank_word[0:3];
+      wire[3:0]sel=POST_ROW_REGION[g].WORD[0].bank_oh;
+      for(genvar b=0;b<4;b=b+1)begin:BANK
+        wire hit=META_SELECT[M].FORWARD[b].mf_valid&&
+          META_SELECT[M].FORWARD[b].mf_address==META_SELECT[M].ep_hi;
+        assign bank_word[b]=hit?mf_data[b][58+:5]:qe[b][58+:5];
+      end
+      assign qbank_post_regions[g*5+:5]=(bank_word[0]&{5{sel[0]}})|
+        (bank_word[1]&{5{sel[1]}})|(bank_word[2]&{5{sel[2]}})|(bank_word[3]&{5{sel[3]}});
+    end
     assign queue_head=mh[63:0];assign queue_post=me[63:0];assign qrow_post=me[78:64];
     // Two real existing-edge write-pointer sources divide fourbank address
     // consumers; the canonical nextstate drives onlythree D pins per bit.
@@ -325,7 +344,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       wire[78:0]wd={incoming[29:15],i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+j)^incoming[16:15]),incoming[11:7],i_tag,4'(j),i_wstrb};
       assign meta_we[b]=we;assign meta_wa[b]=wa[QW-1:2];
       (* keep="true",dont_touch="true" *) reg[14:0]row_q;
-      always @(posedge clk)begin row_q<=wd[78:64];mf_fields[b]<=wd[63:0];end
+      (* keep="true",dont_touch="true" *)reg[4:0]bank_q;
+      always @(posedge clk)begin row_q<=wd[78:64];bank_q<=wd[62:58];mf_low[b]<=wd[57:0];mf_writes[b]<=wd[63];end
+      assign mf_fields[b]={mf_writes[b],bank_q,mf_low[b]};
       assign mf_data[b]={row_q,mf_fields[b]};
       ot_sram_1r1w_128x256_m1_r2c2 u_head(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(next_rp>>2)),.rd_out(qh[b]),
         .w_ce_in(we),.w_addr_in(7'(wa>>2)),.wd_in({177'b0,wd}),.w_mask_in({256{1'b1}}),
@@ -342,11 +363,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       .r_addr_in(7'(response_read_address)),.rd_out(response_meta),
       .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in({235'b0,pending_meta[20:0]}),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.WQ(QD),.MRKEY(MRKEY)) controller(
+    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
-        .wr_v(enqueue_aq),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
+        .wr_v(enqueue_aq),.wr_bank(push[318:314]),.wr_bank_regions(qbank_post_regions),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
         .col_we(cwe),.col_aq(caq),.dbg_held());
     wire sticky_next=sticky||(i_v&&!legal)||kfront_fault||
       (cv_cfg&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||

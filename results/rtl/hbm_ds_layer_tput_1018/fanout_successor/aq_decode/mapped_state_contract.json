@@ -31,7 +31,8 @@
     "fault_regions_q": 3,
     "open": 32,
     "open_column": 32,
-    "refresh_update_regions": 4
+    "refresh_update_regions": 4,
+    "head_bank_cfg": 5
   },
   "forbidden_families": [
     "c_oh",
@@ -46,7 +47,8 @@
       "head_read_global",
       "row_local[18:0]",
       "look_head_bank_local",
-      "look_bank_regions"
+      "look_bank_regions",
+      "head_bank_cfg"
     ],
     "main_aq_async": [
       "q_n_local",

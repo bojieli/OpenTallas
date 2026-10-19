@@ -169,5 +169,16 @@
     "macro_ports_added": 0,
     "kept_boolean_area": "Unknown untilactualmappedcellinventory; nozeroarea claim. CountactualAND/decoderarea,pins,inputs independentlylive,allrootcensus.",
     "status": "modelbeforeRTL;sourceproof+actualtransparentmappingrequired"
+  },
+  "map6_field_successor": {
+    "actual_map6_failure": "5critical:head_bank_local[4]42,2incomingbankpartialdecodes37/35,2encodedlengthcontrols34/33",
+    "added_ff": 23,
+    "head": "5real head_bank_cfg FF sameheadcaptureedge, CFGonehotdecode isolatedfromcanonicalbankselector",
+    "bank": "8x5 regionalbankmux outputs usingexistingPOST_ROW_REGION.WORD0 onehot. MFbankfield3highbitsmerged across4banks: map6actual11 FF (58/59all4banks+60..62bank0), new20keptFF gives+9. ExistingforwardregionsM16..19 eachserves2bank5bwords+4bmetadata=14muxbits<=28pins. Regiononehotserves8row+5bankbits=13loads.40newinternaldatawires; noaddedports onmaster/noSRAMport.",
+    "length": "3prefixbits storedinexistingKringcaptureedge344bitpayloadvs341, 3slots=>+9FF, still43eightbitpayloadslices/22controlregions. Prefixstatesdrive22regionalcredits; encodedlengthonlymetadata. Invariantassertprefix==function(storedlength) wheneverheadvalid; noadditionaledge.",
+    "added_data_edges": 0,
+    "sram_ports_added": 0,
+    "audit_visibility": "Keep actual slot XOR, candidatevalid OR, roundcomplete reduction andkp_len4existingpurecaptureFF, notbufferaliases; semanticgates/inputs fullyaudited noexception.",
+    "status": "modelbeforeRTL;exact6000/AQ64regions8BANK8+WRBANKmutant/SAT/all-driverrequired"
   }
 }

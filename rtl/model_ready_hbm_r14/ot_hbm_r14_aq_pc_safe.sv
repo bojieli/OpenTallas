@@ -30,7 +30,7 @@ module ot_hbm_r14_aq_pc_safe #(
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5, IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
   parameter integer MRKEY = 1,
   parameter integer PULLIN = 8,
-  parameter integer ROW_REGIONS = 0
+  parameter integer ROW_REGIONS = 0, BANK_REGIONS = 0
 )(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
@@ -38,7 +38,7 @@ module ot_hbm_r14_aq_pc_safe #(
   output wire[1:0]col_v_regions, output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
   output wire        ref_fault, output wire[2:0]ref_fault_regions,
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col, input wire [RW_ROW-1:0] wr_row,
-  input wire [8*RW_ROW-1:0] wr_row_regions,
+  input wire [8*RW_ROW-1:0] wr_row_regions, input wire[39:0]wr_bank_regions,
   input  wire        wr_rd, output wire wr_r, output wire col_we, output wire col_aq,
   output wire [31:0] dbg_held
 );
@@ -58,6 +58,15 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [255:0] qm;
   wire [WQW-1:0] qwp = WQW'(q_rp + q_n);
   wire qpush=wr_v&&wr_r;
+  wire[4:0]incoming_bank_region[0:7];
+  for(genvar g=0;g<8;g=g+1)begin:BANK_INPUT_REGION
+    assign incoming_bank_region[g]=(BANK_REGIONS==8?wr_bank_regions[g*5+:5]:wr_bank)
+`ifdef BW_AQ_MUT_WRBANK
+      ^(g==3?5'd1:5'd0)
+`endif
+      ;
+  end
+
   wire[31:0]bank_col;
   // Keep the current head in flops and prefetch its successor. On a pop,
   // request the following successor while capturing the SRAM's old output.
@@ -68,7 +77,7 @@ module ot_hbm_r14_aq_pc_safe #(
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
   (* keep="true",dont_touch="true" *) reg head_read_global;
-  (* keep="true",dont_touch="true" *) reg[4:0]head_bank_global;
+  (* keep="true",dont_touch="true" *) reg[4:0]head_bank_global,head_bank_cfg;
   always @(posedge clk)head_read_global<=head_d[0];
   // Same-edge local head copies: each row bit drives eight comparators and
   // eight look-row capture muxes; each read flag serves eight bank timers.
@@ -122,7 +131,7 @@ module ot_hbm_r14_aq_pc_safe #(
   wire [29:0] head_next=head_from_push?{wr_bank,wr_col,wr_row,wr_rd}:qprefetch;
   always @(posedge clk)begin
     qhead<=head_d;
-    head_bank_local<=head_d[29:25];head_bank_global<=head_d[29:25];
+    head_bank_local<=head_d[29:25];head_bank_global<=head_d[29:25];head_bank_cfg<=head_d[29:25];
   end
   ot_sram_1r1w_128x256_m1_r2c2 u_queue(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(qread)),.rd_out(qm),
     .w_ce_in(qpush),.w_addr_in(7'(qwp)),.wd_in({226'b0,wr_bank,wr_col,wr_row,wr_rd}),.w_mask_in({256{1'b1}}),
@@ -154,7 +163,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // Same-edge reset copies from the parent relay: each bank resets its own
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
-    wire bp=(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&wr_bank==b;
+    wire bp=(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&incoming_bank_region[b/4]==b;
     wire [WQW:0] bn_next=bank_n[b]+(bp&&!bank_col[b]?(WQW+1)'(1):
                     (!bp&&bank_col[b]?{(WQW+1){1'b1}}:(WQW+1)'(0)));
     always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
@@ -174,7 +183,7 @@ module ot_hbm_r14_aq_pc_safe #(
           if(look_valid_regions[b/4][k]&&
              look_bank_words[b/4][k]==5'(b))
             look_row[b][k*8+bit_]<=head_local[b/4][k*8+bit_+1];
-          else if(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ))&&wr_bank==b&&
+          else if(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ))&&incoming_bank_region[b/4]==b&&
               (k==0?bank_n[b]:bank_n_word_local[k-1][b])==0)
             look_row[b][k*8+bit_]<=
 `ifdef BW_AQ_MUT_WRROW
@@ -192,7 +201,7 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [2:0] tail_set_regions[0:7];
   for(genvar t=0;t<8;t=t+1)begin:TAIL_SET_REGION
     always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_regions[t]<=0;
-      else if(wr_v&&(q_n_local[t/2]!=(WQW+1)'(WQ)))tail_set_regions[t]<=wr_bank[4:2];
+      else if(wr_v&&(q_n_local[t/2]!=(WQW+1)'(WQ)))tail_set_regions[t]<=incoming_bank_region[t][4:2];
   end
   // ---- bank / group state ---------------------------------------------------------------
   (* keep="true",dont_touch="true" *) reg[31:0]open,open_column;
@@ -263,7 +272,7 @@ module ot_hbm_r14_aq_pc_safe #(
   end
   wire q_ne = q_n != 0;
   wire ref_due = (ref_c == 0);
-  wire slot_next = (phase != slot_parity);
+  (* keep="true",dont_touch="true" *) wire slot_next = (phase != slot_parity);
   wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;
   wire ref_due_n = (ref_n == 0);
   always @(posedge clk) if (!rst_n) ref_c <= RW'(refresh_reload); else ref_c <= ref_n;
@@ -463,7 +472,8 @@ module ot_hbm_r14_aq_pc_safe #(
   wire head_bank_rdy = q_ne && |(hb_oh & open & head_timer_ready & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
   assign col_v = wr_ok; assign col_we = wr_ok && !hr; assign col_aq = wr_ok && hr;
-  wire cfg_bank_ready=q_ne&&|(hb_oh&open_column&head_timer_ready&~blk&~pre_fl&head_row_match);
+  wire[31:0]hb_oh_cfg=32'b1<<head_bank_cfg;
+  wire cfg_bank_ready=q_ne&&|(hb_oh_cfg&open_column&head_timer_ready&~blk&~pre_fl&head_row_match);
   assign col_v_regions[0]=wr_ok;
   assign col_v_regions[1]=cfg_bank_ready&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
 `ifndef SYNTHESIS
@@ -513,7 +523,7 @@ module ot_hbm_r14_aq_pc_safe #(
   wire ep_rdy = ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= 4'(T_RREFD + 2) && ref_c > RW'(LEAD + 2);
   wire act_ok = act_cand && (|(act_cand_oh & aok_z)) && rrdl_z[act_b[1:0]] && rrds_c == 0 && faw_ok && !act_block &&
                 noact_c == 0 && !((ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1) || ep_start) && act_b == bsel);
-  reg r_v; reg [2:0] r_op; reg [4:0] r_bank; reg [31:0] r_oh; reg [RW_ROW-1:0] r_row;
+  (* keep="true",dont_touch="true" *) reg r_v; reg [2:0] r_op; reg [4:0] r_bank; reg [31:0] r_oh; reg [RW_ROW-1:0] r_row;
   (* keep="true",dont_touch="true" *) wire row_grant=slot_next&&r_v;
   always @* begin
     r_v = 0; r_op = PRE; r_bank = 0; r_oh = 0; r_row = 0;
@@ -526,7 +536,7 @@ module ot_hbm_r14_aq_pc_safe #(
   assign row_v = c_v; assign row_op = c_op; assign row_bank = c_bank; assign row_row = c_row;
   (* keep="true",dont_touch="true" *) reg[3:0]refresh_update_regions;
   wire[31:0]refresh_marked=refreshed|(32'b1<<rb);
-  wire refresh_round_complete=&refresh_marked;
+  (* keep="true",dont_touch="true" *) wire refresh_round_complete=&refresh_marked;
   for(genvar g=0;g<4;g=g+1)begin:REFRESH_BYTE
     always @(posedge clk or negedge reset_regions[32+g])
       if(!reset_regions[32+g])refresh_update_regions[g]<=0;
