@@ -1,0 +1,277 @@
+{
+ "name": "qfd_d2d_static_safe3",
+ "top": "qfd_d2d_static_ovl",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "TXDP": 167838472
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 280.8
+ },
+ "recipe": 4,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[0].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[1].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[2].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[3].u_store.u_sram"
+  }
+ ],
+ "pins": {
+  "S": [
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "fdi_tx_flit",
+   "fdi_rx_v",
+   "fdi_rx_flit",
+   "phy_rst_n"
+  ],
+  "N": [
+   "ck",
+   "native_tx_slot",
+   "native_tx_slot_kind",
+   "native_tx_slot_beat",
+   "native_tx_v",
+   "native_tx_payload",
+   "rx_payload",
+   "native_rx_v",
+   "native_rx_slot",
+   "native_rx_slot_kind",
+   "native_rx_slot_beat",
+   "prog_witness_slot",
+   "prog_auth_slot",
+   "prog_context_slot",
+   "prog_tx_observed_v",
+   "prog_tx_record",
+   "prog_rx_v",
+   "emb_rx_v",
+   "emb_rx_slot"
+  ],
+  "W": [
+   "kv_x3_slot",
+   "x3",
+   "x3_identity",
+   "x3_generation",
+   "status_epoch16",
+   "vm_drained",
+   "collective_drained",
+   "collective_busy",
+   "crom_fault",
+   "execution_active",
+   "admit_ready",
+   "result_v",
+   "result_done",
+   "result_fault",
+   "result_cause",
+   "result_tag",
+   "result_gen",
+   "result_token",
+   "result_value",
+   "result_cycles"
+  ],
+  "E": [
+   "por_n",
+   "rst_n",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "cal_start_rx",
+   "cal_seg_rx",
+   "cal_user_tx",
+   "cal_user_rx",
+   "tx_user",
+   "rx_user",
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "epoch_abort",
+   "transport_fault",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 20,
+   "diameter_um": 40,
+   "extra": "-no_obstruction_aware -distance_between_buffers 40 -sink_clustering_levels 2"
+  },
+  "io_hold_margin_ns": 0.03,
+  "pd": 0.6
+ },
+ "job": {
+  "owner": "CODEX-QW-D2D-SAFE2",
+  "branch": "codex/qw-d2d-safe2-1019",
+  "tag": "safe3",
+  "purpose": "Same full-face0.192um pin plan and same-edge reset statecopies as safe2, with repairable CLK/D pins and mandatory persisted postCTS/GRT/DRT state/equation/load audits. Safe2 failedflow beforeCTS because dont_touch blockedclock reconnect; no density/timing relaxation. Rawmacroescape/DRC evidence pending.",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/hdc",
+   "results/arch/token_path_20261009",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015",
+   "results/rtl/mu_qwen_1018/d2d_ovl/safe_qw_d2d",
+   "physical/ref_tile/qfd_d2d_static_safe3/audit_actual_pins.tcl"
+  ],
+  "benches": [
+   {
+    "name": "xovl_gen_txdp",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=1' XQ_GEN_TXDP=8,3,1,10/21,4,3,3 XQ_GEN_TXDP_EXPECT=PASS bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xovl_gen_txdp pair_gen_txdp",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^pair_gen_txdp expect=PASS got=PASS -> OK"
+   },
+   {
+    "name": "xovl_mut_txdp_c0_late",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=1' XQ_GEN_TXDP=9,3,1,10/21,4,3,3 XQ_GEN_TXDP_EXPECT=PASS bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xovl_mut_txdp_c0_late pair_gen_txdp",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/safe_qw_d2d/xovl_mut_txdp_c0_late.log"
+   },
+   {
+    "name": "xovl_mut_txdp_c3_old",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=1' XQ_GEN_TXDP=8,3,1,9/21,4,3,3 XQ_GEN_TXDP_EXPECT=PASS bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xovl_mut_txdp_c3_old pair_gen_txdp",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/safe_qw_d2d/xovl_mut_txdp_c3_old.log"
+   },
+   {
+    "name": "xovl_mut_rxstart_tied",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=2' XQ_GEN_TXDP=8,3,1,10/21,4,3,3 XQ_GEN_TXDP_EXPECT=PASS bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xovl_mut_rxstart_tied pair_gen_txdp",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/safe_qw_d2d/xovl_mut_rxstart_tied.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_d2d_static_safe3/views",
+  "record_to": "results/rtl/ref_tile/qfd_d2d_static_safe3"
+ },
+ "pinreg_r4": "r4 (2026-10-15): die master is pin-registered (PR=1, tools/qwen_split/d2d_pinreg_gen.py): every functional port has one flop at its pin, placed FIRM at the pin by recipe-2 io_flop_at_pins; fixes qkd r1 EARLY_FAIL_SETUP (-434 ps, all boundary paths) and qfd r1 TT -79 / FF -32.6.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "structural_change": "safe2: exact actual mu1 ODB scalar port inventory3668 repacked at minimum0.192um pitch; N clock stays237.516; E reset capture pins unchanged; same-edge registered reset fanout replication with buffer-path polarity retained. Outline/macros/RTL/transport edges unchanged. safe3: cell-lock preservation replaced by persisted input-equation/retained-state/load audits after every repair stage, allowing real CTS/hold ECOs.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_d2d_static_r8c/local_reset_capture.tcl"
+ ],
+ "hold_budget": "die",
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "2.4",
+  "OT_MEG_OUT_UM": "1.2"
+ },
+ "io_tcl": "physical/ref_tile/qfd_d2d_static_safe3/assigned_pins.tcl",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: ot_rst_pipe u_reset_regions / u_por_region s0 -> s1 (kept 2-flop capture, async assert / sync release, FIRM at the E-face rst_n / por_n pins by local_reset_capture.tcl; port net = 2 sinks), then 8 equal-depth regional copies (RC 1, each <= ~160 loads; r9j 300/325 on one flop). A kit landing would add 2 more stages and rename u_core (breaks the capture anchor)."
+ },
+ "safe_design": {
+  "1_pins": "PASS: PR=1 master (one flop per functional port incl. the 10 OVL bits, FIRM at the pin); reset = RTL 2-stage capture at the E pin (reset_landing opt-out with reason)",
+  "2_reach": "PASS: 475.2 x 280.8, pin flops at faces; no cross-tile single-cycle wire",
+  "3_fanout": "Same-edge reset replicas<=32 ultimate terminals, persisted fullmaster/inputequation manifest and postCTS/GRT/DRT audits. ActualsourceODB8statecopies/16equations PASS, clockreconnectPASS and D<-CLK mutant detected.",
+  "4_depth": "PASS on r9j (setup/hold met at gate; 4:1 OR write select on a registered one-hot fire)",
+  "5_storage": "PASS: 4 x 64x512 SRAM slot store; TXD capture delays are 1-bit shift registers (<=10 deep, no payload delay line) -> waived (a ring would cost more than 10 flops)",
+  "6_floorplan": "External functional pins all minimum0.192um pitch (5.208/um) on legal routing tracks. Macro origins remain43.2 lattice; aspect1.69; measured mu1 totalfill45.5%, std-density9.1% pin/macro limited. Raw64x512 M4 faces10.2pins/um: literal6ruleFAIL, candidate gate allowed while channel/PG/via escape and actual pin-access/DRC proof prepared per ROOT. Independent actualpin audit all3668 externalpins at0.192pitch +zero PG/via bbox overlaps PASS (both fullscan and filteredscan). Rawmacroescape remains pending.",
+  "7_clock": "Prior mu1 pinspreadTT48.9/FF44.0ps, insertion432.0/353.1ps; new pin locations/copies require candidate CTS. io_hold_margin0.03.",
+  "8_schedule": "PASS: static calendars; TXD C [8,3,1,10] = compiled_L1 on dv2f18dh2 (QW-L1SEAM relay check PASS) -> priced by the layer compile (MU-DQ-TOK); RC adds 0 cycles; OVL pin flops are in the OVL compiler (LEAD 1)"
+ },
+ "pin_hook_after_flops": [
+  "physical/ref_tile/qfd_d2d_static_safe3/reset_copy_select.tcl",
+  "physical/common_flow/same_edge_reset_copies.tcl"
+ ],
+ "post_stage_audits": [
+  "physical/common_flow/audit_same_edge_reset_copies.tcl"
+ ]
+}

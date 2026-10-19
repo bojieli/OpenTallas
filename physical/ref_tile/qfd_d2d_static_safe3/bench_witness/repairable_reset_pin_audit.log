@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-qw-d2d-safe2
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-d2d-safe2
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-d2d-safe2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-d2d-safe2
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-qw-d2d-safe2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-d2d-safe2
+ot-run: ot-agidock128  admits    94 GB (avail 78, growth 13, headroom 0, waiters 0/0 GB) load 16/64 running 8 disk 235 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1059263-1792424224 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_LPC split=u_core.u_reset_regions.rst_n\[1\]$_DFF_P_/QN original_loads=53
+OT_LPC split=u_core.u_reset_regions.rst_n\[4\]$_DFF_P_/QN original_loads=78
+OT_LPC split=u_core.u_reset_regions.rst_n\[5\]$_DFF_P_/QN original_loads=136
+OT_LPC split=u_core.u_reset_regions.rst_n\[6\]$_DFF_P_/QN original_loads=53
+OT_LPC_FINAL_EQUIVALENCE PASS same_master_all_signal_inputs=16 copies_and_buffer_paths
+OT_LPC PASS existing_stages_and_copies=36 new_copies=8 maximum_buffer_tree_terminal_load=32 same_master_and_inputs_at_clone=PASS no_added_edges=0
+OT_LPC_MANIFEST /data/ot_reset_copy_manifest.tcl state_copies=8
+RESET_COPY_AUDIT PASS retained_state_copies=8 stages=30 maximum_buffer_tree_terminal_load=32 clock_and_data_equations=UNCHANGED
+COPY_CLK_REPAIRABLE PASS rewired=8
+COPY_INPUT_MUTANT FAIL_DETECTED RESET_COPY_AUDIT changedequationot_lpr_copy_00001/D
+RESET_COPY_AUDIT PASS retained_state_copies=8 stages=30 maximum_buffer_tree_terminal_load=32 clock_and_data_equations=UNCHANGED
+PIN_AUDIT face=N count=1674 min_pitch_um=0.192
+PIN_AUDIT face=S count=1170 min_pitch_um=0.192
+PIN_AUDIT face=W count=758 min_pitch_um=0.192
+PIN_AUDIT face=E count=66 min_pitch_um=0.192
+PIN_AUDIT PASS actual_scalar_pins=3668 PG_and_via_bbox_overlap=0 actual_pitch_ge0.192=PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1059263-1792424224): exit 0
