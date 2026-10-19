@@ -15,6 +15,12 @@ S81-DIE7/LAND (10-18) tile mode, the kit benches of the hardened landing tiles: 
 (dsfd_dvland_<W> D 4 / dsfd_dvland_276l D 8 long geometries) and runs ONE variant; the last line is
 "LAND_BENCH PASS|FAIL <top> <variant> ..." = that variant's own verdict (a mutant must print FAIL), exit 0 on PASS.
   python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --variant base --out RUN/bench.json
+
+PO-SUBMIT (10-19, COORD HANDOFF 0jz) --rst-land N: the kit's reset landing (ref_tile reset_landing {"enable": true,
+"stages": N}: N plain ck flops on rs in front of the core) is modelled in the bench (tb +RL=N); the core release moves
+from R0 to R0 + N and the re-derived die calendar (dv_bind landing_reset_stages) opens the hop-0 gate N edges later,
+so K and the data latency are unchanged.  Variant mut_rlcal keeps the OLD gate edge (uncompensated calendar) and must
+FAIL (latency off by N against the compiler's prediction).
 """
 import argparse, json, math, re, subprocess, tempfile
 from pathlib import Path
@@ -57,7 +63,8 @@ def main():
     ap.add_argument('--widths', type=int, nargs='+', default=[70, 276])
     ap.add_argument('--long', action='store_true', help='dsfd_dvland_276l: D 8, KW 6, long-lane geometries (GEOM_LONG)')
     ap.add_argument('--tile', help='S81-DIE7/LAND: drive this hardened tile top (dsfd_dvland_<W> or dsfd_dvland_276l)')
-    ap.add_argument('--variant', choices=['base', 'mut_naive', 'mut_sel'], help='tile mode: run only this variant')
+    ap.add_argument('--variant', choices=['base', 'mut_naive', 'mut_sel', 'mut_rlcal'], help='tile mode: run only this variant')
+    ap.add_argument('--rst-land', type=int, default=0, help='kit reset landing stages on rs (ref_tile reset_landing.stages)')
     a = ap.parse_args()
     if a.tile:
         m = re.fullmatch(r'dsfd_dvland_(\d+)(l?)', a.tile)
@@ -70,13 +77,20 @@ def main():
     tmp.mkdir(parents=True, exist_ok=True)
     res = dict(schema='opentallas.s81_land.bench.v1', tb=str(TB.relative_to(ROOT)), dut=str(DUT.relative_to(ROOT)),
                T_ps=T, D=d_, KW=kw, R0=R0, G=G, margin_ps=MARGIN, skew_sweep_ps=SWEEP if not a.long else 'per geometry +-SK, 9 points',
-               geometries=geoms, variants={})
+               geometries=geoms, variants={}, rst_land_stages=a.rst_land,
+               calendar='re-derived: core release R0 + rst_land, hop-0 gate G + rst_land (K, latency unchanged)' if a.rst_land else 'R0 / G')
     verdict = True
     if a.tile:
         res.update(tile=a.tile, wrapper=str(WRAP.relative_to(ROOT)))
-    for var, define in (('base', None), ('mut_naive', 'OT_S81_LAND_MUT_NAIVE'), ('mut_sel', 'OT_S81_LAND_MUT_SEL')):
+    assert 0 <= a.rst_land <= 8, '--rst-land: 0..8 stages'
+    if a.variant == 'mut_rlcal':
+        assert a.rst_land > 0, 'mut_rlcal needs --rst-land > 0'
+    for var, define in (('base', None), ('mut_naive', 'OT_S81_LAND_MUT_NAIVE'), ('mut_sel', 'OT_S81_LAND_MUT_SEL'), ('mut_rlcal', None)):
         if a.variant and var != a.variant:
             continue
+        if var == 'mut_rlcal' and not a.rst_land:
+            continue
+        rla = dict(RL=a.rst_land, GS=(0 if var == 'mut_rlcal' else a.rst_land))
         vr = dict(runs=[], expect='PASS' if var == 'base' else 'FAIL')
         for w in a.widths:
             b = tmp / f'{var}_{w}'
@@ -89,11 +103,11 @@ def main():
                 e, k = pick_k(dl0, sk, d_)
                 cyc = {} if not a.long else dict(CYC=320)
                 for s in (SWEEP if not a.long else [round(sk * (i - 4) / 4) for i in range(9)]):
-                    r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'] - s, K=k, R0=R0, G=G, **cyc))
+                    r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'] - s, K=k, R0=R0, G=G, **rla, **cyc))
                     r.update(geom=g['name'], E=e, ok=(r.get('mism', 1) == 0 and r.get('fault', 1) == 0 and r.get('meas') == r.get('pred')))
                     vr['runs'].append(r)
                 slip = 1 if not a.long else (e * T - dl0) // T + 1
-                r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'], K=k, R0=R0, G=G, SLIP=slip, **cyc))   # calendar slip
+                r = run(str(b), dict(N=g['N'], DH=g['DH'], LR=g['LR'], K=k, R0=R0, G=G, SLIP=slip, **rla, **cyc))   # calendar slip
                 r.update(geom=g['name'], E=e, slip_test=True, ok=(r.get('fault') == 1))
                 vr['runs'].append(r)
         sweep = [r for r in vr['runs'] if not r.get('slip_test')]
