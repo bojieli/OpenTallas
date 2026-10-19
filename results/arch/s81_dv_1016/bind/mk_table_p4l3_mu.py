@@ -69,6 +69,7 @@ def build(ab):
         slice_master('dsdv_slice_lepw', 'dsdv_slice_lepw_mab', 'ot_s81sl_slice_lepw_mab', True, ex)
     else:
         slice_master('dsdv_slice_lepw', 'dsdv_slice_lepw_mu', 'ot_s81sl_slice_lepw_mu', True)
+    T['rtl_files'] = T['rtl_files'] + ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']   # dsdv_mu_land SRAM 1
     T['plan'] = 'S81-DV p4l ' + ('copy-A/B rank die (results/arch/s81_dv_1016/p4l_mab/plan.json)' if ab else
                                  'multi-user (results/arch/s81_dv_1016/p4l_mu/plan.json)')
     T['note'] = T['note'] + '; MU-S81/DIE 10-19: ' + ('MU_EN + AB_EN' if ab else 'MU_EN') + ' variant (bind/mk_table_p4l3_mu.py)'

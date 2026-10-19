@@ -33,7 +33,8 @@
 // ~0.004 mm^2 (design study item 6: 0.001 mm^2 for the field alone).
 // NSLOT = 1 (default of dsdv_seq_host_mu): the leaf is not instantiated, t_kd / every pin = dsdv_seq_host exactly.
 // MUT (bench negative controls): 1 user field dropped from t_ku (user 0 on every return), 2 slot-collision check
-// dropped (the occupied entry is overwritten, no fault).
+// dropped (the occupied entry is overwritten, no fault), 3 (NEV > 0) window ab bit dropped (copy B never selected),
+// 4 (NEV > 0) replay enable ignored (cut-through users replayed).
 // ---------------------------------------------------------------------------------------------------------------------
 // MU-S81/DIE (2026-10-19): end-slice TX tag windows + landing replays + RX tag check (NEV > 0; NEV = 0 = the leaf above,
 // byte-for-byte the same behaviour, the new ports unread / 0).  Under the shift calendar every user runs user 0's
@@ -169,8 +170,8 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0,
             for (e = 0; e < NEV; e = e + 1) if (fire[e]) begin
                 if (!ek[e]) begin
                     if (c_n[34*eep[e]]) col_w = 1'b1;
-                    c_n[34*eep[e] +: 34] = {ep[pe[e]], eu[pe[e]], eat[e][pe[e]], 1'b1};
-                end else if (eat[e][pe[e]][1]) begin
+                    c_n[34*eep[e] +: 34] = {ep[pe[e]], eu[pe[e]], eat[e][pe[e]][1], (MUT == 3) ? 1'b0 : eat[e][pe[e]][0], 1'b1};
+                end else if (eat[e][pe[e]][1] || MUT == 4) begin
                     if (rc_n[11*eep[e]]) col_w = 1'b1;
                     rc_n[11*eep[e] +: 11] = {eu[pe[e]], 1'b1};
                 end
