@@ -121,8 +121,21 @@ class KvCheck(unittest.TestCase):
         self.assertEqual(rc, 1)
         self.assertEqual(r['fail_counts'], dict(structure=0, strap=0, window=0, latency=1))
 
+    def test_kv_gen_fixed_rule_passes(self):
+        # KVR-FWDAGE 10-19: the KV GEN's own strap + price functions (kv_fwd_lanes.strap_k / landed_cost) pass kv-check
+        sys.path.insert(0, str(HERE.parent / 'qwen_kv_die'))
+        import kv_fwd_lanes as FL
+        gen = [(nm, S, n, FL.strap_k(n, FL.planned_e(n)) % 8) for nm, S, n, _ in GOOD]
+        self.assertEqual(gen, GOOD)
+        rc, r, out = self.run_check(gen, landed_of=lambda n, E: FL.landed_cost(n, E)['landed'])
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(r['fail_counts'], dict(structure=0, strap=0, window=0, latency=0))
+        for n in range(1, 100):
+            E = FL.planned_e(n)
+            self.assertEqual(math.ceil(FL.landed_cost(n, E)['landed'] - 1), E + 1)
+
     def test_kv_gen_price_and_n1_strap(self):
-        # what the KV GEN writes today: K = E for n = 1 (no hop-0 en edge) and landed = st + E + 2
+        # mutant = the KV GEN before KVR-FWDAGE: K = E for n = 1 (no hop-0 en edge) and landed = st + E + 2
         gen = [(nm, S, n, planned_e(n) % 8) for nm, S, n, _ in GOOD]
         rc, r, _ = self.run_check(gen, landed_of=gen_landed)
         self.assertEqual(rc, 1)
