@@ -658,5 +658,18 @@
   "configuration_ii": 1,
   "steady_data_added_edges": 0,
   "cfg_valid_copies": 55,
-  "native_fanout_qualification": "PENDING"
+  "native_fanout_qualification": "BLOCKED:752 arithmetic FF Q outputs>32;1024driven nets>32; primitive generic maxdepth36, mapped timing pending",
+  "outer_named_control_word_census": {
+    "cfg_v": 4,
+    "vlo": 5,
+    "v9_in": 5,
+    "ws2_to_local_ws3_copies": 16,
+    "rst_n": 4,
+    "vlo_in": 32,
+    "vhi_in": 32,
+    "v8_in": 32,
+    "fv3": 32
+  },
+  "actual_native_cells": 42,
+  "primitive_inventory_unit": "oth-ubuntu-3980836-1792429174"
 }
