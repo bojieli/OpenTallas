@@ -3918,7 +3918,7 @@
      "source": {
       "record": "results/arch/s81_l20_1019/split/split.json",
       "pointer": "single_user.chains.split_k6_compiled - record_D",
-      "commit": "uncommitted",
+      "commit": "19906ec2f",
       "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)"
      },
      "layer": "L20",
@@ -25373,7 +25373,7 @@
      "source": {
       "record": "results/arch/s81_l20_1019/split/split.json",
       "pointer": "single_user.chains.split_k6_compiled - record_D",
-      "commit": "uncommitted",
+      "commit": "19906ec2f",
       "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)"
      },
      "layer": "L20",
@@ -25389,7 +25389,7 @@
      "source": {
       "record": "results/arch/s81_l20_1019/split/split.json",
       "pointer": "single_user.rows.split_k6_compiled_tree.T_mtp - record_D.T_mtp",
-      "commit": "uncommitted",
+      "commit": "19906ec2f",
       "origin": "claude/s81-l20split-1019 (S81-L20SPLIT, coordinator 0li: L20 keys over k = 6 TP4 stages, compiled rank tree on the measured reader + RTL bk_sel jobs)"
      },
      "layer": "wave",
@@ -39990,38 +39990,5 @@
    ]
   }
  },
- "multi_user": {
-  "ar": {
-   "available": true,
-   "users": 46,
-   "fillers": 0,
-   "per_user_tok_s": 1217.2,
-   "aggregate_tok_s": 55991,
-   "slot_cycles": 21313.7,
-   "period_cycles": 980428,
-   "dies": 520,
-   "stacks": 520,
-   "total_mm2": 478504,
-   "model_users": 47,
-   "calendar_per_user_tok_s": 1224.0,
-   "record": "results/arch/mu_s81_1018/calendar_ar.json",
-   "grade": "per-user: this composition; users: modelled calendar"
-  },
-  "mtp": {
-   "available": true,
-   "users": 10,
-   "fillers": 1,
-   "per_user_tok_s": 3622.2,
-   "aggregate_tok_s": 37093,
-   "slot_cycles": 124524,
-   "period_cycles": 1303400,
-   "dies": 520,
-   "stacks": 520,
-   "total_mm2": 478504,
-   "model_users": 10,
-   "calendar_per_user_tok_s": 3829.1,
-   "record": "results/arch/mu_s81_1018/calendar_mtp.json",
-   "grade": "per-user: this composition; users: modelled calendar"
-  }
- }
+ "multi_user": {}
 }
