@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.measured_band_fill.review.v1",
+  "status": "ROOT_REVIEW_REQUIRED",
+  "original_gate_source": "9878449c7",
+  "original_gate_run": "ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin-20261019-083712",
+  "occupancy_smoke_unit": "oth-ubuntu-1825720-1792427077",
+  "smoke_host": "ot-epyc8",
+  "tools": {
+    "tools/ref_tile/measured_band_fill.py": "e8825a5f3bbccd932a31cf2149aefceb70bba75a59ecddc7d9334f2e6d735cc3",
+    "tools/ref_tile/ref_tile.py": "b8fbd20857e1b5531b00014f73391c5a64624c88bc701357c9514780fc745791",
+    "tools/ref_tile/pre_route_gate.py": "18e6bca1a2329e5d7f5ff4dce89f55166bdee04429f183280a6b2649b2cbdde7",
+    "tools/ref_tile/layout_dump.tcl": "cc1a9fa11ecdbe323644c251fcd061eee26535894995967ed26b63d13d08d747",
+    "tools/ref_tile/source_binding.py": "b790221bcf2f21f9e40edc862d70c0aea5d92a4916fe9bec0db2945778a454e0"
+  },
+  "odb_sha256": {
+    "floorplan": "ad36d0f7b844d16c4c868e64d3dfd697970941ae4775ea15c134e81bca02e455",
+    "placed": "4be8c35a6a2f7ee5b797c2229da72c23e29e646c72a89b19f5b1ea5431d950f5",
+    "cts": "1ad7eebd4e69db2d4f153064d87268db28997bd1bab9667f4382f8b58e002124"
+  },
+  "witness_sha256": {
+    "cts.log": "b00b0a8574d34994d8b946b6b4d6a24afd4c6d865cefd5097803f266a2b76588",
+    "placed.log": "1814f72405f0d9946a6dbf770c3b06e379b20172ada711c2def93b0f29783cbc",
+    "floorplan.log": "313cbb11bf1bbe560f117d28e4b2d0b3555ba3444e0f90a5d11eb3fd95652cbe",
+    "ot-run.log": "5f80f0d71f41866e0b3d4073857d60e58cd872e57ead93387ac2cad282bcd90a",
+    "floorplan.json.gz": "9f3e80f0a6adfb72bfc9a9a6eca7b37887d084742e07165a61439a8a839f593c",
+    "smoke.sh": "f54f829c077cf4c0e2b6fb3cd5e0872d1669964e831cf07bf58aea65e1b72c5d",
+    "placed.json.gz": "dc478914305424bba1b303d61ff0f26d4442b661e4945657d8f48d6963be4731",
+    "cts_verdict.json": "f10d8d8434c88ee0ddeb93fdee410cb9459a0db2a3e202200fa5a247045439d8",
+    "cts.json.gz": "eade9e445c36aed142a166ce957fed6f74130b64f3405868af93da69b091e079",
+    "placed_verdict.json": "70db65c6b44419697e3b82c34bb7fb3276663abb4fa77a0a3c09e612b16b966c",
+    "original_spec.json": "9ba17855e566697e4cf55b75106117e2ec2f4183f33785d499a9950c45278d2f"
+  }
+}
