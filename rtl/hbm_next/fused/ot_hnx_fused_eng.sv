@@ -101,8 +101,10 @@ module ot_hnx_fused_lane #(
         reg [32:0] s;
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
     endfunction
-    wire [0:0] rlr; wire rl = rlr[0];
-    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rlr));
+    // n4 (SAFE-DESIGN item 3): one kept reset relay copy per region -- [0] lane control, [1 + e] element column e
+    // (n3 gate: ONE relay flop drove 16,053 async-reset loads, textbook_lint REFUSE high_fanout)
+    wire [8:0] rlr; wire rl = rlr[0];
+    ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rlr));
     // ---- pin flops
     reg dv_q, rv_q, r_vq; reg [2:0] dop_q; reg [7:0] dx_q; reg [127:0] dd_q; reg [255:0] rd_q; reg [31:0] r_dq;
     reg [4:0] lid_q;
@@ -146,7 +148,7 @@ module ot_hnx_fused_lane #(
     // fixed return: the response of the read registered at edge n is at the pin flop after edge n + RR + 1
     wire [RR+1:0] vexp; wire [19:0] rmeta;
     ot_hdc_vline #(.D(RR + 1)) u_vexp (.clk(clk), .rst_n(rl), .v(rq_v), .vd(vexp));
-    ot_hdc_delay #(.W(20), .D(RR + 1)) u_rmeta (.clk(clk), .rst_n(rl), .d(meta_q), .q(rmeta));
+    ot_hdc_delay_ring #(.W(20), .D(RR + 1), .RING(1)) u_rmeta (.clk(clk), .rst_n(rl), .d(meta_q), .q(rmeta));
     wire r_sc = rmeta[19]; wire [5:0] r_sx = rmeta[18:13]; wire r_g = rmeta[12]; wire [3:0] r_row = rmeta[11:8];
     wire [4:0] r_m = rmeta[7:3]; wire [2:0] r_t = rmeta[2:0];
     wire rsp = rv_q && !r_sc, srsp = rv_q && r_sc;
@@ -169,8 +171,10 @@ module ot_hnx_fused_lane #(
     wire post_last = rsp && post && r_t == 3'd4;
     always @(posedge clk) begin
         if (rsp && !r_g && r_t != 3'd4 && !(post ? 1'b0 : r_t == 3'd3)) asb[r_t[1:0]] <= rd_q;
+        // n4: the PRE mix runs on the HC_POST product lanes 0..3 (h_j into op[j + 1]); op[0] (the HC_POST y * post
+        // lane, unused by the mix) is zeroed so its product is an exact 0 and raises no flag
         if (pre_last) begin
-            op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= rd_q; pre_q <= ws[pslot][127:0];
+            op[0] <= 256'd0; op[1] <= asb[0]; op[2] <= asb[1]; op[3] <= asb[2]; op[4] <= rd_q; pre_q <= ws[pslot][127:0];
         end
         if (post_last) begin op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= asb[3]; op[4] <= rd_q; end
     end
@@ -188,7 +192,8 @@ module ot_hnx_fused_lane #(
     wire [7:0] hv; wire [255:0] ho; wire [7:0] hf;
     wire [255:0] xl; wire [7:0] mf, sf; wire [255:0] sq;
     wire [255:0] qq; wire [7:0] f1, f2;
-    localparam integer DM = LM + 3 * LA + 1;
+    // n4: x leaves the folded chain at ML + 3 AL + 1 (the HC_POST multiplier ML 7 replaces the mix's LM 5: +2 edges)
+    localparam integer DM = ML + 3 * AL + 1;
     wire [DM:0] vm;
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rl), .v(mx_v), .vd(vm));
     wire x_v = vm[DM];
@@ -200,7 +205,7 @@ module ot_hnx_fused_lane #(
     always @* xo = xb_rd;
     always @(posedge clk or negedge rl) if (!rl) xo_v <= 1'b0; else xo_v <= sc_run;
     wire [4:0] wm_d;
-    ot_hdc_delay #(.W(5), .D(LMS - 1)) u_wm (.clk(clk), .rst_n(rl), .d(xo_m), .q(wm_d));
+    ot_hdc_delay_ring #(.W(5), .D(LMS - 1), .RING(1)) u_wm (.clk(clk), .rst_n(rl), .d(xo_m), .q(wm_d));
     wire [255:0] wo = (MUT == 5 && g_clr_q) ? 256'd0 : gb_rd;
     ot_sram_1r1w_128x256_m1_r2c2 u_gb (.clk(clk), .r_ce_in(1'b1), .r_addr_in(7'(wm_d)), .rd_out(gb_rd),
         .w_ce_in(rsp && r_g), .w_addr_in(7'(r_m)), .wd_in(rd_q), .w_mask_in({256{1'b1}}),
@@ -210,13 +215,19 @@ module ot_hnx_fused_lane #(
     wire [639:0] wsw = ws[sws];
     genvar e;
     generate for (e = 0; e < 8; e = e + 1) begin : g_el
-        ot_hnx_fused_el u_e (.clk(clk), .rst_n(rl), .sw(sw), .mx_v(mx_v), .x_v(x_v), .xo_v(xo_v), .wv(vx[LMS]),
-            .y(op[0][32*e +: 32]), .r0(op[1][32*e +: 32]), .r1(op[2][32*e +: 32]), .r2(op[3][32*e +: 32]),
-            .r3(op[4][32*e +: 32]), .pre(pre_q), .c0(wsw[32*(4 + 0 + kk) +: 32]), .c1(wsw[32*(4 + 4 + kk) +: 32]),
-            .c2(wsw[32*(4 + 8 + kk) +: 32]), .c3(wsw[32*(4 + 12 + kk) +: 32]), .pc(wsw[32*kk +: 32]),
+        // coefficients: HC_POST row post / comb of sweep step kk; PRE the row's pre (static per record: post)
+        wire [31:0] cb0 = post ? wsw[32*(4 + 0 + kk) +: 32] : pre_q[0 +: 32];
+        wire [31:0] cb1 = post ? wsw[32*(4 + 4 + kk) +: 32] : pre_q[32 +: 32];
+        wire [31:0] cb2 = post ? wsw[32*(4 + 8 + kk) +: 32] : pre_q[64 +: 32];
+        wire [31:0] cb3 = post ? wsw[32*(4 + 12 + kk) +: 32] : pre_q[96 +: 32];
+        wire [31:0] cbp = post ? wsw[32*kk +: 32] : 32'd0;
+        ot_hnx_fused_el2 u_e (.clk(clk), .rst_n(rlr[1 + e]), .v(sw || mx_v), .x_v(x_v), .xo_v(xo_v), .wv(vx[LMS]),
+            .y(op[0][32*e +: 32]), .a0(op[1][32*e +: 32]), .a1(op[2][32*e +: 32]), .a2(op[3][32*e +: 32]),
+            .a3(op[4][32*e +: 32]), .b0(cb0), .b1(cb1), .b2(cb2), .b3(cb3), .p(cbp),
             .xo(xo[32*e +: 32]), .rh(rh), .wo(wo[32*e +: 32]),
-            .hv(hv[e]), .ho(ho[32*e +: 32]), .hf(hf[e]), .xl(xl[32*e +: 32]), .mf(mf[e]), .sq(sq[32*e +: 32]),
+            .hv(hv[e]), .ho(ho[32*e +: 32]), .hf(hf[e]), .xl(xl[32*e +: 32]), .sq(sq[32*e +: 32]),
             .sf(sf[e]), .qq(qq[32*e +: 32]), .f1(f1[e]), .f2(f2[e]));
+        assign mf[e] = 1'b0;                 // the mix's flags are the folded chain's (hf)
     end endgenerate
     // the chunk chain (ot_dsrom_su_norm's, N = 8) over the squares
     localparam integer DS = LM + 7 * LA;
@@ -227,7 +238,7 @@ module ot_hnx_fused_lane #(
     genvar k;
     generate for (k = 1; k < 8; k = k + 1) begin : g_ch
         wire [31:0] sd;
-        ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rl), .d(sq[32*k +: 32]), .q(sd));
+        ot_hdc_delay_ring #(.W(32), .D(LA * (k - 1)), .RING(1)) u_sd (.clk(clk), .rst_n(rl), .d(sq[32*k +: 32]), .q(sd));
         ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rl, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], cf[k]);
     end endgenerate
     wire cs_v = vs[DS];
@@ -326,7 +337,7 @@ module ot_hnx_fused_lane #(
                     if (yr == nm1) fin <= 1'b1;
                 end else ym <= ym + 5'd1;
             end
-            if (hv[0]) begin
+            if (hv[0] && post) begin              // n4: the folded chain also retires PRE mixes (x only)
                 wq_v <= 1'b1; wq_s <= o_p + 16'(ok) * 16'(SD) + o_i; wq_d <= ho;
                 ok <= ok + 2'd1;
                 if (ok == 2'd3) begin
@@ -343,52 +354,85 @@ module ot_hnx_fused_lane #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
-// one FUSED element (lane column e of 8): the LL lane's per-element pipelines, unchanged (HC_POST sweep lane, norm mix,
-// square, x * r, w * (x r)).  (* keep_hierarchy *) + no parameter override: the 8 identical columns are synthesised
-// and ABC-mapped ONCE (the flat lane, 852k cells, ran yosys SHARE 1,476 s + ABC 1,385 s > the 2,700 s gate cap).
-// Latencies are the lane's: ML 7, AL 6 (hcpost), LM 5, LA 6 (mix / square), LMS 6 (scale multipliers).
+// one FUSED element, n4 (LH-P3UNITS/FUSED 2026-10-19, SAFE-DESIGN structural redesign of the n3 lane: 113,400 flops on
+// one root, textbook REFUSE).  HC_PRE_NORM's mix x = bf16(((h0 p0 + h1 p1) + h2 p2) + h3 p3) is the first three sums
+// of HC_POST's chain o = bf16((((r0 c0 + r1 c1) + r2 c2) + r3 c3) + y p) (ot_dsrom_su_hcpost_lane), and the two ops
+// never run together (one record at a time, op static per record).  So ONE product/sum chain serves both: products
+// j = a_j * b_j (j 0..3) and y * p, sums in the hcpost order; PRE taps x = bf16(a3) (the mix's RNE), HC_POST takes
+// bf16(a4).  The multipliers / adders are the same f12 cores the two ops used (only register cuts differ: bit for bit
+// the same function; the adder operands of sums 2 and 3 are swapped vs the mix -- IEEE add commutes).  This removes
+// the mix's 4 multipliers + 3 adders + its 18-deep operand delays from every column (~1/3 of the column).  Operand
+// delays are ring buffers (ot_hdc_delay_ring RING 1: no flop-to-flop hold chain).  Latencies: ML 7 (l7; y * p l6r +1
+// align), AL 6 (l6x), squares LM 5, scale LMS 6.  x leaves at ML + 3 AL + 1 (was LM + 3 LA + 1: +2 edges).
 // ---------------------------------------------------------------------------------------------------------------------
 (* keep_hierarchy *)
-module ot_hnx_fused_el (
+module ot_hnx_fused_el2 (
     input  wire         clk,
     input  wire         rst_n,
-    input  wire         sw,
-    input  wire         mx_v,
+    input  wire         v,
     input  wire         x_v,
     input  wire         xo_v,
     input  wire         wv,
     input  wire [31:0]  y,
-    input  wire [31:0]  r0,
-    input  wire [31:0]  r1,
-    input  wire [31:0]  r2,
-    input  wire [31:0]  r3,
-    input  wire [127:0] pre,
-    input  wire [31:0]  c0,
-    input  wire [31:0]  c1,
-    input  wire [31:0]  c2,
-    input  wire [31:0]  c3,
-    input  wire [31:0]  pc,
+    input  wire [31:0]  a0,
+    input  wire [31:0]  a1,
+    input  wire [31:0]  a2,
+    input  wire [31:0]  a3,
+    input  wire [31:0]  b0,
+    input  wire [31:0]  b1,
+    input  wire [31:0]  b2,
+    input  wire [31:0]  b3,
+    input  wire [31:0]  p,
     input  wire [31:0]  xo,
     input  wire [31:0]  rh,
     input  wire [31:0]  wo,
-    output wire         hv,
-    output wire [31:0]  ho,
-    output wire         hf,
+    output reg          hv,
+    output reg  [31:0]  ho,
+    output reg          hf,
     output wire [31:0]  xl,
-    output wire         mf,
     output wire [31:0]  sq,
     output wire         sf,
     output wire [31:0]  qq,
     output wire         f1,
     output wire         f2
 );
-    localparam integer LM = 5, LA = 6, LMS = 6, ML = 7, AL = 6;
+    localparam integer LM = 5, LMS = 6, ML = 7, AL = 6, LM4 = 6;
+    wire [31:0] m0, m1, m2, m3, m4, s1, s2, s3, s4, m2d, m3d, m4d;
+    wire [1:0] e0, e1, e2, e3, e4, e4a, es1, es2, es3, es4;
+    wire vm, vs1, vs2, vs3, vs4;
+    ot_hdc_fp32_mul_f12_l7  u_m0 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a0), .b(b0), .y(m0), .err(e0), .valid_out(vm));
+    ot_hdc_fp32_mul_f12_l7  u_m1 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a1), .b(b1), .y(m1), .err(e1), .valid_out());
+    ot_hdc_fp32_mul_f12_l7  u_m2 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a2), .b(b2), .y(m2), .err(e2), .valid_out());
+    ot_hdc_fp32_mul_f12_l7  u_m3 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a3), .b(b3), .y(m3), .err(e3), .valid_out());
+    ot_hdc_fp32_mul_f12_l6r u_m4 (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(y),  .b(p),  .y(m4), .err(e4), .valid_out());
+    ot_hdc_delay #(.W(2), .D(ML - LM4)) u_e4 (.clk(clk), .rst_n(rst_n), .d(e4), .q(e4a));
+    ot_hdc_fp32_add_f12_l6x u_s1 (.clk(clk), .rst_n(rst_n), .valid_in(vm), .a(m0), .b(m1), .y(s1), .err(es1), .valid_out(vs1));
+    ot_hdc_delay_ring #(.W(32), .D(AL), .RING(1)) u_d2 (.clk(clk), .rst_n(rst_n), .d(m2), .q(m2d));
+    ot_hdc_fp32_add_f12_l6x u_s2 (.clk(clk), .rst_n(rst_n), .valid_in(vs1), .a(m2d), .b(s1), .y(s2), .err(es2), .valid_out(vs2));
+    ot_hdc_delay_ring #(.W(32), .D(2 * AL), .RING(1)) u_d3 (.clk(clk), .rst_n(rst_n), .d(m3), .q(m3d));
+    ot_hdc_fp32_add_f12_l6x u_s3 (.clk(clk), .rst_n(rst_n), .valid_in(vs2), .a(m3d), .b(s2), .y(s3), .err(es3), .valid_out(vs3));
+    ot_hdc_delay_ring #(.W(32), .D(3 * AL + ML - LM4), .RING(1)) u_d4 (.clk(clk), .rst_n(rst_n), .d(m4), .q(m4d));
+    ot_hdc_fp32_add_f12_l6x u_s4 (.clk(clk), .rst_n(rst_n), .valid_in(vs3), .a(m4d), .b(s3), .y(s4), .err(es4), .valid_out(vs4));
+    // PRE: x = RNE bf16 of the third sum (ot_dsrom_su_norm_mix's rounding), registered (the mix's xr)
+    reg [31:0] xr;
+    wire [32:0] rs = {1'b0, s3} + 33'h7FFF + {32'd0, s3[16]};
+    always @(posedge clk) xr <= {rs[31:16], 16'd0};
+    assign xl = xr;
+    // HC_POST: o = bf16(fourth sum) (ot_dsrom_su_hcpost_lane's rounding); flags sticky (the hcpost lane's fault)
+    wire [15:0] hi;
+    ot_hdc_inc_k #(.W(16)) u_rnd (.a(s4[31:16]), .inc(s4[15] & (s4[16] | (|s4[14:0]))), .y(hi), .co());
+    reg [3*AL:0] fm;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin hv <= 1'b0; hf <= 1'b0; fm <= '0; end
+        else begin
+            hv <= vs4;
+            fm <= {fm[3*AL-1:0], vm && ((e0 | e1 | e2 | e3 | e4a) != 2'd0)};
+            hf <= hf | fm[0] | (vs1 && es1 != 2'd0) | (vs2 && es2 != 2'd0) | (vs3 && es3 != 2'd0) | (vs4 && es4 != 2'd0);
+        end
+    end
+    always @(posedge clk) ho <= {hi, 16'd0};
+    // squares and the scale (unchanged)
     wire [31:0] pp;
-    ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_h (.clk(clk), .rst_n(rst_n), .v(sw),
-        .r0(r0), .r1(r1), .r2(r2), .r3(r3), .y(y), .c0(c0), .c1(c1), .c2(c2), .c3(c3), .p(pc),
-        .vo(hv), .o(ho), .fault(hf));
-    ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rst_n), .v(mx_v), .h0(y), .h1(r0), .h2(r1),
-        .h3(r2), .pre(pre), .x(xl), .fault(mf));
     ot_hdc_qmul_lat #(LM) u_sq (clk, rst_n, x_v, xl, xl, sq, sf);
     ot_hdc_qmul_lat #(LMS) u_xr (clk, rst_n, xo_v, xo, rh, pp, f1);
     ot_hdc_qmul_lat #(LMS) u_w  (clk, rst_n, wv, wo, pp, qq, f2);
