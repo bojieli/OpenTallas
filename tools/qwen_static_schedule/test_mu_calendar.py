@@ -82,6 +82,21 @@ class MuCalendar(unittest.TestCase):
         with self.assertRaises(ScheduleError):
             M.kv_user_rows(4, layers=200)
 
+    def test_dv_user_fields_match_rtl(self):
+        # MU-ADOPT-CTLM 10-19: the strides the compiler writes = the RTL defaults of the die-bound DV control cluster
+        import re
+        root = Path(__file__).resolve().parents[2]
+        f = M.dv_user_fields(4)
+        for rtl in ("rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv", "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv", "rtl/qwen_dv/qfd_tt_ctlm_dv.sv"):
+            src = (root / rtl).read_text()
+            for name, want in (("UVM_STRIDE", f["uvm_stride"]), ("PIDX_STRIDE", f["pidx_stride"]), ("UTAG_LSB", f["utag_lsb"])):
+                got = [int(v) for v in re.findall(rf"parameter integer {name} = (\d+)", src)]
+                self.assertTrue(got and all(g == want for g in got), (rtl, name, got, want))
+        self.assertEqual(4 * f["uvm_stride"], 16384)
+        self.assertEqual(4 * f["pidx_stride"], 512)
+        with self.assertRaises(ScheduleError):
+            M.dv_user_fields(5)
+
 
 if __name__ == "__main__":
     unittest.main()
