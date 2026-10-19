@@ -1,0 +1,295 @@
+{
+ "schema": "opentallas.hbm_next_1019.coll_lanes.v1",
+ "model": "tools/hgi_sim/hbm_plane_model.py (D1, unchanged)",
+ "rule": "HBM-NEXT study (10-19), check (a): the collective / network ceiling at P lanes.\n\nThe d4g price delivers every off-die collective over the die's COLL delivery lanes: D = (G - 1) f / lanes cycles,\nf = ceil(bytes / G / 64), G = 192, lanes = 4 (ds_die_split.deliver; d4g_quadrant adders).  At 4 lanes that is\n256 B/cycle = 307 GB/s into a die.  The die's SerDes is 32 x 100G = 400 GB/s raw a direction (ds_switch_planes);\nafter framing (64-B min frame + 40 B overhead, payload_eff >= 0.8 at P >= 2 for the large classes) about 320-385 GB/s.\nSo the SerDes admits at most ~5 delivery lanes' worth; 8 lanes would be port-drain bound.\n\nThis re-times DS AR, DS MTP (N = 6) and DS multi-user (N = P) on the UNCHANGED D1 model\n(tools/hgi_sim/hbm_plane_model.py) with the COLL delivery lanes set to L in {4, 5, 8}:\n  L = 4  the d4g die (reproduction check: must equal D1's run.json),\n  L = 5  the widest COLL the per-die SerDes can feed (the honest \"COLL widened\" point),\n  L = 8  on-die only, NOT feedable by 400 GB/s SerDes (info: what the on-die COLL alone could buy).\n\n    PYTHONPATH=tools python3 results/arch/hbm_next_1019/coll_lanes.py --out DIR [--jobs N]\n",
+ "by_lanes": {
+  "4": {
+   "ds_ar_cycles": 629775.1,
+   "ds_ar_tok_s": 1905.4,
+   "P": {
+    "2": {
+     "mtp_verify_cycles": 1429323.9,
+     "mtp_step_cycles": 1587987.3,
+     "ds_mtp_tok_s": 3142.8,
+     "mu_step_cycles": 784246.9,
+     "mu_per_user_tok_s": 1530.1,
+     "mu_agg_tok_s": 3060.3,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 591654.7,
+      "COLL": 586264.8,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 10702.1
+     },
+     "mu_busy": {
+      "FUSED": 89912.0,
+      "SM": 258700.4,
+      "COLL": 348640.6,
+      "SU": 134587.1,
+      "DMA": 51566.8,
+      "HC": 111652.0,
+      "IDX": 35015.4,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    },
+    "4": {
+     "mtp_verify_cycles": 1338146.6,
+     "mtp_step_cycles": 1483826.6,
+     "ds_mtp_tok_s": 3363.5,
+     "mu_step_cycles": 1099570.6,
+     "mu_per_user_tok_s": 1091.3,
+     "mu_agg_tok_s": 4365.3,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 487631.3,
+      "COLL": 586264.8,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 7141.3
+     },
+     "mu_busy": {
+      "FUSED": 139106.0,
+      "SM": 372925.9,
+      "COLL": 492543.2,
+      "SU": 146187.1,
+      "DMA": 52494.0,
+      "HC": 151652.0,
+      "IDX": 53802.5,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    },
+    "6": {
+     "mtp_verify_cycles": 1280713.3,
+     "mtp_step_cycles": 1418116.1,
+     "ds_mtp_tok_s": 3519.3,
+     "mu_step_cycles": 1397058.9,
+     "mu_per_user_tok_s": 858.9,
+     "mu_agg_tok_s": 5153.7,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 420542.4,
+      "COLL": 586264.8,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     },
+     "mu_busy": {
+      "FUSED": 188300.0,
+      "SM": 482803.8,
+      "COLL": 617943.9,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 72589.2,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    }
+   }
+  },
+  "5": {
+   "ds_ar_cycles": 615483.0,
+   "ds_ar_tok_s": 1949.7,
+   "P": {
+    "2": {
+     "mtp_verify_cycles": 1388778.3,
+     "mtp_step_cycles": 1546614.4,
+     "ds_mtp_tok_s": 3226.9,
+     "mu_step_cycles": 766291.3,
+     "mu_per_user_tok_s": 1566.0,
+     "mu_agg_tok_s": 3132.0,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 591654.7,
+      "COLL": 542129.2,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 10702.1
+     },
+     "mu_busy": {
+      "FUSED": 89912.0,
+      "SM": 258700.4,
+      "COLL": 329334.2,
+      "SU": 134587.1,
+      "DMA": 51566.8,
+      "HC": 111652.0,
+      "IDX": 35015.4,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    },
+    "4": {
+     "mtp_verify_cycles": 1297601.0,
+     "mtp_step_cycles": 1442454.4,
+     "ds_mtp_tok_s": 3459.9,
+     "mu_step_cycles": 1071052.5,
+     "mu_per_user_tok_s": 1120.4,
+     "mu_agg_tok_s": 4481.6,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 487631.3,
+      "COLL": 542129.2,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 7141.3
+     },
+     "mu_busy": {
+      "FUSED": 139106.0,
+      "SM": 372925.9,
+      "COLL": 461240.2,
+      "SU": 146187.1,
+      "DMA": 52494.0,
+      "HC": 151652.0,
+      "IDX": 53802.5,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    },
+    "6": {
+     "mtp_verify_cycles": 1240167.7,
+     "mtp_step_cycles": 1376743.5,
+     "ds_mtp_tok_s": 3625.1,
+     "mu_step_cycles": 1349690.4,
+     "mu_per_user_tok_s": 889.1,
+     "mu_agg_tok_s": 5334.6,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 420542.4,
+      "COLL": 542129.2,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     },
+     "mu_busy": {
+      "FUSED": 188300.0,
+      "SM": 482803.8,
+      "COLL": 566929.8,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 72589.2,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    }
+   }
+  },
+  "8": {
+   "ds_ar_cycles": 596516.7,
+   "ds_ar_tok_s": 2011.7,
+   "P": {
+    "2": {
+     "mtp_verify_cycles": 1350094.8,
+     "mtp_step_cycles": 1506704.0,
+     "ds_mtp_tok_s": 3312.4,
+     "mu_step_cycles": 750372.7,
+     "mu_per_user_tok_s": 1599.2,
+     "mu_agg_tok_s": 3198.4,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 591654.7,
+      "COLL": 497400.0,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 10702.1
+     },
+     "mu_busy": {
+      "FUSED": 89912.0,
+      "SM": 258700.4,
+      "COLL": 310183.1,
+      "SU": 134587.1,
+      "DMA": 51566.8,
+      "HC": 111652.0,
+      "IDX": 35015.4,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    },
+    "4": {
+     "mtp_verify_cycles": 1258586.2,
+     "mtp_step_cycles": 1402212.1,
+     "ds_mtp_tok_s": 3559.2,
+     "mu_step_cycles": 1043783.9,
+     "mu_per_user_tok_s": 1149.7,
+     "mu_agg_tok_s": 4598.7,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 487631.3,
+      "COLL": 497400.0,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 7141.3
+     },
+     "mu_busy": {
+      "FUSED": 139106.0,
+      "SM": 372925.9,
+      "COLL": 430269.4,
+      "SU": 146187.1,
+      "DMA": 52494.0,
+      "HC": 151652.0,
+      "IDX": 53802.5,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    },
+    "6": {
+     "mtp_verify_cycles": 1201864.0,
+     "mtp_step_cycles": 1337213.0,
+     "ds_mtp_tok_s": 3732.2,
+     "mu_step_cycles": 1305282.7,
+     "mu_per_user_tok_s": 919.3,
+     "mu_agg_tok_s": 5516.0,
+     "mtp_busy": {
+      "FUSED": 188300.0,
+      "SM": 420542.4,
+      "COLL": 497400.0,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 43688.2,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     },
+     "mu_busy": {
+      "FUSED": 188300.0,
+      "SM": 482803.8,
+      "COLL": 517588.3,
+      "SU": 157093.1,
+      "DMA": 57134.0,
+      "HC": 191652.0,
+      "IDX": 72589.2,
+      "CTL": 0.0,
+      "ARGMAX": 4913.2
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,275 @@
+{
+ "mode": "synth",
+ "arith": "chunk8",
+ "heads": 4,
+ "hd": 512,
+ "window": 128,
+ "topk": 512,
+ "ncomp": 4096,
+ "lanes": 4,
+ "seed": 1019,
+ "cases": [
+  {
+   "sigma": 0.0,
+   "union_lines": 643,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 1.0,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 35,
+   "sm_union_lines_mean": 32.6,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 24,
+   "sm32_balanced_lines_mean": 21.5,
+   "sm32_jobs": 80,
+   "sm32_run_div": 4,
+   "sm32_ideal_lines": 20.1,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    1218,
+    1200,
+    1430,
+    1294
+   ],
+   "neg_zins_mism": [
+    1346,
+    1329,
+    1463,
+    1425
+   ],
+   "neg_rank_mism": [
+    1378,
+    1267,
+    1391,
+    1437
+   ],
+   "wall_s": 1.1
+  },
+  {
+   "sigma": 0.15,
+   "union_lines": 790,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.8499,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 53,
+   "sm_union_lines_mean": 44.75,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 44,
+   "sm32_balanced_lines_mean": 31.47,
+   "sm32_jobs": 40,
+   "sm32_run_div": 2,
+   "sm32_ideal_lines": 24.7,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    1388,
+    1356,
+    1380,
+    1386
+   ],
+   "neg_zins_mism": [
+    1319,
+    1332,
+    1387,
+    1451
+   ],
+   "neg_rank_mism": [
+    1394,
+    1401,
+    1415,
+    1407
+   ],
+   "wall_s": 1.0
+  },
+  {
+   "sigma": 0.4,
+   "union_lines": 976,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.6823,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 69,
+   "sm_union_lines_mean": 55.5,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 49,
+   "sm32_balanced_lines_mean": 39.0,
+   "sm32_jobs": 40,
+   "sm32_run_div": 2,
+   "sm32_ideal_lines": 30.5,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    1379,
+    1431,
+    1472,
+    1367
+   ],
+   "neg_zins_mism": [
+    1341,
+    1411,
+    1405,
+    1389
+   ],
+   "neg_rank_mism": [
+    1381,
+    1450,
+    1450,
+    1394
+   ],
+   "wall_s": 1.0
+  },
+  {
+   "sigma": 1.0,
+   "union_lines": 1398,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.3571,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 100,
+   "sm_union_lines_mean": 77.3,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 64,
+   "sm32_balanced_lines_mean": 57.22,
+   "sm32_jobs": 76,
+   "sm32_run_div": 2,
+   "sm32_ideal_lines": 43.7,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    1368,
+    1411,
+    1433,
+    1391
+   ],
+   "neg_zins_mism": [
+    1377,
+    1420,
+    1469,
+    1449
+   ],
+   "neg_rank_mism": [
+    1440,
+    1411,
+    1469,
+    1514
+   ],
+   "wall_s": 0.9
+  },
+  {
+   "sigma": -1,
+   "union_lines": 2179,
+   "lane_lines": [
+    640,
+    640,
+    640,
+    640
+   ],
+   "mean_pair_topk_overlap": 0.0,
+   "union_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_aligned_mism": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sm_union_lines_max": 128,
+   "sm_union_lines_mean": 109.4,
+   "sm_p1_lines_max": 128,
+   "sm_count": 20,
+   "sm32_balanced_lines_max": 72,
+   "sm32_balanced_lines_mean": 69.5,
+   "sm32_jobs": 272,
+   "sm32_run_div": 4,
+   "sm32_ideal_lines": 68.1,
+   "model_upper_ratio_U4_U1": 3.405,
+   "neg_fixsm_mism": [
+    1362,
+    1446,
+    1371,
+    1383
+   ],
+   "neg_zins_mism": [
+    1312,
+    1394,
+    1419,
+    1430
+   ],
+   "neg_rank_mism": [
+    1383,
+    0,
+    0,
+    0
+   ],
+   "wall_s": 1.0
+  }
+ ],
+ "negatives_that_passed": [],
+ "verdict": "PASS"
+}
