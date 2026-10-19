@@ -150,6 +150,41 @@ proc ot_ck_macro_owned {p selected} {
 """
 
 
+# Boundary membership is structural. Clock groups / false paths may suppress
+# STA paths at a legitimate forwarded-clock input; they cannot remove a pin
+# register from the measured physical boundary. Stop at sequential endpoints
+# and intersect real data pins, so an asynchronous reset cannot select every
+# internal register sharing its reset tree. OpenSTA's `all_registers -data_pins`
+# also returns asynchronous set/clear pins (they are timing-check endpoints), so
+# the async and clock pins are subtracted explicitly (review 10-19).
+BOUNDARY_TCL = r"""
+set bnd {}
+set data_pins {}
+set ot_ck_nondata {}
+foreach p [all_registers -async_pins] { dict set ot_ck_nondata [get_full_name $p] 1 }
+foreach p [all_registers -clock_pins] { dict set ot_ck_nondata [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_nondata $n]} { dict set data_pins $n 1 }
+}
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $data_pins $n] && [dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+"""
+
+
 def tcl(corner, db, sdc, routed, clock, mlibs=(), raw_source=False):
     C = corner.upper()
     ml = "\n".join(f"read_liberty {l}" for l in mlibs)
@@ -166,10 +201,7 @@ set_propagated_clock [all_clocks]
 {CLOCK_SETUP_TCL.replace('CLOCK_REQUEST', clock)}
 set regs {{}}
 foreach p [all_registers -clock_pins -clock $ot_ck_selected] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
-set bnd {{}}
-set din [all_inputs -no_clocks]
-if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
-foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
+{BOUNDARY_TCL}
 {ACTIVE_TCL}
 {MACRO_CLOCK_SCOPE_TCL}
 set ot_ck_clk [lindex $ot_ck_selected 0]
@@ -375,6 +407,7 @@ def main():
         if not (base / db).exists() or not sdc:
             raise SystemExit(f"no {db} / SDC under {base}")
     rec = dict(schema="opentallas.closure_loop.ck_insertion.v1", base=str(base), db=db, sdc=sdc, clock=a.clock,
+               boundary_basis="structural first/last sequential data cone, all arcs; selected clock domain",
                parasitics="spef" if a.routed else "placement-estimated", raw_source=bool(a.raw_source))
     env = {}
     need_tt = a.route_corner.upper() in ("TC", "TT")
