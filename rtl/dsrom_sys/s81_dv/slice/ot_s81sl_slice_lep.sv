@@ -1328,7 +1328,9 @@ endmodule
  assign next_data=(rn && event_h)?merged:old_data;
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_lep_key_hold8(input wire rn,valid,input wire [7:0] old_data,new_data,output wire [7:0] next_data);
- assign next_data=(rn && valid)?new_data:old_data;
+ wire enable;
+ (* keep=1 *) ot_s81sl_lep_host_enable u_enable(.ne0(rn),.ne1(valid),.hit(1'b1),.en(enable));
+ assign next_data=enable?new_data:old_data;
 endmodule
 
 (* keep_hierarchy=1 *) module ot_s81sl_lep_host_preserve(input wire pending,send_now,old_valid,new_valid,output wire preserve);
