@@ -1,0 +1,9 @@
+DV_LOWER_VEC resid FAIL 26/26 mutant=xslot commands=112 collisions=22 r=0x3f551336 x_words=64 psums=160
+    S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000010 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000010 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000010 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+rc=1

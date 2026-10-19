@@ -1,0 +1,7 @@
+DV_LOWER_VEC resid FAIL 25/26 mutant=xslot commands=72 collisions=53 ar_order=slice fixture=0 r=0x3f551336 x_words=64 psums=160
+    S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000010 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000010 (any,su,vm,stn,sc,stm,port)
+    x stream: 4/64 words wrong / off edge (first [(5, 640, 1973, 1536), (5, 704, 1981, 1600), (5, 2176, 1989, 3072)]), 60 x words at E5
+rc=1

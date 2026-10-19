@@ -32,3 +32,5 @@ def test_compose_layer():
     assert r['capacity']['fits'] is False and any(g.startswith('IMAGE CAPACITY') for g in r['gaps'])
     fams = r['calendar']['families']
     assert all(fams[k] > 0 for k in ('ssq', 'mat', 'qk', 'resid1', 'silu', 'resid2'))
+    assert not any(g.startswith('XC ORDER') for g in r['gaps'])                # lowered XC precedes word 0
+    assert any(n.startswith('XC ORDER: CLOSED') for n in r['notes'])

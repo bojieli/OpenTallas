@@ -279,9 +279,21 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         'blocks only (no producer of the per-token row on the die)',
         'AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the '
         'message last word; slice2 sends tag = row address, last per STN op (fault_code[2])',
-        'XC ORDER: ctlm_image places XC after the segment END; the lowered XC must precede word 0 (spliced here at '
-        'the lowered edge)',
     ]
+    # XC order: the production decode calendar is THIS spliced calendar (ctlm_image's XC after END is the priced plan
+    # only and is not emitted here).  Check every lowered XC is in it, XC_TO_WORD0 + xc_cc edges before its word 0.
+    xc_bad = []
+    for name, x, t0 in (('o', o_xc, o_t0), ('down', d_xc, d_t0)):
+        e = x['entry'] - R['R_CMD']
+        if x['cc_edge'] != t0 - M.XC_TO_WORD0 or x['entry'] != x['cc_edge'] - ages['xc_cc'] or e not in ev \
+                or not ev[e][1].startswith(f'{name}: XC'):
+            xc_bad.append(dict(matvec=name, entry=x['entry'], cc_edge=x['cc_edge'], word0=t0))
+    if xc_bad:
+        gaps.append(f'XC ORDER: lowered XC not before word 0 in the spliced calendar {xc_bad}')
+    else:
+        notes.append('XC ORDER: CLOSED in the spliced calendar (o / down XC at word0 - XC_TO_WORD0 - xc_cc: '
+                     f'{o_xc["entry"]} / {d_xc["entry"]} vs word0 {o_t0} / {d_t0}); ctlm_image XC-after-END is the '
+                     'priced plan only and is not emitted')
     if ar_order == 'slice':
         gaps.append('AR RETURN ORDER: dv_lower_vec slice-major landing != io_collective message (row) order')
     out = dict(
