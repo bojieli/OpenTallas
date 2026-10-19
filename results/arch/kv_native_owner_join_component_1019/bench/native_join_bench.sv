@@ -301,7 +301,7 @@ reg allow_aw=1,allow_w=1;
     if(!rc_bad)$fatal(1,"MISSING_ATOMIC_CERTIFICATE_VETO");
    end
    malformed_attempt_pending<=injected_bad_attempt;
-   if(case_id==20&&native_certificate_attempt_v&&health_step==0)begin
+   if((case_id==20||case_id==21)&&native_certificate_attempt_v&&health_step==0)begin
     if(!raw_done_v||!certificate_key_ok||!native_certificate_v)$fatal(1,"H93_SAME_EDGE_BOUNDARY_NOT_ESTABLISHED raw=%b eligible=%b accepted=%b",raw_done_v,certificate_key_ok,native_certificate_v);
     boundary_same_edge_hits=boundary_same_edge_hits+1;
     $display("H93_REAL_SAME_EDGE_BOUNDARY e=%0d H=%0d D=%0d raw=%b attempt=%b eligible=%b accepted=%b",edges,H,RESPONSE_DEADLINE,raw_done_v,native_certificate_attempt_v,certificate_key_ok,native_certificate_v);
@@ -374,6 +374,9 @@ reg allow_aw=1,allow_w=1;
    if(native_certificate_v)certificates=certificates+1;
    if(event_insert_v&&event_native_valid)event_copies=event_copies+1;
    if(cq_offer_v&&cq_native_valid)begin
+    if(case_id==21)begin
+     if(!native_cq_offer_ok||cq_native_tag!=={16'd0,6'd37,18'd70001,13'd0,6'd0}||cq_native_gen!==2'd1)$fatal(1,"SINGLE_BOUNDARY_CQ_LINEAGE");
+    end
     if(case_id<=3||case_id==14||case_id==20)begin
      if(!native_cq_offer_ok)$fatal(1,"UNCERTIFIED_CQ_SUCCESS_OFFER");
      if(cq_native_tag!=={16'(cq_offers+1),6'd37,gold_input(cq_offers+1),13'(cq_offers+1),6'd0})$fatal(1,"SAVED_CQ_LINEAGE n=%0d tag=%h",cq_offers,cq_native_tag);
@@ -388,6 +391,7 @@ reg allow_aw=1,allow_w=1;
    end
    if(cq_dma_retired_v)$display("REAL_CQB time=%0t e=%0d native=%b",$time,edges,native_cq_prospective_native_valid);
    if(post_retired)begin
+    if(case_id==21&&native_cq_retirements!=1)$fatal(1,"SINGLE_BOUNDARY_POST_BEFORE_REAL_CQB");
     if(post_completions>=1&&case_id<=3&&native_cq_retirements<post_completions)$fatal(1,"POST_BEFORE_REAL_CQB");
     post_completions=post_completions+1;$display("POST e=%0d tag=%h",edges,post_tag);end
    if(!aw_seen&&m_awvalid)begin
@@ -424,7 +428,7 @@ reg allow_aw=1,allow_w=1;
    if(old_out_aw_valid&&!m_awvalid)$display("PIN_AW_OUTPUT_VALID_DROP e=%0d",edges);
    if(old_out_w_valid&&!m_wvalid)$display("PIN_W_OUTPUT_VALID_DROP e=%0d",edges);
    old_mon_aw_valid=mon_aw_source_valid;old_mon_w_valid=mon_w_source_valid;old_out_aw_valid=m_awvalid;old_out_w_valid=m_wvalid;
-   if((case_id<=3||case_id==14||case_id==20)&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
+   if((case_id<=3||case_id==14||case_id==20||case_id==21)&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
   end
  end
  always @(negedge clk)begin
@@ -437,15 +441,15 @@ reg allow_aw=1,allow_w=1;
  task automatic tick(input integer n);repeat(n)@(negedge clk);#1;endtask
  initial begin
   if(!$value$plusargs("CASE=%d",case_id))case_id=0;
-  if(case_id<0||case_id==9||case_id>20)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
+  if(case_id<0||case_id==9||case_id>21)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
   if((case_id==6||case_id==8)&&FIXTURE_WDOG!=512)$fatal(1,"CANCELLATION_REQUIRES_SEPARATE_TYPED_WDOG512_BUILD");
-  if(case_id==20&&(H!=93||RESPONSE_DEADLINE!=93))$fatal(1,"BOUNDARY_REQUIRES_SEPARATE_H93_D93_BUILD");
+  if((case_id==20||case_id==21)&&(H!=93||RESPONSE_DEADLINE!=93))$fatal(1,"BOUNDARY_REQUIRES_SEPARATE_H93_D93_BUILD");
   if(case_id==14)hold_rank7_result_return=1;
   if(case_id==1)allow_aw=0;
   if(case_id==2)allow_w=0;
   if(case_id==5)fixture_package_ready=0;
   for(integer r=0;r<8;r=r+1)begin request_counts[r]=0;request_returns[r]=0;result_returns[r]=0;releases[r]=0;raw_cleanup_due[r]=-1;transport_returns[r]=0;end
-  memory.descriptor(0,16'h91e3,8'd1,8'd1,8'd0,16'd2,16'd3,64'h3000);
+  memory.descriptor(0,16'h91e3,8'd1,8'd1,8'd0,case_id==21?16'd1:16'd2,case_id==21?16'd1:16'd3,64'h3000);
   memory.prompt_word(0,18'd70001,18'd70003);
   if(case_id==7)begin
    memory.descriptor(1,16'h91e3,8'd1,8'd1,8'd0,16'd2,16'd3,64'h3000);
@@ -515,6 +519,16 @@ reg allow_aw=1,allow_w=1;
    if(saved_cq_key_valid&&saved_cq_key[60:2]!=={16'd1,6'd37,18'd70003,13'd1,6'd0})$fatal(1,"CQ_STALL_OLD_EVENT_KEY");
    $display("CQ_STALL e=%0d pending_phase=%0d issues=%0d alloc=%0d post=%0d saved=%h",edges,pending_phase,issues,allocations,post_completions,saved_cq_key);
    hold_dma_b=0;
+  end
+  if(case_id==21)begin
+   wait(post_completions==1);tick(24);
+   if(boundary_same_edge_hits!=1||issues!=1||allocations!=1||dispatches!=1||raw_completions!=1||certificates!=1||normal_certified_events!=1||event_copies!=1||cq_offers!=1||cq_entries!=1||cq_successes!=1||cq_errors!=0||native_cq_retirements!=1)$fatal(1,"SINGLE_BOUNDARY_COUNTS issue=%0d alloc=%0d raw=%0d cert=%0d event=%0d CQ=%0d B=%0d POST=%0d",issues,allocations,raw_completions,certificates,event_copies,cq_entries,native_cq_retirements,post_completions);
+   if(last_cq_w0[63:48]!==16'(70002)||last_cq_w0[47:32]!==16'd0||last_cq_w0[31:16]!==16'h91e3||last_cq_w0[15:8]!==8'd0||last_cq_w0[7:4]!==4'd2||last_cq_w0[3]!==1'b0||last_cq_w0[2:1]!==2'd2||last_cq_w1[63:48]!==16'(70002>>16)||last_cq_w1[47:32]!==16'd1)$fatal(1,"SINGLE_BOUNDARY_INDEPENDENT_CQ_PAYLOAD w0=%h w1=%h",last_cq_w0,last_cq_w1);
+   for(integer r=0;r<8;r=r+1)if(request_counts[r]!=1||request_returns[r]!=1||result_returns[r]!=1||transport_returns[r]!=1||releases[r]!=1)$fatal(1,"SINGLE_BOUNDARY_RANK_ACCOUNTING rank=%0d",r);
+   if(ar_accepts!=read_beats||aw_accepts!=write_beats||w_accepts!=write_beats||bridge_aw_captures!=write_beats||bridge_w_captures!=write_beats||read_beats!=5||write_beats!=2)$fatal(1,"SINGLE_BOUNDARY_DMA_COUNTS");
+   if(binding_valid||post_pending||(|ep_owned)||join_fault||coordinator_fault||rc_bad)$fatal(1,"SINGLE_BOUNDARY_NOT_DRAINED");
+   $display("NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=21 SINGLE_PROMPT_INPUT_GENERATED_STEP H=%0d deadline=%0d age_bits=%0d same_edge_hits=%0d next_token_gold=70002 CQ_cycles_oracle=OPEN",H,RESPONSE_DEADLINE,$clog2(H+1),boundary_same_edge_hits);
+   $finish;
   end
   wait(post_completions==4);tick(24);
   if(issues!=4||allocations!=4||dispatches!=4||raw_completions!=4||certificates!=4||event_copies!=3||cq_offers!=3||cq_entries!=3)$fatal(1,"JOIN_FINAL_COUNTS issues=%0d alloc=%0d dispatch=%0d raw=%0d cert=%0d events=%0d offers=%0d CQ=%0d",issues,allocations,dispatches,raw_completions,certificates,event_copies,cq_offers,cq_entries);
