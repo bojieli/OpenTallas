@@ -45,12 +45,12 @@
     ],
     "native_prefetch": [
       8,
-      9
+      11
     ],
     "regional_return": "unchanged7",
     "whole_prefetch": [
       15,
-      16
+      18
     ],
     "request_to_final_cache": [
       10,
@@ -59,7 +59,9 @@
     "first_return_valid_after_reset": [
       9,
       10
-    ]
+    ],
+    "conservative_price_equation": "unchangedceilHBM4 +reserve2 +completion2 +read3 =native11; plusregional7 =whole18; shared compiler priceonce",
+    "superseded_proposal": "native9/whole16 was optimistic path-only pricing and is withdrawn; component extra output delay is still exactly1"
   },
   "return_ring": {
     "payload_bits": 263,
@@ -94,6 +96,7 @@
     "sourcepacket/read/reserve/control Q copies realmappedstate",
     "recursive collapsed all-driver loads<=32",
     "strict native reset shape plus internalFIFO graph",
-    "updated measured area/band and parentprefetch16 integration"
+    "updated measured area/band and parentprefetch16 integration",
+    "early metadata MUT2 (rp2) and late metadata MUT4 (rp0), default4edge rp1, causal mismatch witnesses"
   ]
 }
