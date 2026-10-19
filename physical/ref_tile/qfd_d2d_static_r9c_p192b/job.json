@@ -1,5 +1,5 @@
 {
- "name": "qfd_d2d_static_r9c_p192b-p192b-COMMIT",
+ "name": "qfd_d2d_static_r9c_p192b-p192b-af04f6a72",
  "block": "qfd_d2d_static",
  "ref_tile": true,
  "owner": "Claude:QW-SRAM3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/qw-sram3-1019",
-  "commit": "COMMIT",
+  "commit": "af04f6a72",
   "extra_paths": [
    "rtl/qwen_sys",
    "rtl/qwen_split",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_d2d_static_r9c_p192b/qfd_d2d_static_r9c_p192b-p192b-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_d2d_static_r9c_p192b/qfd_d2d_static_r9c_p192b-p192b-af04f6a72"
   }
  ],
  "cycles_added": 0,
