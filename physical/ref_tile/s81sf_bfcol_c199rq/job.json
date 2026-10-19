@@ -43,7 +43,7 @@
     ],
     "pass_regex": "^TXN MATCH$",
     "min_count_regex": "compared=(\\d+)",
-    "pass_witness": "results/rtl/s81_c199_freeclk_1019/rstpart/positive_run.log",
+    "pass_witness": "results/rtl/s81_c199_freeclk_1019/rstpart/v2/positive_run.log",
     "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    },
    {
@@ -56,7 +56,7 @@
      "verilator-5.050"
     ],
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_c199_freeclk_1019/rstpart/fail_witness/rp_mut_stuck.log",
+    "fail_witness": "results/rtl/s81_c199_freeclk_1019/rstpart/v2/fail_witness/rp_mut_stuck.log",
     "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    }
   ],

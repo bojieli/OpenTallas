@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/c199-rstpart
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/c199-rstpart
+ot-run: ot-epyc6       admits   791 GB (avail 667, growth 113, headroom 0, waiters 0/0 GB) load 33/128 running 16 disk 5919 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/c199-rstpart
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/c199-rstpart
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/c199-rstpart
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/c199-rstpart
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3804711-1792435744 after 1 s
+baseline ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456']
+rstpart ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456']
+mut_stuck ok ['[7018000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3327ffffc0400010']
+mut_tree UNEXPECTED ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=5.831 max=46.648 mean=10.668 n=456']
+NEGATIVE mut_stuck DETECTED trace line 8425: [7018000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3327ffffc0400010
+NEGATIVE mut_tree DETECTED trace line 2941: TXN MATCH (values) but output cycles differ
+BF_RSTPART_EXACT PASS {"status": "PASS", "scope": "OT_BF_RSTPART (free clock + partitioned kept reset copies) vs default column: every valid/metadata/busy/fault output cycle identical on the full BF numerical + wake + transaction workload", "trace_lines": 124422, "trace_bytes": 6212138, "trace_sha256": "c6cf9839168a375a834868cafa63e42973d5c49e8f3f203b1c8d25d8f495bf0d", "extra_data_edges": 0, "mutants": {"mut_stuck": {"first_trace_mismatch_line": 8425, "txn": "[7018000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3327ffffc0400010"}, "mut_tree": {"first_trace_mismatch_line": 2941, "txn": "TXN MATCH (values) but output cycles differ"}}}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3804711-1792435744): exit 0

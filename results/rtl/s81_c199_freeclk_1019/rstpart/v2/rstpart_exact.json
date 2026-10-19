@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "scope": "OT_BF_RSTPART (free clock + partitioned kept reset copies) vs default column: every valid/metadata/busy/fault output cycle identical on the full BF numerical + wake + transaction workload",
+  "trace_lines": 124422,
+  "trace_bytes": 6212138,
+  "trace_sha256": "c6cf9839168a375a834868cafa63e42973d5c49e8f3f203b1c8d25d8f495bf0d",
+  "extra_data_edges": 0,
+  "mutants": {
+    "mut_stuck": {
+      "first_trace_mismatch_line": 8425,
+      "txn": "[7018000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=16 ref=32ffffff00400010 shadow=3327ffffc0400010"
+    },
+    "mut_tree": {
+      "first_trace_mismatch_line": 2941,
+      "txn": "TXN MATCH (values) but output cycles differ"
+    }
+  }
+}

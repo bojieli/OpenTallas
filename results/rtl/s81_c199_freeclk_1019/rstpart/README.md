@@ -63,3 +63,24 @@ Over 32: one leaf FP adder / multiplier output word per copy (fadd/fadd2 y[32] +
 - rp_mut_tree: values still match (TXN MATCH, lag max 46.648 ns) but the per-cycle trace differs from line 2941
   (2449 ns): caught by bf_rstpart_bench's per-cycle rule, not by a DIFF TXN regex, so it is NOT a job.json bench
   (fail_witness/rp_mut_tree_run.log is the run log).
+
+## v1 synthesis census (gate s81sf_bfcol_c199rp @1bccd2de5, epyc6 1_synth.odb; rst_census2.tcl, sinks through BUF/INV)
+125 kept reset drivers (no copy merged back), but MAX 42: separate reset copies stop Yosys merging the adders' internal
+valid pipes with the callers' identical pipes (+~340 async FF), so chain adder copies drove 42, bmul 40, tree adders /
+pair 34 (synth_reset_census_rp_v1.txt). -> v2.
+
+## v2 = kit s81sf_bfcol_c199rq (RTL 19ce89ebc, kit b4648a6e2): leaf output word split
+ot_v41_fadd_rp / ot_v41_fadd2_rp / ot_v41_bmul2_rne_prepare_rp take the raw landed copy and hold two kept copies each:
+rst_n -> valid pipeline + {valid_out|fault, y[15:0]}, rst_h -> {y[31:16], err}; next state formed once (same expressions).
+- Synth census (gate s81sf_bfcol_c199rq-20261019-114903, epyc7): 52358 FF, 3098 async FF, 176 kept reset drivers,
+  MAX 32 loads per reset register (v2/synth_reset_census_rq.txt). Item 3 (reset) PASS without waiver.
+- Bench v2 (ot-epyc6 unit oth-ubuntu-3804711-1792435744): rstpart trace == default column, 124422 lines, same sha
+  c6cf9839; TXN MATCH lag 5.831/14.994/9.090; rp_mut_stuck DIFF TXN, rp_mut_tree trace line 2941 (v2/).
+
+## FINDING (SAFE item 3, data/control, pre-existing in the closed compact199 RTL; NOT fixed here)
+Codex's be8676abc census counted direct sinks only ("no data/control > 32"). Counting through BUF/INV trees (the gate's
+textbook lint, c199rp synth): u_l0.u_tag line[200] QN 1,060 loads, line[201] 532, u_l0.p0_fp4 442, an XNOR 330,
+g_ch3.u_c0.first_r 309, line[202] 268, per-lane BF tag copies t_lr[11] 267 (x16); ~185 more flop outputs at 51-65.
+These are the q-lane tag line / fp4 select / chain first flag fan-outs: they need kept per-region copies (as TAGREP did
+for the BF tag line 4,272 -> 267) before this tile counts as SAFE item 3 PASS. Textbook verdict is WARN (only the
+52k-sink clock root), so the gate does not stop on them.
