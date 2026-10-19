@@ -21,6 +21,11 @@ foreach pp [get_ports *] {
  set pn [get_full_name $pp]
  if {$pn in {clk rst_n}} continue
  set dir [get_property $pp direction]
+ if {$dir in {power ground}} {
+  set bt [$pb findBTerm $pn]
+  if {$bt eq "NULL" || [$bt getSigType] ni {POWER GROUND}} {error "PVM_REGION inconsistent power port $pn:$dir"}
+  continue
+ }
  if {$dir eq "input"} {set ends [get_fanout -from $pp -flat -endpoints_only]} elseif {$dir eq "output"} {set ends [get_fanin -to $pp -flat -startpoints_only]} else {error "PVM_REGION unsupported port direction $pn:$dir"}
  foreach ep $ends {
   foreach pc [get_cells -of_objects $ep] {
