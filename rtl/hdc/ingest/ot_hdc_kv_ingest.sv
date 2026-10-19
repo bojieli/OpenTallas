@@ -482,11 +482,7 @@ module ot_hdc_kv_ingest #(
     wire ra_push = st_act && !st_pad && in_v && (ra_n <= 9'd192) && (st_beats != 0);
     wire pad_take = st_act && st_pad && in_v && (st_beats != 0);
     assign in_rdy = qi_act || (st_act && (st_pad ? (st_beats != 0) : ((ra_n <= 9'd192) && (st_beats != 0))));
-    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy
-`ifndef OT_ING_MUT_SPBUSY
-                  || sp_busy                                   // (mutant SPBUSY: the boot marker may overtake the pipe)
-`endif
-                  ;
+    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy || sp_busy;
 
     // dispatch: a QKV descriptor takes the other slot once it is drained (and an
     // RMW descriptor waits for any preload in flight); a stream descriptor starts
@@ -905,11 +901,7 @@ module ot_hdc_kv_ingest #(
         reg  [2:0]  cq_wr, cq_rd;
         reg  [3:0]  cq_n;
         wire [39:0] cq_h = cq[cq_rd];
-`ifdef OT_ING_MUT_SPDONE
-        wire        cq_go = (cq_n != 0);                                   // mutant: done does not wait for its sectors
-`else
         wire        cq_go = (cq_n != 0) && (sp_acc >= cq_h[31:0]);
-`endif
         always @(posedge clk) begin
             dq_t1 <= dtag_r; dq_c1 <= sp_iss; dq_t2 <= dq_t1; dq_c2 <= dq_c1;
             if (dq_e2) cq[cq_wr] <= {dq_t2, dq_c2};

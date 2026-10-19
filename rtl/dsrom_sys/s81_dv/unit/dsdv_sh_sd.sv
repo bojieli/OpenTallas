@@ -72,8 +72,24 @@ module dsdv_sh_sd #(
     wire [2:0] read_next=rp+sd_pop;
     wire have_next=n>{3'd0,sd_pop};
     wire [545:0] mem_q;
+`ifdef OT_S81_SH_BANK64
+    // S81-SHLK s10: four native 32x64 banks for the 256 data bits (see ot_dsdv_host_afifo_sram) instead of the
+    // pin-limited 16x546 macro; {we, addr} (33 b) in an 8 x 33 flop array with the same synchronous held read
+    genvar mb;
+    for (mb = 0; mb < 4; mb = mb + 1) begin : g_bank
+        ot_sram_1r1w2c_32x64_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({2'b0,read_next}),
+          .rd_out(mem_q[mb*64+:64]),.w_ce_in(rn&&iv),.w_addr_in({2'b0,wp}),.wd_in(id[mb*64+:64]),.w_mask_in({64{1'b1}}));
+    end
+    reg [32:0] sd_tm [0:7];
+    reg [32:0] sd_tq;
+    always @(posedge ck) if (rn && iv) sd_tm[wp] <= {iwe, ia};
+    always @(posedge ck) if (rn && have_next) sd_tq <= sd_tm[read_next];
+    assign mem_q[288:256] = sd_tq;
+    assign mem_q[545:289] = 257'd0;
+`else
     ot_sram_1r1w2c_16x546_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q),
       .w_ce_in(rn&&iv),.w_addr_in({1'b0,wp}),.wd_in({257'd0,iwe,ia,id}),.w_mask_in({546{1'b1}}));
+`endif
 `ifdef OT_S81_SH_APIPE10
     // S81-SHLK s10 (sr9 gate: u_mem rd_out (TT clk->q 310 ps) -> head decode / credit check -> fault, macro->reg -233 ps):
     // the popped head is registered straight from the macro (h_q); its decode, credit reserve, fault check and the

@@ -58,10 +58,38 @@ module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2) (
 `endif
  wire we=wrst_n&&push;
  wire [3:0] wa={{(4-AW){1'b0}},wbin[AW-1:0]};
+`ifdef OT_S81_SH_BANK64
+ // S81-SHLK s10 (sr9 gate: the 176.9 x 81 um 16x546 macro is pin-limited, 825 contacts a face = 10.2/um, its write
+ // data split over both faces, 2% array efficiency): ceil(W/64) native 32x64 dual-clock banks (31.99 x 17.30 um,
+ // 103 contacts a face <= 6/um), rows 16..31 unused, address zero-extended.  Same Gray/credit law, same edges.
+ // The W mod 64 tail bits (hx 2, ox 33) sit in a D x TB flop array with the SAME synchronous read (captured on re
+ // at ra, held otherwise), so no bank carries < 64 used bits; D x TB <= 528 bits (well under the 2 kb SRAM rule).
+ localparam integer NB=W/64, TB=W-NB*64;
+ wire [NB*64-1:0] bq;
+ genvar mb;
+ for(mb=0;mb<NB;mb=mb+1) begin:g_bank
+  ot_sram_1r1w2c_32x64_m1 u_mem(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in({1'b0,ra}),.rd_out(bq[mb*64+:64]),
+   .w_ce_in(we),.w_addr_in({1'b0,wa}),.wd_in(wdata[mb*64+:64]),.w_mask_in({64{1'b1}}));
+ end
+ if(TB>0) begin:g_tail
+  reg [TB-1:0] tmem[0:D-1];
+  reg [TB-1:0] tq;
+`ifdef S81SH_BANK_MUT_TAIL
+  always @(posedge wclk) if(we) tmem[wa[AW-1:0]+1'b1]<=wdata[W-1-:TB];   // mutant: tail written one slot ahead
+`else
+  always @(posedge wclk) if(we) tmem[wa[AW-1:0]]<=wdata[W-1-:TB];
+`endif
+  always @(posedge rclk) if(re) tq<=tmem[ra[AW-1:0]];
+  assign rdata={tq,bq};
+ end else begin:g_notail
+  assign rdata=bq;
+ end
+`else
  wire [545:0] q;
  ot_sram_1r1w2c_16x546_m1 u_mem(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(q),
   .w_ce_in(we),.w_addr_in(wa),.wd_in({{(546-W){1'b0}},wdata}),.w_mask_in({546{1'b1}}));
  assign rdata=q[W-1:0];
+`endif
 `ifndef SYNTHESIS
  always @(posedge wclk or posedge rclk)
   if(wrst_n&&rrst_n&&we&&re&&wa==ra)$fatal(1,"SH_SRAM_FIFO_COLLISION addr%0d",ra);
