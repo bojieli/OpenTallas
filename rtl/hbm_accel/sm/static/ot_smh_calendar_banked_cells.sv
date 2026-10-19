@@ -18,4 +18,9 @@ endmodule
  wire[1:0] rd_phase=phase-2'(DELAY);
  assign dout=slots[rd_phase];
 endmodule
+// Preserved local combinational qualifier: mapping must not hoist its common
+// legal/busy term into a shared wide mux-enable cone across state slices.
+(* keep_hierarchy=1 *) module ot_smh_banked_accept(input wire start,ok,output wire accepted);
+ assign accepted=start&&ok;
+endmodule
 `default_nettype wire

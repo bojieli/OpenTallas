@@ -25,12 +25,13 @@ module ot_smh_banked_svg_central #(
  initial if(COMMANDALIGN!=0)$fatal(1,"command-only alignment is not implemented in this wrapper");
  wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;
  wire calendar_fault,app_reset_n,app_next_valid;wire[7:0]app_resets;wire[134:0]app_next_word;
- wire[15:0]local_valid;wire[3:0]write_copy;
+ wire[15:0]local_valid;wire[3:0]write_copy,read_copy;
  for(genvar g=0;g<16;g=g+1)begin:g_app_valid
   (* keep=1 *) ot_smh_banked_rbit u_v(.clk(clk),.rst_n(app_resets[2+g%6]),.d(app_next_valid),.q(local_valid[g]));
  end
  for(genvar g=0;g<4;g=g+1)begin:g_write_copy
   (* keep=1 *) ot_smh_banked_bit u_w(.clk(clk),.d(app_next_word[25]),.q(write_copy[g]));
+  (* keep=1 *) ot_smh_banked_bit u_r(.clk(clk),.d(app_next_word[83]),.q(read_copy[g]));
  end
  ot_smh_calendar_banked_central #(.W(135),.AW(11),.XW(46),.MUT(CALMUT)) u_core(
   .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
@@ -64,7 +65,10 @@ module ot_smh_banked_svg_central #(
    if(write_copy[2]&&looped)cmd_next[6:0]=word[6:0]+wit[6:0];
    if(write_copy[3]&&looped)begin cmd_next[24]=word[24]|(wit==0);cmd_next[23]=word[23]|wlast;end
    if(word[29])cmd_next[39:30]=word[39:30]+c_tag+c_lofs;
-   if(word[83])begin rd_next[1]=c_bank;rd_next[17:2]=c_ep;rd_next[23:18]=word[106:101]+c_lofs[5:0];rd_next[33:24]=word[116:107]+c_tag+c_lofs;end
+   if(read_copy[0])begin rd_next[1]=c_bank;rd_next[17:10]=c_ep[15:8];end
+   if(read_copy[1])rd_next[9:2]=c_ep[7:0];
+   if(read_copy[2])rd_next[23:18]=word[106:101]+c_lofs[5:0];
+   if(read_copy[3])rd_next[33:24]=word[116:107]+c_tag+c_lofs;
    ret_next=word[117]&&(!looped||wlast);retf_next={c_ep,c_bank};
   end
  end
