@@ -242,11 +242,12 @@ def hub_bound(model, die_v=None):
     if 'AP_OFS' in gp or 'FR_OFS' in gp:
         out.append(('generator binding (static_model.json)', _vals(gp)))
     if die_v and Path(die_v).exists():
-        m = re.search(r'qkd_ahub_static_dw\s*#\s*\((.*?)\)\s*ahub\s*\(', Path(die_v).read_text(errors='replace'), re.S)
+        m = re.search(r'qkd_ahub_static_dw\s*(?:#\s*\((.*?)\))?\s+ahub\s*\(', Path(die_v).read_text(errors='replace'), re.S)
         if m:
-            pr = dict(re.findall(r'\.(\w+)\(([^()]*)\)', m.group(1)))
-            if 'AP_OFS' in pr or 'FR_OFS' in pr:
-                out.append((f'die.v {die_v}', _vals(pr)))
+            pr = dict(re.findall(r'\.(\w+)\(([^()]*)\)', m.group(1) or ''))
+            # An instance with only Z_IN_STRIDE (or no overrides) still uses
+            # AP/FR defaults and must be compared with the physical view.
+            out.append((f'die.v {die_v}', _vals(pr)))
     return out
 
 
@@ -255,8 +256,22 @@ def _vals(pr):
     if 'AP_OFS' in pr:
         got['AP_OFS'] = _ap_list(pr['AP_OFS'])
     if 'FR_OFS' in pr:
-        got['FR_OFS'] = int(str(pr['FR_OFS']), 0)
+        x = _literal(pr['FR_OFS'])
+        got['FR_OFS'] = x - 0x100000000 if 0x80000000 <= x <= 0xffffffff else x
     return got
+
+
+def _literal(v):
+    """Read decimal/Python integers and sized SV literals used in kit JSON."""
+    s = str(v).strip()
+    m = re.fullmatch(r"(\d+)'[sS]?([hHdDbBoO])([0-9a-fA-F_]+)", s)
+    if not m:
+        return int(s, 0)
+    width, base, digits = m.groups()
+    x = int(digits.replace('_', ''), {'h': 16, 'd': 10, 'b': 2, 'o': 8}[base.lower()])
+    if not 0 < int(width) <= 64 or x >= 1 << int(width):
+        raise ValueError(f'out-of-range hub parameter literal {v!r}')
+    return x
 
 
 def _ap_list(v):
@@ -267,7 +282,7 @@ def _ap_list(v):
     if fs:                                           # {s3, s2, s1, s0} MSB first
         vals = [int(x, 16) for x in reversed(fs)]
         return [x - 0x10000 if x & 0x8000 else x for x in vals]
-    x = int(s, 0)
+    x = _literal(s)
     return [((x >> (16 * k)) & 0xffff) - (0x10000 if (x >> (16 * k)) & 0x8000 else 0) for k in range(4)]
 
 
