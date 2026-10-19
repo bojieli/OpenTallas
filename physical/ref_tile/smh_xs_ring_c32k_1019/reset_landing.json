@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_accel_smh_xs",
+ "enable": false,
+ "reason": "OT_SMH_XSRST lands raw rst_a in two plain posedge RTL registers before any reset relay. The hxh flow flag alone did not insert the landing with pin_regs disabled."
+}

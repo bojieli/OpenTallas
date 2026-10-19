@@ -12,7 +12,7 @@ from pathlib import Path
 HELPERS = ("m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
+           "../../physical/common_flow/io_ref_routed.sdc", "../../physical/common_flow/clock_family.tcl", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
            "../hier_contract/abstract_pin_stub.py", "../hier_contract/m6_pin_grant.py", "../../physical/common_flow/grt_macro_top_layer.tcl", "../../physical/common_flow/m6_pin_access.tcl",
@@ -228,6 +228,27 @@ RULE_COMMITS = {
     "53efc860bda4dc258b0ec9f229d1b6a9b89d05ff": dict(
         kind="tightening", rule="pin-track-access",
         what="fp_margin_lint: IO pins without actual routing-track access FAIL"),
+    # ROOT-UNBLOCK 10-19: two main commits without a trailer refused every older gate (unclassified).
+    # 96f1d6e0d (RC-IOREF): ot_rc_cal_hold now re-syncs the numeric FF I/O references (ot_mm_unsync; ot_mm_sync) after
+    # applying and after restoring the calibrated hold RC.  It acts only when RC-CAL changes something AND the MM scene
+    # was already synced (OT_HOLD_MM).  No gate FAIL rule reads it (gate hold is WARN-only; the clock tree is not touched),
+    # but it changes the hold-repair targets: stale platform-RC references were pessimistic for outputs and optimistic
+    # for inputs (rc_ioref_capc_1019: out_hold 30.3 -> 111.6 ps, refmax 605 -> 522 ps), so repair buffers can move either
+    # way.  At gate CTS (placement mode) the hold RC applies only with a spine (ot_rc_cal_spine), so the gate's CTS ODB
+    # can differ only for spine clusters -> tightening scoped by requires=rc_cal_spine_hold (spine cluster: re-gate).
+    "96f1d6e0d0577256388fba8ae81830b4c80f4284": dict(
+        kind="tightening", rule="rc-ioref-refresh", requires="rc_cal_spine_hold", paths=("tools/orfs_hold_mm.tcl",),
+        what="RC-IOREF: FF I/O references re-measured under the calibrated hold RC (and again after restore) inside "
+             "ot_rc_cal_hold; gate CTS hold repair differs only for spine clusters under OT_HOLD_MM; never a gate FAIL "
+             "rule; route hold repair targets change in either direction"),
+    # a6d33cc98 (BALANCED-RESET): textbook_lint gains balanced_reset_proof, active only with --balanced-reset-profile,
+    # which pre_route_gate passes only when spec.reset_landing.first_copies is set.  For such a kit a proved two-edge
+    # landing skips the rst_land_max FAIL (relaxing) but a refused proof is a new FAIL (tightening); every kit without
+    # first_copies runs byte-identical checks -> tightening scoped by requires=balanced_reset_profile.
+    "a6d33cc985d3a0d686ba2b1d94930b3350b5de14": dict(
+        kind="tightening", rule="balanced-reset-proof", requires="balanced_reset_profile", paths=("tools/textbook_lint.py",),
+        what="BALANCED-RESET: opt-in mapped two-edge reset proof for kits with reset_landing.first_copies (proof replaces "
+             "the rst_land_max sink limit, refusal is a FAIL); kits without first_copies unchanged"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}

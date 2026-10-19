@@ -2552,26 +2552,53 @@ module ot_hbm_accel_smh_leaf #(
     // write at E3 and read the prior slot at E3b. No same-address collision,
     // stalls, runtime wide mux, or added data edge. Half-cycle macro launches
     // keep the SRAM hold window independent of its clock-pin skew.
+    // LH-SMATT/XS 10-19 (opt-in, default RTL unchanged):
+    //   OT_SMH_RING_RST2  : the ring slot counter and its address captures take their own KEPT reset relay from the
+    //                       leaf's landed rst_a (same SYNC 2 + TREE 1 release edge as u_rr), so the shared leaf relay
+    //                       keeps <= 32 loads after the local captures are added.
+    //   OT_SMH_RING_LOCAL_WADDR : each ring macro also gets a KEPT positive-edge local WRITE-address capture
+    //                       (wa_p <= slot + 1 == the old negedge wa_n at the macro write edge; reset 0 == old wa_n in reset).
+    //   OT_SMH_XSRING32   : the ring is built from ot_sram_1r1w_32x128_m1 (7 x 128 b, 51.4 x 20.8 um) instead of
+    //                       4 x ot_sram_1r1w_128x256_m1_r2c2 (half the hard area; same registered-read semantics).
+    wire rst_ring_n;
+`ifdef OT_SMH_RING_RST2
+    ot_rst_relay #(.REGIONS(1)) u_rr_ring (.clk(clk), .rst_n_in(rst_a), .rst_n(rst_ring_n));
+`else
+    assign rst_ring_n = rst_n;
+`endif
     reg [1:0] wr_slot;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) wr_slot <= 2'd0;
+    always @(posedge clk or negedge rst_ring_n)
+        if (!rst_ring_n) wr_slot <= 2'd0;
         else wr_slot <= wr_slot + 2'd1;
-    wire [NXL*256-1:0] ring_wd = {{(NXL*256-WSW){1'b0}}, r0w};
-    wire [NXL*256-1:0] ring_rd;
+`ifdef OT_SMH_XSRING32
+    localparam integer RGB = 128;
+`else
+    localparam integer RGB = 256;
+`endif
+    localparam integer NRG = (WSW + RGB - 1) / RGB;
+    wire [NRG*RGB-1:0] ring_wd = {{(NRG*RGB-WSW){1'b0}}, r0w};
+    wire [NRG*RGB-1:0] ring_rd;
     genvar rw;
-    generate for (rw=0; rw<NXL; rw=rw+1) begin : g_wr_ring
+    generate for (rw=0; rw<NRG; rw=rw+1) begin : g_wr_ring
+`ifdef OT_SMH_RING_LOCAL_WADDR
+        wire[1:0]wa_n;
+        ot_hbm_accel_smh_ring_waddr u_wa(.clk(clk),.rst_n(rst_ring_n),.slot(wr_slot),.addr(wa_n));
+`else
         reg[1:0]wa_n;
+`endif
 `ifdef OT_SMH_RING_LOCAL_ADDR
         wire[1:0]ra_n;
         // Previous posedge slot is exactly current negedge(slot-1). Native
         // kept local captures add no data edge and prevent cross-macro merging.
-        ot_hbm_accel_smh_ring_raddr u_ra(.clk(clk),.rst_n(rst_n),.slot(wr_slot),.addr(ra_n));
+        ot_hbm_accel_smh_ring_raddr u_ra(.clk(clk),.rst_n(rst_ring_n),.slot(wr_slot),.addr(ra_n));
 `else
         reg[1:0]ra_n;
 `endif
-        reg [255:0] wd_n;
+        reg [RGB-1:0] wd_n;
         always @(negedge clk) begin
+`ifndef OT_SMH_RING_LOCAL_WADDR
             wa_n <= wr_slot;
+`endif
 `ifndef OT_SMH_RING_LOCAL_ADDR
 `ifdef OT_SMH_MUT_XSRING
             ra_n <= wr_slot - 2'd2;
@@ -2579,12 +2606,18 @@ module ot_hbm_accel_smh_leaf #(
             ra_n <= wr_slot - 2'd1;
 `endif
 `endif
-            wd_n <= ring_wd[256*rw +: 256];
+            wd_n <= ring_wd[RGB*rw +: RGB];
         end
+`ifdef OT_SMH_XSRING32
+        ot_sram_1r1w_32x128_m1 u_w (
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(ring_rd[RGB*rw +: RGB]),
+            .w_ce_in(1'b1), .w_addr_in({3'd0,wa_n}), .wd_in(wd_n), .w_mask_in({RGB{1'b1}}));
+`else
         ot_sram_1r1w_128x256_m1_r2c2 u_w (
-            .clk(clk), .r_ce_in(1'b1), .r_addr_in({5'd0,ra_n}), .rd_out(ring_rd[256*rw +: 256]),
-            .w_ce_in(1'b1), .w_addr_in({5'd0,wa_n}), .wd_in(wd_n), .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({5'd0,ra_n}), .rd_out(ring_rd[RGB*rw +: RGB]),
+            .w_ce_in(1'b1), .w_addr_in({5'd0,wa_n}), .wd_in(wd_n), .w_mask_in({RGB{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+`endif
     end endgenerate
     wire [WSW-1:0] w3b = ring_rd[WSW-1:0];
 `else
@@ -3633,6 +3666,23 @@ module ot_hbm_accel_smh_ring_raddr(input wire clk,rst_n,input wire[1:0]slot,outp
         else a<=slot-2'd1;
 `else
         else a<=slot;
+`endif
+    assign addr=a;
+endmodule
+
+// LH-SMATT/XS 10-19: opt-in macro-local WRITE-address capture (OT_SMH_RING_LOCAL_WADDR). The old negedge wa_n sampled
+// slot s_t half a cycle before the macro write edge; slot + 1 captured at the preceding posedge is the same s_t (mod 4),
+// and the reset value 0 equals the old wa_n while the slot counter is held at 0. Full-cycle posedge launch beside its
+// macro; no data edge added.
+(* keep_hierarchy="yes" *)
+module ot_hbm_accel_smh_ring_waddr(input wire clk,rst_n,input wire[1:0]slot,output wire[1:0]addr);
+    (* keep="true",dont_touch="true" *)reg[1:0]a;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)a<=2'd0;
+`ifdef OT_SMH_MUT_XSRING_W
+        else a<=slot;
+`else
+        else a<=slot+2'd1;
 `endif
     assign addr=a;
 endmodule

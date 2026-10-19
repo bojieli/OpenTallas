@@ -33,7 +33,7 @@ import math
 import re
 import sys
 
-DEFAULT_RE = r"(^|\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\.rst_n$|__ot_rlv$"
+DEFAULT_RE = r"(^|\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\.rst_n$|__ot_rlv$|__ot_rl0v$"
 FLOP_RE = re.compile(r"^\$(_[A-Z]*DFF[A-Z]*_[NP01_]*|adff|adffe|dff|dffe|sdff|sdffe|sdffce|aldff|aldffe|dffsr|dffsre)$")
 SAFE_NAME = re.compile(r"^[^\s;#\"{}]+$")
 
@@ -187,10 +187,22 @@ def split_family(wn, bits, cells, drv, loads, max_loads, m):
         w = f"\\ot_rrs__{tag}__c{k}"
         cmds.append(f"add -wire {w} 1")
         cmds.append(f"connect -set {w} {bitname[b]}")
+        repeated = {}
         for cn, pn, L, _, pb in groups[k]:
             if all(x == b for x in pb):
                 continue
-            expr = w if L == 1 else "{ " + " ".join([w] * L) + " }"
+            # Yosys script arguments do not consume a spaced RTLIL concat as
+            # one port expression. Materialize a named vector of alias bits;
+            # every connect expression stays a single token. Wires add no
+            # state or logic and preserve the chosen copy on every port bit.
+            expr = w
+            if L > 1:
+                if L not in repeated:
+                    repeated[L] = f"{w}__v{L}"
+                    cmds.append(f"add -wire {repeated[L]} {L}")
+                    for bi in range(L):
+                        cmds.append(f"connect -set {repeated[L]}[{bi}] {w}")
+                expr = repeated[L]
             cmds.append(f"connect -port {yname(cn)} {pn} {expr}")
             rec["moves"] += 1
     rec["cmds"] = cmds

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_accel_smh_xs",
+ "enable": false,
+ "reason": "Existing RTL input and output pin registers retained; explicit OT_SMH_XSRST two-stage face reset landing. Zero added data edges."
+}
