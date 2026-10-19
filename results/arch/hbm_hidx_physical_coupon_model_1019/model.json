@@ -1,0 +1,46 @@
+{
+  "scope": "MODEL only; no placement/CTS/route",
+  "die_um": [
+    140.4,
+    140.4
+  ],
+  "core_um": [
+    2.16,
+    2.16,
+    138.24,
+    138.24
+  ],
+  "site_um": [
+    0.054,
+    0.27
+  ],
+  "rows": 504,
+  "pin_pitch_um": 0.192,
+  "face_counts": {
+    "W": 653,
+    "N": 652,
+    "E": 652,
+    "S": 652
+  },
+  "max_pins_any_1um": {
+    "W": 6,
+    "N": 6,
+    "E": 6,
+    "S": 6
+  },
+  "max_manhattan_um": 280.8,
+  "existing_cells": 8265,
+  "existing_ff": 2616,
+  "new_capture_ff": 288,
+  "new_polarity_inverters": 288,
+  "candidate_cells_before_cts": 11145,
+  "candidate_ff": 2904,
+  "candidate_area_um2": 1651.18308,
+  "candidate_clock_cap_ff": 1378.633344,
+  "core_util": 0.08916750780482897,
+  "reset_endpoints": 0,
+  "clock_sinks": 2904,
+  "pg_native_terminals_before_cts": 22290,
+  "unknown_cts_area": null,
+  "unknown_parent_fit": null
+}

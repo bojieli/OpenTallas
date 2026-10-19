@@ -1,0 +1,37 @@
+{
+  "all_lib_sha256": "7110a7a75b4d2802053266c170bed511640a53d1c85ba9e43939fd4cb8dfe817",
+  "source": "eebf00b3d cached native same-image all.lib",
+  "cells": {
+    "DFFHQNx1_ASAP7_75t_R": {
+      "area": "0.2916",
+      "cap_fields": [
+        "max_capacitance : 46.08",
+        "capacitance : 0.474736",
+        "capacitance : 0.474467",
+        "capacitance : 0.474736",
+        "capacitance : 0.558822",
+        "capacitance : 0.558822",
+        "capacitance : 0.555706"
+      ],
+      "ff": "ff (IQN,IQNN) {\n      clocked_on : \"CLK\";\n      next_state : \"!D\";\n      power_down_function : \"(!VDD) + (VSS)\";\n    }"
+    },
+    "INVx1_ASAP7_75t_R": {
+      "area": "0.04374",
+      "cap_fields": [
+        "max_capacitance : 46.08",
+        "capacitance : 0.619928",
+        "capacitance : 0.619928",
+        "capacitance : 0.619647"
+      ]
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "area": "0.17496",
+      "cap_fields": [
+        "max_capacitance : 368.64",
+        "capacitance : 0.852045",
+        "capacitance : 0.852045",
+        "capacitance : 0.850973"
+      ]
+    }
+  }
+}
