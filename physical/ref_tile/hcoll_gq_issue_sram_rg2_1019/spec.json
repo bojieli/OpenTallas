@@ -1,0 +1,269 @@
+{
+ "name": "hcoll_gq_issue_sram_rg2_1019",
+ "top": "ot_hgi_coll_gq_issue",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_hc.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "util": 0.52,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "qid",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "tgt_fault",
+   "active",
+   "done",
+   "fault",
+   "isa_ring",
+   "isa_lp_data"
+  ],
+  "W": [
+   "vm_rq_lo",
+   "vm_rr_lo"
+  ],
+  "S": [
+   "vm_rq_hi",
+   "vm_rr_hi"
+  ],
+  "E": [
+   "ra_lp_we",
+   "ra_lp_tag",
+   "ra_lp_data",
+   "ra_state_read_add",
+   "ra_state_read_tx",
+   "ra_state_read_rr",
+   "ra_state_add_tag",
+   "ra_state_tx_tag",
+   "ra_state_rr_tag",
+   "ra_state_add_src",
+   "ra_state_add_rhs_acc",
+   "ra_state_tx_acc",
+   "ra_add_v",
+   "ra_add_tag",
+   "ra_add_src",
+   "ra_add_rhs_acc",
+   "ra_tx_inject",
+   "ra_tx_forward",
+   "ra_tx_tag",
+   "ra_tx_dst",
+   "ra_tx_result",
+   "ra_tx_acc",
+   "ra_tx_gather",
+   "ra_tx_ttl",
+   "ra_rx_slot",
+   "ra_rx_kind",
+   "ra_rx_src",
+   "ra_rx_tag",
+   "ra_rr_local",
+   "ra_rr_local_tag",
+   "rb_lp_we",
+   "rb_lp_tag",
+   "rb_lp_data",
+   "rb_state_read_tx",
+   "rb_state_tx_tag",
+   "rb_tx_inject",
+   "rb_tx_forward",
+   "rb_tx_tag",
+   "rb_tx_ttl",
+   "rb_rx_slot",
+   "rb_rx_kind",
+   "rb_rx_src",
+   "rb_rx_tag",
+   "ld_fire",
+   "ld_desc",
+   "ld_ev_v",
+   "ld_ev_k",
+   "ld_p_v",
+   "ld_p_d"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333333,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 2.16,
+  "macro_halo_x_um": 16.2
+ },
+ "job": {
+  "owner": "Codex:TW7-GQISSUE",
+  "branch": "codex/hbm-gqissue-sram-1019",
+  "tag": "s1",
+  "purpose": "Release GQ r4 storage correction: two1024b quantiser lines become16slot SRAM rings, read7behind write plus macro-local capture, same9edge line/AQlat13/II1, no collisions. Retains r4 reset/fanout/scale-stage redesign. Eight macros on43.2lattice with >=20um channels/full-face pins. Gate/daemon mechanism benches: AQ13 golden exact + wrong SRAM slot; full main-seam COLLQ8mutant integration is also running and must PASS before adoption.",
+  "benches": [
+   {
+    "name": "aq_sram_exact",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "expect": "pass",
+    "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_sram_mut_slot",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "expect": "fail",
+    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
+    "fail_witness": "results/rtl/gqissue_sram_1019/capture_mut_slot_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_aq_scale13r_eq.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/gqissue_sram_1019"
+  ],
+  "views_to": "physical/ref_tile/hcoll_gq_issue_sram_1019/views",
+  "record_to": "results/arch/hbm_die_d4g/collq/route_hcoll_gq_issue_sram_1019"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input is captured by a flop at the pin and every output is a flop Q in the RTL (gather master stage table, tools/hgi_sim/collq_gather_1018.py); automatic pin registers would add an unpriced edge"
+ },
+ "params": {},
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "inst": "*u_aq0.u_x.g_sram?0?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "inst": "*u_aq0.u_x.g_sram?1?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "inst": "*u_aq0.u_x.g_sram?2?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    129.60000000000002
+   ],
+   "inst": "*u_aq0.u_x.g_sram?3?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    129.60000000000002
+   ],
+   "inst": "*u_aq1.u_x.g_sram?0?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    302.4,
+    129.60000000000002
+   ],
+   "inst": "*u_aq1.u_x.g_sram?1?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "inst": "*u_aq1.u_x.g_sram?2?.u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    172.8,
+    216.0
+   ],
+   "inst": "*u_aq1.u_x.g_sram?3?.u_mem*"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "outline": {
+  "w": 432,
+  "h": 345.6
+ },
+ "defines": [
+  "OT_COLLQ_SRAM"
+ ],
+ "structural_change": "After failed r2 route(-98TT/-28FF) and r3 reset gate, r4 fixes reset landing(main reset-only wrapper), replicated selects, and scale stage. Coordinator rejected its >9kb flop-ring per quantiser. SRAM successor replaces BOTH1024b9edge lines with16slot SRAM rings(4x128x256 macros each); read7behind write avoids collisions, then macro-local full-cycle read capture before S9 (SS clk-to-Q455.3ps), macro input negedge lockup. Exact same AQlat13/II1 and schedule. New safe432x345.6geometry, all43.2lattice, >=20um channels, full-face pins<=6/um; area priced in sizing.json before build. Main landing-fault face, registered KQ+2edge share and read-share variants are preserved; only issue module copied from paused r4. SRAM wrong-slot mutant isMUT7, main land-face MUT6 remains. Original SRAM gate now measuredTTsetup-6.329ps with clockspread194TT/169FF: new kit-local equal-actual-stage clock tree and independent nativeIO/allFF/eightmacro clock-graph audit; source/data/cadence unchanged.",
+ "pre_cts_extra": [
+  "physical/ref_tile/hcoll_gq_issue_sram_rg2_1019/clock_graph.tcl",
+  "physical/ref_tile/hcoll_gq_issue_sram_rg2_1019/bnd_branch.tcl"
+ ]
+}
