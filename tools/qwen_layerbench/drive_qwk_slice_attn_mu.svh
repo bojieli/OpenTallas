@@ -309,7 +309,7 @@
             kva_ff = cyc;
             $display("KVA_FAULT first cyc %0d step %0d rel run %0d root age %0d: programme %0d (ctl local %0d record %0d codec cause %b slot %0d) face result %0d service %0d | root local %0d io %0d | cal %0d | pvfin %0d pvw0 %0d pvw1 %0d hub %0d strips %b ECTL %h Vport %h unit %b",
                 cyc, kva_cur(cyc, 0), (kva_cur(cyc, 0) < 0) ? 0 : cyc - kva_A[kva_cur(cyc, 0)], dut.kvs_attn.w_attn_root__age, kva_f_prog,
-                dut.kvs_attn.u_attn.ctl.local_fault, dut.kvs_attn.u_attn.ctl.record_fault, dut.kvs_attn.u_attn.ctl.codec.fault_cause,
+                dut.kvs_attn.u_attn.ctl.local_fault, dut.kvs_attn.u_attn.ctl.record_fault, `KVA_CODEC_CAUSE,
                 dut.kvs_attn.u_attn.ctl.slot_fault, kva_f_face, kva_f_svc, kva_f_rl, kva_f_ri, kva_f_cal, kva_f_fin, kva_f_pw0,
                 kva_f_pw1, kva_f_hub, kva_f_stk, kva_ectl_f, kva_vport_f, kva_f_unit);
         end

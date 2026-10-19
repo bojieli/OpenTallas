@@ -34,6 +34,11 @@ O=$W/obj
 VFILES="-f $SL/$TOP.f $MAC/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v $MAC/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v
     $KSRC/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $W/tb_$TOP.sv"
 QKDEF=""; [ "${KVA_QK_ONLY:-0}" = 1 ] && QKDEF="+define+KVA_QK_ONLY"
+# KV-TOK 10-19: the LAND=1 attention ctl (MU dies) holds its record codec in generate block g_ld
+CC=dut.kvs_attn.u_attn.ctl.codec.fault_cause
+CF=$(grep -l "module qkd_native_attention_static_ctl\b" $(grep -v "^[+-]" $SL/$TOP.f) 2>/dev/null | head -1)
+[ -n "$CF" ] && grep -q "begin:g_ld" "$CF" && CC=dut.kvs_attn.u_attn.ctl.g_ld.codec.fault_cause
+QKDEF="$QKDEF +define+KVA_CODEC_CAUSE=$CC"
 VOPTS="$QKDEF -O1 ${KVA_VFLAGS:--fno-dfg} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN
     --x-assign unique --x-initial unique --top-module tb_$TOP -GMUT=0 -Mdir $O
     +define+SLICE_DRIVE=\"$H/drive_qwk_slice_attn_mu.svh\" +define+IDLE_EDGES=200 +define+TAIL_EDGES=50 +incdir+$H +incdir+$SL"
