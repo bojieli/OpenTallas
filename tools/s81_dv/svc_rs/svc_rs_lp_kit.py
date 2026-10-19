@@ -228,7 +228,12 @@ def kit(TOP, entry, flat, what):
         defines=["SU_SMU_T", "SVCQ_ENG_FG3", "OT_SVC_RS_HARD"], hard_define="OT_SVC_RS_HARD",
         # SYNTH_ARGS -noshare (S81-SVCBK 10-18): the @6bc7f0f30 gates sat >7 h in yosys SHARE on the runtime-indexed
         # part-selects of dsdv_svc_sx / dsdv_svc_att; production practice (hbm_norm_noshare, lane_kh_overlay)
-        orfs_vars={"VERILOG_INCLUDE_DIRS": f"/src/{D}", "SYNTH_ARGS": "-noshare"},
+        # SYNTH_MEMORY_MAX_BITS 262144 (AD-S81-SVC 10-18 22:40): the -noshare gates passed SHARE and then FAILED the ORFS
+        # memory inventory (3 h 13 m): dsdv_svc_att keeps deliberate flop memories pmem 512 x 512 (262,144 b, p FIFO,
+        # 2 read ports) and land 640 x 256 (163,840 b, 3 write / 4 read ports), plus pvq 8 x 2,120, sw 32 x 512, tr 4 x
+        # 512 x 18.  The cap is set to the largest MEASURED memory (not unbounded); SRAM banking of pmem is the open
+        # coordinator option (lanes/COORD-REVIEW-QUEUE.md, AD-S81-SVC).
+        orfs_vars={"VERILOG_INCLUDE_DIRS": f"/src/{D}", "SYNTH_ARGS": "-noshare", "SYNTH_MEMORY_MAX_BITS": "262144"},
         # ref_tile admits multiple_cts_roots only on leaf tiles (and then no sdc_extra): a landed CLUSTER takes the
         # Q-CLUSTER form (qc_kit.py): clock cts, one TritonCTS tree per region clock port, the lp.py SDC creates ck_<r>
         clock="cts", clock_port="ck_c", clock_ports=["ck_c", "ck_sm"],
@@ -238,7 +243,7 @@ def kit(TOP, entry, flat, what):
         children=children(), macros=macros(),
         pins={"ANY": ports}, io_tcl=f"physical/dsdv_svc_rs_lp_pins/{TOP}.tcl",
         recipe=4, hold_budget="die", inhold=False, outhold=False,
-        route=dict(pd=0.5, threads=16, peak_ram_gb=256, hold_margin_ns=0.03, macro_halo_um=5.4),
+        route=dict(pd=0.5, threads=16, peak_ram_gb=256, hold_margin_ns=0.03, io_hold_margin_ns=0.03, macro_halo_um=5.4),  # io margin >= 0.025 (KITS 10-18)
         pin_regs=dict(enable=False, reason="source-registered: every lane pin lands in a pin flop / closed relay station "
                       "(dn / up / ri / ro face flops, dsfd_dvrly_276 stations), HBM pins are the dsfd_svc_pc registers, "
                       "the SM face is the smq tap's output registers; sid is a static strap"),

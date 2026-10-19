@@ -54,7 +54,8 @@
  "hard_define": "OT_SVC_RS_HARD",
  "orfs_vars": {
   "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_dv/svc_rs",
-  "SYNTH_ARGS": "-noshare"
+  "SYNTH_ARGS": "-noshare",
+  "SYNTH_MEMORY_MAX_BITS": "262144"
  },
  "clock": "cts",
  "clock_port": "ck_c",
@@ -1703,8 +1704,8 @@
   "threads": 16,
   "peak_ram_gb": 256,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "pin_regs": {
   "enable": false,
