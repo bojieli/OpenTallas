@@ -5099,11 +5099,40 @@ def _reset_tree(v, m):
         rec['partial_unbuilt_nets'] = sorted(bad)
         if not nets:
             return rec
+    # Q-RSTGEN7 10-19 (RELEASE_TREE Q.STA.GEN.7; tools/qwen_split/reset_sync_contract.py): reset release into a foreign
+    # clock.  (c) a sink on a clock DOMAIN not mesochronous with its tree, without its own synchroniser (link-PHY rst_n: dv2f15codex io_ucie
+    # -220.9 ps stream -> ucie) gets its LAST tree hop re-clocked onto its own clock (qfd_rst_rep = 2-flop synchroniser
+    # of the level in the receiving domain); (b) a tile whose rst_n feeds only its own 2-flop reset synchroniser
+    # (qfd_d2d_static / qfd_sys_face, RTL-proved) is a synchroniser input (d2d_rom early tap -100.7 ps).  Both become
+    # declared synchroniser endpoints (case/reset_sync.sdc, die STA false path with the structural reason); same depth.
+    rsync = dict(reclock={}, endpoints=[], errors=[])
+    if _os.environ.get('OT_SPLIT_RST_SYNC', '1') != '0':
+        from qwen_split import reset_sync_contract as _RS
+        _repo = Path(__file__).resolve().parents[1]
+        _ok = _RS.rtl_check(_repo)
+        _rep_ok = _RS.rep_check(_repo) if (_repo / _RS.REP_SYNC['qfd_rst_rep']).exists() else (False, 'RTL missing')
+        _meso = _RS.mesochronous(m)    # SerDes FDI roots mesochronous with the core (clock_contract.py); ucie 6:5 is not
+        rsync = _RS.plan(cells, wires, ck_of_bus, ckof, {i.name: i.master for i in m['insts']}, _ok, _meso)
+        if rsync['reclock'] and not _rep_ok[0]:
+            rsync['errors'].append(dict(error=f'qfd_rst_rep is not a 2-flop synchroniser: {_rep_ok[1]}'))
+        _rclk = {c[0]: rsync['reclock'].get(c[0], ck_of_bus[c[4]]) for c in cells}
+        rsync['untreated'] = _RS.audit(wires, _rclk, ckof, {i.name: i.master for i in m['insts']}, rsync['endpoints'], _meso)
+        rsync['mesochronous'] = sorted(_meso)
+        if rsync['untreated']:
+            rsync['errors'].append(dict(error='untreated reset release hops', hops=rsync['untreated'][:8]))
+        rsync['rtl_check'] = {k: list(r) for k, r in _ok.items()}
+        rsync['rep_check'] = list(_rep_ok)
+        rec['reset_sync'] = dict(reclock=rsync['reclock'], endpoints=len(rsync['endpoints']), errors=rsync['errors'],
+                                 by_class={c: sum(1 for e in rsync['endpoints'] if e['cls'] == c)
+                                           for c in sorted({e['cls'] for e in rsync['endpoints']})})
+        if rsync['errors']:
+            raise ValueError(f"reset tree: reset synchroniser plan failed: {rsync['errors'][:4]}")
+    m['reset_sync'] = rsync
     dom_inst = {n['bid']: n['domain'] for n in nets}
     ck_add = {}
     for nm, mst, x, y, bid, _ in cells:
         m['insts'].append(v.Inst(nm, mst, x, y, RST_W, RST_H, kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
-        ck_add.setdefault(ck_of_bus[bid], []).append((nm, 'clk'))
+        ck_add.setdefault(rsync['reclock'].get(nm, ck_of_bus[bid]), []).append((nm, 'clk'))
     # DIE-QWEN-GEN16 (Q-CB16RST 10-19): a repeater whose output drops on a cluster's regional reset pin (qfd_c_b16_dv
     # rst_c<c>r<r>) is the LAST hop of that drop: it is clocked from the cluster's own root (re-filed with the cluster),
     # so the 16 drops of an instance leave the die tree on the cluster's clock, all at the tree's equal depth (same edge)

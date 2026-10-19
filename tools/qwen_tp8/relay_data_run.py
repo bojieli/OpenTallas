@@ -163,6 +163,15 @@ if '--case' in sys.argv:
               f"{'none' if not _mk else _rbd['audit']['masks'].get('files_ok')}", flush=True)
         if _rbv != 'PASS':
             raise SystemExit(f"ROM_BIND_AUDIT FAIL: {_rbd['audit']['fails'][:5]} (case/rom_bind.json)")
+    if (m.get('reset_sync') or {}).get('endpoints'):
+        # Q-RSTGEN7 10-19: declared reset synchroniser inputs of this build (tools/qwen_split/reset_sync_contract.py) ->
+        # die STA false paths with their structural reason (read by tools/qwen_tp8/die_sta_libs.py after landing.sdc)
+        from qwen_split import reset_sync_contract as _RS
+        (out / 'case' / 'reset_sync.json').write_text(json.dumps(dict(schema='opentallas.qwen.reset-sync.v1',
+            **m['reset_sync']), indent=1) + '\n')
+        (out / 'case' / 'reset_sync.sdc').write_text(_RS.sdc(m['reset_sync']['endpoints']))
+        rec['reset_sync'] = dict(endpoints=len(m['reset_sync']['endpoints']), reclock=m['reset_sync']['reclock'])
+        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
     # r10: pin directions of every die master as the bus list has them (driver first), for the placeholder Liberty
     # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word
     byi = {i.name: i for i in m['insts']}
