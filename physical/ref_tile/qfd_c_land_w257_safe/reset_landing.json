@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_land_w257_safe",
+ "enable": false,
+ "reason": "rsi lands through kept r1/r2 flops separately in each <=24bit slice"
+}
