@@ -1,0 +1,4 @@
+HNXLAND FAIL phase=-2 checks=1183 errors=1174 min_write_age_ns=28.000
+[12030000] %Fatal: tb_hnx_pl_land_sram.sv:37: Assertion failed in tb_hnx_pl_land_sram: HNXLAND mismatch
+%Error: rtl/hbm_next/common/tb_hnx_pl_land_sram.sv:37: Verilog $stop
+Aborting...

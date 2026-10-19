@@ -1,0 +1,10 @@
+{
+  "source_changes": "Read enable requires both destination warm phase and source slot valid; masked startup output remains exact. Invalid enabled reads are rejected separately from data mismatch.",
+  "simulator": "Verilator5.050",
+  "remote": "ot-epyc4:/srv/opentallas-scratch/claude/codex_hnx_land/out8",
+  "sha256": {
+    "rtl/hbm_next/common/hnx_pl_land_sram.sv": "bca58edf9a570a231e9fd5ffc7facc2a51dcc88effe0718fcf536d56c9317ba8",
+    "rtl/hbm_next/common/tb_hnx_pl_land_sram.sv": "3d9a3ab85ccb586494d7b996b321731a11546b2328609f2ded9247ff7d630858",
+    "rtl/hbm_next/common/run_land_sram.sh": "65a56de16103fee2e91bfab7b1c5874593367c3e22fde8b00fb473173117732b"
+  }
+}

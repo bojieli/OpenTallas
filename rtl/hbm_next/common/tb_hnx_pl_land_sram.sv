@@ -13,6 +13,7 @@ module tb_hnx_pl_land_sram #(parameter integer PHASE=0,MUT=0);
  real min_write_age=1e9;
  initial for(integer a=0;a<16;a=a+1) last_write[a]=-1e9;
  always @(posedge ck_w) if(dut.rq_w) last_write[dut.wa]=$realtime;
+ always @(posedge ck_r) if(dut.read_enable && !(dut.warm&&dut.v[dut.sel])) $fatal(1,"HNXLAND invalid-read fault");
  always @(posedge ck_r) if(dut.warm && dut.v[dut.sel]) begin
   if($realtime-last_write[dut.ra]<min_write_age) min_write_age=$realtime-last_write[dut.ra];
  end

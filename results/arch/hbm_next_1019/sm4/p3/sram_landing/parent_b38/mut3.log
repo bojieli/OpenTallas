@@ -1,0 +1,10 @@
+LP_MISMATCH port=gout cycle=801 flat=86155b669da09773510ce1533c00000003697d000000000000 landed=86155b669da09773510ce1533c00000003697ff707e1c50b0a
+LP_MISMATCH port=gout cycle=802 flat=d2daeb2d2e2940defb2dcdcb04000000000003f707e1c50b0a landed=d2daeb2d2e2940defb2dcdcb04000000000003000000006388
+LP_MISMATCH port=gout cycle=803 flat=c28d0b78037faca5930c9fb194000000000003000000006388 landed=c28d0b78037faca5930c9fb1940000000000030000000087c1
+LP_MISMATCH port=gout cycle=804 flat=d6702a2c1aa26108959af186740000000000030000000087c1 landed=d6702a2c1aa26108959af18674000000000003fa49109c9fd4
+LP_MISMATCH port=gout cycle=805 flat=f45dc5a8906d30e03bd3c8a984000000000003fa49109c9fd4 landed=f45dc5a8906d30e03bd3c8a984000000000001000000000000
+LP_LOCKSTEP FAIL MUT=3 mismatches=2224 of 12796
+- rtl/hbm_next/sm/lp/tb_hnx_rp3lp3x_flat_lp.sv:95: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.726 s; speed 2.317 us/s
+- Verilator: cpu 1.726 s on 1 threads; allocated 30 MB

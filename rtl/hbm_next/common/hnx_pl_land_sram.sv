@@ -23,6 +23,7 @@ module hnx_pl_land_sram #(parameter integer W=2069,D=4,K=2,MUT=0,
  wire [3:0] ra=sel;
  wire [NB*546-1:0] wd={{(NB*546-W){1'b0}},i};
  wire [NB*546-1:0] rd;
+ wire read_enable=(MUT==3)?1'b1:(warm&&v[sel]);
  always @(posedge ck_w) rq_w<=rsi_w;
  always @(posedge ck_r) rq_r<=rsi_r;
  always @(posedge ck_w) begin
@@ -46,7 +47,7 @@ module hnx_pl_land_sram #(parameter integer W=2069,D=4,K=2,MUT=0,
  generate for(b=0;b<NB;b=b+1) begin:g_bank
   ot_sram_1r1w2c_16x546_m1 u_mem(.wclk(ck_w),.rclk(ck_r),
    .w_ce_in(rq_w),.w_addr_in(wa),.wd_in(wd[b*546+:546]),.w_mask_in({546{1'b1}}),
-   .r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd[b*546+:546]));
+   .r_ce_in(read_enable),.r_addr_in(ra),.rd_out(rd[b*546+:546]));
  end
  for(g=0;g<NG;g=g+1) begin:g_valid
   localparam integer BITS=(W-g*32>=32)?32:W-g*32;

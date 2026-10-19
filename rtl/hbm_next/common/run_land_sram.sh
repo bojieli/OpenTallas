@@ -2,7 +2,7 @@
 set -eu
 out=${1:?output};mkdir -p "$out"
 for phase in -2 0 2; do
- for mut in 0 1 2; do
+ for mut in 0 1 2 3; do
   key=p${phase}_m$mut
   "${VERILATOR:-verilator}" --binary -j 4 -Wno-fatal --top-module tb_hnx_pl_land_sram -GPHASE=$phase -GMUT=$mut \
    rtl/hbm_next/common/{ot_pl_land,hnx_pl_land_sram,tb_hnx_pl_land_sram}.sv \
