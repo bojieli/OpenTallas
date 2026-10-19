@@ -36,13 +36,22 @@
     "event_lineage": 992,
     "sum": 1546
   },
-  "source_sha256": "56faafee7f299dd0fa9a226b1e6d732cc239460469364aae5ea1b550f38359b2",
+  "source_sha256": "2dfda19a79ae7bc1ac205b326868b96801f40020130b202934579e19a0a83c62",
   "limitations": [
     "Selected scalar SU only; MU4 elaboration refused",
     "Actual runtime PLL loss witness absent; between-stopped-edge pulse unsupported",
     "No root binding or packet/PHY transport reset closure",
     "No cache poison distribution or production drain receipt",
     "Poisoned context retained until raw POR; after one fault report remaining immutable queue entries retained, never posted as success",
-    "Full-fleet physical/source fanout, clock/reset, macro and static-calendar cost remains open"
-  ]
+    "Full-fleet physical/source fanout, clock/reset, macro and static-calendar cost remains open",
+    "59-bit component owner field is zeroextended host descriptor clientTAG16; it is not nativeTAG59 and does not establish actual native health binding"
+  ],
+  "health_identity_contract": {
+    "domain": "HOST_DESCRIPTOR_COMPONENT",
+    "layout": "{zero_extend_59(descriptor_client_tag16),descriptor_generation2,slot0,engine_position18}",
+    "independent_producer": "Bench reconstructs descriptor client tag/generation and actual engine launch position; no DUT mirror echo",
+    "native_TAG59_mapping": null,
+    "native_TAG59_layout": "{epoch16,stage6,token18,position13,segment6}",
+    "release_binding": "OPEN: real accepted native identity origin, mapping, phase and health producer coverage not established"
+  }
 }
