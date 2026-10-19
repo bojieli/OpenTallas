@@ -134,8 +134,9 @@ ROW_II = {
     "ATT.QK/PV": ("union stream", "MEASURED", "ATT4 bench: span = fixed 113-127 + 7.8 a union row (= fixed + comp x "
                                               "U(N)/U(1)), passes = ceil(N / P); shared 4-lane merge PV span 16-40 "
                                               "shorter (a1); E1 PASS; plan mode R10"),
-    "FUSED.HC_PRE_NORM": (197.0, "MEASURED", "P6 RTL 8fe5d18bd: (1,451 - 466) / 5"),
-    "FUSED.HC_POST": (100.0, "PRICED", "SU chain 25,600 words / 256"),
+    "FUSED.HC_PRE_NORM": (81.0, "MEASURED", "UNITS-FUSED hnx FUSED engine (@e70d3285a): 404 + 81 (N - 1), KX = 4 x slots, "
+                                            "rgap 0 (KX = 2 needs rgap >= 64); price 160; old P6 RTL 197"),
+    "FUSED.HC_POST": (103.0, "MEASURED", "UNITS-FUSED hnx FUSED engine: 196 + 103 (N - 1) (price 100)"),
     "FUSED.QDQ_*": ("n / 32", "PRICED", "quantiser 32 elements a cycle"),
     "HC.HC_MIX*": (250.0, "MEASURED", "UNITS tb_hnx_hc_eng4 (hnx root + 4 ring quarters): HC_MIX 998 + 250 (N - 1), "
                                       "bit-exact N = 1..8"),
@@ -146,19 +147,19 @@ ROW_II = {
     "COLL.ARGMAX_MERGE": (32.0, "MEASURED", "UNITS-COLL rows: 53 + 32 (N - 1) (price 12.7-23.7)"),
     "COLL.TOPK_MERGE": ("c1 - 741.7", "PRICED", "one message train: endpoint + crossing + tail once, payload x N"),
     "IDX.TOPK": (49.2, "MEASURED", "UNITS-IDX ot_hnx_idx_topk_rows_static (price 47.0)"),
-    "IDX.INDEX": (953.0, "MEASURED", "UNITS-IDX: 1,397 + 953 (N - 1) (selector top-512 a row, key stream re-read a row; "
-                                     "price 152 of the 658.9 frame); IDXN redesign (N selectors, one key pass) running"),
+    "IDX.INDEX": (232.0, "MEASURED", "UNITS-IDXN (@5bf6d2d50): 1,297 + 232 (N - 1), keys read once a record (replay "
+                                     "buffer), 8 row streams, 4 time-shared selectors (price 152 of the 658.9 frame)"),
     "IDX.UNION": ("48/67/90/101/142 (N 1/2/3/4/6)", "MEASURED", "UNITS-IDX ot_hnx_idx_union_static (idx packet client, "
                                                                 "~18.6 a row; price N x 6 / 8 + 24)"),
     "IDX.KVUNION": ("(W + N k) / 8 + 320", "PRICED", "merge of N ascending lists at 8 ids a cycle + 32 plan blocks x 320 "
                                                      "words at 32 words a cycle; runs on IDX beside the ROW_GATHER the ATT "
                                                      "record waits for anyway (off the critical path)"),
-    "SU.VOP": ("(2k + 1) ceil(e / 512) + 2", "MEASURED", "UNITS-SUDMA ot_hnx_su_rowx: AB 44 / ABC 72 at e = 7,168 (one "
-                                                         "store write port: k per-row VM operands fill, 1 result); indexed "
-                                                         "gather 1 (= price)"),
+    "SU.VOP": ("2k ceil(e / 512)", "MEASURED", "UNITS-SUDMA2 write-port split (@a42351330): AB 28 / ABC 56 at e = 7,168 "
+                                               "(k per-row VM operands; VM fill bandwidth binds); indexed gather 1 (= price)"),
     "DMA.KVWB_DS": (8.0, "MEASURED", "UNITS-SUDMA kvwb: 36 + 8 (N - 1), +28 a 256-slot ring wrap (price 2)"),
     "DMA.*": ("c1 - first access", "PRICED", "first access once, rows at full bandwidth"),
-    "ARGMAX.LOCAL": (169.0, "MEASURED", "UNITS-SUDMA argmax: 211 + 169 (N - 1) (VM read one sector an edge; price 6)"),
+    "ARGMAX.LOCAL": (22.0, "MEASURED", "UNITS-SUDMA2 ot_hnx_argmax_wide_rows: II 22 (1,347 words / 8 a beat on one slice;"
+                                       " price 6 needs a ~4-slice row spread)"),
     "CTL.*": (0.0, "n/a", "CTL rows are not issued (USERS / TOKX take N from the record)"),
 }
 
