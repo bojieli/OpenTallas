@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "dscoll_lane_w_lt",
+ "reviewer": "coordinator (2026-10-18 ~18:40)",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T18:40:00-07:00",
+ "gate_commit": "b0e3702f0",
+ "checklist": {"lattice":"PASS: 10 SRAMs 512x128 in a regular 2x5 grid with equal channels","std_cell_band":"PASS: W band + inter-macro channels; fill 0.43","pin_spread":"PASS: W and E faces; 2,304 pins","clock_entry":"PASS: N face; spine spread 27.3 TT / 33.4 FF","shape":"PASS: 432x337 (1.3:1); trial GRT overflow 0"},
+ "notes": "S81 link lane with CH_BOARD 700 / ch_b (TOKEN-XDIE-S81: switch-crossing ack timeout). Geometry = the closed rt view. Logic sits in the W half and the macro channels; E half sparse (pin-driven outline).",
+ "geometry_sha256": "50e64597c57369878d641d5d502530c3104989a105d5e0d1a507d4902e5fd75c"
+}
