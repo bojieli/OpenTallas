@@ -107,10 +107,10 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  assign rst_ctx=rst_q[4];assign rst_land=rst_q[5];assign rst_pin=rst_q[6];assign rst_top=rst_q[7];
  end else begin:g_rstf
  // Family widths = ceil(region reset loads / 28) from the SAFE2 synthesized netlist (textbook 10-19: fmt 5,517,
- // svc 2,830, pin 2,173, rec 2,139, top 1,599, land 836, x3 577, ctx < 256); the copies pass re-points the loads,
+ // svc 2,830, pin 2,173, rec 2,139, top 1,599, land 1,420 bit loads (safe3 gate), x3 577, ctx < 256); the pass re-points loads,
  // the gate's high_fanout lint on 1_2_yosys.v is the witness.
  (* keep = "true" *) reg[199:0]rst_cp_fmt;(* keep = "true" *) reg[23:0]rst_cp_x3;(* keep = "true" *) reg[103:0]rst_cp_svc;
- (* keep = "true" *) reg[79:0]rst_cp_rec;(* keep = "true" *) reg[11:0]rst_cp_ctx;(* keep = "true" *) reg[31:0]rst_cp_land;
+ (* keep = "true" *) reg[79:0]rst_cp_rec;(* keep = "true" *) reg[11:0]rst_cp_ctx;(* keep = "true" *) reg[55:0]rst_cp_land;
  (* keep = "true" *) reg[79:0]rst_cp_pin;(* keep = "true" *) reg[59:0]rst_cp_top;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin
