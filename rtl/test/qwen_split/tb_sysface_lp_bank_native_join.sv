@@ -79,7 +79,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  if(cyc==1201||cyc==1301)begin offer=1;record=rec(0,888,1);end
  if(cyc==1300)begin offer=1;record=rec(0,ETOK,2);role=1;role_user=0;end
  if(cyc==1400)fetch=1;
- if(cyc==1740)begin offer=1;record=rec(0,ETOK+1,3);record[58:43]=16'h490;record[532:517]=16'h490;role=1;role_user=0;end
+ if(cyc==1740)begin offer=1;record=rec(0,(ETOK==151935)?0:ETOK+1,3);record[58:43]=16'h490;record[532:517]=16'h490;role=1;role_user=0;end
  if(cyc==1666)begin dh[43:0]=(44'd1<<42)|(44'(ETOK)<<18)|5;init_u0=1;end
  if(cyc==1850)release_row=1; // diagnostic hold only; actual native last-read join is separate
  @(posedge ck);
@@ -98,7 +98,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  #0.1;
  if(es_raw)begin raw_edges++;check(cyc==1732&&et_raw==ETOK&&eu_raw==0,"raw GI EMB publication age66");$display("LP_GI_EMB publication%0d age%0d",cyc,cyc-1666);end
  if(es)begin out_edges++;check(cyc==1735&&et==ETOK&&eu==0,"output LP EMB publication age69");$display("LP_EXTERNAL_EMB publication%0d age%0d",cyc,cyc-1666);end
- check(!rxf&&!obf&&!ef&&dcs[2:1]==0,"receiver/observer/ledger/GI remain fault-free");
+ check(!rxf&&!obf&&!ef&&dcs[2:1]==0,$sformatf("receiver/observer/ledger/GI flags %0d/%0d/%0d/%0d",rxf,obf,ef,dcs[2:1]));
  end
  check(reads==64&&scale_reads==1&&outputs==65&&validations==1,"actual native/provider fullrow coverage");
  check(ctx_edges==1&&init_edges==1&&raw_edges==1&&out_edges==1&&consume_edges==1,"all actual boundary observations covered");
