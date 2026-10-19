@@ -100,6 +100,8 @@ def build(ab):
     # S81-DIECHAIN 10-19: every other block's sticky fault output joins the die status boundary (block_fault vector, one bit
     # per instance whose RTL module has a `fault` output: plain slices, bk collector/selector, G-unit, svc_rs ENTRY slices)
     T['status_fault_masters'] = ['dsdv_slice', 'dsfd_bk_collector', 'dsfd_bk_selector', 'dsdv_gunit', 'dsdv_svc_rs']
+    # seq_host MU table faults (hslot + hwin fold, dsdv_mu_hwin.sv t_mf[3:0]) leave as die status pins (strict OUTPUT_OPEN before)
+    T['masters']['dsdv_seq_host_mux'].setdefault('top_ports', []).append({'port': 't_mf', 'dir': 'output', 'bits': 4})
     T['spare_out_rules'] = True          # tools/s81_dv/dv_spare_out.py (svc_rs role faces, lane quantisation, clock taps)
     T['rtl_files'] = T['rtl_files'] + ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']   # dsdv_mu_land SRAM 1
     cv = T['child_views']

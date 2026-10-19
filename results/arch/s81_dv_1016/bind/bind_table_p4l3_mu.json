@@ -3183,7 +3183,14 @@
      ]
     }
    },
-   "port_note": "p4l: cw; per-half job jw_E (s_j + s_hw_e) / jw_W (s_j copied + s_hw_w); jd_E / jd_W {jd, hc, st_rg} per half (landed); host plane hf / ht to end slice s_7N (landed); MU: mu_c/mu_rc to s_7N in ht spare bits, s_0N/0S/7S on mu_* lanes; mu_rt from s_7N in hf_l2 spare bits, s_0N on rt_0N"
+   "port_note": "p4l: cw; per-half job jw_E (s_j + s_hw_e) / jw_W (s_j copied + s_hw_w); jd_E / jd_W {jd, hc, st_rg} per half (landed); host plane hf / ht to end slice s_7N (landed); MU: mu_c/mu_rc to s_7N in ht spare bits, s_0N/0S/7S on mu_* lanes; mu_rt from s_7N in hf_l2 spare bits, s_0N on rt_0N",
+   "top_ports": [
+    {
+     "port": "t_mf",
+     "dir": "output",
+     "bits": 4
+    }
+   ]
   },
   "dsdv_slice_lepe_mu": {
    "module": "ot_s81sl_slice_lepe_mu",
