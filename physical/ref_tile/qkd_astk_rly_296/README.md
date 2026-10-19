@@ -14,13 +14,16 @@ Benches (fleet, Verilator 5.050 / iverilog; logs in results/arch/qwen_kv_die/kv_
 face_land m0 PASS 20196 checks / 196 reset epochs; m1 (relay bypassed) FAIL 550 errors (witness);
 relay_exact PASS; relay_mutant FAIL cycle 1 (witness).
 
-## Safe-design checklist (pre-gate; post-gate items filled after the gate PNG review)
-1 Pins: data pin regs off by design (the core's output register is the one counted stage, kit reason); reset lands
-  (2 flow stages + relay sync 2 + tree 1): PASS
-2 Reach: 25.92 x 51.84 um tile, no wire near 405 um: PASS
-3 Fanout: reset 296 -> 10 copies <= 30 (was FAIL 296); data is bitwise a->b: PASS (verify ot_rst_copies.tsv)
-4 Depth: one flop stage, no logic: PASS
-5 Storage: 296 flops, no runtime-indexed arrays: PASS
-6 Floorplan: no macros; 2:1 aspect; full-width std-cell band: see gate
-7 Clock: single root, 892 sinks; io_hold_margin 0.0 -> 0.03: see gate (spread <= 80 TT/FF)
-8 Schedule: static, no backpressure; +0 data cycles: PASS
+## Safe-design checklist (gate 2042f2fca, PRE_ROUTE_GATE WARN 0 fail / 2 warn; PNGs reviewed by KV-PARAMS2 10-19 17:05)
+1 Pins: data pin regs off by design (the core output register is the one counted stage); rst_n lands 2 flow stages
+  (reset_landing.json) + relay sync 2 + tree 1; 594 pin rects on track, 0 inaccessible: PASS
+2 Reach: tile 25.92 x 51.84, netlist reach 25.7 um: PASS
+3 Fanout: ot_rst_copies.tsv family u_fl_rst_rst_n.rst_n 10 copies, loads 30x9 + 26 (was 296 on one flop), status OK: PASS (fixed)
+4 Depth: 11.7 ps, one flop stage; setup WNS +334 ps, hold +53 ps (placement TT): PASS
+5 Storage: 310 flops, no indexed arrays: PASS
+6 Floorplan: no macros, aspect 2:1, full std-cell band; util 14-15% is WAIVED: the outline is pin-bound (296 W + 296 E
+  pins at 5.7 pins/um on the 51.84 um faces, <= 6/um) and identical to the closed fl1 outline/faces; flops sit at their
+  pin faces (io_flop_at_pins cols 4), density PNG shows the two pin columns + sparse core, no hot spot: PASS (waiver)
+7 Clock: single S-centre root ck, 310 sinks, TT insertion 75.9 ps, FF 60.3 ps, pin-flop spread 2.6 / 2.6 ps (<= 80),
+  io_hold_margin 0.03; trial GRT overflow 0 (M2 20.9%): PASS
+8 Schedule: static, zero added data cycles; reset release +2 (flow landing) +3 (relay) edges, handed to the die chain: PASS
