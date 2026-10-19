@@ -1,18 +1,19 @@
 {
- "name": "s81dv_land_276-l2-COMMIT",
+ "name": "s81dv_land_276-po2-COMMIT",
  "block": "dsfd_dvland_276",
  "ref_tile": true,
- "owner": "Claude:S81-DIE7/LAND",
+ "owner": "Claude:PO-SUBMIT",
  "purpose": "S81 p4l lane-tail landing tile dsfd_dvland_276 (forwarded-clock ring D 4, read on the block root; 108 inst in bind9)",
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/s81-die7-land-1018",
+  "branch": "claude/po-submit-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/land",
    "tools/s81_dv/land_bench.py",
-   "results/arch/s81_dv_1016/landing/witness_land"
+   "results/arch/s81_dv_1016/landing/witness_land",
+   "results/arch/s81_dv_1016/landing/witness_land_rl2"
   ]
  },
  "stages": {
@@ -29,7 +30,7 @@
    },
    {
     "name": "landing_exact_sweep",
-    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --variant base --out {RUN}/bench_base/bench.json",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --rst-land 2 --variant base --out {RUN}/bench_base/bench.json",
     "expect": "pass",
     "pass_regex": "LAND_BENCH PASS dsfd_dvland_276 base D=4 KW=3 sweep 36/36 slip-fault 4/4",
     "threads": 1,
@@ -40,10 +41,10 @@
    },
    {
     "name": "naive_retime_mutant",
-    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --variant mut_naive --out {RUN}/bench_naive/bench.json",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --rst-land 2 --variant mut_naive --out {RUN}/bench_naive/bench.json",
     "expect": "fail",
     "fail_regex": "LAND_BENCH FAIL dsfd_dvland_276 mut_naive",
-    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land/dsfd_dvland_276_mut_naive.log",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land_rl2/dsfd_dvland_276_mut_naive.log",
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
@@ -52,10 +53,22 @@
    },
    {
     "name": "read_slot_mutant",
-    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --variant mut_sel --out {RUN}/bench_sel/bench.json",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --rst-land 2 --variant mut_sel --out {RUN}/bench_sel/bench.json",
     "expect": "fail",
     "fail_regex": "LAND_BENCH FAIL dsfd_dvland_276 mut_sel",
-    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land/dsfd_dvland_276_mut_sel.log",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land_rl2/dsfd_dvland_276_mut_sel.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "reset_calendar_mutant",
+    "cmd": "python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --rst-land 2 --variant mut_rlcal --out {RUN}/bench_rlcal/bench.json",
+    "expect": "fail",
+    "fail_regex": "LAND_BENCH FAIL dsfd_dvland_276 mut_rlcal",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_land_rl2/dsfd_dvland_276_mut_rlcal.log",
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
@@ -111,7 +124,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81dv_land_276/s81dv_land_276-l2-COMMIT"
+   "to": "results/rtl/ref_tile/s81dv_land_276/s81dv_land_276-po2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -122,7 +135,8 @@
  "merge_target": null,
  "structural_change": "S81-DIE7/LAND 10-18: first hardened view of the S81 p4l lane-tail LANDING dsfd_dvland_276 (ot_s81_land W=276 D=4 KW=3; LANDING-CONTRACT L1-L7): ring of 4 slots written on the lane's forwarded clock ck_f (the slots ARE the capture flops, flop-first), read on the block root ck at slot (rc - K) mod 4 into the registered o (flop-last); k[2:0] = the per-lane identity strap K tied by the die binder; no ready / credit / occupancy (static calendar).  bind9 (claude/s81-die7-1018 3923ae6de, STRICT PASS): 108 inst: last station dsfd_dvrlyh_276_EW 48 / _WE 48 (MY) / _NS 8 / _SN 4.  Faces: lane i + ck_f on E (from the last relay station, as the _EW relays), o + ck + fault on W (abutted to the receiving block), rs / k strap on N; one master per width, the die mirrors it (MY / MX) for the opposite lane direction.  Outline 36.72 x 51.84 um: data faces E/W sized from 277 pins at <= 6 pins/um (5.34/um on 51.84 um), depth from the closure-measured std area 791 um2 at util ~0.51 (l1 route at 34.56 x 47.52: FLOORPLAN_MARGIN util 60.5% > 60%; grown in both axes, pins and faces unchanged).  Two CTS roots (multiple_cts_roots): ck_f (lane domain: i, ring slots, wc, epochs) and ck (core: rs, k, rc / warm / fault / o), related same frequency (one PLL, fixed-phase; the lane phase dL is the die's, checked by the die STA as the landing window MCP -setup E -hold D-1).  Slot write enables stay enable muxes as the RTL (the contract's per-slot ICG note is not adopted: no RTL change under the closed bind9; the Qwen qfd_landh kits do the same).  Recipe 4 flop-first, hold_budget die, M5 cap.",
  "reroute_reason": {
-  "kind": "slot_change",
-  "text": "s81dv_land_276-l1-1da4d6aae FLOORPLAN_MARGIN (util 60.5% > 60%, std 791 in 1306 um2): outline grown 34.56 x 47.52 -> 36.72 x 51.84 um (util ~0.51), pin faces and order unchanged; no closed view exists"
+  "kind": "pin_order",
+  "source": "results/arch/abutted_joints_1019/handoff_s81.md",
+  "fix": "route.pin_balance + disjoint per-port pin_ranges: every bus bit placed monotonically (bit k at the same offset on in and out faces, ascending), replacing the closed view's PPL chunk-scrambled order on abutted joints (pin_order rule c81a8f458); RTL, outline, pin faces unchanged; plus kit reset_landing ON (COORD HANDOFF 0jz: 2 ck flops on rs, core release +2 edges re-derived in the die calendar, data latency unchanged)"
  }
 }
