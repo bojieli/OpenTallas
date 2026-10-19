@@ -100,58 +100,48 @@ def domain_of(net, dmap=DOMAIN_MAP):
     return None
 
 
-def age_fields(r, land_k, land_e=None):
-    """Destination-pin ages use the same lane_cycles source as record_bundles.
+def lane_chain(row, landing):
+    """Canonical physical order: compute stations exclude landing; KV includes it."""
+    if not row or not isinstance(row.get('stations'), list):
+        return None
+    chain = list(row['stations'])
+    if landing not in chain:
+        chain.append(landing)
+    if (not chain or chain[-1] != landing or len(chain) != int(row.get('n', -1))
+            or len(set(chain)) != len(chain)):
+        return None
+    return tuple(chain)
 
-    K is an epoch strap, not a latency. A forwarded path requires its own lane
-    metadata and matching actual straps, even when it has only one frame.
-    """
+
+def age_fields(r, land_k, land_e=None):
+    """Prove exact ordered forwarded occurrences and every plain flop."""
     lands = {l for l in r['lands'] if l}
     if not lands:
         return dict(age_edges=LG.lane_cycles(dict(n=max(r['st']))), age_basis='relay flops')
     ks = sorted({land_k.get(l[-1]) for l in lands}, key=str)
-    if len(r['lands']) == 1 and len(lands) == 1 and len(next(iter(lands))) == 1:
-        name = next(iter(lands))[-1]
-        row = (land_e or {}).get(name)
-        post = int((row or {}).get('post_stages', 0))
-        if row is not None and post >= 0 and ks == [int(row.get('K', -1)) % 8] and r['st'] == {int(row.get('n', -1)) + post}:
-            return dict(age_edges=LG.lane_cycles(row) + post, landing_k=ks[0],
-                        age_basis='lane_groups.lane_cycles: forwarded E + registered landing output + explicit plain post stages')
-        # A die endpoint may also have plain relay flops before the forwarded
-        # lane. Require the walked forwarded instance set to match the GEN
-        # chain exactly; unexplained frame counts alone never establish age.
-        stations = row.get('stations') if row else None
-        plain = r.get('plain_counts', set())
-        if (stations and len(stations) == int(row.get('n', -1)) and post >= 0
-                and ks == [int(row.get('K', -1)) % 8]
-                and r.get('forwarded_paths') == {frozenset(stations)} and len(plain) == 1
-                and min(plain) >= post and r['st'] == {len(stations) + min(plain)}):
-            return dict(age_edges=LG.lane_cycles(row) + min(plain), landing_k=ks[0],
-                        plain_relay_stages=min(plain),
-                        age_basis='exact GEN forwarded chain + individually walked plain relay flops')
     if len(r['lands']) == 1 and len(lands) == 1:
         sequence = next(iter(lands))
         rows = [(land_e or {}).get(name) for name in sequence]
         plain = r.get('plain_counts', set())
-        if len(sequence) > 1 and len(set(sequence)) == len(sequence) and all(rows) and len(plain) == 1:
-            frame_sets = [set(row.get('stations') or []) for row in rows]
-            n = sum(int(row.get('n', -1)) for row in rows)
-            frames = set().union(*frame_sets)
-            valid = all(len(fs) == int(row.get('n', -1)) and int(row.get('post_stages', 0)) >= 0
-                        and land_k.get(name) == int(row.get('K', -1)) % 8
-                        for name, row, fs in zip(sequence, rows, frame_sets))
-            if (valid and len(frames) == n and r.get('forwarded_paths') == {frozenset(frames)}
-                    and r['st'] == {n + min(plain)}
-                    and sum(int(row.get('post_stages', 0)) for row in rows) <= min(plain)):
+        chains = [lane_chain(row, name) for name, row in zip(sequence, rows)]
+        if len(set(sequence)) == len(sequence) and all(rows) and all(chains) and len(plain) == 1:
+            chain = tuple(inst for part in chains for inst in part)
+            posts = [int(row.get('post_stages', 0)) for row in rows]
+            valid = (len(set(chain)) == len(chain) and all(p >= 0 for p in posts)
+                     and all(land_k.get(name) == int(row.get('K', -1)) % 8
+                             for name, row in zip(sequence, rows)))
+            if (valid and r.get('forwarded_paths') == {chain}
+                    and r['st'] == {len(chain) + min(plain)} and sum(posts) <= min(plain)):
                 return dict(age_edges=sum(LG.lane_cycles(row) for row in rows) + min(plain),
-                            landing_k=[land_k[name] for name in sequence], plain_relay_stages=min(plain),
-                            age_basis='ordered exact GEN forwarded chains + individually walked plain relay flops')
+                            landing_k=ks[0] if len(sequence) == 1 else [land_k[name] for name in sequence],
+                            plain_relay_stages=min(plain),
+                            age_basis='ordered exact GEN forwarded occurrences + individually walked plain relay flops')
     return dict(age_edges=None, landing_k=ks[0] if len(ks) == 1 else ks,
-                age_basis='landed path: missing lane metadata, mixed paths, or actual K differs from recorded K',
+                age_basis='landed path: missing lane metadata, mixed paths, or actual K/order differs from recorded chain',
                 age_diagnostic=dict(stages=sorted(r['st']), land_sequences=[list(q) for q in sorted(lands)],
                     plain_counts=sorted(r.get('plain_counts', [])),
-                    forwarded_path_sizes=sorted({len(q) for q in r.get('forwarded_paths', [])}),
-                    metadata={name: {k: row.get(k) for k in ('n', 'E', 'cal', 'K', 'post_stages')}
+                    forwarded_paths=[list(q) for q in sorted(r.get('forwarded_paths', []))],
+                    metadata={name: {k: row.get(k) for k in ('n', 'E', 'cal', 'K', 'post_stages', 'stations')}
                               for name in sorted({n for seq in lands for n in seq})
                               if (row := (land_e or {}).get(name)) is not None}))
 
@@ -250,7 +240,7 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
             for i in range(na):
                 relay_out[(name, 'a', na - 1 - i)] = outpos.get(na - 1 - i)
     # resolve aliases: ('ALIAS', x) means the load continues on bit x with no stage
-    pairs, path_kinds, path_ages = {}, {}, {}
+    pairs, path_ages = {}, {}
 
     def terminal(inst, port, mst):
         if mst == '__alias__':
@@ -264,14 +254,14 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
     for bit, (si, sp, sm, spos) in drv.items():
         if is_relay(sm) or skip_pin(si, sp, sm):
             continue
-        stack = [(bit, 0, frozenset(), ())]
+        stack = [(bit, 0, frozenset(), (), (), 0)]
         while stack:
-            b, n, seen, lands = stack.pop()
+            b, n, seen, lands, forwarded, plain = stack.pop()
             for (li, lp, lm, lpos) in loads.get(b, ()):
                 if lm == '__alias__':
                     nx = relay_out.get((li, 'a', lpos))
                     if nx:
-                        stack.append((nx[1], n, seen, lands))
+                        stack.append((nx[1], n, seen, lands, forwarded, plain))
                     continue
                 if is_relay(lm) and lp == 'a':
                     node = (li, lpos)
@@ -280,14 +270,12 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
                     nx = relay_out.get((li, 'a', lpos))
                     if nx is None or nx[0] in ('CONST', 'Z', 'UNDECL'):
                         problems.append(f'relay {li}.b bit {lpos} open (chain from {si}.{sp})'); continue
-                    stack.append((nx, n + 1, seen | {node}, lands + ((li,) if re.match(r'^(qfd_land|qkd_land)', lm) else ())))
+                    is_fwd = bool(FORWARDED_RE.match(lm))
+                    stack.append((nx, n + 1, seen | {node}, lands + ((li,) if re.match(r'^(qfd_land|qkd_land)', lm) else ()),
+                                  forwarded + ((li,) if is_fwd else ()), plain + int(not is_fwd)))
                     continue
                 if skip_pin(li, lp, lm):
                     continue
-                if seen not in path_kinds:
-                    forwarded = frozenset(q[0] for q in seen if FORWARDED_RE.match(inst_master[q[0]]))
-                    path_kinds[seen] = (forwarded, len(seen) - len(forwarded))
-                forwarded, plain = path_kinds[seen]
                 age_key = (n, lands, forwarded, plain)
                 if age_key not in path_ages:
                     path_ages[age_key] = age_fields(dict(st={n}, lands={lands}, forwarded_paths={forwarded},

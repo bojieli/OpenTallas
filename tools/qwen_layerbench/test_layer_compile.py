@@ -103,6 +103,25 @@ endmodule'''
         self.assertEqual(doc['problem_count'], 0, doc['problems'])
         self.assertEqual(doc['buses'][0]['age_edges'], 4)
 
+    def test_revisited_forwarded_bits_are_not_plain_flops(self):
+        rtl=RTL+"module qkd_landsh_2(input wire ck,input wire [1:0] a,output wire [1:0] b,input wire k0,k1,k2,tie_hi,tie_lo); endmodule"
+        die="""module die();
+wire n_clk_core_c,n_d,hi,lo;wire [1:0] q;
+src s (.ck(n_clk_core_c), .v(n_d));
+qkd_landsh_2 land (.ck(n_clk_core_c), .a({q[0],n_d}), .b(q), .k0(lo), .k1(hi), .k2(lo), .tie_hi(hi), .tie_lo(lo));
+dst d (.ck(n_clk_core_c), .v(q[1]));
+endmodule"""
+        with tempfile.TemporaryDirectory() as t:
+            Path(t,'m.sv').write_text(rtl);Path(t,'die.v').write_text(die)
+            pb=dict(masters={m:dict(rtl=f'{t}/m.sv',kind='real') for m in ('src','dst','qkd_landsh_2')},defines=[])
+            doc=N.export(f'{t}/die.v',pb,'qwen_kv','HEAD',[],[t],'revisited',
+                         land_e={'land':dict(E=1,K=2,cal=1,n=1,stations=['land'])})
+        self.assertGreater(doc['problem_count'],0)
+        bus=doc['buses'][0]
+        self.assertIsNone(bus['age_edges'])
+        self.assertEqual(bus['age_diagnostic']['plain_counts'],[0])
+        self.assertEqual(bus['age_diagnostic']['forwarded_paths'],[['land','land']])
+
     def test_stages_from_netlist(self):
         with tempfile.TemporaryDirectory() as t:
             (Path(t) / 'm.sv').write_text(RTL)
@@ -125,8 +144,8 @@ endmodule'''
         self.assertEqual(N.age_fields(dict(st={3}, lands={()}), {})['age_edges'], 3)
 
     def test_explicit_plain_post_stages(self):
-        row = dict(E=3, K=3, cal=0, n=5, post_stages=2)
-        record = dict(st={7}, lands={('landing',)})
+        row = dict(E=3, K=3, cal=0, n=5, post_stages=2, stations=['h0','h1','h2','h3','landing'])
+        record = dict(st={7}, lands={('landing',)}, forwarded_paths={tuple(row['stations'])}, plain_counts={2})
         self.assertEqual(N.age_fields(record, {'landing': 3}, {'landing': row})['age_edges'], 6)
         # Unexplained extra frames remain unknown rather than silently charged.
         self.assertIsNone(N.age_fields(record, {'landing': 3},
@@ -137,23 +156,33 @@ endmodule'''
     def test_zero_strap_encoding(self):
         with tempfile.TemporaryDirectory() as t:
             path = Path(t, 'lanes.json')
-            path.write_text(json.dumps(dict(lanes=[dict(bid='kv', landing='land', E=8, K=8, cal=0, n=15)])))
+            path.write_text(json.dumps(dict(lanes=[dict(bid='kv', landing='land', E=8, K=8, cal=0, n=15, stations=[f'h{i}' for i in range(14)])])))
             metadata = N.export_lanes(path)
         self.assertEqual(metadata['land']['K'], 0)
-        self.assertEqual(N.age_fields(dict(st={15}, lands={('land',)}), {'land': 0}, metadata)['age_edges'], 9)
+        self.assertEqual(N.age_fields(dict(st={15}, lands={('land',)}, forwarded_paths={tuple([f'h{i}' for i in range(14)]+['land'])}, plain_counts={0}), {'land': 0}, metadata)['age_edges'], 9)
 
     def test_walked_plain_prefix_requires_exact_forwarded_chain(self):
         row = dict(E=3, K=3, cal=0, n=2, stations=['hop', 'land'], post_stages=1)
-        record = dict(st={6}, lands={('land',)}, forwarded_paths={frozenset(['hop', 'land'])}, plain_counts={4})
+        record = dict(st={6}, lands={('land',)}, forwarded_paths={('hop', 'land')}, plain_counts={4})
         self.assertEqual(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'], 8)
-        record['forwarded_paths'] = {frozenset(['foreign_hop', 'land'])}
+        record['forwarded_paths'] = {('foreign_hop', 'land')}
         self.assertIsNone(N.age_fields(record, {'land': 3}, {'land': row})['age_edges'])
+
+    def test_forwarded_order_and_occurrences_are_required(self):
+        row=dict(E=3,K=3,cal=0,n=3,stations=['h0','h1','land'])
+        record=dict(st={3},lands={('land',)},forwarded_paths={('h0','h1','land')},plain_counts={0})
+        self.assertEqual(N.age_fields(record,{'land':3},{'land':row})['age_edges'],4)
+        row['stations']=['h1','h0','land']
+        self.assertIsNone(N.age_fields(record,{'land':3},{'land':row})['age_edges'])
+        row['stations']=['h0','h1','land']
+        record.update(st={4},forwarded_paths={('h0','h0','h1','land')})
+        self.assertIsNone(N.age_fields(record,{'land':3},{'land':row})['age_edges'])
 
     def test_multiple_landings_require_disjoint_exact_chains_and_straps(self):
         rows = dict(l1=dict(E=3, K=3, cal=0, n=2, stations=['h1', 'l1']),
                     l2=dict(E=4, K=5, cal=1, n=1, stations=['l2']))
         record = dict(st={5}, lands={('l1', 'l2')},
-                      forwarded_paths={frozenset(['h1', 'l1', 'l2'])}, plain_counts={2})
+                      forwarded_paths={('h1', 'l1', 'l2')}, plain_counts={2})
         self.assertEqual(N.age_fields(record, {'l1': 3, 'l2': 5}, rows)['age_edges'], 11)
         self.assertIsNone(N.age_fields(record, {'l1': 3, 'l2': 4}, rows)['age_edges'])
         rows['l2']['stations'] = ['l1']
@@ -172,7 +201,7 @@ endmodule'''
             if row.get('E') is None:
                 continue
             land = lanes[bid]['landing']
-            record = dict(st={row['n']}, lands={(land,)})
+            record = dict(st={row['n']}, lands={(land,)}, forwarded_paths={N.lane_chain(metadata[land], land)}, plain_counts={0})
             self.assertEqual(N.age_fields(record, {land: row['K']}, metadata)['age_edges'], RB.cycles(row), bid)
             self.assertIsNone(N.age_fields(record, {land: (row['K'] + 1) % 8}, metadata)['age_edges'])
 
@@ -190,7 +219,7 @@ endmodule"""
                 Path(t, 'die.v').write_text(die)
                 pb = dict(masters={m: dict(rtl=f'{t}/m.sv', kind='real') for m in ('src', 'dst', master)}, defines=[])
                 doc = N.export(f'{t}/die.v', pb, design, 'HEAD', [], [t], 'unit',
-                               land_e={'land': dict(E=1, K=2, cal=1, n=1)})
+                               land_e={'land': dict(E=1, K=2, cal=1, n=1, stations=['land'])})
             self.assertEqual(doc['problem_count'], 0, doc['problems'])
             self.assertEqual(len(doc['buses']), 1)
             self.assertEqual(doc['buses'][0]['age_edges'], 2)
