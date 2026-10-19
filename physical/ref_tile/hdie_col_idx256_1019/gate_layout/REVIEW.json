@@ -1,0 +1,27 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-19T11:05:43.175478-07:00",
+  "gate_commit": "e7e11ce11",
+  "geometry_sha256": "b44057faf45222632b3bb2eb75a32eb13868819d5b17a28754ceae394f891c4d",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "b44057faf45222632b3bb2eb75a32eb13868819d5b17a28754ceae394f891c4d",
+    "components": {
+      "outline": "56bffc09babca65fb01fd2861910f80a8106232885e73540d632aa8c99aa8064",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "7100612f28bf806b7ef68788277d8b80474475de9ab498652417402627df3617",
+      "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Exact129.6sq, no macros, legal continuous rows; actual all29863cells inside rows,222.426um endpoint reach bound.",
+    "std_cell_band": "ROOT pin-bound low-fill component exception; no shrink; source and postCTS areas exposed.",
+    "pin_spread": "2330 accessible real signal/clock pins, <=4.50/um; ANY prm pending parentface contract; exact componentIO frozen.",
+    "clock_entry": "Exact clk/XSER0, measured TT/FF boundary means180.4/147.3 and spreads28.8/24.3; own-reference nativeTT209.785/111.098. Parent/neighbor matching open.",
+    "shape": "ROOT personally inspected placed+gatePNG, same129.6square/SWmass; detailed-route component only."
+  },
+  "scope": "ROOT explicit delegated component detailed-route approval; no die adoption, no parentface grant, no finalnative/DRT/SPEF qualification",
+  "evidence_commit": "795d679b2",
+  "source_rtl_revision": "458299321"
+}
