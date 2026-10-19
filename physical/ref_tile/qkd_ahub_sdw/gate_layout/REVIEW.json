@@ -1,15 +1,17 @@
 {
-  "reviewer": "codex coordinator delegated physical intake",
-  "time": "2026-10-18T23:25:06.603700-07:00",
-  "gate_commit": "2026-10-18T21:43:37-0700",
-  "geometry_sha256": "da5d715adb6bef5b48448bedb279668256ca5897c3797b745241c36e0ee6ed1d",
-  "verdict": "APPROVED",
-  "checklist": {
-    "lattice": "Four ZH children y=43.224, 0.024 um off 43.2 lattice: existing unchanged geometry WARN; no overlap, ample channels.",
-    "std_cell_band": "Inspected post-place density PNG: sparse logic, localized face/clock cells; no continuous congested band. Fill 35%; trial GRT overflow 0.",
-    "pin_spread": "Partial W/E face groups visible at middle y; 353/67 um and 208/32 um. Guidance WARN, unchanged a2. Measured GRT 0; actual native reach remains required before die binding.",
-    "clock_entry": "Top middle ck visible; measured pin-flop spread TT29.8/FF39.2 ps. TT insertion977 ps requires parent compensation/landing; no native clock qualification implied.",
-    "shape": "734.4 x540 rectangle unchanged slot; five children fit with clear channels."
-  },
-  "scope": "Actual floorplan.png and density.png reviewed. Approves route intake only. Placement setup -2 ps must close at routed TT; FF hold and DRC0 remain binding. No native qualification or die binding claimed."
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_ahub_sdw",
+ "reviewer": "coordinator (2026-10-19 ~03:30)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T03:30:00-07:00",
+ "gate_commit": "25f7d0fb2",
+ "checklist": {
+  "lattice": "ACCEPT: 4 ot_nhb_zh + recip leaf in a regular 2x2+1 grid; zh y-origin 43.224 (0.024 um off lattice: DBU rounding; snap at next re-kit)",
+  "std_cell_band": "PASS: wires-mostly parent, std cells in channels, fill 0.353",
+  "pin_spread": "ACCEPT: W/E mid-face and N top-centre cluster (765 pins, pin-limited parent; partial faces follow the die plan)",
+  "clock_entry": "PASS: N-centre; spread TT 18.8 / FF 52.5 (<=80); insertion 1286/1068 is guidance (clock rule = spread)",
+  "shape": "PASS: 734.4x540 = geometry Codex reviewed for a3; GRT ovf 0"
+ },
+ "notes": "a5 = the variant the die binds (AP_OFS/FR_OFS/Z_IN_STRIDE 4); a3 route can be cancelled.",
+ "geometry_sha256": "da5d715adb6bef5b48448bedb279668256ca5897c3797b745241c36e0ee6ed1d"
 }
