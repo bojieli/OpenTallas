@@ -118,17 +118,23 @@ endmodule
 
 // ---- reciprocal seed, 3 registered stages (ROM | carry-save tree | CPA); NC kept output copies ------------------------
 module ot_hdc_skp_seed #(
-    parameter integer NC = 4
+    parameter integer NC = 4,
+    parameter integer CONTROL_SAFE = 0
 ) (
     input  wire              clk,
     input  wire [23:0]       tm,
+    input wire [82:0] decoded,
     output wire [29*NC-1:0]  r
 );
     wire [32:0] c0; wire [22:0] c1; wire [12:0] c2; wire [13:0] sq;
     wire [13:0] h  = tm[13:0];
     wire [12:0] dm = h[13] ? h[12:0] : ~h[12:0];
-    ot_hdc_sk_recip_rom u_rom (.i(tm[22:14]), .c0(c0), .c1(c1), .c2(c2));
-    ot_hdc_sk_sq_rom u_sq (.dmh(dm[12:4]), .sq(sq));
+    generate if (CONTROL_SAFE) begin : g_decoded
+        assign {sq, c2, c1, c0} = decoded;
+    end else begin : g_case_rom
+        ot_hdc_sk_recip_rom u_rom (.i(tm[22:14]), .c0(c0), .c1(c1), .c2(c2));
+        ot_hdc_sk_sq_rom u_sq (.dmh(dm[12:4]), .sq(sq));
+    end endgenerate
     (* keep = "true" *) reg [32:0] c0_q;
     (* keep = "true" *) reg [22:0] c1_q;
     (* keep = "true" *) reg [12:0] c2_q;
@@ -266,6 +272,7 @@ endmodule
 module ot_hdc_sinkhorn_p #(
     parameter integer ITERS = 20,
     parameter [31:0]  EPS = 32'h358637BD,
+    parameter integer CONTROL_SAFE = 0,
     parameter integer MUT = 0                  // bench only: 1 = a steady step lands one stage early
 ) (
     input  wire         clk,
@@ -357,19 +364,42 @@ module ot_hdc_sinkhorn_p #(
         reg b4_q;
         always @(posedge clk) b4_q <= b3_q | (zm[4*r] ? tz_q : (ot_ | !mt[23]));
         assign bad4[r] = b4_q;
+        wire [23:0] tm_d = zm[4*r] ? nt_m_q : mt;
+        wire [82:0] decoded;
+        if (CONTROL_SAFE) begin : g_safe_decode
+            wire [8:0] ix = tm_d[22:14];
+            wire [8:0] sx = tm_d[13] ? tm_d[12:4] : ~tm_d[12:4];
+            wire [23:0] pd, sd;
+            for (genvar pg = 0; pg < 3; pg = pg + 1) begin : g_group
+                for (genvar pv = 0; pv < 8; pv = pv + 1) begin : g_value
+                    assign pd[pg*8+pv] = ix[pg*3 +: 3] == pv;
+                    assign sd[pg*8+pv] = sx[pg*3 +: 3] == pv;
+                end
+            end
+            (* keep = 1 *) ot_hdc_skp_decode_c0lo u_c0l (.clk(clk), .d(pd), .q(decoded[16:0]));
+            (* keep = 1 *) ot_hdc_skp_decode_c0hi u_c0h (.clk(clk), .d(pd), .q(decoded[32:17]));
+            (* keep = 1 *) ot_hdc_skp_decode_c1 u_c1 (.clk(clk), .d(pd), .q(decoded[55:33]));
+            (* keep = 1 *) ot_hdc_skp_decode_c2 u_c2 (.clk(clk), .d(pd), .q(decoded[68:56]));
+            (* keep = 1 *) ot_hdc_skp_decode_sq u_sq (.clk(clk), .d(sd), .q(decoded[82:69]));
+        end else assign decoded = 83'd0;
         wire [23:0] tmc [0:3]; wire signed [9:0] tec [0:3];
         for (k = 0; k < 4; k = k + 1) begin : g_t               // T copies: one per quotient (seed reads copy 0)
-            (* keep = "true" *) reg [23:0] tm_q;
-            (* keep = "true" *) reg [9:0]  te_q;
-            always @(posedge clk) begin
-                tm_q <= zm[4*r + k] ? nt_m_q : mt;
-                te_q <= zm[4*r + k] ? nt_e_q : te_s;
+            if (CONTROL_SAFE) begin : g_kept
+                (* keep = 1 *) ot_hdc_skp_denominator34 u_t (.clk(clk),
+                    .d({zm[4*r+k] ? nt_e_q : te_s, zm[4*r+k] ? nt_m_q : mt}), .q({tec[k],tmc[k]}));
+            end else begin : g_legacy
+                (* keep = "true" *) reg [23:0] tm_q;
+                (* keep = "true" *) reg [9:0] te_q;
+                always @(posedge clk) begin
+                    tm_q <= zm[4*r + k] ? nt_m_q : mt;
+                    te_q <= zm[4*r + k] ? nt_e_q : te_s;
+                end
+                assign tmc[k] = tm_q; assign tec[k] = te_q;
             end
-            assign tmc[k] = tm_q; assign tec[k] = te_q;
         end
         // S9..S11 seed
         wire [29*4-1:0] rs;
-        ot_hdc_skp_seed #(.NC(4)) u_seed (.clk(clk), .tm(tmc[0]), .r(rs));
+        ot_hdc_skp_seed #(.NC(4), .CONTROL_SAFE(CONTROL_SAFE)) u_seed (.clk(clk), .tm(tmc[0]), .decoded(decoded), .r(rs));
         // Q1..Q3 + final; element (r, k) -> storage 4k + r (transposed)
         for (k = 0; k < 4; k = k + 1) begin : g_q
             ot_hdc_skp_quot u_q (.clk(clk), .subn(zm[4*r + k]), .xm(x_m[4*r + k]), .xe(x_e[4*r + k]),
@@ -434,5 +464,8 @@ module ot_hdc_sinkhorn_p #(
 `ifndef SYNTHESIS
     initial if (D0 > 31 || DS > 31) $error("ot_hdc_sinkhorn_p: stage counter is 5 bits");
 `endif
+endmodule
+(* keep_hierarchy = 1 *) module ot_hdc_skp_denominator34(input wire clk, input wire [33:0] d, output reg [33:0] q);
+    always @(posedge clk) q <= d;
 endmodule
 `default_nettype wire

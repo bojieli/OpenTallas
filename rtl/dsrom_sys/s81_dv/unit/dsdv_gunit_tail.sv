@@ -40,10 +40,12 @@ module dsdv_gunit_tail #(
     parameter [31:0] HC_EPS = 32'h358637bd,
     parameter integer MUT_PRE = 0,
     parameter integer MUT_SK = 0,
-    parameter integer PIN_COPY = 0
+    parameter integer PIN_COPY = 0,
+    parameter integer CONTROL_SAFE = 0
 ) (
     input  wire          clk, rst_n,
     input  wire          launch,
+    input  wire [3:0]    launch_pre,
     input  wire [767:0]  mixes, bases,
     input  wire [95:0]   scales,
     output reg           result_v,
@@ -136,7 +138,7 @@ module dsdv_gunit_tail #(
     genvar gj;
     generate for (gj = 0; gj < 16; gj = gj + 1) begin : g_se assign se[32 * gj +: 32] = t[gj + 8]; end endgenerate
     reg sl;
-    ot_hdc_sinkhorn_p #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK)) u_sinkh (.clk(clk), .rst_n(rst_n), .in_valid(sl), .in_ready(sr),
+    ot_hdc_sinkhorn_p #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .CONTROL_SAFE(CONTROL_SAFE)) u_sinkh (.clk(clk), .rst_n(rst_n), .in_valid(sl), .in_ready(sr),
         .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
     // ---------------------------------------------------------------- control, fixed latency
     reg armed, captured, capture_q, flt; reg [9:0] sage;
@@ -166,6 +168,39 @@ module dsdv_gunit_tail #(
                 if (!captured) flt <= 1'b1;
             end
         end
+    wire [101:0] launch_local;
+    wire [47:0] capture_local;
+    generate if (CONTROL_SAFE) begin : g_local_control
+        for (genvar lc = 0; lc < 102; lc = lc + 1) begin : g_launch
+            (* keep = 1 *) dsdv_gunit_control_bit u_en (.clk(clk), .d(launch_pre[lc % 4]), .q(launch_local[lc]));
+        end
+        for (genvar cc = 0; cc < 2; cc = cc + 1) begin : g_capture
+            (* keep = 1 *) dsdv_gunit_capture_bank24 u_en (.clk(clk), .armed(armed), .captured(captured),
+                .sage(sage), .deadline(10'(CAP)), .q(capture_local[24*cc +: 24]));
+        end
+        for (genvar bw = 0; bw < 24; bw = bw + 1) begin : g_payload
+            for (genvar half = 0; half < 2; half = half + 1) begin : g_half
+                always @(posedge clk) begin
+                    if (launch_local[2*bw+half]) t[bw][16*half +: 16] <= mixes[32*bw+16*half +: 16];
+                    if (mo && mi == bw) t[bw][16*half +: 16] <= my[16*half +: 16];
+                    if (ao && ai == bw) t[bw][16*half +: 16] <= ay[16*half +: 16];
+                    if (eo && ei == bw) t[bw][16*half +: 16] <= ey[16*half +: 16];
+                    if (do_ && di == bw) t[bw][16*half +: 16] <= dy[16*half +: 16];
+                    if (launch_local[48+2*bw+half]) b[bw][16*half +: 16] <= bases[32*bw+16*half +: 16];
+                end
+            end
+        end
+        for (genvar sw = 0; sw < 6; sw = sw + 1) begin : g_scale
+            always @(posedge clk) if (launch_local[96+sw]) s[sw/2][16*(sw%2) +: 16] <= scales[16*sw +: 16];
+        end
+        for (genvar rw = 0; rw < 48; rw = rw + 1) begin : g_result
+            if (rw < 16) begin : g_t
+                always @(posedge clk) if (capture_local[rw]) final_result[16*rw +: 16] <= t[rw/2][16*(rw%2) +: 16];
+            end else begin : g_s
+                always @(posedge clk) if (capture_local[rw]) final_result[16*rw +: 16] <= sy[16*(rw-16) +: 16];
+            end
+        end
+    end else begin : g_legacy_storage
     always @(posedge clk) begin
         if (launch) begin
             for (integer j = 0; j < 24; j = j + 1) begin t[j] <= mixes[j * 32 +: 32]; b[j] <= bases[j * 32 +: 32]; end
@@ -175,13 +210,16 @@ module dsdv_gunit_tail #(
         if (ao) t[ai] <= ay;
         if (eo) t[ei] <= ey;
         if (do_) t[di] <= dy;
+    end
+    end endgenerate
+    always @(posedge clk) begin
         if (active && age == 10'(MAX)) for (integer r = 0; r < 4; r = r + 1) begin : pairs
             mp[2 * r]     <= greater(t[8 + 4 * r + 1], t[8 + 4 * r])     ? t[8 + 4 * r + 1] : t[8 + 4 * r];
             mp[2 * r + 1] <= greater(t[8 + 4 * r + 3], t[8 + 4 * r + 2]) ? t[8 + 4 * r + 3] : t[8 + 4 * r + 2];
         end
         if (active && age == 10'(MAX + 1)) for (integer r = 0; r < 4; r = r + 1)
             mx[r] <= greater(mp[2 * r + 1], mp[2 * r]) ? mp[2 * r + 1] : mp[2 * r];
-        if (capture_q) begin
+        if (!CONTROL_SAFE && capture_q) begin
             for (integer j = 0; j < 8; j = j + 1) final_result[j * 32 +: 32] <= t[j];
             final_result[256 +: 512] <= sy;
         end
@@ -193,5 +231,19 @@ endmodule
     input wire clk, input wire [31:0] d, output reg [31:0] q
 );
     always @(posedge clk) q <= d;
+endmodule
+// Fixed kept boundaries prevent opt_merge from collapsing equal enable FF.
+(* keep_hierarchy = 1 *) module dsdv_gunit_control_first(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+(* keep_hierarchy = 1 *) module dsdv_gunit_control_bit(input wire clk, d, output reg q);
+    always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy = 1 *) module dsdv_gunit_capture_bank24(
+    input wire clk, armed, captured, input wire [9:0] sage, deadline, output wire [23:0] q);
+    wire fire = armed && !captured && sage == deadline;
+    for (genvar k = 0; k < 24; k = k + 1) begin : g_q
+        (* keep = 1 *) dsdv_gunit_control_bit u_q (.clk(clk), .d(fire), .q(q[k]));
+    end
 endmodule
 `default_nettype wire
