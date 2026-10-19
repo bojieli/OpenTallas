@@ -10,18 +10,28 @@ from qc_safe_graph import ROOT,extract
 S=1000;GRID=43200;GAP=20000
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
+ p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');p.add_argument('--forward-bank',action='store_true');p.add_argument('--forward-read-reach',type=float,default=250);a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
  knots=sorted([(0,0),(c['outline_um']['w'],W)]+[(x+d,y+d)for x,y in zip(oldx,cols)for d in [0,457.92]])
  def mx(x):
   for(oa,na),(ob,nb)in zip(knots,knots[1:]):
    if oa-1e-5<=x<=ob+1e-5:return na+(x-oa)*(nb-na)/(ob-oa)
   raise ValueError(x)
  m=cp_model.CpModel();xs=[];ys=[];jobs={};groups={};fixed={n:(round(mx(v['at'][0])*S),round(v['at'][1]*S))for n,v in g['ports'].items()}
- for n,v in g['nodes'].items():
+ extras={};forward_groups={}
+ if a.forward_bank:
+  assert not a.full_land
+  for e in g['edges']:
+   if e['kind']!='bank':continue
+   source=g['nodes'][e['src']];half=int(source['ports']['W'])//2;keys=[]
+   for part in [0,1]:
+    key=e['src']+f'_forward_p{part}';keys.append(key)
+    extras[key]=dict(kind='qfd_c_bank_forward_safe',bits=4*half+47,region=source['region'],at=[(u+v)/2 for u,v in zip(e['src_at'],e['dst_at'])])
+   forward_groups[e['src'],e['dst']]=keys
+ for n,v in list(g['nodes'].items())+list(extras.items()):
   if v['bits']<=1:continue
   if v['kind'].startswith('qfd_c_land_'):
    keys=[n] if a.full_land else [n+'_p0',n+'_p1'];shape=(103.68,181.44) if a.full_land else (64.8,129.6)
-  else:keys=[n];shape=(90.72,129.6)if'xstn'in v['kind']else(90.72,64.8)
+  else:keys=[n];shape=(103.68,129.6)if'bank_forward'in v['kind']else(90.72,129.6)if'xstn'in v['kind']else(90.72,64.8)
   groups[n]=keys
   for k in keys:
    w,h=[round(t*S)for t in shape];ix=m.new_int_var(1,math.floor((W*S-GAP-w)/GRID),k+'_ix');iy=m.new_int_var(1,math.floor((H*S-GAP-h)/GRID),k+'_iy')
@@ -62,20 +72,26 @@ def main():
  m.add_no_overlap_2d(xs,ys)
  def center(k):return jobs[k]['center']if k in jobs else fixed[k]
  ee=[];assume={}
+ expanded=[]
  for e in g['edges']:
   ss=groups.get(e['src'],[e['src']]);dd=groups.get(e['dst'],[e['dst']]);pairs=zip(ss,dd)if len(ss)==len(dd)==2 else((s,d)for s in ss for d in dd)
-  for src,dst in pairs:
+  for part,(src,dst)in enumerate(pairs):
+   if a.forward_bank and e['kind']=='bank':
+    relay=forward_groups[e['src'],e['dst']][part]
+    expanded.extend([(dict(e,kind='bank_forward_capture',base_capture_edges=1),src,relay,405),(dict(e,kind='bank_forward_read',base_capture_edges=1),relay,dst,a.forward_read_reach)])
+   else:expanded.append((e,src,dst,405))
+ for e,src,dst,reach in expanded:
    x0,y0=center(src);x1,y1=center(dst);i=len(ee);dx=m.new_int_var(0,round(W*S),f'ex{i}');dy=m.new_int_var(0,round(H*S),f'ey{i}');m.add_abs_equality(dx,x0-x1);m.add_abs_equality(dy,y0-y1)
    # Necessary geometric reach condition, including each bank. Corridor path is
    # checked after packing. No multicycle relaxation is used by this solver.
    if a.core:
-    active=m.new_bool_var(f'edge{i}_reach');m.add(dx+dy<=405*S).only_enforce_if(active);m.add_assumption(active);assume[active.index]=i
-   else:m.add(dx+dy<=405*S)
-   ee.append(dict(e,src=src,dst=dst))
+    active=m.new_bool_var(f'edge{i}_reach');m.add(dx+dy<=round(reach*S)).only_enforce_if(active);m.add_assumption(active);assume[active.index]=i
+   else:m.add(dx+dy<=round(reach*S))
+   ee.append(dict(e,src=src,dst=dst,reach_target_um=reach))
  solver=cp_model.CpSolver();solver.parameters.num_search_workers=1 if a.core else a.workers;solver.parameters.log_search_progress=True
  print('CP_PLACE_START',a.step,'outline',W,H,'jobs',len(jobs),'edges',len(ee),flush=True)
  started=time.time();status=solver.solve(m);name=solver.status_name(status);print('CP_PLACE_STATUS',name,'wall',time.time()-started,flush=True)
- result=dict(schema='opentallas.cb16.cp_place.v1',diagnostic_only=True,source=g['source'],outline_um=dict(w=W,h=H),step_um=a.step,area_mm2=W*H/1e6,area_ratio=W/c['outline_um']['w'],status=name,solver_wall_s=time.time()-started,shape_policy='stations90.72x64.8; xstn90.72x129.6; '+('full103.68x181.44' if a.full_land else 'split64.8x129.6')+'; all pins<=6/um',clock_domain_rule='logical domain unchanged; physical regions may overlap; clock closure unqualified',reset_hardening_remaining=len(g['reset_nodes']),storage_waiver_required=a.full_land,paired_land_restriction=a.paired_land,landing_child_profile='full103.68x181.44'if a.full_land else'split64.8x129.6',release_ready=False)
+ result=dict(schema='opentallas.cb16.cp_place.v1',diagnostic_only=True,source=g['source'],outline_um=dict(w=W,h=H),step_um=a.step,area_mm2=W*H/1e6,area_ratio=W/c['outline_um']['w'],status=name,solver_wall_s=time.time()-started,shape_policy='stations90.72x64.8; xstn90.72x129.6; '+('full103.68x181.44' if a.full_land else 'split64.8x129.6')+'; all pins<=6/um',clock_domain_rule='logical domain unchanged; physical regions may overlap; clock closure unqualified',reset_hardening_remaining=len(g['reset_nodes']),storage_waiver_required=a.full_land,paired_land_restriction=a.paired_land,empty_space_zones=a.zones,forward_bank_stage=a.forward_bank,extra_forward_children=len(extras),extra_forward_state_bits=sum(v["bits"]for v in extras.values()),extra_forward_outline_area_mm2=len(extras)*103.68*129.6/1e6,forward_read_reach_um=a.forward_read_reach,landing_child_profile='full103.68x181.44'if a.full_land else'split64.8x129.6',release_ready=False)
  if status==cp_model.INFEASIBLE:
   result['infeasible_edge_core']=[ee[assume[i]] for i in solver.sufficient_assumptions_for_infeasibility() if i in assume]
   print('CP_PLACE_CORE',[(e['src'],e['dst'],e['net'])for e in result['infeasible_edge_core']],flush=True)
