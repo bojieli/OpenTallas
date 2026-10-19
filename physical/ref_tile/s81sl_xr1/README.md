@@ -56,3 +56,39 @@ Fix (structural, not a squeeze): the fault terms are registered per source regio
 | 8 | schedule | PASS: +1 fault-visibility cycle (fallback +2). This is a diagnostic flag; it is not in the token schedule. Handed to MU-DIE-S81 INBOX. |
 
 Benches: `results/rtl/s81_slice_1019/xr6` (base hb0/1 x 4 seeds, mutants; `fb_*` / `fm_*` = FOREG 1).
+
+## XR7 (LEAD2-S81/SLICE2, 10-19): structural fanout/reset fix after the 67954d13c census
+
+Input: the XR6 gate was WARN (TT +23.1 ps, GRT 0, spread 56.5/55.1), but the native census found 348 FF roots and 9 comb roots with more than 32 loads. RTL 88ed31216 makes 0 data-cycle changes:
+- Reset only on valid/control state. Every kept copy is reset-free: it is recomputed every edge from reset state, so it reads 0 one clock into reset. `bo_r` resets only bit 0.
+- `ot_rst_relay` has 8 regions instead of 4. Each region drives at most 32 reset loads; the largest is r6, with 30.
+- Kept copies sized from mapped pins per bit (~3 for enabled flops and 2:1 muxes, ~4.4 for the 4:1 unpacker read). The rule is 8 bits per copy:
+  - `rwe_c` 640
+  - `rwr_c` 160
+  - `un_c` 320 x 2 b
+  - `pkw_c` 128
+  - `tg1_c` 8
+  - `tg4_c` 6 (new: send-config enables)
+  - `evd_c` 60 / `pvd_c` 20 (new: e_v / p_v data enables)
+  - `lov_c` 80 (16 bits each)
+  - `cis_c` 69 (16 bits each)
+- The wide classify muxes now sit behind registered one-hot select copies. These are RD payload 1024 b, CTL body 160 b, and V/SC cix 275 b.
+  - Raw stage-1 words are `eb2` / `wb2` / `vb2` (+ `bb2` for HB).
+  - Select copies: `rse/rsw` 128+128, `bse/bsw` 20+20, `cvc/cse` 35+35.
+  - The classifier's comb fan-out now ends only on D pins of kept copies (a buffered tree into replicated registers). The old 1,043 / 548 / 328-load comb nets drove the datapath directly.
+- `eoh` / `poh` / `erun` now have lock-step kept copies (`eoh1`, `poh1`, `erx[3:0]`).
+
+| # | item | XR7 |
+|---|------|-----|
+| 1 | pins + reset landing | PASS. Unchanged: 2-stage face landing, then the relay (8 regions <= 32). |
+| 2 | reach | PASS (gate re-checks). Outline unchanged (pin-bound). |
+| 3 | fanout | **fixed**. Yosys 0.68 + ot_keep_regs keep check: every copy survives at its exact RTL count (DFF 19,110; `results/rtl/s81_slice_1019/xr7s2/keep.txt`). Max generic DFF-Q load is 39 (`erx[0]`: x_si/x_s select). Comb classifier roots drive only kept-copy D pins (waived: a textbook buffered tree into replicas, 0 cycles). |
+| 4 | depth | PASS. The selects are registered; the wide muxes are 2 levels after the stage-1 flops. |
+| 5 | storage | **waived** as XR5: `ud` is 5 x 1 kb one-shot staging registers, under the 2 kb per-bank threshold. Each is written whole in a cycle and is not runtime-addressed storage. |
+| 6 | floorplan | **waived (util)** as XR5: pin-bound, 7,651 pins. Std area grows about +2.3k FF; util is still < 10 %. |
+| 7 | clock | gate-checked: km16 roots, spread <= 80 TT+FF, io_hold 0.03. |
+| 8 | schedule | PASS. 0 data cycles; every port timing is identical (bench cycle-exact). |
+
+Benches (Verilator 5.050, ot-epyc6, src 88ed31216, `results/rtl/s81_slice_1019/xr7s2`):
+- base: PASS for hb 0/1 x seeds 1-4 (FOREG 0) and hb 0/1 x seeds 1-2 (FOREG 1).
+- mutants hops / row / porder / nocol: FAIL (err 784 / 1599 / 1016, XRILL missed 1) on both FOREG builds. Witnesses are committed.

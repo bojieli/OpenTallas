@@ -96,7 +96,7 @@
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/slice",
    "tools/s81_slice",
-   "results/rtl/s81_slice_1019/xr6"
+   "results/rtl/s81_slice_1019/xr7s2"
   ],
   "benches": [
    {
@@ -112,7 +112,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_muthops hops 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr6/m_hops/run.log",
+    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/m_hops/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -121,7 +121,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutrow row 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr6/m_row/run.log",
+    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/m_row/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -130,7 +130,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutporder porder 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRB hb=0 .* err=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr6/m_porder/run.log",
+    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/m_porder/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    },
@@ -139,7 +139,7 @@
     "cmd": "bash tools/s81_slice/xr_bench.sh {RUN}/slxr_mutnocol nocol 1 0 6000 raw",
     "expect": "fail",
     "fail_regex": "^XRILL missed=[1-9][0-9]* of 13$",
-    "fail_witness": "results/rtl/s81_slice_1019/xr6/m_nocol/run.log",
+    "fail_witness": "results/rtl/s81_slice_1019/xr7s2/m_nocol/run.log",
     "threads": 4,
     "peak_ram_gb": 4
    }
