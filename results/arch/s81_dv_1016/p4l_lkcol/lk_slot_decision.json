@@ -91,5 +91,129 @@
    "digital": "bottom"
   }
  ],
- "binding": "next real-view chain: plan p4l_lkcol; u_lk_* stay labelled stand-ins sized to the grown slot until the landed column parent closes"
+ "binding": "next real-view chain: plan p4l_lkcol; u_lk_* stay labelled stand-ins sized to the grown slot until the landed column parent closes",
+ "rev2": {
+  "decided": "2026-10-19 coordinator (TW-S81/SERDES request, lanes/TW-S81_SERDES.md, results/arch/s81_link_col_1019/serdes_column_plan.json)",
+  "slot_um": [
+   259.2,
+   3596.4
+  ],
+  "why": "six digital children stacked are 1101.6 um tall + 2250 analog (two PMA abstracts side by side) -> 3596.4; +236.4 over rev1 3360, into the empty die-edge column; width 259.2 (lattice), outer die edge kept",
+  "slots": [
+   {
+    "block": "lk_WS0",
+    "old": [
+     0.0,
+     5285.92,
+     260,
+     2250
+    ],
+    "x": 0.0,
+    "y": 3939.52,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "top"
+   },
+   {
+    "block": "lk_WS1",
+    "old": [
+     0.0,
+     7635.92,
+     260,
+     2250
+    ],
+    "x": 0.0,
+    "y": 7635.92,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "bottom"
+   },
+   {
+    "block": "lk_WN0",
+    "old": [
+     0.0,
+     16738.079999999998,
+     260,
+     2250
+    ],
+    "x": 0.0,
+    "y": 15391.68,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "top"
+   },
+   {
+    "block": "lk_WN1",
+    "old": [
+     0.0,
+     19088.079999999998,
+     260,
+     2250
+    ],
+    "x": 0.0,
+    "y": 19088.08,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "bottom"
+   },
+   {
+    "block": "lk_ES0",
+    "old": [
+     31708.512000000002,
+     5285.92,
+     260,
+     2250
+    ],
+    "x": 31709.312,
+    "y": 3939.52,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "top"
+   },
+   {
+    "block": "lk_ES1",
+    "old": [
+     31708.512000000002,
+     7635.92,
+     260,
+     2250
+    ],
+    "x": 31709.312,
+    "y": 7635.92,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "bottom"
+   },
+   {
+    "block": "lk_EN0",
+    "old": [
+     31708.512000000002,
+     16738.079999999998,
+     260,
+     2250
+    ],
+    "x": 31709.312,
+    "y": 15391.68,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "top"
+   },
+   {
+    "block": "lk_EN1",
+    "old": [
+     31708.512000000002,
+     19088.079999999998,
+     260,
+     2250
+    ],
+    "x": 31709.312,
+    "y": 19088.08,
+    "w": 259.2,
+    "h": 3596.4,
+    "digital": "bottom"
+   }
+  ],
+  "link_lengths": "unchanged (attach points stay on the inner face, checked < 1 um face shift)",
+  "binding": "master ot_pdie_serdes_col (rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv on claude/tw-s81-serdes-1019, SAME PORTS) as a labelled stand-in until s81lk_serdes_col closes; needs a strict re-bind with that RTL (not in the 00:27 chain, which binds ot_pdie_serdes in the rev1 3360 slot)"
+ }
 }
