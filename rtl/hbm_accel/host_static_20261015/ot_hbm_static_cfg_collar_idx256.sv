@@ -91,9 +91,10 @@ module ot_hbm_static_cfg_collar_idx256 #(
     // rst_s_n = rst_c_n). Assert and release both take +2 clk edges; no datapath / event latency changes (cycles 0).
     // MUT 8 (bench): a mid-run reset does not reach the core state (configuration, armed, hwm, records).
     // XSER=1 elaboration is unchanged (g_rst_sync below, byte-identical text; col_su r3 closed view).
-    wire rst_c_n, rst_s_n;
+    wire rst_c_n, rst_s_n, rst_stage1;
     generate if (XSER == 0) begin : g_rst_same
         reg [1:0] rc;
+        assign rst_stage1=rc[0];
         always @(posedge clk) rc <= {rc[0], rst_n};
         if (MUT == 8) begin : g_mut8   // bench mutant: only the power-on reset reaches the core state
             reg por_done = 1'b0;
@@ -105,11 +106,19 @@ module ot_hbm_static_cfg_collar_idx256 #(
         assign rst_s_n = rc[1];
     end else begin : g_rst_sync
         reg [1:0] rc, rs;
+        assign rst_stage1=rc[0];
         always @(posedge clk)    rc <= {rc[0], rst_n};
         always @(posedge clk_in) rs <= {rs[0], rc[1]};
         assign rst_c_n = rc[1];
         assign rst_s_n = (MUT == 5) ? 1'b1 : rs[1];
     end endgenerate
+    wire [23:0] regional_reset;
+    generate if(FAN32!=0)begin:g_reset_copies
+        (* keep *) reg [23:0] rr;
+        always @(posedge clk)rr<={24{rst_stage1}};
+        assign regional_reset=rr;
+    end else assign regional_reset={24{rst_c_n}};
+    endgenerate
     // ---------------- pin flops
     reg cv, dv, lv, done_q, xfault;
     reg [7:0] ct, tg;
@@ -234,15 +243,15 @@ module ot_hbm_static_cfg_collar_idx256 #(
     wire [31:0] cmp_cnt = (MUT == 3) ? cnt + 1 : cnt;
     wire launch_ok = lv && armed && inst_ok && !fault && !run && !install_depth_bad;
     wire record_step = run && !recs_done && cur_off == cmp_cnt;
-    wire [RW-1:0] rptr_next = !rst_c_n ? {RW{1'b0}} :
+    wire [RW-1:0] rptr_next = !regional_reset[23] ? {RW{1'b0}} :
         record_step ? rptr + 1'b1 : launch_ok ? {RW{1'b0}} : rptr;
-    wire [31:0] cnt_next = !rst_c_n ? 32'd0 : run ? cnt + 1'b1 : launch_ok ? 32'd0 : cnt;
+    wire [31:0] cnt_next = !regional_reset[22] ? 32'd0 : run ? cnt + 1'b1 : launch_ok ? 32'd0 : cnt;
     wire programme_accept = hit && !run && !ca[11] && !depth_write_bad &&
         (((lin == hwm[sel] || MUT == 1) && !hwm[sel][AW]) ||
          (lin != hwm[sel] && MUT != 1 && lin == 0));
     generate if (FAN32 != 0) begin : g_fan32
         ot_hbm_idx256_banks #(.AW(AW),.MUT(MUT)) u_banks(
-            .clk(clk),.rst_c_n(rst_c_n),.cfg_v(cfg_v),.cfg_target(cfg_target),
+            .clk(clk),.rst_c_n(rst_c_n),.regional_reset(regional_reset[16:0]),.cfg_v(cfg_v),.cfg_target(cfg_target),
             .cfg_addr(cfg_addr),.cd(cd),.tg(tg),.run(run),.recs_done(recs_done),
             .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
             .programme_accept(programme_accept),.lin(lin[AW-1:0]),
@@ -255,6 +264,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
         assign prm_banked = 0;
         assign rec_banked = 0;
     end endgenerate
+    generate if(FAN32==0)begin:g_original_control
     integer k;
     always @(posedge clk or negedge rst_c_n) begin
         if (!rst_c_n) begin
@@ -322,6 +332,152 @@ module ot_hbm_static_cfg_collar_idx256 #(
             ready <= armed && inst_ok && !fault && !run && !hit;
         end
     end
+    end else begin:g_distributed_control
+        integer k;
+        reg [NS-1:0] n_pw_we;
+        reg [1-1:0] n_start_v;
+        reg [NGO-1:0] n_go;
+        reg [1-1:0] n_ready;
+        reg [1-1:0] n_active;
+        reg [1-1:0] n_fault;
+        reg [SW-1:0] n_sel;
+        reg [1-1:0] n_need_set;
+        reg [1-1:0] n_wait_mask;
+        reg [1-1:0] n_wait_done;
+        reg [NPR-1:0] n_loaded;
+        reg [1-1:0] n_armed;
+        reg [1-1:0] n_run;
+        reg [32-1:0] n_cnt;
+        reg [RW-1:0] n_rptr;
+        reg [8-1:0] n_tail;
+        reg [RN-1:0] n_r_val;
+        reg [AW-1:0] n_pw_addr_raw;
+        reg [256-1:0] n_pw_data_raw;
+        reg [NPR*256-1:0] n_prm_raw;
+        reg [221-1:0] n_rec_raw;
+        reg [AW+1-1:0] n_hwm[0:NS-1];
+        reg [AW+1-1:0] n_need[0:NS-1];
+        reg [PAGE_W-1:0] n_page[0:NS-1];
+        reg [32-1:0] n_r_off[0:RN-1];
+        reg [2-1:0] n_r_go[0:RN-1];
+        reg [221-1:0] n_r_pay[0:RN-1];
+        always @*begin
+            n_pw_we=pw_we;
+            n_start_v=start_v;
+            n_go=go;
+            n_ready=ready;
+            n_active=active;
+            n_fault=fault;
+            n_sel=sel;
+            n_need_set=need_set;
+            n_wait_mask=wait_mask;
+            n_wait_done=wait_done;
+            n_loaded=loaded;
+            n_armed=armed;
+            n_run=run;
+            n_cnt=cnt;
+            n_rptr=rptr;
+            n_tail=tail;
+            n_r_val=r_val;
+            n_pw_addr_raw=pw_addr_raw;
+            n_pw_data_raw=pw_data_raw;
+            n_prm_raw=prm_raw;
+            n_rec_raw=rec_raw;
+            for(k=0;k<NS;k=k+1)n_hwm[k]=hwm[k];
+            for(k=0;k<NS;k=k+1)n_need[k]=need[k];
+            for(k=0;k<NS;k=k+1)n_page[k]=page[k];
+            for(k=0;k<RN;k=k+1)n_r_off[k]=r_off[k];
+            for(k=0;k<RN;k=k+1)n_r_go[k]=r_go[k];
+            for(k=0;k<RN;k=k+1)n_r_pay[k]=r_pay[k];
+            n_pw_we = 0; n_start_v = 0; n_go = 0;
+            if (|cf_q || xfault) n_fault = 1;
+            // ------------ configuration frames
+            if (hit) begin
+                n_armed = 0;
+                if (run) n_fault = 1;
+                else if (install_depth_bad) n_fault = 1;
+                else if (!ca[11]) begin
+                    if (lin == hwm[sel] || MUT == 1) begin
+                        if (hwm[sel][AW]) n_fault = 1;
+                        else begin n_pw_we[sel] = 1; n_pw_addr_raw = lin[AW-1:0]; n_pw_data_raw = cd; n_hwm[sel] = lin + 1'b1; end
+                    end else if (lin == 0) begin
+                        n_pw_we[sel] = 1; n_pw_addr_raw = 0; n_pw_data_raw = cd; n_hwm[sel] = 1;
+                    end else n_fault = 1;
+                end else if (ca[11:10] == 2'b10) begin
+                    if (ca[9:0] >= NPR) n_fault = 1;
+                    else begin n_prm_raw[ca[9:0]*256 +: 256] = cd; n_loaded[ca[9:0]] = 1; end
+                end else if (ca[11:9] == 3'b110) begin
+                    if (ca[8:0] >= NREC) n_fault = 1;
+                    else begin
+                        n_r_off[ca[8:0]] = cd[31:0]; n_r_val[ca[8:0]] = cd[32];
+                        n_r_go[ca[8:0]] = cd[34:33]; n_r_pay[ca[8:0]] = cd[255:35];
+                        if (NGO < 2 && cd[34]) n_fault = 1;
+                    end
+                end else if (ca == 12'hE00) begin
+                    if (cd[7:0] >= NS) n_fault = 1;
+                    else begin n_sel = cd[SW-1:0]; n_page[cd[SW-1:0]] = cd[8 +: PAGE_W]; end
+                end else if (ca == 12'hE01) begin
+                    for (k = 0; k < NS; k = k + 1) n_need[k] = cd[k*32 +: AW+1];
+                    n_wait_mask = cd[128]; n_need_set = 1;
+                end else n_fault = 1;
+            end
+            if (dhit) begin
+                if (run || hit) n_fault = 1; else n_armed = 1;
+            end
+            // ------------ launch: only an armed target participates
+            if (lv && armed) begin
+                n_armed = 0;
+                if (!(inst_ok && !fault && !run && !install_depth_bad)) n_fault = 1;
+                else begin
+                    n_start_v = 1; n_run = 1; n_cnt = 0; n_rptr = 0; n_tail = TAIL[7:0];
+                    n_wait_done = wait_mask;
+                end
+            end
+            // ------------ execution: fixed record calendar
+            if (run) begin
+                n_cnt = cnt + 1'b1;
+                if (tail != 0 && !start_v) n_tail = tail - 1'b1;
+                if (done_q) n_wait_done = 0;
+                if (!recs_done) begin
+                    if (cur_off == cmp_cnt) begin
+                        n_go = selected_record[33 +: NGO]; n_rec_raw = selected_record[255:35]; n_rptr = rptr + 1'b1; n_tail = TAIL[7:0];
+                    end else if (cur_off < cnt) n_fault = 1;
+                end else if (!start_v && tail == 0 && !(|busy_q) && !wait_done && go == 0) n_run = 0;
+            end
+            n_active = run || (lv && armed);
+            n_ready = armed && inst_ok && !fault && !run && !hit;
+
+        end
+        always @(posedge clk or negedge regional_reset[17])begin:seq_0
+            integer z;
+            if(!regional_reset[17])begin pw_we<=0;start_v<=0;go<=0;ready<=0;active<=0;fault<=0; end
+            else begin pw_we<=n_pw_we;start_v<=n_start_v;go<=n_go;ready<=n_ready;active<=n_active;fault<=n_fault; end
+        end
+        always @(posedge clk or negedge regional_reset[18])begin:seq_1
+            integer z;
+            if(!regional_reset[18])begin sel<=0;need_set<=0;wait_mask<=0;wait_done<=0;loaded<=0;armed<=0;run<=0; end
+            else begin sel<=n_sel;need_set<=n_need_set;wait_mask<=n_wait_mask;wait_done<=n_wait_done;loaded<=n_loaded;armed<=n_armed;run<=n_run; end
+        end
+        always @(posedge clk or negedge regional_reset[19])begin:seq_2
+            integer z;
+            if(!regional_reset[19])begin cnt<=0; end
+            else begin cnt<=n_cnt; end
+        end
+        always @(posedge clk or negedge regional_reset[20])begin:seq_3
+            integer z;
+            if(!regional_reset[20])begin rptr<=0;tail<=0;r_val<=0; end
+            else begin rptr<=n_rptr;tail<=n_tail;r_val<=n_r_val; end
+        end
+        always @(posedge clk or negedge regional_reset[21])begin:seq_4
+            integer z;
+            if(!regional_reset[21])begin for(z=0;z<NS;z=z+1)hwm[z]<=0;for(z=0;z<NS;z=z+1)need[z]<=0;for(z=0;z<NS;z=z+1)page[z]<=0; end
+            else begin for(z=0;z<NS;z=z+1)hwm[z]<=n_hwm[z];for(z=0;z<NS;z=z+1)need[z]<=n_need[z];for(z=0;z<NS;z=z+1)page[z]<=n_page[z]; end
+        end
+        always @(posedge clk)begin:seq_unreset
+            integer z;
+            if(rst_c_n)begin prm_raw<=n_prm_raw; pw_addr_raw<=n_pw_addr_raw; pw_data_raw<=n_pw_data_raw; for(z=0;z<RN;z=z+1)r_go[z]<=n_r_go[z]; for(z=0;z<RN;z=z+1)r_off[z]<=n_r_off[z]; for(z=0;z<RN;z=z+1)r_pay[z]<=n_r_pay[z]; rec_raw<=n_rec_raw; end
+        end
+    end endgenerate
 endmodule
 
 // Same physical edge as the original pin/state registers. The canonical
@@ -329,6 +485,7 @@ endmodule
 // Hierarchy protects each 16-bit bank from global ABC enable absorption.
 module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
  input wire clk,rst_c_n,cfg_v,run,recs_done,programme_accept,
+ input wire [16:0] regional_reset,
  input wire [7:0] cfg_target,tg,
  input wire [11:0] cfg_addr,
  input wire [255:0] cd,
@@ -346,7 +503,7 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
   wire [95:0] local_prm;
   wire [15:0] local_rec;
   (* keep_hierarchy *) ot_hbm_idx256_payload_bank #(.LO(g*16),.MUT(MUT)) u_payload(
-   .clk(clk),.rst_c_n(rst_c_n),.cfg_v(cfg_v),.run(run),.recs_done(recs_done),
+   .clk(clk),.rst_c_n(regional_reset[g]),.cfg_v(cfg_v),.run(run),.recs_done(recs_done),
    .programme_accept(programme_accept),.cfg_target(cfg_target),.tg(tg),
    .cfg_addr(cfg_addr),.cd(cd[g*16+:16]),.valid_data(cd[32]),
    .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
@@ -359,7 +516,7 @@ module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
   else if(g==2)assign rec[0+:13]=local_rec[3+:13];
  end endgenerate
  (* keep *) reg addr_cv;
- always @(posedge clk or negedge rst_c_n)if(!rst_c_n)addr_cv<=0;else addr_cv<=cfg_v;
+ always @(posedge clk or negedge regional_reset[16])if(!regional_reset[16])addr_cv<=0;else addr_cv<=cfg_v;
  always @(posedge clk)if(programme_accept && addr_cv)pw_addr<=lin;
 endmodule
 
