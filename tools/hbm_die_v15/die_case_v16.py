@@ -1081,9 +1081,12 @@ def main():
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
     exposed = C.get('exposed_inputs', {})
+    # Legacy contract layers sometimes preserved the exposed-input keys as a list.  That is not a numerical
+    # summary; retain unknown counts in the diagnostic label instead of crashing after all placement work.
+    exposed_summary = exposed if isinstance(exposed, dict) else {}
     manifest = dict(schema='opentallas.hbm_v16.die_case.v1',
-                    label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
-                          f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
+                    label=f"NOT_A_DIE_RESULT (source contract has {exposed_summary.get('ports', 'unknown')} exposed "
+                          f"input ports / {exposed_summary.get('bits', 'unknown')} b; SYNTH views are estimates; "
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags, reticle=RETICLE,
                     excluded_cells=excluded, excluded_instances=out_inst,

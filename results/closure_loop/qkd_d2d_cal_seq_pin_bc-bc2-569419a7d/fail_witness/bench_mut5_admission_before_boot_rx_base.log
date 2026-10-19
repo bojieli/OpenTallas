@@ -1,0 +1,19 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_cal_seq_pin_bc-bc2-569419a7d bench bench_mut5_admission_before_boot_rx_base host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc-bc2-569419a7d log cl/bench_mut5_admission_before_boot_rx_base.a1b1.log captured 2026-10-19T08:07:08-07:00
+# fail_regex 'early 1'
+Verilator 5.050 2026-07-01 rev v5.050
+target11: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh SEG2 TX 9 RX 10
+BAD tile forwarded 65 boot writes (66 expected)
+BAD admission start 1: DUT bases TX 9 RX 0, SEG2 9 / 10
+BAD event stream differs at t=58895000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58905000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58915000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58925000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58935000 (DUT 01 vs ref 00, phase 1)
+BAD event stream differs at t=58945000 (DUT 01 vs ref 00, phase 1)
+BAD tile fault: col 0 run 0 stale 0 early 1 seq 0
+FAIL kv_dcal_bootcfg mut5 errors502
+[2583310000] %Fatal: tb_kv_dcal_bootcfg.sv:157: Assertion failed in tb_kv_dcal_bootcfg
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut5: BAD tile forwarded 65 boot writes (66 expected)

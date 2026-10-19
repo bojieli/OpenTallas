@@ -1,0 +1,8 @@
+# fail witness (ELEM-GAPS/HBMN1-ctlx 2026-10-18): XQL_OLDREF=1 run_xload_xql_quad_lock.sh mutant 1 on ot-epyc5, worktree content of 47fe9018a
+ERR quadrant x-load differs from today's xql at cycle 201 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 202 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 203 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 205 (W en 11/11, E en 11/11)
+ERR quadrant x-load differs from today's xql at cycle 206 (W en 11/11, E en 11/11)
+quadrant vs today's xql (pairs W0,1 = ref 0,1; E0,1 = ref 2,3): 10809 cycles compared, 8032 W beats, 5472 E beats, 1112 differ; W/E distinct beats 1670
+XQL_QUAD_LOCK FAIL 1

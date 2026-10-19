@@ -1,0 +1,11 @@
+VSOP op=12 cmd=616 cycles_cmd_to_last_result=57 slot=57
+VSOP op=9 cmd=4250 cycles_cmd_to_last_result=19 slot=19
+VSOP op=10 cmd=8360 cycles_cmd_to_last_result=147 slot=147
+VSOP op=11 cmd=8968 cycles_cmd_to_last_result=25 slot=25
+VSOP op=8 cmd=10544 cycles_cmd_to_last_result=195 slot=195
+SLVSL sid=0 k=0 cmds=5 rowwrites=24 checked_pairs=20 xq=2/2 errors=0 slot_overruns=0 missed=0 fault=vp0/vs0/vq0
+PASS
+- /srv/opentallas-scratch/claude/tok-s81-gaps/vs/src/tools/s81_dv/layer_prog/vs/tb_vs_lowered.sv:136: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 1.518 s; speed 7.185 us/s
+- Verilator: cpu 1.517 s on 1 threads; allocated 19 MB

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_d2d_cal_seq_pin",
+ "enable": false,
+ "reason": "Explicit source captures every active functional input once; actual qkd_d2d_cal_seq output FFs are the output pin FFs. Local epoch capture compensated by raw EP_SKEW-1. No generic extra stage permitted. Source exact72-layer two-token proof plus failing anchor mutant; AUTO tok_go is internally0 and no physical input remains."
+}
