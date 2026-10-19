@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.ahub.source_manifest.v1",
+  "base_commit": "f6b606d53",
+  "scope": "fixed-profile native source preflight, no physical closure",
+  "files": {
+    "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv": "8b0b8b2d19fb06b6712eba920f841bcaa011bd3b4223384621823b7eaa31d6c8",
+    "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv": "797b2d3df44a168b3c5de35731b04d85acfc5af5c5bbe3fd551e28dc07fa87bc",
+    "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_gen7.sv": "0322736e3f6a3215305f6edd0deed2d9977164a15d9b189247cf01cf9b73efa9",
+    "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe_native.v": "e215df81353e6ba546c0865945e53e60b772f891a76a1ca833f2c2744e83b7b8",
+    "tools/qwen_kv_die/ahub_safe/reset_checks.py": "aed5dc2525582f81f11a87bde0451f67223c7f82b3ac52f15a722e1794f745eb",
+    "tools/qwen_kv_die/ahub_safe/verify.py": "25e7d6ad409a4455a47ba58c67f54254576fd82229a1ef560bf9b0477048a767",
+    "tools/qwen_kv_die/ahub_safe/negative_checks.py": "38cd1e72ac980ad4db6d6d3433f7bc62bb72c007cc33fc00117673725a508409",
+    "tools/qwen_kv_die/ahub_safe/reset_mutant.py": "b024323b228785435408d147980cb47fa944108cb479795339d48ddb6cdd1ca7",
+    "tools/qwen_kv_die/ahub_safe/distribute.py": "1ea32ca21a4266e85f601543e19dff5af1f4d29821b8d1aabfd2821f06cd713e",
+    "tools/qwen_kv_die/ahub_safe/synth.sh": "8471dfe5da443d23054b9c6f647e5ca699a7bb0ec9cbc2c1fb0ad8757de3b8bb",
+    "tools/qwen_kv_die/ahub_safe/native_bench.sh": "be7feae86bc44fe4049458fc7ca6029070d2f4110ca60ec383c3254520c15f27",
+    "tools/qwen_kv_die/ahub_safe/reparse.sh": "a8381d047f614fcff867a9da5b30c0c8f85f811400d4c6fb51200b5529ea19b4",
+    "tools/qwen_kv_die/ahub_safe/bench.sh": "7ffa4f985cb39f31edc69550b69e37c9319ec7960988bd2b7d0f27d7ae21316a",
+    "rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_safe_native.sv": "9eaac15b3aea42377e206bf5f005687b3226bee0e1683c3ee1a1dbddee6fea2f",
+    "results/arch/kv_ahub_structural_source_1019/cells_sim.v": "074b3037d72b192fe5d4caa5c1b0214f6c674ad2ebfe0060b0b648f76a1a8eeb"
+  },
+  "fleet_run": "ot-epyc7:/srv/opentallas-scratch/claude/kv-ahub-structural-source-1019",
+  "source_mapping_input_sha256": "1256f2546a0985710857f13bf72269408c07e355349c7a3f2385e1992203f3da",
+  "emitted_native_sha256": "e215df81353e6ba546c0865945e53e60b772f891a76a1ca833f2c2744e83b7b8"
+}

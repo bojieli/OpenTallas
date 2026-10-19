@@ -1,0 +1,39 @@
+{
+  "status": "SOURCE_PREFLIGHT_PASS",
+  "positive": {
+    "cases": 7,
+    "Z_words": 680,
+    "AM_words": 28,
+    "FR_words": 7,
+    "PV_beats": 224,
+    "actual_RTL_native_miter": "every-edge valid/payload/fault after initialization",
+    "occupied_reset_poison_phases": [
+      1,
+      256,
+      700,
+      1350,
+      1700
+    ]
+  },
+  "negative": {
+    "payload_inversion": "FAIL235",
+    "relay_bypass": "FAIL235",
+    "core_fault_reset_disconnected": "FAIL307 at occupied-reset run; first initialization fault mismatch cycle17",
+    "profile_unsupported": "fatal",
+    "D_CLK_RESETN_SETN": "independent relation refused",
+    "source_hash_wrong": "refused",
+    "provider_stale": "pvfin fault FAIL while actual RTL/native equality retained"
+  },
+  "native_mapped": {
+    "FF": 3315,
+    "hard_children": 5,
+    "nonclock_buffer_transparent_max": 24,
+    "reset_port_sinks": 2,
+    "extra_FF": 103,
+    "std_um2": 1575.67518
+  },
+  "all_own_jobs": "terminal",
+  "physical_qualified": false,
+  "die_POR_qualified": false,
+  "native_source_sha256": "e215df81353e6ba546c0865945e53e60b772f891a76a1ca833f2c2744e83b7b8"
+}
