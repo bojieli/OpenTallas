@@ -1,0 +1,8 @@
+IDXQ_LOCKSTEP rows6 pitch232 chainNew6 mut0 errors0 oracle_errors0 scores_new32736 scores_old32736 records_old3072 flits_new384 flits_old384 live_beats old171 new171 row_beats old1026 new1026 fault_old0 fault_new0 status0 | edges from start: key old219 new221 tx old1184 new1192 done old2471 new2479
+IDXQ_ROWS_CYCLES rows6 pitch232 new_done_edge2479 old_done_edge2471
+IDXQ_LOCKSTEP PASS
+- rtl/hbm_next/idxq/tb/tb_hnx_idxq_lockstep.sv:182: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 32us; walltime 202.371 s; speed 158.027 ns/s
+- Verilator: cpu 202.367 s on 6 threads; allocated 559 MB
+RUN_RC=0

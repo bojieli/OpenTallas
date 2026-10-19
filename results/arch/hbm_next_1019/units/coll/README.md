@@ -181,3 +181,7 @@ The d4g COLL ISA already runs an N-row record as **one issuer loop**. The loop i
    - add the lane-4 half calendar for L = 5.
 3. **L = 5 COLL body:** fork the qso slices with one more sink (NDEL 5). The ctl_v5 delivery_obase widening (CRITICAL) is report only. Gate the tap and serial leaves (`ot_hnx_su_cxdl_tap_s`, `ot_hnx_su_cxdl_q2`) as hnx kits from `hbm_su_cx_dl_1017`.
 4. **gq train:** the record-adapter decode of ROWX (nm1, rs_A, rs_O + the rs_O = R K mod 8 rule) into the gather descriptor.
+
+### Takeover result collection (2026-10-19)
+
+GQ landing n1 immutable daemon record 2d4230d39 and exported views are collected: TT setup +10.38 ps, FF hold +26.08 ps, DRC 0; SS sensitivity -337.01 ps (TT pathfinding evidence). Job hnx_gq_land_1019-n1-be0562a05, source be0562a05. GQ issue n2-72d501b02 remains RUNNING on ot-agidock128; the alternate n2-9a3cc2166 remains CANCELLED. No old agent tree was modified.

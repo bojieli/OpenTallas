@@ -207,3 +207,7 @@ SU slice parent that instantiates it (`su_<Q><g>`, 1,797 x 2,825 um) is a critic
    change. Measuring needs the HBM service bench (VEH / HBM lane), PRICED stays.
 3. Fold rowx + rowr into the SU programme parent and rowstep into the SFU core pin stage (critical parents: report).
 4. Optional: rotate the cross-quarter reduction over the 4 reducers by row (compiler only, II m + 15 -> m + 11.25).
+
+### Takeover result collection (2026-10-19)
+
+The submitted bank6 write-split tile r2 is CLOSED at TT setup +122.97 ps / FF hold +0.37 ps, DRC 0 (SS sensitivity -256.96 ps; this is TT pathfinding evidence, not SS sign-off). The immutable daemon record e4f7013ef and exported views are collected with the r2 kit, positive tile bench and WMUT1/2/3 fail witnesses. Source d324a1771, job hnx_su_bank6_ws_1019-r2-d324a1771. No reroute or submit was performed during collection.
