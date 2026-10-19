@@ -81,6 +81,7 @@
 module qfd_sys_face #(
     parameter integer MUT = 0,
     parameter integer COLD_PREFIX=0,
+    parameter integer SRAM_CAL=0, // opt-in six native SRAMs, four stopped edges after config
     parameter integer COLD_START_OFS=0, // explicit immutable manifest epoch->prefix T-start edge
     parameter integer OVL_AW=11, parameter integer OVL_TX_WRAP_BASE=0, parameter integer OVL_RX_WRAP_BASE=0,
     parameter integer OVL_FIRST_OFS=1176, parameter integer OVL_ADM_LEN=1100,
@@ -392,12 +393,21 @@ module qfd_sys_face #(
     wire cold_t_go; reg cold_active; reg cold_fault;
     wire        t_ev, l_ev, e_ev, t_run, l_run, e_run, t_cf, l_cf, e_cf;
     wire [2:0]  t_p, l_p, e_p; wire [3:0] t_k, l_k, e_k; wire [4:0] t_b, l_b, e_b;
+    generate if(SRAM_CAL) begin : g_sram_cal
+    ot_qwen_d2d_cal_sram #(.NE(64)) u_cal_t (.ck(ck), .rst_n(rst_calt), .cfg_we(t_we), .cfg_addr({c_addr[7], c_addr[5:0]}), .cfg_data(c_data),
+        .start(t_go | cold_t_go), .start_seg(cold_t_go), .halt(halt), .ev_v(t_ev), .ev_port(t_p), .ev_kind(t_k), .ev_beat(t_b), .running(t_run), .fault(t_cf));
+    ot_qwen_d2d_cal_sram #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_calle), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
+        .start(l_go), .start_seg(1'b0), .halt(halt), .ev_v(l_ev), .ev_port(l_p), .ev_kind(l_k), .ev_beat(l_b), .running(l_run), .fault(l_cf));
+    ot_qwen_d2d_cal_sram #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_calle), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
+        .start(ecal_go), .start_seg(COLD_PREFIX && cold_active), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
+    end else begin : g_ff_cal
     ot_qwen_d2d_cal #(.NE(64)) u_cal_t (.ck(ck), .rst_n(rst_calt), .cfg_we(t_we), .cfg_addr({c_addr[7], c_addr[5:0]}), .cfg_data(c_data),
         .start(t_go | cold_t_go), .start_seg(cold_t_go), .halt(halt), .ev_v(t_ev), .ev_port(t_p), .ev_kind(t_k), .ev_beat(t_b), .running(t_run), .fault(t_cf));
     ot_qwen_d2d_cal #(.NE(32)) u_cal_l (.ck(ck), .rst_n(rst_calle), .cfg_we(l_we), .cfg_addr({c_addr[7], c_addr[4:0]}), .cfg_data(c_data),
         .start(l_go), .start_seg(1'b0), .halt(halt), .ev_v(l_ev), .ev_port(l_p), .ev_kind(l_k), .ev_beat(l_b), .running(l_run), .fault(l_cf));
     ot_qwen_d2d_cal #(.NE(16)) u_cal_e (.ck(ck), .rst_n(rst_calle), .cfg_we(e_we), .cfg_addr({c_addr[7], c_addr[3:0]}), .cfg_data(c_data),
         .start(ecal_go), .start_seg(COLD_PREFIX && cold_active), .halt(halt), .ev_v(e_ev), .ev_port(e_p), .ev_kind(e_k), .ev_beat(e_b), .running(e_run), .fault(e_cf));
+    end endgenerate
     assign any_running = t_run | l_run | e_run | t_running_q;
     // D2D link calendars: the Q-LINK sequencer (compiler images as constants) is the ONLY producer of the link end's
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
