@@ -5,6 +5,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 11
+set ::ot_ce_check_only [dict create {ot_hbm_su_programme_pgcol_l/clk} 1 {ot_hbm_su_programme_pgcol_s/clk} 1 {ot_hbm_su_programme_pghead/clk} 1]
 set ::ot_ce_refs [dict create {ot_hbm_su_programme_pghead/clk} {tt {100.1 112.8 123.2} ff {80.9 93.6 104.0} ss {134.2 146.5 156.8}} {ot_hbm_su_programme_pgcol_s/clk} {tt {278.1 292.9 314.2} ff {225.2 239.3 258.6} ss {364.8 380.7 404.1}} {ot_hbm_su_programme_pgcol_l/clk} {tt {425.6 442.4 488.2} ff {344.9 360.9 398.2} ss {559.1 577.3 636.9}}]
 set ::ot_ce_counts [dict create {ot_hbm_su_programme_pghead} 1 {ot_hbm_su_programme_pgcol_s} 7 {ot_hbm_su_programme_pgcol_l} 3]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{cfg_we} {cfg_bank} {cfg_row} {cfg_data} {start} {length} {rst_n}} outputs {{fault}}} {l} {clock ot_io_l io_budget_ps 166.667 inputs {} outputs {{command_l}}} {t} {clock ot_io_t io_budget_ps 166.667 inputs {} outputs {{command_t}}} {b} {clock ot_io_b io_budget_ps 166.667 inputs {} outputs {{command_b} {busy} {valid} {done} {edge_index}}}]
@@ -12,6 +13,22 @@ set ::ot_ce_source_domains [dict create {ck_h} {core} {ck_l} {l} {ck_t} {t} {ck_
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_h} {ck_l} {ck_t} {ck_b}}
 set ::ot_ce_ports {{ck_h} {ck_l} {ck_t} {ck_b}}
+proc ot_ce_net_root_port {pin} {
+  set net [get_nets -quiet -of_objects $pin]
+  for {set i 0} {$i < 256 && [llength $net] == 1} {incr i} {
+    set ports [get_ports -quiet -of_objects $net]
+    if {[llength $ports] == 1} { return [get_full_name [lindex $ports 0]] }
+    if {[llength $ports]} { return "" }
+    set drv [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $drv] != 1} { return "" }
+    set cell [get_cells -quiet -of_objects $drv]
+    if {[llength $cell] != 1 || [dict exists $::ot_ce_counts [get_property $cell ref_name]]} { return "" }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction == input"]
+    if {[llength $ins] != 1} { return "" }
+    set net [get_nets -quiet -of_objects $ins]
+  }
+  return ""
+}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
@@ -114,7 +131,9 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
     foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
       set cell [get_full_name [get_cells -of_objects $pin]]
-      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
+      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {
+        error "OT_MULTI_ROOT: duplicate clock ownership $cell"
+      }
       dict set cells $cell $domain
     }
   }
@@ -432,6 +451,20 @@ proc ot_ce_apply {} {
   foreach name $::ot_ce_cts_roots {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
     set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    set ot_ce_pin_seen [dict create]
+    foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}
+    foreach cell [get_cells -quiet -hierarchical *] {
+      set master [get_property $cell ref_name]
+      if {![dict exists $::ot_ce_counts $master]} continue
+      foreach pin [get_pins -quiet -of_objects $cell] {
+        set key "$master/[get_property $pin lib_pin_name]"
+        if {![dict exists $::ot_ce_refs $key] || [dict exists $ot_ce_pin_seen [get_full_name $pin]]} continue
+        if {![info exists ::ot_ce_check_only] || ![dict exists $::ot_ce_check_only $key]} continue
+        if {[ot_ce_net_root_port $pin] ne $name} continue
+        lappend pins $pin; dict set ot_ce_pin_seen [get_full_name $pin] 1
+        puts "OT_LANDED CHECK_CLOCK_PIN $name [get_full_name $pin] (timing-check-only child clock pin)"
+      }
+    }
     if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
     set arrivals {}; set measured {}; set total 0.0; set ot_ce_child_ext [dict create]
     foreach pin $pins {

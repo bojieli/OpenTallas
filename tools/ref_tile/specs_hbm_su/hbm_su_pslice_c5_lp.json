@@ -265,6 +265,10 @@
   "enable": false,
   "reason": "every parent input lands on a child pin register (head c_* / leaf start-length stage) or a landing ring in its region; every output leaves a child register (leaf command / status, head fault); a kit flop stage would add an edge the landed record does not price"
  },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n has ONE sink, u_lpr_root (ot_pl_pad on ck_h beside the W-face pin), then the regional reset runs u_lpr_* (depth 6, priced in the landed record); a kit landing would add 2 unpriced release edges"
+ },
  "slot_change_request": "H-D4G pgp_<q>: slot 939.6 x 760.32 (flat pslice_q4) -> 1900.8 x 950.4 landed cluster (10 leaves 1.03 mm^2 incl. the 345.6-wide L leaf + head + 41 landings); cfg/start/length/fault/rst_n W face; PORT CHANGE: command[2421:0] -> command_l[767:0] (S, cols 1..3) + command_b[511:0] (S, cols 0,4) + command_t[1141:0] (N, cols 5..9); the parent re-assembles command = {command_t, command_b[511:256], command_l, command_b[255:0]}; busy/valid/done/edge_index S under column 0; 4 region clocks ck_h W / ck_l S / ck_b S / ck_t N, each timed on its own region (command_l on ck_l, command_t on ck_t, command_b + status on ck_b, fault on ck_h); every output +4 edges, reset release +6",
  "why_floorplan": "two leaf rows facing one configuration channel: the head broadcasts east along it, every leaf's cfg face touches it, every command bit leaves straight through its own face; regions by insertion class and placement (L leaves TT 483 vs S 310): h = head, l = L row, sw = W S trio, se = E S quad",
  "landed": {

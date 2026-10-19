@@ -411,6 +411,18 @@ class HelperOverlay(unittest.TestCase):
         CL.ship_helpers('local', str(run), job)
         self.assertFalse(job['helper_overlay_verification']['mutation'])
 
+    def test_publish_helper_drift_to_main_ships_current_bytes(self):
+        _, binding = self.gate()
+        gate_plan = binding['route_overlay_plan']
+        newest = b'# exporter fix on main\n'
+        self.commit_helper(newest)
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': gate_plan}
+        run = Path(self.tmp.name) / 'publish'
+        with patch.object(HO, 'PUBLISH_ONLY', (self.rel,)), patch.object(CL, 'event'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), newest)
+        self.assertEqual(job['helper_overlay_sanctioned'][0]['kind'], 'publish')
+
     def test_fleet_run_sanction_refuses_frozen_blob_outside_main_history(self):
         foreign = b'# never on main\n'
         (self.daemon / self.rel).write_bytes(foreign)

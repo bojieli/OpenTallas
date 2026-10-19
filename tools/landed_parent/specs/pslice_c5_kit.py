@@ -63,7 +63,11 @@ def port_bit(c, k):
 # (DPL keeps every non-group cell -- the anonymous ring/read muxes, reset runs, repair buffers -- out of it): real2 fenced
 # 1.72 of 1.79 mm^2, GPL did not converge, repair_design added ~1.2 M buffers and DPL stuck at 1.1 M illegal cells.
 FENCES = {
-    "h": [(129.6, 540.0, 518.4, 604.8)],      # beside the head's E (output) face, mid-channel
+    # TW2-PSLICE 10-19: h 64.8 -> 32.4 um tall.  real4 CTS DPL-0033: ck_h level-1/5/7/8 BUFx24 clock buffers (not group
+    # members) landed at the sink centroid INSIDE the 64.8-um fence; DPL may move a cell only +/-100 rows (27 um), so from
+    # mid-fence (32.4 um from either edge) no legal site was reachable.  Every fence is now <= 43.2 tall (half < 27 um);
+    # h density 1,916 / 12,597 um^2 = 15%.
+    "h": [(129.6, 545.4, 518.4, 577.8)],      # beside the head's E (output) face, mid-channel (head centre y 561.6)
     "l": [(43.2, 496.8, 1166.4, 518.4)],      # 21.6-um band on the L row's cfg (N) face
     "t": [(129.6, 626.4, 1900.8, 648.0)],     # 21.6-um band under the top row's cfg (S) face
     "b": [(1166.4, 302.4, 1900.8, 345.6)],    # 43.2-um band on c0/c4's cfg (N) face (y 302.4)
@@ -215,6 +219,9 @@ def main():
         pin_regs=dict(enable=False, reason="every parent input lands on a child pin register (head c_* / leaf start-length "
                       "stage) or a landing ring in its region; every output leaves a child register (leaf command / status, "
                       "head fault); a kit flop stage would add an edge the landed record does not price"),
+        reset_landing=dict(enable=False, reason="the RTL lands it: rst_n has ONE sink, u_lpr_root (ot_pl_pad on ck_h beside the "
+                           "W-face pin), then the regional reset runs u_lpr_* (depth 6, priced in the landed record); a kit "
+                           "landing would add 2 unpriced release edges"),
         slot_change_request="H-D4G pgp_<q>: slot 939.6 x 760.32 (flat pslice_q4) -> 1900.8 x 950.4 landed cluster (10 leaves "
                             "1.03 mm^2 incl. the 345.6-wide L leaf + head + 41 landings); cfg/start/length/fault/rst_n W face; "
                             "PORT CHANGE: command[2421:0] -> command_l[767:0] (S, cols 1..3) + command_b[511:0] (S, cols 0,4) + "

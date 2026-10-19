@@ -7,7 +7,7 @@ set ::lpf_dbu [$::lpf_blk getDbUnitsPerMicron]
 array set ::lpf_g {}
 array set ::lpf_n {}
 set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_h"]
-odb::dbBox_create $::lpf_r [expr {round(129.6*$::lpf_dbu)}] [expr {round(540.0*$::lpf_dbu)}] [expr {round(518.4*$::lpf_dbu)}] [expr {round(604.8*$::lpf_dbu)}]
+odb::dbBox_create $::lpf_r [expr {round(129.6*$::lpf_dbu)}] [expr {round(545.4*$::lpf_dbu)}] [expr {round(518.4*$::lpf_dbu)}] [expr {round(577.8*$::lpf_dbu)}]
 set ::lpf_g(h) [odb::dbGroup_create $::lpf_r "lp_fence_grp_h"]
 set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_l"]
 odb::dbBox_create $::lpf_r [expr {round(43.2*$::lpf_dbu)}] [expr {round(496.8*$::lpf_dbu)}] [expr {round(1166.4*$::lpf_dbu)}] [expr {round(518.4*$::lpf_dbu)}]

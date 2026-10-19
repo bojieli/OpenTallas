@@ -1,0 +1,129 @@
+{
+  "name": "s81sl_capc",
+  "top": "ot_s81sl_cap",
+  "kind": "cluster",
+  "sources": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "children": [
+    {
+      "view": "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+      "count": 1,
+      "inst": "g_hard.u_rt",
+      "at": [
+        43.2,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+      "count": 1,
+      "inst": "g_hard.u_tw",
+      "at": [
+        43.2,
+        172.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+      "count": 1,
+      "inst": "g_hard.u_te",
+      "at": [
+        172.8,
+        172.8
+      ],
+      "orient": "MY"
+    }
+  ],
+  "pins": {
+    "W": [
+      "rt_w"
+    ],
+    "E": [
+      "rt_e"
+    ],
+    "N": [
+      "cfg_v",
+      "cfg_d",
+      "cw_n_v",
+      "cw_n_a",
+      "cw_n_d"
+    ],
+    "S": [
+      "cw_s_v",
+      "cw_s_a",
+      "cw_s_d",
+      "clk",
+      "rst_n",
+      "fault"
+    ]
+  },
+  "outline": {
+    "w": 311.04,
+    "h": 302.4
+  },
+  "layer_cap": "M5",
+  "clock": "spine",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03
+  },
+  "structural_change": "S81U-CAP2: the flat s81sl_cap (22,261 sinks / one root, TT insertion 368.5 ps > 300) as a wires-only cluster of 3 hardened leaves with own roots: root leaf s81sl_cap_rt (S), tree leaf s81sl_cap_tr x2 (N; E instance MY). Seams registered both sides (nc RST flop -> n6 P1 flop), no added edge.",
+  "why_floorplan": "square 311.04 x 302.4: u_rt 259.2 x 108 at (43.2, 43.2) (SRAM + side columns, S81U-CAP3), u_tw / u_te 90.72 x 86.4 at (43.2, 172.8) / (172.8, 172.8 MY) above it (21.6-um seam channel; 38.9-um channel between the trees carries the clock spine and cfg / cw_n down to u_rt's N face, M6/M7 over the trees). rt_w / rt_e enter the trees' outer faces; cw_s leaves u_rt's S face. All origins on the 43.2 lattice.",
+  "job": {
+    "owner": "Claude:S81U-CAP2",
+    "branch": "claude/s81u3-1017",
+    "tag": "s81sl_capc",
+    "purpose": "S81U-CAP2: capture root as a wires-only cluster. DO NOT gen/submit until s81sl_cap_tr and s81sl_cap_rt are routed/closed with exported views and child_lint passes.",
+    "benches": [
+      {
+        "name": "slcap_exact",
+        "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_exact {RUN}/slcap_vec 0",
+        "expect": "pass",
+        "pass_regex": "^PASS cap MUT=0 slcap_vec$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slcap_mut1_sibling",
+        "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_m1 {RUN}/slcap_vec 1 raw",
+        "expect": "fail",
+        "fail_regex": "^CAP_MUTANT_DETECTED MUT=1 ",
+        "fail_witness": "results/rtl/s81_slice_1017/cap/mut1_real1.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slcap_mut3_leaf",
+        "cmd": "bash tools/s81_slice/cap_bench.sh {RUN}/slcap_m3 {RUN}/slcap_vec 3 raw",
+        "expect": "fail",
+        "fail_regex": "^CAP_MUTANT_DETECTED MUT=3 ",
+        "fail_witness": "results/rtl/s81_slice_1017/cap/mut3_real1.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      }
+    ],
+    "extra_paths": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "rtl/dsrom_sys/s81_dv/slice",
+      "rtl/dsrom_sys/s81_static_net",
+      "rtl/dsrom_sys/s81_die_bind",
+      "rtl/hdc",
+      "rtl/proto",
+      "rtl/lib",
+      "tools/s81_slice",
+      "tools/s81",
+      "results/rtl/s81_slice_1017/cap"
+    ],
+    "views_to": "physical/ref_tile/s81sl_capc/views",
+    "record_to": "results/rtl/ref_tile/s81sl_capc"
+  }
+}
