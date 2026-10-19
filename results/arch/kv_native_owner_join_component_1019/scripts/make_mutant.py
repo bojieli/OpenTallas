@@ -20,7 +20,7 @@ elif a.mutant=='latest_pending':
  path=core;old='cq_key!=expected_key';new="cq_key!={p_q.client,p_q.slot,p_q.desc_gen,{a_q.request_tag[58:43],6'd37,p_q.input_token,p_q.position[12:0],6'd0},p_q.package_gen}";case=3
  condition='actual next UNBOUND pending issue must coexist with old CQ B; never fabricate another allocation'
 elif a.mutant=='rank_masks':
- path='private/qkd_host_peer_coordinator_codec_rc.sv';old='result_busy&&(&result_return)';new='result_busy&&(|result_return)';case=8;fail='ENGINE_CREDIT_BEFORE_ALL_RESULT_RETURNS';condition='separate watchdog512 cancellation fixture, rank7 result return delayed by genuine drain'
+ path='private/qkd_host_peer_coordinator_codec_rc.sv';old='result_busy&&(&result_return)';new='result_busy&&(|result_return)';case=14;fail='ENGINE_CREDIT_BEFORE_ALL_RESULT_RETURNS';condition='baseline case14 finite ready/valid transport stall on actual rank7 opcode4; other7 actual return packets accepted'
 elif a.mutant=='early_post':
  path='baseline/rtl/qwen_sys/host_integrated_20261014/qkd_host_post_collector.sv';old='(!cq_needed||cq_seen||MUT==1)';new="1'b1";case=3;fail='POST_BEFORE_REAL_CQB'
 elif a.mutant=='raw_cleanup':
@@ -45,5 +45,5 @@ for row in m['sources']:
  if row['path']==path:row['sha256']=hashlib.sha256(f.read_bytes()).hexdigest();row['bytes']=f.stat().st_size;row['origin']+='; deliberate causal mutation '+a.mutant
 m['causal_mutant']=a.mutant
 (out/'source_manifest.json').write_text(json.dumps(m,indent=2)+'\n');(out/'sources.f').write_bytes((src/'sources.f').read_bytes())
-(out/'mutant.json').write_text(json.dumps({'name':a.mutant,'changed_source':path,'original_sha256':oldsha,'mutated_sha256':hashlib.sha256(f.read_bytes()).hexdigest(),'old':old,'new':new,'case':case,'required_fail_regex':fail,'extra_condition':condition,'verdict':'NOT_RUN','caught_requires':'baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence','fixture_watchdog':512 if a.mutant=='rank_masks' else 1<<22},indent=2)+'\n')
+(out/'mutant.json').write_text(json.dumps({'name':a.mutant,'changed_source':path,'original_sha256':oldsha,'mutated_sha256':hashlib.sha256(f.read_bytes()).hexdigest(),'old':old,'new':new,'case':case,'required_fail_regex':fail,'extra_condition':condition,'verdict':'NOT_RUN','caught_requires':'baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence','fixture_watchdog':1<<22},indent=2)+'\n')
 print('MATERIALIZED',a.mutant,'case',case,'not run')

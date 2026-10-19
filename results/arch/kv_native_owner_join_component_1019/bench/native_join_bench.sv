@@ -123,6 +123,7 @@ reg allow_aw=1,allow_w=1;
  wire[15:0]bound_client,pending_client;wire[7:0]bound_slot,pending_slot;wire[17:0]pending_pos;
  wire[1:0]bound_descgen,bound_gen;wire[58:0]bound_request_tag,bound_terminal_tag;
  wire[7:0]peer_rx_valid,peer_rx_ready,peer_tx_valid,peer_tx_ready;wire[4095:0]peer_rx_data,peer_tx_data;
+ wire[7:0]rank_tx_valid,rank_tx_ready;wire[4095:0]rank_tx_data;reg hold_rank7_result_return=0;
  wire alloc_fire,terminal_accepted,post_retired;wire[58:0]terminal_accept_tag;wire[1:0]terminal_accept_gen;wire[58:0]alloc_tag,acknowledged_tag,post_tag;wire[1:0]alloc_gen,acknowledged_gen,post_gen;
  wire dispatch_valid,dispatched,coordinator_fault,post_pending;
  wire[7:0]accepted_ranks;wire[58:0]cohort_tag;wire[1:0]cohort_gen;
@@ -139,6 +140,10 @@ reg allow_aw=1,allow_w=1;
  for(genvar d=0;d<8;d++)begin:ranks
   wire[743:0]ctk;wire[7:0]cready;wire[127:0]cepoch;
   wire cr_unused;
+  wire hold_return=d==7&&hold_rank7_result_return&&rank_tx_data[512*d+:8]==8'd4;
+  assign peer_rx_valid[d]=rank_tx_valid[d]&&!hold_return;
+  assign rank_tx_ready[d]=peer_rx_ready[d]&&!hold_return;
+  assign peer_rx_data[512*d+:512]=rank_tx_data[512*d+:512];
   qkd_host_ctrl_token_service_packet_collected #(.DIE(d),.ENABLE_SERVICE(1),.ENABLE_TOKEN(1)) ctrl(
    .ck(clk),.rst_n(rst_n),.die_id(3'(d)),.rx_v(ctrl_rx_v[d]),.rx_d(ctrl_rx_d[512*d+:512]),.rx_cr(ctrl_rx_cr[d]),.tx_v(ctrl_tx_v[d]),.tx_d(ctrl_tx_d[512*d+:512]),.tx_cr(ctrl_tx_cr[d]),
    .local_tk(local_tk[d]),.local_kst(10'd0),.local_boot(2'b11),.cmd_v(d==0?cmd_v:1'b0),.cmd_hc(cmd_hc),.cmd_cr(cr_unused),.hc(local_hc[d]),.tk8(ctk),.kst8(),.boot8(),.seen(),.fault(ctrl_fault[d]),
@@ -156,7 +161,7 @@ reg allow_aw=1,allow_w=1;
    .result_v(ep_result_v[d]),.result_tag(ep_result_tag[d]),.result_gen(ep_result_gen[d]),.result_done(ep_result_done[d]),.result_fault(ep_result_fault[d]),.result_cause(ep_result_cause[d]),.result_token(ep_result_token[d]),.result_value(ep_result_value[d]),.result_cycles(ep_result_cycles[d]),.result_cr(ep_result_cr[d]),
    .kv_drained(fixture_drains[d]),.vm_drained(fixture_drains[d]),.collective_drained(fixture_drains[d]),.host_drained(fixture_drains[d]),.collective_busy(1'b0),.kv_flush(1'b0),.recovery_clear(recovery_clear[d]),.cancel_release_v(cancel_release_v[d]),.cancel_release_tag(release_tag[d]),.cancel_release_gen(release_gen[d]),.context_owned(ep_owned[d]),.cancel_released(ep_cancel_released[d]),.local_tk(local_tk[d]),.protocol_fault(ep_protocol_fault[d]));
   qkd_host_peer_rank_codec_rc #(.RANK(d),.ENABLE_NATIVE_OWNER_JOIN(1)) codec(
-   .ck(clk),.por_n(raw_por_n),.tx_valid(peer_rx_valid[d]),.tx_data(peer_rx_data[512*d+:512]),.tx_ready(peer_rx_ready[d]),.rx_valid(peer_tx_valid[d]),.rx_data(peer_tx_data[512*d+:512]),.rx_ready(peer_tx_ready[d]),
+   .ck(clk),.por_n(raw_por_n),.tx_valid(rank_tx_valid[d]),.tx_data(rank_tx_data[512*d+:512]),.tx_ready(rank_tx_ready[d]),.rx_valid(peer_tx_valid[d]),.rx_data(peer_tx_data[512*d+:512]),.rx_ready(peer_tx_ready[d]),
    .request_v(ep_request_v[d]),.request_tag(ep_request_tag[d]),.request_gen(ep_request_gen[d]),.request_trace(ep_trace[d]),.request_token(ep_request_token[d]),.request_pos(ep_request_pos[d]),.request_cr(ep_request_cr[d]),.request_aborted(),
    .cancel_valid(ctrl_cancel_v[d]),.cancel_tag(ctrl_cancel_tag[d]),.cancel_gen(ctrl_cancel_gen[d]),.cancel_done(ctrl_cancel_done[d]),.cancel_fault(ctrl_cancel_fault[d]),.cancel_drained(ctrl_cancel_drained[d]),.cancel_accepted(),.cancel_release_v(cancel_release_v[d]),.cancel_release_tag(release_tag[d]),.cancel_release_gen(release_gen[d]),.cancel_released(ep_cancel_released[d]),
    .result_v(ep_result_v[d]),.result_tag(ep_result_tag[d]),.result_gen(ep_result_gen[d]),.result_done(ep_result_done[d]),.result_fault(ep_result_fault[d]),.result_cause(ep_result_cause[d]),.result_token(ep_result_token[d]),.result_value(ep_result_value[d]),.result_cycles(ep_result_cycles[d]),.result_cr(ep_result_cr[d]),
@@ -252,7 +257,8 @@ reg allow_aw=1,allow_w=1;
  reg expected_metadata_fault=0;
  integer native_cq_retirements=0;
  integer edges=0,issues=0,allocations=0,dispatches=0,raw_completions=0,post_completions=0,certificates=0,event_copies=0,cq_offers=0,terminal_accepts=0;
- integer request_counts[8],request_returns[8],result_returns[8],releases[8],raw_cleanup_due[8];
+ integer request_counts[8],request_returns[8],result_returns[8],transport_returns[8],releases[8],raw_cleanup_due[8];
+ integer engine_credits=0;reg rank7_return_stalled=0;reg[511:0]held_rank7_return;
  integer response_due=-1,response_step=-1,first_issue_edge=0,max_response=0;
  integer case_id=0;
  // Selected one-beat pin-channel protocol: first acceptance owns request;
@@ -266,6 +272,9 @@ reg allow_aw=1,allow_w=1;
  always @(posedge clk)begin
   if(raw_por_n)begin
    edges=edges+1;
+   if(rank7_return_stalled&&(!rank_tx_valid[7]||rank_tx_data[3584+:512]!==held_rank7_return))$fatal(1,"REAL_RETURN_READY_VALID_PAYLOAD_CHANGED");
+   rank7_return_stalled=rank_tx_valid[7]&&!rank_tx_ready[7]&&rank_tx_data[3584+:8]==8'd4;
+   held_rank7_return=rank_tx_data[3584+:512];
    if(expected_metadata_fault&&!join_fault)$fatal(1,"CORRUPT_CERTIFICATE_WAS_ACCEPTED case=%0d",case_id);
    expected_metadata_fault<=native_certificate_v&&case_id>=10&&case_id<=13;
    if(binding_valid&&case_id<=3&&bound_request_tag!=={16'(allocations-1),6'd0,gold_input(allocations-1),13'(allocations-1),6'd0})$fatal(1,"BOUND_KEY_IS_NATIVE_TAG59");
@@ -282,6 +291,7 @@ reg allow_aw=1,allow_w=1;
     $display("ALLOC e=%0d tag=%h gen=%0d",edges,alloc_tag,alloc_gen);
    end
    for(integer r=0;r<8;r=r+1)begin
+    if(peer_rx_valid[r]&&peer_rx_ready[r]&&peer_rx_data[512*r+:8]==8'd4)transport_returns[r]=transport_returns[r]+1;
     if(case_id==4&&ep_result_v[r]&&ep_result_done[r]&&fixture_drains[r])raw_cleanup_due[r]=edges+6;
     if(case_id==4&&raw_cleanup_due[r]>=0&&edges>=raw_cleanup_due[r])begin
      if(ep_owned[r])$fatal(1,"RAW_CLEANUP_HEALTH_VETO rank=%0d",r);
@@ -299,7 +309,8 @@ reg allow_aw=1,allow_w=1;
     end
    end
    if(engine_result_cr)begin
-    for(integer r=0;r<8;r=r+1)if(result_returns[r]<dispatches)$fatal(1,"ENGINE_CREDIT_BEFORE_ALL_RESULT_RETURNS rank=%0d",r);
+    engine_credits=engine_credits+1;
+    for(integer r=0;r<8;r=r+1)if(transport_returns[r]<dispatches)$fatal(1,"ENGINE_CREDIT_BEFORE_ALL_RESULT_RETURNS rank=%0d",r);
    end
    if(terminal_accepted)terminal_accepts=terminal_accepts+1;
    if(dispatch_valid)begin
@@ -366,7 +377,7 @@ reg allow_aw=1,allow_w=1;
    if(old_out_aw_valid&&!m_awvalid)$display("PIN_AW_OUTPUT_VALID_DROP e=%0d",edges);
    if(old_out_w_valid&&!m_wvalid)$display("PIN_W_OUTPUT_VALID_DROP e=%0d",edges);
    old_mon_aw_valid=mon_aw_source_valid;old_mon_w_valid=mon_w_source_valid;old_out_aw_valid=m_awvalid;old_out_w_valid=m_wvalid;
-   if(case_id<=3&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
+   if((case_id<=3||case_id==14)&&(join_fault||coordinator_fault||bridge_fault||hc_station_fault||(|ctrl_fault)||(|rank_fault)||(|ep_protocol_fault)||rc_bad))$fatal(1,"HEALTHY_SOURCE_FAULT e=%0d join=%b coord=%b bridge=%b hc=%b ctrl=%h rank=%h ep=%h rc=%b",edges,join_fault,coordinator_fault,bridge_fault,hc_station_fault,ctrl_fault,rank_fault,ep_protocol_fault,rc_bad);
   end
  end
  always @(negedge clk)begin
@@ -379,12 +390,13 @@ reg allow_aw=1,allow_w=1;
  task automatic tick(input integer n);repeat(n)@(negedge clk);#1;endtask
  initial begin
   if(!$value$plusargs("CASE=%d",case_id))case_id=0;
-  if(case_id<0||case_id==9||case_id>13)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
+  if(case_id<0||case_id==9||case_id>14)$fatal(1,"CASE_NOT_IMPLEMENTED id=%0d",case_id);
   if((case_id==6||case_id==8)&&FIXTURE_WDOG!=512)$fatal(1,"CANCELLATION_REQUIRES_SEPARATE_TYPED_WDOG512_BUILD");
+  if(case_id==14)hold_rank7_result_return=1;
   if(case_id==1)allow_aw=0;
   if(case_id==2)allow_w=0;
   if(case_id==5)fixture_package_ready=0;
-  for(integer r=0;r<8;r=r+1)begin request_counts[r]=0;request_returns[r]=0;result_returns[r]=0;releases[r]=0;raw_cleanup_due[r]=-1;end
+  for(integer r=0;r<8;r=r+1)begin request_counts[r]=0;request_returns[r]=0;result_returns[r]=0;releases[r]=0;raw_cleanup_due[r]=-1;transport_returns[r]=0;end
   memory.descriptor(0,16'h91e3,8'd1,8'd1,8'd0,16'd2,16'd3,64'h3000);
   memory.prompt_word(0,18'd70001,18'd70003);
   if(case_id==7)begin
@@ -395,6 +407,13 @@ reg allow_aw=1,allow_w=1;
   tick(12);fixture_certificate_v=1;tick(1);fixture_certificate_v=0;
   tick(100); // Fixture boot/service packets complete; not an ownership/checker mask.
   memory.csr_write('h010,'h1000);memory.csr_write('h018,4);memory.csr_write('h024,'h2000);memory.csr_write('h02c,4);memory.csr_write('h008,1);memory.csr_write('h01c,case_id==7?3:1);
+  if(case_id==14)begin
+   wait(transport_returns[0]==1&&transport_returns[1]==1&&transport_returns[2]==1&&transport_returns[3]==1&&transport_returns[4]==1&&transport_returns[5]==1&&transport_returns[6]==1&&rank_tx_valid[7]&&rank_tx_data[3584+:8]==8'd4);
+   tick(24);
+   if(transport_returns[7]!=0||engine_credits!=0)$fatal(1,"RESULT_RETURN_STALL_NOT_PRESERVED");
+   $display("REAL_RESULT_RETURN_STALL e=%0d endpoint_credit7=%0d wire_return7=%0d engine_credits=%0d",edges,result_returns[7],transport_returns[7],engine_credits);
+   hold_rank7_result_return=0;
+  end
   if(case_id==6)begin
    wait(token_request_v[0]);@(negedge clk);fixture_service_ready=0;
    wait(allocated_valid);#1;
@@ -451,7 +470,7 @@ reg allow_aw=1,allow_w=1;
   end
   wait(post_completions==4);tick(24);
   if(issues!=4||allocations!=4||dispatches!=4||raw_completions!=4||certificates!=4||event_copies!=3||cq_offers!=3||cq_entries!=3)$fatal(1,"JOIN_FINAL_COUNTS issues=%0d alloc=%0d dispatch=%0d raw=%0d cert=%0d events=%0d offers=%0d CQ=%0d",issues,allocations,dispatches,raw_completions,certificates,event_copies,cq_offers,cq_entries);
-  for(integer r=0;r<8;r=r+1)if(request_counts[r]!=4||request_returns[r]!=4||result_returns[r]!=4||releases[r]!=4)$fatal(1,"RANK_ACCOUNTING rank=%0d request=%0d reqcr=%0d resultcr=%0d release=%0d",r,request_counts[r],request_returns[r],result_returns[r],releases[r]);
+  for(integer r=0;r<8;r=r+1)if(request_counts[r]!=4||request_returns[r]!=4||result_returns[r]!=4||transport_returns[r]!=4||releases[r]!=4)$fatal(1,"RANK_ACCOUNTING rank=%0d request=%0d reqcr=%0d resultcr=%0d release=%0d",r,request_counts[r],request_returns[r],result_returns[r],releases[r]);
   if(ar_accepts!=read_beats||aw_accepts!=write_beats||w_accepts!=write_beats||bridge_aw_captures!=write_beats||bridge_w_captures!=write_beats||read_beats!=5||write_beats!=6)$fatal(1,"DMA_CAPTURE_PACKET_COUNTS AR=%0d Rpackets=%0d AW=%0d W=%0d Wpackets=%0d",ar_accepts,read_beats,aw_accepts,w_accepts,write_beats);
   if(binding_valid||post_pending||(|ep_owned)||join_fault||coordinator_fault||rc_bad)$fatal(1,"FINAL_OWNERSHIP_NOT_DRAINED");
   $display("NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=%0d edges=%0d H=%0d deadline=%0d extra_age_bits=3 max_response=%0d",case_id,edges,H,RESPONSE_DEADLINE,max_response);
