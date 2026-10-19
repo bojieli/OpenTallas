@@ -220,7 +220,7 @@ rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/hdc/ot_hdc_vs
 rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_sfu.sv
 rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/test/full_sm_service/sram_models.sv
 rtl/test/hbm_rf_visibility/scale_sram_model.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
-rtl/lib/ot_rst_pipe.sv""".split()
+rtl/lib/ot_rst_pipe.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv""".split()
 
 
 def main():
