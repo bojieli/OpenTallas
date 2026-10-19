@@ -84,8 +84,13 @@ There is no "N = 1 = d4g" reference, because d4g has no such unit. N = 1 is chec
 - Faces: N = command/up/r; S = VM bank (rq/rr/wq).
 - io_hold_margin 0.03; reset landing 2 stages; pin_regs off (every port is a pin flop in the RTL).
 - Benches: m0 (`m0 SUMMARY pass=10 fail=0 noresult=0`) plus m1..m6 with committed witnesses.
-- Remote CTS gate: see pending_results.
-- **Area risk:** the lane holds the KX x NM x 256 b x store (20,480 b) and a 5,120 b gain buffer in flops. If the gate's util or area is poor, move the x store to a 1R1W SRAM macro. Reads are one sector per cycle per slot, so a macro fits.
+- **Remote CTS gate 10-19 03:04 (ot-epyc7): FAIL `synth_smoke`.** ORFS yosys did not finish within 2,700 s; it looped in OPT_SHARE / OPT_DFF passes. Log: `gate1_synth_stall.log`. This is a structural finding, not a flow glitch.
+- **Cause:** the lane keeps the KX x NM x 256 b x store `xb[slot*NM + m]` (80 x 256 = 20,480 b) and the 20 x 256 b gain buffer `gb[m]` as runtime-indexed flop arrays. Each is read through an 80:1 or 20:1 x 256-b mux and written at a runtime index. That is the yosys SHARE-stall class, and it would also give a poor tile even if synthesis finished.
+- **Fix (next agent, RTL):**
+  - Move `xb` into one 1R1W SRAM macro (`physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_*`, 80 of 128 rows). The access pattern is 1 write a cycle (mix) and 1 read a cycle (scale), which fits a 1R1W macro.
+  - Keep `gb` in flops, but read it through a registered address (or use a second 1R1W 32x256 macro).
+  - Absorb the macro read latency into the scale pipeline (`xo` / `wm_d` delay +L). This is a fixed retime, so the row II is unchanged.
+  - Re-run m0 + m1..m6 (the witnesses must be re-made if the logs change), then re-gate `hnx_fused_lane_1019` with `macros` in the spec.
 
 ## Files
 
@@ -97,7 +102,7 @@ There is no "N = 1 = d4g" reference, because d4g has no such unit. N = 1 is chec
 
 ## Next
 
-1. Collect the hnx_fused_lane_1019 gate. Set `std_area_um2`, re-gen the outline, re-gate if needed, then submit_exact. This tile is not on the critical list.
+1. Do the xb -> SRAM macro fix above, re-bench, then re-gate `hnx_fused_lane_1019` (`--remote auto --cts`). Take the outline from the gate's `std_area_um2` plus the macro, then submit_exact. This tile is not on the critical list.
 2. Kit the top (`ot_hnx_fused_top`: csum tree, heap, divc, rsqrt) as a cluster parent with 32 lane children. The DIE lane has to place the 32 lanes beside their VM banks.
 3. CMTP: flip FUSED.HC_PRE_NORM to 81 MEASURED (c1 404) and FUSED.HC_POST to 103 MEASURED (c1 196), with the KX = 4 rgap 0 rule. For KX = 2, the compiler needs rgap >= 64 (the minimum between 1 and 64 is not measured).
 4. The ROWX decode from the HGI-1R record word into the lane JOB (nm1, rgap, rs_A/rs_B/rs_O in sectors = words / 8) sits in the top's job decode. Check it against `tools/hbm_next/isa_rows.py` when CMTP's binary emitter lands.
