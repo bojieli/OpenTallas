@@ -9,7 +9,7 @@
 # TXDP from the D2D_TXDP_C / D2D_TXDP_K lines of the image.  Run from the repository root.
 set -eu
 OUT=$1
-STAGES=${D2D_DIE_STAGES:-2,2,2,2,0,2/11,11,9,9,9,11,11}
+STAGES=${D2D_DIE_STAGES:-2,2,2,2,2,2/11,11,9,9,9,11,11}   # HKV-DIE 10-19: dv2f14bq seam (SC_TX 2) + kvs14p
 TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 # HKV-DIE 10-19: KV attention codec edges read from the instantiated qkd_kvs_attn (.LAND(1) -> 2), never assumed
 KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_layerbench','tools','tools/qwen_split']; import layer_compile as C; print(C.kv_codec_edges(open('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read()))")}
