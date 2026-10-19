@@ -1,6 +1,6 @@
 {
   "baseline_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
-  "emitted_sha256": "2f2ef23f38a403f22c635d4f95ac707fa95a9067268dd0ee1019014f5180e8b3",
+  "emitted_sha256": "ce1aba4c204325f2f3c72caaa96aa9947685be17e9f72cca78702b38f573e8d8",
   "original_ports_preserved": 115,
   "original_output_ports_preserved": 70,
   "new_ports": {
@@ -273,6 +273,26 @@
       "direction": "output",
       "width": "[1:0]",
       "kind": "wire"
+    },
+    "native_cq_offer_ok": {
+      "direction": "input",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_cq_prospective_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_cq_prospective_native_valid": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_cq_prospective_key": {
+      "direction": "output",
+      "width": "[86:0]",
+      "kind": "wire"
     }
   },
   "added_reg_declarations": [
@@ -295,7 +315,8 @@
     "word0_cut_ok uses original descriptor-tag lineage comparison",
     "event lineage uses original descriptor identity",
     "report_once ownership uses original descriptor-tag lineage comparison",
-    "new metadata writes cannot affect old branch"
+    "new metadata writes cannot affect old branch",
+    "native_cq_offer_ok participates only in new native success branch"
   ],
   "verdict": "SOURCE_DECLARATION_CHECK_PASS; DEFAULT_BEHAVIOR_REQUIRES_PARENT_BENCH",
   "compile_or_simulation_run": false
