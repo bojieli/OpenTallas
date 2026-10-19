@@ -1,0 +1,554 @@
+{
+  "tech_dbu": 1000,
+  "manufacturing_grid": 1,
+  "layers": {
+    "M4": {
+      "class": "dbTechLayer",
+      "getAlias": "",
+      "getArea": 2000,
+      "getCapacitance": 0.0,
+      "getConstName": "M4",
+      "getDebugName": "dbTechLayer(18, '<dbTechLayer:18>')",
+      "getDefaultAntennaRule": null,
+      "getDirection": "HORIZONTAL",
+      "getEdgeCapacitance": 0.0,
+      "getFirstLastPitch": -1,
+      "getId": 18,
+      "getLayerAdjustment": 0.0,
+      "getLef58Type": 0,
+      "getLef58TypeString": "NONE",
+      "getMaxWideDRCRange": {
+        "unavailable": "dbTechLayer.getMaxWideDRCRange() missing 2 required positional arguments: 'owidth' and 'olength'"
+      },
+      "getMaxWidth": 2147483647,
+      "getMinCutRules": [],
+      "getMinEncRules": [],
+      "getMinEnclosureRules": {
+        "unavailable": "dbTechLayer.getMinEnclosureRules() missing 1 required positional argument: 'enc_rules'"
+      },
+      "getMinStep": 0,
+      "getMinStepMaxEdges": -1,
+      "getMinStepMaxLength": -1,
+      "getMinWideDRCRange": {
+        "unavailable": "dbTechLayer.getMinWideDRCRange() missing 2 required positional arguments: 'owidth' and 'olength'"
+      },
+      "getMinWidth": 24,
+      "getMinimumCutRules": {
+        "unavailable": "dbTechLayer.getMinimumCutRules() missing 1 required positional argument: 'cut_rules'"
+      },
+      "getName": "M4",
+      "getNumMasks": 1,
+      "getNumber": 17,
+      "getOffset": 3,
+      "getOffsetX": 3,
+      "getOffsetY": 3,
+      "getOrCreateAntennaModel": {
+        "unavailable": "dbTechLayer.getOrCreateAntennaModel() missing 1 required positional argument: 'oxide_idx'"
+      },
+      "getOrthSpacingTable": {
+        "unavailable": "dbTechLayer.getOrthSpacingTable() missing 1 required positional argument: 'tbl'"
+      },
+      "getOxide2AntennaRule": null,
+      "getPitch": 48,
+      "getPitchX": 48,
+      "getPitchY": 48,
+      "getProtrusionFromWidth": 0,
+      "getProtrusionLength": 0,
+      "getProtrusionWidth": 0,
+      "getResistance": 0.0,
+      "getRoutingLevel": 4,
+      "getSpacing": 24,
+      "getThickness": {
+        "unavailable": "dbTechLayer.getThickness() missing 1 required positional argument: 'inthk'"
+      },
+      "getTwoWidthsSpacingTable": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTable() missing 1 required positional argument: 'sptbl'"
+      },
+      "getTwoWidthsSpacingTableEntry": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTableEntry() missing 2 required positional arguments: 'row' and 'col'"
+      },
+      "getTwoWidthsSpacingTableHasPRL": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTableHasPRL() missing 1 required positional argument: 'row'"
+      },
+      "getTwoWidthsSpacingTableNumWidths": 0,
+      "getTwoWidthsSpacingTablePRL": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTablePRL() missing 1 required positional argument: 'row'"
+      },
+      "getTwoWidthsSpacingTableWidth": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTableWidth() missing 1 required positional argument: 'row'"
+      },
+      "getType": "ROUTING",
+      "getTypeName": {
+        "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+      },
+      "getV54SpacingRules": [
+        "<odb.dbTechLayerSpacingRule; proxy of <Swig Object of type 'odb::dbTechLayerSpacingRule *' at 0x79655426cc60> >"
+      ],
+      "getV55InfluenceRules": [],
+      "getV55SpacingTable": {
+        "unavailable": "dbTechLayer.getV55SpacingTable() missing 1 required positional argument: 'sptbl'"
+      },
+      "getV55SpacingWidthsAndLengths": {
+        "unavailable": "dbTechLayer.getV55SpacingWidthsAndLengths() missing 2 required positional arguments: 'width_idx' and 'length_idx'"
+      },
+      "getWidth": 24,
+      "getWireExtension": 0,
+      "getWrongWayMinWidth": 24,
+      "getWrongWayWidth": 24,
+      "hasAlias": false,
+      "hasArea": true,
+      "hasDefaultAntennaRule": false,
+      "hasMaxWidth": false,
+      "hasMinStep": false,
+      "hasMinStepMaxEdges": false,
+      "hasMinStepMaxLength": false,
+      "hasOrthSpacingTable": false,
+      "hasOxide2AntennaRule": false,
+      "hasProtrusion": false,
+      "hasTwoWidthsSpacingRules": false,
+      "hasV55SpacingRules": true,
+      "hasXYOffset": false,
+      "hasXYPitch": false,
+      "isBackside": false,
+      "isRectOnly": true,
+      "isRectOnlyExceptNonCorePins": false,
+      "isRightWayOnGridOnly": true,
+      "isRightWayOnGridOnlyCheckMask": false,
+      "isValid": true,
+      "getTechLayerWidthTableRules": [
+        {
+          "class": "dbTechLayerWidthTableRule",
+          "getDebugName": "dbTechLayerWidthTableRule(1, '<dbTechLayerWidthTableRule:1>')",
+          "getId": 1,
+          "getName": "<dbTechLayerWidthTableRule:1>",
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "isOrthogonal": false,
+          "isValid": true,
+          "isWrongDirection": false
+        }
+      ],
+      "getTechLayerCornerSpacingRules": [
+        {
+          "class": "dbTechLayerCornerSpacingRule",
+          "getDebugName": "dbTechLayerCornerSpacingRule(1, '<dbTechLayerCornerSpacingRule:1>')",
+          "getEdgeLength": 0,
+          "getEolWidth": 0,
+          "getExceptNotchLength": 0,
+          "getId": 1,
+          "getJogLength": 0,
+          "getMinLength": 0,
+          "getName": "<dbTechLayerCornerSpacingRule:1>",
+          "getSpacingTable": {
+            "unavailable": "dbTechLayerCornerSpacingRule.getSpacingTable() missing 1 required positional argument: 'tbl'"
+          },
+          "getType": 0,
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "getWidthTable": {
+            "unavailable": "dbTechLayerCornerSpacingRule.getWidthTable() missing 1 required positional argument: 'tbl'"
+          },
+          "getWithin": 48,
+          "isCornerOnly": true,
+          "isCornerToCorner": false,
+          "isEdgeLengthValid": false,
+          "isExceptEol": false,
+          "isExceptJogLength": false,
+          "isExceptNotch": false,
+          "isExceptNotchLengthValid": false,
+          "isExceptSameMetal": false,
+          "isExceptSameNet": false,
+          "isIncludeShape": false,
+          "isMinLengthValid": false,
+          "isSameMask": false,
+          "isValid": true
+        }
+      ],
+      "getTechLayerEolKeepOutRules": [
+        {
+          "class": "dbTechLayerEolKeepOutRule",
+          "getBackwardExt": 48,
+          "getClassName": "",
+          "getDebugName": "dbTechLayerEolKeepOutRule(1, '<dbTechLayerEolKeepOutRule:1>')",
+          "getEolWidth": 25,
+          "getForwardExt": 48,
+          "getId": 1,
+          "getName": "<dbTechLayerEolKeepOutRule:1>",
+          "getSideExt": 24,
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "getWithinHigh": 0,
+          "getWithinLow": 0,
+          "isClassValid": false,
+          "isCornerOnly": true,
+          "isExceptWithin": false,
+          "isValid": true
+        }
+      ],
+      "getTechLayerSpacingEolRules": [
+        {
+          "class": "dbTechLayerSpacingEolRule",
+          "getCutClass": 0,
+          "getCutToMetalSpace": 0,
+          "getDebugName": "dbTechLayerSpacingEolRule(1, '<dbTechLayerSpacingEolRule:1>')",
+          "getEncloseDist": 0,
+          "getEnclosureEndWidth": 0,
+          "getEnclosureEndWithin": 0,
+          "getEndPrl": 0,
+          "getEndPrlSpace": 0,
+          "getEndToEndSpace": 40,
+          "getEolSpace": 24,
+          "getEolWidth": 25,
+          "getEolWithin": 40,
+          "getExactWidth": 0,
+          "getExtension": 0,
+          "getFillTriangle": 0,
+          "getId": 1,
+          "getMaxLength": 0,
+          "getMinAdjLength": 0,
+          "getMinAdjLength1": 0,
+          "getMinAdjLength2": 0,
+          "getMinLength": 0,
+          "getName": "<dbTechLayerSpacingEolRule:1>",
+          "getNotchLength": 0,
+          "getOneCutSpace": 0,
+          "getOppositeWidth": 0,
+          "getOtherEndWidth": 0,
+          "getOtherWidth": 0,
+          "getParMinLength": 0,
+          "getParPrl": 0,
+          "getParSpace": 0,
+          "getParWithin": 0,
+          "getTwoCutSpace": 0,
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "getWithCutSpace": 0,
+          "getWrongDirExtension": 0,
+          "getWrongDirSpace": 0,
+          "getWrongDirWithin": 0,
+          "isAboveValid": false,
+          "isAllCutsValid": false,
+          "isBelowValid": false,
+          "isCutClassValid": false,
+          "isCutSpacesValid": false,
+          "isCutSpacingValid": false,
+          "isEncloseCutValid": false,
+          "isEnclosureEndValid": false,
+          "isEnclosureEndWithinValid": false,
+          "isEndPrlSpacingValid": false,
+          "isEndToEndValid": true,
+          "isEqualRectWidthValid": false,
+          "isExactWidthValid": false,
+          "isExceptExactWidthValid": false,
+          "isExtensionValid": false,
+          "isFillConcaveCornerValid": false,
+          "isMaxLengthValid": false,
+          "isMinAdjacentLengthValid": false,
+          "isMinLengthValid": false,
+          "isNonEolCornerOnlyValid": false,
+          "isOppositeWidthValid": false,
+          "isOtherEndWidthValid": false,
+          "isParMinLengthValid": false,
+          "isParPrlValid": false,
+          "isParallelEdgeValid": false,
+          "isParallelSameMaskValid": false,
+          "isPrlValid": false,
+          "isSameMaskValid": false,
+          "isSameMetalValid": false,
+          "isSubtractEolWidthValid": false,
+          "isToConcaveCornerValid": false,
+          "isToNotchLengthValid": false,
+          "isTwoEdgesValid": false,
+          "isTwoMinAdjLengthValid": false,
+          "isTwoSidesValid": false,
+          "isValid": true,
+          "isWithCutAboveValid": false,
+          "isWithcutValid": false,
+          "isWithinValid": true,
+          "isWrongDirExtensionValid": false,
+          "isWrongDirSpacingValid": false,
+          "isWrongDirWithinValid": false
+        }
+      ],
+      "getTechLayerSpacingTablePrlRules": []
+    },
+    "M5": {
+      "class": "dbTechLayer",
+      "getAlias": "",
+      "getArea": 2000,
+      "getCapacitance": 0.0,
+      "getConstName": "M5",
+      "getDebugName": "dbTechLayer(20, '<dbTechLayer:20>')",
+      "getDefaultAntennaRule": null,
+      "getDirection": "VERTICAL",
+      "getEdgeCapacitance": 0.0,
+      "getFirstLastPitch": -1,
+      "getId": 20,
+      "getLayerAdjustment": 0.0,
+      "getLef58Type": 0,
+      "getLef58TypeString": "NONE",
+      "getMaxWideDRCRange": {
+        "unavailable": "dbTechLayer.getMaxWideDRCRange() missing 2 required positional arguments: 'owidth' and 'olength'"
+      },
+      "getMaxWidth": 2147483647,
+      "getMinCutRules": [],
+      "getMinEncRules": [],
+      "getMinEnclosureRules": {
+        "unavailable": "dbTechLayer.getMinEnclosureRules() missing 1 required positional argument: 'enc_rules'"
+      },
+      "getMinStep": 0,
+      "getMinStepMaxEdges": -1,
+      "getMinStepMaxLength": -1,
+      "getMinWideDRCRange": {
+        "unavailable": "dbTechLayer.getMinWideDRCRange() missing 2 required positional arguments: 'owidth' and 'olength'"
+      },
+      "getMinWidth": 24,
+      "getMinimumCutRules": {
+        "unavailable": "dbTechLayer.getMinimumCutRules() missing 1 required positional argument: 'cut_rules'"
+      },
+      "getName": "M5",
+      "getNumMasks": 1,
+      "getNumber": 19,
+      "getOffset": 0,
+      "getOffsetX": 0,
+      "getOffsetY": 0,
+      "getOrCreateAntennaModel": {
+        "unavailable": "dbTechLayer.getOrCreateAntennaModel() missing 1 required positional argument: 'oxide_idx'"
+      },
+      "getOrthSpacingTable": {
+        "unavailable": "dbTechLayer.getOrthSpacingTable() missing 1 required positional argument: 'tbl'"
+      },
+      "getOxide2AntennaRule": null,
+      "getPitch": 48,
+      "getPitchX": 48,
+      "getPitchY": 48,
+      "getProtrusionFromWidth": 0,
+      "getProtrusionLength": 0,
+      "getProtrusionWidth": 0,
+      "getResistance": 0.0,
+      "getRoutingLevel": 5,
+      "getSpacing": 24,
+      "getThickness": {
+        "unavailable": "dbTechLayer.getThickness() missing 1 required positional argument: 'inthk'"
+      },
+      "getTwoWidthsSpacingTable": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTable() missing 1 required positional argument: 'sptbl'"
+      },
+      "getTwoWidthsSpacingTableEntry": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTableEntry() missing 2 required positional arguments: 'row' and 'col'"
+      },
+      "getTwoWidthsSpacingTableHasPRL": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTableHasPRL() missing 1 required positional argument: 'row'"
+      },
+      "getTwoWidthsSpacingTableNumWidths": 0,
+      "getTwoWidthsSpacingTablePRL": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTablePRL() missing 1 required positional argument: 'row'"
+      },
+      "getTwoWidthsSpacingTableWidth": {
+        "unavailable": "dbTechLayer.getTwoWidthsSpacingTableWidth() missing 1 required positional argument: 'row'"
+      },
+      "getType": "ROUTING",
+      "getTypeName": {
+        "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+      },
+      "getV54SpacingRules": [
+        "<odb.dbTechLayerSpacingRule; proxy of <Swig Object of type 'odb::dbTechLayerSpacingRule *' at 0x79655426c1e0> >"
+      ],
+      "getV55InfluenceRules": [],
+      "getV55SpacingTable": {
+        "unavailable": "dbTechLayer.getV55SpacingTable() missing 1 required positional argument: 'sptbl'"
+      },
+      "getV55SpacingWidthsAndLengths": {
+        "unavailable": "dbTechLayer.getV55SpacingWidthsAndLengths() missing 2 required positional arguments: 'width_idx' and 'length_idx'"
+      },
+      "getWidth": 24,
+      "getWireExtension": 0,
+      "getWrongWayMinWidth": 24,
+      "getWrongWayWidth": 24,
+      "hasAlias": false,
+      "hasArea": true,
+      "hasDefaultAntennaRule": false,
+      "hasMaxWidth": false,
+      "hasMinStep": false,
+      "hasMinStepMaxEdges": false,
+      "hasMinStepMaxLength": false,
+      "hasOrthSpacingTable": false,
+      "hasOxide2AntennaRule": false,
+      "hasProtrusion": false,
+      "hasTwoWidthsSpacingRules": false,
+      "hasV55SpacingRules": true,
+      "hasXYOffset": false,
+      "hasXYPitch": false,
+      "isBackside": false,
+      "isRectOnly": true,
+      "isRectOnlyExceptNonCorePins": false,
+      "isRightWayOnGridOnly": true,
+      "isRightWayOnGridOnlyCheckMask": false,
+      "isValid": true,
+      "getTechLayerWidthTableRules": [
+        {
+          "class": "dbTechLayerWidthTableRule",
+          "getDebugName": "dbTechLayerWidthTableRule(1, '<dbTechLayerWidthTableRule:1>')",
+          "getId": 1,
+          "getName": "<dbTechLayerWidthTableRule:1>",
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "isOrthogonal": false,
+          "isValid": true,
+          "isWrongDirection": false
+        }
+      ],
+      "getTechLayerCornerSpacingRules": [
+        {
+          "class": "dbTechLayerCornerSpacingRule",
+          "getDebugName": "dbTechLayerCornerSpacingRule(1, '<dbTechLayerCornerSpacingRule:1>')",
+          "getEdgeLength": 0,
+          "getEolWidth": 0,
+          "getExceptNotchLength": 0,
+          "getId": 1,
+          "getJogLength": 0,
+          "getMinLength": 0,
+          "getName": "<dbTechLayerCornerSpacingRule:1>",
+          "getSpacingTable": {
+            "unavailable": "dbTechLayerCornerSpacingRule.getSpacingTable() missing 1 required positional argument: 'tbl'"
+          },
+          "getType": 0,
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "getWidthTable": {
+            "unavailable": "dbTechLayerCornerSpacingRule.getWidthTable() missing 1 required positional argument: 'tbl'"
+          },
+          "getWithin": 48,
+          "isCornerOnly": true,
+          "isCornerToCorner": false,
+          "isEdgeLengthValid": false,
+          "isExceptEol": false,
+          "isExceptJogLength": false,
+          "isExceptNotch": false,
+          "isExceptNotchLengthValid": false,
+          "isExceptSameMetal": false,
+          "isExceptSameNet": false,
+          "isIncludeShape": false,
+          "isMinLengthValid": false,
+          "isSameMask": false,
+          "isValid": true
+        }
+      ],
+      "getTechLayerEolKeepOutRules": [
+        {
+          "class": "dbTechLayerEolKeepOutRule",
+          "getBackwardExt": 48,
+          "getClassName": "",
+          "getDebugName": "dbTechLayerEolKeepOutRule(1, '<dbTechLayerEolKeepOutRule:1>')",
+          "getEolWidth": 25,
+          "getForwardExt": 48,
+          "getId": 1,
+          "getName": "<dbTechLayerEolKeepOutRule:1>",
+          "getSideExt": 24,
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "getWithinHigh": 0,
+          "getWithinLow": 0,
+          "isClassValid": false,
+          "isCornerOnly": true,
+          "isExceptWithin": false,
+          "isValid": true
+        }
+      ],
+      "getTechLayerSpacingEolRules": [
+        {
+          "class": "dbTechLayerSpacingEolRule",
+          "getCutClass": 0,
+          "getCutToMetalSpace": 0,
+          "getDebugName": "dbTechLayerSpacingEolRule(1, '<dbTechLayerSpacingEolRule:1>')",
+          "getEncloseDist": 0,
+          "getEnclosureEndWidth": 0,
+          "getEnclosureEndWithin": 0,
+          "getEndPrl": 0,
+          "getEndPrlSpace": 0,
+          "getEndToEndSpace": 40,
+          "getEolSpace": 24,
+          "getEolWidth": 25,
+          "getEolWithin": 40,
+          "getExactWidth": 0,
+          "getExtension": 0,
+          "getFillTriangle": 0,
+          "getId": 1,
+          "getMaxLength": 0,
+          "getMinAdjLength": 0,
+          "getMinAdjLength1": 0,
+          "getMinAdjLength2": 0,
+          "getMinLength": 0,
+          "getName": "<dbTechLayerSpacingEolRule:1>",
+          "getNotchLength": 0,
+          "getOneCutSpace": 0,
+          "getOppositeWidth": 0,
+          "getOtherEndWidth": 0,
+          "getOtherWidth": 0,
+          "getParMinLength": 0,
+          "getParPrl": 0,
+          "getParSpace": 0,
+          "getParWithin": 0,
+          "getTwoCutSpace": 0,
+          "getTypeName": {
+            "unavailable": "Wrong number or type of arguments for overloaded function 'dbObject_getTypeName'.\n  Possible C/C++ prototypes are:\n    odb::dbObject::getTypeName() const\n    odb::dbObject::getTypeName(odb::dbObjectType)\n"
+          },
+          "getWithCutSpace": 0,
+          "getWrongDirExtension": 0,
+          "getWrongDirSpace": 0,
+          "getWrongDirWithin": 0,
+          "isAboveValid": false,
+          "isAllCutsValid": false,
+          "isBelowValid": false,
+          "isCutClassValid": false,
+          "isCutSpacesValid": false,
+          "isCutSpacingValid": false,
+          "isEncloseCutValid": false,
+          "isEnclosureEndValid": false,
+          "isEnclosureEndWithinValid": false,
+          "isEndPrlSpacingValid": false,
+          "isEndToEndValid": true,
+          "isEqualRectWidthValid": false,
+          "isExactWidthValid": false,
+          "isExceptExactWidthValid": false,
+          "isExtensionValid": false,
+          "isFillConcaveCornerValid": false,
+          "isMaxLengthValid": false,
+          "isMinAdjacentLengthValid": false,
+          "isMinLengthValid": false,
+          "isNonEolCornerOnlyValid": false,
+          "isOppositeWidthValid": false,
+          "isOtherEndWidthValid": false,
+          "isParMinLengthValid": false,
+          "isParPrlValid": false,
+          "isParallelEdgeValid": false,
+          "isParallelSameMaskValid": false,
+          "isPrlValid": false,
+          "isSameMaskValid": false,
+          "isSameMetalValid": false,
+          "isSubtractEolWidthValid": false,
+          "isToConcaveCornerValid": false,
+          "isToNotchLengthValid": false,
+          "isTwoEdgesValid": false,
+          "isTwoMinAdjLengthValid": false,
+          "isTwoSidesValid": false,
+          "isValid": true,
+          "isWithCutAboveValid": false,
+          "isWithcutValid": false,
+          "isWithinValid": true,
+          "isWrongDirExtensionValid": false,
+          "isWrongDirSpacingValid": false,
+          "isWrongDirWithinValid": false
+        }
+      ],
+      "getTechLayerSpacingTablePrlRules": []
+    }
+  }
+}

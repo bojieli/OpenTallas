@@ -1,0 +1,329 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+DESIGN coupon_a ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 10000 10000 ) ;
+TRACKS Y 3 DO 209 STEP 48 LAYER M4 ;
+TRACKS X 0 DO 209 STEP 48 LAYER M5 ;
+GCELLGRID X 0 DO 11 STEP 1000 ;
+GCELLGRID Y 0 DO 11 STEP 1000 ;
+COMPONENTS 0 ;
+END COMPONENTS
+NETS 100 ;
+    - case0_net0 + USE SIGNAL
+      + ROUTED M4 ( 484 963 ) ( 972 * )
+      NEW M4 ( 960 960 ) RECT ( 0 0 24 24 )  ;
+    - case0_net1 + USE SIGNAL
+      + ROUTED M4 ( 484 1059 ) ( 972 * )
+      NEW M4 ( 960 1056 ) RECT ( 0 0 24 24 )  ;
+    - case0_net2 + USE SIGNAL
+      + ROUTED M4 ( 484 1155 ) ( 972 * )
+      NEW M4 ( 960 1152 ) RECT ( 0 0 24 24 )  ;
+    - case0_net3 + USE SIGNAL
+      + ROUTED M4 ( 484 1251 ) ( 972 * )
+      NEW M4 ( 960 1248 ) RECT ( 0 0 24 24 )  ;
+    - case0_net4 + USE SIGNAL
+      + ROUTED M4 ( 484 1347 ) ( 972 * )
+      NEW M4 ( 960 1344 ) RECT ( 0 0 24 24 )  ;
+    - case0_net5 + USE SIGNAL
+      + ROUTED M4 ( 484 1443 ) ( 972 * )
+      NEW M4 ( 960 1440 ) RECT ( 0 0 24 24 )  ;
+    - case0_net6 + USE SIGNAL
+      + ROUTED M4 ( 1260 576 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 1260 1344 ) RECT ( 0 0 212 96 )  ;
+    - case0_net7 + USE SIGNAL
+      + ROUTED M4 ( 1260 960 ) RECT ( 0 0 212 96 )  ;
+    - case10_net0 + USE SIGNAL
+      + ROUTED M4 ( 756 4848 ) ( 1020 * ) ;
+    - case11_net0 + USE SIGNAL
+      + ROUTED M4 ( 2676 4839 ) ( 2940 * )
+      NEW M4 ( 2928 4836 ) RECT ( 0 0 24 24 )  ;
+    - case12_net0 + USE SIGNAL
+      + FIXED M4 ( 4596 4839 ) ( 4860 * )
+      NEW M4 ( 4848 4836 ) RECT ( 0 0 24 24 )  ;
+    - case13_net0 + USE SIGNAL
+      + ROUTED M4 ( 6636 4848 ) ( 6900 * ) ;
+    - case13_net1 + USE SIGNAL
+      + ROUTED M4 ( 6636 4895 ) ( 6900 * ) ;
+    - case14_net0 + USE SIGNAL
+      + ROUTED M4 ( 8436 4848 ) ( 8666 * )
+      NEW M4 ( 8688 4836 ) RECT ( 0 0 24 24 )  ;
+    - case15_net0 + USE SIGNAL
+      + ROUTED M4 ( 756 6780 ) ( 1260 * ) ;
+    - case16_net0 + USE SIGNAL
+      + ROUTED M4 ( 2664 6756 ) RECT ( 0 0 528 33 )  ;
+    - case1_net0 + USE SIGNAL
+      + ROUTED M4 ( 2404 771 ) ( 2892 * )
+      NEW M4 ( 2880 768 ) RECT ( 0 0 24 24 )  ;
+    - case1_net1 + USE SIGNAL
+      + ROUTED M4 ( 2404 867 ) ( 2892 * )
+      NEW M4 ( 2880 864 ) RECT ( 0 0 24 24 )  ;
+    - case1_net2 + USE SIGNAL
+      + ROUTED M4 ( 2404 963 ) ( 2892 * )
+      NEW M4 ( 2880 960 ) RECT ( 0 0 24 24 )  ;
+    - case1_net3 + USE SIGNAL
+      + ROUTED M4 ( 2404 1059 ) ( 2892 * )
+      NEW M4 ( 2880 1056 ) RECT ( 0 0 24 24 )  ;
+    - case1_net4 + USE SIGNAL
+      + ROUTED M4 ( 2404 1155 ) ( 2892 * )
+      NEW M4 ( 2880 1152 ) RECT ( 0 0 24 24 )  ;
+    - case1_net5 + USE SIGNAL
+      + ROUTED M4 ( 2404 1251 ) ( 2892 * )
+      NEW M4 ( 2880 1248 ) RECT ( 0 0 24 24 )  ;
+    - case1_net6 + USE SIGNAL
+      + ROUTED M4 ( 2404 1347 ) ( 2892 * )
+      NEW M4 ( 2880 1344 ) RECT ( 0 0 24 24 )  ;
+    - case1_net7 + USE SIGNAL
+      + ROUTED M4 ( 2404 1443 ) ( 2892 * )
+      NEW M4 ( 2880 1440 ) RECT ( 0 0 24 24 )  ;
+    - case1_net8 + USE SIGNAL
+      + ROUTED M4 ( 3180 472 ) RECT ( 0 0 212 8 ) 
+      NEW M4 ( 3180 1152 ) RECT ( 0 0 212 96 )  ;
+    - case1_net9 + USE SIGNAL
+      + ROUTED M4 ( 3180 768 ) RECT ( 0 0 212 96 )  ;
+    - case2_net0 + USE SIGNAL
+      + ROUTED M4 ( 4312 472 ) RECT ( 0 0 512 23 ) 
+      NEW M4 ( 4800 480 ) RECT ( 0 0 24 24 )  ;
+    - case2_net1 + USE SIGNAL
+      + ROUTED M4 ( 4324 579 ) ( 4812 * )
+      NEW M4 ( 4800 576 ) RECT ( 0 0 24 24 )  ;
+    - case2_net10 + USE SIGNAL
+      + ROUTED M4 ( 4324 1443 ) ( 4812 * )
+      NEW M4 ( 4800 1440 ) RECT ( 0 0 24 24 )  ;
+    - case2_net11 + USE SIGNAL
+      + ROUTED M4 ( 5100 576 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 5100 1344 ) RECT ( 0 0 212 96 )  ;
+    - case2_net12 + USE SIGNAL
+      + ROUTED M4 ( 5100 960 ) RECT ( 0 0 212 96 )  ;
+    - case2_net2 + USE SIGNAL
+      + ROUTED M4 ( 4324 675 ) ( 4812 * )
+      NEW M4 ( 4800 672 ) RECT ( 0 0 24 24 )  ;
+    - case2_net3 + USE SIGNAL
+      + ROUTED M4 ( 4324 771 ) ( 4812 * )
+      NEW M4 ( 4800 768 ) RECT ( 0 0 24 24 )  ;
+    - case2_net4 + USE SIGNAL
+      + ROUTED M4 ( 4324 867 ) ( 4812 * )
+      NEW M4 ( 4800 864 ) RECT ( 0 0 24 24 )  ;
+    - case2_net5 + USE SIGNAL
+      + ROUTED M4 ( 4324 963 ) ( 4812 * )
+      NEW M4 ( 4800 960 ) RECT ( 0 0 24 24 )  ;
+    - case2_net6 + USE SIGNAL
+      + ROUTED M4 ( 4324 1059 ) ( 4812 * )
+      NEW M4 ( 4800 1056 ) RECT ( 0 0 24 24 )  ;
+    - case2_net7 + USE SIGNAL
+      + ROUTED M4 ( 4324 1155 ) ( 4812 * )
+      NEW M4 ( 4800 1152 ) RECT ( 0 0 24 24 )  ;
+    - case2_net8 + USE SIGNAL
+      + ROUTED M4 ( 4324 1251 ) ( 4812 * )
+      NEW M4 ( 4800 1248 ) RECT ( 0 0 24 24 )  ;
+    - case2_net9 + USE SIGNAL
+      + ROUTED M4 ( 4324 1347 ) ( 4812 * )
+      NEW M4 ( 4800 1344 ) RECT ( 0 0 24 24 )  ;
+    - case3_net0 + USE SIGNAL
+      + ROUTED M4 ( 6732 963 ) ( 7220 * )
+      NEW M4 ( 6720 960 ) RECT ( 0 0 24 24 )  ;
+    - case3_net1 + USE SIGNAL
+      + ROUTED M4 ( 6732 1059 ) ( 7220 * )
+      NEW M4 ( 6720 1056 ) RECT ( 0 0 24 24 )  ;
+    - case3_net2 + USE SIGNAL
+      + ROUTED M4 ( 6732 1155 ) ( 7220 * )
+      NEW M4 ( 6720 1152 ) RECT ( 0 0 24 24 )  ;
+    - case3_net3 + USE SIGNAL
+      + ROUTED M4 ( 6732 1251 ) ( 7220 * )
+      NEW M4 ( 6720 1248 ) RECT ( 0 0 24 24 )  ;
+    - case3_net4 + USE SIGNAL
+      + ROUTED M4 ( 6732 1347 ) ( 7220 * )
+      NEW M4 ( 6720 1344 ) RECT ( 0 0 24 24 )  ;
+    - case3_net5 + USE SIGNAL
+      + ROUTED M4 ( 6732 1443 ) ( 7220 * )
+      NEW M4 ( 6720 1440 ) RECT ( 0 0 24 24 )  ;
+    - case3_net6 + USE SIGNAL
+      + ROUTED M4 ( 6232 576 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 6232 1344 ) RECT ( 0 0 212 96 )  ;
+    - case3_net7 + USE SIGNAL
+      + ROUTED M4 ( 6232 960 ) RECT ( 0 0 212 96 )  ;
+    - case4_net0 + USE SIGNAL
+      + ROUTED M4 ( 8316 771 ) ( 9176 * ) ;
+    - case4_net1 + USE SIGNAL
+      + ROUTED M4 ( 8581 867 ) ( 9176 * )
+      NEW M4 ( 8316 963 ) ( 8603 * )
+      NEW M5 ( 8592 856 ) ( * 974 )
+      NEW M4 ( 8592 867 ) VIA45
+      NEW M4 ( 8592 963 ) VIA45 ;
+    - case4_net2 + USE SIGNAL
+      + ROUTED M4 ( 8677 963 ) ( 9176 * )
+      NEW M4 ( 8316 1155 ) ( 8699 * )
+      NEW M5 ( 8688 952 ) ( * 1166 )
+      NEW M4 ( 8688 963 ) VIA45
+      NEW M4 ( 8688 1155 ) VIA45 ;
+    - case4_net3 + USE SIGNAL
+      + ROUTED M4 ( 8773 1059 ) ( 9176 * )
+      NEW M4 ( 8316 1347 ) ( 8795 * )
+      NEW M5 ( 8784 1048 ) ( * 1358 )
+      NEW M4 ( 8784 1059 ) VIA45
+      NEW M4 ( 8784 1347 ) VIA45 ;
+    - case4_net4 + USE SIGNAL
+      + ROUTED M4 ( 8869 1155 ) ( 9176 * )
+      NEW M5 ( 8880 1144 ) ( * 1451 )
+      NEW M4 ( 8880 1155 ) VIA45 ;
+    - case4_net5 + USE SIGNAL
+      + ROUTED M4 ( 8965 1251 ) ( 9176 * )
+      NEW M5 ( 8976 1240 ) ( * 1451 )
+      NEW M4 ( 8976 1251 ) VIA45 ;
+    - case4_net6 + USE SIGNAL
+      + ROUTED M4 ( 9061 1347 ) ( 9176 * )
+      NEW M5 ( 9072 1336 ) ( * 1451 )
+      NEW M4 ( 9072 1347 ) VIA45 ;
+    - case4_net7 + USE SIGNAL
+      + ROUTED M4 ( 9157 1443 ) ( 9176 * )
+      NEW M5 ( 9168 1432 ) ( * 1451 )
+      NEW M4 ( 9168 1443 ) VIA45 ;
+    - case5_net0 + USE SIGNAL
+      + ROUTED M4 ( 484 2883 ) ( 972 * )
+      NEW M4 ( 960 2880 ) RECT ( 0 0 24 24 )  ;
+    - case5_net1 + USE SIGNAL
+      + ROUTED M4 ( 484 2979 ) ( 972 * )
+      NEW M4 ( 960 2976 ) RECT ( 0 0 24 24 )  ;
+    - case5_net2 + USE SIGNAL
+      + ROUTED M4 ( 484 3075 ) ( 972 * )
+      NEW M4 ( 960 3072 ) RECT ( 0 0 24 24 )  ;
+    - case5_net3 + USE SIGNAL
+      + ROUTED M4 ( 484 3171 ) ( 972 * )
+      NEW M4 ( 960 3168 ) RECT ( 0 0 24 24 )  ;
+    - case5_net4 + USE SIGNAL
+      + ROUTED M4 ( 484 3267 ) ( 972 * )
+      NEW M4 ( 960 3264 ) RECT ( 0 0 24 24 )  ;
+    - case5_net5 + USE SIGNAL
+      + ROUTED M4 ( 484 3363 ) ( 972 * )
+      NEW M4 ( 960 3360 ) RECT ( 0 0 24 24 )  ;
+    - case5_net6 + USE SIGNAL
+      + ROUTED M4 ( 1260 2496 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 1260 3264 ) RECT ( 0 0 212 96 )  ;
+    - case5_net7 + USE SIGNAL
+      + ROUTED M4 ( 1260 2880 ) RECT ( 0 0 212 96 )  ;
+    - case6_net0 + USE SIGNAL
+      + ROUTED M4 ( 2404 2787 ) ( 2892 * )
+      NEW M4 ( 2880 2784 ) RECT ( 0 0 24 24 )  ;
+    - case6_net1 + USE SIGNAL
+      + ROUTED M4 ( 2404 2883 ) ( 2892 * )
+      NEW M4 ( 2880 2880 ) RECT ( 0 0 24 24 )  ;
+    - case6_net2 + USE SIGNAL
+      + ROUTED M4 ( 2404 2979 ) ( 2892 * )
+      NEW M4 ( 2880 2976 ) RECT ( 0 0 24 24 )  ;
+    - case6_net3 + USE SIGNAL
+      + ROUTED M4 ( 2404 3075 ) ( 2892 * )
+      NEW M4 ( 2880 3072 ) RECT ( 0 0 24 24 )  ;
+    - case6_net4 + USE SIGNAL
+      + ROUTED M4 ( 2404 3171 ) ( 2892 * )
+      NEW M4 ( 2880 3168 ) RECT ( 0 0 24 24 )  ;
+    - case6_net5 + USE SIGNAL
+      + ROUTED M4 ( 2404 3267 ) ( 2892 * )
+      NEW M4 ( 2880 3264 ) RECT ( 0 0 24 24 )  ;
+    - case6_net6 + USE SIGNAL
+      + ROUTED M4 ( 2404 3363 ) ( 2892 * )
+      NEW M4 ( 2880 3360 ) RECT ( 0 0 24 24 )  ;
+    - case6_net7 + USE SIGNAL
+      + ROUTED M4 ( 3180 2400 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 3180 3168 ) RECT ( 0 0 212 96 )  ;
+    - case6_net8 + USE SIGNAL
+      + ROUTED M4 ( 3180 2784 ) RECT ( 0 0 212 96 )  ;
+    - case7_net0 + USE SIGNAL
+      + ROUTED M4 ( 4312 2392 ) RECT ( 0 0 512 23 ) 
+      NEW M4 ( 4800 2400 ) RECT ( 0 0 24 24 )  ;
+    - case7_net1 + USE SIGNAL
+      + ROUTED M4 ( 4324 2499 ) ( 4812 * )
+      NEW M4 ( 4800 2496 ) RECT ( 0 0 24 24 )  ;
+    - case7_net10 + USE SIGNAL
+      + ROUTED M4 ( 4324 3363 ) ( 4812 * )
+      NEW M4 ( 4800 3360 ) RECT ( 0 0 24 24 )  ;
+    - case7_net11 + USE SIGNAL
+      + ROUTED M4 ( 5100 2976 ) RECT ( 0 0 212 96 )  ;
+    - case7_net12 + USE SIGNAL
+      + ROUTED M4 ( 5100 2592 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 5100 3360 ) RECT ( 0 0 212 32 )  ;
+    - case7_net2 + USE SIGNAL
+      + ROUTED M4 ( 4324 2595 ) ( 4812 * )
+      NEW M4 ( 4800 2592 ) RECT ( 0 0 24 24 )  ;
+    - case7_net3 + USE SIGNAL
+      + ROUTED M4 ( 4324 2691 ) ( 4812 * )
+      NEW M4 ( 4800 2688 ) RECT ( 0 0 24 24 )  ;
+    - case7_net4 + USE SIGNAL
+      + ROUTED M4 ( 4324 2787 ) ( 4812 * )
+      NEW M4 ( 4800 2784 ) RECT ( 0 0 24 24 )  ;
+    - case7_net5 + USE SIGNAL
+      + ROUTED M4 ( 4324 2883 ) ( 4812 * )
+      NEW M4 ( 4800 2880 ) RECT ( 0 0 24 24 )  ;
+    - case7_net6 + USE SIGNAL
+      + ROUTED M4 ( 4324 2979 ) ( 4812 * )
+      NEW M4 ( 4800 2976 ) RECT ( 0 0 24 24 )  ;
+    - case7_net7 + USE SIGNAL
+      + ROUTED M4 ( 4324 3075 ) ( 4812 * )
+      NEW M4 ( 4800 3072 ) RECT ( 0 0 24 24 )  ;
+    - case7_net8 + USE SIGNAL
+      + ROUTED M4 ( 4324 3171 ) ( 4812 * )
+      NEW M4 ( 4800 3168 ) RECT ( 0 0 24 24 )  ;
+    - case7_net9 + USE SIGNAL
+      + ROUTED M4 ( 4324 3267 ) ( 4812 * )
+      NEW M4 ( 4800 3264 ) RECT ( 0 0 24 24 )  ;
+    - case8_net0 + USE SIGNAL
+      + ROUTED M4 ( 6732 2883 ) ( 7220 * )
+      NEW M4 ( 6720 2880 ) RECT ( 0 0 24 24 )  ;
+    - case8_net1 + USE SIGNAL
+      + ROUTED M4 ( 6732 2979 ) ( 7220 * )
+      NEW M4 ( 6720 2976 ) RECT ( 0 0 24 24 )  ;
+    - case8_net2 + USE SIGNAL
+      + ROUTED M4 ( 6732 3075 ) ( 7220 * )
+      NEW M4 ( 6720 3072 ) RECT ( 0 0 24 24 )  ;
+    - case8_net3 + USE SIGNAL
+      + ROUTED M4 ( 6732 3171 ) ( 7220 * )
+      NEW M4 ( 6720 3168 ) RECT ( 0 0 24 24 )  ;
+    - case8_net4 + USE SIGNAL
+      + ROUTED M4 ( 6732 3267 ) ( 7220 * )
+      NEW M4 ( 6720 3264 ) RECT ( 0 0 24 24 )  ;
+    - case8_net5 + USE SIGNAL
+      + ROUTED M4 ( 6732 3363 ) ( 7220 * )
+      NEW M4 ( 6720 3360 ) RECT ( 0 0 24 24 )  ;
+    - case8_net6 + USE SIGNAL
+      + ROUTED M4 ( 6232 2496 ) RECT ( 0 0 212 96 ) 
+      NEW M4 ( 6232 3264 ) RECT ( 0 0 212 96 )  ;
+    - case8_net7 + USE SIGNAL
+      + ROUTED M4 ( 6232 2880 ) RECT ( 0 0 212 96 )  ;
+    - case9_net0 + USE SIGNAL
+      + ROUTED M4 ( 8412 2787 ) ( 9176 * )
+      NEW M4 ( 8400 2784 ) RECT ( 0 0 24 24 )  ;
+    - case9_net1 + USE SIGNAL
+      + ROUTED M4 ( 8677 2883 ) ( 9176 * )
+      NEW M4 ( 8412 2979 ) ( 8699 * )
+      NEW M5 ( 8688 2872 ) ( * 2990 )
+      NEW M4 ( 8400 2976 ) RECT ( 0 0 24 24 ) 
+      NEW M4 ( 8688 2883 ) VIA45
+      NEW M4 ( 8688 2979 ) VIA45 ;
+    - case9_net2 + USE SIGNAL
+      + ROUTED M4 ( 8773 2979 ) ( 9176 * )
+      NEW M4 ( 8412 3171 ) ( 8795 * )
+      NEW M5 ( 8784 2968 ) ( * 3182 )
+      NEW M4 ( 8400 3168 ) RECT ( 0 0 24 24 ) 
+      NEW M4 ( 8784 2979 ) VIA45
+      NEW M4 ( 8784 3171 ) VIA45 ;
+    - case9_net3 + USE SIGNAL
+      + ROUTED M4 ( 8869 3075 ) ( 9176 * )
+      NEW M4 ( 8412 3363 ) ( 8891 * )
+      NEW M5 ( 8880 3064 ) ( * 3371 )
+      NEW M4 ( 8400 3360 ) RECT ( 0 0 24 23 ) 
+      NEW M4 ( 8880 3075 ) VIA45
+      NEW M4 ( 8880 3363 ) VIA45 ;
+    - case9_net4 + USE SIGNAL
+      + ROUTED M4 ( 8965 3171 ) ( 9176 * )
+      NEW M5 ( 8976 3160 ) ( * 3371 )
+      NEW M4 ( 8976 3171 ) VIA45 ;
+    - case9_net5 + USE SIGNAL
+      + ROUTED M4 ( 9061 3267 ) ( 9176 * )
+      NEW M5 ( 9072 3256 ) ( * 3371 )
+      NEW M4 ( 9072 3267 ) VIA45 ;
+    - case9_net6 + USE SIGNAL
+      + ROUTED M4 ( 9157 3363 ) ( 9176 * )
+      NEW M5 ( 9168 3352 ) ( * 3371 )
+      NEW M4 ( 9168 3363 ) VIA45 ;
+END NETS
+END DESIGN

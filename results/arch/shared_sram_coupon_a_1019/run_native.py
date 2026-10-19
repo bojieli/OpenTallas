@@ -63,7 +63,8 @@ design.evalTclString('drt::check_drc -output_file /work/all_markers.rpt -marker_
 print('NATIVE_ORIGINAL_CHECK_COMPLETE',flush=True)
 # ROI reports are native checker invocations on exactly the same unchanged original ODB.
 for i,c in enumerate(coupon['cases']):
- box=' '.join(str(z/1000) for z in c['score_roi_nm'])
- design.evalTclString(f'drt::check_drc -box {{{box}}} -output_file /work/roi_{i:02d}.rpt -marker_name CASE_{i}')
+ box=' '.join(str(z) for z in c['score_roi_nm'])
+ result=design.evalTclString(f'drt::check_drc -box {{{box}}} -output_file /work/roi_{i:02d}.rpt -marker_name CASE_{i}')
+ assert (P/f'roi_{i:02d}.rpt').is_file(), (i,result)
  print('CASE_COMPLETE',i,c['name'],flush=True)
 design.evalTclString('write_db /work/checked_unrepaired.odb')

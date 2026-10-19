@@ -1,0 +1,3687 @@
+[
+  {
+    "case": 0,
+    "net": "case0_net0",
+    "source_net": "wclk",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      951,
+      984,
+      975
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 0,
+    "net": "case0_net0",
+    "source_net": "wclk",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      960,
+      984,
+      984
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 0,
+    "net": "case0_net1",
+    "source_net": "rclk",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      1047,
+      984,
+      1071
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 0,
+    "net": "case0_net1",
+    "source_net": "rclk",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      1056,
+      984,
+      1080
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 0,
+    "net": "case0_net2",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      1143,
+      984,
+      1167
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 0,
+    "net": "case0_net2",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      1152,
+      984,
+      1176
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 0,
+    "net": "case0_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      1239,
+      984,
+      1263
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 0,
+    "net": "case0_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      1248,
+      984,
+      1272
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 0,
+    "net": "case0_net4",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      1335,
+      984,
+      1359
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 0,
+    "net": "case0_net4",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      1344,
+      984,
+      1368
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 0,
+    "net": "case0_net5",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      1431,
+      984,
+      1455
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 0,
+    "net": "case0_net5",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      1440,
+      984,
+      1464
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 0,
+    "net": "case0_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      1260,
+      576,
+      1472,
+      672
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 0,
+    "net": "case0_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      1260,
+      1344,
+      1472,
+      1440
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 0,
+    "net": "case0_net7",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      1260,
+      960,
+      1472,
+      1056
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 1,
+    "net": "case1_net0",
+    "source_net": "wclk",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      759,
+      2904,
+      783
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 1,
+    "net": "case1_net0",
+    "source_net": "wclk",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      768,
+      2904,
+      792
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net1",
+    "source_net": "rclk",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      855,
+      2904,
+      879
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net1",
+    "source_net": "rclk",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      864,
+      2904,
+      888
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net2",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      951,
+      2904,
+      975
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net2",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      960,
+      2904,
+      984
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      1047,
+      2904,
+      1071
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      1056,
+      2904,
+      1080
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net4",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      1143,
+      2904,
+      1167
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net4",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      1152,
+      2904,
+      1176
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net5",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      1239,
+      2904,
+      1263
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net5",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      1248,
+      2904,
+      1272
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net6",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      1335,
+      2904,
+      1359
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net6",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      1344,
+      2904,
+      1368
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net7",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      1431,
+      2904,
+      1455
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 1,
+    "net": "case1_net7",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      1440,
+      2904,
+      1464
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 1,
+    "net": "case1_net8",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      3180,
+      472,
+      3392,
+      480
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 1,
+    "net": "case1_net8",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      3180,
+      1152,
+      3392,
+      1248
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 1,
+    "net": "case1_net9",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      3180,
+      768,
+      3392,
+      864
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 2,
+    "net": "case2_net0",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      472,
+      4824,
+      495
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net0",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      480,
+      4824,
+      504
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net1",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      567,
+      4824,
+      591
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net1",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      576,
+      4824,
+      600
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net2",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      663,
+      4824,
+      687
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net2",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      672,
+      4824,
+      696
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net3",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      759,
+      4824,
+      783
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net3",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      768,
+      4824,
+      792
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net4",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      855,
+      4824,
+      879
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net4",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      864,
+      4824,
+      888
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net5",
+    "source_net": "rd_out[0]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      951,
+      4824,
+      975
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net5",
+    "source_net": "rd_out[0]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      960,
+      4824,
+      984
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net6",
+    "source_net": "rd_out[1]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      1047,
+      4824,
+      1071
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net6",
+    "source_net": "rd_out[1]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      1056,
+      4824,
+      1080
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net7",
+    "source_net": "rd_out[2]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      1143,
+      4824,
+      1167
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net7",
+    "source_net": "rd_out[2]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      1152,
+      4824,
+      1176
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net8",
+    "source_net": "rd_out[3]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      1239,
+      4824,
+      1263
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net8",
+    "source_net": "rd_out[3]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      1248,
+      4824,
+      1272
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net9",
+    "source_net": "rd_out[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      1335,
+      4824,
+      1359
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net9",
+    "source_net": "rd_out[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      1344,
+      4824,
+      1368
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net10",
+    "source_net": "rd_out[5]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      1431,
+      4824,
+      1455
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 2,
+    "net": "case2_net10",
+    "source_net": "rd_out[5]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      1440,
+      4824,
+      1464
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 2,
+    "net": "case2_net11",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      5100,
+      576,
+      5312,
+      672
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 2,
+    "net": "case2_net11",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      5100,
+      1344,
+      5312,
+      1440
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 2,
+    "net": "case2_net12",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      5100,
+      960,
+      5312,
+      1056
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 3,
+    "net": "case3_net0",
+    "source_net": "wd_in[25]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      951,
+      7232,
+      975
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 3,
+    "net": "case3_net0",
+    "source_net": "wd_in[25]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      960,
+      6744,
+      984
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 3,
+    "net": "case3_net1",
+    "source_net": "wd_in[26]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1047,
+      7232,
+      1071
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 3,
+    "net": "case3_net1",
+    "source_net": "wd_in[26]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1056,
+      6744,
+      1080
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 3,
+    "net": "case3_net2",
+    "source_net": "wd_in[27]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1143,
+      7232,
+      1167
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 3,
+    "net": "case3_net2",
+    "source_net": "wd_in[27]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1152,
+      6744,
+      1176
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 3,
+    "net": "case3_net3",
+    "source_net": "wd_in[28]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1239,
+      7232,
+      1263
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 3,
+    "net": "case3_net3",
+    "source_net": "wd_in[28]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1248,
+      6744,
+      1272
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 3,
+    "net": "case3_net4",
+    "source_net": "wd_in[29]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1335,
+      7232,
+      1359
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 3,
+    "net": "case3_net4",
+    "source_net": "wd_in[29]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1344,
+      6744,
+      1368
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 3,
+    "net": "case3_net5",
+    "source_net": "wd_in[30]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1431,
+      7232,
+      1455
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 3,
+    "net": "case3_net5",
+    "source_net": "wd_in[30]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      1440,
+      6744,
+      1464
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "UNCHANGED_original_contact"
+  },
+  {
+    "case": 3,
+    "net": "case3_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      6232,
+      576,
+      6444,
+      672
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 3,
+    "net": "case3_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      6232,
+      1344,
+      6444,
+      1440
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 3,
+    "net": "case3_net7",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      6232,
+      960,
+      6444,
+      1056
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 4,
+    "net": "case4_net0",
+    "source_net": "wclk",
+    "layer": "M4",
+    "rect_nm": [
+      8304,
+      759,
+      9188,
+      783
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 4,
+    "net": "case4_net1",
+    "source_net": "rclk",
+    "layer": "M4",
+    "rect_nm": [
+      8569,
+      855,
+      9188,
+      879
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net1",
+    "source_net": "rclk",
+    "layer": "M4",
+    "rect_nm": [
+      8304,
+      951,
+      8615,
+      975
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "terminal_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net1",
+    "source_net": "rclk",
+    "layer": "M5",
+    "rect_nm": [
+      8580,
+      844,
+      8604,
+      986
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net1",
+    "source_net": "rclk",
+    "via": "VIA45",
+    "center_nm": [
+      8592,
+      867
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8569,
+          855,
+          8615,
+          879
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8580,
+          844,
+          8604,
+          890
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8580,
+          855,
+          8604,
+          879
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net1",
+    "source_net": "rclk",
+    "via": "VIA45",
+    "center_nm": [
+      8592,
+      963
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8569,
+          951,
+          8615,
+          975
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8580,
+          940,
+          8604,
+          986
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8580,
+          951,
+          8604,
+          975
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net2",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      8665,
+      951,
+      9188,
+      975
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net2",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      8304,
+      1143,
+      8711,
+      1167
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "terminal_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net2",
+    "source_net": "r_ce_in",
+    "layer": "M5",
+    "rect_nm": [
+      8676,
+      940,
+      8700,
+      1178
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net2",
+    "source_net": "r_ce_in",
+    "via": "VIA45",
+    "center_nm": [
+      8688,
+      963
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8665,
+          951,
+          8711,
+          975
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8676,
+          940,
+          8700,
+          986
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8676,
+          951,
+          8700,
+          975
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net2",
+    "source_net": "r_ce_in",
+    "via": "VIA45",
+    "center_nm": [
+      8688,
+      1155
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8665,
+          1143,
+          8711,
+          1167
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8676,
+          1132,
+          8700,
+          1178
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8676,
+          1143,
+          8700,
+          1167
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      8761,
+      1047,
+      9188,
+      1071
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      8304,
+      1335,
+      8807,
+      1359
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "terminal_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net3",
+    "source_net": "r_addr_in[0]",
+    "layer": "M5",
+    "rect_nm": [
+      8772,
+      1036,
+      8796,
+      1370
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net3",
+    "source_net": "r_addr_in[0]",
+    "via": "VIA45",
+    "center_nm": [
+      8784,
+      1059
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8761,
+          1047,
+          8807,
+          1071
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8772,
+          1036,
+          8796,
+          1082
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8772,
+          1047,
+          8796,
+          1071
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net3",
+    "source_net": "r_addr_in[0]",
+    "via": "VIA45",
+    "center_nm": [
+      8784,
+      1347
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8761,
+          1335,
+          8807,
+          1359
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8772,
+          1324,
+          8796,
+          1370
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8772,
+          1335,
+          8796,
+          1359
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net4",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      8857,
+      1143,
+      9188,
+      1167
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net4",
+    "source_net": "r_addr_in[1]",
+    "layer": "M5",
+    "rect_nm": [
+      8868,
+      1132,
+      8892,
+      1463
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net4",
+    "source_net": "r_addr_in[1]",
+    "via": "VIA45",
+    "center_nm": [
+      8880,
+      1155
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8857,
+          1143,
+          8903,
+          1167
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8868,
+          1132,
+          8892,
+          1178
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8868,
+          1143,
+          8892,
+          1167
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net5",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      8953,
+      1239,
+      9188,
+      1263
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net5",
+    "source_net": "r_addr_in[2]",
+    "layer": "M5",
+    "rect_nm": [
+      8964,
+      1228,
+      8988,
+      1463
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net5",
+    "source_net": "r_addr_in[2]",
+    "via": "VIA45",
+    "center_nm": [
+      8976,
+      1251
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8953,
+          1239,
+          8999,
+          1263
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8964,
+          1228,
+          8988,
+          1274
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8964,
+          1239,
+          8988,
+          1263
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net6",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      9049,
+      1335,
+      9188,
+      1359
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net6",
+    "source_net": "r_addr_in[3]",
+    "layer": "M5",
+    "rect_nm": [
+      9060,
+      1324,
+      9084,
+      1463
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net6",
+    "source_net": "r_addr_in[3]",
+    "via": "VIA45",
+    "center_nm": [
+      9072,
+      1347
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          9049,
+          1335,
+          9095,
+          1359
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          9060,
+          1324,
+          9084,
+          1370
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          9060,
+          1335,
+          9084,
+          1359
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 4,
+    "net": "case4_net7",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      9145,
+      1431,
+      9188,
+      1455
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 4,
+    "net": "case4_net7",
+    "source_net": "r_addr_in[4]",
+    "layer": "M5",
+    "rect_nm": [
+      9156,
+      1420,
+      9180,
+      1463
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 4,
+    "net": "case4_net7",
+    "source_net": "r_addr_in[4]",
+    "via": "VIA45",
+    "center_nm": [
+      9168,
+      1443
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          9145,
+          1431,
+          9191,
+          1455
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          9156,
+          1420,
+          9180,
+          1466
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          9156,
+          1431,
+          9180,
+          1455
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 5,
+    "net": "case5_net0",
+    "source_net": "clk",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      2871,
+      984,
+      2895
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 5,
+    "net": "case5_net0",
+    "source_net": "clk",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      2880,
+      984,
+      2904
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 5,
+    "net": "case5_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      2967,
+      984,
+      2991
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 5,
+    "net": "case5_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      2976,
+      984,
+      3000
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 5,
+    "net": "case5_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      3063,
+      984,
+      3087
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 5,
+    "net": "case5_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      3072,
+      984,
+      3096
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 5,
+    "net": "case5_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      3159,
+      984,
+      3183
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 5,
+    "net": "case5_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      3168,
+      984,
+      3192
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 5,
+    "net": "case5_net4",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      3255,
+      984,
+      3279
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 5,
+    "net": "case5_net4",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      3264,
+      984,
+      3288
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 5,
+    "net": "case5_net5",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      472,
+      3351,
+      984,
+      3375
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 5,
+    "net": "case5_net5",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      960,
+      3360,
+      984,
+      3384
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 5,
+    "net": "case5_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      1260,
+      2496,
+      1472,
+      2592
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 5,
+    "net": "case5_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      1260,
+      3264,
+      1472,
+      3360
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 5,
+    "net": "case5_net7",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      1260,
+      2880,
+      1472,
+      2976
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 6,
+    "net": "case6_net0",
+    "source_net": "clk",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      2775,
+      2904,
+      2799
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 6,
+    "net": "case6_net0",
+    "source_net": "clk",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      2784,
+      2904,
+      2808
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      2871,
+      2904,
+      2895
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 6,
+    "net": "case6_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      2880,
+      2904,
+      2904
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      2967,
+      2904,
+      2991
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 6,
+    "net": "case6_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      2976,
+      2904,
+      3000
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      3063,
+      2904,
+      3087
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 6,
+    "net": "case6_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      3072,
+      2904,
+      3096
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net4",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      3159,
+      2904,
+      3183
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 6,
+    "net": "case6_net4",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      3168,
+      2904,
+      3192
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net5",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      3255,
+      2904,
+      3279
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 6,
+    "net": "case6_net5",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      3264,
+      2904,
+      3288
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net6",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      2392,
+      3351,
+      2904,
+      3375
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 6,
+    "net": "case6_net6",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      2880,
+      3360,
+      2904,
+      3384
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 6,
+    "net": "case6_net7",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      3180,
+      2400,
+      3392,
+      2496
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 6,
+    "net": "case6_net7",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      3180,
+      3168,
+      3392,
+      3264
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 6,
+    "net": "case6_net8",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      3180,
+      2784,
+      3392,
+      2880
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 7,
+    "net": "case7_net0",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2392,
+      4824,
+      2415
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net0",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2400,
+      4824,
+      2424
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net1",
+    "source_net": "r_addr_in[5]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2487,
+      4824,
+      2511
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net1",
+    "source_net": "r_addr_in[5]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2496,
+      4824,
+      2520
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net2",
+    "source_net": "r_addr_in[6]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2583,
+      4824,
+      2607
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net2",
+    "source_net": "r_addr_in[6]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2592,
+      4824,
+      2616
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net3",
+    "source_net": "r_addr_in[7]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2679,
+      4824,
+      2703
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net3",
+    "source_net": "r_addr_in[7]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2688,
+      4824,
+      2712
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net4",
+    "source_net": "r_addr_in[8]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2775,
+      4824,
+      2799
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net4",
+    "source_net": "r_addr_in[8]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2784,
+      4824,
+      2808
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net5",
+    "source_net": "rd_out[0]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2871,
+      4824,
+      2895
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net5",
+    "source_net": "rd_out[0]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2880,
+      4824,
+      2904
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net6",
+    "source_net": "rd_out[1]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      2967,
+      4824,
+      2991
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net6",
+    "source_net": "rd_out[1]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      2976,
+      4824,
+      3000
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net7",
+    "source_net": "rd_out[2]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      3063,
+      4824,
+      3087
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net7",
+    "source_net": "rd_out[2]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      3072,
+      4824,
+      3096
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net8",
+    "source_net": "rd_out[3]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      3159,
+      4824,
+      3183
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net8",
+    "source_net": "rd_out[3]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      3168,
+      4824,
+      3192
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net9",
+    "source_net": "rd_out[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      3255,
+      4824,
+      3279
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net9",
+    "source_net": "rd_out[4]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      3264,
+      4824,
+      3288
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net10",
+    "source_net": "rd_out[5]",
+    "layer": "M4",
+    "rect_nm": [
+      4312,
+      3351,
+      4824,
+      3375
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 7,
+    "net": "case7_net10",
+    "source_net": "rd_out[5]",
+    "layer": "M4",
+    "rect_nm": [
+      4800,
+      3360,
+      4824,
+      3384
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 7,
+    "net": "case7_net11",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      5100,
+      2976,
+      5312,
+      3072
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 7,
+    "net": "case7_net12",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      5100,
+      2592,
+      5312,
+      2688
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 7,
+    "net": "case7_net12",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      5100,
+      3360,
+      5312,
+      3392
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 8,
+    "net": "case8_net0",
+    "source_net": "wd_in[70]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      2871,
+      7232,
+      2895
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 8,
+    "net": "case8_net0",
+    "source_net": "wd_in[70]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      2880,
+      6744,
+      2904
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 8,
+    "net": "case8_net1",
+    "source_net": "wd_in[71]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      2967,
+      7232,
+      2991
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 8,
+    "net": "case8_net1",
+    "source_net": "wd_in[71]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      2976,
+      6744,
+      3000
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 8,
+    "net": "case8_net2",
+    "source_net": "wd_in[72]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3063,
+      7232,
+      3087
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 8,
+    "net": "case8_net2",
+    "source_net": "wd_in[72]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3072,
+      6744,
+      3096
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 8,
+    "net": "case8_net3",
+    "source_net": "wd_in[73]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3159,
+      7232,
+      3183
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 8,
+    "net": "case8_net3",
+    "source_net": "wd_in[73]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3168,
+      6744,
+      3192
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 8,
+    "net": "case8_net4",
+    "source_net": "wd_in[74]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3255,
+      7232,
+      3279
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 8,
+    "net": "case8_net4",
+    "source_net": "wd_in[74]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3264,
+      6744,
+      3288
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 8,
+    "net": "case8_net5",
+    "source_net": "wd_in[75]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3351,
+      7232,
+      3375
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 8,
+    "net": "case8_net5",
+    "source_net": "wd_in[75]",
+    "layer": "M4",
+    "rect_nm": [
+      6720,
+      3360,
+      6744,
+      3384
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "source_pad"
+  },
+  {
+    "case": 8,
+    "net": "case8_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      6232,
+      2496,
+      6444,
+      2592
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 8,
+    "net": "case8_net6",
+    "source_net": "VDD",
+    "layer": "M4",
+    "rect_nm": [
+      6232,
+      3264,
+      6444,
+      3360
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 8,
+    "net": "case8_net7",
+    "source_net": "VSS",
+    "layer": "M4",
+    "rect_nm": [
+      6232,
+      2880,
+      6444,
+      2976
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": null
+  },
+  {
+    "case": 9,
+    "net": "case9_net0",
+    "source_net": "clk",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      2775,
+      9188,
+      2799
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "horizontal_zero_jog"
+  },
+  {
+    "case": 9,
+    "net": "case9_net0",
+    "source_net": "clk",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      2784,
+      8424,
+      2808
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "terminal_pad"
+  },
+  {
+    "case": 9,
+    "net": "case9_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      8665,
+      2871,
+      9188,
+      2895
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      2967,
+      8711,
+      2991
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "terminal_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net1",
+    "source_net": "r_ce_in",
+    "layer": "M5",
+    "rect_nm": [
+      8676,
+      2860,
+      8700,
+      3002
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 9,
+    "net": "case9_net1",
+    "source_net": "r_ce_in",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      2976,
+      8424,
+      3000
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "terminal_pad"
+  },
+  {
+    "case": 9,
+    "net": "case9_net1",
+    "source_net": "r_ce_in",
+    "via": "VIA45",
+    "center_nm": [
+      8688,
+      2883
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8665,
+          2871,
+          8711,
+          2895
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8676,
+          2860,
+          8700,
+          2906
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8676,
+          2871,
+          8700,
+          2895
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net1",
+    "source_net": "r_ce_in",
+    "via": "VIA45",
+    "center_nm": [
+      8688,
+      2979
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8665,
+          2967,
+          8711,
+          2991
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8676,
+          2956,
+          8700,
+          3002
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8676,
+          2967,
+          8700,
+          2991
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      8761,
+      2967,
+      9188,
+      2991
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      3159,
+      8807,
+      3183
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "terminal_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M5",
+    "rect_nm": [
+      8772,
+      2956,
+      8796,
+      3194
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 9,
+    "net": "case9_net2",
+    "source_net": "r_addr_in[0]",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      3168,
+      8424,
+      3192
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "terminal_pad"
+  },
+  {
+    "case": 9,
+    "net": "case9_net2",
+    "source_net": "r_addr_in[0]",
+    "via": "VIA45",
+    "center_nm": [
+      8784,
+      2979
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8761,
+          2967,
+          8807,
+          2991
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8772,
+          2956,
+          8796,
+          3002
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8772,
+          2967,
+          8796,
+          2991
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net2",
+    "source_net": "r_addr_in[0]",
+    "via": "VIA45",
+    "center_nm": [
+      8784,
+      3171
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8761,
+          3159,
+          8807,
+          3183
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8772,
+          3148,
+          8796,
+          3194
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8772,
+          3159,
+          8796,
+          3183
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      8857,
+      3063,
+      9188,
+      3087
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      3351,
+      8903,
+      3375
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "terminal_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M5",
+    "rect_nm": [
+      8868,
+      3052,
+      8892,
+      3383
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 9,
+    "net": "case9_net3",
+    "source_net": "r_addr_in[1]",
+    "layer": "M4",
+    "rect_nm": [
+      8400,
+      3360,
+      8424,
+      3383
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "terminal_pad"
+  },
+  {
+    "case": 9,
+    "net": "case9_net3",
+    "source_net": "r_addr_in[1]",
+    "via": "VIA45",
+    "center_nm": [
+      8880,
+      3075
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8857,
+          3063,
+          8903,
+          3087
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8868,
+          3052,
+          8892,
+          3098
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8868,
+          3063,
+          8892,
+          3087
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net3",
+    "source_net": "r_addr_in[1]",
+    "via": "VIA45",
+    "center_nm": [
+      8880,
+      3363
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8857,
+          3351,
+          8903,
+          3375
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8868,
+          3340,
+          8892,
+          3386
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8868,
+          3351,
+          8892,
+          3375
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net4",
+    "source_net": "r_addr_in[2]",
+    "layer": "M4",
+    "rect_nm": [
+      8953,
+      3159,
+      9188,
+      3183
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net4",
+    "source_net": "r_addr_in[2]",
+    "layer": "M5",
+    "rect_nm": [
+      8964,
+      3148,
+      8988,
+      3383
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 9,
+    "net": "case9_net4",
+    "source_net": "r_addr_in[2]",
+    "via": "VIA45",
+    "center_nm": [
+      8976,
+      3171
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          8953,
+          3159,
+          8999,
+          3183
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          8964,
+          3148,
+          8988,
+          3194
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          8964,
+          3159,
+          8988,
+          3183
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net5",
+    "source_net": "r_addr_in[3]",
+    "layer": "M4",
+    "rect_nm": [
+      9049,
+      3255,
+      9188,
+      3279
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net5",
+    "source_net": "r_addr_in[3]",
+    "layer": "M5",
+    "rect_nm": [
+      9060,
+      3244,
+      9084,
+      3383
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 9,
+    "net": "case9_net5",
+    "source_net": "r_addr_in[3]",
+    "via": "VIA45",
+    "center_nm": [
+      9072,
+      3267
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          9049,
+          3255,
+          9095,
+          3279
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          9060,
+          3244,
+          9084,
+          3290
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          9060,
+          3255,
+          9084,
+          3279
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 9,
+    "net": "case9_net6",
+    "source_net": "r_addr_in[4]",
+    "layer": "M4",
+    "rect_nm": [
+      9145,
+      3351,
+      9188,
+      3375
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "source_horizontal"
+  },
+  {
+    "case": 9,
+    "net": "case9_net6",
+    "source_net": "r_addr_in[4]",
+    "layer": "M5",
+    "rect_nm": [
+      9156,
+      3340,
+      9180,
+      3383
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "vertical_column"
+  },
+  {
+    "case": 9,
+    "net": "case9_net6",
+    "source_net": "r_addr_in[4]",
+    "via": "VIA45",
+    "center_nm": [
+      9168,
+      3363
+    ],
+    "native_boxes": [
+      {
+        "layer": "M4",
+        "rect_nm": [
+          9145,
+          3351,
+          9191,
+          3375
+        ]
+      },
+      {
+        "layer": "M5",
+        "rect_nm": [
+          9156,
+          3340,
+          9180,
+          3386
+        ]
+      },
+      {
+        "layer": "V4",
+        "rect_nm": [
+          9156,
+          3351,
+          9180,
+          3375
+        ]
+      }
+    ],
+    "status": "ROUTED"
+  },
+  {
+    "case": 10,
+    "net": "case10_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      744,
+      4836,
+      1032,
+      4860
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "aligned_rectangle"
+  },
+  {
+    "case": 11,
+    "net": "case11_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      2664,
+      4827,
+      2952,
+      4851
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "exact_9nm_step"
+  },
+  {
+    "case": 11,
+    "net": "case11_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      2928,
+      4836,
+      2952,
+      4860
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "exact_9nm_step"
+  },
+  {
+    "case": 12,
+    "net": "case12_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      4584,
+      4827,
+      4872,
+      4851
+    ],
+    "status": "FIXED",
+    "representation": "segment",
+    "role": "all_fixed_9nm_step"
+  },
+  {
+    "case": 12,
+    "net": "case12_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      4848,
+      4836,
+      4872,
+      4860
+    ],
+    "status": "FIXED",
+    "representation": "patch",
+    "role": "all_fixed_9nm_step"
+  },
+  {
+    "case": 13,
+    "net": "case13_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      6624,
+      4836,
+      6912,
+      4860
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "spacing_23nm"
+  },
+  {
+    "case": 13,
+    "net": "case13_net1",
+    "source_net": "b",
+    "layer": "M4",
+    "rect_nm": [
+      6624,
+      4883,
+      6912,
+      4907
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "spacing_23nm"
+  },
+  {
+    "case": 14,
+    "net": "case14_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      8424,
+      4836,
+      8678,
+      4860
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "disconnected_contact"
+  },
+  {
+    "case": 14,
+    "net": "case14_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      8688,
+      4836,
+      8712,
+      4860
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "disconnected_contact"
+  },
+  {
+    "case": 15,
+    "net": "case15_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      744,
+      6768,
+      1272,
+      6792
+    ],
+    "status": "ROUTED",
+    "representation": "segment",
+    "role": "old_track_phase"
+  },
+  {
+    "case": 16,
+    "net": "case16_net0",
+    "source_net": "a",
+    "layer": "M4",
+    "rect_nm": [
+      2664,
+      6756,
+      3192,
+      6789
+    ],
+    "status": "ROUTED",
+    "representation": "patch",
+    "role": "width_33nm"
+  }
+]
