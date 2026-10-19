@@ -267,7 +267,11 @@ def form(lines, dirs, slots):
                     conn = f'.ckf(n_{prev}__cko[0]), .ea(n_{prev}__eb[0]), .a({A}), {tail}'
             new[c] = (mst, conn)
             rep['per_master'][mst] += 1
-        rep['lanes'].append(dict(stations=ch, S=S, n=n, src=ln_['src'], src_kind=ln_['src_kind'], src_tree=X, dst=ln_['dst'],
+        rep['lanes'].append(dict(stations=ch, landing=ch[-1], bid=ch[-1], S=S, n=n,
+                                 E=E, cal=hop0_en_reg(n), cal_basis='total', reset_cal=0,
+                                 age_contract='KVR-FWDAGE: G=R0; source-to-landing-output age E+1; post_stages are plain flops',
+                                 age_witness='results/rtl/kvr_fwdage_1019/record.json',
+                                 src=ln_['src'], src_kind=ln_['src_kind'], src_tree=X, dst=ln_['dst'],
                                  dsts=ln_['dsts'], dst_port=ln_['dst_port'],
                                  dst_tree=Y, en=en, rs=rs, E_planned=E, K=K, h0=hop0_en_reg(n), **cost))
         rep['totals']['lanes'] += 1

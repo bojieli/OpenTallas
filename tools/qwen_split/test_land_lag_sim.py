@@ -104,6 +104,33 @@ class KvCheck(unittest.TestCase):
         self.assertEqual(by['rly_a_0__s0']['L_hw'], planned_e(1) + 1)
         self.assertIn('LAND_LAG_KV PASS crossings 4 failing 0', out)
 
+    @staticmethod
+    def canonical(fl):
+        for r in fl['lanes']:
+            r.update(E=r['E_planned'], cal=int(r['n']==1), h0=int(r['n']==1),
+                     cal_basis='G-R0+h0', reset_cal=0,
+                     age_contract='KVR-FWDAGE: G=R0; source-to-landing-output age E+1')
+
+    def test_canonical_total_calendar_counts_hop0_once(self):
+        rc,r,out=self.run_check(GOOD,row_edit=self.canonical)
+        self.assertEqual(rc,0,out)
+        self.assertEqual(r['crossings_detail'][0]['cal_total'],1)
+        self.assertEqual(r['crossings_detail'][0]['L_hw'],3)
+
+    def test_canonical_wrong_strap_still_fails(self):
+        rc,r,_=self.run_check(GOOD,row_edit=self.canonical,kfix={'a':4})
+        self.assertEqual(rc,1)
+        self.assertEqual(r['fail_counts']['strap'],1)
+        self.assertEqual(r['fail_counts']['latency'],1)
+
+    def test_unknown_or_inconsistent_calendar_basis_fails_closed(self):
+        for key,value in [('cal_basis','invented'),('reset_cal',1),('h0',0)]:
+            def edit(fl):
+                self.canonical(fl);fl['lanes'][0][key]=value
+            rc,r,_=self.run_check(GOOD,row_edit=edit)
+            self.assertEqual(rc,1,(key,r))
+            self.assertGreater(r['fail_counts']['structure'],0)
+
     def test_mutant_one_landing_age_off_by_one(self):
         # one landing's K strap one edge late -> its age is off by one: strap + latency FAIL, only that crossing
         rc, r, out = self.run_check(GOOD, kfix={'b': (planned_e(3) + 1) % 8})
