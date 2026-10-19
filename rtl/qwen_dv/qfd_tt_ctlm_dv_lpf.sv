@@ -13,16 +13,23 @@
 //   u_thru hr region: wires only.  It makes every core-driven output (cmd, cal_*, emb_*) cross into the hr region like
 //          the head's outputs, so the landed parent has ONE output offset (+3 edges on every output, 0 on every input).
 // Every input port is landed from the core region (port_regions), so the die presents all inputs on the flat schedule.
+// MU-ADOPT-CTLM 10-19: NU (default 4 = the Qwen ROM 4-user calendar) / dh_user as qfd_tt_ctlm_dv (see its NU header);
+//   NU = 1 is the single-user cluster.  dh_user lands from the core region like dh (0 edges).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_lpf #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
     parameter integer LAST_STAGE = 37,
-    parameter integer STAGE_ME = 0
+    parameter integer STAGE_ME = 0,
+    parameter integer NU = 4,                    // MU-ADOPT-CTLM 10-19: Qwen ROM 4 users (qfd_tt_ctlm_dv NU; 1 = single user)
+    parameter integer UVM_STRIDE = 4096,         // = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE
+    parameter integer PIDX_STRIDE = 128,         // = DV_PIDX_STRIDE
+    parameter integer UTAG_LSB = 6               // = DV_UTAG_LSB
 ) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [74:0]   pw,
     input  wire [186:0]  dh,
+    input  wire [1:0]    dh_user,                // user of the dh stage start (qfd_sys_face seq_dh_user; tie 0 = user 0)
     input  wire          kok,
     input  wire          kwd,
     input  wire          fab,
@@ -64,7 +71,8 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [15:0]  me_observe;
     wire [379:0] ib_q;
     wire [72:0]  hr_lo;
-    qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME)) u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .ss5(ss5),
+    qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB)) u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
         .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),

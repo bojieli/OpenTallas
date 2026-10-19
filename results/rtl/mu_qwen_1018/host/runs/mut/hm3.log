@@ -1,0 +1,19 @@
+CAPS 01040004
+ERR start user 0 pos 0/0 busy 1 token 00205
+ERR start user 0 pos 0/1 busy 1 token 00305
+ERR retire slot 1 pos 0/0 token 20003
+ERR start user 0 pos 1/1 busy 1 token 00206
+ERR start user 0 pos 0/1 busy 1 token 00405
+ERR CQ 1 w0 0003000000a20203 w1 0002000100000034 user 2 expect pos 0 token 22003
+ERR CQ 3 w0 0008000100a20203 w1 0002000200000034 user 2 expect pos 1 token 22008
+ERR CQ 4 w0 000d000200a10103 w1 0002000100000034 user 1 expect pos 2 token 2100d
+ERR CQ 6 w0 000d000200a20203 w1 0002000300000034 user 2 expect pos 2 token 2200d
+ERR CQ 7 w0 0012000300a10125 w1 0002000200000034 user 1 expect pos 3 token 21012
+ERR CQ 8 w0 0012000300a20225 w1 0002000400000034 user 2 expect pos 3 token 22012
+ERR CQ 9 w0 0012000300a30303 w1 0002000100000034 user 3 expect pos 3 token 23012
+ERR CQ 10 w0 0017000400a30303 w1 0002000200000034 user 3 expect pos 4 token 23017
+ERR CQ 11 w0 001c000500a30325 w1 0002000300000034 user 3 expect pos 5 token 2301c
+FAIL host MU_OUT errors=37 starts 18 max_outstanding 4
+[607000] %Fatal: tb_qkd_host_mu_out.sv:148: Assertion failed in tb_qkd_host_mu_out
+%Error: rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv:148: Verilog $stop
+Aborting...

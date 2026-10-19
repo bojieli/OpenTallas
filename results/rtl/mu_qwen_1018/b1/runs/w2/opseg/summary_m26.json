@@ -1,0 +1,15 @@
+{
+ "mut": 26,
+ "cases": [
+  "neg_drift"
+ ],
+ "neg_drift": {
+  "want_edge": 18591,
+  "opf": [],
+  "raised": false
+ },
+ "verdict": "FAIL",
+ "fails": [
+  "neg_drift: required fault not raised at ~18591 (opf log [])"
+ ]
+}

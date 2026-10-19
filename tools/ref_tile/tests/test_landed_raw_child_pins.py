@@ -248,6 +248,9 @@ class RawPinOpenroad(unittest.TestCase):
             s['landed_record'] = 'top_lp_record.json'
             rtl = (K.RTL if plain else RTL).replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace(
                 'u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
+            if mutant == 'raw_wrong_root':
+                # ROOT-LANDEDHC 10-19: the raw pin wired to ANOTHER region root (net trace, mode-independent)
+                rtl = rtl.replace('.CKP(ck_ra),', '.CKP(ck_rb),')
             (w / 't.v').write_text(rtl)
             entries = 'set ::ot_ce_require_wire 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w)
             if mutant == 'pre_fix_body':
@@ -262,12 +265,23 @@ class RawPinOpenroad(unittest.TestCase):
             self.assertEqual(flow.count(hand), 1)
             pre = [] if mutant == 'no_pre_cts_dicts' else CE.landed_pre_cts_tcl(s, w)
             flow = flow.replace(hand, '').replace('FLAG', 'set ::ot_ce_landed_cluster 1\n' + '\n'.join(pre) + '\n')
-            if mutant not in ('no_tap', 'pre_fix_body') and not plain:
+            if mutant not in ('no_tap', 'pre_fix_body', 'raw_wrong_root') and not plain:
                 hook = 'source /src/physical/common_flow/clock_entries.tcl\n'
                 self.assertEqual(flow.count(hook), 1)
                 flow = flow.replace(hook, hook + '\n'.join(CE.landed_raw_tcl(s, w)) + '\n')
+            mm = mutant == 'multi_mm_pre_cts'
+            if mm:
+                # ROOT-LANDEDHC 10-19: the ORFS multi-mode pre-CTS load (read_sdc -mode ss, ideal clocks, no CTS) where the
+                # TW-HBM-COLLP lpk4 gates lost child clock pins (get_property clocks empty): the raw pin is still visited
+                flow = flow.replace('READ_CLOCKS\n', '').replace(
+                    flow[flow.index('set ::ot_ce_cts_roots'):flow.index('READ_ENTRIES')],
+                    'set ::ot_ce_cts_roots {ck_ra ck_rb}\nset ::ot_ref_pre_cts 1\n')
+                flow = flow.replace('READ_ENTRIES', 'read_sdc -mode ss /w/clocks.tcl\nread_sdc -mode ss /w/entries.tcl')
+                (w / 'entries.tcl').write_text(entries.replace('set ::ot_ce_require_wire 1\n', '', 1))
+            flow = flow.replace('READ_CLOCKS', 'source /w/clocks.tcl').replace('READ_ENTRIES', 'source /w/entries.tcl')
             (w / 'run.tcl').write_text(flow)
-            proc = subprocess.run(['docker', 'run', '--rm', '-v', f'{w}:/w', '-v', f'{ROOT}:/src:ro',
+            env = ['-e', 'OT_HOLD_MM=1'] if mm else []
+            proc = subprocess.run(['docker', 'run', '--rm', *env, '-v', f'{w}:/w', '-v', f'{ROOT}:/src:ro',
                                    K.IMAGE, K.OR, '-no_init', '-exit', '/w/run.tcl'], capture_output=True, text=True, timeout=180)
             return proc.returncode, proc.stdout + proc.stderr
 
@@ -305,9 +319,17 @@ class RawPinOpenroad(unittest.TestCase):
         self.assertNotEqual(rc, 0)
         self.assertIn('must reach only standard-cell clock pins', out)
 
+    def test_raw_pin_visited_in_multi_mode_pre_cts(self):
+        rc, out = self.run_flow('multi_mm_pre_cts')
+        self.assertEqual(rc, 0, out[-6500:])
+        self.assertRegex(out, r'OT_LANDED RAW_PIN \S+ ck_ra h/CKP .* PRE_CTS')
+        self.assertIn('LANDED_RESULT PASS', out)
+
     def test_mutants_fail_closed(self):
         for mutant, why in (('pre_fix_body', r'OT_LANDED: 1 of 2 bound hard-child clock pins reached'),
-                            ('tight_record', r'OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin')):
+                            ('tight_record', r'OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin'),
+                            ('raw_wrong_root', r'OT_LANDED: raw child clock pin h/CKP is wired to region root ck_rb, '
+                                               r'its co-timed pin h/CLK to ck_ra')):
             with self.subTest(mutant=mutant):
                 rc, out = self.run_flow(mutant)
                 self.assertNotEqual(rc, 0, out[-4000:])

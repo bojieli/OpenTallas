@@ -8,8 +8,10 @@
 // compiler shifts selector/link fields by the tree (hbm_idx_static_calendar.py --score-chain, see lanes/HBM-B-RTL2.md).
 // PINS: programme bus, start and the quadrant faults land in pin flops; the decoded fields and done leave flops
 // (+2 edges from the host start, as the quadrant copies). TOPK/share keep their own (unchanged) pin structure.
+// PIN_IN (VEH-TOPKFIX 10-19): 1 = the SW VM banks carry literal input pin flops (hfd_vms_bank_native_q0_faces): TOPK
+// captures n+9 / ACK 13 and the share steers responses at n+8 (bound die master = ot_hbm_idx_rootctl_static_pin).
 // RESET: rst_n drives only ot_rst_relay. STATIC: no ready/credit.
-module ot_hbm_idx_rootctl_static(
+module ot_hbm_idx_rootctl_static #(parameter integer PIN_IN = 0)(
  input wire clk_program,clk_program_mem,clk_sel,clk_topk,input wire[3:0]clk_pair,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -58,11 +60,11 @@ module ot_hbm_idx_rootctl_static(
  end
  assign fault=calendar_fault|(|qf_r)|sf|lf|parent_calendar_fault|agree_fault;
  wire[135:0]topk_rq;wire[2055:0]topk_rr;
- ot_hbm_idx_topk_static topk(.clk(clk_topk),.rst_n(rst_n),.sid(SID),.go(topk_go),.k(topk_k),.order(topk_order),
+ ot_hbm_idx_topk_static #(.PIN_IN(PIN_IN)) topk(.clk(clk_topk),.rst_n(rst_n),.sid(SID),.go(topk_go),.k(topk_k),.order(topk_order),
   .n(topk_n),.m(topk_m),.a_mirror(topk_a_mirror),.a_base(topk_a_base),.a_str(topk_a_str),.o_mirror(topk_o_mirror),
   .o_base(topk_o_base),.o_str(topk_o_str),.has_r(topk_has_r),.r_base(topk_r_base),.r_str(topk_r_str),
   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(cq),.cq_seq(cq_seq),.cr(cr),.busy(topk_busy),.done(topk_done),.fault(topk_fault));
- ot_hbm_idx_vm_share_static share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),.argmax_rq(argmax_rq),
+ ot_hbm_idx_vm_share_static #(.PIN_IN(PIN_IN)) share(.clk_pair(clk_pair),.rst_n(rst_n),.index_rq(index_rq),.topk_rq(topk_rq),.argmax_rq(argmax_rq),
   .vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),.topk_rr(topk_rr),.argmax_rr(argmax_rr),.fault(share_fault));
 endmodule
 `default_nettype wire

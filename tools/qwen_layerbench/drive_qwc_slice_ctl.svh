@@ -12,6 +12,15 @@
 `ifndef SMOKE_IMG
 `define SMOKE_IMG "img"
 `endif
+// QLB-GEN 10-18: the witness pins at the slice edge are the die nets INTO qfd_d2d_static (their relay suffix depends on
+// the GEN; dv2f14bn names by default) and the XPF transport probe (SMOKE_HR_OUT = the slice output carrying the hr bus
+// at the W5 end, SMOKE_XPF_T = XPF_TRANSPORT_EDGES as elaborated in this slice, slice.json die_params_applied)
+`ifndef SMOKE_WIT_V
+`define SMOKE_WIT_V o_n_sf_prog_tx_observed_v__r2
+`endif
+`ifndef SMOKE_WIT_REC
+`define SMOKE_WIT_REC o_n_sf_prog_tx_record__r1
+`endif
     reg [63:0] prog [0:1031];
     reg [63:0] digest = 64'h51484f5354505247, footer = 0;
     integer pi, pw_seen = 0, dw_seen = 0, pw_bad = 0, dw_bad = 0, boot_cyc = -1, ready_cyc = -1, cal_rdy_cyc = -1;
@@ -43,10 +52,10 @@
     end
 `endif
     // witness: the face's kind-14 record leaves the slice at the qfd_d2d_static input pins
-    reg w_rslot = 0; always @(posedge ck) w_rslot <= o_n_sf_prog_tx_observed_v__r2;
+    reg w_rslot = 0; always @(posedge ck) w_rslot <= `SMOKE_WIT_V;
     wire w_commit, w_inst, w_cap, w_f; wire [15:0] w_ep; wire [63:0] w_dg;
-    qkd_program_witness_rx u_kv_wrx (.ck(ck), .rst_n(rst_n), .program_begin_v(a_begin), .receive_slot(o_n_sf_prog_tx_observed_v__r2),
-        .rx_v(o_n_sf_prog_tx_observed_v__r2), .rx_record(o_n_sf_prog_tx_record__r1), .expected_epoch(16'h0b0b),
+    qkd_program_witness_rx u_kv_wrx (.ck(ck), .rst_n(rst_n), .program_begin_v(a_begin), .receive_slot(`SMOKE_WIT_V),
+        .rx_v(`SMOKE_WIT_V), .rx_record(`SMOKE_WIT_REC), .expected_epoch(16'h0b0b),
         .expected_digest(digest), .authorized_footer_valid(1'b1), .authorized_footer(footer), .program_commit_v(w_commit),
         .program_commit_epoch(w_ep), .program_commit_digest(w_dg), .program_installed_valid(w_inst), .installed_fusedcap(w_cap),
         .fault(w_f));
@@ -55,6 +64,15 @@
         for (pi = 0; pi < 1032; pi = pi + 1)
             digest = {digest[56:0], digest[63:57]} ^ prog[pi] ^ (pi < 1024 ? 64'(pi) : (64'd1 << 10) | 64'(pi - 1024));
         footer = prog[1023];
+    end
+    // QLB-GEN: first edge of each record-port fault term (which slot / record raised it)
+    reg rp_af_said = 0, rp_sf_said = 0;
+    always @(posedge ck) if (rst_n) begin
+        if (dut.sys_face.u_record.af === 1'b1 && !rp_af_said) begin rp_af_said = 1;
+            $display("SMOKE_INFO record port af rises @%0d (rx_v %b auth_slot %b context_slot %b)", cyc,
+                     dut.sys_face.prog_rx_v, dut.sys_face.prog_auth_slot, dut.sys_face.prog_context_slot); end
+        if (dut.sys_face.u_record.slot_fault === 1'b1 && !rp_sf_said) begin rp_sf_said = 1;
+            $display("SMOKE_INFO record port slot_fault rises @%0d", cyc); end
     end
     // program words at the tt_ctlm pins (after the die relays)
     always @(posedge ck) if (rst_n) begin
@@ -118,6 +136,28 @@
             smoke_err("LANDING: record bundle {rx_payload, prog_rx_v, prog_auth_slot, prog_context_slot} not on one edge at the face");
         if (lat_embv != lat_embs) smoke_err("LANDING: emb_rx_v / emb_rx_slot not on one edge at the face (face emb_fault rule)");
     end endtask
+`ifdef SMOKE_HR_OUT
+    // XPF TRANSPORT PROBE (QLB-GEN, LAYERBENCH G-C1): a one-edge all-ones word on the tt_ctlm hr pin-register output net
+    // (as if launched by the hr register on edge X) must leave the slice at the W5 end (landing o register) exactly
+    // XPF_TRANSPORT_EDGES - 1 edges later: the compiler's XPF_TRANSPORT_EDGES = hr register + these lane cycles
+    integer xp0, lat_hr, kx;
+    task automatic xpf_probe(); begin
+        lat_hr = -1;
+        @(posedge ck); #0.01;                      // just after launch edge X, as the hr register would drive it
+        force dut.n_dvw_hr_wi = {453{1'b1}}; xp0 = cyc;
+        for (kx = 0; kx < 64 && lat_hr < 0; kx = kx + 1) begin
+            @(posedge ck); #0.01;                  // edge X + 1 + kx: a one-flop path shows here with lat 1
+            if (kx == 0) release dut.n_dvw_hr_wi;  // one edge wide
+            if (&`SMOKE_HR_OUT) lat_hr = cyc - xp0;
+        end
+        $display("SMOKE_XPF hr lane edges %0d (tt_ctlm.hr -> W5-end slice output); XPF_TRANSPORT_EDGES elaborated %0d (expected %0d = 1 + lane)",
+                 lat_hr, `SMOKE_XPF_T, lat_hr + 1);
+        if (lat_hr < 0 || `SMOKE_XPF_T != lat_hr + 1) begin
+            $display("SMOKE_XPF_MISMATCH XPF_TRANSPORT_EDGES %0d != 1 + measured hr lane edges %0d", `SMOKE_XPF_T, lat_hr);
+            smoke_err("XPF_TRANSPORT_EDGES != 1 + measured hr lane edges");
+        end else $display("SMOKE_XPF_OK XPF_TRANSPORT_EDGES %0d = 1 + measured hr lane edges %0d", `SMOKE_XPF_T, lat_hr);
+    end endtask
+`endif
     task automatic slice_programme(); begin
         if (boot_cyc < 0) smoke_err("face boot not done after the idle window");
         $display("SMOKE_INFO boot_done at edge %0d (release %0d)", boot_cyc, rel_cyc);
@@ -137,4 +177,8 @@
         $display("SMOKE_INFO witness installed %b digest %h (expected %h) fault %b", w_inst, w_dg, digest, w_f);
         if (!w_inst || w_dg !== digest) smoke_err("kind-14 witness not accepted by the KV-side receiver");
         probe();
+`ifdef SMOKE_HR_OUT
+        repeat (20) @(negedge ck);
+        xpf_probe();
+`endif
     end endtask

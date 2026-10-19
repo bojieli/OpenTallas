@@ -19,7 +19,12 @@
 // reference's &selected_v every edge; in the last quarter selected_v is corrupted once and the DUT fault must rise
 // 2 edges later and stay. TOPK is idle here (go = 0): its pin registers / RT_EXTRA are covered by tb_idx_rootctl_am_topk.
 // AMMUT 6 (ingest_v one edge early) and 7 (owner tap own[6]) must FAIL here.
+// VMX (VEH-TOPKFIX2 10-19): 1 = pin-registered d4g VM banks: REF rootctl #(.PIN_IN(1)) vs DUT rootctl_am #(.VM_RT(1),.CR_RT(1))
+// (= die master ot_hbm_idx_rootctl_static_am_pin); same relations (both owner taps one edge later).
 module tb_idx_rootctl_am;
+`ifndef VMX
+`define VMX 0
+`endif
 `ifndef NCYC
 `define NCYC 40000
 `endif
@@ -38,7 +43,7 @@ module tb_idx_rootctl_am;
     wire [3:0] so0, so1; wire [1:0] sp0, sp1; wire [7:0] sa0, sa1; wire lfl0, lfl1, le0, le1, lc0, lc1; wire [3:0] lg0, lg1;
     wire iv0, iv1, dn0, dn1, ft0, ft1; wire [337:0] cq0, cq1; wire [1:0] cs0, cs1; wire tb0, tb1, td0, td1, tf0, tf1;
     wire [2055:0] irr0, irr1, arr0; wire [263:0] am1; wire [135:0] vq0, vq1; wire shf0, shf1;
-    ot_hbm_idx_rootctl_static ref_(.clk_program(clk), .clk_program_mem(clk), .clk_sel(clk), .clk_topk(clk), .clk_pair({4{clk}}),
+    ot_hbm_idx_rootctl_static #(.PIN_IN(`VMX)) ref_(.clk_program(clk), .clk_program_mem(clk), .clk_sel(clk), .clk_topk(clk), .clk_pair({4{clk}}),
         .rst_n(rst_n), .program_we(program_we), .program_addr(program_addr), .program_data(program_data), .start(start),
         .length(length), .sel_op(so0), .sel_pass(sp0), .sel_addr(sa0), .link_flush(lfl0), .link_emit(le0), .link_group(lg0),
         .link_clear(lc0), .selected_v(selected_v), .ingest_v(iv0), .tree_ev(tree_ev), .qfault(qfault), .sf(sf), .lf(lf),
@@ -47,7 +52,7 @@ module tb_idx_rootctl_am;
         .topk_o_base(topk_o_base), .topk_o_str(topk_o_str), .topk_has_r(topk_has_r), .topk_r_base(topk_r_base),
         .topk_r_str(topk_r_str), .cq(cq0), .cq_seq(cs0), .cr(cr), .topk_busy(tb0), .topk_done(td0), .topk_fault(tf0),
         .index_rq(index_rq_d), .index_rr(irr0), .argmax_rq(argmax_rq_d), .argmax_rr(arr0), .vm_rq(vq0), .vm_rr(vm_rr), .share_fault(shf0));
-    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT)) dut(.clk(clk),
+    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`VMX), .CR_RT(`VMX)) dut(.clk(clk),
         .rst_n(rst_n), .program_we(program_we), .program_addr(program_addr), .program_data(program_data), .start(start),
         .length(length), .sel_op(so1), .sel_pass(sp1), .sel_addr(sa1), .link_flush(lfl1), .link_emit(le1), .link_group(lg1),
         .link_clear(lc1), .selected_v(selected_v), .ingest_v(iv1), .tree_ev(tree_ev), .qfault(qfault), .sf(sf), .lf(lf),

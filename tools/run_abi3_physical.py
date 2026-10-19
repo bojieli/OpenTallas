@@ -2189,6 +2189,28 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             "}",
             f"ot_check_pin_regions [list {pats}]",
         ]
+    # DESCENDING BIT ORDER (HCRING 2026-10-19): OT_PIN_ORDER_DESC names bus ports (base names) whose bits are laid
+    # out from the HIGH bit at the region's low end.  A tile placed R180 against an R0 neighbour sees that
+    # neighbour's face mirrored: the R0 side's ranges are mirrored AND its bits must run high-to-low, or an abutted
+    # 2,048-b chain arrives bit-reversed (HC ring e0 S -> b5, b7 -> b0 S).  Unset (every other kit): output unchanged.
+    desc = os.environ.get("OT_PIN_ORDER_DESC", "").split()
+    if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", d) for d in desc):
+        raise ValueError("OT_PIN_ORDER_DESC: port base names only")
+    if desc:
+        lines += [
+            # ORFS sources this script inside a proc: a plain `set` is proc-local and `global` then finds nothing
+            # (HC bank e0/b0 pord1 gates: "can't read ot_pin_desc").  Use the namespace-qualified global.
+            f"set ::ot_pin_desc {{{' '.join(desc)}}}",
+            "proc ot_order_pins {names} {",
+            "  if {[llength $names] > 0 && [lsearch -exact $::ot_pin_desc [ot_pin_base [lindex $names 0]]] >= 0} {",
+            "    foreach n $names { if {[lsearch -exact $::ot_pin_desc [ot_pin_base $n]] < 0} {",
+            "      error \"OT_PIN_ORDER_DESC: region mixes descending [ot_pin_base [lindex $names 0]] with $n\" } }",
+            "    return [lreverse $names]",
+            "  }",
+            "  return $names",
+            "}",
+        ]
+    match_pins = "ot_order_pins [ot_match_pins {%s}]" if desc else "ot_match_pins {%s}"
     for region in pin_regions:
         edge_region = region["edge"] + ":*"
         if "range_um" in region:
@@ -2227,7 +2249,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
                         if edge in ("left", "right") else
                         f"[list $ot_pos {dy1 if edge == 'top' else dy0:g}]")
             lines += [
-                f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
+                f"set ot_region_pins [{match_pins % region['regex']}]",
                 "set ot_count [llength $ot_region_pins]",
                 "set ot_first 0",
                 "foreach ot_pin $ot_region_pins {",
@@ -2239,7 +2261,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             ]
         elif group_max:
             lines += [
-                f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
+                f"set ot_region_pins [{match_pins % region['regex']}]",
                 f"for {{set ot_first 0}} {{$ot_first < [llength $ot_region_pins]}} {{incr ot_first {group_max}}} {{",
                 f"  set_io_pin_constraint -group -order -region {edge_region} "
                 f"-pin_names [lrange $ot_region_pins $ot_first [expr {{$ot_first + {group_max} - 1}}]]",
@@ -2248,7 +2270,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         else:
             lines.append(
                 f"set_io_pin_constraint -group -order -region {edge_region} "
-                f"-pin_names [ot_match_pins {{{region['regex']}}}]"
+                f"-pin_names [{match_pins % region['regex']}]"
             )
     return "\n".join(lines) + "\n"
 

@@ -169,11 +169,22 @@ def git_show_opt(commit, path):
     return r.stdout if r.returncode == 0 else None
 
 
-def rtl_txdp(compute_commit, kv_commit=None):
-    """bound TXDP per end: the compute master from the compute die's source commit, the KV master from the KV die's"""
+def rtl_txdp(compute_commit, kv_commit=None, compute_params=None):
+    """bound TXDP per end: the compute master from the compute die's source commit, the KV master from the KV die's.
+    A required-parameter compute master takes the compute GEN's die.v.params.json qfd_d2d_static.TXDP when given
+    (QLB-GEN assignment), else the committed image D2D_TXDP_C."""
     out, src = {}, {}
     for end, commit in (('C', compute_commit), ('K', kv_commit or compute_commit)):
-        out[end], kind = txdp_bound(git_show(commit, D2D_RTL), git_show_opt(commit, D2D_IMAGE), end)
+        rtl = git_show(commit, D2D_RTL)
+        if end == 'C' and compute_params and not re.search(
+                r"qfd_d2d_static_core\s*#\([^;]*?\.TXDP\(PR \?", rtl, re.S):
+            v = json.loads(Path(compute_params).read_text()).get('masters', {}).get('qfd_d2d_static', {}).get('TXDP')
+            if v is None:
+                raise SystemExit(f'layer_compile: {compute_params} assigns no qfd_d2d_static TXDP')
+            out[end] = [(int(v) >> (8 * i)) & 0xff for i in range(4)]
+            src[end] = f'{compute_params} qfd_d2d_static.TXDP (die_parameter)'
+            continue
+        out[end], kind = txdp_bound(rtl, git_show_opt(commit, D2D_IMAGE), end)
         src[end] = f'{commit}:{D2D_RTL if kind == "rtl_literal" else D2D_IMAGE} ({kind})'
     return out, src
 
@@ -264,6 +275,7 @@ def main(argv=None):
     ap.add_argument('--compute-stages', required=True); ap.add_argument('--kv-stages', required=True)
     ap.add_argument('--token-path', default='results/arch/token_path_20261009/qwen_rom.json')
     ap.add_argument('--link-handoff', default='results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json')
+    ap.add_argument('--compute-params', help='compute die.v.params.json (TXDP as the die elaborates it)')
     ap.add_argument('--compute-commit', default='0a9c93921'); ap.add_argument('--kv-commit', default='f05f9338f')
     ap.add_argument('--txl', type=int, default=6); ap.add_argument('--phy', type=int, default=5)
     ap.add_argument('--n59-land-edges', type=int, default=8,
@@ -293,7 +305,7 @@ def main(argv=None):
     S = compile_stages(ba)
     kvp = kv_programme_constants(a.kv_commit)
     raw, txd = txd_of(S, kv_codec=kvp['KV_CODEC'])
-    hard, hard_src = rtl_txdp(a.compute_commit, a.kv_commit)
+    hard, hard_src = rtl_txdp(a.compute_commit, a.kv_commit, a.compute_params)
     for e in ('C', 'K'):
         if hard[e] != txd[e]:
             findings.append(dict(id=f'TXDP {e}', severity='FAIL', owner='Q-LINK / die leads',

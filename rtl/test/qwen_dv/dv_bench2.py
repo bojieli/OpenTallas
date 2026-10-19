@@ -28,7 +28,14 @@ ROOT = B.ROOT
 SRCS2 = [s for s in B.SRCS if not s.endswith(("qfd_dv_slice.sv", "qfd_dv_redstn.sv", "qfd_dv_scalar.sv",
                                                 "tb_qfd_dv.sv"))] + \
     ["rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv",
-     "rtl/test/qwen_dv/tb_qfd_dv2.sv"]
+     "rtl/test/qwen_dv/tb_qfd_dv2.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/qfd_dv_slice2_faces.sv"]
+# MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
+# DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
+# qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).
+import os  # noqa: E402
+MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
+FACE = int(os.environ.get("DV2_FACE", "0"))
+AM_MUT = int(os.environ.get("DV2_AM_MUT", "0"))
 P_RET_AR, P_RET_DD, P_SWI2 = 1001, 1040, 41      # pre-translation codes (TB ports 1 / 40 / 41)
 SK = 14
 
@@ -97,14 +104,15 @@ def conv48(w):
 def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
-    obj = work / f"obj2_n{n}"
+    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}"
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():
         cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-j", "16", "-Wno-fatal", "-Wno-lint", "-Wno-style",
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
-               "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", "-Mdir", str(obj), str(HERE / "main2.cpp")] + \
-              [str(ROOT / s) for s in SRCS2]
+               "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", f"-GMU_NU={MU_NU}", f"-GFACE={FACE}"] + \
+              ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
+              ["-Mdir", str(obj), str(HERE / "main2.cpp")] + [str(ROOT / s) for s in SRCS2]
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc}"], check=True, stdout=subprocess.DEVNULL)
     out = {}
@@ -423,6 +431,228 @@ def bench_j(work, mut, seed=11):
     return ok, 3, errs
 
 
+def cmd_stn_u(mode, wsrc, nwords, sbase, dst, dbase, amax=0, user=0):
+    """STN with the MU-QWEN R4 user field cmd[52:51]."""
+    return B.cmd_stn(mode, wsrc, nwords, sbase, dst, dbase, amax=amax) | ((user & 3) << 51)
+
+
+def cmd_amax_u(clear=0, emit=0, user=0):
+    """AMAX with the MU-QWEN R4 user field cmd[9:8]."""
+    return cmd_amax2(clear=clear, emit=emit) | ((user & 3) << 8)
+
+
+def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
+    """MU-ADOPT-SLICE (MU-QWEN R4 on the slice / face RTL): 4 users' LM heads as row chunks interleaved op by op on a
+    2-slice chain, as the static calendar runs them.  Per round every user u has 2 x nch x 128 rows (slice sl rows
+    sl*512 + c*128 ..); its op sequence is a random interleave of all users' (u, c) chunk ops (chunk order permuted);
+    AMAX clear of u just before u's first chunk, AMAX emit of u at a random later point (often after another user's
+    STN, so the emit must select the AMAX command's user); ties of the top value inside a slice across chunks, at a
+    chunk boundary and across slices (the lowest index must win).  STN ops are spaced DV2_GAP edges after the last
+    data word (default 18: the next STN issues while the previous op's last results are still in the compare tree, so
+    the user must travel down the tree).  Check: per emit, the root token, the ring broadcast and slice 1's token
+    equal the golden single-shot argmax of that user's rows (np.argmax: lowest index of the maximum); no fault.
+    At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL.  One ROOT cfg at the start: at MU_NU > 1
+    the root restarts its argmax merge after each token (qfd_dv_scalar2 MU_NU; a ROOT cfg per user token would clear
+    other users' PSUM slots); DV2_AM_MUT 6 removes that restart and must FAIL (every token = the largest head so far).
+    DV2_GAP 12 / 14 issue the next STN while the previous op's results are pending: the stn_pend fault must fire (FAIL).
+    MU-QW-AMIX 10-19 (MU_NU > 1): every token also carries its USER -- the root's and slice 1's status st[27:26] on the
+    tok_v edge (contract with MU-QW-B1-RTL: ss5[27:26]) and the TOK broadcast word's tag[1:0] -- and must equal the
+    emitted user."""
+    seed = int(os.environ.get("DV2_SEED", seed))
+    rng = np.random.default_rng(seed)
+    gap = int(os.environ.get("DV2_GAP", "18"))
+    ev = B.Ev()
+    R = 2 * 512
+    exp = []
+    ev.at(B.P_CMD + 0, B.cmd_root(1, 0, 0, amnb=2), t=ev.t)
+    ev.at(B.P_CMD + 1, B.cmd_root(0, 0, 0), t=ev.t + 1)
+    ev.step(8)
+    ntie = 0
+    for rnd in range(rounds):
+        vals = {}
+        for u in range(nu):
+            v = (rng.standard_normal(R) * 4.0).astype(F)
+            v[v == 0] = F(1.0)
+            top = F(np.max(np.abs(v)) * 2 + 1)
+            kind = (rnd * nu + u) % 4
+            if kind == 0:      # chunk boundary inside slice 0 + a later chunk
+                rows = [127, 128, 300 + int(rng.integers(0, 100))]
+            elif kind == 1:    # across slices (slice 1 lower chunk vs slice 0 higher chunk)
+                rows = [512 + int(rng.integers(0, 128)), 3 * 128 + int(rng.integers(0, 128))]
+            elif kind == 2:    # chunk boundary inside slice 1 + slice 0's last chunk
+                rows = [512 + 255, 512 + 256, 383]
+            else:              # no tie, random position
+                rows = [int(rng.integers(0, R))]
+            for r in rows:
+                v[r] = top
+            ntie += len(rows) > 1
+            vals[u] = v
+        ops = [(u, c) for u in range(nu) for c in range(nch)]
+        rng.shuffle(ops)
+        first = {u: min(i for i, o in enumerate(ops) if o[0] == u) for u in range(nu)}
+        last = {u: max(i for i, o in enumerate(ops) if o[0] == u) for u in range(nu)}
+        emit_at = {u: int(rng.integers(last[u], len(ops))) for u in range(nu)}   # emit after op index emit_at[u]
+        done_t = {}
+        last_emit = -100
+        pend = []
+        for i, (u, c) in enumerate(ops):
+            if i == first[u]:
+                for sl in (0, 1):
+                    ev.at(B.P_CMD + sl, cmd_amax_u(clear=1, user=u), t=ev.t + sl)
+                ev.step(3)
+            for sl in (0, 1):
+                ev.at(B.P_CMD + sl, cmd_stn_u(0, 1, 8, 0, 0, sl * 512 + c * 128, amax=1, user=u), t=ev.t + sl)
+            ev.step(4 + SK)
+            for k in range(8):
+                for sl in (0, 1):
+                    base = sl * 512 + c * 128 + 16 * k
+                    pair2(ev, sl, vals[u][base:base + 16], np.zeros(16, dtype=F), None, None, ev.t)
+                ev.step()
+            if i == last[u]:
+                done_t[u] = ev.t
+            ev.step(gap)
+            for w in sorted(x for x in range(nu) if emit_at[x] == i):
+                pend.append(w)
+            # an emit waits until its user's last results merged (40 edges after the data) and the root finished the
+            # previous user's token (30 edges); meanwhile the next ops run
+            while pend and ev.t >= done_t[pend[0]] + 40 and ev.t >= last_emit + 30:
+                w = pend.pop(0)
+                ev.at(B.P_CMD + 1, cmd_amax_u(emit=1, user=w)); ev.at(B.P_CMD + 0, cmd_amax_u(emit=1, user=w), t=ev.t + 3)
+                exp.append((rnd, w, int(np.argmax(G.mul(G.add(vals[w], F(0)), F(1.0))))))
+                last_emit = ev.t
+                ev.step(6)
+        while pend:
+            w = pend.pop(0)
+            ev.step(max(0, done_t[w] + 40 - ev.t, last_emit + 30 - ev.t))
+            ev.at(B.P_CMD + 1, cmd_amax_u(emit=1, user=w)); ev.at(B.P_CMD + 0, cmd_amax_u(emit=1, user=w), t=ev.t + 3)
+            exp.append((rnd, w, int(np.argmax(G.mul(G.add(vals[w], F(0)), F(1.0))))))
+            last_emit = ev.t
+            ev.step(6)
+        ev.step(40)
+    log = run_sim2(f"m_g{gap}_s{seed}", ev, work, mut, ev.t + 20)
+    errs = status_ok2(log)
+    tok = [w & 0xFFFFFF for _, w in log.get("S0TOK", [])]
+    ring = [(w >> 64) & 0xFFFFFF for _, w in log.get("S0SC", []) if (w >> 92) & 7 == 4]
+    tok1 = [w & 0xFFFFFF for _, w in log.get("S1TOK", [])]
+    # MU-QW-AMIX: token users (status [27:26] at the tok_v edge, TOK word tag[1:0] = raw scalar word [33:32])
+    utok = [(w >> 26) & 3 for _, w in log.get("S0TOK", [])]
+    utok1 = [(w >> 26) & 3 for _, w in log.get("S1TOK", [])]
+    uring = [(w >> 32) & 3 for _, w in log.get("S0SU", []) if (w >> 44) & 7 == 5]
+    ok = 0
+    for i, (rnd, w, g) in enumerate(exp):
+        got = [lst[i] if i < len(lst) else None for lst in (tok, ring, tok1)]
+        gu = [lst[i] if i < len(lst) else None for lst in (utok, uring, utok1)]
+        if all(x == g for x in got) and (MU_NU == 1 or all(x == w for x in gu)):
+            ok += 1
+        else:
+            errs.append(f"round {rnd} user {w}: root token / broadcast / slice-1 token {got} users {gu}, golden argmax {g}")
+    if len(tok) != len(exp):
+        errs.append(f"{len(tok)} root tokens for {len(exp)} emits")
+    print(f"    bench2 (m): seed {seed} gap {gap} MU_NU {MU_NU} FACE {FACE} AM_MUT {AM_MUT}: {len(exp)} emits, "
+          f"{ntie} tie heads, end cycle {ev.t}")
+    return ok, len(exp), errs
+
+
+def bench_o(work, mut, seed=31):
+    """MU-ADOPT-SLICE (F-TOK-1 / B2): an STN issued while the previous amax op's station results are still pending is a
+    sticky port fault at MU_NU > 1 (it would drop / misattribute them).  Slice 0: STN amax user 1, its 8 data words,
+    then DV2_OGAP edges later (default 4: results still streaming) an STN of user 2 (no amax).  Slice 1: the same first
+    op, then the second STN 30 edges after the data (legal).  PASS iff slice 0's port fault (status bit 63) is set and
+    slice 1's is clear; a second run with both second STNs legal must leave both clear."""
+    rng = np.random.default_rng(seed)
+    og = int(os.environ.get("DV2_OGAP", "4"))
+    ok, errs = 0, []
+    for case, g0 in (("ovl", og), ("legal", 30)):
+        ev = B.Ev()
+        v = (rng.standard_normal(256) * 4.0).astype(F)
+        for sl in (0, 1):
+            ev.at(B.P_CMD + sl, cmd_amax_u(clear=1, user=1), t=ev.t + sl)
+        ev.step(4)
+        for sl in (0, 1):
+            ev.at(B.P_CMD + sl, cmd_stn_u(0, 1, 8, 0, 0, sl * 128, amax=1, user=1), t=ev.t + sl)
+        ev.step(4 + SK)
+        for k in range(8):
+            for sl in (0, 1):
+                pair2(ev, sl, v[sl * 128 + 16 * k:sl * 128 + 16 * k + 16], np.zeros(16, dtype=F), None, None, ev.t)
+            ev.step()
+        t0 = ev.t
+        ev.at(B.P_CMD + 0, cmd_stn_u(0, 1, 8, 0, 0, 0x800, amax=0, user=2), t=t0 + g0)
+        ev.at(B.P_CMD + 1, cmd_stn_u(0, 1, 8, 0, 0, 0x800, amax=0, user=2), t=t0 + 30 + 1)
+        ev.step(80)
+        log = run_sim2(f"o_{case}_g{g0}", ev, work, mut, ev.t + 20)
+        pf = [(log[f"S{sl}ST"][0][1] >> 63) & 1 for sl in (0, 1)]
+        want = [1, 0] if case == "ovl" else [0, 0]
+        if pf == want:
+            ok += 1
+        else:
+            errs.append(f"{case} (slice-0 second STN {g0} edges after the data): port fault slice0/slice1 {pf}, want {want}")
+    print(f"    bench2 (o): ovl gap {og} MU_NU {MU_NU} FACE {FACE} AM_MUT {AM_MUT}")
+    return ok, 2, errs
+
+
+def bench_n(work, mut, seed=41):
+    """MU-QW-AMIX 10-19: the root argmax merge must hold ONE user's candidates (qfd_dv_scalar2 MU_NU > 1 checks it).
+    2-slice chain, root = slice 0 (amnb 2).  Users 1 and 2 each run one amax-armed STN chunk on both slices (rows
+    sl*512 + {0, 128}..), heads cleared first.  Case 'mixed': slice 1 emits user 1 while the root emits user 2 (one merge,
+    two users' candidates), then slice 1 emits user 2 while the root emits user 1.  Every per-slice command is legal for
+    qfd_dv_amax_mu (both heads open), so only the root's mixed-merge check can see it: PASS iff the root's sc fault
+    (status bit 65) is set, its port fault (63) is clear and slice 1 has no fault.  Case 'legal': the same heads, both
+    slices emit user 1, then both user 2: no fault, root / slice-1 tokens = the golden argmax of each user's rows with
+    the token user in status [27:26] and in the TOK word tag.  DV2_AM_MUT 7 (no check) must FAIL 'mixed'.  MU_NU > 1."""
+    rng = np.random.default_rng(int(os.environ.get("DV2_SEED", seed)))
+    users = (1, 2)
+    ok, errs = 0, []
+    for case in ("mixed", "legal"):
+        ev = B.Ev()
+        ev.at(B.P_CMD + 0, B.cmd_root(1, 0, 0, amnb=2), t=ev.t)
+        ev.at(B.P_CMD + 1, B.cmd_root(0, 0, 0), t=ev.t + 1)
+        ev.step(8)
+        gold = {}
+        for c, u in enumerate(users):
+            v = (rng.standard_normal(2 * 128) * 4.0).astype(F)
+            v[v == 0] = F(1.0)
+            rows = [sl * 512 + c * 128 + j for sl in (0, 1) for j in range(128)]
+            vv = G.mul(G.add(v, F(0)), F(1.0))
+            gold[u] = rows[int(np.argmax(vv))]
+            for sl in (0, 1):
+                ev.at(B.P_CMD + sl, cmd_amax_u(clear=1, user=u), t=ev.t + sl)
+            ev.step(3)
+            for sl in (0, 1):
+                ev.at(B.P_CMD + sl, cmd_stn_u(0, 1, 8, 0, 0, sl * 512 + c * 128, amax=1, user=u), t=ev.t + sl)
+            ev.step(4 + SK)
+            for k in range(8):
+                for sl in (0, 1):
+                    pair2(ev, sl, v[sl * 128 + 16 * k:sl * 128 + 16 * k + 16], np.zeros(16, dtype=F), None, None, ev.t)
+                ev.step()
+            ev.step(18)
+        ev.step(40)
+        pairs = [(1, 2), (2, 1)] if case == "mixed" else [(1, 1), (2, 2)]
+        for u1, u0 in pairs:                       # (slice 1's emit user, the root's emit user)
+            ev.at(B.P_CMD + 1, cmd_amax_u(emit=1, user=u1)); ev.at(B.P_CMD + 0, cmd_amax_u(emit=1, user=u0), t=ev.t + 3)
+            ev.step(40)
+        ev.step(20)
+        log = run_sim2(f"n_{case}", ev, work, mut, ev.t + 20)
+        st0, st1 = log["S0ST"][0][1], log["S1ST"][0][1]
+        sc0, pf0, any1 = (st0 >> 65) & 1, (st0 >> 63) & 1, (st1 >> 69) & 1
+        if case == "mixed":
+            if sc0 == 1 and pf0 == 0 and any1 == 0:
+                ok += 1
+            else:
+                errs.append(f"mixed: root sc fault {sc0} (want 1), root port fault {pf0} (want 0), slice-1 any fault {any1} (want 0)")
+            continue
+        bad = status_ok2(log)
+        tok = [(w & 0xFFFFFF, (w >> 26) & 3) for _, w in log.get("S0TOK", [])]
+        tok1 = [(w & 0xFFFFFF, (w >> 26) & 3) for _, w in log.get("S1TOK", [])]
+        ring = [((w & 0xFFFFFF), (w >> 32) & 3) for _, w in log.get("S0SU", []) if (w >> 44) & 7 == 5]
+        want = [(gold[u], u) for u in users]
+        if not bad and tok == want and tok1 == want and ring == want:
+            ok += 1
+        else:
+            errs.append(f"legal: faults {bad}; root {tok} / slice-1 {tok1} / TOK words {ring}, want {want}")
+    print(f"    bench2 (n): MU_NU {MU_NU} FACE {FACE} AM_MUT {AM_MUT}")
+    return ok, 2, errs
+
+
 def install():
     B.Ev = Ev2
     B.load_vm = load_vm2
@@ -431,7 +661,7 @@ def install():
 
 
 BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
-           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j}
+           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o, "n": bench_n}
 
 
 def main():
