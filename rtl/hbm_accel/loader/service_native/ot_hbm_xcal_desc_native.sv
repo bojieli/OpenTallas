@@ -17,9 +17,13 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
  always @(posedge clk or negedge rst_n)
    if(!rst_n) reset_landing<=0; else reset_landing<={reset_landing[0],1'b1};
  wire rst_q=reset_landing[1] && (MUT!=3);
+ wire [6:0] reset_branch;
+ for(genvar g=0;g<7;g=g+1)begin:g_reset_branch
+   (* keep = 1 *) ot_hbm_xcal_reset_branch u_reset(.clk(clk),.rst_n(rst_n),.phase0((MUT==3)?1'b0:reset_landing[0]),.q(reset_branch[g]));
+ end
  reg prog_done_q,prog_fault_q,outstanding;
- always @(posedge clk or negedge rst_q)
-   if(!rst_q)begin prog_done_q<=0;prog_fault_q<=0;end
+ always @(posedge clk or negedge reset_branch[0])
+   if(!reset_branch[0])begin prog_done_q<=0;prog_fault_q<=0;end
    else begin prog_done_q<=prog_done;prog_fault_q<=prog_fault;end
     // Local descriptor SRAM input capture.
     // ---------------- pin flops
@@ -28,8 +32,8 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
     reg [255:0] desc_data_q;
     reg [DAW:0] run_count_q;
     always @(posedge clk) begin desc_addr_q <= desc_addr; desc_data_q <= desc_data; run_base_q <= run_base; run_count_q <= run_count; end
-    always @(posedge clk or negedge rst_q)
-        if (!rst_q) begin desc_we_q <= 1'b0; run_q <= 1'b0; end
+    always @(posedge clk or negedge reset_branch[0])
+        if (!reset_branch[0]) begin desc_we_q <= 1'b0; run_q <= 1'b0; end
         else begin desc_we_q <= desc_we; run_q <= run_v; end
     // ---------------- go table (copy of the svg issuer's descriptor table)
     reg running, rd_q, ent_v;
@@ -64,13 +68,13 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
       cfg_addr_o<=cfg_addr; cfg_data_o<=cfg_data;
       start_base_o<=e_base;start_limit_o<=e_limit;start_loops_o<=e_loops;start_ctx_o<=e_ctx;
     end
-    always @(posedge clk or negedge rst_q)
-      if(!rst_q)begin cfg_we_o<=0;start_v_o<=0;end
+    always @(posedge clk or negedge reset_branch[0])
+      if(!reset_branch[0])begin cfg_we_o<=0;start_v_o<=0;end
       else begin cfg_we_o<=cfg_we;start_v_o<=go;end
-    always @(posedge clk or negedge rst_q) begin
-        if (!rst_q) begin
+    always @(posedge clk or negedge reset_branch[0]) begin
+        if (!reset_branch[0]) begin
             running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0;  rp_q <= 0;   
-            rc <= 24'd0;     
+                 
             active <= 1'b0; done <= 1'b0; fault <= 1'b0; outstanding <= 1'b0;
         end else begin
             done <= 1'b0;
@@ -79,9 +83,9 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
                 if (running || outstanding || run_count_q == 0 || {1'b0, run_base_q} + run_count_q > DD) fault <= 1'b1;
                 else begin
                     running <= 1'b1; outstanding <= 1'b1; 
-                    rc <= (MUT == 1) ? 24'd0 : 24'd1;
+
                 end
-            end else if (running) rc <= rc + 24'd1;
+            end
             rd_q <= rd_go; rp_q <= rp;
 
             if (rd_q) begin
@@ -106,60 +110,64 @@ module ot_hbm_xcal_desc_native #(parameter integer MUT=0, PAW=11, DD=256, DAW=8)
     for(genvar k=0;k<(24+7)/8;k=k+1)begin:g_capture_e_at
       localparam integer BW=(24-8*k<8)?24-8*k:8;
       wire cap;
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
-      always @(posedge clk or negedge rst_q)
-        if(!rst_q)e_at[8*k+:BW]<=0;else if(cap)e_at[8*k+:BW]<=e_at_decoded[8*k+:BW];
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(reset_branch[4]),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge reset_branch[4])
+        if(!reset_branch[4])e_at[8*k+:BW]<=0;else if(cap)e_at[8*k+:BW]<=e_at_decoded[8*k+:BW];
     end
     wire [PAW-1:0] e_base_decoded=PAW'({rd[189],rd[91:82]});
     for(genvar k=0;k<(PAW+7)/8;k=k+1)begin:g_capture_e_base
       localparam integer BW=(PAW-8*k<8)?PAW-8*k:8;
       wire cap;
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
-      always @(posedge clk or negedge rst_q)
-        if(!rst_q)e_base[8*k+:BW]<=0;else if(cap)e_base[8*k+:BW]<=e_base_decoded[8*k+:BW];
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(reset_branch[5]),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge reset_branch[5])
+        if(!reset_branch[5])e_base[8*k+:BW]<=0;else if(cap)e_base[8*k+:BW]<=e_base_decoded[8*k+:BW];
     end
     wire [PAW+1-1:0] e_limit_decoded=(PAW+1)'({rd[190],rd[102:92]});
     for(genvar k=0;k<(PAW+1+7)/8;k=k+1)begin:g_capture_e_limit
       localparam integer BW=(PAW+1-8*k<8)?PAW+1-8*k:8;
       wire cap;
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
-      always @(posedge clk or negedge rst_q)
-        if(!rst_q)e_limit[8*k+:BW]<=0;else if(cap)e_limit[8*k+:BW]<=e_limit_decoded[8*k+:BW];
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(reset_branch[5]),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge reset_branch[5])
+        if(!reset_branch[5])e_limit[8*k+:BW]<=0;else if(cap)e_limit[8*k+:BW]<=e_limit_decoded[8*k+:BW];
     end
     wire [16-1:0] e_loops_decoded=rd[118:103];
     for(genvar k=0;k<(16+7)/8;k=k+1)begin:g_capture_e_loops
       localparam integer BW=(16-8*k<8)?16-8*k:8;
       wire cap;
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
-      always @(posedge clk or negedge rst_q)
-        if(!rst_q)e_loops[8*k+:BW]<=0;else if(cap)e_loops[8*k+:BW]<=e_loops_decoded[8*k+:BW];
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(reset_branch[6]),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge reset_branch[6])
+        if(!reset_branch[6])e_loops[8*k+:BW]<=0;else if(cap)e_loops[8*k+:BW]<=e_loops_decoded[8*k+:BW];
     end
     wire [5-1:0] e_ctx_decoded={rd[197:195],rd[198],rd[199]};
     for(genvar k=0;k<(5+7)/8;k=k+1)begin:g_capture_e_ctx
       localparam integer BW=(5-8*k<8)?5-8*k:8;
       wire cap;
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(rst_q),.d(rd_go),.q(cap));
-      always @(posedge clk or negedge rst_q)
-        if(!rst_q)e_ctx[8*k+:BW]<=0;else if(cap)e_ctx[8*k+:BW]<=e_ctx_decoded[8*k+:BW];
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_cap(.clk(clk),.rst_n(reset_branch[6]),.d(rd_go),.q(cap));
+      always @(posedge clk or negedge reset_branch[6])
+        if(!reset_branch[6])e_ctx[8*k+:BW]<=0;else if(cap)e_ctx[8*k+:BW]<=e_ctx_decoded[8*k+:BW];
     end
     wire [1:0] run_copy;wire [1:0] run_accept;
     wire legal_run=run_count_q!=0&&{1'b0,run_base_q}+run_count_q<=DD;
     for(genvar k=0;k<2;k=k+1)begin:g_run_copy
-      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_run(.clk(clk),.rst_n(rst_q),.d(run_v),.q(run_copy[k]));
+      (* keep = 1 *) ot_hbm_xcal_kept_rbit u_run(.clk(clk),.rst_n(reset_branch[0]),.d(run_v),.q(run_copy[k]));
       assign run_accept[k]=run_copy[k]&&!running&&!outstanding&&legal_run;
     end
-    always @(posedge clk or negedge rst_q)
-      if(!rst_q)begin rp<=0;n_rd<=0;end
+    always @(posedge clk or negedge reset_branch[2])
+      if(!reset_branch[2])begin rp<=0;n_rd<=0;end
       else begin
         if(run_accept[0])begin rp<=run_base_q;n_rd<=run_count_q;end
         if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
       end
-    always @(posedge clk or negedge rst_q)
-      if(!rst_q)begin n_go<=0;n_done<=0;end
+    always @(posedge clk or negedge reset_branch[3])
+      if(!reset_branch[3])begin n_go<=0;n_done<=0;end
       else begin
         if(run_accept[1])begin n_go<=run_count_q;n_done<=run_count_q;end
         if(go)n_go<=n_go-1'b1;
         if(prog_done_q&&outstanding)n_done<=n_done-1'b1;
       end
+    always @(posedge clk or negedge reset_branch[1])
+      if(!reset_branch[1])rc<=0;
+      else if(run_q)begin if(!running&&!outstanding&&legal_run)rc<=(MUT==1)?24'd0:24'd1;end
+      else if(running)rc<=rc+1'b1;
 endmodule
 `default_nettype wire
