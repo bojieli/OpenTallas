@@ -269,17 +269,17 @@ set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
 $i setOrient R0; $i setLocation [expr {round(1036.8 * $dbu)}] [expr {round(1254.96 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 1036.8 1254.96 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?0?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 43.2 R0"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 43.2 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?1?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(432.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 432.0 R0"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(432.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 432.0 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?2?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 820.8 R0"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 820.8 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?3?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 1209.6 R0"
+$i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 43.2 1209.6 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?4?*u_sfu}]
 $i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_su12_sfu at 302.4 1382.4 R0"
@@ -287,23 +287,23 @@ set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?5?*u_sfu}]
 $i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_su12_sfu at 561.6 1382.4 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?6?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 820.8 1382.4 R0"
+$i setOrient MY; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 820.8 1382.4 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?7?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(1080.0 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1080.0 1382.4 R0"
+$i setOrient MY; $i setLocation [expr {round(1080.0 * $dbu)}] [expr {round(1382.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1080.0 1382.4 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?8?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 43.2 MY"
+$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?9?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(432.0 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 432.0 MY"
+$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(432.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 432.0 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?10?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 820.8 MY"
+$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 820.8 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?11?*u_sfu}]
-$i setOrient MY; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 1209.6 MY"
+$i setOrient R0; $i setLocation [expr {round(1339.2 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1339.2 1209.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?12?*u_sfu}]
 $i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_su12_sfu at 302.4 43.2 R0"
@@ -311,10 +311,10 @@ set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?13?*u_sfu}]
 $i setOrient R0; $i setLocation [expr {round(561.6 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_su12_sfu at 561.6 43.2 R0"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?14?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 820.8 43.2 R0"
+$i setOrient MY; $i setLocation [expr {round(820.8 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 820.8 43.2 MY"
 set i [ot_ref_pick $ot_ref_by ot_su12_sfu {*g_lane?15?*u_sfu}]
-$i setOrient R0; $i setLocation [expr {round(1080.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_su12_sfu at 1080.0 43.2 R0"
+$i setOrient MY; $i setLocation [expr {round(1080.0 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_su12_sfu at 1080.0 43.2 MY"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 96} { error "ref_tile place: expected 96 macros, netlist has $nb" }
