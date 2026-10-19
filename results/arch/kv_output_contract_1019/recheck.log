@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits   888 GB (avail 735, growth 113, headroom 0, waiters 0/0 GB) load 123/128 running 34 disk 336 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-output-contract-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-kv-output-contract-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-output-contract-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-kv-output-contract-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-output-contract-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-output-contract-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3375544-1792423173 after 0 s
+FAIL qkd_ctrl_kc                        x4      OUTPUT_OPEN 
+FAIL qkd_d2d_cal_seq_pin                x1      OUTPUT_OPEN 
+FAIL qkd_d2d_static                     x1      INPUT_UNCONNECTED/OUTPUT_OPEN in_unconn=cfg_addr,cfg_data,cfg_rx_we,cfg_tx_we
+FAIL qkd_host_pc_slice_die              x128    OUTPUT_OPEN 
+FAIL qkd_host_root_admission            x1      OUTPUT_OPEN 
+FAIL qkd_kvs_ctl                        x1      OUTPUT_OPEN 
+FAIL qkd_kvs_grp                        x28     OUTPUT_OPEN 
+FAIL qkd_kvs_grp_h                      x4      OUTPUT_OPEN 
+FAIL qkd_kvs_pc                         x124    OUTPUT_OPEN 
+FAIL qkd_kvs_pc_h                       x4      OUTPUT_OPEN 
+DIE_PORT_BIND FAIL masters=68 instances=43967 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=4 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=293925 output_open_ports=73 top_assigns=0 params_not_in_rtl=0 strap_ports=36 pad_bits=196115 spare_out_bits=306920 unresolved_children=0 ambiguous_children=0 variant_children=11
+STRICT_RECHECK_RETURN 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3375544-1792423173): exit 0
