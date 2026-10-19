@@ -8,7 +8,10 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/po-link-1019",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/rtl/qwen_kv_die/rlys_po_1019"
+  ]
  },
  "stages": {
   "bench": [
@@ -42,7 +45,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/qwen_kv_die/rlys_po_1019/qkd_rlys_36_mut.log"
    }
   ],
   "calibrate": {

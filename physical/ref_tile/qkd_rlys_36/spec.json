@@ -90,11 +90,15 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/qwen_kv_die/rlys_po_1019/qkd_rlys_36_mut.log"
    }
   ],
   "views_to": "physical/ref_tile/qkd_rlys_36/views",
-  "record_to": "results/rtl/ref_tile/qkd_rlys_36"
+  "record_to": "results/rtl/ref_tile/qkd_rlys_36",
+  "extra_paths": [
+   "results/rtl/qwen_kv_die/rlys_po_1019"
+  ]
  },
  "children": [],
  "inter": [],
