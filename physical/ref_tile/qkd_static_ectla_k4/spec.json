@@ -1,0 +1,328 @@
+{
+ "name": "qkd_static_ectla_k4",
+ "top": "qkd_static_ectla_kiss",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv",
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "RESPONSE_LAT": 80,
+  "QK_ISSUE_AGE": 91,
+  "HXK": 13,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 194.4
+ },
+ "layer_cap": "M6",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_macro?0?*u_s",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_macro?1?*u_s",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "req_valid",
+   "req_t",
+   "req_v",
+   "req_epoch",
+   "req_layer",
+   "rsp_valid",
+   "rsp_data",
+   "rsp_t",
+   "rsp_v",
+   "rsp_epoch",
+   "rsp_layer"
+  ],
+  "E": [
+   "rs_o",
+   "x_i"
+  ],
+  "S": [
+   "cfg",
+   "rst_n",
+   "kgo",
+   "epoch",
+   "layer",
+   "fault",
+   "t0_row"
+  ],
+  "N": [
+   "ck",
+   "t1_row"
+  ]
+ },
+ "pin_ranges": {
+  "cfg": [
+   5.9,
+   8.09
+  ],
+  "ck": [
+   86.11,
+   86.71
+  ],
+  "epoch": [
+   12.1,
+   18.55
+  ],
+  "fault": [
+   20.69,
+   21.29
+  ],
+  "kgo": [
+   11.71,
+   12.31
+  ],
+  "layer": [
+   18.34,
+   20.9
+  ],
+  "req_epoch": [
+   4.7,
+   8.32
+  ],
+  "req_layer": [
+   7.44,
+   9.21
+  ],
+  "req_t": [
+   1.96,
+   5.5
+  ],
+  "req_v": [
+   5.22,
+   5.82
+  ],
+  "req_valid": [
+   1.92,
+   2.52
+  ],
+  "rs_o": [
+   5.81,
+   110.18
+  ],
+  "rsp_data": [
+   8.83,
+   186.22
+  ],
+  "rsp_epoch": [
+   188.4,
+   191.48
+  ],
+  "rsp_layer": [
+   191.18,
+   192.46
+  ],
+  "rsp_t": [
+   185.19,
+   188.66
+  ],
+  "rsp_v": [
+   188.45,
+   189.05
+  ],
+  "rsp_valid": [
+   8.5,
+   9.1
+  ],
+  "rst_n": [
+   10.22,
+   10.82
+  ],
+  "t0_row": [
+   22.7,
+   170.28
+  ],
+  "t1_row": [
+   22.7,
+   170.28
+  ],
+  "x_i": [
+   111.79,
+   124.2
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "structural_change": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): re-hardened at the KV die configuration -- ONE K round trip for all 32 ECTL frames (kv_k_rt_eq pads each frame request chain to 80): RESPONSE_LAT 80, ROW_RETURN_LAT 87, QK_ISSUE_AGE 91 (= 80 + 11, static_qk_calendar write-before-read). The die binds qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)); the views hardened at RESPONSE_LAT 14 / ROW_RETURN_LAT 21 / QK_ISSUE_AGE 34 no longer match it. Same RTL, same outline, same pin plan; only the shift-line depths and compare constants change.",
+ "job": {
+  "owner": "Claude:KV-ECTL4 10-18",
+  "branch": "claude/kv-ectl4-1018",
+  "tag": "rt80",
+  "purpose": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): re-hardened at the KV die configuration -- ONE K round trip for all 32 ECTL frames (kv_k_rt_eq pads each frame request chain to 80): RESPONSE_LAT 80, ROW_RETURN_LAT 87, QK_ISSUE_AGE 91 (= 80 + 11, static_qk_calendar write-before-read). The die binds qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)); the views hardened at RESPONSE_LAT 14 / ROW_RETURN_LAT 21 / QK_ISSUE_AGE 34 no longer match it. Same RTL, same outline, same pin plan; only the shift-line depths and compare constants change.",
+  "benches": [
+   {
+    "name": "ectl_kiss_st_k_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS ectl_kiss_st_k RL 80 QK 91 mut 0: 36 layers",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_pass.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_layer_mutant",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "request identity",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_mut5_layer.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_late_landing_mutant",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k8 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "late landing response faulted",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_mut8_late.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_qk_minus1_mutant",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k9 9",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "consume slot",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_mut9_qkm1.log"
+   },
+   {
+    "name": "ectl3_kiss_st_lockstep_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: RL 80 QK 91",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/l_pass.log"
+   },
+   {
+    "name": "ectl_c_st_fault_mutant_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/l_mut1.log"
+   },
+   {
+    "name": "ectl_c_st_q_mutant_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/l_mut2.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/qwen_kv_static_ectla2_1017",
+   "results/arch/qwen_kv_static_kvjd_1017",
+   "results/arch/qwen_split_1014/ectl_pin_grant_1016",
+   "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys",
+   "rtl/test/qwen_kv_die",
+   "rtl/test/qwen_split",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_kv_die",
+   "tools/qwen_static_kv"
+  ],
+  "views_to": "physical/ref_tile/qkd_static_ectla_k4/views",
+  "record_to": "results/rtl/ref_tile/qkd_static_ectla_k4",
+  "structural_change": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): re-hardened at the KV die configuration -- ONE K round trip for all 32 ECTL frames (kv_k_rt_eq pads each frame request chain to 80): RESPONSE_LAT 80, ROW_RETURN_LAT 87, QK_ISSUE_AGE 91 (= 80 + 11, static_qk_calendar write-before-read). The die binds qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)); the views hardened at RESPONSE_LAT 14 / ROW_RETURN_LAT 21 / QK_ISSUE_AGE 34 no longer match it. Same RTL, same outline, same pin plan; only the shift-line depths and compare constants change."
+ },
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "clock": "spine",
+ "slot_change_request": "ECTLA-2 2026-10-17: ECTL A slot re-aspected 254.88 x 129.6 -> 172.8 x 194.4 inside the KV die's ECTL area (KV has spare area; re-grant only): A's bottom edge aligns with B so rs_o/x_i keep their y; t0_row/t1_row leave over x 23..170 (the head-tile pair row pins re-map), landing req/rsp on the W face over 190 um. Exact pins: results/arch/qwen_kv_static_ectla2_1017/qkd_static_ectla_k3.tcl.",
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data pin (FLOW-HOLD recipe 4, hold_budget die; ECTLA-3 2026-10-17): routed r3-32e20b9e0 netlist audit -- 1,103 input bits land only on flop D pins, 37 unused, the 1,573 driven outputs leave a flop Q/QN(+INV); the last three non-flop-first inputs are fixed in RTL: rsp_valid / rsp_v (issuer rs[0] = rv_q && !vv_q, bit-identical) and rst_n (ECTL A body reset relay fed by the pin flop rst_q). A synthesis pin register (+1 edge per port) would shift the ECTL static calendar (QK_ISSUE_AGE, ROW_RETURN_LAT, HXK count every boundary edge in the RTL)."
+ },
+ "purpose": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): re-hardened at the KV die configuration -- ONE K round trip for all 32 ECTL frames (kv_k_rt_eq pads each frame request chain to 80): RESPONSE_LAT 80, ROW_RETURN_LAT 87, QK_ISSUE_AGE 91 (= 80 + 11, static_qk_calendar write-before-read). The die binds qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)); the views hardened at RESPONSE_LAT 14 / ROW_RETURN_LAT 21 / QK_ISSUE_AGE 34 no longer match it. Same RTL, same outline, same pin plan; only the shift-line depths and compare constants change.",
+ "io_tcl": "results/arch/qwen_kv_static_ectla2_1017/qkd_static_ectla_k3.tcl",
+ "layer_cap_grant": "Q-KVSYS-DIE: ECTL A pin grant 2026-10-16 carried to the fused successor (KVJ-D) and its re-aspected ECTLA-2 outline: W-face landing K request/response (1,100 b) over M4 + M6 alternating, 2.9 pins/um/layer; PG M6 stripes, parent strap M7 over this leaf",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "0",
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_LEAF_N": "24"
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why_route": "qkd_static_ectla_k3-r3-828d82516 (closed at the unit parameters) -> {'RESPONSE_LAT': 80, 'QK_ISSUE_AGE': 91, 'HXK': 13, 'MUT': 0}: the die configuration changed (KV-ECTL4 one K round trip 80, QK_ISSUE_AGE 91); same RTL / outline / pins, new shift-line depths and compare constants; nothing to re-use from the old route"
+ }
+}
