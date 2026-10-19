@@ -80,6 +80,91 @@ def git_show(ref, path):
     return subprocess.run(['git', '-C', os.environ.get('OT_GIT_DIR', str(ROOT)), 'show', f'{ref}:{path}'], capture_output=True, check=True).stdout
 
 
+def _read_at(ref, path):
+    """text of path at ref (None = absent); ref None = the worktree file, else HEAD of the worktree's git"""
+    if ref is None:
+        p = ROOT / path
+        if p.is_file():
+            return p.read_text()
+        ref = 'HEAD'
+        gd = str(ROOT)
+    else:
+        gd = os.environ.get('OT_GIT_DIR', str(ROOT))
+    r = subprocess.run(['git', '-C', gd, 'show', f'{ref}:{path}'], capture_output=True)
+    return r.stdout.decode() if r.returncode == 0 else None
+
+
+def land_view_reset_stages(master, view, read=_read_at):
+    """MU-DIE-S81/PO2 (10-19): reset-landing stage count RL of the CLOSED VIEW bound for landing master dsfd_dvland_<x>.
+    view = bind table land_views[master] ({"ref": <record commit/ref>, "kit": physical/ref_tile/<spec>}) or None (= the
+    worktree's kit view).  The view's abstract.json names its closure-loop job (orfs_dir .../closure-loop/<job>/...); the
+    job's source commit (verdict.json source_commit at the view ref, else the job name's trailing sha) holds the kit
+    spec.json the view was hardened from: RL = reset_landing.stages when reset_landing.enable, else 0.
+    Returns dict(rl=int|None, job, source, kit, error)."""
+    import re as _re
+    view = view or {}
+    ref = view.get('commit') or view.get('ref')
+    kit = view.get('kit') or f"physical/ref_tile/s81dv_land_{master[len('dsfd_dvland_'):]}"
+    row = dict(master=master, view_ref=ref, kit=kit, rl=None, job=None, source=None, error=None)
+    ab = read(ref, f'{kit}/views/{master}/abstract.json')
+    if ab is None:
+        row['error'] = f'no closed view {kit}/views/{master} at {ref or "worktree"}'
+        return row
+    try:
+        od = json.loads(ab).get('orfs_dir', '')
+    except ValueError:
+        od = ''
+    m = _re.search(r'closure-loop/([^/]+)/', od)
+    if not m:
+        row['error'] = f'view abstract names no closure-loop job (orfs_dir {od!r})'
+        return row
+    job = row['job'] = m.group(1)
+    if view.get('job') and view['job'] != job:
+        row['error'] = f'table names job {view["job"]} but the view at {ref} is {job}'
+        return row
+    src = None
+    vd = read(ref, f'results/closure_loop/{job}/verdict.json')
+    if vd:
+        try:
+            src = json.loads(vd).get('source_commit')
+        except ValueError:
+            src = None
+    if not src:
+        mm = _re.search(r'-([0-9a-f]{7,40})$', job)
+        src = mm.group(1) if mm else None
+    if not src:
+        row['error'] = f'no source commit for job {job}'
+        return row
+    row['source'] = src
+    sp = read(src, f'{kit}/spec.json')
+    if sp is None:
+        row['error'] = f'kit {kit}/spec.json not at source {src} (fetch it)'
+        return row
+    rl = json.loads(sp).get('reset_landing') or {}
+    row['rl'] = int(rl.get('stages', 0)) if rl.get('enable') else 0
+    return row
+
+
+def landing_reset_check(T, masters, read=_read_at):
+    """Strict-bind check: for every landing master bound on the die, the table's landing_reset_stages[master]
+    (absent = 0) must equal the stage count of the view actually bound (land_view_reset_stages).  A po2 view bound
+    without the key, or the key set on an old (no kit landing) view, shifts every lane of that master by RL cycles."""
+    tab = T.get('landing_reset_stages', {})
+    lv = T.get('land_views', {})
+    rows, mism, unres = [], [], []
+    for m in sorted(x for x in masters if x.startswith('dsfd_dvland')):
+        r = land_view_reset_stages(m, lv.get(m), read)
+        r['table'] = int(tab.get(m, 0))
+        rows.append(r)
+        if r['rl'] is None:
+            unres.append(f"{m}: {r['error']}")
+        elif r['rl'] != r['table']:
+            mism.append(f"{m}: table landing_reset_stages {r['table']} != view {r['job']} reset_landing {r['rl']}")
+    unused = sorted(k for k in tab if k not in masters)
+    return dict(verdict='PASS' if not (mism or unres) else 'FAIL', mismatch=mism, unresolved=unres,
+                unused_keys=unused, rows=rows)
+
+
 def bundle_age_unequal(land_rows):
     """S81-LBGAP/G8: multi-lane bundles (<stem>_l<i> into one receiver) whose lanes land at different ages
     ceil(N/2) + K + 1 -- the receiver consumes the bundle beat in one cycle, so these tear it"""
@@ -627,11 +712,15 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             dst.parent.mkdir(parents=True, exist_ok=True)
             dst.write_bytes(git_show(ref, p))
             extra.append(str(dst))
+    # MU-DIE-S81/PO2 (10-19): landing_reset_stages must match the reset landing of every bound landing VIEW (both ways)
+    lrc = landing_reset_check(T, {r['master'] for r in land_rows})
+    (out / 'landing_reset_check.json').write_text(json.dumps(lrc, indent=1))
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
                hop0_clock_gates=gate_cells, gate_calendar_stations=len(cal_place),
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
                frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
+               landing_reset_check={k: lrc[k] for k in ('verdict', 'mismatch', 'unresolved', 'unused_keys')},
                landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
                              by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
@@ -657,8 +746,17 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         for d_ in T.get('defines', []):         # S81-DIE5: build defines of the bound RTL (e.g. DSFD_PQ_STATIC_X2)
             cmd += ['--define', d_]
         r = subprocess.run(cmd, capture_output=True, text=True)
-        (out / 'port_bind.log').write_text(r.stdout + r.stderr)
-        rec['port_bind_rc'] = r.returncode
+        log_, rc_ = r.stdout + r.stderr, r.returncode
+        nbad_ = len(lrc['mismatch']) + len(lrc['unresolved'])
+        # the landing reset check is a strict-bind counter: any mismatch / unresolved view FAILS the bind
+        log_ = '\n'.join((l.replace('DIE_PORT_BIND PASS', 'DIE_PORT_BIND FAIL', 1) if nbad_ else l) +
+                          (f' landing_reset_mismatch={len(lrc["mismatch"])} landing_reset_unresolved={len(lrc["unresolved"])}'
+                           if l.startswith('DIE_PORT_BIND ') else '') for l in log_.split('\n'))
+        log_ += ''.join(f'LANDING_RESET {x}\n' for x in lrc['mismatch'] + lrc['unresolved'])
+        if nbad_ and rc_ == 0:
+            rc_ = 3
+        (out / 'port_bind.log').write_text(log_)
+        rec['port_bind_rc'] = rc_
         rec['port_bind_cmd'] = cmd
     (out / 'bind_case.json').write_text(json.dumps(rec, indent=1))
     # S81-DIE7 (10-18): placement hints for the real-view physical case (dv_rvcase.py): reset stations of the regional
@@ -669,6 +767,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         block_rst_pin={b: [round(x, 3), round(y, 3)] for b, (x, y) in rst['block_pin'].items()},
         landings=[dict(inst=f'ld_{r["link"]}', link=r['link'], dst=r['inst'], master=r['master'], bits=r['bits'], D=r['D'])
                   for r in land_rows]), indent=1))
+    if lrc['verdict'] != 'PASS':
+        raise SystemExit('dv_bind: STRICT bind FAIL, landing_reset_stages vs bound landing views:\n  ' +
+                         '\n  '.join(lrc['mismatch'] + lrc['unresolved']))
     return rec
 
 

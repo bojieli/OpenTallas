@@ -384,6 +384,10 @@ def main():
     assigns = [x for x in insts if x[0] == '__assign__']
     insts = [x for x in insts if x[0] != '__assign__']
     views = closed_views(a.view_refs)
+    # MU-DIE-S81/PO2 (10-19): the bind table pins each landing master's view (land_views: record commit + kit) -- the
+    # SAME view dv_bind's landing reset check derived landing_reset_stages from; it overrides the first-ref-wins pick
+    for m_, v_ in T.get('land_views', {}).items():
+        views[m_] = (v_.get('commit') or v_['ref'], f"{v_['kit']}/views/{m_}")
     idx = rtl_ports(bc['port_bind_cmd'])
     kind = {}
     for mst, nm, _, _ in insts:

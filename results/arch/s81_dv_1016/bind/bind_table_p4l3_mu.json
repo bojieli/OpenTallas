@@ -6524,5 +6524,54 @@
    "reason": "PHY min_period 900 ps; ctrl_rg2 ckh uses its signed-off hclk domain through the existing async FIFO"
   }
  },
+ "land_views": {
+  "dsfd_dvland_276": {
+   "ref": "codex/closure-record-s81dv_land_276-po2-df5c2d585",
+   "commit": "4e4a509e266ac84a0ac9f77552936342956f7b21",
+   "kit": "physical/ref_tile/s81dv_land_276",
+   "job": "s81dv_land_276-po2-df5c2d585"
+  },
+  "dsfd_dvland_276l": {
+   "ref": "codex/closure-record-s81dv_land_276l-po2-df5c2d585",
+   "commit": "c1f2495df9e5c32462adc0d2a2c0c66d0af76562",
+   "kit": "physical/ref_tile/s81dv_land_276l",
+   "job": "s81dv_land_276l-po2-df5c2d585"
+  },
+  "dsfd_dvland_70": {
+   "ref": "codex/closure-record-s81dv_land_70-po2-df5c2d585",
+   "commit": "e676a75d23d7f728746c3d225dc54c58eab9f00a",
+   "kit": "physical/ref_tile/s81dv_land_70",
+   "job": "s81dv_land_70-po2-df5c2d585"
+  },
+  "dsfd_dvland_562": {
+   "ref": "codex/closure-record-s81dv_land_562-l1-1da4d6aae",
+   "commit": "4c846bd0cd6f86699a00ba20515f59cf73d56bc5",
+   "kit": "physical/ref_tile/s81dv_land_562",
+   "job": "s81dv_land_562-l1-1da4d6aae"
+  },
+  "dsfd_dvland_512": {
+   "ref": "codex/closure-record-s81dv_land_512-g3a-7a9c99ef3",
+   "commit": "3a39b9392249887e59fee98b9f43199a9be24a61",
+   "kit": "physical/ref_tile/s81dv_land_512",
+   "job": "s81dv_land_512-g3a-7a9c99ef3"
+  },
+  "dsfd_dvland_682": {
+   "ref": "codex/closure-record-s81dv_land_682-l1-1da4d6aae",
+   "commit": "ff575a79ee8ef4f584b625c7b1dfd732aec483ce",
+   "kit": "physical/ref_tile/s81dv_land_682",
+   "job": "s81dv_land_682-l1-1da4d6aae"
+  },
+  "dsfd_dvland_pvrd": {
+   "ref": "codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad",
+   "commit": "3b83f2255f8e17caa8eb4ff7e6354214440b817b",
+   "kit": "physical/ref_tile/s81dv_land_pvrd",
+   "job": "s81dv_land_pvrd-p3-b15a4ddad"
+  }
+ },
+ "landing_reset_stages": {
+  "dsfd_dvland_276": 2,
+  "dsfd_dvland_276l": 2,
+  "dsfd_dvland_70": 2
+ },
  "land_plan_note_mu": "MU lanes (mu_*, rt_0N, lt/lr_lk_WN2/3) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan"
 }
