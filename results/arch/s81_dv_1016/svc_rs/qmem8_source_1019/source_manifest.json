@@ -1,0 +1,19 @@
+{
+  "parent_revision": "53ccd5927",
+  "parent_sha256": "73f7798e0503d13a576cdac82d58df6e50cecd9c74a5276fbdf07f1066d0cc72",
+  "default_projection": "PASS_FULL_TOKEN_IDENTITY",
+  "legacy_assignment_bytes": [
+    "    reg [D*16-1:0] qmem [0:H-1];",
+    "        if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;",
+    "        eq_w <= qmem[4'(rc - 10'd1)];"
+  ],
+  "native_revision": "b65718325",
+  "native_sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+  "mutants": {
+    "1": "wrong-head +1",
+    "2": "early/previous head -1",
+    "3": "extra capture edge",
+    "4": "same-address NEW bypass",
+    "5": "wrong write head +1"
+  }
+}

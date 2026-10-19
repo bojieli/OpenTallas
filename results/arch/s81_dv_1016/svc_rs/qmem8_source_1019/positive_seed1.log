@@ -1,0 +1,5 @@
+QMEM8_PASS mode=0 edges=381 data_checks=349 qualified=288 nonzero_heads=16 OLD_collisions=50 wraps=12 jobs=3 occupied_reset=1
+- tb.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 2.649 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

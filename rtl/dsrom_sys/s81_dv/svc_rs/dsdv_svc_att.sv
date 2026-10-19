@@ -78,7 +78,8 @@ module dsdv_svc_att #(
     parameter integer PMEM = 1,                   // 1: the p store (4 x ot_sram_1r1w_256x256), 0: dropped (non-owner)
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    parameter bit QMEM_SRAM = 0                // opt-in: native 8x32x64, same capture edge
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -280,7 +281,7 @@ module dsdv_svc_att #(
     wire [143:0] rows_bits = {q_d[290 + 16*rh +: 16], q_d[34 + 128*rh +: 128]};
 
     // ------------------------------------------------------------------ q store
-    reg [D*16-1:0] qmem [0:H-1];
+    // QMEM_SRAM does not alter parser, GO, q_have or engine valid ages.
     reg [4:0] q_have;
     wire [3:0] qt = (MUT == 3) ? tile + 4'd1 : tile;
     wire q_word = pay_mine && f_type == 4'd1 && f_idx[3:0] == qt;
@@ -292,7 +293,7 @@ module dsdv_svc_att #(
     reg [9:0] rc; reg run;                           // program cycle
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
     // engine ports
-    reg ej_v; reg eq_v; reg [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m;
+    reg ej_v; reg eq_v; wire [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m;
 `ifndef OT_SVC_LAND_SRAM
     reg [NL*265-1:0] ekv_w, kc_w;
 `else
@@ -407,6 +408,20 @@ module dsdv_svc_att #(
     endgenerate
 `endif
 
+    generate if (QMEM_SRAM) begin : g_qmem_sram
+        dsdv_svc_qmem8 u_qmem (.clk(clk), .wr_v(q_word),
+            .wr_head({f_hdr[448], f_idx[6:4]}), .wr_data(q_d),
+            .rd_head(4'(rc - 10'd1)), .rd_data(eq_w));
+    end else begin : g_qmem_legacy
+        reg [D*16-1:0] qmem [0:H-1];
+        reg [D*16-1:0] eq_w_q;
+        always @(posedge clk) begin
+            if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;
+            eq_w_q <= qmem[4'(rc - 10'd1)];
+        end
+        assign eq_w = eq_w_q;
+    end endgenerate
+
     // ------------------------------------------------------------------ p store (SVCB: 2 SRAM banks even / odd, prefetch)
     reg [PFW:0] pw, pr, pw_q;
     wire [PFW:0] pcnt = pw - pr;
@@ -483,7 +498,7 @@ module dsdv_svc_att #(
         // write FIFO pushes
         for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
         // q store
-        if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;
+
         // landing writes: PC responses, ROWS
         for (k = 0; k < 2; k = k + 1) if (qrv[k]) begin
             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
@@ -516,7 +531,7 @@ module dsdv_svc_att #(
             fq[sid_g[8]][fq_w[sid_g[8]][3:0]] <= {sid_g[3:0], s_rank, sid_g[20:9]};
         // SEL words
         // engine program inputs
-        eq_w <= qmem[4'(rc - 10'd1)];
+
 `ifndef OT_SVC_LAND_SRAM
         ekv_w <= kc_w;
 `endif
