@@ -10,7 +10,7 @@ from qc_safe_graph import ROOT,extract
 S=1000;GRID=43200;GAP=20000
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
+ p=argparse.ArgumentParser();p.add_argument('--step',type=float,required=True);p.add_argument('--out',required=True);p.add_argument('--workers',type=int,default=8);p.add_argument('--core',action='store_true');p.add_argument('--full-land',action='store_true');p.add_argument('--paired-land',action='store_true');p.add_argument('--zones',action='store_true');a=p.parse_args();g=extract();assert not g['unresolved'];c=g['contract'];cols=[172.8+i*a.step for i in range(4)];W=math.ceil((cols[-1]+457.92+172.8)/43.2-1e-8)*43.2;H=c['outline_um']['h'];oldx=sorted(set(t['at'][0]for t in c['tiles']))
  knots=sorted([(0,0),(c['outline_um']['w'],W)]+[(x+d,y+d)for x,y in zip(oldx,cols)for d in [0,457.92]])
  def mx(x):
   for(oa,na),(ob,nb)in zip(knots,knots[1:]):
@@ -28,6 +28,20 @@ def main():
    x=m.new_int_var(GRID,round(W*S),k+'_x');y=m.new_int_var(GRID,round(H*S),k+'_y');m.add(x==ix*GRID);m.add(y==iy*GRID)
    xs.append(m.new_fixed_size_interval_var(x,w+GAP,k+'_xr'));ys.append(m.new_fixed_size_interval_var(y,h+GAP,k+'_yr'))
    jobs[k]=dict(logical=n,kind=v['kind'],region=v['region'],w=shape[0],h=shape[1],ix=ix,iy=iy,x=x,y=y,center=(x+w//2,y+h//2))
+   if a.zones:
+    # Redundant but stronger propagation: all empty tile-array space is the
+    # union of five vertical corridors and five horizontal row gaps. This
+    # preserves the unrestricted feasible set (unlike sibling pairing).
+    rows=sorted(set(t['at'][1]for t in c['tiles']))
+    strips=[('x',0,cols[0]-20)]+[('x',cols[i]+457.92+20,cols[i+1]-20)for i in range(3)]+[('x',cols[-1]+457.92+20,W)]
+    strips += [('y',0,rows[0]-20)]+[('y',rows[i]+1166.4+20,rows[i+1]-20)for i in range(3)]+[('y',rows[-1]+1166.4+20,H)]
+    choices=[]
+    for zi,(axis,lo,hi)in enumerate(strips):
+     size=shape[0]if axis=='x'else shape[1];lower=max(1,math.ceil((lo-1e-8)/43.2));upper=math.floor((hi-size+1e-8)/43.2)
+     if lower>upper:continue
+     on=m.new_bool_var(k+f'_zone{zi}');var=ix if axis=='x'else iy
+     m.add(var>=lower).only_enforce_if(on);m.add(var<=upper).only_enforce_if(on);choices.append(on)
+    m.add_bool_or(choices)
    m.add_hint(ix,min(math.floor((W*S-GAP-w)/GRID),max(1,round((mx(v['at'][0])-shape[0]/2)/43.2))))
    m.add_hint(iy,min(math.floor((H*S-GAP-h)/GRID),max(1,round((v['at'][1]-shape[1]/2)/43.2))))
  # Optional sibling pairing removes duplicate-split symmetry, while preserving
