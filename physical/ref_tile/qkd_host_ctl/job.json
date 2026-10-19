@@ -1,16 +1,19 @@
 {
- "name": "qkd_host_ctl-hc1-71ffdaf23",
+ "name": "qkd_host_ctl-mu1-COMMIT",
  "block": "qkd_host_ctl",
  "ref_tile": true,
- "owner": "Codex:el1013-qwen-host",
- "purpose": "Harden the actual TP8 package-control engine into its own clock root and pin-register boundary, raw merged-sequencer hc182/tk93 words. Full host ingest/SerDes master remains explicitly incomplete.",
+ "owner": "Claude:MU-KV-KITS",
+ "purpose": "MU 1 (Qwen ROM 4 users, owner MU.DECIDE A 10-18) re-close of qkd_host_ctl: ot_qfd_pkgctl MU 4-slot static calendar (2-bit generation = step tag, in-order retire after all 8 dies, sticky faults flush) + hc user on pos[17:16] at the tile pin flops (MU-QWEN-HOST 433d668c5, results/rtl/mu_qwen_1018/host). Reset landing 2 stages (ROOT-RST 10-19: reset release +2 ck, scheduled constant).",
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/el1013-qwen-r3b-host",
-  "commit": "71ffdaf23",
+  "branch": "claude/mu-kv-kits-1019",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/qkd_host_ctl",
+   "rtl/test/mu_qwen_1018/lists/tb_qkd_host_ctl_mu.f",
+   "rtl/test/mu_qwen_1018/run_host_mu.sh",
+   "rtl/test/mu_qwen_1018/tb_qkd_host_ctl_mu.sv",
    "rtl/test/tb_qkd_host_ctl.sv"
   ]
  },
@@ -18,7 +21,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_host_ctl #(.ND(8), .WDOG(4194304), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_host_ctl.sv rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_host_ctl #(.ND(8), .WDOG(4194304), .MUT(0), .MU(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_host_ctl.sv rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -41,6 +44,42 @@
     "fail_regex": "^FAIL qkd_host_ctl mutant=1 detected",
     "threads": 1,
     "peak_ram_gb": 1
+   },
+   {
+    "name": "host_ctl_mu",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_host_mu.sh . {RUN}/bench/mu tb_qkd_host_ctl_mu; rc=$?; cat {RUN}/bench/mu/tb_qkd_host_ctl_mu.log; exit $rc",
+    "expect": "pass",
+    "pass_regex": "^PASS qkd_host_ctl MU users4 steps400",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/rtl/mu_qwen_1018/host/runs/mu/tb_qkd_host_ctl_mu.log"
+   },
+   {
+    "name": "host_ctl_mu_cm1",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_host_mu.sh . {RUN}/bench/mu cm1; rc=$?; cat {RUN}/bench/mu/cm1.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "ERR retire 0 at",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/host/runs/mut/cm1.log"
+   },
+   {
+    "name": "host_ctl_mu_cm3",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_host_mu.sh . {RUN}/bench/mu cm3; rc=$?; cat {RUN}/bench/mu/cm3.log; exit $rc",
+    "expect": "fail",
+    "fail_regex": "ERR start 1 gen .* user 0/1",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/mu_qwen_1018/host/runs/mut/cm3.log"
    }
   ],
   "calibrate": {
@@ -48,7 +87,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_host_ctl/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_host_ctl/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_host_ctl/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_host_ctl/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
@@ -91,7 +130,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_host_ctl/qkd_host_ctl-hc1-71ffdaf23"
+   "to": "results/rtl/ref_tile/qkd_host_ctl/qkd_host_ctl-mu1-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -99,5 +138,9 @@
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null
+ "merge_target": null,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "rtl_change: MU 1 host plane (MU-QWEN-HOST 433d668c5): ot_qfd_pkgctl MU 4-slot static calendar + hc user on pos[17:16] at the tile's pin flops (params MU=1); benches results/rtl/mu_qwen_1018/host (tb_qkd_host_ctl_mu PASS, cm1-cm4 FAIL); MU 0 13/13 host benches identical. Closed hc1-71ffdaf23 is the single-user (MU 0) view; the release die is the MU die (owner 0kc 10-19)."
+ }
 }

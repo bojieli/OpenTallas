@@ -4,9 +4,9 @@ MISMATCH t=4 child u_pc.pc
 MISMATCH t=5 child u_pc.pc
 MISMATCH t=6 child u_pc.pc
 MISMATCH t=7 child u_pc.pc
-KVS_TILE FAIL tile=pc_h edges=4000 checks=215838 errors=5449 mut=2 (rotated .pc(pc__pc) by one bit)
-- /srv/opentallas-scratch/claude/kv-kits-par/out-82c1c8dc0/pc_h_m2/tb.sv:295: Verilog $finish
+KVS_TILE FAIL tile=pc_h edges=4000 checks=215838 errors=5663 mut=2 (rotated .pc(pc__pc) by one bit)
+- /srv/opentallas-scratch/claude/kv-kits-par/out-f985bf9d9/pc_h_m2/tb.sv:295: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 0.097 s; speed 82.640 us/s
-- Verilator: cpu 0.097 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 8us; walltime 0.224 s; speed 35.828 us/s
+- Verilator: cpu 0.162 s on 1 threads; allocated 7 MB
 
