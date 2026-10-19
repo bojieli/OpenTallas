@@ -43,6 +43,36 @@
 // MUT (bench only): 1 record halves swapped (emit side), 2 flit sequence header, 3 carry slots from the beat instead of W,
 //                   4 emit read tap one edge early (latency mutant).
 // ---------------------------------------------------------------------------------------------------------------
+// Fixed-age cyclic storage: payload never shifts between adjacent delay registers.
+// FIELD is deliberately unique per field bank; physical mapping must retain those banks.
+(* keep_hierarchy *) module ot_hbm_idx_link_control_ring #(
+ parameter integer W=8, parameter integer FIELD=0, parameter integer RESET_PAYLOAD=0
+)(input wire clk,rst_n,input wire[W-1:0]din,
+ output reg[W-1:0]age3,age4,age5);
+ (* keep *) reg[4:0]wp;
+ (* keep *) reg[W-1:0]slots[0:4];
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)wp<=5'b00001;else wp<={wp[3:0],wp[4]};
+ genvar k;
+ for(k=0;k<5;k=k+1)begin:slot
+  if(RESET_PAYLOAD)begin:r
+   always @(posedge clk or negedge rst_n)
+    if(!rst_n)slots[k]<=0;else if(wp[k])slots[k]<=din;
+  end else begin:n
+   always @(posedge clk)if(wp[k])slots[k]<=din;
+  end
+ end
+ integer i;
+ always @*begin
+  age3=0;age4=0;age5=0;
+  for(i=0;i<5;i=i+1)begin
+   age3=age3|({W{wp[i]}}&slots[(i+2)%5]);
+   age4=age4|({W{wp[i]}}&slots[(i+1)%5]);
+   age5=age5|({W{wp[i]}}&slots[i]);
+  end
+ end
+endmodule
+
 module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,parameter integer CW=4,
                                  parameter integer RW=36,parameter integer NC=1)(
  input wire[NA*RW-1:0]a,input wire[NC*CW-1:0]na,input wire[NB*RW-1:0]b,output wire[(NA+NB)*RW-1:0]y
@@ -86,7 +116,7 @@ module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,pa
  assign y=st[SW*W+:W];
 endmodule
 
-module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter integer SAFE_RING=0)(
  input wire clk,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,input wire[4*64-1:0]lane_vc,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -99,17 +129,37 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0)(
  endfunction
  genvar j,g,s,p,b,q;
  // ---------------- control delay line: tap 3 = S4 loop stage, tap 5 = SRAM read stage
- reg[4:0]clr_d,fl_d,em_d;
- reg[19:0]grp_d;reg[39:0]rk_d,gb_d;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin clr_d<=0;fl_d<=0;em_d<=0;end
-  else begin clr_d<={clr_d[3:0],clear};fl_d<={fl_d[3:0],flush};em_d<={em_d[3:0],emit_v};end
- end
- always @(posedge clk)begin grp_d<={grp_d[15:0],emit_group};rk_d<={rk_d[31:0],rank};gb_d<={gb_d[31:0],gbase};end
- wire clr3=clr_d[2],fl3=fl_d[2],em3=em_d[2];
- wire[7:0]rk3=rk_d[23:16],gb3=gb_d[23:16];
- localparam integer RT=(MUT==4)?3:4;            // read tap index (4 = 5 edges)
- wire em5=em_d[RT];wire[3:0]grp5=grp_d[RT*4+:4];wire[7:0]rk5=rk_d[RT*8+:8],gb5=gb_d[RT*8+:8];
+ localparam integer RT=(MUT==4)?3:4;
+ wire clr3,fl3,em3,em5;
+ wire[7:0]rk3,gb3,rk5,gb5;wire[3:0]grp5;
+ generate if(SAFE_RING)begin:g_control_ring
+  wire[2:0]c3,c4,c5;wire[3:0]g3,g4,g5;
+  wire[7:0]r3,r4,r5,b3,b4,b5;
+  ot_hbm_idx_link_control_ring #(.W(3),.FIELD(0),.RESET_PAYLOAD(1)) ctl
+   (.clk(clk),.rst_n(rst_n),.din({emit_v,flush,clear}),.age3(c3),.age4(c4),.age5(c5));
+  ot_hbm_idx_link_control_ring #(.W(4),.FIELD(1)) group_id
+   (.clk(clk),.rst_n(rst_n),.din(emit_group),.age3(g3),.age4(g4),.age5(g5));
+  ot_hbm_idx_link_control_ring #(.W(8),.FIELD(2)) rank_id
+   (.clk(clk),.rst_n(rst_n),.din(rank),.age3(r3),.age4(r4),.age5(r5));
+  ot_hbm_idx_link_control_ring #(.W(8),.FIELD(3)) base_id
+   (.clk(clk),.rst_n(rst_n),.din(gbase),.age3(b3),.age4(b4),.age5(b5));
+  assign {em3,fl3,clr3}=c3;
+  assign rk3=r3;assign gb3=b3;
+  assign em5=(MUT==4)?c4[2]:c5[2];
+  assign grp5=(MUT==4||MUT==5)?g4:g5;
+  assign rk5=(MUT==4)?r4:r5;assign gb5=(MUT==4)?b4:b5;
+ end else begin:g_control_shift
+  reg[4:0]clr_d,fl_d,em_d;
+  reg[19:0]grp_d;reg[39:0]rk_d,gb_d;
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin clr_d<=0;fl_d<=0;em_d<=0;end
+   else begin clr_d<={clr_d[3:0],clear};fl_d<={fl_d[3:0],flush};em_d<={em_d[3:0],emit_v};end
+  end
+  always @(posedge clk)begin grp_d<={grp_d[15:0],emit_group};rk_d<={rk_d[31:0],rank};gb_d<={gb_d[31:0],gbase};end
+  assign clr3=clr_d[2];assign fl3=fl_d[2];assign em3=em_d[2];
+  assign rk3=rk_d[23:16];assign gb3=gb_d[23:16];
+  assign em5=em_d[RT];assign grp5=grp_d[RT*4+:4];assign rk5=rk_d[RT*8+:8];assign gb5=gb_d[RT*8+:8];
+ end endgenerate
  // ---------------- S1 (r3: per-group compaction only; counts registered)
  // lane_vc = 4 kept pin-flop copies of the 64 lane valid bits (copy c at [c*64+j]; copy 0 = line_r[j*37]).
  // Copy c drives slots 2c/2c+1 of every group (its own prefix counts), copy 0 also the group / pair counts.
@@ -260,7 +310,7 @@ endmodule
 // PIN-REGISTERED TILE (owner rule 19:50 PT 10-15): die master ot_hbm_idx_topk_link_static_p. Every data input and
 // every output passes ONE kept flop at the pin (+1/+1 edge, as the historical shell); rst_n enters a 2-flop release
 // synchroniser on clk. Port list identical to ot_hbm_idx_topk_link_static (drop-in); outputs = historical +5 edges.
-module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE_RING=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -289,7 +339,7 @@ module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0)(
   for(vj=0;vj<64;vj=vj+1)begin vrep[vj]<=selected_line[vj*37];vrep[64+vj]<=selected_line[vj*37];vrep[128+vj]<=selected_line[vj*37];end
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT),.SAFE_RING(SAFE_RING)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.lane_vc(lane_vc),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule

@@ -7,6 +7,7 @@
 // 6 a short frame flushed early (fault path; must match the historical fault edge +5).
 module tb_idx_link_pipe;
  parameter integer MUT=0;
+ parameter integer SAFE_RING=0;
  localparam integer LAT=5;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,clear=0,ingest_v=0,flush=0,emit_v=0;
@@ -14,7 +15,7 @@ module tb_idx_link_pipe;
  wire[3:0]av,bv;wire[2179:0]atx,btx;wire af,bf;wire[9:0]ac,bc;
  ot_hbm_idx_topk_link_static refdut(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),
  .selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),.gbase(8'd1),.tx_v(av),.tx(atx),.fault(af),.selected_count(ac));
- ot_hbm_idx_topk_link_static_p #(.MUT(MUT)) dut(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),
+ ot_hbm_idx_topk_link_static_p #(.MUT(MUT),.SAFE_RING(SAFE_RING)) dut(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),
  .selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),.gbase(8'd1),.tx_v(bv),.tx(btx),.fault(bf),.selected_count(bc));
  integer cycle=0,errors=0,miter=0,records=0,flits=0,total_records=0,frame=0,issued=0,rstc=-1;
  reg[63:0]gold[0:511];

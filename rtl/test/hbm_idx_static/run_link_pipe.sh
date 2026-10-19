@@ -12,7 +12,7 @@ src=(rtl/test/hbm_idx_static/tb_idx_link_pipe.sv rtl/hbm_accel/index/ot_hbm_idx_
 sha256sum "${src[@]}" "$0" > "$out/sources.sha256"
 single=${2:-}
 for m in ${single:-0 1 2 3 4};do
- "$vl" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_idx_link_pipe -GMUT="$m" --Mdir "$out/obj$m" "${src[@]}" > "$out/build$m.log" 2>&1 || { tail -30 "$out/build$m.log"; exit 2; }
+ "$vl" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_idx_link_pipe -GMUT="$m" -GSAFE_RING="${SAFE_RING:-0}" --Mdir "$out/obj$m" "${src[@]}" > "$out/build$m.log" 2>&1 || { tail -30 "$out/build$m.log"; exit 2; }
  set +e
  (cd "$out"&&"$out/obj$m/Vtb_idx_link_pipe") > "$out/run$m.log" 2>&1
  rc=$?

@@ -1,0 +1,13 @@
+# HIDX link structural successor model (before build)
+
+Exact base e11cba3a3; previous route failed TT setup -0.62 ps and FF hold -47.62 ps. The worst hold path is a pure group metadata shift (grp_d[8] to grp_d[12]); other failures are SRAM write-data and ring/write registers. These are separate mechanisms.
+
+The first isolated candidate SAFE_RING=1 replaces only the five-edge control/identity delay lines with actual five-slot cyclic storage. Pointer state rotates, payload stays at its slot, and fixed age3/age4/age5 ports read the same historical sample. It adds no cycle, port, throughput change, numerical change or identity truncation. Default remains 0. There is no delay padding, wait, runtime credit or new timing exception.
+
+Old storage: five times (clear, flush, emit, group4, rank8, gbase8) =115 data bits. New storage: same115 bits plus five one-hot pointer bits per one of four independent field banks=20 bits. Reset controls15 plus pointers20, versus old15 controls. Per-field width at most8: a pointer bit drives at most8 write enables plus three8-bit read decodes (32 logical loads before mapping). Mapped fanout and reset distribution must be checked; retained unique field paramods prevent pointer sharing. Writes/reads sustain one input each cycle, total23 bits per edge, no large memory port. Group/rank/gbase storage has no payload reset, matching the original.
+
+Area estimate before synthesis: +20 FF plus read/write muxes for115 bits; reserve500 um2 until mapped census. No macro inventory change: eight real64x512_r2c2 SRAMs, total106587.728 um2. Existing650x500 slot325000um2 and full-face routing are NOT approved for this successor. Existing memory faces are dense and off43.2-origin lattice; SRAM contact/access repair must be modeled with the central compiler before a gate.
+
+Existing physical SRAM clock problem remains OPEN: FF write paths see an excessively late macro capture clock even with shared bin leaves. A real matched local clock branch and local bank ingress register placement must be proven from actual TT/FF clock paths and native pin timing; moving a clock pin or changing SDC alone is not a repair. The ring change does not claim to solve SRAM hold.
+
+Actual TOPK record IDs remain20 bits and all header/rank/group fields remain intact. IDX256 guard is a separate source component and is neither changed nor bypassed. All payload arithmetic and packing stages are unchanged. Production exact miter + original four mutants + a ring age mutant and reset/continuous metadata unit tests qualify only this source mechanism. Native TT/FF, SRAM access, <=405um reach, reset/data fanout<=32, full-face pin placement, legal lattice, standard-cell band and root PNG review remain required before any physical gate.
