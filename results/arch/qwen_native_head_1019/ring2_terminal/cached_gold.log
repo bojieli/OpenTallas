@@ -1,0 +1,21 @@
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+CACHED_GOLD a 24/24 errors=[]
+CACHED_GOLD c 640/640 errors=[]
+CACHED_GOLD f 3/3 errors=[]
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         189
+  consumer norm / scale (683 rows)             86             86         140
+  QK sum of squares (128)                      16             16         110
+  QK norm (128)                                16             16          70
+  SiLU * up (128)                              16             16         196
+CACHED_GOLD g 5/5 errors=[]
+CACHED_GOLD k 512/512 errors=[]
+CACHED_GOLD q 512/512 errors=[]
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680
+CACHED_GOLD m 8/8 errors=[]
+    bench2 (o): ovl gap 4 MU_NU 4 FACE 1 AM_MUT 0
+CACHED_GOLD o 2/2 errors=[]
+    bench2 (n): MU_NU 4 FACE 1 AM_MUT 0
+CACHED_GOLD n 2/2 errors=[]
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+CACHED_GOLD e 1024/1024 errors=[]
