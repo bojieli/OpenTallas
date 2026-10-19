@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits  -527 GB (avail 439, growth 808, headroom 0, waiters 1/64 GB) load 115/128 running 42 disk 548 GB 
+ot-run: ot-epyc5       admits    10 GB (avail 321, growth 314, headroom 0, waiters 12/908 GB) load 323/128 running 49 disk 671 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-bench/mu-adopt-ctlm-1019/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-bench/mu-adopt-ctlm-1019/src
+ot-run: -> ot-epyc4 (will queue: admits -527 GB < 12 GB)
+ot-heavy: waiting for memory on regular-crane: need 0.7 x 12 = 8 GB, admissible -520 GB: available 439 GB, growth charged 804 GB (x0.5), young 1079 GB, floor 57 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-4115285-1792394368 after 20 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   mu_m0: MU_CTLM_PASS mut 0
+OK   mu_m16: MU_CTLM_FAIL mut 16: mu4 C3 cmd words != compiled (missing 27 e.g. [(3039, 1, 77884452878022414430209536826542085), (4760, 2, 77884452878022414432461611518134277)]; extra 27 e.g. [(3039, 1, 77884452878022414427957737012856837), (4760, 2, 77884452878022414427958011890763781)])
+OK   mu_m17: MU_CTLM_FAIL mut 17: C2 latency user sua differs mu4 vs solo1 (24/93; first diffs [(2836, 8), (2844, 9), (3902, 8), (6202, 9)])
+OK   mu_m18: MU_CTLM_FAIL mut 18: mu4 C4 SEG base/tok/pos != compiled (missing 12 e.g. [(4302, 16, 4352, 512), (6024, 16, 4625, 528)]; extra 12 e.g. [(4302, 16, 4625, 528), (6024, 16, 4898, 544)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 0, 1, 2), (16353, 0, 2, 3), (23239, 0, 3, 37)]
+OK   mu_m19: MU_CTLM_FAIL mut 19: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user mes differs mu4 vs solo1 (3/12; first diffs [(3023, 4625, 528), (4744, 4898, 544)]) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | mu4 C4 MES (ME programme start) != compiled (missing 0 e.g. []; extra 9 e.g. [(3023, 4625, 528), (4744, 4898, 544)])
+OK   mu_m20: MU_CTLM_FAIL mut 20: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 3, 2, 1), (16353, 3, 3, 2), (23239, 3, 37, 3)]
+MU_CTLM BENCHES: PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4115285-1792394368): exit 0

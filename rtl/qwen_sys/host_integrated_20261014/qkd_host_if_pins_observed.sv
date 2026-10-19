@@ -18,7 +18,11 @@ module qkd_host_if_pins_observed #(
     //   descriptor w0 [47:32] prompt length / [63:48] max new tokens (16 b each); prompt tokens two per word
     //   ([31:0], [63:32]); w3 [31:0] EOS id 0, [63:32] EOS id 1.  Completion w0 [47:32] position[15:0],
     //   [63:48] token[15:0]; w1 [47:32] tokens generated[15:0], [63:48] token[31:16].  FMT 0: the layout above.
-    parameter integer FMT     = 0
+    parameter integer FMT     = 0,
+    // MU-QWEN-HOST 10-18 (opt-in; 0 = the pin leaf shape above, unchanged): 1 = 4 users, NSLOT = ENG_CTX = 4,
+    // PLB 11 (2,048 prompt tokens a user, so {slot2, pos11} keeps the 13-bit prompt SRAM), up to 4 steps outstanding
+    // (core MU_OUT), eng_done a one-edge pulse a retired step (ot_qfd_pkgctl MU) taken without the start guard.
+    parameter integer MU_OUT  = 0
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -106,7 +110,8 @@ module qkd_host_if_pins_observed #(
  output wire step_retire_v,step_retire_cq,output wire[15:0]step_retire_client_tag,output wire[7:0]step_retire_slot,output wire[17:0]step_retire_pos,step_retire_token,
  output wire host_idle,host_observer_fault
 );
-initial if(MODE!=0 || NSLOT!=1 || ENG_CTX!=1 || NW!=18 || PLB!=13 || CTX_MAX!=8192)
+initial if(MODE!=0 || NW!=18 || CTX_MAX!=8192 ||
+   (MU_OUT==0 ? (NSLOT!=1 || ENG_CTX!=1 || PLB!=13) : (NSLOT!=4 || ENG_CTX!=4 || PLB!=11)))
  $fatal(1,"host pin leaf shape mismatch");
 localparam integer SB=(NSLOT>1)?$clog2(NSLOT):1;
 wire  clk_i;
@@ -248,7 +253,7 @@ reg completion_armed;
 always @(posedge clk or negedge rst_n)if(!rst_n)completion_armed<=0;
 else if(eng_start_i)completion_armed<=0;
 else if(!pin_eng_done)completion_armed<=1;
-assign eng_done_i=(MUT_DONE_GUARD || completion_armed) && pin_eng_done;
+assign eng_done_i=(MU_OUT!=0) ? pin_eng_done : (MUT_DONE_GUARD || completion_armed) && pin_eng_done;
 reg [NW-1:0] pin_eng_next_token;
 always @(posedge clk or negedge rst_n)if(!rst_n)pin_eng_next_token<=0;else pin_eng_next_token<=eng_next_token;
 assign eng_next_token_i=pin_eng_next_token;
@@ -303,7 +308,7 @@ assign users_done_i=pin_users_done;
 reg  pin_arr_fault;
 always @(posedge clk or negedge rst_n)if(!rst_n)pin_arr_fault<=0;else pin_arr_fault<=arr_fault;
 assign arr_fault_i=pin_arr_fault;
-ot_host_if_pb2_observed #(.PB_READ_PIPE(PB_READ_PIPE),.PB_VALID_ONLY(PB_VALID_ONLY),.NSLOT(NSLOT),.MODE(MODE),.ENG_CTX(ENG_CTX),.NW(NW),.PLB(PLB),.CTX_MAX(CTX_MAX),.AW(AW),.KVW(KVW),.EVQ(EVQ),.FMT(FMT)) u_core(.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+ot_host_if_pb2_observed #(.PB_READ_PIPE(PB_READ_PIPE),.PB_VALID_ONLY(PB_VALID_ONLY),.NSLOT(NSLOT),.MODE(MODE),.ENG_CTX(ENG_CTX),.NW(NW),.PLB(PLB),.CTX_MAX(CTX_MAX),.AW(AW),.KVW(KVW),.EVQ(EVQ),.FMT(FMT),.MU_OUT(MU_OUT)) u_core(.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
 .clk(clk_i),
 .rst_n(rst_n_i),
 .s_awvalid(s_awvalid_i),

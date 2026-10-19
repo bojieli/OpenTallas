@@ -11,7 +11,8 @@ one E per link, the same at TT and FF, from the die STA of a GEN that already ca
       E = max over corners of 1 + ceil(-S1 / T) (>= 1); window check hold_E = H0 + (D - E) T >= 0 at TT and FF (a hold
       miss raises D, never E); K = E mod 8 (the reset calendar G = R0; --calendar JSON {bid: G - R0} overrides).
       The next GEN takes it with OT_SPLIT_LAND_PLAN=land_plan.json (E -> landing.sdc MCP, K -> the landing's k straps).
-      QK-LANDEN 10-19: this K excludes the landh0 en register edge (n = 1); the GEN adds it once (lane_groups.HOP0_EN_REG).
+      QK-LANDEN 10-19 / RLYH0-EN 10-19: this K excludes the hop-0 en register edge (every lane: landh0 n = 1 and rlyh0
+      n >= 2); the GEN adds it once (lane_groups.HOP0_EN_REG).
 """
 import argparse, json, math, re
 from pathlib import Path

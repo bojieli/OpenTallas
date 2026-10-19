@@ -1,0 +1,1373 @@
+{
+ "schema": "opentallas.qwen.mu_calendar.receipt.v1",
+ "grade": "modelled (windows measured-old-RTL + priced)",
+ "layer_source": "results/rtl/qwen_layer_tput_1013/record.json windows[]: latency = price_production (sum 6,835 = production_layer.priced), unit busy = measured window (me class 1,283, su class 462; rmsnorm2 capped at its price); the production adders (die relays 430 um, issue relays, stations) are latency, not occupancy; the busy part sits centred in its window (modelled placement)",
+ "inputs": {
+  "layer_period": 6886,
+  "l0_extra": 399,
+  "head_cycles": 3048,
+  "embed_cycles": 272,
+  "kv_service": 1555,
+  "d2d_record": 32,
+  "host_return": 134,
+  "ar_words": 256,
+  "lu": 53,
+  "ls": 378,
+  "users": 4
+ },
+ "frame": {
+  "measured": {
+   "period": 6886,
+   "per_resource": {
+    "su": {
+     "windows": 5,
+     "busy": 453,
+     "forbidden_shifts": 3102
+    },
+    "me": {
+     "windows": 4,
+     "busy": 1283,
+     "forbidden_shifts": 5781
+    },
+    "d2d_q": {
+     "windows": 1,
+     "busy": 32,
+     "forbidden_shifts": 63
+    },
+    "kvs": {
+     "windows": 1,
+     "busy": 1555,
+     "forbidden_shifts": 3109
+    },
+    "d2d_o": {
+     "windows": 1,
+     "busy": 32,
+     "forbidden_shifts": 63
+    },
+    "coll.issue": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.B": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.W": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.O": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.ucie": {
+     "windows": 4,
+     "busy": 1024,
+     "forbidden_shifts": 4437
+    }
+   },
+   "feasible_pair_shifts": 82,
+   "feasible_runs": [
+    [
+     3283,
+     3324
+    ],
+    [
+     3563,
+     3604
+    ]
+   ],
+   "four_user_pure_shift": null
+  },
+  "priced": {
+   "period": 6886,
+   "per_resource": {
+    "su": {
+     "windows": 5,
+     "busy": 1276,
+     "forbidden_shifts": 5682
+    },
+    "me": {
+     "windows": 4,
+     "busy": 1643,
+     "forbidden_shifts": 6319
+    },
+    "d2d_q": {
+     "windows": 1,
+     "busy": 32,
+     "forbidden_shifts": 63
+    },
+    "kvs": {
+     "windows": 1,
+     "busy": 1555,
+     "forbidden_shifts": 3109
+    },
+    "d2d_o": {
+     "windows": 1,
+     "busy": 32,
+     "forbidden_shifts": 63
+    },
+    "coll.issue": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.B": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.W": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.O": {
+     "windows": 2,
+     "busy": 512,
+     "forbidden_shifts": 1533
+    },
+    "coll.ucie": {
+     "windows": 4,
+     "busy": 1024,
+     "forbidden_shifts": 4437
+    }
+   },
+   "feasible_pair_shifts": 0,
+   "feasible_runs": [],
+   "four_user_pure_shift": null
+  }
+ },
+ "runs": [
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 9290.9,
+   "per_user_tok_s": [
+    4769.2,
+    4521.7
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 9290.9,
+   "per_user_tok_s": [
+    4769.2,
+    4521.7,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 9290.9,
+   "per_user_tok_s": [
+    4769.2,
+    4521.7,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 9290.9,
+   "per_user_tok_s": [
+    4769.2,
+    4521.7
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 9290.9,
+   "per_user_tok_s": [
+    4769.2,
+    4521.7,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 9290.9,
+   "per_user_tok_s": [
+    4769.2,
+    4521.7,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 9411.3,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 11077.5,
+   "per_user_tok_s": [
+    4769.2,
+    3164.3,
+    3144.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 12058.7,
+   "per_user_tok_s": [
+    4769.2,
+    2451.0,
+    2450.3,
+    2388.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 9411.3,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 11732.4,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    2321.1
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "measured",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 14053.5,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    2321.1,
+    2321.1
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "layer",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 1,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 2,
+   "aggregate_tok_s": 8274.1,
+   "per_user_tok_s": [
+    4769.2,
+    3505.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 3,
+   "aggregate_tok_s": 10712.1,
+   "per_user_tok_s": [
+    4769.2,
+    3327.0,
+    2615.9
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "joint",
+   "users": 4,
+   "aggregate_tok_s": 11909.6,
+   "per_user_tok_s": [
+    4769.2,
+    3074.1,
+    2384.6,
+    1681.8
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 1,
+   "aggregate_tok_s": 4769.2,
+   "per_user_tok_s": [
+    4769.2
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 2,
+   "aggregate_tok_s": 8274.1,
+   "per_user_tok_s": [
+    4769.2,
+    3505.0
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 3,
+   "aggregate_tok_s": 10589.4,
+   "per_user_tok_s": [
+    4769.2,
+    3512.5,
+    2307.7
+   ],
+   "latency_user_identical": true
+  },
+  {
+   "occupancy": "priced",
+   "granularity": "op",
+   "head_chunks": 8,
+   "policy": "priority",
+   "users": 4,
+   "aggregate_tok_s": 12567.9,
+   "per_user_tok_s": [
+    4769.2,
+    3512.5,
+    2307.7,
+    1978.5
+   ],
+   "latency_user_identical": true
+  }
+ ],
+ "sensitivity": [
+  {
+   "resources_ignored": [],
+   "aggregate_tok_s": 14053.5,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    2321.1,
+    2321.1
+   ]
+  },
+  {
+   "resources_ignored": [
+    "me"
+   ],
+   "aggregate_tok_s": 14427.1,
+   "per_user_tok_s": [
+    4769.2,
+    4627.0,
+    2578.7,
+    2452.3
+   ]
+  },
+  {
+   "resources_ignored": [
+    "su"
+   ],
+   "aggregate_tok_s": 14042.2,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    2384.6,
+    2246.2
+   ]
+  },
+  {
+   "resources_ignored": [
+    "kvs"
+   ],
+   "aggregate_tok_s": 14038.6,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    3101.5,
+    1525.7
+   ]
+  },
+  {
+   "resources_ignored": [
+    "coll"
+   ],
+   "aggregate_tok_s": 15294.3,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    3040.8,
+    2842.2
+   ]
+  },
+  {
+   "resources_ignored": [
+    "coll.ucie"
+   ],
+   "aggregate_tok_s": 15294.3,
+   "per_user_tok_s": [
+    4769.2,
+    4642.1,
+    3040.8,
+    2842.2
+   ]
+  },
+  {
+   "resources_ignored": [
+    "me",
+    "su"
+   ],
+   "aggregate_tok_s": 14445.7,
+   "per_user_tok_s": [
+    4769.2,
+    4769.2,
+    2522.7,
+    2384.6
+   ]
+  },
+  {
+   "resources_ignored": [
+    "me",
+    "su",
+    "coll"
+   ],
+   "aggregate_tok_s": 18865.5,
+   "per_user_tok_s": [
+    4769.2,
+    4769.2,
+    4632.2,
+    4694.9
+   ]
+  }
+ ],
+ "of_record": {
+  "call": "compile_calendar(dict(users=4, occupancy='measured', head_chunks=8), tokens=6, policy='priority')",
+  "summary": {
+   "schema": "opentallas.qwen.mu_calendar.v1",
+   "layer_source": "results/rtl/qwen_layer_tput_1013/record.json windows[]: latency = price_production (sum 6,835 = production_layer.priced), unit busy = measured window (me class 1,283, su class 462; rmsnorm2 capped at its price); the production adders (die relays 430 um, issue relays, stations) are latency, not occupancy; the busy part sits centred in its window (modelled placement)",
+   "granularity": "op",
+   "users": [
+    {
+     "user": 0,
+     "first_layer_start": 0,
+     "tokens_completed": 6,
+     "token_period": 251615.0,
+     "tok_s": 4769.19102597222,
+     "bubble_cycles_total": 0,
+     "blocks": 2646
+    },
+    {
+     "user": 1,
+     "first_layer_start": 1722,
+     "tokens_completed": 5,
+     "token_period": 258501.0,
+     "tok_s": 4642.1483862731675,
+     "bubble_cycles_total": 38948,
+     "blocks": 2573
+    },
+    {
+     "user": 2,
+     "first_layer_start": 3443,
+     "tokens_completed": 2,
+     "token_period": 517002.0,
+     "tok_s": 2321.0741931365837,
+     "bubble_cycles_total": 764621,
+     "blocks": 1298
+    },
+    {
+     "user": 3,
+     "first_layer_start": 5164,
+     "tokens_completed": 2,
+     "token_period": 517002.0,
+     "tok_s": 2321.0741931365837,
+     "bubble_cycles_total": 776084,
+     "blocks": 1270
+    }
+   ],
+   "single_user_token_cycles": 251615,
+   "single_user_tok_s": 4769.19102597222,
+   "aggregate_tok_s": 14053.487798518556,
+   "horizon_cycles": 1509690,
+   "lemma_frame_violations": [
+    {
+     "users": [
+      0,
+      1
+     ],
+     "resource": "me",
+     "window": [
+      3831,
+      4375
+     ],
+     "shifted": [
+      3962,
+      4245
+     ]
+    },
+    {
+     "users": [
+      0,
+      1
+     ],
+     "resource": "coll.ucie",
+     "window": [
+      4792,
+      5048
+     ],
+     "shifted": [
+      4782,
+      5038
+     ]
+    },
+    {
+     "users": [
+      0,
+      2
+     ],
+     "resource": "su",
+     "window": [
+      277,
+      371
+     ],
+     "shifted": [
+      253,
+      344
+     ]
+    },
+    {
+     "users": [
+      0,
+      2
+     ],
+     "resource": "su",
+     "window": [
+      3696,
+      3787
+     ],
+     "shifted": [
+      3720,
+      3814
+     ]
+    },
+    {
+     "users": [
+      0,
+      3
+     ],
+     "resource": "me",
+     "window": [
+      2240,
+      2523
+     ],
+     "shifted": [
+      2109,
+      2653
+     ]
+    },
+    {
+     "users": [
+      0,
+      3
+     ],
+     "resource": "coll.ucie",
+     "window": [
+      3060,
+      3316
+     ],
+     "shifted": [
+      3070,
+      3326
+     ]
+    },
+    {
+     "users": [
+      1,
+      2
+     ],
+     "resource": "me",
+     "window": [
+      3831,
+      4375
+     ],
+     "shifted": [
+      3961,
+      4244
+     ]
+    },
+    {
+     "users": [
+      1,
+      2
+     ],
+     "resource": "coll.ucie",
+     "window": [
+      4792,
+      5048
+     ],
+     "shifted": [
+      4781,
+      5037
+     ]
+    },
+    {
+     "users": [
+      1,
+      3
+     ],
+     "resource": "su",
+     "window": [
+      277,
+      371
+     ],
+     "shifted": [
+      252,
+      343
+     ]
+    },
+    {
+     "users": [
+      1,
+      3
+     ],
+     "resource": "su",
+     "window": [
+      3696,
+      3787
+     ],
+     "shifted": [
+      3719,
+      3813
+     ]
+    },
+    {
+     "users": [
+      2,
+      3
+     ],
+     "resource": "me",
+     "window": [
+      3831,
+      4375
+     ],
+     "shifted": [
+      3961,
+      4244
+     ]
+    },
+    {
+     "users": [
+      2,
+      3
+     ],
+     "resource": "coll.ucie",
+     "window": [
+      4792,
+      5048
+     ],
+     "shifted": [
+      4781,
+      5037
+     ]
+    }
+   ],
+   "schedule_collisions": 0,
+   "latency_user_identical": true,
+   "schedule_blocks": {
+    "0": 2646,
+    "1": 2573,
+    "2": 1298,
+    "3": 1270
+   }
+  },
+  "kv_user_dimension": {
+   "context": 8192,
+   "users": 4,
+   "pc_busy_hbm_per_layer": 514,
+   "service_window_hbm": 1265,
+   "pc_streams_fit_service_window": true,
+   "capacity_feasible_in_window": true,
+   "kvs_window_overlaps": 0,
+   "user_layer_bases": 144,
+   "row_formula": "64 + layer + 256*user (= RTL qkd_kv_mu_wrow/rrow)",
+   "user_row_stride": 256,
+   "base_example": {
+    "u0_L0": 65536,
+    "u0_L35": 101376,
+    "u1_L0": 327680,
+    "u1_L35": 363520,
+    "u2_L0": 589824,
+    "u2_L35": 625664,
+    "u3_L0": 851968,
+    "u3_L35": 887808
+   },
+   "note": "bases = the RTL row map (qkd_kv_mu_rowoff inserts the stage user into row[9:8]; no job-word field); the HBM PC stream of a user-layer starts at its kvs window start, so prefetch never spans another user's window"
+  }
+ }
+}
