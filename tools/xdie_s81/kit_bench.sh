@@ -25,8 +25,9 @@ case $M in
   chb0) A="$A -GCHB=0" ;;
   board400)
     mkdir -p $O/mut
-    sed 's/parameter integer CH_BOARD = 700) (/parameter integer CH_BOARD = 400) (/' rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv > $O/mut/ot_s81ph_coll_lane.sv
-    [ "$(grep -c 'parameter integer CH_BOARD = 400) (' $O/mut/ot_s81ph_coll_lane.sv)" = 2 ] || { echo "MUTANT_NOT_APPLIED"; exit 4; }
+    # S81-SAFE-FIX/COLL 10-19: the tile tops now end '..CH_BOARD = 700, parameter integer SAFE = 1) (' (both forms matched)
+    sed -E 's/parameter integer CH_BOARD = 700(, parameter integer SAFE = [01])?\) \(/parameter integer CH_BOARD = 400\1) (/' rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv > $O/mut/ot_s81ph_coll_lane.sv
+    [ "$(grep -c -E 'parameter integer CH_BOARD = 400(, parameter integer SAFE = [01])?\) \(' $O/mut/ot_s81ph_coll_lane.sv)" = 2 ] || { echo "MUTANT_NOT_APPLIED"; exit 4; }
     export LANE=$O/mut/ot_s81ph_coll_lane.sv ;;
   *) echo "usage: kit_bench.sh <outdir> pass|board400|chb0"; exit 2 ;;
 esac

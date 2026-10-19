@@ -64,7 +64,18 @@ module ot_s81ph_coll_lane #(
     // ds-1010/coll-tu 2026-10-11 (opt-in): LRXW = the LCR landing FIFO with ot_link_credit_rx WFREE 2 (registered one-hot
     // slot write enables, registered non-empty flag); EPMW = ot_s81ph_link_ep MWR (registered SRAM write ports).  0 cycles.
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif,
-    parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif
+    parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
+    // SAFE (S81-SAFE-FIX/COLL 2026-10-19, owner safe-design checklist item 3; default 0 = same netlist, the tile tops set 1):
+    // (a) the stream reset is synchronised and then RELAYED per consumer (rtl/lib/ot_rst_relay.sv, 5 kept copies:
+    //     local landing/flags, credit rx, credit tx, endpoint, gearbox), release +1 edge; the single rst_s[1] flop drove
+    //     6,837 loads (dscoll_lane_w_ltr gate textbook.high_fanout);
+    // (b) the rx pin landing keeps a reset only on its three flag bits (valid lr[0], marker lr[513], fault lr[514]);
+    //     the 512 beat bits are plain registers (the gearbox reads them only under lr[0] && lr[513]);
+    // (c) ot_s81ph_link_ep DNR 1: the endpoint's frame data registers leave the reset processes (5,700 rst-gated
+    //     enables); (d) the LCR landing FIFO read pointer is kept per 8-bit slice (ot_link_credit_rx RREP 70: 70 x 3
+    //     kept flops, ~64 mux loads each instead of 4,426 on rp[1]).  0 data cycles; reset release +1 edge in RTL (the
+    //     kit's reset_landing adds 2 more at the face).
+    parameter integer SAFE = 0
 ) (
     input  wire          clk,
     input  wire          rs_n,       // stream reset (async assert), synchronised here
@@ -87,45 +98,58 @@ module ot_s81ph_coll_lane #(
     localparam integer S = FFW + 1;
     localparam integer PNUM = (GFMT != 0) ? FB * 3 * (IDLE_P - 1) : FB * G * (IDLE_P - 1);
     localparam integer PDEN = (GFMT != 0) ? 4 * IDLE_P : S * IDLE_P;
+    wire rst_n, rst_ni, rst_no, rst_ne, rst_ng;  // local / credit rx / credit tx / endpoint / gearbox
+    wire [514:0] lr;
+    generate if (SAFE != 0) begin : g_safe_rst
+        wire [4:0] rr;
+        ot_rst_relay #(.REGIONS(5), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rs_n), .rst_n(rr));
+        assign rst_n = rr[0]; assign rst_ni = rr[1]; assign rst_no = rr[2]; assign rst_ne = rr[3]; assign rst_ng = rr[4];
+        reg [2:0] lr_f; reg [511:0] lr_d;
+        always @(posedge clk or negedge rst_n) if (!rst_n) lr_f <= 3'b000; else lr_f <= {rx[514], rx[513], rx[0]};
+        always @(posedge clk) lr_d <= rx[512:1];
+        assign lr = {lr_f[2], lr_f[1], lr_d, lr_f[0]};
+    end else begin : g_rst
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs_n) if (!rs_n) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    wire rst_n = rst_s[1];
-    reg [514:0] lr;
-    always @(posedge clk or negedge rst_n) if (!rst_n) lr <= 0; else lr <= rx;
+    assign rst_n = rst_s[1]; assign rst_ni = rst_s[1]; assign rst_no = rst_s[1]; assign rst_ne = rst_s[1]; assign rst_ng = rst_s[1];
+    reg [514:0] lr_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) lr_q <= 0; else lr_q <= rx;
+    assign lr = lr_q;
+    end endgenerate
     // core -> link
     wire iv, ir, il; wire [W-1:0] id;
     reg  lk1, up;                                // link-up gate (v4): own receiver locked once / peer's locked
     wire ir_g = ir && (UPGATE == 0 || up);
     generate if (LCR != 0) begin : g_lcri
         wire lcf;
-        ot_link_credit_rx #(.W(W + 1), .DEPTH(8), .OREG(0), .WFREE(LRXW ? 2 : 1)) u_ski (.clk(clk), .rst_n(rst_n), .l_valid(lo_v), .l_data(lo_d),
+        ot_link_credit_rx #(.W(W + 1), .DEPTH(8), .OREG(0), .WFREE(LRXW ? 2 : 1), .RREP(SAFE ? 70 : 1)) u_ski (.clk(clk), .rst_n(rst_ni), .l_valid(lo_v), .l_data(lo_d),
             .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
     end else begin : g_skid_i
-    ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_n), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
+    ot_s81ph_skid2 #(.W(W + 1)) u_ski (.clk(clk), .rst_n(rst_ni), .in_v(lo_v), .in_r(lo_r), .in_d(lo_d),
         .out_v(iv), .out_r(ir_g), .out_d({il, id}));
     end endgenerate
     // link -> core
     wire ov, orr, ol; wire [W-1:0] od;
     generate if (LCR != 0) begin : g_lcro
         wire lv; reg lvq; wire [W:0] ld;
-        ot_link_credit_tx #(.W(W + 1), .CRED(8)) u_sko (.clk(clk), .rst_n(rst_n), .i_valid(ov), .i_ready(orr), .i_data({ol, od}),
+        ot_link_credit_tx #(.W(W + 1), .CRED(8)) u_sko (.clk(clk), .rst_n(rst_no), .i_valid(ov), .i_ready(orr), .i_data({ol, od}),
             .l_valid(lv), .l_data(ld), .l_credit(li_r));
         assign li_v = lv; assign li_d = ld;
     end else begin : g_skid_o
-    ot_s81ph_skid2 #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_n), .in_v(ov), .in_r(orr), .in_d({ol, od}),
+    ot_s81ph_skid2 #(.W(W + 1)) u_sko (.clk(clk), .rst_n(rst_no), .in_v(ov), .in_r(orr), .in_d({ol, od}),
         .out_v(li_v), .out_r(li_r), .out_d(li_d));
     end endgenerate
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
-        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE), .RXPIPE(EPRX), .TOREG(EPTO), .MWR(EPMW)) u_ep (
-        .clk(clk), .rst_n(rst_n), .ch_b(ch_b),
+        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE), .RXPIPE(EPRX), .TOREG(EPTO), .MWR(EPMW), .DNR(SAFE)) u_ep (
+        .clk(clk), .rst_n(rst_ne), .ch_b(ch_b),
         .in_valid(iv && (UPGATE == 0 || up)), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv), .r_tx(rt), .r_rx_v(rrv), .r_rx(rr),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
         .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
     ot_s81ph_link_gbx #(.FMT(GFMT), .FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P)) u_gb (
-        .clk(clk), .rst_n(rst_n), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && (UPGATE == 0 || lk1)), .r_tx(rt), .beat_tx(tx),
+        .clk(clk), .rst_n(rst_ng), .f_tx_v(ftv), .f_tx(ft), .r_tx_v(rtv && (UPGATE == 0 || lk1)), .r_tx(rt), .beat_tx(tx),
         .beat_rx_v(lr[0] && lr[513]), .beat_rx(lr[512:1]), .f_rx_v(frv), .f_rx(fr), .r_rx_v(rrv), .r_rx(rr),
         .locked(gb_l), .fault(gb_f));
     always @(posedge clk or negedge rst_n) if (!rst_n) flt <= 3'b000; else flt <= {lr[514], gb_f, ep_f};
@@ -147,21 +171,21 @@ module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter
     parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
-    parameter integer CH_BOARD = 700) (
+    parameter integer CH_BOARD = 700, parameter integer SAFE = 1) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
 module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
     parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
     parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer LRXW = `ifdef OT_S81PH_LANE_RXW 1 `else 0 `endif, parameter integer EPMW = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
-    parameter integer CH_BOARD = 700) (
+    parameter integer CH_BOARD = 700, parameter integer SAFE = 1) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO), .LRXW(LRXW), .EPMW(EPMW), .CH_BOARD(CH_BOARD), .SAFE(SAFE)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule

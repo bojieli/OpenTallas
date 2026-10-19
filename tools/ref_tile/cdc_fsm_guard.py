@@ -65,7 +65,10 @@ def policies(spec):
     out = []
     if spec.get('clock_data_paths') == G.POLICY:
         out.append((G.POLICY, G.lint, G.GrayFifoError, G._yosys))
-    if spec.get('cdc_synchronizers') is not None:
+    # The reviewed FIFO policy owns its event groups too, including their register
+    # roles.  Its family-period/seen schema is deliberately richer than the
+    # standalone CDC policy, so lint those groups only through their owning policy.
+    elif spec.get('cdc_synchronizers') is not None:
         out.append((S.KEY, S.lint, S.CdcError, S._yosys))
     return out
 

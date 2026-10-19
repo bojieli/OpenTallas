@@ -112,6 +112,31 @@ class VisualReview(unittest.TestCase):
         del files["k/gate_layout/REVIEW.json"]
         self.assertIn("REVIEW_REQUIRED: no", SE.review_check(self.t, "c" * 40, "k", show=files.get))
 
+    def test_geometry_hash_independent_of_kit_name(self):
+        """ROOT 10-19 (HKV-D2D18): a byte-identical layout under a new kit name hashes the same; a receipt carrying the
+        pre-10-19 path-keyed hash is still accepted; a changed pin file still changes the hash"""
+        fp = {"die": [0, 0, 100, 50], "core": [1, 1, 99, 49], "pins": {"W": ["a"]}, "clock_port": "ck", "blocks": []}
+        def kit(name, io="set_io_pin_constraint -region left:* -pin_names a\n"):
+            return {f"{name}/floorplan.json": json.dumps(fp), f"{name}/io.tcl": io,
+                    f"{name}/clock_entry.sdc": "create_clock ck\n",
+                    f"{name}/spec.json": json.dumps({"outline": {"w": 100, "h": 50}, "io_tcl": f"{name}/io.tcl"}),
+                    f"{name}/gate_result.json": json.dumps({"commit": "new1234"})}
+        a, b = kit("physical/ref_tile/d2d_r7u"), kit("physical/ref_tile/d2d_r7v")
+        ga, gb = SE.geometry_record(a.get, "physical/ref_tile/d2d_r7u"), SE.geometry_record(b.get, "physical/ref_tile/d2d_r7v")
+        self.assertEqual(ga["sha256"], gb["sha256"])
+        la = SE.geometry_record(a.get, "physical/ref_tile/d2d_r7u", legacy=True)
+        lb = SE.geometry_record(b.get, "physical/ref_tile/d2d_r7v", legacy=True)
+        self.assertNotEqual(la["sha256"], lb["sha256"])          # the old form keyed by path (the pointless re-review)
+        c = kit("physical/ref_tile/d2d_r7v", io="set_io_pin_constraint -region right:* -pin_names a\n")
+        self.assertNotEqual(SE.geometry_record(c.get, "physical/ref_tile/d2d_r7v")["sha256"], ga["sha256"])
+        rev = {"reviewer": "coordinator (Claude)", "time": "now", "gate_commit": "abc0001", "verdict": "APPROVED",
+               "checklist": {k: "ok" for k in SE.REVIEW_CHECKLIST}}
+        for sha in (gb["sha256"], lb["sha256"]):                 # new form, and the transition (legacy) form
+            b["physical/ref_tile/d2d_r7v/gate_layout/REVIEW.json"] = json.dumps(dict(rev, geometry_sha256=sha))
+            self.assertIsNone(SE.review_check(self.t, "c" * 40, "physical/ref_tile/d2d_r7v", show=b.get))
+        c["physical/ref_tile/d2d_r7v/gate_layout/REVIEW.json"] = json.dumps(dict(rev, geometry_sha256=lb["sha256"]))
+        self.assertIn("geometry changed", SE.review_check(self.t, "c" * 40, "physical/ref_tile/d2d_r7v", show=c.get))
+
     def test_geometry_bound_receipt(self):
         fp = {"die": [0, 0, 100, 50], "core": [1, 1, 99, 49], "pins": {"W": ["a"], "E": ["b"]}, "clock_port": "ck",
               "blocks": [{"inst": "u", "master": "m", "x": 43.2, "y": 0, "w": 10, "h": 10, "orient": "R0"}]}

@@ -49,6 +49,13 @@ module ot_s81ph_link_ep #(
     parameter integer MWR            = `ifdef OT_S81PH_EP_MWR 1 `else 0 `endif,
     parameter integer TOREG          = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif,
     parameter integer RXPIPE         = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
+    // DNR (S81-SAFE-FIX/COLL 2026-10-19, opt-in, default 0 = same netlist): the frame DATA registers (TX pipe tp_f /
+    // tp_lo / tp_hi, RX pipe xp_f, RX CRC partials p_lo / p_hi / p_got, reverse frames rr_f / rg_f) load every cycle in
+    // reset-free processes.  Written inside the async-reset processes without a reset value, yosys kept them "hold during
+    // reset" = one rst_n-gated enable per bit: the lane's reset synchroniser drove 6,837 loads (5,700 NAND2 / OA21 data
+    // enables + the async clears; dscoll_lane_w_ltr gate textbook.high_fanout).  Every consumer is qualified by its
+    // reset valid (tp_v / xp_v / rr_v / rg_v), so the transfer function after reset is unchanged.  0 cycles.
+    parameter integer DNR            = 0,
     parameter integer PIPE           = 0,     // CLAUDE S81-PH coll lane v3: 1 = sender pipelined (see the PIPE notes below)
                                               // CLAUDE s81-blocks 2026-10-07: 2 = PIPE 1 + (a) the freed-count difference
                                               // d_fr registered in S2 (fr_seen only changes in S2-apply cycles, as una for
@@ -211,9 +218,12 @@ module ot_s81ph_link_ep #(
     ot_link_crc32 #(.W(RVW)) u_rv_crc_chk (.d(r_rx[RFW-1:32]), .crc(r_rx_crc));
     wire            rr_ok0  = rr_v && rr_crc_ok;
     wire            rr_bad  = rr_v && !rr_crc_ok;
-    wire            rr_nak0 = rr_f[RFW-1];
-    wire [SEQW-1:0] rr_ack0 = rr_f[RFW-2 -: SEQW];
-    wire [CW-1:0]   rr_fr0  = rr_f[32 +: CW];
+    reg  [RFW-1:0]  rrn_f;                       // DNR: reset-free reverse frame (qualified by rr_v)
+    always @(posedge clk) rrn_f <= r_rx;
+    wire [RFW-1:0]  rr_fs   = (DNR != 0) ? rrn_f : rr_f;
+    wire            rr_nak0 = rr_fs[RFW-1];
+    wire [SEQW-1:0] rr_ack0 = rr_fs[RFW-2 -: SEQW];
+    wire [CW-1:0]   rr_fr0  = rr_fs[32 +: CW];
     // PIPE: pending slot P and decode stage S2
     reg             pv, s2v, pnak, s2nak, s2bad; reg [SEQW-1:0] pack, s2ack, s2dack; reg [CW-1:0] pfr, s2fr, s2dfr;
     wire            p_take = pv && !s2v;
@@ -290,7 +300,24 @@ module ot_s81ph_link_ep #(
         end
     end endgenerate
     assign f_tx_v = tp_v[TX_STAGES-1];
-    assign f_tx   = tp_f[TX_STAGES-1];
+    reg  [FFW-1:0]  tpn_f [0:TX_STAGES-1];       // DNR: reset-free frame data
+    reg  [31:0]     tpn_lo, tpn_hi;
+    generate if (DNR != 0) begin : g_tx_dnr
+        for (gi = 0; gi < TX_STAGES; gi = gi + 1) begin : g_s
+            if (gi == 0) begin : g_first
+                always @(posedge clk) begin tpn_f[gi] <= {t_pay, 32'd0}; tpn_lo <= l_crc_lo; tpn_hi <= l_crc_hi; end
+            end else if (gi == 1) begin : g_crc
+                always @(posedge clk) tpn_f[gi] <= {tpn_f[gi-1][FFW-1:32], tpn_lo ^ tpn_hi
+`ifndef OT_S81PH_EP_MUT_NOZERO
+                    ^ crc_zero
+`endif
+                    };
+            end else begin : g_rest
+                always @(posedge clk) tpn_f[gi] <= tpn_f[gi-1];
+            end
+        end
+    end endgenerate
+    assign f_tx   = (DNR != 0) ? tpn_f[TX_STAGES-1] : tp_f[TX_STAGES-1];
 
     // ======================================================================== receiver
     reg             xp_v [0:RX_STAGES-1];
@@ -308,21 +335,37 @@ module ot_s81ph_link_ep #(
     end endgenerate
 
     wire            c_v    = xp_v[RX_STAGES-1];
-    wire [FFW-1:0]  c_f    = xp_f[RX_STAGES-1];
+    reg  [FFW-1:0]  xpn_f [0:RX_STAGES-1];       // DNR: reset-free frame data
+    generate if (DNR != 0) begin : g_rx_dnr
+        for (gi = 0; gi < RX_STAGES; gi = gi + 1) begin : g_s
+            if (gi == 0) begin : g_first
+                always @(posedge clk) xpn_f[gi] <= f_rx;
+            end else begin : g_rest
+                always @(posedge clk) xpn_f[gi] <= xpn_f[gi-1];
+            end
+        end
+    end endgenerate
+    wire [FFW-1:0]  c_f    = (DNR != 0) ? xpn_f[RX_STAGES-1] : xp_f[RX_STAGES-1];
     // (T) CRC of RX stage RX_STAGES-3 in two halves, registered beside stage RX_STAGES-2, compared into the flag
     // registered beside the last stage (ct: one cycle, stage RX_STAGES-2)
-    wire [FFW-1:0]  q_f    = xp_f[RX_STAGES-3];
+    wire [FFW-1:0]  q_f    = (DNR != 0) ? xpn_f[RX_STAGES-3] : xp_f[RX_STAGES-3];
     wire [31:0]     q_lo, q_hi;
     ot_link_crc32 #(.W(FPW)) u_rx_crc_lo (.d({{(FPW-HB){1'b0}}, q_f[32 +: HB]}), .crc(q_lo));
     ot_link_crc32 #(.W(FPW)) u_rx_crc_hi (.d({q_f[FFW-1:32+HB], {HB{1'b0}}}), .crc(q_hi));
     reg  [31:0]     p_lo, p_hi, p_got;
     reg             c_crc_ok_r;
+    wire [31:0]     p_lo_s, p_hi_s, p_got_s;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin c_crc_ok_r <= 1'b0; p_lo <= 0; p_hi <= 0; p_got <= 0; end
         else begin
             p_lo <= q_lo; p_hi <= q_hi; p_got <= q_f[31:0];
-            c_crc_ok_r <= ((p_lo ^ p_hi ^ crc_zero) == p_got);
+            c_crc_ok_r <= ((p_lo_s ^ p_hi_s ^ crc_zero) == p_got_s);
         end
+    reg  [31:0]     pn_lo, pn_hi, pn_got;        // DNR: reset-free CRC partials
+    always @(posedge clk) begin pn_lo <= q_lo; pn_hi <= q_hi; pn_got <= q_f[31:0]; end
+    assign p_lo_s = (DNR != 0) ? pn_lo : p_lo;
+    assign p_hi_s = (DNR != 0) ? pn_hi : p_hi;
+    assign p_got_s = (DNR != 0) ? pn_got : p_got;
 `ifdef OT_DSROM_LINK_MUT_NOCRC
     wire            c_crc_ok = 1'b1;
 `else
@@ -347,7 +390,8 @@ module ot_s81ph_link_ep #(
     wire            c_acc;
     generate if (RXPIPE != 0) begin : g_rxp
         // seq of the flit entering the last RX stage next edge, against exp_seq as it will be after this edge
-        wire [SEQW-1:0] n_seq = xp_f[RX_STAGES-2][FFW-1 -: SEQW];
+        wire [FFW-1:0]  n_f   = (DNR != 0) ? xpn_f[RX_STAGES-2] : xp_f[RX_STAGES-2];
+        wire [SEQW-1:0] n_seq = n_f[FFW-1 -: SEQW];
         reg  [SEQW-1:0] d_q;
 `ifdef OT_S81PH_EP_RXPIPE_MUT
         always @(posedge clk or negedge rst_n) if (!rst_n) d_q <= 0; else d_q <= n_seq - exp_seq;   // mutant: ignores this cycle's accept
@@ -385,7 +429,9 @@ module ot_s81ph_link_ep #(
     reg             rg_v;
     reg  [RFW-1:0]  rg_f;
     assign r_tx_v = rg_v;
-    assign r_tx   = rg_f;
+    reg  [RFW-1:0]  rgn_f;                       // DNR: reset-free reverse frame (qualified by rg_v)
+    always @(posedge clk) rgn_f <= {rg_pay, rg_crc};
+    assign r_tx   = (DNR != 0) ? rgn_f : rg_f;
 
     // ======================================================================== state
     reg  [3:0] fault_n;
