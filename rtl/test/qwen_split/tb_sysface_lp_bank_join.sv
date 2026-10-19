@@ -34,7 +34,7 @@ module tb_sysface_lp_bank_join #(parameter MUT=0);
  reg fetch=0,release_row=0;wire[15:0]fe,re,ce;wire ef;
  qfd_mu_embedding_cold_epoch_model #(.ENABLE(1),.NU(4),.COLD_PENDING(1)) ledger(.ck(ck),.rst_n(rst_n),.epoch_abort(1'b0),.new_epoch(1'b0),.accepted_v(mv),.accepted_user(mu),.accepted_epoch(me),.accepted_cold_role(mu==0),.accepted_token(mt),.accepted_generation(mg),.publish_slot(pub),.publish_mask(pubmask),.init_publication(actual_init),.init_token(dut.s_tok),.init_generation(2'd2),.fetch_slot(fetch),.fetch_pending(1'b1),.fetch_user(2'd0),.fetch_token(18'd777),.fetch_generation(2'd2),.consume_slot(es),.consume_user(eu),.consume_token(et),.release_slot(release_row),.retire_slot(1'b0),.retire_mask(4'd0),.fetch_epoch(fe),.expected_epoch(re),.core_epoch(ce),.fault(ef));
  function automatic[547:0]rec(input integer user,input integer tok,input integer gen);
- reg[547:0]v;reg[58:0]tag;begin tag={14'h123,2'(user),6'd0,18'(tok),13'd7,6'd0};v=0;v[542:539]=12;v[538:533]=63;v[532:517]=tag[58:43];v[141:78]=64'h123456789abcdef0;v[77:62]=16'hbeef;v[61]=1;v[60:59]=2'(gen);v[58:0]=tag;return v;end endfunction
+ reg[547:0]v;reg[58:0]tag;begin tag={14'h123,2'(user),6'd0,18'(tok),13'd7,6'd0};if(user==0&&tok==777)tag[18:6]=13'd5;v=0;v[542:539]=12;v[538:533]=63;v[532:517]=tag[58:43];v[141:78]=64'h123456789abcdef0;v[77:62]=16'hbeef;v[61]=1;v[60:59]=2'(gen);v[58:0]=tag;return v;end endfunction
  integer cyc,checks=0,ctx_edges=0,init_edges=0,raw_edges=0,out_edges=0,consume_edges=0;
  reg[63:0]pw[0:1023],dw[0:7];string packet;
  task check(input bit good,input string why);begin checks++;if(!good)$fatal(1,"LP_BANK_FAIL MUT%0d cycle%0d %s",MUT,cyc,why);end endtask
