@@ -1,0 +1,50 @@
+[
+  {
+    "mutant": 1,
+    "source_sha256": "dceba0fc5aed8f928cd33a84c42ebd1647123a3446b97dc26ecf459e4fa20c7d",
+    "before": "assign group_rst_n=(MUT==1)?a1:(raw_rst_n & ((MUT==2)?a0:a1));",
+    "after": "assign group_rst_n=a1;",
+    "bench_MUT_parameter": 0,
+    "witness": "actual runtime named GROUP_FAIL required"
+  },
+  {
+    "mutant": 2,
+    "source_sha256": "98b3856a0a6a101e6ba7c3c4710d719f68234ed81a4e3c9af8bddb0fe3e3bfa2",
+    "before": "assign group_rst_n=(MUT==1)?a1:(raw_rst_n & ((MUT==2)?a0:a1));",
+    "after": "assign group_rst_n=raw_rst_n & a0;",
+    "bench_MUT_parameter": 0,
+    "witness": "actual runtime named GROUP_FAIL required"
+  },
+  {
+    "mutant": 3,
+    "source_sha256": "62498bb3431245873630468513009a8124d81fe8f5f5b04a61b42451360a0625",
+    "before": "assign ready=(MUT==3)?q0:q1;",
+    "after": "assign ready=q0;",
+    "bench_MUT_parameter": 0,
+    "witness": "actual runtime named GROUP_FAIL required"
+  },
+  {
+    "mutant": 4,
+    "source_sha256": "bdbca3a5a5ef14006803ff5e57902738b8ae7f3f2a4abeb9234ac4f827684ddf",
+    "before": "else if(we[s]) slot_valid[s]<=(MUT==4)?1'b1:ingress_valid;",
+    "after": "else if(we[s]) slot_valid[s]<=1'b1;",
+    "bench_MUT_parameter": 0,
+    "witness": "actual runtime named GROUP_FAIL required"
+  },
+  {
+    "mutant": 5,
+    "source_sha256": "f6cdae699dd44303fdb7a90b0759be1c5053f51e63818276028aeec767a37a88",
+    "before": "((MUT==5 && BI==0)?1:0)",
+    "after": "((BI==0)?1:0)",
+    "bench_MUT_parameter": 0,
+    "witness": "actual runtime named GROUP_FAIL required"
+  },
+  {
+    "mutant": 6,
+    "source_sha256": "652979dfdb6c57782e7ece3290094692154581ab28825bb591fb8fbe4db54bb0",
+    "before": "if(MUT_RETURN==6) begin:g_wrong_owner",
+    "after": "if(1) begin:g_wrong_owner",
+    "bench_MUT_parameter": 0,
+    "witness": "actual runtime named GROUP_FAIL required"
+  }
+]
