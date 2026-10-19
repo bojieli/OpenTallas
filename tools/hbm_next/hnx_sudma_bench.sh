@@ -15,6 +15,11 @@
 #      ABC N = 1,4,6; AB N = 4 --guard 0 (fill / lane-result store writes back to back) -> SU_ROWS PASS + SU_ROWS_EDGES
 #  s1..s4  rowx mutant m (1 vmr sector stride, 2 control vb stride, 3 vmw sector stride, 4 store-row stride),
 #      AB N = 4 row-relative -> SU_ROWS FAIL (fail witnesses)
+#  w0..w3 (SUDMA2 10-19) split store write phase: ot_hnx_su_top (ot_hnx_su_pgslice + ot_hnx_su_wsplit) behind rowx,
+#      tb_hnx_su_rows_ws -GWMUT=m. w0: wsplit 1 AB N = 1,2,3,4,6 and ABC N = 1,4,6 (II = 2 k nv); wsplit 0 on the d4g
+#      vectors ab_n1 / ab_n4 / abc_n1 (= d4g bit for bit: same expected writes and edges as stage s0); schedule-parity
+#      witness ws_ab_n4_fw11 (lane writes on the wrong phase -> FAULT, must FAIL). w1 deferral dropped / w2 HI = 1
+#      deferred / w3 deferred address not captured: ws_ab_n4 -> SU_ROWS FAIL (witnesses)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -81,11 +86,38 @@ SRC=($S/arithmetic/ot_hbm_su_static_ins.sv $S/arithmetic/ot_hbm_su_static_lane.s
  rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv
  rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
-case $ST in s0) M=0;; s1) M=1;; s2) M=2;; s3) M=3;; s4) M=4;; *) V "bad stage"; exit 2;; esac
+WM=-1
+case $ST in s0) M=0;; s1) M=1;; s2) M=2;; s3) M=3;; s4) M=4;; w0) M=0;WM=0;; w1) M=0;WM=1;; w2) M=0;WM=2;; w3) M=0;WM=3;;
+ *) V "bad stage"; exit 2;; esac
 gen(){ # case args...
   local c=$1; shift
   [ -f $O/vec_$c/programme.json ] || python3 tools/hbm_next/su_rows_compile.py $O/vec_$c "$@" > $O/vec_$c.log 2>&1 || V "vector gen $c FAILED"
 }
+if [ $WM -ge 0 ]; then
+  SRC+=(rtl/hbm_next/su/ot_hnx_su_wsplit.sv rtl/hbm_next/su/ot_hnx_su_pgslice.sv rtl/hbm_next/su/ot_hnx_su_quarter.sv
+   rtl/hbm_next/su/ot_hnx_su_top.sv rtl/hbm_next/su/tb/tb_hnx_su_rows_ws.sv)
+  SRC=("${SRC[@]/rtl\/hbm_next\/su\/tb\/tb_hnx_su_rows.sv/}")
+  if [ $WM = 0 ]; then
+   CASES="ws_ab_n1 ws_ab_n2 ws_ab_n3 ws_ab_n4 ws_ab_n6 ws_abc_n1 ws_abc_n4 ws_abc_n6 ab_n1 ab_n4 abc_n1 ws_ab_n4_fw11"
+   for n in 1 2 3 4 6; do gen ws_ab_n$n --n $n --wsplit 1; done
+   for n in 1 4 6; do gen ws_abc_n$n --n $n --op ABC --wsplit 1; done
+   gen ab_n1 --n 1; gen ab_n4 --n 4; gen abc_n1 --n 1 --op ABC; gen ws_ab_n4_fw11 --n 4 --wsplit 1 --fw 11
+  else
+   CASES="ws_ab_n4"; gen ws_ab_n4 --n 4 --wsplit 1
+  fi
+  SRC=($(printf '%s\n' "${SRC[@]}" | grep -v '^$'))
+  d=$O/obj_w$WM; rm -rf $d
+  verilator --binary --timing --hierarchical -O1 -j ${JOBS:-8} -CFLAGS -O0 -Wno-fatal -Wno-lint -Wno-style \
+    --top-module tb_hnx_su_rows_ws -GWMUT=$WM --Mdir $d "${SRC[@]}" > $O/build_w$WM.log 2>&1
+  V "build w$WM rc=$? bin=$( [ -x $d/Vtb_hnx_su_rows_ws ] && echo ok || echo MISSING)"
+  for c in $CASES; do
+    read -r NE NW WS < <(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["edges"],d["expected_vm_writes"],d.get("wsplit",0))' $O/vec_$c/programme.json)
+    ( $d/Vtb_hnx_su_rows_ws +DIR=$O/vec_$c +NE=$NE +NW=$NW +WSPLIT=$WS > $O/run_w${WM}_$c.log 2>&1; echo RUN_RC=$? >> $O/run_w${WM}_$c.log
+      V "w$WM $c: $(grep -h 'SU_ROWS PASS\|SU_ROWS FAIL\|SU_ROWS_EDGES\|RUN_RC' $O/run_w${WM}_$c.log | head -3 | tr '\n' ' ')" ) &
+  done
+  wait; rm -rf $d
+  V "done"; exit 0
+fi
 if [ $M = 0 ]; then
   CASES="ab_n1 ab_n2 ab_n3 ab_n4 ab_n6 ab_n4_abs abc_n1 abc_n4 abc_n6 ab_n4_g0"
   gen ab_n1 --n 1; gen ab_n2 --n 2; gen ab_n3 --n 3; gen ab_n4 --n 4; gen ab_n6 --n 6; gen ab_n4_abs --n 4 --absolute

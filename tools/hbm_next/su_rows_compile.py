@@ -17,6 +17,11 @@ Schedule (static, compiler-fixed, every edge known; collision = assert here, FAU
 Row-relative image (default): every command is row 0's; the per-edge row code (rowc.mem) names the row of the vmr, vmw and
 control classes and ot_hnx_su_rowx adds row x stride (VM sector, store row, control vb) per operand. --absolute: the
 unrolled d4g image (absolute addresses, row codes 0) -> must give the SAME expected files (the d4g SU runs it unchanged).
+--wsplit 1 (HBM-NEXT-UNITS-SUDMA2, needs ot_hnx_su_top with wsplit = 1): split store write phase. The fill writes the
+HI = 0 store groups on even bank-write edges and HI = 1 on odd ones (fill command e -> bank write e + FW, FW = 12, from
+the ab_n4_g0 witness); a vector's lane write W = emit + 23 is put on a fill-HI0 edge, HI = 1 banks commit at W, HI = 0
+banks (deferred one edge by ot_hnx_su_wsplit) at W + 1, on a fill-HI1 edge. Vectors emit every 2nd edge, the row fill
+streams with no gap: II = 2 k nv (+ 2 --sguard). --fw 11 = the schedule-parity witness (must FAULT st_conflict).
 Golden: hdc_golden mul / add / bf16 RNE in NumPy, independent of the DUT (su_arith_compile seed rows = VM rows).
 Outputs: prog.mem (4 x 2422 b a line), rowc.mem (4 x 20 b), strides.mem, expw/exps/explw.mem, arith/seed.mem,
 programme.json (cycles(N), II, dictionary sizes per 256-b column for the row-relative and the absolute image).
@@ -42,6 +47,9 @@ def main():
     ap.add_argument('--op', choices=('AB', 'ABC'), default='AB'); ap.add_argument('--absolute', action='store_true')
     ap.add_argument('--lat', type=int, default=1, help='edges of the rowx stage (REG 1)')
     ap.add_argument('--guard', type=int, default=1, help='edges between fill and lane-result store writes')
+    ap.add_argument('--wsplit', type=int, default=0, help='1: split store write phase (ot_hnx_su_top wsplit = 1)')
+    ap.add_argument('--fw', type=int, default=12, help='fill command -> bank write edge offset (11 = parity witness)')
+    ap.add_argument('--sguard', type=int, default=0, help='wsplit: extra edge pairs a period')
     a = ap.parse_args()
     N, nv, L = a.n, a.nv, a.lat
     assert 1 <= N <= 16 and N * nv <= 128 - 0 and VM_O + VM_RS * (N - 1) + nv <= 512 and VM_A + VM_RS * (N - 1) + nv <= VM_C
@@ -54,10 +62,19 @@ def main():
     k, g = len(rowops), a.guard
     # store write port (ONE per bank: fill > lane result, both on one edge = FAULT st_conflict): fill cmd e writes at
     # e + 11, emit m writes its result at m + 23 -> period p: fills of row p + 1 then the results of row p, disjoint
-    II = (2 * k + 1) * nv + 2 * g
+    II = (2 * k + 1) * nv + 2 * g if not a.wsplit else 2 * k * nv + 2 * a.sguard
     T = lambda p: 2 * nv + (p + 1) * II           # period p = -1 .. N - 1 (p = -1: prologue fill of row 0)
     FR = [T(r - 1) for r in range(N)]
-    EM = [[T(r) + 2 * k * nv + g - 12 + j for j in range(nv)] for r in range(N)]
+    if a.wsplit:
+        # lane write W = emit + 23 on a fill-HI0 bank-write edge: W = T + FW (mod 2); first emit >= last fill cmd + 25
+        def em0(r):
+            b = T(r) + 24
+            return b + ((b + 23 - T(r) - a.fw) % 2)
+        EM = [[em0(r) + 2 * j for j in range(nv)] for r in range(N)]
+        for r in range(1, N):
+            assert EM[r][0] > EM[r - 1][-1], 'emit slots overlap'
+    else:
+        EM = [[T(r) + 2 * k * nv + g - 12 + j for j in range(nv)] for r in range(N)]
     for r in range(N):
         assert EM[r][0] >= FR[r] + 2 * k * nv - 1 + 25, 'row data not in the store before its first emit'
     S = EM[0][0] - 8
@@ -179,6 +196,7 @@ def main():
     first_cmd = 0
     last_w = max(x[0] for x in expw)
     man = dict(schema='opentallas.hbm_next.su_rows.v1', n=N, nv=nv, op=a.op, row_relative=rel, lat=L, edges=NE,
+               wsplit=a.wsplit, fw=a.fw,
                ii=II, c1_rule='2 nv B fill + II row-0 fill + 16 + nv emits + 23 + MARGIN + 2 nv drain', row_ops=rowops,
                fr=FR, ld_edge=S, first_emit=EM[0][0], last_drain=DR[-1][-1], first_cmd_edge=first_cmd,
                last_vm_write_edge=last_w, cycles=last_w - first_cmd + 1 - L, expected_vm_writes=len(expw),
