@@ -3,7 +3,7 @@ set ::ot_ce_cts_roots {ck_core ck_hr}
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_counts [dict create {ot_qfd_tt_ctlm_static_hr} 1]
 set ::ot_ce_landed_raw [dict create {ot_qfd_tt_ctlm_static_hr/ck_pm0} {ref ck_head} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {ref ck_head}]
-set ::ot_ce_raw_memory_bindings [dict create {u_gi.u_cal.g_m[0].u_pm} {master ot_sram_1r1w_64x512_m1_r2c2 clock_pin clk root ck_core} {u_gi.u_cal.g_m[1].u_pm} {master ot_sram_1r1w_64x512_m1_r2c2 clock_pin clk root ck_core}]
+set ::ot_ce_raw_memory_bindings [dict create {u_gi.g_op.u_leaf.g_op.u_rom} {master ot_rom_4096x72_m8 clock_pin clk root ck_core} {u_gi.u_cal.g_m[0].u_pm} {master ot_sram_1r1w_64x512_m1_r2c2 clock_pin clk root ck_core} {u_gi.u_cal.g_m[1].u_pm} {master ot_sram_1r1w_64x512_m1_r2c2 clock_pin clk root ck_core}]
 source /src/physical/common_flow/clock_entries.tcl
 set ::ot_lrt_targets [dict create {ot_qfd_tt_ctlm_static_hr/ck_pm0} {ref ck_head tt 287.9 ff 232 ss 379.8} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {ref ck_head tt 288.5 ff 232.5 ss 380.4}]
 source /src/physical/common_flow/landed_raw_tap.tcl

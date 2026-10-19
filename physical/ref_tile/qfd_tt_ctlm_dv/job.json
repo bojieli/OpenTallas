@@ -1,13 +1,13 @@
 {
- "name": "qfd_tt_ctlm_dv-lp1-COMMIT",
+ "name": "qfd_tt_ctlm_dv-mu1-COMMIT",
  "block": "qfd_tt_ctlm_dv_lpf_lp",
  "ref_tile": true,
- "owner": "Claude:HF-4",
- "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv as a LANDED parent (HF-4, HARD-FIX 0id, landed-regions-standard-1018): lp.py top qfd_tt_ctlm_dv_lpf_lp, 2 region roots (ck_core: pin regs + calendar + 2 x 64x512 SRAMs; ck_hr: hard TT head h16c/h17 + XPF + dc + output side), 20 landings (3490 flops), uniform +3 edges on every output, inputs on time, reset depth 3; slot 777.6 x 345.6 (not 2.3:1).",
+ "owner": "Claude:MU-DQ-CTLMKIT",
+ "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv, MU release die (MU-DIE-QW): landed parent qfd_tt_ctlm_dv_lpf_lp re-cut from the merged MU RTL (NU 4 qfd_dv_cmd_cal_mu, OPSEG 1 op-start leaf qfd_sys_face_mu_dhuser + 1 ot_rom_4096x72_m8 in the core region, TLOAD tl[1087:0] -> W5 st_wi, dh_user, qfd_dv_hr_pack hr contract); 2 region roots ck_core / ck_hr, 21 landings (8,943 flops), uniform +3 edges on every output, inputs on time, reset depth 3; slot 777.6 x 345.6.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/hf4-1018",
+  "branch": "claude/mu-dq-ctlmkit-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/qwen_dv",
@@ -16,14 +16,15 @@
    "physical/ref_tile/qfd_tt_head_static_h16c",
    "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
    "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
-   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a"
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/mu_qwen_1018/b1/rom"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/qfd_dv_cmd_cal.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37), .MUT(0), .NU(4), .OPSEG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v rtl/qwen_dv/qfd_dv_hr_pack.sv rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -164,7 +165,7 @@
    "peak_ram_gb": 48
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_ctlm_dv --out {RUN}/record/views/qfd_tt_ctlm_dv_lpf_lp --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 --macro-view physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_ctlm_dv --out {RUN}/record/views/qfd_tt_ctlm_dv_lpf_lp --macro-view physical/asap7_memory_macros/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 --macro-view physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -181,6 +182,7 @@
    "physical/common_flow/link_budget_consistent.sdc"
   ],
   "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr"
   ]
@@ -201,7 +203,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_ctlm_dv/qfd_tt_ctlm_dv-lp1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_ctlm_dv/qfd_tt_ctlm_dv-mu1-COMMIT"
   }
  ],
  "cycles_added": 0,

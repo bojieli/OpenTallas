@@ -30,7 +30,7 @@ if {[llength $ot_c]} {
   define_pdn_grid -name {hard_m5} -voltage_domains {CORE} -macro -cells $ot_c -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
   add_pdn_connect -grid {hard_m5} -layers {M5 M6}
 }
-set ot_s [ot_ref_present {ot_sram_1r1w_64x512_m1_r2c2}]
+set ot_s [ot_ref_present {ot_rom_4096x72_m8 ot_sram_1r1w_64x512_m1_r2c2}]
 if {[llength $ot_s]} {
   define_pdn_grid -name {sram} -voltage_domains {CORE} -macro -cells $ot_s -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
   add_pdn_connect -grid {sram} -layers {M4 M5}
