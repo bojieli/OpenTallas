@@ -143,7 +143,7 @@ def measured_band_fill(s, floorplan, placed):
                 or e.get("role") not in ("clock", "pin")
                 or not e.get("inst")
                 or e["inst"] in ex
-                or any(c in e["inst"] for c in "*?[]")
+                or any(c in e["inst"] for c in "*?")
             ):
                 errors.append("invalid exact clock/pin exception approval")
             ex[e.get("inst")] = e
