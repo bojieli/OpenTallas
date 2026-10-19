@@ -1,0 +1,63 @@
+{
+  "source_revision": "8c6f0f616",
+  "tool": "Verilator 5.050",
+  "host": "ot-epyc6",
+  "profiles": [
+    {
+      "id": 0,
+      "pair_ps": [
+        30,
+        40,
+        50,
+        60
+      ],
+      "local_return_ps": [
+        10,
+        15,
+        20,
+        25
+      ],
+      "cache_ps": 0
+    },
+    {
+      "id": 1,
+      "all_ps": 0
+    }
+  ],
+  "physical_stream_roots": 9,
+  "pass_per_profile": {
+    "groups": 1632,
+    "min_delay_edges": 7,
+    "max_delay_edges": 7,
+    "first_valid_after_reset": [
+      9,
+      9,
+      9
+    ],
+    "sustained_windows": 3,
+    "groups_per_window": 64,
+    "edges_per_window": 64,
+    "bytes_per_edge": 128
+  },
+  "mutants": [
+    {
+      "id": 1,
+      "profile": 0,
+      "fail_regex": "RETURN_DATA_FAIL",
+      "witness": "profile0_mutant1.log"
+    },
+    {
+      "id": 2,
+      "profile": 0,
+      "fail_regex": "RETURN_DATA_FAIL",
+      "witness": "profile0_mutant2.log"
+    },
+    {
+      "id": 3,
+      "profile": 0,
+      "fail_regex": "RING_PHASE_FAIL",
+      "witness": "profile0_mutant3.log"
+    }
+  ],
+  "physical_qualification": false
+}

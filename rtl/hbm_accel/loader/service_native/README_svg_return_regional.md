@@ -1,15 +1,20 @@
 # Regional SVG return prototype
 
 `ot_hbm_svg_return_regional` is opt-in and changes no release master. Model
-49668e988 preceded RTL 0c8f83652; final measured bench is 8e6003874.
+49668e988 preceded RTL 0c8f83652; final separate-root measured bench is 8c6f0f616.
 Call `uarch_model.hbm_svg_return_regional_model()` for the seven-edge price.
 No SDC, gate, submission, or physical closure is supplied.
 
 ## Mapping and timing
 
-There are four independent pair stream roots and one cache stream root, all at
-the same fixed frequency and matched phase. The component bench uses 834 ps
-periods with source offsets 0/10/20/30 ps relative to the cache root. They are
+There are four pair stream trees, four local forwarded return trees, and one
+cache tree: nine physical trees in five logical stream domains. A landing+pair
+element additionally has its HBM root. The component bench uses 834 ps periods,
+pair phases30/40/50/60ps, return phases10/15/20/25ps, and cache phase0; it also
+passes an all-aligned profile. The nearest setup intervals are 814/809/804/799ps
+from pair to local return, and824/819/814/809ps from return to cache. Corresponding
+next-launch hold offsets are20/25/30/35ps and10/15/20/25ps. Same-root and aligned
+setup intervals are834ps, hold offset0. No four-slot multicycle borrowing. They are
 mesochronous crossings with normal single-cycle timing, not asynchronous CDC.
 Every root has two registered reset-release stages. Assert/release all resets
 together; independent root resets during traffic are outside this contract.
@@ -28,7 +33,7 @@ All pair ordinals and valid bits must agree; disagreement sets sticky fault.
 | Pair native pins | E1 | Capture both 256-bit inputs and ordinal/valid |
 | Pair select | E2 | Registered 2:1 selected payload |
 | Source ring | E3 | Write actual four-slot ring |
-| Receiver landing | E4 | Capture previous slot on cache root |
+| Source-face return Q | E4 | Capture previous slot on local forwarded return root |
 | Cache native pins | E5 | Capture four pair words |
 | Rotation by two | E6 | Registered ordinal[1] rotation |
 | Rotation by one | E7 | Registered ordinal[0] rotation and output |
@@ -54,11 +59,13 @@ have a reset mass. The read data, ordinal and valid are receiver registers.
 
 This is a real indexed ring, not four sequential flop copies. The source ring
 Q, read mux/select and receiver register paths must all be timed normally.
-The source-local read mux placement is not constrained or measured here:
-exporting 263 selected data wires requires that mux placement; a receiver-local
-mux would expose 1052 source-slot wires. Destination read-pointer copies add
-control crossings. Fanout, wire reach and round-trip select delay therefore
-remain physical audit items; this prototype does not claim a closed boundary.
+The ENTIRE ringSlice, including return-clock read pointers, read mux and E4
+registered output, belongs inside the source pair tile. It exports registered
+data256+ordinal3+valid1+phase-fault1=261 wires to the cache E5 pin registers.
+There is no external read-select feedback. `return_clk[j]` and `return_rst_n[j]`
+are explicit local forwarded cache-phase root ports; they are not aliases of
+`cache_clk` in the physical contract. Fanout, reach, root forwarding and directed
+setup/hold remain physical audit items. This is not a closed boundary.
 
 The cache's three-edge ordinal/valid alignment uses a separate actual four-slot
 four-bit ring (write0/read2), avoiding a three-flop metadata shift chain.
@@ -69,7 +76,8 @@ Selector control delays are at most two registers.
 
 ## Native port mapping
 
-Top ports are `pair_clk[3:0]`, `pair_rst_n[3:0]`, `cache_clk`, `cache_rst_n`,
+Top ports are `pair_clk[3:0]`, `pair_rst_n[3:0]`, `return_clk[3:0]`,
+`return_rst_n[3:0]`, `cache_clk`, `cache_rst_n`,
 `bank_data[2047:0]`, `in_ordinal[11:0]`, and `in_valid[3:0]`.
 Bank b occupies `bank_data[b*256+:256]`. Pair j's local ordinal occupies
 `in_ordinal[j*3+:3]`; valid j is the common read-group validity in that root.
@@ -78,14 +86,16 @@ Output lanes k occupy `out_data[k*256+:256]`, followed by registered
 Parent masks the final partial group; valid is a group flag, not a per-lane mask.
 
 A return-only pair receives 512 data + ordinal3 + valid1 + clock/reset2 = 518
-native input pins. Its selected word is 260 bits; the tagged ring is 263 bits.
+native input pins before the local return clock/reset2 are counted, hence520
+including all pair-only roots. Its selected word is260 bits, tagged internal
+ring263 bits, and exported registered word+fault261 bits.
 The cache receives 1024 data + ordinal12 + valid4 + phase-fault4 + clock/reset2
 = 1046 pins, and exports 1024 data + ordinal3 + valid1 + fault1 = 1029 pins.
 These logical counts do not establish a legal physical face plan.
 
 ## Component qualification
 
-Fleet Verilator 5.050, source 8e6003874, checks every full ordinal 0..271 twice
+Fleet Verilator 5.050, source 8c6f0f616, checks every full ordinal 0..271 twice
 per reset (one full-rate sweep and one bubble sweep), varying all eight banks'
 256-bit payloads. Three episodes include occupied pipeline resets, ring wraps,
 and exact warmup. The independent oracle directly selects banks
@@ -98,14 +108,14 @@ reset-release edge nine in all three episodes; three windows of 64 groups in
 Mutant1 inverts pair0 selection: RETURN_DATA_FAIL, 1632 errors.
 Mutant2 inverts rotate-by-one: RETURN_DATA_FAIL, 1632 errors.
 Mutant3 reads the wrong ring slot: RING_PHASE_FAIL plus data/valid/fault failures.
-Witnesses are committed under `rtl/test/hbm_accel/svg_rel/svg_return_evidence/`.
+New witnesses are in `rtl/test/hbm_accel/svg_rel/svg_return_evidence/native_roots_8c6f0f616/`; earlier proof remains as diagnostic history.
 
 ## Pre-gate safe-design checklist
 
 1. Fixed at RTL: native data/control captures, registered outputs, two-stage
    reset landing per root; reset distribution still needs mapped review.
 2. OPEN: source pair, cache and crossing placement/reach <=405 um, including
-   source-local read mux location and destination select return, unmeasured.
+   pair-local read mux/return-Q and pair-to-cache registered wire, unmeasured.
 3. Fixed in structure: kept 16-bit pair/rotate selects, kept ring pointer
    slices, native ordinal copies. Mapped preservation and <=32 loads unverified.
 4. Fixed latency/no pin-to-pin combinational bypass. Normal one-edge crossing
