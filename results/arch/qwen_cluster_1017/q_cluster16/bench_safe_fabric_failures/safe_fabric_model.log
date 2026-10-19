@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   970 GB (avail 793, growth 113, headroom 0, waiters 0/0 GB) load 78/128 running 37 disk 318 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/safe-qw-cb16-1019/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3763583-1792426120 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/tools/qwen_cluster/qc_safe_fabric_model.py", line 42, in <module>
+    fab,n=re.subn(r'\.q\('+net+r'\)',f'.q({raw})',fab);assert n==1,(net,n)
+                                                              ^^^^
+AssertionError: ('trst_0_0', 0)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3763583-1792426120): exit 1

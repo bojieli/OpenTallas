@@ -22,11 +22,18 @@ S="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv tools/s81_dv/layer_prog/vs/tb_vs_lowered.sv"
 F=""; for f in $S; do F="$F $R/$f"; done
+DEF=""
+if [ "${FINAL_FFN_POST:-0}" = 1 ]; then
+  S="$S rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv rtl/hdc/v41x/ot_hbm_norm_split.sv rtl/hdc/v41x/ot_hbm_norm_split_p.sv"
+  F="$F $R/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv $R/rtl/hdc/v41x/ot_hbm_norm_split.sv $R/rtl/hdc/v41x/ot_hbm_norm_split_p.sv"
+  DEF="+define+OT_FINAL_FFN_POST"
+fi
 $V --version > $O/verilator.version
 (cd $R && sha256sum $S tools/s81_dv/layer_prog/lower_vs.py tools/s81_dv/layer_prog/vs/gen_vs_bench.py \
-   tools/s81_dv/layer_prog/vs/run_vs_bench.sh) > $O/sources.sha256
+   tools/s81_dv/layer_prog/vs/run_vs_bench.sh tools/s81_dv/layer_prog/final_ffn.py \
+   tools/s81_dv/layer_prog/vs/gen_final_ffn.py) > $O/sources.sha256
 if [ ! -x $O/obj/Vtb_vs_lowered ]; then
-  /usr/bin/time -v -o $O/build.time $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb_vs_lowered \
+  /usr/bin/time -v -o $O/build.time $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF --top-module tb_vs_lowered \
     -Mdir $O/obj $F --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 \
     || { echo "VSB BUILD_FAILED"; grep -m8 %Error $O/build.log; exit 3; }
 fi

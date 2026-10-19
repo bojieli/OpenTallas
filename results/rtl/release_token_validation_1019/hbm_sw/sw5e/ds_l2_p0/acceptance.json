@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.hbm_slice_run_check.v1",
+  "scope": "component_probe",
+  "requested_scope": "component_probe",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "state_seed_provenance": [
+    "unspecified"
+  ],
+  "passed": false,
+  "errors": [
+    "missing unique SLICE_PASS or explicit failure",
+    "fails: 1332",
+    "rec_fail: 1332",
+    "per-record commit checks differ from the complete replay schedule"
+  ],
+  "expected": {
+    "drives": 4452,
+    "checks": 1332
+  },
+  "last_scheduled_cycles": {
+    "stream_edges": -1,
+    "serial_edges": 13706,
+    "hbm_edges": -1
+  },
+  "summary": {
+    "drives": 4452,
+    "checks": 1332,
+    "fails": 1332,
+    "rec_commit_ok": 0,
+    "rec_fail": 1332,
+    "stream_edges": 18787,
+    "serial_edges": 14090,
+    "hbm_edges": 15288
+  },
+  "expected_record_checks": 1332,
+  "replay_hdr_sha256": "c28b989c5909edb24ba29c2ad13f97f0289b6ee0d6ed8f97bba5d88ee1468e9d",
+  "run_log_sha256": "8514a98dbcc6ddc054550714de36164ac9bf26adbbf09b2ef826421e115807e7"
+}

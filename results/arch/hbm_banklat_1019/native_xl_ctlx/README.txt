@@ -1,0 +1,3 @@
+tools/hier_contract/native_pin_audit.py --root <wt> --view physical/ref_tile/hgi_sm_xl2_ctlx_bl/views/ot_hgi_sm_xload_cl2_ctlx --cell ot_hgi_sm_xload_cl2_ctlx (tool origin/main 0db444d59, record b35ca2873), own R 441.2, 10-19 TW6-XLNAT
+hgi_sm_xl2_ctlx_bl-b1-f3b542177 (RD_LAT budget 64'h2d2b37351d1b2725, CLOSED TT +9.46 / FF +11.74): PASS launch 169.8 (eg_ed5[2]) capture 104.2 (rr[115]) comb 0; pin-flop spread TT 68.5 / FF 62.6 <= 80; FF hold need -8.9
+note: --relative-to <own insertion.json> compares the single-flop clk_cal (ot_io_cal) pin to the core C 441.2 (317 TT) -- not a neighbour check; clk_cal boundary is matched at the die by its own landing, unchanged from closed q1.

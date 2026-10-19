@@ -218,7 +218,30 @@ def test_events_g8():
     return dict(ctl=n, row_ctl=sch['row_ctl_events'], qf_words=sum(len(e['words']) for e in qf))
 
 
+def test_bk_shard():
+    """S81-L20SPLIT: lower_bk shards a rank's keys over SHARD_K dies (L20 k = 6 after 0li; option D k = 3 = 87,382 a
+    die), the static rank tree, and the lane-3 append words (own dense quarter + children's sparse candidates)"""
+    sys.path.insert(0, str(HERE / 'layer_prog'))
+    import lower_bk as B
+    assert B.shard_k('L20') == 6 and B.shard_k('L2') == 3 and B.SHARD_K_RECORD_D['L20'] == 3
+    assert [B.shard_range(262144, 3, j)[1] for j in range(3)] == [87382, 87382, 87380]
+    assert [B.shard_range(262144, 6, j)[1] for j in range(6)] == [43691] * 5 + [43689]
+    assert B.shard_tree(6) == {0: [1, 3], 1: [2], 2: [], 3: [4, 5], 4: [], 5: []}
+    assert B.shard_tree(3) == {0: [1, 2], 1: [], 2: []}
+    import numpy as np
+    own = np.arange(100, 120) % 7 + 0x3F80          # 20 own keys at positions [1000, 1020): 2 BEAT words
+    ext = [(np.array([0x4000, 0x4100]), np.array([1021, 1100]))]
+    ws = B.lane3_append(own, 1000, 20, ext, 512, 0x30)
+    kinds = [w >> 508 for w in ws]
+    assert kinds == [B.T_HDR, B.T_BEAT, B.T_BEAT, B.T_REBASE, B.T_BEAT], kinds
+    assert bits(ws[2], 256 + 15, 256) == 0b101111 and not bits(ws[2], 272, 272)   # 4 own + pos 1021 folded, not last
+    assert bits(ws[2], 16 * 5 + 15, 16 * 5) == 0x4000
+    assert bits(ws[3], 19, 0) == 1088 and bits(ws[4], 256 + 15, 256) == 1 << 12 and bits(ws[4], 272, 272) == 1
+
+
 if __name__ == '__main__':
+    test_bk_shard()
+    print('test_bk_shard PASS')
     test_encoders()
     test_previous_pre_source()
     print('test_previous_pre_source PASS')

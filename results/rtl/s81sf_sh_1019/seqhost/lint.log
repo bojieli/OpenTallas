@@ -65,16 +65,16 @@
 %Warning-VARHIDDEN: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:107:33: Declaration of signal hides declaration in upper scope: 'r'
   107 |    reg[QD*31-1:0]q;reg[QA-1:0]w,r;reg[QA:0]n;
       |                                 ^
-                    /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:64:16: ... Location of original declaration
-   64 |  integer i,s,e,r,end_count,kit_count,n,max_done;
+                    /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:65:16: ... Location of original declaration
+   65 |  integer i,s,e,r,end_count,kit_count,n,max_done;
       |                ^
                     ... For warning description see https://verilator.org/warn/VARHIDDEN?v=5.050
                     ... Use "/* verilator lint_off VARHIDDEN */" and lint_on around source to disable this message.
 %Warning-VARHIDDEN: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:107:44: Declaration of signal hides declaration in upper scope: 'n'
   107 |    reg[QD*31-1:0]q;reg[QA-1:0]w,r;reg[QA:0]n;
       |                                            ^
-                    /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:64:38: ... Location of original declaration
-   64 |  integer i,s,e,r,end_count,kit_count,n,max_done;
+                    /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:65:38: ... Location of original declaration
+   65 |  integer i,s,e,r,end_count,kit_count,n,max_done;
       |                                      ^
 %Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:25:23: Operator VAR 'KVS' expects 32 bits on the Initial value, but Initial value's CONST '2'h3' generates 2 bits.
    25 |     parameter integer KVS = 1,           
@@ -223,9 +223,9 @@
                                                                                                                 : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
   119 |                 if (cr[s] - (pop && dst[s]) + hc_q[9*s] > SCRED) fault <= 1'b1;
       |                           ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv:28:90: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE' generates 32 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv:30:90: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE' generates 32 bits.
                                                                                                                    : ... note: In instance 'dsdv_seq_host.u_l0.u_h'
-   28 |  dsfd_host #(.ENG_TRIM(ENG_TRIM),.APIPE(APIPE)) host(.rst_n(rst_n),.clk_h(clk_h),.h_v(h_v&&ENABLE),.h_cls(h_cls),.h_d(h_d),.h_crn(h_crn),
+   30 |  dsfd_host #(.ENG_TRIM(ENG_TRIM),.APIPE(APIPE)) host(.rst_n(rst_n),.clk_h(clk_h),.h_v(h_v&&ENABLE),.h_cls(h_cls),.h_d(h_d),.h_crn(h_crn),
       |                                                                                          ^~
 %Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:73:28: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
@@ -263,10 +263,10 @@
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
   156 |     end else if(!begun||pw_a>=NOPS)begin cfg_fault<=1;if(fault_code==0)fault_code<=4;end
       |                             ^~
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:165:51: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'scan_index' generates 8 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:165:53: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'scan_index' generates 8 bits.
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
-  165 |     sc_in<=scan_index<length_q;sc_last<=scan_index==NOPS-1;
-      |                                                   ^~
+  165 |     sc_in0<=scan_index<length_q;sc_last0<=scan_index==NOPS-1;
+      |                                                     ^~
 %Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:166:18: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'scan_index' generates 8 bits.
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
   166 |     if(scan_index==NOPS-1)validating<=0;else scan_index<=scan_index+1'b1;
@@ -331,17 +331,17 @@
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
   227 |  wire do_write=pw_v&&!pw_busy&&pw_d[27:26]!=3&&begun&&pw_a<NOPS;
       |                                                           ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:244:41: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:246:41: Bit extraction of var[4:0] requires 3 bit index, not 4 bits.
                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
-  244 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
+  246 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
       |                                         ^
-%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:244:70: Bit extraction of array[4:0] requires 3 bit index, not 4 bits.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:246:70: Bit extraction of array[4:0] requires 3 bit index, not 4 bits.
                                                                                                                        : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
-  244 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
+  246 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
       |                                                                      ^
-%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:244:20: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:246:20: Operator LT expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
-  244 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
+  246 |    if(sc_row[27:24]<NENG)begin scan_seen[sc_row[27:24]]<=1'b1;scan_ld[sc_row[27:24]]<=sc_row[75:52];end
       |                    ^
 %Warning-BLKSEQ: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:171:8: Blocking assignment '=' in sequential logic process
                                                                                                                   : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
@@ -654,13 +654,13 @@
                                                                                                                     : ... note: In instance 'dsdv_seq_host.u_l2'
   315 |     wire [255:0] rd_n, rd_s, rd_g;
       |                              ^~~~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:61:35: Bits of signal are not used: 'dt_q'[31:24]
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:62:35: Bits of signal are not used: 'dt_q'[31:24]
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
-   61 |  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
+   62 |  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
       |                                   ^~~~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:64:10: Signal is not driven, nor used: 'i'
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:65:10: Signal is not driven, nor used: 'i'
                                                                                                                         : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
-   64 |  integer i,s,e,r,end_count,kit_count,n,max_done;
+   65 |  integer i,s,e,r,end_count,kit_count,n,max_done;
       |          ^
 %Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:101:16: Signal is not used: 'chk0'
                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
@@ -670,9 +670,9 @@
                                                                                                                          : ... note: In instance 'dsdv_seq_host.u_l1.u_iss'
   101 |  wire[NENG-1:0]chk0,chk1,good0,good1,bad0,bad1,full0,full1;
       |                     ^~~~
-%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv:27:44: Signal is not used: 'landed'
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv:29:44: Signal is not used: 'landed'
                                                                                                                      : ... note: In instance 'dsdv_seq_host.u_l0.u_h'
-   27 |  wire uv,uc,uf,ff;wire[63:0] ud;wire[31:0] landed;
+   29 |  wire uv,uc,uf,ff;wire[63:0] ud;wire[31:0] landed;
       |                                            ^~~~~~
 %Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:74:17: Bits of signal are not used: 'hpx'[29:5]
                                                                                                                 : ... note: In instance 'dsdv_seq_host.u_l0.u_sd'
@@ -780,9 +780,9 @@
                                                                                                             : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
   475 |     reg [31:0]  r_idx;
       |                 ^~~~~
-%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:737:24: Parameter is not used: 'LBW'
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv:741:24: Parameter is not used: 'LBW'
                                                                                                            : ... note: In instance 'dsdv_seq_host.u_l0.u_h.host.u_hi.u_eng'
-  737 |     localparam integer LBW = LWP + 1;                        
+  741 |     localparam integer LBW = LWP + 1;                        
       |                        ^~~
 %Warning-LATCH: /srv/opentallas-scratch/claude/s81sf-sh/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv:77:5: Latch inferred for signal 'dsdv_seq_host.u_l0.u_sd.kk' (not all control paths of combinational always assign a value)
                                                                                                         : ... Suggest use of always_latch for intentional latches
@@ -844,5 +844,5 @@
                       ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
                       ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
 - V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
-- Verilator: Built from 1.979 MB sources in 30 modules, into 1.517 MB in 6 C++ files needing 0.000 MB
-- Verilator: Walltime 0.541 s (elab=0.060, cvt=0.393, bld=0.000); cpu 0.541 s on 1 threads; allocated 57.391 MB
+- Verilator: Built from 1.983 MB sources in 30 modules, into 1.521 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.472 s (elab=0.078, cvt=0.274, bld=0.000); cpu 0.470 s on 1 threads; allocated 57.391 MB

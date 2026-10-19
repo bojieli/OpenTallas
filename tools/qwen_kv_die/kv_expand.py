@@ -31,6 +31,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as K  # noqa: E402
 from binding_order import sliced_order
+import kv_expand_parameters as EP
 
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
@@ -74,8 +75,14 @@ VIEWS = dict(
     qkd_rlyi_258=f'{RT}/qkd_rlyi_258/views/qkd_rlyi_258', qkd_pv_rs_hd=f'{RT}/qkd_pv_rs_hd/views/qkd_pv_rs_hd',
     # KV-KITS/NATIVE 10-18: their native-pin successors (pv_trunk_gen default; r1 views fail native capture on the selects)
     qkd_rlyi_258s=f'{RT}/qkd_rlyi_258s/views/qkd_rlyi_258s', qkd_pv_rs_hd_r=f'{RT}/qkd_pv_rs_hd_r/views/qkd_pv_rs_hd_r',
+    # AD3-KV-PARENTS 10-18: the static sequencer qkd_seq_static_s (die slot seq, kv_static_die SEQ_S) is a wires-only parent
+    # of 9 CLOSED leaves -> die-placed (the die is its parent), no hardened cluster view
+    qkd_seq_core_static_s=f'{RT}/qkd_seq_core_st_s/views/qkd_seq_core_static_s',
+    qkd_seq_xs_s=f'{RT}/qkd_seq_xs_s/views/qkd_seq_xs_s', qkd_seq_fan_s=f'{RT}/qkd_seq_fan_s/views/qkd_seq_fan_s',
     # AD3-KV-RSHD 10-18: the header's half-local-select successor (pv_trunk_gen --rs-hd f; _r fails native capture 259.9)
     qkd_pv_rs_hd_f=f'{RT}/qkd_pv_rs_hd_f/views/qkd_pv_rs_hd_f',
+    # MU-DIE-KV2 10-19 (OT_KV_BOOT_AGES=1: qkd_pvw_die_tb holds the boot-age pair control): CLOSED qkd_pv_ctl_tb1-b1-cebb296c4
+    ot_qwen_tp8_pv_wide_ctl_tb=f"{RT}/{__import__('os').environ.get('OT_KV_PV_TB_CTL_KIT', 'qkd_pv_ctl_tb1')}/views/ot_qwen_tp8_pv_wide_ctl_tb",
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -89,9 +96,15 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            **{m_: 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv' for m_ in
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')},
            ot_qwen_tp8_pv_wide_ctl_t='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv',
+           ot_qwen_tp8_pv_wide_ctl_tb='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv',
            **{f'qkd_rlys_{w_}': 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv' for w_ in (1, 36, 296)},
            **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r',
-                                                                     'qkd_pv_rs_hd_f')})
+                                                                     'qkd_pv_rs_hd_f')},
+           **{m_: 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv' for m_ in
+              ('qkd_seq_core_static_s', 'qkd_seq_xs_s', 'qkd_seq_fan_s')})
+# HKV-DIE3 10-19: child master -> the view master it is bound to (face-landed _fl successors: same ports, the RTL child
+# keeps its core name; kv_astk_expand.configure fills it for the selected kv_static_die.FACE_LAND_SEL tiles)
+ALIAS = {}
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
 SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
                              ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
@@ -160,8 +173,19 @@ def _pv_plan():
                                  pl[cell.split('u_pair.', 1)[-1]][4])
 
 
+# AD3-KV-PARENTS 10-18: qkd_seq_static_s leaf homes in the seq frame (604.8 x 475.2, canonical R0; 43.2-um lattice): W fans
+# (aq_WS / aq_WN faces) at x 43.2, E fans (MY) at x 518.4, the 2 x 2 Q-FIFO block (xs, MX: x_d inputs toward the S prg face)
+# in the middle, the core in the centre gap between the xs rows (it drives x_v / qpop to all 4 xs and aqm / kc to all 4 fans).
+SEQ_S_PLAN = {'u_core': (302.4, 259.2, 'MX'),
+              'g_xs[0].u_xs': (172.8, 129.6, 'MX'), 'g_xs[1].u_xs': (345.6, 129.6, 'MX'),
+              'g_xs[2].u_xs': (172.8, 302.4, 'MX'), 'g_xs[3].u_xs': (345.6, 302.4, 'MX'),
+              'g_fan[1].u_fan': (43.2, 129.6, 'R0'), 'g_fan[0].u_fan': (43.2, 259.2, 'R0'),
+              'g_fan[3].u_fan': (518.4, 129.6, 'MY'), 'g_fan[2].u_fan': (518.4, 259.2, 'MY')}
+
+
 def frames():
     return dict(
+        qkd_seq_st=dict(plan=lambda cell, fw, fh: SEQ_S_PLAN[cell], straps=lambda inst: {}),
         qkd_rhead=dict(plan=_head_plan(), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
         qkd_rhead_ft=dict(plan=_head_plan(True), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
         qkd_ectl=dict(plan=_ectl_plan(),
@@ -323,6 +347,10 @@ def main(argv=None):
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--only', default='')
     ap.add_argument('--astk-static', action='store_true', help='expand only the actual RL3 static ASTK source, with native leaf views')
+    ap.add_argument('--parameter-profiles', type=Path,
+                    default=__import__('os').environ.get('OT_KV_PARAMETER_PROFILES'),
+                    help='Exact selected child profiles (or OT_KV_PARAMETER_PROFILES)')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
@@ -330,10 +358,14 @@ def main(argv=None):
     case, libs = a.run / 'case_kv', a.run / 'libs'
     FR = frames()
     if a.astk_static:
+        # HKV-DIE3 10-19 (production OT_KV_ASTK_EXPAND=1): the ASTK strips expand TOGETHER with the other frames
         import kv_astk_expand as ASTK
-        FR = ASTK.configure(K, VIEWS, RTL, SUBLEVELS)
+        FR = dict(FR, **ASTK.configure(K, VIEWS, RTL, SUBLEVELS, ALIAS))
         ASTK.require_views(ROOT)
     only = [x for x in a.only.split(',') if x] or list(FR)
+    param_path = case / 'die.v.params.json'
+    child_params = json.loads(param_path.read_text()) if param_path.exists() else {}
+    profiles = json.loads(a.parameter_profiles.read_text()) if a.parameter_profiles else {}
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
     wires = {}
@@ -383,7 +415,9 @@ def main(argv=None):
                 r['w'] = 1 if r['bits'] == {None} else max(r['bits']) + 1
             leaf[nm] = dict(view=vd, lef=blk, size=sz, ports=ports)
     views = json.loads((libs / 'views.json').read_text())
-    rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={})
+    rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={}, parameter_instances={},
+               preexpand_die_sha256=EP.sha(case / 'die.v'))
+    occupied = set(re.findall(r'^\s+\w+(?:\s*#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\S+)\s*\(', dv, re.M))
     new_lines, add_wires, add_place, drop_inst, used_leaf = [], [], [], set(), set()
     inst_re = re.compile(r'^\s+(\w+) (\S+) \((.*)\);\s*$')
     jcache = {}
@@ -459,6 +493,7 @@ def main(argv=None):
         for cname, c in J['cells'].items():
             cell = cname.lstrip('\\')
             ct = base_type(c['type'])
+            ct = ALIAS.get(ct, ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
             if ct not in leaf:
                 raise ValueError(f'{mst}: child {cell} ({ct}) has no closed view (glue is not expanded)')
             used_leaf.add(ct)
@@ -480,6 +515,14 @@ def main(argv=None):
             cf = FLIP[co]
             orient = ORIENT[(ff[0] ^ cf[0], ff[1] ^ cf[1])]
             cinst = f'{inst}__{re.sub(r"[^A-Za-z0-9_]", "_", cell)}'
+            if cinst in occupied or cinst in child_params:
+                raise ValueError(f'{cinst}: duplicate instance or stale child parameters')
+            occupied.add(cinst)
+            literals, profile = EP.preserve(ROOT, base_type(c['type']), c.get('parameters', {}),
+                                            RTL[ct], L['view'], profiles, a.diagnostic_parameter_profiles)
+            if profile is not None:
+                child_params[cinst] = literals
+                rep['parameter_instances'][cinst] = dict(module=base_type(c['type']), literals=literals, profile=profile)
             pc = []
             for p, bits in c['connections'].items():
                 if p not in L['ports']:
@@ -532,7 +575,11 @@ def main(argv=None):
     for f in ('die.v', 'place.tcl', 'elements.lef'):
         if not (case / f'{f}.preexp').exists():
             shutil.copy(case / f, case / f'{f}.preexp')
+    # All validation precedes mutation, including stale parent-sidecar entries.
+    for inst in drop_inst:
+        child_params.pop(inst, None)
     (case / 'die.v').write_text('\n'.join(new_lines))
+    param_path.write_text(json.dumps(child_params, indent=1) + '\n')
     keep = [ln for i, ln in enumerate(place) if not any(i == plc[x][0] for x in drop_inst)]
     j = max(i for i, ln in enumerate(keep) if 'ot_mts::place' in ln)
     keep[j + 1:j + 1] = add_place

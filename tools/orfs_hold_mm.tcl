@@ -98,6 +98,7 @@ proc ot_mm_scene_shim {on} {
 # Recreating the existing clock updates its waveform in place; IO constraints,
 # latency and uncertainty remain attached. Other virtual/window clocks stay put.
 proc ot_mm_sync_link_periods {} {
+  if {[llength [info commands ot_single_clock_check]]} { ot_single_clock_check }
   foreach c [all_clocks] {
     set vn [get_full_name $c]
     if {![regexp {^ot_lb_v_(.+)$} $vn -> rn] || [llength [get_property $c sources]]} continue
@@ -227,14 +228,26 @@ proc ot_rc_cal_restore {} {
   source $::env(PLATFORM_DIR)/setRC.tcl
   puts "OT_RC_CAL restored platform setRC.tcl"
 }
-# run BODY (a script, uplevel 1) with the calibrated hold RC, estimating parasitics before and after
+# Run BODY with calibrated hold RC. Numeric FF I/O references must be measured
+# with that same RC, and measured again after restoring platform RC. Unsync FIRST:
+# writing the SS SDC while its temporary hold exception is active would copy that
+# exception to FF and hide real hold paths. Never refresh a scene that was not
+# already synced by the caller; non-MM and setup-only behavior stays unchanged.
 proc ot_rc_cal_hold {body} {
   set on [ot_rc_cal_apply hold]
-  if {$on} { estimate_parasitics [ot_rc_cal_mode] }
+  set refresh [expr {$on && [info exists ::ot_mm_synced]}]
   try {
+    if {$on} {
+      estimate_parasitics [ot_rc_cal_mode]
+      if {$refresh} { ot_mm_unsync; ot_mm_sync }
+    }
     return [uplevel 1 $body]
   } finally {
-    if {$on} { ot_rc_cal_restore; estimate_parasitics [ot_rc_cal_mode] }
+    if {$on} {
+      ot_rc_cal_restore
+      estimate_parasitics [ot_rc_cal_mode]
+      if {$refresh} { ot_mm_unsync; ot_mm_sync }
+    }
   }
 }
 
