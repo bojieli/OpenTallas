@@ -7,16 +7,49 @@ The added area is measured. It covers the SM leaf block-dot lanes, the BF16-colu
 | P | +mm² | die mm² | +mm² (bdc-only variant) | DS AR | **DS MTP** | DS MTP kv-lower / union-p90 | DS users agg | Qwen AR | Qwen DFlash b16 pub / meas | Qwen users agg | DS MTP tok/s per die mm² |
 |---:|---:|---:|---:|---:|---:|---|---:|---:|---|---:|---:|
 | 1 | 0.0 | 641.8 | 0.0 | 1905.4 | **1694.3** |  /  | 1905.4 | 946.2 | 459.5 / 209.7 | 946.2 | 2.64 |
-| 2 | 34.56 | 676.4 | 16.58 | 1905.4 | **3142.8** | 3288.8 / 3063.1 | 3060.3 | 946.2 | 864.7 / 394.7 | 1734.2 | 4.646 |
-| 4 | 101.11 | 742.9 | 47.2 | 1905.4 | **3363.5** | 3597.8 / 3272.3 | 4365.3 | 946.2 | 1460.0 / 666.4 | 2971.4 | 4.527 |
-| 6 | 167.64 | 809.5 | 77.79 | 1905.4 | **3519.3** | 3841.7 / 3419.6 | 5153.7 | 946.2 | 1487.4 / 678.9 | 3898.6 | 4.348 |
-| 8 | 234.51 | 876.3 | 108.72 | 1905.4 | **3519.3** | 3841.7 / 3419.6 | 5710.4 | 946.2 | 2101.9 / 959.4 | 4619.2 | 4.016 |
+| 2 | 34.56 | 676.4 | 16.58 | 1905.4 | **3142.8** | 3288.8 / 3063.1 | 3060.3 | 946.2 | 874.3 / 399.1 | 1734.2 | 4.646 |
+| 4 | 101.11 | 742.9 | 47.2 | 1905.4 | **3363.5** | 3597.8 / 3272.3 | 4365.3 | 946.2 | 1465.9 / 669.1 | 2971.4 | 4.527 |
+| 6 | 167.64 | 809.5 | 77.79 | 1905.4 | **3519.3** | 3841.7 / 3419.6 | 5153.7 | 946.2 | 1758.1 / 802.5 | 3898.6 | 4.348 |
+| 8 | 234.51 | 876.3 | 108.72 | 1905.4 | **3519.3** | 3841.7 / 3419.6 | 5710.4 | 946.2 | 2442.8 / 1115.0 | 4619.2 | 4.016 |
 
 ## Where the knee is
 
 - **DeepSeek single-user MTP: the knee is at P=2.** Throughput goes from 1694 to 3143 tok/s (+86%) for +34.6 mm² (+5.4% of the die). P=4 adds only +7% more and P=6 +12% more, for +101 mm² and +168 mm². P=8 is the same as P=6 for DS, because there is no gamma-7 drafter.
-- **Qwen DFlash and multi-user aggregate keep rising up to P=8.** Throughput per die mm² peaks at P=2 (4.65 against 2.64 at P=1).
+- **Qwen DFlash and multi-user aggregate keep rising up to P=8.** DFlash b16 (published tau 8.01) is 0.92/1.55/1.86/2.58 x AR at P=2/4/6/8; with our measured tau 3.656 it reaches AR only at P=8 (1,115 tok/s, 1.18x). These rows were corrected on 10-18 (see below). Throughput per die mm² peaks at P=2 (4.65 against 2.64 at P=1).
 - **Cheaper variant: give P lanes to the FP8/FP4 block-dot only.** At P=6 that costs about 78 mm² instead of 168. It gives up the multi-query attention lanes in the BF16 column (the ATT feature saves 189k verify cycles at P=6). This variant was not re-timed.
+
+## Qwen DFlash check (10-18, lane HBM-MTP-QCHK)
+
+The first table had DFlash +2% from P=4 to P=6, then +41% at P=8. That was a modelling error, now fixed in `tools/hgi_sim/hbm_plane_model.py`:
+
+1. **Weight passes.** The DFlash programme was always emitted in the as-built records: 8 slots per SM record and 4 slots per LM-head pass. The P-lane rule then charged ceil(8/P) line passes per record. So P=4 and P=6 both paid 4 weight passes for the 16 positions (P=6 should pay 3), and every head paid 4 passes at any P. Now the compiler picks the record size R from {P, 2P, 8, 16} (the SM slot field is widened to 4 bits, per the change list). It also picks the head pass PH from {16, 8, 6, 4}: the largest that fits the P-lane VM. Chosen (R, PH): P=2 (8,4), P=4 (8,6), P=6 (12,8), P=8 (16,8).
+2. **Attention merging.** The attention group index was read from the tag `.g<s0>`, which holds the first *slot* (0/4/8/12). So no passes merged at P=2/4, and the wrong groups merged at P=6/8. The index is now slot / 4.
+
+Checks that hold:
+
+- **Draft cost.** The drafter is charged per pass (its weights are re-read for each pass), not per position. At P=8 it costs about 0.28M cycles.
+- **Verify passes.** At P=8 the verify reads the weights in 1.745M cycles, exactly 2 x AR's 0.898M.
+- **Prices.** AR and DFlash go through the same d4g cost chain. P=1 reproduces the earlier step.
+- **MoE union.** None: Qwen is dense.
+
+**Why DFlash is not far above AR.** At P=8 one 16-position step takes 3.93M cycles, which is 3.10 AR steps. The parts:
+
+| cost | cycles |
+|---|---:|
+| target weights, 2 passes | 1.75M |
+| drafter | 0.28M |
+| LM heads (15 draft + 16 verify slots, 4 passes) | 0.31M |
+
+The rest is per-position work that P lanes do not amortise:
+
+| per-position cost | DFlash | AR |
+|---|---:|---:|
+| tensor-parallel all-reduce, 16 x H payload | 0.46M | 0.10M |
+| softmax over 8K scores x 16 slots | 0.36M | 0.04M |
+| attention | 0.23M | 0.09M |
+| norms | 0.17M | 0.01M |
+
+The all-reduce price (64 B/cycle serialisation) is an estimate, and the largest per-position term. Step / AR at P=1/2/4/6/8 is 16.5/8.67/5.17/4.31/3.10. So DFlash beats AR from P=4 with the published tau, but needs P=8 with our measured tau 3.656.
 
 ## Area at P=6 (mm²)
 
