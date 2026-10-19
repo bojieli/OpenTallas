@@ -1,0 +1,27 @@
+[
+  {
+    "control": "healthy exact frozen identities",
+    "rc": 0,
+    "output": "AUTHORITY_GENERATE_PASS paths=18 captures=510"
+  },
+  {
+    "control": "changed cut refused",
+    "rc": 1,
+    "output": "AUTHORITY_GENERATE_FAIL unsupported cut/source hash"
+  },
+  {
+    "control": "unsupported relay refused",
+    "rc": 1,
+    "output": "AUTHORITY_GENERATE_FAIL unsupported primitive"
+  },
+  {
+    "control": "changed clock manifest refused",
+    "rc": 1,
+    "output": "AUTHORITY_GENERATE_FAIL unsupported frontier manifest hash"
+  },
+  {
+    "control": "changed producer refused",
+    "rc": 1,
+    "output": "AUTHORITY_GENERATE_FAIL source hash mismatch: qkd_static_k_issuer.sv"
+  }
+]

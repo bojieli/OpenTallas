@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1134 GB (avail 850, growth 49, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 412 GB 
+ot-run: ot-epyc5       admits   649 GB (avail 511, growth 17, headroom 0, waiters 0/0 GB) load 45/128 running 6 disk 562 GB 
+ot-run: ot-epyc6       admits  1247 GB (avail 930, growth 56, headroom 0, waiters 0/0 GB) load 23/128 running 17 disk 559 GB 
+ot-run: ot-epyc7       admits   995 GB (avail 758, growth 61, headroom 0, waiters 0/0 GB) load 23/96 running 21 disk 502 GB 
+ot-run: ot-epyc8       admits  1254 GB (avail 934, growth 40, headroom 0, waiters 0/0 GB) load 12/128 running 10 disk 565 GB 
+ot-run: ot-pve1        admits   112 GB (avail 90, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1210 GB 
+ot-run: ot-agidock128  admits    91 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3663734-1792446162 after 0 s
+AUTHORITY_RUN_DIR=/srv/opentallas-scratch/claude/kv-authority-manifest-1019
+Verilator 5.050 2026-07-01 rev v5.050
+AUTHORITY_SUITE_PASS healthy=36 guard_mutant=CAUGHT early_mutant=CAUGHT
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3663734-1792446162): exit 0
