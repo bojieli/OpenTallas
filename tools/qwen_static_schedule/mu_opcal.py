@@ -70,9 +70,12 @@ def tok_slice0_edge(n=M.AM_SLICES):
     return worst
 
 
-RES_SSQ = AM_CMD_PIN + tok_slice0_edge() + ST_REG + SS_PIN     # 51: ctlm ss_q holds the result (bench ss5 event edge)
-RES_BANK = RES_SSQ + BANK_WR                                    # 52: tok_b[u] written on I + 52
-EMB_T = AM_EMIT_T + RES_BANK    # 60: EMB issue edge S + 60 -> emb_token sampled on S + 61 >= the write edge + 1
+# SAFE scalar root capture: registered AMemit -> old result+1/new result+2,
+# versus old same-edge/new+1; group II remains1 (owner measured5.050 receipt).
+AM_ROOT_CAPTURE = 0  # legacy default; safe scalar is opt-in until physical closure
+RES_SSQ = AM_CMD_PIN + tok_slice0_edge() + AM_ROOT_CAPTURE + ST_REG + SS_PIN     # legacy51; safe capture+1: ctlm ss_q holds the result (bench ss5 event edge)
+RES_BANK = RES_SSQ + BANK_WR                                    # legacy52; safe capture+1: tok_b[u] written on I + 52
+EMB_T = AM_EMIT_T + RES_BANK    # legacy60, safe61: emb_token samples on issue+1, after bank write
 EMB_T_SMOKE = 16                # the pre-fix image (mu_tok_cases smoke segment 0): EMB before the result (stale token)
 UVM, PIDX, UTAG = M.DV_UVM_STRIDE, M.DV_PIDX_STRIDE, M.DV_UTAG_LSB
 LAST_STAGE = C.LAST_STAGE
@@ -85,6 +88,20 @@ TB, UB_, SB, FB, CB = 22, 2, 6, 10, 10  # entry fields: t, user, stage, first, c
 # next entry on that same edge (1-edge read, captured into the prefetch register on e + 1), so the next entry can be
 # consumed on e + 2 at the earliest: consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP
 LEAF_MIN_GAP = 2
+
+
+def result_timing(root_capture=0):
+    """Price the measured SAFE scalar capture without adopting its opt-in RTL.
+
+    Source4ddd08d8a; witness dfc91c00c safe_scalar/latency_ii.pass.log:
+    +1 result edge, sustained group II1. The actual view must bind the parameter.
+    """
+    if root_capture not in (0, 1):
+        raise ScheduleError("am_root_capture must match a measured0/1 scalar variant")
+    ssq = AM_CMD_PIN + tok_slice0_edge() + root_capture + ST_REG + SS_PIN
+    bank = ssq + BANK_WR
+    return dict(root_capture=root_capture, res_ssq=ssq, res_bank=bank,
+                emb_t=AM_EMIT_T + bank)
 
 
 # ---------------------------------------------------------------------------------------------------- image
@@ -171,7 +188,7 @@ def segments(p=None):
     lay, grp = op_layer_image(p)
     s = C.segments(p)
     s[1] = lay
-    emb_t = (p or {}).get("emb_t", EMB_T)
+    emb_t = (p or {}).get("emb_t", result_timing((p or {}).get("am_root_capture", 0))["emb_t"])
     s[0] = [(t, c) if not _is_emb(c) else (emb_t, c) for t, c in s[0]]       # MU-OPCAL-EMB: EMB after the result
     s[0].sort()
     return s, grp
@@ -200,10 +217,11 @@ def check_emb_after_result(cal):
         for name, t0, _ in seq:
             if name != "head":
                 continue
-            w, e = t0 + emits[0] + RES_BANK, t0 + embs[0]
+            res_bank = result_timing(cal.get("inputs", {}).get("am_root_capture", 0))["res_bank"]
+            w, e = t0 + emits[0] + res_bank, t0 + embs[0]
             if e < w:
                 raise ScheduleError(f"user {u}: LOCAL EMB at {e} precedes its argmax result in tok_b[{u}] (written on {w}: "
-                                    f"emit {t0 + emits[0]} + RES_BANK {RES_BANK}) -- the EMB would send the previous token")
+                                    f"emit {t0 + emits[0]} + RES_BANK {res_bank}) -- the EMB would send the previous token")
             n += 1
     return n
 
@@ -213,6 +231,45 @@ def image(segs):
     pw, dw = C.image(segs)
     desc = {s: ((dw[1 + s] >> 16) & 0xFFFF, dw[1 + s] & 0xFFFF) for s in range(4)}
     return pw, dw, desc
+
+
+def initial_context_image(segs):
+    """Append an explicit INIT token-start range, preserving every issue edge.
+
+    INIT replaces the AMAX emit with a non-go NOP. Clear and LOCAL EMB retain
+    the ordinary range's times/count. The caller's compiled admission programme
+    selects this range; no runtime context flag suppresses an issued command.
+    Existing four descriptors keep their ordinary ranges byte-identical.
+    """
+    pw, dw, desc = image(segs)
+    normal = segs[0]
+    emit = [i for i, (_, c) in enumerate(normal) if _is_emit(c)]
+    if len(emit) != 1 or not any(_is_emb(c) for _, c in normal):
+        raise ScheduleError("INIT requires exactly one AMAX emit and a LOCAL EMB")
+    initial = [(t, 0 if i == emit[0] else c) for i, (t, c) in enumerate(normal)]
+    base, nent = (dw[0] >> 16) & 0x3ff, dw[0] & 0x1ff
+    first = (nent + 3) & ~3
+    total = first + len(initial)
+    if total >= 512 or base + 2 * total > 976:
+        raise ScheduleError("INIT range exceeds the programme SRAM image")
+    for index in range(nent, first):
+        word = 1 << 116  # unfetched alignment pad, a legal positive-delta NOP
+        pw[base + 2 * index] = word & ((1 << 64) - 1)
+        pw[base + 2 * index + 1] = word >> 64
+    previous = 0
+    for index, (t, command) in enumerate(initial, first):
+        delta = t - previous
+        if not 1 <= delta <= 4095:
+            raise ScheduleError("INIT entry has an invalid positive delta")
+        word = (delta << 116) | command
+        pw[base + 2 * index] = word & ((1 << 64) - 1)
+        pw[base + 2 * index + 1] = word >> 64
+        previous = t
+    dw[0] = (dw[0] & ~0x1ff) | total
+    return dict(pw=pw, dw=dw, descriptors=desc,
+                initial_range=dict(first=first, cnt=len(initial), entries=initial),
+                normal_range=dict(first=desc[0][0], cnt=desc[0][1], entries=normal),
+                added_words=total-nent, added_issue_edges=0)
 
 
 # ---------------------------------------------------------------------------------------------------- user words
@@ -285,6 +342,13 @@ def token_units(p, segs, grp, filler, layers=36):
     head_cp = _cp(segs[2], 0, start=0)
     tok_cp = _merge(_cp(segs[0], 0, start=0), {"am.root": [(AM_EMIT_T, AM_EMIT_T + AM_ROOT_SPAN)]})
     lay_cp = _cp(segs[1], 0, start=0)
+    if filler:
+        # Every potential leaf start reserves the physical ROM prefetch gap.
+        # Reserving even a group later fused into its predecessor is conservative.
+        # The face's independent starts need only cp.start, not the leaf port.
+        leaf_cp = {"cp.leaf": [(0, LEAF_MIN_GAP)]}
+        head_cp = _merge(head_cp, leaf_cp)
+        tok_cp = _merge(tok_cp, leaf_cp)
     names = [g for g, _ in op_groups(p)]
     out = []
     kvr = p.get("kv_lp_rows")      # MU-KV-BOOT 10-19 (opt-in): the KV layer programme's own edges as resource kv.lp
@@ -307,7 +371,9 @@ def token_units(p, segs, grp, filler, layers=36):
             # the group's commands at their image offsets from the group's image start (an L0 qkv is longer: its
             # slack is after its commands, the next group opens later = a wait the leaf plays)
             gent = [e for e in segs[1][gg["first"]:gg["first"] + gg["cnt"]]]
-            cp = _cp(gent, gg["a"], start=gg["T_prev"] - gg["a"])
+            leaf_start = gg["T_prev"] - gg["a"]
+            cp = _merge(_cp(gent, gg["a"], start=leaf_start),
+                        {"cp.leaf": [(leaf_start, leaf_start + LEAF_MIN_GAP)]})
             gw = _merge(_cut(blk["windows"], a, b), cp)
             kb = {}
             if kvr and "kvs" in gw:                                     # rigid with this group's kvs window
@@ -389,7 +455,9 @@ def compile_frame(F=16, p=None, layers=36, starts=None):
     p = M._need(dict(M.SOURCED, users=NU, occupancy="measured", head_chunks=8, **(p or {})))
     # the embedding request / host return / row fetch consume the NEW token: they start at the EMB edge (mu_calendar
     # head_blocks tok_ofs), so the token-start block is EMB_T longer than the pre-fix image's (single-user too)
-    p.setdefault("head_tok_ofs", p.get("emb_t", EMB_T))
+    p.setdefault("am_root_capture", 0)
+    timing = result_timing(p["am_root_capture"])
+    p.setdefault("head_tok_ofs", p.get("emb_t", timing["emb_t"]))
     P = p["layer_period"]
     segs, grp = segments(p)
     u0 = token_units(p, segs, grp, filler=False, layers=layers)
@@ -599,6 +667,7 @@ def face_stage_list(cal):
 def receipt(cal, pb=None):
     pb = pb or playback(cal)
     L = leaf_list(cal, pb)
+    timing = result_timing(cal["inputs"].get("am_root_capture", 0))
     per = {u: sum(1 for x in pb["starts"] if x[1] == u) for u in range(NU)}
     return dict(schema=cal["schema"], frame_tokens=cal["frame_tokens"], layers=cal["layers"], H=cal["H"], T=cal["T"],
                 aggregate_tok_s=cal["aggregate_tok_s"], users=cal["users"], leaf_entries=len(L),
@@ -606,11 +675,11 @@ def receipt(cal, pb=None):
                 group_layout={g: {k: v for k, v in x.items() if k != "ops"} for g, x in cal["grp"].items()},
                 descriptors={str(k): v for k, v in pb["desc"].items()},
                 am_root=dict(span=AM_ROOT_SPAN, emits_per_frame=check_root_merge(cal)),
-                emb=dict(EMB_T=EMB_T, AM_EMIT_T=AM_EMIT_T, RES_SSQ=RES_SSQ, RES_BANK=RES_BANK,
-                         tok_slice0_edge=tok_slice0_edge(), head_tok_ofs=cal["inputs"].get("head_tok_ofs", 0),
+                emb=dict(EMB_T=timing["emb_t"], AM_EMIT_T=AM_EMIT_T, RES_SSQ=timing["res_ssq"], RES_BANK=timing["res_bank"],
+                         tok_slice0_edge=tok_slice0_edge(), root_capture=timing["root_capture"], head_tok_ofs=cal["inputs"].get("head_tok_ofs", 0),
                          token_starts_checked=check_emb_after_result(cal),
-                         path="AMAX issue I -> W5 cmd_q +1 -> root merge + TOK to W5 tok_v +48 -> st +1 -> ctlm ss_q +1 "
-                              "-> tok_b +1 = I + 52; EMB issue >= S + 8 + 52 (emb_token sampled on issue + 1)"),
+                         path=f"AMAX I -> W5 cmd_q +1 -> root capture +{timing['root_capture']} -> merge/TOK +48 -> st +1 -> ss_q +1 "
+                              f"-> bank +1 = I +{timing['res_bank']}; EMB >=S +{timing['emb_t']} (sample on issue+1)"),
                 rules=dict(T0_MIN=T0_MIN, MIN_OP_CYC=MIN_OP_CYC, OP_ENTRY_OFS=OP_ENTRY_OFS, LEAF_MIN_GAP=LEAF_MIN_GAP))
 
 

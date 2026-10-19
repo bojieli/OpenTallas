@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-epyc6       admits   864 GB (avail 718, growth 113, headroom 0, waiters 0/0 GB) load 41/128 running 24 disk 6090 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-ctx-admission
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4087693-1792424187 after 0 s
+EXPANDED_ROM_INSTANCES 3 ['g_op.g_banked.u_rom1', 'g_op.g_banked.u_rom2', 'g_op.u_rom']
+KEPT_BANK_TAGS 3 PARAMOD_TYPES 3
+g_op.g_banked.g_sel[0].u_tag loads [3, 3]
+g_op.g_banked.g_sel[1].u_tag loads [3, 3]
+g_op.g_banked.g_sel[2].u_tag loads [3, 3]
+EXPANDED_LEAF_INVENTORY_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4087693-1792424187): exit 0
