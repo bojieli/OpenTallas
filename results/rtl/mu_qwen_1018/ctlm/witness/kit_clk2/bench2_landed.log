@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /home/ubuntu/ot-bench/mu-dq-ctlmclk-1019/src
+ot-run: ot-epyc5       admits   558 GB (avail 504, growth 113, headroom 0, waiters 0/0 GB) load 111/128 running 29 disk 642 GB 
+ot-run: ot-epyc6       skipped: no /home/ubuntu/ot-bench/mu-dq-ctlmclk-1019/src
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-bench/mu-dq-ctlmclk-1019/src
+ot-run: ot-epyc8       skipped: no /home/ubuntu/ot-bench/mu-dq-ctlmclk-1019/src
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-bench/mu-dq-ctlmclk-1019/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-bench/mu-dq-ctlmclk-1019/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1017294-1792417279 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   landed_l0: LANDED_LOCKSTEP PASS lmut 0 runs=2: red_mu: LANDED_LOCKSTEP PASS LMUT=0 compared=845539 mismatches=0 active=8911 tl_words=0 op_starts=952 | full_mu: LANDED_LOCKSTEP PASS LMUT=0 compared=4057891 mismat
+OK   landed_l0_mu: MU_OPSEG_PASS mut 0_l0
+OK   landed_l1: LANDED_LOCKSTEP FAIL lmut 1 runs=1: red_mu: LANDED_LOCKSTEP FAIL LMUT=1 compared=845539 mismatches=845539 active=8911 tl_words=0 op_starts=952
+OK   landed_l2: LANDED_LOCKSTEP FAIL lmut 2 runs=1: red_mu: LANDED_LOCKSTEP FAIL LMUT=2 compared=845539 mismatches=8911 active=8911 tl_words=0 op_starts=952
+MU_OPSEG BENCHES: PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1017294-1792417279): exit 0

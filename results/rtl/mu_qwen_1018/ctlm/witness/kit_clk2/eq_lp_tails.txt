@@ -1,0 +1,54 @@
+==> eq_m0_o0.out <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.032 s; speed 126.612 us/s
+- Verilator: cpu 0.032 s on 1 threads; allocated 8 MB
+
+==> eq_m0_o1.out <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.036 s; speed 110.537 us/s
+- Verilator: cpu 0.036 s on 1 threads; allocated 8 MB
+
+==> eq_m29_o1.out <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.033 s; speed 120.481 us/s
+- Verilator: cpu 0.033 s on 1 threads; allocated 8 MB
+
+==> eq_m5_o0.out <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.023 s; speed 174.851 us/s
+- Verilator: cpu 0.023 s on 1 threads; allocated 8 MB
+
+==> eq_m5_o1.out <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.033 s; speed 122.116 us/s
+- Verilator: cpu 0.033 s on 1 threads; allocated 8 MB
+
+==> eq_m6_o0.out <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.031 s; speed 129.231 us/s
+- Verilator: cpu 0.030 s on 1 threads; allocated 8 MB
+
+==> lp/mut0.log <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.022 s; speed 136.887 us/s
+- Verilator: cpu 0.022 s on 1 threads; allocated 8 MB
+
+==> lp/mut1.log <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.026 s; speed 114.684 us/s
+- Verilator: cpu 0.026 s on 1 threads; allocated 8 MB
+
+==> lp/mut2.log <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.034 s; speed 88.275 us/s
+- Verilator: cpu 0.031 s on 1 threads; allocated 8 MB
+
+==> lp/mut4.log <==
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.029 s; speed 104.284 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 8 MB
+
+==> lp/audit_unland.log <==
+ ]
+}
+LP_AUDIT FAIL
