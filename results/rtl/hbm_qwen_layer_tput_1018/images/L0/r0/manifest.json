@@ -1,0 +1,2548 @@
+{
+ "schema": "opentallas.hbm_layer_images.v1",
+ "design": "qwen",
+ "mapping": "D4G8 (qwen_compiler Geometry tp=8)",
+ "stage": "L0",
+ "rank": 0,
+ "schedule_variant": "landed",
+ "programme": "/srv/opentallas-scratch/claude/layerbench-hbm/qfix_archive/fix/L0/program.hgi1",
+ "programme_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+ "boundary": "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json",
+ "records": [
+  {
+   "i": 0,
+   "j": 0,
+   "rec": 0,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "rope.table_row",
+   "start": 181,
+   "end": 309.5,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 1,
+   "j": 1,
+   "rec": 1,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "swiglu.route_one",
+   "start": 185,
+   "end": 313.1,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 2,
+   "j": 2,
+   "rec": 2,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "down.rank_table",
+   "start": 189,
+   "end": 317.1,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 3,
+   "j": 3,
+   "rec": 3,
+   "L": 0,
+   "unit": "FUSED",
+   "op": "FUSED.ROW_NORM",
+   "tag": "prenorm.attn",
+   "start": 191,
+   "end": 355.2,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "FUSED programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 4,
+   "j": 4,
+   "rec": 4,
+   "L": 0,
+   "unit": "SM",
+   "op": "SM.MATVEC",
+   "tag": "qkv",
+   "start": 379.2,
+   "end": 3799.8,
+   "cls": "W1",
+   "blocked_by": [],
+   "reasons": [
+    "SM programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 5,
+   "j": 5,
+   "rec": 5,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "row_scale_qkv.load",
+   "start": 380.2,
+   "end": 509.3,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 6,
+   "j": 6,
+   "rec": 6,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "row_scale_qkv",
+   "start": 3823.8,
+   "end": 3874.0,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "emitted",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 768,
+    "address_checks": 2304,
+    "issue_groups": 2,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false,
+   "golden_vs_hgi": {
+    "words": 256,
+    "mismatch": 0
+   },
+   "edges": 48,
+   "fill_sectors": 64,
+   "drain_sectors": 32,
+   "programme": 0,
+   "line0_serial": 3154,
+   "compiled_commit_serial": 3212,
+   "priced_end_serial": 3200,
+   "commit_slack_edges": -12
+  },
+  {
+   "i": 7,
+   "j": 7,
+   "rec": 7,
+   "L": 0,
+   "unit": "FUSED",
+   "op": "FUSED.ROW_NORM",
+   "tag": "qknorm.q",
+   "start": 3898.0,
+   "end": 4012.2,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "FUSED programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 8,
+   "j": 8,
+   "rec": 8,
+   "L": 0,
+   "unit": "FUSED",
+   "op": "FUSED.ROW_NORM",
+   "tag": "qknorm.k",
+   "start": 4012.2,
+   "end": 4126.3,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "FUSED programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 9,
+   "j": 9,
+   "rec": 9,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "rope",
+   "start": 4150.3,
+   "end": 4200.5,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "operand B group 0 not one aligned VM sector",
+    "operand B group 1 not one aligned VM sector",
+    "operand B group 2 not one aligned VM sector",
+    "operand B group 3 not one aligned VM sector",
+    "operand B group 4 not one aligned VM sector",
+    "operand B group 5 not one aligned VM sector",
+    "operand B group 6 not one aligned VM sector",
+    "operand B group 7 not one aligned VM sector",
+    "operand B group 8 not one aligned VM sector",
+    "operand B group 9 not one aligned VM sector",
+    "operand B group 10 not one aligned VM sector",
+    "operand B group 11 not one aligned VM sector",
+    "operand B group 12 not one aligned VM sector",
+    "operand B group 13 not one aligned VM sector",
+    "operand B group 14 not one aligned VM sector",
+    "operand B group 15 not one aligned VM sector",
+    "operand D group 0 not one aligned VM sector",
+    "operand D group 1 not one aligned VM sector",
+    "operand D group 2 not one aligned VM sector",
+    "operand D group 3 not one aligned VM sector",
+    "operand D group 4 not one aligned VM sector",
+    "operand D group 5 not one aligned VM sector",
+    "operand D group 6 not one aligned VM sector",
+    "operand D group 7 not one aligned VM sector",
+    "operand D group 8 not one aligned VM sector",
+    "operand D group 9 not one aligned VM sector",
+    "operand D group 10 not one aligned VM sector",
+    "operand D group 11 not one aligned VM sector",
+    "operand D group 12 not one aligned VM sector",
+    "operand D group 13 not one aligned VM sector",
+    "operand D group 14 not one aligned VM sector",
+    "operand D group 15 not one aligned VM sector",
+    "operand B group 0 not one aligned VM sector",
+    "operand B group 1 not one aligned VM sector",
+    "operand B group 2 not one aligned VM sector",
+    "operand B group 3 not one aligned VM sector",
+    "operand B group 4 not one aligned VM sector",
+    "operand B group 5 not one aligned VM sector",
+    "operand B group 6 not one aligned VM sector",
+    "operand B group 7 not one aligned VM sector",
+    "operand B group 8 not one aligned VM sector",
+    "operand B group 9 not one aligned VM sector",
+    "operand B group 10 not one aligned VM sector",
+    "operand B group 11 not one aligned VM sector",
+    "operand B group 12 not one aligned VM sector",
+    "operand B group 13 not one aligned VM sector",
+    "operand B group 14 not one aligned VM sector",
+    "operand B group 15 not one aligned VM sector",
+    "operand D group 0 not one aligned VM sector",
+    "operand D group 1 not one aligned VM sector",
+    "operand D group 2 not one aligned VM sector",
+    "operand D group 3 not one aligned VM sector",
+    "operand D group 4 not one aligned VM sector",
+    "operand D group 5 not one aligned VM sector",
+    "operand D group 6 not one aligned VM sector",
+    "operand D group 7 not one aligned VM sector",
+    "operand D group 8 not one aligned VM sector",
+    "operand D group 9 not one aligned VM sector",
+    "operand D group 10 not one aligned VM sector",
+    "operand D group 11 not one aligned VM sector",
+    "operand D group 12 not one aligned VM sector",
+    "operand D group 13 not one aligned VM sector",
+    "operand D group 14 not one aligned VM sector",
+    "operand D group 15 not one aligned VM sector"
+   ],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "v1_unsupported",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 640,
+    "address_checks": 2560,
+    "issue_groups": 2,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false
+  },
+  {
+   "i": 10,
+   "j": 10,
+   "rec": 10,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "round_q",
+   "start": 4200.5,
+   "end": 4249.7,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "emitted",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 512,
+    "address_checks": 1024,
+    "issue_groups": 1,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false,
+   "golden_vs_hgi": {
+    "words": 128,
+    "mismatch": 0
+   },
+   "edges": 44,
+   "fill_sectors": 16,
+   "drain_sectors": 16,
+   "programme": 0,
+   "line0_serial": 3439,
+   "compiled_commit_serial": 3493,
+   "priced_end_serial": 3482,
+   "commit_slack_edges": -11
+  },
+  {
+   "i": 11,
+   "j": 11,
+   "rec": 11,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.STORE",
+   "tag": "kv_append.K",
+   "start": 4273.7,
+   "end": 4294.3,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 12,
+   "j": 12,
+   "rec": 12,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.STORE",
+   "tag": "kv_append.V",
+   "start": 4318.3,
+   "end": 4339.0,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 13,
+   "j": 13,
+   "rec": 13,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.FENCE",
+   "tag": "kv_fence",
+   "start": 4363.0,
+   "end": 4448.9,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 14,
+   "j": 14,
+   "rec": 14,
+   "L": 0,
+   "unit": "ATT",
+   "op": "ATT.QK",
+   "tag": "attention_qk.kv0",
+   "start": 4472.9,
+   "end": 5455.8,
+   "cls": "W2",
+   "blocked_by": [],
+   "reasons": [
+    "ATT programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 15,
+   "j": 15,
+   "rec": 15,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "softmax.max",
+   "start": 5479.8,
+   "end": 5735.0,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "reducer_join_calendar_open (su_arith_lower open: scalar_reducer_external_joins; golden csum8 tree order must be matched)"
+   ],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "v1_unsupported",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 32768,
+    "address_checks": 32768,
+    "issue_groups": 64,
+    "needs_reducer": true,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false
+  },
+  {
+   "i": 16,
+   "j": 16,
+   "rec": 16,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "softmax.exp_sum",
+   "start": 5735.0,
+   "end": 6150.0,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "native_SFU_or_scalar_side_control_calendar"
+   ],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "unsupported_lowering",
+   "lowering": {
+    "supported": false,
+    "reasons": [
+     "native_SFU_or_scalar_side_control_calendar"
+    ]
+   },
+   "inputs_placeholder": null
+  },
+  {
+   "i": 17,
+   "j": 17,
+   "rec": 17,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "softmax.bf16_p",
+   "start": 6150.0,
+   "end": 6262.2,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "emitted",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 32768,
+    "address_checks": 65536,
+    "issue_groups": 64,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false,
+   "golden_vs_hgi": {
+    "words": 8192,
+    "mismatch": 0
+   },
+   "edges": 170,
+   "fill_sectors": 1024,
+   "drain_sectors": 1024,
+   "programme": 1,
+   "line0_serial": 4901,
+   "compiled_commit_serial": 5081,
+   "priced_end_serial": 4991,
+   "commit_slack_edges": -90
+  },
+  {
+   "i": 18,
+   "j": 18,
+   "rec": 18,
+   "L": 0,
+   "unit": "ATT",
+   "op": "ATT.PV",
+   "tag": "attention_pv.kv0",
+   "start": 6286.2,
+   "end": 7269.0,
+   "cls": "W2",
+   "blocked_by": [],
+   "reasons": [
+    "ATT programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 19,
+   "j": 19,
+   "rec": 19,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "pv_normalize",
+   "start": 7293.0,
+   "end": 7358.2,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "native_M128_divider_lane_selection_calendar"
+   ],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "unsupported_lowering",
+   "lowering": {
+    "supported": false,
+    "reasons": [
+     "native_M128_divider_lane_selection_calendar"
+    ]
+   },
+   "inputs_placeholder": null
+  },
+  {
+   "i": 20,
+   "j": 20,
+   "rec": 20,
+   "L": 0,
+   "unit": "SM",
+   "op": "SM.MATVEC",
+   "tag": "o",
+   "start": 7382.2,
+   "end": 9778.8,
+   "cls": "W1",
+   "blocked_by": [],
+   "reasons": [
+    "SM programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 21,
+   "j": 21,
+   "rec": 21,
+   "L": 0,
+   "unit": "COLL",
+   "op": "COLL.ALL_REDUCE_SUM",
+   "tag": "all_reduce_o",
+   "start": 9794.8,
+   "end": 11200.4,
+   "cls": "C1",
+   "blocked_by": [],
+   "reasons": [
+    "COLL programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [
+    "host_cp_ingress__cfg_v",
+    "host_cp_ingress__cfg_data",
+    "host_cp_ingress__desc_v",
+    "host_cp_ingress__launch_v",
+    "ep_S0__rx_pin_flit",
+    "ep_S1__rx_pin_flit"
+   ],
+   "status": "format_open"
+  },
+  {
+   "i": 22,
+   "j": 22,
+   "rec": 22,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "row_scale_o.load",
+   "start": 9803.8,
+   "end": 9937.1,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 23,
+   "j": 23,
+   "rec": 23,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "row_scale_o+residual",
+   "start": 11216.4,
+   "end": 11272.6,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "emitted",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 4096,
+    "address_checks": 16384,
+    "issue_groups": 8,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false,
+   "golden_vs_hgi": {
+    "words": 1024,
+    "mismatch": 0
+   },
+   "edges": 87,
+   "fill_sectors": 384,
+   "drain_sectors": 128,
+   "programme": 2,
+   "line0_serial": 8697,
+   "compiled_commit_serial": 8794,
+   "priced_end_serial": 8749,
+   "commit_slack_edges": -45
+  },
+  {
+   "i": 24,
+   "j": 24,
+   "rec": 24,
+   "L": 0,
+   "unit": "FUSED",
+   "op": "FUSED.ROW_NORM",
+   "tag": "prenorm.ffn",
+   "start": 11296.6,
+   "end": 11460.8,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "FUSED programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 25,
+   "j": 25,
+   "rec": 25,
+   "L": 0,
+   "unit": "SM",
+   "op": "SM.MATVEC",
+   "tag": "gu",
+   "start": 11484.8,
+   "end": 24121.4,
+   "cls": "W1",
+   "blocked_by": [],
+   "reasons": [
+    "SM programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 26,
+   "j": 26,
+   "rec": 26,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "row_scale_gu.load",
+   "start": 11485.8,
+   "end": 11617.8,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 27,
+   "j": 27,
+   "rec": 27,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "row_scale_gu",
+   "start": 24145.4,
+   "end": 24199.6,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "emitted",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 3072,
+    "address_checks": 9216,
+    "issue_groups": 6,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false,
+   "golden_vs_hgi": {
+    "words": 768,
+    "mismatch": 0
+   },
+   "edges": 63,
+   "fill_sectors": 192,
+   "drain_sectors": 96,
+   "programme": 3,
+   "line0_serial": 18396,
+   "compiled_commit_serial": 18469,
+   "priced_end_serial": 18444,
+   "commit_slack_edges": -25
+  },
+  {
+   "i": 28,
+   "j": 28,
+   "rec": 28,
+   "L": 0,
+   "unit": "SFU",
+   "op": "SFU.GLU",
+   "tag": "swiglu",
+   "start": 24223.6,
+   "end": 24345.4,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [
+    "SFU programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [
+    "host_cp_ingress__cfg_v",
+    "host_cp_ingress__cfg_data"
+   ],
+   "status": "format_open"
+  },
+  {
+   "i": 29,
+   "j": 29,
+   "rec": 29,
+   "L": 0,
+   "unit": "COLL",
+   "op": "COLL.ALL_GATHER",
+   "tag": "act_all_gather",
+   "start": 24361.4,
+   "end": 25181.4,
+   "cls": "C1",
+   "blocked_by": [],
+   "reasons": [
+    "COLL programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [
+    "host_cp_ingress__cfg_v",
+    "host_cp_ingress__cfg_data",
+    "host_cp_ingress__desc_v",
+    "host_cp_ingress__launch_v",
+    "ep_S0__rx_pin_flit",
+    "ep_S1__rx_pin_flit"
+   ],
+   "status": "format_open"
+  },
+  {
+   "i": 30,
+   "j": 30,
+   "rec": 30,
+   "L": 0,
+   "unit": "SM",
+   "op": "SM.MATVEC",
+   "tag": "down",
+   "start": 25197.4,
+   "end": 31690.0,
+   "cls": "W1",
+   "blocked_by": [],
+   "reasons": [
+    "SM programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 31,
+   "j": 31,
+   "rec": 31,
+   "L": 0,
+   "unit": "COLL",
+   "op": "COLL.GROUP_REDUCE_MCAST",
+   "tag": "all_reduce_down",
+   "start": 31706.0,
+   "end": 33069.6,
+   "cls": "C1",
+   "blocked_by": [],
+   "reasons": [
+    "COLL programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [
+    "host_cp_ingress__cfg_v",
+    "host_cp_ingress__cfg_data",
+    "host_cp_ingress__desc_v",
+    "host_cp_ingress__launch_v",
+    "ep_S0__rx_pin_flit",
+    "ep_S1__rx_pin_flit"
+   ],
+   "status": "format_open"
+  },
+  {
+   "i": 32,
+   "j": 32,
+   "rec": 32,
+   "L": 0,
+   "unit": "DMA",
+   "op": "DMA.LOAD",
+   "tag": "row_scale_down.load",
+   "start": 31715.0,
+   "end": 31848.3,
+   "cls": "D1",
+   "blocked_by": [],
+   "reasons": [
+    "DMA programme image format not emitted by v1 (layer_images formats_open)"
+   ],
+   "target_ports": [],
+   "status": "format_open"
+  },
+  {
+   "i": 33,
+   "j": 33,
+   "rec": 33,
+   "L": 0,
+   "unit": "SU",
+   "op": "SU.VOP",
+   "tag": "row_scale_down+residual",
+   "start": 33085.6,
+   "end": 33141.8,
+   "cls": "-",
+   "blocked_by": [],
+   "reasons": [],
+   "target_ports": [
+    "su_prog__r_we",
+    "su_prog__r_bank",
+    "su_prog__r_row",
+    "su_prog__r_data",
+    "su_prog__r_start",
+    "su_prog__r_len"
+   ],
+   "status": "emitted",
+   "lowering": {
+    "supported": true,
+    "empty": false,
+    "words": 4096,
+    "address_checks": 16384,
+    "issue_groups": 8,
+    "needs_reducer": false,
+    "execution_qualified": false,
+    "open": [
+     "actual_3072_SRAM_bank_calendar",
+     "scalar_reducer_external_joins",
+     "native_global_numerical_proof",
+     "production_timing_price"
+    ]
+   },
+   "inputs_placeholder": false,
+   "golden_vs_hgi": {
+    "words": 1024,
+    "mismatch": 0
+   },
+   "edges": 87,
+   "fill_sectors": 256,
+   "drain_sectors": 128,
+   "programme": 4,
+   "line0_serial": 25099,
+   "compiled_commit_serial": 25196,
+   "priced_end_serial": 25151,
+   "commit_slack_edges": -45
+  }
+ ],
+ "placement_conflicts": [],
+ "preload_conflicts": [
+  {
+   "sector": 16,
+   "rec": 23
+  },
+  {
+   "sector": 17,
+   "rec": 23
+  },
+  {
+   "sector": 18,
+   "rec": 23
+  },
+  {
+   "sector": 19,
+   "rec": 23
+  },
+  {
+   "sector": 20,
+   "rec": 23
+  },
+  {
+   "sector": 21,
+   "rec": 23
+  },
+  {
+   "sector": 22,
+   "rec": 23
+  },
+  {
+   "sector": 23,
+   "rec": 23
+  },
+  {
+   "sector": 24,
+   "rec": 23
+  },
+  {
+   "sector": 25,
+   "rec": 23
+  },
+  {
+   "sector": 26,
+   "rec": 23
+  },
+  {
+   "sector": 27,
+   "rec": 23
+  },
+  {
+   "sector": 28,
+   "rec": 23
+  },
+  {
+   "sector": 29,
+   "rec": 23
+  },
+  {
+   "sector": 30,
+   "rec": 23
+  },
+  {
+   "sector": 31,
+   "rec": 23
+  },
+  {
+   "sector": 48,
+   "rec": 23
+  },
+  {
+   "sector": 49,
+   "rec": 23
+  },
+  {
+   "sector": 50,
+   "rec": 23
+  },
+  {
+   "sector": 51,
+   "rec": 23
+  },
+  {
+   "sector": 52,
+   "rec": 23
+  },
+  {
+   "sector": 53,
+   "rec": 23
+  },
+  {
+   "sector": 54,
+   "rec": 23
+  },
+  {
+   "sector": 55,
+   "rec": 23
+  },
+  {
+   "sector": 56,
+   "rec": 23
+  },
+  {
+   "sector": 57,
+   "rec": 23
+  },
+  {
+   "sector": 58,
+   "rec": 23
+  },
+  {
+   "sector": 59,
+   "rec": 23
+  },
+  {
+   "sector": 60,
+   "rec": 23
+  },
+  {
+   "sector": 61,
+   "rec": 23
+  },
+  {
+   "sector": 62,
+   "rec": 23
+  },
+  {
+   "sector": 63,
+   "rec": 23
+  },
+  {
+   "sector": 16,
+   "rec": 27
+  },
+  {
+   "sector": 17,
+   "rec": 27
+  },
+  {
+   "sector": 18,
+   "rec": 27
+  },
+  {
+   "sector": 19,
+   "rec": 27
+  },
+  {
+   "sector": 20,
+   "rec": 27
+  },
+  {
+   "sector": 21,
+   "rec": 27
+  },
+  {
+   "sector": 22,
+   "rec": 27
+  },
+  {
+   "sector": 23,
+   "rec": 27
+  },
+  {
+   "sector": 24,
+   "rec": 27
+  },
+  {
+   "sector": 25,
+   "rec": 27
+  },
+  {
+   "sector": 26,
+   "rec": 27
+  },
+  {
+   "sector": 27,
+   "rec": 27
+  },
+  {
+   "sector": 28,
+   "rec": 27
+  },
+  {
+   "sector": 29,
+   "rec": 27
+  },
+  {
+   "sector": 30,
+   "rec": 27
+  },
+  {
+   "sector": 31,
+   "rec": 27
+  },
+  {
+   "sector": 48,
+   "rec": 27
+  },
+  {
+   "sector": 49,
+   "rec": 27
+  },
+  {
+   "sector": 50,
+   "rec": 27
+  },
+  {
+   "sector": 51,
+   "rec": 27
+  },
+  {
+   "sector": 52,
+   "rec": 27
+  },
+  {
+   "sector": 53,
+   "rec": 27
+  },
+  {
+   "sector": 54,
+   "rec": 27
+  },
+  {
+   "sector": 55,
+   "rec": 27
+  },
+  {
+   "sector": 56,
+   "rec": 27
+  },
+  {
+   "sector": 57,
+   "rec": 27
+  },
+  {
+   "sector": 58,
+   "rec": 27
+  },
+  {
+   "sector": 59,
+   "rec": 27
+  },
+  {
+   "sector": 60,
+   "rec": 27
+  },
+  {
+   "sector": 61,
+   "rec": 27
+  },
+  {
+   "sector": 62,
+   "rec": 27
+  },
+  {
+   "sector": 63,
+   "rec": 27
+  },
+  {
+   "sector": 2304,
+   "rec": 27
+  },
+  {
+   "sector": 2305,
+   "rec": 27
+  },
+  {
+   "sector": 2306,
+   "rec": 27
+  },
+  {
+   "sector": 2307,
+   "rec": 27
+  },
+  {
+   "sector": 2308,
+   "rec": 27
+  },
+  {
+   "sector": 2309,
+   "rec": 27
+  },
+  {
+   "sector": 2310,
+   "rec": 27
+  },
+  {
+   "sector": 2311,
+   "rec": 27
+  },
+  {
+   "sector": 2312,
+   "rec": 27
+  },
+  {
+   "sector": 2313,
+   "rec": 27
+  },
+  {
+   "sector": 2314,
+   "rec": 27
+  },
+  {
+   "sector": 2315,
+   "rec": 27
+  },
+  {
+   "sector": 2316,
+   "rec": 27
+  },
+  {
+   "sector": 2317,
+   "rec": 27
+  },
+  {
+   "sector": 2318,
+   "rec": 27
+  },
+  {
+   "sector": 2319,
+   "rec": 27
+  },
+  {
+   "sector": 2352,
+   "rec": 27
+  },
+  {
+   "sector": 2353,
+   "rec": 27
+  },
+  {
+   "sector": 2354,
+   "rec": 27
+  },
+  {
+   "sector": 2355,
+   "rec": 27
+  },
+  {
+   "sector": 2356,
+   "rec": 27
+  },
+  {
+   "sector": 2357,
+   "rec": 27
+  },
+  {
+   "sector": 2358,
+   "rec": 27
+  },
+  {
+   "sector": 2359,
+   "rec": 27
+  },
+  {
+   "sector": 2360,
+   "rec": 27
+  },
+  {
+   "sector": 2361,
+   "rec": 27
+  },
+  {
+   "sector": 2362,
+   "rec": 27
+  },
+  {
+   "sector": 2363,
+   "rec": 27
+  },
+  {
+   "sector": 2364,
+   "rec": 27
+  },
+  {
+   "sector": 2365,
+   "rec": 27
+  },
+  {
+   "sector": 2366,
+   "rec": 27
+  },
+  {
+   "sector": 2367,
+   "rec": 27
+  },
+  {
+   "sector": 2400,
+   "rec": 27
+  },
+  {
+   "sector": 2401,
+   "rec": 27
+  },
+  {
+   "sector": 2402,
+   "rec": 27
+  },
+  {
+   "sector": 2403,
+   "rec": 27
+  },
+  {
+   "sector": 2404,
+   "rec": 27
+  },
+  {
+   "sector": 2405,
+   "rec": 27
+  },
+  {
+   "sector": 2406,
+   "rec": 27
+  },
+  {
+   "sector": 2407,
+   "rec": 27
+  },
+  {
+   "sector": 2408,
+   "rec": 27
+  },
+  {
+   "sector": 2409,
+   "rec": 27
+  },
+  {
+   "sector": 2410,
+   "rec": 27
+  },
+  {
+   "sector": 2411,
+   "rec": 27
+  },
+  {
+   "sector": 2412,
+   "rec": 27
+  },
+  {
+   "sector": 2413,
+   "rec": 27
+  },
+  {
+   "sector": 2414,
+   "rec": 27
+  },
+  {
+   "sector": 2415,
+   "rec": 27
+  },
+  {
+   "sector": 2448,
+   "rec": 27
+  },
+  {
+   "sector": 2449,
+   "rec": 27
+  },
+  {
+   "sector": 2450,
+   "rec": 27
+  },
+  {
+   "sector": 2451,
+   "rec": 27
+  },
+  {
+   "sector": 2452,
+   "rec": 27
+  },
+  {
+   "sector": 2453,
+   "rec": 27
+  },
+  {
+   "sector": 2454,
+   "rec": 27
+  },
+  {
+   "sector": 2455,
+   "rec": 27
+  },
+  {
+   "sector": 2456,
+   "rec": 27
+  },
+  {
+   "sector": 2457,
+   "rec": 27
+  },
+  {
+   "sector": 2458,
+   "rec": 27
+  },
+  {
+   "sector": 2459,
+   "rec": 27
+  },
+  {
+   "sector": 2460,
+   "rec": 27
+  },
+  {
+   "sector": 2461,
+   "rec": 27
+  },
+  {
+   "sector": 2462,
+   "rec": 27
+  },
+  {
+   "sector": 2463,
+   "rec": 27
+  },
+  {
+   "sector": 16,
+   "rec": 33
+  },
+  {
+   "sector": 17,
+   "rec": 33
+  },
+  {
+   "sector": 18,
+   "rec": 33
+  },
+  {
+   "sector": 19,
+   "rec": 33
+  },
+  {
+   "sector": 20,
+   "rec": 33
+  },
+  {
+   "sector": 21,
+   "rec": 33
+  },
+  {
+   "sector": 22,
+   "rec": 33
+  },
+  {
+   "sector": 23,
+   "rec": 33
+  },
+  {
+   "sector": 24,
+   "rec": 33
+  },
+  {
+   "sector": 25,
+   "rec": 33
+  },
+  {
+   "sector": 26,
+   "rec": 33
+  },
+  {
+   "sector": 27,
+   "rec": 33
+  },
+  {
+   "sector": 28,
+   "rec": 33
+  },
+  {
+   "sector": 29,
+   "rec": 33
+  },
+  {
+   "sector": 30,
+   "rec": 33
+  },
+  {
+   "sector": 31,
+   "rec": 33
+  },
+  {
+   "sector": 48,
+   "rec": 33
+  },
+  {
+   "sector": 49,
+   "rec": 33
+  },
+  {
+   "sector": 50,
+   "rec": 33
+  },
+  {
+   "sector": 51,
+   "rec": 33
+  },
+  {
+   "sector": 52,
+   "rec": 33
+  },
+  {
+   "sector": 53,
+   "rec": 33
+  },
+  {
+   "sector": 54,
+   "rec": 33
+  },
+  {
+   "sector": 55,
+   "rec": 33
+  },
+  {
+   "sector": 56,
+   "rec": 33
+  },
+  {
+   "sector": 57,
+   "rec": 33
+  },
+  {
+   "sector": 58,
+   "rec": 33
+  },
+  {
+   "sector": 59,
+   "rec": 33
+  },
+  {
+   "sector": 60,
+   "rec": 33
+  },
+  {
+   "sector": 61,
+   "rec": 33
+  },
+  {
+   "sector": 62,
+   "rec": 33
+  },
+  {
+   "sector": 63,
+   "rec": 33
+  },
+  {
+   "sector": 2304,
+   "rec": 33
+  },
+  {
+   "sector": 2305,
+   "rec": 33
+  },
+  {
+   "sector": 2306,
+   "rec": 33
+  },
+  {
+   "sector": 2307,
+   "rec": 33
+  },
+  {
+   "sector": 2308,
+   "rec": 33
+  },
+  {
+   "sector": 2309,
+   "rec": 33
+  },
+  {
+   "sector": 2310,
+   "rec": 33
+  },
+  {
+   "sector": 2311,
+   "rec": 33
+  },
+  {
+   "sector": 2312,
+   "rec": 33
+  },
+  {
+   "sector": 2313,
+   "rec": 33
+  },
+  {
+   "sector": 2314,
+   "rec": 33
+  },
+  {
+   "sector": 2315,
+   "rec": 33
+  },
+  {
+   "sector": 2316,
+   "rec": 33
+  },
+  {
+   "sector": 2317,
+   "rec": 33
+  },
+  {
+   "sector": 2318,
+   "rec": 33
+  },
+  {
+   "sector": 2319,
+   "rec": 33
+  },
+  {
+   "sector": 2352,
+   "rec": 33
+  },
+  {
+   "sector": 2353,
+   "rec": 33
+  },
+  {
+   "sector": 2354,
+   "rec": 33
+  },
+  {
+   "sector": 2355,
+   "rec": 33
+  },
+  {
+   "sector": 2356,
+   "rec": 33
+  },
+  {
+   "sector": 2357,
+   "rec": 33
+  },
+  {
+   "sector": 2358,
+   "rec": 33
+  },
+  {
+   "sector": 2359,
+   "rec": 33
+  },
+  {
+   "sector": 2360,
+   "rec": 33
+  },
+  {
+   "sector": 2361,
+   "rec": 33
+  },
+  {
+   "sector": 2362,
+   "rec": 33
+  },
+  {
+   "sector": 2363,
+   "rec": 33
+  },
+  {
+   "sector": 2364,
+   "rec": 33
+  },
+  {
+   "sector": 2365,
+   "rec": 33
+  },
+  {
+   "sector": 2366,
+   "rec": 33
+  },
+  {
+   "sector": 2367,
+   "rec": 33
+  },
+  {
+   "sector": 2400,
+   "rec": 33
+  },
+  {
+   "sector": 2401,
+   "rec": 33
+  },
+  {
+   "sector": 2402,
+   "rec": 33
+  },
+  {
+   "sector": 2403,
+   "rec": 33
+  },
+  {
+   "sector": 2404,
+   "rec": 33
+  },
+  {
+   "sector": 2405,
+   "rec": 33
+  },
+  {
+   "sector": 2406,
+   "rec": 33
+  },
+  {
+   "sector": 2407,
+   "rec": 33
+  },
+  {
+   "sector": 2408,
+   "rec": 33
+  },
+  {
+   "sector": 2409,
+   "rec": 33
+  },
+  {
+   "sector": 2410,
+   "rec": 33
+  },
+  {
+   "sector": 2411,
+   "rec": 33
+  },
+  {
+   "sector": 2412,
+   "rec": 33
+  },
+  {
+   "sector": 2413,
+   "rec": 33
+  },
+  {
+   "sector": 2414,
+   "rec": 33
+  },
+  {
+   "sector": 2415,
+   "rec": 33
+  },
+  {
+   "sector": 2448,
+   "rec": 33
+  },
+  {
+   "sector": 2449,
+   "rec": 33
+  },
+  {
+   "sector": 2450,
+   "rec": 33
+  },
+  {
+   "sector": 2451,
+   "rec": 33
+  },
+  {
+   "sector": 2452,
+   "rec": 33
+  },
+  {
+   "sector": 2453,
+   "rec": 33
+  },
+  {
+   "sector": 2454,
+   "rec": 33
+  },
+  {
+   "sector": 2455,
+   "rec": 33
+  },
+  {
+   "sector": 2456,
+   "rec": 33
+  },
+  {
+   "sector": 2457,
+   "rec": 33
+  },
+  {
+   "sector": 2458,
+   "rec": 33
+  },
+  {
+   "sector": 2459,
+   "rec": 33
+  },
+  {
+   "sector": 2460,
+   "rec": 33
+  },
+  {
+   "sector": 2461,
+   "rec": 33
+  },
+  {
+   "sector": 2462,
+   "rec": 33
+  },
+  {
+   "sector": 2463,
+   "rec": 33
+  },
+  {
+   "sector": 2496,
+   "rec": 33
+  },
+  {
+   "sector": 2497,
+   "rec": 33
+  },
+  {
+   "sector": 2498,
+   "rec": 33
+  },
+  {
+   "sector": 2499,
+   "rec": 33
+  },
+  {
+   "sector": 2500,
+   "rec": 33
+  },
+  {
+   "sector": 2501,
+   "rec": 33
+  },
+  {
+   "sector": 2502,
+   "rec": 33
+  },
+  {
+   "sector": 2503,
+   "rec": 33
+  },
+  {
+   "sector": 2504,
+   "rec": 33
+  },
+  {
+   "sector": 2505,
+   "rec": 33
+  },
+  {
+   "sector": 2506,
+   "rec": 33
+  },
+  {
+   "sector": 2507,
+   "rec": 33
+  },
+  {
+   "sector": 2508,
+   "rec": 33
+  },
+  {
+   "sector": 2509,
+   "rec": 33
+  },
+  {
+   "sector": 2510,
+   "rec": 33
+  },
+  {
+   "sector": 2511,
+   "rec": 33
+  },
+  {
+   "sector": 2544,
+   "rec": 33
+  },
+  {
+   "sector": 2545,
+   "rec": 33
+  },
+  {
+   "sector": 2546,
+   "rec": 33
+  },
+  {
+   "sector": 2547,
+   "rec": 33
+  },
+  {
+   "sector": 2548,
+   "rec": 33
+  },
+  {
+   "sector": 2549,
+   "rec": 33
+  },
+  {
+   "sector": 2550,
+   "rec": 33
+  },
+  {
+   "sector": 2551,
+   "rec": 33
+  },
+  {
+   "sector": 2552,
+   "rec": 33
+  },
+  {
+   "sector": 2553,
+   "rec": 33
+  },
+  {
+   "sector": 2554,
+   "rec": 33
+  },
+  {
+   "sector": 2555,
+   "rec": 33
+  },
+  {
+   "sector": 2556,
+   "rec": 33
+  },
+  {
+   "sector": 2557,
+   "rec": 33
+  },
+  {
+   "sector": 2558,
+   "rec": 33
+  },
+  {
+   "sector": 2559,
+   "rec": 33
+  }
+ ],
+ "placed_sectors": 2896,
+ "su_programmes": [
+  {
+   "programme": 0,
+   "records": [
+    6,
+    10
+   ],
+   "edges": 329,
+   "config_writes": 268,
+   "load_serial": 2879,
+   "start_serial": 3149,
+   "image": "images/su_prog00/cols/config.mem",
+   "image_sha256": "c2898431321f988ac1a3c91f6aff7d703f64c33a59301d7eef82ec6a98f51e0d",
+   "columns": [
+    {
+     "column": 0,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 7,
+     "writes": 28
+    },
+    {
+     "column": 1,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 17,
+     "writes": 38
+    },
+    {
+     "column": 2,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 13,
+     "writes": 34
+    },
+    {
+     "column": 3,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 4,
+     "writes": 25
+    },
+    {
+     "column": 4,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 6,
+     "writes": 27
+    },
+    {
+     "column": 5,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 3,
+     "writes": 24
+    },
+    {
+     "column": 6,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 23
+    },
+    {
+     "column": 7,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 1,
+     "writes": 22
+    },
+    {
+     "column": 8,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 23
+    },
+    {
+     "column": 9,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 3,
+     "writes": 24
+    }
+   ],
+   "note": null
+  },
+  {
+   "programme": 1,
+   "records": [
+    17
+   ],
+   "edges": 170,
+   "config_writes": 679,
+   "load_serial": 4215,
+   "start_serial": 4896,
+   "image": "images/su_prog01/cols/config.mem",
+   "image_sha256": "94dd7b5f33be39417ece99e7a711291a2c7e56ddc63498d35c3fd4fe982932cc",
+   "columns": [
+    {
+     "column": 0,
+     "index_banks": 1,
+     "dictionary_banks": 2,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 129,
+     "writes": 140
+    },
+    {
+     "column": 1,
+     "index_banks": 1,
+     "dictionary_banks": 2,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 170,
+     "writes": 181
+    },
+    {
+     "column": 2,
+     "index_banks": 1,
+     "dictionary_banks": 2,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 130,
+     "writes": 141
+    },
+    {
+     "column": 3,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 65,
+     "writes": 76
+    },
+    {
+     "column": 4,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 66,
+     "writes": 77
+    },
+    {
+     "column": 5,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 13
+    },
+    {
+     "column": 6,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 1,
+     "writes": 12
+    },
+    {
+     "column": 7,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 1,
+     "writes": 12
+    },
+    {
+     "column": 8,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 13
+    },
+    {
+     "column": 9,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 3,
+     "writes": 14
+    }
+   ],
+   "note": null
+  },
+  {
+   "programme": 2,
+   "records": [
+    23
+   ],
+   "edges": 87,
+   "config_writes": 220,
+   "load_serial": 8470,
+   "start_serial": 8692,
+   "image": "images/su_prog02/cols/config.mem",
+   "image_sha256": "bc8594e6309c9919d9574cfccedd0a2e11579cde84de54f91848be00a6cb8d68",
+   "columns": [
+    {
+     "column": 0,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 17,
+     "writes": 23
+    },
+    {
+     "column": 1,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 63,
+     "writes": 69
+    },
+    {
+     "column": 2,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 50,
+     "writes": 56
+    },
+    {
+     "column": 3,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 9,
+     "writes": 15
+    },
+    {
+     "column": 4,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 10,
+     "writes": 16
+    },
+    {
+     "column": 5,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 6,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 7,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 8,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 9,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 3,
+     "writes": 9
+    }
+   ],
+   "note": null
+  },
+  {
+   "programme": 3,
+   "records": [
+    27
+   ],
+   "edges": 63,
+   "config_writes": 141,
+   "load_serial": 18248,
+   "start_serial": 18391,
+   "image": "images/su_prog03/cols/config.mem",
+   "image_sha256": "abfc9fe208940e144e87182c8771f5480f4082032e5676aa386e7be6d954bbf5",
+   "columns": [
+    {
+     "column": 0,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 13,
+     "writes": 17
+    },
+    {
+     "column": 1,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 37,
+     "writes": 41
+    },
+    {
+     "column": 2,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 26,
+     "writes": 30
+    },
+    {
+     "column": 3,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 7,
+     "writes": 11
+    },
+    {
+     "column": 4,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 8,
+     "writes": 12
+    },
+    {
+     "column": 5,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 6
+    },
+    {
+     "column": 6,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 6
+    },
+    {
+     "column": 7,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 1,
+     "writes": 5
+    },
+    {
+     "column": 8,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 6
+    },
+    {
+     "column": 9,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 3,
+     "writes": 7
+    }
+   ],
+   "note": null
+  },
+  {
+   "programme": 4,
+   "records": [
+    33
+   ],
+   "edges": 87,
+   "config_writes": 220,
+   "load_serial": 24872,
+   "start_serial": 25094,
+   "image": "images/su_prog04/cols/config.mem",
+   "image_sha256": "10306352737a8ba0dfbee0caeb1e0e4b73aedc2d9a13865e5c7263d72a806113",
+   "columns": [
+    {
+     "column": 0,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 17,
+     "writes": 23
+    },
+    {
+     "column": 1,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 63,
+     "writes": 69
+    },
+    {
+     "column": 2,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 50,
+     "writes": 56
+    },
+    {
+     "column": 3,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 9,
+     "writes": 15
+    },
+    {
+     "column": 4,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 10,
+     "writes": 16
+    },
+    {
+     "column": 5,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 6,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 7,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 8,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 2,
+     "writes": 8
+    },
+    {
+     "column": 9,
+     "index_banks": 1,
+     "dictionary_banks": 1,
+     "leaf_dictionary_banks": 3,
+     "leaf": "ot_hbm_su_programme_pgcol_s",
+     "dictionary_entries": 3,
+     "writes": 9
+    }
+   ],
+   "note": null
+  }
+ ],
+ "t0_serial": 294,
+ "priced_layer_cycles": 33141.8,
+ "counts": {
+  "emitted": 6,
+  "format_open": 24,
+  "unsupported_lowering": 2,
+  "v1_unsupported": 2
+ }
+}
