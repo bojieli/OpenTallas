@@ -1,0 +1,12 @@
+GU KS 480 base 484
+GU_AGE_ISSUE edge=221 which=0 row=1000
+GU_AGE_RESULT S edge=1697 row=1000 last_hp_n=724 last_hp_s=726 issue=221 age_from_n=973
+GU_AGE_RESULT N edge=1699 row=1000 last_hp_n=724 last_hp_s=726 issue=221 age_from_n=975
+GU_AGE_ISSUE edge=9405 which=1 row=1008
+GU_AGE_RESULT S edge=10881 row=1008 last_hp_n=9908 last_hp_s=9910 issue=9405 age_from_n=973
+GU_AGE_RESULT N edge=10883 row=1008 last_hp_n=9908 last_hp_s=9910 issue=9405 age_from_n=975
+GU_LAYER PASS layer edges: 3 jobs, 1655 HP/SC beats in, 15 CTL rows out each side, roots 50, rsqrt 2, no fault
+- /srv/opentallas-scratch/claude/codex-s81-gunit-safe3-1019/hop_src/tools/s81_dv/layer_prog/gu/tb_gu_layer.sv:164: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 1.347 s; speed 9.202 us/s
+- Verilator: cpu 1.347 s on 1 threads; allocated 13 MB

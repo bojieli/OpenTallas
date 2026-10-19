@@ -1,0 +1,26 @@
+{
+  "compile_define": "OT_S81_GUNIT_PIN_COPY=1",
+  "source_rtl": "fc4b55510, SHA256fromsources.sha256",
+  "harness": "HOP98fb068bc actualtb_gu_layer GU_AGE capture, same as49f8f8f84",
+  "positive": "PASS3jobs1655HP15CTLeachside50roots2rsqrt nofault",
+  "old759_757": "FAIL35",
+  "wrong976_974": "FAIL35",
+  "origin": "lastHP_N input port edge",
+  "HC_LAT_N": 975,
+  "HC_LAT_S": 973,
+  "attn": {
+    "issue": 221,
+    "lastHP_N": 724,
+    "lastHP_S": 726,
+    "CTL_N": 1699,
+    "CTL_S": 1697
+  },
+  "ffn": {
+    "issue": 9405,
+    "lastHP_N": 9908,
+    "lastHP_S": 9910,
+    "CTL_N": 10883,
+    "CTL_S": 10881
+  },
+  "compiler_update": "none; release admission blocked pending new physical/native gate"
+}
