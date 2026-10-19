@@ -1,0 +1,293 @@
+{
+ "schema": "opentallas.hbm_d4g_su_red_1018.v1",
+ "generated_utc": "2026-10-19T06:48:59Z",
+ "rule": "HH-5 (10-19, coordinator 0ix (5)): re-price the adopted d4g token (two rings + QBG, every d4g adder, RTL ledger) with\nthe HBM SU reducer ingress AS BUILT, on the HBM-B-RTL3 d4g pricer (hgi_sim.d4g_quadrant_1017).\n\nORIGIN (LB2-HBM-CDS 10-18, claude/lb2-hbm-cds-1018 @1b82239d6, tools/hbm_layer_vehicle/layer_images.py reducer_bound):\n  each SU quarter's ot_hbm_su_reduce_static takes ONE external operand per edge: red_sel = {v, op3, osel, lane7} picks one\n  lane of the quarter's 128 (ot_hbm_su_static_pgslice.sv:355-361 slice_x -> ot_hbm_su_static_qcore_r5.sv rc_x =\n  slice_x[e_sl]); a lane's ro_v/ro_x is live one edge; dependent reducer ops issue >= DEP 10 edges apart, commits /\n  exports +LAT 9 (ot_hbm_su_reduce_static.sv:1-8).  The die has 4 quarters (su_<q><g>: 4 x 4 pgslices of 32 lanes) ->\n  4 reducers.  The price model charged SU reductions with the ROM SU layout model (timing.su_cost: nv + depth dR at\n  su_lanes 1024), i.e. a full-width reduction ingress; CDS bounds: q_norm.ss 428 vs 137 priced, engram.ss* 5268 vs 173.\n\nRE-PRICE (knob `su_red` on the d4g knob, applied to every SU.VOP with sut.red, also inside the MTP rows-x-P records):\n  words      = n x m of operand A (the reduced lane values of the record on one die)\n  bound      = layer_images.reducer_bound(words) (CDS rule, verbatim): ingress ceil(words / 4) + chunk tail\n               DEP (1 + tree_q) + LAT + quarter-join DEP 2 + LAT\n  local      = bound - (2 DEP + LAT)  (the 4-quarter join is ALREADY priced by the XQT adder su_tree = 28 measured\n               RF_TREE_UP/DN + XQ crossings; not counted twice)\n  unit cost  = max(model cost, local + SU.issue_overhead + HBM first access if any)\n  The ingress rate is achievable with the RTL as built (the compiler re-issues the issue group so the selected lane's\n  ro_x is live on its edge; 127 of 128 lane results per edge are discarded), so this is the as-built price, a lower\n  bound only in that RF relay / class-4 read edges are not added.  Numerics unchanged (golden csum8 + pairwise tree on\n  reducer ops 0/1/2/4).\n  su_red_w<W> (sizing): the same with W reducer operands accepted per edge per quarter (a widened ingress).\n  su_red_rows (info): the same bound with the chunk tree of ONE row (m independent rows) -- tail 30 edges smaller.\n\n    PYTHONPATH=tools python3 -m hgi_sim.d4g_su_red_1018 --out results/arch/hbm_d4g_price_1017/su_red/price_su_red.json\n",
+ "table": {
+  "b_plan": {
+   "ar_cycles": 606563.8,
+   "ar_tok_s": 1978.4,
+   "mtp_step_cycles": 1480624.1,
+   "mtp_design_tok_s": 3370.7,
+   "qwen_tok_s": 955.2,
+   "d_ar_pct_vs_b_plan": 0.0,
+   "d_mtp_pct_vs_b_plan": 0.0,
+   "d_qwen_pct_vs_b_plan": 0.0,
+   "d_ar_pct_vs_d4g_2ring_qbg": 3.83,
+   "d_mtp_pct_vs_d4g_2ring_qbg": 3.44,
+   "d_qwen_pct_vs_d4g_2ring_qbg": 0.95
+  },
+  "d4g_2ring_qbg": {
+   "ar_cycles": 629775.1,
+   "ar_tok_s": 1905.4,
+   "mtp_step_cycles": 1531513.5,
+   "mtp_design_tok_s": 3258.7,
+   "qwen_tok_s": 946.2,
+   "d_ar_pct_vs_b_plan": -3.69,
+   "d_mtp_pct_vs_b_plan": -3.32,
+   "d_qwen_pct_vs_b_plan": -0.94,
+   "d_ar_pct_vs_d4g_2ring_qbg": 0.0,
+   "d_mtp_pct_vs_d4g_2ring_qbg": 0.0,
+   "d_qwen_pct_vs_d4g_2ring_qbg": 0.0
+  },
+  "d4g_2ring_qbg_su_red": {
+   "ar_cycles": 667935.0,
+   "ar_tok_s": 1796.6,
+   "mtp_step_cycles": 1858252.6,
+   "mtp_design_tok_s": 2685.7,
+   "qwen_tok_s": 494.3,
+   "d_ar_pct_vs_b_plan": -9.19,
+   "d_mtp_pct_vs_b_plan": -20.32,
+   "d_qwen_pct_vs_b_plan": -48.25,
+   "d_ar_pct_vs_d4g_2ring_qbg": -5.71,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -17.58,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -47.76
+  },
+  "d4g_2ring_qbg_su_red_rows_info": {
+   "ar_cycles": 666615.0,
+   "ar_tok_s": 1800.1,
+   "mtp_step_cycles": 1853854.6,
+   "mtp_design_tok_s": 2692.1,
+   "qwen_tok_s": 494.7,
+   "d_ar_pct_vs_b_plan": -9.01,
+   "d_mtp_pct_vs_b_plan": -20.13,
+   "d_qwen_pct_vs_b_plan": -48.21,
+   "d_ar_pct_vs_d4g_2ring_qbg": -5.53,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -17.39,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -47.72
+  },
+  "d4g_2ring_qbg_su_red_w2": {
+   "ar_cycles": 644702.8,
+   "ar_tok_s": 1861.3,
+   "mtp_step_cycles": 1682650.6,
+   "mtp_design_tok_s": 2966.0,
+   "qwen_tok_s": 652.9,
+   "d_ar_pct_vs_b_plan": -5.92,
+   "d_mtp_pct_vs_b_plan": -12.01,
+   "d_qwen_pct_vs_b_plan": -31.65,
+   "d_ar_pct_vs_d4g_2ring_qbg": -2.31,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -8.98,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -31.0
+  },
+  "d4g_2ring_qbg_su_red_w4": {
+   "ar_cycles": 635416.8,
+   "ar_tok_s": 1888.5,
+   "mtp_step_cycles": 1595064.0,
+   "mtp_design_tok_s": 3128.9,
+   "qwen_tok_s": 777.7,
+   "d_ar_pct_vs_b_plan": -4.54,
+   "d_mtp_pct_vs_b_plan": -7.17,
+   "d_qwen_pct_vs_b_plan": -18.58,
+   "d_ar_pct_vs_d4g_2ring_qbg": -0.89,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -3.98,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -17.81
+  },
+  "d4g_2ring_qbg_su_red_w8": {
+   "ar_cycles": 632216.8,
+   "ar_tok_s": 1898.1,
+   "mtp_step_cycles": 1555936.7,
+   "mtp_design_tok_s": 3207.6,
+   "qwen_tok_s": 859.9,
+   "d_ar_pct_vs_b_plan": -4.06,
+   "d_mtp_pct_vs_b_plan": -4.84,
+   "d_qwen_pct_vs_b_plan": -9.98,
+   "d_ar_pct_vs_d4g_2ring_qbg": -0.38,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -1.57,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -9.12
+  },
+  "d4g_2ring_qbg_su_red_w16": {
+   "ar_cycles": 630691.1,
+   "ar_tok_s": 1902.7,
+   "mtp_step_cycles": 1540636.7,
+   "mtp_design_tok_s": 3239.4,
+   "qwen_tok_s": 907.9,
+   "d_ar_pct_vs_b_plan": -3.83,
+   "d_mtp_pct_vs_b_plan": -3.9,
+   "d_qwen_pct_vs_b_plan": -4.95,
+   "d_ar_pct_vs_d4g_2ring_qbg": -0.14,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -0.59,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -4.05
+  },
+  "d4g_2ring_qbg_su_red_w32": {
+   "ar_cycles": 630051.1,
+   "ar_tok_s": 1904.6,
+   "mtp_step_cycles": 1534386.5,
+   "mtp_design_tok_s": 3252.6,
+   "qwen_tok_s": 933.9,
+   "d_ar_pct_vs_b_plan": -3.73,
+   "d_mtp_pct_vs_b_plan": -3.5,
+   "d_qwen_pct_vs_b_plan": -2.23,
+   "d_ar_pct_vs_d4g_2ring_qbg": -0.04,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -0.19,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -1.3
+  },
+  "d4g_2ring_qbg_upper": {
+   "ar_cycles": 685082.1,
+   "ar_tok_s": 1751.6,
+   "mtp_step_cycles": 1755365.6,
+   "mtp_design_tok_s": 2843.2,
+   "qwen_tok_s": 935.7,
+   "d_ar_pct_vs_b_plan": -11.46,
+   "d_mtp_pct_vs_b_plan": -15.65,
+   "d_qwen_pct_vs_b_plan": -2.04,
+   "d_ar_pct_vs_d4g_2ring_qbg": -8.07,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -12.75,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -1.11
+  },
+  "d4g_2ring_qbg_upper_su_red": {
+   "ar_cycles": 720316.6,
+   "ar_tok_s": 1665.9,
+   "mtp_step_cycles": 2073326.8,
+   "mtp_design_tok_s": 2407.1,
+   "qwen_tok_s": 491.4,
+   "d_ar_pct_vs_b_plan": -15.8,
+   "d_mtp_pct_vs_b_plan": -28.59,
+   "d_qwen_pct_vs_b_plan": -48.56,
+   "d_ar_pct_vs_d4g_2ring_qbg": -12.57,
+   "d_mtp_pct_vs_d4g_2ring_qbg": -26.13,
+   "d_qwen_pct_vs_d4g_2ring_qbg": -48.07,
+   "d_ar_pct_vs_d4g_2ring_qbg_upper": -4.89,
+   "d_mtp_pct_vs_d4g_2ring_qbg_upper": -15.34,
+   "d_qwen_pct_vs_d4g_2ring_qbg_upper": -47.48
+  }
+ },
+ "su_reduction_census": {
+  "AR": {
+   "q_norm.ss": {
+    "n": 40,
+    "model": 6600.0,
+    "as_built": 16120.0,
+    "words": 1280
+   },
+   "kv_norm.ss": {
+    "n": 40,
+    "model": 6040.0,
+    "as_built": 7640.0,
+    "words": 512
+   },
+   "attend.max": {
+    "n": 40,
+    "model": 6282.0,
+    "as_built": 9132.0,
+    "words": 640
+   },
+   "attend.exp_sum": {
+    "n": 40,
+    "model": 10080.0,
+    "as_built": 10080.0,
+    "words": 640
+   },
+   "route.total": {
+    "n": 40,
+    "model": 4600.0,
+    "as_built": 4600.0,
+    "words": 6
+   },
+   "engram.ssH": {
+    "n": 2,
+    "model": 428.0,
+    "as_built": 10486.0,
+    "words": 20480
+   },
+   "engram.ssK": {
+    "n": 2,
+    "model": 428.0,
+    "as_built": 10486.0,
+    "words": 20480
+   },
+   "engram.dot": {
+    "n": 2,
+    "model": 428.0,
+    "as_built": 10486.0,
+    "words": 20480
+   }
+  }
+ },
+ "ledger": {
+  "schema": "opentallas.hbm_d4g_latency_ledger.v1",
+  "rule": "d4g fixed-latency inputs of tools/hgi_sim/d4g_quadrant_1017.py. An entry with status 'measured' and a 'knob' overrides that adder's cycles (knob names: su_start, sfu_d, sfu_chain, su_tree, hc_tree, idx_merge). 'plan' entries document the plan-level estimate the pricer uses until the RTL lane reports.",
+  "entries": [
+   {
+    "item": "COLL ring all-gather (GATHER kind 3)",
+    "lane": "HBM-B-RTL3",
+    "status": "measured",
+    "cycles_rule": "min(1.5 F + 3 hop, 2 F + 2 hop), hop = 2 + COLL_RING relays; RTL r=0: F224 340 / F112 172 (mode 0), F224 451 / F112 227 (mode 1); TWO RINGS (0dr): ring B = ot_hgi_coll_ring_ag_lane (gather-only stop), flit i on ring i%2, same per-ring rule on F/2 (bench run_ring_ag2_bench.sh RINGS=1 vs 2)",
+    "evidence": "rtl/hbm_accel/generic/collective/p2p/run_ring_ag_bench.sh"
+   },
+   {
+    "item": "SU programme slice start advance DEPTH+4",
+    "lane": "HBM-SU2 / HBM-TILES-A2 (pslice r4 / c5)",
+    "status": "measured",
+    "knob": "su_start",
+    "cycles": 4,
+    "evidence": "HANDOFF HBM-TILES-A2 13:12, HBM-SU2 17:24 (start advance unchanged DEPTH+4)"
+   },
+   {
+    "item": "SFU programme store D 4 -> 5 (r10 cluster relays)",
+    "lane": "SFU-PS-4",
+    "status": "measured",
+    "knob": "sfu_d",
+    "cycles": 1,
+    "evidence": "HANDOFF SFU-PS-4 17:51 (D=5, lockstep vs r7c PASS)"
+   },
+   {
+    "item": "SFU chains R11 -> R14 (+3 each way of the LG VM round trip)",
+    "lane": "H-DIE-R8",
+    "status": "measured",
+    "knob": "sfu_chain",
+    "cycles": 6,
+    "evidence": "lanes/H-DIE-R8.md (LG_PATH 15, +6 stream edges per SFU LG round trip)"
+   },
+   {
+    "item": "broadcast depth (equal-age forks: xl x-data 40, vmks fill 44 model x 1.204)",
+    "lane": "H-PLANSTUDY lane model",
+    "status": "plan",
+    "evidence": "results/arch/hbm_plan_study_1017 plans.json b_inner.bus.deep"
+   },
+   {
+    "item": "SU 64-b scalar tree (replaces rfr chains)",
+    "lane": "HBM-B-RTL1",
+    "status": "measured",
+    "knob": "su_tree",
+    "cycles_rule": "RF_TREE_UP 14 + RF_TREE_DN 14 (leaf->root->4 heads, equal legs incl. leg stations; H-D4G may retune UP/DN after placement -> update here)",
+    "cycles": 28,
+    "xq_crossings": 0,
+    "evidence": "lanes/HBM-B-RTL1.md SU DONE claude/hbm-b-rtl1-su-1017 81eb10546: lockstep vs d4f 36-stage relay PASS 14/14, 4 mutants FAIL"
+   },
+   {
+    "item": "HC partial-sum tree (root TPRE=6 + 4 quarter engines, 4x34 b up / 4x68 b down)",
+    "lane": "HBM-B-RTL2",
+    "status": "measured",
+    "knob": "hc_tree",
+    "cycles_rule": "RAW0 165 + XRD + XRU vs 137 single block (+28 measured; XRD/XRU = die relay stages root<->quarter, 0 in bench); HC_MIX P1/P2/P8 996/1246/2746 vs 968/1218/2718. Compiler: ingest event 2 + XRD edges earlier; wave index quarter-local 0..19",
+    "cycles": 28,
+    "xq_crossings": 2,
+    "evidence": "lanes/HBM-B-RTL2.md HC split lockstep P1/P2/P8/G22 PASS bit-exact (claude/hbm-b-rtl2-1017 b5b3af11b); MUT1/MUT4 verdict pending agidock out5"
+   },
+   {
+    "item": "IDX scorer quarters -> XQ node tree -> selector",
+    "lane": "HBM-B-RTL2",
+    "status": "measured",
+    "knob": "idx_merge",
+    "cycles_rule": "vs N_Q=2 cluster client: events +2, key beats +2, scores +4, first TX / every TX flit +8, done +2, frame +6; compile hbm_idx_static_calendar.py --score-chain 14 (was 8)",
+    "cycles": 8,
+    "xq_crossings": 1,
+    "evidence": "lanes/HBM-B-RTL2.md ## IDX (claude/hbm-b-rtl2-idx-1017 b605bce30); quad lockstep verdict pending agidock lock1 -> UNVERIFIED until then"
+   },
+   {
+    "item": "HOST cfg leaves (4 per-quadrant leaves)",
+    "lane": "HBM-B-RTL1",
+    "status": "measured",
+    "cycles": 0,
+    "evidence": "lanes/HBM-B-RTL1.md HOST DONE 5828f1128: config path only, no programme-timeline record"
+   },
+   {
+    "item": "VM SE/NE client side + 16 vmdel lanes",
+    "lane": "HBM-B-RTL1/VM",
+    "status": "measured",
+    "evidence": "lanes/HBM-B-RTL1.md VM DONE claude/hbm-b-rtl1-vm-1017 a61511e52: VMS_QB_EQUIV SE/NE PASS, WRQ4_LOCKSTEP PASS, VMDEL_N lockstep PASS, mutants FAIL",
+    "cycles": 0,
+    "cycles_rule": "SM writer 0 edges added (rv(t) -> wq slot 0 at t+3, calendar C_launch+2+LEAD+at unchanged); vmdel NPC2 LAT 2 / STATUS_LAT 2 / first beat start+3 unchanged; SE/NE bank timing = SW. E-quadrant SMs lose the VM ring hop (a gain, NOT credited: conservative)"
+   }
+  ]
+ }
+}
