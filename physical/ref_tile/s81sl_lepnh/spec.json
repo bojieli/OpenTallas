@@ -13,16 +13,16 @@
   "rst_n"
  ],
  "outline": {
-  "w": 432.0,
-  "h": 432.0
+  "w": 475.2,
+  "h": 475.2
  },
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?0?.u_m.g_sram.g_t?0?.u_m",
    "at": [
-    31.104,
-    97.2
+    41.904,
+    118.8
    ],
    "orient": "R0"
   },
@@ -30,8 +30,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?0?.u_m.g_sram.g_t?1?.u_m",
    "at": [
-    31.104,
-    149.04
+    41.904,
+    170.64
    ],
    "orient": "R0"
   },
@@ -39,8 +39,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?0?.u_m.g_sram.g_t?2?.u_m",
    "at": [
-    31.104,
-    200.88
+    41.904,
+    222.48
    ],
    "orient": "R0"
   },
@@ -48,8 +48,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?0?.u_m.g_sram.g_t?3?.u_m",
    "at": [
-    31.104,
-    252.72
+    41.904,
+    274.32
    ],
    "orient": "R0"
   },
@@ -57,8 +57,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?0?.u_m.g_sram.g_t?4?.u_m",
    "at": [
-    31.104,
-    304.56
+    41.904,
+    326.16
    ],
    "orient": "R0"
   },
@@ -66,8 +66,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?1?.u_m.g_sram.g_t?0?.u_m",
    "at": [
-    226.824,
-    97.2
+    259.2,
+    118.8
    ],
    "orient": "R0"
   },
@@ -75,8 +75,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?1?.u_m.g_sram.g_t?1?.u_m",
    "at": [
-    226.824,
-    149.04
+    259.2,
+    170.64
    ],
    "orient": "R0"
   },
@@ -84,8 +84,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?1?.u_m.g_sram.g_t?2?.u_m",
    "at": [
-    226.824,
-    200.88
+    259.2,
+    222.48
    ],
    "orient": "R0"
   },
@@ -93,8 +93,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?1?.u_m.g_sram.g_t?3?.u_m",
    "at": [
-    226.824,
-    252.72
+    259.2,
+    274.32
    ],
    "orient": "R0"
   },
@@ -102,8 +102,8 @@
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_tx?1?.u_m.g_sram.g_t?4?.u_m",
    "at": [
-    226.824,
-    304.56
+    259.2,
+    326.16
    ],
    "orient": "R0"
   }
@@ -156,7 +156,7 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.025
  },
- "structural_change": "S81-LEPV (owner 10-18 \"remove ties where cheap\"): HOST_EN 0 variant of the end-slice link-port leaf s81sl_lep for the three endpoints without the host plane (s_0S / s_0N via dsdv_slice_lepw, s_7S via dsdv_slice_lepe_nh). Same macros, placement, outline and E / W / S faces as s81sl_lep; NO N face: t_host / t_kd / f_host / f_lf / f_ks and l0_st / l1_st are not ports, the THOST / TKD pending registers, host pin flops and f_host / f_ks / f_lf registers are generated out; a HOST / KS frame arriving here is a protocol fault. Replaces 3 x 131 b of tied die pads. HOURLY-S81/LEP 10-19 (after --cts gate 20261018-175853 FAIL clock_rule pin-flop spread TT 128.8 / FF 115.9, GRT 0, timing met): 16 per-region clock roots by 2-D k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K 16, proven on s81sl_xr1 128/113 -> 48.6/46.4); io_hold_margin 0.025 (KITS rule 10-18); bench min_count_regex gains its capture group. Same RTL, ports, cycles, SDC. HOURLY-S81/LEP 432 trial: outline 475.2 -> 432 x 432 (W/E faces 5.3/um, under the 6/um rule; area -17%), the two 5-SRAM columns close their centre channel (halos abut; lane-1 W->E traffic goes over the 97-um N/S bands, as before), 20-um W/E std-cell bands beyond the halos (the 3eb62a102 divergence had a 15-um band at 5.9/um), column centred vertically. Pin-bound: std-cell util stays ~9% (9k um2 std vs 5.3k pins); 50-60% is not reachable without moving the lane/ring faces.",
+ "structural_change": "S81-LEPV (owner 10-18 \"remove ties where cheap\"): HOST_EN 0 variant of the end-slice link-port leaf s81sl_lep for the three endpoints without the host plane (s_0S / s_0N via dsdv_slice_lepw, s_7S via dsdv_slice_lepe_nh). Same macros, placement, outline and E / W / S faces as s81sl_lep; NO N face: t_host / t_kd / f_host / f_lf / f_ks and l0_st / l1_st are not ports, the THOST / TKD pending registers, host pin flops and f_host / f_ks / f_lf registers are generated out; a HOST / KS frame arriving here is a protocol fault. Replaces 3 x 131 b of tied die pads. HOURLY-S81/LEP 10-19 (after --cts gate 20261018-175853 FAIL clock_rule pin-flop spread TT 128.8 / FF 115.9, GRT 0, timing met): 16 per-region clock roots by 2-D k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K 16, proven on s81sl_xr1 128/113 -> 48.6/46.4); io_hold_margin 0.025 (KITS rule 10-18); bench min_count_regex gains its capture group. Same RTL, ports, cycles, SDC.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered (RTL-BUILD-S81): ro lands in pin flops (rov/roq), ri / lo_v / lo_d / li_r / rxv / fault leave flops, li handshake + data land in hq / dq flops, sl_f / l*_f land in slq / lfq; recipe pin_regs would add an unpriced stage."
@@ -252,7 +252,7 @@
  "keep_pin_regs": true,
  "std_area_um2": 7336.5,
  "fill_reason": {
-  "pin_bound": "Pin-bound: 4,600 signal pins (W 2,300 lane lo/li, E 2,280 ring ro/ri, S 20; no host face); the W/E faces set the outline as in s81sl_lep (432 um faces 5.3/um); fill ~33% is the price of the pin faces."
+  "pin_bound": "Pin-bound: 4,600 signal pins (W 2,300 lane lo/li, E 2,280 ring ro/ri, S 20; no host face); the W/E faces set the outline as in s81sl_lep (475.2 um faces 4.85/um); fill ~26% is the price of the pin faces."
  },
  "pre_cts_extra": [
   "physical/common_flow/clock_split_km.tcl"
