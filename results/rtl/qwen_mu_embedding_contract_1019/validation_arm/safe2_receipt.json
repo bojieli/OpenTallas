@@ -1,0 +1,201 @@
+{
+  "source_commit": "e3c4a9723",
+  "native_source_commit": "9f159ab98",
+  "native_parameters": {
+    "NU": 4,
+    "MCTX": 1,
+    "SAFE": 2
+  },
+  "production_bound": false,
+  "physical_clock_relationship_qualified": false,
+  "functional_clocks": "ck/ck_fmt/ck_qbuf tied in component bench only",
+  "full_MCTX_attention_protocol_proven": false,
+  "cold_pending_before_INIT_join_proven": false,
+  "embedding_reader_comparison": {
+    "normalization": "whitespace and rst_top\u2192rst_n only",
+    "embedding_reader_equivalent": true,
+    "baseline_sha256": "37e6b82479b62e20cf86d477eb9e72d2cc3aea1b64a8e64ef7d45ed27bf11f1e",
+    "SAFE2_sha256": "af27939faeb1d003aec4e6e5a7b153c2bc7047e5829055bd80354cf7e1583de5"
+  },
+  "positives": [
+    {
+      "token": 0,
+      "rounds": 8,
+      "validation_command_delta": 1,
+      "firstcode_command_delta": 3,
+      "round_receipts": [
+        "ROUND_PASS user=0 token=0 epoch=0 reads=64 output=65",
+        "ROUND_PASS user=1 token=0 epoch=1 reads=64 output=65",
+        "ROUND_PASS user=2 token=0 epoch=2 reads=64 output=65",
+        "ROUND_PASS user=3 token=0 epoch=3 reads=64 output=65",
+        "ROUND_PASS user=0 token=0 epoch=4 reads=64 output=65",
+        "ROUND_PASS user=1 token=0 epoch=5 reads=64 output=65",
+        "ROUND_PASS user=2 token=0 epoch=6 reads=64 output=65",
+        "ROUND_PASS user=3 token=0 epoch=7 reads=64 output=65"
+      ]
+    },
+    {
+      "token": 65536,
+      "rounds": 8,
+      "validation_command_delta": 1,
+      "firstcode_command_delta": 3,
+      "round_receipts": [
+        "ROUND_PASS user=0 token=65536 epoch=0 reads=64 output=65",
+        "ROUND_PASS user=1 token=65536 epoch=1 reads=64 output=65",
+        "ROUND_PASS user=2 token=65536 epoch=2 reads=64 output=65",
+        "ROUND_PASS user=3 token=65536 epoch=3 reads=64 output=65",
+        "ROUND_PASS user=0 token=65536 epoch=4 reads=64 output=65",
+        "ROUND_PASS user=1 token=65536 epoch=5 reads=64 output=65",
+        "ROUND_PASS user=2 token=65536 epoch=6 reads=64 output=65",
+        "ROUND_PASS user=3 token=65536 epoch=7 reads=64 output=65"
+      ]
+    },
+    {
+      "token": 151935,
+      "rounds": 8,
+      "validation_command_delta": 1,
+      "firstcode_command_delta": 3,
+      "round_receipts": [
+        "ROUND_PASS user=0 token=151935 epoch=0 reads=64 output=65",
+        "ROUND_PASS user=1 token=151935 epoch=1 reads=64 output=65",
+        "ROUND_PASS user=2 token=151935 epoch=2 reads=64 output=65",
+        "ROUND_PASS user=3 token=151935 epoch=3 reads=64 output=65",
+        "ROUND_PASS user=0 token=151935 epoch=4 reads=64 output=65",
+        "ROUND_PASS user=1 token=151935 epoch=5 reads=64 output=65",
+        "ROUND_PASS user=2 token=151935 epoch=6 reads=64 output=65",
+        "ROUND_PASS user=3 token=151935 epoch=7 reads=64 output=65"
+      ]
+    }
+  ],
+  "negative": [
+    {
+      "mutant": 1,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 2,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 3,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 4,
+      "failure": "JOIN_FAIL payload",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=87 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 5,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=88 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 6,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=1",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=1 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 7,
+      "failure": "JOIN_FAIL read token/index cycle=93",
+      "first_fault": []
+    },
+    {
+      "mutant": 8,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 9,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 10,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=101 provider=0 arm=0 ledger=1 epoch=1"
+      ]
+    },
+    {
+      "mutant": 11,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=23 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 12,
+      "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=91 provider=0 arm=0 ledger=1 epoch=0"
+      ]
+    },
+    {
+      "mutant": 13,
+      "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=891 provider=0 arm=0 ledger=1 epoch=0"
+      ]
+    },
+    {
+      "mutant": 14,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=92 provider=1 arm=0 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 15,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=1 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=41 provider=0 arm=0 ledger=0 epoch=1"
+      ]
+    },
+    {
+      "mutant": 16,
+      "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=0 epoch_publication=1 arm=0",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=41 provider=0 arm=0 ledger=0 epoch=1"
+      ]
+    },
+    {
+      "mutant": 17,
+      "failure": "JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=1",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=292 provider=1 arm=1 ledger=0 epoch=0"
+      ]
+    },
+    {
+      "mutant": 18,
+      "failure": "JOIN_FAIL identity/residency provider=0 native=0 ledger=0 epoch_publication=0 arm=1",
+      "first_fault": [
+        "FIRST_FAULT_SAMPLE cycle=92 provider=0 arm=1 ledger=0 epoch=0"
+      ]
+    }
+  ],
+  "fleet_unit": "oth-ubuntu-1754633-1792430724",
+  "provider_validation_edges_added": 1,
+  "diagnostic_edges_added": 1,
+  "native_read_edges_added": 0,
+  "native_output_edges_added": 0
+}

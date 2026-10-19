@@ -1,0 +1,32 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-embedding-arm-safe2-1019
+ot-run: ot-epyc5       admits   796 GB (avail 619, growth 61, headroom 0, waiters 0/0 GB) load 50/128 running 8 disk 1017 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-embedding-arm-safe2-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-embedding-arm-safe2-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-embedding-arm-safe2-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-embedding-arm-safe2-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-embedding-arm-safe2-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1754633-1792430724 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+JOIN_PASS fixed1validation+registeredepoch unchangedcmd3read6output recurring4 token=0 rounds=8
+JOIN_PASS fixed1validation+registeredepoch unchangedcmd3read6output recurring4 token=65536 rounds=8
+JOIN_PASS fixed1validation+registeredepoch unchangedcmd3read6output recurring4 token=151935 rounds=8
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0
+[133000] %Fatal: tb_mu_embedding_validation_safe2.sv:89: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL payload
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=1
+[78000] %Fatal: tb_mu_embedding_validation_safe2.sv:82: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL read token/index cycle=93
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=1 epoch_publication=1 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0 arm=0
+[818000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=0 native=0 ledger=1 epoch_publication=0 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=1 arm=0
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=0 native=0 ledger=0 epoch_publication=1 arm=0
+[317000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=1 native=0 ledger=0 epoch_publication=0 arm=1
+[151000] %Fatal: tb_mu_embedding_validation_safe2.sv:94: Assertion failed in tb_mu_embedding_validation_safe2: JOIN_FAIL identity/residency provider=0 native=0 ledger=0 epoch_publication=0 arm=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1754633-1792430724): exit 0
