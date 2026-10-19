@@ -264,9 +264,5 @@
  },
  "sdc_extra": [
   "physical/qkd_kvs_kits/qkd_kvs_pc_h_k1_hck.sdc"
- ],
- "orfs_vars": {
-  "OT_HM_GUARD_MAX_EP": "40000"
- },
- "hm_guard_note": "HKV-PCH 2026-10-19: route eb7cbd435 (pc_h) dropped the 30 ps route hold margin to 28.4 (CTS) / 16.9 (GRT) because 24.5k FF endpoints sat inside it (> OT_HM_GUARD_MAX_EP 10k) although the projected padding was only +2.9 util pts (guard limit 8) on a 33% util core; sign-off FF hold then lost ~22 ps (-8.83 r2r, 165 endpoints, 30 ps leaf skew on direct flop->flop transfers, tree spread <=51 ps). The endpoint cap is raised for this low-util tile so the full 30 ps margin is repaired with real hold buffers; the util-points cap (8) still applies."
+ ]
 }
