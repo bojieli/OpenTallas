@@ -1,9 +1,10 @@
 `timescale 1ns/1ps
 // HKV-AHUB4 2026-10-19: tb_qkd_ahub_static_dw at the KV DIE's binding, Z_IN_STRIDE = 4 (kv_static_die ASTK_Z_STRIDE = the
 // CLOSED qkd_astk_ctl_s Z stride; the die passes ONLY Z_IN_STRIDE, so AP_OFS / FR_OFS are the RTL defaults {4{2}} / 0)
-// on the PRODUCTION calendar of the native case (kv_static_programme.attention_calendar(T, profile('die'), no service_end)
-// under OT_KV_ASTK_EXPAND=1, the RL3 law: LMAX / EXP +16, Z / HUB_Z / HUB_RECIP / HUB_PUB +40; claude/hkv-die-1019
-// 90dedf84f).  One calendar per pass (T 8192 / 3000 / 1 / 1000 / 128 / 8192).  Same structure as tb_qkd_ahub_static_dw:
+// on the PRODUCTION calendars of the native case: kv_static_programme.compile_all(profile('die')) attention samples under
+// OT_KV_ASTK_EXPAND=1 (RL3 law: LMAX / EXP +16, Z / HUB_Z / HUB_RECIP / HUB_PUB +40; service_end 1779, R stretched so
+// PV_START + R = 1730 for every T; claude/hkv-die-1019 90dedf84f, die ages qwen_kv_static_programme_1017/die_ages.json).
+// One calendar per pass (T 8192 / 2048 / 1 / 1000 / 128 / 6144 / 4096).  Same structure as tb_qkd_ahub_static_dw:
 // ACTUAL qkd_attn_service_root -> die relays -> DUT -> relays -> ACTUAL qkd_pv_fin_s, lockstep against the sealed
 // ot_qkd_ahub_static_die_cal at Z_IN_STRIDE 4 fed by the root with no die stages; the stack words ride the reference's
 // compiled slots (slot_h / slot_k at stride 4 = one Z word EVERY edge of a 4 x nblk window), and the DUT's own slot
@@ -22,15 +23,17 @@ module tb_qkd_ahub_static_dw_s4;
     localparam integer LH = D_HS + 1;
     localparam integer FR_OFS = D_PVFST - PVL - D_FR - D_HS - 1;
     localparam [63:0] AP_OFS = {4{16'd2}};
-    localparam integer NP = 6;
+    localparam integer NP = 7;
     // production calendars (11 x 16 b): {R, P1, P0, PV_START, HUB_PUB, HUB_RECIP, HUB_Z, HUB_LMAX, Z, LMAX, EXP}
     function automatic [175:0] pcal(input integer T);
         case (T)
-            1:    pcal = {16'd280, 16'd248, 16'd280, 16'd626, 16'd904, 16'd831, 16'd750, 16'd207, 16'd489, 16'd200, 16'd215};
-            128:  pcal = {16'd280, 16'd248, 16'd280, 16'd656, 16'd934, 16'd861, 16'd780, 16'd222, 16'd519, 16'd215, 16'd230};
-            1000: pcal = {16'd328, 16'd328, 16'd328, 16'd639, 16'd965, 16'd892, 16'd811, 16'd238, 16'd550, 16'd231, 16'd246};
-            3000: pcal = {16'd456, 16'd456, 16'd456, 16'd635, 16'd1089, 16'd1016, 16'd935, 16'd302, 16'd674, 16'd295, 16'd310};
-            default: pcal = {16'd776, 16'd776, 16'd776, 16'd887, 16'd1399, 16'd1326, 16'd1245, 16'd462, 16'd984, 16'd455, 16'd470};
+            1:       pcal = {16'd1104, 16'd248, 16'd280, 16'd626, 16'd904, 16'd831, 16'd750, 16'd207, 16'd489, 16'd200, 16'd215};
+            128:     pcal = {16'd1074, 16'd248, 16'd280, 16'd656, 16'd934, 16'd861, 16'd780, 16'd222, 16'd519, 16'd215, 16'd230};
+            1000:    pcal = {16'd1091, 16'd328, 16'd328, 16'd639, 16'd965, 16'd892, 16'd811, 16'd238, 16'd550, 16'd231, 16'd246};
+            2048:    pcal = {16'd1093, 16'd392, 16'd392, 16'd637, 16'd1027, 16'd954, 16'd873, 16'd270, 16'd612, 16'd263, 16'd278};
+            4096:    pcal = {16'd1070, 16'd520, 16'd520, 16'd660, 16'd1151, 16'd1078, 16'd997, 16'd334, 16'd736, 16'd327, 16'd342};
+            6144:    pcal = {16'd935, 16'd648, 16'd648, 16'd795, 16'd1307, 16'd1234, 16'd1153, 16'd430, 16'd892, 16'd423, 16'd438};
+            default: pcal = {16'd843, 16'd776, 16'd776, 16'd887, 16'd1399, 16'd1326, 16'd1245, 16'd462, 16'd984, 16'd455, 16'd470};
         endcase
     endfunction
     reg [175:0] CAL = 0;
@@ -169,8 +172,9 @@ module tb_qkd_ahub_static_dw_s4;
     end
     initial begin
         for (integer i = 0; i < NP; i = i + 1) begin frn[i] = 0; outn[i] = 0; end
-        pT[0] = 8192; pT[1] = 3000; pT[2] = 1; pT[3] = 1000; pT[4] = 128; pT[5] = 8192;
+        pT[0] = 8192; pT[1] = 2048; pT[2] = 1; pT[3] = 1000; pT[4] = 128; pT[5] = 6144; pT[6] = 4096;
         pep[0] = 16'h1234; pep[1] = 16'h1235; pep[2] = 16'h2001; pep[3] = 16'h2002; pep[4] = 16'h2003; pep[5] = 16'h3001;
+        pep[6] = 16'h3002;
         repeat (6) @(negedge ck); rst_n = 1;
         for (integer i = 0; i < NP; i = i + 1) begin
             while (!req_rdy) @(negedge ck);
@@ -179,19 +183,19 @@ module tb_qkd_ahub_static_dw_s4;
             CAL = pcal(pT[i]);
             req_v = 1; req_ep = pep[i]; req_layer = 6'(3 + i); req_pos = 18'(pT[i] - 1);
             @(negedge ck); req_v = 0;
-            repeat (1900) @(negedge ck);
+            repeat (1950) @(negedge ck);
             if (frn[i] != 1) err("not exactly one fr edge in the pass");
             if (outn[i] != 32) err("pvfin did not emit 32 beats");
         end
         repeat (20) @(negedge ck);
         if (amn != 4 * NP) err("am valid count");
         if (pubn != NP) err("reference publication count");
-        // 4 heads x sum_s nblk_s(T): T 8192 256, 3000 96, 1 4, 1000 32, 128 4, 8192 256
-        if (zwn != 648) err("Z word count on the stride-4 slots != 648");
+        // 4 heads x sum_s nblk_s(T): T 8192 256, 2048 64, 1 4, 1000 32, 128 4, 6144 192, 4096 128
+        if (zwn != 680) err("Z word count on the stride-4 slots != 680");
         if (errors == 0)
-            $display("AHUB_DW PASS mut=%0d passes=%0d Z_IN_STRIDE=%0d zwords=%0d fr=%0d/%0d/%0d/%0d/%0d/%0d beats=%0d/%0d/%0d/%0d/%0d/%0d am=%0d FR_OFS=%0d AP_OFS=%h",
-                     MUT, NP, DUT_ZS, zwn, frn[0], frn[1], frn[2], frn[3], frn[4], frn[5], outn[0], outn[1], outn[2], outn[3],
-                     outn[4], outn[5], amn, FR_OFS, AP_OFS);
+            $display("AHUB_DW PASS mut=%0d passes=%0d Z_IN_STRIDE=%0d zwords=%0d fr=%0d/%0d/%0d/%0d/%0d/%0d/%0d beats=%0d/%0d/%0d/%0d/%0d/%0d/%0d am=%0d FR_OFS=%0d AP_OFS=%h",
+                     MUT, NP, DUT_ZS, zwn, frn[0], frn[1], frn[2], frn[3], frn[4], frn[5], frn[6], outn[0], outn[1], outn[2],
+                     outn[3], outn[4], outn[5], outn[6], amn, FR_OFS, AP_OFS);
         else $display("AHUB_DW FAIL mut=%0d errors=%0d", MUT, errors);
         $finish;
     end
