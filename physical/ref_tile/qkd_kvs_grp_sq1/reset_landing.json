@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_grp",
+ "enable": false,
+ "reason": "the RTL lands it (TW2-KVGRP 10-19): qkd_kv_rst_land u_rrc (ck) / u_rrh (hck) = a 2-flop async-assert synchroniser per reset port in its OWN clock domain (the port net reaches its 2 reset pins only) + one kept register copy per child; the flow landing takes ONE clock and would land hrst_n on ck"
+}
