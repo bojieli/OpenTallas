@@ -1,0 +1,34 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc8       admits  1233 GB (avail 954, growth 91, headroom 0, waiters 0/0 GB) load 38/128 running 26 disk 207 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-71710-1792433085 after 0 s
+RDPAIR errors=0 local_packets=1 mut=0
+PASS
+RDPAIR errors=9 local_packets=1 mut=1
+FAIL
+RDPAIR errors=5 local_packets=1 mut=2
+FAIL
+RDPAIR errors=17 local_packets=1 mut=3
+FAIL
+RDPAIR errors=9 local_packets=1 mut=4
+FAIL
+RDPAIR errors=16 local_packets=1 mut=5
+FAIL
+RDPAIR errors=10 local_packets=1 mut=6
+FAIL
+RDPAIR errors=3 local_packets=1 mut=7
+FAIL
+RDPAIR errors=2 local_packets=1 mut=8
+FAIL
+RDPAIR errors=1 local_packets=1 mut=9
+FAIL
+RDPAIR errors=1 local_packets=1 mut=10
+FAIL
+RDPAIR errors=3 local_packets=1 mut=11
+FAIL
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-71710-1792433085): exit 0

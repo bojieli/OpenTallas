@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-epyc8       admits  1270 GB (avail 968, growth 79, headroom 0, waiters 0/0 GB) load 29/128 running 23 disk 182 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rdpair-loop-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3507490-1792433903 after 0 s
+{"shared_XR_lo_bandwidth_only_floor": 1030, "uncoalesced_V_reference_busiest_edges": 692, "admitted": false}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3507490-1792433903): exit 0

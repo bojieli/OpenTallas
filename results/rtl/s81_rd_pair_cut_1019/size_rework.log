@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-size-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-size-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-size-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rdpair-size-1019
+ot-run: ot-epyc8       admits  1244 GB (avail 954, growth 83, headroom 0, waiters 0/0 GB) load 38/128 running 25 disk 207 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rdpair-size-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rdpair-size-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-71516-1792433084 after 0 s
+SIZE_DONE ot_s81sl_xr1 loop
+SIZE_DONE ot_s81sl_rstop loop
+[{"name": "ot_s81sl_rstop_baseline", "max_loads": 1413, "over32": 59, "q_over32": 8, "raw_reset_loads": 2505}, {"name": "ot_s81sl_rstop_loop", "max_loads": 1896, "over32": 57, "q_over32": 9, "raw_reset_loads": 2505}, {"name": "ot_s81sl_rstop_pair", "max_loads": 1993, "over32": 68, "q_over32": 8, "raw_reset_loads": 2505}, {"name": "ot_s81sl_xr1_baseline", "max_loads": 1425, "over32": 89, "q_over32": 39, "raw_reset_loads": 3}, {"name": "ot_s81sl_xr1_loop", "max_loads": 1425, "over32": 96, "q_over32": 38, "raw_reset_loads": 3}, {"name": "ot_s81sl_xr1_pair", "max_loads": 1425, "over32": 94, "q_over32": 37, "raw_reset_loads": 3}]
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-71516-1792433084): exit 0

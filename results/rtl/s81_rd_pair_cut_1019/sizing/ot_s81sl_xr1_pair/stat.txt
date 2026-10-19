@@ -1,0 +1,57 @@
+
+10. Printing statistics.
+
+=== ot_s81sl_xr1 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    56102        - wires
+    56102        - wire bits
+     8797        - public wires
+     8797        - public wire bits
+     7651        - ports
+     7651        - port bits
+    50749 7.75E+03 cells
+       35    3.062   AND2x2_ASAP7_75t_R
+       52    4.549   AND3x1_ASAP7_75t_R
+       39     3.98   AND4x1_ASAP7_75t_R
+        6      0.7   AND5x1_ASAP7_75t_R
+        2    0.467   AO211x2_ASAP7_75t_R
+     6727  588.478   AO21x1_ASAP7_75t_R
+        2    0.292   AO221x1_ASAP7_75t_R
+        2    0.262   AO22x1_ASAP7_75t_R
+        2    0.467   AO31x2_ASAP7_75t_R
+        8    0.933   AO32x1_ASAP7_75t_R
+        1    0.146   AO33x2_ASAP7_75t_R
+        4      0.7   AOI211x1_ASAP7_75t_R
+      561   65.435   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+        3    0.437   AOI22x1_ASAP7_75t_R
+        5    0.365   BUFx2_ASAP7_75t_R
+      108   40.941   DFFASRHQNx1_ASAP7_75t_R
+    15817 4.61E+03   DFFHQNx1_ASAP7_75t_R
+     5989  261.959   INVx1_ASAP7_75t_R
+        9    1.181   MAJx2_ASAP7_75t_R
+     1140   99.727   NAND2x1_ASAP7_75t_R
+        3    0.481   NAND3x1_ASAP7_75t_R
+     5086  444.923   NOR2x1_ASAP7_75t_R
+        1     0.16   NOR3x1_ASAP7_75t_R
+     1394  162.596   OA211x2_ASAP7_75t_R
+     2795  285.258   OA21x2_ASAP7_75t_R
+      393   68.759   OA222x2_ASAP7_75t_R
+      323   47.093   OA22x2_ASAP7_75t_R
+        2    0.437   OA31x2_ASAP7_75t_R
+        2    0.292   OA33x2_ASAP7_75t_R
+     5215  608.278   OAI21x1_ASAP7_75t_R
+       11    1.604   OAI22x1_ASAP7_75t_R
+     4344  380.013   OR2x2_ASAP7_75t_R
+      566   49.514   OR3x1_ASAP7_75t_R
+       13    1.327   OR4x1_ASAP7_75t_R
+        3     0.35   OR5x1_ASAP7_75t_R
+       42    6.736   XNOR2x2_ASAP7_75t_R
+       43    6.896   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_s81sl_xr1': 7751.238300
+     of which used for sequential elements: 4653.177840 (60.03%)
+

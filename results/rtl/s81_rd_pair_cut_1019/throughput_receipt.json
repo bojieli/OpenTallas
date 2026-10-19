@@ -1,0 +1,44 @@
+{
+ "source": "020c90875",
+ "rtl": "241f7b963",
+ "positive": true,
+ "all384pairs_SRAM_readback_exact": true,
+ "rows": [
+  {
+   "pairs_per_message": 4,
+   "period_edges": 5,
+   "messages": 64,
+   "total_pairs": 256,
+   "first_XR_sw": 560,
+   "last_XR_sw": 878,
+   "write_span": 319,
+   "source_CTL_first_to_last_XR_sw_inclusive": 340,
+   "startup_inclusive_pairs_per_edge": 0.7529411764705882,
+   "budget_pairs_per_edge": 0.8,
+   "within10percent": true,
+   "actual_first_source_line_CTL_pin": 539
+  },
+  {
+   "pairs_per_message": 2,
+   "period_edges": 3,
+   "messages": 64,
+   "total_pairs": 128,
+   "first_XR_sw": 3232,
+   "last_XR_sw": 3422,
+   "write_span": 191,
+   "source_CTL_first_to_last_XR_sw_inclusive": 212,
+   "startup_inclusive_pairs_per_edge": 0.6037735849056604,
+   "budget_pairs_per_edge": 0.6666666666666666,
+   "within10percent": true,
+   "actual_first_source_line_CTL_pin": 3211
+  }
+ ],
+ "admitted": false,
+ "excludes": [
+  "actual slice DL4",
+  "real V relay/landing",
+  "host/PHY",
+  "physical clocks",
+  "other-owner traffic"
+ ]
+}

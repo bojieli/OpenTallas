@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.s81.rd_pair.minimum_cut.v1",
+ "rtl_source": "241f7b963",
+ "bench_source": "738c8efa0",
+ "source_inventory": "functional_loop/sources.sha256",
+ "compiler": "Verilator5.050",
+ "positive": true,
+ "qualified_component_only": true,
+ "production_calendar_admitted": false,
+ "measured_edges": {
+  "source_line_CTL_pin_to_XR_c_v_VP_input_pin": 5,
+  "VP_command_input_to_VP_lo_output_first_pair": 5,
+  "VP_lo_output_to_rstop_V_output": 5,
+  "V_input_to_XR_sw_output_VP_sw_input": 6,
+  "local_XR_ci_output_to_XR_sw_output_VP_sw_input": 3
+ },
+ "excluded_composition": [
+  "actual slice DL4 command/lo relays",
+  "actual slice DL4 sw relay",
+  "actual VP input/macro write age",
+  "actual V relay/landing/phase age",
+  "host/walker boot and seqhost CTL ages",
+  "external PHY/link and peer POST ages"
+ ],
+ "negative_errors": {
+  "1": 9,
+  "2": 5,
+  "3": 17,
+  "4": 9,
+  "5": 16,
+  "6": 10,
+  "7": 3,
+  "8": 2,
+  "9": 1,
+  "10": 1,
+  "11": 3
+ },
+ "negative_scope": "wire/checker mutants; missing/duplicate/partial/late is a static-schedule violation, not new hardware message authentication",
+ "inherited_fanout_and_reset_safe": false,
+ "full_token_added_cycles": null,
+ "shipped_source_files_verified_against_738c8efa0": 42,
+ "verified_vp_lo_to_v_output_deltas": [
+  5
+ ]
+}
