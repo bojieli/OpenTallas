@@ -1,0 +1,119 @@
+{
+  "scope": "MODEL ONLY: finite logical-cell rectangle packing, no legal placement/physical/source qualification",
+  "source_commit": "3ebb699a9bd3564837e84e018e4c2c7c1e3cae8c",
+  "native_odb_sha256": "00150f2fb15c550a1b5996031874102edfd5bbd677c98aef31bd87b9b3c38ad2",
+  "parent_binding": null,
+  "parent_clock_phase": null,
+  "macro_access_qualified": false,
+  "original_all_output_fixedpoint": [
+    826,
+    861,
+    861
+  ],
+  "boundary_revised_fixedpoint": [
+    826,
+    862,
+    862
+  ],
+  "increment_beyond_236_625": {
+    "ff": 18,
+    "comb": 0,
+    "tie": 1
+  },
+  "increment_area_um2": 6.779700000000001,
+  "total_std_mass_um2_including_old_transparent_cts": 12553.38,
+  "band_um": [
+    0,
+    108,
+    302.4,
+    194.4
+  ],
+  "logical_cell_bodies": 58175,
+  "boundary_owner_instances": 6410,
+  "all_expanded_root_edges": 142142,
+  "worst_rectangle_corner_L1_um": 337.38,
+  "over405": [],
+  "unused_row_area_um2": 16332.224399999985,
+  "legacy_nonlogical_mass_um2": 3606.4358999950055,
+  "buffer_inv_cts_instance_count": 42833,
+  "buf_inv_cts_finite_geometry_proved": false,
+  "native_LEF_sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+  "predicates": [
+    {
+      "port": "f_host[0]",
+      "gate": "_113592_/Y",
+      "raw_ff": "u_ot_pr_core.fi\\[0\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113592_/B",
+      "consumer_count": 2
+    },
+    {
+      "port": "f_ks[52]",
+      "gate": "_113593_/Y",
+      "raw_ff": "u_ot_pr_core.ks_q\\[52\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113593_/B",
+      "consumer_count": 1
+    },
+    {
+      "port": "kd_i[53]",
+      "gate": "_113597_/Y",
+      "raw_ff": "u_ot_pr_core.kd_q\\[53\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113597_/B",
+      "consumer_count": 1
+    },
+    {
+      "port": "j_i[32]",
+      "gate": "_113598_/Y",
+      "raw_ff": "u_ot_pr_core.j_q\\[32\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113598_/B",
+      "consumer_count": 1
+    },
+    {
+      "port": "s_jd_w[0]",
+      "gate": "_113771_/Y",
+      "raw_ff": "u_ot_pr_core.jdw_q\\[0\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113771_/B",
+      "consumer_count": 5
+    },
+    {
+      "port": "s_jd_w[1]",
+      "gate": "_113594_/Y",
+      "raw_ff": "u_ot_pr_core.jdw_q\\[1\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113594_/B",
+      "consumer_count": 1
+    },
+    {
+      "port": "s_jd_e[0]",
+      "gate": "_113772_/Y",
+      "raw_ff": "u_ot_pr_core.jde_q\\[0\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113772_/B",
+      "consumer_count": 8
+    },
+    {
+      "port": "s_jd_e[1]",
+      "gate": "_113595_/Y",
+      "raw_ff": "u_ot_pr_core.jde_q\\[1\\]$_DFF_P_/QN",
+      "sampled_rn_sink": "_113595_/A",
+      "consumer_count": 1
+    }
+  ],
+  "rn_owner": "ot_rrs__u_ot_pr_core_rr__ot_rlv__c9$_DFF_PN0_/QN",
+  "new_data_edges_equational_component": 0,
+  "parent_schedule_age": null,
+  "clock_increment_beyond_236_625_fF": {
+    "TT": 8.344019,
+    "FF": 9.075594
+  },
+  "legacy_missing_rectangle_capacity_bound": {
+    "count": 42833,
+    "area_um2": 3606.4358999950055,
+    "max_native_master_width_um": 1.62,
+    "height_um": 0.27,
+    "one_site_padding_area_um2": 624.50514,
+    "dedicated_rows": 54,
+    "row_y0_um": 179.82,
+    "guaranteed_shelf_area_um2": 4384.58508,
+    "logical_max_y_um": 140.67000000000002,
+    "actual_identity_orientation_clock_pin_routing_unproved": true
+  }
+}
+PASS finite logical bodies and every expanded incoming/output corner bound <=405; physical qualification HOLD
