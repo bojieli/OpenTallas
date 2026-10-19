@@ -49,6 +49,7 @@ IL, C8, FMT_LEAD = 8, 8, MV.FMT_LEAD
 PAW, PSTORE, ATT_RESERVED = 11, 2048, 1019        # 2,048-word store; HBM-ATTGAP resident QK+PV (KV8) = 1,019 words
 TBL = 256                                         # issuer descriptor table rows (DD 256)
 NID, IDW, NEXP = 6, 9, 384                        # router broadcast: top-6 slots of 9-bit ids (DS V4.1: 384 routed experts)
+BSCALE = int(os.environ.get('SMB_BSCALE', 1))       # 8 = one block per DRAM row index (slot 0, the as-built layout)
 BLK_MAX = 1 << 18                                 # 18-bit block address = DRAM row index [17:3] + sub-row slot [2:0]
 SVG_TGT, XC_TGT = 64, 192
 LANDING = 4
@@ -246,16 +247,16 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                     exp_blocks.setdefault(r["slot"], []).append(blk)
         kd["nonexp_blocks"] = len(nonexp)
         # 18-bit block addresses: nonexpert = kbase + L*lstride + j; routed = ebase + L*elstride + id*estride + b
-        lstride = len(nonexp)
+        lstride = len(nonexp) * BSCALE
         kbase = row_top
         row_top += lstride * (max(L, 0) + 1)
-        estride = max((len(v) for v in exp_blocks.values()), default=0)
+        estride = max((len(v) for v in exp_blocks.values()), default=0) * BSCALE
         if exp_blocks:
             assert len({len(v) for v in exp_blocks.values()}) == 1, "routed experts of one kind must share a shape"
         kd.update(lstride=lstride, kbase=kbase, estride=estride)
         for j, b in enumerate(nonexp):
-            b.update(row_base=kbase + j, layer_stride=lstride, id_sel=0, expert_stride=0,
-                     dram_row=kbase + L * lstride + j)
+            b.update(row_base=kbase + j * BSCALE, layer_stride=lstride, id_sel=0, expert_stride=0,
+                     dram_row=kbase + L * lstride + j * BSCALE)
         kd["exp"] = {}
         if exp_blocks:
             elstride = NEXP * estride
@@ -265,8 +266,8 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 eid = next(r["eid"] for r in recs if r["slot"] == s)
                 kd["exp"][s] = eid
                 for b_i, b in enumerate(bl):
-                    b.update(row_base=eb + b_i, layer_stride=elstride, id_sel=s + 1, expert_stride=estride,
-                             dram_row=eb + L * elstride + eid * estride + b_i)
+                    b.update(row_base=eb + b_i * BSCALE, layer_stride=elstride, id_sel=s + 1, expert_stride=estride,
+                             dram_row=eb + L * elstride + eid * estride + b_i * BSCALE)
             kd.update(ebase=eb, elstride=elstride)
         if row_top >= BLK_MAX:
             raise SystemExit(f"block addresses exhausted ({row_top})")

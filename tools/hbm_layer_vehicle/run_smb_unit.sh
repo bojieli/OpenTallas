@@ -30,7 +30,7 @@ case "$JOB" in
   smoke) J="$T --layers L00:0 --name smoke --out $OUT/out/smoke.json" ;;
   trace) J="$T --layers L00:0 --define TRACE --name trace --out $OUT/out/trace.json" ;;
   pos)   J="$T --layers L00:0,L02:2,L14:14,head:0 --name pos --out $OUT/out/pos.json" ;;
-  probe)  J="SMB_PACE_ADD=${PADD:-200} $T --layers L14:14 --name probe --out $OUT/out/probe.json" ;;
+  probe)  J="export SMB_PACE_ADD=${PADD:-8} SMB_BSCALE=${BSCALE:-1}; $T --layers L14:14 --name probe${PADD:-8}_${BSCALE:-1} --out $OUT/out/probe${PADD:-8}_${BSCALE:-1}.json" ;;
   l14)   J="$T --layers L14:14 --name l14 --out $OUT/out/l14.json" ;;
   late)  J="$T --layers L14:14 --mut late_ids --name late --out $OUT/out/late.json" ;;
   imut1) J="$T --layers L14:14 --define IMUT=1 --name imut1 --out $OUT/out/imut1.json" ;;
@@ -39,5 +39,5 @@ case "$JOB" in
   xmut4) J="$T --layers L14:14 --define XMUT=4 --name xmut4 --out $OUT/out/xmut4.json" ;;
   *) echo "unknown JOB $JOB"; exit 2 ;;
 esac
-/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir "$OUT" -- bash -c "$J > $OUT/out/$JOB.log 2>&1; echo ${JOB}_RC \$?; tail -n 3 $OUT/out/$JOB.log"
+/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir "$OUT" -- bash -c "$J > $OUT/out/${LOGN:-$JOB}.log 2>&1; echo ${JOB}_RC \$?; tail -n 3 $OUT/out/${LOGN:-$JOB}.log"
 echo "SMB_UNIT_DONE $JOB"
