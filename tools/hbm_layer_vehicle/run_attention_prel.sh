@@ -11,11 +11,11 @@ OUT=$4
 set -eu
 cd "$1"
 export HDC_V41_ARITH=chunk8
-for trial in kv8 kv4 wrong_row; do
+for trial in kv8 kv4 wrong_row read_early; do
   sm=0
   mutation=""
   if [ "$trial" = kv4 ]; then sm=2; fi
-  if [ "$trial" = wrong_row ]; then mutation=wrong_row; fi
+  if [ "$trial" = wrong_row ] || [ "$trial" = read_early ]; then mutation=$trial; fi
   set +e
   python3 tools/hbm_layer_vehicle/attention_prel_svg.py --kv "$2" --layer 2 --sm "$sm" \
     --name "$trial" --work "$4/work" --exe "$3" --out "$4/out/$trial.json" --mut "$mutation" \
@@ -23,7 +23,9 @@ for trial in kv8 kv4 wrong_row; do
   rc=$?
   set -e
   echo "$trial RC=$rc"
-  if [ "$trial" != wrong_row ] && [ "$rc" -ne 0 ]; then exit "$rc"; fi
-  if [ "$trial" = wrong_row ] && [ "$rc" -eq 0 ]; then exit 1; fi
+  case "$trial" in
+    kv8|kv4) if [ "$rc" -ne 0 ]; then exit "$rc"; fi ;;
+    *) if [ "$rc" -eq 0 ]; then exit 1; fi ;;
+  esac
 done
 ' bash "$SRC" "$KV" "$EXE" "$OUT"
