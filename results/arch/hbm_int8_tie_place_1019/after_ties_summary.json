@@ -1,0 +1,87 @@
+{
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "canonical_nontransparent_violators": 0,
+  "counts": {
+    "cells": 10370,
+    "drivers": 11407,
+    "logical_endpoints": 22424,
+    "roles": {
+      "comb": 7322,
+      "ff": 2782,
+      "input": 1037,
+      "static": 266
+    }
+  },
+  "diagnostic_provenance": {
+    "collector_sha256": "893a3f5566752a5ee38b7dd3495b43d8d84258cbbd49b975b3e01a38707bb9dd",
+    "comparison_scope": "placement-only physical candidate diagnostic API; not NEW-kit activation",
+    "elapsed_seconds": 3.270467637994443,
+    "input_manifest_sha256": "7264b29e6ee483005368b57c3cf2b57e547f9a332072b2396ba287e257145009",
+    "libraries": [
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "parsed": false,
+        "path": "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+      },
+      {
+        "parsed": false,
+        "path": "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+      },
+      {
+        "parsed": false,
+        "path": "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "parsed": true,
+        "path": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      }
+    ],
+    "pg_only_instances": [],
+    "pg_only_native_master_pins": {},
+    "physical_omissions": {
+      "instance_pg_pins": 20740
+    },
+    "raw_export_sha256": "00fd39340f0784d2a81231f3c68d3f873582a18bc88b33ac102023e5d9f4b767",
+    "replay_sha256": "d67651724a210d492c97fdba355b7e1d1de0e36427f9b20a1cbef627a5bb83f6",
+    "source_odb": "/work/after_ties.odb",
+    "source_odb_sha256": "cd511e372c478d88d1cf80cef79decf69a23c847c15ef7950ce1e897549b4a4b"
+  },
+  "disconnected_outputs": [],
+  "literal_load_excess": [],
+  "max_allowed": 32,
+  "max_loads": 24,
+  "max_nonliteral_loads": 24,
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "top": "ot_smh_int8_tile_safe",
+  "transparent_output_violators": 0,
+  "unphysicalized_literals": [],
+  "verdict": "PASS",
+  "violating_roots": [],
+  "violations": []
+}

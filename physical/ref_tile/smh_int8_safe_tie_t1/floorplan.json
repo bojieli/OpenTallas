@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.ref_tile.floorplan.v1",
+  "name": "smh_int8_safe_tie_t1",
+  "top": "ot_smh_int8_tile_safe",
+  "kind": "tile",
+  "die": [
+    0,
+    0,
+    237.6,
+    129.6
+  ],
+  "core": [
+    2.16,
+    2.16,
+    235.44,
+    127.44
+  ],
+  "why": "placement-only exact mapped import; ROOT pin-bound review required",
+  "std_area_um2": 1322.5372200000272,
+  "layer_contract": {
+    "children": {},
+    "pg_layer": "M5",
+    "rlayers": [
+      "M2",
+      "M5"
+    ],
+    "strap_layer": "M6",
+    "layer_cap": "M5",
+    "cap_basis": "contract"
+  },
+  "pins": {
+    "N": [
+      "i_v",
+      "i_tag",
+      "i_codes"
+    ],
+    "S": [
+      "o_v",
+      "o_tag",
+      "o_data",
+      "o_sel"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "clock_port": "clk",
+  "blocks": [],
+  "findings": [],
+  "referenced": [
+    "tools/hbm_int8_tie_place/place.tcl",
+    "physical/common_flow/die_constant_cells.tcl",
+    "results/arch/hbm_int8_tie_place_1019/README.md"
+  ]
+}

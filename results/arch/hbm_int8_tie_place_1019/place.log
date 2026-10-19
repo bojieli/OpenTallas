@@ -1,0 +1,196 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 464 rows of 4320 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 237.600 129.600 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 235.440 127.440 ) um
+[INFO IFP-0102] Core area:                        29225.318 um^2
+[INFO IFP-0103] Total instances area:              1310.902 um^2
+[INFO IFP-0104] Effective utilization:                0.045
+[INFO IFP-0105] Number of instances:                  10104
+Found 0 macro blocks.
+[INFO PPL-0044] Pin group: [ i_v ]
+[INFO PPL-0044] Pin group: [ i_tag[9] i_tag[8] i_tag[7] i_tag[6] i_tag[5] ... ]
+[INFO PPL-0044] Pin group: [ i_codes[1023] i_codes[1022] i_codes[1021] i_codes[1020] i_codes[1019] ... ]
+[INFO PPL-0044] Pin group: [ o_v ]
+[INFO PPL-0044] Pin group: [ o_tag[9] o_tag[8] o_tag[7] o_tag[6] o_tag[5] ... ]
+[INFO PPL-0044] Pin group: [ o_data[1023] o_data[1022] o_data[1021] o_data[1020] o_data[1019] ... ]
+[INFO PPL-0044] Pin group: [ o_sel[34] o_sel[33] o_sel[32] o_sel[31] o_sel[30] ... ]
+[INFO PPL-0067] Restrict pins [ i_v ] to region 2.00u-3.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ i_tag[0] i_tag[1] i_tag[2] i_tag[3] i_tag[4] ... ] to region 3.00u-8.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ i_codes[0] i_codes[1000] i_codes[1001] i_codes[1002] i_codes[1003] ... ] to region 10.00u-234.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ o_v ] to region 2.00u-3.00u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ o_tag[0] o_tag[1] o_tag[2] o_tag[3] o_tag[4] ... ] to region 3.00u-8.00u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ o_sel[0] o_sel[10] o_sel[11] o_sel[12] o_sel[13] ... ] to region 8.00u-15.50u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ o_data[0] o_data[1000] o_data[1001] o_data[1002] o_data[1003] ... ] to region 17.00u-234.00u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ clk ] to region 62.80u-64.30u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ rst_n ] to region 65.30u-66.80u at the LEFT edge.
+[INFO PPL-0001] Number of available slots 3796
+[INFO PPL-0002] Number of I/O             2107
+[INFO PPL-0003] Number of I/O w/sink      2107
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0006] Number of I/O Groups    7
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0100] Group of size 1024 placed during fallback mode.
+[INFO PPL-0100] Group of size 1024 placed during fallback mode.
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 243824.25 um.
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 235.440 127.440 ) um
+[INFO GPL-0016] Core area:                   29225.318 um^2
+[INFO GPL-0036] Movable instances area:       1310.902 um^2
+[INFO GPL-0037] Total instances area:         1310.902 um^2
+[INFO GPL-0035] Pin density area adjust:        49.968 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             10104
+[INFO GPL-0007] Movable instances:               10104
+[INFO GPL-0008] Fixed instances:                     0
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  11141
+[INFO GPL-0011] Number of pins:                  31192
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 237.600 129.600 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 235.440 127.440 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 29225.318 um^2
+[INFO GPL-0017] Fixed instances area:            0.000 um^2
+[INFO GPL-0018] Movable instances area:       1360.870 um^2
+[INFO GPL-0019] Utilization:                     4.656 %
+[INFO GPL-0020] Standard cells area:          1360.870 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 10104	Region center = 0
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.135 um^2
+[INFO GPL-0025] Ideal bin area:                  0.269 um^2
+[INFO GPL-0026] Ideal bin count:                108494
+[INFO GPL-0027] Total bin area:              29225.318 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.911 *  0.489 um
+[INFO GPL-0030] Number of bins:                  65536
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9981 |  2.550109e+03 |   +0.00% |  3.01e-14 |      
+       10 |   0.9980 |  7.871400e+02 |  -69.13% |  4.90e-14 |      
+       20 |   0.9977 |  4.782630e+02 |  -39.24% |  7.99e-14 |      
+       30 |   0.9976 |  4.358760e+02 |   -8.86% |  1.30e-13 |      
+       40 |   0.9975 |  4.339020e+02 |   -0.45% |  2.12e-13 |      
+       50 |   0.9976 |  4.203260e+02 |   -3.13% |  3.45e-13 |      
+       60 |   0.9977 |  4.184080e+02 |   -0.46% |  5.62e-13 |      
+       70 |   0.9976 |  4.252680e+02 |   +1.64% |  9.16e-13 |      
+       80 |   0.9973 |  4.417370e+02 |   +3.87% |  1.49e-12 |      
+       90 |   0.9966 |  4.644240e+02 |   +5.14% |  2.43e-12 |      
+      100 |   0.9961 |  5.019690e+02 |   +8.08% |  3.96e-12 |      
+      110 |   0.9947 |  5.804480e+02 |  +15.63% |  6.45e-12 |      
+      120 |   0.9928 |  7.345130e+02 |  +26.54% |  1.05e-11 |      
+      130 |   0.9890 |  1.013110e+03 |  +37.93% |  1.71e-11 |      
+      140 |   0.9832 |  1.381487e+03 |  +36.36% |  2.79e-11 |      
+      150 |   0.9748 |  1.454807e+03 |   +5.31% |  4.54e-11 |      
+      160 |   0.9635 |  1.345544e+03 |   -7.51% |  7.39e-11 |      
+      170 |   0.9489 |  1.465608e+03 |   +8.92% |  1.20e-10 |      
+      180 |   0.9291 |  1.797256e+03 |  +22.63% |  1.96e-10 |      
+      190 |   0.9035 |  2.137739e+03 |  +18.94% |  3.19e-10 |      
+      200 |   0.8758 |  2.400170e+03 |  +12.28% |  5.20e-10 |      
+      210 |   0.8516 |  2.656476e+03 |  +10.68% |  8.48e-10 |      
+      220 |   0.8246 |  2.992108e+03 |  +12.63% |  1.38e-09 |      
+      230 |   0.8036 |  3.439545e+03 |  +14.95% |  2.25e-09 |      
+      240 |   0.7833 |  3.873089e+03 |  +12.60% |  3.66e-09 |      
+      250 |   0.7547 |  4.511603e+03 |  +16.49% |  5.97e-09 |      
+      260 |   0.7226 |  5.130704e+03 |  +13.72% |  9.72e-09 |      
+      270 |   0.6897 |  5.178013e+03 |   +0.92% |  1.58e-08 |      
+      280 |   0.6608 |  5.216010e+03 |   +0.73% |  2.58e-08 |      
+      290 |   0.6278 |  5.538697e+03 |   +6.19% |  4.20e-08 |      
+      300 |   0.5930 |  5.567407e+03 |   +0.52% |  6.84e-08 |      
+      310 |   0.5440 |  6.102625e+03 |   +9.61% |  1.11e-07 |      
+      320 |   0.5012 |  6.420018e+03 |   +5.20% |  1.81e-07 |      
+      330 |   0.4617 |  6.477372e+03 |   +0.89% |  2.96e-07 |      
+      340 |   0.4161 |  6.835550e+03 |   +5.53% |  4.81e-07 |      
+      350 |   0.3717 |  7.099153e+03 |   +3.86% |  7.84e-07 |      
+      360 |   0.3332 |  7.421998e+03 |   +4.55% |  1.23e-06 |      
+      370 |   0.3005 |  7.625188e+03 |   +2.74% |  1.81e-06 |      
+      380 |   0.2672 |  7.931565e+03 |   +4.02% |  2.66e-06 |      
+      390 |   0.2333 |  8.231957e+03 |   +3.79% |  3.92e-06 |      
+      400 |   0.2010 |  8.501721e+03 |   +3.28% |  5.78e-06 |      
+      410 |   0.1696 |  8.257067e+03 |   -2.88% |  8.51e-06 |      
+      420 |   0.1457 |  8.563385e+03 |   +3.71% |  1.25e-05 |      
+      430 |   0.1237 |  8.817816e+03 |   +2.97% |  1.85e-05 |      
+      440 |   0.1061 |  9.040986e+03 |   +2.53% |  2.72e-05 |      
+      444 |   0.0990 |  9.122618e+03 |          |  3.30e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 444
+[INFO GPL-1002] Placed Cell Area             1360.8700
+[INFO GPL-1003] Available Free Area         29225.3184
+[INFO GPL-1004] Minimum Feasible Density        0.0500 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0517
+[INFO GPL-1008]     - For 80% usage of free space: 0.0582
+[INFO GPL-1009]     - For 50% usage of free space: 0.0931
+[INFO GPL-1014] Final placement area: 1360.87 (+0.00%)
+[INFO DPL-0006] Core area: 29225.32 um^2
+[INFO DPL-0007] Movable instances area: 1310.90 um^2
+[INFO DPL-0008] Fixed instances area within core: 0.00 um^2
+[INFO DPL-0009] Utilization: 4.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 10104 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         15 |         5 |        10
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.16s
+Placement Analysis
+---------------------------------
+total displacement       2830.3 u
+average displacement        0.3 u
+max displacement            1.7 u
+original HPWL          269676.5 u
+legalized HPWL         271722.8 u
+delta HPWL                    1 %
+
+[INFO IFP-0030] Inserted 1 tiecells using TIEHIx1_ASAP7_75t_R/H.
+[INFO RSZ-0042] Inserted 202 tie TIEHIx1_ASAP7_75t_R instances.
+[INFO IFP-0030] Inserted 1 tiecells using TIELOx1_ASAP7_75t_R/L.
+[INFO RSZ-0042] Inserted 64 tie TIELOx1_ASAP7_75t_R instances.
+OT_CONST LOCAL_PLACE cells=266 rows_used=125
+OT_CONST MAPPED cells=266 hard_macros_unchanged=0
+OT_CONST PG_OPEN: actual M1 supply rails and upconnect require PDN connectivity qualification
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0500] Runtime: 0.49s
+[INFO PSM-0040] All shapes on net VDD are connected.
+[INFO PSM-0040] All shapes on net VSS are connected.
+INT8_TIE_PLACEMENT_FINISHED_NO_CTS_NO_ROUTE
