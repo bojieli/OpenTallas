@@ -13,3 +13,13 @@ The selected analog PLL model only acquires lock at startup and cannot generate 
 Evidence is source-pinned, includes default-off comparisons and real causal fail witnesses, and preserves earlier failed builds, oracle mistakes and uncaught controls. Module-specific receipts and final integration records state exactly what ran. Functional event storage is allowed only for this simulation component: 116 original event bits plus62 lineage bits plus1 owner-record bit times16 entries is **2864 indexed bits**. Physical implementation requires real SRAM and its access/collision/clock contract. No synthesis or physical run was performed.
 
 Release integration still requires native accepted identity, complete producer/phase/calendar coverage, the whole accepted packet/PHY/controller transport lifetime, cache poison/distribution and true external drain ownership, measured fanout/reset/clock/storage/area and latency, and coherent MU binding if selected. These component results do not qualify a release calendar or an actual whole-root reset protocol.
+
+| Final evidence | Bounded result |
+|---|---|
+| Scheduler source8858a45b0 / SHAacf1208 | 30 positive cases, all57 original outputs match default-off trace; seven causal mutants and four invalid contracts caught |
+| Packet bridge897a37d7e | 205-edge positive; 22 original outputs match over2000edges; four causal mutants caught |
+| Native endpoint7c51f2085 | 106-edge positive and original-output default-off comparison; five causal mutants caught |
+| Exact final ND8 dataflow | Five cases PASS at209/210/210/221/221edges; eight requests and eight result-credit returns percase; real CQ words checked |
+| Actual ingress/reset path | Reservation exclusion and later legal SYS_CTRL restart PASS; original bypass mutant fails92 |
+
+The final event-owner bit also fixes a real duplicate-client-tag regression: a descriptor validation error cannot consume the active owner's one fault report. A separate causal restoration of the faulty D_ERR logic loses an accepted error during certification arbitration; both historical fail witnesses are retained. Added declared scheduler state is1563bits atH12,1565atH40 or1566atH64; final ND8 component adds1609logicalstatebits including bridge27 and eight endpoint pairs. These are functional counts, not mapped flipflop/clock/fanout or physical area receipts.
