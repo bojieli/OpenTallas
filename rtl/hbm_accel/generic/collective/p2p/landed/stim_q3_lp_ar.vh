@@ -1,7 +1,9 @@
 // PL-COLLQ 10-18: lockstep stimulus for tb_ot_hfd_coll_q3_lp (q3 SW, SOLO 1; = stim_q2_lp.vh + the TKM write-back port
 // TW2-COLLAR 10-19 (_ar = XDIE-HBM4 AR_ITER 1 / ROWS 128): the same programme placed at rows S_B=64..99 (7-bit pc: next /
-// target MSBs in meta[51] / [52], descriptor base 64 / limit 100, 140-edge scan before launch) with the AR rows 15..27
-// in a 3-trip loop (lid 1, loop-end row 27 -> row 15) and iter_ar_tag_step (word[717:714]) = 3 on them, so the
+// target MSBs in meta[51] / [52], descriptor base 64 / limit 100, 140-edge scan before launch) with the AR rows 15..26
+// in a 3-trip loop (lid 1, loop-end row 26 = the pub_read / release row -> row 15; row 27 pub_issue after the loop) and
+// iter_ar_tag_step (word[717:714]) = 3 on them, so the iterated tags / index change on the loop-end edge (an iteration
+// taken one edge early -- OT_ARITER_TAG_MUT_EDGE -- reads the next trip's tags there); so the
 // iterated reduce tags / publication index (u_ariter) carry it_d2 x step != 0; LP_ACTIVITY ariter_step_cycles counts it.
 // tkx_w_* random into the VM writer's tkw path (a port read only by the writer region); tkx_busy/done/fault held 0).
 // The v5 hard-parent bench programme (tb_hgi_coll_q_hard_v5: actual F20 frames, reduce rows 12-29, scen-7 VM read /
@@ -76,7 +78,7 @@ initial begin : s_main
     s_ar = 0; s_ar[10] = 1; s_pack_ar(17, s_ar);
     s_ar = 0; s_ar[11] = 1; s_ar[21] = 1; s_ar[23 +: 8] = 8'd7; s_ar[31 +: 16] = 16'd13; s_pack_ar(26, s_ar);
     s_ar = 0; s_ar[22] = 1; s_pack_ar(27, s_ar);
-    for (row = 15; row <= 27; row = row + 1) s_code[row][714 +: 4] = 4'(S_STEP);   // iter_ar_tag_step
+    for (row = 15; row <= 26; row = row + 1) s_code[row][714 +: 4] = 4'(S_STEP);   // iter_ar_tag_step
     s_code[28][S_RED] = 1;
     s_code[29][10 + 2] = 1; s_code[29][26 + 2 * 4 +: 4] = 4'(S_RED);
     // scen 7: legal VM read (banks 0 and 7), assembly select, slot capture, delivery
@@ -98,8 +100,8 @@ initial begin : s_main
     repeat (8) @(negedge clk);
     for (row = 0; row < S_NR; row = row + 1) begin
         s_nx = S_B + row + 1; md = 0; md[5:0] = s_nx[5:0]; md[51] = s_nx[6]; if (row == S_NR - 1) md[44] = 1;
-        if (row >= 15 && row <= 27) md[50:45] = 6'd1;                       // loop body lid 1
-        if (row == 27) begin s_nx = S_B + 15; md[43:12] = 32'(S_LOOP); md[11:6] = s_nx[5:0]; md[52] = s_nx[6]; end
+        if (row >= 15 && row <= 26) md[50:45] = 6'd1;                       // loop body lid 1
+        if (row == 26) begin s_nx = S_B + 15; md[43:12] = 32'(S_LOOP); md[11:6] = s_nx[5:0]; md[52] = s_nx[6]; end
         for (seg = 0; seg < 6; seg = seg + 1) s_frame(S_TGT, S_B + row, seg, s_code[row][seg * 256 +: 256]);
         s_frame(S_TGT, S_B + row, 6, {192'b0, md});
         @(negedge clk); fi_cfg_v = 0;
