@@ -1,7 +1,12 @@
 {
   "scope": "Shared clock-entry measurement regression using preserved actual WFC source/netlist/placed ODB and exact CTS recipe. No routed TT/FF/DRC or native closure claim.",
   "fixture_host": "ot-agidock128",
-  "fixture": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_bridge_native_1016_r1-20261016-031244",
+  "fixture": {
+    "kind": "regenerate (host-resident ref_gate run dir; not committed: placed ODB + full source export, swept)",
+    "run_dir_name": "dsfd_vm_wfc_fault_bridge_native_1016_r1-20261016-031244",
+    "regenerate": "git worktree at fixture_source_commit fbdee41dc; python3 tools/ref_tile/pre_route_gate.py physical/ref_tile/dsfd_vm_wfc_fault_bridge_native_1016_r1 --remote <fleet host> --cts (writes ref_gate/<name>-<ts> under the fleet scratch root); check 3_place.odb and dsfd_vm_static_wfc.sv against input_output_shas",
+    "replay": "python3 tools/ref_tile/tests/probe_clock_edge_phase.py <run_dir> <out> <candidate helper> [positive|rise_source_only|no_phase_subtraction] (via ot-run)"
+  },
   "fixture_source_commit": "fbdee41dc",
   "source_archive_sha256": "bd9f6e365ec5b9486a4f2dd6fc8cd9ba119fd3e1a88677f9fac0285cbe1aca87",
   "base_main": "b6cfe7cbd3d4d7c5c583b8a14bad29baa6bd3b71",
@@ -12,7 +17,7 @@
       "name": "positive",
       "exit": 0,
       "ot_run_unit": "oth-ubuntu-1106335-1792146051",
-      "log_local": "/home/ubuntu/artifacts/clockedge-0253/positive.log",
+      "log_local": "tools/ref_tile/tests/clock_edge_phase_1016/positive.log",
       "log_sha256": "5ccc8c85b9e3ef5c77c92ab67e9c751e14754f9f799083c298465f350c59f431",
       "failure": []
     },
@@ -20,7 +25,7 @@
       "name": "mut-rise",
       "exit": 2,
       "ot_run_unit": "oth-ubuntu-1105736-1792146041",
-      "log_local": "/home/ubuntu/artifacts/clockedge-0253/mut-rise.log",
+      "log_local": "tools/ref_tile/tests/clock_edge_phase_1016/mut-rise.log",
       "log_sha256": "675d5e7ad0228f0f6385969d51b72d90e4bf078f6c14a7df26dfaaf3a325e2b3",
       "failure": [
         "Error: cts.tcl, 36 OT_ENTRIES: missing unique finite propagated clock arrival on core_lock$_DFF_NN0_/CLK scene=WC clock=ot_entry_0"
@@ -30,7 +35,7 @@
       "name": "mut-phase",
       "exit": 2,
       "ot_run_unit": "oth-ubuntu-1105047-1792146027",
-      "log_local": "/home/ubuntu/artifacts/clockedge-0253/mut-phase.log",
+      "log_local": "tools/ref_tile/tests/clock_edge_phase_1016/mut-phase.log",
       "log_sha256": "a37ea70a8db8da90aa3fa7538cabf9bb4d1904ef76e8276643497f4cc64013e9",
       "failure": [
         "Error: cts.tcl, 36 EDGE_PHASE_ASSERT: actual small-leaf negedge insertion contains source waveform phase: 438.24885562460236"
@@ -38,10 +43,10 @@
     }
   ],
   "input_output_shas": [
-    "59aeaeb191641f543dc1feea5181e696bc00b72a29cd787cb3293df0750dc48f  /srv/opentallas-scratch/claude/clockedge-proof-0253-positive/orfs/clockedge_post_cts.odb",
-    "06a237ae6bb7ffd0a8f237cf922fc23e9583fa32963cf158a3e255d7a6013475  /srv/opentallas-scratch/claude/clockedge-proof-0253-positive/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_cts.odb",
-    "e838e970764e8e190b429c13c36e3e5b91744a0c2e06db9a222d69d9385b55f6  /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_bridge_native_1016_r1-20261016-031244/routes/gate/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.odb",
-    "63bc73955124d2fcbd640b8277b8a9716a4a65f01fe51c69a39f496a4c6f94f8  /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_fault_bridge_native_1016_r1-20261016-031244/src/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv"
+    "59aeaeb191641f543dc1feea5181e696bc00b72a29cd787cb3293df0750dc48f  {positive_out}/orfs/clockedge_post_cts.odb",
+    "06a237ae6bb7ffd0a8f237cf922fc23e9583fa32963cf158a3e255d7a6013475  {positive_out}/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/4_cts.odb",
+    "e838e970764e8e190b429c13c36e3e5b91744a0c2e06db9a222d69d9385b55f6  {fixture}/routes/gate/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_bridge_asap7_ref_gate/base/3_place.odb",
+    "63bc73955124d2fcbd640b8277b8a9716a4a65f01fe51c69a39f496a4c6f94f8  {fixture}/src/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv"
   ],
   "actual_positive_evidence": [
     "EDGE_WAVEFORM ot_entry_0 0.0 3.850000040994672e-10",
@@ -123,5 +128,11 @@
     "OT_MULTI_ROOT RELATED_PATH serial -> core max slack=2.305933 (ordinary synchronous timing retained)",
     "OT_MULTI_ROOT RELATED_PATH serial -> core min slack=-57.069736 (ordinary synchronous timing retained)"
   ],
-  "limits_preserved": "No IO/clock budget, uncertainty, latency, phi-R formula, 15000/300/80 thresholds, source RTL, or ordinary synchronous timing edits. Normal crossings remain failing. Waveform taken from actual Clock object, converted to UI units (770ps gate fall385, 833.333ps signoff fall416.667; serial 4/3)."
+  "limits_preserved": "No IO/clock budget, uncertainty, latency, phi-R formula, 15000/300/80 thresholds, source RTL, or ordinary synchronous timing edits. Normal crossings remain failing. Waveform taken from actual Clock object, converted to UI units (770ps gate fall385, 833.333ps signoff fall416.667; serial 4/3).",
+  "sources": [
+    "tools/ref_tile/tests/clock_edge_phase_1016/positive.log",
+    "tools/ref_tile/tests/clock_edge_phase_1016/mut-rise.log",
+    "tools/ref_tile/tests/clock_edge_phase_1016/mut-phase.log",
+    "tools/ref_tile/tests/probe_clock_edge_phase.py"
+  ]
 }
