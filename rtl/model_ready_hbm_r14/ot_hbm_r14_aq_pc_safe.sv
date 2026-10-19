@@ -242,7 +242,17 @@ module ot_hbm_r14_aq_pc_safe #(
   // REFpb AHEAD of the schedule; a scheduled slot whose best bank is protected (key >= 32) is then skipped (paid ahead).
   // No REFpb is ever later than the strict schedule; each bank still once per 32-command round.
   reg [3:0] pin; reg ep, skip; reg [3:0] sact;
-  wire ep_start = (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
+`ifdef BW_MUT_REF_STALE
+  wire ref_choice_fresh=1'b1;
+  wire ref_choice_protected=1'b0;
+`else
+  // Tournament keys are pipelined. A completed early REF updates the live
+  // bank state several edges before its key emerges. Never reserve that stale
+  // candidate again: use its already-earned refresh credit for this slot.
+  wire ref_choice_fresh=!refreshed[bsel]&&!need[bsel]&&!open[bsel]&&!aok_busy[bsel];
+  wire ref_choice_protected=refreshed[bsel]||need[bsel]||open[bsel]||aok_busy[bsel];
+`endif
+  wire ep_start = ref_choice_fresh && (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
                   sact >= 4'd6;
   wire ep_rdy = ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= 4'(T_RREFD + 2) && ref_c > RW'(LEAD + 2);
   wire act_ok = act_cand && (|(act_cand_oh & aok_z)) && rrdl_z[act_b[1:0]] && rrds_c == 0 && faw_ok && !act_block &&
@@ -282,7 +292,7 @@ module ot_hbm_r14_aq_pc_safe #(
       if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != 4'hf) sact <= sact + 1'b1;
       if (ref_c == RW'(LEAD)) begin
         if (ep) begin ref_pend <= 1; ep <= 0; end                               // a pending pull-in becomes this slot
-        else if (pin != 0 && bkey >= 7'd32) begin pin <= pin - 1'b1; skip <= 1; end   // paid ahead: skip
+        else if (pin != 0 && (bkey >= 7'd32 || ref_choice_protected)) begin pin <= pin - 1'b1; skip <= 1; end   // paid ahead: skip
         else begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; rkey <= bkey; end
       end else if (ep_start) begin ep <= 1; rb <= bsel; blk <= 32'b1 << bsel; rkey <= bkey; end
       else if (ep && |(blk & open)) begin ep <= 0; blk <= 0; end
