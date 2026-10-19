@@ -66,6 +66,22 @@ class MuCalendar(unittest.TestCase):
         b = M.kv_user_bases(4)
         self.assertEqual(len(set(b.values())), 4 * 36)
 
+    def test_kv_user_rows_match_rtl_rowoff(self):
+        # coordinator 0jc: the RTL row (qkd_kv_mu_wrow/rrow: row[9:8] |= user on the today row 64 + l) is the reference
+        r = M.kv_user_rows(4)
+        for u in range(4):
+            for l in range(36):
+                rtl = (64 + l) | (u << 8)                 # bit insertion as the leaves do it
+                self.assertEqual(r[(u, l)], rtl)
+                self.assertEqual(r[(u, l)], 64 + l + 256 * u)
+                self.assertEqual((r[(u, l)] & 0xFF) - 64, l)   # closed read-return tag row[7:0] - ROW0 = layer
+        self.assertEqual(M.kv_user_bases(4)[(3, 35)], (64 + 35 + 768) << 10)
+        self.assertEqual(M.kv_user_rows(1), {(0, l): 64 + l for l in range(36)})   # 1 user = today's rows
+        with self.assertRaises(ScheduleError):
+            M.kv_user_rows(5)
+        with self.assertRaises(ScheduleError):
+            M.kv_user_rows(4, layers=200)
+
 
 if __name__ == "__main__":
     unittest.main()

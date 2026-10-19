@@ -1355,18 +1355,19 @@
    "capacity_feasible_in_window": true,
    "kvs_window_overlaps": 0,
    "user_layer_bases": 144,
-   "base_stride_sectors": 1024,
+   "row_formula": "64 + layer + 256*user (= RTL qkd_kv_mu_wrow/rrow)",
+   "user_row_stride": 256,
    "base_example": {
-    "u0_L0": 0,
-    "u0_L35": 35840,
-    "u1_L0": 36864,
-    "u1_L35": 72704,
-    "u2_L0": 73728,
-    "u2_L35": 109568,
-    "u3_L0": 110592,
-    "u3_L35": 146432
+    "u0_L0": 65536,
+    "u0_L35": 101376,
+    "u1_L0": 327680,
+    "u1_L35": 363520,
+    "u2_L0": 589824,
+    "u2_L35": 625664,
+    "u3_L0": 851968,
+    "u3_L35": 887808
    },
-   "note": "bases are compiler-written absolute job-word fields (study item 5 preferred form); the HBM PC stream of a user-layer starts at its kvs window start, so prefetch never spans another user's window"
+   "note": "bases = the RTL row map (qkd_kv_mu_rowoff inserts the stage user into row[9:8]; no job-word field); the HBM PC stream of a user-layer starts at its kvs window start, so prefetch never spans another user's window"
   }
  }
 }

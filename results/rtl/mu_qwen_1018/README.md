@@ -112,8 +112,11 @@ Results are in `coll/runs/` (record.json and logs per case).
   collective tag.
 
 **KV die (KV-PLAN / KV-HROOT).**
-- **R6.** Per-user KV base in the job words. The compiler writes the bases (`kv_user_dimension`):
-  - 144 user-layer bases, stride 1,024 sectors a PC;
+- **R6.** Per-user KV row (coordinator 0jc, 10-19: the RTL row is the reference). Row of user u, layer l =
+  64 + l + 256*u: `qkd_kv_mu_wrow` / `qkd_kv_mu_rrow` put the stage user into row[9:8] of today's row 64 + l (bit
+  insertion, no job-word field). The compiler (`kv_user_rows` / `kv_user_bases` / `kv_user_dimension`) emits the same map,
+  test `test_kv_user_rows_match_rtl_rowoff` (the earlier compiler map (u*36 + l) << 10 did not match the RTL and is gone):
+  - 144 user-layer rows (64..99, 320..355, 576..611, 832..867), all below the embedding table (row 24,427);
   - the per-PC stream is 514 HBM edges, which fits the 1,265-edge service window;
   - the service windows never overlap across users.
 - **R6 (host).** NSLOT 4 on the host plane (`qkd_host_if_pins` `$fatal`). Lane MU-QWEN-HOST covers it.

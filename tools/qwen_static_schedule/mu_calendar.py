@@ -397,11 +397,33 @@ def bench_cases(cal, max_msgs=30, t_lo=None):
 
 
 # ---- kv_calendar user dimension ----------------------------------------------------------------------------------------
-def kv_user_bases(users, layers=36, sectors_per_layer=1024):
-    """per-PC HBM sector base of user u, layer l: ((u * layers + l) << 10) | sector (static_kv_calendar.sector is 10 bits:
-    K 0..255, V 512..767); disjoint by construction, checked"""
-    bases = {(u, l): (u * layers + l) * sectors_per_layer for u in range(users) for l in range(layers)}
-    spans = sorted((b, b + sectors_per_layer) for b in bases.values())
+KV_ROW0 = 64                 # qkd_kv_static_writer :85 / qkd_controller_hbm_calendar ROW0: layer l's KV row = 64 + l
+KV_USER_ROW_STRIDE = 256     # qkd_kv_mu_wrow / qkd_kv_mu_rrow (MU-QWEN-HOST): row[9:8] = user, pure bit insertion
+KV_EMBED_ROW0 = 24427        # first embedding-table row on the KV die (must stay above every user's KV rows)
+
+
+def kv_user_rows(users, layers=36):
+    """HBM row of user u, layer l on the Qwen KV die = 64 + l + 256*u (coordinator 0jc: the RTL row is the reference).
+    This is exactly what the RTL does: qkd_kv_mu_wrow/rrow OR the 2-bit user into row[9:8] of the today row 64 + l, so
+    row[7:0] - 64 = layer stays exact for the closed read-return tag.  Checked here: no carry (64 + l < 256), users fit
+    the 2-bit field, rows disjoint, below the embedding table."""
+    if users > 4 or users < 1:
+        raise ScheduleError(f"kv_user_rows: {users} users, the RTL user field is 2 bits")
+    if KV_ROW0 + layers > KV_USER_ROW_STRIDE:
+        raise ScheduleError(f"kv_user_rows: 64 + {layers} layers carries into the user bits")
+    rows = {(u, l): (KV_ROW0 + l) | (u << 8) for u in range(users) for l in range(layers)}
+    assert all(r == KV_ROW0 + l + KV_USER_ROW_STRIDE * u for (u, l), r in rows.items())
+    assert len(set(rows.values())) == len(rows) and max(rows.values()) < KV_EMBED_ROW0
+    return rows
+
+
+def kv_user_bases(users, layers=36, sectors_per_row=1024):
+    """per-PC HBM sector base {row19, sector10} of user u, layer l = kv_user_rows << 10 (static_kv_calendar.sector is
+    10 bits: K 0..255, V 512..767); disjoint by construction, checked.  (Was (u*36 + l) << 10 before 0jc: that row map
+    did not match the RTL, which keeps row[7:0] = 64 + l and puts the user in row[9:8].)"""
+    rows = kv_user_rows(users, layers)
+    bases = {k: r * sectors_per_row for k, r in rows.items()}
+    spans = sorted((b, b + sectors_per_row) for b in bases.values())
     assert all(x[1] <= y[0] for x, y in zip(spans, spans[1:]))
     return bases
 
@@ -428,9 +450,10 @@ def kv_user_dimension(cal, T=8192, kvp=None):
     return dict(context=T, users=NU, pc_busy_hbm_per_layer=scr["pc_busy_hbm_per_layer"], service_window_hbm=svc_hbm,
                 pc_streams_fit_service_window=scr["pc_busy_hbm_per_layer"] <= svc_hbm,
                 capacity_feasible_in_window=scr["capacity_feasible"], kvs_window_overlaps=len(overlap),
-                user_layer_bases=len(bases), base_stride_sectors=1024,
+                user_layer_bases=len(bases), row_formula="64 + layer + 256*user (= RTL qkd_kv_mu_wrow/rrow)",
+                user_row_stride=KV_USER_ROW_STRIDE,
                 base_example={f"u{u}_L{l}": bases[(u, l)] for u in range(NU) for l in (0, 35)},
-                note="bases are compiler-written absolute job-word fields (study item 5 preferred form); the HBM PC "
+                note="bases = the RTL row map (qkd_kv_mu_rowoff inserts the stage user into row[9:8]; no job-word field); the HBM PC "
                      "stream of a user-layer starts at its kvs window start, so prefetch never spans another user's window")
 
 
