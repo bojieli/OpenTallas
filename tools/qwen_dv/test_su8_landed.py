@@ -8,7 +8,10 @@ sys.path.insert(0,str(ROOT/"rtl/test/qwen_dv"))
 import dv_bench2 as B
 B.SRCS2=[s.replace("qfd_dv_slice2_rsafe.sv","qfd_dv_slice2_landed_rsafe.sv").replace("qfd_dv_su8_entries.sv","qfd_dv_su8_landed.sv") for s in B.SRCS2]
 B.XSRCS=[s.replace("qfd_dv_su_lane.sv","qfd_dv_su_lane_landed.sv") for s in B.XSRCS]
-B.SRCS2 += ["rtl/common/landed_parent/ot_pl_land.sv","rtl/common/landed_parent/ot_pl_stream_land.sv"]
+B.SRCS2 = list(dict.fromkeys(B.SRCS2 + ["rtl/common/landed_parent/ot_pl_land.sv",
+                                      "rtl/common/landed_parent/ot_pl_stream_land.sv"]))
 # Added reset release leaf contributes two deterministic boot edges only.
-B.RESET_WARM=10
+# Preserve the source owner's longer guard for scalar/CFG reset forests.
+# Baseline safe core remains 8+2; final scalar/CFG becomes 16+2.
+B.RESET_WARM += 2
 if __name__=="__main__": B.main()
