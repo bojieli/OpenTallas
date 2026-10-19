@@ -1,10 +1,10 @@
-ot-run: ot-epyc4       admits   879 GB (avail 729, growth 113, headroom 0, waiters 0/0 GB) load 113/128 running 36 disk 412 GB 
-ot-run: ot-epyc5       admits   698 GB (avail 553, growth 64, headroom 0, waiters 0/0 GB) load 67/128 running 10 disk 564 GB 
-ot-run: ot-epyc6       admits   844 GB (avail 695, growth 104, headroom 0, waiters 0/0 GB) load 18/128 running 9 disk 563 GB 
-ot-run: ot-epyc7       admits  1025 GB (avail 818, growth 101, headroom 0, waiters 0/0 GB) load 73/96 running 24 disk 502 GB 
-ot-run: ot-epyc8       admits  1195 GB (avail 950, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 35 disk 565 GB 
-ot-run: ot-pve1        admits   149 GB (avail 116, growth 6, headroom 0, waiters 0/0 GB) load 15/28 running 3 disk 1196 GB 
-ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 10/64 running 7 disk 46 GB 
+ot-run: ot-epyc4       admits   879 GB (avail 729, growth 113, headroom 0, waiters 0/0 GB) load 113/128 running 36 disk 412 GB
+ot-run: ot-epyc5       admits   698 GB (avail 553, growth 64, headroom 0, waiters 0/0 GB) load 67/128 running 10 disk 564 GB
+ot-run: ot-epyc6       admits   844 GB (avail 695, growth 104, headroom 0, waiters 0/0 GB) load 18/128 running 9 disk 563 GB
+ot-run: ot-epyc7       admits  1025 GB (avail 818, growth 101, headroom 0, waiters 0/0 GB) load 73/96 running 24 disk 502 GB
+ot-run: ot-epyc8       admits  1195 GB (avail 950, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 35 disk 565 GB
+ot-run: ot-pve1        admits   149 GB (avail 116, growth 6, headroom 0, waiters 0/0 GB) load 15/28 running 3 disk 1196 GB
+ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 10/64 running 7 disk 46 GB
 ot-run: -> ot-agidock128
 ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1547678-1792432465 after 0 s
 RESULT_ROOT=/srv/opentallas-scratch/claude/hbm-xcal-public-banked-1019
