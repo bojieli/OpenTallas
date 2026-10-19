@@ -8,6 +8,8 @@ Inputs (all compiled / measured elsewhere, nothing re-priced here):
   dv_lower.lower             RMSNorm sum of squares PC0 (per-slice SSQ, fused ROOT r)          ages: slice_ages.json
   dv_lower_vec.lower_vec     qk (PC2..PC10: v*r, q/k*r, head SSQ, rsqrt, QK-norm, RoPE -> D2D), resid (PC14 + PC15 /
                              PC22 + PC23: AR landing, fused post-scale + residual add + SSQ, x stream), silu (PC17..19)
+                             attn (PC11 -> PC12, QW-ATTNRET: KV result dr words landed on PORTS dd windows + o_proj x
+                             stream; measured span results/rtl/qw_attnret_1019/record.json)
                                                                                                 ages: vec_ages.json
   dv_lower_mat               STN of qkv / o / gate-up / down, XC dst 0, AR stagger                ages: stn_ages.json
   TOKEN-XDIE-QTP8 record     TP8 AR 256 x 512 b on the production collective: last in -> first out E 284, first in ->
@@ -43,6 +45,7 @@ QTP8 = dict(E=284, span=795, words=256, ls_rec=376, ls_bi=378,
             source='lanes/TOKEN-XDIE-QTP8.md + results/rtl/xdie_qtp8_1018/record.json (claude/xdie-qtp8-1018 fed8119c7): '
                    'AR 256 x 512 b, production LU 53 / LS 376, Verilator 5.050; bi LS 378 (Q-COLLCAL3 e1a641d23)')
 MARGIN = 2
+ATTNRET_REC = 'results/rtl/qw_attnret_1019/record.json'     # QW-ATTNRET: measured attention-return span (bench)
 
 
 def ctlm_rec(stage, lane_ages=LANE_AGES):
@@ -93,7 +96,17 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
 
     # ---------------- family spans (each from its own lowering, local timeline)
     ssq_lw, ssq_cmds, ssq_e0, ssq_span, ssq_boot = ssq_family()
-    fam = {m: vec_family(m, ar_order if m == 'resid' else 'slice') for m in ('qk', 'resid', 'silu')}
+    fam = {m: vec_family(m, ar_order if m == 'resid' else 'slice') for m in ('qk', 'resid', 'silu', 'attn')}
+    at_lw, _ = fam['attn']
+    at_r0 = at_lw['dd_r0']
+    at_span_c = max(x['edge_e5'] for x in at_lw['expected']['x']) - at_r0
+    at_rec = json.loads((ROOT / ATTNRET_REC).read_text()) if (ROOT / ATTNRET_REC).exists() else {}
+    at_span = at_rec.get('measured_span_edges')
+    if at_span is None:
+        gaps.append(f'ATTENTION RETURN: no measured span ({ATTNRET_REC}); the compiled span {at_span_c} is used')
+        at_span = at_span_c
+    elif at_span != at_span_c:
+        gaps.append(f'ATTENTION RETURN: measured span {at_span} != compiled {at_span_c} (re-bench the attn family)')
     qk, _ = fam['qk']
     qk_c0 = min(c['edge'] for c in qk['commands'])
     qk_end = max(d['edge_w5'] for d in qk['expected']['d2d'])
@@ -162,7 +175,13 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     a0 = t_qk + gap(10, 11)
     t_att = stage_rec('attention (KV die native, PRICED)', [11], a0, a0 + P[11]['done'] - P[11]['at'], P[11]['at'],
                       P[11]['done'], 'ctlm plan price: the KV die step is QW-KVATTN (not composed from a measurement here)')
-    o_at = t_att + gap(11, 12)
+    # the attention result's first dr word is taken at the W5 return pin on the PRICED attention done (conservative:
+    # the ctlm price already counts its own result landing, plan first landed word = done - 16)
+    t_ret = stage_rec('attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)', [11, 12], t_att,
+                      t_att + at_span, P[11]['done'] - 16, P[11]['done'],
+                      f'dv_lower_vec attn (owners {at_lw["attn_owners"]}): MEASURED first dr word at the W5 pin -> '
+                      f'last x word at E5 ({ATTNRET_REC}); priced = the plan landing tail (done - 16 .. done)')
+    o_at = t_ret + gap(11, 12)
     o_low, o_ch, o_xc, o_t0, o_first_out = mv_ar('o', o_at, o_at + P[12]['done'] - P[12]['at'])
     t_o = stage_rec('o_proj matvec L8 -> AR words + XC (column tiles + STN)', [12, 13], o_at, o_t0 + 255, P[12]['at'],
                     P[13]['done'], 'dv_lower_mat (stagger, XC dst 0)')
@@ -218,9 +237,11 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     for name, ch in (('qkv', qkv_ch), ('o', o_ch), ('gu', gu_ch), ('down', d_ch)):
         for e, (c, l) in ch.used.items():
             put(e, c, f'{name}: {l}', 'mat')
-    shifts = dict(qk=q0 - qk_c0, resid1=o_first_out - rs_r0, silu=s0 - sl_c0, resid2=d_first_out - rs_r0)
+    shifts = dict(qk=q0 - qk_c0, attn=t_att - at_r0, resid1=o_first_out - rs_r0, silu=s0 - sl_c0,
+                  resid2=d_first_out - rs_r0)
     occ = {}
-    for key, (mode, dl) in dict(qk=('qk', shifts['qk']), resid1=('resid', shifts['resid1']),
+    for key, (mode, dl) in dict(qk=('qk', shifts['qk']), attn=('attn', shifts['attn']),
+                                resid1=('resid', shifts['resid1']),
                                 silu=('silu', shifts['silu']), resid2=('resid', shifts['resid2'])).items():
         lw, S = fam[mode]
         for c in lw['commands']:
@@ -268,9 +289,6 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     if not model['ok']:
         gaps.append(f'cmd_cal model: {model["error"]}')
     gaps += [
-        'ATTENTION OUTPUT PATH (PC11 -> PC12): the KV die returns the attention output on the D2D return chain; no '
-        'lowering lands it / streams it to the o_proj column heads (PORTS dd_en windows + x-stream of the 512 attn '
-        'elements are not emitted by any family)',
         'COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control '
         'that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)',
         f'TILE DELIVERY: tile_first {tile_first} (ME issue -> first far cluster word) and the AR stagger (slice s gets '
@@ -301,7 +319,8 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
             lowered_minus_priced=t_r2 - p_end),
         calendar=dict(model=model, entries=len(events), clashes=clash[:20], occupancy_clashes=occ_clash[:20],
                       shifts=shifts, families={k: sum(1 for v in ev.values() if v[2] == k)
-                                               for k in ('ssq', 'mat', 'qk', 'resid1', 'silu', 'resid2', 'ctlm')}),
+                                               for k in ('ssq', 'mat', 'qk', 'attn', 'resid1', 'silu', 'resid2',
+                                                         'ctlm')}),
         capacity=cap, gaps=gaps, notes=notes,
         events=[dict(edge_w5=e + R['R_CMD'], cmd=f'{c:029x}', label=l) for e, c, l in events])
     return out

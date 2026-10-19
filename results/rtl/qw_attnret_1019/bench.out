@@ -1,0 +1,14 @@
+DV_LOWER_VEC attn FAIL 0/1 mutant=ddbase commands=16 collisions=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+    o_proj x stream: 6/8 words wrong / off edge (first [(1, 128, 880, 128), (1, 192, 888, 192), (2, 256, 887, 256)]), 8 x words at E5
+rc=1
+DV_LOWER_VEC attn FAIL 0/1 mutant=ddwin commands=16 collisions=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+    o_proj x stream: 4/8 words wrong / off edge (first [(0, 64, 881, 64), (1, 192, 888, 192), (2, 320, 895, 320)]), 8 x words at E5
+rc=1
+DV_LOWER_VEC attn PASS 1/1 mutant=0 commands=16 collisions=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+rc=0
+DV_LOWER_VEC qk PASS 4/4 mutant=0 commands=26 collisions=0 q heads 4 / k / v, d2d words=96
+rc=0
+DV_LOWER_VEC resid PASS 26/26 mutant=0 commands=112 collisions=0 r=0x3f551336 x_words=64 psums=160
+rc=0
+DV_LOWER_VEC silu PASS 1/1 mutant=0 commands=36 collisions=0 act words=24
+rc=0

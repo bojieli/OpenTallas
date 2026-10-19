@@ -1,0 +1,3 @@
+DV_LOWER_VEC attn FAIL 0/1 mutant=ddwin commands=16 collisions=0 owners=[0, 1, 2, 5] x_words=8 MEASURED_SPAN first dr word at W5 pin (edge 802) -> last x word at E5 (edge 900) = 98 edges (compiled 98)
+    o_proj x stream: 4/8 words wrong / off edge (first [(0, 64, 881, 64), (1, 192, 888, 192), (2, 320, 895, 320)]), 8 x words at E5
+rc=1
