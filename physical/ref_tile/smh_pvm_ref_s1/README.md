@@ -41,4 +41,9 @@ SAFE 0 regression: exact PASS 240, tight PASS 192.
 8. Schedule: the design is static. The +1 fold write-back cycle was handed to TW5-HBM-DIE and HBM-REPRICE3.
 
 ## Gate
-(filled in after the --cts gate)
+`pre_route_gate --cts` on eb3e319f0 (exact snapshot, ot-epyc6, 2026-10-19 08:13) gave **WARN**, with no FAIL.
+- Clock: one root with 13,793 sinks. Pin-flop spread is 18.5 ps at TT and 18.9 ps at FF (<= 80 PASS). Insertion is 359.7 ps at TT and 299.4 ps at FF. The >300 ps TT insertion is guidance only (owner 0dq): the die matches the boundary by compensation.
+- Trial GRT: overflow 0. Worst layer is M2 at 32.6%.
+- Reset landing: 2 sinks. The post-landing relay rst_n__ot_rl1 drives 285 loads (WARN > 256; these are control/valid bits off the critical cone, audit R2).
+- PNG review (LH-SU 10-19): the SRAM sits on the lattice in the middle, with even std-cell rings N, S, W and E. Pins spread along the full N and S faces. clk enters on S near the centre. Density is even, with no red hot spots apart from pin-register rows at the faces. The outline is 1.5:1.
+- Checklist after the gate: items 1-5, 7 and 8 PASS or fixed; item 6 has the macro-LEF pin-density waiver (above).
