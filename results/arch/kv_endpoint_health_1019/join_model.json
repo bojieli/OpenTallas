@@ -1,0 +1,41 @@
+{
+  "status": "INCOMPLETE_REAL_HOST_RETIREMENT_JOIN",
+  "native_endpoint": {
+    "selected_master": "qkd_host_native_token_endpoint_cancel",
+    "actual_clock": "n_clk_core_c[0]",
+    "actual_reset": "host_rst_n",
+    "POR_input": "por_n && pll_locked",
+    "sticky_new_scope": "local clone not instantiated by selected die",
+    "late_flush_sample": "input sampled at edge H, veto used at H+1; no claim at same capture edge"
+  },
+  "STATUS": {
+    "compute_to_KV_kind": 15,
+    "local_KV_result_status": "native attention record kinds3/4; separate source identity and compiled slot required",
+    "health_plane_cutoff": null,
+    "deadline": null
+  },
+  "final_host": {
+    "scheduler_module": "ot_host_if_pb2_observed",
+    "step_done": "MODE0 && (MU_OUT ? eng_done && mq_n !=0 : inflight && eng_done && !eng_start)",
+    "state_mutation": "step_done updates per-slot state/prompt/gen ownership and CQ event queues",
+    "CQ_commit": "DMA accepted AW/W and response lifecycle; observer cq_commit_v=ev_pop&&m_bresp==0",
+    "why_endpoint_is_insufficient": "A healthy endpoint done can already be serialized, accepted upstream and turned into pending host state/CQ data before later health reaches this local endpoint. Deasserting continued done cannot retract an earlier transaction.",
+    "required_real_implementation": [
+      "Clock/reset-qualified sticky health transported to actual scheduler, retaining failure through host warm and PLL transitions under explicit lifetime policy",
+      "Compiled per-layer STATUS/health deadline before any healthy terminal release",
+      "Continuous veto at scheduler admission and state transition, preserving exception cleanup",
+      "Finite CQ DMA transaction policy for health arriving after AW or W acceptance; no observer-only mask",
+      "Actual selected HOST MU propagation and all four-user context/retirement lifetimes"
+    ]
+  },
+  "KC_DCAL": {
+    "packet_commits": [
+      "fa65492fc",
+      "90b659e78"
+    ],
+    "KC_kf_not_intrinsically_sticky": true,
+    "missing_consumer_input_ABI": true,
+    "landed_phase_and_latency": null
+  },
+  "release_qualification": false
+}

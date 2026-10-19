@@ -1,0 +1,29 @@
+{
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "cases": [
+    {
+      "case": "healthy",
+      "exit_code": 0,
+      "expected_failure": null,
+      "pass_": true,
+      "source_sha256": "311255b03c3f37f863e223bccdf03d2e919d2a125f5897607c48ae055dc5a09c",
+      "bench_sha256": "4961f4ab548b810b574b5b8dfd3ef648a414dbd0c7aa7bcdb4cbb0e16ec49b90"
+    },
+    {
+      "case": "fault",
+      "exit_code": 0,
+      "expected_failure": null,
+      "pass_": true,
+      "source_sha256": "311255b03c3f37f863e223bccdf03d2e919d2a125f5897607c48ae055dc5a09c",
+      "bench_sha256": "caa609f4fcc5022d4b0be2b986142b911017241e2958ad4b1038d9accce7391e"
+    },
+    {
+      "case": "no_sticky",
+      "exit_code": 1,
+      "expected_failure": "HEALTH_RETIRE",
+      "pass_": false,
+      "source_sha256": "5f6dbdd5be89f459618e1f9e79bda8f44f388ebbf8998de9c4a423c829af5ddf",
+      "bench_sha256": "caa609f4fcc5022d4b0be2b986142b911017241e2958ad4b1038d9accce7391e"
+    }
+  ]
+}

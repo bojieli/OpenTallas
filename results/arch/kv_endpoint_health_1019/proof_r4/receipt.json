@@ -1,0 +1,53 @@
+{
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "cases": [
+    {
+      "case": "healthy",
+      "exit_code": 0,
+      "expected_failure": null,
+      "pass_": true,
+      "source_sha256": "311255b03c3f37f863e223bccdf03d2e919d2a125f5897607c48ae055dc5a09c",
+      "bench_sha256": "6c60746a9e63ef97c00117bb8b4c92bc5cbae50c09230f0736036775d1468f48"
+    },
+    {
+      "case": "fault",
+      "exit_code": 0,
+      "expected_failure": null,
+      "pass_": true,
+      "source_sha256": "311255b03c3f37f863e223bccdf03d2e919d2a125f5897607c48ae055dc5a09c",
+      "bench_sha256": "293edab6a95570e26349df5fed2b24de15b38a54eb2f9a004457998f2df59f95"
+    },
+    {
+      "case": "no_sticky",
+      "exit_code": 1,
+      "expected_failure": "HEALTH_RETIRE",
+      "pass_": true,
+      "source_sha256": "5f6dbdd5be89f459618e1f9e79bda8f44f388ebbf8998de9c4a423c829af5ddf",
+      "bench_sha256": "293edab6a95570e26349df5fed2b24de15b38a54eb2f9a004457998f2df59f95"
+    },
+    {
+      "case": "retire_bypass",
+      "exit_code": 1,
+      "expected_failure": "HEALTH_RETIRE",
+      "pass_": true,
+      "source_sha256": "35bb25f09c4d50c5cf7bbd8c61ec0dbd08f603d40f1734b454039ccd5bf77ec8",
+      "bench_sha256": "293edab6a95570e26349df5fed2b24de15b38a54eb2f9a004457998f2df59f95"
+    },
+    {
+      "case": "admit_bypass",
+      "exit_code": 1,
+      "expected_failure": "HEALTH_ADMIT",
+      "pass_": true,
+      "source_sha256": "0a6b6b5104a47dca94da6798b9929a3aba42fd760cfd012a4f21bd2c6a9c9874",
+      "bench_sha256": "293edab6a95570e26349df5fed2b24de15b38a54eb2f9a004457998f2df59f95"
+    },
+    {
+      "case": "done_bypass",
+      "exit_code": 1,
+      "expected_failure": "HEALTH_DONE",
+      "pass_": true,
+      "source_sha256": "576f8ab4be4bffcb95bc804f8cc7c5b62800f5518c7c8e77918c4a2088b8c668",
+      "bench_sha256": "293edab6a95570e26349df5fed2b24de15b38a54eb2f9a004457998f2df59f95"
+    }
+  ]
+}

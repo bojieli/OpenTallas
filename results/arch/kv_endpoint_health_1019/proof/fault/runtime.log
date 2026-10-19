@@ -1,0 +1,5 @@
+PASS HOST_ENDPOINT_HEALTH checks=10 requests=2 credits=1
+- /srv/opentallas-scratch/claude/kv-endpoint-health-1019/rtl/test/qwen_host/tb_qkd_host_native_token_endpoint_health_fault.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 72ns; walltime 0.000 s; speed 698.430 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

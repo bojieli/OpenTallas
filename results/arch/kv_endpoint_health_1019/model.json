@@ -1,0 +1,49 @@
+{
+  "status": "BOUNDED_LOCAL_MECHANISM_NOT_RELEASE_ADOPTION",
+  "selected_die_sha256": "18464a8b31042bea03b3fc5779d42803ab7b05bebbaab733a4d83d4a714c1ea6",
+  "source": "4db097403",
+  "original": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+  "actual_selected_hierarchy": "host.u_rank.u_native",
+  "added_state": {
+    "health_sticky_FF": 1,
+    "clock": "ck_native -> n_clk_core_c[0]",
+    "async_clear": "por_n only; actual selected rank passes por_n&&pll_locked, so PLL loss ALSO clears; no POR-only system claim",
+    "warm_host_reset_clear": false,
+    "sticky_D": "health_sticky OR (HEALTH_RETIRE && kv_flush)",
+    "endpoint_healthy_edges_added": 0
+  },
+  "logic": {
+    "accept_veto": 1,
+    "issue_veto": 1,
+    "normal_retire_veto": 1,
+    "continued_done_level_veto": 1,
+    "status_fault_OR": 1,
+    "health_fanout_lower_bound": 5,
+    "mapped_area_um2": null,
+    "clock_cap_fF": null,
+    "physical_reset_and_copy_fixedpoint": null
+  },
+  "data_intensity": {
+    "MACs": 0,
+    "new_memory_bytes_per_edge": 0,
+    "existing_health_boundary_bits": 1,
+    "new_boundary_bits": 0
+  },
+  "schedule": {
+    "SU_added_healthy_edges": 0,
+    "MU_added_healthy_edges": 0,
+    "full_layer_health_cutoff": null,
+    "per_layer_provisional_token_extra": 7680,
+    "actual_STATUS_calendar": null
+  },
+  "full_join": {
+    "KC_DCAL_missing_landed_path": true,
+    "PC_paths_have_unqualified_regional_epoch_phase": true,
+    "D2D_STATUS_direction": "compute -> KV",
+    "host_final_state_mutation": "ot_host_if_pb2_observed step_done",
+    "host_final_CQ_external_commit": "CQ DMA AW/W/B lifecycle; cq_commit_v is only an observer",
+    "full_host_retirement_admission_join": false,
+    "reason": "Endpoint-local sampled flush veto does not prove full-plane bounded arrival before irreversible host commit. No guessed ABI or observer-only mask."
+  },
+  "new_physical_build_authorized": false
+}
