@@ -1,0 +1,136 @@
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:67:25: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+   67 |     wire status_a = u_b.u_core.u_st.status_event_valid;
+      |                         ^~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:67:32: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+   67 |     wire status_a = u_b.u_core.u_st.status_event_valid;
+      |                                ^~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:68:25: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+   68 |     wire status_b = u_b.u_core.u_st.status_port_match;
+      |                         ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:68:32: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+   68 |     wire status_b = u_b.u_core.u_st.status_port_match;
+      |                                ^~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:71:79: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+   71 |             $display("STATUS_TRUTH inputs=%b%b slot=%b",status_a,status_b,u_b.u_core.u_st.tx_slot_k);
+      |                                                                               ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:71:86: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+   71 |             $display("STATUS_TRUTH inputs=%b%b slot=%b",status_a,status_b,u_b.u_core.u_st.tx_slot_k);
+      |                                                                                      ^~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:73:39: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+   73 |         status_one = status_one | u_b.u_core.u_st.tx_slot_k;
+      |                                       ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:73:46: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+   73 |         status_one = status_one | u_b.u_core.u_st.tx_slot_k;
+      |                                              ^~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:74:42: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+   74 |         status_zero = status_zero | ~u_b.u_core.u_st.tx_slot_k;
+      |                                          ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:74:49: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+   74 |         status_zero = status_zero | ~u_b.u_core.u_st.tx_slot_k;
+      |                                                 ^~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:76:21: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+   76 |             if (u_b.u_core.u_st.tx_slot_k[status_idx] !== (status_a && status_b))
+      |                     ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:76:28: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+   76 |             if (u_b.u_core.u_st.tx_slot_k[status_idx] !== (status_a && status_b))
+      |                            ^~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:28: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                            ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:35: Can't find definition of 'u_end' in dotted scope/variable: 'u_b.u_core.u_end'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                   ^~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:41: Can't find definition of 'u_link' in dotted scope/variable: 'u_b.u_core.u_link'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                         ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:48: Can't find definition of 'g_bank' in dotted scope/variable: 'u_b.u_core.g_bank'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:58: Can't find definition of 'u_store' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_store'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                          ^~~~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:66: Can't find definition of 'u_h0d' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_h0d'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                  ^~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:78: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                              ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:85: Can't find definition of 'u_end' in dotted scope/variable: 'u_b.u_core.u_end'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                                     ^~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:91: Can't find definition of 'u_link' in dotted scope/variable: 'u_b.u_core.u_link'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                                           ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:98: Can't find definition of 'g_bank' in dotted scope/variable: 'u_b.u_core.g_bank'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                                                  ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:108: Can't find definition of 'u_store' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_store'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                                                            ^~~~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:168:116: Can't find definition of 'u_h0d' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_h0d'
+  168 |         s6s_and0_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h0d.b}] = 1'b1;
+      |                                                                                                                    ^~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:28: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                            ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:35: Can't find definition of 'u_end' in dotted scope/variable: 'u_b.u_core.u_end'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                   ^~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:41: Can't find definition of 'u_link' in dotted scope/variable: 'u_b.u_core.u_link'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                         ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:48: Can't find definition of 'g_bank' in dotted scope/variable: 'u_b.u_core.g_bank'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:58: Can't find definition of 'u_store' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_store'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                          ^~~~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:66: Can't find definition of 'u_h1d' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_h1d'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                  ^~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:78: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                              ^~~~~~
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:85: Can't find definition of 'u_end' in dotted scope/variable: 'u_b.u_core.u_end'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                                     ^~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:91: Can't find definition of 'u_link' in dotted scope/variable: 'u_b.u_core.u_link'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                                           ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:98: Can't find definition of 'g_bank' in dotted scope/variable: 'u_b.u_core.g_bank'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                                                  ^~~~~~
+        ... Known scopes under 'u_b.u_core': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:108: Can't find definition of 'u_store' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_store'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                                                            ^~~~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:169:116: Can't find definition of 'u_h1d' in dotted scope/variable: 'u_b.u_core__BRA__??__KET__.u_h1d'
+  169 |         s6s_and1_seen[{u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.a,u_b.u_core.u_end.u_link.g_bank[0].u_store.u_h1d.b}] = 1'b1;
+      |                                                                                                                    ^~~~~
+        ... Known scopes under 'u_b.u_core[??]': <no instances found>
+%Error: Exiting due to 36 error(s)

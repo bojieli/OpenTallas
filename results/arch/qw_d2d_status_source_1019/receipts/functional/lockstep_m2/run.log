@@ -1,0 +1,14 @@
+SFEQ_FAIL cycle=2328 diff_bits=2
+    bit 616 a=1 b=0
+SFEQ_FAIL cycle=2331 diff_bits=107
+    bit 11 a=0 b=1
+SFEQ_FAIL cycle=2332 diff_bits=12
+    bit 559 a=1 b=0
+SFEQ_FAIL cycle=2333 diff_bits=108
+    bit 13 a=1 b=0
+SF6U_USEFUL_AND_COVER h0=1111 h1=1011
+SFEQ_FAIL mismatching_cycles=195333 slots=7174 fdi_tx=9730
+- rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:218: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 4.325 s; speed 92.478 us/s
+- Verilator: cpu 4.323 s on 1 threads; allocated 7 MB

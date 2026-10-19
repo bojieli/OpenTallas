@@ -1,0 +1,43 @@
+mkdir -p /work/results/asap7/sf6s_source_census/base/
+echo 770.0 > /work/results/asap7/sf6s_source_census/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/sf6s_source_census/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/sf6s_source_census/base/clock_period.txt
+Setting clock period to 770.0
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192/ot_sram_1r1w_64x137_m1_r2c2_p192_tt.lib
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+12. Executing Liberty frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192/ot_sram_1r1w_64x137_m1_r2c2_p192_tt.lib
+13. Executing Verilog-2005 frontend: /src/rtl/lib/ot_rst_pipe.sv
+14. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
+15. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv
+16. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
+17. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv
+18. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+19. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv
+20. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv
+21. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv
+22. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe5.sv
+23. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf.sv
+24. Executing Verilog-2005 frontend: /src/rtl/qwen_split/qfd_kvn_static_transport.sv
+25. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192/ot_sram_1r1w_64x137_m1_r2c2_p192_bb.v
+26. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe6u.sv
+27. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf6s.sv
+28. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+29. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_d2d_static_ovl_sf6s'.
+30. Executing HIERARCHY pass (managing design hierarchy).
+31. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_d2d_static_ovl_sf6s'.
+31.1. Analyzing design hierarchy..
+31.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_d2d_kff'.
+ERROR: Module `\qfd_d2d_static_core_s6s' referenced in module `\qfd_d2d_static_ovl_sf6s' in cell `\u_core' is not part of the design.
+Elapsed time: 0:00.86[h:]min:sec. CPU time: user 0.81 sys 0.05 (99%). Peak memory: 83544KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/sf6s_source_census/base/1_1_yosys_canonicalize.rtlil] Error 2

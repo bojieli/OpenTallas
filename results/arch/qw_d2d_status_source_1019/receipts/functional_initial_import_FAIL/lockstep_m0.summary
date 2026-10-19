@@ -1,0 +1,9 @@
+sfeq_m0 got=BUILD_FAIL
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:67:25: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:67:32: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:68:25: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:68:32: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:71:79: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:71:86: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:73:39: Dotted reference to instance that refers to missing module/interface: 'qfd_d2d_static_core_s6s'
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6s_equiv.sv:73:46: Can't find definition of 'u_st' in dotted scope/variable: 'u_b.u_core.u_st'

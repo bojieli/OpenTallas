@@ -1,0 +1,4 @@
+pair_gen_txdp expect=FAIL got=CAL_FAIL -> UNEXPECTED
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'

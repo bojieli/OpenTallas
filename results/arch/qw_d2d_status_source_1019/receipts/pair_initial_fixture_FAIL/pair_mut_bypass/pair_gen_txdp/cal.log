@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qw-d2d-status-source-1019/tools/qwen_split/xdie_exchange_cal.py", line 183, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/qw-d2d-status-source-1019/tools/qwen_split/xdie_exchange_cal.py", line 106, in main
+    _, lay = L.program_profile(txl_p, phy_p, a.token_path, host_stages=0, st_ofs=40, handoff=a.link_handoff)
+             ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qw-d2d-status-source-1019/tools/qwen_split/d2d_link_calendar.py", line 139, in program_profile
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'

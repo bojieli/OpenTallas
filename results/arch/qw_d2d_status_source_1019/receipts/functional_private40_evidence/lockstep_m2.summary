@@ -1,0 +1,10 @@
+sfeq_m2 got=FAIL
+SFEQ_FAIL cycle=2328 diff_bits=2
+    bit 616 a=1 b=0
+SFEQ_FAIL cycle=2331 diff_bits=107
+    bit 11 a=0 b=1
+SFEQ_FAIL cycle=2332 diff_bits=12
+    bit 559 a=1 b=0
+SFEQ_FAIL cycle=2333 diff_bits=108
+    bit 13 a=1 b=0
+SFEQ_FAIL mismatching_cycles=195333 slots=7174 fdi_tx=9730
