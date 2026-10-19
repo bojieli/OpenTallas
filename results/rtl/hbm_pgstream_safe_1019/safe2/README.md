@@ -54,3 +54,14 @@ so it cannot see this. SAFE2 releases stream-domain loads from pg_clk terminals 
 top _split_safe2; sources + multirate_bridge_regional.sv + ot_hbm_su_static_pg_stream_safe2.sv; reset_landing.stages 1;
 seam_windows globs -> region cells (*u_bq.req*, *u_bs.ret*, *u_s.g_ij*); cdc_synchronizers chains -> u_s.rq_s0 /
 u_s.g_lr[*].u.r and u_s.rs_s0 / u_s.g_tr[*].u.r; declare g_bsf feeder->P window (2q setup / 1q hold).
+
+## r5..r7 (LH-PGVM2 10-19, LEAD-HBM decision: register the inject pins, +1 stream edge accepted)
+- r5 6bead8e80: inj_rd / inj_addr captured per inject region on pg_clk before the decode; the bench reference gets the
+  inputs through one pg_clk register (gen_safe2_tb.py). PASS 3 / mutants 8 FAIL; census 1 root > 32 (38: the {bad}
+  region's slot-3 group bit).
+- r6 81f9b: {bad} region split into four group instances (bad = OR_g bad_g); sequential form -> 56 loads (worse).
+- r7 6fef8: group instances compute the conflict pairwise. Evidence `bench_r7/` (Verilator 5.050, ot-epyc7): rr18 / rr10 /
+  qid0 PASS (checks 7194, windows 9228), m1 m2 m3 m6 m8 m12 m13 m14 FAIL. `map_r7/` (yosys 0.68 TT): 29,656 cells,
+  9,496 FF, 4,185 um2, **0 roots > 32 (max 32)**.
+- Checklist item 1 now FIXED (every data pin registered in RTL), item 3 FIXED. Kit: physical/ref_tile/hbm_su_pg_stream_b_safe2_1019
+  (README has the full checklist), gate --cts --remote auto.

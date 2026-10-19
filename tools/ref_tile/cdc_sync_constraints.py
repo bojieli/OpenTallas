@@ -187,7 +187,11 @@ def elaborate(root, top, sources, params, yosys):
         args += f' -chparam {name} {value}'
     with tempfile.TemporaryDirectory(prefix='ot-cdc-sync-') as tmp:
         out = Path(tmp) / 'netlist.json'
+        # LH-PGVM2 10-19: the lint is a LOGICAL census, so kept hierarchy (keep_hierarchy region / replica cells, kept for
+        # placement and fanout) is flattened too; otherwise a kept cell is an 'unexpected unmapped cell'.  Kept replicas
+        # of one register are logically one register here (opt merges them); synthesis still keeps them apart.
         cmd = (f'read_verilog -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+               f'setattr -mod -unset keep_hierarchy; '
                f'proc; flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
