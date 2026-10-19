@@ -164,7 +164,11 @@ for g_, j_, kv_ in (("dv2f14bq", QR, 7), ("dv2f14bi", QI, 6)):   # kv_ = port 2 
 _MU = ["--mu-cal", "results/rtl/mu_qwen_1018/coll/mu_cal.json"]
 _MUB = CASES["cal_dv2f14bi"] + _MU
 CASES.update({
-    "mu_bi": _MUB + ["--only", "mu_window($|_ref)"],
+    # Current source-bound SAFE profile; retain the old fixture as a diagnostic,
+    # with its original positive expectation so a failure remains visible.
+    "mu_bi": RLB + ["--real-lanes", "results/rtl/qwen_coll_safe_1019/dv2f18dh2_coll_lane_latency.json",
+                    "--safe-face-hard", "--lats", "cal"] + _MU + ["--only", "mu_window($|_ref)"],
+    "mu_bi_dv2f14bi_diagnostic": _MUB + ["--only", "mu_window($|_ref)"],
     "mu_bi_neg_overlap": _MUB + ["--only", "mu_window_neg_overlap", "--expect-fail"],
     "mu_bi_mut_rlat": _MUB + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RLAT", "--expect-fail"],
     "mu_bi_mut_rank": _MUB + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RANK", "--expect-fail"],
