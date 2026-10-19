@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-witness
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-witness
+ot-run: ot-epyc6       admits   403 GB (avail 396, growth 113, headroom 0, waiters 0/0 GB) load 51/128 running 20 disk 6113 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-witness
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-witness
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-ctrl-witness
+ot-run: ot-agidock128  admits    87 GB (avail 74, growth 13, headroom 0, waiters 0/0 GB) load 17/64 running 10 disk 223 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4009734-1792422671 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 20.17 max 143.25 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4009734-1792422671): exit 0

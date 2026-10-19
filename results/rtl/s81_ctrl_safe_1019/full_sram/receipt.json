@@ -1,0 +1,19 @@
+{
+ "source": "efe223a42",
+ "physical_source": "8a9d1473c",
+ "verilator": "5.050",
+ "full_vehicle": "16xdsfd_ctrl_rg2,32PC",
+ "seed": 1,
+ "n": 48,
+ "positive": "TB_DSFD_CTRL PASS",
+ "request_min_cks": 6.95,
+ "response_min_cks": 5.26,
+ "request_mean_cks": 20.17,
+ "response_mean_cks": 5.73,
+ "request_max_cks": 143.25,
+ "response_max_cks": 6.18,
+ "edges_vs_pinned_flop": "identical measured crossing metrics",
+ "negative_vehicle": "../pcr_min/actual2PC registered boundary comparisons",
+ "canceled_full_krdy_pid": 4115777,
+ "canceled_is_witness": false
+}
