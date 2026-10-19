@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits    32 GB (avail 342, growth 319, headroom 0, waiters 0/0 GB) load 55/128 running 19 disk 414 GB 
+ot-run: ot-epyc5       admits   541 GB (avail 513, growth 134, headroom 0, waiters 0/0 GB) load 135/128 running 16 disk 565 GB 
+ot-run: ot-pve1        admits   234 GB (avail 181, growth 18, headroom 0, waiters 0/0 GB) load 17/28 running 10 disk 1260 GB 
+ot-run: ot-agidock128  admits    27 GB (avail 36, growth 18, headroom 0, waiters 0/0 GB) load 18/64 running 6 disk 51 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3190313-1792391323 after 0 s
+ORDER_RESET FAIL comparisons=10000 epochs=100 emits=20 errors=0
+[10003000] %Fatal: tb.sv:97: Assertion failed in tb_order_reset: reset contract mismatch or no traffic
+%Error: /tmp/codex-hrord-bench/exact/tb.sv:97: Verilog $stop
+Aborting...
+
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3190313-1792391323): exit 1

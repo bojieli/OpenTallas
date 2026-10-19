@@ -43,10 +43,10 @@ def main():
                 dn = rn = f'i{i}_{name}'
                 text += [f'reg {rng} {dn}=0;']
                 drive += [f'{dn} = {{16{{$random}}}};']
-                if name in ('chain_a', 'slice_ack', 'acks', 'chain_c', 'chain_fault_i'):
+                if name in ('chain_a', 'slice_ack', 'acks', 'chain_c', 'chain_fault_i', 'kv_cr', 'hb_cr', 'marker_cr', 'boot_release'):
                     drive += [f'{dn}=0;']
                 if name == 'ing':
-                    drive += [f'{dn}[33:2] = $urandom_range(0,127); {dn}[1:0]=3;']
+                    drive += [f'{dn}[33:2] = $urandom_range(0,127); {dn}[1]=1; {dn}[0]=(c%8==0);']
             else:
                 dn, rn = f'd{i}_{name}', f'r{i}_{name}'
                 text += [f'wire {rng} {dn}, {rn};']
