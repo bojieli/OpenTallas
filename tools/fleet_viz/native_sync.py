@@ -15,8 +15,9 @@ This tool is run hourly by the user timer fleet-viz-elem-sync.timer and rebuilds
               days whose list items are native_pin_audit records: cell, view, pass, launch_ps).  CTS probes
               (cts-native-probe schema) are diagnostics, not routed qualifications, and are ignored.  Per job / view the
               own audit stands; a committed receipt fills a job the own audit does not cover, and a relative-mode
-              receipt PASS (owner 10-17 0dq clock rule: --relative-to parent compensation / neighbour) overrides an
-              own-R FAIL of the same view.
+              receipt PASS (owner 10-17 0dq clock rule: --relative-to parent compensation / neighbour) or a case-pin
+              receipt PASS (native_pin_audit --case: strap pins the die SDC set_case_analysis-es; record case_pins, or
+              the superseded S81-MISC static_pins) overrides an own-R FAIL of the same view.
   4. margin   margin_thin.native_of per record -> {state}/margin_live.json (schema opentallas.margin_thin.v1, 'views'
               list: the input of elements.py apply_die_bindable).  The viewer prefers this file over the committed one.
 
@@ -169,6 +170,35 @@ def harvest_receipts(git, days=RECEIPT_DAYS):
     return out
 
 
+RECEIPT_OVERRIDE_KEYS = ('pass', 'fail_why', 'relative_to', 'relative', 'launch_ps', 'launch_pin', 'capture_ps', 'capture_pin',
+                         'launch_over', 'capture_over', 'comb_pins', 'case_patterns', 'case_pins', 'case_pins_raw_capture_ps',
+                         'case_evidence', 'static_pins', 'static_evidence')
+
+
+def apply_receipts(views, receipts):
+    """merge committed receipts into the own audit records (in place) -> (n_fill, n_override).  Newest receipt per
+    job / view / cell.  A receipt fills a job the own audit does not cover; a receipt PASS overrides an own FAIL of the
+    same view only when it carries what the own audit cannot know: relative_to (parent / neighbour reference, owner
+    10-17 0dq) or non-empty case_pins / static_pins (die-SDC case-analysed straps, NS-CASE 10-18).  A plain
+    own-R receipt PASS never beats an own FAIL."""
+    by_job_view = {(v.get('job'), v['view'], v['cell']): v for v in views}
+    own_jobs = {v.get('job') for v in views if v.get('job')}
+    n_fill = n_rel = 0
+    best = {}
+    for t, path, r in sorted(receipts, key=lambda x: x[0]):
+        best[(r.get('job'), r['view'], r['cell'])] = (t, path, r)    # newest receipt per job/view
+    for (job, view, cell), (t, path, r) in best.items():
+        own = by_job_view.get((job, view, cell))
+        if own is None:
+            if job and job in own_jobs: continue
+            v = dict(r); v.update(src='receipt ' + path, receipt=path); views.append(v); n_fill += 1
+        elif own.get('pass') is False and r.get('pass') is True and (r.get('relative_to') or r.get('case_pins') or r.get('static_pins')):
+            own_why = own.get('fail_why')
+            own.update({k: r.get(k) for k in RECEIPT_OVERRIDE_KEYS if k in r or k in ('pass', 'fail_why')})
+            own['receipt'] = path; own['own_fail_why'] = own_why; n_rel += 1
+    return n_fill, n_rel
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--repo', default='/home/ubuntu/OpenTallas')
@@ -258,21 +288,8 @@ def main(argv=None):
         v = dict(r); v.update(job=job, src='main' if src == 'main' else ref.replace('refs/remotes/', ''), tree=tree)
         views.append(v)
     receipts = harvest_receipts(git)
-    by_job_view = {(v.get('job'), v['view'], v['cell']): v for v in views}
-    own_jobs = {v.get('job') for v in views if v.get('job')}
-    n_fill = n_rel = 0
-    best = {}
-    for t, path, r in sorted(receipts, key=lambda x: x[0]):
-        best[(r.get('job'), r['view'], r['cell'])] = (t, path, r)    # newest receipt per job/view
-    for (job, view, cell), (t, path, r) in best.items():
-        own = by_job_view.get((job, view, cell))
-        if own is None:
-            if job and job in own_jobs: continue
-            v = dict(r); v.update(src='receipt ' + path, receipt=path); views.append(v); n_fill += 1
-        elif own.get('pass') is False and r.get('pass') is True and r.get('relative_to'):
-            own.update({k: r.get(k) for k in ('pass', 'fail_why', 'relative_to', 'relative', 'launch_ps', 'capture_ps')})
-            own['receipt'] = path; own['own_fail_why'] = own.get('fail_why'); n_rel += 1
-    log('receipts: %d records, %d fill uncovered jobs, %d relative PASS over own FAIL' % (len(receipts), n_fill, n_rel))
+    n_fill, n_rel = apply_receipts(views, receipts)
+    log('receipts: %d records, %d fill uncovered jobs, %d relative/case PASS over own FAIL' % (len(receipts), n_fill, n_rel))
 
     # ---- 4. margin file
     out = []
@@ -281,7 +298,7 @@ def main(argv=None):
         out.append(dict(cell=v.get('cell'), view=v.get('view'), job=v.get('job'), native=nat, native_why=why,
                         launch_ps=v.get('launch_ps'), capture_ps=v.get('capture_ps'), spread_ps=v.get('spread_ps'),
                         ff_spread_ps=v.get('ff_spread_ps'), R_ps=v.get('R_ps'), src=v.get('src'), receipt=v.get('receipt'),
-                        relative_to=v.get('relative_to')))
+                        relative_to=v.get('relative_to'), case_pins=v.get('case_pins') or v.get('static_pins')))
     c = collections.Counter(x['native'] for x in out)
     doc = dict(schema='opentallas.margin_thin.v1', generator='tools/fleet_viz/native_sync.py',
                generated=datetime.datetime.now().astimezone().isoformat(timespec='seconds'), source_main=main_rev,

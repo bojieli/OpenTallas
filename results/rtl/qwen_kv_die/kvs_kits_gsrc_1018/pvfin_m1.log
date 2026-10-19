@@ -1,0 +1,8 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cmd 6 beat 23 at k 59 (ref out 35) db 23
+MISMATCH cmd 7 beat 7 at k 48 (ref out 40) db 7
+MISMATCH cmd 14 beat 15 at k 174 (ref out 158) db 15
+MISMATCH cmd 15 beat 15 at k 32 (ref out 16) db 15
+MISMATCH cmd 22 beat 7 at k 44 (ref out 36) db 7
+FAIL 10 mismatches (1536 beats, 96 compared)
+PVFIN_KIT FAIL mut=1 detected (5 mismatch/fault lines)

@@ -1,0 +1,15 @@
+WRITE_MISMATCH edge 1003 leaf 2 port 0 addr 27 data 3edee93a
+WRITE_MISMATCH edge 2150 leaf 4 port 0 addr 58 data bec2c579
+MISSING row write edge 643 leaf 1 port 0 addr 11
+MISSING row write edge 646 leaf 2 port 1 addr 15
+MISSING row write edge 649 leaf 2 port 1 addr 23
+MISSING row write edge 733 leaf 0 port 1 addr 23
+MISSING row write edge 736 leaf 1 port 0 addr 16
+MISSING row write edge 739 leaf 4 port 0 addr 19
+MISSING row write edge 741 leaf 0 port 1 addr 13
+MISSING row write edge 747 leaf 3 port 0 addr 8
+MISSING row write edge 777 leaf 1 port 1 addr 13
+MISSING row write edge 779 leaf 0 port 0 addr 16
+SLCAP rows 1280 written_ok 251 bad_writes 2 missing 1029 arrivals 7446/7446 arr_mismatch 0 fault 1 fcause 0460
+SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min 43 max 61 mean 45.96
+FAIL

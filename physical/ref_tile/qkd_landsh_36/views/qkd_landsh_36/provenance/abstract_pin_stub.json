@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qkd_landsh_36.lef",
+    "sha256": "92e4538715954d017389046dad6e06c144b1b7de7a781a8ea08d6713f20ffc17"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qkd_landsh_36-f1-20cef08c0/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_landsh_36-f1-20cef08c0/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_landsh_36-f1-20cef08c0/record/views/qkd_landsh_36/provenance/raw/qkd_landsh_36.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_landsh_36-f1-20cef08c0/record/views/qkd_landsh_36/provenance/qkd_landsh_36.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 21 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_landsh_36-f1-20cef08c0/record/views/qkd_landsh_36/provenance/qkd_landsh_36.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qkd_landsh_36 25.92 x 21.6: PG M5 VDD 8 stripes (73% spread, 100% cov) / VSS 8 stripes (73% spread, 100% cov); strap M6; face pins 82 blocked-above 0 blocked-same 0; clock ck insertion 63 ps; clock ckf insertion 89 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qkd_landsh_36",
+      "W": 25.92,
+      "H": 21.6,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 8,
+            "dir": "V",
+            "spread": 0.729,
+            "coverage": 1.0,
+            "shapes_on_top": 8
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 8,
+            "dir": "V",
+            "spread": 0.729,
+            "coverage": 1.0,
+            "shapes_on_top": 8
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 82,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 62.67,
+          "min_ps": 53.19
+        },
+        "ckf": {
+          "max_ps": 89.01,
+          "min_ps": 74.23
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 21
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "qkd_landsh_36.lef",
+    "sha256": "f35b276c6e7f99f9c9aa573461bb36bda0736708018dabd1e75274b5f5476d31"
+  }
+}

@@ -1,0 +1,8 @@
+2026-10-18 12:37:46 PDT kvs14q 8503e0c89 prep start (netlist-only; OT_KV_D2D_TXDP_K=image)
+2026-10-18 13:03:21 PDT prep done: prep done: 8503e0c89 }
+2026-10-18 13:03:21 PDT BUNDLE_EQ: kv die BUNDLE_EQ: K.rx_record 11, K.tx_slot 9, K.tx_record 11, K.emb_record 0, K.kvn_writer 4 (11 pad relays)
+2026-10-18 13:03:21 PDT LANDSLOT: kv die LANDSLOT: 288 crossing runs, tiers {'near': 211, 'abut': 75, 'unslotted': 2}, legality {'overlaps': 0, 'outside': 0, 'examples': []}
+2026-10-18 13:03:21 PDT relay_stages.json (generator model): 
+2026-10-18 13:03:21 PDT STRICT BIND: DIE_PORT_BIND PASS masters=55 instances=33217 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=24 pad_bits=254475
+2026-10-18 13:03:49 PDT TXDP_K PASS bound [[23, 4, 3, 3]] (qkd_d2d_static instances 1) compiled [23, 4, 3, 3]
+2026-10-18 13:03:49 PDT RELAY_CHECK PASS design=qwen_kv buses=45318 digest=sha256:7df44a9f9f6b323ed8aae589be4d36be0c567432d8455384ff404af301610b55 plan=kvs14q-8503e0c89-netlist schedule=compiled_schedule:tools/qwen_layerbench/layer_compile.py

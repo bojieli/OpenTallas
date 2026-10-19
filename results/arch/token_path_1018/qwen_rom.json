@@ -8,34 +8,34 @@
    "available": true,
    "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 251723.0,
+   "T_token_cycles": 251759.0,
    "tau": null,
-   "per_accepted_cycles": 251723.0,
-   "tok_s": 4767.1,
+   "per_accepted_cycles": 251759.0,
+   "tok_s": 4766.5,
    "price_of_record": {
     "tok_s": 4810.9,
     "cycles": 249431.0,
     "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
    },
-   "vs_price_pct": -0.91,
-   "T_at_price_cycles": 251723.0,
-   "pct_measured_current_rtl": 0.0,
-   "banner": "0.0% of token cycles measured on current RTL (99.3% on older RTL, 0.0% modelled PHY, 0.7% priced)",
+   "vs_price_pct": -0.92,
+   "T_at_price_cycles": 251759.0,
+   "pct_measured_current_rtl": 0.8,
+   "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
    "by_grade": {
-    "measured-current-RTL": 0,
-    "measured-old-RTL": 250083.0,
-    "modelled-PHY": 0,
+    "measured-current-RTL": 2016.0,
+    "measured-old-RTL": 247743.0,
+    "modelled-PHY": 360.0,
     "priced": 1640.0
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.0,
-    "measured-old-RTL": 0.9935,
-    "modelled-PHY": 0.0,
+    "measured-current-RTL": 0.008,
+    "measured-old-RTL": 0.984,
+    "modelled-PHY": 0.0014,
     "priced": 0.0065
    },
    "by_kind": {
     "layer": 170487.0,
-    "xdie": 81236.0,
+    "xdie": 81272.0,
     "adjust": 0
    },
    "o_rule": "O from the 10-13 die run op-fetch window partition (TP4 reference vehicle); no dv2f14+kvs14c co-sim yet",
@@ -47,9 +47,10 @@
      }
     },
     "d2d_attention": {
-     "exposed": 2340.0,
+     "exposed": 2376.0,
      "by_grade": {
-      "measured-old-RTL": 2340.0
+      "measured-current-RTL": 2016.0,
+      "modelled-PHY": 360.0
      }
     },
     "kv_embedding": {
@@ -63,19 +64,23 @@
     "L0": {
      "n": 1,
      "die": 5039.0,
-     "xdie": 2249.0,
+     "xdie": 2250.0,
      "by_grade": {
-      "measured-old-RTL": 7250.0,
-      "priced": 38.0
+      "measured-old-RTL": 7185.0,
+      "priced": 38.0,
+      "measured-current-RTL": 56.0,
+      "modelled-PHY": 10.0
      }
     },
     "Lc": {
      "n": 35,
      "die": 4640.0,
-     "xdie": 2249.0,
+     "xdie": 2250.0,
      "by_grade": {
-      "measured-old-RTL": 6851.0,
-      "priced": 38.0
+      "measured-old-RTL": 6786.0,
+      "priced": 38.0,
+      "measured-current-RTL": 56.0,
+      "modelled-PHY": 10.0
      }
     },
     "head": {
@@ -95,7 +100,20 @@
      }
     }
    },
-   "overrides_used": [],
+   "overrides_used": [
+    {
+     "slots": [
+      "Lc.xdie.d2d_attention"
+     ],
+     "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json"
+    },
+    {
+     "slots": [
+      "L0.xdie.d2d_attention"
+     ],
+     "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json"
+    }
+   ],
    "evidence": null,
    "terms": [
     {
@@ -181,26 +199,6 @@
      "layer": "L0",
      "die": "compute",
      "note": "slab MUL_LAT 7 (4), band integration (28), SerDes pin register (2), tree stage 20 -> 21 (4)"
-    },
-    {
-     "slot": "L0.xdie.d2d_attention",
-     "kind": "xdie",
-     "n": 1,
-     "cycles": 65.0,
-     "grade": "measured-old-RTL",
-     "total": 65.0,
-     "source": {
-      "record": "results/rtl/qwen_layer_tput_1013/record.json",
-      "pointer": "unmeasured_per_layer.kv_die_attention.link_cycles",
-      "commit": "2caca063c",
-      "origin": "main"
-     },
-     "E": 65,
-     "E_total": 65,
-     "O": 0.0,
-     "O_source": "die run window partition: attention is serial on the controller (allreduce1 window = END-b barrier waiting on the posted attention) -> O 0",
-     "part": "compute <-> KV die D2D link stages",
-     "layer": "L0"
     },
     {
      "slot": "L0.xdie.tp_allreduce",
@@ -337,26 +335,6 @@
      "note": "slab MUL_LAT 7 (4), band integration (28), SerDes pin register (2), tree stage 20 -> 21 (4)"
     },
     {
-     "slot": "Lc.xdie.d2d_attention",
-     "kind": "xdie",
-     "n": 35,
-     "cycles": 65.0,
-     "grade": "measured-old-RTL",
-     "total": 2275.0,
-     "source": {
-      "record": "results/rtl/qwen_layer_tput_1013/record.json",
-      "pointer": "unmeasured_per_layer.kv_die_attention.link_cycles",
-      "commit": "2caca063c",
-      "origin": "main"
-     },
-     "E": 65,
-     "E_total": 65,
-     "O": 0.0,
-     "O_source": "die run window partition: attention is serial on the controller (allreduce1 window = END-b barrier waiting on the posted attention) -> O 0",
-     "part": "compute <-> KV die D2D link stages",
-     "layer": "Lc"
-    },
-    {
      "slot": "Lc.xdie.tp_allreduce",
      "kind": "xdie",
      "n": 35,
@@ -441,6 +419,120 @@
      "O_source": "serial (token start)",
      "part": "embedding row fetched through the KV die",
      "layer": "embed"
+    },
+    {
+     "slot": "Lc.xdie.d2d_attention",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 28.0,
+     "grade": "measured-current-RTL",
+     "total": 980.0,
+     "source": {
+      "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+      "pointer": "exchanges.pair (C2K + K2C, PHY 5)",
+      "commit": "9991e8715",
+      "origin": "override"
+     },
+     "E": 28.0,
+     "E_total": 66.0,
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "part": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
+    },
+    {
+     "slot": "Lc.xdie.d2d_attention",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 28.0,
+     "grade": "measured-current-RTL",
+     "total": 980.0,
+     "source": {
+      "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+      "pointer": "exchanges.pair (C2K + K2C, PHY 5)",
+      "commit": "9991e8715",
+      "origin": "override"
+     },
+     "E": 28.0,
+     "E_total": 66.0,
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "part": "NETLISTED seam of the next die GENs, register chains in the vehicle: compute dv2f14bi (Q-DIE14 230b28bd5; record_bundle_audit.json lane cycles = E + 1: C.tx_slot 2, C.rx_record 3, C.x3_slot 2, C.tx_record 3, C.x3_record 2) and KV kvs14q-8503e0c89 (64ce0504d gsrc of kvs14p; BUNDLE_EQ K.rx_record 11, K.tx_slot 9, K.tx_record 11); KV master NTX 3 (kvs14p bind)"
+    },
+    {
+     "slot": "Lc.xdie.d2d_attention",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 10.0,
+     "grade": "modelled-PHY",
+     "total": 350.0,
+     "source": {
+      "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+      "pointer": "exchanges.pair (C2K + K2C, PHY 5)",
+      "commit": "9991e8715",
+      "origin": "override"
+     },
+     "E": 10.0,
+     "E_total": 66.0,
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "part": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
+    },
+    {
+     "slot": "L0.xdie.d2d_attention",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 28.0,
+     "grade": "measured-current-RTL",
+     "total": 28.0,
+     "source": {
+      "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+      "pointer": "exchanges.pair_l0 (C2K + K2C, PHY 5)",
+      "commit": "9991e8715",
+      "origin": "override"
+     },
+     "E": 28.0,
+     "E_total": 66.0,
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "part": "die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn programme pins, measured on the paired co-sim"
+    },
+    {
+     "slot": "L0.xdie.d2d_attention",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 28.0,
+     "grade": "measured-current-RTL",
+     "total": 28.0,
+     "source": {
+      "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+      "pointer": "exchanges.pair_l0 (C2K + K2C, PHY 5)",
+      "commit": "9991e8715",
+      "origin": "override"
+     },
+     "E": 28.0,
+     "E_total": 66.0,
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "part": "NETLISTED seam of the next die GENs, register chains in the vehicle: compute dv2f14bi (Q-DIE14 230b28bd5; record_bundle_audit.json lane cycles = E + 1: C.tx_slot 2, C.rx_record 3, C.x3_slot 2, C.tx_record 3, C.x3_record 2) and KV kvs14q-8503e0c89 (64ce0504d gsrc of kvs14p; BUNDLE_EQ K.rx_record 11, K.tx_slot 9, K.tx_record 11); KV master NTX 3 (kvs14p bind)"
+    },
+    {
+     "slot": "L0.xdie.d2d_attention",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 10.0,
+     "grade": "modelled-PHY",
+     "total": 10.0,
+     "source": {
+      "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
+      "pointer": "exchanges.pair_l0 (C2K + K2C, PHY 5)",
+      "commit": "9991e8715",
+      "origin": "override"
+     },
+     "E": 10.0,
+     "E_total": 66.0,
+     "O": 0.0,
+     "O_source": "xdie_exchange_cal.py calendar (same compiler pass): attn_kv is serial in the token path (rmsnorm1 -> qkv -> qknorm_rope -> attn_kv -> o_proj), no independent compute-die op inside it -> O 0; KVN hidden (next token)",
+     "part": "UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 doi:10.1109/JSSC.2026.3651425)"
     }
    ]
   },

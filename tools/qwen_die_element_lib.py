@@ -180,11 +180,14 @@ def fwd_cell(master, ports, c, pb, cq, trn):
                     f'rise_transition (load1) {{ {table(trn, LOADS)} }} fall_transition (load1) {{ {table(trn, LOADS)} }} }}')
         elif p in data_in:
             body = f'direction : input; capacitance : {c["cin"]}; ' + cons(clk)
+        elif kind == 'landh0' and p == 'en':
+            # QK-LANDEN 10-19: en is registered on ck_s at the face (one flop before the hop-0 gate): a ck_s input
+            body = f'direction : input; capacitance : {c["cin"]}; ' + cons('ck_s')
         elif p in data_out:
             body = 'direction : output; max_capacitance : 5000; ' + launch
         elif p in ('tie_hi', 'tie_lo'):
             body = 'direction : output; max_capacitance : 5000;'
-        else:                       # k0..k2 straps, the landh0 gate enable en: no arcs
+        else:                       # k0..k2 straps: no arcs
             body = f'direction : input; capacitance : {c["cin"]};'
         if bus:
             L.append(f'    bus ({p}) {{ bus_type : b{n}; {body} }}')
