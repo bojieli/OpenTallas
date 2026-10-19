@@ -107,7 +107,11 @@ module dsdv_gunit_l5 #(
             (* keep = 1 *) dsdv_gunit_control_first u_v (.clk(clk), .rst_n(rr[15]), .d(mx_v), .q(qv));
             (* keep = 1 *) dsdv_gunit_index5 u_i (.clk(clk), .d(mx_i), .q(qi));
             for (genvar mw = 6 * (mc / 2); mw < 6 * (mc / 2) + 6; mw = mw + 1) begin : g_w
-                always @(posedge clk) if (qv && qi == 5'(mw)) mx[32 * mw + 16 * (mc % 2) +: 16] <= qm_y[16 * (mc % 2) +: 16];
+                for (genvar mq = 0; mq < 2; mq = mq + 1) begin : g_q      // kept enable gate per 8 bits
+                    wire en;
+                    (* keep = 1 *) ot_skf_and2 u_en (.a(qv), .b(qi == 5'(mw)), .y(en));
+                    always @(posedge clk) if (en) mx[32 * mw + 16 * (mc % 2) + 8 * mq +: 8] <= qm_y[16 * (mc % 2) + 8 * mq +: 8];
+                end
             end
         end
     end else begin : g_in_legacy
@@ -158,11 +162,11 @@ module dsdv_gunit_l5 #(
         reg [95:0] scl_t [0:NSET*2-1];
         wire scw_d0 = cw_v && !cw_a[9] && cw_a[5:0] == 6'd62 && !cw_a[8];
         wire scw_d1 = cw_v && !cw_a[9] && cw_a[5:0] == 6'd62 &&  cw_a[8];
-        for (g = 0; g < 16; g = g + 1) begin : g_scw
+        for (g = 0; g < 32; g = g + 1) begin : g_scw
             wire we;
-            (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n(rr[2]), .d((g / 8) ? scw_d1 : scw_d0), .q(we));
-            // copy g: scale word (g / 4) = 2 set + half, bits 24 (g % 4) +: 24; half h <- wd[96 h +: 96]
-            always @(posedge clk) if (we) scl_t[g / 4][24 * (g % 4) +: 24] <= wd[96 * ((g / 4) % 2) + 24 * (g % 4) +: 24];
+            (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n((g % 2) ? rr[13] : rr[2]), .d((g / 16) ? scw_d1 : scw_d0), .q(we));
+            // copy g: scale word (g / 8) = 2 set + half, bits 12 (g % 8) +: 12; half h <- wd[96 h +: 96]
+            always @(posedge clk) if (we) scl_t[g / 8][12 * (g % 8) +: 12] <= wd[96 * ((g / 8) % 2) + 12 * (g % 8) +: 12];
         end
         for (g = 0; g < 12; g = g + 1) begin : g_sc
             always @(posedge clk) scales[8 * g +: 8] <= scl_t[2 * ss[12 + g] + sw[12 + g]][8 * g +: 8];

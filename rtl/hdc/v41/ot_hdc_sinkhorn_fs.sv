@@ -26,6 +26,11 @@
     always @(posedge clk) q <= d;
 endmodule
 
+// kept 2-input AND: synthesis cannot push the gate into every consumer bit (the output net is the only load of a/b)
+(* keep_hierarchy = 1 *) module ot_skf_and2 (input wire a, input wire b, output wire y);
+    assign y = a & b;
+endmodule
+
 // ---- controller replica: ph / c / cnt and predicted decodes ---------------------------------------------------------
 (* keep_hierarchy = 1 *) module ot_hdc_skf_ctl #(
     parameter integer D0 = 18, parameter integer DS = 16, parameter integer STEPS = 39, parameter integer MUT = 0,
@@ -61,9 +66,16 @@ endmodule
     always @(posedge clk) begin c <= c_n; cnt <= cnt_n; end
     wire zn = (ph_n == P_Z), in_ = (ph_n == P_IDLE);
     wire zcn = (ph_n == P_Z) && (c_n == 5'(D0 - 1)), scn = (ph_n == P_RUN) && (c_n == 5'(DS - 1 - MUT));
-    reg [NZ-1:0] zm_q; reg [NG-1:0] id_q, zc_q, sc_q;
-    always @(posedge clk) begin zm_q <= {NZ{zn}}; id_q <= {NG{in_}}; zc_q <= {NG{zcn}}; sc_q <= {NG{scn}}; end
-    assign zm = zm_q; assign idle = id_q; assign zc = zc_q; assign sc = sc_q;
+    // every predicted copy is its own kept register (a plain vector of equal-D flops would be merged)
+    genvar gk;
+    generate
+        for (gk = 0; gk < NZ; gk = gk + 1) begin : g_zm
+            (* keep = 1 *) ot_skf_kr #(.W(1)) u_q (.clk(clk), .d(zn), .q(zm[gk]));
+        end
+        for (gk = 0; gk < NG; gk = gk + 1) begin : g_g
+            (* keep = 1 *) ot_skf_kr #(.W(3)) u_q (.clk(clk), .d({in_, zcn, scn}), .q({idle[gk], zc[gk], sc[gk]}));
+        end
+    endgenerate
 endmodule
 
 // ---- fanout-safe positive add (ot_hdc_skp_add with ua = 0, bit for bit) ----------------------------------------------
@@ -87,9 +99,8 @@ module ot_hdc_skf_add #(parameter integer NS = 4, parameter integer NB = 3) (
         for (c = 0; c <= NS; c = c + 1) begin : g_a
             wire [7:0]  ea_c = ea[8*c +: 8], eb_c = eb[8*c +: 8];
             wire [23:0] ma_c = ma[24*c +: 24], mb_c = mb[24*c +: 24];
-            wire [8:0] ab0, ab1, ba0, ba1;
-            ot_hdc_sk_cadd #(.W(8)) u_dab (.a(ea_c), .b(~eb_c), .s0(ab0), .s1(ab1));   // ea - eb
-            ot_hdc_sk_cadd #(.W(8)) u_dba (.a(eb_c), .b(~ea_c), .s0(ba0), .s1(ba1));   // eb - ea
+            wire [8:0] ab1, ba1;
+            (* keep = 1 *) ot_skf_esub u_es (.ea(ea_c), .eb(eb_c), .ab1(ab1), .ba1(ba1));   // ea - eb, eb - ea
             wire swap = !ab1[8];
             wire [7:0] dab = ab1[7:0], dba = ba1[7:0];
             wire [24:0] shb = (dab >= 8'd25) ? 25'd0 : ({mb_c, 1'b0} >> dab[4:0]);
@@ -101,13 +112,13 @@ module ot_hdc_skf_add #(parameter integer NS = 4, parameter integer NB = 3) (
                 wire [23:0] ah24 = {{(24-SW){1'b0}}, ah} << (SW*c);
                 assign ad[c] = {8'd0, 3'd0, ah24, mg24};
             end else begin : g_exp
-                wire [23:0] mk_any, mk_st, mk_a_any, mk_a_st;
-                for (i = 0; i < 24; i = i + 1) begin : g_mk
-                    assign mk_any[i] = (dab > i);   assign mk_st[i] = (dab > i + 1);
-                    assign mk_a_any[i] = (dba > i); assign mk_a_st[i] = (dba > i + 1);
-                end
-                wire b_any = |(mb_c & mk_any), b_st = |(mb_c & mk_st);
-                wire a_any = |(ma_c & mk_a_any), a_st = |(ma_c & mk_a_st);
+                // |(m & {i < d}) == (m != 0 && tz(m) < d): the trailing-zero count runs beside the exponent difference
+                wire [4:0] tzb, tza;
+                ot_skf_tz24 u_tzb (.m(mb_c), .tz(tzb));
+                ot_skf_tz24 u_tza (.m(ma_c), .tz(tza));
+                wire nzb = |mb_c, nza = |ma_c;
+                wire b_any = nzb && ({3'd0, tzb} < dab), b_st = nzb && ({3'd0, tzb} + 8'd1 < dab);
+                wire a_any = nza && ({3'd0, tza} < dba), a_st = nza && ({3'd0, tza} + 8'd1 < dba);
                 wire [7:0] eg = swap ? eb_c : ea_c;
                 wire g = swap ? sha[0] : shb[0];
                 wire an = swap ? a_any : b_any;
@@ -151,6 +162,19 @@ module ot_hdc_skf_add #(parameter integer NS = 4, parameter integer NB = 3) (
     assign e = ek; assign ovf = ok;
 endmodule
 
+// kept exponent differences of one stage-A slice (the exponent copy drives only this module and the eg select)
+(* keep_hierarchy = 1 *) module ot_skf_esub (input wire [7:0] ea, input wire [7:0] eb, output wire [8:0] ab1, output wire [8:0] ba1);
+    wire [8:0] ab0, ba0;
+    ot_hdc_sk_cadd #(.W(8)) u_dab (.a(ea), .b(~eb), .s0(ab0), .s1(ab1));
+    ot_hdc_sk_cadd #(.W(8)) u_dba (.a(eb), .b(~ea), .s0(ba0), .s1(ba1));
+endmodule
+
+// trailing-zero count of a non-zero 24-bit word (don't care for 0)
+module ot_skf_tz24 (input wire [23:0] m, output reg [4:0] tz);
+    integer k;
+    always @* begin tz = 5'd0; for (k = 23; k >= 0; k = k - 1) if (m[k]) tz = k[4:0]; end
+endmodule
+
 // ---- fanout-safe normaliser slice: m bits [8 s +: 8] of ot_hdc_sk_norm (and e / z) ----------------------------------
 module ot_hdc_skf_norm_slice #(parameter integer S = 0) (
     input wire [30:0] x, output wire [7:0] m, output wire signed [9:0] e, output wire z
@@ -171,16 +195,16 @@ module ot_hdc_skf_seed (
     wire [13:0] sq = decoded[82:69];
     reg [32:0] c0_q;
     always @(posedge clk) c0_q <= c0;
-    wire [22:0] c1_q [0:1]; wire [12:0] c2_q [0:1]; wire [13:0] sq_q [0:1]; wire [13:0] h_q [0:3];
+    wire [22:0] c1_q [0:1]; wire [12:0] c2_q [0:1]; wire [13:0] sq_q [0:3]; wire [13:0] h_q [0:3];
     genvar j, b;
     generate
         for (j = 0; j < 2; j = j + 1) begin : g_cc
             (* keep = 1 *) ot_skf_kr #(.W(23)) u_c1 (.clk(clk), .d(c1), .q(c1_q[j]));
             (* keep = 1 *) ot_skf_kr #(.W(13)) u_c2 (.clk(clk), .d(c2), .q(c2_q[j]));
-            (* keep = 1 *) ot_skf_kr #(.W(14)) u_sq (.clk(clk), .d(sq), .q(sq_q[j]));
         end
         for (j = 0; j < 4; j = j + 1) begin : g_hc
             (* keep = 1 *) ot_skf_kr #(.W(14)) u_h (.clk(clk), .d(h), .q(h_q[j]));
+            (* keep = 1 *) ot_skf_kr #(.W(14)) u_sq (.clk(clk), .d(sq), .q(sq_q[j]));
         end
     endgenerate
     localparam integer W = 48;
@@ -200,7 +224,7 @@ module ot_hdc_skf_seed (
         for (j = 0; j < 14; j = j + 1) begin : g_c2
             wire [12:0] gc;
             for (b = 0; b < 13; b = b + 1) begin : g_b
-                assign gc[b] = sq_q[(b < 7) ? 0 : 1][j] & c2_q[(j < 7) ? 0 : 1][b];
+                assign gc[b] = sq_q[b / 4][j] & c2_q[(j < 7) ? 0 : 1][b];
             end
             assign rows[(16 + j)*W +: W] = {{(W-13){1'b0}}, gc} << j;
         end
@@ -257,26 +281,36 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
     wire signed [10:0] E  = lt ? (e0 - 11'sd1) : e0;
     reg [WP-1:0] ps_q, pc_q;
     always @(posedge clk) begin ps_q <= ps; pc_q <= pc; end
-    wire [3:0] lt_q; wire [10:0] E_q [0:7];
+    // the Q2 grid shift is a function of E and the mode only: computed here and registered (kept copies, one per
+    // Q2 output slice), so no Q2 select net is combinational from E (same values at the same Q2 edge: the mode is
+    // constant within a step)
+    wire signed [10:0] sfull = -11'sd126 - E;
+    wire [4:0] shd = (!subn[0] || sfull <= 11'sd0 || sfull > 11'sd24) ? 5'd0 : sfull[4:0];
+    wire zsd = subn[0] && (sfull > 11'sd24);
+    wire [3:0] lt_q; wire [10:0] E_q [0:1]; wire [4:0] sh_q [0:7];
     generate
         for (j = 0; j < 4; j = j + 1) begin : g_lt
             (* keep = 1 *) ot_skf_kr #(.W(1)) u_lt (.clk(clk), .d(lt), .q(lt_q[j]));
         end
-        for (j = 0; j < 8; j = j + 1) begin : g_e
+        for (j = 0; j < 2; j = j + 1) begin : g_e
             (* keep = 1 *) ot_skf_kr #(.W(11)) u_e (.clk(clk), .d(E), .q(E_q[j]));
         end
+        for (j = 0; j < 8; j = j + 1) begin : g_shc     // 0..5 Q2 slices, 6..7 the registered s (sub) copies
+            (* keep = 1 *) ot_skf_kr #(.W(5)) u_s (.clk(clk), .d(shd), .q(sh_q[j]));
+        end
     endgenerate
-    // ---- Q2: CPA, M', grid shift (sliced: own E / mode copy per output slice)
+    reg zs_q1;
+    always @(posedge clk) zs_q1 <= zsd;
+    // ---- Q2: CPA, M', grid shift (sliced: own registered shift copy per output slice)
     wire [WP:0] pr0, pr1;
     ot_hdc_sk_cadd #(.W(WP)) u_xrc (.a(ps_q), .b(pc_q), .s0(pr0), .s1(pr1));
     wire [23:0] mp = {lt_q[0] ? pr0[50:39] : pr0[51:40], lt_q[1] ? pr0[38:27] : pr0[39:28]};
     wire [24:0] xpl = {xm3, 1'b0}, xpr = {1'b0, xm3};
     wire [24:0] xp = {lt_q[2] ? xpl[24:12] : xpr[24:12], lt_q[3] ? xpl[11:0] : xpr[11:0]};
-    wire [23:0] msd; wire [26:0] xsd; wire [4:0] sh0; wire zs0;
+    wire [23:0] msd; wire [26:0] xsd;
     generate
         for (s = 0; s < 6; s = s + 1) begin : g_sh
-            wire signed [10:0] sfull = -11'sd126 - $signed(E_q[s]);
-            wire [4:0] sh = (!subn[s] || sfull <= 11'sd0 || sfull > 11'sd24) ? 5'd0 : sfull[4:0];
+            wire [4:0] sh = sh_q[s];
             if (s < 3) begin : g_m
                 wire [23:0] v = mp >> sh;
                 assign msd[8*s +: 8] = v[8*s +: 8];
@@ -284,22 +318,17 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
                 wire [26:0] v = {2'b00, xp} << (5'd24 - sh);
                 assign xsd[9*(s-3) +: 9] = v[9*(s-3) +: 9];
             end
-            if (s == 0) begin : g_s0
-                assign sh0 = sh; assign zs0 = subn[0] && (sfull > 11'sd24);
-            end
         end
     endgenerate
     wire [23:0] ms_q [0:6]; wire [4:0] s_q [0:1];
     reg [26:0] xs_q; reg zs_q;
-    always @(posedge clk) begin xs_q <= xsd; zs_q <= zs0; end
+    always @(posedge clk) begin xs_q <= xsd; zs_q <= zs_q1; end
+    assign s_q[0] = sh_q[6]; assign s_q[1] = sh_q[7];   // s / sub of this step (held from Q1, as ms_q from Q2)
     generate
         for (j = 0; j < 7; j = j + 1) begin : g_ms     // 0..2 Q3 row groups, 3..6 final slices
             (* keep = 1 *) ot_skf_kr #(.W(24)) u_m (.clk(clk), .d(msd), .q(ms_q[j]));
         end
-        for (j = 0; j < 2; j = j + 1) begin : g_s
-            (* keep = 1 *) ot_skf_kr #(.W(5)) u_s (.clk(clk), .d(sh0), .q(s_q[j]));
-        end
-    endgenerate
+endgenerate
     // ---- Q3: r1 = xs - T - sum_j T_j (ms << (j+1))  (mod 2^27) carry-save
     localparam integer W = 27;
     localparam integer NR = 24 + 3;
@@ -336,7 +365,7 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
     wire [23:0] m30 = ms_q[3];
     wire inc1 = (!neg1 & !z1) | (z1 & m30[0]);
     wire inc2 = (!neg2 & !z2) | (z2 & !m30[0]);
-    wire signed [10:0] eq4 = E_q[6];
+    wire signed [10:0] eq4 = E_q[0];
     wire signed [10:0] eb4 = eq4 + 11'sd127, eb41 = eq4 + 11'sd128;
     wire sub4 = s_q[0] != 5'd0;
     wire hi0 = !sub4 && (eb4 > 11'sd254);
@@ -351,7 +380,7 @@ module ot_hdc_skf_quot #(parameter integer MUT_Q4 = 0) (
     endgenerate
     (* keep = 1 *) ot_skf_kr #(.W(6)) u_rng (.clk(clk), .d({inc1, inc2, hi0, hi1, low ^ (MUT_Q4 != 0), zero}), .q(range_q));
     // ---- final, sliced: f 0 = exponent field [30:23], f 1..3 = mantissa [22:15] [14:7] [6:0]
-    wire signed [10:0] ef = E_q[7];
+    wire signed [10:0] ef = E_q[1];
     wire signed [10:0] ebf = ef + 11'sd127, ebf1 = ef + 11'sd128;
     wire subf = s_q[1] != 5'd0;
     wire [30:0] yv [0:3];
@@ -407,8 +436,8 @@ module ot_hdc_sinkhorn_fs #(
     localparam [7:0]  EPS_E = (EPS[30:23] == 8'd0) ? 8'd1 : EPS[30:23];
     localparam [23:0] EPS_M = {EPS[30:23] != 8'd0, EPS[22:0]};
     localparam integer NS = 4, NA = NS + 1;      // adder operand copies
-    localparam integer NG = 32;                  // st select groups of 16 bits
-    localparam integer NCS = 4;                  // controller replicas for the st selects (8 groups each)
+    localparam integer NG = 64;                  // st select groups of 8 bits
+    localparam integer NCS = 8;                  // controller replicas for the st selects (8 groups each)
     localparam integer NZR = 9;                  // controller replicas for the mode copies (16 each)
     genvar r, k, g, n;
 
@@ -452,14 +481,15 @@ module ot_hdc_sinkhorn_fs #(
     wire [511:0] std_d;
     generate
         for (g = 0; g < NG; g = g + 1) begin : g_std
-            wire acc_g = g_idle[g] & vin[g % NVIN];
-            wire [15:0] zo, qo;
-            for (k = 0; k < 16; k = k + 1) begin : g_b
-                localparam integer B = 16 * g + k;
+            wire acc_g;
+            (* keep = 1 *) ot_skf_and2 u_acc (.a(g_idle[g]), .b(vin[g % NVIN]), .y(acc_g));
+            wire [7:0] zo, qo;
+            for (k = 0; k < 8; k = k + 1) begin : g_b
+                localparam integer B = 8 * g + k;
                 assign zo[k] = z_out[B / 32][B % 32];
                 assign qo[k] = (B % 32 == 31) ? 1'b0 : q[B / 32][B % 32];
             end
-            assign std_d[16*g +: 16] = acc_g ? in_e[16*g +: 16] : g_zc[g] ? zo : g_sc[g] ? qo : stc[0][16*g +: 16];
+            assign std_d[8*g +: 8] = acc_g ? in_e[8*g +: 8] : g_zc[g] ? zo : g_sc[g] ? qo : stc[0][8*g +: 8];
         end
         for (n = 0; n < NSTC; n = n + 1) begin : g_stc
             (* keep = 1 *) ot_skf_kr #(.W(512)) u_st (.clk(clk), .d(std_d), .q(stc[n]));
@@ -621,10 +651,14 @@ module ot_hdc_sinkhorn_fs #(
         if (!rst_n) begin flt <= 1'b0; out_valid <= 1'b0; fault <= 1'b0; end
         else begin flt <= flt_n; out_valid <= ov_n; fault <= fault_n; end
     // fault copies (zero the output, 16 bits each); fault_n == fault during reset
-    wire [31:0] fc;
-    generate for (g = 0; g < 32; g = g + 1) begin : g_fc
-        (* keep = 1 *) ot_skf_kr #(.W(1)) u_f (.clk(clk), .d(fault_n), .q(fc[g]));
-        assign y[16*g +: 16] = fc[g] ? 16'd0 : stc[0][16*g +: 16];
+    wire [63:0] fc;                             // 2 kept fault copies per 16 output bits (8 bits each), D from 4 kept fault_n gates
+    wire [3:0] fn;
+    generate for (g = 0; g < 4; g = g + 1) begin : g_fn
+        (* keep = 1 *) ot_skf_and2 u_n (.a(fault_n), .b(1'b1), .y(fn[g]));
+    end
+    for (g = 0; g < 64; g = g + 1) begin : g_fc
+        (* keep = 1 *) ot_skf_kr #(.W(1)) u_f (.clk(clk), .d(fn[g / 16]), .q(fc[g]));
+        assign y[8*g +: 8] = fc[g] ? 8'd0 : stc[0][8*g +: 8];
     end endgenerate
 `ifndef SYNTHESIS
     initial if (D0 > 31 || DS > 31) $error("ot_hdc_sinkhorn_fs: stage counter is 5 bits");

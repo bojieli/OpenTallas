@@ -3,11 +3,11 @@
 
 Each bank registers the three 3-bit one-hot groups (24 bits) in NCP kept copies at the EXISTING T-capture edge.
 Minterm i = {g2, g1, g0} reads group g's bit from the copy chosen by two bits of the OTHER groups, so every
-registered one-hot bit drives 512 / 8 / NCP = 16 minterm gates (ot_hdc_skp_predecode had 2 copies, 32 each).
+registered one-hot bit drives 512 / 8 / NCP = 8 minterm gates (ot_hdc_skp_predecode had 2 copies, 32 each).
 """
 import re
 from pathlib import Path
-NCP = 4
+NCP = 8
 root = Path(__file__).resolve().parents[3]
 rom = (root / "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv").read_text()
 rows = re.findall(r"9'd(\d+): begin c0 = 33'h([0-9a-f]+); c1 = 23'h([0-9a-f]+); c2 = 13'h([0-9a-f]+); end", rom)
@@ -26,7 +26,7 @@ endmodule
 """ % NCP
 def copy_of(i, g):
     # group g's copy index from two bits of the other groups
-    other = {0: (i >> 3) & 3, 1: (i >> 6) & 3, 2: i & 3}[g]
+    other = {0: (i >> 3) & 7, 1: (i >> 6) & 7, 2: i & 7}[g]
     return other % NCP
 for name, width, vals in [('c0lo', 17, [x[0] & ((1 << 17) - 1) for x in cs]), ('c0hi', 16, [x[0] >> 17 for x in cs]),
                           ('c1', 23, [x[1] for x in cs]), ('c2', 13, [x[2] for x in cs]), ('sq', 14, sq)]:

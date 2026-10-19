@@ -62,7 +62,12 @@ module dsdv_gunit_tail_fs #(
     endfunction
     // replica A: decodes the NEXT state (registered selects for the next edge); replica B: the CURRENT state
     reg actA, actB; reg [9:0] ageA, ageB;
-    wire [10:0] nA = nxt(actA, ageA, launch), nB = nxt(actB, ageB, launch);
+    // launch copies (== launch: launch_pre[8..10] registered once more), one per counter
+    wire lnA, lnB, lnM;
+    (* keep = 1 *) ot_skf_kr #(.W(1)) u_lnA (.clk(clk), .d(launch_pre[8]), .q(lnA));
+    (* keep = 1 *) ot_skf_kr #(.W(1)) u_lnB (.clk(clk), .d(launch_pre[9]), .q(lnB));
+    (* keep = 1 *) ot_skf_kr #(.W(1)) u_lnM (.clk(clk), .d(launch_pre[10]), .q(lnM));
+    wire [10:0] nA = nxt(actA, ageA, lnA), nB = nxt(actB, ageB, lnB);
     always @(posedge clk or negedge rst_v[1])
         if (!rst_v[1]) begin actA <= 1'b0; ageA <= 10'd0; actB <= 1'b0; ageB <= 10'd0; end
         else begin {actA, ageA} <= nA; {actB, ageB} <= nB; end
@@ -214,7 +219,11 @@ module dsdv_gunit_tail_fs #(
     generate for (b = 0; b < 24; b = b + 1) begin : g_payload
         for (h = 0; h < 2; h = h + 1) begin : g_half
             localparam integer C = (2 * b + h) % 4;
-            wire wm = mo_c[C] & mi_oh[h][b], wa = ao_c[C] & ai_oh[h][b], we = xe_vo[C] & ei_oh[h][b], wd = xd_vo[C] & di_oh[h][b];
+            wire wm, wa, we, wd;                 // kept gates: the valid copy drives 12 gates, each gate 16 bits
+            (* keep = 1 *) ot_skf_and2 u_wm (.a(mo_c[C]), .b(mi_oh[h][b]), .y(wm));
+            (* keep = 1 *) ot_skf_and2 u_wa (.a(ao_c[C]), .b(ai_oh[h][b]), .y(wa));
+            (* keep = 1 *) ot_skf_and2 u_we (.a(xe_vo[C]), .b(ei_oh[h][b]), .y(we));
+            (* keep = 1 *) ot_skf_and2 u_wd (.a(xd_vo[C]), .b(di_oh[h][b]), .y(wd));
             always @(posedge clk) begin
                 if (launch_local[2*b+h]) t[b][16*h +: 16] <= mixes[32*b+16*h +: 16];
                 if (wm) t[b][16*h +: 16] <= my[16*h +: 16];
@@ -266,7 +275,7 @@ module dsdv_gunit_tail_fs #(
         end else begin
             capture_q <= 1'b0; result_v <= 1'b0;
             if (active) age <= age + 1'b1;
-            if (launch) begin
+            if (lnM) begin
                 if (active) flt <= 1'b1;
                 active <= 1'b1; age <= 10'd1; armed <= 1'b0; captured <= 1'b0;
             end
