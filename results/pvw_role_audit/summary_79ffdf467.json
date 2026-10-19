@@ -1,0 +1,110 @@
+{
+  "qualification": "read-only classification; no helper edit, tie, padding declaration, waiver, or hardware change",
+  "audit_source_commit": "79ffdf467",
+  "rtl_source_commit": "219049242d2656c808ee554b5a9ba8436e76b171",
+  "audit_script_sha256": "e32ce5d92eccc03bf7ed6e0c0ff0e70d260197a3eae6ba0a2c92e451fdf9a7ac",
+  "die_sha256": "726f9a08bb3bf497ebe778a0b59f4e1746b9bd8bfbce58eeebcf7848bcd71c21",
+  "receipt_sha256": "2c0742c653df1e250ed12fbf4d3be058846f41be6ef78c02ec73e096b68225dc",
+  "classified_bits": 5356,
+  "source_zero_replica_bits": 117064,
+  "role_counts": {
+    "unconsumed_public_status": 34,
+    "reserved_zero_command": 56,
+    "branch_subset_cargo": 4756,
+    "fixed_width_delay_terminal": 62,
+    "duplicate_reset_cargo": 448
+  },
+  "findings": [
+    {
+      "field": "32 terminal CP words",
+      "bits": 4224,
+      "exact_role": "128 other-head E bits plus C[1,2,7,8] per word",
+      "source_bit_positions": "C at [2,3,8,9]; E at [33+32k:48+32k] for k=0..7",
+      "consumer_proof": "Every required E/command field on all slices independently traces to the correct H/GS/port/bank source; these duplicate origins are consumed on other branch subsets",
+      "source_refs": [
+        "pv_trunk_gen.py:394",
+        "pv_trunk_gen.py:414",
+        "pv_trunk_gen.py:354",
+        "pv_trunk_gen.py:455"
+      ]
+    },
+    {
+      "field": "four X0 control words",
+      "bits": 532,
+      "exact_role": "128 other-head E bits plus C[3,4,5,6,31] per word",
+      "source_bit_positions": "C at [4,5,6,7,32]; E at [49+32k:64+32k] for k=0..7",
+      "consumer_proof": "Same complete source-to-primary proof; row0 bottom-bank subset omits upper-bank takes and join_go while the final full-width trunk word still carries them"
+    },
+    {
+      "field": "w_S{s}b{bank}[311], bank!=4",
+      "bits": 448,
+      "exact_role": "Unused registered R copy in 7 of 8 bank stations,32columns,2PV parents",
+      "consumer_proof": "All512 actual slice rst_n pins use dedicated R stations; bank4 S[311] feeds64join resets and is NOT in unread set; all sources trace rst_n",
+      "source_refs": [
+        "pv_trunk_gen.py:375",
+        "pv_trunk_gen.py:560",
+        "pv_trunk_gen.py:618",
+        "pv_trunk_gen.py:997",
+        "pv_trunk_gen.py:1005"
+      ]
+    },
+    {
+      "field": "31 DL words per PV, bit35",
+      "bits": 62,
+      "exact_role": "Terminal of fixed36-bit one-way shift line; next-state b[35]=old b[34], no wrap and no consumer of bit35",
+      "consumer_proof": "Actual reader reconstruction confirms bit35 unread; earlier taps/select inputs stay connected. This is dynamic terminal cargo, not zero padding",
+      "source_refs": [
+        "pv_trunk_gen.py:837",
+        "pv_trunk_gen.py:838",
+        "pv_trunk_gen.py:841"
+      ]
+    },
+    {
+      "field": "cmd_w[59:32],2PV",
+      "bits": 56,
+      "exact_role": "Reserved-zero source bits, distinct from generated high replica padding",
+      "consumer_proof": "Every whole-word cmd assignment is0; every partial assignment is below32; reset also writes0",
+      "source_refs": [
+        "ot_qwen_tp8_pv_wide_ctl_t.sv:109",
+        "ot_qwen_tp8_pv_wide_ctl_t.sv:118",
+        "pv_trunk_gen.py:352"
+      ]
+    },
+    {
+      "field": "busy[0] and out_age[15:0],2PV",
+      "bits": 34,
+      "exact_role": "Public controller state/age outputs without any actual consumer",
+      "consumer_proof": "UNRESOLVED integration contract: no source-only proof that discarding public status is permitted; must not infer diagnostic role from names",
+      "source_refs": [
+        "ot_qwen_tp8_pv_wide_ctl_t.sv:122",
+        "ot_qwen_tp8_pv_wide_ctl_t.sv:126",
+        "pv_trunk_gen.py:965",
+        "pv_trunk_gen.py:984"
+      ]
+    }
+  ],
+  "primary_checks": {
+    "ot_qwen_tp8_pv_slice_t.rst_n": 512,
+    "ot_qwen_tp8_pv_slice_t.pv2": 131072,
+    "ot_qwen_tp8_pv_slice_t.pe2": 16384,
+    "ot_qwen_tp8_pv_slice_t.bc": 11776,
+    "ot_qwen_tp8_pv_slice_t.ts": 262144,
+    "ot_qwen_tp8_pv_slice_t.fault": 512,
+    "ot_qwen_tp8_pv_join_t.rst_n": 64,
+    "ot_qwen_tp8_pv_join_t.ts0": 65536,
+    "ot_qwen_tp8_pv_join_t.ts1": 65536,
+    "ot_qwen_tp8_pv_join_t.ts2": 65536,
+    "ot_qwen_tp8_pv_join_t.ts3": 65536,
+    "ot_qwen_tp8_pv_join_t.join_go": 64,
+    "ot_qwen_tp8_pv_join_t.sf": 512,
+    "ot_qwen_tp8_pv_join_t.y": 32768,
+    "ot_qwen_tp8_pv_join_t.y_valid": 64,
+    "ot_qwen_tp8_pv_join_t.fault": 64
+  },
+  "limits": [
+    "Static connectivity and source-role proof only; does not prove numerical correctness or timing/CDC/reset signoff",
+    "No V/E/command primary-consumer gap found at the pinned512slice/64join boundaries",
+    "34 public status bits remain unresolved contract/consumer gaps; no waiver justified by this audit"
+  ],
+  "evidence": "results/pvw_role_audit/roles_79ffdf467.json"
+}
