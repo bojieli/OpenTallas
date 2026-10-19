@@ -8,42 +8,43 @@
    "available": true,
    "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 251759.0,
+   "T_token_cycles": 193727.0,
    "tau": null,
-   "per_accepted_cycles": 251759.0,
-   "tok_s": 4766.5,
+   "per_accepted_cycles": 193727.0,
+   "tok_s": 6194.3,
    "price_of_record": {
     "tok_s": 4810.9,
     "cycles": 249431.0,
     "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
    },
-   "vs_price_pct": -0.92,
-   "T_at_price_cycles": 251759.0,
-   "pct_measured_current_rtl": 0.8,
-   "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
+   "vs_price_pct": 28.76,
+   "T_at_price_cycles": 193727.0,
+   "pct_measured_current_rtl": 4.62,
+   "banner": "4.6% of token cycles measured on current RTL (87.3% on older RTL, 7.2% modelled PHY, 0.8% priced)",
    "by_grade": {
-    "measured-current-RTL": 2016.0,
-    "measured-old-RTL": 247743.0,
-    "modelled-PHY": 360.0,
+    "measured-current-RTL": 8942.4,
+    "measured-old-RTL": 169119,
+    "modelled-PHY": 14025.6,
     "priced": 1640.0
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.008,
-    "measured-old-RTL": 0.984,
-    "modelled-PHY": 0.0014,
-    "priced": 0.0065
+    "measured-current-RTL": 0.0462,
+    "measured-old-RTL": 0.873,
+    "modelled-PHY": 0.0724,
+    "priced": 0.0085
    },
    "by_kind": {
     "layer": 170487.0,
-    "xdie": 81272.0,
+    "xdie": 23240.0,
     "adjust": 0
    },
    "o_rule": "O from the 10-13 die run op-fetch window partition (TP4 reference vehicle); no dv2f14+kvs14c co-sim yet",
    "xdie_summary": {
     "tp_allreduce": {
-     "exposed": 78624.0,
+     "exposed": 20592.0,
      "by_grade": {
-      "measured-old-RTL": 78624.0
+      "measured-current-RTL": 6926.4,
+      "modelled-PHY": 13665.6
      }
     },
     "d2d_attention": {
@@ -64,23 +65,23 @@
     "L0": {
      "n": 1,
      "die": 5039.0,
-     "xdie": 2250.0,
+     "xdie": 638.0,
      "by_grade": {
-      "measured-old-RTL": 7185.0,
+      "measured-old-RTL": 5001.0,
       "priced": 38.0,
-      "measured-current-RTL": 56.0,
-      "modelled-PHY": 10.0
+      "measured-current-RTL": 248.4,
+      "modelled-PHY": 389.6
      }
     },
     "Lc": {
      "n": 35,
      "die": 4640.0,
-     "xdie": 2250.0,
+     "xdie": 638.0,
      "by_grade": {
-      "measured-old-RTL": 6786.0,
+      "measured-old-RTL": 4602.0,
       "priced": 38.0,
-      "measured-current-RTL": 56.0,
-      "modelled-PHY": 10.0
+      "measured-current-RTL": 248.4,
+      "modelled-PHY": 389.6
      }
     },
     "head": {
@@ -101,6 +102,18 @@
     }
    },
    "overrides_used": [
+    {
+     "slots": [
+      "L0.xdie.tp_allreduce"
+     ],
+     "record": "results/rtl/xdie_qtp8_2_1019/record.json"
+    },
+    {
+     "slots": [
+      "Lc.xdie.tp_allreduce"
+     ],
+     "record": "results/rtl/xdie_qtp8_2_1019/record.json"
+    },
     {
      "slots": [
       "Lc.xdie.d2d_attention"
@@ -201,56 +214,6 @@
      "note": "slab MUL_LAT 7 (4), band integration (28), SerDes pin register (2), tree stage 20 -> 21 (4)"
     },
     {
-     "slot": "L0.xdie.tp_allreduce",
-     "kind": "xdie",
-     "n": 1,
-     "cycles": 1228.0,
-     "grade": "measured-old-RTL",
-     "total": 1228.0,
-     "source": {
-      "record": "results/rtl/qwen_layer_tput_1013/record.json",
-      "pointer": "windows[attn_tail, allreduce2].measured",
-      "commit": "2caca063c",
-      "origin": "main"
-     },
-     "E": 1228,
-     "E_total": 2184,
-     "O": 0.0,
-     "O_source": "die run op-fetch windows holding \"link\": the controller is stalled on the collective for the whole window (ME work inside it is the posted write-back of the same layer) -> O 0",
-     "part": "all-reduce #1 (in attn_tail window)",
-     "layer": "L0",
-     "evidence": {
-      "tp8_unit_bench_2x256w": 862,
-      "record": "results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json",
-      "note": "TP8 collective unit bench (8 ranks, 2 all-reduces) 862 cycles vs the TP4 vehicle windows; not substituted: no TP8 layer vehicle"
-     }
-    },
-    {
-     "slot": "L0.xdie.tp_allreduce",
-     "kind": "xdie",
-     "n": 1,
-     "cycles": 956.0,
-     "grade": "measured-old-RTL",
-     "total": 956.0,
-     "source": {
-      "record": "results/rtl/qwen_layer_tput_1013/record.json",
-      "pointer": "windows[attn_tail, allreduce2].measured",
-      "commit": "2caca063c",
-      "origin": "main"
-     },
-     "E": 956,
-     "E_total": 2184,
-     "O": 0.0,
-     "O_source": "die run op-fetch windows holding \"link\": the controller is stalled on the collective for the whole window (ME work inside it is the posted write-back of the same layer) -> O 0",
-     "part": "all-reduce #2",
-     "layer": "L0",
-     "evidence": {
-      "tp8_unit_bench_2x256w": 862,
-      "record": "results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json",
-      "note": "TP8 collective unit bench (8 ranks, 2 all-reduces) 862 cycles vs the TP4 vehicle windows; not substituted: no TP8 layer vehicle"
-     }
-    },
-    {
      "slot": "Lc.die.vehicle",
      "kind": "layer",
      "n": 35,
@@ -335,56 +298,6 @@
      "note": "slab MUL_LAT 7 (4), band integration (28), SerDes pin register (2), tree stage 20 -> 21 (4)"
     },
     {
-     "slot": "Lc.xdie.tp_allreduce",
-     "kind": "xdie",
-     "n": 35,
-     "cycles": 1228.0,
-     "grade": "measured-old-RTL",
-     "total": 42980.0,
-     "source": {
-      "record": "results/rtl/qwen_layer_tput_1013/record.json",
-      "pointer": "windows[attn_tail, allreduce2].measured",
-      "commit": "2caca063c",
-      "origin": "main"
-     },
-     "E": 1228,
-     "E_total": 2184,
-     "O": 0.0,
-     "O_source": "die run op-fetch windows holding \"link\": the controller is stalled on the collective for the whole window (ME work inside it is the posted write-back of the same layer) -> O 0",
-     "part": "all-reduce #1 (in attn_tail window)",
-     "layer": "Lc",
-     "evidence": {
-      "tp8_unit_bench_2x256w": 862,
-      "record": "results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json",
-      "note": "TP8 collective unit bench (8 ranks, 2 all-reduces) 862 cycles vs the TP4 vehicle windows; not substituted: no TP8 layer vehicle"
-     }
-    },
-    {
-     "slot": "Lc.xdie.tp_allreduce",
-     "kind": "xdie",
-     "n": 35,
-     "cycles": 956.0,
-     "grade": "measured-old-RTL",
-     "total": 33460.0,
-     "source": {
-      "record": "results/rtl/qwen_layer_tput_1013/record.json",
-      "pointer": "windows[attn_tail, allreduce2].measured",
-      "commit": "2caca063c",
-      "origin": "main"
-     },
-     "E": 956,
-     "E_total": 2184,
-     "O": 0.0,
-     "O_source": "die run op-fetch windows holding \"link\": the controller is stalled on the collective for the whole window (ME work inside it is the posted write-back of the same layer) -> O 0",
-     "part": "all-reduce #2",
-     "layer": "Lc",
-     "evidence": {
-      "tp8_unit_bench_2x256w": 862,
-      "record": "results/rtl/qwen_layer_tput_1013/native_tp8_collective/positive/record.json",
-      "note": "TP8 collective unit bench (8 ranks, 2 all-reduces) 862 cycles vs the TP4 vehicle windows; not substituted: no TP8 layer vehicle"
-     }
-    },
-    {
      "slot": "head.die",
      "kind": "layer",
      "n": 1,
@@ -419,6 +332,158 @@
      "O_source": "serial (token start)",
      "part": "embedding row fetched through the KV die",
      "layer": "embed"
+    },
+    {
+     "slot": "L0.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 96.2,
+     "grade": "measured-current-RTL",
+     "total": 96.2,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 96.2,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #1 o_proj: dv2f15r collective/IO masters + real forwarded SerDes lanes at the compiled LS, 8 dies, exact at compiled cycles (Verilator 5.050)"
+    },
+    {
+     "slot": "L0.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 189.8,
+     "grade": "modelled-PHY",
+     "total": 189.8,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 189.8,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #1 o_proj: PHY frame pipes UCIe 20 + SerDes 339 core cycles (results/arch/qwen_tp8_1012/SPEC.md), E share by path"
+    },
+    {
+     "slot": "L0.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 96.2,
+     "grade": "measured-current-RTL",
+     "total": 96.2,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 96.2,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #2 down_proj: dv2f15r collective/IO masters + real forwarded SerDes lanes at the compiled LS, 8 dies, exact at compiled cycles (Verilator 5.050)"
+    },
+    {
+     "slot": "L0.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 1,
+     "cycles": 189.8,
+     "grade": "modelled-PHY",
+     "total": 189.8,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 189.8,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #2 down_proj: PHY frame pipes UCIe 20 + SerDes 339 core cycles (results/arch/qwen_tp8_1012/SPEC.md), E share by path"
+    },
+    {
+     "slot": "Lc.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 96.2,
+     "grade": "measured-current-RTL",
+     "total": 3367.0,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 96.2,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #1 o_proj: dv2f15r collective/IO masters + real forwarded SerDes lanes at the compiled LS, 8 dies, exact at compiled cycles (Verilator 5.050)"
+    },
+    {
+     "slot": "Lc.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 189.8,
+     "grade": "modelled-PHY",
+     "total": 6643.0,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 189.8,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #1 o_proj: PHY frame pipes UCIe 20 + SerDes 339 core cycles (results/arch/qwen_tp8_1012/SPEC.md), E share by path"
+    },
+    {
+     "slot": "Lc.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 96.2,
+     "grade": "measured-current-RTL",
+     "total": 3367.0,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 96.2,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #2 down_proj: dv2f15r collective/IO masters + real forwarded SerDes lanes at the compiled LS, 8 dies, exact at compiled cycles (Verilator 5.050)"
+    },
+    {
+     "slot": "Lc.xdie.tp_allreduce",
+     "kind": "xdie",
+     "n": 35,
+     "cycles": 189.8,
+     "grade": "modelled-PHY",
+     "total": 6643.0,
+     "source": {
+      "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+      "pointer": "measured.AR256.E_split",
+      "commit": "uncommitted",
+      "origin": "override"
+     },
+     "E": 189.8,
+     "E_total": 572.0,
+     "O": 0.0,
+     "O_source": "compiled collective calendar of GEN dv2f15r (tools/qwen_split/lane_groups.collective_calendar, LS 378, results/rtl/xdie_qtp8_2_1019/gen_dv2f15r/coll_lane_latency.json): each TP8 all-reduce (o_proj, down_proj) feeds the residual add the next op needs and the calendar issues no compute-die op inside it (serial token path) -> O 0",
+     "part": "TP8 all-reduce #2 down_proj: PHY frame pipes UCIe 20 + SerDes 339 core cycles (results/arch/qwen_tp8_1012/SPEC.md), E share by path"
     },
     {
      "slot": "Lc.xdie.d2d_attention",
