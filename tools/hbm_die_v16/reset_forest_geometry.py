@@ -65,6 +65,11 @@ class Geometry:
                 x, y = self.grid.xy((i, j))
                 if x < self.half_w or y < self.half_h or x + self.half_w > self.W or y + self.half_h > self.H:
                     self.grid.blk[j * self.grid.nx + i] = 1
+        # FOREST2: wires overfly reserved 32.4 um relay tiles freely; only PLACED BLOCKS count toward the blocked-run
+        # budget.  Routing uses this obstacle-only grid; placement (free homes) uses self.grid (blocks + reservations).
+        # Reserved tiles used to close 20 um channels for later trees (GEN2a stream NW pocket).  Budget unchanged.
+        self.rgrid = Grid(self.W, self.H, [])
+        self.rgrid.blk[:] = self.grid.blk
 
     def block_rect(self, x0, y0, x1, y1):
         # Mark centers whose complete largest-relay rectangle intersects the
@@ -136,7 +141,7 @@ class Geometry:
         budget chain() routes with (budget - 4 GRID).  One flood per source; a regional root is only homed on a reachable
         cell, so walled pockets are never tried.  Minimal-run labels: a cell is relaxed at most R + 1 times."""
         R = int((self.budget - 4 * GRID) // GRID)
-        nx, ny, blk = self.grid.nx, self.grid.ny, self.grid.blk
+        nx, ny, blk = self.rgrid.nx, self.rgrid.ny, self.rgrid.blk
         best = bytearray(b'\xff') * (nx * ny)
         a = self.grid.cell(*point)
         s0 = a[1] * nx + a[0]
@@ -164,7 +169,15 @@ class Geometry:
                     buckets[nr].append(n)
                     if nr < lo:
                         lo = nr
-        return bytearray(1 if (b == 0 and not blk[k]) else 0 for k, b in enumerate(best))
+        pb = self.grid.blk
+        return bytearray(1 if (b == 0 and not pb[k]) else 0 for k, b in enumerate(best))
+
+    def unreserve(self, tile):
+        """Undo the LAST reservation (only valid right after reserve())."""
+        k = max(self.reserved)
+        assert self.reserved[k] is tile
+        self.grid.blk[:] = self._before_last
+        del self.reserved[k]
 
     def snapshot(self):
         """Undo point for a speculative plan (alternative regional-root homes)."""
@@ -191,7 +204,7 @@ class Geometry:
 
     def relay_lef(self, kind):
         """hbfd_rrl_pad<N> (multi-stage leaf) is planned on the hbfd_rrl_hop footprint and pins: same 32.4 um kit
-        outline, N <= 32 flops; its own routed view must keep that outline and pin set."""
+        outline, N <= 128 flops; its own routed view must keep that outline and pin set."""
         return self.relay['hop' if kind.startswith('pad') else kind]
 
     def centre(self, tile):
@@ -229,6 +242,7 @@ class Geometry:
                 continue
             # Reserve the actual rectangle, including exclusion for the next
             # tile's complete outline. No legalizer relocation is assumed.
+            self._before_last = bytes(self.grid.blk)
             self.block_rect(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
             self.reserved[len(self.reserved)] = tile
             return tile
@@ -248,21 +262,43 @@ class Geometry:
         point = source
         while md(point, end) > self.reach:
             a, b = self.grid.cell(*point), self.grid.cell(*end)
+            # Leave room for the current relay reservation and endpoint pin offsets; never use the clock router's 3x
+            # fallback.  FOREST2: route first on the PLACEMENT grid (reserved relays count as blocked, so every free
+            # path cell is a legal stage home and greedy staging always progresses); only if that fails, on the
+            # obstacle-only grid (wires overfly reserved relays) with stage homes beside the path.  Same budget.
             try:
-                # Leave room for the current relay reservation and endpoint
-                # pin offsets; never use the clock router's 3x fallback.
                 path = self.grid._route(a, b, self.budget - 4 * GRID)
-            except SystemExit as e:
-                raise GeometryError(f'no reset route within fixed reach: {point} -> {end}') from e
+            except SystemExit:
+                try:
+                    path = self.rgrid._route(a, b, self.budget - 4 * GRID)
+                except SystemExit as e:
+                    raise GeometryError(f'no reset route within fixed reach: {point} -> {end}') from e
             points = [point] + [self.grid.xy(c) for c in path] + [end]
             run = [0.0]
             for p, q in zip(points, points[1:]):
                 run.append(run[-1] + md(p, q))
             options = [i for i in range(1, len(points) - 1)
                        if run[i] <= self.budget and self.grid.free(path[i - 1])]
-            if not options:
-                raise GeometryError(f'no legal reset relay within routed reach from {point}')
-            t = self.reserve('hop', points[options[-1]], max_distance=0)
+            if options:
+                t = self.reserve('hop', points[options[-1]], max_distance=0)
+            else:
+                # FOREST2: the routed cells within the budget are all OCCUPIED by earlier relay reservations (wires
+                # overfly them): home the stage on the nearest free cell beside the path instead, farthest path point
+                # first, still with its input within reach of the current point and a strict progress check.
+                t = None
+                reach_left = [i for i in range(1, len(points) - 1) if run[i] <= self.budget]
+                for i in reversed(reach_left[-12:] if len(reach_left) > 12 else reach_left):
+                    try:
+                        cand = self.reserve('hop', points[i], targets=[('rst_n_in', point)],
+                                            max_distance=max(GRID, self.budget - run[i]))
+                    except GeometryError:
+                        continue
+                    if md(self.tile_pin(cand, 'rst_n'), end) < md(point, end):
+                        t = cand
+                        break
+                    self.unreserve(cand)
+                if t is None:
+                    raise GeometryError(f'no legal reset relay within routed reach from {point}')
             out.append(t)
             point = self.tile_pin(t, 'rst_n')
         all_pins = [source] + [self.tile_pin(t, 'rst_n') for t in out]
