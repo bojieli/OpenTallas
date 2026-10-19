@@ -64,3 +64,8 @@ yosys setattr -set keep 1 {*}{@ot_kc}
 set ot_kr_n [llength [split [string trim [yosys tee -q -s result.string select -list {*}{@ot_kc}]] "\n"]]
 puts "OT_KEEP_REGS: keep set on $ot_kr_n register cells driving keep wires"
 yosys select -clear
+# OT_RST_SPLIT=1 (KV-PEER5 2026-10-19, ref_tile spec "rst_split"): spread each member's async-reset flops over the K kept
+# copies of its wrapper's reset relay (wires with attribute ot_rst_split); see physical/common_flow/ot_rst_split.tcl.
+if {[info exists ::env(OT_RST_SPLIT)] && $::env(OT_RST_SPLIT) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] ot_rst_split.tcl]
+}
