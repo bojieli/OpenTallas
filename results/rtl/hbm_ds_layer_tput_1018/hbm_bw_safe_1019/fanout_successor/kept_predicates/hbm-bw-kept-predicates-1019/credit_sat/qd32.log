@@ -1,0 +1,204 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv; prep -top tb; sat -verify -prove ok 1 -show n,len' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv' to AST representation.
+Generating RTLIL representation for module `\tb'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \tb
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \tb
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 4 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\tb.$proc$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:14$13'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\tb.\credit_room$func$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:14$1.$result' from process `\tb.$proc$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:14$13'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `tb.$proc$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:14$13'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tb.
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tb.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tb..
+Removed 0 unused cells and 11 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module tb...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tb.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tb'.
+Computing hashes of 20 cells of `\tb'.
+Finding duplicate cells in `\tb'.
+Removed a total of 0 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tb..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tb.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tb'.
+Computing hashes of 20 cells of `\tb'.
+Finding duplicate cells in `\tb'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tb..
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tb.
+
+2.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 30 bits (of 32) from port B of cell tb.$le$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:4$3 ($le).
+Removed top 30 bits (of 32) from port B of cell tb.$le$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:4$4 ($le).
+Removed top 3 bits (of 4) from port B of cell tb.$eq$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:4$5 ($eq).
+Removed top 26 bits (of 32) from port A of cell tb.$add$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:13$6 ($add).
+Removed top 28 bits (of 32) from port B of cell tb.$add$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:13$6 ($add).
+Removed top 25 bits (of 32) from port Y of cell tb.$add$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:13$6 ($add).
+Removed top 25 bits (of 32) from port A of cell tb.$le$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:13$7 ($le).
+Removed top 26 bits (of 32) from port B of cell tb.$le$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:13$7 ($le).
+Removed top 31 bits (of 32) from port B of cell tb.$lt$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:14$8 ($lt).
+Removed top 29 bits (of 32) from port B of cell tb.$gt$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:14$9 ($gt).
+Removed top 1 bits (of 6) from port B of cell tb.$le$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:8$18 ($le).
+Removed top 1 bits (of 6) from port B of cell tb.$eq$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:9$19 ($eq).
+Removed top 1 bits (of 6) from port B of cell tb.$eq$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:10$22 ($eq).
+Removed top 1 bits (of 6) from port B of cell tb.$eq$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:11$25 ($eq).
+Removed top 25 bits (of 32) from wire tb.$add$/srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/credit_sat/qd32.sv:13$6_Y.
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tb..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tb.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tb'.
+Computing hashes of 20 cells of `\tb'.
+Finding duplicate cells in `\tb'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tb..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== tb ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       23 wires
+       49 wire bits
+        9 public wires
+       29 public wire bits
+        3 ports
+       11 port bits
+       20 cells
+        1   $add
+        5   $eq
+        1   $gt
+        4   $le
+        3   $logic_and
+        5   $logic_or
+        1   $lt
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module tb...
+Found and reported 0 problems.
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 20 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: { \n \len }
+
+Solving problem with 338 variables and 944 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 26219dea6d, time: 0.01s, user: 0.01s, system: 0.01s, MEM: 24.59 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 29% 1x sat (0 sec), 18% 2x read_verilog (0 sec), ...

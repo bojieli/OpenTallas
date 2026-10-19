@@ -1,0 +1,8 @@
+BW_SAFE_TXN_BEAT_MISMATCH i0 h9b tag00001 beat0 d5a5a0000 safe tag00000 beat0 d5a5a0000
+BW_SAFE_TXN_BEAT_MISMATCH i1 h9b tag00001 beat1 dc46d79b1 safe tag00000 beat1 dc46d79b1
+BW_SAFE_TXN_BEAT_MISMATCH i2 h9b tag00001 beat2 d6634f362 safe tag00000 beat2 d6634f362
+BW_SAFE_TXN_BEAT_MISMATCH i3 h9b tag00001 beat3 d80fc6d13 safe tag00000 beat3 d80fc6d13
+BW_SAFE_TXN_RATE h9b 88783 safe 166919
+[171129856000] %Fatal: tb_hbm_pc_bw_safe_txn.sv:72: Assertion failed in tb: BW_SAFE_TXN FAIL errors=12945 MUT_ID_TAG=1
+%Error: /srv/opentallas-scratch/claude/hbm-bw-kept-predicates-1019/src/rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_safe_txn.sv:72: Verilog $stop
+Aborting...

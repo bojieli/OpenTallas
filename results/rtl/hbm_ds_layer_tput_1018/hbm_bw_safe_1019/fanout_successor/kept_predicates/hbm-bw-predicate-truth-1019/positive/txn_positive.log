@@ -1,0 +1,23 @@
+KR_POP_TRUTH region=0 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=1 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=2 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=3 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=4 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=5 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=6 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=7 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=8 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=9 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=10 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=11 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=12 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=13 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=14 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=15 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=16 00=2 01=21 10=180 11=383
+KR_POP_TRUTH region=17 00=2 01=21 10=180 11=383
+KR_BRIDGE_PASS exact=256 II=1 max_occupancy=3 occupied_reset=1 latency_hbm=1
+- /srv/opentallas-scratch/claude/hbm-bw-predicate-truth-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_kr_ready_bridge.sv:64: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 607ns; walltime 0.001 s; speed 897.537 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

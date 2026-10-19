@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm_kr_ready_bridge.v1",
+  "verdict": "FAIL",
+  "mutant": false,
+  "producer": true,
+  "mutant_parameter": "MUT",
+  "fail_regex": "KR_BRIDGE_(?:DATA_MISMATCH|LATENCY_FAIL)",
+  "returncode": 1,
+  "source_base_revision": "1cc470d0d",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kr_ready_bridge.sv": "265a35381ed0d7acc90ad6877146cf165323eae159cccd16856f5be4846b0355",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv": "61bc4e92771c0a2f735c6fbcb98df4505399f7d2dbfedf7176b24ddc4256ce4f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv": "83633af492001e2e291ff2b0651fbeda073ae88bc974a930578ea2d6a415431d",
+    "rtl/test/hbm_accel/svg_rel/tb_hbm_kr_ready_bridge.sv": "ddd4517a063647db8ba5890244082d69aa3b55a85a10867fadc1d4b02188a71a",
+    "tools/hbm_layer_vehicle/hbm_kr_ready_bridge.py": "4a331d9460c2f30243bf2d4424534f7a80f5f489eedc5804dc254f7b5f5227be"
+  },
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "log": "txn_positive.log",
+  "summary": []
+}
