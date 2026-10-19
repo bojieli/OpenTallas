@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.d4g_functional_bind.v1",
+ "contract": "/home/ubuntu/scratch/hc-xrdu/landsmoke_l7.json",
+ "verdict": "PASS",
+ "classes": {
+  "INJ": {
+   "paths": 200,
+   "bits": 39296,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    19,
+    20,
+    21,
+    23
+   ],
+   "landed_paths": 4
+  },
+  "DEL": {
+   "paths": 96,
+   "bits": 26080,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ],
+   "landed_paths": 0
+  },
+  "RC": {
+   "paths": 84,
+   "bits": 5628,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ],
+   "landed_paths": 0
+  },
+  "SFUJ": {
+   "paths": 64,
+   "bits": 2048,
+   "fail": 0,
+   "relay_stages": [
+    2,
+    3
+   ],
+   "landed_paths": 0
+  },
+  "DMA": {
+   "paths": 44,
+   "bits": 9620,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    3,
+    4
+   ],
+   "landed_paths": 11
+  },
+  "HC": {
+   "paths": 376,
+   "bits": 82452,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    6,
+    8,
+    9,
+    10,
+    17,
+    18,
+    19
+   ],
+   "landed_paths": 92
+  },
+  "XCMD": {
+   "paths": 296,
+   "bits": 124816,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    13
+   ],
+   "landed_paths": 12
+  }
+ },
+ "stale_gaps": [],
+ "open_gaps": [],
+ "unlisted_open_gaps": [],
+ "fails": [],
+ "paths": 1160
+}

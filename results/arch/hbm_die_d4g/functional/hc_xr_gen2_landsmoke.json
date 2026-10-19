@@ -1,0 +1,1016 @@
+{
+ "ok": true,
+ "problems": [],
+ "per_quarter": {
+  "XRD": {
+   "SW": 11,
+   "SE": 6,
+   "NW": 11,
+   "NE": 6
+  },
+  "XRU": {
+   "SW": 11,
+   "SE": 7,
+   "NW": 10,
+   "NE": 5
+  }
+ },
+ "paths": [
+  {
+   "path": "hc_eng.qd_v[0+:1]->hc_SW.d_v[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_ss[0+:1]->hc_SW.d_ss[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_nv[0+:7]->hc_SW.d_nv[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_wa[0+:10]->hc_SW.d_wa[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_xa[0+:10]->hc_SW.d_xa[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_v[0+:1]->hc_SW.i_v[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_kind[0+:1]->hc_SW.i_kind[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_slot[0+:2]->hc_SW.i_slot[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_lo[0+:5]->hc_SW.i_lo[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_w[0+:5]->hc_SW.i_w[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_cnt[0+:12]->hc_SW.i_cnt[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_word[0+:10]->hc_SW.i_word[0]",
+   "dir": "XRD",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    18
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.ps_v[0+:1]->hc_eng.qps_v[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.ps[0+:32]->hc_eng.qps[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.ps_f[0+:1]->hc_eng.qps_f[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.eng_fault[0+:1]->hc_eng.q_fault[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.gathered_mix_v[0+:1]->hc_eng.gathered_mix_v[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.gathered_mix_row[0+:5]->hc_eng.gathered_mix_row[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.gathered_mix_pos[0+:3]->hc_eng.gathered_mix_pos[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SW.gathered_mix_data[0+:32]->hc_eng.gathered_mix_data[0]",
+   "dir": "XRU",
+   "q": "SW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_v[1+:1]->hc_SE.d_v[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_ss[1+:1]->hc_SE.d_ss[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_nv[7+:7]->hc_SE.d_nv[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_wa[10+:10]->hc_SE.d_wa[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_xa[10+:10]->hc_SE.d_xa[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_v[1+:1]->hc_SE.i_v[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_kind[1+:1]->hc_SE.i_kind[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_slot[2+:2]->hc_SE.i_slot[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_lo[5+:5]->hc_SE.i_lo[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_w[5+:5]->hc_SE.i_w[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_cnt[12+:12]->hc_SE.i_cnt[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_word[10+:10]->hc_SE.i_word[0]",
+   "dir": "XRD",
+   "q": "SE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    8
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.ps_v[0+:1]->hc_eng.qps_v[1]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.ps[0+:32]->hc_eng.qps[32]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.ps_f[0+:1]->hc_eng.qps_f[1]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.eng_fault[0+:1]->hc_eng.q_fault[1]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.gathered_mix_v[0+:1]->hc_eng.gathered_mix_v[1]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.gathered_mix_row[0+:5]->hc_eng.gathered_mix_row[5]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.gathered_mix_pos[0+:3]->hc_eng.gathered_mix_pos[3]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_SE.gathered_mix_data[0+:32]->hc_eng.gathered_mix_data[32]",
+   "dir": "XRU",
+   "q": "SE",
+   "latency": [
+    7
+   ],
+   "relays": [
+    10
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_v[2+:1]->hc_NW.d_v[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_ss[2+:1]->hc_NW.d_ss[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_nv[14+:7]->hc_NW.d_nv[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_wa[20+:10]->hc_NW.d_wa[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_xa[20+:10]->hc_NW.d_xa[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_v[2+:1]->hc_NW.i_v[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_kind[2+:1]->hc_NW.i_kind[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_slot[4+:2]->hc_NW.i_slot[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_lo[10+:5]->hc_NW.i_lo[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_w[10+:5]->hc_NW.i_w[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_cnt[24+:12]->hc_NW.i_cnt[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_word[20+:10]->hc_NW.i_word[0]",
+   "dir": "XRD",
+   "q": "NW",
+   "latency": [
+    11
+   ],
+   "relays": [
+    19
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.ps_v[0+:1]->hc_eng.qps_v[2]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.ps[0+:32]->hc_eng.qps[64]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.ps_f[0+:1]->hc_eng.qps_f[2]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.eng_fault[0+:1]->hc_eng.q_fault[2]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.gathered_mix_v[0+:1]->hc_eng.gathered_mix_v[2]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.gathered_mix_row[0+:5]->hc_eng.gathered_mix_row[10]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.gathered_mix_pos[0+:3]->hc_eng.gathered_mix_pos[6]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NW.gathered_mix_data[0+:32]->hc_eng.gathered_mix_data[64]",
+   "dir": "XRU",
+   "q": "NW",
+   "latency": [
+    10
+   ],
+   "relays": [
+    17
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_v[3+:1]->hc_NE.d_v[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_ss[3+:1]->hc_NE.d_ss[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_nv[21+:7]->hc_NE.d_nv[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_wa[30+:10]->hc_NE.d_wa[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qd_xa[30+:10]->hc_NE.d_xa[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_v[3+:1]->hc_NE.i_v[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_kind[3+:1]->hc_NE.i_kind[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_slot[6+:2]->hc_NE.i_slot[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_lo[15+:5]->hc_NE.i_lo[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_w[15+:5]->hc_NE.i_w[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_cnt[36+:12]->hc_NE.i_cnt[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_eng.qi_word[30+:10]->hc_NE.i_word[0]",
+   "dir": "XRD",
+   "q": "NE",
+   "latency": [
+    6
+   ],
+   "relays": [
+    9
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.ps_v[0+:1]->hc_eng.qps_v[3]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.ps[0+:32]->hc_eng.qps[96]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.ps_f[0+:1]->hc_eng.qps_f[3]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.eng_fault[0+:1]->hc_eng.q_fault[3]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.gathered_mix_v[0+:1]->hc_eng.gathered_mix_v[3]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.gathered_mix_row[0+:5]->hc_eng.gathered_mix_row[15]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.gathered_mix_pos[0+:3]->hc_eng.gathered_mix_pos[9]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  },
+  {
+   "path": "hc_NE.gathered_mix_data[0+:32]->hc_eng.gathered_mix_data[96]",
+   "dir": "XRU",
+   "q": "NE",
+   "latency": [
+    5
+   ],
+   "relays": [
+    6
+   ],
+   "landed": true
+  }
+ ],
+ "params": {
+  "XRD": 11,
+  "XRU": 11,
+  "XRDQ": 101385739,
+  "XRUQ": 84543243
+ },
+ "params_hex": {
+  "XRDQ": "32'h060b060b",
+  "XRUQ": "32'h050a070b"
+ },
+ "pads": {
+  "XRD": {
+   "SW": 0,
+   "SE": 5,
+   "NW": 0,
+   "NE": 5
+  },
+  "XRU": {
+   "SW": 0,
+   "SE": 4,
+   "NW": 1,
+   "NE": 6
+  }
+ },
+ "compiler": {
+  "RAW0": 189,
+  "ingest_lead": 13,
+  "note": "RAW0 = 167 + XRD + XRU (QDRLY 2); ingest event fires 2 + XRD edges before the wave cadence; every quarter on the same timeline (root pads)"
+ },
+ "contract": "/home/ubuntu/scratch/hc-xrdu/landsmoke_l7.json",
+ "params_before": {
+  "XRD": null,
+  "XRU": null,
+  "XRDQ": null,
+  "XRUQ": null
+ }
+}

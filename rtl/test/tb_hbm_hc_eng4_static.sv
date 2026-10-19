@@ -53,24 +53,62 @@ module tb_hbm_hc_eng4_static;
 `ifndef HC_QDRLY
 `define HC_QDRLY `HC_DRLY
 `endif
+    // HC-XRDU 10-18: LANDED root <-> quarter links.  HC_XRD/HC_XRU/HC_XRDQ/HC_XRUQ = the root's compiled parameters;
+    // HC_DIE_XRDQ / HC_DIE_XRUQ = the die's compiled per-quarter link latency (byte q, edges from driver pin to sink pin:
+    // a landed lane = ceil(N/2) + 1 + E, tools/hbm_die_v16/d4g_hc_xr.py), modelled here as that many register stages
+    // per quarter (the landing lockstep, relay_lockstep_bench.py, proves a landed lane IS that fixed latency).
+    // Defaults = 0 / all-1 = the unlanded bench (byte-identical to before).
+`ifndef HC_XRD
+`define HC_XRD 0
+`endif
+`ifndef HC_XRU
+`define HC_XRU 0
+`endif
+`ifndef HC_XRDQ
+`define HC_XRDQ 32'hffffffff
+`endif
+`ifndef HC_XRUQ
+`define HC_XRUQ 32'hffffffff
+`endif
+`ifndef HC_DIE_XRDQ
+`define HC_DIE_XRDQ 32'h0
+`endif
+`ifndef HC_DIE_XRUQ
+`define HC_DIE_XRUQ 32'h0
+`endif
+    localparam [31:0] DXD = `HC_DIE_XRDQ, DXU = `HC_DIE_XRUQ;
     wire [3:0] qd_v, qd_ss, qi_v, qi_kind, qps_v, qps_f, q_fault; wire [27:0] qd_nv; wire [39:0] qd_wa, qd_xa, qi_word;
     wire [7:0] qi_slot; wire [19:0] qi_lo, qi_w; wire [47:0] qi_cnt; wire [127:0] qps;
-    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    // quarter-side copies after the die links
+    wire [3:0] ld_v, ld_ss, li_v, li_kind, lps_v, lps_f, l_fault; wire [27:0] ld_nv; wire [39:0] ld_wa, ld_xa, li_word;
+    wire [7:0] li_slot; wire [19:0] li_lo, li_w; wire [47:0] li_cnt; wire [127:0] lps;
+    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .qd_v(qd_v), .qd_ss(qd_ss), .qd_nv(qd_nv), .qd_wa(qd_wa), .qd_xa(qd_xa), .qi_v(qi_v), .qi_kind(qi_kind),
-        .qi_slot(qi_slot), .qi_lo(qi_lo), .qi_w(qi_w), .qi_cnt(qi_cnt), .qi_word(qi_word), .qps_v(qps_v), .qps(qps),
-        .qps_f(qps_f), .q_fault(q_fault),
+        .qi_slot(qi_slot), .qi_lo(qi_lo), .qi_w(qi_w), .qi_cnt(qi_cnt), .qi_word(qi_word), .qps_v(lps_v), .qps(lps),
+        .qps_f(lps_f), .q_fault(l_fault),
         .gathered_mix_v(gm_v), .gathered_mix_row(gm_row), .gathered_mix_pos(gm_pos), .gathered_mix_data(gm_data),
         .result_v(result_v), .result_position(result_position), .result(result),
         .program_active(pa), .program_done(pd), .fault(fault));
     genvar gqi;
+    for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_lnk
+        // die link root -> quarter gqi (65 b) and quarter gqi -> root (35 b), fixed latency DXD/DXU byte gqi
+        ot_hdc_delay #(.W(65), .D((DXD >> (8 * gqi)) & 255), .RESET(1)) u_dn (.clk(clk), .rst_n(rst_n),
+            .d({qd_v[gqi], qd_ss[gqi], qd_nv[gqi*7 +: 7], qd_wa[gqi*10 +: 10], qd_xa[gqi*10 +: 10], qi_v[gqi], qi_kind[gqi],
+                qi_slot[gqi*2 +: 2], qi_lo[gqi*5 +: 5], qi_w[gqi*5 +: 5], qi_cnt[gqi*12 +: 12], qi_word[gqi*10 +: 10]}),
+            .q({ld_v[gqi], ld_ss[gqi], ld_nv[gqi*7 +: 7], ld_wa[gqi*10 +: 10], ld_xa[gqi*10 +: 10], li_v[gqi], li_kind[gqi],
+                li_slot[gqi*2 +: 2], li_lo[gqi*5 +: 5], li_w[gqi*5 +: 5], li_cnt[gqi*12 +: 12], li_word[gqi*10 +: 10]}));
+        ot_hdc_delay #(.W(35), .D((DXU >> (8 * gqi)) & 255), .RESET(1)) u_up (.clk(clk), .rst_n(rst_n),
+            .d({qps_v[gqi], qps[gqi*32 +: 32], qps_f[gqi], q_fault[gqi]}),
+            .q({lps_v[gqi], lps[gqi*32 +: 32], lps_f[gqi], l_fault[gqi]}));
+    end
     for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_q
         ot_hbm_hc_qeng_static #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY)) u_q (
             .clk(clk), .rst_n(rst_n),
-            .d_v(qd_v[gqi]), .d_ss(qd_ss[gqi]), .d_nv(qd_nv[gqi*7 +: 7]), .d_wa(qd_wa[gqi*10 +: 10]), .d_xa(qd_xa[gqi*10 +: 10]),
-            .i_v(qi_v[gqi]), .i_kind(qi_kind[gqi]), .i_slot(qi_slot[gqi*2 +: 2]), .i_lo(qi_lo[gqi*5 +: 5]),
-            .i_w(qi_w[gqi*5 +: 5]), .i_cnt(qi_cnt[gqi*12 +: 12]), .i_word(qi_word[gqi*10 +: 10]),
+            .d_v(ld_v[gqi]), .d_ss(ld_ss[gqi]), .d_nv(ld_nv[gqi*7 +: 7]), .d_wa(ld_wa[gqi*10 +: 10]), .d_xa(ld_xa[gqi*10 +: 10]),
+            .i_v(li_v[gqi]), .i_kind(li_kind[gqi]), .i_slot(li_slot[gqi*2 +: 2]), .i_lo(li_lo[gqi*5 +: 5]),
+            .i_w(li_w[gqi*5 +: 5]), .i_cnt(li_cnt[gqi*12 +: 12]), .i_word(li_word[gqi*10 +: 10]),
             .x_wave_v(x_wave_v[gqi]), .x_wave_beat(x_wave_beat[gqi*2 +: 2]), .x_wave_word(x_wave_word[gqi*10 +: 10]),
             .x_wave(x_wave[gqi*BW +: BW]), .ps_v(qps_v[gqi]), .ps(qps[gqi*32 +: 32]), .ps_f(qps_f[gqi]), .fault(q_fault[gqi]));
     end

@@ -20,11 +20,23 @@
 // STATIC: no ready, credit or backpressure.  New fault: a quarter subtree sum not on its due edge (ps_v != expected).
 // Pin registers: every input lands in a pin flop, every output is a flop; rst_n through ot_rst_relay.
 // MUT (bench): 2 = tail pre-sigmoid eps dropped (unit 0).
+// ELEM-GAPS/HBMB 2026-10-18: every runtime-indexed part-select replaced by decoded constant-index slices (gate synthesis
+// stalled in yosys SHARE); function and cycles unchanged.
+// HC-XRDU 2026-10-18 (RELEASE_TREE H.STA.WIRE.8): LANDED root <-> quarter links.  On the d4g die the root <-> hub links are
+// landed lanes (half-cycle stations + a 4-slot landing, fixed latency L = ceil(N/2) + 1 + E + pads edges from the driver
+// pin to the sink pin), and the four quarters sit at different distances.  XRDQ / XRUQ give the compiled per-quarter
+// latency (byte q = SW, SE, NW, NE; tools/hbm_die_v16/d4g_hc_xr.py derives them from the landed contract); XRD / XRU stay
+// the compiler constants and must equal the per-quarter maximum.  Quarter q is padded INSIDE the root by XRD - XRDQ[q]
+// stages before its descriptor / ingest out flops and by XRU - XRUQ[q] stages after its subtree-sum / gathered-mix pin
+// flops (ot_hdc_delay, valid bits reset), so every quarter sees the same compiled timeline (no stagger, no runtime
+// alignment).  XRDQ = XRUQ = 32'hffffffff (default) = every quarter at XRD / XRU = the previous form, byte-identical cycles.
 module ot_hbm_hc_root_static #(
     parameter integer K    = 20480,
     parameter [31:0]  NF   = 32'h46a00000,       // binary32(K)
     parameter integer XRD  = 0,                  // die relay stages root -> quarter (descriptor + ingest event)
     parameter integer XRU  = 0,                  // die relay stages quarter -> root (subtree sums)
+    parameter [31:0]  XRDQ = 32'hffffffff,       // per-quarter landed root -> quarter latency (byte q), <= XRD; all-1 = XRD
+    parameter [31:0]  XRUQ = 32'hffffffff,       // per-quarter landed quarter -> root latency (byte q), <= XRU; all-1 = XRU
     parameter integer QDRLY = 1,                 // quarter's centre <-> bank relays (ot_hbm_hc_qeng_static DRLY)
     parameter integer TLA  = 7,                  // quarter tree adder stages
     parameter integer MUT  = 0
@@ -73,6 +85,12 @@ module ot_hbm_hc_root_static #(
     localparam integer SYS_LAT = SYS_LAT0 + 1 + XRD + 1 + 6 * TLA + 1 + XRU + 1;
     localparam integer NVW = $clog2(W) + 1;
     initial if (K % (8 * W) != 0 || R > 16) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    // per-quarter pads (XRDQ / XRUQ all-1 = no pad)
+    function automatic integer padq(input [31:0] v, input integer mx, input integer q);
+        padq = (v == 32'hffffffff) ? 0 : mx - ((v >> (8 * q)) & 255);
+    endfunction
+    initial for (integer q = 0; q < 4; q = q + 1)
+        if (padq(XRDQ, XRD, q) < 0 || padq(XRUQ, XRU, q) < 0) $fatal(1, "XRDQ/XRUQ byte above XRD/XRU");
 
     // ------------------------------------------------------------------ synced reset
     wire [1:0] rn;
@@ -80,13 +98,26 @@ module ot_hbm_hc_root_static #(
     wire rst_c = rn[0];
 
     // ------------------------------------------------------------------ pin registers
-    reg [3:0] gv_q; reg [19:0] gr_q; reg [11:0] gp_q; reg [127:0] gd_q;
-    reg [3:0] psv_q, psf_q, qf_q; reg [127:0] ps_q;
+    reg [3:0] gv_p; reg [19:0] gr_p; reg [11:0] gp_p; reg [127:0] gd_p;
+    reg [3:0] psv_p, psf_p, qf_p; reg [127:0] ps_p;
     always @(posedge clk or negedge rst_c)
-        if (!rst_c) begin gv_q <= 0; psv_q <= 0; psf_q <= 0; qf_q <= 0; end
-        else begin gv_q <= gathered_mix_v; psv_q <= qps_v; psf_q <= qps_f; qf_q <= q_fault; end
+        if (!rst_c) begin gv_p <= 0; psv_p <= 0; psf_p <= 0; qf_p <= 0; end
+        else begin gv_p <= gathered_mix_v; psv_p <= qps_v; psf_p <= qps_f; qf_p <= q_fault; end
     always @(posedge clk) begin
-        gr_q <= gathered_mix_row; gp_q <= gathered_mix_pos; gd_q <= gathered_mix_data; ps_q <= qps;
+        gr_p <= gathered_mix_row; gp_p <= gathered_mix_pos; gd_p <= gathered_mix_data; ps_p <= qps;
+    end
+    // landed quarter -> root: quarter q delayed by XRU - XRUQ[q] after its pin flops (every quarter at XRU)
+    wire [3:0] gv_q; wire [19:0] gr_q; wire [11:0] gp_q; wire [127:0] gd_q;
+    wire [3:0] psv_q, psf_q, qf_q; wire [127:0] ps_q;
+    genvar gxu;
+    for (gxu = 0; gxu < 4; gxu = gxu + 1) begin : g_xru
+        localparam integer PU = padq(XRUQ, XRU, gxu);
+        ot_hdc_delay #(.W(4), .D(PU), .RESET(1)) u_v (.clk(clk), .rst_n(rst_c),
+            .d({gv_p[gxu], psv_p[gxu], psf_p[gxu], qf_p[gxu]}),
+            .q({gv_q[gxu], psv_q[gxu], psf_q[gxu], qf_q[gxu]}));
+        ot_hdc_delay #(.W(72), .D(PU), .RESET(0)) u_d (.clk(clk), .rst_n(rst_c),
+            .d({gr_p[gxu*5 +: 5], gp_p[gxu*3 +: 3], gd_p[gxu*32 +: 32], ps_p[gxu*32 +: 32]}),
+            .q({gr_q[gxu*5 +: 5], gp_q[gxu*3 +: 3], gd_q[gxu*32 +: 32], ps_q[gxu*32 +: 32]}));
     end
     // ------------------------------------------------------------------ folded F20 targets (pin flops inside)
     wire cfg_we, start_v, tbl_we_q, ptgt_fault, ttgt_fault, seq_active;
@@ -139,18 +170,33 @@ module ot_hbm_hc_root_static #(
     wire        e_eunit = ev[123];
 
     // ------------------------------------------------------------------ ingest event -> quarter e_ingq (out flops)
+    wire sd_v, sd_ss; wire [NVW-1:0] sd_nv; wire [AW-1:0] sd_wa, sd_xa;   // HCP core descriptor tap (below)
+    // landed root -> quarter: quarter q's ingest event and descriptor are delayed by XRD - XRDQ[q] BEFORE its out flops
+    // (outputs stay flops; every quarter pin flop sees the event XRD + 2 edges after it fires)
+    wire [3:0] dg_v, dd_v; wire [3:0] dg_kind, dd_ss; wire [7:0] dg_slot; wire [19:0] dg_lo, dg_w; wire [47:0] dg_cnt;
+    wire [39:0] dg_word, dd_wa, dd_xa; wire [4*NVW-1:0] dd_nv;
+    genvar gxd;
+    for (gxd = 0; gxd < 4; gxd = gxd + 1) begin : g_xrd
+        localparam integer PD = padq(XRDQ, XRD, gxd);
+        ot_hdc_delay #(.W(2), .D(PD), .RESET(1)) u_v (.clk(clk), .rst_n(rst_c),
+            .d({e_ing && e_ingq == 2'(gxd), sd_v}), .q({dg_v[gxd], dd_v[gxd]}));
+        ot_hdc_delay #(.W(56 + NVW), .D(PD), .RESET(0)) u_d (.clk(clk), .rst_n(rst_c),
+            .d({e_kind, e_slot, e_lo, e_w[4:0], e_cnt, e_word, sd_ss, sd_wa, sd_xa, sd_nv}),
+            .q({dg_kind[gxd], dg_slot[gxd*2 +: 2], dg_lo[gxd*5 +: 5], dg_w[gxd*5 +: 5], dg_cnt[gxd*12 +: 12],
+                dg_word[gxd*10 +: 10], dd_ss[gxd], dd_wa[gxd*10 +: 10], dd_xa[gxd*10 +: 10], dd_nv[gxd*NVW +: NVW]}));
+    end
     always @(posedge clk or negedge rst_c)
-        if (!rst_c) qi_v <= 4'd0; else qi_v <= e_ing ? (4'd1 << e_ingq) : 4'd0;
-    always @(posedge clk) if (e_ing) begin
-        qi_kind[e_ingq] <= e_kind; qi_slot[e_ingq*2 +: 2] <= e_slot; qi_lo[e_ingq*5 +: 5] <= e_lo;
-        qi_w[e_ingq*5 +: 5] <= e_w[4:0]; qi_cnt[e_ingq*12 +: 12] <= e_cnt; qi_word[e_ingq*10 +: 10] <= e_word;
+        if (!rst_c) qi_v <= 4'd0; else qi_v <= dg_v;
+    // decoded constant-index destinations (no runtime part-selects: yosys SHARE stall class)
+    always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) if (dg_v[q]) begin
+        qi_kind[q] <= dg_kind[q]; qi_slot[q*2 +: 2] <= dg_slot[q*2 +: 2]; qi_lo[q*5 +: 5] <= dg_lo[q*5 +: 5];
+        qi_w[q*5 +: 5] <= dg_w[q*5 +: 5]; qi_cnt[q*12 +: 12] <= dg_cnt[q*12 +: 12]; qi_word[q*10 +: 10] <= dg_word[q*10 +: 10];
     end
     reg ev_fault;
     always @(posedge clk or negedge rst_c)
         if (!rst_c) ev_fault <= 1'b0; else if (e_ing && e_w[6:5] != 2'd0) ev_fault <= 1'b1;   // quarter wave index < 32
 
     // ------------------------------------------------------------------ HCP core (TPRE = 6: partial-sum tree root)
-    wire sd_v, sd_ss; wire [NVW-1:0] sd_nv; wire [AW-1:0] sd_wa, sd_xa;
     wire o_valid, o_last, core_fault, core_idle; wire [2:0] o_pos; wire [4:0] o_idx; wire [31:0] o_data;
     ot_hdc_v41x_hcp_sys1_static #(.W(W), .TL(4), .PMAX(8), .OMAX(32), .AW(AW), .CW(16), .ML(ML), .DF(32),
         .STATIC_CALENDAR(1), .SYS(1), .SYS_LAT(SYS_LAT), .TPRE(6)) u_core (
@@ -162,10 +208,11 @@ module ot_hbm_hc_root_static #(
         .fault(core_fault), .idle(core_idle),
         .sd_v(sd_v), .sd_ss(sd_ss), .sd_nv(sd_nv), .sd_wa(sd_wa), .sd_xa(sd_xa), .sys_sum(ps_q), .sys_fault(|psf_q));
     // descriptor -> the 4 quarters (out flops); quarter q's lanes are 64q .. 64q + 63 of the run
-    always @(posedge clk or negedge rst_c) if (!rst_c) qd_v <= 4'd0; else qd_v <= {4{sd_v}};
+    always @(posedge clk or negedge rst_c) if (!rst_c) qd_v <= 4'd0; else qd_v <= dd_v;
     always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) begin
-        qd_ss[q] <= sd_ss; qd_wa[q*10 +: 10] <= sd_wa; qd_xa[q*10 +: 10] <= sd_xa;
-        qd_nv[q*7 +: 7] <= (sd_nv <= NVW'(64 * q)) ? 7'd0 : (sd_nv >= NVW'(64 * q + 64)) ? 7'd64 : 7'(sd_nv - NVW'(64 * q));
+        qd_ss[q] <= dd_ss[q]; qd_wa[q*10 +: 10] <= dd_wa[q*10 +: 10]; qd_xa[q*10 +: 10] <= dd_xa[q*10 +: 10];
+        qd_nv[q*7 +: 7] <= (dd_nv[q*NVW +: NVW] <= NVW'(64 * q)) ? 7'd0 : (dd_nv[q*NVW +: NVW] >= NVW'(64 * q + 64)) ? 7'd64
+                           : 7'(dd_nv[q*NVW +: NVW] - NVW'(64 * q));
     end
     // the subtree sums of the task issued SYS_LAT edges ago must be in the pin flops now (all 4 quarters)
     reg [SYS_LAT-1:0] xv; reg ps_fault;
@@ -183,17 +230,24 @@ module ot_hbm_hc_root_static #(
         else begin
             if (e_clear) have <= 0;
             if (e_gm) gm_open[e_gmq] <= e_gmo;
-            if (o_valid) begin
-                if (o_idx >= 5'd24) mix_fault <= 1'b1;
-                else begin mixes[(o_pos*24 + o_idx)*32 +: 32] <= o_data; have[o_pos*24 + o_idx] <= 1'b1; end
+            if (o_valid && o_idx >= 5'd24) mix_fault <= 1'b1;
+            for (integer q = 0; q < 4; q = q + 1)
+                if (gv_q[q] && (!gm_open[q] || gr_q[q*5 +: 5] >= 5'd24)) mix_fault <= 1'b1;
+            // decoded slot writes (slot = pos * 24 + row); same priority as before: core word, then quadrants 0..3
+            for (integer p = 0; p < 8; p = p + 1) for (integer r = 0; r < 24; r = r + 1) begin
+                if (o_valid && o_pos == 3'(p) && o_idx == 5'(r)) have[p*24 + r] <= 1'b1;
+                for (integer q = 0; q < 4; q = q + 1)
+                    if (gv_q[q] && gm_open[q] && gp_q[q*3 +: 3] == 3'(p) && gr_q[q*5 +: 5] == 5'(r))
+                        have[p*24 + r] <= 1'b1;
             end
-            for (integer q = 0; q < 4; q = q + 1) if (gv_q[q]) begin
-                if (!gm_open[q] || gr_q[q*5 +: 5] >= 5'd24) mix_fault <= 1'b1;
-                else begin
-                    mixes[(gp_q[q*3 +: 3]*24 + gr_q[q*5 +: 5])*32 +: 32] <= gd_q[q*32 +: 32];
-                    have[gp_q[q*3 +: 3]*24 + gr_q[q*5 +: 5]] <= 1'b1;
-                end
-            end
+        end
+    end
+    always @(posedge clk) begin
+        for (integer p = 0; p < 8; p = p + 1) for (integer r = 0; r < 24; r = r + 1) begin
+            if (o_valid && o_pos == 3'(p) && o_idx == 5'(r)) mixes[(p*24 + r)*32 +: 32] <= o_data;
+            for (integer q = 0; q < 4; q = q + 1)
+                if (gv_q[q] && gm_open[q] && gp_q[q*3 +: 3] == 3'(p) && gr_q[q*5 +: 5] == 5'(r))
+                    mixes[(p*24 + r)*32 +: 32] <= gd_q[q*32 +: 32];
         end
     end
 
@@ -214,17 +268,27 @@ module ot_hbm_hc_root_static #(
             if (tbl_we_q && seq_active) tbl_fault <= 1'b1;
         end
     end
-    always @(posedge clk) if (tf_rd_q) hold[tf_row_q*224 +: 224] <= tbl_rd[223:0];   // row payload (F20 header off)
+    always @(posedge clk) for (integer r = 0; r < 4; r = r + 1)
+        if (tf_rd_q && tf_row_q == 2'(r)) hold[r*224 +: 224] <= tbl_rd[223:0];   // row payload (F20 header off)
     // set layout: base i = row i/7 word i%7 = hold word i (i < 24); scale j = row 3 word 3 + j = hold word 24 + j
     wire [767:0] t_bases = hold[767:0]; wire [95:0] t_scales = hold[863:768];
 
     // ------------------------------------------------------------------ tail units
     wire [1:0] tv, tfl; wire [1535:0] tres; reg [2:0] tpos [0:1]; reg [1:0] tready; reg tail_fault;
+    // position e_tpos of the mix store / have map: decoded AND-OR select (no runtime part-select)
+    reg [767:0] mix_at; reg [23:0] have_at;
+    always @* begin
+        mix_at = 768'd0; have_at = 24'd0;
+        for (integer p = 0; p < 8; p = p + 1) if (e_tpos == 3'(p)) begin
+            mix_at = mix_at | mixes[p*768 +: 768]; have_at = have_at | have[p*24 +: 24];
+        end
+    end
+    wire [767:0] tres_e = e_eunit ? tres[1535:768] : tres[767:0];
     genvar gu;
     for (gu = 0; gu < 2; gu = gu + 1) begin : g_tail
         wire go = e_tl && e_tunit == gu;
         ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_c),
-            .launch(go), .mixes(mixes[e_tpos*768 +: 768]), .bases(t_bases), .scales(t_scales),
+            .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
             .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
     end
     always @(posedge clk or negedge rst_c) begin
@@ -234,7 +298,7 @@ module ot_hbm_hc_root_static #(
                 if (tv[u]) tready[u] <= 1'b1;
                 if (e_tl && e_tunit == u) begin tready[u] <= 1'b0; tpos[u] <= e_tpos; end
             end
-            if (e_tl && have[e_tpos*24 +: 24] != 24'hffffff) tail_fault <= 1'b1;
+            if (e_tl && have_at != 24'hffffff) tail_fault <= 1'b1;
             if (e_emit && !tready[e_eunit]) tail_fault <= 1'b1;
         end
     end
@@ -245,7 +309,7 @@ module ot_hbm_hc_root_static #(
         else result_v <= e_emit ? e_qmask : 4'd0;
     end
     always @(posedge clk) if (e_emit) for (integer q = 0; q < 4; q = q + 1) if (e_qmask[q]) begin
-        result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres[e_eunit*768 +: 768];
+        result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres_e;
     end
 
     // ------------------------------------------------------------------ status
