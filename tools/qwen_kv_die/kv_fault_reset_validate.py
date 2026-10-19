@@ -9,7 +9,10 @@ def validate(run,inv,c,m,p):
     P=I.P;nets,_,_,insts=P.parse_die(str(run/'case_kv/die.v'))
     uses=collections.Counter()
     for _,_,_,ports in insts:
-        for expr in ports.values():uses.update(b for b in (P.expr_bits(expr,nets) or []) if b[0]!='CONST')
+        for expr in ports.values():
+            bits=P.expr_bits(expr,nets)
+            if bits is None and expr.strip():raise ValueError('Unresolved expression prevents conservative reset fanout counting: '+expr)
+            uses.update(b for b in (bits or []) if b[0]!='CONST')
     lef=(run/'case_kv/elements.lef').read_text();macro=re.search(r'^MACRO qkd_rlys_1\s*$(.*?)^END qkd_rlys_1$',lef,re.M|re.S)
     if not macro:raise ValueError('Native reset relay view absent')
     body=macro[1];sz=re.search(r'SIZE ([\d.]+) BY ([\d.]+)',body);w,h=map(float,sz.groups())
