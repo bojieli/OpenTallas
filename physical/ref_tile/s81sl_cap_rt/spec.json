@@ -7,7 +7,6 @@
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/proto/ot_fp32_add_rne_pipe.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
-  "rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv"
  ],
  "params": {},
@@ -68,10 +67,10 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.025,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81U-CAP2: the flat s81sl_cap failed the clock rule (22,261 sinks / one root, TT insertion 368.5 ps > 300, physical/ref_tile/s81sl_cap/gate_result.json); split into 2 x tree leaf (s81sl_cap_tr, one master, E instance MY) + root leaf (s81sl_cap_rt) with own clock roots and registered seams (nc RST flop -> n6 P1 flop, no added edge), parent s81sl_capc = instances + wiring. S81U-CAP3: pairing-store lookups read one register early with forwarding (gate's 18-level fb_t -> cnt stage, ~795 ps), reset relay 20 copies, SRAM on the lattice; 0 edges moved (cap_bench identical). S81U-CAP5 (CAP3 gate WARN: n6_t[13] / re_t[13] 3,604 loads, TT ins 328.1 / spread 104.6, resets 401 / 384, u_add s2_small -> s3_val ~647 ps): look-ahead slot / h selects replicated per slot group as kept registered copies (n6 output stage moved into the leaf, u_n6 RST 0), store key / es moved into the slot groups (group-local 8:1 then across-group 8:1), both adders ot_s81_fadd_pipe (bit-identical, valid-only reset, single add in stage 3), clk pin to the N-face centre (128-131) over the macro / store mass; 0 edges moved (cap_bench SLCAP lines identical).",
+ "structural_change": "S81U-CAP2: the flat s81sl_cap failed the clock rule (22,261 sinks / one root, TT insertion 368.5 ps > 300, physical/ref_tile/s81sl_cap/gate_result.json); split into 2 x tree leaf (s81sl_cap_tr, one master, E instance MY) + root leaf (s81sl_cap_rt) with own clock roots and registered seams (nc RST flop -> n6 P1 flop, no added edge), parent s81sl_capc = instances + wiring. S81U-CAP3: pairing-store lookups read one register early with forwarding (gate's 18-level fb_t -> cnt stage, ~795 ps), reset relay 20 copies, SRAM on the lattice; 0 edges moved (cap_bench identical). S81U-CAP5 (CAP3 gate WARN: n6_t[13] / re_t[13] 3,604 loads, TT ins 328.1 / spread 104.6, resets 401 / 384, u_add s2_small -> s3_val ~647 ps): look-ahead slot / h selects replicated per slot group as kept registered copies (n6 output stage moved into the leaf, u_n6 RST 0), store key / es moved into the slot groups (group-local 8:1 then across-group 8:1), both adders ot_s81_fadd_pipe (bit-identical, valid-only reset, single add in stage 3), clk pin to the N-face centre (128-131) over the macro / store mass; 0 edges moved (cap_bench SLCAP lines identical). HOURLY-S81/CAPRT 2026-10-19: the CAP5 adder change no longer touches the SHARED ot_s81_retn_static.sv (closed s81sl_cap_tr / s81net_node views stay source-identical): u_n6 is ot_s81sl_cap_rt_retn = ot_s81_retn_static verbatim with u_add = ot_s81_fadd_pipe, both defined in ot_s81sl_cap_rt.sv; same netlist function, 0 edges. RESET-LANDING (ROOT-RST d4c49c8d3): rst_n reached 22 sinks (2 sync + 20 relay clears of ot_rst_relay) > 2 -> kit reset_landing 2 stages (rst_n -> rst_n__ot_rl0 -> rst_n__ot_rl1 -> u_rr): reset assert/release +2 cycles (scheduled constant), data latency unchanged. io_hold_margin_ns 0.0 -> 0.025 (KITS 10-18 rule).",
  "job": {
   "owner": "Claude:S81U-CAP2",
   "branch": "claude/s81u3-1017",
@@ -221,6 +220,10 @@
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
  },
  "children": [],
  "inter": []

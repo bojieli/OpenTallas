@@ -40,12 +40,7 @@ module ot_s81_retn_static #(
     // and read through the N:1 mux, output register), so no zero-logic flop -> flop hop is left in them.  Same flop count,
     // same edges.  Why: s81sl_cap_tr route 9df7f8153 (3 nodes, 6,200 sinks) NEEDS_RTL FF hold -6.37 ps; all 188 violators
     // are flop -> INV -> flop pass hops (93 of them in u_fsb / u_asb), capture clock 14 ps after launch, ECO 7,489 cells.
-    parameter integer DLR = 0,
-    // ADDN (S81U-CAP5 2026-10-17, default 0 = ot_fp32_add_rne_pipe, netlist unchanged for every existing tile): 1 = the
-    // bit-identical ot_s81_fadd_pipe below (valid-only reset: the adder's ~350 datapath reset flops made the node's reset
-    // net 401 loads in s81sl_cap_rt; stage 3 is one add with the sub's inversion and the zero test moved into stage 2 and
-    // the carry renormalize moved into stage 4: same 5 edges).
-    parameter integer ADDN = 0
+    parameter integer DLR = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -214,13 +209,8 @@ module ot_s81_retn_static #(
     always @(posedge clk or negedge rst_n) if (!rst_n) begin q_add <= 1'b0; q_fwd <= 1'b0; end
                                            else begin q_add <= is_add; q_fwd <= is_fwd; end
     always @(posedge clk) begin q_x <= add_x; q_y <= add_y; end
-    generate if (ADDN != 0) begin : g_addn
-        ot_s81_fadd_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(q_add), .a(q_x), .b(q_y),
+    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(q_add), .a(q_x), .b(q_y),
                                 .y(sum), .err(err), .valid_out(sv));
-    end else begin : g_addr
-        ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(q_add), .a(q_x), .b(q_y),
-                                    .y(sum), .err(err), .valid_out(sv));
-    end endgenerate
     // side band of the add: tag, error, wait-to-exit; forward lane: word + wait
     // exit edge = early + WIN + EXIT_C.  A sum issued at edge n whose earlier sibling arrived age edges before waits
     // WIN - age more edges than a forward (which issues at age WIN).
@@ -303,147 +293,5 @@ module ot_s81_retn_static #(
 `ifndef SYNTHESIS
     initial if (WIN < 1 || WIN > 14) $fatal(1, "ot_s81_retn_static: 1 <= WIN <= 14");
 `endif
-endmodule
-
-
-// ---------------------------------------------------------------------------------------------------------------------
-// ot_s81_fadd_pipe (S81U-CAP5 2026-10-17): ot_fp32_add_rne_pipe, bit-identical (y, err, valid_out at the same 5 edges;
-// equivalence bench rtl/dsrom_sys/s81_dv/slice/test/tb_s81_fadd_eq.sv), restructured for the s81sl_cap_rt gate:
-//   * reset only on the valid chain: the datapath registers carry no reset (the original resets all ~350 of them, which
-//     made every node / finish reset net 384-401 loads);
-//   * stage 2 registers the small operand already inverted for a subtraction and the exact-cancellation flag
-//     (|a| == |b| <=> dist == 0 && big == small: for dist > 0 the big operand is normal, >= 2^26 in the 28-bit frame,
-//     and the shifted small one is < 2^26), so stage 3 is ONE 28-bit add (big + small' + sub) with no sum/dif mux and
-//     no 28-bit zero detect behind it (gate: u_add.s2_small -> s3_val 18 levels ~647 ps);
-//   * the carry renormalize (shift right one, exponent + 1) moves into stage 4, where a carry excludes the cancellation
-//     normalize (carry => add => no left shift), so stage 4 gains one final 2:1 mux and nothing else.
-// ---------------------------------------------------------------------------------------------------------------------
-module ot_s81_fadd_pipe (
-    input  wire        clk,
-    input  wire        rst_n,
-    input  wire        valid_in,
-    input  wire [31:0] a,
-    input  wire [31:0] b,
-    output reg  [31:0] y,
-    output reg  [1:0]  err,
-    output reg         valid_out
-);
-    localparam [1:0] E_NONE = 2'd0;
-    localparam [1:0] E_NONFINITE = 2'd1;
-    localparam [1:0] E_OVERFLOW = 2'd2;
-    integer k;
-    // -- stage 1: decode, order by magnitude, resolve the zero operands (as ot_fp32_add_rne_pipe)
-    wire        a_sign = a[31], b_sign = b[31];
-    wire [7:0]  a_field = a[30:23], b_field = b[30:23];
-    wire [7:0]  a_exp = (a_field == 8'd0) ? 8'd1 : a_field;
-    wire [7:0]  b_exp = (b_field == 8'd0) ? 8'd1 : b_field;
-    wire [23:0] a_man = {(a_field != 8'd0), a[22:0]};
-    wire [23:0] b_man = {(b_field != 8'd0), b[22:0]};
-    wire s1_nonfinite = (a_field == 8'hff) || (b_field == 8'hff);
-    wire a_is_zero = (a_man == 24'd0);
-    wire b_is_zero = (b_man == 24'd0);
-    wire s1_bypass = s1_nonfinite || a_is_zero || b_is_zero;
-    wire [31:0] s1_bypass_code = s1_nonfinite ? 32'd0 : (a_is_zero ? (b_is_zero ? 32'd0 : b) : a);
-    wire swap = (b_exp > a_exp) || ((b_exp == a_exp) && (b_man > a_man));
-    reg        s1_v, s2_v, s3_v, s4_v;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin s1_v <= 1'b0; s2_v <= 1'b0; s3_v <= 1'b0; s4_v <= 1'b0; valid_out <= 1'b0; end
-        else begin s1_v <= valid_in; s2_v <= s1_v; s3_v <= s2_v; s4_v <= s3_v; valid_out <= s4_v; end
-    reg        s1_byp, s1_sub, s1_sign;
-    reg [1:0]  s1_err;
-    reg [31:0] s1_code;
-    reg [7:0]  s1_exp, s1_dist;
-    reg [23:0] s1_big, s1_small;
-    always @(posedge clk) begin
-        s1_byp <= s1_bypass;
-        s1_err <= s1_nonfinite ? E_NONFINITE : E_NONE;
-        s1_code <= s1_bypass_code;
-        s1_sub <= (a_sign != b_sign);
-        s1_sign <= swap ? b_sign : a_sign;
-        s1_exp <= swap ? b_exp : a_exp;
-        s1_dist <= (swap ? b_exp : a_exp) - (swap ? a_exp : b_exp);
-        s1_big <= swap ? b_man : a_man;
-        s1_small <= swap ? a_man : b_man;
-    end
-    // -- stage 2: align (jamming), invert for a subtraction, exact-cancellation flag
-    function automatic [27:0] shift_right_jam_28(input [27:0] value, input [7:0] distance);
-        reg discarded; reg [27:0] shifted; integer bit_index;
-        begin
-            discarded = 1'b0; shifted = 28'd0;
-            if (distance == 8'd0) shifted = value;
-            else if (distance >= 8'd28) shifted[0] = |value;
-            else begin
-                shifted = value >> distance;
-                for (bit_index = 0; bit_index < 28; bit_index = bit_index + 1)
-                    if ({24'd0, bit_index[7:0]} < distance) discarded = discarded | value[bit_index];
-                shifted[0] = shifted[0] | discarded;
-            end
-            shift_right_jam_28 = shifted;
-        end
-    endfunction
-    wire [27:0] s2_sh = shift_right_jam_28({1'b0, s1_small, 3'b000}, s1_dist);
-    reg        s2_byp, s2_sub, s2_sign, s2_eq;
-    reg [1:0]  s2_err;
-    reg [31:0] s2_code;
-    reg [7:0]  s2_exp;
-    reg [27:0] s2_big, s2_smallx;
-    always @(posedge clk) begin
-        s2_byp <= s1_byp; s2_sub <= s1_sub; s2_sign <= s1_sign; s2_err <= s1_err; s2_code <= s1_code; s2_exp <= s1_exp;
-        s2_big <= {1'b0, s1_big, 3'b000};
-        s2_smallx <= s1_sub ? ~s2_sh : s2_sh;
-        s2_eq <= (s1_dist == 8'd0) && (s1_big == s1_small);
-    end
-    // -- stage 3: ONE add (big + small + 0, or big + ~small + 1 = big - small: big >= small, no borrow)
-    wire [27:0] s3_arith = s2_big + s2_smallx + {27'd0, s2_sub};
-    reg        s3_byp, s3_sub, s3_sign, s3_zero, s3_carry;
-    reg [1:0]  s3_err;
-    reg [31:0] s3_code;
-    reg [7:0]  s3_exp;
-    reg [27:0] s3_raw;
-    always @(posedge clk) begin
-        s3_byp <= s2_byp; s3_sub <= s2_sub; s3_sign <= s2_sign; s3_err <= s2_err; s3_code <= s2_code;
-        s3_zero <= s2_sub && s2_eq;
-        s3_exp <= s2_exp;
-        s3_raw <= s3_arith;
-        s3_carry <= !s2_sub && s3_arith[27];
-    end
-    // -- stage 4: carry renormalize OR cancellation normalize (exclusive: a carry is an add)
-    wire [26:0] s4_in = s3_raw[26:0];
-    wire [26:0] s4_rsh = {s3_raw[27:2], s3_raw[1] | s3_raw[0]};
-    reg [4:0] s4_lz;
-    always @* begin
-        s4_lz = 5'd27;
-        for (k = 0; k <= 26; k = k + 1)
-            if (s4_in[k]) s4_lz = 5'd26 - k[4:0];
-    end
-    wire [7:0] s4_room = s3_exp - 8'd1;
-    wire [7:0] s4_shift = ({3'd0, s4_lz} > s4_room) ? s4_room : {3'd0, s4_lz};
-    wire       s4_apply = s3_sub && !s3_zero && !s3_byp;
-    reg        s4_byp, s4_sign, s4_zero;
-    reg [1:0]  s4_err;
-    reg [31:0] s4_code;
-    reg [7:0]  s4_exp;
-    reg [26:0] s4_val;
-    always @(posedge clk) begin
-        s4_byp <= s3_byp; s4_sign <= s3_sign; s4_zero <= s3_zero; s4_err <= s3_err; s4_code <= s3_code;
-        s4_exp <= s3_carry ? (s3_exp + 8'd1) : s4_apply ? (s3_exp - s4_shift) : s3_exp;
-        s4_val <= s3_carry ? s4_rsh : s4_apply ? (s4_in << s4_shift) : s4_in;
-    end
-    // -- stage 5: round to nearest even, encode, fail closed on overflow (as ot_fp32_add_rne_pipe)
-    wire [24:0] s5_trunc = {1'b0, s4_val[26:3]};
-    wire        s5_inc = s4_val[2] && ((|s4_val[1:0]) || s4_val[3]);
-    wire [24:0] s5_round = s5_trunc + {24'd0, s5_inc};
-    wire        s5_carry = s5_round[24];
-    wire [23:0] s5_man = s5_carry ? s5_round[24:1] : s5_round[23:0];
-    wire [7:0]  s5_exp = s5_carry ? (s4_exp + 8'd1) : s4_exp;
-    wire        s5_subnormal = (s5_exp == 8'd1) && !s5_man[23];
-    wire [31:0] s5_code = {s4_sign, s5_subnormal ? 8'd0 : s5_exp, s5_man[22:0]};
-    wire        s5_over = (s4_exp >= 8'hff) || (s5_exp >= 8'hff);
-    always @(posedge clk) begin
-        if (s4_byp) begin y <= s4_code; err <= s4_err; end
-        else if (s4_zero) begin y <= 32'd0; err <= E_NONE; end
-        else if (s5_over) begin y <= 32'd0; err <= E_OVERFLOW; end
-        else begin y <= (s5_code[30:0] == 31'd0) ? 32'd0 : s5_code; err <= E_NONE; end
-    end
 endmodule
 `default_nettype wire
