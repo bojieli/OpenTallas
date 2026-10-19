@@ -292,10 +292,102 @@ def cmd_plan(a):
     return 0
 
 
+# ------------------------------------------------------------------------------------------------ HBM KV image
+BLOCK_LINES = 64           # svg block = 64 136-B lines (descriptor rows 7 b; budget() svg_blocks)
+KV_ROW0 = 0x4000           # explicit KV allocation: DRAM row KV_ROW0 + block on the SM's own four PCs (weights stay low)
+
+
+def kv_image(rec, ops, row0=KV_ROW0):
+    """HBM image of the KV lines of every in-slice SM (sm_SW0..7 -> svg_SW<k> id_sm k -> phy_SW PCs 4k..4k+3).
+
+    Address law = ot_hbm_svc_prefetch_overlap_owner_id (k_addr) = tools/hbm_svc_packed136_image.sector_address: logical
+    sector o of a block -> lane o&3 (PC pcs[lane]), t = o>>2, bank {t[9:7], t[1:0]}, col t[6:2], row = row_base; 136-B
+    lines packed contiguously per block (w19_payload_loader.compact_sectors: little-endian 32-B sectors, last padded),
+    total = ceil(rows*136/128)*4 sectors (issuer rule).  QK and PV of an SM read the SAME blocks (DS K = V)."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from hbm_svc_packed136_image import sector_address, sector_pc  # noqa: E402
+    sms = sorted({o[5] for o in ops})
+    hexlines, blocks, seen = [], [], set()
+    for s in sms:
+        rows = next(o[3] for o in ops if o[5] == s and o[1] == "qk")
+        if s >= 8:
+            blocks.append(dict(sm=SM_NAMES[s], in_slice=False, rows=len(rows),
+                               note="sm_NW* is outside the SW slice: its QK scores / PV node are replayed at the boundary"))
+            continue
+        lines = op_lines(rec, rows)
+        alloc = dict(pcs=[4 * s + k for k in range(4)], row_base=0, stack_bytes=1 << 35)
+        for b in range(-(-len(lines) // BLOCK_LINES)):
+            blk = lines[BLOCK_LINES * b:BLOCK_LINES * (b + 1)]
+            raw = b"".join(x.to_bytes(136, "little") for x in blk)
+            total = ((len(blk) * 136 + 127) // 128) * 4
+            raw += bytes(32 * total - len(raw))
+            alloc["row_base"] = row0 + b
+            secs = []
+            for o in range(total):
+                sa = sector_address(o, alloc)
+                if sa in seen:
+                    raise SystemExit(f"KV image alias at sector {sa:#x}")
+                seen.add(sa)
+                assert sector_pc(sa) == alloc["pcs"][o & 3]
+                hexlines.append(f"{sa:08x} {int.from_bytes(raw[32 * o:32 * o + 32], 'little'):064x}")
+                secs.append(sa)
+            blocks.append(dict(sm=SM_NAMES[s], in_slice=True, block=b, lines=len(blk), rows_field=len(blk),
+                               total_sectors=total, pcs=list(alloc["pcs"]), row_base=row0 + b,
+                               first_sector=secs[0], last_sector=secs[-1],
+                               bytes_sha256=hashlib.sha256(raw).hexdigest()))
+    return hexlines, blocks
+
+
+def image_readback(hexlines, blocks):
+    """inverse of kv_image: rebuild every in-slice block's line stream from the hex image (the check that the image
+    holds exactly the lines the unit pre-check feeds the SM)."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from hbm_svc_packed136_image import sector_address  # noqa: E402
+    mem = {int(a, 16): int(d, 16) for a, d in (ln.split() for ln in hexlines)}
+    out = {}
+    for b in blocks:
+        if not b["in_slice"]:
+            continue
+        alloc = dict(pcs=b["pcs"], row_base=b["row_base"], stack_bytes=1 << 35)
+        raw = b"".join(mem[sector_address(o, alloc)].to_bytes(32, "little") for o in range(b["total_sectors"]))
+        out.setdefault(b["sm"], []).extend(int.from_bytes(raw[136 * i:136 * i + 136], "little")
+                                           for i in range(b["lines"]))
+    return out
+
+
+def cmd_image(a):
+    rec, src = load_ds(Path(a.kv), a.layer)
+    ops, nrun = plan_d4g(rec)
+    hexlines, blocks = kv_image(rec, ops)
+    back = image_readback(hexlines, blocks)
+    for s in sorted({o[5] for o in ops if o[5] < 8}):
+        rows = next(o[3] for o in ops if o[5] == s and o[1] == "qk")
+        if back[SM_NAMES[s]] != op_lines(rec, rows):
+            raise SystemExit(f"{SM_NAMES[s]}: image readback != SM line stream")
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "phy_SW.hex").write_text("\n".join(hexlines) + "\n")
+    doc = dict(schema="opentallas.hbm_vehicle_att_kv_image.v1", lane="VEH-ATT2", source=src, nrun=nrun,
+               file="phy_SW.hex (+HBM_IMG_DIR: ot_hbm3e_phy_rc_e8p5 DRAM model, lines '<sector30 hex> <256-b hex>')",
+               phy_hex_sha256=hashlib.sha256((out / "phy_SW.hex").read_bytes()).hexdigest(), sectors=len(hexlines),
+               allocation=dict(row0=KV_ROW0, block_lines=BLOCK_LINES,
+                               law="svg_SW<k> (id_sm k) PCs 4k..4k+3; block b at DRAM row KV_ROW0+b; "
+                                   "hbm_svc_packed136_image.sector_address == overlap_owner_id k_addr"),
+               readback="every in-slice SM's image decodes to exactly the 136-B line stream of the unit pre-check "
+                        "(op_lines), whose rows decode bit-exact to the fixture K rows (kv8/kv4_encode)",
+               blocks=blocks,
+               descriptor_note="issuer descriptor per block: rows = lines, row_base = KV_ROW0 + b, pcs = the SM's own "
+                               "four PCs, total = ceil(rows*136/128)*4 (sm_images.py / VEH-FMT-SM2 owns the row ABI)")
+    (out / "kv_image.json").write_text(json.dumps(doc, indent=1, default=int) + "\n")
+    print(f"PASS HBM_VEH_ATT_IMAGE sectors={len(hexlines)} blocks={sum(b['in_slice'] for b in blocks)} "
+          f"outside_slice={sum(not b['in_slice'] for b in blocks)}")
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for nm in ("plan", "unit"):
+    for nm in ("plan", "unit", "image"):
         p = sub.add_parser(nm)
         p.add_argument("--kv", required=True, help="ds_att_kv.py output dir (contains L<NN>/att_kv.json)")
         p.add_argument("--layer", type=int, default=2)
@@ -310,7 +402,7 @@ def main(argv=None):
             p.add_argument("--probe", action="store_true")
             p.add_argument("--lat", default="")
     a = ap.parse_args(argv)
-    return cmd_unit(a) if a.cmd == "unit" else cmd_plan(a)
+    return {"unit": cmd_unit, "plan": cmd_plan, "image": cmd_image}[a.cmd](a)
 
 
 if __name__ == "__main__":
