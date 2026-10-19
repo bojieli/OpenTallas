@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "qfd_tt_head_static_h16c",
- "reviewer": "coordinator (2026-10-18 ~22:35)",
+ "reviewer": "coordinator (2026-10-19 ~00:20)",
  "verdict": "APPROVED",
- "time": "2026-10-18T22:35:00-07:00",
- "gate_commit": "72f0abd47",
+ "time": "2026-10-19T00:20:00-07:00",
+ "gate_commit": "2c9065372",
  "checklist": {
   "lattice": "PASS: two stacked 64x512 1R1W SRAMs, aligned, abutted, on lattice, W-centred with halo",
   "std_cell_band": "PASS: L-shaped std-cell band E (beside the pin face) and S (under the macros); fill 0.548, no hot bins (max ~0.7 at S band)",
@@ -12,6 +12,6 @@
   "clock_entry": "PASS: ck on E/S faces; ck_head 9,405 sinks, pin-flop spread TT 58.0 / FF 51.4 (<=80)",
   "shape": "PASS: 259.2x222.5 compact; trial GRT overflow 0; gate WARN 0 fail (TT r2r +72.5, hold +51)"
  },
- "notes": "h17 = STAGE_ME stage port + MEG 6.0 guard (Q-H16C kit 0b9133c0f), the variant the die binds (HARD_HR 1 + STAGE_ME 1). Empty W/N strip is the macro halo, not a link path.",
- "geometry_sha256": "173b9249afe97c1d4e1509522d843c6d63f665e0c9fd60b6d539a6f446e9dfad"
+ "notes": "h17 = STAGE_ME stage port + MEG 6.0 guard (Q-H16C kit 0b9133c0f), the variant the die binds (HARD_HR 1 + STAGE_ME 1). Empty W/N strip is the macro halo, not a link path. Re-review 10-19: kit regen on main's native CTS policy changed only clock_entry.sdc text (clock-rule proc); outline/macros/pins identical; re-gate 774f6e681 WARN 0 fail, same numbers (TT +72.5, hold +51, spread 58.0/51.4, GRT 0).",
+ "geometry_sha256": "ef265692c9fafe53cc7c6c1ecce2d8cb7950c3eb47f6df8bf00870d994cfb0e7"
 }
