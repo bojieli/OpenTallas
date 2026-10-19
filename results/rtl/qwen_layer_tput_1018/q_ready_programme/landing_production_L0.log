@@ -1,0 +1,18 @@
+QLANDING_FAULT cycle1599 data1 qs0 qb0
+N59DV_ERR cycle 1599: production forwarded landing fault
+QTRACE_FIRST cycle1693
+N59DV_ERR cycle 1693: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1694: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1695: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1696: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1697: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1698: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1699: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1700: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1702: Q landing differs from selected age (GEN20/control16)
+N59DV_ERR cycle 1703: Q landing differs from selected age (GEN20/control16)
+QREQUEST_FIRST cycle1803 beat0
+N59DV_FAIL errors=65 x3 4/4 tx 33/33 ar 32/32 emb 65 done 1894/1895 fault 0
+[0] %Fatal: tb_qready_landing.sv:250: Assertion failed in TOP.tb_qready_landing
+%Error: rtl/test/qwen_dv/qready/tb_qready_landing.sv:250: Verilog $stop
+Aborting...

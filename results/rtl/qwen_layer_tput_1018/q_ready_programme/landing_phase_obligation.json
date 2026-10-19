@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.qwen.q_landing_phase_obligation.v1",
+ "source": "ot-epyc6:/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/land_plan_used.json",
+ "source_sha256": "78188090e4d936e0bfede8b759ab25b6c90cc1ba7f21450f34c8fd8e0c98e513",
+ "T_ps": 833.333,
+ "D": 4,
+ "logs": [
+  "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f15codex/chain/sta_r22k_tt/grt_tt.log",
+  "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f15codex/chain/sta_r22k_ff/grt_ff.log"
+ ],
+ "links": [
+  {
+   "bid": "sf_q_slot",
+   "n": 1,
+   "E": 1,
+   "K": 1,
+   "s1": {
+    "tt": 405.4,
+    "ff": 486.7
+   },
+   "h0": {
+    "tt": 201.8,
+    "ff": 132.6
+   },
+   "setup_E": {
+    "tt": 405.4,
+    "ff": 486.7
+   },
+   "hold_E": {
+    "tt": 2701.8,
+    "ff": 2632.6
+   },
+   "window_ok": true,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_q_slot_beat",
+   "n": 1,
+   "E": 1,
+   "K": 1,
+   "s1": {
+    "tt": 362.0,
+    "ff": 454.8
+   },
+   "h0": {
+    "tt": 227.5,
+    "ff": 148.8
+   },
+   "setup_E": {
+    "tt": 362.0,
+    "ff": 454.8
+   },
+   "hold_E": {
+    "tt": 2727.5,
+    "ff": 2648.8
+   },
+   "window_ok": true,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_dd_wo",
+   "n": 26,
+   "E": 7,
+   "K": 7,
+   "s1": {
+    "tt": -4515.6,
+    "ff": -3133.6
+   },
+   "h0": {
+    "tt": 4954.9,
+    "ff": 3600.0
+   },
+   "setup_E": {
+    "tt": 484.4,
+    "ff": 1866.4
+   },
+   "hold_E": {
+    "tt": 2454.9,
+    "ff": 1100.0
+   },
+   "window_ok": true,
+   "E_gen": 19
+  }
+ ],
+ "scope": "Inherited bi GRT plan used by dv2f18dh2 GEN; not final dv2f18dh2 clock/route qualification"
+}

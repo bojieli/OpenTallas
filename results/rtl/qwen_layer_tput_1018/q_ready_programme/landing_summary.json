@@ -1,0 +1,112 @@
+{
+ "schema": "opentallas.qwen.q_landing_mechanism.v1",
+ "production_bound": false,
+ "advance_admitted": false,
+ "phase_qualified": false,
+ "native_source": "9f159ab985b8e61f6a8a6b5ce1900a1e7588a75e",
+ "real_trace_source": "2cdba303d",
+ "native_shape": {
+  "q_seats": 512,
+  "q_beats": 32,
+  "source_words": 64
+ },
+ "production_zero_delay": {
+  "Q_K": 2,
+  "Q_E": 19,
+  "planned_age": 20,
+  "observed_age": 16,
+  "landing_epoch_fault": true,
+  "expected_failure_checks": 65
+ },
+ "legal_zero_delay_control": {
+  "Q_K": 6,
+  "Q_E": 15,
+  "observed_Q_age": 16,
+  "observed_request_age": 2,
+  "layers": [
+   0,
+   1
+  ],
+  "verdict": "PASS"
+ },
+ "late_prefetch": {
+  "extra_request_edge": 1,
+  "errors": 247,
+  "verdict": "FAIL_EXPECTED"
+ },
+ "local_control_pin_times": {
+  "time_reference": "diagnostic bench cycle; source trace offset64, zero-delay K6/E15 control",
+  "producer_ready": [
+   1694,
+   1696,
+   1698,
+   1700,
+   1735,
+   1737,
+   1739,
+   1741,
+   1703,
+   1705,
+   1707,
+   1709,
+   1744,
+   1746,
+   1748,
+   1750,
+   1712,
+   1714,
+   1716,
+   1718,
+   1753,
+   1755,
+   1757,
+   1759,
+   1721,
+   1723,
+   1725,
+   1727,
+   1762,
+   1764,
+   1766,
+   1768
+  ],
+  "request_arrivals": [
+   1803,
+   1804,
+   1805,
+   1806,
+   1807,
+   1808,
+   1809,
+   1810,
+   1811,
+   1812,
+   1813,
+   1814,
+   1815,
+   1816,
+   1817,
+   1818,
+   1819,
+   1820,
+   1821,
+   1822,
+   1823,
+   1824,
+   1825,
+   1826,
+   1827,
+   1828,
+   1829,
+   1830,
+   1831,
+   1832,
+   1833,
+   1834
+  ]
+ },
+ "production_blockers": [
+  "new source-pinned deployment programme must join the actual producer",
+  "bind final source/forwarded/receiver clock phases for dv2f18dh2 successor; inherited bi plan is not final release phase proof"
+ ]
+}

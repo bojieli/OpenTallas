@@ -1,0 +1,5 @@
+QTRACE_FIRST cycle1693
+QREQUEST_FIRST cycle1803 beat0
+QREADY_LANDING_PASS 512 actual seats 32 requests Qage16/QSage2, IDEAL_CONTROL1 production_bound=false
+N59DV_PASS x3=4 tx=33(1 CMD+32 Q) ar=32 bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done 1894->1895, emb group-1 words=65 at cmd+6..+70
+- rtl/test/qwen_dv/qready/tb_qready_landing.sv:255: Verilog $finish

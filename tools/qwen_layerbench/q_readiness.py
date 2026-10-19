@@ -57,18 +57,20 @@ def inspect(die_v, lanes, source_commit):
             raise ValueError(f'Q readiness: wrong consumer pin {bid}')
         pins[bid] = dict(source=f'{src}.{sp}', consumer=f'{dst}.{dp}',
                          source_net=sn, consumer_net=dn, frames=n['n'],
-                         E=r['E'], K=n['K'], age_edges=LG.lane_cycles(r))
+                         E=r['E'], K=n['K'], age_edges=LG.lane_cycles(r),
+                         age_basis='GEN planned E+1; frame/strap connectivity checked, physical phase unqualified')
     if pins['sf_q_slot']['age_edges'] != pins['sf_q_slot_beat']['age_edges']:
         raise ValueError('Q readiness: torn Q request slot/beat')
     return dict(schema='opentallas.qwen_layerbench.q_readiness.v1', verdict='BLOCKED',
-                production_bound=False, advance_admitted=False, source_commit=source_commit,
+                production_bound=False, advance_admitted=False, phase_qualified=False, source_commit=source_commit,
                 inputs=dict(die_v_sha256=digest(die_v), fwd_lanes_sha256=digest(lanes)),
                 pins=pins, request_edges=pins['sf_q_slot']['age_edges'],
                 ready_reference='native59_qdd_pin', producer_ready=None, request_ages=None,
                 required_coverage=dict(beats=32, seats_per_beat=16, total_seats=512),
                 blockers=['production PW1024/DW8 compute program is not emitted (bench_program is filler)',
                           'no production W5 Q write edges/seat coverage or all32 QSLOT events',
-                          'SAFE2 source/kit must be bound by a new GEN; existing die is not its production proof'],
+                          'SAFE2 source/kit must be bound by a new GEN; existing die is not its production proof',
+                          'GEN E+1 is planned, not measured: bind final die source/forwarded/receiver clock phases'],
                 rule='For each beat b: old_qslot[b] - 1 + request_edges >= '
                      'max(W5_Qwrite[b,seat] + Qdata_age for seat in 0..15); '
                      'SAFE2 same-edge forwarding permits equality; all512 seats and all32 requests required')
@@ -94,4 +96,4 @@ if __name__ == '__main__':
         require_advance(cert, a.advance)
     except ValueError as e:
         sys.exit(str(e))
-    print('Q_READINESS BLOCKED: transport ages established; production requests and producer ready edges missing')
+    print('Q_READINESS BLOCKED: GEN planned ages checked; production programme and clock phase unqualified')

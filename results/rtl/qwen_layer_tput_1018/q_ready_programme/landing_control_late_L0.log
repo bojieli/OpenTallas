@@ -1,0 +1,17 @@
+QTRACE_FIRST cycle1693
+QREQUEST_FIRST cycle1804 beat0
+N59DV_ERR cycle 1809: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1810: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1811: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1812: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1813: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1814: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1815: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1816: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1817: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1818: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 1819: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_FAIL errors=247 x3 4/4 tx 33/1 ar 32/0 emb 65 done 1894/-1 fault 1
+[0] %Fatal: tb_qready_landing.sv:250: Assertion failed in TOP.tb_qready_landing
+%Error: rtl/test/qwen_dv/qready/tb_qready_landing.sv:250: Verilog $stop
+Aborting...
