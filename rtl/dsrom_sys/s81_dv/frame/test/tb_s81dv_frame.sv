@@ -61,7 +61,10 @@ module tb_s81dv_frame;
     always @(*) xwd[0] = xw;
     always @(posedge clk) for (di = XDLY; di > 0; di = di - 1) xwd[di] <= xwd[di - 1];
     wire [1100:0] xs = xwd[XDLY];
-    wire [1100:0] xw2 = {xs[1100:565], xw[564:550], xs[549:1], xw[550] | xw[551] | xs[283]};
+    // TOK-S81-GAPS/XS2: a BF16 word (dsfd_pq_lx bv: go_bf = xw[565], xb_v = xw[569]; its payload replaces x0 / x1) is
+    // valid too -- the delayed BF beat and the delayed go_bf (the BF front samples it with the sequencer's go_e, +4 like
+    // the beats).  q-only words are unchanged (xw[565] = xw[569] = 0).
+    wire [1100:0] xw2 = {xs[1100:565], xw[564:550], xs[549:1], xw[550] | xw[551] | xs[283] | xs[565] | xs[569]};
     wire [1103:0] x = {xw2[1100:565], xw2[0], mk, xw2[564:0], mk};
     // ---------------- DUT
     wire [1103:0] xo; wire [3:0] xok; wire [69:0] ret;
@@ -131,4 +134,28 @@ module tb_s81dv_pvtrace (input wire clk, input wire [1:0] pv, input wire [31:0] 
                                             prow[15:0], prow[31:16], pseg[4:0], pseg[9:5], pnseg[4:0]);
 endmodule
 bind ot_v41_rom_elem_q_qxpq_w10 tb_s81dv_pvtrace u_pvt (.clk(clk), .pv(pv), .prow(prow), .pseg(pseg), .pnseg(pnseg));
+`endif
+`ifdef TB_BFTRACE
+// TOK-S81-GAPS/XS2 measurement probe (simulation only): every BF core's walker availability edge with the identity a
+// static programme must present (the tools/s81/bf_programme_compile.py trace: G = core go, I = available, off = core
+// cycles since go) on the RET edge numbering, every programmed issue the core rejects (programme_bad: the sticky
+// programme_fault cause), and every BF column partial (the frame return tree leaf e<k>{w,e}.r = dsfd_bf_col r[0]).
+module tb_bf_issue_trace (input wire fclk, input wire go, input wire go_bf, input wire ia, input wire [13:0] a_ctr,
+                          input wire [14:0] op, input wire [2:0] ws, input wire wh, input wire [3:0] wc, input wire pi,
+                          input wire pbad);
+    integer cyc = 0, g = -1;
+    always @(posedge fclk) begin
+        cyc = cyc + 1;
+        if (go) begin g = cyc; $display("BFG %m %0d %0d %0d", tb_s81dv_frame.edge_n, cyc, go_bf); end
+        if (ia) $display("BFI %m %0d %0d %0d %0d %0d %0d %0d %0d %0d", tb_s81dv_frame.edge_n, cyc, cyc - g, a_ctr, op, ws,
+                         wh, wc, go_bf);
+        if (pi && pbad) $display("BFP_BAD %m edge %0d", tb_s81dv_frame.edge_n);
+    end
+endmodule
+bind ot_v41_bf_front_core_roots tb_bf_issue_trace u_bft (.fclk(fclk), .go(go), .go_bf(go_bf), .ia(issue_available),
+    .a_ctr(a_ctr), .op(programme_operand), .ws(w_s), .wh(w_h), .wc(w_cnt), .pi(prog_issue_u), .pbad(programme_bad));
+module tb_bf_pvtrace (input wire clk, input wire pv, input wire [15:0] prow, input wire [4:0] pseg, input wire [4:0] pnseg);
+    always @(posedge clk) if (pv) $display("BFPV %0d %m rows %0d seg %0d n %0d", tb_s81dv_frame.edge_n, prow, pseg, pnseg);
+endmodule
+bind ot_v41_bf_col tb_bf_pvtrace u_bfpv (.clk(clk), .pv(pv), .prow(prow), .pseg(pseg), .pnseg(pnseg));
 `endif
