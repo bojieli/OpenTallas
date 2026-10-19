@@ -1,17 +1,17 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "qfd_sys_face",
- "reviewer": "coordinator (2026-10-18 ~01:20)",
+ "reviewer": "coordinator (2026-10-19 ~17:05)",
  "verdict": "APPROVED",
- "time": "2026-10-18T01:45:00-07:00",
- "gate_commit": "2026-10-18T01:27:29-0700",
+ "time": "2026-10-19T17:05:00-07:00",
+ "gate_commit": "04ca074e7",
  "checklist": {
-  "lattice": "PASS: ROM 4096x72 at (172.8, 43.2) R0 on the 43.2 lattice",
-  "std_cell_band": "PASS: one contiguous band beside the ROM",
-  "pin_spread": "PASS: buses cover all four faces (N 5.85/um max; W/S/E <=3.3), 0 inaccessible",
-  "clock_entry": "PASS: N-face centre between the 548-b record buses; pin-flop spread 41.0 TT / 40.7 FF",
-  "shape": "PASS 259.2x129.6 (2:1; shrunk from 302.4x216 -> die slot change owed)"
+  "lattice": "PASS: ROM 4096x72 on the 43.2 lattice (172.8,43.2), unchanged from closed rs3",
+  "std_cell_band": "PASS: one std-cell region; fill 23% (pin-limited, = rs3)",
+  "pin_spread": "PASS: pins over full N/S/W/E faces, ~5.5/um",
+  "clock_entry": "PASS: N-face centre beside the register mass; spread TT 46.0 / FF 46.2 (<=80); insertion 301.8 guidance",
+  "shape": "PASS: 259.2x129.6 (2:1) unchanged; GRT ovf 0; setup +80.4 / hold +9.3"
  },
- "notes": "rs3 (Q-SYSFACE3): setup +69.6, hold +14.1, gate 0 fail / 0 warn. S-face emb_* pins and emb_prov_fault kept. Re-stamped after the identical-geometry re-gate (f64e91bf2).",
+ "notes": "MU re-close (MU d2d image, MU_HEAD filler contexts, reset_landing 2). rtl_change.",
  "geometry_sha256": "09345eb4049a3b985686a054b8d6a277f66dafe16f6f92358cee84594190a5fe"
 }
