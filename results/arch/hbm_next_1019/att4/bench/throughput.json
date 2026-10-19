@@ -1,0 +1,55 @@
+{
+ "qk": {
+  "ops": 80,
+  "fixed_cycles": 126.5,
+  "cycles_per_union_row": 7.762,
+  "max_abs_resid": 32.8
+ },
+ "pv": {
+  "ops": 80,
+  "fixed_cycles": 113.0,
+  "cycles_per_union_row": 7.926,
+  "max_abs_resid": 10.6
+ },
+ "p1_single_lane_32row_span": {
+  "qk": 363,
+  "pv": 377
+ },
+ "s00": {
+  "sigma": 0.0,
+  "union_lines": 643,
+  "qk_span_max": 422,
+  "pv_span_max": 401,
+  "qk_p1_4lanes": 1452,
+  "pv_p1_4lanes": 1508,
+  "union_rows_max": 35
+ },
+ "s03": {
+  "sigma": 0.3,
+  "union_lines": 865,
+  "qk_span_max": 597,
+  "pv_span_max": 569,
+  "qk_p1_4lanes": 1452,
+  "pv_p1_4lanes": 1508,
+  "union_rows_max": 58
+ },
+ "s10": {
+  "sigma": 1.0,
+  "union_lines": 1212,
+  "qk_span_max": 792,
+  "pv_span_max": 785,
+  "qk_p1_4lanes": null,
+  "pv_p1_4lanes": null,
+  "union_rows_max": 85
+ },
+ "sdj": {
+  "sigma": -1.0,
+  "union_lines": 2179,
+  "qk_span_max": 1115,
+  "pv_span_max": 1129,
+  "qk_p1_4lanes": 1452,
+  "pv_p1_4lanes": 1508,
+  "union_rows_max": 128
+ },
+ "price_check": "model form (hbm_plane_model post_pass): fixed + comp x U(N)/U(1); measured spans are linear in union rows (fit above): a SM job of U rows costs fixed + ~7.8 U cycles, P=1 32 rows = fixed + 7.8 x 32 -> the comp x U/U1 scaling holds per SM job; the record time is the max job (E1 sec. 4: balanced 32-SM assignment)"
+}
