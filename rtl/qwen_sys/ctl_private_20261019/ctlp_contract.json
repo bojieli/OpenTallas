@@ -1,0 +1,39 @@
+{
+  "source_base": "c5fbbded9",
+  "integration_base": "efae17de2128f3813aff8cf76226e8be8d60ea97",
+  "sources": {
+    "writer_original.sv": "5107a0163d4488ef1d0f635f513bc925fb384135dbfffdee04773be5ff3e458f",
+    "programme_original.sv": "6446686e653284868036a53648bfaca05be9ad810671cfeb13e1c006853ca164"
+  },
+  "authorized_private_files": [
+    "qkd_kv_native_programme_ctlp.sv",
+    "qkd_static_kv_layer_programme_ctlp.sv",
+    "ctlp_contract.json",
+    "tb_ctlp.sv",
+    "run_ctlp.sh"
+  ],
+  "default_ENABLE": 0,
+  "enabled_change": "writer SRAM read CE only: reset_pin_n && !fault && start_p && configured && !active && !cfg_we_p && stage_p>=1 && stage_p<=36",
+  "storage": "original 128x256 primitive, unchanged masks, capture latency and uninitialized payload",
+  "edge_delta": 0,
+  "SU_MU_calendar": null,
+  "selected_5f2_ABI": "missing RCOPIES/SRAM writer parameters and whole mus module; no adoption",
+  "resource_request": {
+    "memory_GB": 8,
+    "threads": 2,
+    "disk_GB": 20,
+    "fleet": "unpinned ot-run; actual headroom measured 2026-10-19 before edit"
+  },
+  "functional_plan": [
+    "all public outputs every edge, ENABLE0 original miter",
+    "ENABLE1 miter; full boot and consecutive stage/token runs",
+    "rejected start at pending final write; original collision witness",
+    "cold boot and reset during write/read/ld then full reboot",
+    "bad address/order/epoch/digest and simultaneous cfg/start priority",
+    "4-state arbitrary old SRAM Q and before-reset first-use",
+    "late-read, wrong-row, write-mask and invalid-start causal mutants"
+  ],
+  "physical_status": "HOLD: no dual-clock OLD or write integrity assumed; no physical/gate/binding work",
+  "copies": "none; 602-copy forest explicitly excluded",
+  "implementation": "Writer only read CE predicate. Programme clone has no functional edit. ENABLE does not alter storage modes."
+}
