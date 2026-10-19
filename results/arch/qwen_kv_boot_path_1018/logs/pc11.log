@@ -1,0 +1,28 @@
+FAIL boot word at 0/31 not a sector of the image
+FAIL boot word at 0/1 not a sector of the image
+FAIL boot word at 0/3 not a sector of the image
+FAIL boot word at 0/5 not a sector of the image
+FAIL boot word at 0/7 not a sector of the image
+FAIL boot word at 0/9 not a sector of the image
+FAIL boot word at 0/11 not a sector of the image
+FAIL boot word at 0/13 not a sector of the image
+FAIL boot word at 0/15 not a sector of the image
+FAIL boot word at 0/17 not a sector of the image
+FAIL boot word at 0/19 not a sector of the image
+FAIL boot word at 0/21 not a sector of the image
+FAIL boot word at 0/23 not a sector of the image
+FAIL boot word at 0/25 not a sector of the image
+FAIL boot word at 0/27 not a sector of the image
+FAIL boot word at 0/29 not a sector of the image
+FAIL boot word at 0/0 not a sector of the image
+FAIL boot word at 0/2 not a sector of the image
+FAIL boot word at 0/4 not a sector of the image
+FAIL PC 6 writes 9 (want 8)
+FAIL PC 7 writes 8 (want 9)
+FAIL PC 30 writes 9 (want 8)
+FAIL PC 31 writes 8 (want 9)
+FAIL MUT 11 errors 1262 (beats 388)
+- rtl/test/qwen_static_kv/tb_kv_boot_pc.sv:300: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 0.155 s; speed 61.325 us/s
+- Verilator: cpu 0.155 s on 1 threads; allocated 8 MB

@@ -8,6 +8,13 @@ Rule: results/arch/boundary_hold_budget_1016/RULE.md (FLOW-HOLD, owner-approved 
   D1  die FF STA >= 0 on the BOUND tiles' ETMs (sender launch-min = the ETM clk->out min arc, never a 65 ps
       placeholder; an unbuilt placeholder launches at C = 25 ps and its links are hold-DIAGNOSTIC);
   D2  neighbour skew |delta| <= 80 ps on every communicating pair (a link over 80 is a FAIL class, never padded);
+      Q-DIE13 10-18 (owner clock rule 10-17: boundary matched by parent compensation): with the bound views' measured
+      clock insertion (--qwen-views insertion_ps, or --insertion {master: {corner: {pin: ps}}}) the skew is judged at
+      the CHILD FLOPS: delta_flop = delta + ins(receiver) - ins(sender).  A deep tile (d2d_rom 343 ps FF) whose die
+      clock tap is planned early by its insertion (die STA: set_clock_latency -source -ins at its ck pin, = the
+      per-child clock_tap of ref_tile) then matches its ~47-ps neighbours; an UNcompensated deep tile still fails
+      (its boundary delta is ~0 but delta_flop = its insertion).  The report's source latency is the tap actually
+      modelled; |tap - ins| > 1 ps is counted (tap_mismatch_links), never silently accepted;
   D3  a hold shortfall is fixed at die level: in a relay station on the link (hold-delay station variant) or a
       die-net hold cell -- never by re-padding the tile and never by relaxing U.
 
@@ -144,13 +151,32 @@ def _parse_block(blk):
     if Cap is None:
         r['error'] = 'capture clock not found'
         return r
+    _sl = re.compile(r'^\s*(-?\d+(?:\.\d+)?)\s+-?\d+(?:\.\d+)?\s+clock source latency\s*$')
+    src_l = [float(m_.group(1)) for m_ in map(_sl.match, launch) if m_]
+    src_c = [float(m_.group(1)) for m_ in map(_sl.match, cap) if m_]
+    r['src_lat_launch'] = src_l[0] if src_l else 0.0       # the die clock tap modelled at the sender's clock pin
+    r['src_lat_capture'] = src_c[0] if src_c else 0.0      # ... and at the receiver's
     r.update(L=L, Cap=Cap, delta=round(Cap - L, 3), launch_min=round(out_t - L, 3), wire=round(r['arrival'] - out_t, 3),
              hold=H, U=unc, crpr=crpr)
     return r
 
 
-def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None, skew_ps=SKEW_PS, u_ps=U_PS):
+def _ins(insertion, master, clock_pin):
+    """declared (measured) clock insertion of a bound view at its clock pin, None if the master has none"""
+    v = (insertion or {}).get(master)
+    if not v:
+        return None
+    pin = (clock_pin or '').rsplit('/', 1)[-1]
+    if pin in v:
+        return float(v[pin])
+    return float(next(iter(v.values()))) if len(v) == 1 else None
+
+
+def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None, skew_ps=SKEW_PS, u_ps=U_PS,
+             insertion=None):
+    """insertion: {master: {clock pin: ps}} at the dump's corner (FF) -> skew judged at the child flops (D2)"""
     masters = masters or {}
+    tap_mismatch = set()
     diag = set(masters.get('diagnostic', ()))
     relay_set = set(masters.get('relay', ()))
     rr = re.compile(relay_re) if relay_re else None
@@ -165,19 +191,29 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
         elif p['U'] > u_ps + 0.05:
             u_above += 1         # pessimistic (e.g. Qwen region clock-OCV pairs 25 + OCV): reported, not a FAIL
         key = (p['start'], p['end'] if p['end_kind'] == 'reg' else p['end'])
+        d_flop = p['delta']
+        if insertion:
+            i_s = _ins(insertion, p.get('start_master'), p.get('start_clock_pin'))
+            i_r = _ins(insertion, p.get('end_master'), p.get('end_clock_pin'))
+            d_flop = round(p['delta'] + (i_r or 0.0) - (i_s or 0.0), 3)
+            for i_, lat in ((i_s, p.get('src_lat_launch', 0.0)), (i_r, p.get('src_lat_capture', 0.0))):
+                if i_ is not None and abs(-lat - i_) > 1.0:
+                    tap_mismatch.add(key)
         lk = links.get(key)
         if lk is None:
             lk = links[key] = dict(sender=p['start'], receiver=p['end'], sender_master=p.get('start_master'),
                                    receiver_master=p.get('end_master'), bits=0, worst_slack=p['slack'],
-                                   delta=p['delta'], max_abs_delta=abs(p['delta']), launch_min=p['launch_min'],
+                                   delta=p['delta'], max_abs_delta=abs(p['delta']), delta_flop=d_flop,
+                                   max_abs_delta_flop=abs(d_flop), launch_min=p['launch_min'],
                                    min_wire=p['wire'], hold=p['hold'], U=p['U'], ideal=False)
         lk['ideal'] = lk['ideal'] or bool(p.get('ideal'))
         lk['bits'] += 1
         lk['max_abs_delta'] = max(lk['max_abs_delta'], abs(p['delta']))
+        lk['max_abs_delta_flop'] = max(lk['max_abs_delta_flop'], abs(d_flop))
         lk['min_wire'] = min(lk['min_wire'], p['wire'])
         lk['launch_min'] = min(lk['launch_min'], p['launch_min'])
         if p['slack'] < lk['worst_slack']:
-            lk.update(worst_slack=p['slack'], delta=p['delta'], hold=p['hold'], U=p['U'])
+            lk.update(worst_slack=p['slack'], delta=p['delta'], delta_flop=d_flop, hold=p['hold'], U=p['U'])
     by_fix = defaultdict(list)
     cls = defaultdict(lambda: dict(links=0, bits=0, violators=0, skew_fail=0, max_abs_delta=0.0, worst_slack=None,
                                    min_launch_min=None))
@@ -185,7 +221,8 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
         sm, rm = lk['sender_master'], lk['receiver_master']
         diagnostic = sm in diag or rm in diag or lk['ideal']
         port = 'PORT' in (sm, rm)
-        lk['skew_ok'] = port or lk['max_abs_delta'] <= skew_ps   # a die top port has no sender/receiver clock pair
+        # a die top port has no sender/receiver clock pair; with declared insertion the pair is judged at its flops
+        lk['skew_ok'] = port or (lk['max_abs_delta_flop'] if insertion else lk['max_abs_delta']) <= skew_ps
         if lk['worst_slack'] >= 0:
             fix = 'PASS'
         elif port:
@@ -207,6 +244,7 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
         c = cls[f'{sm}->{rm}']
         c['links'] += 1; c['bits'] += lk['bits']; c['violators'] += lk['worst_slack'] < 0
         c['skew_fail'] += not lk['skew_ok']; c['max_abs_delta'] = max(c['max_abs_delta'], lk['max_abs_delta'])
+        c['max_abs_delta_flop'] = max(c.get('max_abs_delta_flop', 0.0), lk['max_abs_delta_flop'])
         c['worst_slack'] = lk['worst_slack'] if c['worst_slack'] is None else min(c['worst_slack'], lk['worst_slack'])
         c['min_launch_min'] = lk['launch_min'] if c['min_launch_min'] is None else min(c['min_launch_min'], lk['launch_min'])
         c['diagnostic'] = c.get('diagnostic', False) or diagnostic
@@ -216,7 +254,7 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
     ndiag = sum(1 for lk in links.values() if lk['diagnostic'])
     nideal = sum(1 for lk in links.values() if lk['ideal'])
     placeholder_launch = sorted({lk['sender_master'] for lk in links.values() if lk['sender_master'] in diag})
-    if viol or skew_fail or u_bad or errors:
+    if viol or skew_fail or u_bad or errors or tap_mismatch:
         verdict = 'FAIL'
     elif truncated or ndiag or masters.get('diagnostic_all'):
         verdict = 'DIAGNOSTIC'
@@ -224,19 +262,22 @@ def classify(paths, masters=None, relay_re=RELAY_RE, paths_cap=None, design=None
         verdict = 'PASS'
     worst = lambda xs: sorted(xs, key=lambda x: x['worst_slack'])[:50]
     return dict(schema=SCHEMA, rule=RULE, design=design, verdict=verdict,
-                params=dict(U_ps=u_ps, C_ps=C_PS, skew_limit_ps=skew_ps, relay_re=relay_re, paths_cap=paths_cap),
+                params=dict(U_ps=u_ps, C_ps=C_PS, skew_limit_ps=skew_ps, relay_re=relay_re, paths_cap=paths_cap,
+                            skew_at='child flops (declared insertion)' if insertion else 'clock pins',
+                            insertion_masters=sorted(insertion or {})),
                 coverage=dict(paths=len(paths), parsed=len(good), parse_errors=len(errors), links=len(links),
                               truncated=truncated,
                               note='skew/hold judged on the dumped endpoints; truncated -> DIAGNOSTIC (raise --paths-cap)'),
                 counts=dict(hold_violating_links=viol, skew_fail_links=skew_fail, diagnostic_links=ndiag, ideal_clock_links=nideal,
-                            paths_with_U_below_25=u_bad, paths_with_U_above_25=u_above, by_fix={k: len(v) for k, v in sorted(by_fix.items())},
+                            tap_mismatch_links=len(tap_mismatch), paths_with_U_below_25=u_bad, paths_with_U_above_25=u_above, by_fix={k: len(v) for k, v in sorted(by_fix.items())},
                             demand_ps_by_fix={k: round(sum(x['demand_ps'] for x in v), 1) for k, v in sorted(by_fix.items())
                                               if k != 'PASS'}),
                 placeholder_senders=placeholder_launch, diagnostic_all=masters.get('diagnostic_all'),
                 link_classes=dict(sorted(cls.items(), key=lambda kv: (kv[1]['worst_slack'] if kv[1]['worst_slack'] is not None else 0))),
                 worst_links={k: worst(v) for k, v in sorted(by_fix.items()) if k != 'PASS'},
                 skew_fail_links=sorted((lk for lk in links.values() if not lk['skew_ok']),
-                                       key=lambda x: -x['max_abs_delta'])[:50],
+                                       key=lambda x: -(x['max_abs_delta_flop'] if insertion else x['max_abs_delta']))[:50],
+                tap_mismatch_links=[list(k) for k in sorted(tap_mismatch)[:50]],
                 parse_errors=[dict(start=e['start'], end=e['end'], error=e['error']) for e in errors[:20]])
 
 
@@ -252,17 +293,24 @@ def main(argv=None):
     c.add_argument('--relay-re', default=RELAY_RE)
     c.add_argument('--paths-cap', type=int, default=None, help='the dump -group_path_count (truncation detection)')
     c.add_argument('--design', default=None)
+    c.add_argument('--insertion', type=Path, help='{master: {corner: {clock pin: ps}}} measured view insertion '
+                   '(default: --qwen-views insertion_ps): skew judged at the child flops')
+    c.add_argument('--corner', default='ff', help='corner of the dump (insertion lookup), default ff')
     a = ap.parse_args(argv)
     m = json.loads(a.masters.read_text()) if a.masters else {}
     if a.qwen_views:
         v = json.loads(a.qwen_views.read_text())
         m = dict(m, diagnostic=sorted(set(m.get('diagnostic', ())) | set(v.get('assumed', ()))),
                  real=sorted(set(v.get('real', {})) | set(v.get('hard_macro', {}))))
-    rec = classify(parse(a.report.read_text()), m, a.relay_re, a.paths_cap, a.design)
+    ins_src = json.loads(a.insertion.read_text()) if a.insertion else \
+        (json.loads(a.qwen_views.read_text()).get('insertion_ps') if a.qwen_views else None)
+    ins = {k: v[a.corner] for k, v in (ins_src or {}).items() if a.corner in v} or None
+    rec = classify(parse(a.report.read_text()), m, a.relay_re, a.paths_cap, a.design, insertion=ins)
     rec['report'] = str(a.report)
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(f"OT_HOLD_BUDGET {rec['verdict']} links={rec['coverage']['links']} viol={rec['counts']['hold_violating_links']} "
-          f"skew_fail={rec['counts']['skew_fail_links']} diag={rec['counts']['diagnostic_links']} "
+          f"skew_fail={rec['counts']['skew_fail_links']} tap_mismatch={rec['counts']['tap_mismatch_links']} "
+          f"skew_at={'flops' if ins else 'pins'} diag={rec['counts']['diagnostic_links']} "
           f"by_fix={json.dumps(rec['counts']['by_fix'], separators=(',', ':'))}")
     return 0
 

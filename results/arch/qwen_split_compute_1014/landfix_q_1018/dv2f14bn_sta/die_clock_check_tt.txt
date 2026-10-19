@@ -1,0 +1,53 @@
+die clock check: 2792 tiles / 3676 clock entries, 0 die clock cells, 0 die flops, roots 
+VERDICT: NO PHYSICAL DIE CLOCK -- every entry has 0 ps STA insertion and the die has no clock cells (ideal / per-pin defined clocks); delivery and neighbour skew are NOT measured. Build the die clock with tools/die_clock/build.py and check its arrivals (METHOD results/arch/die_clock_method_1016).
+insertion model ps : min 0.0 / med 1093.2 / p90 2929.1 / max 4176.4 (spread 4176.4)
+insertion STA ps   : min 0.0 / med 0.0 / p90 0.0 / max 0.0 (spread 0.0)  [late]; min -420.7 / med -43.9 / p90 0.0 / max 0.0 (spread 420.7) [early]
+tree levels        : min 0 / med 0.0 / p90 0 / max 0 (spread 0)
+non-common pairs 1795 (no common root 360, unmatched 289)
+non-common model ps: min 25.0 / med 620.6 / p90 3139.1 / max 4044.9 (spread 4019.9)
+non-common STA ps  : n/a
+pair skew STA ps   : n/a
+per region (73): entries | insertion STA late | flop arrival spread | intra pairs NCP / skew
+  c16_E0_0/ck_c0r0[0]              43 |                n/a |      n/a |      0 n/a / n/a
+  c16_E0_0/ck_c0r2[0]              44 |                n/a |      n/a |      0 n/a / n/a
+  c16_E0_1/ck_c0r0[0]              74 |                n/a |      n/a |     22 n/a / n/a
+  c16_E0_2/ck_c0r0[0]             103 |                n/a |      n/a |      9 n/a / n/a
+  c16_E0_3/ck_c0r0[0]              51 |                n/a |      n/a |      8 n/a / n/a
+  c16_E0_3/ck_c0r2[0]              52 |                n/a |      n/a |     16 n/a / n/a
+  c16_E2_0/ck_c0r0[0]              36 |                n/a |      n/a |      0 n/a / n/a
+  c16_E2_1/ck_c0r0[0]              41 |                n/a |      n/a |     11 n/a / n/a
+  c16_E2_2/ck_c0r0[0]              75 |                n/a |      n/a |     27 n/a / n/a
+  c16_E2_3/ck_c0r0[0]              16 |                n/a |      n/a |      0 n/a / n/a
+  c16_E3_0/ck_c0r0[0]              23 |                n/a |      n/a |      2 n/a / n/a
+  c16_E3_1/ck_c0r0[0]              26 |                n/a |      n/a |      9 n/a / n/a
+  c16_E3_2/ck_c0r0[0]              67 |                n/a |      n/a |     19 n/a / n/a
+  c16_E3_3/ck_c0r0[0]              16 |                n/a |      n/a |      0 n/a / n/a
+  c16_E4_0/ck_c0r0[0]              35 |                n/a |      n/a |      7 n/a / n/a
+  c16_E4_1/ck_c0r0[0]              38 |                n/a |      n/a |      9 n/a / n/a
+  c16_E4_2/ck_c0r0[0]              28 |                n/a |      n/a |      3 n/a / n/a
+  c16_E4_3/ck_c0r0[0]              16 |                n/a |      n/a |      0 n/a / n/a
+  c16_E5_0/ck_c0r0[0]              26 |                n/a |      n/a |      1 n/a / n/a
+  c16_E5_1/ck_c0r0[0]              21 |                n/a |      n/a |      1 n/a / n/a
+inter-region pairs: 360
+worst 20 pairs (non-common = max side from the branch point):
+  tile A                             tile B                                model      STA     skew  branch
+  dvs_E1                             dvs_E2                                    -        -        -  NO COMMON ROOT
+  dvs_E2                             dvs_E3                                    -        -        -  NO COMMON ROOT
+  dvs_E3                             dvs_E4                                    -        -        -  NO COMMON ROOT
+  dvs_E4                             dvs_E5                                    -        -        -  NO COMMON ROOT
+  dvs_W0                             dvs_W1                                    -        -        -  NO COMMON ROOT
+  dvs_W1                             dvs_W2                                    -        -        -  NO COMMON ROOT
+  dvs_W2                             dvs_W3                                    -        -        -  NO COMMON ROOT
+  dvs_W3                             dvs_W4                                    -        -        -  NO COMMON ROOT
+  dvs_W4                             dvs_W5                                    -        -        -  NO COMMON ROOT
+  c16_E0_1                           dvs_E0                                    -        -        -  NO COMMON ROOT
+  c16_E0_2                           dvs_E0                                    -        -        -  NO COMMON ROOT
+  c16_E1_1                           dvs_E1                                    -        -        -  NO COMMON ROOT
+  c16_E1_2                           dvs_E1                                    -        -        -  NO COMMON ROOT
+  c16_E2_1                           dvs_E2                                    -        -        -  NO COMMON ROOT
+  c16_E2_2                           dvs_E2                                    -        -        -  NO COMMON ROOT
+  c16_E3_1                           dvs_E3                                    -        -        -  NO COMMON ROOT
+  c16_E3_2                           dvs_E3                                    -        -        -  NO COMMON ROOT
+  c16_E4_1                           dvs_E4                                    -        -        -  NO COMMON ROOT
+  c16_E4_2                           dvs_E4                                    -        -        -  NO COMMON ROOT
+  c16_E5_1                           dvs_E5                                    -        -        -  NO COMMON ROOT

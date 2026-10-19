@@ -80,6 +80,35 @@ for ph in (1, 2, 3, 4, 5):
     CASES[f"d50_base_phase{ph}"] = BASE + D50 + ["--lats", "376", "--fdi-phase", str(ph)]
     CASES[f"d50_rec_phase{ph}"] = REC + ["--lats", "376", "--fdi-phase", str(ph)]
 
+# Q-COLLCAL 10-18: the REAL forwarded lanes (rtl/qwen_split/qfd_fwd_lane.sv, N / K straps per port and direction) of the
+# next Qwen compute GEN in place of the fixed delays, and the calendar LX0..2 the GEN emits (case/coll_lane_latency.json;
+# the bench takes LX from it).  Inputs results/rtl/q_collcal_1018/gen_*/coll_lane_latency.json = tools/qwen_split/
+# lane_groups.py emit on the dv2f14bhd GEN lanes (frames unchanged by the bus-group fix): gen_bhd (estimate E, LX 10/0/9),
+# gen_bhd_lp (+ the dv2f14bg land plan bhd/final.sh takes, LX 11/0/10), gen_bhd_asbuilt (the netlist as generated today).
+RLB = BASE + D50 + ["--tok-reg", "1"]
+QC = "results/rtl/q_collcal_1018"
+for g_ in ("gen_bhd", "gen_bhd_lp"):
+    J_ = ["--real-lanes", f"{QC}/{g_}/coll_lane_latency.json"]
+    CASES.update({
+        f"rl_{g_}_ls376": RLB + J_ + ["--lats", "376"],
+        f"rl_{g_}_ls376_tok0": BASE + D50 + J_ + ["--lats", "376"],
+        f"rl_{g_}_seqsu": RLB + J_ + ["--lats", "376", "--seqsu"],
+        f"rl_{g_}_unit": ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "376", "--tok-reg", "1"] + D50 + J_,
+        # negatives: the qtp8 fixed-delay calendar (lane = E, not E + 1), no calendar LX, the as-built valid K (skew),
+        # the land plan's residual K (E_sta instead of the total E), the collective mutants
+        f"rl_{g_}_lx707": RLB + J_ + ["--lats", "376", "--lx", "7", "0", "7", "--expect-fail"],
+        f"rl_{g_}_lx000": RLB + J_ + ["--lats", "376", "--lx", "0", "0", "0", "--expect-fail"],
+        f"rl_{g_}_mut_rank": RLB + J_ + ["--lats", "376", "--mutant-define", "OT_TP8S_MUT_RANK", "--only", "qwen_ar_256w|qwen_layer_2x256w$", "--expect-fail"],
+        f"rl_{g_}_mut_rxearly": RLB + J_ + ["--lats", "376", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
+        f"rl_{g_}_seqsu_tokmut": RLB + J_ + ["--lats", "376", "--seqsu", "--plusarg", "TOKMUT=1", "--expect-fail"],
+    })
+    for ls_ in (377, 378, 380):
+        CASES[f"rl_{g_}_ls{ls_}"] = RLB + J_ + ["--lats", str(ls_)]
+CASES["rl_gen_bhd_skew"] = RLB + ["--real-lanes", f"{QC}/gen_bhd/coll_lane_latency.json", "--real-lanes-override", "KTV2=6", "--lats", "376", "--expect-fail"]
+CASES["rl_gen_bhd_lp_residualk"] = RLB + ["--real-lanes", f"{QC}/gen_bhd_lp/coll_lane_latency.json", "--real-lanes-override",
+                                          "KT2=2", "KTV2=3", "KR2=3", "KRV2=2", "--lats", "376", "--expect-fail"]
+CASES["rl_asbuilt_lx000"] = RLB + ["--real-lanes", f"{QC}/gen_bhd_asbuilt/coll_lane_latency.json", "--lx", "0", "0", "0", "--lats", "376", "--expect-fail"]
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))
