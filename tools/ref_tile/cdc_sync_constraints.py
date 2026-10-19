@@ -27,8 +27,15 @@ bit i (bounded ``sync_max_delay_ps``) or payload -> capture register (bounded ``
 ``set_min_delay 0`` and ``-ignore_clock_latency``, from the actual launch register to the actual D pin only, with a
 finite-path proof. No false path, clock group or same-domain exception is generated; every tagged register is checked
 to sit in its declared domain and every declared bit must be seen crossing. Not a physical-closure claim.
+
+With the existing ``seam_windows`` schema, a related 3:4 leaf may also have static bank crossings. The lint admits
+each remaining dependence only from one literal bank source on the declared launch/capture domains. CDC-tagged
+registers cannot use that fallback. Mapped ownership applies both exact CDC bounds and the existing seam bounds,
+requires every group/window to be seen, and leaves negative setup/hold slack visible to signoff. A window declaration
+does not prove its calendar: the tile's behavioural minimum-age and overwrite tests remain required.
 """
 import hashlib
+import fnmatch
 import itertools
 import json
 import os
@@ -370,6 +377,12 @@ def lint(spec, root):
     net = Netlist(document, spec['top'], spec)
     role = {}      # flop Q bit -> (group, role, index)
     record = dict(groups={}, roles={}, source_sha256=dict(hashes))
+    # Mixed mode admits only the existing related-clock bank windows alongside exact CDC groups.
+    # It never falls back to the general related-clock exemption for an unclassified dependence.
+    import clock_entry_constraints as C
+    windows = C.seam_windows(spec) or []
+    port_domain = {p: n for n, d in spec['clock_entry_domains'].items() for p in d['ports']}
+    seam_role, seam_seen = {}, set()
     resolved = []
     for g in groups:
         n, sd, dd = g['name'], g['src_domain'], g['dst_domain']
@@ -455,6 +468,21 @@ def lint(spec, root):
                         raise CdcError(f'{lr[0]}: payload {net.key(leaf)} captured on {dom}, not {g[0]["dst_domain"]}')
                     captures.setdefault(q, set()).add(lr[0])
                     continue
+                if windows and not lr and not qr:
+                    names = net.names.get(leaf, []) + [net.flops[leaf]['cell'].lstrip('\\')]
+                    matches = [w for w in windows
+                               if port_domain[w['launch']] == net.domain(leaf)
+                               and port_domain[w['capture']] == dom
+                               and any(fnmatch.fnmatchcase(n, pat) for n in names for pat in w['from'])]
+                    if len(matches) != 1:
+                        raise CdcError(f'cdc_synchronizers seam crossing {net.key(leaf)} -> {net.key(q)} '
+                                       f'matches {len(matches)} windows; exactly one required')
+                    w = matches[0]
+                    if leaf in seam_role and seam_role[leaf] != w['name']:
+                        raise CdcError(f'cdc_synchronizers seam source {net.key(leaf)} belongs to several windows')
+                    seam_role[leaf] = w['name']
+                    seam_seen.add(w['name'])
+                    continue
                 raise CdcError(f'cdc_synchronizers undeclared crossing {net.key(leaf)} ({net.domain(leaf)}) -> '
                                f'{net.key(q)} ({dom})')
     # Gated capture: no source / stage-1 bit, >= one stage >= 2, and payload-independent while no event is in flight.
@@ -496,6 +524,17 @@ def lint(spec, root):
         if not cell.startswith('$'):
             record['roles'].setdefault(cell, list(r))
     record['counts'] = {r: sum(1 for x in role.values() if x[1] == r) for r in ('source', 'sync1', 'payload', 'capture')}
+    if windows:
+        if seam_seen != {w['name'] for w in windows}:
+            raise CdcError('cdc_synchronizers seam windows without actual crossings: '
+                           + str(sorted({w['name'] for w in windows} - seam_seen)))
+        record['seam_roles'] = {}
+        for q, name in seam_role.items():
+            for key in net.names.get(q, []) + [net.flops[q]['cell'].lstrip('\\')]:
+                if not key.startswith('$'):
+                    record['seam_roles'][key] = [name, 'seam', 0]
+        record['seam_windows'] = {w['name']: dict(src=port_domain[w['launch']], dst=port_domain[w['capture']],
+                                                setup=w['setup_q'], hold=w['hold_q']) for w in windows}
     return record
 
 
@@ -527,7 +566,97 @@ def extend(body, spec, root):
     body = body.replace(CROSSING, '          ot_cdc_crossing $start $pin $source $cell $source_domain $expected\n'
                                   '          continue\n')
     body = body.replace(MARKER, '  ot_cdc_complete $cells\n' + MARKER)
-    return bindings(record) + TCL + '\n' + body
+    extra = ''
+    tcl = TCL
+    if spec.get('seam_windows') is not None:
+        if not record.get('seam_windows'):
+            raise CdcError('mixed seam/CDC requires a fresh structurally linted seam receipt')
+        roles = ' '.join(_word(k) + ' {' + ' '.join(map(str, r)) + '}'
+                         for k, r in sorted(record['seam_roles'].items()))
+        windows = ' '.join('{' + n + '} {' + ' '.join(f'{k} {v}' for k, v in w.items()) + '}'
+                           for n, w in sorted(record['seam_windows'].items()))
+        extra = f'set ::ot_cdc_seam_roles [dict create {roles}]\nset ::ot_cdc_seams [dict create {windows}]\n'
+        # Use exactly the same mapped-register identity resolver as CDC; keep the namespaces disjoint.
+        resolver = TCL[TCL.index('proc ot_cdc_role '):TCL.index('proc ot_cdc_bound ')]
+        extra += resolver.replace('ot_cdc_role', 'ot_cdc_seam_role').replace('::ot_cdc_roles', '::ot_cdc_seam_roles')
+        extra += MIXED_TCL
+        tcl = tcl.replace('  if {$sg eq "" || $sg ne $tg}',
+                          '  if {$sg eq "" && $tg eq ""} {\n'
+                          '    ot_cdc_seam_crossing $start $pin $source $target $source_domain $target_domain\n'
+                          '    return\n  }\n  if {$sg eq "" || $sg ne $tg}')
+        body = body.replace('  ot_cdc_complete $cells\n', '  ot_cdc_complete $cells\n  ot_cdc_seam_complete\n')
+    # The flow's sole top wrapper (ref_tile.pin_wrapper / ot_pin_regs.tcl) adds this exact namespace once.
+    # The original RTL lint has no wrapper, so admit its identities after stripping ONLY that known prefix.
+    wrapped = any(isinstance(spec.get(k), dict) and spec[k].get('enable') is True
+                  for k in ('pin_regs', 'reset_landing'))
+    if wrapped:
+        for key in ('pin_regs', 'reset_landing'):
+            if isinstance(spec.get(key), dict) and spec[key].get('enable') not in (True, False, None):
+                raise CdcError('CDC flow wrapper enable must be a boolean')
+        def normalize(text):
+            text = text.replace('  set names [list $full]\n',
+                                '  set names [ot_cdc_flow_names $full]\n')
+            text = text.replace('        if {[dict exists $::ot_cdc_roles $n]} {dict set roles [dict get $::ot_cdc_roles $n] 1}',
+                                '        foreach name [ot_cdc_flow_names $n] {\n'
+                                '          if {[dict exists $::ot_cdc_roles $name]} {dict set roles [dict get $::ot_cdc_roles $name] 1}\n        }')
+            text = text.replace('        if {[dict exists $::ot_cdc_seam_roles $n]} {dict set roles [dict get $::ot_cdc_seam_roles $n] 1}',
+                                '        foreach name [ot_cdc_flow_names $n] {\n'
+                                '          if {[dict exists $::ot_cdc_seam_roles $name]} {dict set roles [dict get $::ot_cdc_seam_roles $name] 1}\n        }')
+            return text
+        extra = FLOW_WRAPPER_TCL + normalize(extra)
+        tcl = normalize(tcl)
+    return bindings(record) + extra + tcl + '\n' + body
+
+
+FLOW_WRAPPER_TCL = r'''
+proc ot_cdc_flow_names {name} {
+  set names [list $name]
+  if {[regsub {^u_ot_pr_core[./]} $name {} core]} {
+    lappend names $core
+    if {[regexp {^([^$]+)\$} $core -> base]} {lappend names $base}
+  }
+  return $names
+}
+'''
+
+
+MIXED_TCL = r'''
+# Every non-CDC dependence is an exact linted bank-source / domain pair; ordinary related data is not exempted.
+set ::ot_cdc_seam_seen {}
+proc ot_cdc_seam_crossing {start pin source target source_domain target_domain} {
+  lassign [ot_cdc_seam_role $source] name role index
+  if {$name eq "" || ![dict exists $::ot_cdc_seams $name]} {
+    error "OT_CDC_SEAM: undeclared crossing $source -> $target"
+  }
+  set w [dict get $::ot_cdc_seams $name]
+  if {$source_domain ne [dict get $w src] || $target_domain ne [dict get $w dst]} {
+    error "OT_CDC_SEAM: wrong clock domains $source -> $target"
+  }
+  set launch [get_cells -quiet -of_objects $start]
+  if {[llength $launch] != 1} {error "OT_CDC_SEAM: missing unique bank register"}
+  set q [expr {[get_property [get_clocks core_clk] period] / 3.0}]
+  # Same latency-inclusive semantics as seam_window_sdc, narrowed to this actual launch and capture D pin.
+  set max_bound [expr {[dict get $w setup] * $q}]
+  set min_bound [expr {-[dict get $w hold] * $q}]
+  set_max_delay $max_bound -from $launch -to $pin
+  set_min_delay $min_bound -from $launch -to $pin
+  foreach kind {max min} {
+    set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} continue
+    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+      error "OT_CDC_SEAM: missing finite bounded $kind path $source -> $target"
+    }
+  }
+  dict incr ::ot_cdc_seam_seen $name
+  puts "OT_CDC_SEAM BOUNDED $name $source -> $target"
+}
+proc ot_cdc_seam_complete {} {
+  dict for {name window} $::ot_cdc_seams {
+    if {![dict exists $::ot_cdc_seam_seen $name]} {error "OT_CDC_SEAM: missing actual bank window $name"}
+  }
+  puts "OT_CDC_SEAM STRUCTURAL_PASS $::ot_cdc_seam_seen (finite bounded paths, physical slack checked at signoff)"
+}
+'''
 
 
 TCL = r'''
