@@ -30,7 +30,48 @@
       "writes_per_edge": 1
     },
     "origins_grid_um": 43.2,
-    "pin_face_channel_um_min": 20
+    "pin_face_channel_um_min": 20,
+    "status": "OLD_FIVE_LOGICAL_MACRO_GOLDEN_SOURCE; PHYSICAL_PIN_DENSITY_FAILS_10.2_PER_UM",
+    "physical_candidate": {
+      "status": "COMPILER_MODEL_NOT_ROUTED_SIGNOFF",
+      "macro": "ot_sram_1r1w_32x64_m1",
+      "source": "tools/mem_compiler/sram_gen.py@4d2cb6301",
+      "width_um": 31.968,
+      "height_um": 17.28,
+      "area_um2": 552.40704,
+      "face_pins": {
+        "W": 103,
+        "E": 102
+      },
+      "face_pins_per_um": {
+        "W": 5.960648148148148,
+        "E": 5.902777777777778
+      },
+      "physical_banks": 45,
+      "logical_ports": 5,
+      "bits_per_port": 546,
+      "physical_bits_per_port": 576,
+      "padded_masked_bits": 30,
+      "total_area_um2": 24858.3168,
+      "SS_clk_to_q_ps": 317.7647673045979,
+      "SS_min_period_ps": 318.1277631204382,
+      "pin_channel_min_um": 20,
+      "native_group_extent_um": [
+        204.768,
+        103.68
+      ],
+      "gross_group_allocation_um": [
+        302.4,
+        172.8
+      ],
+      "gross_group_allocation_total_um2": 261273.6,
+      "native_group_layout": "3x3 origins at43.2+86.4*x and43.2+43.2*y inside allocated302.4x172.8; pinface20um halo after all bodies, group entry reach<=405um; PG/via/pin-access and actual clock proof owed",
+      "source_commit": "b65718325",
+      "wrapper_status": "seam_source owns source-native9bank546wrapper; production E/W and actualpinaccess pending",
+      "physical_clock_sinks": 45,
+      "exposed_clock_roots": 0,
+      "initial_clock_plan": "One existing core CTS root routed to45actualnativepins plus22VMpins, actualTT/FF co-time/phase/reach proof required; no per-bank root vector exists"
+    }
   },
   "regional_cut": {
     "core": "VM/control/reducer",
@@ -51,12 +92,14 @@
       "mirror": 0,
       "storage": 0,
       "SU_crossings": {
-        "status": "PREDICTION_NOT_QUALIFIED",
+        "status": "MEASURED_SOURCE_EXACT_W_FIVE_BANK_FUNCTIONAL_ONLY",
         "control": 1,
         "read_roundtrip": 4,
         "result_return": 1,
         "total": 6,
-        "separate_root_argmax_delta": 1
+        "separate_root_argmax_delta": 1,
+        "receipt": "results/arch/safe_qw_slice_w_1019/su8_timing.json",
+        "all_five_bench_g_operations_delta_edges": 6
       }
     },
     "cannot_gate_until": [
@@ -106,7 +149,8 @@
     "old_hard_views": [
       "qfd_dv_lane_h standin",
       "ot_qfd_xs_leaf M5 standin"
-    ]
+    ],
+    "32x546_raw_pin_density_per_um": 10.198
   },
   "geometry_method": "Preserve native child pins; 43.2 lattice origins, >=20um macro pin-face channels, std-cell bands within each landed region. Use actual synth area, no guessed compact outline."
 }

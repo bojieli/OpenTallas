@@ -1,0 +1,62 @@
+{
+  "status": "SOURCE_EXACT_W_FUNCTIONAL_TIMING_PASS_NOT_NATIVE_GATE",
+  "baseline_core": "9b41881fe",
+  "landed_candidate": "c4adbc1c3",
+  "fixture": "dv_bench2 g SU_LT1 HD_W1301 MU_NU4 FACE1 SAFE_STORAGE SAFE_RESET",
+  "boot_offsets": {
+    "baseline": 8,
+    "landed": 10
+  },
+  "input_events_normalized_exact": true,
+  "ports": {
+    "S1E": {
+      "words": 46,
+      "delta_edges": 0,
+      "all_values_and_order_exact": true
+    },
+    "S1SD": {
+      "words": 7,
+      "delta_edges": 6,
+      "all_values_and_order_exact": true
+    },
+    "S0DD": {
+      "words": 118,
+      "delta_edges": 6,
+      "all_values_and_order_exact": true
+    },
+    "S0ST": {
+      "words": 1,
+      "delta_edges": 0,
+      "all_values_and_order_exact": true
+    },
+    "S1ST": {
+      "words": 1,
+      "delta_edges": 0,
+      "all_values_and_order_exact": true
+    },
+    "S0AG": {
+      "words": 1,
+      "delta_edges": 0,
+      "all_values_and_order_exact": true
+    }
+  },
+  "source_read_loop_edges": {
+    "old": 8,
+    "new": 12,
+    "head_inner_ML_old": 7,
+    "head_inner_ML_new": 11
+  },
+  "edge_budget": {
+    "issue_control": 1,
+    "read_roundtrip": 4,
+    "result_return": 1,
+    "total": 6
+  },
+  "native_clock_phase_reach_and_final_45_bank_source_qualified": false,
+  "traces_sha256": {
+    "base_g.ev": "8da5676729b5be0a7b0a54d1031d4dbbb0c89813b230268fcb4322bb4a69cf9a",
+    "base_g.log": "bdc7d797d94592907729564b91e9cb462dd5fa18b6d3b640c7c9b4e18ec700b9",
+    "land_g.ev": "637ffb9f4fda97fe808df288aba83cfef2d4735499fcee0269a0e036bf4a5ad9",
+    "land_g.log": "3d8d3cc232c650412a0d3a5f0b074b6fe559f03b99241d42288e96414da56c7e"
+  }
+}
