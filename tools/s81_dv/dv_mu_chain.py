@@ -52,9 +52,10 @@ def plan():
             links.append(dict(group=gid, kind=kind, src=src, dst=dst, circuits=RANKS, bytes_per_user_pos=H_BYTES * RANKS,
                               cycles_per_user_pos=M.H_MSG, slot=ar['slot'],
                               occupancy=round(M.H_MSG / ar['slot'], 4),
-                              form='switched: the upstream rank die addresses copy A or copy B per the compiled slot bit '
-                                   '(lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a '
-                                   'second plane'))
+                              form='second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a '
+                                   'destination field is NOT possible, the frozen lane tile link layer is end-to-end '
+                                   'per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 '
+                                   'forced to A)'))
         links.append(dict(group=gid, kind='copy B internal (TP4 collectives + intra-group stage hops)', src=f'{gid}.B',
                           dst=f'{gid}.B', circuits=per_copy * LANES_PER_DIE['serdes'],
                           form='identical to copy A on the new dies\' own lanes'))
@@ -67,9 +68,12 @@ def plan():
                    die_mm2=m.S81['die_mm2'], total_mm2=d['total_mm2'],
                    switch_ports_added=dict(serdes=new_dies * LANES_PER_DIE['serdes'],
                                            note='UCIe lanes stay inside the two-die package'),
-                   extra_circuits_on_existing_dies=dict(switched=0, circuit_form=2 * RANKS * len(M.DUP),
-                                                        note='switched form: destination select only; circuit form: '
-                                                             '+1 tx circuit on each upstream rank die, +1 rx circuit on '
+                   extra_circuits_on_existing_dies=dict(circuits=2 * RANKS * len(M.DUP),
+                                                        die_variant=('the 4 rank dies of each pre-group and post-group '
+                                                                     'stage need a die master with +1 SerDes lane pair '
+                                                                     '(2 PHY lanes) and lep_mu (lane face ~4.4k pins): '
+                                                                     f'{2 * RANKS * len(M.DUP)} dies, a p4l variant'),
+                                                        note='+1 tx lane pair on each upstream rank die, +1 rx lane pair on '
                                                              'each downstream rank die')),
         reuse=('per the token DAG of record (results/arch/token_path_20261009/ds_rom.json) every layer writes and reads '
                'its own rows on its own stage (own_row_write / window_load / pv nodes); what later layers reuse from '

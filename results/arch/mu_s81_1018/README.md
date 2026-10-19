@@ -84,11 +84,13 @@ Negative controls in the test:
   - stage hop in: upstream rank dies to copy B, 4 circuits;
   - stage hop out: copy B to downstream, 4 circuits;
   - copy B's own TP4 and intra-group lanes, the same as copy A.
-- **Two physical forms:**
-  - Switched (the vehicle's one-tier multi-plane switch): no extra lane on existing dies. The lep selects the
-    destination copy per the compiled slot bit (MU-S81/LINK).
-  - Circuit: +1 tx circuit on each upstream rank die and +1 rx circuit on each downstream rank die, 64 circuits in all.
-  - Added switch ports: 480 SerDes lanes. UCIe lanes stay in the package.
+- **Physical form (MU-S81/LINK, claude/mu-s81-link-1018 258c9894b): a second lane pair, i.e. a second static
+  circuit.** A destination field is not possible: the frozen lane tile's link layer is end-to-end per peer pair, so two
+  peers on one lane would mix two sequence spaces.
+  - The 4 rank dies of each pre-group and post-group stage (64 dies) need a p4l variant: +1 SerDes lane pair (2 PHY
+    lanes) and `ot_s81sl_lep_mu` (lane face ~4.4k pins, needs a taller outline or a second face). **This is a die
+    variant, not die-unchanged.**
+  - 64 extra circuits in all; added switch ports: 480 SerDes lanes on copy B + 128 on the variant dies.
 - **Latency.** Every crossing is the same fixed-delay switched channel (377.6 ns budget), so copy B's hop latency
   equals copy A's (delta 0) and the lemma holds unchanged.
 - **Occupancy.** The added links carry 652 of 21,314 cycles a slot, which is 3.1%.

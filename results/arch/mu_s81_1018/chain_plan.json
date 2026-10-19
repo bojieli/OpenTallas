@@ -15,9 +15,9 @@
    "note": "UCIe lanes stay inside the two-die package"
   },
   "extra_circuits_on_existing_dies": {
-   "switched": 0,
-   "circuit_form": 64,
-   "note": "switched form: destination select only; circuit form: +1 tx circuit on each upstream rank die, +1 rx circuit on each downstream rank die"
+   "circuits": 64,
+   "die_variant": "the 4 rank dies of each pre-group and post-group stage need a die master with +1 SerDes lane pair (2 PHY lanes) and lep_mu (lane face ~4.4k pins): 64 dies, a p4l variant",
+   "note": "+1 tx lane pair on each upstream rank die, +1 rx lane pair on each downstream rank die"
   }
  },
  "reuse": "per the token DAG of record (results/arch/token_path_20261009/ds_rom.json) every layer writes and reads its own rows on its own stage (own_row_write / window_load / pv nodes); what later layers reuse from the owner layers 2/8/14/20 is the top-k selection, which rides the stage h message with the user tag. So copy B needs NO reuse link; the owner copy is addressed by user only through the h message order. Lane MU-S81/SVC confirms on the RTL (svc_bases.json).",
@@ -267,7 +267,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S029",
@@ -279,7 +279,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S029",
@@ -299,7 +299,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S020",
@@ -311,7 +311,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S020",
@@ -331,7 +331,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S011",
@@ -343,7 +343,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S011",
@@ -363,7 +363,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S002",
@@ -375,7 +375,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S002",
@@ -395,7 +395,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S034",
@@ -407,7 +407,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S034",
@@ -427,7 +427,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S040",
@@ -439,7 +439,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S040",
@@ -459,7 +459,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S046",
@@ -471,7 +471,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S046",
@@ -491,7 +491,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S052",
@@ -503,7 +503,7 @@
    "cycles_per_user_pos": 652,
    "slot": 21313.6,
    "occupancy": 0.0306,
-   "form": "switched: the upstream rank die addresses copy A or copy B per the compiled slot bit (lep A/B select, MU-S81/LINK); circuit form: +1 static circuit a rank die on a second plane"
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
   },
   {
    "group": "S052",
