@@ -139,10 +139,12 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
    (.clk(clk),.rst_n(rst_n),.din({emit_v,flush,clear}),.age3(c3),.age4(c4),.age5(c5));
   ot_hbm_idx_link_control_ring #(.W(4),.FIELD(1)) group_id
    (.clk(clk),.rst_n(rst_n),.din(emit_group),.age3(g3),.age4(g4),.age5(g5));
-  ot_hbm_idx_link_control_ring #(.W(8),.FIELD(2)) rank_id
-   (.clk(clk),.rst_n(rst_n),.din(rank),.age3(r3),.age4(r4),.age5(r5));
-  ot_hbm_idx_link_control_ring #(.W(8),.FIELD(3)) base_id
-   (.clk(clk),.rst_n(rst_n),.din(gbase),.age3(b3),.age4(b4),.age5(b5));
+  for(genvar field_half=0;field_half<2;field_half=field_half+1)begin:g_identity_half
+   ot_hbm_idx_link_control_ring #(.W(4),.FIELD(2+field_half)) rank_id
+    (.clk(clk),.rst_n(rst_n),.din(rank[field_half*4+:4]),.age3(r3[field_half*4+:4]),.age4(r4[field_half*4+:4]),.age5(r5[field_half*4+:4]));
+   ot_hbm_idx_link_control_ring #(.W(4),.FIELD(4+field_half)) base_id
+    (.clk(clk),.rst_n(rst_n),.din(gbase[field_half*4+:4]),.age3(b3[field_half*4+:4]),.age4(b4[field_half*4+:4]),.age5(b5[field_half*4+:4]));
+  end
   assign {em3,fl3,clr3}=c3;
   assign rk3=r3;assign gb3=b3;
   assign em5=(MUT==4)?c4[2]:c5[2];

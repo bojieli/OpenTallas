@@ -20,3 +20,6 @@ The next partial bank select adds an8-way288-bit mux on the carry feedback, so T
 
 ### Negative-control coverage correction
 The historical production bench held emit_group seven idle cycles after each command, so changing only group metadata from age5 to age4 escaped that stimulus. Preserve that passing mutant as a coverage failure, not a qualification. A new EMIT_GAP=0 production-shape variant emits all16groups on consecutive cycles (the SRAM interface supports one read/cycle); unchanged golden/miter checks must pass while the wrong-age group mutant must fail. Default historical bench remains EMIT_GAP=7.
+
+### Mapped correction
+The first actual mapping shows a retained8-bit ring pointer branch at33 loads (including next-state feedback), so the final candidate splits rank and base into4-bit halves with unique field IDs2..5. There are six field banks,30pointerFF total (+30vsold delay payload), with max four-bit bank pointer branch expected17loads before mapping. The whole inherited datapath still has merged high fanout up to7018 and reset82; this is a source-safety failure, not physical qualification. Do not gate this candidate until those inherited copied-control families are structurally preserved and measured.
