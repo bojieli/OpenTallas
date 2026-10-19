@@ -1,0 +1,12 @@
+SFEQ_FAIL cycle=2328 diff_bits=2
+    bit 616 a=1 b=0
+SFEQ_FAIL cycle=2331 diff_bits=107
+    bit 11 a=0 b=1
+SFEQ_FAIL cycle=2332 diff_bits=12
+    bit 559 a=1 b=0
+SFEQ_FAIL cycle=2333 diff_bits=108
+    bit 13 a=1 b=0
+SF6U_USEFUL_AND_COVER h0=1111 h1=1011
+[400001000] %Fatal: tb_qfd_d2d_sf6u_equiv.sv:156: Assertion failed in tb_qfd_d2d_sf6u_equiv: SF6U_USEFUL_AND_COVER_FAIL
+%Error: rtl/test/qwen_split/tb_qfd_d2d_sf6u_equiv.sv:156: Verilog $stop
+Aborting...

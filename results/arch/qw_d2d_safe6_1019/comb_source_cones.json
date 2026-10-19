@@ -1,0 +1,1976 @@
+[
+  {
+    "root": "_30942_/Y",
+    "kind": "comb",
+    "loads": "491",
+    "flop_loads": "1",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_36656_/B,_36661_/B,_36724_/B,_36898_/B,_36829_/B,_36834_/B",
+    "cell_type": "NAND2x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "net11587",
+      "B": "net10401",
+      "Y": "_16464_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.u_txcal.ev_port[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.ev_port[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.ev_port[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.ev_v$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37518_/Y",
+    "kind": "comb",
+    "loads": "150",
+    "flop_loads": "150",
+    "macro_loads": "0",
+    "reset_loads": "150",
+    "ports": "0",
+    "examples": "u_core.u_st.r\\[57\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[56\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[138\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[137\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[136\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[135\\]$_DFFE_PN0P_/RESETN",
+    "cell_type": "NOR2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "\\u_core.eb_k[5]",
+      "B": "_11187_",
+      "Y": "\\u_core.u_st.rst_n[0]"
+    },
+    "upstream_leaves": [
+      "\\u_core.g_eb[5].u_eb/q$_DFF_PN0_/QN",
+      "\\u_core.u_reset_regions.rst_n[2]$_DFF_P_/QN"
+    ]
+  },
+  {
+    "root": "_31434_/Y",
+    "kind": "comb",
+    "loads": "76",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_32024_/A2,_32033_/A2,_32036_/A2,_32039_/A2,_32653_/A2,_32672_/A2",
+    "cell_type": "AND3x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "c_cfg_tx_we",
+      "B": "_16775_",
+      "C": "_11174_",
+      "Y": "_16776_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_32753_/Y",
+    "kind": "comb",
+    "loads": "70",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_33968_/A2,_33965_/A2,_33963_/A2,_33313_/A2,_33309_/A2,_33303_/A2",
+    "cell_type": "AND3x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_11168_",
+      "B": "c_cfg_rx_we",
+      "C": "_16775_",
+      "Y": "_17955_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_52467_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_52543_/A2,_48379_/A2,_52506_/A2,_52508_/A2,_52512_/A2,_52531_/A2",
+    "cell_type": "NAND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "net11932",
+      "B": "_14878_",
+      "Y": "_14879_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "\\u_core.u_end.u_link.u_ctl.v1$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_52470_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_52482_/A2,_52513_/A2,_52552_/A2,_52583_/A2,_52591_/A2,_52598_/A2",
+    "cell_type": "NAND2x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "net11932",
+      "B": "_14881_",
+      "Y": "_14882_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.u_link.u_ctl.cmd_wv$_DFF_PN0_/QN",
+      "\\u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37530_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37607_/B,_37623_/A2,_37622_/B,_37564_/A2,_37563_/B,_37538_/A2",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_22162_",
+      "Y": "_22163_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37628_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37674_/A2,_37684_/B,_37685_/A2,_37654_/B,_37655_/A2,_37686_/B",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_22229_",
+      "Y": "_22230_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37700_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37726_/B,_37727_/A2,_42334_/A2,_42333_/B,_37767_/A2,_37766_/B",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_22270_",
+      "Y": "_22271_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37771_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37805_/B,_37806_/A2,_37811_/B,_37812_/A2,_37825_/B,_37826_/A2",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_22310_",
+      "Y": "_22311_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37843_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37847_/B,_37848_/A2,_37897_/B,_37898_/A2,_37899_/B,_37900_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_22351_",
+      "Y": "_22352_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37913_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37980_/A2,_37979_/B,_37974_/A2,_37973_/B,_37972_/A2,_37971_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_22351_",
+      "Y": "_22391_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_37983_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_37991_/B,_37992_/A2,_37995_/B,_37996_/A2,_38001_/B,_38002_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_22351_",
+      "Y": "_22430_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38053_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38085_/B,_38086_/A2,_38087_/B,_38088_/A2,_38089_/B,_38090_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_22351_",
+      "Y": "_22469_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38125_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38131_/B,_38132_/A2,_38181_/B,_38182_/A2,_38129_/B,_38130_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_22509_",
+      "Y": "_22510_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38195_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38199_/B,_38200_/A2,_38218_/B,_38219_/A2,_38253_/B,_38254_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_22509_",
+      "Y": "_22549_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38270_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38274_/B,_38275_/A2,_38302_/B,_38303_/A2,_38347_/B,_38348_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_22509_",
+      "Y": "_22593_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38366_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38435_/A2,_38434_/B,_38431_/A2,_38430_/B,_38429_/A2,_38428_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_22509_",
+      "Y": "_22658_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38437_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38471_/B,_38472_/A2,_38473_/B,_38474_/A2,_38475_/B,_38476_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_22697_",
+      "Y": "_22698_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38507_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38561_/B,_38562_/A2,_38563_/B,_38511_/B,_38512_/A2,_38513_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_22697_",
+      "Y": "_22737_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38577_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38611_/B,_38612_/A2,_38615_/B,_38616_/A2,_38618_/A2,_38617_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_22697_",
+      "Y": "_22776_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38647_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38681_/B,_38682_/A2,_38701_/B,_38702_/A2,_38659_/B,_38660_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_22697_",
+      "Y": "_22815_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38719_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38753_/B,_38754_/A2,_38759_/B,_38760_/A2,_38773_/B,_38774_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_22855_",
+      "Y": "_22856_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38789_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38793_/B,_38794_/A2,_38812_/B,_38813_/A2,_38846_/A2,_38823_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_22855_",
+      "Y": "_22895_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38859_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38893_/B,_38894_/A2,_38895_/B,_38896_/A2,_38897_/B,_38898_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_22855_",
+      "Y": "_22934_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_38929_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_38985_/B,_38963_/B,_38964_/A2,_38969_/B,_38970_/A2,_38983_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_22855_",
+      "Y": "_22973_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39005_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39012_/B,_39013_/A2,_39027_/B,_39028_/A2,_39034_/B,_39035_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_23017_",
+      "Y": "_23018_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39101_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39105_/B,_39106_/A2,_39107_/B,_39108_/A2,_39124_/B,_39125_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_23017_",
+      "Y": "_23083_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39171_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39227_/B,_39225_/B,_39226_/A2,_39175_/B,_39176_/A2,_39177_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_23017_",
+      "Y": "_23122_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39241_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39297_/B,_39245_/B,_39246_/A2,_39264_/B,_39265_/A2,_39286_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_23017_",
+      "Y": "_23161_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39312_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39316_/B,_39317_/A2,_39318_/B,_39319_/A2,_39324_/B,_39325_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_23200_",
+      "Y": "_23201_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39382_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39386_/B,_39387_/A2,_39439_/A2,_39436_/B,_39437_/A2,_39438_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_23200_",
+      "Y": "_23240_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39452_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39456_/B,_39457_/A2,_39506_/B,_39507_/A2,_39521_/A2,_39520_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_23200_",
+      "Y": "_23279_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39522_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39552_/B,_39553_/A2,_39588_/B,_39589_/A2,_39526_/B,_39527_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_23200_",
+      "Y": "_23318_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39593_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39597_/B,_39598_/A2,_39599_/B,_39600_/A2,_39616_/B,_39617_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22162_",
+      "B": "_23357_",
+      "Y": "_23358_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39663_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39684_/B,_39685_/A2,_39713_/B,_39714_/A2,_42278_/A2,_42277_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22229_",
+      "B": "_23357_",
+      "Y": "_23397_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39733_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39767_/B,_39768_/A2,_39769_/B,_39770_/A2,_39771_/B,_39772_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22270_",
+      "B": "_23357_",
+      "Y": "_23436_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39803_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39837_/B,_39838_/A2,_39839_/B,_39840_/A2,_39841_/B,_39842_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22310_",
+      "B": "_23357_",
+      "Y": "_23475_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_rx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39875_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_42255_/A2,_42254_/B,_39953_/A2,_39952_/B,_39921_/A2,_39920_/B",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_23515_",
+      "Y": "_23516_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_39972_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_39980_/B,_42253_/A2,_42252_/B,_40027_/A2,_40026_/B,_40005_/A2",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_23581_",
+      "Y": "_23582_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40044_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40052_/B,_40053_/A2,_40054_/B,_40055_/A2,_42251_/A2,_42250_/B",
+    "cell_type": "AND4x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_23622_",
+      "Y": "_23623_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40115_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40122_/A2,_40133_/B,_40134_/A2,_40181_/B,_40182_/A2,_40160_/B",
+    "cell_type": "AND4x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_06315_",
+      "B": "_06316_",
+      "C": "_06317_",
+      "D": "_23662_",
+      "Y": "_23663_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40185_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40228_/B,_40229_/A2,_40237_/B,_40238_/A2,_40249_/B,_40250_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22351_",
+      "B": "_23515_",
+      "Y": "_23702_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40255_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40262_/A2,_40281_/B,_40282_/A2,_40259_/B,_40260_/A2,_40263_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22351_",
+      "B": "_23581_",
+      "Y": "_23741_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40325_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40333_/B,_40334_/A2,_40335_/B,_40336_/A2,_40339_/B,_40340_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22351_",
+      "B": "_23622_",
+      "Y": "_23780_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40395_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40443_/B,_40444_/A2,_40399_/B,_40400_/A2,_40462_/A2,_40461_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22351_",
+      "B": "_23662_",
+      "Y": "_23819_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40465_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40473_/B,_40474_/A2,_40475_/B,_40476_/A2,_40479_/B,_40480_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22509_",
+      "B": "_23515_",
+      "Y": "_23858_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40535_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40543_/B,_40544_/A2,_40545_/B,_40546_/A2,_40549_/B,_40550_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22509_",
+      "B": "_23581_",
+      "Y": "_23897_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40610_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40635_/B,_40636_/A2,_40674_/B,_40675_/A2,_40684_/B,_40685_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22509_",
+      "B": "_23622_",
+      "Y": "_23941_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40706_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40714_/B,_40720_/B,_40721_/A2,_40758_/B,_40759_/A2,_40770_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22509_",
+      "B": "_23662_",
+      "Y": "_24006_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40776_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40780_/B,_40781_/A2,_40782_/B,_40783_/A2,_40794_/B,_40795_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22697_",
+      "B": "_23515_",
+      "Y": "_24045_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40846_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40854_/B,_40850_/B,_40851_/A2,_40864_/B,_40865_/A2,_40891_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22697_",
+      "B": "_23581_",
+      "Y": "_24084_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40916_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_40920_/B,_40921_/A2,_40934_/B,_40935_/A2,_40924_/B,_40925_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22697_",
+      "B": "_23622_",
+      "Y": "_24123_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_40986_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41053_/A2,_41052_/B,_41051_/A2,_41050_/B,_41039_/A2,_41038_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22697_",
+      "B": "_23662_",
+      "Y": "_24162_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41056_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41064_/B,_41065_/A2,_41066_/B,_41067_/A2,_41068_/B,_41069_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22855_",
+      "B": "_23515_",
+      "Y": "_24201_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41126_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41132_/B,_41144_/B,_41145_/A2,_41152_/B,_41153_/A2,_41178_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22855_",
+      "B": "_23581_",
+      "Y": "_24240_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41196_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41204_/B,_41205_/A2,_41206_/B,_41210_/B,_41211_/A2,_42217_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22855_",
+      "B": "_23622_",
+      "Y": "_24279_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41266_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41272_/B,_41273_/A2,_41284_/B,_41285_/A2,_41318_/B,_41319_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_22855_",
+      "B": "_23662_",
+      "Y": "_24318_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41341_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41405_/B,_41406_/A2,_41415_/B,_41416_/A2,_41421_/B,_41422_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23017_",
+      "B": "_23515_",
+      "Y": "_24362_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41437_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41443_/B,_41455_/B,_41456_/A2,_41482_/B,_41483_/A2,_41493_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23017_",
+      "B": "_23581_",
+      "Y": "_24427_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41507_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41513_/B,_41525_/B,_41526_/A2,_41563_/B,_41564_/A2,_41573_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23017_",
+      "B": "_23622_",
+      "Y": "_24466_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41577_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41583_/B,_41584_/A2,_41595_/B,_41596_/A2,_41603_/B,_41604_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23017_",
+      "B": "_23662_",
+      "Y": "_24505_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41647_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41653_/B,_41654_/A2,_41703_/B,_41704_/A2,_41713_/B,_41714_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23200_",
+      "B": "_23515_",
+      "Y": "_24544_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41717_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41723_/B,_41724_/A2,_41735_/B,_41736_/A2,_41762_/B,_41763_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23200_",
+      "B": "_23581_",
+      "Y": "_24583_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41787_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41832_/B,_41833_/A2,_41843_/B,_41844_/A2,_41793_/B,_41805_/B",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23200_",
+      "B": "_23622_",
+      "Y": "_24622_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41857_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41863_/B,_41864_/A2,_41875_/B,_41876_/A2,_41883_/B,_41884_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23200_",
+      "B": "_23662_",
+      "Y": "_24661_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41927_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_41935_/B,_41936_/A2,_41937_/B,_41938_/A2,_41939_/B,_41940_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23357_",
+      "B": "_23515_",
+      "Y": "_24700_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_41997_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_42015_/B,_42016_/A2,_42042_/B,_42043_/A2,_42045_/B,_42046_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23357_",
+      "B": "_23581_",
+      "Y": "_24739_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_42067_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_42075_/B,_42076_/A2,_42077_/B,_42078_/A2,_42081_/B,_42082_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23357_",
+      "B": "_23622_",
+      "Y": "_24778_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_42137_/Y",
+    "kind": "comb",
+    "loads": "64",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_42145_/B,_42146_/A2,_42151_/B,_42152_/A2,_42182_/B,_42183_/A2",
+    "cell_type": "AND2x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_23357_",
+      "B": "_23662_",
+      "Y": "_24817_"
+    },
+    "upstream_leaves": [
+      "\\c_cfg_addr[0]$_DFF_P_/QN",
+      "\\c_cfg_addr[1]$_DFF_P_/QN",
+      "\\c_cfg_addr[2]$_DFF_P_/QN",
+      "\\c_cfg_addr[3]$_DFF_P_/QN",
+      "\\c_cfg_addr[4]$_DFF_P_/QN",
+      "\\c_cfg_addr[5]$_DFF_P_/QN",
+      "\\c_cfg_tx_we$_DFF_P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_32045_/Y",
+    "kind": "comb",
+    "loads": "47",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_32382_/B,_32403_/A,_32408_/B,_32429_/A,_32433_/B,_32454_/A",
+    "cell_type": "OR3x2_ASAP7_75t_R",
+    "inputs": {
+      "A": "_16793_",
+      "B": "_16962_",
+      "C": "_16792_",
+      "Y": "_17334_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "\\u_core.u_end.u_txcal.cnt[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[10]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[11]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[12]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[13]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[5]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[6]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[7]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[8]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[9]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cur[17]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_33363_/Y",
+    "kind": "comb",
+    "loads": "44",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_33391_/B,_33462_/B,_33444_/B,_34224_/A,_33836_/A,_33811_/A",
+    "cell_type": "AND3x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_00063_",
+      "B": "_17945_",
+      "C": "_18061_",
+      "Y": "_18512_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[10]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[11]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[12]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[13]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[5]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[6]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[7]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[8]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[9]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cur[17]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_33359_/Y",
+    "kind": "comb",
+    "loads": "39",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_33712_/B1,_33737_/B1,_33762_/B1,_33787_/B1,_33812_/B1,_33837_/B1",
+    "cell_type": "OR3x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_18507_",
+      "B": "_18063_",
+      "C": "_18062_",
+      "Y": "_18508_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[10]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[11]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[12]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[13]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[5]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[6]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[7]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[8]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cnt[9]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.cur[17]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.rep[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ]
+  },
+  {
+    "root": "_32049_/Y",
+    "kind": "comb",
+    "loads": "36",
+    "flop_loads": "0",
+    "macro_loads": "0",
+    "reset_loads": "0",
+    "ports": "0",
+    "examples": "_32052_/B,_32097_/B,_32120_/B,_32696_/A,_32704_/A,_43734_/A",
+    "cell_type": "AND3x1_ASAP7_75t_R",
+    "inputs": {
+      "A": "_16759_",
+      "B": "_16764_",
+      "C": "_16964_",
+      "Y": "_17338_"
+    },
+    "upstream_leaves": [
+      "\\u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "\\u_core.u_end.u_txcal.cnt[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[10]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[11]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[12]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[13]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[5]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[6]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[7]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[8]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cnt[9]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.cur[17]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[0]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[1]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[2]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[3]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.rep[4]$_DFFE_PN0P_/QN",
+      "\\u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ]
+  }
+]

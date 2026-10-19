@@ -1,0 +1,84 @@
+{
+  "status": "MODEL_ONLY_NOT_BUILD_AUTHORITY",
+  "selected_master": null,
+  "candidate_name": "qfd_d2d_static_ovl_sf6",
+  "parent_slot_qualified": false,
+  "baseline": {
+    "ff": 11502,
+    "std_area_um2": 5941.3,
+    "macro_area_um2": 10579.8,
+    "unsafe_comb": 74,
+    "unsafe_ff": 194
+  },
+  "geometry_proposal": {
+    "outline_um": [
+      345.6,
+      216
+    ],
+    "aspect": 1.6,
+    "macro_origins": [
+      [
+        43.2,
+        43.2
+      ],
+      [
+        259.2,
+        43.2
+      ],
+      [
+        43.2,
+        129.6
+      ],
+      [
+        259.2,
+        129.6
+      ]
+    ],
+    "macro_size_um": [
+      57.912,
+      45.672
+    ],
+    "macro_edge_halo_um": 10.8,
+    "std_band_um": [
+      0,
+      88.872,
+      345.6,
+      129.6
+    ],
+    "diagonal_um": 407.5479849048453,
+    "full_face_pins": {
+      "N": 1674,
+      "S": 1218,
+      "W": 798,
+      "E": 106
+    },
+    "pitch_um": 0.192,
+    "pin_registration": "preserve original PR1 edges; all additions copied at same edge",
+    "routing_capacity": "40.728um / M3 .048um =848.5 gross tracks before row quantization, PG and obstructions",
+    "reach_proof": "Outline diagonal407.55um does not prove405um: source-node placement and complete stage ledger required before gate"
+  },
+  "state_model": {
+    "minimum_added_ff": 284,
+    "minimum_added_clock_pins": 284,
+    "added_cycle_target": 0,
+    "token_delta_target": 0,
+    "minimum_std_area_delta_um2": null,
+    "caveat": "284 is a design reservation, not mapped cost or a complete fanout fix; reset/control recursion can add state"
+  },
+  "storage": {
+    "four_macros_bits": 35072,
+    "calendar_bits_each": 1024,
+    "calendar_array_count": 2,
+    "calendar_combined_bits": 2048,
+    "same_edge_collision_semantics": "preserve read/write bypass age0/age1 and OLD SRAM behavior"
+  },
+  "proof_obligations": [
+    "no arbitrary-init equality assumption for copied hold-state",
+    "each duplicate same D/reset/enable or explicit reset/load-before-use causal proof",
+    "replay exact200k lockstep,35-layer pair, all old causal mutants on Verilator5.050",
+    "all-root transparent mapped native logical-pin census <=32 incl reset and ties",
+    "source equation and actual phase-qualified clock proof",
+    "native PG, legal pin contacts, OBS, TT/FF timing, parent matching",
+    "no falsepaths or multicycle data masks"
+  ]
+}

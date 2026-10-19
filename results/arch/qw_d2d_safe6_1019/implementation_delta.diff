@@ -1,0 +1,56 @@
+--- SAFE5
++++ SF6U_normalized_module_names
+@@ -7,12 +7,14 @@
+     input wire [136:0] din,
+     output reg [136:0] dout
+ );
+-    localparam integer W = 137, SW = 28, NS = (W + SW - 1) / SW;   // 5 slices
++    localparam integer W = 137, SW = 12, NS = (W + SW - 1) / SW;   // 12 slices
+     reg wq; reg [5:0] aq; reg [W-1:0] dq, dqq;
+     wire [W-1:0] mr;
+     always @(posedge ck) begin wq <= we; aq <= wa; dq <= din; dqq <= dq; end
+-    wire h0d = we && wa == ra;
+-    wire h1d = wq && aq == ra;
++    wire h0d;
++    ot_d2d_useful_and_s6u u_h0d (.a(we), .b(wa == ra), .y(h0d));
++    wire h1d;
++    ot_d2d_useful_and_s6u u_h1d (.a(wq), .b(aq == ra), .y(h1d));
+     wire [NS-1:0] h0, h1;
+     genvar s;
+     for (s = 0; s < NS; s = s + 1) begin : g_hit
+@@ -407,7 +409,7 @@
+     input  wire [1:0]   rst_n,          // [0] held result (pend, r), [1] TX register (tx_valid, fault)
+     input  wire [15:0]  epoch16,
+     input  wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+-    input  wire [9:0]   result_v_k,     // KEPT pin-flop copies of result_v
++    input  wire [21:0]  result_v_k,     // KEPT pin-flop copies of result_v
+     input  wire         result_done, result_fault,
+     input  wire [3:0]   result_cause,
+     input  wire [58:0]  result_tag,
+@@ -420,7 +422,7 @@
+     output reg  [547:0] tx_payload,
+     output reg          fault
+ );
+-    localparam integer RS = 15;        // 149-bit held result in 10 slices of <= 15 bits
++    localparam integer RS = 7;        // 149-bit held result in 22 slices of <= 7 bits
+     reg pend; reg [148:0] r;
+     wire [148:0] rin = {result_cycles, result_value, result_token, result_gen, result_tag, result_cause, result_fault, result_done};
+     wire result_v = result_v_k[0];
+@@ -435,7 +437,7 @@
+         else if (result_v) pend <= 1'b1;
+     end
+     genvar s;
+-    for (s = 0; s < 10; s = s + 1) begin : g_r
++    for (s = 0; s < 22; s = s + 1) begin : g_r
+         localparam integer LO = s * RS, HI = (s * RS + RS > 149) ? 149 : s * RS + RS;
+         always @(posedge ck or negedge rst_h) begin
+             if (!rst_h) r[HI-1:LO] <= 0;
+@@ -485,7 +487,7 @@
+     input  wire [523:0] x3, input wire [58:0] x3_identity, input wire [1:0] x3_generation,
+     input  wire [15:0]  status_epoch16,
+     input  wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
+-    input  wire [9:0]   result_v_k,
++    input  wire [21:0]  result_v_k,
+     input  wire         result_done, result_fault, input wire [3:0] result_cause, input wire [58:0] result_tag,
+     input  wire [1:0]   result_gen, input wire [17:0] result_token, input wire [31:0] result_value, result_cycles,
+     input  wire         fdi_tx_up, output wire fdi_tx_v, output wire [582:0] fdi_tx_flit,

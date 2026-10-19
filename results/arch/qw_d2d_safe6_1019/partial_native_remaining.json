@@ -1,0 +1,2246 @@
+{
+  "scope": "actual source-mapped native1_synth ODB; BUF/INV transparent; no place/CTS/PG/timing qualification",
+  "rows": 30782,
+  "over32": [
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[31\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54256_/A1,_54151_/A1,_53998_/A1,_54453_/A1,_54432_/A1,_54411_/A1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[31\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34290_/A1,_34258_/A1,_34240_/A1,_34018_/A1,_33993_/A1,_33980_/A1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[31\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55140_/A1,_55061_/A1,_54972_/A1,_55296_/A1,_55276_/A1,_55233_/A1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[31\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32989_/A1,_32961_/A1,_32711_/A1,_32701_/A1,_32069_/A1,_43830_/A1"
+    },
+    {
+      "root": "u_core.u_end.wcnt\\[5\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "38",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_52056_/A,_52040_/A,_46632_/A,_43736_/A,u_core.u_end.u_link.u_ctl.cmd_ws\\[5\\]$_DFF_P_/D,_52067_/A"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[0\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54533_/A2,_54386_/A2,_54130_/A2,_54459_/A2,_54447_/A2,_54393_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[1\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54387_/A2,_54281_/A2,_54072_/A2,_54487_/A2,_54466_/A2,_54444_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[2\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54235_/A2,_53900_/A2,_50622_/A2,_54500_/A2,_54455_/A2,_54437_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[3\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54403_/A2,_54344_/A2,_54025_/A2,_54501_/A2,_54321_/A2,_54224_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[4\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54492_/A2,_54261_/A2,_54198_/A2,_54553_/A2,_54528_/A2,_54470_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[5\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54513_/A2,_54218_/A2,_50618_/A2,_54538_/A2,_54433_/A2,_54348_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[6\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54554_/A2,_54323_/A2,_54219_/A2,_54526_/A2,_54477_/A2,_54417_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[7\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54534_/A2,_54491_/A2,_54302_/A2,_54510_/A2,_54438_/A2,_54372_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[8\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54407_/A2,_54049_/A2,_53968_/B1,_54519_/A2,_54498_/A2,_54456_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[9\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54450_/A2,_54345_/A2,_50623_/A2,_54540_/A2,_54527_/A2,_54506_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[10\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54429_/A2,_54408_/A2,_53999_/A2,_54522_/A2,_54460_/A2,_54317_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[11\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54471_/A2,_54298_/A2,_53860_/A2,_54548_/A2,_54511_/A2,_54443_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[12\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54450_/B1,_54429_/B1,_54298_/B1,_54537_/A2,_54474_/A2,_54390_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[13\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54529_/B1,_54407_/B1,_54155_/B1,_54454_/A2,_54370_/A2,_54329_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[14\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54555_/A2,_54197_/B1,_54050_/A2,_54330_/A2,_54309_/B1,_54270_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[15\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54445_/B1,_54424_/B1,_54345_/B1,_54524_/B2,_54486_/B1,_54214_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[16\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54449_/B1,_54428_/B1,_53998_/B2,_54517_/B1,_54495_/B1,_54201_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[17\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54550_/B1,_54386_/B1,_54361_/B1,_54506_/B1,_54322_/B2,_54275_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[18\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54487_/B1,_54470_/B1,_50618_/B1,_54381_/B1,_54359_/B1,_54343_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[19\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54387_/B1,_54114_/B1,_50623_/B1,_54465_/A2,_54443_/B1,_54422_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[20\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54282_/B1,_54240_/B1,_54156_/B1,_54390_/B1,_54287_/B1,_54211_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[21\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54534_/B1,_54219_/B1,_54198_/B1,_54512_/B1,_54469_/B1,_54339_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[22\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54513_/B1,_54323_/B1,_53900_/B1,_54358_/B1,_54291_/B1,_54245_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[23\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54555_/B1,_54235_/B1,_50622_/B1,_54502_/B1,_54354_/B2,_54297_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[24\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54408_/B1,_54261_/B1,_53969_/B1,_54545_/B1,_54533_/B1,_54427_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[25\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54366_/B1,_54324_/B1,_54093_/B1,_54543_/B1,_54432_/B2,_54266_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[26\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54365_/B1,_54303_/B1,_54177_/B1,_54516_/B1,_54500_/B1,_54455_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[27\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54508_/B1,_54466_/B1,_54021_/B1,_54370_/B1,_54348_/B1,_54253_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[28\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54554_/B1,_54471_/B1,_54260_/B1,_54532_/B1,_54448_/B1,_54406_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[29\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54492_/B1,_54344_/B1,_54281_/B1,_54511_/B1,_54444_/B1,_54193_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.s1oh\\[30\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54072_/B1,_53999_/B1,_53937_/B1,_54505_/B1,_54463_/B1,_54447_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[0\\]$_DFFE_PN1P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43941_/B1,_34285_/A2,_34257_/A2,_34236_/A2,_34023_/A2,_34006_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[1\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34289_/A2,_34259_/A2,_34226_/A2,_34020_/A2,_33990_/A2,_33508_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[2\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34294_/A2,_34260_/A2,_34234_/A2,_34022_/A2,_34005_/A2,_33502_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[3\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43950_/A2,_34278_/A2,_34254_/A2,_34239_/A2,_34025_/A2,_34002_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[4\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34291_/A2,_34266_/A2,_34230_/A2,_34019_/A2,_33992_/A2,_43979_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[5\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34277_/A2,_34253_/A2,_34227_/A2,_34024_/A2,_33998_/A2,_44045_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[6\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34288_/A2,_34263_/A2,_34032_/A2,_34008_/A2,_33507_/A2,_43984_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[7\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34283_/A2,_34269_/A2,_34242_/A2,_34017_/A2,_34001_/A2,_44075_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[8\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43951_/A2,_34282_/A2,_34265_/A2,_34241_/A2,_34028_/A2,_34000_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[9\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34293_/A2,_34270_/A2,_34231_/A2,_34027_/A2,_34003_/A2,_33473_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[10\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34284_/A2,_34268_/A2,_34235_/A2,_34029_/A2,_33991_/A2,_33498_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[11\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43955_/A2,_34283_/B1,_34255_/A2,_34237_/A2,_34035_/A2,_34001_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[12\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43945_/A2,_34295_/A2,_34264_/A2,_34232_/A2,_34018_/B2,_34007_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[13\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43945_/B1,_34295_/B1,_34262_/A2,_34034_/A2,_33997_/A2,_43994_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[14\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34279_/A2,_34268_/B1,_34224_/A2,_34030_/A2,_33996_/A2,_33496_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[15\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43950_/B1,_34284_/B1,_34260_/B1,_34033_/A2,_34000_/B1,_43989_/B2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[16\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34296_/A2,_34270_/B1,_34234_/B1,_34022_/B1,_33997_/B1,_43982_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[17\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34296_/B1,_34264_/B1,_34235_/B1,_34020_/B1,_33990_/B1,_43978_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[18\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34280_/A2,_34262_/B1,_34019_/B1,_34002_/B1,_33508_/B1,_44045_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[19\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34278_/B1,_34259_/B1,_34229_/B1,_34029_/B1,_34006_/B1,_33476_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[20\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43949_/B1,_34285_/B1,_34265_/B1,_34236_/B1,_34024_/B1,_33996_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[21\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34290_/B2,_34252_/A2,_34227_/B1,_34034_/B1,_33995_/A2,_33502_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[22\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34288_/B1,_34258_/B2,_34241_/B1,_34027_/B1,_33991_/B1,_44075_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[23\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34293_/B1,_34266_/B1,_34231_/B1,_34017_/B1,_33995_/B1,_44044_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[24\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43955_/B1,_34289_/B1,_34253_/B1,_34240_/B2,_34028_/B1,_34003_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[25\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43946_/B1,_34294_/B1,_34254_/B1,_34239_/B1,_34035_/B1,_34008_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[26\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34277_/B1,_34263_/B1,_34242_/B1,_34030_/B1,_33998_/B1,_43988_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[27\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34282_/B1,_34255_/B1,_34237_/B1,_34025_/B1,_33993_/B2,_43983_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[28\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34279_/B1,_34257_/B1,_34225_/B1,_34033_/B1,_33992_/B1,_44042_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[29\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34291_/B1,_34252_/B1,_34232_/B1,_34023_/B1,_34005_/B1,_43979_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_rxcal.oh\\[30\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43951_/B1,_34280_/B1,_34269_/B1,_34032_/B1,_34007_/B1,_43987_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[0\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55019_/A2,_54797_/A2,_50687_/A2,_55290_/A2,_55092_/A2,_54974_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[1\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55144_/A2,_55102_/A2,_55082_/A2,_55269_/A2,_55243_/A2,_55159_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[2\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55250_/A2,_55123_/A2,_54955_/A2,_55174_/A2,_55022_/A2,_54894_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[3\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55271_/A2,_55161_/A2,_54736_/A2,_55279_/A2,_55212_/A2,_55090_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[4\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54866_/A2,_54681_/A2,_54638_/A2,_55238_/A2,_55154_/A2,_55127_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[5\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55312_/A2,_55040_/A2,_54844_/A2,_55319_/A2,_55266_/A2,_55134_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[6\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55249_/A2,_55229_/A2,_55186_/A2,_55321_/A2,_55256_/A2,_55195_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[7\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55333_/A2,_55124_/A2,_54934_/A2,_55143_/A2,_55075_/A2,_55054_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[8\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55292_/A2,_55187_/A2,_54956_/A2,_55214_/A2,_55130_/A2,_55113_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[9\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55229_/B1,_55019_/B1,_54823_/A2,_55322_/A2,_55280_/A2,_55196_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[10\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55270_/A2,_55103_/A2,_54890_/A2,_55323_/A2,_55298_/A2,_55277_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[11\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54997_/B1,_54977_/A2,_54867_/A2,_55306_/A2,_55222_/A2,_55197_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[12\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55334_/A2,_55313_/A2,_55208_/A2,_55287_/A2,_55166_/A2,_55051_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[13\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55307_/B1,_55056_/B1,_55040_/B1,_55242_/A2,_55132_/B1,_55074_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[14\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55270_/B1,_55207_/B1,_55077_/B1,_55138_/A2,_55018_/A2,_54971_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[15\\]$_SDFFCE_PP0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55308_/B1,_55286_/B1,_55076_/B1,_55316_/B1,_55232_/B1,_55127_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[16\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55266_/B1,_54744_/B1,_50686_/B1,_55322_/B1,_55234_/B1,_55213_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[17\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54890_/B1,_54867_/B1,_54681_/B1,_55280_/B1,_55260_/B1,_55235_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[18\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55328_/B1,_55292_/B1,_55124_/B1,_55311_/B1,_55202_/B1,_55096_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[19\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_54998_/B1,_54822_/B1,_54638_/B1,_55302_/A2,_55284_/B1,_55151_/B2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[20\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55140_/B2,_54913_/B1,_54798_/B1,_55321_/B1,_55200_/B1,_55108_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[21\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55333_/B1,_55187_/B1,_55103_/B1,_55265_/B1,_55239_/B1,_55218_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[22\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55166_/B1,_55061_/B2,_54745_/B1,_55195_/B1,_55090_/B1,_54981_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[23\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55313_/B1,_55271_/B1,_54977_/B1,_55332_/B2,_55206_/B1,_55144_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[24\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55250_/B1,_55145_/B1,_55082_/B1,_55297_/B1,_55169_/B1,_55086_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[25\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55334_/B1,_54956_/B1,_50687_/B1,_55263_/B1,_55095_/B1,_55074_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[26\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55208_/B1,_54713_/B1,_50685_/B1,_55253_/B1,_55150_/B1,_54990_/B2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[27\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55228_/B1,_54972_/B2,_54929_/B2,_55327_/B1,_55261_/B1,_55240_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[28\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55291_/B1,_55249_/B1,_54955_/B1,_55161_/B1,_55122_/B1,_55098_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[29\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55039_/B1,_54823_/B1,_54776_/B1,_55259_/B1,_55184_/B1,_55128_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.s1oh\\[30\\]$_SDFFCE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_55123_/B1,_54951_/B2,_54912_/B1,_55318_/B1,_55301_/B1,_55087_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[0\\]$_DFFE_PN1P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32988_/A2,_32950_/A2,_32717_/A2,_32696_/A2,_32242_/A2,_32890_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[1\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32980_/A2,_32951_/A2,_32720_/A2,_32695_/A2,_32304_/A2,_43884_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[2\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32993_/A2,_32955_/A2,_32712_/A2,_32697_/A2,_32310_/A2,_32899_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[3\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32984_/A2,_32949_/A2,_32715_/A2,_32687_/A2,_32243_/A2,_32895_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[4\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32978_/A2,_32960_/A2,_32725_/A2,_32688_/A2,_32218_/A2,_43910_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[5\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32977_/A2,_32966_/A2,_32727_/A2,_32691_/A2,_32244_/A2,_43882_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[6\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32979_/A2,_32959_/A2,_32710_/A2,_32698_/A2,_32309_/A2,_43898_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[7\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32995_/A2,_32962_/A2,_32726_/A2,_32693_/A2,_32274_/A2,_32067_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[8\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32982_/A2,_32964_/A2,_32721_/A2,_32702_/A2,_32275_/A2,_32900_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[9\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32994_/A2,_32952_/A2,_32723_/A2,_32700_/A2,_32299_/A2,_43822_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[10\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32985_/A2,_32965_/A2,_32713_/A2,_32686_/A2,_32068_/A2,_43826_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[11\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32983_/A2,_32957_/A2,_32728_/A2,_32703_/A2,_32272_/A2,_32066_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[12\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32992_/A2,_32967_/A2,_32712_/B1,_32685_/A2,_32298_/A2,_43834_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[13\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32987_/A2,_32954_/A2,_32726_/B1,_32700_/B1,_32304_/B1,_32889_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[14\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32990_/A2,_32961_/B2,_32716_/A2,_32697_/B1,_32238_/A2,_43881_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[15\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32977_/B1,_32956_/A2,_32722_/A2,_32692_/A2,_32217_/B2,_32889_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[16\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32989_/B2,_32949_/B1,_32715_/B1,_32685_/B1,_32273_/A2,_32067_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[17\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32992_/B1,_32967_/B1,_32718_/A2,_32695_/B1,_32273_/B1,_43882_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[18\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32994_/B1,_32951_/B1,_32723_/B1,_32703_/B1,_32242_/B1,_43909_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[19\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32983_/B1,_32962_/B1,_32727_/B1,_32687_/B1,_32310_/B1,_43837_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[20\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32984_/B1,_32950_/B1,_32718_/B1,_32698_/B1,_32307_/B1,_43786_/A2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[21\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32985_/B1,_32952_/B1,_32711_/B2,_32696_/B1,_32244_/B1,_43832_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[22\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32987_/B1,_32966_/B1,_32722_/B1,_32701_/B2,_32300_/B1,_43883_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[23\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32995_/B1,_32954_/B1,_32717_/B1,_32690_/A2,_32274_/B1,_43912_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[24\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32978_/B1,_32959_/B1,_32713_/B1,_32690_/B1,_32068_/B1,_43829_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[25\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32982_/B1,_32960_/B1,_32710_/B1,_32702_/B1,_32298_/B1,_43826_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[26\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32990_/B1,_32965_/B1,_32716_/B1,_32686_/B1,_32305_/B1,_43884_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[27\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32979_/B1,_32955_/B1,_32720_/B1,_32693_/B1,_32308_/B1,_32905_/B2"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[28\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32988_/B1,_32957_/B1,_32721_/B1,_32692_/B1,_32066_/B1,_43881_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[29\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32993_/B1,_32964_/B1,_32728_/B1,_32688_/B1,_32272_/B1,_43822_/B1"
+    },
+    {
+      "root": "u_core.u_end.u_txcal.oh\\[30\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32980_/B1,_32956_/B1,_32725_/B1,_32275_/B1,_32069_/B2,_43914_/B1"
+    },
+    {
+      "root": "u_core.u_end.wcnt\\[1\\]$_DFFE_PN0P_/QN",
+      "kind": "ff",
+      "loads": "34",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_52055_/B,_46633_/A,u_core.u_end.u_link.u_ctl.cmd_ws\\[1\\]$_DFF_P_/D,_52045_/A,_31716_/B,_31700_/A1"
+    },
+    {
+      "root": "u_core.u_reset_regions.rst_n\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "85",
+      "flop_loads": "85",
+      "macro_loads": "0",
+      "reset_loads": "85",
+      "ports": "0",
+      "examples": "u_core.u_end.u_txcal.running$_DFF_PN0_/RESETN,u_core.u_end.u_txcal.rep\\[4\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_txcal.rep\\[3\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_txcal.rep\\[2\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_txcal.rep\\[1\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_txcal.rep\\[0\\]$_DFFE_PN0P_/RESETN"
+    },
+    {
+      "root": "u_core.u_reset_regions.rst_n\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "179",
+      "flop_loads": "179",
+      "macro_loads": "0",
+      "reset_loads": "179",
+      "ports": "0",
+      "examples": "u_core.u_end.wcnt\\[5\\]$_DFFE_PN0P_/RESETN,u_core.u_end.wcnt\\[4\\]$_DFFE_PN0P_/RESETN,u_core.u_end.wcnt\\[3\\]$_DFFE_PN0P_/RESETN,u_core.u_end.wcnt\\[2\\]$_DFFE_PN0P_/RESETN,u_core.u_end.wcnt\\[1\\]$_DFFE_PN0P_/RESETN,u_core.u_end.wcnt\\[0\\]$_DFFE_PN0P_/RESETN"
+    },
+    {
+      "root": "u_core.u_reset_regions.rst_n\\[5\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "200",
+      "flop_loads": "200",
+      "macro_loads": "0",
+      "reset_loads": "200",
+      "ports": "0",
+      "examples": "u_core.u_end.u_link.u_ctl.written\\[9\\]$_DFF_PN0_/RESETN,u_core.u_end.u_link.u_ctl.written\\[8\\]$_DFF_PN0_/RESETN,u_core.u_end.u_link.u_ctl.written\\[7\\]$_DFF_PN0_/RESETN,u_core.u_end.u_link.u_ctl.written\\[6\\]$_DFF_PN0_/RESETN,u_core.u_end.u_link.u_ctl.written\\[63\\]$_DFF_PN0_/RESETN,u_core.u_end.u_link.u_ctl.written\\[62\\]$_DFF_PN0_/RESETN"
+    },
+    {
+      "root": "u_core.u_reset_regions.rst_n\\[6\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "85",
+      "flop_loads": "85",
+      "macro_loads": "0",
+      "reset_loads": "85",
+      "ports": "0",
+      "examples": "u_core.u_end.u_rxcal.running$_DFF_PN0_/RESETN,u_core.u_end.u_rxcal.rep\\[4\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_rxcal.rep\\[3\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_rxcal.rep\\[2\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_rxcal.rep\\[1\\]$_DFFE_PN0P_/RESETN,u_core.u_end.u_rxcal.rep\\[0\\]$_DFFE_PN0P_/RESETN"
+    },
+    {
+      "root": "_52679_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_52826_/A2,_52824_/A2,_48582_/A2,_48580_/A2,_52706_/A2,_52704_/A2"
+    },
+    {
+      "root": "_52682_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_52825_/A2,_52823_/A2,_48581_/A2,_48579_/A2,_52705_/A2,_52703_/A2"
+    },
+    {
+      "root": "_31344_/Y",
+      "kind": "comb",
+      "loads": "511",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43724_/C,_43722_/C,_43720_/C,_37528_/C,_31421_/B,_31406_/B"
+    },
+    {
+      "root": "_31802_/Y",
+      "kind": "comb",
+      "loads": "66",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_32324_/C,_33035_/A2,_33034_/A2,_33033_/A2,_33032_/A2,_32404_/A2"
+    },
+    {
+      "root": "_32411_/Y",
+      "kind": "comb",
+      "loads": "42",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43890_/A,_32886_/A,_32861_/A,_32836_/A,_32811_/A,_43930_/A2"
+    },
+    {
+      "root": "_32415_/Y",
+      "kind": "comb",
+      "loads": "43",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43810_/B,_33074_/A2,_33053_/A,_32474_/B,_32467_/B,_32461_/B"
+    },
+    {
+      "root": "_33111_/Y",
+      "kind": "comb",
+      "loads": "74",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_34341_/A2,_34340_/A2,_33123_/A2,_33122_/B,_33120_/A2,_33119_/B"
+    },
+    {
+      "root": "_33721_/Y",
+      "kind": "comb",
+      "loads": "38",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_44051_/A,_36588_/B,_34191_/A,_34166_/A,_34141_/A,_34116_/A"
+    },
+    {
+      "root": "_33726_/Y",
+      "kind": "comb",
+      "loads": "40",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_36583_/A,_44052_/B1,_36610_/B2,_34192_/B1,_34167_/B1,_34142_/B1"
+    },
+    {
+      "root": "_37687_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_37781_/B,_37779_/B,_37777_/B,_37775_/B,_42497_/A2,_37717_/A2"
+    },
+    {
+      "root": "_37785_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42492_/B,_37853_/B,_37851_/B,_37849_/B,_37809_/A2,_37807_/A2"
+    },
+    {
+      "root": "_37857_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42490_/B,_37925_/B,_37923_/B,_37921_/B,_37881_/A2,_37879_/A2"
+    },
+    {
+      "root": "_37928_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42488_/B,_37996_/B,_37994_/B,_37992_/B,_37952_/A2,_37950_/A2"
+    },
+    {
+      "root": "_38000_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42486_/B,_38068_/B,_38066_/B,_38064_/B,_38024_/A2,_38022_/A2"
+    },
+    {
+      "root": "_38070_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42484_/B,_38138_/B,_38136_/B,_38134_/B,_38094_/A2,_38092_/A2"
+    },
+    {
+      "root": "_38140_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42482_/B,_38208_/B,_38206_/B,_38204_/B,_38164_/A2,_38162_/A2"
+    },
+    {
+      "root": "_38210_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42480_/B,_38278_/B,_38276_/B,_38274_/B,_38234_/A2,_38232_/A2"
+    },
+    {
+      "root": "_38282_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42478_/B,_38350_/B,_38348_/B,_38346_/B,_38306_/A2,_38304_/A2"
+    },
+    {
+      "root": "_38352_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42476_/B,_38424_/B,_38421_/B,_38418_/B,_38376_/A2,_38374_/A2"
+    },
+    {
+      "root": "_38427_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42474_/B,_38521_/B,_38519_/B,_38517_/B,_38460_/A2,_38457_/A2"
+    },
+    {
+      "root": "_38523_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42472_/B,_38591_/B,_38589_/B,_38587_/B,_38547_/A2,_38545_/A2"
+    },
+    {
+      "root": "_38594_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42469_/B,_38662_/B,_38660_/B,_38658_/B,_38618_/A2,_38616_/A2"
+    },
+    {
+      "root": "_38664_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42467_/B,_38732_/B,_38730_/B,_38728_/B,_38688_/A2,_38686_/A2"
+    },
+    {
+      "root": "_38734_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42465_/B,_38802_/B,_38800_/B,_38798_/B,_38758_/A2,_38756_/A2"
+    },
+    {
+      "root": "_38804_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42463_/B,_38872_/B,_38870_/B,_38868_/B,_38828_/A2,_38826_/A2"
+    },
+    {
+      "root": "_38876_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42461_/B,_38944_/B,_38942_/B,_38940_/B,_38900_/A2,_38898_/A2"
+    },
+    {
+      "root": "_38946_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42459_/B,_39014_/B,_39012_/B,_39010_/B,_38970_/A2,_38968_/A2"
+    },
+    {
+      "root": "_39016_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42457_/B,_39084_/B,_39082_/B,_39080_/B,_39040_/A2,_39038_/A2"
+    },
+    {
+      "root": "_39086_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42455_/B,_39158_/B,_39155_/B,_39152_/B,_39110_/A2,_39108_/A2"
+    },
+    {
+      "root": "_39162_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42453_/B,_39256_/B,_39254_/B,_39252_/B,_39195_/A2,_39192_/A2"
+    },
+    {
+      "root": "_39258_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42451_/B,_39326_/B,_39324_/B,_39322_/B,_39282_/A2,_39280_/A2"
+    },
+    {
+      "root": "_39328_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42448_/B,_39396_/B,_39394_/B,_39392_/B,_39352_/A2,_39350_/A2"
+    },
+    {
+      "root": "_39398_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42446_/B,_39466_/B,_39464_/B,_39462_/B,_39422_/A2,_39420_/A2"
+    },
+    {
+      "root": "_39469_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42444_/B,_39537_/B,_39535_/B,_39533_/B,_39493_/A2,_39491_/A2"
+    },
+    {
+      "root": "_39539_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42442_/B,_39607_/B,_39605_/B,_39603_/B,_39563_/A2,_39561_/A2"
+    },
+    {
+      "root": "_39609_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42440_/B,_39677_/B,_39675_/B,_39673_/B,_39633_/A2,_39631_/A2"
+    },
+    {
+      "root": "_39679_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42438_/B,_39747_/B,_39745_/B,_39743_/B,_39703_/A2,_39701_/A2"
+    },
+    {
+      "root": "_39750_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42436_/B,_39818_/B,_39816_/B,_39814_/B,_39774_/A2,_39772_/A2"
+    },
+    {
+      "root": "_39820_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42434_/B,_39888_/B,_39886_/B,_39884_/B,_39844_/A2,_39842_/A2"
+    },
+    {
+      "root": "_39890_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42432_/B,_39958_/B,_39956_/B,_39954_/B,_39914_/A2,_39912_/A2"
+    },
+    {
+      "root": "_39960_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42430_/B,_40028_/B,_40026_/B,_40024_/B,_39984_/A2,_39982_/A2"
+    },
+    {
+      "root": "_40032_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42411_/B,_40126_/B,_40124_/B,_40122_/B,_40065_/A2,_40062_/A2"
+    },
+    {
+      "root": "_40129_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42409_/B,_40197_/B,_40195_/B,_40193_/B,_40153_/A2,_40151_/A2"
+    },
+    {
+      "root": "_40200_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42407_/B,_40268_/B,_40266_/B,_40264_/B,_40224_/A2,_40222_/A2"
+    },
+    {
+      "root": "_40272_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42404_/B,_40340_/B,_40338_/B,_40336_/B,_40296_/A2,_40294_/A2"
+    },
+    {
+      "root": "_40342_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42402_/B,_40410_/B,_40408_/B,_40406_/B,_40366_/A2,_40364_/A2"
+    },
+    {
+      "root": "_40412_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42400_/B,_40480_/B,_40478_/B,_40476_/B,_40436_/A2,_40434_/A2"
+    },
+    {
+      "root": "_40482_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42398_/B,_40550_/B,_40548_/B,_40546_/B,_40506_/A2,_40504_/A2"
+    },
+    {
+      "root": "_40552_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42396_/B,_40620_/B,_40618_/B,_40616_/B,_40576_/A2,_40574_/A2"
+    },
+    {
+      "root": "_40622_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42394_/B,_40690_/B,_40688_/B,_40686_/B,_40646_/A2,_40644_/A2"
+    },
+    {
+      "root": "_40692_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42392_/B,_40764_/B,_40761_/B,_40758_/B,_40716_/A2,_40714_/A2"
+    },
+    {
+      "root": "_40767_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42390_/B,_40861_/B,_40859_/B,_40857_/B,_40800_/A2,_40797_/A2"
+    },
+    {
+      "root": "_40863_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42388_/B,_40931_/B,_40929_/B,_40927_/B,_40887_/A2,_40885_/A2"
+    },
+    {
+      "root": "_40933_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42386_/B,_41001_/B,_40999_/B,_40997_/B,_40957_/A2,_40955_/A2"
+    },
+    {
+      "root": "_41003_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42383_/B,_41071_/B,_41069_/B,_41067_/B,_41027_/A2,_41025_/A2"
+    },
+    {
+      "root": "_41073_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42381_/B,_41141_/B,_41139_/B,_41137_/B,_41097_/A2,_41095_/A2"
+    },
+    {
+      "root": "_41143_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42379_/B,_41211_/B,_41209_/B,_41207_/B,_41167_/A2,_41165_/A2"
+    },
+    {
+      "root": "_41213_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42377_/B,_41281_/B,_41279_/B,_41277_/B,_41237_/A2,_41235_/A2"
+    },
+    {
+      "root": "_41283_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42375_/B,_41351_/B,_41349_/B,_41347_/B,_41307_/A2,_41305_/A2"
+    },
+    {
+      "root": "_41353_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42373_/B,_41421_/B,_41419_/B,_41417_/B,_41377_/A2,_41375_/A2"
+    },
+    {
+      "root": "_41423_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42371_/B,_41495_/B,_41492_/B,_41489_/B,_41447_/A2,_41445_/A2"
+    },
+    {
+      "root": "_41498_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42369_/B,_41592_/B,_41590_/B,_41588_/B,_41531_/A2,_41528_/A2"
+    },
+    {
+      "root": "_41594_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42367_/B,_41662_/B,_41660_/B,_41658_/B,_41618_/A2,_41616_/A2"
+    },
+    {
+      "root": "_41664_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42365_/B,_41732_/B,_41730_/B,_41728_/B,_41688_/A2,_41686_/A2"
+    },
+    {
+      "root": "_41734_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42427_/B,_41802_/B,_41800_/B,_41798_/B,_41758_/A2,_41756_/A2"
+    },
+    {
+      "root": "_41804_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42425_/B,_41872_/B,_41870_/B,_41868_/B,_41828_/A2,_41826_/A2"
+    },
+    {
+      "root": "_41874_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42423_/B,_41942_/B,_41940_/B,_41938_/B,_41898_/A2,_41896_/A2"
+    },
+    {
+      "root": "_41944_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42421_/B,_42012_/B,_42010_/B,_42008_/B,_41968_/A2,_41966_/A2"
+    },
+    {
+      "root": "_42014_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42419_/B,_42082_/B,_42080_/B,_42078_/B,_42038_/A2,_42036_/A2"
+    },
+    {
+      "root": "_42084_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42413_/B,_42152_/B,_42150_/B,_42148_/B,_42108_/A2,_42106_/A2"
+    },
+    {
+      "root": "_42154_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_50760_/B,_42222_/B,_42220_/B,_42218_/B,_42178_/A2,_42176_/A2"
+    },
+    {
+      "root": "_42224_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42417_/B,_42292_/B,_42290_/B,_42288_/B,_42248_/A2,_42246_/A2"
+    },
+    {
+      "root": "_42294_/Y",
+      "kind": "comb",
+      "loads": "64",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42415_/B,_42362_/B,_42360_/B,_42358_/B,_42318_/A2,_42316_/A2"
+    },
+    {
+      "root": "_56650_/H",
+      "kind": "tie",
+      "loads": "1181",
+      "flop_loads": "628",
+      "macro_loads": "552",
+      "reset_loads": "626",
+      "ports": "1",
+      "examples": "u_core.u_st.tx_valid$_DFF_PN0_/SETN,u_core.u_st.r\\[9\\]$_DFFE_PN0P_/SETN,u_core.u_st.r\\[99\\]$_DFFE_PN0P_/SETN,u_core.u_st.r\\[98\\]$_DFFE_PN0P_/SETN,u_core.u_st.r\\[97\\]$_DFFE_PN0P_/SETN,u_core.u_st.r\\[96\\]$_DFFE_PN0P_/SETN,port:fdi_tx_flit[556]"
+    },
+    {
+      "root": "_56651_/L",
+      "kind": "tie",
+      "loads": "132",
+      "flop_loads": "0",
+      "macro_loads": "128",
+      "reset_loads": "0",
+      "ports": "4",
+      "examples": "u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram/rr_en[1],u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram/rr_en[0],u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram/rr_addr[9],u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram/rr_addr[8],u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram/rr_addr[7],u_core.u_end.u_link.g_bank\\[3\\].u_store.u_sram/rr_addr[6],port:fdi_tx_flit[554],port:fdi_tx_flit[555],port:fdi_tx_flit[557],port:fdi_tx_flit[566]"
+    },
+    {
+      "root": "_51768_/Y",
+      "kind": "comb",
+      "loads": "150",
+      "flop_loads": "150",
+      "macro_loads": "0",
+      "reset_loads": "150",
+      "ports": "0",
+      "examples": "u_core.u_st.r\\[9\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[99\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[98\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[97\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[96\\]$_DFFE_PN0P_/RESETN,u_core.u_st.r\\[95\\]$_DFFE_PN0P_/RESETN"
+    },
+    {
+      "root": "g_cal_seg_k\\[0\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "73",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_50696_/C,_32917_/A,_32651_/A,_32289_/A,_32284_/A,_32172_/A"
+    },
+    {
+      "root": "g_cal_seg_rx_k\\[0\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_50642_/C,_34222_/A,_34218_/A,_33960_/A,_33923_/A,_33601_/A"
+    },
+    {
+      "root": "g_cfg_data_r\\[0\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_40029_/A1,_39959_/A1,_39889_/A1,_38351_/A1,_38279_/A1,_38209_/A1"
+    },
+    {
+      "root": "g_cfg_data_r\\[1\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_40027_/A1,_39957_/A1,_39887_/A1,_38349_/A1,_38277_/A1,_38207_/A1"
+    },
+    {
+      "root": "g_cfg_data_r\\[2\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_40025_/A1,_39955_/A1,_39885_/A1,_38347_/A1,_38275_/A1,_38205_/A1"
+    },
+    {
+      "root": "g_cfg_data_r\\[3\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_40023_/A1,_39953_/A1,_39883_/A1,_38345_/A1,_38273_/A1,_38203_/A1"
+    },
+    {
+      "root": "g_cfg_data_r\\[4\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43934_/A,_40021_/A1,_39951_/A1,_38413_/A1,_38343_/A1,_38271_/A1"
+    },
+    {
+      "root": "g_cfg_data_t\\[0\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42363_/A1,_42293_/A1,_42223_/A1,_40691_/A1,_40621_/A1,_40551_/A1"
+    },
+    {
+      "root": "g_cfg_data_t\\[1\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42361_/A1,_42291_/A1,_42221_/A1,_40689_/A1,_40619_/A1,_40549_/A1"
+    },
+    {
+      "root": "g_cfg_data_t\\[2\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42359_/A1,_42289_/A1,_42219_/A1,_40687_/A1,_40617_/A1,_40547_/A1"
+    },
+    {
+      "root": "g_cfg_data_t\\[3\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_42357_/A1,_42287_/A1,_42217_/A1,_40685_/A1,_40615_/A1,_40545_/A1"
+    },
+    {
+      "root": "g_cfg_data_t\\[4\\].u_k/q$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_43774_/A,_42355_/A1,_42285_/A1,_40753_/A1,_40683_/A1,_40613_/A1"
+    },
+    {
+      "root": "u_core.g_eb\\[0\\].u_eb/q$_DFF_PN0_/QN",
+      "kind": "ff",
+      "loads": "84",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_44162_/B,_43768_/B,_43766_/B,_31715_/C,_44167_/A,_43769_/A2"
+    },
+    {
+      "root": "u_core.g_eb\\[1\\].u_eb/q$_DFF_PN0_/QN",
+      "kind": "ff",
+      "loads": "193",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "_48591_/A,_48590_/A,_48589_/A,_31769_/A2,_31767_/A2,_31149_/A2"
+    }
+  ]
+}

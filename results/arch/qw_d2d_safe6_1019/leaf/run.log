@@ -1,0 +1,5 @@
+SF6U_LEAF_PASS checks=5996 h0=1111 h1=1111 full_words=64 width=137
+- rtl/test/qwen_split/tb_qfd_sf6u_leaf.sv:25: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.020 s; speed 618.097 us/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB

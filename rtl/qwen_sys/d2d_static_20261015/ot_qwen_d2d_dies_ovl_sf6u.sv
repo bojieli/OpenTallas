@@ -1,0 +1,341 @@
+`timescale 1ns/1ps
+// SF6U default-off PARTIAL prototype derived from SAFE5; NOT a release/fanout-safe master.
+// D2D master qfd_d2d_static_ovl_sf6u = qfd_d2d_static_ovl ports + KEPT pin-flop copies + qfd_d2d_static_core_s6u.
+// Source list: ot_qwen_d2d_dies.sv, ot_qwen_d2d_safe5.sv, this file.
+module qfd_d2d_static_ovl_sf6u #(parameter integer MUT = 0, parameter integer PR = 1, parameter [31:0] TXDP = 32'd0,
+    parameter integer SFMUT = 0) (
+    input  wire ck,
+    input  wire por_n,
+    input  wire rst_n,
+    input  wire cfg_tx_we,
+    input  wire cfg_rx_we,
+    input  wire [5:0] cfg_addr,
+    input  wire [31:0] cfg_data,
+    input  wire cal_start,
+    input  wire cal_seg,
+    input  wire cal_start_rx,
+    input  wire cal_seg_rx,
+    input  wire [1:0] cal_user_tx,
+    input  wire [1:0] cal_user_rx,
+    output wire [1:0] tx_user,
+    output wire [1:0] rx_user,
+    input  wire fwd_epoch,
+    input  wire fwd_link_rst_n,
+    output wire native_tx_slot,
+    output wire [3:0] native_tx_slot_kind,
+    output wire [4:0] native_tx_slot_beat,
+    input  wire native_tx_v,
+    input  wire [547:0] native_tx_payload,
+    output wire [547:0] rx_payload,
+    output wire native_rx_v,
+    output wire native_rx_slot,
+    output wire [3:0] native_rx_slot_kind,
+    output wire [4:0] native_rx_slot_beat,
+    output wire prog_witness_slot,
+    output wire prog_auth_slot,
+    output wire prog_context_slot,
+    input  wire prog_tx_observed_v,
+    input  wire [547:0] prog_tx_record,
+    output wire prog_rx_v,
+    output wire emb_rx_v,
+    output wire emb_rx_slot,
+    output wire kv_x3_slot,
+    input  wire [523:0] x3,
+    input  wire [58:0] x3_identity,
+    input  wire [1:0] x3_generation,
+    input  wire [15:0] status_epoch16,
+    input  wire vm_drained,
+    input  wire collective_drained,
+    input  wire collective_busy,
+    input  wire crom_fault,
+    input  wire execution_active,
+    input  wire admit_ready,
+    input  wire result_v,
+    input  wire result_done,
+    input  wire result_fault,
+    input  wire [3:0] result_cause,
+    input  wire [58:0] result_tag,
+    input  wire [1:0] result_gen,
+    input  wire [17:0] result_token,
+    input  wire [31:0] result_value,
+    input  wire [31:0] result_cycles,
+    input  wire fdi_tx_up,
+    output wire fdi_tx_v,
+    output wire [582:0] fdi_tx_flit,
+    input  wire fdi_rx_v,
+    input  wire [582:0] fdi_rx_flit,
+    output wire phy_rst_n,
+    output wire epoch_abort,
+    output wire [7:0] transport_fault,
+    output wire fault
+);
+    // TXDP = the compiler's per-TX-port producer capture latency (port p = byte p, 1..255 edges), set by the die GEN
+    // from d2d_cal_image.svh (D2D_TXDP_C / D2D_TXDP_K, tools/qwen_split/d2d_cal_seq_image.py) or txdp.svh
+    // (tools/qwen_split/d2d_link_calendar.py).  No production default exists: PR = 1 with an uncompiled (zero) port
+    // byte does not elaborate (QXF-LINK 2026-10-18, TOKEN-XDIE-QWEN F4; the r4..r9 masters hard-wired the
+    // component-bench codec latencies).
+    generate if (PR != 0 && (TXDP[7:0] == 8'd0 || TXDP[15:8] == 8'd0 || TXDP[23:16] == 8'd0 || TXDP[31:24] == 8'd0)) begin : g_txdp_uncompiled
+        D2D_TXDP_NOT_COMPILED__set_TXDP_from_the_compiler u_txdp_uncompiled ();
+    end endgenerate
+    generate if (PR == 0) begin : g_sf_needs_pr
+        D2D_SF_REQUIRES_PR_1 u_sf_needs_pr ();
+    end endgenerate
+    genvar gi;   // SAFE5: KEPT pin-flop copies (ot_d2d_kff, route.synth_keep_modules), one per <= ~32 loads
+    wire c_cfg_tx_we;
+    reg q_cfg_tx_we;
+    always @(posedge ck) q_cfg_tx_we <= cfg_tx_we;
+    assign c_cfg_tx_we = PR ? q_cfg_tx_we : cfg_tx_we;
+    wire c_cfg_rx_we;
+    reg q_cfg_rx_we;
+    always @(posedge ck) q_cfg_rx_we <= cfg_rx_we;
+    assign c_cfg_rx_we = PR ? q_cfg_rx_we : cfg_rx_we;
+    wire [5:0] c_cfg_addr;
+    reg [5:0] q_cfg_addr;
+    always @(posedge ck) q_cfg_addr <= cfg_addr;
+    assign c_cfg_addr = PR ? q_cfg_addr : cfg_addr;
+    wire [31:0] k_cfg_data_t;
+    for (gi = 0; gi < 32; gi = gi + 1) begin : g_cfg_data_t
+        ot_d2d_kff u_k (.ck(ck), .d(cfg_data[gi]), .q(k_cfg_data_t[gi]));
+    end
+    wire [31:0] k_cfg_data_r;
+    for (gi = 0; gi < 32; gi = gi + 1) begin : g_cfg_data_r
+        ot_d2d_kff u_k (.ck(ck), .d(cfg_data[gi]), .q(k_cfg_data_r[gi]));
+    end
+    wire [4:0] k_cfg_seg_t;
+    for (gi = 0; gi < 5; gi = gi + 1) begin : g_cfg_seg_t
+        ot_d2d_kff u_k (.ck(ck), .d(cfg_data[gi]), .q(k_cfg_seg_t[gi]));
+    end
+    wire [4:0] k_cfg_seg_r;
+    for (gi = 0; gi < 5; gi = gi + 1) begin : g_cfg_seg_r
+        ot_d2d_kff u_k (.ck(ck), .d(cfg_data[gi]), .q(k_cfg_seg_r[gi]));
+    end
+    wire [4:0] k_cal_start_rx_k;
+    for (gi = 0; gi < 5; gi = gi + 1) begin : g_cal_start_rx_k
+        ot_d2d_kff u_k (.ck(ck), .d(cal_start_rx), .q(k_cal_start_rx_k[gi]));
+    end
+    wire [2:0] k_cal_seg_rx_k;
+    for (gi = 0; gi < 3; gi = gi + 1) begin : g_cal_seg_rx_k
+        ot_d2d_kff u_k (.ck(ck), .d(cal_seg_rx), .q(k_cal_seg_rx_k[gi]));
+    end
+    wire [1:0] c_cal_user_tx;
+    reg [1:0] q_cal_user_tx;
+    always @(posedge ck) q_cal_user_tx <= cal_user_tx;
+    assign c_cal_user_tx = PR ? q_cal_user_tx : cal_user_tx;
+    wire [1:0] c_cal_user_rx;
+    reg [1:0] q_cal_user_rx;
+    always @(posedge ck) q_cal_user_rx <= cal_user_rx;
+    assign c_cal_user_rx = PR ? q_cal_user_rx : cal_user_rx;
+    wire [1:0] c_tx_user;
+    reg [1:0] q_tx_user;
+    always @(posedge ck) q_tx_user <= c_tx_user;
+    assign tx_user = PR ? q_tx_user : c_tx_user;
+    wire [1:0] c_rx_user;
+    reg [1:0] q_rx_user;
+    always @(posedge ck) q_rx_user <= c_rx_user;
+    assign rx_user = PR ? q_rx_user : c_rx_user;
+    wire [4:0] k_cal_start_k;
+    for (gi = 0; gi < 5; gi = gi + 1) begin : g_cal_start_k
+        ot_d2d_kff u_k (.ck(ck), .d(cal_start), .q(k_cal_start_k[gi]));
+    end
+    wire [2:0] k_cal_seg_k;
+    for (gi = 0; gi < 3; gi = gi + 1) begin : g_cal_seg_k
+        ot_d2d_kff u_k (.ck(ck), .d(cal_seg), .q(k_cal_seg_k[gi]));
+    end
+    wire c_fwd_epoch;
+    reg q_fwd_epoch;
+    always @(posedge ck) q_fwd_epoch <= fwd_epoch;
+    assign c_fwd_epoch = PR ? q_fwd_epoch : fwd_epoch;
+    wire c_fwd_link_rst_n;
+    reg q_fwd_link_rst_n;
+    always @(posedge ck) q_fwd_link_rst_n <= fwd_link_rst_n;
+    assign c_fwd_link_rst_n = PR ? q_fwd_link_rst_n : fwd_link_rst_n;
+    wire c_native_tx_slot;
+    reg q_native_tx_slot;
+    always @(posedge ck) q_native_tx_slot <= c_native_tx_slot;
+    assign native_tx_slot = PR ? q_native_tx_slot : c_native_tx_slot;
+    wire [3:0] c_native_tx_slot_kind;
+    reg [3:0] q_native_tx_slot_kind;
+    always @(posedge ck) q_native_tx_slot_kind <= c_native_tx_slot_kind;
+    assign native_tx_slot_kind = PR ? q_native_tx_slot_kind : c_native_tx_slot_kind;
+    wire [4:0] c_native_tx_slot_beat;
+    reg [4:0] q_native_tx_slot_beat;
+    always @(posedge ck) q_native_tx_slot_beat <= c_native_tx_slot_beat;
+    assign native_tx_slot_beat = PR ? q_native_tx_slot_beat : c_native_tx_slot_beat;
+    wire c_native_tx_v;
+    reg q_native_tx_v;
+    always @(posedge ck) q_native_tx_v <= native_tx_v;
+    assign c_native_tx_v = PR ? q_native_tx_v : native_tx_v;
+    wire [547:0] c_native_tx_payload;
+    reg [547:0] q_native_tx_payload;
+    always @(posedge ck) q_native_tx_payload <= native_tx_payload;
+    assign c_native_tx_payload = PR ? q_native_tx_payload : native_tx_payload;
+    wire [547:0] c_rx_payload;
+    reg [547:0] q_rx_payload;
+    always @(posedge ck) q_rx_payload <= c_rx_payload;
+    assign rx_payload = PR ? q_rx_payload : c_rx_payload;
+    wire c_native_rx_v;
+    reg q_native_rx_v;
+    always @(posedge ck) q_native_rx_v <= c_native_rx_v;
+    assign native_rx_v = PR ? q_native_rx_v : c_native_rx_v;
+    wire c_native_rx_slot;
+    reg q_native_rx_slot;
+    always @(posedge ck) q_native_rx_slot <= c_native_rx_slot;
+    assign native_rx_slot = PR ? q_native_rx_slot : c_native_rx_slot;
+    wire [3:0] c_native_rx_slot_kind;
+    reg [3:0] q_native_rx_slot_kind;
+    always @(posedge ck) q_native_rx_slot_kind <= c_native_rx_slot_kind;
+    assign native_rx_slot_kind = PR ? q_native_rx_slot_kind : c_native_rx_slot_kind;
+    wire [4:0] c_native_rx_slot_beat;
+    reg [4:0] q_native_rx_slot_beat;
+    always @(posedge ck) q_native_rx_slot_beat <= c_native_rx_slot_beat;
+    assign native_rx_slot_beat = PR ? q_native_rx_slot_beat : c_native_rx_slot_beat;
+    wire c_prog_witness_slot;
+    reg q_prog_witness_slot;
+    always @(posedge ck) q_prog_witness_slot <= c_prog_witness_slot;
+    assign prog_witness_slot = PR ? q_prog_witness_slot : c_prog_witness_slot;
+    wire c_prog_auth_slot;
+    reg q_prog_auth_slot;
+    always @(posedge ck) q_prog_auth_slot <= c_prog_auth_slot;
+    assign prog_auth_slot = PR ? q_prog_auth_slot : c_prog_auth_slot;
+    wire c_prog_context_slot;
+    reg q_prog_context_slot;
+    always @(posedge ck) q_prog_context_slot <= c_prog_context_slot;
+    assign prog_context_slot = PR ? q_prog_context_slot : c_prog_context_slot;
+    wire c_prog_tx_observed_v;
+    reg q_prog_tx_observed_v;
+    always @(posedge ck) q_prog_tx_observed_v <= prog_tx_observed_v;
+    assign c_prog_tx_observed_v = PR ? q_prog_tx_observed_v : prog_tx_observed_v;
+    wire [547:0] c_prog_tx_record;
+    reg [547:0] q_prog_tx_record;
+    always @(posedge ck) q_prog_tx_record <= prog_tx_record;
+    assign c_prog_tx_record = PR ? q_prog_tx_record : prog_tx_record;
+    wire c_prog_rx_v;
+    reg q_prog_rx_v;
+    always @(posedge ck) q_prog_rx_v <= c_prog_rx_v;
+    assign prog_rx_v = PR ? q_prog_rx_v : c_prog_rx_v;
+    wire c_emb_rx_v;
+    reg q_emb_rx_v;
+    always @(posedge ck) q_emb_rx_v <= c_emb_rx_v;
+    assign emb_rx_v = PR ? q_emb_rx_v : c_emb_rx_v;
+    wire c_emb_rx_slot;
+    reg q_emb_rx_slot;
+    always @(posedge ck) q_emb_rx_slot <= c_emb_rx_slot;
+    assign emb_rx_slot = PR ? q_emb_rx_slot : c_emb_rx_slot;
+    wire c_kv_x3_slot;
+    reg q_kv_x3_slot;
+    always @(posedge ck) q_kv_x3_slot <= c_kv_x3_slot;
+    assign kv_x3_slot = PR ? q_kv_x3_slot : c_kv_x3_slot;
+    wire [523:0] c_x3;
+    reg [523:0] q_x3;
+    always @(posedge ck) q_x3 <= x3;
+    assign c_x3 = PR ? q_x3 : x3;
+    wire [58:0] c_x3_identity;
+    reg [58:0] q_x3_identity;
+    always @(posedge ck) q_x3_identity <= x3_identity;
+    assign c_x3_identity = PR ? q_x3_identity : x3_identity;
+    wire [1:0] c_x3_generation;
+    reg [1:0] q_x3_generation;
+    always @(posedge ck) q_x3_generation <= x3_generation;
+    assign c_x3_generation = PR ? q_x3_generation : x3_generation;
+    wire [15:0] c_status_epoch16;
+    reg [15:0] q_status_epoch16;
+    always @(posedge ck) q_status_epoch16 <= status_epoch16;
+    assign c_status_epoch16 = PR ? q_status_epoch16 : status_epoch16;
+    wire c_vm_drained;
+    reg q_vm_drained;
+    always @(posedge ck) q_vm_drained <= vm_drained;
+    assign c_vm_drained = PR ? q_vm_drained : vm_drained;
+    wire c_collective_drained;
+    reg q_collective_drained;
+    always @(posedge ck) q_collective_drained <= collective_drained;
+    assign c_collective_drained = PR ? q_collective_drained : collective_drained;
+    wire c_collective_busy;
+    reg q_collective_busy;
+    always @(posedge ck) q_collective_busy <= collective_busy;
+    assign c_collective_busy = PR ? q_collective_busy : collective_busy;
+    wire c_crom_fault;
+    reg q_crom_fault;
+    always @(posedge ck) q_crom_fault <= crom_fault;
+    assign c_crom_fault = PR ? q_crom_fault : crom_fault;
+    wire c_execution_active;
+    reg q_execution_active;
+    always @(posedge ck) q_execution_active <= execution_active;
+    assign c_execution_active = PR ? q_execution_active : execution_active;
+    wire c_admit_ready;
+    reg q_admit_ready;
+    always @(posedge ck) q_admit_ready <= admit_ready;
+    assign c_admit_ready = PR ? q_admit_ready : admit_ready;
+    wire [21:0] k_result_v_k;
+    for (gi = 0; gi < 22; gi = gi + 1) begin : g_result_v_k
+        ot_d2d_kff u_k (.ck(ck), .d(result_v), .q(k_result_v_k[gi]));
+    end
+    wire c_result_done;
+    reg q_result_done;
+    always @(posedge ck) q_result_done <= result_done;
+    assign c_result_done = PR ? q_result_done : result_done;
+    wire c_result_fault;
+    reg q_result_fault;
+    always @(posedge ck) q_result_fault <= result_fault;
+    assign c_result_fault = PR ? q_result_fault : result_fault;
+    wire [3:0] c_result_cause;
+    reg [3:0] q_result_cause;
+    always @(posedge ck) q_result_cause <= result_cause;
+    assign c_result_cause = PR ? q_result_cause : result_cause;
+    wire [58:0] c_result_tag;
+    reg [58:0] q_result_tag;
+    always @(posedge ck) q_result_tag <= result_tag;
+    assign c_result_tag = PR ? q_result_tag : result_tag;
+    wire [1:0] c_result_gen;
+    reg [1:0] q_result_gen;
+    always @(posedge ck) q_result_gen <= result_gen;
+    assign c_result_gen = PR ? q_result_gen : result_gen;
+    wire [17:0] c_result_token;
+    reg [17:0] q_result_token;
+    always @(posedge ck) q_result_token <= result_token;
+    assign c_result_token = PR ? q_result_token : result_token;
+    wire [31:0] c_result_value;
+    reg [31:0] q_result_value;
+    always @(posedge ck) q_result_value <= result_value;
+    assign c_result_value = PR ? q_result_value : result_value;
+    wire [31:0] c_result_cycles;
+    reg [31:0] q_result_cycles;
+    always @(posedge ck) q_result_cycles <= result_cycles;
+    assign c_result_cycles = PR ? q_result_cycles : result_cycles;
+    wire c_fdi_tx_up;
+    reg q_fdi_tx_up;
+    always @(posedge ck) q_fdi_tx_up <= fdi_tx_up;
+    assign c_fdi_tx_up = PR ? q_fdi_tx_up : fdi_tx_up;
+    wire c_fdi_tx_v;
+    reg q_fdi_tx_v;
+    always @(posedge ck) q_fdi_tx_v <= c_fdi_tx_v;
+    assign fdi_tx_v = PR ? q_fdi_tx_v : c_fdi_tx_v;
+    wire [582:0] c_fdi_tx_flit;
+    reg [582:0] q_fdi_tx_flit;
+    always @(posedge ck) q_fdi_tx_flit <= c_fdi_tx_flit;
+    assign fdi_tx_flit = PR ? q_fdi_tx_flit : c_fdi_tx_flit;
+    wire c_fdi_rx_v;
+    reg q_fdi_rx_v;
+    always @(posedge ck) q_fdi_rx_v <= fdi_rx_v;
+    assign c_fdi_rx_v = PR ? q_fdi_rx_v : fdi_rx_v;
+    wire [582:0] c_fdi_rx_flit;
+    reg [582:0] q_fdi_rx_flit;
+    always @(posedge ck) q_fdi_rx_flit <= fdi_rx_flit;
+    assign c_fdi_rx_flit = PR ? q_fdi_rx_flit : fdi_rx_flit;
+    wire c_phy_rst_n;
+    reg q_phy_rst_n;
+    always @(posedge ck) q_phy_rst_n <= c_phy_rst_n;
+    assign phy_rst_n = PR ? q_phy_rst_n : c_phy_rst_n;
+    wire c_epoch_abort;
+    reg q_epoch_abort;
+    always @(posedge ck) q_epoch_abort <= c_epoch_abort;
+    assign epoch_abort = PR ? q_epoch_abort : c_epoch_abort;
+    wire [7:0] c_transport_fault;
+    reg [7:0] q_transport_fault;
+    always @(posedge ck) q_transport_fault <= c_transport_fault;
+    assign transport_fault = PR ? q_transport_fault : c_transport_fault;
+    wire c_fault;
+    reg q_fault;
+    always @(posedge ck) q_fault <= c_fault;
+    assign fault = PR ? q_fault : c_fault;
+    qfd_d2d_static_core_s6u #(.TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1}), .SFMUT(SFMUT)) u_core (.ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(c_cfg_tx_we), .cfg_rx_we(c_cfg_rx_we), .cfg_addr(c_cfg_addr), .cfg_data_t(k_cfg_data_t), .cfg_data_r(k_cfg_data_r), .cfg_seg_t(k_cfg_seg_t), .cfg_seg_r(k_cfg_seg_r), .cal_start_k(k_cal_start_k), .cal_seg_k(k_cal_seg_k), .cal_start_rx_k(k_cal_start_rx_k), .cal_seg_rx_k(k_cal_seg_rx_k), .cal_user_tx(c_cal_user_tx), .cal_user_rx(c_cal_user_rx), .tx_user(c_tx_user), .rx_user(c_rx_user), .fwd_epoch(c_fwd_epoch), .fwd_link_rst_n(c_fwd_link_rst_n), .native_tx_slot(c_native_tx_slot), .native_tx_slot_kind(c_native_tx_slot_kind), .native_tx_slot_beat(c_native_tx_slot_beat), .native_tx_v(c_native_tx_v), .native_tx_payload(c_native_tx_payload), .rx_payload(c_rx_payload), .native_rx_v(c_native_rx_v), .native_rx_slot(c_native_rx_slot), .native_rx_slot_kind(c_native_rx_slot_kind), .native_rx_slot_beat(c_native_rx_slot_beat), .prog_witness_slot(c_prog_witness_slot), .prog_auth_slot(c_prog_auth_slot), .prog_context_slot(c_prog_context_slot), .prog_tx_observed_v(c_prog_tx_observed_v), .prog_tx_record(c_prog_tx_record), .prog_rx_v(c_prog_rx_v), .emb_rx_v(c_emb_rx_v), .emb_rx_slot(c_emb_rx_slot), .kv_x3_slot(c_kv_x3_slot), .x3(c_x3), .x3_identity(c_x3_identity), .x3_generation(c_x3_generation), .status_epoch16(c_status_epoch16), .vm_drained(c_vm_drained), .collective_drained(c_collective_drained), .collective_busy(c_collective_busy), .crom_fault(c_crom_fault), .execution_active(c_execution_active), .admit_ready(c_admit_ready), .result_v_k(k_result_v_k), .result_done(c_result_done), .result_fault(c_result_fault), .result_cause(c_result_cause), .result_tag(c_result_tag), .result_gen(c_result_gen), .result_token(c_result_token), .result_value(c_result_value), .result_cycles(c_result_cycles), .fdi_tx_up(c_fdi_tx_up), .fdi_tx_v(c_fdi_tx_v), .fdi_tx_flit(c_fdi_tx_flit), .fdi_rx_v(c_fdi_rx_v), .fdi_rx_flit(c_fdi_rx_flit), .phy_rst_n(c_phy_rst_n), .epoch_abort(c_epoch_abort), .transport_fault(c_transport_fault), .fault(c_fault));
+endmodule
