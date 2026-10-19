@@ -1,0 +1,2 @@
+die dv2f14bi out/case/die.v (GEN params XPF_TRANSPORT_EDGES 20, STAGE_ME 1), c_ctl slice + land_lag_sim PLAN (LAG = E_sta - 2)
+image: ctlm_image.py --lane-ages /srv/opentallas-scratch/claude/q-xpf-1018/cprog/m1/lane_ages.json -> xpf_transport_edges 20; tt_ctlm MUT 1; no bench compensation
