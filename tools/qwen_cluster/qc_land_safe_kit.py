@@ -42,7 +42,7 @@ def main():
     name=v['name'];(out/f'{name}.json').write_text(json.dumps(v,indent=1)+'\n')
     text=CHECKS
     if name.endswith('_narrow'):text=text.replace('216 x129.6','64.8 x129.6').replace('216x129.6','64.8x129.6').replace('aspect1.667','aspect2').replace('1032/214.92=4.81','516/128.52=4.02').replace('345.6','194.4')
-    text+='\nSlot-written flags:4 per-source-ring flags, same2stage reset epoch; each drives11 local masks, each mask<=24 data gates. Prevents stale reset output at +0.1T receiver phase.\n'
+    text+='\nSlot-written flags:4 kept source-register copies per24bit slice (44flag pins forW258), same2stage reset epoch; each drives one local read mask, <=24 data gates. Prevents stale reset output at +0.1T receiver phase.\n'
     kit=ROOT/'physical/ref_tile'/name;kit.mkdir(parents=True,exist_ok=True)
     (kit/'SAFE_CHECKLIST.md').write_text(f'# {name}: SAFE-QW-CB16 checklist\n\n'+text)
     print(out/f'{name}.json')

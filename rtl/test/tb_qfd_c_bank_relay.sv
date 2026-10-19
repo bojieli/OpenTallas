@@ -12,7 +12,7 @@ module tb;
  reg [257:0] i=0;
  wire [1031:0] b[0:HOPS],ref_bank;
  wire [257:0] o,ref_o;
- wire[11:0] epo;wire[3:0]vld,safe_vld;
+ wire[11:0] epo;wire[3:0]vld;wire[43:0]safe_vld;
  qfd_c_land_safe_w #(.W(258)) w(wck,rst,i,b[0],safe_vld);
  genvar h;
  generate for(h=0;h<HOPS;h=h+1)begin:g_hop

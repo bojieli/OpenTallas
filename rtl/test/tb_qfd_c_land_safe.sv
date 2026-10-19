@@ -8,7 +8,7 @@ module tb;
  wire [1031:0] bank,ref_bank;
  wire [257:0] o,ref_o;
  wire [11:0] epo;
- wire [3:0] vld,safe_vld;
+ wire [3:0] vld;wire [43:0] safe_vld;
  qfd_c_land_safe_w #(.W(258)) w(ck,rst,i,bank,safe_vld);
  qfd_c_land_safe_r #(.W(258),.K(MUT?3:2)) r(ck,rst,bank,safe_vld,o);
  always @(posedge ck) ref_rst<=rst;

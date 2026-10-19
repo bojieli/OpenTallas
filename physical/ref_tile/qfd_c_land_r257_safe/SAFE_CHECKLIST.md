@@ -9,4 +9,4 @@
 7 FIXED: local hard-child clock, root beside register mass, io_hold_margin_ns0.03. TT/FF spread awaits gate. Parent root only hard-child clocks remains integration prerequisite.
 8 FIXED: static continuous ring, no credit/backpressure. Two reset stages shift both landing epochs +1 versus historical halves; normal data latency unchanged K=2. Parent warm-up/compiler reset update required BEFORE binding. New halves remain unbound pending that work.
 
-Slot-written flags:4 per-source-ring flags, same2stage reset epoch; each drives11 local masks, each mask<=24 data gates. Prevents stale reset output at +0.1T receiver phase.
+Slot-written flags:4 kept source-register copies per24bit slice (44flag pins forW258), same2stage reset epoch; each drives one local read mask, <=24 data gates. Prevents stale reset output at +0.1T receiver phase.
