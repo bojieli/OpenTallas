@@ -30,13 +30,19 @@ module ot_hgi_coll_iter_mul_safephys(
  //   off32 = 32'(it_l*b + {16'(it_h*b),16'd0}) = low32(it*b) = 32'(sum_{i<4,j<2,i+j<4} it_i*b_j << 8(i+j))
  //   16'(it_l*a) = 16'(it_0*a_0 + (it_1*a_0 + it_0*a_1) << 8)
  //   it_l*k = it_0*k + it_1*k << 8 (24b);   it_h*k = it_2*k + it_3*k << 8 (24b)
- (* keep=1, dont_touch=1 *) reg [31:0] it_a,it_v,it_b,it_c,it_d,it_k;reg [15:0] a,v,b,c,d;reg [7:0] k;
+ wire [31:0] it_a,it_v,it_b,it_c,it_d,it_k;reg [15:0] a,v,b,c,d;reg [7:0] k;
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_a(.clk(clk),.d(iteration),.q(it_a));
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_v(.clk(clk),.d(iteration),.q(it_v));
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_b(.clk(clk),.d(iteration),.q(it_b));
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_c(.clk(clk),.d(iteration),.q(it_c));
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_d(.clk(clk),.d(iteration),.q(it_d));
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_k(.clk(clk),.d(iteration),.q(it_k));
  function automatic [7:0] by(input [31:0] x,input integer i);by=x[i*8+:8];endfunction
  reg [15:0] pa[0:2],pv[0:2];                 // 00,10,01
  reg [15:0] pb[0:6],pc[0:6],pd[0:6];         // (i,j): 00,10,20,30,01,11,21
  reg [15:0] pk[0:3];                         // it_0..3 * k
  always @(posedge clk)begin
-  it_a<=iteration;it_v<=iteration;it_b<=iteration;it_c<=iteration;it_d<=iteration;it_k<=iteration;a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
+  a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
   pa[0]<=by(it_a,0)*by(a,0);pa[1]<=by(it_a,1)*by(a,0);pa[2]<=by(it_a,0)*by(a,1);
   pv[0]<=by(it_v,0)*by(v,0);pv[1]<=by(it_v,1)*by(v,0);pv[2]<=by(it_v,0)*by(v,1);
   for(integer i=0;i<4;i=i+1)begin
@@ -355,3 +361,8 @@ endmodule
 // V6: VM read-data assembly leaf (moved out of the protocol leaf: 2,048 data bits in and out made that leaf pin-bound,
 // 380x280 at util 7%). Same edges as the V5 protocol-leaf code: sel = the protocol leaf's instruction field (flop Q),
 // sp[0] = vm_select_pipe[0]; raw = vm_raw_data; assembled 9 edges after the select.
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_iter_landing_safephys(input wire clk,input wire[31:0]d,output reg[31:0]q);
+ always @(posedge clk)q<=d;
+endmodule
