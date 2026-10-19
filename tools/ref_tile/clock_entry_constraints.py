@@ -506,6 +506,27 @@ proc ot_ce_boundary_cells {} {
   }
   return $boundary
 }
+# Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
+# (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
+# TT or FF; SS is sensitivity only.  > 15k sinks and > 300 ps insertion only WARN.
+proc ot_ce_clock_rule {corner name sinks all_mean pin_mean pin_lo pin_hi scope} {
+  set spread [expr {$pin_hi - $pin_lo}]
+  set warn {}
+  if {$sinks > 15000} { lappend warn "sinks $sinks > 15000 (guidance)" }
+  if {$all_mean > 300 || $pin_mean > 300} {
+    lappend warn "insertion all_mean [format %.1f $all_mean] / pin_mean [format %.1f $pin_mean] ps > 300 (guidance)"
+  }
+  if {[string tolower $corner] in {tt ff} && $spread > 80} {
+    set level FAIL
+  } elseif {[llength $warn]} {
+    set level WARN
+  } else {
+    set level PASS
+  }
+  puts "OT_HYBRID CLOCK_RULE $corner $name $level pin_spread=[format %.1f $spread] scope=$scope sinks=$sinks[expr {[llength $warn] ? " WARN: [join $warn {; }]" : ""}]"
+  return $level
+}
+
 proc ot_ce_boundary_pins {pins boundary_cells} {
   set regs {}; set boundary {}
   foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
@@ -613,9 +634,6 @@ proc ot_ce_apply {} {
     if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
       error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
     }
-    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
-      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
-    }
     if {!$boundary_cells_ready} {
       set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
     }
@@ -630,8 +648,12 @@ proc ot_ce_apply {} {
     set arrivals [lsort -real $arrivals]
     set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
     set mean [expr {$total / [llength $arrivals]}]
-    if {[llength $pins] > 15000 && $mean > 300} {
-      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    # Clock rule (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval): FAIL only on the pin-flop (boundary
+    # register; child-flop on a region-rooted parent) spread > 80 ps at TT or FF.  > 15k sinks on one root and
+    # insertion > 300 ps are guidance (WARN): the neighbour boundary is matched by the source-latency
+    # compensation below / a ring crossing and judged by native_pin_audit --relative-to.
+    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {
+      error "OT_HYBRID: glue root $name pin-flop spread [format %.1f [expr {$hi-$lo}]] ps > 80 at $corner ($scope, [llength $boundary] of [llength $pins] sinks)"
     }
     set domain [dict get $::ot_ce_source_domains $name]
     lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
@@ -1002,6 +1024,12 @@ def leaf_body():
 LEAF_BODY = leaf_body()
 
 
+RULE_ABORT = ('    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {\n'
+              '      error "OT_HYBRID: glue root $name pin-flop spread [format %.1f [expr {$hi-$lo}]] ps > 80 at $corner '
+              '($scope, [llength $boundary] of [llength $pins] sinks)"\n'
+              '    }\n')
+
+
 def landed_body():
     """PL-KIT 10-18: the multi-root leaf body for a LANDED cluster (landed_cluster): hard-child clock pins are sinks of
     their region root, measured at the child's flops (entry-wire arrival + insertion.json boundary min / mean / max of
@@ -1041,6 +1069,14 @@ def landed_body():
          '      if {![dict exists $ot_ce_child_ext [get_full_name $pin]]} continue\n'
          '      lassign [dict get $ot_ce_child_ext [get_full_name $pin]] clo chi\n'
          '      set lo [expr {min($lo, $clo)}]; set hi [expr {max($hi, $chi)}]\n'
+         '    }\n'),
+        # a landed parent is judged per LINKED child pair at the child flops (pre_route_gate root_child_flops +
+        # clock_rule_eval, TT and FF <= 80), not on the whole-root span that mixes landed soft halves and children:
+        # the in-flow line is reported, the verdict is the gate's
+        (RULE_ABORT,
+         '    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {\n'
+         '      puts "OT_LANDED CLOCK_RULE_SPAN $corner $name: whole-root span over 80 ps; verdict per linked child pair '
+         '(pre_route_gate root_child_flops)"\n'
          '    }\n'),
         ('  if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }\n',
          '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins} { error "OT_LANDED: $ot_ce_landed_hits of $::ot_ce_landed_child_pins'

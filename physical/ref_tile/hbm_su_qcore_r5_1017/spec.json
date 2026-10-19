@@ -233,5 +233,8 @@
     ]
    }
   ]
+ },
+ "fill_reason": {
+  "pin_bound": "routing- and face-bound, measured: at 216x216 (PD 0.52) route r5-ff9f9da83 EARLY_FAIL_CONGESTION (GRT 20,000 markers flat; no H layer over the two SRAMs, all E<->W traffic in 3 channels). At 280.8x280.8 the forced trial GRT (gate_g4b, 10-18 18:00, ot-pve1) has overflow 0, worst M2 58%; W/E faces carry 731/576 pins over 264.6/264.7 of 280.8 um (94% occupied, <=2.6 pins/um). Shrinking to reach 35% fill (~264 um) re-enters the measured congestion regime; owner 10-17: no white-space compaction for its own sake."
  }
 }
