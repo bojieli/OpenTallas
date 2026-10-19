@@ -1,0 +1,4 @@
+Verilator 5.050 2026-07-01 rev v5.050
+[20776000] %Fatal: tb_banked_calendar.sv:50: Assertion failed in tb_banked_calendar.svg: BANKED_FAIL tuple W=135 cycle=2078 ordinal=0/0 iter=0/0 ctx=00000000002b/00000000002b data=0000000000000000000000000000000000/196f4c272cb136081caac27a48ae02b576
+%Error: rtl/test/hbm_accel/svg_rel/tb_banked_calendar.sv:50: Verilog $stop
+Aborting...
