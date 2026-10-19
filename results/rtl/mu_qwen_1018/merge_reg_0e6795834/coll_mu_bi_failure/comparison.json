@@ -331,5 +331,15 @@
     "First message fails before second command1623, and user0-only reference also fails: multiuser overlap is not required to reproduce saved symptom.",
     "Old and new landing K values differ; source also differs. This is not a controlled source/fixture comparison and does not establish causality.",
     "Passing SAFE zero-phase fixture is separate evidence, not MU closure."
-  ]
+  ],
+  "recipe": {
+    "path": "tools/xdie_qtp8/cases.py",
+    "regression_sha256": "f7020509a6fe4262ae8a6e91b614fe4184c8e2432795b9aafd042add41346317",
+    "current_safe_branch_sha256": "f7020509a6fe4262ae8a6e91b614fe4184c8e2432795b9aafd042add41346317",
+    "same_bytes": true,
+    "selection": "_MUB=CASES[cal_dv2f14bi]+--mu-cal; mu_bi only mu_window($|_ref)",
+    "old_fixture_path": "results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json",
+    "old_fixture_sha256": "ae825178946b6cd5b9bf0fdd84dbc6e5ab10fa7c6f692e4f76b428fa8629eef7",
+    "note": "Current SAFE branch recipe still selects old dv2f14bi; direct passing SAFE run explicitly uses dv2f18dh2. This is an unresolved recipe/fixture mismatch, not proof current MU passes."
+  }
 }
