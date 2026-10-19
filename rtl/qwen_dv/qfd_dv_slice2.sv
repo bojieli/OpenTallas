@@ -171,6 +171,7 @@ module qfd_dv_slice2 #(
     wire [511:0] r_d;
     qfd_dv_redstn2 #(.MUT(MUT)) u_stn (.ck(ck), .rst_n(rst),
         .cfg_v(c_stn), .cfg_mode(cmd_q[5:4]), .cfg_wsrc(cmd_q[6]), .cfg_nwords(cmd_q[14:7]), .cfg_sbase(cmd_q[23:15]),
+        .cfg_kcm1(cmd_q[58:51]),
         .rs_s(rss_q), .rs_n(rsn_q), .nb_i(nb_q), .nb_o(l9_o),
         .bt_re(bt_re), .bt_word(bt_word), .bt_q(bt_q),
         .r_v(r_v), .r_idx(r_idx), .r_last(r_last), .r_d(r_d), .fault(stn_fault));
