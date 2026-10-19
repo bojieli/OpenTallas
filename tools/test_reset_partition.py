@@ -6,7 +6,7 @@ from reset_partition import partition
 
 class ChildResetDomains(unittest.TestCase):
  def render(self,body):
-  return partition('module top #(parameter integer N=8)(input wire ck,rst_n);'+body+'endmodule','top','rst_n')
+  return partition('module top #(parameter integer N=8)(input wire ck,rst_n);\n'+body+'\nendmodule\n','top','rst_n')
  def test_inline_parameter_scope(self):
   text,m=self.render('for(genvar k=0;k<N;k=k+1) begin:g leaf u(.rst_n(rst_n));end')
   self.assertEqual(m['leaf_count'],8)
