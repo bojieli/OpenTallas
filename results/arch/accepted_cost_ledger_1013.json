@@ -2422,6 +2422,40 @@
   },
   {
    "design": "r25gq",
+   "unit": "HBM d4g GEN2e SU LG tap relays 18/15 (sourceprofile 708d112f3) vs 1017 kits 10/7",
+   "group": "HBM.D4G_GEN2E_SU_TAP",
+   "measured": 18,
+   "price": 10,
+   "unit_of_measure": "edges (tap read return)",
+   "unit_ratio": 1.8,
+   "e2e_loss_pct": 1.43,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_gen2e_su",
+     "base_tok_s": 1905.4,
+     "tok_s": 1878.2,
+     "e2e_loss_pct": 1.43,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_gen2e_su",
+     "base_tok_s": 946.2,
+     "tok_s": 940.4,
+     "e2e_loss_pct": 0.61,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3b_current.json results/arch/hbm_reprice_1019/reprice3b_successor.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "LH-REPRICE3 10-19: +8 read / +8 write an SU-executed VM record, fully exposed (priced; GEN2e PRE-RELAY, planned profile, not die STA).",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
    "unit": "HBM d4g SM attention: HBM-ATTGAP S32 sub-runs (busiest-SM QK 861 / PV 1,171 vs priced components 288 / 386) + window staging (0) + on-die SU PV merge model (400.8 / 335.5 minus priced 99 / 79) + VEH-ATT3 MEASURED Qwen spans (QK 1,195 / PV 2,364 per SM at P 8192)",
    "group": "HBM.D4G_SM_ATTENTION",
    "measured": 826.0,
@@ -2481,6 +2515,142 @@
    "status": "proposed",
    "share_basis": "modelled",
    "note": "HBM-REPRICE2 10-19: att_meas retired; ATTGAP choice S32 + staging + SU merge, Qwen MEASURED (VEH-ATT3). Accounting: the measured span replaces the SM component of the priced record (fa 259 / publish 64 stay: the span excludes them); HBM-ATTGAP's own comparison against the whole record (ATT.D4G.* rows) reproduces as info_attgap_total DS 1790.2 and under-counts. > 5 % -> COORD-REVIEW-QUEUE. Swap S32 -> BIGPROG measured row when HBM-SMBUDGET lands."
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g SU pg_inject: PGSTREAM SAFE2 per-region inject capture (+1 stream edge, 2 vs 1 per SU VM-read record)",
+   "group": "HBM.D4G_PGSTREAM_SAFE2",
+   "measured": 2,
+   "price": 1,
+   "unit_of_measure": "edges",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.09,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3c_1019.py S2 schedule (3b + pg_inject 2 + face area; wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_pg_inject vs 3b only_pg_inject",
+     "base_tok_s": 1903.6,
+     "tok_s": 1901.8,
+     "e2e_loss_pct": 0.09,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3c_1019.py S2 schedule (3b + pg_inject 2 + face area; wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_pg_inject vs 3b only_pg_inject",
+     "base_tok_s": 945.8,
+     "tok_s": 945.5,
+     "e2e_loss_pct": 0.03,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3c_face_p540.json results/arch/hbm_reprice_1019/reprice3c_face_q648.json results/arch/hbm_reprice_1019/reprice3c_current.json results/arch/hbm_reprice_1019/reprice3c_bw99.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "L2H-BW 10-19: LH-PGVM2 input note (claude/lh-pgvm-pgsafe-1019 6bead8e80); priced, fully exposed.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g bank-client relay budgets (x-load 65, COLL VM_RT 74+10 = E+84 measured v74, DMA 93, IDX 181 / rootctl 75; fully exposed)",
+   "group": "HBM.D4G_BANKLAT_BUDGET",
+   "measured": 0,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 9.85,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, info_banklat_all vs all",
+     "base_tok_s": 1338.1,
+     "tok_s": 1206.3,
+     "e2e_loss_pct": 9.85,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, info_banklat_all vs all",
+     "base_tok_s": 410.1,
+     "tok_s": 407.0,
+     "e2e_loss_pct": 0.74,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3b_current.json results/arch/hbm_reprice_1019/reprice3b_successor.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "LH-REPRICE3 10-19: REPRICE3 composed budgets (conservative, whole budget exposed); GEN2d measured depths will replace them.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g physical HBM bandwidth: L2H-BW SAFE face successor controller (hdie_pc_ctrl_bw_face_p540/q648, every port a flop, p192 SRAM) 90.67 B/edge/SM vs 99 priced; SM/ATT/DMA stream floor",
+   "group": "HBM.D4G_BW_CONTROLLER",
+   "measured": 90.67,
+   "price": 99.0,
+   "unit_of_measure": "B/edge/SM",
+   "unit_ratio": 0.9159,
+   "e2e_loss_pct": 8.54,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3c_1019.py S2 schedule (3b + pg_inject 2 + face area; wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_hbm_bw",
+     "base_tok_s": 1905.4,
+     "tok_s": 1877.6,
+     "e2e_loss_pct": 1.46,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3c_1019.py S2 schedule (3b + pg_inject 2 + face area; wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_hbm_bw",
+     "base_tok_s": 946.2,
+     "tok_s": 865.4,
+     "e2e_loss_pct": 8.54,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3c_face_p540.json results/arch/hbm_reprice_1019/reprice3c_face_q648.json results/arch/hbm_reprice_1019/reprice3c_current.json results/arch/hbm_reprice_1019/reprice3c_bw99.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "L2H-BW 10-19: successor of the 45.03 released controller row in this group (counts once at the worst row). Gates face_p540/face_q648 running; adopt (and supersede the 45.03 row) only after a closed route + production full96 PASS. Composed with banklat: DS 1406.1 / Qwen 746.5 (-28.74 % vs 1973.3); at a perfect 99 B/edge DS is 1422.9 (-27.9 %), so BW is no longer the DS lever.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g physical HBM bandwidth: released PC controller 45.03 B/edge/SM (HBM-BW measured) vs 99 priced; SM/ATT/DMA stream floor",
+   "group": "HBM.D4G_BW_CONTROLLER",
+   "measured": 45.03,
+   "price": 99.0,
+   "unit_of_measure": "B/edge/SM",
+   "unit_ratio": 2.1985,
+   "e2e_loss_pct": 54.93,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_hbm_bw",
+     "base_tok_s": 1905.4,
+     "tok_s": 1513.1,
+     "e2e_loss_pct": 20.59,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_hbm_bw",
+     "base_tok_s": 946.2,
+     "tok_s": 426.5,
+     "e2e_loss_pct": 54.93,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3b_current.json results/arch/hbm_reprice_1019/reprice3b_successor.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "LH-REPRICE3 10-19. Successor (codex/hbm-bw-safe-1019, static96 cadence 90.67 B/edge + cold bridge +1, +11.59 mm2/die; NOT adopted: fanout/native/CTS open): only_hbm_bw DS -1.46 % / Qwen -8.54 %, bridge DS -0.15 %. Over 5 %: COORD (structural lever = adopt the SAFE successor controller).",
+   "share_basis": "modelled"
   },
   {
    "design": "r25gq",
@@ -3016,11 +3186,11 @@
   },
   "r25gq": {
    "accepted_pct": 10.915,
-   "proposed_pct": 123.856,
-   "accepted_plus_proposed_pct": 134.771,
+   "proposed_pct": 190.156,
+   "accepted_plus_proposed_pct": 201.071,
    "limit_pct": 15.0,
    "accepted_rows": 3,
-   "proposed_rows": 23,
+   "proposed_rows": 28,
    "headroom_pct": 4.085,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": false,
