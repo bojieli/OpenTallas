@@ -11,10 +11,11 @@
   "cost_partial_um2": 904.1787,
   "native_graph_costs": "unpriced; no synth/route permitted",
   "simulation": {
-    "wrapper": "actual63/2/32 PASS; firstOLDmutantcoveragehole preserved then explicitcausalcollision rejectsall4",
-    "dated": "NS2/1 andNS47/16 +2originaldates PASS3seeds; extendedqualifiedinternalmiter PASS",
-    "occupied_async_reset": "NS2 phases0..8,90,93 andNS47 phase0 three-seedPASS",
-    "four_state": "FAIL externalreleasec4 observableunknown; no fullqualification; preserve exactwitness",
-    "original_case_matrix": "already admitted still running; no further test launches pending ROOT disposition"
+    "wrapper": "63/2/32-bit actual instances PASS three seeds; all four causal RTL mutants rejected after preserved original OLD-mutant coverage hole",
+    "dated": "Original +2 and collision +3 dates; NS2/1 and NS47/16 three seeds PASS; 46 full16 shapes,276 legal positives+276 intended expiry negatives PASS",
+    "occupied_async_reset": "Verilator NS2 phases0..8,90,93 and NS47 phase0 three seeds PASS",
+    "four_state": "Icarus NS2 phases0..8,90,93 PASS; NS47 phases0..3 PASS, remaining4..8,90,93 OPEN live job06",
+    "original_case_matrix": "Completed exit0; original illegal NS2/full16 config-fault FAIL retained as expected negative; S256 legal positives separate",
+    "causals": "Actual full HWIN EC_MUT1..4, wrap/timestamp/retire/reset mutants, payload/control X, boot/reconfig/late/collision firstfaults verified"
   }
 }
