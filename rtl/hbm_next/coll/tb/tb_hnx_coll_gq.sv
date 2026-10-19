@@ -22,6 +22,7 @@
 // VM images must equal the N single-row gathers, and COLLQ_TRAIN prints the per-row fire -> last-write span.
 module tb_hnx_coll_gq;
     parameter integer MUT = 0, KQMUT = 0;
+    parameter integer FFL = 3;        // launch sample -> fire of t_start 0 (HNX-GQ s3 registered descriptor read: 4)
     parameter string VEC = "vec";
     parameter string VECR = "vecr";   // HNX: per-row QBG vectors (tools/hbm_next/hnx_coll_gq_train.py vectors)
     reg clk = 0, rst_n = 0; always #0.5 clk = ~clk;
@@ -214,7 +215,7 @@ module tb_hnx_coll_gq;
     task automatic compile(input integer row, input integer loop);
         integer fe, K, R, last;
         R = r_r2[row] ? 2 : 1; K = (r_f[row] + R - 1) / R;
-        fe = L + 3 + loop * PERIOD + r_t[row]; last = fe;
+        fe = L + FFL + loop * PERIOD + r_t[row]; last = fe;
         for (integer rr = 0; rr < r_n[row]; rr = rr + 1)
         for (integer q = 0; q < 4; q = q + 1)
             for (integer i = 0; i < r_f[row]; i = i + 1) begin
@@ -318,12 +319,12 @@ module tb_hnx_coll_gq;
         if (conf !== 4'hf) begin $display("COLLQ FAIL targets not configured %b", conf); $finish; end
         launch_v = 1; @(posedge clk); L = cyc; @(negedge clk); launch_v = 0;
         for (integer l = 0; l < LOOPS; l = l + 1) for (integer row = 0; row < NR; row = row + 1) compile(row, l);
-        last_edge = L + 3 + LOOPS * PERIOD + 100;
-        // edges: IE(k=0) = L + 4; a value set by at_edge(T) is sampled at the posedge where cyc == T
-        if (scenario == 1) fork begin at_edge(L + 4 + 27); isa[2][28:27] = 2'b01; at_edge(L + 4 + 28); isa[2] = 0; end join_none
-        if (scenario == 3) fork begin at_edge(L + 4 + 34); a_kq[1][((r_dst[0] + prevq(1) * r_str[0]) % 8) * 281 + 280] = 1'b1;
-            at_edge(L + 4 + 35); a_kq[1] = 0; end join_none
-        drop_at = L + 4 + 30;                   // ring-B stop samples the first h=1 transit (k=0) here
+        last_edge = L + FFL + LOOPS * PERIOD + 100;
+        // edges: IE(k=0) = L + FFL + 1; a value set by at_edge(T) is sampled at the posedge where cyc == T
+        if (scenario == 1) fork begin at_edge(L + FFL + 1 + 27); isa[2][28:27] = 2'b01; at_edge(L + FFL + 1 + 28); isa[2] = 0; end join_none
+        if (scenario == 3) fork begin at_edge(L + FFL + 1 + 34); a_kq[1][((r_dst[0] + prevq(1) * r_str[0]) % 8) * 281 + 280] = 1'b1;
+            at_edge(L + FFL + 1 + 35); a_kq[1] = 0; end join_none
+        drop_at = L + FFL + 1 + 30;                   // ring-B stop samples the first h=1 transit (k=0) here
         while (cyc < last_edge) @(negedge clk);
         // checks
         if (scenario != 0) begin
