@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.qwen.kv-witness-age.v1",
+  "source_commit": "353123a8d",
+  "top": "qkd_d2d_static_ovl",
+  "params": {
+    "NTX": 3,
+    "SAFE_RC": 1,
+    "PR": 1,
+    "TXDP": "0x03030416"
+  },
+  "verilator": "5.050",
+  "unit": "oth-ubuntu-2825230-1792427136",
+  "host": "ot-epyc8",
+  "calendar_sample": 222,
+  "witness_pin_sample": 225,
+  "calendar_to_pin_age": 3,
+  "scope": "Exact release-tree353 target single valid CRC frame; not another KV variant, die-lane join or throughput proof",
+  "source_hashes": {
+    "rtl/lib/ot_rst_pipe.sv": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "82bb11f1151e044dae4e1bfe3dad7d9128dabdf2bb2fe51b723061db9fa4e369",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "99df5a4fa2213760a65db2fca365d02d6bc70c807ca31933b4ee87a07a231153",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv": "b96568a31a4cd8c4dc0c99dfce1a146bade6ea846f9be3fe4395a6a763eef6b4",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  "bench_sha256": "a6f35f805f0ad52432452dc2a382551df4587606d30a763cbea238847a8d8636",
+  "early_fdi_mutant": "one edge early frame abort08/no record_rx_v"
+}

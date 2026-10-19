@@ -1,0 +1,1 @@
+Exact 353123a8d KV SAFE/PR1 receiver: K_RX calendar sampled at222, checked WITNESS record pin sampled at225. The age is3. The one-edge-early FDI mutant aborts08 and emits no checked record. Source hashes and fleet terminal output are retained. This is a scoped transport latency receipt, not an absolute startup or die phase binding.

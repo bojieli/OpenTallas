@@ -1,0 +1,115 @@
+`timescale 1ns/1ps
+module tb_k_d2d_age;
+parameter integer MUT=0;localparam integer NL=2,NTX=3;
+reg ck=0;
+reg por_n=0;
+reg rst_n=0;
+reg cfg_tx_we=0;
+reg cfg_rx_we=0;
+reg [5:0] cfg_addr=0;
+reg [31:0] cfg_data=0;
+reg cal_start=0;
+reg cal_seg=0;
+reg cal_start_rx=0;
+reg cal_seg_rx=0;
+reg [1:0] cal_user_tx=0;
+reg [1:0] cal_user_rx=0;
+wire [1:0] tx_user;
+wire [1:0] rx_user;
+reg host_link_reset_req=0;
+reg host_recovery_clear=0;
+reg host_boot_begin=0;
+wire fwd_epoch;
+wire fwd_link_rst_n;
+wire att_tx_slot;
+wire [3:0] att_tx_kind;
+wire [4:0] att_tx_beat;
+reg att_tx_v=0;
+reg [547:0] att_tx_payload=0;
+wire att_rx_v;
+wire att_rx_slot;
+wire [3:0] att_rx_kind;
+wire [4:0] att_rx_beat;
+wire [547:0] rx_payload;
+wire emb_tx_slot;
+reg emb_tx_v=0;
+reg [547:0] emb_tx_payload=0;
+reg record_tx_observed_v=0;
+reg [547:0] record_tx=0;
+wire [1:0] record_send_kind;
+wire record_witness_slot;
+wire record_rx_v;
+wire [547:0] record_rx;
+reg [58:0] kvn_compiled_identity=0;
+reg [1:0] kvn_compiled_generation=0;
+wire kvn_word_valid;
+wire [10:0] kvn_word_tag;
+wire [511:0] kvn_word_data;
+wire [58:0] kvn_word_identity;
+wire [1:0] kvn_word_generation;
+wire kvn_word_slot;
+wire [1:0] kvn_word_index;
+reg [15:0] status_epoch16=0;
+reg serdes_up=0;
+reg kv_drained_local=0;
+reg kv_flush_local=0;
+reg host_drained_local=0;
+reg kv_active_local=0;
+wire [NL-1:0] link_up;
+wire [7:0] transport_fault;
+wire native_links_drained;
+wire native_link_reset_seen;
+wire native_retrained;
+wire [3:0] abort_drained;
+wire native_kv_drained;
+wire native_vm_drained;
+wire native_collective_drained;
+wire native_host_drained;
+wire native_collective_busy;
+wire native_kv_flush;
+wire native_admit_ready;
+wire crom_fault;
+wire execution_active;
+wire engine_result_v;
+wire engine_result_done;
+wire engine_result_fault;
+wire [3:0] engine_result_cause;
+wire [58:0] engine_result_tag;
+wire [1:0] engine_result_gen;
+wire [17:0] engine_result_token;
+wire [31:0] engine_result_value;
+wire [31:0] engine_result_cycles;
+reg fdi_tx_up=0;
+wire fdi_tx_v;
+wire [582:0] fdi_tx_flit;
+reg fdi_rx_v=0;
+reg [582:0] fdi_rx_flit=0;
+wire phy_rst_n;
+wire epoch_abort;
+wire [31:0] recovery_cycles;
+wire fault;
+always #5 ck=~ck;
+qkd_d2d_static_ovl #(.NTX(3),.SAFE_RC(1),.TXDP(32'h03030416)) dut(.ck(ck),.por_n(por_n),.rst_n(rst_n),.cfg_tx_we(cfg_tx_we),.cfg_rx_we(cfg_rx_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.cal_start(cal_start),.cal_seg(cal_seg),.cal_start_rx(cal_start_rx),.cal_seg_rx(cal_seg_rx),.cal_user_tx(cal_user_tx),.cal_user_rx(cal_user_rx),.tx_user(tx_user),.rx_user(rx_user),.host_link_reset_req(host_link_reset_req),.host_recovery_clear(host_recovery_clear),.host_boot_begin(host_boot_begin),.fwd_epoch(fwd_epoch),.fwd_link_rst_n(fwd_link_rst_n),.att_tx_slot(att_tx_slot),.att_tx_kind(att_tx_kind),.att_tx_beat(att_tx_beat),.att_tx_v(att_tx_v),.att_tx_payload(att_tx_payload),.att_rx_v(att_rx_v),.att_rx_slot(att_rx_slot),.att_rx_kind(att_rx_kind),.att_rx_beat(att_rx_beat),.rx_payload(rx_payload),.emb_tx_slot(emb_tx_slot),.emb_tx_v(emb_tx_v),.emb_tx_payload(emb_tx_payload),.record_tx_observed_v(record_tx_observed_v),.record_tx(record_tx),.record_send_kind(record_send_kind),.record_witness_slot(record_witness_slot),.record_rx_v(record_rx_v),.record_rx(record_rx),.kvn_compiled_identity(kvn_compiled_identity),.kvn_compiled_generation(kvn_compiled_generation),.kvn_word_valid(kvn_word_valid),.kvn_word_tag(kvn_word_tag),.kvn_word_data(kvn_word_data),.kvn_word_identity(kvn_word_identity),.kvn_word_generation(kvn_word_generation),.kvn_word_slot(kvn_word_slot),.kvn_word_index(kvn_word_index),.status_epoch16(status_epoch16),.serdes_up(serdes_up),.kv_drained_local(kv_drained_local),.kv_flush_local(kv_flush_local),.host_drained_local(host_drained_local),.kv_active_local(kv_active_local),.link_up(link_up),.transport_fault(transport_fault),.native_links_drained(native_links_drained),.native_link_reset_seen(native_link_reset_seen),.native_retrained(native_retrained),.abort_drained(abort_drained),.native_kv_drained(native_kv_drained),.native_vm_drained(native_vm_drained),.native_collective_drained(native_collective_drained),.native_host_drained(native_host_drained),.native_collective_busy(native_collective_busy),.native_kv_flush(native_kv_flush),.native_admit_ready(native_admit_ready),.crom_fault(crom_fault),.execution_active(execution_active),.engine_result_v(engine_result_v),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.fdi_tx_up(fdi_tx_up),.fdi_tx_v(fdi_tx_v),.fdi_tx_flit(fdi_tx_flit),.fdi_rx_v(fdi_rx_v),.fdi_rx_flit(fdi_rx_flit),.phy_rst_n(phy_rst_n),.epoch_abort(epoch_abort),.recovery_cycles(recovery_cycles),.fault(fault));
+wire[566:0]body={1'b0,8'd1,1'b0,1'b1,8'd0,548'h123456789abc};wire[15:0]crc;
+ot_qwen_crc_parallel #(.DW(567),.CW(16)) crcgen(.d(body),.q(crc));
+integer e=0,cal=-1,out=-1;always @(posedge ck)begin
+ e<=e+1;
+ if(dut.u_core.u_end.rv)begin cal=e;$display("KD2DAGE calendar_sample=%0d",e);end
+ if(record_rx_v)begin out=e;$display("KD2DAGE witness_pin_sample=%0d payload=%h",e,record_rx);end
+end
+initial begin
+ fdi_tx_up=1;serdes_up=3;kv_drained_local=1;host_drained_local=1;
+ repeat(20)@(negedge ck);por_n=1;rst_n=1;
+ while(e<80)@(negedge ck);cfg_rx_we=1;cfg_addr=0;cfg_data=(20<<18)|(1<<17)|(1<<14)|(14<<10)|(1<<5);
+ @(negedge ck);cfg_rx_we=0;
+ while(e<100)@(negedge ck);host_boot_begin=1;@(negedge ck);host_boot_begin=0;
+ while(e<200)@(negedge ck);cal_start_rx=1;cal_user_rx=0;
+ @(negedge ck);cal_start_rx=0;
+ while(e<(MUT?220:221))@(negedge ck);fdi_rx_v=1;fdi_rx_flit={crc,body};
+ @(negedge ck);fdi_rx_v=0;
+ while(e<240)@(negedge ck);
+ if(cal<0||out<0||out-cal!=3||record_rx!=548'h123456789abc||fault||epoch_abort)begin
+ $display("KD2DAGE_FAIL MUT%0d cal%0d out%0d fault%0d abort%0d cause%h ep%h",MUT,cal,out,fault,epoch_abort,dut.u_core.u_end.u_link.u_ctl.fault_cause,dut.u_core.ep);$fatal(1);end
+ $display("KD2DAGE_PASS MUT%0d calendar_to_witness_pin%0d",MUT,out-cal);$finish;
+end
+endmodule

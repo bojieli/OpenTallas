@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits  1044 GB (avail 822, growth 91, headroom 0, waiters 0/0 GB) load 77/128 running 29 disk 308 GB 
+ot-run: ot-epyc5       admits   879 GB (avail 728, growth 113, headroom 0, waiters 0/0 GB) load 62/128 running 11 disk 1051 GB 
+ot-run: ot-epyc6       admits   325 GB (avail 328, growth 101, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 6057 GB 
+ot-run: ot-epyc7       admits   537 GB (avail 477, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 17 disk 6477 GB 
+ot-run: ot-epyc8       admits  1228 GB (avail 933, growth 73, headroom 0, waiters 0/0 GB) load 36/128 running 23 disk 355 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-k-witness-age-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-k-witness-age-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2825230-1792427136 after 0 s
+KD2DAGE calendar_sample=222
+KD2DAGE witness_pin_sample=225 payload=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456789abc
+KD2DAGE_PASS MUT0 calendar_to_witness_pin3
+- tb_k_d2d_age.sv:113: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 6.498 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+KD2DAGE calendar_sample=222
+KD2DAGE_FAIL MUT1 cal222 out-1 fault0 abort1 cause08 ep01
+[2400000] %Fatal: tb_k_d2d_age.sv:112: Assertion failed in tb_k_d2d_age
+%Error: tb_k_d2d_age.sv:112: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2825230-1792427136): exit 0
