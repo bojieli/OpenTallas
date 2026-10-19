@@ -8,7 +8,8 @@
   "sources": [
     "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv",
     "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv",
-    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv"
   ],
   "clock_port": "clk",
   "outline": {
@@ -65,7 +66,11 @@
   ],
   "prototype_only": true,
   "route": {
-    "io_hold_margin_ns": 0.03
+    "io_hold_margin_ns": 0.03,
+    "synth_keep_modules": [
+      "ot_hbm_xcal_kept_bit",
+      "ot_hbm_xcal_kept_rbit"
+    ]
   },
   "review_blockers": [
     "Parent source/geometry review required before gate",
