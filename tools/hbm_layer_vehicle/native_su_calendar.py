@@ -13,7 +13,8 @@ from pathlib import Path
 from sm_images import cal_word,prog_row
 
 def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
-                     host_launch, rows=128, host_publication=10):
+                     host_launch, rows=128, host_publication=10, request_lane_edges=0):
+    if not isinstance(request_lane_edges,int) or request_lane_edges<0: raise ValueError('request lane depth must be a nonnegative integer')
     if first_serial < bridge_serial: raise ValueError('command before bridge epoch')
     if not 1<=rows<=1024: raise ValueError('native calendar PCW10 capacity')
     fields=[{} for _ in range(rows)];events=[]
@@ -32,19 +33,19 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
                 # event(n).lg_issue in su_multirate_compile.py; no dynamic wait.
                 lg=bridge_stream+(4*n+6)//3+1
                 at=lg-first_calendar
-                if not 0<=at<at+2<rows:raise ValueError(f'{kind} edge{lg} outside resident calendar')
+                if not 0<=at<at+2+request_lane_edges<rows:raise ValueError(f'{kind} edge{lg} outside resident calendar')
                 fields[at][sel]=fields[at].get(sel,0)|1<<b
-                fields[at+2][owner]=fields[at+2].get(owner,0)|1<<b
+                fields[at+2+request_lane_edges][owner]=fields[at+2+request_lane_edges].get(owner,0)|1<<b
                 # Native VM owner0 is the SU face. Remaining selector fields
                 # stay zero: face_response returns by pipelined owner d_p;
                 # client/response fields feed the separate hub/router path.
                 events.append(dict(kind=kind,bank=b,command=e,serial_capture=serial,
-                                   lg_sample=lg,vm_pin_sample=lg+2))
+                                   lg_sample=lg,vm_pin_sample=lg+2+request_lane_edges))
     words=[prog_row(i,cal_word(**f),187) for i,f in enumerate(fields)]
     return words,dict(schema='opentallas.native_su_calendar.v1',qualified=False,
         first_serial=first_serial,bridge_serial=bridge_serial,bridge_stream=bridge_stream,
         host_launch=host_launch,host_publication=host_publication,rows=rows,
-        calendar_row0_consumer=first_calendar,owner=0,lg_to_vm_pin_edges=2,
+        calendar_row0_consumer=first_calendar,owner=0,lg_to_vm_pin_edges=2+request_lane_edges,request_lane_edges=request_lane_edges,
         events=events,unused_fields='hub/router client/response/ring paths unused by native SU face')
 
 def add_host_replay(source,boundary,output,words,meta, *, stream_limit=3700,
@@ -92,9 +93,9 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('commands',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--first-serial',type=int,required=True);p.add_argument('--bridge-serial',type=int,required=True)
     p.add_argument('--bridge-stream',type=int,required=True);p.add_argument('--host-launch',type=int,required=True)
-    p.add_argument('--rows',type=int,default=128);p.add_argument('--replay',type=Path);p.add_argument('--boundary',type=Path)
+    p.add_argument('--request-lane-edges',type=int,default=0);p.add_argument('--rows',type=int,default=128);p.add_argument('--replay',type=Path);p.add_argument('--boundary',type=Path)
     a=p.parse_args();words,meta=compile_calendar([int(x,16)for x in a.commands.read_text().split()],first_serial=a.first_serial,
-        bridge_serial=a.bridge_serial,bridge_stream=a.bridge_stream,host_launch=a.host_launch,rows=a.rows)
+        bridge_serial=a.bridge_serial,bridge_stream=a.bridge_stream,host_launch=a.host_launch,rows=a.rows,request_lane_edges=a.request_lane_edges)
     if a.replay:add_host_replay(a.replay,a.boundary,a.output,words,meta)
     else:a.output.mkdir(parents=True,exist_ok=True)
     (a.output/'calendar.mem').write_text(''.join(f'{v:064x}\n'for v in words))
