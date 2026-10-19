@@ -1,0 +1,726 @@
+{
+  "schema": "kv.pc_terminal_collection.v1",
+  "release_qualified": false,
+  "complete_uncapped_source_census": null,
+  "fixed_face_ff_ownership": null,
+  "tiles": {
+    "pc": {
+      "verdict": "WARN",
+      "generated": "2026-10-19T10:12:40-0700",
+      "source_start_commit": "0eed5271d3e716b89aa2fc6c21841cbd61b74f51",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_sha256": "338ea0f17b2a45cbb97ad5d5dca7352187cd5e7b01b522a49b89cff79f4cd602",
+      "source_archive_sha256": "1e88f9bba89dbfdb56b1b21a60b9e32851e1f4fd47ffa5b4af98df65c37581a8",
+      "source_tree": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_pc_rl1-20261019-064619/src",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_pc_rl1-20261019-064619",
+      "clock": {
+        "max_root_sinks": 21520,
+        "root": "port:hck",
+        "cts": true,
+        "tt_insertion_ps": 407.7,
+        "tt_spread_ps": 45.2,
+        "tt_pin_spread_ps": 37.8,
+        "ff_insertion_ps": 336.3,
+        "ff_spread_ps": 42.1,
+        "ff_pin_spread_ps": 34.1,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 3599,
+                "mean": 393.4,
+                "min": 373.9,
+                "max": 427.3
+              },
+              "all": {
+                "n": 10015,
+                "mean": 388.7,
+                "min": 368.0,
+                "max": 449.5
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 3599,
+                "mean": 324.5,
+                "min": 306.0,
+                "max": 356.5
+              },
+              "all": {
+                "n": 10015,
+                "mean": 319.9,
+                "min": 299.5,
+                "max": 375.6
+              },
+              "child_flop": null,
+              "macros": null
+            }
+          },
+          {
+            "source": "hck",
+            "clock": "hclk",
+            "tt": {
+              "boundary": {
+                "n": 768,
+                "mean": 390.8,
+                "min": 369.9,
+                "max": 407.7
+              },
+              "all": {
+                "n": 20406,
+                "mean": 379.4,
+                "min": 362.5,
+                "max": 407.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 768,
+                "mean": 320.8,
+                "min": 301.7,
+                "max": 335.8
+              },
+              "all": {
+                "n": 20406,
+                "mean": 310.1,
+                "min": 294.2,
+                "max": 336.3
+              },
+              "child_flop": null,
+              "macros": null
+            }
+          }
+        ],
+        "measured_clock": "hclk",
+        "verdict": "WARN",
+        "text": "21,520 sinks on the largest root; measured TT insertion 407.7 ps, FF insertion 336.3 ps, TT pin-flop spread 37.8 ps, FF pin-flop spread 34.1 ps; WARN: 21,520 sinks on one clock root > 15,000 (guidance); insertion 407.7 ps > 300 (guidance; boundary matched by parent compensation / landing)"
+      },
+      "reset_landing": {
+        "max_sinks": 2,
+        "ports": [
+          {
+            "port": "hrst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          },
+          {
+            "port": "rst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          }
+        ],
+        "over": [],
+        "waived": false,
+        "ok": true
+      },
+      "trial_route": {
+        "schema": "opentallas.ref_tile.trial_route.v1",
+        "overflow": 0,
+        "kind": "tile",
+        "skip_incremental_repair": true,
+        "rc": "0",
+        "grt_s": 883,
+        "layers": [
+          {
+            "layer": "M1",
+            "capacity": 0,
+            "usage": 0,
+            "pct": 0.0,
+            "overflow": 0
+          },
+          {
+            "layer": "M2",
+            "capacity": 2288138,
+            "usage": 918814,
+            "pct": 40.16,
+            "overflow": 0
+          },
+          {
+            "layer": "M3",
+            "capacity": 2800003,
+            "usage": 1250291,
+            "pct": 44.65,
+            "overflow": 0
+          },
+          {
+            "layer": "M4",
+            "capacity": 2151094,
+            "usage": 338001,
+            "pct": 15.71,
+            "overflow": 0
+          },
+          {
+            "layer": "M5",
+            "capacity": 2069659,
+            "usage": 339228,
+            "pct": 16.39,
+            "overflow": 0
+          }
+        ],
+        "worst_layer_usage": [
+          "M3",
+          44.65
+        ],
+        "hotspot": null,
+        "congestion_png": null
+      },
+      "textbook_metrics": {
+        "core_um": [
+          263.5,
+          295.9
+        ],
+        "clock_roots": [
+          {
+            "root": "port:hck",
+            "ff": 21520,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_calendar.active_epoch[0]$_DFFE_PN0P_"
+          },
+          {
+            "root": "port:ck",
+            "ff": 8893,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_embr.cs_q$_DFF_PN0_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[1]",
+            "ff": 2400,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[1].bank_mem[0][0]$_DFFE_PP_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[2]",
+            "ff": 2400,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[2].bank_mem[0][0]$_DFFE_PP_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[3]",
+            "ff": 2304,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[3].bank_mem[0][0]$_DFFE_PP_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[0]",
+            "ff": 2112,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[0].bank_mem[0][0]$_DFFE_PP_"
+          }
+        ],
+        "hier_subblocks": 0,
+        "clock_max_root_sinks": 21520,
+        "clock_max_root": "port:hck",
+        "high_fanout_top": [
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[8].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2405,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[4].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2405,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[12].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2309,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_ctrl.u_sched.tr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2179,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[0].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2117,
+            "flops": 0
+          },
+          {
+            "net": "_293083_/Y (AND2x2_ASAP7_75t_R)",
+            "loads": 2023,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_ctrl.u_sched.hgo$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 1994,
+            "flops": 1986
+          },
+          {
+            "net": "_293587_/Y (AND2x2_ASAP7_75t_R)",
+            "loads": 1801,
+            "flops": 0
+          }
+        ],
+        "hf_max_port": 0,
+        "hf_max_reset": 0,
+        "hf_max_net": 2405,
+        "reset_landing": [
+          {
+            "port": "hrst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          },
+          {
+            "port": "rst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          }
+        ],
+        "in_to_out_bits": 0,
+        "in_to_reg_levels": 2,
+        "reg_to_out_levels": 0,
+        "icg_enable_from_port": 0,
+        "depth_ps": 641.8,
+        "depth_path": [
+          "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.koh[2]$_DFFE_PN0P_",
+          "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.wq_n[2]$_DFF_PN0_/D"
+        ],
+        "depth_levels": 16,
+        "reach_worst_um": 211.4,
+        "reach_violations": 0,
+        "util": 0.317
+      },
+      "cells": 188622,
+      "flops": 41933,
+      "diagnostic_tt_placement_setup_ps": 88.32468090247403,
+      "diagnostic_tt_placement_hold_ps": -4.322736613104894,
+      "ff_signoff_setup_hold": null,
+      "native_launch_capture_qualified": false,
+      "outline_um": [
+        267.84,
+        300.24
+      ],
+      "aspect_ratio": 1.120967741935484,
+      "macros": 0,
+      "face_pin_counts": {
+        "N": 1547,
+        "S": 1113,
+        "E": 1376,
+        "W": 625
+      },
+      "face_average_density_per_um": {
+        "N": 5.77583632019116,
+        "S": 4.155465949820789,
+        "E": 4.583000266453504,
+        "W": 2.081667998934186
+      },
+      "clock_pin_geometry": {
+        "ck": {
+          "center_um": [
+            267.798,
+            10.956
+          ],
+          "side": "E",
+          "rect": [
+            267.756,
+            10.944,
+            267.84,
+            10.968
+          ],
+          "layer": "M4"
+        },
+        "hck": {
+          "center_um": [
+            267.798,
+            30.828
+          ],
+          "side": "E",
+          "rect": [
+            267.756,
+            30.816,
+            267.84,
+            30.84
+          ],
+          "layer": "M4"
+        }
+      },
+      "complete_uncapped_transparent_logical_pin_census": null,
+      "fixed_face_ff_ownership": null,
+      "historical_physical_json_warning": "physical.json was emitted at initial floorplan stop before final gate CTS/GRT; its not_met timings are preserved and are not final signoff"
+    },
+    "pc_h": {
+      "verdict": "FAIL",
+      "generated": "2026-10-19T09:57:23-0700",
+      "source_start_commit": "0eed5271d3e716b89aa2fc6c21841cbd61b74f51",
+      "source_identity": "exact_content_snapshot",
+      "source_manifest_sha256": "845d76f14c41a04a55668481f3a50bb119a26b81b665505218d504830e687317",
+      "source_archive_sha256": "390134894c9537dc9a61100040f723c61f7898af5ae5e9ca2f3ebdd5f2c31c82",
+      "source_tree": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_pc_h_rl1-20261019-064619/src",
+      "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_pc_h_rl1-20261019-064619",
+      "clock": {
+        "max_root_sinks": 21520,
+        "root": "port:hck",
+        "cts": true,
+        "tt_insertion_ps": 450.8,
+        "tt_spread_ps": 89.0,
+        "tt_pin_spread_ps": 81.1,
+        "ff_insertion_ps": 377.6,
+        "ff_spread_ps": 83.6,
+        "ff_pin_spread_ps": 76.0,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "ck",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 2522,
+                "mean": 369.7,
+                "min": 352.3,
+                "max": 397.6
+              },
+              "all": {
+                "n": 8938,
+                "mean": 365.0,
+                "min": 352.3,
+                "max": 397.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 2522,
+                "mean": 305.7,
+                "min": 289.0,
+                "max": 332.8
+              },
+              "all": {
+                "n": 8938,
+                "mean": 300.7,
+                "min": 287.4,
+                "max": 332.9
+              },
+              "child_flop": null,
+              "macros": null
+            }
+          },
+          {
+            "source": "hck",
+            "clock": "hclk",
+            "tt": {
+              "boundary": {
+                "n": 768,
+                "mean": 395.7,
+                "min": 369.7,
+                "max": 450.8
+              },
+              "all": {
+                "n": 20406,
+                "mean": 380.3,
+                "min": 361.8,
+                "max": 450.8
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            },
+            "ff": {
+              "boundary": {
+                "n": 768,
+                "mean": 325.3,
+                "min": 301.6,
+                "max": 377.6
+              },
+              "all": {
+                "n": 20406,
+                "mean": 310.8,
+                "min": 294.0,
+                "max": 377.6
+              },
+              "child_flop": null,
+              "macros": null
+            }
+          }
+        ],
+        "measured_clock": "hclk",
+        "verdict": "REFUSE",
+        "text": "21,520 sinks on the largest root; measured TT insertion 450.8 ps, FF insertion 377.6 ps, TT pin-flop spread 81.1 ps, FF pin-flop spread 76.0 ps; TT pin-flop spread 81.1 ps > 80"
+      },
+      "reset_landing": {
+        "max_sinks": 2,
+        "ports": [
+          {
+            "port": "hrst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          },
+          {
+            "port": "rst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          }
+        ],
+        "over": [],
+        "waived": false,
+        "ok": true
+      },
+      "trial_route": {
+        "schema": "opentallas.ref_tile.trial_route.v1",
+        "overflow": 0,
+        "kind": "tile",
+        "skip_incremental_repair": true,
+        "rc": "0",
+        "grt_s": 809,
+        "layers": [
+          {
+            "layer": "M1",
+            "capacity": 0,
+            "usage": 0,
+            "pct": 0.0,
+            "overflow": 0
+          },
+          {
+            "layer": "M2",
+            "capacity": 2288874,
+            "usage": 824062,
+            "pct": 36.0,
+            "overflow": 0
+          },
+          {
+            "layer": "M3",
+            "capacity": 2800003,
+            "usage": 891569,
+            "pct": 31.84,
+            "overflow": 0
+          },
+          {
+            "layer": "M4",
+            "capacity": 2151094,
+            "usage": 226423,
+            "pct": 10.53,
+            "overflow": 0
+          },
+          {
+            "layer": "M5",
+            "capacity": 2069659,
+            "usage": 117183,
+            "pct": 5.66,
+            "overflow": 0
+          }
+        ],
+        "worst_layer_usage": [
+          "M2",
+          36.0
+        ],
+        "hotspot": null,
+        "congestion_png": null
+      },
+      "textbook_metrics": {
+        "core_um": [
+          263.5,
+          295.9
+        ],
+        "clock_roots": [
+          {
+            "root": "port:hck",
+            "ff": 21520,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_calendar.active_epoch[0]$_DFFE_PN0P_"
+          },
+          {
+            "root": "port:ck",
+            "ff": 8594,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_embr.cs_q$_DFF_PN0_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[1]",
+            "ff": 2400,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[1].bank_mem[0][0]$_DFFE_PP_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[2]",
+            "ff": 2400,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[2].bank_mem[0][0]$_DFFE_PP_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[3]",
+            "ff": 2304,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[3].bank_mem[0][0]$_DFFE_PP_"
+          },
+          {
+            "root": "port:pc__front_hbm_data[0]",
+            "ff": 2112,
+            "icg": 0,
+            "macro_pins": 0,
+            "example": "u_pc.u_pce.u_path.u_front.g_storage[0].bank_mem[0][0]$_DFFE_PP_"
+          }
+        ],
+        "hier_subblocks": 0,
+        "clock_max_root_sinks": 21520,
+        "clock_max_root": "port:hck",
+        "high_fanout_top": [
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[8].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2405,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[4].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2405,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[12].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2309,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_ctrl.u_sched.tr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2179,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_front.g_ra[0].u_rp.q[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 2117,
+            "flops": 0
+          },
+          {
+            "net": "_291643_/Y (AND2x2_ASAP7_75t_R)",
+            "loads": 2023,
+            "flops": 0
+          },
+          {
+            "net": "u_pc.u_pce.u_path.u_ctrl.u_sched.hgo$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+            "loads": 1994,
+            "flops": 1986
+          },
+          {
+            "net": "_292147_/Y (AND2x2_ASAP7_75t_R)",
+            "loads": 1801,
+            "flops": 0
+          }
+        ],
+        "hf_max_port": 0,
+        "hf_max_reset": 0,
+        "hf_max_net": 2405,
+        "reset_landing": [
+          {
+            "port": "hrst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          },
+          {
+            "port": "rst_n",
+            "sinks": 2,
+            "flops": 2,
+            "macros": 0
+          }
+        ],
+        "in_to_out_bits": 0,
+        "in_to_reg_levels": 2,
+        "reg_to_out_levels": 0,
+        "icg_enable_from_port": 0,
+        "depth_ps": 590.1,
+        "depth_path": [
+          "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.wq_v[2]$_DFF_PN0_",
+          "u_pc.u_pce.u_path.u_ctrl.u_sched.u_ctl.core.on.bank[14].wrr[3]$_DFFE_PN0P_/D"
+        ],
+        "depth_levels": 14,
+        "reach_worst_um": 236.4,
+        "reach_violations": 0,
+        "util": 0.3159
+      },
+      "cells": 187867,
+      "flops": 41634,
+      "diagnostic_tt_placement_setup_ps": 107.34135802437095,
+      "diagnostic_tt_placement_hold_ps": -17.61646384323967,
+      "ff_signoff_setup_hold": null,
+      "native_launch_capture_qualified": false,
+      "outline_um": [
+        267.84,
+        300.24
+      ],
+      "aspect_ratio": 1.120967741935484,
+      "macros": 0,
+      "face_pin_counts": {
+        "N": 1547,
+        "S": 34,
+        "E": 1376,
+        "W": 625
+      },
+      "face_average_density_per_um": {
+        "N": 5.77583632019116,
+        "S": 0.1269414575866189,
+        "E": 4.583000266453504,
+        "W": 2.081667998934186
+      },
+      "clock_pin_geometry": {
+        "ck": {
+          "center_um": [
+            267.798,
+            10.956
+          ],
+          "side": "E",
+          "rect": [
+            267.756,
+            10.944,
+            267.84,
+            10.968
+          ],
+          "layer": "M4"
+        },
+        "hck": {
+          "center_um": [
+            267.798,
+            30.828
+          ],
+          "side": "E",
+          "rect": [
+            267.756,
+            30.816,
+            267.84,
+            30.84
+          ],
+          "layer": "M4"
+        }
+      },
+      "complete_uncapped_transparent_logical_pin_census": null,
+      "fixed_face_ff_ownership": null,
+      "historical_physical_json_warning": "physical.json was emitted at initial floorplan stop before final gate CTS/GRT; its not_met timings are preserved and are not final signoff"
+    }
+  }
+}
