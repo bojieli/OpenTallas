@@ -97,6 +97,37 @@ class MuCalendar(unittest.TestCase):
         with self.assertRaises(ScheduleError):
             M.dv_user_fields(5)
 
+    # MU-QW-AMIX 10-19: the argmax root merges one user's candidates at a time (compiler assertion; the RTL faults too)
+    def test_root_window_derivation(self):
+        self.assertEqual(M.am_root_window(12), (2, 48))         # root at W5: own at +2, slice 11 at +4*11+3 = +47
+        self.assertEqual(M.am_root_window(2), (2, 8))
+        lo, hi = M.am_root_window(12)
+        for r in range(12):                                      # every root position inside the worst-case window
+            arr = [2 * r + 2] + [2 * k + 2 * abs(k - r) + 3 for k in range(12) if k != r]
+            self.assertTrue(lo <= min(arr) and max(arr) < hi)
+
+    def test_root_merge_legal_schedule_passes(self):
+        cal = M.compile_calendar(OF_RECORD, tokens=3, policy="priority")
+        self.assertGreater(cal["root_merge"]["emits_checked"], 3)
+        self.assertEqual(cal["root_merge"]["mixed"], 0)
+        self.assertEqual(M.check_root_merge(cal["schedule"]), cal["root_merge"]["emits_checked"])
+        span = M.am_root_window()[1] - M.am_root_window()[0]
+        self.assertEqual(M.check_root_merge({0: [("head", 1000, None)], 1: [("head", 1000 + span, None)]}), 2)
+        self.assertEqual(M.check_root_merge({0: [("head", 1000, None), ("head", 1001, None)]}), 2)   # one user: legal
+
+    def test_root_merge_forced_mix_raises(self):
+        span = M.am_root_window()[1] - M.am_root_window()[0]
+        with self.assertRaisesRegex(ScheduleError, r"mixes users 0 and 1: emits at cycles 1008 and 1053"):
+            M.check_root_merge({0: [("head", 1000, None)], 1: [("head", 1000 + span - 1, None)]})
+        cal = M.compile_calendar(OF_RECORD, tokens=3, policy="priority")
+        sched = {u: list(v) for u, v in cal["schedule"].items()}
+        h0 = next(t0 for n, t0, _ in sched[0] if n == "head")
+        i1 = next(i for i, (n, _, _) in enumerate(sched[1]) if n == "head")
+        n, _, b = sched[1][i1]
+        sched[1][i1] = (n, h0 + 10, b)                           # user 1's emit 10 cycles after user 0's
+        with self.assertRaisesRegex(ScheduleError, "argmax root merge mixes users 0 and 1"):
+            M.check_root_merge(sched)
+
 
 if __name__ == "__main__":
     unittest.main()

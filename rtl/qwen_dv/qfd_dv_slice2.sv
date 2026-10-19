@@ -28,6 +28,11 @@
 //   AMAX [6] ARX: the root's die-wide argmax leaves as one AR word {v, tag {0, idx}, mode 1, last 1, {0, idx, val}}
 //   AMAX [7] GATHER: the next AR return words (one per rank, rank order) are merged on every slice (strictly greater
 //            okey; a tie keeps the earlier rank) instead of landing; the last one sets the status token (G9 token id)
+// MU-QW-AMIX 10-19 (MU_NU > 1; contract with MU-QW-B1-RTL): st[27:26] = the USER of the token in st[23:0] on the edges
+//   st[24] (tok_v) is set (scalar-tree token: the root merge's user carried in the TOK tag; gather token: the gather
+//   AMAX command's user cmd[9:8]); otherwise st[27:26] = ar_rank[1:0] as before.  MU_NU 1: st unchanged.  The root
+//   faults (sc_fault) when one argmax merge holds two users' candidates (qfd_dv_scalar2).  AM_MUT 7 (bench only) drops
+//   that check (qfd_dv_scalar2 MU_MUT 2).
 // =====================================================================================================================
 module qfd_dv_slice2 #(
     parameter integer MUT = 0,
@@ -101,7 +106,7 @@ module qfd_dv_slice2 #(
             cmd_o <= setid ? {cmd_q[115:8], cmd_q[7:4] + ((MUT == 10) ? 4'd0 : 4'd1), cmd_q[3:0]} : cmd_q;
         end
     // ------------------------------------------------------------------ command decode
-    reg        arx_arm, g_arm, g_tok_v, g_fault; reg [2:0] g_cnt; reg [55:0] g_best; reg [23:0] g_tok_idx; reg [31:0] g_tok_val;
+    reg        arx_arm, g_arm, g_tok_v, g_fault; reg [1:0] g_user; reg [2:0] g_cnt; reg [55:0] g_best; reg [23:0] g_tok_idx; reg [31:0] g_tok_val;
     wire       go = cmd_q[0] && sid_ok && (cmd_q[115:112] == sid_q || cmd_q[115:112] == 4'hF) && cmd_q[3:1] != 3'd7;
     wire [2:0] kind = cmd_q[3:1];
     wire c_su = go && kind == 3'd1, c_stn = go && kind == 3'd2, c_root = go && kind == 3'd3,
@@ -184,23 +189,24 @@ module qfd_dv_slice2 #(
     wire        red_vm = red_we && red_addr[23:22] == 2'b00;
     wire        red_bad = red_we && red_addr[23:22] != 2'b11 && red_addr[23:22] != 2'b00;
     wire        am_v, tok_v, tok_own;
+    wire [1:0]  am_u, tok_user;
     wire [23:0] am_idx, tok_idx;
     wire [31:0] am_val, tok_val;
 `ifdef OT_DV_AMAX_MUT
-    localparam integer AM_MUT = `OT_DV_AMAX_MUT;   // bench only (MU-ADOPT-SLICE mutant witnesses): qfd_dv_amax_mu MUT 1..5; 6 = root merge no per-token restart (qfd_dv_scalar2 MU_MUT 1)
+    localparam integer AM_MUT = `OT_DV_AMAX_MUT;   // bench only (MU-ADOPT-SLICE mutant witnesses): qfd_dv_amax_mu MUT 1..5; 6 = root merge no per-token restart (qfd_dv_scalar2 MU_MUT 1); 7 = no mixed-user merge check (qfd_dv_scalar2 MU_MUT 2)
 `else
     localparam integer AM_MUT = 0;
 `endif
-    qfd_dv_scalar2 #(.MUT(MUT), .MU_NU(MU_NU), .MU_MUT((AM_MUT == 6) ? 1 : 0)) u_sc (.ck(ck), .rst_n(rst),
+    qfd_dv_scalar2 #(.MUT(MUT), .MU_NU(MU_NU), .MU_MUT((AM_MUT == 6) ? 1 : (AM_MUT == 7) ? 2 : 0)) u_sc (.ck(ck), .rst_n(rst),
         .cfg_v(c_root), .cfg_root(cmd_q[4]), .cfg_nb(cmd_q[10:5]), .cfg_ss(cmd_q[34:11]),
         .cfg_fuse(cmd_q[35]), .cfg_rx(cmd_q[59:36]), .cfg_eps(cmd_q[91:60]), .cfg_k(cmd_q[96:92]),
         .cfg_amnb(cmd_q[102:97]), .cfg_rdir(cmd_q[103]),
         .dn_i(scd_q), .dn_o(sc_dn_o), .up_i(scu_q), .up_o(sc_up_o),
         .ps_v(red_ps), .ps_idx({2'b00, red_addr[21:0]}), .ps_val(red_data),
         .rb_v(su_rb), .rb_val(vm_wdata[31:0]),
-        .am_v(am_v), .am_idx(am_idx), .am_val(am_val),
+        .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u),
         .w1_we(sc_w1_we), .w1_addr(sc_w1_addr), .w1_data(sc_w1_data), .tok_v(tok_v), .tok_idx(tok_idx),
-        .tok_own(tok_own), .tok_val(tok_val),
+        .tok_own(tok_own), .tok_val(tok_val), .tok_user(tok_user),
         .busy(sc_busy), .fault(sc_fault));
     // ------------------------------------------------------------------ LM-head running argmax (max, lowest index)
     // qfd_dv_amax_mu (rtl/qwen_dv/mu): MU_NU = 1 is the former in-line block statement for statement (tree, running best,
@@ -210,9 +216,9 @@ module qfd_dv_slice2 #(
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
     wire am_emit_empty, am_mu_fault, am_stn_pend;
-    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT == 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
+    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT >= 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(go && kind == 3'd6), .am_clr(cmd_q[4]), .am_emit_cmd(cmd_q[5]),
-        .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
+        .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
     // ------------------------------------------------------------------ stream
     wire        tw_we, stm_fault, xt_v, xt_bad;
     wire [23:0] xt_a;
@@ -284,12 +290,12 @@ module qfd_dv_slice2 #(
     wire       g_take = (g_cnt == 3'd0) || okey(g_in[31:0]) > okey(g_best[31:0]) ||
                         ((MUT == 12) && okey(g_in[31:0]) == okey(g_best[31:0]));
     always @(posedge ck or negedge rst)
-        if (!rst) begin arx_arm <= 1'b0; g_arm <= 1'b0; g_tok_v <= 1'b0; g_fault <= 1'b0; g_cnt <= 3'd0;
+        if (!rst) begin arx_arm <= 1'b0; g_arm <= 1'b0; g_tok_v <= 1'b0; g_fault <= 1'b0; g_cnt <= 3'd0; g_user <= 2'd0;
                         g_best <= 56'd0; g_tok_idx <= 24'd0; g_tok_val <= 32'd0; end
         else begin
             g_tok_v <= 1'b0;
             if (c_am && cmd_q[6]) arx_arm <= 1'b1; else if (arx_v) arx_arm <= 1'b0;
-            if (c_am && cmd_q[7]) begin g_arm <= 1'b1; g_cnt <= 3'd0; end
+            if (c_am && cmd_q[7]) begin g_arm <= 1'b1; g_cnt <= 3'd0; if (MU_NU > 1) g_user <= cmd_q[9:8]; end
             else if (g_v) begin
                 if (g_take) g_best <= g_in;
                 g_cnt <= g_cnt + 3'd1;
@@ -347,10 +353,12 @@ module qfd_dv_slice2 #(
         else if (stn_busy && (stn_snd ? l9_o[512] : r_v)) stn_left <= stn_left - 9'd1;
     always @(posedge ck or negedge rst) if (!rst) tok_g <= 1'b0; else if (g_tok_v) tok_g <= 1'b1; else if (tok_v) tok_g <= 1'b0;
     wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault | hd_fault;
+    // MU-QW-AMIX: st[27:26] = user of the token on a tok_v edge (MU_NU > 1), else ar_rank[1:0] (MU_NU 1: always)
+    wire [1:0] st_ru = (MU_NU > 1 && (tok_v || g_tok_v)) ? (tsel ? g_user : tok_user) : ar_rank[1:0];
     always @(posedge ck or negedge rst)
         if (!rst) st <= 107'd0;
         else st <= {ar_v, tsel ? g_tok_val : tok_v ? (tok_own ? tok_val : 32'd0) : tok_own_val, 4'd0 /* sid */, any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
-                    su_idle, sc_busy, su_prog, su_rows, ar_rank, ar_last, tok_v || g_tok_v,
+                    su_idle, sc_busy, su_prog, su_rows, ar_rank[2], st_ru, ar_last, tok_v || g_tok_v,
                     tsel ? g_tok_idx : tok_idx} | (107'(sid_q) << 70);
     // status OR chain toward W5 (registered; the chain end's ag_up_i is the zero identity)
     always @(posedge ck or negedge rst)
