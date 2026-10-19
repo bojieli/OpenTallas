@@ -86,6 +86,10 @@
   "macro_halo_um": 5.4,
   "pin_balance": {
    "group_max": 32
+  },
+  "cts_sink": {
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware",
+   "why": "ORPHANS-1835 10-18: gate 055002 (default H-tree, obstruction-aware around the 3-SRAM stack, entry N-W corner) pin-flop spread TT 379.2..492.6 = 113.4 / FF 309.1..408.1 = 99.0 ps (> 80) with the bulk tight (mean 393.3): a late tail, the S-KVASTK st2 pattern (6-SRAM column, 118.5 -> 61.1 ps with this measured setting on its re-CTS sweep). Same setting here; the gate measures it."
   }
  },
  "pin_regs": {

@@ -103,9 +103,12 @@ def gate_file_ok(root, path):
 
 def dirty(root, commit, paths):
     """(uncommitted, differs-from-commit) consumed paths"""
-    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit
+    # gate_layout/ (pre_route_gate layout PNGs) is never shipped nor gate-bound: an untracked copy is not a dirty kit.
+    # An untracked lint_receipt.json (tools/ref_tile/lint_receipt.py) is a cache of the kit CDC lint written by the
+    # gate's regeneration: the daemon re-derives (or re-runs on the fleet) the same lint at the commit, so it is not dirt.
     unc = [ln.split(None, 1)[1] for ln in git(root, "status", "--porcelain", "--", *paths).splitlines()
-           if ln.strip() and not (ln.startswith("??") and "/gate_layout/" in "/" + ln.split(None, 1)[1])]
+           if ln.strip() and not (ln.startswith("??") and ("/gate_layout/" in "/" + ln.split(None, 1)[1]
+                                                          or ln.split(None, 1)[1].endswith("/lint_receipt.json")))]
     head = git(root, "rev-parse", "HEAD")
     diff = git(root, "diff", "--name-only", commit, head, "--", *paths).splitlines() if not head.startswith(commit) else []
     return unc, [d for d in diff if d]
