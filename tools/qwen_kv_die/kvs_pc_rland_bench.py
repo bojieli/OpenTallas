@@ -7,7 +7,8 @@
         straight into u_pce; rtl/test/qwen_static_kv/kvpc_rland/qkd_static_kv_pc_path_fan_nc_b_ref.sv), its resets
         landed OUTSIDE the tile by the same 2-stage ot_reset_sync per domain.
 Claim: the landing + strap registers change nothing but the reset release point (+2 edges per domain, the same as an
-external landing), i.e. every tile output is equal every ck and hck edge.  Two clocks: ck 834 ps, hck 1024 ps
+external landing), i.e. every tile output AND every child input pin (u_embr, u_pc, and the strap pins of u_pc.u_pce /
+u_pc.u_chain) is equal every ck and hck edge from the reset release on.  Two clocks: ck 834 ps, hck 1024 ps
 (offset 0.3 ps: no coincident edges).  Resets low 12 ck edges; random inputs on every ck edge from the release on (the
 landing window is exercised), straps constant.
 --mut (must FAIL): 1 hck landing clocked by ck; 2 u_pc.cal_rst_n left on the raw hrst_n; 3 u_embr on the raw rst_n;
@@ -121,6 +122,16 @@ def main():
                                              for n, d, w in P) + ');')
     L.append('  dut_tile u_dut (' + ', '.join(f'.{n}({"d__" + n if d == "output" else n})' for n, d, w in P) + ');')
     cmp_ = []
+    # every child input pin of the tile (u_embr, u_pc) and the strap pins of u_pc's u_pce / u_chain: REF vs DUT (the
+    # landing window and the strap register are compared directly, not only through what the children make visible)
+    pins = []
+    for inst in ('u_embr', 'u_pc'):
+        m = re.search(rf'\b{inst} \((.*?)\);', dut, re.S)
+        pins += [f'{inst}.{pin}' for pin in re.findall(r'\.(\w+)\(', m.group(1))]
+    pins += ['u_pc.u_pce.pc', 'u_pc.u_pce.cfg_stack', 'u_pc.u_chain.pc', 'u_pc.u_chain.cfg_stack']
+    for h in pins:
+        cmp_.append(f'      chk = chk + 1; if (u_ref.{h} !== u_dut.{h}) begin bad = bad + 1; '
+                    f'if (bad < 8) $display("MISMATCH t=%0d %s pin {h}", t, phase); end')
     for n, w in outs:
         cmp_.append(f'      chk = chk + 1; if (r__{n} !== d__{n}) begin bad = bad + 1; '
                     f'if (bad < 8) $display("MISMATCH t=%0d %s out {n}", t, phase); end')
@@ -145,7 +156,8 @@ def main():
             L.append(f'      {n} = {rnd(w)};')
     L.append('    end')
     L.append(f'    if (bad == 0 && act > 0) $display("KVPC_RLAND PASS tile={a.tile} edges={a.edges} checks=%0d '
-             f'active_out=%0d outs={len(outs)} errors=0 mut={a.mut} vs=ref_unlanded_external_landing", chk, act);')
+             f'active_out=%0d outs={len(outs)} child_pins={len(pins)} errors=0 mut={a.mut} '
+             f'vs=ref_unlanded_external_landing", chk, act);')
     L.append(f'    else $display("KVPC_RLAND FAIL tile={a.tile} edges={a.edges} checks=%0d errors=%0d active_out=%0d '
              f'mut={a.mut}", chk, bad, act);')
     L.append('    $finish;')
