@@ -21,11 +21,11 @@
  ],
  "outline": {
   "w": 172.8,
-  "h": 216.0,
+  "h": 302.4,
   "exact": true
  },
- "std_area_um2": 24000,
- "slot_change_request": "HH-6 / HBM-SURED 10-18 -> H-D4G: NEW leaf su_pt_<q><g> (16 per die), one beside each SU pgslice on its reducer side: W face = the slice's 32 lanes' ro_x/ro_v + tree_cmd (1,068 b, 4.9/um), E face = tree_o 67 b toward sucore_<q>; serial clk_ctl domain.",
+ "std_area_um2": 26000,
+ "slot_change_request": "HBM-PRETREE p2 10-19 -> H-D4G: su_pt_<q><g> outline 172.8 x 216 -> 172.8 x 302.4 um (+86.4 um, two 43.2 lattice rows) because the hold-safe skew lines (circular buffers) + node operand registers measured 25.8k um2 synth (73% in the old slot); faces unchanged (W lanes 1,068 b now 3.5/um, E tree_o 67 b). | p1: HH-6 / HBM-SURED 10-18 -> H-D4G: NEW leaf su_pt_<q><g> (16 per die), one beside each SU pgslice on its reducer side: W face = the slice's 32 lanes' ro_x/ro_v + tree_cmd (1,068 b, 4.9/um), E face = tree_o 67 b toward sucore_<q>; serial clk_ctl domain.",
  "layer_cap": "M5",
  "macros": [],
  "children": [],
@@ -46,7 +46,7 @@
   ]
  },
  "route": {
-  "pd": 0.72,
+  "pd": 0.65,
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
