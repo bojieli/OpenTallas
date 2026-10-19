@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen.witness-storage-source-receipt.v1",
+  "production_bound": false,
+  "storage_RTL_implemented": false,
+  "native_source_commit": "b65718325",
+  "native_view_path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+  "native_V_sha256": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+  "native_binary_sha256": "f7fa1e133fe5a6b626137f76d9072604e17a3b11d86c68406f102c7ff9f90484",
+  "native_checks": 38,
+  "DFF_source_path": "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/DFFHQNx1_ASAP7_75t_R.lib",
+  "DFF_source_sha256": "06c367e79e76f7e3341a06453cb04d9b4e47663194264c1438b753139b327433",
+  "sha256": {
+    "tools/qwen_layerbench/witness_storage_model.py": "bec6b31d4e40058ecbc537893f15d231aa5ef0da9302f92f3a3165f098e0fbe0",
+    "rtl/test/qwen_dv/tb_qwen_witness_native32.sv": "eca84309ec7e1006bd7ca4f51f41a9fc116edfd2cbafde22519d8111cdd4cd6c",
+    "results/arch/qwen_calendar_integration_1019/witness/witness_storage/model.json": "1386c2668b6d06c831a7019b53b422a15bca53ee7b130ba67d7adb0bac913c86",
+    "results/arch/qwen_calendar_integration_1019/witness/witness_storage/packed_sram.hex": "af53ff1d49ee03a79f13dc4d1fb0f9ee7299e445ef087a3587b2448c6cd6067b",
+    "results/arch/qwen_calendar_integration_1019/witness/native32_port.log": "7e89d9f28327fc1da51fd6caa5f7688f93d070fd077c2f86261bd46be6364770"
+  },
+  "scope": "Native raw memory port calibration + executable packing/service/phase-guard MODEL; no selected storage RTL or physical admission"
+}

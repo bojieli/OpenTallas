@@ -1,0 +1,1149 @@
+{
+  "schema": "opentallas.qwen.witness-storage-service-options.v1",
+  "production_bound": false,
+  "storage_RTL_implemented": false,
+  "packed": {
+    "useful_bits": 1742,
+    "native_rows_used": 28,
+    "physical_rows": 32,
+    "row_bits": 64,
+    "explicit_zero_rows": [
+      28,
+      29,
+      30,
+      31
+    ],
+    "last_row_useful_low_bits": 14,
+    "template_fetch": [
+      {
+        "group": 0,
+        "family": "SSQ",
+        "pidx": 0,
+        "first_row": 0,
+        "last_row": 2,
+        "bit_offset": 0,
+        "read_slots": 3
+      },
+      {
+        "group": 1,
+        "family": "qk",
+        "pidx": 4,
+        "first_row": 2,
+        "last_row": 4,
+        "bit_offset": 6,
+        "read_slots": 3
+      },
+      {
+        "group": 2,
+        "family": "qk",
+        "pidx": 5,
+        "first_row": 4,
+        "last_row": 6,
+        "bit_offset": 12,
+        "read_slots": 3
+      },
+      {
+        "group": 3,
+        "family": "qk",
+        "pidx": 6,
+        "first_row": 6,
+        "last_row": 8,
+        "bit_offset": 18,
+        "read_slots": 3
+      },
+      {
+        "group": 4,
+        "family": "qk",
+        "pidx": 7,
+        "first_row": 8,
+        "last_row": 10,
+        "bit_offset": 24,
+        "read_slots": 3
+      },
+      {
+        "group": 5,
+        "family": "qk",
+        "pidx": 8,
+        "first_row": 10,
+        "last_row": 12,
+        "bit_offset": 30,
+        "read_slots": 3
+      },
+      {
+        "group": 6,
+        "family": "attn",
+        "pidx": 11,
+        "first_row": 12,
+        "last_row": 14,
+        "bit_offset": 36,
+        "read_slots": 3
+      },
+      {
+        "group": 7,
+        "family": "resid1",
+        "pidx": 1,
+        "first_row": 14,
+        "last_row": 16,
+        "bit_offset": 42,
+        "read_slots": 3
+      },
+      {
+        "group": 8,
+        "family": "resid1",
+        "pidx": 3,
+        "first_row": 16,
+        "last_row": 18,
+        "bit_offset": 48,
+        "read_slots": 3
+      },
+      {
+        "group": 9,
+        "family": "silu",
+        "pidx": 9,
+        "first_row": 18,
+        "last_row": 20,
+        "bit_offset": 54,
+        "read_slots": 3
+      },
+      {
+        "group": 10,
+        "family": "silu",
+        "pidx": 10,
+        "first_row": 20,
+        "last_row": 23,
+        "bit_offset": 60,
+        "read_slots": 4
+      },
+      {
+        "group": 11,
+        "family": "resid2",
+        "pidx": 1,
+        "first_row": 23,
+        "last_row": 25,
+        "bit_offset": 2,
+        "read_slots": 3
+      },
+      {
+        "group": 12,
+        "family": "resid2",
+        "pidx": 3,
+        "first_row": 25,
+        "last_row": 27,
+        "bit_offset": 8,
+        "read_slots": 3
+      }
+    ],
+    "read_slots_per13groups": 40,
+    "read_slots_4contexts": 160
+  },
+  "installation": {
+    "PW_beats": 39,
+    "first_PW_sample": 0,
+    "last_PW_sample": 38,
+    "first_native_write_sample": 4,
+    "last_native_write_sample": 42,
+    "seal_publication": 43,
+    "first_usable_seal_sample": 44,
+    "max_write_FIFO_words": 3,
+    "native_writes": 28,
+    "writes": [
+      {
+        "edge": 4,
+        "row": 0
+      },
+      {
+        "edge": 5,
+        "row": 1
+      },
+      {
+        "edge": 7,
+        "row": 2
+      },
+      {
+        "edge": 8,
+        "row": 3
+      },
+      {
+        "edge": 10,
+        "row": 4
+      },
+      {
+        "edge": 11,
+        "row": 5
+      },
+      {
+        "edge": 13,
+        "row": 6
+      },
+      {
+        "edge": 14,
+        "row": 7
+      },
+      {
+        "edge": 16,
+        "row": 8
+      },
+      {
+        "edge": 17,
+        "row": 9
+      },
+      {
+        "edge": 19,
+        "row": 10
+      },
+      {
+        "edge": 20,
+        "row": 11
+      },
+      {
+        "edge": 22,
+        "row": 12
+      },
+      {
+        "edge": 23,
+        "row": 13
+      },
+      {
+        "edge": 25,
+        "row": 14
+      },
+      {
+        "edge": 26,
+        "row": 15
+      },
+      {
+        "edge": 28,
+        "row": 16
+      },
+      {
+        "edge": 29,
+        "row": 17
+      },
+      {
+        "edge": 31,
+        "row": 18
+      },
+      {
+        "edge": 32,
+        "row": 19
+      },
+      {
+        "edge": 34,
+        "row": 20
+      },
+      {
+        "edge": 35,
+        "row": 21
+      },
+      {
+        "edge": 36,
+        "row": 22
+      },
+      {
+        "edge": 37,
+        "row": 23
+      },
+      {
+        "edge": 38,
+        "row": 24
+      },
+      {
+        "edge": 40,
+        "row": 25
+      },
+      {
+        "edge": 41,
+        "row": 26
+      },
+      {
+        "edge": 42,
+        "row": 27
+      }
+    ],
+    "complete_physical_copy_authentication_still_required": true
+  },
+  "storage_prefetch_stress": {
+    "contexts": 4,
+    "simultaneous_origin": true,
+    "service": [
+      {
+        "user": 0,
+        "group": 0,
+        "request_sample": 6,
+        "read_slots": 3,
+        "first_macro_read_sample": 7,
+        "last_macro_read_sample": 9,
+        "last_capture_publication": 10,
+        "earliest_consumer_sample": 11,
+        "first_witness_source_edge": 26,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 0,
+        "request_sample": 10,
+        "read_slots": 3,
+        "first_macro_read_sample": 11,
+        "last_macro_read_sample": 13,
+        "last_capture_publication": 14,
+        "earliest_consumer_sample": 15,
+        "first_witness_source_edge": 26,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 0,
+        "request_sample": 14,
+        "read_slots": 3,
+        "first_macro_read_sample": 15,
+        "last_macro_read_sample": 17,
+        "last_capture_publication": 18,
+        "earliest_consumer_sample": 19,
+        "first_witness_source_edge": 26,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 0,
+        "request_sample": 18,
+        "read_slots": 3,
+        "first_macro_read_sample": 19,
+        "last_macro_read_sample": 21,
+        "last_capture_publication": 22,
+        "earliest_consumer_sample": 23,
+        "first_witness_source_edge": 26,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 1,
+        "request_sample": 282,
+        "read_slots": 3,
+        "first_macro_read_sample": 283,
+        "last_macro_read_sample": 285,
+        "last_capture_publication": 286,
+        "earliest_consumer_sample": 287,
+        "first_witness_source_edge": 302,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 1,
+        "request_sample": 286,
+        "read_slots": 3,
+        "first_macro_read_sample": 287,
+        "last_macro_read_sample": 289,
+        "last_capture_publication": 290,
+        "earliest_consumer_sample": 291,
+        "first_witness_source_edge": 302,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 1,
+        "request_sample": 290,
+        "read_slots": 3,
+        "first_macro_read_sample": 291,
+        "last_macro_read_sample": 293,
+        "last_capture_publication": 294,
+        "earliest_consumer_sample": 295,
+        "first_witness_source_edge": 302,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 1,
+        "request_sample": 294,
+        "read_slots": 3,
+        "first_macro_read_sample": 295,
+        "last_macro_read_sample": 297,
+        "last_capture_publication": 298,
+        "earliest_consumer_sample": 299,
+        "first_witness_source_edge": 302,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 2,
+        "request_sample": 373,
+        "read_slots": 3,
+        "first_macro_read_sample": 374,
+        "last_macro_read_sample": 376,
+        "last_capture_publication": 377,
+        "earliest_consumer_sample": 378,
+        "first_witness_source_edge": 393,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 2,
+        "request_sample": 377,
+        "read_slots": 3,
+        "first_macro_read_sample": 378,
+        "last_macro_read_sample": 380,
+        "last_capture_publication": 381,
+        "earliest_consumer_sample": 382,
+        "first_witness_source_edge": 393,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 2,
+        "request_sample": 381,
+        "read_slots": 3,
+        "first_macro_read_sample": 382,
+        "last_macro_read_sample": 384,
+        "last_capture_publication": 385,
+        "earliest_consumer_sample": 386,
+        "first_witness_source_edge": 393,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 2,
+        "request_sample": 385,
+        "read_slots": 3,
+        "first_macro_read_sample": 386,
+        "last_macro_read_sample": 388,
+        "last_capture_publication": 389,
+        "earliest_consumer_sample": 390,
+        "first_witness_source_edge": 393,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 3,
+        "request_sample": 444,
+        "read_slots": 3,
+        "first_macro_read_sample": 445,
+        "last_macro_read_sample": 447,
+        "last_capture_publication": 448,
+        "earliest_consumer_sample": 449,
+        "first_witness_source_edge": 464,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 3,
+        "request_sample": 448,
+        "read_slots": 3,
+        "first_macro_read_sample": 449,
+        "last_macro_read_sample": 451,
+        "last_capture_publication": 452,
+        "earliest_consumer_sample": 453,
+        "first_witness_source_edge": 464,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 3,
+        "request_sample": 452,
+        "read_slots": 3,
+        "first_macro_read_sample": 453,
+        "last_macro_read_sample": 455,
+        "last_capture_publication": 456,
+        "earliest_consumer_sample": 457,
+        "first_witness_source_edge": 464,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 3,
+        "request_sample": 456,
+        "read_slots": 3,
+        "first_macro_read_sample": 457,
+        "last_macro_read_sample": 459,
+        "last_capture_publication": 460,
+        "earliest_consumer_sample": 461,
+        "first_witness_source_edge": 464,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 4,
+        "request_sample": 493,
+        "read_slots": 3,
+        "first_macro_read_sample": 494,
+        "last_macro_read_sample": 496,
+        "last_capture_publication": 497,
+        "earliest_consumer_sample": 498,
+        "first_witness_source_edge": 513,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 4,
+        "request_sample": 497,
+        "read_slots": 3,
+        "first_macro_read_sample": 498,
+        "last_macro_read_sample": 500,
+        "last_capture_publication": 501,
+        "earliest_consumer_sample": 502,
+        "first_witness_source_edge": 513,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 4,
+        "request_sample": 501,
+        "read_slots": 3,
+        "first_macro_read_sample": 502,
+        "last_macro_read_sample": 504,
+        "last_capture_publication": 505,
+        "earliest_consumer_sample": 506,
+        "first_witness_source_edge": 513,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 4,
+        "request_sample": 505,
+        "read_slots": 3,
+        "first_macro_read_sample": 506,
+        "last_macro_read_sample": 508,
+        "last_capture_publication": 509,
+        "earliest_consumer_sample": 510,
+        "first_witness_source_edge": 513,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 5,
+        "request_sample": 534,
+        "read_slots": 3,
+        "first_macro_read_sample": 535,
+        "last_macro_read_sample": 537,
+        "last_capture_publication": 538,
+        "earliest_consumer_sample": 539,
+        "first_witness_source_edge": 554,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 5,
+        "request_sample": 538,
+        "read_slots": 3,
+        "first_macro_read_sample": 539,
+        "last_macro_read_sample": 541,
+        "last_capture_publication": 542,
+        "earliest_consumer_sample": 543,
+        "first_witness_source_edge": 554,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 5,
+        "request_sample": 542,
+        "read_slots": 3,
+        "first_macro_read_sample": 543,
+        "last_macro_read_sample": 545,
+        "last_capture_publication": 546,
+        "earliest_consumer_sample": 547,
+        "first_witness_source_edge": 554,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 5,
+        "request_sample": 546,
+        "read_slots": 3,
+        "first_macro_read_sample": 547,
+        "last_macro_read_sample": 549,
+        "last_capture_publication": 550,
+        "earliest_consumer_sample": 551,
+        "first_witness_source_edge": 554,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 6,
+        "request_sample": 2348,
+        "read_slots": 3,
+        "first_macro_read_sample": 2349,
+        "last_macro_read_sample": 2351,
+        "last_capture_publication": 2352,
+        "earliest_consumer_sample": 2353,
+        "first_witness_source_edge": 2368,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 6,
+        "request_sample": 2352,
+        "read_slots": 3,
+        "first_macro_read_sample": 2353,
+        "last_macro_read_sample": 2355,
+        "last_capture_publication": 2356,
+        "earliest_consumer_sample": 2357,
+        "first_witness_source_edge": 2368,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 6,
+        "request_sample": 2356,
+        "read_slots": 3,
+        "first_macro_read_sample": 2357,
+        "last_macro_read_sample": 2359,
+        "last_capture_publication": 2360,
+        "earliest_consumer_sample": 2361,
+        "first_witness_source_edge": 2368,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 6,
+        "request_sample": 2360,
+        "read_slots": 3,
+        "first_macro_read_sample": 2361,
+        "last_macro_read_sample": 2363,
+        "last_capture_publication": 2364,
+        "earliest_consumer_sample": 2365,
+        "first_witness_source_edge": 2368,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 7,
+        "request_sample": 3259,
+        "read_slots": 3,
+        "first_macro_read_sample": 3260,
+        "last_macro_read_sample": 3262,
+        "last_capture_publication": 3263,
+        "earliest_consumer_sample": 3264,
+        "first_witness_source_edge": 3279,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 7,
+        "request_sample": 3263,
+        "read_slots": 3,
+        "first_macro_read_sample": 3264,
+        "last_macro_read_sample": 3266,
+        "last_capture_publication": 3267,
+        "earliest_consumer_sample": 3268,
+        "first_witness_source_edge": 3279,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 7,
+        "request_sample": 3267,
+        "read_slots": 3,
+        "first_macro_read_sample": 3268,
+        "last_macro_read_sample": 3270,
+        "last_capture_publication": 3271,
+        "earliest_consumer_sample": 3272,
+        "first_witness_source_edge": 3279,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 7,
+        "request_sample": 3271,
+        "read_slots": 3,
+        "first_macro_read_sample": 3272,
+        "last_macro_read_sample": 3274,
+        "last_capture_publication": 3275,
+        "earliest_consumer_sample": 3276,
+        "first_witness_source_edge": 3279,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 8,
+        "request_sample": 3367,
+        "read_slots": 3,
+        "first_macro_read_sample": 3368,
+        "last_macro_read_sample": 3370,
+        "last_capture_publication": 3371,
+        "earliest_consumer_sample": 3372,
+        "first_witness_source_edge": 3387,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 8,
+        "request_sample": 3371,
+        "read_slots": 3,
+        "first_macro_read_sample": 3372,
+        "last_macro_read_sample": 3374,
+        "last_capture_publication": 3375,
+        "earliest_consumer_sample": 3376,
+        "first_witness_source_edge": 3387,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 8,
+        "request_sample": 3375,
+        "read_slots": 3,
+        "first_macro_read_sample": 3376,
+        "last_macro_read_sample": 3378,
+        "last_capture_publication": 3379,
+        "earliest_consumer_sample": 3380,
+        "first_witness_source_edge": 3387,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 8,
+        "request_sample": 3379,
+        "read_slots": 3,
+        "first_macro_read_sample": 3380,
+        "last_macro_read_sample": 3382,
+        "last_capture_publication": 3383,
+        "earliest_consumer_sample": 3384,
+        "first_witness_source_edge": 3387,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 9,
+        "request_sample": 4183,
+        "read_slots": 3,
+        "first_macro_read_sample": 4184,
+        "last_macro_read_sample": 4186,
+        "last_capture_publication": 4187,
+        "earliest_consumer_sample": 4188,
+        "first_witness_source_edge": 4203,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 9,
+        "request_sample": 4187,
+        "read_slots": 3,
+        "first_macro_read_sample": 4188,
+        "last_macro_read_sample": 4190,
+        "last_capture_publication": 4191,
+        "earliest_consumer_sample": 4192,
+        "first_witness_source_edge": 4203,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 9,
+        "request_sample": 4191,
+        "read_slots": 3,
+        "first_macro_read_sample": 4192,
+        "last_macro_read_sample": 4194,
+        "last_capture_publication": 4195,
+        "earliest_consumer_sample": 4196,
+        "first_witness_source_edge": 4203,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 9,
+        "request_sample": 4195,
+        "read_slots": 3,
+        "first_macro_read_sample": 4196,
+        "last_macro_read_sample": 4198,
+        "last_capture_publication": 4199,
+        "earliest_consumer_sample": 4200,
+        "first_witness_source_edge": 4203,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 10,
+        "request_sample": 4248,
+        "read_slots": 4,
+        "first_macro_read_sample": 4249,
+        "last_macro_read_sample": 4252,
+        "last_capture_publication": 4253,
+        "earliest_consumer_sample": 4254,
+        "first_witness_source_edge": 4268,
+        "slack_edges": 14
+      },
+      {
+        "user": 1,
+        "group": 10,
+        "request_sample": 4252,
+        "read_slots": 4,
+        "first_macro_read_sample": 4253,
+        "last_macro_read_sample": 4256,
+        "last_capture_publication": 4257,
+        "earliest_consumer_sample": 4258,
+        "first_witness_source_edge": 4268,
+        "slack_edges": 10
+      },
+      {
+        "user": 2,
+        "group": 10,
+        "request_sample": 4256,
+        "read_slots": 4,
+        "first_macro_read_sample": 4257,
+        "last_macro_read_sample": 4260,
+        "last_capture_publication": 4261,
+        "earliest_consumer_sample": 4262,
+        "first_witness_source_edge": 4268,
+        "slack_edges": 6
+      },
+      {
+        "user": 3,
+        "group": 10,
+        "request_sample": 4260,
+        "read_slots": 4,
+        "first_macro_read_sample": 4261,
+        "last_macro_read_sample": 4264,
+        "last_capture_publication": 4265,
+        "earliest_consumer_sample": 4266,
+        "first_witness_source_edge": 4268,
+        "slack_edges": 2
+      },
+      {
+        "user": 0,
+        "group": 11,
+        "request_sample": 5244,
+        "read_slots": 3,
+        "first_macro_read_sample": 5245,
+        "last_macro_read_sample": 5247,
+        "last_capture_publication": 5248,
+        "earliest_consumer_sample": 5249,
+        "first_witness_source_edge": 5264,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 11,
+        "request_sample": 5248,
+        "read_slots": 3,
+        "first_macro_read_sample": 5249,
+        "last_macro_read_sample": 5251,
+        "last_capture_publication": 5252,
+        "earliest_consumer_sample": 5253,
+        "first_witness_source_edge": 5264,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 11,
+        "request_sample": 5252,
+        "read_slots": 3,
+        "first_macro_read_sample": 5253,
+        "last_macro_read_sample": 5255,
+        "last_capture_publication": 5256,
+        "earliest_consumer_sample": 5257,
+        "first_witness_source_edge": 5264,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 11,
+        "request_sample": 5256,
+        "read_slots": 3,
+        "first_macro_read_sample": 5257,
+        "last_macro_read_sample": 5259,
+        "last_capture_publication": 5260,
+        "earliest_consumer_sample": 5261,
+        "first_witness_source_edge": 5264,
+        "slack_edges": 3
+      },
+      {
+        "user": 0,
+        "group": 12,
+        "request_sample": 5352,
+        "read_slots": 3,
+        "first_macro_read_sample": 5353,
+        "last_macro_read_sample": 5355,
+        "last_capture_publication": 5356,
+        "earliest_consumer_sample": 5357,
+        "first_witness_source_edge": 5372,
+        "slack_edges": 15
+      },
+      {
+        "user": 1,
+        "group": 12,
+        "request_sample": 5356,
+        "read_slots": 3,
+        "first_macro_read_sample": 5357,
+        "last_macro_read_sample": 5359,
+        "last_capture_publication": 5360,
+        "earliest_consumer_sample": 5361,
+        "first_witness_source_edge": 5372,
+        "slack_edges": 11
+      },
+      {
+        "user": 2,
+        "group": 12,
+        "request_sample": 5360,
+        "read_slots": 3,
+        "first_macro_read_sample": 5361,
+        "last_macro_read_sample": 5363,
+        "last_capture_publication": 5364,
+        "earliest_consumer_sample": 5365,
+        "first_witness_source_edge": 5372,
+        "slack_edges": 7
+      },
+      {
+        "user": 3,
+        "group": 12,
+        "request_sample": 5364,
+        "read_slots": 3,
+        "first_macro_read_sample": 5365,
+        "last_macro_read_sample": 5367,
+        "last_capture_publication": 5368,
+        "earliest_consumer_sample": 5369,
+        "first_witness_source_edge": 5372,
+        "slack_edges": 3
+      }
+    ],
+    "native_read_ports": 1,
+    "max_active_or_prefetch_reserved_templates_per_context": 2,
+    "minimum_first_witness_slack": 2,
+    "intended_slots_per_context": 2,
+    "cal_output_execution_admissibility": false,
+    "physical_clock_axis_bound": false,
+    "axis": "separate runtime unit phase after installed/authenticated; installation-relative sample0 is not shared",
+    "absolute_execution_start": null
+  },
+  "required_faults": [
+    {
+      "name": "install_during_execution",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "read_during_install",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "same_address_install_prefetch",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "execution_before_final_native_write",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "execution_before_complete_copy_digest",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "missing_partial_PW",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "duplicate_PW",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "out_of_order_PW",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "header_or_padding_mutation",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "prefetch_late",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "stale_prefetch_generation",
+      "required_fault": true,
+      "RTL_tested": false
+    },
+    {
+      "name": "overwrite_live_template",
+      "required_fault": true,
+      "RTL_tested": false
+    }
+  ],
+  "MODEL_guard_mutants": [
+    {
+      "name": "write_during_execution",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "prefetch_during_install",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "execute_before_install",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "missing_final_native_drain",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "missing_partial_record",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "duplicate_PW",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "out_of_order_PW",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "header_or_padding_mutation",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "wrong_profile_digest",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "missing_physical_copy_auth",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    },
+    {
+      "name": "authenticate_before_drain",
+      "rejected": true,
+      "scope": "executable MODEL policy; no RTL guard claim"
+    }
+  ],
+  "native_SRAM": {
+    "master": "ot_sram_1r1w_32x64_m1",
+    "source_commit": "b65718325",
+    "geometry_um": [
+      31.968,
+      17.28
+    ],
+    "area_um2": 552.40704,
+    "true_single_clock_1R1W": true,
+    "same_address": "read_before_write",
+    "read_sample_to_output_publication": 0,
+    "output_to_external_capture": 1,
+    "request_control_sample_to_macro_read": 1,
+    "max_record_request_to_usable_sample": 6,
+    "loader_FF_components": {
+      "partial_assembly": 128,
+      "carry": 63,
+      "carry_count": 6,
+      "write_FIFO3x64": 192,
+      "FIFO_count": 2,
+      "FIFO_read_write_pointers": 4,
+      "next_PW": 6,
+      "record_index": 4,
+      "part": 2,
+      "loaded_mask": 13,
+      "registered_write_boundary": 70,
+      "row_emit_pointer": 5,
+      "rows_committed": 6,
+      "loading_seal_fault_drain": 4
+    },
+    "active_FF_components": {
+      "template_cache8x134": 1072,
+      "seen8x12": 96,
+      "group_ids8x4": 32,
+      "cache_valid": 8,
+      "context_cycle13x4": 52,
+      "stage6x4": 24,
+      "generation16x4": 64,
+      "held_ME_XPF_users": 4,
+      "held_valid": 2,
+      "fault": 1
+    },
+    "prefetch_FF_components": {
+      "read_assembly4x64": 256,
+      "two_pending_target_tags": 58,
+      "registered_read_request_addr_CE": 6,
+      "word_indices": 4,
+      "busy": 1
+    },
+    "total_FF_bits": 2185,
+    "native_clock_pins": 1,
+    "FF_clock_pins": 2185,
+    "conservative_resettable_control_bits": 410,
+    "raw_DFF_plus_macro_area_lower_bound_um2": 1189.5530400000002,
+    "raw_clockcap_DFF_only_ff": 1037.29816,
+    "max_indexed_data_block_bits": 1072,
+    "alignment_mux2_equivalents": 1608,
+    "feedback_enable_mux_bits": 1775
+  },
+  "finite_FF": {
+    "template_block_bits": 1742,
+    "loader_FF_components": {
+      "partial_assembly": 128,
+      "part": 2,
+      "record_index": 4,
+      "next_PW": 6,
+      "loaded_mask": 13,
+      "loading_seal_fault": 3,
+      "drain": 1
+    },
+    "active_FF_components": {
+      "template_cache8x134": 1072,
+      "seen8x12": 96,
+      "group_ids8x4": 32,
+      "cache_valid": 8,
+      "context_cycle13x4": 52,
+      "stage6x4": 24,
+      "generation16x4": 64,
+      "held_ME_XPF_users": 4,
+      "held_valid": 2,
+      "fault": 1
+    },
+    "prefetch_FF_components": {
+      "pending_target_tag": 29,
+      "selector": 4,
+      "valid": 1
+    },
+    "total_FF_bits": 3288,
+    "FF_clock_pins": 3288,
+    "conservative_resettable_control_bits": 346,
+    "raw_DFF_area_lower_bound_um2": 958.7808000000001,
+    "raw_clockcap_DFF_only_ff": 1560.9319679999999,
+    "template_read_ports": 1,
+    "template_read_width": 134,
+    "request_to_usable_sample": 2,
+    "template_read_mux2_equivalents": 1608,
+    "feedback_enable_mux_bits": 2942,
+    "template_async_reset": false,
+    "active_data_async_reset": false,
+    "max_indexed_block_bits": 1742
+  },
+  "clock_reset_scope": "unreset data guarded by sealed/loaded/cachevalid; conservative control reset counts; no clock gates assumed",
+  "physical_cost_limits": [
+    "raw DFF area is a lower bound, excludes reset-cell uplift, enable/select/decode logic, buffers, CTS, route, placement and mux timing",
+    "mux equivalents are explicit logic obligations, not mapped cell area or timing",
+    "native macro has additional9.3458fF clock capacitance in TT view; pin cap alone is not clock-route signoff"
+  ],
+  "candidate_selection": null,
+  "physical_admission": false,
+  "sources": {
+    "model": {
+      "path": "held_user_witness_model.json",
+      "sha256": "671c84c3f46d4c510a676b4ea8b2d051c48c05cffb1bdf232bb6e8cfe9c9942e"
+    },
+    "packet": {
+      "path": "witness_template_packet/manifest.json",
+      "sha256": "0de94c99a8f78cae9cf23a4eb34daf65d86c65959ed6d44d3d91cd0a09dda496"
+    },
+    "macro": {
+      "path": "qwen-witness-native32-source.json",
+      "sha256": "508f24ab33ae5843ff8c700345ebd76af18c299c0bbffd66dfab0d220448e076"
+    },
+    "cell": {
+      "path": "qwen-witness-dff-source.lib",
+      "sha256": "06c367e79e76f7e3341a06453cb04d9b4e47663194264c1438b753139b327433"
+    }
+  }
+}
