@@ -20,12 +20,30 @@ validate_case() {
 # Q-KV 2026-10-16: the prep's OT_KV_* flags (kvsys_prep.sh kv_flags.env) for the strict bind re-imports of kv_die
 [ "$DIE" = kv ] && [ -f "$R/kv_flags.env" ] && . "$R/kv_flags.env"
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
+# QW-DIECHAIN2 10-19 (dv2f18dh2 chain died: `ln` of the root-owned dieclk clock.odb -> grt floorplan_pdn.odb, Permission
+# denied under fs.protected_hardlinks, so GRT opened no ODB): place SRC... DST hard-links when the kernel allows it and
+# falls back to a copy for a root-owned / foreign-owned / cross-filesystem source.  Fails (non-zero) only if both fail.
+place() {
+  local n=$# s t; local d=${!n}
+  for s in "${@:1:n-1}"; do
+    t=$d; [ -d "$d" ] && t=$d/$(basename "$s")
+    ln -f "$s" "$t" 2>/dev/null || { rm -f "$t" && cp --reflink=auto "$s" "$t"; } || return 1
+  done
+}
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
 # ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset).  The KV die
 # runs it after the strict bind below (QXF-SEAMK 10-18: netlist-walk export + the compiler's schedule for THIS die)
 if [ "$DIE" != kv ]; then
-RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"; [ "$RCR" = 0 ] || exit 1
+RCL=$(bash "$SRC/tools/die_relay_chain_step.sh" "$C/relay_stages.json" "${OT_RELAY_SCHEDULE:-}" "$R/relay_check.json") && RCR=0 || RCR=$?; say "$RCL"
+# QW-DIECHAIN2 10-19: same OT_BIND_DIAGNOSTIC=1 convention as the KV branch below -- a relay FAIL is stamped on STATUS and
+# in NOT_A_DIE_RESULT and the chain continues as PATHFINDING only (never a die result); default stays: stop.
+if [ "$RCR" != 0 ]; then
+  if [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+    say "RELAY_CHECK FAIL ($R/relay_check.json): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT"
+    echo "RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+  else exit 1; fi
+fi
 fi
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
 # every launch, including preserved-case resumes. HARD_PHY still needs real ports.
@@ -82,7 +100,7 @@ pg_open_diag() {
   case "$pg_process_rc" in 0|1) ;; *) return 1;; esac
   grep -Eq '^OT_PGCHECK (VDD|VSS) FAIL ' "$C/run_pdn.log" || return 1
   grep -E '^(OT_.*FAIL|Error:|\[ERROR)' $C/run_pdn.log | grep -v -E 'OT_PGCHECK (VDD|VSS) FAIL|PSM-0069|run_pdn.tcl, [0-9]+ PSM-0069' | grep -q . && return 1
-  ln -f $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb
+  place $C/floorplan_pdn_prepg.odb $C/floorplan_pdn.odb || return 1
   say "PDN PG OPEN -- DIAGNOSTIC ONLY (GRT/STA continue): islands by class: $(grep PSM-0039 $C/run_pdn.log | sed -E 's/.*instance ([^ /]+)\/.*/\1/; s/(_[0-9]+)+$//' | sort | uniq -c | sort -rn | awk '{printf "%s=%s ",$2,$1}')"
 }
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
@@ -100,7 +118,7 @@ say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' 
 if [ "${OT_PDN:-run}" = skip ]; then
   # kvsys lead r5 2026-10-14: per-instance macro grids on the 13.4k expanded leaves insert ~15/min (~15 h): a
   # DIAGNOSTIC chain may skip the die PDN (GRT then sees no M8/M9 straps: overflow optimistic; STA unaffected)
-  ln -f $C/floorplan.odb $C/floorplan_pdn.odb
+  place $C/floorplan.odb $C/floorplan_pdn.odb || { say "PDN skip: cannot place floorplan.odb"; exit 1; }
   say "PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY"
 else
 $ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)); pdn_rc=$?
@@ -109,7 +127,7 @@ elif pg_open_diag; then :
 else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
-mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
+mkdir -p $G; cp $H/grt.tcl $G/; place $C/floorplan_pdn.odb $G/floorplan_pdn.odb || { say "GRT: cannot place floorplan_pdn.odb in $G"; exit 1; }
 # DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
 # element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
@@ -147,7 +165,7 @@ for c in $corners; do
 done
 for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; sta_failed=1; continue; }
-  ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
+  place $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/ || { say "STA $c: cannot place GRT outputs in $D"; sta_failed=1; continue; }
   cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; for f in $R/libs/qfd_etm_*_$c.lib; do [ -f "$f" ] && cp "$f" $D/libs/; done; [ -f $R/libs/views.json ] && cp $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
   # qwendie-1011: the die's CTS-measured clock arrivals (clock_plan.py record) when the run has one, else ideal
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
