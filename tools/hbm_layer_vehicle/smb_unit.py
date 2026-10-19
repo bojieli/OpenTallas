@@ -444,6 +444,9 @@ def build(work: Path, bundle: Path, defines):
     if "SMB_SRAMFIFO" in defines:
         own += [ROOT / p for p in (
             "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_sram285_safe.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_boundary_safe.sv",
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_safe.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native8.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv",
