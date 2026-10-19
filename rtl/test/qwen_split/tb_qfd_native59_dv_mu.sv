@@ -21,7 +21,7 @@
 //   outputs of op k inside op k+1's window).  OVLP=1 MCTX=0 = the as-built single-context service: must FAIL.
 //   COLL=1 (OVLP): op 3's completion slot is never driven, so op 5's begin takes op 3's still-active slot -> fault.
 // Pass line N59MU_PASS ...; failure N59MU_FAIL ... and exit != 0.
-module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0)(input wire clk);
+module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0,LATE_PREFETCH=0)(input wire clk);
  localparam integer NOP=14,P=OVLP?170:240,B0=10,BK=OVLP?60:0;
  localparam[13:0]SEQ0=14'd9;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
@@ -75,6 +75,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
  reg[5:0]stage;reg[17:0]token,position;reg[379:0]cmd;
  reg[1:0]kvindex;reg[4:0]qb,tb,rb;reg[3:0]tk,rk;reg[547:0]rxdata,dd;
  reg[15:0]he;reg[58:0]htag;reg[15:0]kep;
+ reg safe_qslot;reg[4:0]safe_qbeat;
  reg m0f,m0b;                      // the front / back op of this cycle is a user-0 op (DUT1 gating)
  integer kk,rr,sl,kraw;
  always @*begin
@@ -82,7 +83,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
   if(!in_op)k=NOP-1;
   u=op_u[k];lay=op_l[k];n=op_n[k];
   context_v=0;kvslot=0;xslot=0;qslot=0;txslot=0;rxslot=0;rxv=0;visibility_slot=0;complete_slot=0;
-  cmd=0;kvindex=0;qb=0;tb=0;rb=0;tk=0;rk=0;rxdata=0;dd=0;m0f=in_op&&(op_u[k]==0);m0b=0;kep=0;
+  safe_qslot=0;safe_qbeat=0;cmd=0;kvindex=0;qb=0;tb=0;rb=0;tk=0;rk=0;rxdata=0;dd=0;m0f=in_op&&(op_u[k]==0);m0b=0;kep=0;
   stage=6'(lay+1);token=otok(u,n);position={2'(u),opos(u,n)[15:0]};
   // HOST face: user 0's current token context only (held across filler ops)
   he={SEQ0+14'(op_n0[k]),2'd0};htag={he,6'd0,otok(0,op_n0[k]),opos(0,op_n0[k])[12:0],6'd0};
@@ -109,6 +110,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
     if(rr>=112&&rr<119)begin i=rr-112;kvslot=i<4;kvindex=2'(i);xslot=i>=3;end
     if(rr==122)cmd=TEMPLATE;
     if(rr==123)begin txslot=1;tk=1;tb=0;end
+    if(rr>=125&&rr<157)begin safe_qslot=1;safe_qbeat=5'(rr-125);end
     if(rr>=126&&rr<159)begin i=rr-126;qslot=i<32;qb=5'(i);txslot=i>0;tk=2;tb=5'(i-1);end
     if(rr>=160&&rr<192)begin
      i=rr-160;rxv=1;rxslot=1;rk=3;rb=5'(i);
@@ -131,7 +133,7 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
  .dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),
  .x3(x34),.x3_identity(xid4),.x3_generation(xg4),
- .q_slot(qslot),.q_slot_beat(qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(tv4),.native_tx_payload(td4),
+ .q_slot(SAFE==2&&LATE_PREFETCH==0?safe_qslot:qslot),.q_slot_beat(SAFE==2&&LATE_PREFETCH==0?safe_qbeat:qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(tv4),.native_tx_payload(td4),
  .native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.dr_o(dr4),
  .emb_code_re(),.emb_code_addr(),.emb_scale_re(),.emb_scale_addr(),.emb_code_q(512'd0),.emb_scale_q(16'd0),
  .visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(dn4),.native_ret(ret4),.fault(f4));

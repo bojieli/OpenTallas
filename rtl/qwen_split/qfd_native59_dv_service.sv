@@ -179,17 +179,21 @@ module qfd_native59_dv_service #(
  // Kept replicas capture the raw face on the SAME edge as p_dd/p_lcv.
  // Each address/valid replica serves only32 seats; no extra data edge.
  (* keep = "true" *) reg[71:0]qe_rep[0:15];
- (* keep = "true" *) reg[7:0]qh_rep[0:15];
- (* keep = "true" *) reg[15:0]qb_rep;
+ wire[7:0]qh_rep[0:15];wire[15:0]qb_rep;
+ (* keep = "true" *) reg[7:0]qm_rep[0:15];
+ (* keep = "true" *) reg[2:0]qd_rep[0:15];
+ (* keep = "true" *) reg[6:0]qc_rep[0:15];
  genvar gr;
  generate if(SAFE!=0)begin:g_scatter_rep
   for(gr=0;gr<16;gr=gr+1)begin:g_seg
    always @(posedge ck)begin
-    qb_rep[gr]<=layer_context_v&&command_stage>=1&&command_stage<=36;
-    qh_rep[gr]<={8{dd_i[547]&&dd_i[546:545]==0&&!(layer_context_v&&command_stage>=1&&command_stage<=36)}}&dd_i[544:537];
+    qc_rep[gr]<={layer_context_v,command_stage};
+    qd_rep[gr]<=dd_i[547:545];qm_rep[gr]<=dd_i[544:537];
     for(integer lane=0;lane<8;lane=lane+1)
      qe_rep[gr][9*lane+:9]<=dd_i[345+24*lane+:9]^9'(MUT==1);
    end
+   assign qb_rep[gr]=qc_rep[gr][6]&&qc_rep[gr][5:0]>=1&&qc_rep[gr][5:0]<=36;
+   assign qh_rep[gr]={8{qd_rep[gr]==3'b100&&!qb_rep[gr]}}&qm_rep[gr];
    always @(posedge ck or negedge rst_top)
     if(!rst_top)qseen[32*gr+:32]<=0;
     else if(qb_rep[gr])qseen[32*gr+:32]<=0;
@@ -245,6 +249,12 @@ module qfd_native59_dv_service #(
   assign qfull_t[gb+1]=qfull_t[gb]|(sel&&(&qseen[16*gb+:16]));
  end endgenerate
  wire[511:0]qrow;wire qrow_full;
+ reg q_read_valid;reg[4:0]q_read_beat;
+ always @(posedge ck or negedge rst_pin)
+  if(!rst_pin)begin q_read_valid<=0;q_read_beat<=0;end
+  else begin q_read_valid<=p_qs;q_read_beat<=p_qb;end
+ wire q_emit=(SAFE==2)?q_read_valid:p_qs;
+ wire[4:0]q_emit_beat=(SAFE==2)?q_read_beat:p_qb;
  generate if(SAFE==0)begin:g_qread_legacy
   assign qrow=qrow_t[32];assign qrow_full=qfull_t[32];
  end else begin:g_qread_safe
@@ -254,13 +264,13 @@ module qfd_native59_dv_service #(
    .ck(ck),.ck_mem(ck_qbuf),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),
    .write_element(qe_all),.write_data(p_dd[344:89]),
    .element_copies(qe_copies),.valid_copies(qh_copies),
-   .read_v(q_slot),.read_beat(q_slot_beat),.read_data(qrow));
+   .read_v(SAFE==2?p_qs:q_slot),.read_beat(SAFE==2?p_qb:q_slot_beat),.read_data(qrow));
   reg full_q;
-  always @(posedge ck)full_q<=!begin_slot&&(&qseen_n[16*q_slot_beat+:16]);
+  always @(posedge ck)full_q<=!begin_slot&&(&qseen_n[16*(SAFE==2?p_qb:q_slot_beat)+:16]);
   assign qrow_full=full_q;
  end endgenerate
- wire q_miss=p_qs&&!qrow_full;
- wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qrow}:524'd0;
+ wire q_miss=q_emit&&!qrow_full;
+ wire[523:0]q=q_emit?{1'b1,3'd1,3'd0,q_emit_beat,qrow}:524'd0;
  wire export_control_fault;
  qfd_native59_q_export_control u_qexport_control(
  .ck(ck),.rst_n(rst_ctx),.begin_slot(begin_slot),.request_slot(request_slot),.q_committed(q_committed),
@@ -370,7 +380,7 @@ module qfd_native59_dv_service #(
   .ck(ck),.rst_n(rst_svc),.source_fault(src_fault),
   .begin_slot(begin_slot&&sel_nf[gs]),.begin_tag(begin_tag),.request_slot(req_s),.request_tag(request_tag),.result_base_word(base),
   .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
-  .q_slot(p_qs&&f),.q_slot_beat(p_qb),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
+  .q_slot(q_emit&&f),.q_slot_beat(q_emit_beat),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
   .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
   .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),

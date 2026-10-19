@@ -1,0 +1,13 @@
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 128: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 129: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 130: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 131: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 132: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 133: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 134: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 135: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion
+- /srv/opentallas-scratch/claude/n59-safe-1019/src/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv:201: Verilog $finish

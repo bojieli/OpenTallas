@@ -46,5 +46,6 @@ run bad_q pass -GBAD_Q=1
 run mut1_q_lane fail -GMUT=1
 run mut2_kv_addr fail -GMUT=2
 run mut3_emb_word fail -GMUT=3
+if [[ ${N59_SAFE:-0} == 2 ]]; then run late_prefetch fail -GLATE_PREFETCH=1; fi
 sha256sum "${SRC[@]}" > "$out/source.sha256"
 exit $rc_all

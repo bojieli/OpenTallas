@@ -1,0 +1,424 @@
+{
+ "name": "qfd_native59_dv_service_safe2",
+ "top": "qfd_native59_dv_service",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_dv_service.sv",
+  "rtl/qwen_split/qfd_native59_command_context.sv",
+  "rtl/qwen_split/qfd_native59_q_export_control.sv",
+  "rtl/qwen_split/qfd_native59_static_service.sv",
+  "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_split/qfd_native59_qseat_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_bb.v"
+ ],
+ "params": {
+  "NU": 4,
+  "MCTX": 1,
+  "SAFE": 2
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 518.4,
+  "h": 648.0,
+  "exact": true
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "native_rx_payload",
+   "rst_n",
+   "ck",
+   "x3_identity",
+   "x3_generation",
+   "x3",
+   "tx_slot_kind",
+   "tx_slot_beat",
+   "tx_slot",
+   "rx_slot_kind",
+   "rx_slot_beat",
+   "rx_slot",
+   "native_tx_v",
+   "native_tx_payload",
+   "native_rx_v",
+   "kv_x3_slot",
+   "ck_fmt",
+   "ck_qbuf"
+  ],
+  "S": [
+   "dr_o",
+   "dd_i",
+   "native_token",
+   "native_position",
+   "layer_context_v",
+   "command_stage",
+   "native_ret",
+   "native_cmd"
+  ],
+  "W": [
+   "emb_code_addr",
+   "emb_code_q",
+   "emb_code_re",
+   "emb_scale_addr",
+   "emb_scale_q",
+   "emb_scale_re",
+   "completed",
+   "complete_slot",
+   "fault",
+   "host_epoch",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_generation",
+   "host_tag",
+   "kv_word_index",
+   "kv_word_slot",
+   "q_slot",
+   "q_slot_beat",
+   "visibility_slot"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "job": {
+  "owner": "Codex:N59-SAFE",
+  "branch": "codex/n59-safe-1019",
+  "tag": "safe2",
+  "purpose": "Exact8writer qseat SRAM, registered bank select and forwarding; pipelined8lane formatter; related3regional roots; source-evidence admission only after timing/checklist review; strict pin-FIRST Qprefetch +1 internal read edge; advance q_slot inputs1 to preserve external record calendar; production readiness manifest mandatory",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "results/arch/qwen_split_compute_1014/q_n59_1017",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "results/rtl/mu_qwen_1018/n59_safe"
+  ],
+  "benches": [
+   {
+    "name": "n59dv_positive",
+    "cmd": "N59_SAFE=2 N59_ONLY=positive bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^positive OK \\(pass\\)"
+   },
+   {
+    "name": "n59dv_bad_q",
+    "cmd": "N59_SAFE=2 N59_ONLY=bad_q bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_bad_q",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^bad_q OK \\(pass\\)"
+   },
+   {
+    "name": "n59dv_mut1_q_lane",
+    "cmd": "N59_SAFE=2 N59_ONLY=mut1_q_lane bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_mut1_q_lane",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_n59_1017/bench/mut1_q_lane.log"
+   },
+   {
+    "name": "n59dv_mut2_kv_addr",
+    "cmd": "N59_SAFE=2 N59_ONLY=mut2_kv_addr bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_mut2_kv_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_n59_1017/bench/mut2_kv_addr.log"
+   },
+   {
+    "name": "n59dv_mut3_emb_word",
+    "cmd": "N59_SAFE=2 N59_ONLY=mut3_emb_word bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_mut3_emb_word",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_n59_1017/bench/mut3_emb_word.log"
+   },
+   {
+    "name": "qseat_positive",
+    "cmd": "bash rtl/test/qwen_split/run_native59_qseat_sram.sh {RUN}/bench/qseat_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^QSEAT_PASS"
+   },
+   {
+    "name": "qseat_mut7_owner",
+    "cmd": "QSEAT_MUT=7 bash rtl/test/qwen_split/run_native59_qseat_sram.sh {RUN}/bench/qseat_mut7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^QSEAT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe/qseat_mut7.log"
+   },
+   {
+    "name": "mu_ovl_positive",
+    "cmd": "N59_SAFE=2 N59MU_ONLY=ovl_positive bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/mu_ovl",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59MU_PASS"
+   },
+   {
+    "name": "n59_late_prefetch",
+    "cmd": "N59_SAFE=2 N59_ONLY=late_prefetch bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/late_prefetch",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe/safe2_late_prefetch.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_native59_dv_service_safe2/views",
+  "record_to": "results/rtl/ref_tile/qfd_native59_dv_service_safe2"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?0?*u_mem",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?1?*u_mem",
+   "at": [
+    259.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?2?*u_mem",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?3?*u_mem",
+   "at": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?4?*u_mem",
+   "at": [
+    43.2,
+    388.79999999999995
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?5?*u_mem",
+   "at": [
+    259.2,
+    388.79999999999995
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?6?*u_mem",
+   "at": [
+    43.2,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*g_qread_safe*u_qseat*g_writer?7?*u_mem",
+   "at": [
+    259.2,
+    518.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (Q-N59 dd73225e0: every input lands in a p_* pin register, every output is a flop; the die calendar already counts those +1 edges); OT_PIN_REGS would add a second edge and break the benched edge contract"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "ck_fmt",
+  "ck_qbuf"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "native_rx_payload",
+    "rst_n",
+    "tx_slot_kind",
+    "tx_slot_beat",
+    "tx_slot",
+    "rx_slot_kind",
+    "rx_slot_beat",
+    "rx_slot",
+    "native_rx_v",
+    "kv_x3_slot",
+    "dd_i",
+    "native_token",
+    "native_position",
+    "layer_context_v",
+    "command_stage",
+    "native_cmd",
+    "emb_code_q",
+    "emb_scale_q",
+    "complete_slot",
+    "host_epoch",
+    "host_epoch_valid",
+    "host_fused_capability",
+    "host_generation",
+    "host_tag",
+    "kv_word_index",
+    "kv_word_slot",
+    "q_slot",
+    "q_slot_beat",
+    "visibility_slot"
+   ],
+   "outputs": [
+    "x3",
+    "x3_identity",
+    "x3_generation",
+    "native_tx_v",
+    "native_tx_payload",
+    "dr_o",
+    "emb_code_re",
+    "emb_code_addr",
+    "emb_scale_re",
+    "emb_scale_addr",
+    "completed",
+    "native_ret",
+    "fault"
+   ]
+  },
+  "formatter": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_fmt"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "qbuf": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_qbuf"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "slot_change_request": {
+  "reason": "OWNER N59-SAFE approved exact8writer SRAM scatter preservation; actual pinlimited8macro footprint101966.688um2 excludes260square; provisional518.4x648 pending synthesis area. Regional clocks ck/ck_fmt/ck_qbuf require die bind.",
+  "requested_outline_um": [
+   518.4,
+   648
+  ]
+ }
+}

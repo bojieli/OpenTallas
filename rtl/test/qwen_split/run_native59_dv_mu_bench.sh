@@ -55,6 +55,7 @@ run ovl_positive pass -GOVLP=1 -GMCTX=1
 run ovl_ret_bad pass -GOVLP=1 -GMCTX=1 -GRET_BAD=1
 run ovl_asbuilt_1ctx fail -GOVLP=1 -GMCTX=0
 run ovl_mut_collide fail -GOVLP=1 -GMCTX=1 -GCOLL=1
+if [[ ${N59_SAFE:-0} == 2 ]]; then run ovl_late_prefetch fail -GOVLP=1 -GMCTX=1 -GLATE_PREFETCH=1; fi
 run ovl_mut5_m7 fail -GOVLP=1 -GMCTX=1 -GMUT=5
 if [[ -z ${N59MU_ONLY:-} || ${N59MU_ONLY:-} == regress_nu1 ]]; then
   VERILATOR=$VL bash "$R/rtl/test/qwen_split/run_native59_dv_service_bench.sh" "$out/regress_nu1" > "$out/regress_nu1.log" 2>&1 \

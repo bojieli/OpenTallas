@@ -16,7 +16,7 @@
 //   command pin: beat k = code word k (k 0..63), then beat 0 = {496'd0, scale}; provider and DUT fault-free.
 // BAD_Q=1: one Q dd word is never sent -> NEW must fault and never complete (schedule violation, no stall).
 // Pass line: N59DV_PASS ...; any failure prints N59DV_FAIL and $fatal.
-module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0)(input wire clk);
+module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_PREFETCH=0)(input wire clk);
  localparam integer HEADS=1;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  localparam[58:0]TAG={16'd9,6'd1,18'd50994,13'd255,6'd0};
@@ -129,11 +129,13 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0)(inpu
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd[0]?cmd:380'd0),
  .native_issue(issue),.kv_we(we),.kv_waddr(wa),.kv_wdata(wd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),
  .x3(o_x3),.x3_identity(o_xid),.x3_generation(o_xg),.vm_q_epoch(o_qe),.vm_q_start(o_qs),.q_committed(q_committed),.q_fault(1'b0),.q(q),
- .q_slot(qslot),.q_slot_beat(qb),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(o_tv),.native_tx_payload(o_td),
+ .q_slot(safe_qslot),.q_slot_beat(safe_qbeat),.tx_slot(txslot),.tx_slot_kind(tk),.tx_slot_beat(tb),.native_tx_v(o_tv),.native_tx_payload(o_td),
  .native_rx_v(rxv),.native_rx_payload(rxdata),.rx_slot(rxslot),.rx_slot_kind(rk),.rx_slot_beat(rb),.vm_ar(vm_ar),
  .write_commit_v(raw_v),.write_commit_line(raw_line),.write_commit_mask(raw_mask),.visibility_slot(visibility_slot),
  .complete_slot(complete_slot),.completed(o_done),.native_ret(o_ret),.fault(o_fault));
  // ------------------------------------------------------------------ NEW DUT + the real embedding provider
+ wire safe_qslot=(SAFE==2&&LATE_PREFETCH==0)?(cyc>=QS0-1&&cyc<QS0+31):qslot;
+ wire[4:0]safe_qbeat=(SAFE==2&&LATE_PREFETCH==0)?5'(cyc-(QS0-1)):qb;
  wire[519:0]dr;wire n_tv,n_done,n_fault;wire[58:0]n_xid;wire[1:0]n_xg;wire[523:0]n_x3;wire[547:0]n_td;wire[94:0]n_ret;
  wire e_cre,e_sre;wire[23:0]e_caddr;wire[17:0]e_saddr;wire[511:0]e_cq;wire[15:0]e_sq;wire p_fault;
  qfd_native59_dv_service #(.MUT(MUT),.SAFE(SAFE))dut(
