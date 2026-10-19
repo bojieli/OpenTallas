@@ -23,12 +23,29 @@ smoke)
     exec /home/ubuntu/bin/ot-run --mem 8 --threads 8 --dir "$SRC" --disk 5 -- bash rtl/test/mu_qwen_tok/run_mu_tok_smoke.sh "$W" ;;
 gate)
     C=${2:?COMPUTE_DIE_V}; K=${3:?KV_DIE_V}; R4=${4:-}; G5=${5:-}; rc=0
-    for m in qfd_dv_cmd_cal_mu qfd_dv_amax_mu qfd_sys_face_mu_dhuser; do
-        grep -q "$m" "$C" || { echo "BLOCKED B3: compute die $C has no $m (MU-ADOPT-CTLM / MU-ADOPT-SLICE / MU-QW-B1 OPSEG)"; rc=2; }
-    done
-    for m in qkd_kv_mu_wrow qkd_kv_mu_rrow; do
-        grep -q "$m" "$K" || { echo "BLOCKED B3: KV die $K has no $m (MU-ADOPT-KV)"; rc=2; }
-    done
+    # MU-DQ-TOK 10-19: a die GEN's die.v names only the tile masters (the MU blocks sit inside qfd_tt_ctlm_dv /
+    # qfd_dv_slice2_e/w / qkd_* tiles), so the MU build is proven by the GEN record: compute die.v.params.json
+    # (qfd_tt_ctlm_dv NU 4 + OPSEG 1, qfd_dv_slice2_e/_w MU_NU 4) and the KV run's kv_flags.env OT_KV_MU=1; a die.v that
+    # names the MU blocks (flat netlist) passes as before.
+    cmu=$(python3 - "$C.params.json" <<'PY' 2>/dev/null
+import json, sys
+m = json.load(open(sys.argv[1])).get("masters", {})
+ok = m.get("qfd_tt_ctlm_dv", {}).get("NU", 1) >= 4 and m.get("qfd_tt_ctlm_dv", {}).get("OPSEG", 0) == 1 and \
+     all(m.get(k, {}).get("MU_NU", 1) >= 4 for k in ("qfd_dv_slice2_e", "qfd_dv_slice2_w"))
+print("MU" if ok else "NO")
+PY
+)
+    if [ "$cmu" != MU ]; then
+        for m in qfd_dv_cmd_cal_mu qfd_dv_amax_mu qfd_sys_face_mu_dhuser; do
+            grep -q "$m" "$C" || { echo "BLOCKED B3: compute die $C has no $m and no MU params (NU 4 / OPSEG 1 / MU_NU 4) in $C.params.json"; rc=2; }
+        done
+    fi
+    kf=$(dirname "$K")/../kv_flags.env
+    if ! grep -q "OT_KV_MU='\?1" "$kf" 2>/dev/null; then
+        for m in qkd_kv_mu_wrow qkd_kv_mu_rrow; do
+            grep -q "$m" "$K" || { echo "BLOCKED B3: KV die $K has no $m and $kf lacks OT_KV_MU=1 (MU-ADOPT-KV)"; rc=2; }
+        done
+    fi
     { [ -n "$R4" ] && grep -q "TOK_QW PASS" "$R4"; } || { echo "BLOCKED B4: no single-user TOK.QW PASS record (${R4:-not given})"; rc=2; }
     for u in 1 2 3; do
         { [ -n "$G5" ] && ls "$G5" 2>/dev/null | grep -q "u$u"; } || { echo "BLOCKED B5: no user-$u golden in ${G5:-<GOLD_DIR not given>}"; rc=2; }
