@@ -1,0 +1,625 @@
+{
+  "scope": "private conditional SU scheduler component only",
+  "source_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
+  "frozen_source_commit": "8858a45b0",
+  "total_positive_cases": 30,
+  "source_history": [
+    {
+      "source_sha256": "547f8188db0df993799272336b6745c1e2f56a8429107dc9d8d81d5d43bc4416",
+      "evidence_commit": "c7dfb37e8",
+      "receipt": "scheduler_run_receipt.json",
+      "scope": "prior26case corpus; descriptor races explicitly open"
+    },
+    {
+      "source_sha256": "26a737ff9c0e325baa45846abbcf4246fd93290f8f87b958f0070d8f065cde42",
+      "scope": "D_ERR repaired; current26/27/28 pass; duplicate-tag29 causal failure archived"
+    },
+    {
+      "source_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
+      "source_commit": "8858a45b0",
+      "scope": "explicit owner-record;30positive cases plus57outputmiter and7mutants and4refusals"
+    }
+  ],
+  "fixture": {
+    "H": 40,
+    "deadline": 8,
+    "NSLOT": 1,
+    "ENG_CTX": 1,
+    "MODE": 0,
+    "MU_OUT": 0,
+    "NW": 18,
+    "PLB": 13,
+    "FMT": 1
+  },
+  "fleet": {
+    "host": "ot-epyc6",
+    "verilator": "5.050",
+    "positive_and_baseline_unit": "oth-ubuntu-3665366-1792446237",
+    "descriptor_mutant_unit": "oth-ubuntu-3667109-1792446284",
+    "historical_alias_failure_unit": "oth-ubuntu-3664954-1792446209",
+    "remote_dir": "/srv/opentallas-scratch/claude/scheduler-descriptor-regression-1019"
+  },
+  "new_cases": [
+    {
+      "case": 26,
+      "pending_edges": 1,
+      "certification_priority_collisions": 0,
+      "descriptor_errors": 1,
+      "owner_events": 1,
+      "edges": 110
+    },
+    {
+      "case": 27,
+      "pending_edges": 1,
+      "certification_priority_collisions": 1,
+      "descriptor_errors": 1,
+      "owner_events": 1,
+      "edges": 118
+    },
+    {
+      "case": 28,
+      "pending_edges": 1,
+      "certification_priority_collisions": 0,
+      "descriptor_errors": 1,
+      "owner_events": 1,
+      "edges": 111
+    },
+    {
+      "case": 29,
+      "pending_edges": 1,
+      "certification_priority_collisions": 0,
+      "descriptor_errors": 1,
+      "owner_events": 1,
+      "edges": 111
+    }
+  ],
+  "baseline_cases": 26,
+  "default_original_outputs": 57,
+  "baseline_mutants": [
+    {
+      "name": "word0",
+      "case": 4,
+      "exit": 1,
+      "fail_regex": "SCHED_WORD0_FAULT",
+      "caught": true
+    },
+    {
+      "name": "deadline",
+      "case": 5,
+      "exit": 1,
+      "fail_regex": "SCHED_DEADLINE",
+      "caught": true
+    },
+    {
+      "name": "rawdone",
+      "case": 1,
+      "exit": 1,
+      "fail_regex": "SCHED_RAWDONE_CLEANUP",
+      "caught": true
+    },
+    {
+      "name": "identity",
+      "case": 7,
+      "exit": 1,
+      "fail_regex": "SCHED_IDENTITY_REFUSAL",
+      "caught": true
+    },
+    {
+      "name": "counters",
+      "case": 4,
+      "exit": 1,
+      "fail_regex": "SCHED_FAULT_COUNTERS",
+      "caught": true
+    },
+    {
+      "name": "warm",
+      "case": 2,
+      "exit": 1,
+      "fail_regex": "SCHED_RETAIN_WARM",
+      "caught": true
+    }
+  ],
+  "contract_refusals": [
+    {
+      "case": 0,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    },
+    {
+      "case": 1,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    },
+    {
+      "case": 2,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    },
+    {
+      "case": 3,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    }
+  ],
+  "descriptor_mutant": {
+    "name": "restore_faulty_D_ERR",
+    "case": 27,
+    "exit": 1,
+    "caught": true,
+    "fail_regex": "DESC_MISSING_ACCEPTED_ERROR",
+    "requires": [
+      "DESC_PRIORITY_COLLISION",
+      "COMMIT",
+      "no DESC_PUSH"
+    ],
+    "source_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
+    "mutant_sha256": "e72374393bdf9c5f3f0b4a0fbbb6d975c90382b3a578d28b861ea14f89dbd58d"
+  },
+  "historical_alias_failure": "26a737 source fails case29 DESC_FOREIGN_CONSUMED_REPORT",
+  "files": [
+    {
+      "path": "private/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 51160,
+      "sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2"
+    },
+    {
+      "path": "scheduler_descriptor_baseline.sv",
+      "bytes": 15329,
+      "sha256": "71d98574588d919d672ef7a317e727303b480fb3fbdc55939025ad248404209f"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_contract.sv",
+      "bytes": 405,
+      "sha256": "63d8e43b303ef768a69d1e09aa90990e6afb980d2c3686b51bb0f161a06fe647"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_default.sv",
+      "bytes": 24950,
+      "sha256": "16d0fc3d62abca30eea85200d455cd2f75258ea1587d6faa6514fa08b910b3d7"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run.sh",
+      "bytes": 987,
+      "sha256": "132808bc956ce208bbaa894592912f66a0ed4751b5c62e29e4a32587566ecc6e"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_build.log",
+      "bytes": 45840,
+      "sha256": "e8bd2a510a896801ab95824f131276a2fd1f741822df392b314f9d95ae951008"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case0.log",
+      "bytes": 430,
+      "sha256": "fc619b6c08163b9577661e390d66fbe3be58f60113940b7c2d93a357d2c56c3b"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case1.log",
+      "bytes": 429,
+      "sha256": "35822aa3633b9e8c6fa27f8efbca661775eadacaa2658a93ca72fe71790d55b5"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case10.log",
+      "bytes": 431,
+      "sha256": "b44df2e24e73b7b8f69f7123784480481da32dd7c2d4f243174c9a9ad46691be"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case11.log",
+      "bytes": 430,
+      "sha256": "5cd219952318b63d3f73bc0c4f14a994ce82a29b953db4a7faa51ed165548ace"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case12.log",
+      "bytes": 431,
+      "sha256": "432024ad686aee1156ad9dffa449bf20622c850927f0dbf4f9b27c06b85044e8"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case13.log",
+      "bytes": 427,
+      "sha256": "13aee3c3f79e51118e83f9c614654643823b949998de5c31260b92b01f63ddf5"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case14.log",
+      "bytes": 431,
+      "sha256": "4ff35a654b0fb03cb1e553f94150613a673d3e3f8d1a4251845137b754c42e32"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case15.log",
+      "bytes": 356,
+      "sha256": "4543ef438f599f9f2cc5e71b0351fc89c6ae14b8303fe599bf3a653e4040a8b4"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case16.log",
+      "bytes": 430,
+      "sha256": "392f5a6f4ff0e8fb9fc0c1024fcdcf06cc93f73cc9b46384ce0ef3229fea4806"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case17.log",
+      "bytes": 430,
+      "sha256": "41f6a2bf077845f9c3bfdaec9d397deee0423814f460e54b9ce71befb4de25e5"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case18.log",
+      "bytes": 430,
+      "sha256": "4969577ccfad7953a8b9e272f197d6822886299da7169a6767137dab311672d4"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case19.log",
+      "bytes": 430,
+      "sha256": "a6413df1b0da5f22953bec82214b46a460f8a92646c1f7484baaaf5be4be32cd"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case2.log",
+      "bytes": 429,
+      "sha256": "269111019d97f83eb107a9d63b65561a77c8f513f7636b9c0699dfd68f97adea"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case20.log",
+      "bytes": 505,
+      "sha256": "48dd71d27f9f0d315b65a7fb4281bf44e248a8bec0cd26b84b2667945a894198"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case21.log",
+      "bytes": 1143,
+      "sha256": "d91aa123fdde6dd9c7781aeb025da51d4713e8c983c640cc51630d88c10ab7bc"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case22.log",
+      "bytes": 430,
+      "sha256": "a9cbcc84bfd08ae340c3b34db9b455eaafff74288ce82bc3efc1a54b880a626a"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case23.log",
+      "bytes": 430,
+      "sha256": "73cc958c66cd0b1495af5ea086c493d3844ef28a27b9945498fa30c3728f8353"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case24.log",
+      "bytes": 430,
+      "sha256": "3f099d8166563678bd8a07f46cc7efdf53a92d82d522fe2d7845f60ab47426cb"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case25.log",
+      "bytes": 506,
+      "sha256": "e609b2fff8bf9725f471bcc96898c0365b804b1e5528bf4e11ad3309a9b4d566"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case3.log",
+      "bytes": 480,
+      "sha256": "d11fa11e94240f74bac343062c1866c25e32001bb3f2cf07ac720c71213b17da"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case4.log",
+      "bytes": 429,
+      "sha256": "dd3f6eb58eefeb8cd38aedfbbb0864c445e259f4618353bbf2126bcb9af66cce"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case5.log",
+      "bytes": 429,
+      "sha256": "bdcf2fc572b50b1397b045522cfecd71a7914862e0774c634e4b143b09653897"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case6.log",
+      "bytes": 558,
+      "sha256": "424dd2233b232d2aa829fb4e7a24b79398224ba8571085f771239529b265629f"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case7.log",
+      "bytes": 429,
+      "sha256": "b18a819ec6c8ab26c0c582bb8e51915859d437d205c20e1b7eec61b98c65141e"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case8.log",
+      "bytes": 480,
+      "sha256": "68dbd03ee82b50e0c8ba7f63be4fb85038a4934accf8990748c591c347dc0da0"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_case9.log",
+      "bytes": 505,
+      "sha256": "95870054ace3310a1df94fceb31cf9725ee44da64bb81bda7a57d29399de56de"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract.json",
+      "bytes": 407,
+      "sha256": "4d07c534d9d55a3a96bac0af2f2669c237ede1d3d63c057d4e34efa4987e7a15"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract.py",
+      "bytes": 1090,
+      "sha256": "1776cacbebf2d07161fbe16e1796693e794b731284c2722571b87d891a6dee00"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_0/build.log",
+      "bytes": 140014,
+      "sha256": "c8e5661194523159830b5a236aed2557a3a5d2690bbb3f2740c3d6426b750415"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_0/fail.log",
+      "bytes": 280,
+      "sha256": "d2510a3787425b557224aa4988102323489cd8296a28f653658c34f511722b49"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_1/build.log",
+      "bytes": 140014,
+      "sha256": "c73b5c02a56aa1f2143d6973571e2c1c7b901824ee4b8da1d9322cdffed91a05"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_1/fail.log",
+      "bytes": 280,
+      "sha256": "d2510a3787425b557224aa4988102323489cd8296a28f653658c34f511722b49"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_2/build.log",
+      "bytes": 140014,
+      "sha256": "5eb8a5aa28d6363b7911edb38181c93c2645a31fbf278056c7c86917cf17e871"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_2/fail.log",
+      "bytes": 280,
+      "sha256": "d2510a3787425b557224aa4988102323489cd8296a28f653658c34f511722b49"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_3/build.log",
+      "bytes": 140014,
+      "sha256": "91bdb2bfd2576809934743e801d1ae6cc3da00cca958266ff0226c54b7a78da8"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_contract_3/fail.log",
+      "bytes": 280,
+      "sha256": "d2510a3787425b557224aa4988102323489cd8296a28f653658c34f511722b49"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_default.log",
+      "bytes": 438,
+      "sha256": "27bd2f05501e63525fb54e7875a443cbc5a95e05132143eea11f5a2ab1d3c7c4"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_default.sh",
+      "bytes": 708,
+      "sha256": "001f934609a1b95c6e3070a507dfab0689531386b19f14a8782558d1112410a4"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_default_build.log",
+      "bytes": 64922,
+      "sha256": "3c39c519f702f4fb7e78f2a6509250f2391b4d576a1780d4fba3bfbaff623e9b"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_input_hashes.txt",
+      "bytes": 203,
+      "sha256": "d6e4f4279caf3b2d93e98fce31c4b2c70b88af878b56418da9f9d75392afafb4"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_counters/build.log",
+      "bytes": 49554,
+      "sha256": "ae208c8c85479a5eed72b0499aea10378b0186241b40f7a955dc218fd61e2893"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_counters/fail.log",
+      "bytes": 345,
+      "sha256": "9425be66c9b5bd99aae9a9c3885ffe37a8226a437aa308e8c7364aadcfc3432f"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_counters/source.sv",
+      "bytes": 51146,
+      "sha256": "4604c1d4c8f5590101ade7d136c69baedd6f91f549503208e31cf88274e2b0d3"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_deadline/build.log",
+      "bytes": 49059,
+      "sha256": "3553261fa0d83186459eecaeabd15a418d519c40402b8f4995674ec855b98faa"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_deadline/fail.log",
+      "bytes": 243,
+      "sha256": "80295ac64c1726f168cd212c674a4c88e6e821418e4e3a53ad1c31f5e57f8da8"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_deadline/source.sv",
+      "bytes": 51077,
+      "sha256": "79255eb8e1b236536ec059fa6cadcfaeb4a2eb5c34e50532b11283fdb7107ea2"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_identity/build.log",
+      "bytes": 49568,
+      "sha256": "eb5ddbba59dd352caf7607df5642d725785accad0b06e6085173e2f3c853ce77"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_identity/fail.log",
+      "bytes": 251,
+      "sha256": "954300dccbeff9312144caa18ceac1cb3d57624260e715682609c397e1dcc707"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_identity/source.sv",
+      "bytes": 51060,
+      "sha256": "7ae12145a240b814bdbb1bc93141594df59e6849f50039f914a41f5647813ffd"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_rawdone/build.log",
+      "bytes": 49398,
+      "sha256": "c0a88ce5d189d7a8822a1478b699656366873ced1e009a81bb23900a61f2d26b"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_rawdone/fail.log",
+      "bytes": 250,
+      "sha256": "1212de69eec24e0977b123ecbe2bd53301719b428cd3568ce799700201aa6983"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_rawdone/source.sv",
+      "bytes": 51163,
+      "sha256": "44b7c3eaa5fd7017313d55702b926372e6a9aeceb75ce355f54e84b4711e261e"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_warm/build.log",
+      "bytes": 48888,
+      "sha256": "9466f65ed541cb00d0709a4de3faf7b8b2ab8c1e249e5c3a27b61ca93dcd9257"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_warm/fail.log",
+      "bytes": 246,
+      "sha256": "87b85dc13119106df89dd8c51a345808d7c60fd1fdd50a85cd7508c7d61a71ce"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_warm/source.sv",
+      "bytes": 51116,
+      "sha256": "1a9a0f21d9160bdf31157a807b15f961d519c0e2ed4fa6ad0e7f2dea1133cc41"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_word0/build.log",
+      "bytes": 49058,
+      "sha256": "897fa456e65bb6310ea0cea69ccfe4f2c1a8091daeb8decd481949ef630d4be6"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_word0/fail.log",
+      "bytes": 266,
+      "sha256": "a23c6e63a7ffa55f8842eaed440b3df893cc39be9bae958302c1cba5bdc2642f"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutant_word0/source.sv",
+      "bytes": 50940,
+      "sha256": "e88e84636152e46b34e0de0bd0cc24f1585a911cc254864cf960f39a83e7c813"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutants.json",
+      "bytes": 730,
+      "sha256": "b2ef8bd6008eab4e2983b7d50a42c5fce3e531a0bb48713202049fd378540149"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_mutants.py",
+      "bytes": 2395,
+      "sha256": "4c86b52575e633ee6289a8da82a1272220aed55b3adb013f110f016e037f9c83"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_original.sv",
+      "bytes": 39228,
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d"
+    },
+    {
+      "path": "scheduler_descriptor_baseline_run_version.log",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    },
+    {
+      "path": "scheduler_descriptor_bench.sv",
+      "bytes": 12597,
+      "sha256": "edb851f1d4be7f1a44ea83d332d7aecaa9ebd93046623d52b59d79f49958c4fe"
+    },
+    {
+      "path": "scheduler_descriptor_build.log",
+      "bytes": 45501,
+      "sha256": "d56d0ac3584683eb2305a9a9263456978f3e09405f85370a1766e8480125fdeb"
+    },
+    {
+      "path": "scheduler_descriptor_case26.log",
+      "bytes": 657,
+      "sha256": "6869a866ac6a9eae8cfd1ba167a34b28ba9813d16b410310d0f68dcdd4e92ac6"
+    },
+    {
+      "path": "scheduler_descriptor_case27.log",
+      "bytes": 660,
+      "sha256": "693e98b7112fe723301f383330a652fad15b027045c4fc63c26ecbf5195a623f"
+    },
+    {
+      "path": "scheduler_descriptor_case28.log",
+      "bytes": 657,
+      "sha256": "94071f207f720f31c2ef36592c08a66122f55fec1dae8461f8dd242b2ceb2934"
+    },
+    {
+      "path": "scheduler_descriptor_case29.log",
+      "bytes": 657,
+      "sha256": "3e2282491c8cb4f6d621506a3695575b928706b278169937681c97077d6c6a86"
+    },
+    {
+      "path": "scheduler_descriptor_collect.py",
+      "bytes": 3422,
+      "sha256": "62fc20afa15aaf7da9d6d06a67e6c4b66c32c2f37403057bd1db65c0f85cd67b"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_bench.sv",
+      "bytes": 12597,
+      "sha256": "edb851f1d4be7f1a44ea83d332d7aecaa9ebd93046623d52b59d79f49958c4fe"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_build.log",
+      "bytes": 45444,
+      "sha256": "b027748c5f467f59da488e6ff013cf0a0c648655add61619702ebd24e8fe3b2e"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_case26.log",
+      "bytes": 657,
+      "sha256": "5668eeb1a2f972a3f3de5f720237e1ac1eb3d6282eda594b975644061be3f132"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_case27.log",
+      "bytes": 660,
+      "sha256": "455afd7ce580276c98a085de7105203f01ece7bd25fe0a44900262363111885e"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_case28.log",
+      "bytes": 657,
+      "sha256": "c999574839434578c4056e1fd37a856b71fa94df6ed868fa0917d9e51d4e4b76"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_case29.log",
+      "bytes": 378,
+      "sha256": "67fa9f0bb85b931e7b1ba1c6772ac838b63fe2247c56b9e340fe4541d30d53ec"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/scheduler_descriptor_source.sha256",
+      "bytes": 104,
+      "sha256": "b7e871bbaafc1f87cc5a24bc204e304ebb8699d8f6af4bd3ae41cf0b06270bd3"
+    },
+    {
+      "path": "scheduler_descriptor_history_26a737/source.sv",
+      "bytes": 50796,
+      "sha256": "26a737ff9c0e325baa45846abbcf4246fd93290f8f87b958f0070d8f065cde42"
+    },
+    {
+      "path": "scheduler_descriptor_mutant.json",
+      "bytes": 388,
+      "sha256": "cae8402ed23bc94bd7c62c8ecbb8fea0534b47be2254e40d2917ff074b5a910b"
+    },
+    {
+      "path": "scheduler_descriptor_mutant.py",
+      "bytes": 2125,
+      "sha256": "9025afce8e5210f07a733c598957363ff9cbdddef0c4f5f22000e38ce18272a5"
+    },
+    {
+      "path": "scheduler_descriptor_mutant_drop/bench.sv",
+      "bytes": 12672,
+      "sha256": "b0f3030f826024cba06b177a05aca437ba980502d102c7dd076e776c8d516e32"
+    },
+    {
+      "path": "scheduler_descriptor_mutant_drop/build.log",
+      "bytes": 58880,
+      "sha256": "1176f9bc1a57628c6b8c0abc6bd4e34d38ccfdbf1d6a7eac4aedd3f1040c44d3"
+    },
+    {
+      "path": "scheduler_descriptor_mutant_drop/fail.log",
+      "bytes": 491,
+      "sha256": "1da2f5ddd851e008a1637d39893bade9788ad3cbe4de67cad17107d624e807cc"
+    },
+    {
+      "path": "scheduler_descriptor_mutant_drop/source.sv",
+      "bytes": 51198,
+      "sha256": "e72374393bdf9c5f3f0b4a0fbbb6d975c90382b3a578d28b861ea14f89dbd58d"
+    },
+    {
+      "path": "scheduler_descriptor_run.sh",
+      "bytes": 930,
+      "sha256": "d6c98af6a9031a6db39e6d93e3f0eb2a1515de6e4c858902638dd57cd73d52f2"
+    },
+    {
+      "path": "scheduler_descriptor_source.sha256",
+      "bytes": 104,
+      "sha256": "14dd357e9146d0c2eb42074321fd6cae2d94302d340491c5b9bb5e4ccd13f041"
+    },
+    {
+      "path": "scheduler_descriptor_version.log",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    }
+  ]
+}
