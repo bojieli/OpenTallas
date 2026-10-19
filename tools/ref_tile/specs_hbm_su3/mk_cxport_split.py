@@ -21,7 +21,7 @@ def bits(spec):
     return spec
 
 
-def mk(name, top, params, W, H, pins, B, core_in, core_out, ser_in, ser_out, std, why, route_extra=None):
+def mk(name, top, params, W, H, pins, B, core_in, core_out, ser_in, ser_out, std, why):
     pr = {}
     for f, order in pins.items():
         span = (H if f in 'WE' else W)
@@ -42,14 +42,13 @@ def mk(name, top, params, W, H, pins, B, core_in, core_out, ser_in, ser_out, std
          'outline': {'w': W, 'h': H, 'exact': True}, 'std_area_um2': std, 'layer_cap': 'M5', 'recipe': 4,
          'macros': [], 'children': [], 'inter': [], 'pins': pins, 'pin_ranges': pr,
          'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 8, 'peak_ram_gb': 12, 'hold_margin_ns': 0.03, 'macro_halo_um': 5.4,
-                   'pin_h': 'M4', 'pin_v': 'M3 M5', 'pin_balance': {'h': 'M4', 'v': 'M3 M5', 'group_max': 1}, 'io_hold_margin_ns': 0.03,
-                   **(route_extra or {})},
+                   'pin_h': 'M4', 'pin_v': 'M3 M5', 'pin_balance': {'h': 'M4', 'v': 'M3 M5', 'group_max': 1}, 'io_hold_margin_ns': 0.0},
          'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False, 'keep_pin_regs': True, 'hold_budget': 'die',
          'pin_regs': {'enable': False, 'reason': 'Every pin is registered in RTL (cxport rule: stream inputs land in phase-indexed '
                       'pin slots, serial inputs in pin registers, every output is a register); a wrapper stage would move the '
                       'fixed 3:4 crossing edges.'},
          'structural_change': why,
-         'job': {'owner': 'Claude:HBM-SU6', 'branch': 'claude/hbm-su6-cx-1017', 'tag': 's2',
+         'job': {'owner': 'Claude:HBM-SU3', 'branch': 'claude/hbm-su3-1017', 'tag': 's1',
                  'purpose': 'HBM die d4f cxport split (0dc): ' + top, 'record_to': 'results/rtl/ref_tile/' + name,
                  'views_to': f'physical/ref_tile/{name}/views', 'auto_merge': False, **BENCH}}
     out = Path('tools/ref_tile/specs_hbm_su3') / f'{name}.json'
@@ -62,11 +61,7 @@ WHY = ('HBM-SU3 10-17 cxport SPLIT (coordinator 0dc: hub of 13.2k pin bits on 26
        'delivery calendar rule (lane j -> slice j) now FAULTs if broken. Every 3:4 crossing is MUX-ONLY (decode before the '
        'slot on the writer side; STA times stream->serial at the 1-quantum pair, 278 ps): the hub-equivalent dl gate showed '
        '-266 ps (dw_d after the slot decode) and rc -277 ps (64:1 SFU lane select); the SFU operand is registered whole and '
-       'lane-selected on the next serial edge (compiler: SFU-source reducer command at E+1). '
-       'HBM-SU6 10-17 (gate WARNs on bf7c343cb / 7bde7baff): dl phase slots are the pin registers (raw lane + 4 kept '
-       'copies of the lane code; half/valid zeroing after the slot mux, same edges); ij inject select registered one-hot '
-       '(64 b, 256 loads each; no runtime part-select), reset only on valid bits, aperture partials finished serial-side; '
-       'rc red_sel decoded one-hot (33 loads/bit), carry reset from 2 kept regional copies, pend payload unreset. ')
+       'lane-selected on the next serial edge (compiler: SFU-source reducer command at E+1). ')
 B = dict(del_valid=1, del_flit=545, del_obase=40, dw_v=2, dw_row=18, dw_d=1024, clk_s=1, clk_q=1, rst_s_n=1, rst_q_n=1, fault=1)
 mk('hbm_su_cx_dl_1017', 'ot_hbm_su_static_cxport_dl', {'QID': 2, 'G': 0}, 108.0, 216.0,
    {'W': ['del_valid', 'del_obase', 'del_flit'], 'E': ['dw_v', 'dw_row', 'dw_d'], 'N': ['clk_s', 'clk_q', 'rst_s_n', 'rst_q_n', 'fault']},
@@ -77,10 +72,8 @@ B = dict(inj_rd=2, inj_addr=160, inj_d=1024, inj_q0=1024, inj_q1=1024, inj_q2=10
 mk('hbm_su_cx_ij_1017', 'ot_hbm_su_static_cxport_ij', {'QID': 2, 'B39_NOOP': 0, 'INJ_RET': 11}, 388.8, 388.8,
    {'W': ['inj_q0', 'inj_q1'], 'S': ['inj_q2', 'inj_q3'], 'E': ['inj_d', 'inj_rd', 'inj_addr'], 'N': ['clk_s', 'clk_q', 'rst_s_n', 'rst_q_n', 'fault']},
    B, ['inj_rd', 'inj_addr'], ['inj_d'], ['inj_q0', 'inj_q1', 'inj_q2', 'inj_q3'], [], 9000,
-   WHY + 'ij clk_q pin-flop spread was 137 ps (397..534) on the sparse pin-band tile: TritonCTS register clustering off '
-   '(as qkd_d2d_static 10-15: pin-band sinks on a sparse tile). Leaf ij: the four slices\' port-5 data (4,096 b serial) is intrinsic to the inject gather; inj_q over the full W '
-   'face would be 10.6/um, so it is four 1,024-b slice ports, two on W and two on S (5.3/um); E COLL side inj_d 1,024 + request 162.',
-   route_extra={'cts_sink': {'sink_clustering': False}})
+   WHY + 'Leaf ij: the four slices\' port-5 data (4,096 b serial) is intrinsic to the inject gather; inj_q over the full W '
+   'face would be 10.6/um, so it is four 1,024-b slice ports, two on W and two on S (5.3/um); E COLL side inj_d 1,024 + request 162.')
 B = dict(rc_v=1, rc_tag=3, rc_d=256, rr_v=1, rr_tag=3, rr_d=256, red_sv=1, red_tag=32, red_x=32, rr_wv=1, rr_wa=5, rr_wd=256,
          ro_v=16, ro_x=512, red_sel=12, sfu_x=32, clk_s=1, clk_q=1, rst_s_n=1, rst_q_n=1, fault=1)
 mk('hbm_su_cx_rc_1017', 'ot_hbm_su_static_cxport_rc', {}, 216.0, 216.0,

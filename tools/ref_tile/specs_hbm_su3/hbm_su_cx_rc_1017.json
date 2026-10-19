@@ -212,7 +212,7 @@
    "v": "M3 M5",
    "group_max": 1
   },
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.0
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -226,11 +226,11 @@
   "enable": false,
   "reason": "Every pin is registered in RTL (cxport rule: stream inputs land in phase-indexed pin slots, serial inputs in pin registers, every output is a register); a wrapper stage would move the fixed 3:4 crossing edges."
  },
- "structural_change": "HBM-SU3 10-17 cxport SPLIT (coordinator 0dc: hub of 13.2k pin bits on 264.6 um): the quarter hub becomes 4 delivery leaves beside the pgslices, one inject-gather leaf and one RED_CARRY/SFU-operand leaf beside sucore; same epoch counters, slots and edges (lockstep vs the hub PASS QID 2 and QID 0/B39, split-only mutants 1-4 FAIL); the delivery calendar rule (lane j -> slice j) now FAULTs if broken. Every 3:4 crossing is MUX-ONLY (decode before the slot on the writer side; STA times stream->serial at the 1-quantum pair, 278 ps): the hub-equivalent dl gate showed -266 ps (dw_d after the slot decode) and rc -277 ps (64:1 SFU lane select); the SFU operand is registered whole and lane-selected on the next serial edge (compiler: SFU-source reducer command at E+1). HBM-SU6 10-17 (gate WARNs on bf7c343cb / 7bde7baff): dl phase slots are the pin registers (raw lane + 4 kept copies of the lane code; half/valid zeroing after the slot mux, same edges); ij inject select registered one-hot (64 b, 256 loads each; no runtime part-select), reset only on valid bits, aperture partials finished serial-side; rc red_sel decoded one-hot (33 loads/bit), carry reset from 2 kept regional copies, pend payload unreset. Leaf rc: W COLL/SFU stream side (1,048 b, 4.9/um), E sucore serial side (373 b), clocks at the N centre.",
+ "structural_change": "HBM-SU3 10-17 cxport SPLIT (coordinator 0dc: hub of 13.2k pin bits on 264.6 um): the quarter hub becomes 4 delivery leaves beside the pgslices, one inject-gather leaf and one RED_CARRY/SFU-operand leaf beside sucore; same epoch counters, slots and edges (lockstep vs the hub PASS QID 2 and QID 0/B39, split-only mutants 1-4 FAIL); the delivery calendar rule (lane j -> slice j) now FAULTs if broken. Every 3:4 crossing is MUX-ONLY (decode before the slot on the writer side; STA times stream->serial at the 1-quantum pair, 278 ps): the hub-equivalent dl gate showed -266 ps (dw_d after the slot decode) and rc -277 ps (64:1 SFU lane select); the SFU operand is registered whole and lane-selected on the next serial edge (compiler: SFU-source reducer command at E+1). Leaf rc: W COLL/SFU stream side (1,048 b, 4.9/um), E sucore serial side (373 b), clocks at the N centre.",
  "job": {
-  "owner": "Claude:HBM-SU6",
-  "branch": "claude/hbm-su6-cx-1017",
-  "tag": "s2",
+  "owner": "Claude:HBM-SU3",
+  "branch": "claude/hbm-su3-1017",
+  "tag": "s1",
   "purpose": "HBM die d4f cxport split (0dc): ot_hbm_su_static_cxport_rc",
   "record_to": "results/rtl/ref_tile/hbm_su_cx_rc_1017",
   "views_to": "physical/ref_tile/hbm_su_cx_rc_1017/views",
