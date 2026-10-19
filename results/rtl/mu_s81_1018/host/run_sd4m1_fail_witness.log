@@ -1,0 +1,12 @@
+ERR 1073 user 1 beat 0 addr 1000 we 1
+ERR 1074 user 1 beat 1 addr 1001 we 1
+ERR 1075 user 1 beat 2 addr 1002 we 1
+ERR 1076 user 1 beat 3 addr 1003 we 1
+ERR 1077 user 1 beat 4 addr 1004 we 1
+U0 TRACE n 1600 hash 608ca2329d562200
+MUSEED NU 4 NUP 4: 2560 read beats, 3840 write beats, errs 7360
+MUSEED FAIL
+- /srv/opentallas-scratch/claude/mu-s81-host/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_seed.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.003 s; speed 3.559 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

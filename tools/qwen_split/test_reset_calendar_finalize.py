@@ -32,4 +32,16 @@ straps={pol:[p for _,_,_,eps in m['buses'] if eps[0]==('last','tie_'+pol) for p 
 assert straps=={'hi':[('last','k1'),('last','k2')],'lo':[('last','k0')]}
 finalize_model(m,{'external.s':16,'external.r':20})
 assert len(m['buses'])==6
+# QK-LANDEN 10-19: a one-frame lane (landh0, no stations) registers en on ck_s -> write epoch G + 1 -> K + 1
+m0=dict(insts=[SimpleNamespace(name='s',master='qfd_rst_rep'), SimpleNamespace(name='r',master='qfd_rst_rep_p8')],
+        buses=[('root_s','reset',1,[('external','s'),('s','d')]), ('root_r','reset',1,[('external','r'),('r','d')]),
+               ('source','reset',1,[('s','q0'),('land0','en')]), ('dest','reset',1,[('r','q0'),('land0','rs')])],
+        fwd_lanes=dict(lanes=[dict(bid='y',lane='data',n=1,E=2,E_sta=2,K=2,stations=[],landing='land0')]))
+finalize_model(m0,{'external.s':16,'external.r':20})
+r0=m0['fwd_lanes']['lanes'][0]
+assert (r0['G_reset_tree'],r0['R0_reset_tree'],r0['K'],r0['cal'])==(19,30,7,-11), r0
+import lane_groups as LG
+rows=[dict(bid='a',n=1,E=3),dict(bid='b',n=3,E=3)]
+LG.equalize(rows,4,{})
+assert [(r['K'],r['cal']) for r in rows]==[(4,1),(3,0)], rows
 print('RESET_FINALIZE PASS: exact taps/straps, unknown-root refusal, idempotence')

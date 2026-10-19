@@ -195,6 +195,14 @@ SEQ_S = AHUB_STATIC and os.environ.get('OT_KV_SEQ_STATIC', '0') == '1' and os.en
 SEQ_S_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv'
 PRG = ['request_valid', 'request_position', 'q_valid', 'q_beat', 'q_data']        # kvs_attn prg = seq prg_* (537 b)
 PRG_W, ARH_W = 537, 8
+# KV-ATTNKIT 10-18 (OT_KV_ATTN_LAND=1, default off until the die lane prices it): the attention control tile kvs_attn
+# with a registered boundary (kit qkd_kvs_attn-g1-7834bbc26 EARLY_FAIL_SETUP TT -480.8 ps: logic between the d2d rx pins
+# and the first flops, fault-gated outputs, a pin-to-pin arh feed-through).  attention_programme LAND=1 (landed RX
+# codec, no added RX edge; TX launch flops), attn_root / attn_face CAL_PIPE=1 (exact), prg <- the programme's launched
+# prg_l, arh <- the face's registered hdr_l.  ADDED EDGES (compiler, like one more relay stage on the bundle):
+# K.tx_record +1 (attn__tx_valid / attn__tx_payload), ks_prg +1, ks_arh +1; RX bundles K.rx_record / K.tx_slot +0.
+ATTN_LAND = os.environ.get('OT_KV_ATTN_LAND', '0') == '1'
+ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0, 'K.tx_slot': 0}
 # KV-WIRE2 10-18 (RTL-BUILD-KV/ASTK (a)-(d), lanes/RTL-BUILD-KV.md ASTK; OT_KV_ASTK_ST, default ON with the static hub): the
 # static ASTK strip with its inline e-read (die face qkd_astk_strip_er_die = qkd_astk_strip_er_st + the vh -> read request
 # slicing + af | er_fault), the ECTL frames on qkd_ectl3_kiss_st (C = qkd_ectl_c_st: so 413 b, si 633 b, no nb_cr), heads
@@ -251,10 +259,23 @@ def graph():
             _boot_join(g)
         if AFAULT:
             _afault_join(g)
+        if ATTN_LAND:
+            _attn_land_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
     return _G['g']
+
+
+def _attn_land_join(g):
+    """KV-ATTNKIT (OT_KV_ATTN_LAND): registered kvs_attn boundary parameters (see ATTN_LAND)"""
+    by = {i['name']: i for i in g['instances']}
+    for name, k in (('attention_programme', 'LAND'), ('attn_root', 'CAL_PIPE'), ('attn_face', 'CAL_PIPE')):
+        if name not in by:
+            raise ValueError(f'kv_static_die ATTN_LAND: no instance {name}')
+        by[name]['parameters'][k] = 1
+    g.setdefault('joins_added', []).append(dict(producer='attention_programme LAND / attn_root, attn_face CAL_PIPE',
+        bound_inputs=0, owner_note='KV-ATTNKIT 10-18: registered kvs_attn boundary; added edges ' + json.dumps(ATTN_LAND_EDGES)))
 
 
 def _hroot_join(g):
@@ -644,7 +665,7 @@ def tile(die_inst):
     if kind == 'attn' and SEQ_S and 'fin' in ports:
         # KV-WIRE2 SEQ: the sequencer's result header ar_h {valid, g, beat[5:0]} = the final join's stream header (pure
         # wires from the fin input; g = 0 and beat[5] = 0: the static die has ONE 32-beat result stream)
-        outs['arh'] = ("{fin[0], 2'b00, fin[5:1]}", ARH_W, [])
+        outs['arh'] = (('w_attn_face__hdr_l' if ATTN_LAND else "{fin[0], 2'b00, fin[5:1]}"), ARH_W, [])
         die_x.add('arh')
     if kind == 'emb':                      # the D2D RESULT proxy for the PCs (via their groups)
         for key in PASSES:
@@ -725,7 +746,7 @@ if PVFIN:   # KV-PLAN-FIN: the final join's command word {start_pv, ep, cal R/P1
 if AHUB_STATIC:   # KV-INTEG/AHUB: the attention command word of the static hub
     DIE_EXPORTS['attn'][('attn_root', tuple(AHS))] = ('ahs', AHS_W)
 if SEQ_S:         # KV-WIRE2 SEQ: the attention programme's request / Q beat face -> the static sequencer
-    DIE_EXPORTS['attn'][('attn', tuple(PRG))] = ('prg', PRG_W)
+    DIE_EXPORTS['attn'][('attn', 'prg_l' if ATTN_LAND else tuple(PRG))] = ('prg', PRG_W)   # ATTN_LAND: launched copy
 if BOOT:    # the pc_path's slice-facing outputs (note s5.5)
     DIE_EXPORTS['pc'].update({('pc', p[4:]): (p, w) for _b, p, _s, w, out in BOOT_HSL if out})
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
