@@ -9,7 +9,7 @@ the result leaves through its own qslots source to SU delivery lane 0 at the pos
 P positions are a software-pipelined loop of the issuer: one 32-row body (II 32 = 24 input edges + flush + 6 +
 start) whose loop iteration is the position (iter_vm_step = the per-position operand stride, iter_del_step = the
 per-position output stride: real RTL arithmetic). A position's lifetime (VM request -12 .. delivery +35 = 48 edges)
-spans two body passes, so the compiler peels a 15-row head-only prologue (enters the body at row 15) and a 15-row
+spans two body passes at VM_RT 0 (LEAD 12 + VM_RT, see set_vm_rt), so the compiler peels a 15-row head-only prologue (enters the body at row 15) and a 15-row
 tail-only epilogue: 15 + 32 + 16 + halt = 64 programme rows.
 
     python3 tools/hbm_coll_static/argmax_rows.py OUT --P 6 [--mutant vm_step]
@@ -26,10 +26,29 @@ LAYOUT = ROOT / 'rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v4.json'
 NPT, G, LANES = 3, 96, 4
 M = G // LANES               # 24 input edges a position
 II = 32                      # start + 24 inputs + flush + 6 (publish = flush + 6) -> next start
-LEAD = 12                    # VM request of input m at S - 12 + m (capture +10, sink +11, ARG sees it +13)
+VM_RT = 0                    # HBM-BANKLAT-COLL 10-19: COLL parent VM_RT (VM capture n+10+VM_RT); set by --vm-rt
+LEAD = 12                    # VM request of input m at S - LEAD + m (capture +10+VM_RT, sink +11+VM_RT, ARG sees it
+                             # +13+VM_RT): LEAD = 12 + VM_RT; the capture/sink/ARG offsets relative to S do not move
 VB, VS = 0x0400, 0x0020      # VM operand sector base, per-position stride (32 sectors, 24 used)
 OBASE, DSTRIDE = 0x41000000, 0x40
-PEEL = 15                    # tail rows (offsets 20..34 of a position) = rows 0..14 of the next body pass
+PEEL = 15                    # = W - II, W = LEAD + M + 11 = a position's lifetime in edges (48 - 1 at VM_RT 0):
+                             # tail rows (offsets 20..34 of a position) = rows 0..14 of the next body pass
+CAP_ROWS = 64                # q3 programme memory (6-bit pc)
+
+
+def set_vm_rt(v):
+    """re-derive LEAD / PEEL for a COLL parent VM_RT. Programme rows = PEEL + II + (PEEL + 1) + halt = 2 W - II + 2 =
+    64 + 2 VM_RT: the peeled two-position loop fits the 64-row programme ONLY at VM_RT 0. VM_RT > 0 also stretches a
+    position over K = ceil(W / II) > 2 body passes (VM_RT 74: W 121, K 4, PEEL 89 >= II), so no prologue/epilogue peel
+    of this ISA fits; it needs per-stage row predicates (kernel-only modulo schedule) or a deeper programme memory."""
+    global VM_RT, LEAD, PEEL
+    VM_RT, LEAD = v, 12 + v
+    W = LEAD + M + 11
+    PEEL = W - II
+    rows = 2 * PEEL + II + 2
+    if PEEL >= II or rows > CAP_ROWS:
+        raise SystemExit(f'ARGMAX_ROWS_COMPILE FAIL capacity VM_RT={v} LEAD={LEAD} lifetime={W} passes={-(-W // II)} '
+                         f'peel={PEEL} rows={rows} > {CAP_ROWS} (needs stage predicates or a deeper programme)')
 
 
 def ar_fields(ar):
@@ -178,9 +197,11 @@ def main():
     ap.add_argument('out', type=pathlib.Path)
     ap.add_argument('--P', type=int, default=1)
     ap.add_argument('--mutant', choices=('vm_step',))
+    ap.add_argument('--vm-rt', type=int, default=0, help='COLL parent VM_RT (extra VM read edges beyond n+10 capture)')
     a = ap.parse_args()
+    set_vm_rt(a.vm_rt)
     a.out.mkdir(parents=True, exist_ok=True)
-    man = dict(schema='hcoll.rows.argmax.v1', P=a.P, mutant=a.mutant, G=G, II=II, VB=VB, VS=VS, OBASE=OBASE,
+    man = dict(schema='hcoll.rows.argmax.v1', P=a.P, mutant=a.mutant, vm_rt=a.vm_rt, G=G, II=II, VB=VB, VS=VS, OBASE=OBASE,
                DSTRIDE=DSTRIDE, layout_sha256=hashlib.sha256(LAYOUT.read_bytes()).hexdigest(), parents={})
     halt_only = (1 << 44)
     for die in range(2):

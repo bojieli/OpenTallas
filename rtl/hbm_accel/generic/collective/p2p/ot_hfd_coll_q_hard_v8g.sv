@@ -11,7 +11,14 @@
 // Children, clocks, every other port and edge: unchanged (wires only).
 module ot_hfd_coll_q_hard_v8g_body #(
  parameter integer NPT=3,SOLO=1,TP=96,
- parameter integer NS=(SOLO!=0)?NPT+8:NPT+7,ND=NPT+13,NSL=18,NCK=NS+NSL
+ parameter integer NS=(SOLO!=0)?NPT+8:NPT+7,ND=NPT+13,NSL=18,NCK=NS+NSL,
+ // HBM-BANKLAT-COLL 10-19: VM_RT = VM read edges beyond the fixed n+8 capture (d4g VM faces bank pin + die lanes + COLL
+ // read share hcollrs_<q>, padded by the die to this scalar budget). 0 = the v8 parent, identical hierarchy and edges
+ // (protocol leaf ot_hgi_coll_ctl_v5_*, vm_sel from the uop pipe d3). VM_RT > 0: protocol leaf ot_hgi_coll_ctl_v5r_*
+ // #(VM_RT) (valid check / select / metadata +VM_RT) and vm_sel = its vm_sel_d (select delayed VM_RT edges, flop Q);
+ // the 16 vmasm slices are unchanged. COMPILER: every COLL VM read request leads its capture by 10 + VM_RT instruction
+ // edges (was 10): tools/hbm_coll_static/row_gather_rows.py --vm-rt.
+ parameter integer VM_RT=0
 )(
  input wire rst_n,
  input wire [1:0] qid,
@@ -105,7 +112,8 @@ module ot_hfd_coll_q_hard_v8g_body #(
  // V6: VM read data -> assembly leaf, valid bits -> protocol leaf (wires only)
  wire [7:0] vm_rv;wire [2047:0] vm_rd_il,vm_as_il;
  // V7: the pair select is the uop pipe's d3 word (same register edge as the protocol leaf's inst_q)
- wire [23:0] vm_sel=inst[1383+:24];
+ wire [23:0] vm_sel_ctl;
+ wire [23:0] vm_sel=(VM_RT==0)?inst[1383+:24]:vm_sel_ctl;
  for(genvar b=0;b<8;b=b+1)begin:g_vmsplit
   assign vm_rv[b]=vm_rr[b*257+256];
   for(genvar i=0;i<256;i=i+1)begin:g_bit assign vm_rd_il[i*8+b]=vm_rr[b*257+i];end
@@ -151,7 +159,7 @@ module ot_hfd_coll_q_hard_v8g_body #(
   wire arg_out_v;wire [PWT-1:0] arg_out_data;
   assign source_v[NPT+7]=arg_out_v;assign source_d[(NPT+7)*PWT+:PWT]=arg_out_data;
   assign capture_calendar[NPT+7]=p_ring[82];
-  if(NPT==3)begin:n_u_control 
+  if(NPT==3 && VM_RT==0)begin:n_u_control 
   ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
@@ -161,7 +169,17 @@ module ot_hfd_coll_q_hard_v8g_body #(
    .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
-  end else begin:a_u_control
+  end else if(NPT==3)begin:n_u_control_r
+  ot_hgi_coll_ctl_v5r_q3 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
+   .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
+   .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
+   .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
+   .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
+   .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
+   .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
+  end else if(VM_RT==0)begin:a_u_control
   ot_hgi_coll_ctl_v5_n2s1 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
@@ -171,6 +189,16 @@ module ot_hfd_coll_q_hard_v8g_body #(
    .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
+  end else begin:a_u_control_r
+  ot_hgi_coll_ctl_v5r_n2s1 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
+   .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
+   .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
+   .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
+   .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
+   .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
+   .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
   end
 if(TP==96)begin:t96
   ot_hgi_coll_argmax_m u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
@@ -225,7 +253,7 @@ if(TP==96)begin:t96
   assign tkx_start=1'b0;assign tkx_arg_mode=1'b0;assign tkx_cfg_n=0;assign tkx_cfg_k=0;assign tkx_cfg_nout=0;
   assign tkx_cfg_g=0;assign tkx_cfg_gbase=0;assign tkx_cfg_pf=0;assign tkx_cfg_obase=0;assign tkx_cfg_rbase=0;
   assign tkx_cfg_has_r=1'b0;assign tkx_del_slot=0;assign tkx_del_valid=0;assign tkx_del_flit=0;
-  if(NPT==2)begin:n_u_control 
+  if(NPT==2 && VM_RT==0)begin:n_u_control 
   ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
@@ -235,7 +263,17 @@ if(TP==96)begin:t96
    .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
-  end else begin:a_u_control
+  end else if(NPT==2)begin:n_u_control_r
+  ot_hgi_coll_ctl_v5r_q2 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
+   .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
+   .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
+   .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
+   .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
+   .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
+   .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
+  end else if(VM_RT==0)begin:a_u_control
   ot_hgi_coll_ctl_v5_n1s0 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
@@ -245,6 +283,16 @@ if(TP==96)begin:t96
    .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
    .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
+  end else begin:a_u_control_r
+  ot_hgi_coll_ctl_v5r_n1s0 #(.VM_RT(VM_RT)) u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d2),
+   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),
+   .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
+   .delivery_obase_pin(delivery_obase_pin),.rgx_addr_pin(rgx_addr_pin),
+   .inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),.vm_source_meta(vm_source_meta),
+   .vm_assembled_v(vm_assembled_v),.held_epoch(held_epoch),
+   .wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),.rx_sequence_pin(rx_sequence_pin),
+   .protocol_fault(protocol_fault),.cycles(stat_cycles),.vm_sel_d(vm_sel_ctl));
   end
   if(NPT==2)begin:n_u_fj 
   ot_hgi_coll_fj_q2 u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
@@ -374,7 +422,7 @@ endmodule
 
 // d4f (H-DIE 10-17): the q3 parent with TKM hoisted to a die-level sub-cluster (tkm_SW, ot_hgi_coll_tkm_m_tp192): same
 // body, the TKM interface on pins (zero-latency wires in the lockstep bench; die hop granted <= 450 um, no relay).
-module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=96)(
+module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=96,parameter integer VM_RT=0)(
  input wire rst_n,input wire [1:0] qid,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+8+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,
@@ -412,10 +460,10 @@ module ot_hfd_coll_q3_hard_v8x #(parameter integer NLINK=3,parameter integer TP=
  input wire tkx_busy,tkx_done,tkx_fault,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(1)) u_body(.*);
+ ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(1),.VM_RT(VM_RT)) u_body(.*);
 endmodule
 
-module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=96)(
+module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=96,parameter integer VM_RT=0)(
  input wire rst_n,input wire [1:0] qid,
  input wire clk_program,clk_control,input wire [15:0] clk_vmasm,clk_upipe,input wire clk_issue,input wire [NLINK+7+18-1:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
@@ -447,7 +495,7 @@ module ot_hfd_coll_q2_hard_v8g #(parameter integer NLINK=2,parameter integer TP=
  output wire [135:0] vm_rq,input wire [2055:0] vm_rr,output wire [2247:0] vm_kq,
  output wire fault,output wire [15:0] fault_cause,output wire done,output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(0)) u_body(.*,.clk_arg(1'b0),
+ ot_hfd_coll_q_hard_v8g_body #(.NPT(NLINK),.TP(TP),.SOLO(0),.VM_RT(VM_RT)) u_body(.*,.clk_arg(1'b0),
   .tkx_start(),.tkx_arg_mode(),.tkx_cfg_n(),.tkx_cfg_k(),.tkx_cfg_nout(),.tkx_cfg_g(),.tkx_cfg_gbase(),.tkx_cfg_pf(),
   .tkx_cfg_obase(),.tkx_cfg_rbase(),.tkx_cfg_has_r(),.tkx_del_slot(),.tkx_del_valid(),.tkx_del_flit(),
   .tkx_w_v(1'b0),.tkx_w_addr(40'd0),.tkx_w_mask(16'd0),.tkx_w_data(512'd0),.tkx_busy(1'b0),.tkx_done(1'b0),.tkx_fault(1'b0));
