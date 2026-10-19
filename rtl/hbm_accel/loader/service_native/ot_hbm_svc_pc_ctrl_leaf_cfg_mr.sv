@@ -1,0 +1,199 @@
+`timescale 1ns/1ps
+// HBM-BW 2026-10-19: MULTI-ROW successor of ot_hbm_svc_pc_ctrl_leaf_cfg (that module stays byte-identical).  Same ports,
+// same K/response skids, same 32-entry queue + write-payload / response SRAMs, same PHY-side output flops.  The single
+// active-row state machine (IDLE/DESC/DRAIN/RUN: a request to another row waited until every queued access AND every read
+// response had left, then a precharge-all and a new descriptor) is gone: every queued access carries its own DRAM row
+// into ot_hbm_r14_aq_pc_mr (per-bank open row, ACT ahead from the queue, precharge when no queued access needs the
+// open row), so a K request is accepted whenever the queue has room.  Measured cause and numbers: lanes/HBM-BW.md.
+module ot_hbm_svc_pc_ctrl_leaf_cfg_mr #(
+    parameter integer MRKEY=1,
+    // RQ (HBM-BW): read responses reserved per PC (posted + in flight + landed, untaken).  The as-built 32 covered only
+    // the ~30-cycle column -> K-response round trip, so the queue ran nearly empty and no ACT could be issued ahead;
+    // 128 (a power of two: ring pointers) covers the 64-entry queue + the round trip; the 128x256 response SRAM already
+    // holds 128 rows.
+    parameter integer RQ=128,
+    // QD (HBM-BW): access-queue depth in sectors (leaf queue + sequencer queue).  The queue is the ACT lookahead: an
+    // entry's bank is activated when it is queued, so QD cycles of column work must cover the ACT sequencing of a block's
+    // four banks (tRRD/slot ~4 cycles each) + tRCD 19 + a refresh ACT-blocking window (16): 32 left no margin.
+    parameter integer QD=64,
+    parameter integer OREG=1,
+    parameter integer KREG=1,
+    parameter integer KRREG=1,
+    parameter integer RREG=1,
+    // WPAY=1 (H-DIE 2026-10-15 22:50, physical default): the 256-bit write payload of the 32-entry same-row queue lives
+    // in a real 128x256 SRAM (rows 0..31) instead of 8,192 queue flops + a 32:1 x 256 head mux; the clock root drops
+    // from 15,219 to ~7k sinks.  The payload is read continuously at the NEXT head (rp, or rp+1 on a column pop), so
+    // the head word is valid one edge after any pop.  A write column issued less than two edges after its own payload
+    // write would read the old word: that is checked (sticky fault), never silently stretched.  WPAY=0 = flops.
+    parameter integer WPAY=1
+)(
+    input wire clk,rst_n,
+    input wire [4:0]pc_id,
+    input wire [7:0]refresh_reload,
+    input wire k_v,output wire k_rdy,input wire k_we,
+    input wire[29:0]k_addr,input wire[3:0]k_len,input wire[16:0]k_tag,
+    input wire[255:0]k_wdata,input wire[31:0]k_wstrb,
+    output wire kr_v,input wire kr_rdy,
+    output wire[16:0]kr_tag,output wire[3:0]kr_beat,output wire[255:0]kr_data,
+    output reg k_wr_done,
+    output wire row_v,output wire[2:0]row_op,output wire[4:0]row_bank,output wire[18:0]row_row,
+    output wire col_v,col_we,output wire[4:0]col_bank,col_col,
+    output wire[255:0]col_data,output wire[31:0]col_strb,
+    input wire dram_rvalid,input wire[255:0]dram_rdata,
+    output wire pc_fault,owner_fault
+);
+    // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
+    wire lrst_n;
+    ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(lrst_n));
+    // Native PHY-return pin capture: valid and all payload bits enter flops
+    // together before response FIFO accounting/address/identity logic. This
+    // adds one HBM edge before block-ready; normal on-die calendars do not
+    // gain a runtime stall or a credit mechanism. RREG=0 is diagnostic history.
+    wire ret_v; wire [255:0] ret_data;
+    generate if(RREG!=0)begin:g_phy_return
+        reg v;reg [255:0]data;
+        always @(posedge clk) data<=dram_rdata;
+        always @(posedge clk or negedge lrst_n)
+            if(!lrst_n) v<=1'b0; else v<=dram_rvalid;
+        assign ret_v=v;assign ret_data=data;
+    end else begin:g_raw_phy_return
+        assign ret_v=dram_rvalid;assign ret_data=dram_rdata;
+    end endgenerate
+    reg [4:0]pc_id_q;reg [7:0]refresh_reload_q;
+    always @(posedge clk)begin pc_id_q<=pc_id;refresh_reload_q<=refresh_reload;end
+    wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
+    wire i_rdy;
+    reg sticky;
+    localparam integer QW=$clog2(QD);
+    reg[QW-1:0]wp,rp,ep;reg[QW:0]count,unposted;
+    reg[63:0]queue[0:QD-1];          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
+    reg[14:0]qrow[0:QD-1];           // the DRAM row of each queued access (multi-row)
+    wire[255:0]head_wdata;
+    reg fresh_v;reg[QW-1:0]fresh_slot;
+    localparam integer RQW=$clog2(RQ);
+    reg[RQW:0]read_reserved,pending_count,response_count;
+    reg[RQW-1:0]pending_wp,pending_rp,response_wp,response_rp;
+    reg[20:0]pending_identity[0:RQ-1],response_identity[0:RQ-1];
+    reg[20:0]head_identity;reg head_valid;
+    wire[255:0]response_data;
+    wire[29:0]incoming=i_addr;
+    wire[18:0]incoming_row={4'b0,incoming[29:15]};
+    wire[4:0]incoming_pc=incoming[6:2]^incoming[11:7]^incoming[16:12];
+    wire[3:0]length=i_len;
+    wire legal=length>=1 && length<=4 && (!i_we || length==1) &&
+        {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
+    wire wr,cv,cwe,caq;wire[4:0]cb,cc;
+    wire[319:0]head={queue[rp],head_wdata},push={queue[ep],256'b0};
+    wire push_read=!push[319];
+    wire enqueue=unposted!=0 && (!push_read || read_reserved<RQ) && !sticky;
+    wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
+    wire posted_read=posted&&push_read;
+    wire column_read=cv&&!cwe;
+    wire j_v,j_rdy;
+    wire response_take=j_v&&j_rdy;
+    assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=QD;
+    generate if(KREG!=0)begin:g_kreg
+        ot_hbm_svc_pin_skid2 #(.WIDTH(340)) u_skid(
+            .clk(clk),.rst_n(lrst_n),.in_v(k_v),.in_r(k_rdy),
+            .in_data({k_we,k_addr,k_len,k_tag,k_wstrb,k_wdata}),
+            .out_v(i_v),.out_r(i_rdy),.out_data({i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}));
+    end else begin:g_raw_k
+        assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
+        assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
+    end endgenerate
+
+    assign j_v=head_valid&&!sticky&&!pc_fault;
+    generate if(KRREG!=0)begin:g_krreg
+        ot_hbm_svc_pin_skid2 #(.WIDTH(277)) u_skid(
+            .clk(clk),.rst_n(lrst_n),.in_v(j_v),.in_r(j_rdy),
+            .in_data({head_identity[20:4],head_identity[3:0],response_data}),
+            .out_v(kr_v),.out_r(kr_rdy),.out_data({kr_tag,kr_beat,kr_data}));
+    end else begin:g_raw_kr
+        assign kr_v=j_v;assign j_rdy=kr_rdy;
+        assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
+    end endgenerate
+    wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
+    generate if(OREG!=0)begin:g_oreg
+        reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
+        always @(posedge clk or negedge lrst_n)
+            if(!lrst_n)begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
+        always @(posedge clk)begin q_rop<=r_op;q_rbank<=r_bank;q_rrow<=r_row;q_cb<=cb;q_cc<=cc;q_cd<=head[255:0];q_cs<=head[287:256];end
+        assign row_v=q_rv;assign row_op=q_rop;assign row_bank=q_rbank;assign row_row=q_rrow;
+        assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;assign col_data=q_cd;assign col_strb=q_cs;
+    end else begin:g_comb
+        assign row_v=r_v;assign row_op=r_op;assign row_bank=r_bank;assign row_row=r_row;
+        assign col_v=cv;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
+        assign col_data=head[255:0];assign col_strb=head[287:256];
+    end endgenerate
+    assign owner_fault=sticky;
+    generate if(WPAY!=0)begin:g_wpay
+        // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
+        wire[QW-1:0]wpay_raddr=cv?rp+1'b1:rp;
+        ot_sram_1r1w_128x256_m1_r2c2 u_write_payload(
+            .clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(wpay_raddr)),.rd_out(head_wdata),
+            .w_ce_in(accepted&&i_we),.w_addr_in(7'(wp)),.wd_in(i_wdata),.w_mask_in({256{1'b1}}),
+            .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+    end else begin:g_wflops
+        reg[255:0]wq[0:QD-1];
+        always @(posedge clk) if(accepted)for(integer b=0;b<4;b=b+1)if(b<length)wq[QW'(wp+b)]<=i_wdata;
+        assign head_wdata=wq[rp];
+    end endgenerate
+    wire response_read=!sticky&&((!head_valid&&response_count!=0)||(response_take&&response_count>1));
+    wire[RQW-1:0]response_read_address=response_take?response_rp+1'b1:response_rp;
+    wire response_write=ret_v&&pending_count!=0&&!sticky;
+    ot_sram_1r1w_128x256_m1_r2c2 u_response_payload(
+        .clk(clk),.r_ce_in(response_read),.r_addr_in(7'(response_read_address)),.rd_out(response_data),
+        .w_ce_in(response_write),.w_addr_in(7'(response_wp)),.wd_in(ret_data),.w_mask_in({256{1'b1}}),
+        .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+    ot_hbm_r14_aq_pc_mr #(.WQ(QD),.MRKEY(MRKEY)) controller(
+        .clk(clk),.rst_n(lrst_n),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
+        .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
+        .col_v(cv),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),
+        .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow[ep]}),.wr_rd(push_read),.wr_r(wr),
+        .col_we(cwe),.col_aq(caq),.dbg_held());
+    always @(posedge clk or negedge lrst_n)begin
+        if(!lrst_n)begin
+            sticky<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
+            read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
+            head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;
+        end else begin
+            k_wr_done<=0;
+            if(i_v&&!legal)sticky<=1;
+            if(accepted)begin
+                for(integer b=0;b<4;b=b+1)if(b<length)
+                    begin queue[QW'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
+                          qrow[QW'(wp+b)]<=incoming[29:15];end
+                wp<=wp+QW'(length);
+            end
+            count<=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
+            unposted<=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
+            read_reserved<=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
+            pending_count<=pending_count+(column_read?6'd1:6'd0)-(ret_v?6'd1:6'd0);
+            response_count<=response_count+(ret_v?6'd1:6'd0)-(response_take?6'd1:6'd0);
+            if(posted)ep<=ep+1'b1;
+            fresh_v<=accepted&&i_we;fresh_slot<=wp;
+            if(cv)begin
+                if(count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq))sticky<=1;
+                if(WPAY!=0 && cwe && fresh_v && fresh_slot==rp)sticky<=1;
+                rp<=rp+1'b1;
+                if(cwe)k_wr_done<=1;
+                else begin
+                    if(pending_count>=RQ)sticky<=1;
+                    pending_identity[pending_wp]<=head[308:288];pending_wp<=pending_wp+1'b1;
+                end
+            end
+            if(ret_v)begin
+                if(pending_count==0 || (response_count>=RQ&&!response_take))sticky<=1;
+                else begin response_identity[response_wp]<=pending_identity[pending_rp];pending_rp<=pending_rp+1'b1;response_wp<=response_wp+1'b1;end
+            end
+            if(response_read)begin head_identity<=response_identity[response_read_address];head_valid<=1;end
+            else if(response_take)head_valid<=0;
+            if(response_take)begin
+                if(read_reserved==0||response_count==0)sticky<=1;
+                response_rp<=response_rp+1'b1;
+            end
+            if(read_reserved>RQ||pending_count>RQ||response_count>RQ)sticky<=1;
+        end
+    end
+endmodule
+`default_nettype wire

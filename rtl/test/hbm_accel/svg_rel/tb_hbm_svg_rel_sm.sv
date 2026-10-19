@@ -56,7 +56,12 @@ module tb_hbm_svg_rel_sm;
   .fault(xc_fault),.active(xc_active));
  // ---------------- HBM: real controller leaves + DRAM command fixture
  wire[31:0]row_v,col_v,col_we,dram_rvalid;wire[95:0]row_op;wire[159:0]row_bank,col_bank,col_col;wire[607:0]row_row;wire[8191:0]col_data,dram_rdata;wire[1023:0]col_strb;wire native_fault;
- ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm),.rst_n(hrst),.pc_clk({32{hbm}}),
+`ifdef HBM_MR
+ // HBM-BW 2026-10-19: multi-row controller leaves (per-bank open rows, ACT ahead from a 64-entry queue, refresh key)
+ ot_hbm_svc_native_sector_pipeline_leaves_mr controller(.clk(hbm)
+`else
+ ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm)
+`endif,.rst_n(hrst),.pc_clk({32{hbm}}),
   .k_tag(kt),.k_wdata(kw),.k_addr(ka),.kr_rdy(rrdy),.k_wstrb(ks),.k_we(kwe),.k_len(kl),.k_rdy(krdy),.kr_v(rv_),.kr_data(rd),.kr_beat(rb),
   .k_wr_done(kdone),.kr_tag(rt),.k_v(kv),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),.col_we(col_we),
   .col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata),.fault(native_fault));
