@@ -460,6 +460,13 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # reset leaves; the side that would release early is delayed by gate-calendar stations (dsfd_rly_1, one edge
     # each) beside its own block (source pin / landing), clocked by that block's root, tapped from one chain per leaf.
     # The landing rs releases at least T/2 before the first lane clock edge reaches the ring.
+    # PO-SUBMIT (10-19, COORD HANDOFF 0jz): a landing VIEW hardened with the kit reset landing (ref_tile reset_landing
+    # {"enable": true, "stages": RL}: rs -> RL plain ck flops -> core) releases its core RL edges after its rs leaf, so the
+    # receiver's release edge is R_leaf + RL.  Bind table "landing_reset_stages": {master: RL} names it for the views
+    # actually bound (absent = 0 = the pre-po2 views without a kit landing).  The calendar below then opens the hop-0
+    # gate RL edges later too (more source-side gate-calendar stations, or fewer receiver-side ones): K = E and every
+    # data latency are unchanged; only the reset release / first gated edge move RL edges, uniformly.
+    land_rl_tab = T.get('landing_reset_stages', {})
     lsrc = {l['i'].replace('-', '_'): l for l in plan['links']}
     rdep = rst['depth']
     gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
@@ -480,7 +487,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         l_ = lsrc[nm]
         a_ = blocks[l_['e'][0][0]]['name']
         sleaf, rleaf = rst['block_leaf'].get(a_, 'rst_sync1'), rst['block_leaf'][n]
-        ds_, dr_ = rdep[sleaf], rdep[rleaf]
+        pr = land_rows_plan.get(nm, {})
+        long_ = (not ad) and pr.get('master') == f'dsfd_dvland_{b}l'
+        lm_ = ad[0] if ad else (f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}')
+        rl_ = int(land_rl_tab.get(lm_, 0))
+        ds_, dr_ = rdep[sleaf], rdep[rleaf] + rl_
         h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
         if dr_ - ds_ > h_:
             gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
@@ -492,11 +503,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             gate_en[nm], land_rs[nm] = sleaf, rleaf
         st = len(chains_pts[nm])
         e_ = land_e.get(nm)
-        pr = land_rows_plan.get(nm, {})
         # LANDFIX-SQ (10-18): the land plan names the tile per link (D 4 dsfd_dvland_<W>, 3-bit K <= 7; or the long tile
         # dsfd_dvland_<W>l, D 8, 6-bit K <= 63 for E > 7 or a TT/FF spread > 2 ns).  K = E (G = R0: the hop-0 gate opens on
         # the receiver's calendar release edge), so no reset-calendar offset is needed for any E.
-        long_ = (not ad) and pr.get('master') == f'dsfd_dvland_{b}l'
         kw_ = 6 if long_ else 3
         if e_ is not None and e_ > (2 ** kw_ - 1):
             raise SystemExit(f'dv_bind: landing {nm} E {e_} > K range {2 ** kw_ - 1} of its tile (land plan {lp})')
@@ -520,7 +529,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                               age=math.ceil(st / 2) + k_ + 1, bundle=pr.get('bundle'),
                               K_source=(pr.get('K_source') or 'land_plan E (gate calendar R0 = G + N mod 2)') if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
                               calendar_G_minus_R0=-h_, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
-                              land_rs=land_rs[nm], release_src=ds_, release_dst=dr_,
+                              land_rs=land_rs[nm], release_src=ds_, release_dst=dr_, land_reset_stages=rl_,
                               calendar_stations=dict(side='source' if dr_ - ds_ > h_ else ('receiver' if dr_ - ds_ < h_ else None),
                                                      n=abs(dr_ - ds_ - h_))))
     for lm in sorted({r['master'] for r in land_rows}):

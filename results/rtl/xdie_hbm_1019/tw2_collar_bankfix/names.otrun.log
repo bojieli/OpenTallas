@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-epyc5       admits   663 GB (avail 648, growth 184, headroom 0, waiters 0/0 GB) load 61/128 running 23 disk 1554 GB 
+ot-run: ot-epyc6       admits   525 GB (avail 489, growth 121, headroom 0, waiters 0/0 GB) load 47/128 running 14 disk 6442 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tw2-collar-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1562748-1792406418 after 0 s
+ROWS=64 rc=0
+ROWS=64 ot_hgi_coll_issuer_m/u_issuer.g_mem[0].u_bank.u_sram
+ROWS=64 ot_hgi_coll_issuer_m/u_issuer.g_mem[1].u_bank.u_sram
+ROWS=64 ot_hgi_coll_issuer_m/u_issuer.g_mem[2].u_bank.u_sram
+ROWS=128 rc=0
+ROWS=128 ot_hgi_coll_issuer_m/u_issuer.g_mem[0].u_bank.g128.u_sram_hi
+ROWS=128 ot_hgi_coll_issuer_m/u_issuer.g_mem[0].u_bank.u_sram
+ROWS=128 ot_hgi_coll_issuer_m/u_issuer.g_mem[1].u_bank.g128.u_sram_hi
+ROWS=128 ot_hgi_coll_issuer_m/u_issuer.g_mem[1].u_bank.u_sram
+ROWS=128 ot_hgi_coll_issuer_m/u_issuer.g_mem[2].u_bank.g128.u_sram_hi
+ROWS=128 ot_hgi_coll_issuer_m/u_issuer.g_mem[2].u_bank.u_sram
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1562748-1792406418): exit 0

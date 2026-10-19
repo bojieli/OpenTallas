@@ -8,8 +8,8 @@
 #         and the NU 4 landed cluster (dh_user 0) in lockstep: CTLM_PROG PASS + LANDED_LOCKSTEP PASS; --mut 1 FAIL
 #   lp    rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh (regenerated, NU 4, random dh_user): audit PASS, unland FAIL, MUT 0
 #         PASS, 1 / 2 FAIL (MUT 4 = late u_hr reset, not observable: HF-4 waiver, reported as INFO)
-#   eq    rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_eq.sv NU 4 random dh_user: DMUT 0 PASS, 5 / 6 FAIL
-#   seq   rtl/test/mu_qwen_seq/run_mu_seq.sh (qfd_dv_cmd_cal_mu, UFOLD default 0): mut 0 PASS, 11..15 FAIL
+#   eq    rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_eq.sv NU 4 random dh_user: OPSEG 0 DMUT 0 PASS, 5 / 6 FAIL; OPSEG 1 DMUT 0 PASS, 5 / 29 FAIL
+#   seq   rtl/test/mu_qwen_seq/run_mu_seq.sh (qfd_dv_cmd_cal_mu, UFOLD default 0): mut 0 PASS, 4 5 11..15 FAIL
 set -u
 D=$(cd "$(dirname "$0")" && pwd); R=$(cd "$D/../../.." && pwd); W=${1:?WORK}; shift; mkdir -p "$W"; W=$(cd "$W" && pwd)
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -48,12 +48,14 @@ if want lp; then
 fi
 if want eq; then
     SRCS="$(sed "s#^#$R/#" "$R/rtl/test/qwen_dv/tt_ctlm_dv_sources.f") $R/rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv $R/rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv"
-    for m in 0 5 6; do
+    # MU-QW-DIE 10-19: OPSEG 0 (DMUT 0 / 5 / 6) and OPSEG 1 (DMUT 0 / 5 / 29: the landed form takes OPSEG + the context record)
+    for mo in "0 0" "5 0" "6 0" "0 1" "5 1" "29 1"; do
+        set -- $mo; m=$1; o=$2; t=m${m}_o${o}
         verilator --binary -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --x-assign 0 --x-initial 0 \
-            --top-module tb_qfd_tt_ctlm_dv_lpf_eq -GDMUT=$m -GNU=4 $SRCS "$R/rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_eq.sv" \
-            -Mdir "$W/eq$m" > "$W/eq_build$m.log" 2>&1 && "$W/eq$m/Vtb_qfd_tt_ctlm_dv_lpf_eq" > "$W/eq_m$m.out" 2>&1
-        L=$(grep -m1 -E 'LPF_EQ (PASS|FAIL)' "$W/eq_m$m.out" 2>/dev/null)
-        [ $m = 0 ] && chk eq_m$m "LPF_EQ PASS" "${L:-NO_RESULT}" || chk eq_m$m "LPF_EQ FAIL" "${L:-NO_RESULT}"
+            --top-module tb_qfd_tt_ctlm_dv_lpf_eq -GDMUT=$m -GNU=4 -GOPSEG=$o $SRCS "$R/rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_eq.sv" \
+            -Mdir "$W/eq$t" > "$W/eq_build$t.log" 2>&1 && "$W/eq$t/Vtb_qfd_tt_ctlm_dv_lpf_eq" > "$W/eq_$t.out" 2>&1
+        L=$(grep -m1 -E 'LPF_EQ (PASS|FAIL)' "$W/eq_$t.out" 2>/dev/null)
+        [ $m = 0 ] && chk eq_$t "LPF_EQ PASS" "${L:-NO_RESULT}" || chk eq_$t "LPF_EQ FAIL" "${L:-NO_RESULT}"
     done
 fi
 if want seq; then
