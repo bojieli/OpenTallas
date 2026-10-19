@@ -25,11 +25,11 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     wire [1103:0] p_ri, a_ri, b_ri, rp_ri, ra_ri; wire [31:0] a_rt, b_rt, p_rt; wire p_f, a_f, b_f, rp_f, ra_f;
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
-    ot_s81sl_lep_mu #(.SRAM(1), .HOST_EN(0), .AB_EN(1), .NB(NB)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
+    // MU-S81/KIT: die P = the hardened copy A/B master ot_s81sl_lep_mu_ab (kit s81sl_lepmu; = lep_mu HOST_EN 0 AB_EN 1)
+    ot_s81sl_lep_mu_ab #(.SRAM(1), .NB(NB)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
         .lo0_v(plv[0]), .lo0_r(plr[0]), .lo0_d(pld[0 +: 553]), .lo1_v(plv[1]), .lo1_r(plr[1]), .lo1_d(pld[553 +: 553]),
         .li0_v(piv[0]), .li0_r(pir[0]), .li0_d(pid[0 +: 553]), .li1_v(piv[1]), .li1_r(pir[1]), .li1_d(pid[553 +: 553]),
-        .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]), .l0_st(2'b00), .l1_st(2'b00),
-        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+        .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]),
         .mu_c(p_mc), .mu_rt(p_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
         .lo2_v(plv[2]), .lo2_r(plr[2]), .lo2_d(pld[1106 +: 553]), .lo3_v(plv[3]), .lo3_r(plr[3]), .lo3_d(pld[1659 +: 553]),
         .li2_v(piv[2]), .li2_r(pir[2]), .li2_d(pid[1106 +: 553]), .li3_v(piv[3]), .li3_r(pir[3]), .li3_d(pid[1659 +: 553]),

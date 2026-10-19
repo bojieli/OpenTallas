@@ -590,6 +590,55 @@ module ot_s81sl_lep_mu #(
         .l2_f(l2_f), .l3_f(l3_f), .fault(fault));
 endmodule
 
+// MU-S81/KIT (2026-10-19): hardened master of the copy A/B endpoint WITHOUT the host plane (kit s81sl_lepmu): MU_EN 1,
+// AB_EN 1, HOST_EN 0.  Same core and cycles as ot_s81sl_lep_mu #(.HOST_EN(0), .AB_EN(1)); the host ports (t_host / t_kd
+// in, f_host / f_lf / f_ks out) and l0_st / l1_st are not ports (the core reads none of them at HOST_EN 0, generate), so
+// the hard block carries no tied pad and no constant output.  Faces (kit): W lanes A, S lanes B, N landing (dsdv_mu_land),
+// E ring + mu_c / mu_rt.
+module ot_s81sl_lep_mu_ab #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer NB = 80
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    input  wire [33:0]     mu_c,
+    output wire [31:0]     mu_rt,
+    output wire            ml_wv,
+    output wire [1103:0]   ml_wd,
+    input  wire            ml_rv,
+    input  wire [1103:0]   ml_rd,
+    input  wire            ml_f,
+    output wire            lo2_v, input wire lo2_r, output wire [552:0] lo2_d,
+    output wire            lo3_v, input wire lo3_r, output wire [552:0] lo3_d,
+    input  wire            li2_v, output wire li2_r, input wire [552:0] li2_d,
+    input  wire            li3_v, output wire li3_r, input wire [552:0] li3_d,
+    output wire [1:0]      rxvb,
+    input  wire [2:0]      l2_f,
+    input  wire [2:0]      l3_f,
+    output wire            fault
+);
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .AB_EN(1), .NB(NB)) u (
+        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
+        .lo2_v(lo2_v), .lo2_r(lo2_r), .lo2_d(lo2_d), .lo3_v(lo3_v), .lo3_r(lo3_r), .lo3_d(lo3_d),
+        .li2_v(li2_v), .li2_r(li2_r), .li2_d(li2_d), .li3_v(li3_v), .li3_r(li3_r), .li3_d(li3_d), .rxvb(rxvb),
+        .l2_f(l2_f), .l3_f(l3_f), .fault(fault));
+endmodule
+
 // ---------------------------------------------------------------------------------------------------------------------
 // The end-slice cluster: slice + lep + 2 link lanes.  SIDE 0 = W end (outward = ri_w / ro_w), 1 = E end.  The die
 // masters are the parameter-free tops below (one per outward face: pin plans differ, as dsfd_coll_lane_w / _e).
