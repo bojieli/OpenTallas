@@ -1,0 +1,294 @@
+{
+  "over405": 57,
+  "over405_async": 5,
+  "max_nonasync": 423.149,
+  "over405_pairs": [
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.u_q.g_bank[5].u_mem/r_addr_in[1]",
+      "bbox_manhattan_upper_um": 420.767
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.u_q.g_bank[5].u_mem/r_addr_in[0]",
+      "bbox_manhattan_upper_um": 420.67100000000005
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.u_q.g_bank[5].u_mem/r_ce_in",
+      "bbox_manhattan_upper_um": 420.57500000000005
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.u_q.g_bank[5].u_mem/r_addr_in[2]",
+      "bbox_manhattan_upper_um": 420.863
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_hrs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.g_bank[5].u_mem/r_ce_in",
+      "bbox_manhattan_upper_um": 406.427
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[0]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_beat[0]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 420.251
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[10]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[6]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 414.16100000000006
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[11]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[7]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.145
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[12]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[8]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.535
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[13]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[9]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.277
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[14]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[10]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 414.209
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[15]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[11]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 416.16499999999996
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[16]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[12]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 416.39300000000003
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[17]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[13]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 417.053
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[18]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[14]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.87699999999995
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[19]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[15]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 417.455
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[1]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_beat[1]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 418.80500000000006
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[20]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[16]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 418.995
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[2]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_beat[2]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 421.139
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[3]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_beat[3]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 421.20500000000004
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[4]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[0]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 412.361
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[5]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[1]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 412.80499999999995
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[6]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[2]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 412.54699999999997
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[7]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[3]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 413.585
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[8]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[4]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 414.19100000000003
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[0].u_pc.u_r.g_bank[0].u_mem/rd_out[9]",
+      "sink": "u_ot_pr_core.g_pc[0].u_pc.r_tag[5]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 414.31100000000004
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.g_bank[5].u_mem/r_ce_in",
+      "bbox_manhattan_upper_um": 419.657
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.g_bank[5].u_mem/r_addr_in[2]",
+      "bbox_manhattan_upper_um": 419.94499999999994
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.g_bank[5].u_mem/r_addr_in[0]",
+      "bbox_manhattan_upper_um": 419.753
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.g_h[10].krq_c$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.g_bank[5].u_mem/r_addr_in[1]",
+      "bbox_manhattan_upper_um": 419.84899999999993
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[0]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_beat[0]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 421.871
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[10]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[6]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 416.69900000000007
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[11]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[7]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 416.98100000000005
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[12]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[8]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.21099999999996
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[13]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[9]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 416.519
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[14]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[10]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 418.529
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[15]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[11]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 418.055
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[16]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[12]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 418.283
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[17]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[13]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 417.59299999999996
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[18]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[14]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 419.65700000000004
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[19]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[15]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 419.56100000000004
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[1]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_beat[1]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 423.12500000000006
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[20]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[16]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 419.46500000000003
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[2]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_beat[2]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 422.48900000000003
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[3]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_beat[3]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 423.149
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[4]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[0]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 413.549
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[5]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[1]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 414.317
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[6]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[2]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.787
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[7]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[3]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 416.01500000000004
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[8]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[4]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.757
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_r.g_bank[0].u_mem/rd_out[9]",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.r_tag[5]$_DFF_P_/D",
+      "bbox_manhattan_upper_um": 415.823
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.g_bank[5].u_mem/w_ce_in",
+      "bbox_manhattan_upper_um": 421.73299999999995
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.rv$_DFF_PN0_/RESETN",
+      "bbox_manhattan_upper_um": 494.38
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_q.w_credit$_DFF_PN0_/RESETN",
+      "bbox_manhattan_upper_um": 495.23900000000003
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.st[0]$_DFF_PN0_/RESETN",
+      "bbox_manhattan_upper_um": 495.244
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.st[1]$_DFF_PN0_/RESETN",
+      "bbox_manhattan_upper_um": 495.946
+    },
+    {
+      "driver": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "sink": "u_ot_pr_core.g_pc[1].u_pc.u_wd.d_p$_DFF_PN0_/RESETN",
+      "bbox_manhattan_upper_um": 495.3750000000001
+    }
+  ],
+  "dead_memory_tail_bits": 174,
+  "dead_all_macro_outputs": true
+}
