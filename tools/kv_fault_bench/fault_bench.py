@@ -10,18 +10,11 @@ def normalize(plan):
     ids = {s['id'] for s in sources}
     if len(ids) != len(sources):
         raise ValueError('duplicate source ID')
-    for s in sources:
-        if s.get('sticky', False):
-            ops.append(dict(id=s['id']+'__sticky', a=s['id'], kind='sticky', latency=1))
-    aliases = {s['id']: s['id']+'__sticky' for s in sources if s.get('sticky', False)}
     pending = copy.deepcopy(plan.get('transports', []) + plan['nodes'])
     for n in pending:
         if 'source' in n:
             n.update(a=n.pop('source'), kind='pipe', latency=n.pop('latency_cycles'))
         n['latency'] = n.get('latency', 1)
-        for port in ('a', 'b'):
-            if port in n:
-                n[port] = aliases.get(n[port], n[port])
     known = ids | {n['id'] for n in ops}
     while pending:
         ready = [n for n in pending if all(n[p] in known or (n['kind']=='sticky' and n[p]==n['id']) or n[p] in ('0', "1'b0") for p in ('a','b') if p in n)]
@@ -73,8 +66,11 @@ def generate(plan, output, mutant='none'):
     # independent graph latency bound checks source coverage and retirement.
     state = {n['id']: [0]*n['latency'] for n in ops}
     rows = []; case = 0
+    held = set()
     def tick(active=(), reset=False):
-        before = {s['id']: int(s['id'] in active) for s in sources}
+        if reset: held.clear()
+        else: held.update(s['id'] for s in sources if s.get('sticky',False) and s['id'] in active)
+        before = {s['id']: int(not reset and (s['id'] in active or s['id'] in held)) for s in sources}
         before.update({k:v[-1] for k,v in state.items()}); before['0']=0; before["1'b0"]=0
         for n in ops:
             v = before[n['a']] | before.get(n.get('b'), 0)
@@ -145,6 +141,8 @@ initial begin
 end
 endmodule
 '''.replace('NS',str(len(sources))).replace('WIRES','\n'.join(wires)).replace('W-1',str(width-1)).replace('QUIET',str(quiet))
+    if mutant != 'none':
+        text = text.replace('if(q !== expected)', f'if(q[{idx[sink]}] !== expected[{idx[sink]}])')
     (output/'tb.sv').write_text(text)
     meta = dict(source_count=len(sources),node_count=len(ops),cycles=len(rows),quiet_cycles=quiet,max_leaf_latency=max(latencies.values()),latencies=latencies,mutant=mutant,qualification='logical topology only; fixed-cycle transports do not qualify CDC or physical lanes',plan_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True).encode()).hexdigest())
     (output/'manifest.json').write_text(json.dumps(meta,indent=2)+'\n')
@@ -152,9 +150,9 @@ endmodule
 
 
 def fixture(n=340):
-    sources=[dict(id=f's{i}',sticky=i<4) for i in range(n)]
-    transports=[dict(id=f't{i}',source=f's{i}',latency_cycles=1+i%5) for i in range(n)]
-    nodes=[]; level=[f't{i}' for i in range(n)]; k=0
+    sources=[dict(id=f's{i}',sticky=i>=4,requires_sticky_latch=i<4) for i in range(n)]
+    transports=[dict(id=f't{i}',source=f'kc{i}' if i<4 else f's{i}',latency_cycles=1+i%5) for i in range(n)]
+    nodes=[dict(id=f'kc{i}',a=f's{i}',b=f'kc{i}',kind='sticky',latency=1) for i in range(4)]; level=[f't{i}' for i in range(n)]; k=0
     while len(level)>1:
         nxt=[]
         for i in range(0,len(level),2):
