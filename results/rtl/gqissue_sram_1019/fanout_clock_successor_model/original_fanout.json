@@ -1,0 +1,166 @@
+{
+  "category_max": {},
+  "top": "ot_hgi_coll_gq_issue",
+  "netlist_sha256": "108b0ba0a9f68d99525bdb9c70dbbaa2c5afed052b7bde0dcd3922bcd648a731",
+  "strap_roots": 0,
+  "max_strap_fanout": 0,
+  "strap_top": [],
+  "all_signal_top": [
+    {
+      "net": "u_ot_pr_core.a1[290]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 514,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.fire_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 513,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_105498_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 417,
+      "flops": 1,
+      "example": "u_ot_pr_core.fire_q$_DFF_PN0_"
+    },
+    {
+      "net": "_163085_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 407,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.sync_q[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 318,
+      "flops": 293,
+      "example": "u_ot_pr_core.u_rst.rst_n[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.scan_row[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 264,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_185924_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 256,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.program_cfg_we$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 201,
+      "flops": 1,
+      "example": "u_ot_pr_core.u_target.commit[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.install_open$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 192,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.program_start_v$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 182,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_153836_/Y (XNOR2x2_ASAP7_75t_R)",
+      "loads": 175,
+      "flops": 1,
+      "example": "u_ot_pr_core.u_aq1.u_scale.u.s3_product[47]$_DFF_P_"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 170,
+      "flops": 170,
+      "example": "u_ot_pr_core.active$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.rst_n[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 144,
+      "flops": 144,
+      "example": "u_ot_pr_core.rd_exp[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.scan_row[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 135,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.rst_n[3]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 134,
+      "flops": 134,
+      "example": "u_ot_pr_core.a1[0]$_DFF_PN0_"
+    },
+    {
+      "net": "_185925_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 128,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_r2$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 120,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_163117_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 118,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_178929_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_179599_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_180048_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_180495_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_180951_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_181397_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    }
+  ],
+  "clock_roots": [
+    {
+      "source": [
+        "port",
+        "clk"
+      ],
+      "ff": 21844,
+      "icg": 0,
+      "macro_pins": 8,
+      "example": "_185924_"
+    }
+  ]
+}

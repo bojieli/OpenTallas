@@ -1,0 +1,33 @@
+{
+  "status": "BLOCKED_SOURCE_REPAIR",
+  "original_synth_total_um2": 46183.22924,
+  "original_hard_area_um2": 31132.61568,
+  "original_std_area_um2": 15050.613560000002,
+  "original_preCTS_outline_fill": 0.309333400580847,
+  "outline_um": [
+    432,
+    345.6
+  ],
+  "macros": 8,
+  "source_data_cadence_delta_edges": 0,
+  "current_partial_added_ff": 32,
+  "current_partial_model": "two16copy scalar banks, actualmappedcensus pending; no qualification",
+  "clock_independent_graph_sinks": 21784,
+  "clock_actual_stage_range": [
+    13,
+    15
+  ],
+  "macro_clock_actual_stages": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14
+  ],
+  "native_io_clock_pins": 3654,
+  "unsafe_hot_controls": "original_fanout.json",
+  "owner_policy": "actualmappedcriticalcontrols<=32; resetbranchesquantified; nogateuntilrepaired"
+}

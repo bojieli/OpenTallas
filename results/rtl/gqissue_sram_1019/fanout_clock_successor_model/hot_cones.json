@@ -1,0 +1,212 @@
+[
+  {
+    "root": "u_ot_pr_core.a1[290]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 514,
+    "inputs": [
+      "u_ot_pr_core.nb_8.$fordecl_block$4302.$for_loop$4303[0].nb_9.lpw",
+      "u_ot_pr_core.u_rst.relay_q[0][3]",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.merge_bad$_DFF_PN0_",
+      "u_ot_pr_core.ra_lp_data[0]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[100]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[101]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[102]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[103]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[104]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[105]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[106]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[107]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[108]$_DFF_P_",
+      "u_ot_pr_core.ra_lp_data[109]$_DFF_P_"
+    ]
+  },
+  {
+    "root": "u_ot_pr_core.fire_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 513,
+    "inputs": [
+      "u_ot_pr_core.fire",
+      "u_ot_pr_core.u_rst.relay_q[0][0]",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.ex[0]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[100]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[101]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[102]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[103]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[104]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[105]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[106]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[107]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[108]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[109]$_SDFF_PP0_",
+      "u_ot_pr_core.ex[10]$_SDFF_PP0_"
+    ]
+  },
+  {
+    "root": "_105498_/Y (AND5x1_ASAP7_75t_R)",
+    "loads": 417,
+    "inputs": [
+      "_105289_/Y (INVx1_ASAP7_75t_R)",
+      "_105336_/Y (AND4x1_ASAP7_75t_R)",
+      "_105387_/Y (AND4x1_ASAP7_75t_R)",
+      "_105399_/Y (XNOR2x2_ASAP7_75t_R)",
+      "_105497_/Y (AND5x1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.busy$_DFFE_PN0P_",
+      "u_ot_pr_core.cur[1]$_DFFE_PN0P_",
+      "u_ot_pr_core.drain[0]$_DFFE_PN0P_",
+      "u_ot_pr_core.drain[1]$_DFFE_PN0P_",
+      "u_ot_pr_core.drain[2]$_DFFE_PN0P_",
+      "u_ot_pr_core.drain[3]$_DFFE_PN0P_",
+      "u_ot_pr_core.drain[4]$_DFFE_PN0P_",
+      "u_ot_pr_core.drain[5]$_DFFE_PN0P_",
+      "u_ot_pr_core.fire_q$_DFF_PN0_",
+      "u_ot_pr_core.g_bs[0]$_DFFE_PP_",
+      "u_ot_pr_core.g_bs[1]$_DFFE_PP_",
+      "u_ot_pr_core.g_bs[2]$_DFFE_PP_"
+    ]
+  },
+  {
+    "root": "_163085_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 407,
+    "inputs": [
+      "_162112_/Y (BUFx2_ASAP7_75t_R)",
+      "_162113_/Y (BUFx2_ASAP7_75t_R)",
+      "_162092_/Y (INVx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.rf[0][0]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][100]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][10]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][11]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][12]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][13]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][14]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][15]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][16]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][17]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][18]$_DFFE_PP_",
+      "u_ot_pr_core.rf[0][19]$_DFFE_PP_"
+    ]
+  },
+  {
+    "root": "u_ot_pr_core.u_rst.sync_q[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 318,
+    "inputs": [
+      "u_ot_pr_core.u_target.reset_meta",
+      "rst_n__ot_rl1[0]",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "_185924_",
+      "_185925_",
+      "_185926_",
+      "_185927_",
+      "u_ot_pr_core.u_rst.rst_n[0]$_DFF_PN0_",
+      "u_ot_pr_core.u_rst.rst_n[1]$_DFF_PN0_",
+      "u_ot_pr_core.u_rst.rst_n[2]$_DFF_PN0_",
+      "u_ot_pr_core.u_rst.rst_n[3]$_DFF_PN0_",
+      "u_ot_pr_core.u_rst.rst_n[4]$_DFF_PN0_",
+      "u_ot_pr_core.u_rst.rst_n[5]$_DFF_PN0_",
+      "u_ot_pr_core.u_target.armed$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.commit[0]$_DFF_PN0_"
+    ]
+  },
+  {
+    "root": "u_ot_pr_core.u_target.scan_row[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 264,
+    "inputs": [
+      "_161981_/Y (AO21x1_ASAP7_75t_R)",
+      "u_ot_pr_core.u_target.reset_live",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.u_target.scan_row[0]$_DFF_PN0_",
+      "u_ot_pr_core.u_target.scan_row[1]$_DFF_PN0_",
+      "u_ot_pr_core.u_target.scan_row[3]$_DFF_PN0_",
+      "u_ot_pr_core.u_target.scan_row[4]$_DFF_PN0_",
+      "u_ot_pr_core.u_target.scan_row[5]$_DFF_PN0_"
+    ]
+  },
+  {
+    "root": "_185924_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 256,
+    "inputs": [
+      "_163500_/Y (OA21x2_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": []
+  },
+  {
+    "root": "u_ot_pr_core.u_target.program_cfg_we$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 201,
+    "inputs": [
+      "_185397_/Y (AND3x1_ASAP7_75t_R)",
+      "u_ot_pr_core.u_target.reset_live",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.rf[11][0]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][10]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][11]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][12]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][13]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][14]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][15]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][16]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][17]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][18]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][19]$_DFFE_PP_",
+      "u_ot_pr_core.rf[11][1]$_DFFE_PP_"
+    ]
+  },
+  {
+    "root": "u_ot_pr_core.u_target.install_open$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 192,
+    "inputs": [
+      "_182013_/Y (AOI21x1_ASAP7_75t_R)",
+      "u_ot_pr_core.u_target.reset_live",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.u_target.install_open$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[0]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[100]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[101]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[102]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[103]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[104]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[105]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[106]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[107]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[108]$_DFFE_PN0P_",
+      "u_ot_pr_core.u_target.installed[109]$_DFFE_PN0P_"
+    ]
+  },
+  {
+    "root": "u_ot_pr_core.u_target.program_start_v$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 182,
+    "inputs": [
+      "_185393_/Y (AND4x1_ASAP7_75t_R)",
+      "u_ot_pr_core.u_target.reset_live",
+      "_185928_/H (TIEHIx1_ASAP7_75t_R)"
+    ],
+    "ff_endpoint_sample": [
+      "u_ot_pr_core.active$_DFF_PN0_",
+      "u_ot_pr_core.b0[0]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0[1]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0[2]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0[3]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0_oh[0]$_DFFE_PN1P_",
+      "u_ot_pr_core.b0_oh[10]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0_oh[11]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0_oh[12]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0_oh[13]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0_oh[14]$_DFFE_PN0P_",
+      "u_ot_pr_core.b0_oh[15]$_DFFE_PN0P_"
+    ]
+  }
+]

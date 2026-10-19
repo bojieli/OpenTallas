@@ -221,8 +221,15 @@ module ot_hgi_coll_gq_issue #(
         end
     end
     always @(posedge clk or negedge rn) if (!rn) ld_fire <= 1'b0; else ld_fire <= fire;
+`ifdef OT_GQ_FAN32
+    wire [15:0] fire_qc;
+    generate for (genvar fc = 0; fc < 16; fc = fc + 1) begin : g_fire_copy
+        ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn), .d(fire), .q(fire_qc[fc]));
+    end endgenerate
+`else
     (* keep = "true", dont_touch = "true" *) reg fire_q;   // r4: = ld_fire (own kept copy for the exponent-word clear)
     always @(posedge clk or negedge rn) if (!rn) fire_q <= 1'b0; else fire_q <= fire;
+`endif
     always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
     always @(posedge clk) if (fire) begin
         g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
@@ -395,7 +402,12 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk) begin
         // r4: the exponent words clear one edge after fire (fire_q; was on fire: 512 loads on the calendar compare). No
         // exponent flit of the new gather merges before S_P >= 24 edges later, and the previous gather has drained.
+`ifdef OT_GQ_FAN32
+        for (integer fc = 0; fc < 16; fc = fc + 1)
+            ex[32*fc +: 32] <= fire_qc[fc] ? 32'd0 : ex_n[32*fc +: 32];
+`else
         if (fire_q) ex <= '0; else ex <= ex_n;
+`endif
         for (integer r = 0; r < 2; r = r + 1)
             for (integer c = 0; c < 8; c = c + 1)
                 p_d[r][32*c +: 32] <= rdw_oh32(pp_rawc[r*8 + c], c) | (aq_q_q[r*256 + 32*c +: 32] & {32{pp_codec[r][c]}}) |
@@ -427,6 +439,12 @@ module ot_hgi_coll_gq_issue #(
         end
     end
     // P is loaded on the lp edge, so the lp data of the registered command word is P (r).
+`ifdef OT_GQ_FAN32
+    wire [15:0] a1_select_c;
+    generate for (genvar ac = 0; ac < 16; ac = ac + 1) begin : g_a1_select_copy
+        ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn3), .d(cb[0][290]), .q(a1_select_c[ac]));
+    end endgenerate
+`endif
     reg [290:0] a1;             // ring-A gather command (ring B timing)
     reg [290:0] b1;             // ring B command register (MUT 5: one more edge)
     always @(posedge clk or negedge rn3)
@@ -472,7 +490,12 @@ module ot_hgi_coll_gq_issue #(
     end
     always @(posedge clk) begin
         ra_lp_tag <= isa_q[3:1] | a1[289:287];
+`ifdef OT_GQ_FAN32
+        for (integer ac = 0; ac < 16; ac = ac + 1)
+            ra_lp_data[16*ac +: 16] <= a1_select_c[ac] ? a1_d[16*ac +: 16] : isa_d_q[16*ac +: 16];
+`else
         ra_lp_data <= a1[290] ? a1_d : isa_d_q;
+`endif
         ra_state_add_tag <= isa_q[7:5]; ra_state_add_src <= isa_q[9:8]; ra_state_add_rhs_acc <= isa_q[10];
         ra_state_tx_tag <= isa_q[14:12] | a1[29:27]; ra_state_tx_acc <= isa_q[15];
         ra_state_rr_tag <= isa_q[19:17];
@@ -730,5 +753,15 @@ module ot_hgi_coll_kq_share2 #(parameter integer MUT = 0)(
             .b_kq(b_kq[562*p +: 562]), .vm_kq(vm_kq[562*p +: 562]), .fault(f[p]));
     end
     assign fault = |f;
+endmodule
+// GQ fanout successor: same-edge scalar replicas, default off at the issue user.
+// Both kept flop cells and hierarchy are intentional; qualification requires the
+// actual mapped census, not the source instance count.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_control_ff(input wire clk, rst_n, d, output wire q);
+    (* keep = "true", dont_touch = "true" *) reg r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) r <= 1'b0; else r <= d;
+    assign q = r;
 endmodule
 `default_nettype wire
