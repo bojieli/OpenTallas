@@ -1,0 +1,14 @@
+{
+ "reviewer": "coordinator Claude:KV-HOST2 (LEAD2-KV delegated non-critical review)",
+ "time": "2026-10-19T17:00-07:00",
+ "gate_commit": "8a04df728",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "1024x256 SRAM at (43.2,172.8); four 256x64 at x 43.2/172.8, y 86.4/129.6; all on the 43.2 lattice; channels 25.4 um (no-pin faces) / 63.3 um (pin faces); edge channels W 41.0 N 35.4 E 39.5-60.7",
+  "std_cell_band": "density.png: one continuous logic spine from a full-width S band up the centre between the macros; thin pin-flop columns on W/E/N; util 18% (pin-bound)",
+  "pin_spread": "5,439 pins on all four full faces (S 1556, N 669, W 1607, E 1607) <= 5.8/um; actual pin geometry 5,335/5,335 on track",
+  "clock_entry": "ck_core at the S face centre beside the logic spine; TT 438.7 / FF 362.8 ps insertion, pin-flop spread 45.8 / 42.0 ps",
+  "shape": "280.8 x 280.8 um square (perimeter set by pin demand)",
+  "timing": "CTS gate: reg->reg +43.0 ps, reg->macro +65.8, hold +36.1 ps; trial GRT overflow 0 (M2 27.7%)"
+ }
+}
