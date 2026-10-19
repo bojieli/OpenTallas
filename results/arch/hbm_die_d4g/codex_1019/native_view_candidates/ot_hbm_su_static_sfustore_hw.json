@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_su_static_sfustore_hw",
+ "view": "physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw",
+ "lib_cell": "ot_hbm_su_static_sfustore_hw",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 354.0,
+ "spread_ps": 71.7,
+ "outputs": 513,
+ "inputs": 1315,
+ "launch_ps": 179.7,
+ "launch_pin": "fault",
+ "capture_ps": 113.8,
+ "capture_pin": "l10_vi_addr[9]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 64.4,
+ "ff_launch_min_ps": 52.8,
+ "ff_hold_need_ps": -22.1,
+ "pass": true,
+ "fail_why": ""
+}

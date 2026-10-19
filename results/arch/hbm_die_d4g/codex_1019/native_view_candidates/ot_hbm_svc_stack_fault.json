@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_svc_stack_fault",
+ "view": "physical/ref_tile/hdie_svc_stack_fault/views/ot_hbm_svc_stack_fault",
+ "lib_cell": "ot_hbm_svc_stack_fault",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 85.5,
+ "spread_ps": 4.2,
+ "outputs": 8,
+ "inputs": 147,
+ "launch_ps": 172.9,
+ "launch_pin": "status[0]",
+ "capture_ps": 119.2,
+ "capture_pin": "owner_fault[64]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 4.2,
+ "ff_launch_min_ps": 108.3,
+ "ff_hold_need_ps": -37.1,
+ "pass": true,
+ "fail_why": ""
+}

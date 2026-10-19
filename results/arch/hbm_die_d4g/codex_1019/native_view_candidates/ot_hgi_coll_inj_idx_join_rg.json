@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hgi_coll_inj_idx_join_rg",
+ "view": "physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg",
+ "lib_cell": "ot_hgi_coll_inj_idx_join_rg",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 244.8,
+ "spread_ps": 47.6,
+ "outputs": 1025,
+ "inputs": 3364,
+ "launch_ps": 150.0,
+ "launch_pin": "fault",
+ "capture_ps": 124.5,
+ "capture_pin": "su_inj_d_r0[417]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 43.9,
+ "ff_launch_min_ps": 41.3,
+ "ff_hold_need_ps": -11.7,
+ "pass": true,
+ "fail_why": ""
+}

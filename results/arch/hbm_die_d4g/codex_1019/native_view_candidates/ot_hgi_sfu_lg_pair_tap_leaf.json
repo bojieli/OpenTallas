@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hgi_sfu_lg_pair_tap_leaf",
+ "view": "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_1017/views/ot_hgi_sfu_lg_pair_tap_leaf",
+ "lib_cell": "ot_hgi_sfu_lg_pair_tap_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 234.6,
+ "spread_ps": 53.6,
+ "outputs": 1629,
+ "inputs": 1713,
+ "launch_ps": 179.9,
+ "launch_pin": "fault",
+ "capture_ps": 117.6,
+ "capture_pin": "local_write[0]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 51.0,
+ "ff_launch_min_ps": 42.5,
+ "ff_hold_need_ps": 5.5,
+ "pass": true,
+ "fail_why": ""
+}

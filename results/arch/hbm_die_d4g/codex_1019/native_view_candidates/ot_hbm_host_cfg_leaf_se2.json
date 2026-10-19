@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_host_cfg_leaf_se2",
+ "view": "physical/ref_tile/hdie_host_cfg_leaf_se_r2/views/ot_hbm_host_cfg_leaf_se2",
+ "lib_cell": "ot_hbm_host_cfg_leaf_se2",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 106.0,
+ "spread_ps": 17.7,
+ "outputs": 712,
+ "inputs": 393,
+ "launch_ps": 102.3,
+ "launch_pin": "s_ready[20]",
+ "capture_ps": 76.1,
+ "capture_pin": "t_ready[13]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 17.9,
+ "ff_launch_min_ps": 54.4,
+ "ff_hold_need_ps": -20.9,
+ "pass": true,
+ "fail_why": ""
+}

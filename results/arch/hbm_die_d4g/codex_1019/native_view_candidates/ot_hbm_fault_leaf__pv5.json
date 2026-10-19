@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_fault_leaf",
+ "view": "physical/ref_tile/hdie_fault_leaf_n5_s8_r1/views/ot_hbm_fault_leaf",
+ "lib_cell": "ot_hbm_fault_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 47.0,
+ "spread_ps": 0.2,
+ "outputs": 1,
+ "inputs": 6,
+ "launch_ps": 85.9,
+ "launch_pin": "fault",
+ "capture_ps": 59.5,
+ "capture_pin": "in[2]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 0.2,
+ "ff_launch_min_ps": 59.0,
+ "ff_hold_need_ps": -17.2,
+ "pass": true,
+ "fail_why": ""
+}

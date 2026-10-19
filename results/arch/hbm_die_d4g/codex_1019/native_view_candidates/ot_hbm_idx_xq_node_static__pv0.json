@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_idx_xq_node_static",
+ "view": "physical/ref_tile/hidx_xq_node_w297/views/ot_hbm_idx_xq_node_static",
+ "lib_cell": "ot_hbm_idx_xq_node_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 152.4,
+ "spread_ps": 31.3,
+ "outputs": 594,
+ "inputs": 595,
+ "launch_ps": 121.9,
+ "launch_pin": "y[467]",
+ "capture_ps": 157.1,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 30.1,
+ "ff_launch_min_ps": 50.3,
+ "ff_hold_need_ps": -10.6,
+ "pass": true,
+ "fail_why": ""
+}

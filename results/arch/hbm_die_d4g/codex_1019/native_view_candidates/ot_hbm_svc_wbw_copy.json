@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_svc_wbw_copy",
+ "view": "physical/ref_tile/hdie_svc_wbw_copy/views/ot_hbm_svc_wbw_copy",
+ "lib_cell": "ot_hbm_svc_wbw_copy",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 94.2,
+ "spread_ps": 4.9,
+ "outputs": 172,
+ "inputs": 44,
+ "launch_ps": 91.4,
+ "launch_pin": "o_wbw_v[2]",
+ "capture_ps": 63.6,
+ "capture_pin": "wbw_v",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 4.2,
+ "ff_launch_min_ps": 57.9,
+ "ff_hold_need_ps": -14.0,
+ "pass": true,
+ "fail_why": ""
+}

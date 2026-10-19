@@ -1,0 +1,481 @@
+{
+ "schema": "opentallas.hbm.main_view_refresh_candidates.v1",
+ "consumed_source": "3ca4d2b98",
+ "view_plan_old_sha256": "d9303a954a31662722d43cc5e07af0fb2aa1997e5adf178b65338cbf80d15b15",
+ "native_pass": 15,
+ "declared_source_match": 10,
+ "candidate_pass": 10,
+ "records": [
+  {
+   "cell": "ot_hbm_fault_leaf__pv4",
+   "view": "physical/ref_tile/hdie_fault_leaf_n4_s8_r1/views/ot_hbm_fault_leaf",
+   "pass": true,
+   "launch_ps": 85.0,
+   "capture_ps": 60.2,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "12e0fbbd1",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+     "consumed_sha256": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+     "closed_sha256": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_fault_leaf__pv5",
+   "view": "physical/ref_tile/hdie_fault_leaf_n5_s8_r1/views/ot_hbm_fault_leaf",
+   "pass": true,
+   "launch_ps": 85.9,
+   "capture_ps": 59.5,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "12e0fbbd1",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+     "consumed_sha256": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+     "closed_sha256": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_fault_leaf_n8_s0",
+   "view": "physical/ref_tile/hdie_fault_leaf_w_n8_s0/views/ot_hbm_fault_leaf_n8_s0",
+   "pass": true,
+   "launch_ps": 86.8,
+   "capture_ps": 60.0,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "3e59abf7b",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv",
+     "consumed_sha256": "d6e1395ecd1b15e72369eec6dea660b55dea677437ae6f42f671ac6f7b3dc356",
+     "closed_sha256": "d6e1395ecd1b15e72369eec6dea660b55dea677437ae6f42f671ac6f7b3dc356",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+     "consumed_sha256": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+     "closed_sha256": "40425bc3e56317db3a1fcf6dee3f53a1adb137ff9414ddc5571f0996fd1661ff",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_host_cfg_leaf_ne2",
+   "view": "physical/ref_tile/hdie_host_cfg_leaf_ne_r2/views/ot_hbm_host_cfg_leaf_ne2",
+   "pass": true,
+   "launch_ps": 106.4,
+   "capture_ps": 74.1,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "2b7b8dcf2",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf_r2.sv",
+     "consumed_sha256": "734f18e496e1d78be8834806bdb02e8d4c3ed2cc3d7594522c69dae045c3afcd",
+     "closed_sha256": "734f18e496e1d78be8834806bdb02e8d4c3ed2cc3d7594522c69dae045c3afcd",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+     "consumed_sha256": "653f0a9ceea31efbae71dbafb62947985830528f870883955d1648a070087378",
+     "closed_sha256": "653f0a9ceea31efbae71dbafb62947985830528f870883955d1648a070087378",
+     "match": true
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_host_cfg_leaf_se2",
+   "view": "physical/ref_tile/hdie_host_cfg_leaf_se_r2/views/ot_hbm_host_cfg_leaf_se2",
+   "pass": true,
+   "launch_ps": 102.3,
+   "capture_ps": 76.1,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "2b7b8dcf2",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf_r2.sv",
+     "consumed_sha256": "734f18e496e1d78be8834806bdb02e8d4c3ed2cc3d7594522c69dae045c3afcd",
+     "closed_sha256": "734f18e496e1d78be8834806bdb02e8d4c3ed2cc3d7594522c69dae045c3afcd",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+     "consumed_sha256": "653f0a9ceea31efbae71dbafb62947985830528f870883955d1648a070087378",
+     "closed_sha256": "653f0a9ceea31efbae71dbafb62947985830528f870883955d1648a070087378",
+     "match": true
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_idx_query_static",
+   "view": "physical/ref_tile/hidx_q_r4/views/ot_hbm_idx_query_static",
+   "pass": true,
+   "launch_ps": 120.1,
+   "capture_ps": 119.0,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "05854d3ef",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+     "consumed_sha256": "9572322a2a57381db8a74eaebaf9b96924890bc33e49a9f10baafaed39357bae",
+     "closed_sha256": "9572322a2a57381db8a74eaebaf9b96924890bc33e49a9f10baafaed39357bae",
+     "match": true
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_idx_xq_node_static__pv0",
+   "view": "physical/ref_tile/hidx_xq_node_w297/views/ot_hbm_idx_xq_node_static",
+   "pass": true,
+   "launch_ps": 121.9,
+   "capture_ps": 157.1,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "8835479e1",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_xq_node_static.sv",
+     "consumed_sha256": "db3fb8a9f6294b9612c3091d952156e2c7286e46e2edaf135078d71a93b929a5",
+     "closed_sha256": "be9534fa4838460df8c12f6aa3dcaa34602d47aba74a0cac50ee43163a0d9e47",
+     "match": false
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": false,
+   "adoptable_native_candidate": false,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_idx_xq_node_static__pv1",
+   "view": "physical/ref_tile/hidx_xq_node_w594/views/ot_hbm_idx_xq_node_static",
+   "pass": true,
+   "launch_ps": 128.5,
+   "capture_ps": 179.3,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "8835479e1",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_xq_node_static.sv",
+     "consumed_sha256": "db3fb8a9f6294b9612c3091d952156e2c7286e46e2edaf135078d71a93b929a5",
+     "closed_sha256": "be9534fa4838460df8c12f6aa3dcaa34602d47aba74a0cac50ee43163a0d9e47",
+     "match": false
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": false,
+   "adoptable_native_candidate": false,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_pc_refresh_cfg",
+   "view": "physical/ref_tile/hbm_refcfg_q_1018/views/ot_hbm_pc_refresh_cfg",
+   "pass": true,
+   "launch_ps": 115.4,
+   "capture_ps": 64.4,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "212589b09",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv",
+     "consumed_sha256": "696ba9a2d26b9799f4dd2c15afe6ed03ad09843be8ab965afc0fb91d00f2c319",
+     "closed_sha256": "8bdbe0ea302f882d8c92320cfa4e629d8b55698ec3516733fc75c4fbf033f58c",
+     "match": false
+    }
+   ],
+   "declared_source_closure_match": false,
+   "adoptable_native_candidate": false,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_su_static_sfustore_hw",
+   "view": "physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw",
+   "pass": true,
+   "launch_ps": 179.7,
+   "capture_ps": 113.8,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "9767724e6",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore_hw.sv",
+     "consumed_sha256": "0c41a05b3a8325746bb60c7fd580c6ea079209bea9cbc31a22a7d1cae74c0ae2",
+     "closed_sha256": "f9f4e69e26a8e24b6883405784da679cffdc5cb601a93699dbd5b5847fe9b069",
+     "match": false
+    },
+    {
+     "path": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+     "consumed_sha256": "96d8450033bbb98d2262562633480afd9179455fbd63b6c2107d6455f2201f9d",
+     "closed_sha256": "96d8450033bbb98d2262562633480afd9179455fbd63b6c2107d6455f2201f9d",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+     "consumed_sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+     "closed_sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+     "consumed_sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+     "closed_sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+     "match": true
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": false,
+   "adoptable_native_candidate": false,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_svc_stack_fault",
+   "view": "physical/ref_tile/hdie_svc_stack_fault/views/ot_hbm_svc_stack_fault",
+   "pass": true,
+   "launch_ps": 172.9,
+   "capture_ps": 119.2,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "5f7d151bc",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv",
+     "consumed_sha256": "a97ed029431a606dabd8ecf583195fc5394c2583a4b2534c733167058c9a37cf",
+     "closed_sha256": "1e75a28bc9b76c70735d26fe940d48b319f8e64587ef1cfae8dde19b069d37e7",
+     "match": false
+    }
+   ],
+   "declared_source_closure_match": false,
+   "adoptable_native_candidate": false,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hbm_svc_wbw_copy",
+   "view": "physical/ref_tile/hdie_svc_wbw_copy/views/ot_hbm_svc_wbw_copy",
+   "pass": true,
+   "launch_ps": 91.4,
+   "capture_ps": 63.6,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "9a071ce97",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+     "consumed_sha256": "41666af96d2b1f0138ebe7233d6e8f0ce48835992aee4c884e4bcc02b4398ae8",
+     "closed_sha256": "41666af96d2b1f0138ebe7233d6e8f0ce48835992aee4c884e4bcc02b4398ae8",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hgi_coll_gq_land",
+   "view": "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land",
+   "pass": false,
+   "launch_ps": 228.0,
+   "capture_ps": 90.0,
+   "error": null,
+   "rc": 1,
+   "closed_source_ref": "b7918441e",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+     "consumed_sha256": "8168c8f8d7d7f75d6b8033b13c812d396ca637c39ecde50ea218b64d9b0dfca4",
+     "closed_sha256": "2ca1a808f335b4344ff588b9c623d19a4ac472a2e59ecc50407ca65575e81ccc",
+     "match": false
+    },
+    {
+     "path": "rtl/lib/ot_rst_relay.sv",
+     "consumed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "closed_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": false,
+   "adoptable_native_candidate": false,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hgi_coll_inj_idx_join_rg",
+   "view": "physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg",
+   "pass": true,
+   "launch_ps": 150.0,
+   "capture_ps": 124.5,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "7a8776ef2",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+     "consumed_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+     "closed_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "view": "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_1017/views/ot_hgi_sfu_lg_pair_tap_leaf",
+   "pass": true,
+   "launch_ps": 179.9,
+   "capture_ps": 117.6,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "b593fd3b1",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+     "consumed_sha256": "2e7a305647b5c0af0daee4bafe3158df0fc3bd4fa8d130480234dfac6bb277b1",
+     "closed_sha256": "2e7a305647b5c0af0daee4bafe3158df0fc3bd4fa8d130480234dfac6bb277b1",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+     "consumed_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+     "closed_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+     "consumed_sha256": "32bf9786731e79ab391864e00c5b07499f3ac61d4996107794ea9b93802f4091",
+     "closed_sha256": "32bf9786731e79ab391864e00c5b07499f3ac61d4996107794ea9b93802f4091",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+     "consumed_sha256": "8d2fd258929e0cb4e59ec46ff1c2679d756ea9b2fa86569d92f023dfdb42558a",
+     "closed_sha256": "8d2fd258929e0cb4e59ec46ff1c2679d756ea9b2fa86569d92f023dfdb42558a",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  },
+  {
+   "cell": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "view": "physical/ref_tile/hbm_hc_lg_pair_tap_leaf_term_1017/views/ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "pass": true,
+   "launch_ps": 140.9,
+   "capture_ps": 86.6,
+   "error": null,
+   "rc": 0,
+   "closed_source_ref": "cd78c43fe",
+   "declared_source_files": [
+    {
+     "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+     "consumed_sha256": "2e7a305647b5c0af0daee4bafe3158df0fc3bd4fa8d130480234dfac6bb277b1",
+     "closed_sha256": "2e7a305647b5c0af0daee4bafe3158df0fc3bd4fa8d130480234dfac6bb277b1",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+     "consumed_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+     "closed_sha256": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+     "consumed_sha256": "32bf9786731e79ab391864e00c5b07499f3ac61d4996107794ea9b93802f4091",
+     "closed_sha256": "32bf9786731e79ab391864e00c5b07499f3ac61d4996107794ea9b93802f4091",
+     "match": true
+    },
+    {
+     "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+     "consumed_sha256": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
+     "closed_sha256": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
+     "match": true
+    }
+   ],
+   "declared_source_closure_match": true,
+   "adoptable_native_candidate": true,
+   "native_release_qualified": false,
+   "remaining": "Transitive actual compilation manifest, params, die slot/clock/reset/context and throughput remain required."
+  }
+ ],
+ "preserve_existing_view": {
+  "cell": "ot_hbm_idx_vm_query_static_n12",
+  "view": "physical/ref_tile/hidx_op_n12_1018/views/ot_hbm_idx_vm_query_static_n12",
+  "reason": "Currently consumed closed view absent from main refresh, retain it."
+ }
+}

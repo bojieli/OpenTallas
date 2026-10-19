@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_idx_query_static",
+ "view": "physical/ref_tile/hidx_q_r4/views/ot_hbm_idx_query_static",
+ "lib_cell": "ot_hbm_idx_query_static",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 311.5,
+ "spread_ps": 79.6,
+ "outputs": 567,
+ "inputs": 1056,
+ "launch_ps": 120.1,
+ "launch_pin": "ql_codes[369]",
+ "capture_ps": 119.0,
+ "capture_pin": "block_data[465]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 75.3,
+ "ff_launch_min_ps": 48.9,
+ "ff_hold_need_ps": -17.5,
+ "pass": true,
+ "fail_why": ""
+}
