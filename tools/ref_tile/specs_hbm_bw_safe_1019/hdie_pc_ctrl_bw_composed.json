@@ -1,0 +1,267 @@
+{
+  "name": "hdie_pc_ctrl_bw_composed",
+  "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kr_ready_bridge.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "k_v",
+      "k_rdy",
+      "k_we",
+      "k_addr",
+      "k_len",
+      "k_tag",
+      "k_wdata",
+      "k_wstrb",
+      "kr_v",
+      "kr_rdy",
+      "kr_tag",
+      "kr_beat",
+      "kr_data",
+      "k_wr_done"
+    ],
+    "S": [
+      "row_v",
+      "row_op",
+      "row_bank",
+      "row_row",
+      "col_v",
+      "col_we",
+      "col_bank",
+      "col_col",
+      "col_data",
+      "col_strb",
+      "dram_rvalid",
+      "dram_rdata"
+    ],
+    "W": [
+      "clk",
+      "rst_n",
+      "owner_fault_split"
+    ],
+    "E": [
+      "pc_fault",
+      "pc_id",
+      "refresh_reload"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 3,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        43.2
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        172.8,
+        43.2
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        302.4,
+        43.2
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        129.60000000000002
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        172.8,
+        129.60000000000002
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        302.4,
+        129.60000000000002
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        216.0
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        172.8,
+        216.0
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        302.4,
+        216.0
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        302.40000000000003
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        172.8,
+        302.40000000000003
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        302.4,
+        302.40000000000003
+      ],
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        43.2,
+        388.8
+      ],
+      "at_exact": true
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 1024,
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "io_hold_margin_ns": 0.03,
+    "pin_balance": {
+      "h": "M4",
+      "v": "M3 M5",
+      "group_max": 32
+    }
+  },
+  "job": {
+    "owner": "Codex:HBM-BW",
+    "branch": "codex/hbm-bw-safe3-band-1019",
+    "tag": "safe4",
+    "purpose": "Source4461ed960 physical successor after safe3 measured critical qhead->cv->conditionalSRAMraddr at1119.9ps. Measure actual area/fanout/TT1024 and FF hold. Singleclock signoff833 tool blocker remains explicit; no submission/fullproductionclose.",
+    "extra_paths": [
+      "physical/hbm_bw_safe3_1019",
+      "physical/dsrom_window_source",
+      "physical/qwen_die_masters"
+    ],
+    "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_bw_safe4",
+    "no_bench_reason": "Synthesis/floorplan diagnostic only; submit remains prohibited until production bench and committed mutant witnesses are bound."
+  },
+  "params": {
+    "OREG": 1,
+    "KREG": 1,
+    "KRREG": 1,
+    "RREG": 1,
+    "WPAY": 1,
+    "RESET_LANDING": 2
+  },
+  "children": [],
+  "inter": [],
+  "keep_pin_regs": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "Native H9b pure K pin capture, KR registered readiness and outputs, PHY return capture and OREG pin output flops. Custom PRE_GLOBAL_PLACE preserves stock recipe3 pin-split/hold/pin-flop order; generated duplicate wrappers disabled."
+  },
+  "structural_change": "Kept16-bit read/write selectors in opt-in K ring/KRskid; existing same-edge reset copies separate AQ/ACT fromCFG; registered rp+1/ep+1/AQsuccessors remove conditional carry from late column eligibility. No new data stage or macro. QD64 retained after measured QD128 regression; failed cyclic refresh guard removed. Mixed6000 trace preserves12944reads+759writes and originalcycles.",
+  "clock": "spine",
+  "spine_macro_leaf": true,
+  "outline": {
+    "w": 432,
+    "h": 475.2
+  },
+  "orfs_vars": {
+    "OT_MEG_DEPTH_UM": 48,
+    "PRE_GLOBAL_PLACE_TCL": "physical/hbm_bw_safe3_1019/pre_gpl.tcl",
+    "PRE_DETAIL_PLACE_TCL": "physical/hbm_bw_safe3_1019/pre_dpl.tcl",
+    "POST_IO_PLACEMENT_TCL": "physical/hbm_bw_safe3_1019/post_iop.tcl",
+    "OT_OFLOP_HOPS": 8,
+    "OT_OFLOP_ALLOW_NONE": 1,
+    "OT_OFLOP_COLS": 4,
+    "OT_IOHOLD_IN": 1,
+    "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
+    "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R"
+  },
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "Optin combined controller+one real regional-valid KRcollar. Metadata4bit+8regionalrow sources, AQ625FF, K/KR282FF copies preservedataedges. Explicit physical2edge resetlanding andnative3edge relay. Synthesis/floorplanONLY diagnostic; actualall-driver32,macroface,reset,area/region,TT/FF allOPEN."
+  },
+  "reset_landing": {
+    "enable": false,
+    "reason": "RTL top g_reset_face.rst_l0/rst_l1 are two kept same-clock registered face landing stages; native relay adds3; physical release5. Disable duplicate tool2. Source-owned fullnative/adversephase proof required."
+  },
+  "util_waiver": "Coordinator explicit 10-19: low fill accepted from measured 13-macro face/lattice/channel bound; outline432x475.2. Measure std area before CTS gate.",
+  "fill_reason": {
+    "lattice_channel_bound": {
+      "why": "13actualstockSRAMs on43.2lattice20umchannels require432x475.2; oldband9006.94um2 retained only for synthesis-only diagnostic. Measure finalstdarea beforeselectingnewband; no arbitraryhighutil squeeze/noCTS.",
+      "approved_by": "CODEX full coordinator, HBM-BW message10-19 08:xx; lane/HANDOFF record",
+      "std_band_y_um": [
+        270,
+        291.06
+      ]
+    }
+  }
+}
