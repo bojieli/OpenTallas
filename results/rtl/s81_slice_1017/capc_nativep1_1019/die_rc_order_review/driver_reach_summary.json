@@ -1,0 +1,92 @@
+{
+ "scope": "Exact fresh4_1_cts.odb driver/load pin geometry; bounding-box farthest-corner Manhattan upper bound, not routed length",
+ "nets": 8207,
+ "pin_shapes": 17604,
+ "driver_load_pairs": 9397,
+ "multiple_driver_nets": [],
+ "undriven_load_nets": [],
+ "max_bbox_upper": [
+  {
+   "net": "net2803",
+   "type": "SIGNAL",
+   "driver": "place2804/Y",
+   "sink": "_2292_/A",
+   "bbox_upper_um": 165.22700000000003,
+   "center_um": 164.90050000000002
+  },
+  {
+   "net": "net2804",
+   "type": "SIGNAL",
+   "driver": "place2805/Y",
+   "sink": "_2291_/A",
+   "bbox_upper_um": 164.57899999999998,
+   "center_um": 164.25249999999997
+  },
+  {
+   "net": "net2802",
+   "type": "SIGNAL",
+   "driver": "place2803/Y",
+   "sink": "_2293_/A",
+   "bbox_upper_um": 164.30900000000003,
+   "center_um": 163.98250000000004
+  },
+  {
+   "net": "net2806",
+   "type": "SIGNAL",
+   "driver": "place2807/Y",
+   "sink": "_2289_/A",
+   "bbox_upper_um": 164.09300000000002,
+   "center_um": 163.76650000000004
+  },
+  {
+   "net": "net2800",
+   "type": "SIGNAL",
+   "driver": "place2801/Y",
+   "sink": "_2295_/A",
+   "bbox_upper_um": 163.60699999999997,
+   "center_um": 163.28049999999996
+  },
+  {
+   "net": "net2747",
+   "type": "SIGNAL",
+   "driver": "place2748/Y",
+   "sink": "_2343_/A",
+   "bbox_upper_um": 163.58399999999997,
+   "center_um": 163.25749999999996
+  },
+  {
+   "net": "net2746",
+   "type": "SIGNAL",
+   "driver": "place2747/Y",
+   "sink": "_2344_/A",
+   "bbox_upper_um": 163.206,
+   "center_um": 162.87949999999998
+  },
+  {
+   "net": "net2801",
+   "type": "SIGNAL",
+   "driver": "place2802/Y",
+   "sink": "_2294_/A",
+   "bbox_upper_um": 162.959,
+   "center_um": 162.6325
+  },
+  {
+   "net": "net2796",
+   "type": "SIGNAL",
+   "driver": "place2797/Y",
+   "sink": "_2298_/A",
+   "bbox_upper_um": 162.419,
+   "center_um": 162.0925
+  },
+  {
+   "net": "net2799",
+   "type": "SIGNAL",
+   "driver": "place2800/Y",
+   "sink": "_2296_/A",
+   "bbox_upper_um": 162.257,
+   "center_um": 161.9305
+  }
+ ],
+ "over405": 0,
+ "over405_nonclock": 0
+}

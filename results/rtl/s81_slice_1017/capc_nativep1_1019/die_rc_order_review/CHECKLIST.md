@@ -11,3 +11,11 @@ Source b0f1fd5a97c974f0fa5b2e3e05e7dfb34903bb8f; canonical framework18b8c357d in
 Review images: physical/ref_tile/s81sl_capc_p1_die_rc_order/gate_layout/floorplan.png and density.png. Native files in sibling die_rc_order_native_cts and die_rc_order_native_ff. remote_native_sha256.txt binds both probe scripts, outputs, exact archived gate spec and4_1_cts.odb on saved fresh102231 run. Gate source_binding independently hashes archived source/parameters/children.
 
 REQUEST: ROOT inspect PNG/checklist and authorize next qualification/review step. No REVIEW.json, submit, view adoption or main merge has been performed. This is CTS placement-RC diagnostic evidence, not routed native/die-link qualification; full accepted model/die schedule/clock linkage remains owed.
+
+## ROOT-requested internal driver and placed-stage census
+
+The exact same fresh CTS ODB was read without mutation. driver_reach.tsv records all8207 non-PG nets/17604 placed pin-shape endpoints and9397 driver-load pairs: zero undriven or multiple-driver nets. Worst individual net farthest-bbox-corner Manhattan upper bound165.227um. register_pins.tsv records all1177 clock/1956 data/1759 output/26 async STA register pins, including hard-child abstract boundary roles.
+
+stage_reach.py conservatively joins every combinational instance input to every output, stops at sequential data/async inputs and hard-child boundary inputs, and launches from source ports, sequential Q and hard-child outputs. Exact escaped OpenDB bracket names are normalized to STA names. All2481 launch boundaries reach at least one sink, all2509 capture-boundary geometries are present,2495 complete boundary-stage pairs result. Worst farthest-bbox-corner Manhattan span386.651um is reset_l1/QN→u_core.g_hard.u_te/rst_n; zero stages exceed405um. Clocks are independently covered in the net census, not traversed as data; hard-child internals require their own accepted evidence. Source/native boundary1173-bit census remains separate.
+
+This bounds placed endpoint reach. It does not assert routed wirelength, RC timing, PG connectivity or routed parent qualification.
