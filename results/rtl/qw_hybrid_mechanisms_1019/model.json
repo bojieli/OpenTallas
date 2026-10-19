@@ -1,0 +1,76 @@
+{
+  "kind": "standalone mechanism analytical model, no native qualification",
+  "prebuild_model_message": "LEAD-QW received model before RTL",
+  "source": "43182e0f1",
+  "ff10": {
+    "payload_epoch_ff": 112,
+    "slot_valid_ff": 8,
+    "counter_k_ff": 12,
+    "reset_landing_ff": 4,
+    "warm_count_ff": 5,
+    "output_valid_fault_ff": 12,
+    "total_ff": 153,
+    "clocked_w_ff": 126,
+    "clocked_r_ff": 27,
+    "write_feedback_mux_bits": 112,
+    "read_8to1_mux_bits": 14,
+    "equivalent_2to1_read_muxes": 98,
+    "publication": "R",
+    "consumer_nba": "R+1"
+  },
+  "sram453": {
+    "macro": "ot_sram_1r1w2c_32x64_m1",
+    "banks": 8,
+    "macro_clock_pins": 16,
+    "physical_bits": 16384,
+    "record_bits": 458,
+    "padding_bits": 54,
+    "slot_valid_ff": 8,
+    "counter_k_ff": 12,
+    "reset_landing_ff": 4,
+    "warm_count_ff": 5,
+    "output_valid_fault_ff": 455,
+    "pending_ff": 6,
+    "total_soft_ff": 490,
+    "clocked_w_soft_ff": 14,
+    "clocked_r_soft_ff": 476,
+    "macro_area_um2": 4428.716544,
+    "read_launch": "R",
+    "publication": "R+1",
+    "consumer_nba": "R+2"
+  },
+  "macs_per_cycle": 0,
+  "write_bytes_per_cycle": {
+    "ff": 1.25,
+    "sram": 56.625,
+    "sram_record": 57.25,
+    "sram_physical_ports": 64
+  },
+  "boundary_payload_bits_per_edge": [
+    10,
+    453
+  ],
+  "replicas": 1,
+  "routing_tracks": null,
+  "actual_cell_logic_area": null,
+  "actual_clock_cap": null,
+  "native_setup_hold": null,
+  "reach": null,
+  "fanout": null,
+  "full_face_contacts_per_um": 10.4167,
+  "production_K": null,
+  "production_first_use": null,
+  "absolute_token_delta": null,
+  "assumptions": [
+    "joint async invalidation from either reset",
+    "two local release edges",
+    "all eight actual rows written",
+    "bounded absolute age prevents mod16 alias",
+    "no simultaneous crossclock same-address RW",
+    "all real phase windows need native proof"
+  ],
+  "historical_failures_unchanged": [
+    "HR512/512 age16 instead20",
+    "109 schedule-age failures"
+  ]
+}

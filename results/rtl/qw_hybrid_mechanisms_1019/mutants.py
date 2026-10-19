@@ -1,6 +1,7 @@
 from pathlib import Path
 s=Path('qfd_d8_mechanism.sv').read_text()
 mutants={
+ 'K':('kq<={k3,k2,k1,k0};','kq<={k3,k2,k1,!k0};'),
  'slot':('wire [2:0] slot=expected[2:0];','wire [2:0] slot=expected[2:0]^3\'d1;'),
  'epoch':("record={1'b1,wc,din}","record={1'b1,(wc^4'd1),din}"),
  'written':("record={1'b1,wc,din}","record={1'b0,wc,din}"),
