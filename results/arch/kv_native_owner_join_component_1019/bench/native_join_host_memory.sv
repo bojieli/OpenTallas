@@ -48,6 +48,7 @@ module native_join_host_memory(
     case(tx_d[7:0])
      8'h81:begin
       if(tx_d[33:32]!=0)$fatal(1,"CSR_BRESP edge=%0d resp=%h",edge_count,tx_d[33:32]);
+      if(tx_d[31:16]!=16'(csr_acks+1))$fatal(1,"CSR_PACKET_ID_OR_DUPLICATE got=%h expected=%0d",tx_d[31:16],csr_acks+1);
       csr_acks=csr_acks+1;
      end
      8'h82:begin if(tx_d[33:32]!=0)$fatal(1,"CSR_RRESP");end
