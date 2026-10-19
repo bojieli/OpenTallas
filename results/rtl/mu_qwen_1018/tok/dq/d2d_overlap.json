@@ -1,0 +1,75 @@
+{
+ "schema": "opentallas.qwen.mu_d2d_overlap.v1",
+ "frame_tokens": 16,
+ "record_op": {
+  "aggregate_tok_s": 13708.2,
+  "per_user": [
+   4768.1,
+   4470.1,
+   2384.0,
+   2086.0
+  ]
+ },
+ "exchanges": 1656,
+ "exchange_span": 1816,
+ "adjacent_overlaps": 968,
+ "first_overlaps": [
+  {
+   "prev": {
+    "user": 0,
+    "unit": "L0",
+    "q": 774,
+    "o": 2590
+   },
+   "next": {
+    "user": 1,
+    "unit": "L0.attention",
+    "q": 2496,
+    "o": 4312
+   }
+  },
+  {
+   "prev": {
+    "user": 1,
+    "unit": "L0.attention",
+    "q": 2496,
+    "o": 4312
+   },
+   "next": {
+    "user": 2,
+    "unit": "L0.attention",
+    "q": 4284,
+    "o": 6100
+   }
+  },
+  {
+   "prev": {
+    "user": 0,
+    "unit": "L1",
+    "q": 7660,
+    "o": 9476
+   },
+   "next": {
+    "user": 3,
+    "unit": "L0.attention",
+    "q": 9215,
+    "o": 11031
+   }
+  }
+ ],
+ "single_playhead": {
+  "attention_window_exclusive": [
+   375,
+   2191
+  ],
+  "aggregate_tok_s": 9834.1,
+  "per_user": [
+   4768.1,
+   4470.1,
+   298.0,
+   298.0
+  ]
+ },
+ "verdict": "AS-BUILT D2D CANNOT PLAY record_op",
+ "fix": "ot_qwen_d2d_cal: separate C->K request and K->C response segments (or 2 playheads) so a user's request segment may start while another user's response segment runs; compiler emits per-user segment starts from record_op; KV programme must accept the next CMD while its RESULT tail runs"
+}
