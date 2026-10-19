@@ -1,0 +1,2 @@
+DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv_tp8.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+rc=0

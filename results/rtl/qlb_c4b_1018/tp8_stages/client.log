@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-epyc5       admits   619 GB (avail 547, growth 113, headroom 0, waiters 0/0 GB) load 70/128 running 14 disk 1047 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1681780-1792427546 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+TP8STAGES 0 ['mat_gu', 'mat_qkv', 'resid1', 'resid2', 'silu'] missing []
+TP8STAGES 1 ['mat_gu', 'mat_qkv', 'resid1', 'silu'] missing ['resid2: no recorded next-layer normalization; no synthetic golden emitted']
+DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L0_silu_tp8.npz act words=24 span_cycles=814 isa_gold_words=1536/1536
+DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv_tp8.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L0_mat_gu_tp8.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3072/3072", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=112 collisions=0 ar_order=row fixture=L0_resid1_tp8.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097
+DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L1_silu_tp8.npz act words=24 span_cycles=814 isa_gold_words=1536/1536
+DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L1_mat_qkv_tp8.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=112 collisions=0 ar_order=row fixture=L1_resid1_tp8.npz r=0x40b6801a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097
+DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L1_mat_gu_tp8.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3072/3072", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+DV_LOWER_VEC silu FAIL 1/2 mutant=nor commands=24 collisions=0 ar_order=slice fixture=L0_silu_tp8.npz act words=24 span_cycles=749 isa_gold_words=1536/1536
+DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=112 collisions=0 ar_order=row fixture=L0_resid2_tp8.npz r=0x40d90860 x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097
+DV_LOWER_VEC resid PASS 28/28 mutant=nor commands=112 collisions=0 ar_order=row fixture=L0_resid1_tp8.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1681780-1792427546): exit 0

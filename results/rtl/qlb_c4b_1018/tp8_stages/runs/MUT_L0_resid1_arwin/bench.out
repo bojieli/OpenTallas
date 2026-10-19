@@ -1,0 +1,12 @@
+DV_LOWER_VEC resid FAIL 4/28 mutant=arwin commands=112 collisions=0 ar_order=row fixture=L0_resid1_tp8.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097
+    slice 0: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 1: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 2: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 3: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 4: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 5: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 6: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 7: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 8: RB ['0x41a6594a'] want [0x412e3b9a]
+    slice 9: RB ['0x41a6594a'] want [0x412e3b9a]
+rc=1

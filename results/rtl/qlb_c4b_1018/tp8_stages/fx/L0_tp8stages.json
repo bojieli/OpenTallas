@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.qwen.dv-layer-fixture-tp8stages.v1",
+ "layer": 0,
+ "position": 8191,
+ "tp_gold": 8,
+ "tp8_die": 0,
+ "oracle_collective_profile": "production_tp8_two_level (rank 4*DIE+PKG, pair r[p]+r[p+4], ((P0+P1)+P2)+P3)",
+ "provenance": "Recorded native TP8 snapshots and collective returns; no TP4 inputs or re-execution",
+ "image_sha256": {
+  "program.hex": "44e0e715c33b14b6d630325e832c8fb94f7427c895c05df9b2be4207bd345dce",
+  "segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+  "crom.hex": "bbcb28143ffe62f1850ee5a5e05d87650c07271002baba5f520588fcd514a164",
+  "matrix_scale_bf16.hex": "fd7b94a8fa5ff9a34d66baeb901407257ee331e2abcbe64a938a930342fc43e0",
+  "layer0_rom.json": "56b77bcb4abfc27638205728650414be4a7806d87adc444c79910dd2cc213251"
+ },
+ "inputs_sha256": {
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/oracle.json": "e10fb57fab813f80d119b33e0cc5b6639b398e90ebb1ab5c5fe4e7dd2e8b7aaa",
+  "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc0_vm.npz": "3bb24df254429e03559040922e437267c04ab7578a32701dde7fd389052af763",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc1_vm.npz": "4d9bf1f69500dfcf93175b8d942ff38a34128404dbc518d7303b5dc380b3df09",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc14_vm.npz": "a4a2d10f2dbeaa1c22a19bb60eae9ed851efe0a86eb5f52f03025483145dd7f2",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc16_vm.npz": "669aa28b162995839ca889fd0f7b8059a3b736c113783c6bcfd548393df05c32",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc17_vm.npz": "7ed06510d4775cf6bfa4f8fe484d928c555ad02bb55bf2de8595d0af1b7a4f04",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc18_vm.npz": "494ff4a64577f2b7ee06bbbb4e881118d1d48faedbd9332306d06e686d87ed34",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc19_vm.npz": "1fd346cdaa3236f478c3d4498c5fda14001e8d659d78304f44303936709d83a4",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/candidate_pc20_vm.npz": "8293c7254a7a5dd7f19d1418ea70a2ffad5e72b867f92749bae36eea3a810061",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/collective0_return.hex": "a7be5ebb57b568cb5a107561fe44316486b359696950cbf7f4466d8f45176740",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L0/collective1_return.hex": "d0ce807bc1657a864094fe502d0d5f4c2405852ac1cb49a5156db90c2598eb4d",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/L00_die0_x.hex": "7ec05fa69b5bff82110e08ae8cbd0f299755aa5ab1f88be1316941221509223e",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc0_vm.npz": "42f17ccbdf938756bee95b0f90d320503c571fa5783c5d57a8311355fe1c4f9f",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc2_vm.npz": "1645e692055ddfc23a6ae47ef2ed8fd03e3af8f0b14e781a5c120b46dc99671a"
+ },
+ "stages": {
+  "resid1": {
+   "file": "L0_resid1_tp8.npz",
+   "sha256": "fab7a82d99cd54050e6830ee8ee9bbc0aeda0a8a6615f747cac8e24494168713",
+   "keys": [
+    "gold_r",
+    "gold_x",
+    "pos",
+    "ps1",
+    "t",
+    "x"
+   ]
+  },
+  "silu": {
+   "file": "L0_silu_tp8.npz",
+   "sha256": "37af04a0e093edd6fb32c045e8e7f30bde4f2932b8af3d896384b2f31083f0b4",
+   "keys": [
+    "gold_act",
+    "gu",
+    "gu_r",
+    "r"
+   ]
+  },
+  "mat_qkv": {
+   "file": "L0_mat_qkv_tp8.npz",
+   "sha256": "1eacb299857342e340347bb0c28781e24e3d6103e1d7c1d436244ecedf011969",
+   "keys": [
+    "gold_y",
+    "s",
+    "split",
+    "w",
+    "x"
+   ]
+  },
+  "mat_gu": {
+   "file": "L0_mat_gu_tp8.npz",
+   "sha256": "671bd39496a53ca8800e348167ebb23482e057ac0823d512819961eb71d8b2d4",
+   "keys": [
+    "gold_y",
+    "s",
+    "split",
+    "w",
+    "x"
+   ]
+  },
+  "resid2": {
+   "file": "L0_resid2_tp8.npz",
+   "sha256": "5d7a6e07b297f85c06518a2adddf2d41713980e8e0f9868594d4c627578807a5",
+   "keys": [
+    "gold_r",
+    "gold_x",
+    "pos",
+    "ps1",
+    "t",
+    "x"
+   ]
+  }
+ },
+ "missing": [],
+ "tool_sha256": "2ed536affc345b1088f767fe4856b38ac4f2097afe70bc61e7a1b673a7762661"
+}

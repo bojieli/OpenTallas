@@ -1,0 +1,107 @@
+{
+  "scope": "L0/L1 recorded native TP8 operands, existing old N12 RTL binary; component cuts, no whole-layer/fulltoken or SAFE physical claim",
+  "source_commit": "9f185989e",
+  "fixture_commit": "6afb5ad53",
+  "driver_commit": "b4cf49112",
+  "positive_cases": 9,
+  "effective_negative_cases": 2,
+  "ineffective_controls": 1,
+  "cases": [
+    {
+      "case": "L0_gu",
+      "result": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L0_mat_gu_tp8.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L0_qkv",
+      "result": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L0_mat_qkv_tp8.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L0_resid1",
+      "result": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=112 collisions=0 ar_order=row fixture=L0_resid1_tp8.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L0_resid2",
+      "result": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=112 collisions=0 ar_order=row fixture=L0_resid2_tp8.npz r=0x40d90860 x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L0_silu",
+      "result": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L0_silu_tp8.npz act words=24 span_cycles=814 isa_gold_words=1536/1536",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L1_gu",
+      "result": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 fixture=L1_mat_gu_tp8.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L1_qkv",
+      "result": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 fixture=L1_mat_qkv_tp8.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L1_resid1",
+      "result": "DV_LOWER_VEC resid PASS 28/28 mutant=0 commands=112 collisions=0 ar_order=row fixture=L1_resid1_tp8.npz r=0x40b6801a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "L1_silu",
+      "result": "DV_LOWER_VEC silu PASS 2/2 mutant=0 commands=36 collisions=0 ar_order=slice fixture=L1_silu_tp8.npz act words=24 span_cycles=814 isa_gold_words=1536/1536",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "MUT_L0_resid1_arwin",
+      "result": "DV_LOWER_VEC resid FAIL 4/28 mutant=arwin commands=112 collisions=0 ar_order=row fixture=L0_resid1_tp8.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "effective_negative": true,
+      "scope": "native TP8 component"
+    },
+    {
+      "case": "MUT_L0_resid1_nor",
+      "result": "DV_LOWER_VEC resid PASS 28/28 mutant=nor commands=112 collisions=0 ar_order=row fixture=L0_resid1_tp8.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1109 isa_gold_words=4097/4097",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "effective_negative": false,
+      "scope": "ineffective control: nor is unused in residual lowering"
+    },
+    {
+      "case": "MUT_L0_silu_nor",
+      "result": "DV_LOWER_VEC silu FAIL 1/2 mutant=nor commands=24 collisions=0 ar_order=slice fixture=L0_silu_tp8.npz act words=24 span_cycles=749 isa_gold_words=1536/1536",
+      "returncode": 1,
+      "expected_returncode": 1,
+      "effective_negative": true,
+      "scope": "native TP8 component"
+    }
+  ]
+}
