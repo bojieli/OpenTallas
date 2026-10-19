@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-epyc8       admits  1082 GB (avail 860, growth 102, headroom 0, waiters 0/0 GB) load 52/128 running 26 disk 401 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3144987-1792424575 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+CREDIT_SRAM_EQ PASS checks=19994 takes=7113 fault_cycles=9885 MUT=0
+- /srv/opentallas-scratch/claude/codex-s81-coll-storagep1-1019/src/rtl/common/test/sram_head/tb_credit_sram.sv:38: Verilog $finish
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3144987-1792424575): exit 0
