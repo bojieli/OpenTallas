@@ -1537,8 +1537,37 @@ def _cdc_co_y(cdc):
     return cdc.y + (cdc.h - cy if cdc.orient in ('MX', 'R180') else cy)
 
 
+# DIE-KV-REPLACE 10-19 (kvs14r-131a7af2c-base PREP FAIL: lane reach 1 bit, rly_pinfix_af_ES_r74_1 -> seq__g_fan_2__u_fan.af
+# 954 um): with the die-placed parent qkd_seq_st (OT_KV_EXPAND) the seq frame's aq / kc / af words end on the closed fan leaf
+# qkd_seq_fan_s (32.4 x 108, words on its W face at y ~74, kv_expand.SEQ_S_PLAN homes; fan k = stack STACKS[k]), not on the
+# frame pin the abstract drew; the pin repair placed the last relay at the frame's W corner, 950 um from the E fan.
+SEQ_FAN_PIN_Y = 73.9
+SEQ_FAN_HOMES = ((43.2, 259.2, 'R0'), (43.2, 129.6, 'R0'), (518.4, 259.2, 'MY'), (518.4, 129.6, 'MY'))   # = kv_expand.SEQ_S_PLAN g_fan[k]
+
+
+def _seq_fan_pin(it, port):
+    import os as _os
+    if _os.environ.get('OT_KV_SEQ_FAN_PIN', '0') != '1' or 'qkd_seq_st' not in _os.environ.get('OT_KV_EXPAND', '').split(',') \
+            or it.name != 'seq':
+        return None
+    mt = re.fullmatch(r'(aq|kc|af)_(WS|WN|ES|EN)', port.lstrip('*').split('[')[0])
+    if not mt:
+        return None
+    fx, fy, o = SEQ_FAN_HOMES[STACKS.index(mt.group(2))]
+    px = fx + (32.4 if o in ('MY', 'R180') else 0.0)
+    py = fy + (108.0 - SEQ_FAN_PIN_Y if o in ('MX', 'R180') else SEQ_FAN_PIN_Y)
+    if it.orient in ('MY', 'R180'):
+        px = it.w - px
+    if it.orient in ('MX', 'R180'):
+        py = it.h - py
+    return it.x + px, it.y + py
+
+
 def _leaf_pin(it, port):
     """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    sp_ = _seq_fan_pin(it, port)
+    if sp_ is not None:
+        return sp_
     if not HOP or it.master not in ('qkd_ctrl', 'qkd_ctrl_n'):
         return None
     if 'kc' not in _LEAF_PIN_CACHE:
@@ -3411,15 +3440,22 @@ def _krs_top_lane(m, bid):
     import os as _os
     if _os.environ.get('OT_KV_KRS_TOP_LANE', '1' if ECTL == ECTL_ST else '0') != '1':
         return None
-    mt = re.fullmatch(r'krs_(WS|WN|ES|EN)_7(?:__f\d+)?', bid or '')
+    mt = re.fullmatch(r'krs_(WS|WN|ES|EN)_([67])(?:__f\d+)?', bid or '')
     g = m['geo'].get('grp_y', {})
     if not mt or mt.group(1) not in g:
         return None
     st = mt.group(1)
     dy = float(_os.environ.get('OT_KV_KRS_TOP_DY', '259.2'))
     dch = float(_os.environ.get('OT_KV_KRS_TOP_CH', '648'))
+    e = int(mt.group(2))
+    if e == 6:
+        # the far column's row-2 engine crosses the same group top (its group slg_<st>_6 sits below slg_<st>_7): its own
+        # lane one 86.4-um band further out, so the two 1,062-b words never share relay cells
+        dy, dch = dy + 86.4, dch + 86.4
+    if _os.environ.get('OT_KV_KRS_TOP_E6', '0') != '1' and e == 6:
+        return None
     by = {i.name: i for i in m['insts']}
-    ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_7')
+    ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_{e}')
     if ak is None or ec is None:
         return None
     ly = g[st][1] + dy
