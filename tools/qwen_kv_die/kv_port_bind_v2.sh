@@ -23,6 +23,10 @@ if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
     --root "$R" --existing "$PADS" --out "$O/output_pads.head.json" > "$O/output_pads.head.log" 2>&1 \
     || { tail -3 "$O/output_pads.head.log"; exit 3; }
   PADS="$O/output_pads.head.json"
+  python3 "$R/tools/qwen_kv_die/kv_pvw_padding.py" --run "$(dirname "$EXP")" --die "$O/die_bound.v" \
+    --root "$R" --existing "$PADS" --out "$O/output_pads.pv.json" > "$O/output_pads.pv.log" 2>&1 \
+    || { tail -3 "$O/output_pads.pv.log"; exit 3; }
+  PADS="$O/output_pads.pv.json"
 fi
 F+=(--pad-file "$PADS")
 # relay standards (OT_KV_RLY_STD=1): the qkd_rlys_* replicas bind their real RTL (not a stub)
