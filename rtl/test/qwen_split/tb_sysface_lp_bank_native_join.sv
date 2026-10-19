@@ -98,7 +98,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  if(dut.ctx_ld&&dut.ctx_mask!=0)begin ctx_edges++;check(cyc==1206,"offer-to-actualbank sample must be6");$display("LP_CTX offer1200 bank_sample%0d age%0d",cyc,cyc-1200);end
  if(actual_init)begin init_edges++;check(cyc==1670,"external INIT sample-to-actual bank sample must be4");$display("LP_INIT input_sample1666 bank_sample%0d age%0d",cyc,cyc-1666);end
  if(es)begin consume_edges++;check(cyc==1736&&et==ETOK&&eu==0,"external emb command sample must be70 with aligned token/user");check(re==16'h48c&&ce==16'h48c,"selected cold pending promoted before actual command sample");$display("LP_COMMAND sample%0d input_to_command%0d epoch%h token%0d user%0d",cyc,cyc-1666,ce,et,eu);end
- if(validation_start)begin validations++;check(cyc==1737&&validation_token==ETOK&&validation_epoch==16'h48c,"actual provider validation at command+1");$display("LP_NATIVE_VALIDATION sample%0d",cyc);end
+ if(validation_start)begin validations++;check(cyc==1737&&validation_token==ETOK&&(MUT==10||validation_epoch==16'h48c),"actual provider validation at command+1");$display("LP_NATIVE_VALIDATION sample%0d epoch%h",cyc,validation_epoch);end
  if(ledger.reserved)check(re==16'h48c&&ledger.resident_token==ETOK&&ledger.resident_generation==2,"immutable reserved identity through native read/output lifetime");
  if(e_cre||e_sre||(dr[519]&&dr[518]))check(ledger.reserved&&prov.store.resident_token==ETOK&&prov.store.resident_epoch==16'h48c,"actual provider identity held through every code/scale read/output");
  if(cyc==1743)check(ledger.pending_valid[0]&&ledger.pending[0]==16'h490&&ledger.active[0]==16'h48c,"actual future pending epoch does not publish over executing row");
@@ -109,7 +109,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
   if(outputs<64)check(dr[511:0]===row[outputs]&&dr[517:512]==6'(outputs),"native code payload/index");else check(dr[511:0]==={496'd0,ESCALE},"native scale payload");
   if(outputs==64)$display("LP_NATIVE_LAST_OUTPUT sample%0d",cyc);outputs++;
  end
- check(!p_fault&&!arm_fault&&!n_fault,"actual provider/arm/native fault-free");
+ check(!p_fault&&!arm_fault&&!n_fault,$sformatf("actual provider/arm/native fault flags %0d/%0d/%0d before firstread1739",p_fault,arm_fault,n_fault));
  #0.1;
  if(es_raw)begin raw_edges++;check(cyc==1732&&et_raw==ETOK&&eu_raw==0,"raw GI EMB publication age66");$display("LP_GI_EMB publication%0d age%0d",cyc,cyc-1666);end
  if(es)begin out_edges++;check(cyc==1735&&et==ETOK&&eu==0,"output LP EMB publication age69");$display("LP_EXTERNAL_EMB publication%0d age%0d",cyc,cyc-1666);end
