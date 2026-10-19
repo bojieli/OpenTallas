@@ -14,7 +14,13 @@ FF={'$_DFF_P_','$_DFF_PN0_','$_DFF_PN1_','$_DFFE_PP_',
     '$_DFFE_PN0P_','$_DFFE_PN0N_','$_SDFF_PP0_','$_SDFF_PN0_'}
 
 def check(expected,compiled,source,top='qfd_sys_face_control_safe'):
-    e=expected['modules'][top];modules=compiled['modules'];m=modules[top]
+    e=expected['modules'][top];modules=compiled['modules']
+    if top.endswith('__safe_core'):
+        outer=top[:-len('__safe_core')]
+        actual_type=modules[outer]['cells']['core']['type']
+        m=modules[actual_type]
+        assert actual_type==top or m.get('attributes',{}).get('hdlname')==top, 'wrong explicit core module'
+    else:m=modules[top]
     def wire(b):
         return b if isinstance(b,str) else m['netnames']['n'+str(b)]['bits'][0]
     def conn(c):return {p:[wire(b) for b in bb] for p,bb in c['connections'].items()}
@@ -49,6 +55,24 @@ def check(expected,compiled,source,top='qfd_sys_face_control_safe'):
     for i,(name,c) in enumerate(sorted(e['cells'].items())):
         typ=c['type'];wanted=conn(c)
         if typ in GATES:
+            if 'sysface_safe_gate' in source:
+                actual=m['cells']['g'+str(i)]; sub=modules[actual['type']]
+                assert actual['connections']=={p:wanted.get(p,['0']) for p in ['A','B','S','Y']}, 'kept gate pin changed: '+name
+                # Exhaust the actual re-read primitive network for every 0/1 assignment.
+                pins={p:bb[0] for p,bb in sub['ports'].items()}
+                for values in itertools.product([0,1],repeat=3):
+                    env={pins[p]:v for p,v in zip(['A','B','S'],values)}
+                    env.update({'0':0,'1':1,'x':'x','z':'x'})
+                    todo=list(sub['cells'].values())
+                    while todo:
+                        ready=[x for x in todo if x['type'] in GATES and all(b in env for p,bb in x['connections'].items() if p!='Y' for b in bb)]
+                        assert ready,'unproved or cyclic kept gate: '+name
+                        for x in ready:
+                            vv={p:env[bb[0]] for p,bb in x['connections'].items() if p!='Y'}
+                            env[x['connections']['Y'][0]]=gate(x['type'],vv);todo.remove(x)
+                    assert env[pins['Y']]==gate(typ,dict(zip(['A','B','S'],values))), 'native helper equation '+name
+                counts['boolean_equations']+=1
+                continue
             # Prove source expressions before synthesis's legitimate don't-care
             # optimization. Compiler-generated unused mux arms may become X;
             # those are not grounds for masking a meaningful pin or FF check.
@@ -80,7 +104,7 @@ def check(expected,compiled,source,top='qfd_sys_face_control_safe'):
     return counts
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('expected');ap.add_argument('compiled');ap.add_argument('--source',required=True);ap.add_argument('--out',required=True);a=ap.parse_args()
-    out=check(json.loads(Path(a.expected).read_text()),json.loads(Path(a.compiled).read_text()),Path(a.source).read_text())
+    ap=argparse.ArgumentParser();ap.add_argument('--top',default='qfd_sys_face_control_safe');ap.add_argument('expected');ap.add_argument('compiled');ap.add_argument('--source',required=True);ap.add_argument('--out',required=True);a=ap.parse_args()
+    out=check(json.loads(Path(a.expected).read_text()),json.loads(Path(a.compiled).read_text()),Path(a.source).read_text(),top=a.top)
     Path(a.out).write_text(json.dumps(out,sort_keys=True,indent=2)+'\n');print(json.dumps(out,sort_keys=True))
 if __name__=='__main__':main()

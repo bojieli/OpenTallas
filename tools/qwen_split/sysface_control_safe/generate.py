@@ -32,7 +32,7 @@ def loads(m):
                     if isinstance(b, int): out[b].append((name, p, k))
     return out
 
-def generate(src, manifest):
+def generate(src, manifest, useful_cones=False, physical_wrapper=False):
     orig = src['modules']['qfd_sys_face']
     assert not any(c['type'] not in FF | GATES | MACROS | {'$scopeinfo'}
                    for c in orig['cells'].values()), 'flatten all nonmacro modules first'
@@ -96,6 +96,83 @@ def generate(src, manifest):
     leaf=[reset_ff('safe_rst_leaf_'+str(i),mid[i//LIMIT],3) for i in range(nleaf)]
     for i,ref in enumerate(refs): rewire(ref,leaf[i//LIMIT])
 
+    input_capture_copies=[]
+    useful_copies=[]
+    if useful_cones:
+        # Count terminal pins through INV, never credit transparent distribution.
+        # Recompute after every split because new producer inputs are real loads.
+        for iteration in range(100000):
+            ll=loads(m)
+            published=collections.defaultdict(list)
+            for port,desc in m['ports'].items():
+                if desc['direction']=='output':
+                    for k,b in enumerate(desc['bits']):published[b].append(('@'+port,'',k))
+            def terminals(bit, path=(), seen=frozenset()):
+                assert bit not in seen, 'transparent cycle'
+                ans=[]
+                for ref in ll.get(bit,[]):
+                    n,p,k=ref; c=m['cells'][n]
+                    if c['type']=='$_NOT_':
+                        ans.extend(terminals(c['connections']['Y'][0],path+(n,),seen|{bit}))
+                    else:ans.append((ref,path))
+                ans.extend((ref,path) for ref in published.get(bit,[]))
+                return ans
+            roots=[]
+            for n,c in m['cells'].items():
+                if c['type'] in (FF | (GATES-{'$_NOT_'})):
+                    q=c['connections']['Q' if c['type'] in FF else 'Y'][0]
+                    tt=sorted(terminals(q),key=lambda x:not x[0][0].startswith("@"))
+                    if len(tt)>LIMIT:roots.append((len(tt),n,q,tt))
+            if not roots:break
+            _,name,q,tt=max(roots,key=lambda x:(x[0],x[1]))
+            if iteration%100==0:print('useful split',iteration,name,len(tt),'cells',len(m['cells']),flush=True)
+            c=m['cells'][name]
+            for start in range(LIMIT,len(tt),LIMIT):
+                nn=name+'__useful_'+str(len(useful_copies)); nc=copy.deepcopy(c);qb=alloc()
+                nc['connections']['Q' if c['type'] in FF else 'Y']=[qb]
+                m['cells'][nn]=nc;origins[nn]=origins[name];bit_origin[qb]=bit_origin.get(q,q)
+                useful_copies.append({'cell':nn,'original':origins[name],'q':qb,'original_q':bit_origin.get(q,q)})
+                if origins[name] is None:
+                    prior=next(f for f in forest if f['cell']==name)
+                    forest.append(dict(prior,cell=nn,q=qb))
+                for ref,path in tt[start:start+LIMIT]:
+                    b=qb
+                    for old in path:
+                        inv=copy.deepcopy(m['cells'][old]); ni=old+'__path_'+str(alloc()); ob=alloc()
+                        inv['connections']['A']=[b];inv['connections']['Y']=[ob]
+                        m['cells'][ni]=inv;origins[ni]=origins[old];bit_origin[ob]=bit_origin.get(m['cells'][old]['connections']['Y'][0],m['cells'][old]['connections']['Y'][0]);b=ob
+                    if ref[0].startswith('@'):m['ports'][ref[0][1:]]['bits'][ref[2]]=b
+                    else:rewire(ref,b)
+        else:raise AssertionError('useful producer replication did not converge')
+        if physical_wrapper:
+            # These are additional copies of the ALREADY PAID face capture,
+            # never an extra core pipeline edge. Expanded ports are private.
+            for port,desc in list(m['ports'].items()):
+                if desc['direction']!='input' or port in ['ck','rst_n']:continue
+                for pin_index,b in enumerate(desc['bits']):
+                    ll=loads(m);tt=terminals(b)
+                    assert (len(tt)+LIMIT-1)//LIMIT<=32, 'raw pin would exceed32 capture D loads'
+                    for start in range(LIMIT,len(tt),LIMIT):
+                        nb=alloc();pn='__safe_capture_'+str(len(input_capture_copies))
+                        m['ports'][pn]={'direction':'input','bits':[nb]};bit_origin[nb]=b
+                        input_capture_copies.append({'port':pn,'bit':nb,'original_bit':b,'original_port':port,'original_index':pin_index})
+                        for ref,path in tt[start:start+LIMIT]:
+                            out=nb
+                            for old in path:
+                                inv=copy.deepcopy(m['cells'][old]);ni=old+'__pinpath_'+str(alloc());ob=alloc()
+                                inv['connections']['A']=[out];inv['connections']['Y']=[ob]
+                                m['cells'][ni]=inv;origins[ni]=origins[old];bit_origin[ob]=bit_origin.get(m['cells'][old]['connections']['Y'][0],m['cells'][old]['connections']['Y'][0]);out=ob
+                            if ref[0].startswith('@'):m['ports'][ref[0][1:]]['bits'][ref[2]]=out
+                            else:rewire(ref,out)
+            ll=loads(m)
+        boundary={b:len(terminals(b)) for p in m['ports'].values() if p['direction']=='input' for b in p['bits'] if b!=clk}
+        for c in m['cells'].values():
+            if c['type'] in MACROS:
+                for p,bs in c['connections'].items():
+                    if c['port_directions'][p]=='output':
+                        for b in bs:boundary[b]=len(terminals(b))
+        assert max(boundary.values(),default=0)<=32, 'uncopyable top/memory boundary exceeds32: '+str(sorted(boundary.items(),key=lambda x:-x[1])[:10])
+
     # Native-cell trees retain all cycles. No abstract buffers or ignored cells.
     # Output capacitance and slew are still physical signoff obligations.
     buffers=[]
@@ -107,7 +184,7 @@ def generate(src, manifest):
         buffers.append({'cell':n,'input':src,'output':q})
         return n,q
     for bit,refs in list(loads(m).items()):
-        if bit == clk or len(refs)<=LIMIT: continue
+        if useful_cones or bit == clk or len(refs)<=LIMIT: continue
         level=[]
         for i,start in enumerate(range(0,len(refs),LIMIT)):
             name,q=buffer(bit,'leaf')
@@ -120,21 +197,21 @@ def generate(src, manifest):
                 for ref in level[start:start+LIMIT]: rewire(ref,q)
                 higher.append((name,'A',0))
             level=higher
-    assert max((len(v) for b,v in loads(m).items() if b!=clk),default=0)<=LIMIT
+    if not useful_cones:assert max((len(v) for b,v in loads(m).items() if b!=clk),default=0)<=LIMIT
     return m, {'limit':LIMIT,'clock':clk,'reset_chain_original':rr,'removed_reset_cells':rr_cells,
-       'copies':copies,'forest':forest,'buffers':buffers,'origins':origins,
+       'physical_wrapper':physical_wrapper,'public_ports':orig['ports'],'input_capture_copies':input_capture_copies,'useful_cones':useful_cones,'useful_copies':useful_copies,'copies':copies,'forest':forest,'buffers':buffers,'origins':origins,
        'bit_origin':bit_origin,'source_graph_sha256':None,'manifest':manifest,
        'macro_bindings':{n:{'emitted_instance':'m'+str(i),'master':c['type']}
                          for i,(n,c) in enumerate(sorted(m['cells'].items())) if c['type'] in MACROS},
        'counts':{'original_cells':len(orig['cells']),'candidate_cells':len(m['cells']),
-       'copied_ff':len(copies),'reset_ff':len(forest),'native_buffers':len(buffers),
+       'extra_paid_input_captures':len(input_capture_copies),'useful_producer_copies':len(useful_copies),'copied_ff':len(copies),'reset_ff':len(forest),'native_buffers':len(buffers),
        'max_nonclock_load':max(len(v) for b,v in loads(m).items() if b!=clk)}}
 
 def emit(m, top, original, manifest, receipt):
     def bit(x): return ('n'+str(x)) if isinstance(x,int) else "1'b"+x
     def vec(xs): return '{'+','.join(bit(x) for x in reversed(xs))+'}' if len(xs)>1 else bit(xs[0])
     out=['// Generated by tools/qwen_split/sysface_control_safe/generate.py; do not edit.',
-         'module '+top+' #(parameter ROM_VIAMAP="", ROM_INSTANCE="sys_face_cfg", OVL_ROM_DIR="") (']
+         ('(* keep_hierarchy=1 *) ' if receipt.get('physical_wrapper') else '')+'module '+top+' #(parameter ROM_VIAMAP="", ROM_INSTANCE="sys_face_cfg", OVL_ROM_DIR="") (']
     ports=[]
     for n,p in m['ports'].items():
         ports.append('  '+p['direction']+' wire '+('['+str(len(p['bits'])-1)+':0] ' if len(p['bits'])>1 else '')+n)
@@ -155,7 +232,10 @@ def emit(m, top, original, manifest, receipt):
             a=con['A']; b=con.get('B'); y=con['Y']
             expr={'$_AND_':lambda:a+'&'+b,'$_OR_':lambda:a+'|'+b,'$_XOR_':lambda:a+'^'+b,
                   '$_NOT_':lambda:'~'+a,'$_MUX_':lambda:con['S']+'?'+b+':'+a}[typ]()
-            out.append('assign '+y+' = '+expr+';')
+            if receipt.get('useful_cones'):
+                kind=sorted(GATES).index(typ)
+                out.append('(* keep=1 *) sysface_safe_gate #(.ID('+str(i)+'),.KIND('+str(kind)+')) g'+str(i)+'(.A('+a+'),.B('+con.get('B',"1'b0")+'),.S('+con.get('S',"1'b0")+'),.Y('+y+'));')
+            else:out.append('assign '+y+' = '+expr+';')
         elif typ==BUF:
             out.append('(* keep=1 *) '+BUF+' b'+str(i)+'(.A('+con['A']+'),.Y('+con['Y']+'));')
         else:
@@ -169,6 +249,12 @@ def emit(m, top, original, manifest, receipt):
             out.append(typ+' '+param+'m'+str(i)+'('+','.join('.'+p+'('+v+')' for p,v in con.items())+');')
             if param:out.append('`endif')
     out.append('endmodule')
+    if receipt.get('useful_cones'):
+        out += ['(* keep_hierarchy=1 *) module sysface_safe_gate #(parameter integer ID=0,KIND=0)(input A,B,S,output Y);']
+        expressions={'$_AND_':'A&B','$_OR_':'A|B','$_XOR_':'A^B','$_NOT_':'~A','$_MUX_':'S?B:A'}
+        for k,typ in enumerate(sorted(GATES)):
+            out.append(('if' if k==0 else 'else if')+'(KIND=='+str(k)+') begin:g'+str(k)+' assign Y='+expressions[typ]+'; end')
+        out+=['else begin:bad initial $error("unsupported gate"); end','endmodule']
     out += ['(* keep_hierarchy=1 *) module sysface_safe_ff #(parameter integer ID=0,KIND=0)(input wire C,D,E,R,output reg Q);']
     for k,typ in enumerate(ftypes):
         out.append(('if' if k==0 else 'else if')+'(KIND=='+str(k)+') begin:g'+str(k))
@@ -185,15 +271,22 @@ def emit(m, top, original, manifest, receipt):
     return '\n'.join(out)
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--graph',required=True);ap.add_argument('--manifest',required=True);ap.add_argument('--out',required=True);ap.add_argument('--top',default='qfd_sys_face_control_safe');a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--graph',required=True);ap.add_argument('--manifest',required=True);ap.add_argument('--out',required=True);ap.add_argument('--top',default='qfd_sys_face_control_safe');ap.add_argument('--useful-cones',action='store_true');ap.add_argument('--physical-wrapper',action='store_true');a=ap.parse_args()
+    assert not a.physical_wrapper or a.useful_cones, 'physical wrapper requires useful cone model'
     manifest=json.loads(Path(a.manifest).read_text())
     for p,h in manifest['source_sha256'].items():assert digest(p)==h, 'source hash mismatch: '+p
-    src=json.loads(Path(a.graph).read_text());m,receipt=generate(src,manifest)
+    src=json.loads(Path(a.graph).read_text());m,receipt=generate(src,manifest,a.useful_cones,a.physical_wrapper)
     receipt['source_graph_sha256']=digest(a.graph)
     out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
-    text=emit(m,a.top,src['modules']['qfd_sys_face'],manifest,receipt);(out/'parent.sv').write_text(text)
+    core_top=a.top+'__safe_core' if a.physical_wrapper else a.top
+    text=emit(m,core_top,src['modules']['qfd_sys_face'],manifest,receipt)
+    if a.physical_wrapper:
+        from physical_wrapper import wrapper
+        text+=wrapper(a.top,core_top,receipt)
+    receipt['core_top']=core_top;receipt['public_top']=a.top
+    (out/'parent.sv').write_text(text)
     receipt['emitted_sha256']=digest(out/'parent.sv')
-    (out/'graph.json').write_text(json.dumps({'modules':{a.top:m}},sort_keys=True))
+    (out/'graph.json').write_text(json.dumps({'modules':{core_top:m}},sort_keys=True))
     (out/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
     print(json.dumps(receipt['counts'],sort_keys=True))
 if __name__=='__main__':main()

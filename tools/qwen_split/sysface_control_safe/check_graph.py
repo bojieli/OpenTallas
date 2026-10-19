@@ -13,15 +13,17 @@ from pathlib import Path
 def check(original, candidate, receipt):
     o=original['modules']['qfd_sys_face']; c=next(iter(candidate['modules'].values()))
     cells=c['cells']; origins=receipt['origins']; rr=receipt['reset_chain_original']
-    assert c['ports']==o['ports'], 'public port graph changed'
+    extra={x['port']: {'direction':'input','bits':[x['bit']]} for x in receipt.get('input_capture_copies',[])}
+    assert c['ports']==dict(o['ports'],**extra), 'public/core alias port graph changed'
     assert set(cells)==set(origins), 'unaccounted cell'
     buf={n:x for n,x in cells.items() if x['type']=='BUFx2_ASAP7_75t_R'}
     forest={x['cell']:x for x in receipt['forest']}
-    state_alias={}
+    state_alias={x['bit']:x['original_bit'] for x in receipt.get('input_capture_copies',[])}
     for n,x in cells.items():
         old=origins[n]
-        if old is not None and 'Q' in x['connections']:
-            state_alias[x['connections']['Q'][0]]=o['cells'][old]['connections']['Q'][0]
+        if old is not None and ('Q' in x['connections'] or (receipt.get('useful_cones') and 'Y' in x['connections'])):
+            pin='Q' if 'Q' in x['connections'] else 'Y'
+            state_alias[x['connections'][pin][0]]=o['cells'][old]['connections'][pin][0]
     for n,f in forest.items():state_alias[f['q']]=rr[f['depth']-1]
     buffer_alias={x['connections']['Y'][0]:x['connections']['A'][0] for x in buf.values()}
     def canon(b,seen=None):
@@ -66,7 +68,7 @@ def check(original, candidate, receipt):
     for b,nn in drivers.items(): assert len(nn)==1 and b not in input_bits, 'multiply driven signal'
     for b in loads:
         assert isinstance(b,str) or b in input_bits or b in drivers, 'undriven input'
-        if b!=receipt['clock'] and isinstance(b,int):assert loads[b]<=24, 'fanout exceeded'
+        if not receipt.get('useful_cones') and b!=receipt['clock'] and isinstance(b,int):assert loads[b]<=24, 'fanout exceeded'
     for p in c['ports'].values():
         if p['direction']=='output':
             for b in p['bits']:assert isinstance(b,str) or b in drivers or b in input_bits

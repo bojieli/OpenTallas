@@ -1,0 +1,14 @@
+useful split 0 $auto$simplemap.cc:256:simplemap_logbin$15182 507 cells 13236
+useful split 100 $auto$ff.cc:337:slice$23343__copy_6 15 cells 13561
+useful split 200 safe_rst_leaf_184 13 cells 13669
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/sysface-boolean-copies-r1-1019/tools/qwen_split/sysface_control_safe/generate.py", line 263, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch/claude/sysface-boolean-copies-r1-1019/tools/qwen_split/sysface_control_safe/generate.py", line 255, in main
+    src=json.loads(Path(a.graph).read_text());m,receipt=generate(src,manifest,a.useful_cones)
+                                                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/sysface-boolean-copies-r1-1019/tools/qwen_split/sysface_control_safe/generate.py", line 152, in generate
+    assert max(boundary.values(),default=0)<=32, 'uncopyable top/memory boundary exceeds32: '+str(sorted(boundary.items(),key=lambda x:-x[1])[:10])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncopyable top/memory boundary exceeds32: [(1055, 90), (591, 86), (682, 83), (679, 32), (592, 19), (593, 19), (41, 18), (3, 12), (71, 9), (77, 9)]
