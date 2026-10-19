@@ -65,6 +65,10 @@ def emit(master):
                 clock_pins=['ck', 'clk', 'cr', 'cr_s', 'xk'],
                 reset_port='rst_n', reset_net='n257', reset_pins=['rs', 'rst_n', 'rst'],
                 static=['lk'], reschedule=True, D=4, E=2,
+                # TW3-S81/FRAME 10-19: the default MUT-4 child (first reset kid = u_bn0, a qbank pipeline) forgets a late
+                # reset in one edge, so the frame bench was blind to it (PASS).  Children are event-driven (x/go/cfg), so
+                # hold a q element the plan uses past its last return word: the mutant proves the reset run reaches it.
+                mut_child='u_e0', mut4_stages=400,
                 out_dir=out, record_dir=rec,
                 regions=[dict(name=n, insts=sorted(v)) for n, v in sorted(regions.items())])
     d = ROOT / rec
