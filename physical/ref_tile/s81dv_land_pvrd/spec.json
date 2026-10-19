@@ -1,0 +1,177 @@
+{
+ "name": "s81dv_land_pvrd",
+ "top": "dsfd_dvland_pvrd",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_f"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rs",
+    "k",
+    "nw",
+    "rb"
+   ],
+   "outputs": [
+    "o",
+    "fault"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_f"
+   ],
+   "inputs": [
+    "i"
+   ],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 155.52,
+  "h": 25.92,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "i",
+   "ck_f"
+  ],
+  "N": [
+   "o",
+   "ck",
+   "rs"
+  ],
+  "W": [
+   "k",
+   "nw",
+   "rb",
+   "fault"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays / landing frames): the lane input i IS captured flop-first into the ring slots on ck_f (LANDING-CONTRACT L1) and every live output bit is a flop on ck (o, flop-last, L2); k / nw / rb are identity die-tie straps (case-analysed), fault is the OR of two sticky flops. A flow pin register would add an edge the die calendar (N + 1 + E + 1) does not price."
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-DIE7/PVRD 10-18: first hardened view of dsfd_dvland_pvrd (S81-DIE5 RTL; 2 instances in bind9 / p4l: links pv_W -> s_3S, pv_E -> s_4S, from svc entries rsv_05 / rsv_11 over one dsfd_dvrlyh_562 chain, 2 stations, E 2 / K 2 / D 4): the P.V 562-b lane LANDING (ot_s81_land W 562 D 4: ring written on the forwarded lane clock ck_f, read on the slice root ck at K) + a static fixed-latency width adapter (one register, +1 edge) into the C3 slice band port bi (1104-b RD beat: leaf w mod 5, row rb + 4 (w div 5), pairs 2). No ready, no backpressure, no credit; fault = slot-epoch check | head-flag calendar slip (assertion only). Two CTS roots (ck receiver root, ck_f lane capture), related same frequency, fixed-latency ring. Faces from the p4l plan: lane i + ck_f on S (from rsv_05 / rsv_11 below), o abutted N to the slice S-face band port bi with the slice root ck and regional reset rs, straps / fault on W. Recipe 4 flop-first, hold_budget die, M5 cap. | p2: outline 151.2 x 23.76 (p1 gate 172.8 x 34.56: std 1,695 um2, util 33%); pin-limited face strip (1,106 pins on N at 7.3/um, as the 276/562 relays), abutted along the slice S face. | p3: outline 155.52 x 25.92 (p2 route FLOORPLAN_MARGIN util 60.3%, std 1,722 um2 in 2,855; now ~53%), pins unchanged.",
+ "job": {
+  "owner": "Claude:S81-DIE7-PVRD",
+  "branch": "claude/s81-die7-pvrd2-1018",
+  "tag": "p3",
+  "purpose": "S81 die P.V landing + static RD-beat width adapter dsfd_dvland_pvrd (562-b forwarded-clock lane -> 1104-b slice bi), 2 instances (s_3S, s_4S)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_dvland_pvrd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pvrd_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/land/test/pvrd_bench.sh pass {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "PVRD_BENCH PASS 5 cases",
+    "min_count_regex": "PVRD_BENCH PASS (\\d+) cases",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "leaf_calendar_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/land/test/pvrd_bench.sh mut_cal {RUN}/bench_mc",
+    "expect": "fail",
+    "fail_regex": "PVRD_BENCH FAIL",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_pvrd/mut_cal.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ring_read_slot_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/land/test/pvrd_bench.sh mut_sel {RUN}/bench_ms",
+    "expect": "fail",
+    "fail_regex": "PVRD_BENCH FAIL",
+    "fail_witness": "results/arch/s81_dv_1016/landing/witness_pvrd/mut_sel.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81dv_land_pvrd/views",
+  "record_to": "results/rtl/ref_tile/s81dv_land_pvrd",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/land",
+   "results/arch/s81_dv_1016/landing/witness_pvrd"
+  ]
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "text": "s81dv_land_pvrd-p2-59155a3f2 FLOORPLAN_MARGIN (util 60.3% > 60%, std 1722 in 2855 um2): outline grown 151.2 x 23.76 -> 155.52 x 25.92 um on the 2.16 lattice (core 3266 um2, util ~0.53), pin faces and order unchanged, N pin density 7.3 -> 7.1/um (<= relay density); no closed view exists"
+ },
+ "inter": []
+}
