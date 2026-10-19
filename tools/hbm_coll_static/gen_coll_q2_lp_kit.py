@@ -85,6 +85,26 @@ def children():
     return c
 
 
+def entry_domains(cks):
+    """IO domain per port = the region that owns it in the lp.py SDC (ck_wr / ck_rg set_*_delay lines); the rest = core
+    (ck_sw, the first region).  Literal base names (PL-KIT refuses wildcards)."""
+    import re
+    top = f"ot_hfd_coll_{VARIANT}_lp"
+    d = ROOT / "rtl/hbm_accel/generic/collective/p2p/landed"
+    sv = (d / f"{top}.sv").read_text()
+    sdc = (d / f"{top}.sdc").read_text()
+    head = sv[sv.index(f"module {top}"):sv.index(");")]
+    io = re.findall(r"^\s*(input|output)\s+(?:wire|logic|reg)?\s*(?:\[[^\]]*\]\s*)?(\w+)", head, re.M)
+    own = {m.group(2): m.group(1) for m in re.finditer(r"-clock (ck_\w+) \[get_ports \{(\w+)", sdc)}
+    name = {cks[0]: "core", "ck_wr": "wr", "ck_rg": "rg"}
+    out = {name[c]: {"ratio": [1, 1], "ports": [c], "inputs": [], "outputs": []} for c in cks}
+    for kind, p in io:
+        if p in cks:
+            continue
+        out[name[own.get(p, cks[0])]]["inputs" if kind == "input" else "outputs"].append(p)
+    return out
+
+
 def spec():
     srcs = ["rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_q2_lp.sv", "rtl/common/landed_parent/ot_pl_land.sv"]
     srcs += [f for f in LP["child_sources"] if "asap7_memory_macros/" not in f]
@@ -121,12 +141,16 @@ def spec():
         "kind": "cluster",
         "sources": srcs,
         "params": {},
-        "clock": "spine",
-        "child_clock_ref": "pin",
+        # PL-KIT landed-cluster form (main 112f518d5): one TritonCTS root per region, child clock pins are sinks judged at
+        # the child flops, landing multicycles from the record; IO timed against the region that owns each port
+        # (spine + sdc_extra form: lp1/lp2 stalled 4 h in CTS hold repair, I2R 3,080 @ -638 ps vs a 0.9-1.8 ns spine)
+        "clock": "multiple_cts_roots",
         "clock_port": cks[0],
         "clock_ports": cks,
-        "orfs_vars": {"OT_SPINE_PORTS": ",".join(cks), "OT_SPINE_MACRO_LEAF": "1", "OT_SPINE_MACRO_PIN_LEAF": "1"},
-        "sdc_extra": ["rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_q2_lp.sdc"],
+        "clock_data_paths": "related_same_frequency",
+        "clock_relationship": {"kind": "same_pll_fixed_phase", "ratio": [1, 1], "phase_ps": 0},
+        "clock_entry_domains": entry_domains(cks),
+        "landed_record": "results/arch/landed_parent_1018/collq/ot_hfd_coll_q2_lp_record.json",
         "reset_ports": ["rst_n"],
         "outline": {"w": 1296.0, "h": 1036.8, "exact": True},
         "macros": macros,
@@ -141,7 +165,7 @@ def spec():
         "job": {
             "owner": "Claude:PL-COLLQ",
             "branch": "claude/pl-collq-1018",
-            "tag": "lp1",
+            "tag": "lpk1",
             "purpose": "HBM COLL q2 quadrant engine parent (SE/NW/NE) as landed regions; contains the critical "
                        "ot_hgi_coll_ctl_v5_q2 leaf: coordinator PNG review before any submit",
             "hold_merge": "critical (ot_hgi_coll_ctl_v5 prefix inside): gate + PNG review only; issuer / link_e / reduce "
