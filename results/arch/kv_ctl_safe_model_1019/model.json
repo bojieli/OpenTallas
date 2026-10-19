@@ -1,0 +1,1318 @@
+{
+  "schema": "kv_ctl_safe_structural_model.v1",
+  "verdict": "MODEL_ONLY_NOT_SAFE_NOT_BUILD_AUTHORIZED",
+  "source_commit": "c5fbbded9",
+  "census_odb_sha256": "fcbc77429404faa5ab91981c1901b93dfb43f5b254bc0992e0d9cdd38460af0a",
+  "existing_mu5": {
+    "outline_um": [
+      345.6,
+      475.2
+    ],
+    "macro_family": "ot_sram_1r1w_128x256_m1_r2c2",
+    "native_instances": 3,
+    "face_contacts": [
+      410,
+      409
+    ],
+    "face_length_um": 41.064,
+    "contacts_per_um": [
+      9.98441457237483,
+      9.9600623417105
+    ],
+    "reset_relay_target": 256,
+    "logical_unsafe_roots": 185
+  },
+  "fanout": {
+    "reset_only_roots": 60,
+    "other_roots": 125,
+    "reset_ff_copy_lower_bound": 148,
+    "useful_control_copy_lower_bound": 436,
+    "warning": "Lower bounds only. Cloning multiplies predecessor loads; recompute fixed point and preserve state/reset polarity and update edges. Combinational root duplication alone is merged by synthesis; duplicate functional registered control/data decisions with kept provenance, not BUF/INV trees.",
+    "unsafe_roots": [
+      {
+        "driver": "_47221_/Y",
+        "fanout": 2336,
+        "category": "functional",
+        "minimum_copies_total": 73
+      },
+      {
+        "driver": "u_ot_pr_core.u_fanr.ph1$_DFF_PN0_/QN",
+        "fanout": 1033,
+        "category": "functional",
+        "minimum_copies_total": 33
+      },
+      {
+        "driver": "_48654_/Y",
+        "fanout": 1024,
+        "category": "functional",
+        "minimum_copies_total": 32
+      },
+      {
+        "driver": "_53751_/Y",
+        "fanout": 644,
+        "category": "functional",
+        "minimum_copies_total": 21
+      },
+      {
+        "driver": "_53825_/Y",
+        "fanout": 644,
+        "category": "functional",
+        "minimum_copies_total": 21
+      },
+      {
+        "driver": "_53901_/Y",
+        "fanout": 644,
+        "category": "functional",
+        "minimum_copies_total": 21
+      },
+      {
+        "driver": "_53976_/Y",
+        "fanout": 644,
+        "category": "functional",
+        "minimum_copies_total": 21
+      },
+      {
+        "driver": "_45479_/Y",
+        "fanout": 572,
+        "category": "functional",
+        "minimum_copies_total": 18
+      },
+      {
+        "driver": "u_ot_pr_core.u_wprg.ld$_DFF_PN0_/QN",
+        "fanout": 325,
+        "category": "functional",
+        "minimum_copies_total": 11
+      },
+      {
+        "driver": "u_ot_pr_core.u_own.g_mu.rn$_DFF_P_/QN",
+        "fanout": 303,
+        "category": "reset",
+        "minimum_copies_total": 10
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[2\\]$_DFF_PN0_/QN",
+        "fanout": 256,
+        "category": "reset",
+        "minimum_copies_total": 8
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[3\\]$_DFF_PN0_/QN",
+        "fanout": 256,
+        "category": "reset",
+        "minimum_copies_total": 8
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c1$_DFF_P_/QN",
+        "fanout": 226,
+        "category": "reset",
+        "minimum_copies_total": 8
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c2$_DFF_P_/QN",
+        "fanout": 226,
+        "category": "reset",
+        "minimum_copies_total": 8
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c0$_DFF_P_/QN",
+        "fanout": 206,
+        "category": "reset",
+        "minimum_copies_total": 7
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c1$_DFF_P_/QN",
+        "fanout": 199,
+        "category": "reset",
+        "minimum_copies_total": 7
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c2$_DFF_P_/QN",
+        "fanout": 199,
+        "category": "reset",
+        "minimum_copies_total": 7
+      },
+      {
+        "driver": "u_ot_pr_core.u_fanr.rs_q$_DFF_P_/QN",
+        "fanout": 193,
+        "category": "reset",
+        "minimum_copies_total": 7
+      },
+      {
+        "driver": "_45268_/Y",
+        "fanout": 193,
+        "category": "functional",
+        "minimum_copies_total": 7
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[0\\]$_DFF_PN0_/QN",
+        "fanout": 187,
+        "category": "reset",
+        "minimum_copies_total": 6
+      },
+      {
+        "driver": "u_ot_pr_core.u_dcfg.pr_n$_DFF_PN0_/QN",
+        "fanout": 173,
+        "category": "reset",
+        "minimum_copies_total": 6
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c3$_DFF_P_/QN",
+        "fanout": 171,
+        "category": "reset",
+        "minimum_copies_total": 6
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c3$_DFF_P_/QN",
+        "fanout": 171,
+        "category": "functional",
+        "minimum_copies_total": 6
+      },
+      {
+        "driver": "_53400_/Y",
+        "fanout": 171,
+        "category": "functional",
+        "minimum_copies_total": 6
+      },
+      {
+        "driver": "u_ot_pr_core.w_lprg__fault$_DFF_PN0_/QN",
+        "fanout": 165,
+        "category": "functional",
+        "minimum_copies_total": 6
+      },
+      {
+        "driver": "_53055_/Y",
+        "fanout": 152,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_boot.g_mu.g_we$_DFF_PN0_/QN",
+        "fanout": 147,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "_67711_/Y",
+        "fanout": 144,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "_68746_/Y",
+        "fanout": 144,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "_69504_/Y",
+        "fanout": 144,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "_56834_/Y",
+        "fanout": 141,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "_69051_/Y",
+        "fanout": 138,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_wprg_g_rc_rpv__c1$_DFF_P_/QN",
+        "fanout": 137,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "ot_rrs__u_ot_pr_core_u_wprg_g_rc_rpv__c2$_DFF_P_/QN",
+        "fanout": 134,
+        "category": "functional",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_wprg.reset_pin_n$_DFF_P_/QN",
+        "fanout": 131,
+        "category": "reset",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[4\\]$_DFF_PN0_/QN",
+        "fanout": 129,
+        "category": "reset",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[6\\]$_DFF_PN0_/QN",
+        "fanout": 129,
+        "category": "reset",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[8\\]$_DFF_PN0_/QN",
+        "fanout": 129,
+        "category": "reset",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[10\\]$_DFF_PN0_/QN",
+        "fanout": 129,
+        "category": "reset",
+        "minimum_copies_total": 5
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[11\\]$_DFF_PN0_/QN",
+        "fanout": 128,
+        "category": "reset",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[5\\]$_DFF_PN0_/QN",
+        "fanout": 128,
+        "category": "reset",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[7\\]$_DFF_PN0_/QN",
+        "fanout": 128,
+        "category": "reset",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[9\\]$_DFF_PN0_/QN",
+        "fanout": 128,
+        "category": "reset",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_48356_/Y",
+        "fanout": 120,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_53608_/Y",
+        "fanout": 119,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_69803_/Y",
+        "fanout": 119,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_48511_/Y",
+        "fanout": 110,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.epoch_q\\[1\\]$_DFF_P_/QN",
+        "fanout": 108,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_68363_/Y",
+        "fanout": 100,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_69195_/Y",
+        "fanout": 97,
+        "category": "functional",
+        "minimum_copies_total": 4
+      },
+      {
+        "driver": "_70617_/Y",
+        "fanout": 91,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69858_/Y",
+        "fanout": 90,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69837_/Y",
+        "fanout": 85,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[1\\]$_DFF_PN0_/QN",
+        "fanout": 84,
+        "category": "reset",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69697_/Y",
+        "fanout": 79,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_44733_/Y",
+        "fanout": 76,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69852_/Y",
+        "fanout": 76,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.c_wait\\[2\\]$_DFFE_PN0N_/QN",
+        "fanout": 75,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.c_wait\\[3\\]$_DFFE_PN0N_/QN",
+        "fanout": 74,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_68463_/Y",
+        "fanout": 72,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69812_/Y",
+        "fanout": 72,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_44971_/Y",
+        "fanout": 71,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69842_/Y",
+        "fanout": 70,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.c_wait\\[1\\]$_DFFE_PN0N_/QN",
+        "fanout": 69,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_68326_/Y",
+        "fanout": 69,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69781_/Y",
+        "fanout": 69,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.c_wait\\[0\\]$_DFFE_PN0N_/QN",
+        "fanout": 68,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69794_/Y",
+        "fanout": 68,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.epoch_q\\[0\\]$_DFF_P_/QN",
+        "fanout": 66,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_44851_/Y",
+        "fanout": 66,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_69830_/Y",
+        "fanout": 66,
+        "category": "functional",
+        "minimum_copies_total": 3
+      },
+      {
+        "driver": "_44849_/Y",
+        "fanout": 64,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_44931_/Y",
+        "fanout": 64,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47145_/Y",
+        "fanout": 63,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47175_/Y",
+        "fanout": 63,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_69867_/Y",
+        "fanout": 63,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47092_/Y",
+        "fanout": 62,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_52769_/Y",
+        "fanout": 60,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_69828_/Y",
+        "fanout": 55,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c1$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c2$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c3$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c4$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c5$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c6$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c7$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c8$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c9$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c10$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c11$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c12$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c13$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c14$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c15$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c16$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c18$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c19$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c20$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c21$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c22$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c23$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c24$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c26$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c27$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c28$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c29$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c30$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c31$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c32$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c33$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c34$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c35$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c36$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c37$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c38$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "rst_n__ot_rl1$_DFF_P_/QN",
+        "fanout": 54,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_44676_/Y",
+        "fanout": 54,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47139_/Y",
+        "fanout": 54,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_57459_/Y",
+        "fanout": 54,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c39$_DFF_P_/QN",
+        "fanout": 52,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "ot_rrs__rst_n__ot_rlv__c17$_DFF_P_/QN",
+        "fanout": 51,
+        "category": "reset",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_69863_/Y",
+        "fanout": 51,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_57024_/Y",
+        "fanout": 48,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[27\\]$_DFF_P_/QN",
+        "fanout": 46,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_52675_/Y",
+        "fanout": 46,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[29\\]$_DFF_P_/QN",
+        "fanout": 45,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_52889_/Y",
+        "fanout": 44,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[24\\]$_DFF_P_/QN",
+        "fanout": 43,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[28\\]$_DFF_P_/QN",
+        "fanout": 43,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47285_/Y",
+        "fanout": 43,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[14\\]$_DFF_P_/QN",
+        "fanout": 42,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[15\\]$_DFF_P_/QN",
+        "fanout": 42,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[25\\]$_DFF_P_/QN",
+        "fanout": 42,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[8\\]$_DFF_P_/QN",
+        "fanout": 42,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[18\\]$_DFF_P_/QN",
+        "fanout": 41,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[19\\]$_DFF_P_/QN",
+        "fanout": 41,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_52573_/Y",
+        "fanout": 41,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_56539_/Y",
+        "fanout": 41,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[11\\]$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[12\\]$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[13\\]$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[5\\]$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[9\\]$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "boot__boot_pr__ot_q\\[67\\]$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "rst_n__ot_rl0$_DFF_P_/QN",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_70588_/Y",
+        "fanout": 40,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[10\\]$_DFF_P_/QN",
+        "fanout": 39,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "boot__boot_pr__ot_q\\[70\\]$_DFF_P_/QN",
+        "fanout": 39,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[16\\]$_DFF_P_/QN",
+        "fanout": 38,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[26\\]$_DFF_P_/QN",
+        "fanout": 38,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.wq$_DFF_PN0_/QN",
+        "fanout": 38,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[17\\]$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[1\\]$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[21\\]$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[2\\]$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[4\\]$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[6\\]$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_oobs.rn$_DFF_P_/QN",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_68490_/Y",
+        "fanout": 37,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[20\\]$_DFF_P_/QN",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[22\\]$_DFF_P_/QN",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[30\\]$_DFF_P_/QN",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_53202_/Y",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_56615_/Y",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_57129_/Y",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_57230_/Y",
+        "fanout": 36,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[23\\]$_DFF_P_/QN",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[3\\]$_DFF_P_/QN",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "boot__boot_pr__ot_q\\[69\\]$_DFF_P_/QN",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_56686_/Y",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_56757_/Y",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_57648_/Y",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_68487_/Y",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_68652_/Y",
+        "fanout": 35,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "u_ot_pr_core.u_lprg.data_q\\[7\\]$_DFF_P_/QN",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47091_/Y",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_68650_/Y",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47402_/Y",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_77811_/Y",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47405_/Y",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_47404_/Y",
+        "fanout": 34,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_56689_/Y",
+        "fanout": 33,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_56760_/Y",
+        "fanout": 33,
+        "category": "functional",
+        "minimum_copies_total": 2
+      },
+      {
+        "driver": "_57546_/Y",
+        "fanout": 33,
+        "category": "functional",
+        "minimum_copies_total": 2
+      }
+    ]
+  },
+  "storage": {
+    "rows": [
+      {
+        "name": "lprg_rowa",
+        "width": 256,
+        "native_slices": 4,
+        "rows_used": 36,
+        "useful_bits": 9216
+      },
+      {
+        "name": "lprg_rowb",
+        "width": 168,
+        "native_slices": 3,
+        "rows_used": 36,
+        "useful_bits": 5912
+      },
+      {
+        "name": "wprg",
+        "width": 160,
+        "native_slices": 3,
+        "rows_used": 36,
+        "useful_bits": 5760
+      }
+    ],
+    "boot_useful_bits": 20736,
+    "derived_gap_flags": 288,
+    "stored_macro_useful_bits": 20888,
+    "g0_registered_bits": 136,
+    "proposed_family": "ot_sram_1r1w2c_128x64_m1",
+    "physical_instances": 10,
+    "physical_bits": 81920,
+    "macro_area_um2": 9298.627199999999,
+    "macro_origins": [
+      {
+        "name": "n64_0",
+        "origin_um": [
+          86.4,
+          43.2
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_1",
+        "origin_um": [
+          216.0,
+          43.2
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_2",
+        "origin_um": [
+          86.4,
+          129.60000000000002
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_3",
+        "origin_um": [
+          216.0,
+          129.60000000000002
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_4",
+        "origin_um": [
+          86.4,
+          216.0
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_5",
+        "origin_um": [
+          216.0,
+          216.0
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_6",
+        "origin_um": [
+          86.4,
+          302.40000000000003
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_7",
+        "origin_um": [
+          216.0,
+          302.40000000000003
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_8",
+        "origin_um": [
+          86.4,
+          388.8
+        ],
+        "orient": "R0"
+      },
+      {
+        "name": "n64_9",
+        "origin_um": [
+          216.0,
+          388.8
+        ],
+        "orient": "R0"
+      }
+    ],
+    "registered_read_edges": 1,
+    "read_disabled": "output hold",
+    "same_edge_collision": "UNDEFINED for existing dual-clock model; never claim OLD semantics by tying clocks",
+    "repair": "Existing candidate ties old repair ports zero; n64 family has no repair rows/columns. No new ECC required under academic policy; no repair or reliability qualification inherited.",
+    "access_proof_owed": "Prove arbitrary reset/boot, consecutive config writes, last write/seal/start, illegal rewrite, active reset/reboot. No read and write may overlap same physical word. Until proved no n64 replacement allowed."
+  },
+  "physical": {
+    "outline_um": [
+      345.6,
+      475.2
+    ],
+    "macro_dimensions_um": [
+      33.72,
+      27.576
+    ],
+    "origin_lattice_um": 43.2,
+    "vertical_pitch_um": 86.4,
+    "vertical_face_gap_um": 58.824000000000005,
+    "horizontal_macro_gap_um": 95.88,
+    "contact_density_per_um": 3.8076588337684942,
+    "contacts_per_macro": 210,
+    "total_macro_signal_contacts": 2100,
+    "clock_contacts": 20,
+    "clock_cap_ff": {
+      "tt": 186.916,
+      "ff": 207.464,
+      "ss": 173.6752
+    },
+    "old_macro_area_um2": 11681.558207999999,
+    "central_fullwidth_std_band_um": [
+      250.56,
+      293.76
+    ],
+    "clock_entry_proposal_um": [
+      0,
+      272.16
+    ],
+    "parent_regrant": "REQUIRED:345.6x475.2 cannot fit old1123x172.8 frame",
+    "std_cell_area_after_fix": null,
+    "utilization": null,
+    "actual_stage_wire_max_um": null,
+    "actual_logic_depth_ps": null,
+    "pg_contact_via_obs_check": "OPEN; exact LEF signal rectangles, PG stripe origin/phase, access tracks, OBS and vias required; average density alone insufficient"
+  },
+  "schedule": {
+    "mu5_delta_edges": 0,
+    "proposed_n64_delta_edges": 0,
+    "copy_delta_edges_target": 0,
+    "source_age_contract": "mu4 quiet enter/leave window +1; fault abort observation +1; pin input/output +1 each unchanged",
+    "whole_su_token_delta": null,
+    "whole_mu_token_delta": null,
+    "qualification": "No schedule adoption until exact source-level whole-tile lockstep plus unchanged compiler events, throughput and native qualification"
+  },
+  "next_steps": [
+    "Review model and exact185 roots; preserve mu5/mu5b live gate evidence",
+    "Prove boot-seal/start no read/write overlap with arbitrary macro state and reset; select existing n64 or independently calibrated wider-pitch family",
+    "Build complete functional-copy/reset-forest fixed-point model with preserved source-state/update/reset witness; all roots <=32",
+    "Measure exactsource synth area, source stages/depth, 405um reach plan and realPG access; regrant parent slot and nativeclock load",
+    "Only then implement opt-in source and minimum whole-tile replay/mutants; no gate before coordinator checklist review"
+  ]
+}
