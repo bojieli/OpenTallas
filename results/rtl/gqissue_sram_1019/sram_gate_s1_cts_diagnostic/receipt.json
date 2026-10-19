@@ -1,0 +1,17 @@
+{
+  "status": "partial diagnostic; original trialGRT still progressing, no gate_result or release receipt",
+  "source_commit": "4903cd023",
+  "host": "ot-epyc8",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_sram_1019-20261019-081144",
+  "partial_log_sha256": "70a17274b2d4da073f49fc1e265ed7294e7f1bcdf91b9c53b9e0bc4b7bacba17",
+  "png_source": "GATE_LAYOUT_B64 placed from original sourcebound execution.log",
+  "cts_rc": 0,
+  "tt_setup_ps": -6.328715329573242,
+  "ff_hold_ps": 34.84634802930486,
+  "tt_pin_spread_approx_ps": 194,
+  "ff_pin_spread_approx_ps": 169,
+  "critical_reg_path": "u_ot_pr_core.rb_lp_data[211]$_DFF_P_/D",
+  "macro_input_setup_ps": 4.2,
+  "classification": "ordinary CTS root skew; fullcycleSRAM read capture preserved; balanced source-pinned clock-tree successor pending",
+  "submission_allowed": false
+}

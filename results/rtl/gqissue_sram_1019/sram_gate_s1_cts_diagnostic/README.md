@@ -1,0 +1,3 @@
+This is a partial diagnostic of the original source4903cd023 gate. CTS has finished but trial GRT is still progressing. It is not a terminal gate result. The clock boundary spread (~194ps TT,169ps FF) fails the80ps limit, and TT setup is-6.329ps at rb_lp_data[211]. FF hold is+34.846ps; macro input setup is+4.2ps.
+
+The original execution stream supplies the placed PNGs. The layout retains8lattice macros, full-face pins and a contiguous standard-cell region through the south/middle macro channels, with sparse north/control area. The next structural target is clock distribution; no SRAM latency change is justified by SS sensitivity alone. Original route and source tree remain untouched pending terminal recovery.
