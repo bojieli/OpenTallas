@@ -1,0 +1,169 @@
+{
+  "status": "ROOT_MODEL_REVIEW_REQUIRED_NO_RTL_OR_GATE",
+  "acceptance_logical_pins_per_nonclock_driver": 32,
+  "actual_complete_successor_copy_fixed_point": null,
+  "all_driver_costs_include_recursive_D_enable_reset_upstream_tax": true,
+  "matching_uninitialized_state_assumption_permitted": false,
+  "phase_and_collision_proof_complete": false,
+  "successor_latency_edges": null,
+  "successor_token_cycles": null,
+  "successor_complete_area_um2": null,
+  "successor_outline_um": null,
+  "front_candidate": {
+    "primitive": "ot_sram_1r1w2c_32x64_m1",
+    "primitive_source": "e26d92503",
+    "diagnostic_only_contact_audit": "3e95aae81",
+    "diagnostic_source": "3ff02bde1",
+    "banks": 4,
+    "declared_widths": [
+      75,
+      75,
+      75,
+      72
+    ],
+    "macros_per_bank": 2,
+    "macro_instances": 8,
+    "physical_bits": 16384,
+    "declared_bits": 9504,
+    "declared_packing_unused_bits": 6880,
+    "width_um": 31.992,
+    "height_um": 17.304,
+    "macro_area_um2": 4428.716544,
+    "macro_clock_contacts": 16,
+    "writer_clock_domains": 4,
+    "reader_clock_domains": 1,
+    "logical_write_bits_per_hbm_edge": 297,
+    "logical_read_bits_per_hbm_edge": 297,
+    "useful_payload_bits_per_hbm_edge": 256,
+    "actual_nominal_holds_or_waits_added": 0,
+    "added_read_edge": null,
+    "preread_request_equation": "(rp + (take ? 1 : 0)) modulo 32",
+    "consume_equation": "unchanged out_q captures current rp word exactly on take",
+    "first_put_source_age_edges": 3,
+    "collision_rule": "disable undefined macro same-address read; exact previous/current write forwarding required",
+    "collision_forward_payload_FF_reserve": 297,
+    "collision_forward_control_FF_reserve": 48,
+    "macro_grid_um": 43.2,
+    "west_east_contacts_per_macro_face": 103,
+    "full_face_contacts_per_um": 5.9523809523809526,
+    "replicated_PG_OBS_via_contact_escape_proven": false,
+    "pin_face_channel_and_parent_slot": null,
+    "proof_obligations": [
+      "fixed 4 storage-clock phases relative to pll_hbm",
+      "first take after cold reset and every restart",
+      "back-to-back last-take/start and pointer wrap",
+      "nominal no-overwrite lifetime and OLD read semantics",
+      "overflow/go fault cases preserve original behavior",
+      "arbitrary uninitialized storage, output hold when not take",
+      "unchanged occupancy/pending/hold/drain/fault/reset priorities"
+    ]
+  },
+  "other_observed_runtime_storage": {
+    "return_payload": {
+      "native_bits": 2304,
+      "bank_pointer_FF_excluded": 48,
+      "candidate_macro_instances": 8,
+      "write_clocks": 4,
+      "read_clock": "ck",
+      "lifetime_proven": false
+    },
+    "control_down_FIFO": {
+      "native_bits": 2304,
+      "candidate_macro_instances": 5,
+      "lifetime_proven": false
+    },
+    "control_up_FIFO": {
+      "native_bits": 2064,
+      "candidate_macro_instances": 5,
+      "lifetime_proven": false
+    },
+    "full_source_indexed_storage_inventory_complete": false
+  },
+  "preexisting_native_costs": {
+    "pc": {
+      "FF": 39989,
+      "source_driver_roles": {
+        "FF": {
+          "drivers": 39989,
+          "max_pins": 2405,
+          "over32": 188,
+          "extra_copies_target32_lower_bound": 1532,
+          "extra_copies_target24_lower_bound": 2066
+        },
+        "comb": {
+          "drivers": 105272,
+          "max_pins": 2023,
+          "over32": 324,
+          "extra_copies_target32_lower_bound": 1754,
+          "extra_copies_target24_lower_bound": 2363
+        },
+        "constant": {
+          "drivers": 22,
+          "max_pins": 4024,
+          "over32": 1,
+          "extra_copies_target32_lower_bound": 125,
+          "extra_copies_target24_lower_bound": 167
+        },
+        "clock_only": {
+          "drivers": 10,
+          "max_pins": 20072,
+          "over32": 10,
+          "extra_copies_target32_lower_bound": 0,
+          "extra_copies_target24_lower_bound": 0
+        },
+        "top_input": {
+          "drivers": 2089,
+          "max_pins": 3,
+          "over32": 0,
+          "extra_copies_target32_lower_bound": 0,
+          "extra_copies_target24_lower_bound": 0
+        }
+      },
+      "fixed_face_extra_same_edge_copies_lower_bound": 805,
+      "native_area_known_subtotal_um2": 24543.88452
+    },
+    "pc_h": {
+      "FF": 39690,
+      "source_driver_roles": {
+        "FF": {
+          "drivers": 39690,
+          "max_pins": 2405,
+          "over32": 184,
+          "extra_copies_target32_lower_bound": 1523,
+          "extra_copies_target24_lower_bound": 2057
+        },
+        "comb": {
+          "drivers": 105573,
+          "max_pins": 2023,
+          "over32": 323,
+          "extra_copies_target32_lower_bound": 1743,
+          "extra_copies_target24_lower_bound": 2359
+        },
+        "constant": {
+          "drivers": 22,
+          "max_pins": 4023,
+          "over32": 1,
+          "extra_copies_target32_lower_bound": 125,
+          "extra_copies_target24_lower_bound": 167
+        },
+        "clock_only": {
+          "drivers": 10,
+          "max_pins": 20072,
+          "over32": 10,
+          "extra_copies_target32_lower_bound": 0,
+          "extra_copies_target24_lower_bound": 0
+        },
+        "top_input": {
+          "drivers": 1790,
+          "max_pins": 3,
+          "over32": 0,
+          "extra_copies_target32_lower_bound": 0,
+          "extra_copies_target24_lower_bound": 0
+        }
+      },
+      "fixed_face_extra_same_edge_copies_lower_bound": 25,
+      "native_area_known_subtotal_um2": 24458.445720000007
+    }
+  },
+  "scope": "Finite architecture candidate and independently reclassified frozen native evidence; no source safety or physical adoption"
+}
