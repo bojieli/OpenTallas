@@ -29,14 +29,18 @@ Evidence: fleet Verilator5.050, ot-epyc6,
 seq_w128: positive PASS, NU1 zero lockstep mismatches, MU4 288 schedule events,
 1536 landed words,235 dense events. MUT33 wrong next head FAIL; MUT2 swapped
 entry halves FAIL. The witnesses below include committed failing logs.
-OPSEG production-frame results are recorded separately when harvested.
+OPSEG production full/red +ctx_part and drift/collision/context negatives PASS: red845548 edges/3677 fires, full4057900 edges/22146 fires (opseg_m0.out).
 
 Safe-design checklist for the successor parent kit:
 1. External pin registers/reset landing: parent kit responsibility (ABI unchanged).
 2. Reach: parent places four new macros and their staging/head registers locally;
    no claim of physical closure before that gate.
-3. Fanout: programme bank selection and read-head field selects require the
-   successor synthesis/netlist fanout review; kept replication if over32.
+3. Fanout: FIXED for SRAM head field selects:48 hierarchy-kept selector
+   modules/48 parameter identities at NU4, separate replicas per32-bit chunk
+   and WD/read/collision source; pending/bypass flags replicated too. Fleet
+   Yosys0.68 synth -flatten -noabc inventory confirms48 instances retained,
+   max selector output load32. check_calpipe_selectors.py checks the JSON.
+   Other parent critical cones still require their normal synthesis review.
 4. Depth: old rp->eight-entry word/time mux->compare->issue cone removed;
    registered fire and per-user relocated heads replace it. Physical timing owed.
 5. Storage: FIXED, SRAM rings; only one-edge interface/collision registers outside.
@@ -48,3 +52,9 @@ Safe-design checklist for the successor parent kit:
 
 Not a tile gate or sign-off record. The CTLM structural kit re-cut consumes this
 RTL alongside ctx_x/hu changes and must finish items1-4,6-7 before its gate.
+
+Selector follow-up: command/TLOAD edges unchanged; seq_sel positive+dense
+lockstep PASS, calendarMUT33 FAIL. Source qfd_calpipe_selector is in the same
+SV file; no source-list addition. keep_hierarchy deliberately preserves the
+per-source/per-chunk select registers through flatten/opt_merge. Placement
+must treat these small internal modules as soft logic in the core region.

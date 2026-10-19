@@ -1,0 +1,61 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-dq-calpipe-sram
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-dq-calpipe-sram
+ot-run: ot-epyc6       admits   336 GB (avail 349, growth 113, headroom 0, waiters 0/0 GB) load 38/128 running 27 disk 6120 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-dq-calpipe-sram
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/mu-dq-calpipe-sram
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-dq-calpipe-sram
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-dq-calpipe-sram
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3973827-1792422262 after 0 s
+SELECTOR_INSTANCES 48 PARAMOD_TYPES 48
+g_fifo[0].g_sel[0].u_bs sel loads [2, 2, 2, 2]
+g_fifo[0].g_sel[0].u_rs sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[0].u_ws sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[1].u_bs sel loads [2, 2, 2, 2]
+g_fifo[0].g_sel[1].u_rs sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[1].u_ws sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[2].u_bs sel loads [2, 2, 2, 2]
+g_fifo[0].g_sel[2].u_rs sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[2].u_ws sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[3].u_bs sel loads [2, 2, 2, 2]
+g_fifo[0].g_sel[3].u_rs sel loads [32, 32, 32, 32]
+g_fifo[0].g_sel[3].u_ws sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[0].u_bs sel loads [2, 2, 2, 2]
+g_fifo[1].g_sel[0].u_rs sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[0].u_ws sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[1].u_bs sel loads [2, 2, 2, 2]
+g_fifo[1].g_sel[1].u_rs sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[1].u_ws sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[2].u_bs sel loads [2, 2, 2, 2]
+g_fifo[1].g_sel[2].u_rs sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[2].u_ws sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[3].u_bs sel loads [2, 2, 2, 2]
+g_fifo[1].g_sel[3].u_rs sel loads [32, 32, 32, 32]
+g_fifo[1].g_sel[3].u_ws sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[0].u_bs sel loads [2, 2, 2, 2]
+g_fifo[2].g_sel[0].u_rs sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[0].u_ws sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[1].u_bs sel loads [2, 2, 2, 2]
+g_fifo[2].g_sel[1].u_rs sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[1].u_ws sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[2].u_bs sel loads [2, 2, 2, 2]
+g_fifo[2].g_sel[2].u_rs sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[2].u_ws sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[3].u_bs sel loads [2, 2, 2, 2]
+g_fifo[2].g_sel[3].u_rs sel loads [32, 32, 32, 32]
+g_fifo[2].g_sel[3].u_ws sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[0].u_bs sel loads [2, 2, 2, 2]
+g_fifo[3].g_sel[0].u_rs sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[0].u_ws sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[1].u_bs sel loads [2, 2, 2, 2]
+g_fifo[3].g_sel[1].u_rs sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[1].u_ws sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[2].u_bs sel loads [2, 2, 2, 2]
+g_fifo[3].g_sel[2].u_rs sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[2].u_ws sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[3].u_bs sel loads [2, 2, 2, 2]
+g_fifo[3].g_sel[3].u_rs sel loads [32, 32, 32, 32]
+g_fifo[3].g_sel[3].u_ws sel loads [32, 32, 32, 32]
+SELECTOR_MAX_LOAD 32
+CALPIPE_SELECTOR_INVENTORY_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3973827-1792422262): exit 0
