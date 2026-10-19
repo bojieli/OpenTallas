@@ -56,9 +56,12 @@ SPECIAL = ('mtp_draft', 'head')
 SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5)
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
-# tb_s81sl_beat (results/rtl/s81_slice_1017/beat/bt_base: SLBEAT go_to_partial=111 rstd_to_y0=18 rstd_to_xq=47, PASS);
-# the bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 (the compiler keeps the proven slots).
-BEAT = dict(go_to_partial=111, rstd_to_y0=18, rstd_to_xq=47, hload_slot=40, gain_slot=20)
+# tb_s81sl_beat on the current vp (S81-SLICE NORMR, Verilator 5.050): results/rtl/s81_slice_1017/beat/g_b37 (op 7 NORMR,
+# hc_pre = G-unit leaf row R: SLBEAT go_to_partial=115 rstd_to_y0=18 rstd_to_xq=59 post_cmd_to_last_hw=63, PASS) and g_b37i
+# (op 5 NORM imm: go_to_partial=112); mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
+# pre-NORMR bt_base: 111 / 18 / 47.)  The bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 is kept.
+BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
+            hload_slot=40, gain_slot=20)
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 XFIN = dict(dl=4, collector=5, last_partial_to_rstd=234, rstd_to_xq_ring=59 + 16 + 4)
@@ -236,7 +239,7 @@ def vp_cmd(op, a0=0, a1=0, n=0, imm=0):
     return (op & 0xF) | (a0 & 0x3FF) << 4 | (a1 & 0x3FF) << 14 | (n & 0xFF) << 24 | (imm & ((1 << 128) - 1)) << 32
 
 
-VP = dict(GAIN=1, POST=2, HLOAD=3, HSTORE=4, NORM=5, RDOUT=6)
+VP = dict(GAIN=1, POST=2, HLOAD=3, HSTORE=4, NORM=5, RDOUT=6, NORMR=7)
 
 
 def xfin_go(eps32, eng=False, eng_scale=0):
@@ -323,10 +326,14 @@ def layer_schedule(tree, layer, workload='ar'):
 # SPEC.md section 3 (DV dataflow per layer type) + the unit contracts.  status: LOWERED (this compiler emits the unit
 # programme), PARTIAL (programme emitted, a named field is runtime data with no on-die path), GAP (no unit contract /
 # encoder for this op on the DV die yet: the precise missing piece is named).
-GAP_NORM_PRE = ('ot_s81sl_vp', 'c_d[159:32] (OP_NORM imm = hc_pre coefficients)',
-                'NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six '
-                'leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row '
-                '(POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients')
+GAP_NORM_PRE = ('ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)', '16-slice norm composition',
+                'hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 '
+                'PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE '
+                'slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed')
+GAP_QNORM = ('tools/s81_dv/frame_return_plan.py + xfin over 4 slices', 'q_lora (qa) rows -> vn h copy 0',
+             'q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows '
+             'are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice '
+             'xfin composition is not compiled')
 GAP_XS_ROM = ('ot_s81sl_xs', 'calendar / phase / stream ROMs (OT_ROM_DIR images)',
               'no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub '
               'stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule '
@@ -360,7 +367,7 @@ OPMAP = [
      'frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)', 'GAP', GAP_XS_ROM),
     (r'\.(a_allgather|out_allreduce|router_allgather|combine_allreduce|rows_allgather)$',
      'end-slice lep link endpoints + ring (cross-die)', 'GAP', GAP_XDIE),
-    (r'attn\.q_norm\.|attn\.q_quant$', 'slice vn/vq over 4 adjacent slices (q_lora norm, xfin)', 'PARTIAL', GAP_NORM_PRE),
+    (r'attn\.q_norm\.|attn\.q_quant$', 'slice vn/vq over 4 adjacent slices (q_lora norm, xfin)', 'PARTIAL', GAP_QNORM),
     (r'attn\.(q_rope|kv_rope_qdq|kv_norm\..*)$', 'slice vs SU ops (RoPE / QDQ)', 'GAP',
      ('ot_s81sl_vs', 'SU op codes 8..15 (s_d)', 'no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py '
       'drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)')),
@@ -528,7 +535,7 @@ def ctl_path(die, sl):
 
 def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
     """slice-local hc_pre + RMSNorm + act-quant on ONE slice (the beat bench's proven sequence, issued through the
-    seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORM per leaf (a1 = global beat 5 sid + k, n = 3:
+    seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORMR per leaf (a0 = G-unit row R, a1 = global beat 5 sid + k, n = 3:
     q + BF16 family) -> xfin go (eps).  The partial / rstd / XQ edges follow from the unit latencies."""
     s = die.slices()[sl]
     sid, smask = s['sid'], 1 << s['sid']
@@ -537,7 +544,12 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     lat = cp['edges']
     th = prog.template(f'{which}.HLOAD', ctl_payload(smask, 0, 0x1F, vp_cmd(VP['HLOAD'], a0=r_h)))
     tg = prog.template(f'{which}.GAIN', ctl_payload(smask, 0, 0x1F, vp_cmd(VP['GAIN'], a0=r_gain)))
-    tn = [prog.template(f'{which}.NORM.k{k}', ctl_payload(smask, 0, 1 << k, vp_cmd(VP['NORM'], a1=5 * sid + k, n=3, imm=0)))
+    # hc_pre: vp op 7 NORMR reads it from leaf row R, the row the G-unit L5 writes the coefficients to (pre 0..3 at
+    # row R; lower_gu GU_ROWS; S81-SLICE 10-18) -> the NORM templates are static (no runtime immediate)
+    GU_ROWS = dict(family_lowerings())['gu'].GU_ROWS
+    r_pre = GU_ROWS['ffn' if which.endswith('ffn') else 'attn']
+    tn = [prog.template(f'{which}.NORMR.k{k}', ctl_payload(smask, 0, 1 << k, vp_cmd(VP['NORMR'], a0=r_pre, a1=5 * sid + k,
+                                                                                   n=3)))
           for k in range(5)]
     tx = prog.template(f'{which}.XFIN_GO', ctl_payload(smask, 1, 0, xfin_go(eps)))
     t = t0
@@ -549,18 +561,33 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=t + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.GAIN',
                             payload=f'template {tg}'))
     t += BEAT['gain_slot']
+    # dependency: NORMR reads row R one edge after its command flop, so row R (the G-unit L5 CTL row beat, hc.coef_row0
+    # on vo_n / vo_s) must have landed in the slice's leaf store first.  Row arrival = vo out + the gunit tier link age
+    # (tvN_gunit / tvS_gunit) + the same line path the seq_host V beats take from the column-4 entry (ctl_path minus its
+    # seq_host head).  The NORMR issue moves later when the rows land later than the priced slot (dep_shift).
+    rows_out = [e['cycle'] for e in prog.events if e.get('tag') == f'{which}.hc.coef_row0'
+                and e.get('port') == ('vo_n' if sl.endswith('N') else 'vo_s')]
+    dep_shift, row_land = 0, None
+    if rows_out:
+        tier = 'N' if sl.endswith('N') else 'S'
+        head = SEQ['v_cmd_to_vo'] + (die.links.get(f'tv{tier}_seqhost') or {}).get('age_edges', 0)
+        gl = (die.links.get(f'tv{tier}_gunit') or {}).get('age_edges', 0)
+        row_land = max(rows_out) + gl + (lat - head)
+        need = row_land + 1 - lat                    # issue edge whose CTL beat reaches the slice after the row
+        if need > t:
+            dep_shift, t = need - t, need
     # one CTL beat a cycle (two CTL beats in one cycle are a sticky fault in xr); the 5 NORMs go on 5 edges
     go = []
     for k in range(5):
-        prog.vrow(eng, t + k, tn[k], what=f'{which} NORM leaf {k} {sl} (imm = hc_pre: RUNTIME, see gap)')
+        prog.vrow(eng, t + k, tn[k], what=f'{which} NORMR leaf {k} {sl} (hc_pre = leaf row {r_pre})')
         prog.events.append(dict(cycle=t + k + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL',
-                                tag=f'{which}.NORM.k{k}', payload=f'template {tn[k]}; imm hc_pre RUNTIME'))
+                                tag=f'{which}.NORMR.k{k}', payload=f'template {tn[k]}; hc_pre leaf row {r_pre}'))
         go.append(t + k + lat)
     prog.vrow(eng, t + 5, tx, what=f'{which} XFIN_GO {sl}')
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
-    last_partial = go[-1] + BEAT['go_to_partial'] + XFIN['dl'] + XFIN['collector']
+    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
     gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '
@@ -572,7 +599,7 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=xq, inst=sl, port='ro_e / ro_w', dir='out', kind='XQ', tag=f'{which}.x_allgather',
                             payload='act-quant x beats of the slice (fixture: golden FP8 codes)', plan_only=True, gap=gap16))
     return dict(slice=sl, sid=sid, ctl_latency=cp, t_issue0=t0, last_partial=last_partial, rstd=rstd, xq_at_ring=xq,
-                end=xq, templates=[th, tg] + tn + [tx])
+                end=xq, templates=[th, tg] + tn + [tx], hc_pre_row=r_pre, hc_pre_row_land=row_land, dep_shift=dep_shift)
 
 
 def row_ctl_events(die, prog):
