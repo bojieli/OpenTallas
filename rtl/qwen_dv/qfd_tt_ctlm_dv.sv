@@ -15,6 +15,9 @@
 //   hr[452:0]  -> W5 hr_wi   {ib 380, xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
 //                             calendars count it, XPF_TRANSPORT_EDGES included)
 //   cmd[115:0] -> W5 cmd_wi  the static command calendar qfd_dv_cmd_cal (SETID at boot, every slice / XC command)
+//   tl[1087:0] -> W5 st_wi   (QLB-C4b 10-18) the slice stream TABLE words (kinds 1..3: PROG / CROM / BTAB) played by
+//                             the same calendar's LOCAL TLOAD entries from blocks of this installed image (the only
+//                             load path of the slice tables on the die; was a chain-end tie).  A register, one edge.
 //   ss5[106:0] <- W5 ss_wo, ag5[9:0] <- W5 ag_wo (pin registers): the DV status that replaces seq_su's xs / dc sources.
 //              Q-DIEPLAN6 10-17: widened to the Q-SLICE 2f8b7015b contract (ss 107 = {ar_land, tok_val 32, <74 b>},
 //              ag 10 = {stn_busy, <9 b>}) and closes the Q-CTLM gaps: G9b dc nval = ss tok_val latched with tok_v;
@@ -45,7 +48,8 @@
 //   0 extra edges on the issue path (the stage latch loads on the same edge as tok_r / pos_r).
 // MUT (bench only): 1..3 -> qfd_dv_cmd_cal MUT; 4 = x_oprog / x_orows swapped; 5 = dc rom_fault from ag any (not vm);
 //   6 = nval from the old (pre-widening) ss bits [73:42] instead of tok_val; 7 = ME idle ignores ag stn_busy;
-//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule).
+//   8 = coll_busy clears on the ar_last rise only (the pre-widening rule); 9 / 10 -> qfd_dv_cmd_cal MUT 4 / 5 (TLOAD
+//   payload halves swapped / table word one edge late).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -77,6 +81,7 @@ module qfd_tt_ctlm_dv #(
     // ---------------- W5 slice (qfd_dv_slice2_w dn face)
     output reg  [452:0]  hr,
     output wire [115:0]  cmd,
+    output wire [1087:0] tl,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     // ---------------- embedding provider
@@ -108,10 +113,10 @@ module qfd_tt_ctlm_dv #(
     // ------------------------------------------------------------------ static command calendar
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
-    qfd_dv_cmd_cal #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : 0), .LAST_STAGE(LAST_STAGE)) u_cal (.ck(ck), .rst_n(rst_n),
+    qfd_dv_cmd_cal #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 9) ? 4 : (MUT == 10) ? 5 : 0), .LAST_STAGE(LAST_STAGE)) u_cal (.ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(s_start), .stage(s_stage), .cmd(cmd), .loc_emb(c_emb), .loc_seg(c_seg), .loc_base(c_base),
+        .start(s_start), .stage(s_stage), .cmd(cmd), .tl(tl), .loc_emb(c_emb), .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .done(c_done), .fault(c_fault));
     assign cal_image_ready = c_ready;
