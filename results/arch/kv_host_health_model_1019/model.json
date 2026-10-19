@@ -158,10 +158,8 @@
     "routing_tracks": null,
     "boundary_bits_per_cycle": null,
     "production_throughput": null,
-    "source_sticky_incremental_bits_range": [
-      0,
-      42
-    ]
+    "source_sticky_incremental_bits_range": null,
+    "source_sticky_note": "Unknown until primitive producers/domains are partitioned; 42 consumer input lanes do not bound producer retention count."
   },
   "production_refusals": [
     "incomplete source inventory and producer-domain/capture/clear proofs",
