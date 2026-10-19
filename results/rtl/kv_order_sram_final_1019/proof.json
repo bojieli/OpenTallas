@@ -1,0 +1,31 @@
+{
+  "source_commit": "a8d257f37",
+  "host": "ot-epyc8",
+  "verilator": "5.050",
+  "cycles_per_seed": 200000,
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "total_cycles": 600000,
+  "warm_resets": 916,
+  "map_emits": 137853,
+  "dispatch_sends": 237459,
+  "logical_capacity": 8,
+  "capacity_reached_each_seed": true,
+  "extra_functional_cycles": 0,
+  "exact": "PASS3/3zerooutputmismatches",
+  "mutants": {
+    "drop_RAW_bypass": "FAIL0/3",
+    "wrong_prefetch_head": "FAIL0/3"
+  },
+  "physical_status": "NOT_QUALIFIED_PENDING_EXACT_GEOMETRY_GATE_AND_ROUTE",
+  "source_sha256": {
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv": "d0ffed5fbb9d41816505f65092b4c675b66d683e64eb4dbb50e91e5d54ba92df",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "98db2662b8101ffd8bff2695fac774293d97d7568f6013b07c98c6226e5e4308",
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv": "6b7506240100e1a9f1bcf19a1c09c00252ae3b1f70eee4ecb43c53cc38078678",
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv": "debd849645a825f389647ac5afbd0392239ede931a9c18e820b4d611fd4bf8a9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.v": "e8d4ae480612bbc610bafa5c4c0a30b7240257589ca085f4b3811e56b4fad2b1"
+  }
+}

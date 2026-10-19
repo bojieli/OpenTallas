@@ -85,7 +85,9 @@
   "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
-  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv"
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_bb.v"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -93,10 +95,60 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 172.8,
-  "h": 172.8
+  "w": 302.4,
+  "h": 259.2,
+  "exact": true
  },
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "at": [
+    216.0,
+    129.6
+   ],
+   "at_exact": true
+  }
+ ],
  "pins": {
   "N": [
    "ck_core",
@@ -132,7 +184,7 @@
    "hb_cr"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): host_rst_n landed relay drove 7,826 flops on one copy -> the last landing stage gets 36 KEPT identical copies (sized from the 7,982 reset loads the synthesis pass saw on gate r5a) (reset_landing.copies, ot_pin_regs.tcl OT_RST_LAND_COPIES) and reset_relay_split {256} spreads the core's reset loads over them in synthesis (ot_rst_copies.tcl); release latency unchanged (+2 landing edges); io_hold_margin 0.025 -> 0.03. RTL unchanged.",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): host_rst_n landed relay drove 7,826 flops on one copy -> the last landing stage gets 36 KEPT identical copies (sized from the 7,982 reset loads the synthesis pass saw on gate r5a) (reset_landing.copies, ot_pin_regs.tcl OT_RST_LAND_COPIES) and reset_relay_split {256} spreads the core's reset loads over them in synthesis (ot_rst_copies.tcl); release latency unchanged (+2 landing edges); io_hold_margin 0.025 -> 0.03. RTL unchanged. | ROOT geometry redesign10-19: 172.8x172.8 ->198.72x177.12um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence. | SRAM recovery: default-off canonical OT_HOST_BOOT_FIFO_DEFAULT=1 for this kit; two host boot payloadFIFOs(logical8entries,285/290payloadbits) use6 real32x128_p192 SRAM macros with next-head synchronous prefetch and RAW bypass. Per-FIFO metadata72/80bits remains flops; old runtime-indexed>2kb payloadfloparrays removed from elaborated SRAMvehicle. Actualboot_dispatch_debt+compatplain covered. Candidate302.4x259.2um with>=24.84umchannels and one fullwidthstdcellband. Addedcycles0 only after full-cycleequivPASS; actualSS/FFphysicalclosure pending.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -160,9 +212,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-RELAYGEN",
-  "branch": "claude/kv-relaygen-order-1019",
-  "tag": "r5",
+  "owner": "CODEX:KV-RELAYGEN",
+  "branch": "codex/relaygen-order-collect-1019",
+  "tag": "s1",
   "purpose": "HKV-RSTCAP2: native capture re-route of closed qkd_hr_core_order r3 (host_rst_n capture 386.9 > 190) with main's reset_landing kit option (2 registered face stages)",
   "benches": [
    {
@@ -197,7 +249,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py exact --out {RUN}/bench/hrorder_exact",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py exact --out {RUN}/bench/hrorder_exact --sram",
     "pass_regex": "HRORDER_EQUIV PASS exact runs_pass=3/3",
     "sources": [
      "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
@@ -220,7 +272,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m map_hold_bypass --out {RUN}/bench/hrorder_mut_map_hold_bypass",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m map_hold_bypass --out {RUN}/bench/hrorder_mut_map_hold_bypass --sram",
     "fail_regex": "HRORDER_EQUIV FAIL mutant map_hold_bypass",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_map_hold_bypass.log",
     "sources": [
@@ -244,7 +296,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m map_adv_bypass --out {RUN}/bench/hrorder_mut_map_adv_bypass",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m map_adv_bypass --out {RUN}/bench/hrorder_mut_map_adv_bypass --sram",
     "fail_regex": "HRORDER_EQUIV FAIL mutant map_adv_bypass",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_map_adv_bypass.log",
     "sources": [
@@ -268,7 +320,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m order_hold_bypass --out {RUN}/bench/hrorder_mut_order_hold_bypass",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m order_hold_bypass --out {RUN}/bench/hrorder_mut_order_hold_bypass --sram",
     "fail_regex": "HRORDER_EQUIV FAIL mutant order_hold_bypass",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_order_hold_bypass.log",
     "sources": [
@@ -292,7 +344,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m order_adv_bypass --out {RUN}/bench/hrorder_mut_order_adv_bypass",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m order_adv_bypass --out {RUN}/bench/hrorder_mut_order_adv_bypass --sram",
     "fail_regex": "HRORDER_EQUIV FAIL mutant order_adv_bypass",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_order_adv_bypass.log",
     "sources": [
@@ -316,7 +368,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m disp_hold_bypass --out {RUN}/bench/hrorder_mut_disp_hold_bypass",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m disp_hold_bypass --out {RUN}/bench/hrorder_mut_disp_hold_bypass --sram",
     "fail_regex": "HRORDER_EQUIV FAIL mutant disp_hold_bypass",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_disp_hold_bypass.log",
     "sources": [
@@ -340,7 +392,7 @@
     "needs": [
      "verilator"
     ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m disp_order_adv --out {RUN}/bench/hrorder_mut_disp_order_adv",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m disp_order_adv --out {RUN}/bench/hrorder_mut_disp_order_adv --sram",
     "fail_regex": "HRORDER_EQUIV FAIL mutant disp_order_adv",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_disp_order_adv.log",
     "sources": [
@@ -355,7 +407,37 @@
      "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
      "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
     ]
+   },
+   {
+    "name": "sram_mut_drop_raw_bypass",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py exact --sram --sram-mut 1 --cycles 30000 --out {RUN}/bench/sram_mut1",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "HRORDER_EQUIV FAIL exact runs_pass=0/3",
+    "fail_witness": "results/rtl/kv_order_sram_final_1019/mut1.log"
+   },
+   {
+    "name": "sram_mut_wrong_prefetch_head",
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py exact --sram --sram-mut 2 --cycles 30000 --out {RUN}/bench/sram_mut2",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "HRORDER_EQUIV FAIL exact runs_pass=0/3",
+    "fail_witness": "results/rtl/kv_order_sram_final_1019/mut2.log"
    }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "tools/qwen_kv_die/host_cluster/bench",
+   "results/rtl/kv_order_sram_safe_1019",
+   "results/rtl/kv_order_sram_final_1019"
   ]
  },
  "children": [],
@@ -373,12 +455,27 @@
   }
  },
  "reroute_reason": {
-  "kind": "native_capture",
-  "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
-  "cell": "qkd_hr_core_order",
-  "fix": "input side: host_rst_n lands at the face in main's reset_landing (ROOT-RST 10-19: 2 registered stages <port>__ot_rl0 -> __ot_rl1, then equal-depth fan-out) instead of the raw pin clearing every member flop tile-wide; reset assert and release +2 tile-clock edges (scheduled constant), data latency unchanged; RTL, outline and pin faces unchanged"
+  "kind": "rtl_change",
+  "reason": "Replace >2kb hostboot runtime-indexed flopFIFOs by realSRAMmacro+prefetchhead/RAW bypass; source and exact leafslot changed; historical routedflopviews cannot qualify this architecture."
  },
  "reset_relay_split": {
   "max_loads": 256
+ },
+ "slot_change_request": "ROOT/KVhost parent: qkd_hr_core_order s1 requires exact302.4x259.2um instead172.8square;6 SRAMmacros43.2lattice, outlinearea78,382.08um2 (+162.5%); host parent MUSTrepack fromnewLEF andpricearea; unchanged portnames/faces, zero measuredfunctional addedcycles afterproof; physicalclosure pending.",
+ "safe_design_checklist": {
+  "1_pins": "PASS: pin_regs on, literal async reset roles only; two-stage reset_landing; gate elaborated port_latency recorded.",
+  "2_reach": "PASS geometric bound:302.4x259.2 outline diagonal398.3um<405; actualregisteredpaths measured atgate.",
+  "3_fanout": "FIXED: identical KEPT reset copies; order36copies/7982loads/max222, guard18copies/4062loads/max226; each<=256 at synthesis pass. Critical data fanout remains inherited.",
+  "4_depth": "PASS analytical: metadata decode/headcontrol remain registered stages; newSRAM SSclktoq352.187ps (TT269.741/FF217.521) then existing outputregister mux, no additional arithmetic; ~600psstage target pendingmeasuredgate. No arbitrationcycle introduced.",
+  "5_storage": "FIXED: two285/290x8 payloadFIFOs become6 real32x128_p192 SRAMmacro slices; perFIFO metadata72/80bits and one-word RAW forwarding register stay below2kb. Logicalcapacity8andcycleedges proven separately; legacyflop branch defaultoffinthiskit.",
+  "6_floorplan": "FIXED:302.4x259.2um,6 macros51.408x39.96 atx43.2/129.6/216,y43.2/129.6; pinfaces4.980/4.955pins/um, macroboundarygaps>=34.992um, innergaps34.992/46.44um,24.84umtofullwidthstdcellband y194.4..259.2 (19,595.52um2). Macro/channelbound outline forces lowglobalutil; stdband mustmeasure~40-60%, no squeezed macrochannels. TopN1165/302.4=3.853,E1036/259.2=3.997.",
+  "7_clock": "PASS design: oneck_core for6 SRAMs+stdcellband, unchanged registeredboundaries/resetlanding2and36KEPTresetcopies;io_holdmargin0.03. NewCTSspreadTT/FF<=80 required; historicalr5clock isunqualified fornewgeometry.",
+  "8_schedule": "PASS measured behavioral: realp192SRAM vs immutableflopbaseline3seedsx200000cycles,916resets,137853mapemits/237459dispatchsends,zerooutputmismatches. BothFIFOs reachedall8logicalentries ineachseed. RAW-bypass andprefetch-head mutantsfailall3seeds. Addedfunctionalboot/runtimecycles0, pendingphysicalclosure."
+ },
+ "defines": [
+  "OT_HOST_BOOT_FIFO_DEFAULT=1"
+ ],
+ "fill_reason": {
+  "pin_bound": "Six true SRAMmacros repinned at.192um keep W199/39.96=4.980,E198/39.96=4.955pins/um. Threecolumns at43.2/129.6/216 with>=34.992umhorizontalchannels and43.2umtileedge; tworows at43.2/129.6 with46.44umverticalchannel require302.4umwidth. Macroend169.56+24.84umclearance+64.8umfullwidthstdcellband requires259.2umheight. 11700um2estimatedstd/19595.52um2band=59.7%; globalfill31% is geometric macro-pin/channel constraint, not unpricedemptyarea. Actualsyntharea andstd/IOregisterdistribution required atgate; footprint+162.5%, extra cycles0 afterproof."
  }
 }

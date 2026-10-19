@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  172.8,
-  172.8
+  302.4,
+  259.2
  ],
  "core": [
   2.16,
   2.16,
-  170.64000000000001,
-  170.64000000000001
+  300.23999999999995,
+  257.03999999999996
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 11700.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -64,8 +64,94 @@
   ]
  },
  "clock_port": "ck_core",
- "blocks": [],
- "findings": [],
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "master": "ot_sram_1r1w_32x128_m1_p192",
+   "inst": null,
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 51.408,
+   "h": 39.96,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "master": "ot_sram_1r1w_32x128_m1_p192",
+   "inst": null,
+   "idx": 0,
+   "x": 129.6,
+   "y": 43.2,
+   "w": 51.408,
+   "h": 39.96,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "master": "ot_sram_1r1w_32x128_m1_p192",
+   "inst": null,
+   "idx": 0,
+   "x": 216.0,
+   "y": 43.2,
+   "w": 51.408,
+   "h": 39.96,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "master": "ot_sram_1r1w_32x128_m1_p192",
+   "inst": null,
+   "idx": 0,
+   "x": 43.2,
+   "y": 129.6,
+   "w": 51.408,
+   "h": 39.96,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "master": "ot_sram_1r1w_32x128_m1_p192",
+   "inst": null,
+   "idx": 0,
+   "x": 129.6,
+   "y": 129.6,
+   "w": 51.408,
+   "h": 39.96,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192",
+   "master": "ot_sram_1r1w_32x128_m1_p192",
+   "inst": null,
+   "idx": 0,
+   "x": 216.0,
+   "y": 129.6,
+   "w": 51.408,
+   "h": 39.96,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "fill 31% = (macros/children 12326 + std 11700) / outline 78382 um2 (pin-bound: Six true SRAMmacros repinned at.192um keep W199/39.96=4.980,E198/39.96=4.955pins/um. Threecolumns at43.2/129.6/216 with>=34.992umhorizontalchannels and43.2umtileedge; tworows at43.2/129.6 with46.44umverticalchannel require302.4umwidth. Macroend169.56+24.84umclearance+64.8umfullwidthstdcellband requires259.2umheight. 11700um2estimatedstd/19595.52um2band=59.7%; globalfill31% is geometric macro-pin/channel constraint, not unpricedemptyarea. Actualsyntharea andstd/IOregisterdistribution required atgate; footprint+162.5%, extra cycles0 afterproof.)",
+   ""
+  ]
+ ],
  "referenced": [
   "rtl/qwen_sys/host_cluster_20261017/qkd_hr_core_order.v",
   "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
@@ -151,6 +237,8 @@
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_boot_fifo8_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_bb.v",
   "physical/ref_tile/qkd_hr_core_order/kit.env",
   "physical/ref_tile/qkd_hr_core_order/clock.sdc",
   "physical/ref_tile/qkd_hr_core_order/signoff.sdc",
@@ -172,7 +260,34 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192/ot_sram_1r1w_32x128_m1_p192_tt.lib",
+  "physical/ref_tile/qkd_hr_core_order/place.tcl"
  ]
 }

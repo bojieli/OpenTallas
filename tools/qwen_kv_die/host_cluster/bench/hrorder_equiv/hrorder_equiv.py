@@ -20,8 +20,8 @@ REF = [HERE / 'ref' / f.replace('.sv', '_ref.sv') for f in DUT]
 TB = HERE / 'tb_hrorder_equiv.sv'
 # mutant name -> (file, old text, new text): each drops one write-bypass / advance term of a new head register
 MUTANTS = {
-    'map_hold_bypass': ('qkd_host_ingest_map.sv', 'else hd<=(wr&&wp==rp)?iq_dec[8:0]:q[rp][8:0];', 'else hd<=q[rp][8:0];'),
-    'map_adv_bypass': ('qkd_host_ingest_map.sv', 'if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q[rp1][8:0];', 'if(adv)hd<=q[rp1][8:0];'),
+    'map_hold_bypass': ('qkd_host_ingest_map.sv', 'else hd<=(wr&&wp==rp)?iq_dec[8:0]:q_ctl[rp];', 'else hd<=q_ctl[rp];'),
+    'map_adv_bypass': ('qkd_host_ingest_map.sv', 'if(adv)hd<=(wr&&wp==rp1)?iq_dec[8:0]:q_ctl[rp1];', 'if(adv)hd<=q_ctl[rp1];'),
     'order_hold_bypass': ('qkd_host_commit_order.sv', 'head_hold=(v3&&fw==fr)?s3:front[fr];', 'head_hold=front[fr];'),
     'order_adv_bypass': ('qkd_host_commit_order.sv', 'head_adv=(v3&&fw==fr1)?s3:front[fr1]', 'head_adv=front[fr1]'),
     'disp_hold_bypass': ('qkd_host_boot_dispatch_debt.sv', 'else hd<=(wr&&wp==rp)?id_dec:qd[rp];', 'else hd<=qd[rp];'),
