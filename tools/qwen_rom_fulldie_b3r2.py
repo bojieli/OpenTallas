@@ -4491,7 +4491,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             raise ValueError(f"collective lane latency: {cll['fails']}")
         if any(i_.name == _LG.COLL_INST and i_.master == _LG.COLL_MASTER for i_ in m['insts']):
             m.setdefault('die_master_params', {})[_LG.COLL_MASTER] = dict(
-                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j)')
+                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j); Q-COLLCAL3: LS = compiled calendar lane_groups.collective_calendar')
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
