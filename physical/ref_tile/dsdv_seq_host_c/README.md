@@ -28,7 +28,8 @@ closer vc origin, so the outline stays 345.6 x 648.0. The closed lk view on main
    8x289) is owned by the lk SRAM redesign -- waived for this diagnostic only.
 6. Floorplan: children on the 43.2 lattice (x 43.2; y 43.2 / 216.0 / 388.8); aspect 1.88 (<= 2); fill = hard children ~56 % of the
    outline. Face pin density 10.5 pins/um on S (lk vo_s) and N (vc cw_d) -- waived: inherited from the closed leaf faces, pins go straight
-   out (the 10-18 gate pin-geometry check: 0 inaccessible). No std-cell band needed (no parent logic beyond pin/reset cells).
+   out (the 10-18 gate pin-geometry check: 0 inaccessible). route.pin_balance {group_max 1, M4 M6 / M5} gives every >32-b abutted
+   bus a defined bit order (gate pin_order). No std-cell band needed (no parent logic beyond pin/reset cells).
 7. Clock: one region (parent < 1 mm, 0.35 x 0.65 mm: no landed crossings needed), spine on `ck` with hard-child macro leaves; judged per
    linked child pair u_l0-u_l1 / u_l1-u_l2 at child boundary flops, TT and FF <= 80 ps (gate `clock_child_pair`). io_hold_margin 0.03. PASS
    pending the gate numbers.

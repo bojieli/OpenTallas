@@ -191,6 +191,11 @@
   "threads": 16,
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  },
   "macro_halo_um": 5.4
  },
  "pin_regs": {
