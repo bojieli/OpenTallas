@@ -126,8 +126,9 @@ plays stages 1..36 from one layer segment.
 - The record: `compile_calendar(users=4, occupancy=measured, head_chunks=8, tokens=6, policy=priority)`.
 - `record_cp` is the record plus the command plane.
 - **`record_op` is the case table of record (MU-QW-B1, 10-19).** It is the op-granular PERIODIC frame of
-  `mu_opcal.compile_frame(16)`: 16 latency tokens a frame (H = 4,025,840 edges), the command plane and the argmax root
-  scheduled, **13,711.4 tok/s** (4,769.2 / 4,471.1 / 2,384.6 / 2,086.5). The face plays user 0's stage starts and the
+  `mu_opcal.compile_frame(16)`: 16 latency tokens a frame (H = 4,026,800 edges), the command plane and the argmax root
+  scheduled, **13,708.2 tok/s** (4,768.1 / 4,470.1 / 2,384.0 / 2,086.0). MU-OPCAL-EMB (10-19) moved the token-start
+  LOCAL EMB after the user's argmax result (T = 60, was 16: 13,711.4); see `b1/README.md` section 6. The face plays user 0's stage starts and the
   op-start leaf plays the fillers' op starts with explicit entry ranges. It is RTL-playable: see
   `results/rtl/mu_qwen_1018/b1/README.md`. Run `launch_mu_tok.sh cases OUT` (variant `record_op`).
 - `record` (14,054, finite horizon, no command plane) and `rtl_layer` (2 users, 9,291) are superseded as case tables;
