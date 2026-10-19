@@ -28,6 +28,20 @@ if [ "${OT_KV_RST_PIN_REG:-1}" = 1 ]; then   # default ON (KV-KITS/NATIVE 10-18,
   python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$RPV" > "$O/rst_pin_view_audit.json" || {
     cat "$O/rst_pin_view_audit.json"; echo 'OT_KV_RST_PIN_REG: selected view is not native PASS'; exit 6;
   }
+  # KV-HEALTH 10-19 (OT_KV_RST_HOLD, default 273 = MU release): the health retirement reset contract needs every region
+  # held >= 263 edges after a re-assert (source clear + plane depth + skew); qkd_rst_region_pr_h273 (9-bit hold) binds
+  # when its CLOSED view audits PASS.  Absent view: HOLD128 _pr stays bound and RUN/RST_HOLD_DIAGNOSTIC marks the run.
+  if [ "${OT_KV_RST_HOLD:-273}" = 273 ]; then
+    HPV=physical/ref_tile/qkd_rst_region_pr_h273/views/qkd_rst_region_pr_h273
+    if python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$HPV" --cell qkd_rst_region_pr_h273 > "$O/rst_hold_view_audit.json" 2>/dev/null; then
+      RPV=$HPV; echo "OT_KV_RST_HOLD=273: qkd_rst_region -> $HPV"
+    else
+      export OT_KV_RST_HOLD=128
+      echo "qkd_rst_region_pr_h273 view absent / not native PASS: HOLD128 bound, health reset contract (263) UNPROVEN" > "$O/RST_HOLD_DIAGNOSTIC"
+      cat "$O/RST_HOLD_DIAGNOSTIC"
+    fi
+  fi
+  export OT_KV_RST_HOLD=${OT_KV_RST_HOLD:-273}
   BV="$BV --view qkd_rst_region=$RPV"
 fi
 # KV-PLAN5 10-18 (OT_KV_D2DS_VIEW=1): the static D2D end qkd_d2ds on the CLOSED qkd_d2d_static r7t view (NTX = 3,
@@ -212,6 +226,18 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
+fi
+# KV-HEALTH 10-19 (OT_KV_HEALTH=1; kvs14r default ON = MU release): the continuous registered health plane -- every
+# landing / KC / DCAL fault source -> no-reset OR joins + relay pipes per clock root, cross-root on spare bits of the
+# stack->core forwarded lanes, final sticky -> kvs_attn.ufh (owner 10-19 per-layer health retirement, STATUS 1982).
+# RUN/health_plane.json (+ health_successor.json for kv_retirement_contract).  A missing source export or a plane deeper
+# than the reserved STATUS writes RUN/HEALTH_DIAGNOSTIC (kvs14r: NOT a die result).  OT_KV_HEALTH_NETLIST_ONLY=1: before
+# the qkd_hp_or2 view closes (bind checks only).
+if [ "${OT_KV_HEALTH:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_health_plane.py install --run $O ${OT_KV_HEALTH_NETLIST_ONLY:+--netlist-only} > $O/health_plane.log 2>&1 \
+    || { tail -5 $O/health_plane.log; echo "KV_HEALTH install FAILED ($O/health_plane.log)"; exit 11; }
+  grep '^KV_HEALTH' $O/health_plane.log | cut -c1-900
+  EXP="--expanded $O/expand.json"
 fi
 [ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)

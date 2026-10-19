@@ -770,6 +770,12 @@ SPLIT_BINDINGS['qkd_rst_region'] = dict(module='qkd_rst_region', file='rtl/qwen_
 if RST_PIN_REG:
     SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module='qkd_rst_region_pr',
         file='rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv')
+# KV-HEALTH 10-19 (OT_KV_RST_HOLD=273, kvsys_prep binds the qkd_rst_region_pr_h273 view only when it audits PASS, else it
+# exports 128): the health retirement reset contract (263 edges) needs HOLD 273; wrapper of _pr, same ports and straps
+RST_HOLD = int(__import__('os').environ.get('OT_KV_RST_HOLD', '128'))
+if RST_PIN_REG and RST_HOLD == 273:
+    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module='qkd_rst_region_pr_h273',
+        file='rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273.sv')
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
 # v1.4.4 PV16 wide pairs (die-placed children via kv_expand) behind their wires-only KV-die face qkd_pvw_die (one die word
