@@ -10,13 +10,27 @@ set qrl_block [ord::get_db_block]
 set qrl_dbu [$qrl_block getDbUnitsPerMicron]
 set qrl_members [dict create]
 foreach g $qrl_groups { dict set qrl_members [dict get $g name] {} }
+set qrl_unowned {}
 foreach inst [$qrl_block getInsts] {
  set master [$inst getMaster]
  if {[$master isBlock] || ![$master isSequential]} {continue}
  set name [string map [list "\\" ""] [$inst getName]]
+ set owned 0
  foreach g $qrl_groups {
-  if {[regexp [dict get $g regex] $name]} { dict lappend qrl_members [dict get $g name] $inst; break }
+  if {[regexp [dict get $g regex] $name]} { dict lappend qrl_members [dict get $g name] $inst; set owned 1; break }
  }
+ if {!$owned} { lappend qrl_unowned $name }
+}
+# QF-A0 10-18: check EVERY group before failing, and name the cells, so a regex that drifted from the synthesized names
+# (genblkN scopes, renamed regs) is diagnosed in one gate instead of one group per gate.
+set qrl_bad {}
+foreach g $qrl_groups {
+ set n [llength [dict get $qrl_members [dict get $g name]]]
+ puts "QRL_COUNT [dict get $g name] $n expected [dict get $g min]..[dict get $g max]"
+ if {$n < [dict get $g min] || $n > [dict get $g max]} { lappend qrl_bad "[dict get $g name] owns $n sequential cells, expected [dict get $g min]..[dict get $g max]" }
+}
+if {[llength $qrl_bad]} {
+ error "ROMleaf parent region [join $qrl_bad {; }] (unowned sequential cells [llength $qrl_unowned], e.g. [lrange [lsort $qrl_unowned] 0 5])"
 }
 set report [open qrl_parent_regions.tsv w]
 puts $report "group\ttype\tff_sinks\tcell_area_um2\trow_capacity_um2\tfill\tboxes"
