@@ -769,24 +769,45 @@ end endgenerate
         localparam integer HL = G * W / 2;
         localparam integer WB = (INT8_WEIGHT != 0 && WCONV == 0) ? 8 : 16;
         integer lw, le;
+        // REGROOT 3 (Q-A0FIX2 10-19, landed select): the s2_w operand selects (s1b_gm / s1b_wsrc) were one hub flop on
+        // root ck broadcast ~490 um into both gutter roots (NL c1r9e cross_clock ck -> ck_dw 505 endpoints, worst
+        // -235 ps: 700 ps of repeaters + the 150 ps distinct-entry reserve).  Each half now keeps its own copy of the
+        // S1B select on its own regional root, taken from the hub's S1 register: the entry crossing is one flop -> one
+        // flop (no logic, single fanout) and the fan-out to the half's 1,024 operand flops stays inside one root.  Same
+        // values on the same edges (s1b_* <= s1_* on the shared tile clock): 0 cycles, bit-identical.
+        wire           wsrc_w, wsrc_e;
+        wire [G-1:0]   gm_w, gm_e;
+        if (REGROOT >= 3) begin : g_lsel
+            (* keep *) reg           s1b_wsrc_w, s1b_wsrc_e;
+            (* keep *) reg [G/2-1:0] s1b_gm_w;
+            (* keep *) reg [G-G/2-1:0] s1b_gm_e;
+            always @(posedge ck_reg[2]) begin s1b_wsrc_w <= s1_wsrc; s1b_gm_w <= s1_gm[G/2-1:0]; end
+            always @(posedge ck_reg[3]) begin s1b_wsrc_e <= s1_wsrc; s1b_gm_e <= s1_gm[G-1:G/2]; end
+            assign wsrc_w = s1b_wsrc_w; assign wsrc_e = s1b_wsrc_e;
+            assign gm_w = {{(G-G/2){1'b0}}, s1b_gm_w};
+            assign gm_e = {s1b_gm_e, {(G/2){1'b0}}};
+        end else begin : g_hsel
+            assign wsrc_w = s1b_wsrc; assign wsrc_e = s1b_wsrc;
+            assign gm_w = s1b_gm; assign gm_e = s1b_gm;
+        end
         always @(posedge ck_reg[2]) begin
             mq_wrom[0 +: HL*WB] <= wrom_q[0 +: HL*WB];
             for (lw = 0; lw < HL; lw = lw + 1)
                 if (INT8_WEIGHT != 0 && WCONV == 0)
-                    s2_w[32*lw +: 32] <= !s1b_gm[lw / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*lw +: 32] :
+                    s2_w[32*lw +: 32] <= !gm_w[lw / W] ? 32'd0 : wsrc_w ? mq_kv[32*lw +: 32] :
                                               {int8_bf16(mq_wrom[8*lw +: 8]), 16'h0000};
                 else
-                    s2_w[32*lw +: 32] <= !s1b_gm[lw / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*lw +: 32] :
+                    s2_w[32*lw +: 32] <= !gm_w[lw / W] ? 32'd0 : wsrc_w ? mq_kv[32*lw +: 32] :
                                               {mq_wrom[16*lw +: 16], 16'h0000};
         end
         always @(posedge ck_reg[3]) begin
             mq_wrom[HL*WB +: HL*WB] <= wrom_q[HL*WB +: HL*WB];
             for (le = HL; le < G * W; le = le + 1)
                 if (INT8_WEIGHT != 0 && WCONV == 0)
-                    s2_w[32*le +: 32] <= !s1b_gm[le / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*le +: 32] :
+                    s2_w[32*le +: 32] <= !gm_e[le / W] ? 32'd0 : wsrc_e ? mq_kv[32*le +: 32] :
                                               {int8_bf16(mq_wrom[8*le +: 8]), 16'h0000};
                 else
-                    s2_w[32*le +: 32] <= !s1b_gm[le / W] ? 32'd0 : s1b_wsrc ? mq_kv[32*le +: 32] :
+                    s2_w[32*le +: 32] <= !gm_e[le / W] ? 32'd0 : wsrc_e ? mq_kv[32*le +: 32] :
                                               {mq_wrom[16*le +: 16], 16'h0000};
         end
         always @(posedge clk) begin

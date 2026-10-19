@@ -62,9 +62,9 @@ module qfd_tile_nk_rp2_romleaf_rr #(
     output wire [513:0]  n_y
 );
 `ifndef SYNTHESIS
-    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(2)) u_g (
+    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(3)) u_g (
 `else
-    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(2)) u_g (
+    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(3)) u_g (
 `endif
         .ck(ck),
         .ck_rp0(ck_rp0),

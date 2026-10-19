@@ -27,6 +27,15 @@ foreach g $qrl_groups {
  if {$n < [dict get $g min] || $n > [dict get $g max]} {
   error "ROMleaf parent region $gname owns $n sequential cells, expected [dict get $g min]..[dict get $g max]"
  }
+ # FREE (Q-A0FIX2 10-19): the group only CLAIMS its registers (so no later group, e.g. the catch-all hub, boxes them);
+ # no region is created and global placement puts each one between its driver and its loads.  Used for the landing
+ # register of an entry crossing (TX rung 0, ROM request relay, fault capture): one register -> wire -> register hop
+ # each side instead of one > 405 um hop boxed at either end.
+ if {[dict get $g type] eq "FREE"} {
+  puts $report "$gname\tFREE\t$n\t-\t-\t-\t-"
+  puts "QRL_REGION $gname FREE sinks=$n"
+  continue
+ }
  set region [odb::dbRegion_create $qrl_block qrl_$gname]
  $region setRegionType [dict get $g type]
  set capacity 0.0

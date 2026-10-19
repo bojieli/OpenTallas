@@ -2,7 +2,7 @@
 // Q-TILE45 node-less twin: qfd_tile_nl_rp2_45 (NODE 0, 41 entries) against the original 25-entry qfd_tile_nk_rp1 tree
 // output t_out (the nk node leaf's t_d feed-through = the nl TOREG register: same edge and value). n_a/n_b held 0 (no
 // node traffic; a node-less tile has no tree-node ports).  Mutants stop ck_tx0 (1), ck_rp5 (2), the t_out face ck_fa2 (3).
-// Local ROM-pair equivalence; MUT1 core, MUT2/3 RQR, MUT4..13 each physical ROM/pair clock, MUT14..21 each TX root, MUT22..25 the regional roots rsw/rnw/dw/de.
+// Local ROM-pair equivalence; MUT1 core, MUT2/3 RQR, MUT4..13 each physical ROM/pair clock, MUT14..21 each TX root, MUT22..25 the regional roots rsw/rnw/dw/de, MUT28/29 the W/E landed group-select copy (REGROOT 3).
 // Native clock-partition equivalence: both sides instantiate all64 actual MAC lanes,
 // the closed LSL/node RTL bodies, and ten real 4096x266 mapped-ROM functional models.
 // Raw via-array initialization is declared memory stimulus, not internal compute substitution.
@@ -13,7 +13,11 @@ initial begin if ($value$plusargs("MUT=%d", MUT)) begin end end
 // MUT26/27 (Q-ROMPARENT-2 c1r8, REGROOT 2): hold one ROM leaf reset relay low -- W-south leaf (bank 0, col 0) /
 // E-north leaf (bank 4, col 1) never leaves reset; the parent must miss that leaf's words.
 initial begin #0.2; if (MUT==26) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq = 1'b0;
- if (MUT==27) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq = 1'b0; end
+ if (MUT==27) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq = 1'b0;
+// MUT28/29 (Q-A0FIX2 10-19, REGROOT 3 landed select): hold the W (ck_dw) / E (ck_de) regional copy of the S1B group
+// select at 0 -- that half's weight operands are zeroed, so the parent must miss its lanes' products.
+ if (MUT==28) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_operand_rr.g_lsel.s1b_gm_w = '0;
+ if (MUT==29) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_operand_rr.g_lsel.s1b_gm_e = '0; end
 reg ck=0,rs=0; always #0.5 ck=~ck;
 reg [507:0] tap=0;
 reg [513:0] na=0,nb=0;

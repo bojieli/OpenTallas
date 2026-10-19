@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// Local ROM-pair equivalence; MUT1 core, MUT2/3 RQR, MUT4..13 each physical ROM/pair clock, MUT14..21 each TX root, MUT22..25 the regional roots rsw/rnw/dw/de, MUT26/27 a held ROM-leaf reset relay (REGROOT 2).
+// Local ROM-pair equivalence; MUT1 core, MUT2/3 RQR, MUT4..13 each physical ROM/pair clock, MUT14..21 each TX root, MUT22..25 the regional roots rsw/rnw/dw/de, MUT28/29 the W/E landed group-select copy (REGROOT 3), MUT26/27 a held ROM-leaf reset relay (REGROOT 2).
 // Native clock-partition equivalence: both sides instantiate all64 actual MAC lanes,
 // the closed LSL/node RTL bodies, and ten real 4096x266 mapped-ROM functional models.
 // Raw via-array initialization is declared memory stimulus, not internal compute substitution.
@@ -10,7 +10,11 @@ initial begin if ($value$plusargs("MUT=%d", MUT)) begin end end
 // MUT26/27 (Q-ROMPARENT-2 c1r8, REGROOT 2): hold one ROM leaf reset relay low -- W-south leaf (bank 0, col 0) /
 // E-north leaf (bank 4, col 1) never leaves reset; the parent must miss that leaf's words.
 initial begin #0.2; if (MUT==26) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq = 1'b0;
- if (MUT==27) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq = 1'b0; end
+ if (MUT==27) force dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq = 1'b0;
+// MUT28/29 (Q-A0FIX2 10-19, REGROOT 3 landed select): hold the W (ck_dw) / E (ck_de) regional copy of the S1B group
+// select at 0 -- that half's weight operands are zeroed, so the parent must miss its lanes' products.
+ if (MUT==28) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_operand_rr.g_lsel.s1b_gm_w = '0;
+ if (MUT==29) force dut.u_g.u_tile.u_tile.u_logic.u_me.g_operand_rr.g_lsel.s1b_gm_e = '0; end
 reg ck=0,rs=0; always #0.5 ck=~ck;
 reg [507:0] tap=0;
 reg [513:0] na=0,nb=0;
