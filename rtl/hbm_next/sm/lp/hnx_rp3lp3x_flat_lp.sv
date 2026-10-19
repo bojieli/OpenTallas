@@ -38,8 +38,7 @@ module hnx_rp3lp3x_flat_lp #(
     wire lpr_s;  ot_pl_pad #(.W(1), .N(1)) u_lpr_s (.ck(ck_s), .d(lpr_root), .q(lpr_s));   // 1 hop(s) from n
     // ---- LANDING 0: bin_l n -> s, 2069 b (u_land_s.d)
     wire [4*((2068) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [3:0] lpl_0_vld;  wire [2068:0] bin_l__l_s, lpl_0_o;
-    ot_pl_land_w #(.W(((2068) - (0) + 1)), .D(4)) u_lpl_0_w (.ck(ck_n), .rsi(lpr_n), .i(bin_l), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
-    ot_pl_land_r #(.W(((2068) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2)) u_lpl_0_r (.ck(ck_s), .rsi(lpr_s), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    hnx_pl_land_sram #(.W(((2068) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2)) u_lpl_0_sram (.ck_w(ck_n), .ck_r(ck_s), .rsi_w(lpr_n), .rsi_r(lpr_s), .i(bin_l), .o(lpl_0_o));
     assign bin_l__l_s = (MUT == 1) ? bin_l : lpl_0_o;
     // ---- LANDING 1: g0m n -> s, 50 b (u_gs.g0m)
     wire [4*((49) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [3:0] lpl_1_vld;  wire [49:0] g0m__l_s, lpl_1_o;
@@ -51,8 +50,8 @@ module hnx_rp3lp3x_flat_lp #(
     ot_pl_land_w #(.W(((99) - (0) + 1)), .D(4)) u_lpl_2_w (.ck(ck_n), .rsi(lpr_n), .i(gpm), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
     ot_pl_land_r #(.W(((99) - (0) + 1)), .D(4), .K(2)) u_lpl_2_r (.ck(ck_s), .rsi(lpr_s), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
     assign gpm__l_s = lpl_2_o;
-    wire [817:0] rl1_s__p_u_lf1;  hnx_pl_pad_sram #(.W(((817) - (0) + 1)), .N((MUT == 3) ? 2 : 3)) u_lpp_0 (.ck(ck_s), .rst_n(lpr_s), .d(rl1_s), .q(rl1_s__p_u_lf1));   // align u_lf1: +3
-    wire [25:0] st_s__p_u_lf1;  ot_pl_pad #(.W(((25) - (0) + 1)), .N(3)) u_lpp_1 (.ck(ck_s), .d(st_s), .q(st_s__p_u_lf1));   // align u_lf1: +3
+    wire [817:0] rl1_s__p_u_lf1;  hnx_pl_pad_sram #(.W(((817) - (0) + 1)), .N((MUT == 3) ? 2 : 3), .SMALL(1)) u_lpp_0 (.ck(ck_s), .rst_n(lpr_s), .d(rl1_s), .q(rl1_s__p_u_lf1));   // align u_lf1: +3
+    wire [25:0] st_s__p_u_lf1;  hnx_pl_pad_ring #(.W(((25) - (0) + 1)), .N(3)) u_lpp_1 (.ck(ck_s), .rst_n(lpr_s), .d(st_s), .q(st_s__p_u_lf1));   // align u_lf1: +3
     wire lpr_c_u_pr_n;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_pr_n (.ck(ck_n), .d(lpr_n), .q(lpr_c_u_pr_n));   // t(u_pr_n) = 0
     wire lpr_c_u_pr_s;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_pr_s (.ck(ck_s), .d(lpr_s), .q(lpr_c_u_pr_s));   // t(u_pr_s) = 0
     wire lpr_c_u_pb;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_pb (.ck(ck_n), .d(lpr_n), .q(lpr_c_u_pb));   // t(u_pb) = 0

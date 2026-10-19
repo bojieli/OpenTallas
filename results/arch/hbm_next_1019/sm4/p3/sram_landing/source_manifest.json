@@ -1,0 +1,28 @@
+{
+  "simulator": "Verilator5.050",
+  "host": "ot-epyc4",
+  "landing_remote_bundle": "/srv/opentallas-scratch/claude/codex_hnx_land/out5",
+  "pad_remote_bundle": "/srv/opentallas-scratch/claude/codex_hnx_pad/out_small",
+  "sha256": {
+    "rtl/hbm_next/common/hnx_pl_land_sram.sv": "ca5bc20265fbc66630b588d03ef47c1080f72fcf44c12fbcd95646e426278acb",
+    "rtl/hbm_next/common/tb_hnx_pl_land_sram.sv": "e61a760e1a624d654a7ef98f58eed17007454ebdf841021de89ea6e70d8d1d62",
+    "rtl/hbm_next/common/run_land_sram.sh": "1838e95e29c496ce8a1f55828db32e0e435c0791570deab3ba9b3c9fb93e1514",
+    "rtl/hbm_next/common/hnx_pl_pad_sram.sv": "2696979fdad6834b7fec1fd4ac6be68a6f7938ae2513b6c11516ade2e5f7f7e7",
+    "rtl/hbm_next/common/tb_hnx_pl_pad_sram.sv": "0bdbdd1b9b2f2beca23e7abca5fd4aad3c7effad43db5c6e52987784d58d50b0",
+    "rtl/hbm_next/common/run_pad_sram.sh": "9a69c84875b371425c50d49c2474c9016a535b4f8814e725d72d95e1b0afa32f",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.json": "11dfede431747e2f86612c69bed52663f938be7e47d75e099476a95a08c62f78",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ss.lib": "dc5aeb055c562d487906c039ae8a1b2649ceda6e80900f5a51410e79c2fd0d96",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_bb.v": "edddf4e6db43681bfc28c118817e9ef9d565d279848b3475d15f99c4407f6a57",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v": "f1b736ff2a12823300b4b079c8e8eaf21a2d4a2d2a0c5dbcecb47169d39a4d73",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib": "2547e9763031a5d58ed3f7001b9c5fbb927e12123b910c4b69f451e051a866a4",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.lef": "2bca21d7a888b07c18e9bec1fc53d8021eb00ace2acc5499359248521275c02e",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib": "af25cfc64d41d47eccb96cb81babb49c17310f4113f87ceff10a973b10df4a0c",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.json": "d4fcd75754cbc71d2ce1ca9d700b779ec91af72ca48f635e79ee9186f3a3ebbc",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib": "a98066b7e8130854b9300f617dd9be0546499a6cbd84397aa30a1629400608a0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib": "be56251231244c726aaafd4e50e102f80aed6d0b7ba375e61f9ead0a28e147e0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef": "eaeda6a04d73124db159a54e0160ad4f5f72cc35375732b9b7d7a4c2bf42cbc9"
+  }
+}

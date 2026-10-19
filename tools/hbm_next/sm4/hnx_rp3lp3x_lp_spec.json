@@ -50,7 +50,10 @@
   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
   "rtl/hbm_next/sm/hnx_xs4.sv",
   "rtl/hbm_next/sm/hnx_xs3.sv",
-  "rtl/hbm_next/common/hnx_pl_pad_sram.sv"
+  "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
+  "rtl/hbm_next/common/hnx_pl_land_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"
  ],
  "defines": [
   "OT_SMH_CG_ENREG",
@@ -130,6 +133,15 @@
  "why": "HBM-NEXT-P3-SM 10-19 (owner P3+(a)): SM P=3 tile hnx_rp3lp3x = hnx_rp4lp4x at P = 3 (shared 3-lane x store hnx_xs3 per leaf) + NREL = 2 gather relays per half (reach); same 2 regions and minimum-crossing cut (bin_l -> land_s 2,069 b, leaf-0 gather 50 b, pass-through gather 100 b)",
  "defines_note": "kit defines minus SYNTHESIS (ot_hdly hold cells are identity in simulation)",
  "sram_pads": [
+  "rl1_s"
+ ],
+ "ring_pads": [
+  "st_s"
+ ],
+ "sram_lands": [
+  "bin_l"
+ ],
+ "small_sram_pads": [
   "rl1_s"
  ]
 }

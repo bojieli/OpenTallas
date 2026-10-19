@@ -1,0 +1,47 @@
+{
+  "landing": {
+    "logical_width": 2069,
+    "depth": 4,
+    "logical_bits": 8276,
+    "part": "ot_sram_1r1w2c_16x546_m1",
+    "macros": 4,
+    "installed_bits": 34944,
+    "macro_area_um2": 57316.896,
+    "write_clock": "ck_n -> wclk",
+    "read_clock": "ck_s -> rclk",
+    "extra_edges_vs_flop_landing": 0,
+    "target_ii_cycles": 1,
+    "SS_read_clk_to_q_ps": 386.44514314643703,
+    "SS_min_period_ps": 392.2699456560119,
+    "native_clock_bind": {
+      "wclk": "source region",
+      "rclk": "destination region"
+    },
+    "physical_gate_pass": false
+  },
+  "pad": {
+    "logical_width": 818,
+    "depth": 3,
+    "logical_bits": 2454,
+    "part": "ot_sram_1r1w_32x128_m1",
+    "macros": 7,
+    "installed_bits": 28672,
+    "macro_area_um2": 7481.40624,
+    "extra_edges": 0,
+    "target_ii_cycles": 1
+  },
+  "small_control_pad": {
+    "width": 26,
+    "depth": 3,
+    "logical_flop_bits": 78,
+    "output_capture_bits": 26,
+    "implementation": "addressed flop ring, below2kb"
+  },
+  "remaining_parent_work": [
+    "Bind exact native macro views and both roots",
+    "Validate reach and layout from final no-growth candidate",
+    "Synthesis proves kept control copies survive",
+    "Parent lockstep from final source",
+    "CTS/GRT native timing gate and coordinator PNG review"
+  ]
+}

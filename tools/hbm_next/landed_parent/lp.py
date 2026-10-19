@@ -65,7 +65,9 @@ KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic",
 LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out", "epo": "out", "vld": "out"},
              "ot_pl_land_r": {"ck": "in", "rsi": "in", "bank": "in", "epo": "in", "vld": "in", "o": "out"},
              "ot_pl_pad": {"ck": "in", "d": "in", "q": "out"},
-             "hnx_pl_pad_sram": {"ck": "in", "rst_n": "in", "d": "in", "q": "out"}}
+             "hnx_pl_pad_sram": {"ck": "in", "rst_n": "in", "d": "in", "q": "out"},
+             "hnx_pl_pad_ring": {"ck": "in", "rst_n": "in", "d": "in", "q": "out"},
+             "hnx_pl_land_sram": {"ck_w": "in", "ck_r": "in", "rsi_w": "in", "rsi_r": "in", "i": "in", "o": "out"}}
 
 
 # ----------------------------------------------------------------------------------------------------- verilog parsing
@@ -497,11 +499,15 @@ class Parent:
             w(f"    // ---- LANDING {n}: {net} {s} -> {r}, {Ld['width']} b ({', '.join(Ld['readers'])})")
             w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
               f"  wire {decl} {out}, lpl_{n}_o;")
-            w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
-              f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             kk = f"(MUT == 2) ? {K + 1} : {K}" if n == "0" and mut else f"{K}"
-            w(f"    ot_pl_land_r #(.W({wt}), .D({D}), .K({kk})) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
-              f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld), .o(lpl_{n}_o));")
+            if net in S.get("sram_lands", []):
+                w(f"    hnx_pl_land_sram #(.W({wt}), .D({D}), .K({kk})) u_lpl_{n}_sram "
+                  f"(.ck_w(ck_{s}), .ck_r(ck_{r}), .rsi_w(lpr_{s}), .rsi_r(lpr_{r}), .i({net}), .o(lpl_{n}_o));")
+            else:
+                w(f"    ot_pl_land_w #(.W({wt}), .D({D})) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
+                  f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
+                w(f"    ot_pl_land_r #(.W({wt}), .D({D}), .K({kk})) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
+                  f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld), .o(lpl_{n}_o));")
             if Ld.get("unlanded_mutant"):
                 w(f"    assign {out} = {net};   // --mut-unland: the region audit must FAIL on this crossing")
             elif n == "0" and mut:
@@ -517,9 +523,11 @@ class Parent:
             q = f"{net}__p_{inst}"
             kk = f"(MUT == 3) ? {k - 1} : {k}" if j == 0 and mut else f"{k}"
             use_sram = net in S.get("sram_pads", [])
-            pad_type = "hnx_pl_pad_sram" if use_sram else "ot_pl_pad"
-            reset_pin = f".rst_n(lpr_{self.region[inst]}), " if use_sram else ""
-            w(f"    wire {rng or ''} {q};  {pad_type} #(.W({width_text(rng)}), .N({kk})) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
+            use_ring = net in S.get("ring_pads", [])
+            pad_type = "hnx_pl_pad_sram" if use_sram else ("hnx_pl_pad_ring" if use_ring else "ot_pl_pad")
+            reset_pin = f".rst_n(lpr_{self.region[inst]}), " if use_sram or use_ring else ""
+            extra = ", .SMALL(1)" if net in S.get("small_sram_pads", []) else ""
+            w(f"    wire {rng or ''} {q};  {pad_type} #(.W({width_text(rng)}), .N({kk}){extra}) u_lpp_{j} (.ck(ck_{self.region[inst]}), "
               f"{reset_pin}.d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
         # child resets
@@ -584,7 +592,7 @@ class Parent:
         if P["lands"]:
             o.append(f"# {len(P['lands'])} landings (LANDING-CONTRACT L5): ring -> read multicycle -setup {E} -hold {D - 1}, "
                      f"window ({E} - {D}) T + t_hold < dL < {E} T - t_cq - t_setup")
-            o.append("set ot_lp_lands {" + " ".join(L["name"] for L in P["lands"]) + "}")
+            o.append("set ot_lp_lands {" + " ".join(L["name"] for L in P["lands"] if L["net"] not in S.get("sram_lands", [])) + "}")
             o += ["set ot_lp_miss 0", "foreach ot_ln $ot_lp_lands {",
                   "  set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]",
                   "  set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r.*]",
@@ -613,7 +621,10 @@ class Parent:
     def record(self, P, top_lp, rt):
         S = self.S
         t = P["t"]
-        flops_land = sum(self.D * L["width"] + self.D + (self.AW + 1) + 1 + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
+        flops_land = sum((0 if L["net"] in self.S.get("sram_lands", []) else (self.D+1)*L["width"])
+                         + self.D + (self.AW+1) + 1 + (self.AW+1) + 2
+                         + ((L["width"]+31)//32 if L["net"] in self.S.get("sram_lands", []) else 0)
+                         for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items()
                         if n not in self.S.get("sram_pads", []))
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) for i in self.insts)
@@ -789,7 +800,17 @@ def audit(spec: dict, rtl_text: str) -> dict:
         if i["module"] not in dirs:
             dirs[i["module"]] = {p["name"]: p["dir"] for p in parse_module(csrc, i["module"])["ports"]}
     reg = {}
+    sram_cross = {f"u_lpl_{x['name']}_sram": x for x in Parent(spec).plan()['lands']
+                  if x['net'] in spec.get('sram_lands', [])}
     for i in insts:
+        if i['module'] == 'hnx_pl_land_sram':
+            x = sram_cross.get(i['inst'])
+            if not x or any(i['conns'].get(p) != v for p, v in {
+                    'ck_w': 'ck_'+x['src_region'], 'ck_r': 'ck_'+x['dst_region'],
+                    'rsi_w': 'lpr_'+x['src_region'], 'rsi_r': 'lpr_'+x['dst_region'], 'i': x['net']}.items()):
+                return dict(ok=False, fails=[f"{i['inst']}: native SRAM landing binding mismatch"])
+            reg[i['inst']] = x['dst_region']
+            continue
         cks = [ex.strip() for pin, ex in i["conns"].items() if re.fullmatch(r"ck_\w+", ex.strip())]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
@@ -815,6 +836,10 @@ def audit(spec: dict, rtl_text: str) -> dict:
                     if reg[d] == reg[i["inst"]]:
                         continue
                     di = next(x for x in insts if x["inst"] == d)
+                    if i['module'] == 'hnx_pl_land_sram' and pin in ('i', 'rsi_w') and \
+                            reg[d] == sram_cross[i['inst']]['src_region']:
+                        landed += pin == 'i'
+                        continue
                     if di["module"] == "ot_pl_land_w" and i["module"] == "ot_pl_land_r" and \
                             d[:-2] == i["inst"][:-2]:
                         landed += pin == "bank"

@@ -10,7 +10,7 @@ set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_s]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_s] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_s] -to [get_clocks core_clk]
 # 3 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
-set ot_lp_lands {0 1 2}
+set ot_lp_lands {1 2}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
