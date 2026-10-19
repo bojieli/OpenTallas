@@ -80,6 +80,19 @@ def inventory(run,source_tree=None,die_relative='port_bind_v2/die_bound.v'):
         i='kc_'+region
         if cells[i][0]!='qkd_ctrl_kc': raise ValueError('unqualified control source '+i)
         sources.append(role(i,'kf','ck','rsi',False))
+    # DCAL is a distinct sticky error producer.  An open RTL connection or an
+    # absent LEF pin is an implementation obligation, never an unused output.
+    dm,dp,dc=cells['dcal']
+    if dm!='qkd_d2d_cal_seq_pin_bc' or dp!={'EP_SKEW':'3','GO_OFS':'0','MUT':'0'}:
+        raise ValueError('DCAL successor requires exact source/profile review')
+    sources.append(dict(id='dcal.fault',instance='dcal',master=dm,port='fault',
+                        parameters=dp,signal=ref(dc['fault']) if dc.get('fault') else None,
+                        clock=scalar(dc['ck']),reset=scalar(dc['rst_n']),sticky=True,
+                        requires_sticky_latch=False,placement=places['dcal'],pin_xy=point('dcal','fault'),
+                        internal_reset_release_edges=2,
+                        error_predicates=['s_fault','COL','RUN','STALE','EARLY'],
+                        native_exposure_required=True,
+                        note='release_q[1] clears fault and all four cause registers; reload/halt do not clear sticky health'))
     native_evidence={}
     if source_tree is not None:
         view=source_tree/'physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc'
