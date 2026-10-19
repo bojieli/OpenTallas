@@ -23,8 +23,12 @@ case $KIND in
   eq)
     D=""; [ "$M" != 0 ] && D="+define+OT_LPF_MUT$M"
     "$V" $VF $D --top-module tb_qfd_dv_slice2_e_lpf $SIM rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv -Mdir "$OUT/obj_eq$M" \
-      > "$OUT/build_eq$M.log" 2>&1 && "$OUT/obj_eq$M/Vtb_qfd_dv_slice2_e_lpf" > "$OUT/eq$M.log" 2>&1
-    r=$(grep -o 'LPF_EQ [A-Z]*' "$OUT/eq$M.log" 2>/dev/null | head -1); grep -m3 LPF_MISMATCH "$OUT/eq$M.log"
+      > "$OUT/build_eq$M.log" 2>&1 && { "$OUT/obj_eq$M/Vtb_qfd_dv_slice2_e_lpf" > "$OUT/eq$M.log" 2>&1;
+                                         "$OUT/obj_eq$M/Vtb_qfd_dv_slice2_e_lpf" +quiet > "$OUT/eq${M}q.log" 2>&1; }
+    # two stimulus modes: all inputs random / quiet (no commands, chains, rs: the heads fault and the heads paths are visible)
+    r1=$(grep -o 'LPF_EQ [A-Z]*' "$OUT/eq$M.log" 2>/dev/null | head -1); r2=$(grep -o 'LPF_EQ [A-Z]*' "$OUT/eq${M}q.log" 2>/dev/null | head -1)
+    grep -m3 LPF_MISMATCH "$OUT/eq$M.log" "$OUT/eq${M}q.log"; grep -h "LPF_EQ\|LPF_NZ cw\|LPF_NZ ag\|LPF_NZ ss" "$OUT/eq$M.log" "$OUT/eq${M}q.log"
+    if [ "$r1" = "LPF_EQ PASS" ] && [ "$r2" = "LPF_EQ PASS" ]; then r="LPF_EQ PASS"; elif [ -n "$r1$r2" ] && { [ "$r1" = "LPF_EQ FAIL" ] || [ "$r2" = "LPF_EQ FAIL" ]; }; then r="LPF_EQ FAIL"; else r=""; fi
     echo "EQ MUT=$M: ${r:-NO_RESULT (see $OUT/build_eq$M.log)}"; tail -3 "$OUT/build_eq$M.log";;
   lp)
     "$V" $VF -GMUT=$M --top-module tb_qfd_dv_slice2_e_lpf_lp $SIM rtl/common/landed_parent/ot_pl_land.sv \

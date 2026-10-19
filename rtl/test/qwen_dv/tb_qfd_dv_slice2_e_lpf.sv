@@ -64,9 +64,11 @@ module tb_qfd_dv_slice2_e_lpf;
     wire [515:0] a_cw_s3, b_cw_s3;
     qfd_dv_slice2_e #(.SU_LT(1), .HD_W130(1)) u_ref (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_ei), .hr_ei(hr_ei), .st_ei(st_ei), .st_wi(st_wi), .sc_ei(sc_ei), .sc_wi(sc_wi), .arv_wi(arv_wi), .art_wi(art_wi), .arm_wi(arm_wi), .arl_wi(arl_wi), .ard_wi(ard_wi), .dd_wi(dd_wi), .rv_ei(rv_ei), .re_ei(re_ei), .rr_ei(rr_ei), .rl_ei(rl_ei), .rd_ei(rd_ei), .dr_ei(dr_ei), .ag_wi(ag_wi), .l9_wi(l9_wi), .rs_n0(rs_n0), .rs_n1(rs_n1), .rs_s0(rs_s0), .rs_s1(rs_s1), .cmd_wo(a_cmd_wo), .hr_wo(a_hr_wo), .st_eo(a_st_eo), .st_wo(a_st_wo), .sc_eo(a_sc_eo), .sc_wo(a_sc_wo), .arv_eo(a_arv_eo), .art_eo(a_art_eo), .arm_eo(a_arm_eo), .arl_eo(a_arl_eo), .ard_eo(a_ard_eo), .dd_eo(a_dd_eo), .rv_wo(a_rv_wo), .re_wo(a_re_wo), .rr_wo(a_rr_wo), .rl_wo(a_rl_wo), .rd_wo(a_rd_wo), .dr_wo(a_dr_wo), .ag_eo(a_ag_eo), .ss_eo(a_ss_eo), .ccv_eo(a_ccv_eo), .ccm_eo(a_ccm_eo), .ccw_eo(a_ccw_eo), .cct_eo(a_cct_eo), .l9_eo(a_l9_eo), .cw_n0(a_cw_n0), .cw_n1(a_cw_n1), .cw_n2(a_cw_n2), .cw_n3(a_cw_n3), .cw_s0(a_cw_s0), .cw_s1(a_cw_s1), .cw_s2(a_cw_s2), .cw_s3(a_cw_s3));
     qfd_dv_slice2_e_lpf #(.SU_LT(1)) u_lpf (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_ei), .hr_ei(hr_ei), .st_ei(st_ei), .st_wi(st_wi), .sc_ei(sc_ei), .sc_wi(sc_wi), .arv_wi(arv_wi), .art_wi(art_wi), .arm_wi(arm_wi), .arl_wi(arl_wi), .ard_wi(ard_wi), .dd_wi(dd_wi), .rv_ei(rv_ei), .re_ei(re_ei), .rr_ei(rr_ei), .rl_ei(rl_ei), .rd_ei(rd_ei), .dr_ei(dr_ei), .ag_wi(ag_wi), .l9_wi(l9_wi), .rs_n0(rs_n0), .rs_n1(rs_n1), .rs_s0(rs_s0), .rs_s1(rs_s1), .cmd_wo(b_cmd_wo), .hr_wo(b_hr_wo), .st_eo(b_st_eo), .st_wo(b_st_wo), .sc_eo(b_sc_eo), .sc_wo(b_sc_wo), .arv_eo(b_arv_eo), .art_eo(b_art_eo), .arm_eo(b_arm_eo), .arl_eo(b_arl_eo), .ard_eo(b_ard_eo), .dd_eo(b_dd_eo), .rv_wo(b_rv_wo), .re_wo(b_re_wo), .rr_wo(b_rr_wo), .rl_wo(b_rl_wo), .rd_wo(b_rd_wo), .dr_wo(b_dr_wo), .ag_eo(b_ag_eo), .ss_eo(b_ss_eo), .ccv_eo(b_ccv_eo), .ccm_eo(b_ccm_eo), .ccw_eo(b_ccw_eo), .cct_eo(b_cct_eo), .l9_eo(b_l9_eo), .cw_n0(b_cw_n0), .cw_n1(b_cw_n1), .cw_n2(b_cw_n2), .cw_n3(b_cw_n3), .cw_s0(b_cw_s0), .cw_s1(b_cw_s1), .cw_s2(b_cw_s2), .cw_s3(b_cw_s3));
-    integer cyc, bad, nc, nz;
+    integer pnz [0:32];
+    integer cyc, bad, nc, nz, k; reg quiet;
     initial begin
-        bad = 0; nc = 0; nz = 0;
+        bad = 0; nc = 0; nz = 0; quiet = $test$plusargs("quiet");
+        for (k = 0; k < 33; k = k + 1) pnz[k] = 0;
         cmd_ei = '0;
         hr_ei = '0;
         st_ei = '0;
@@ -94,68 +96,101 @@ module tb_qfd_dv_slice2_e_lpf;
         for (cyc = 0; cyc < CYC; cyc = cyc + 1) begin
             @(negedge ck);
             if (cyc == 16) rst_n = 1'b1;
-            cmd_ei = {$urandom,$urandom,$urandom,$urandom};
+            cmd_ei = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom};
             hr_ei = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
             st_ei = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
             st_wi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
             sc_ei = {$urandom,$urandom};
             sc_wi = {$urandom,$urandom};
-            arv_wi = {$urandom};
-            art_wi = {$urandom};
-            arm_wi = {$urandom};
-            arl_wi = {$urandom};
-            ard_wi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            dd_wi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rv_ei = {$urandom};
-            re_ei = {$urandom};
-            rr_ei = {$urandom};
-            rl_ei = {$urandom};
-            rd_ei = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            dr_ei = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            ag_wi = {$urandom};
-            l9_wi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_n0 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_n1 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_s0 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            rs_s1 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            arv_wi = quiet ? '0 : {$urandom};
+            art_wi = quiet ? '0 : {$urandom};
+            arm_wi = quiet ? '0 : {$urandom};
+            arl_wi = quiet ? '0 : {$urandom};
+            ard_wi = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            dd_wi = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rv_ei = quiet ? '0 : {$urandom};
+            re_ei = quiet ? '0 : {$urandom};
+            rr_ei = quiet ? '0 : {$urandom};
+            rl_ei = quiet ? '0 : {$urandom};
+            rd_ei = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            dr_ei = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            ag_wi = quiet ? '0 : {$urandom};
+            l9_wi = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_n0 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_n1 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_s0 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            rs_s1 = quiet ? '0 : {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
             if (cyc > 18) begin
-                nc = nc + 1; if (|a_cmd_wo) nz = nz + 1; if (a_cmd_wo !== b_cmd_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cmd_wo cycle=%0d ref=%h lpf=%h", cyc, a_cmd_wo, b_cmd_wo); end
-                nc = nc + 1; if (|a_hr_wo) nz = nz + 1; if (a_hr_wo !== b_hr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=hr_wo cycle=%0d ref=%h lpf=%h", cyc, a_hr_wo, b_hr_wo); end
-                nc = nc + 1; if (|a_st_eo) nz = nz + 1; if (a_st_eo !== b_st_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=st_eo cycle=%0d ref=%h lpf=%h", cyc, a_st_eo, b_st_eo); end
-                nc = nc + 1; if (|a_st_wo) nz = nz + 1; if (a_st_wo !== b_st_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=st_wo cycle=%0d ref=%h lpf=%h", cyc, a_st_wo, b_st_wo); end
-                nc = nc + 1; if (|a_sc_eo) nz = nz + 1; if (a_sc_eo !== b_sc_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=sc_eo cycle=%0d ref=%h lpf=%h", cyc, a_sc_eo, b_sc_eo); end
-                nc = nc + 1; if (|a_sc_wo) nz = nz + 1; if (a_sc_wo !== b_sc_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=sc_wo cycle=%0d ref=%h lpf=%h", cyc, a_sc_wo, b_sc_wo); end
-                nc = nc + 1; if (|a_arv_eo) nz = nz + 1; if (a_arv_eo !== b_arv_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=arv_eo cycle=%0d ref=%h lpf=%h", cyc, a_arv_eo, b_arv_eo); end
-                nc = nc + 1; if (|a_art_eo) nz = nz + 1; if (a_art_eo !== b_art_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=art_eo cycle=%0d ref=%h lpf=%h", cyc, a_art_eo, b_art_eo); end
-                nc = nc + 1; if (|a_arm_eo) nz = nz + 1; if (a_arm_eo !== b_arm_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=arm_eo cycle=%0d ref=%h lpf=%h", cyc, a_arm_eo, b_arm_eo); end
-                nc = nc + 1; if (|a_arl_eo) nz = nz + 1; if (a_arl_eo !== b_arl_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=arl_eo cycle=%0d ref=%h lpf=%h", cyc, a_arl_eo, b_arl_eo); end
-                nc = nc + 1; if (|a_ard_eo) nz = nz + 1; if (a_ard_eo !== b_ard_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ard_eo cycle=%0d ref=%h lpf=%h", cyc, a_ard_eo, b_ard_eo); end
-                nc = nc + 1; if (|a_dd_eo) nz = nz + 1; if (a_dd_eo !== b_dd_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=dd_eo cycle=%0d ref=%h lpf=%h", cyc, a_dd_eo, b_dd_eo); end
-                nc = nc + 1; if (|a_rv_wo) nz = nz + 1; if (a_rv_wo !== b_rv_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rv_wo cycle=%0d ref=%h lpf=%h", cyc, a_rv_wo, b_rv_wo); end
-                nc = nc + 1; if (|a_re_wo) nz = nz + 1; if (a_re_wo !== b_re_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=re_wo cycle=%0d ref=%h lpf=%h", cyc, a_re_wo, b_re_wo); end
-                nc = nc + 1; if (|a_rr_wo) nz = nz + 1; if (a_rr_wo !== b_rr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rr_wo cycle=%0d ref=%h lpf=%h", cyc, a_rr_wo, b_rr_wo); end
-                nc = nc + 1; if (|a_rl_wo) nz = nz + 1; if (a_rl_wo !== b_rl_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rl_wo cycle=%0d ref=%h lpf=%h", cyc, a_rl_wo, b_rl_wo); end
-                nc = nc + 1; if (|a_rd_wo) nz = nz + 1; if (a_rd_wo !== b_rd_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rd_wo cycle=%0d ref=%h lpf=%h", cyc, a_rd_wo, b_rd_wo); end
-                nc = nc + 1; if (|a_dr_wo) nz = nz + 1; if (a_dr_wo !== b_dr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=dr_wo cycle=%0d ref=%h lpf=%h", cyc, a_dr_wo, b_dr_wo); end
-                nc = nc + 1; if (|a_ag_eo) nz = nz + 1; if (a_ag_eo !== b_ag_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ag_eo cycle=%0d ref=%h lpf=%h", cyc, a_ag_eo, b_ag_eo); end
-                nc = nc + 1; if (|a_ss_eo) nz = nz + 1; if (a_ss_eo !== b_ss_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ss_eo cycle=%0d ref=%h lpf=%h", cyc, a_ss_eo, b_ss_eo); end
-                nc = nc + 1; if (|a_ccv_eo) nz = nz + 1; if (a_ccv_eo !== b_ccv_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ccv_eo cycle=%0d ref=%h lpf=%h", cyc, a_ccv_eo, b_ccv_eo); end
-                nc = nc + 1; if (|a_ccm_eo) nz = nz + 1; if (a_ccm_eo !== b_ccm_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ccm_eo cycle=%0d ref=%h lpf=%h", cyc, a_ccm_eo, b_ccm_eo); end
-                nc = nc + 1; if (|a_ccw_eo) nz = nz + 1; if (a_ccw_eo !== b_ccw_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ccw_eo cycle=%0d ref=%h lpf=%h", cyc, a_ccw_eo, b_ccw_eo); end
-                nc = nc + 1; if (|a_cct_eo) nz = nz + 1; if (a_cct_eo !== b_cct_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cct_eo cycle=%0d ref=%h lpf=%h", cyc, a_cct_eo, b_cct_eo); end
-                nc = nc + 1; if (|a_l9_eo) nz = nz + 1; if (a_l9_eo !== b_l9_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=l9_eo cycle=%0d ref=%h lpf=%h", cyc, a_l9_eo, b_l9_eo); end
-                nc = nc + 1; if (|a_cw_n0) nz = nz + 1; if (a_cw_n0 !== b_cw_n0) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n0 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n0, b_cw_n0); end
-                nc = nc + 1; if (|a_cw_n1) nz = nz + 1; if (a_cw_n1 !== b_cw_n1) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n1 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n1, b_cw_n1); end
-                nc = nc + 1; if (|a_cw_n2) nz = nz + 1; if (a_cw_n2 !== b_cw_n2) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n2 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n2, b_cw_n2); end
-                nc = nc + 1; if (|a_cw_n3) nz = nz + 1; if (a_cw_n3 !== b_cw_n3) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n3 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n3, b_cw_n3); end
-                nc = nc + 1; if (|a_cw_s0) nz = nz + 1; if (a_cw_s0 !== b_cw_s0) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s0 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s0, b_cw_s0); end
-                nc = nc + 1; if (|a_cw_s1) nz = nz + 1; if (a_cw_s1 !== b_cw_s1) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s1 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s1, b_cw_s1); end
-                nc = nc + 1; if (|a_cw_s2) nz = nz + 1; if (a_cw_s2 !== b_cw_s2) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s2 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s2, b_cw_s2); end
-                nc = nc + 1; if (|a_cw_s3) nz = nz + 1; if (a_cw_s3 !== b_cw_s3) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s3 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s3, b_cw_s3); end
+                nc = nc + 1; if (|a_cmd_wo) begin nz = nz + 1; pnz[0] = pnz[0] + 1; end if (a_cmd_wo !== b_cmd_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cmd_wo cycle=%0d ref=%h lpf=%h", cyc, a_cmd_wo, b_cmd_wo); end
+                nc = nc + 1; if (|a_hr_wo) begin nz = nz + 1; pnz[1] = pnz[1] + 1; end if (a_hr_wo !== b_hr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=hr_wo cycle=%0d ref=%h lpf=%h", cyc, a_hr_wo, b_hr_wo); end
+                nc = nc + 1; if (|a_st_eo) begin nz = nz + 1; pnz[2] = pnz[2] + 1; end if (a_st_eo !== b_st_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=st_eo cycle=%0d ref=%h lpf=%h", cyc, a_st_eo, b_st_eo); end
+                nc = nc + 1; if (|a_st_wo) begin nz = nz + 1; pnz[3] = pnz[3] + 1; end if (a_st_wo !== b_st_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=st_wo cycle=%0d ref=%h lpf=%h", cyc, a_st_wo, b_st_wo); end
+                nc = nc + 1; if (|a_sc_eo) begin nz = nz + 1; pnz[4] = pnz[4] + 1; end if (a_sc_eo !== b_sc_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=sc_eo cycle=%0d ref=%h lpf=%h", cyc, a_sc_eo, b_sc_eo); end
+                nc = nc + 1; if (|a_sc_wo) begin nz = nz + 1; pnz[5] = pnz[5] + 1; end if (a_sc_wo !== b_sc_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=sc_wo cycle=%0d ref=%h lpf=%h", cyc, a_sc_wo, b_sc_wo); end
+                nc = nc + 1; if (|a_arv_eo) begin nz = nz + 1; pnz[6] = pnz[6] + 1; end if (a_arv_eo !== b_arv_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=arv_eo cycle=%0d ref=%h lpf=%h", cyc, a_arv_eo, b_arv_eo); end
+                nc = nc + 1; if (|a_art_eo) begin nz = nz + 1; pnz[7] = pnz[7] + 1; end if (a_art_eo !== b_art_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=art_eo cycle=%0d ref=%h lpf=%h", cyc, a_art_eo, b_art_eo); end
+                nc = nc + 1; if (|a_arm_eo) begin nz = nz + 1; pnz[8] = pnz[8] + 1; end if (a_arm_eo !== b_arm_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=arm_eo cycle=%0d ref=%h lpf=%h", cyc, a_arm_eo, b_arm_eo); end
+                nc = nc + 1; if (|a_arl_eo) begin nz = nz + 1; pnz[9] = pnz[9] + 1; end if (a_arl_eo !== b_arl_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=arl_eo cycle=%0d ref=%h lpf=%h", cyc, a_arl_eo, b_arl_eo); end
+                nc = nc + 1; if (|a_ard_eo) begin nz = nz + 1; pnz[10] = pnz[10] + 1; end if (a_ard_eo !== b_ard_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ard_eo cycle=%0d ref=%h lpf=%h", cyc, a_ard_eo, b_ard_eo); end
+                nc = nc + 1; if (|a_dd_eo) begin nz = nz + 1; pnz[11] = pnz[11] + 1; end if (a_dd_eo !== b_dd_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=dd_eo cycle=%0d ref=%h lpf=%h", cyc, a_dd_eo, b_dd_eo); end
+                nc = nc + 1; if (|a_rv_wo) begin nz = nz + 1; pnz[12] = pnz[12] + 1; end if (a_rv_wo !== b_rv_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rv_wo cycle=%0d ref=%h lpf=%h", cyc, a_rv_wo, b_rv_wo); end
+                nc = nc + 1; if (|a_re_wo) begin nz = nz + 1; pnz[13] = pnz[13] + 1; end if (a_re_wo !== b_re_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=re_wo cycle=%0d ref=%h lpf=%h", cyc, a_re_wo, b_re_wo); end
+                nc = nc + 1; if (|a_rr_wo) begin nz = nz + 1; pnz[14] = pnz[14] + 1; end if (a_rr_wo !== b_rr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rr_wo cycle=%0d ref=%h lpf=%h", cyc, a_rr_wo, b_rr_wo); end
+                nc = nc + 1; if (|a_rl_wo) begin nz = nz + 1; pnz[15] = pnz[15] + 1; end if (a_rl_wo !== b_rl_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rl_wo cycle=%0d ref=%h lpf=%h", cyc, a_rl_wo, b_rl_wo); end
+                nc = nc + 1; if (|a_rd_wo) begin nz = nz + 1; pnz[16] = pnz[16] + 1; end if (a_rd_wo !== b_rd_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=rd_wo cycle=%0d ref=%h lpf=%h", cyc, a_rd_wo, b_rd_wo); end
+                nc = nc + 1; if (|a_dr_wo) begin nz = nz + 1; pnz[17] = pnz[17] + 1; end if (a_dr_wo !== b_dr_wo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=dr_wo cycle=%0d ref=%h lpf=%h", cyc, a_dr_wo, b_dr_wo); end
+                nc = nc + 1; if (|a_ag_eo) begin nz = nz + 1; pnz[18] = pnz[18] + 1; end if (a_ag_eo !== b_ag_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ag_eo cycle=%0d ref=%h lpf=%h", cyc, a_ag_eo, b_ag_eo); end
+                nc = nc + 1; if (|a_ss_eo) begin nz = nz + 1; pnz[19] = pnz[19] + 1; end if (a_ss_eo !== b_ss_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ss_eo cycle=%0d ref=%h lpf=%h", cyc, a_ss_eo, b_ss_eo); end
+                nc = nc + 1; if (|a_ccv_eo) begin nz = nz + 1; pnz[20] = pnz[20] + 1; end if (a_ccv_eo !== b_ccv_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ccv_eo cycle=%0d ref=%h lpf=%h", cyc, a_ccv_eo, b_ccv_eo); end
+                nc = nc + 1; if (|a_ccm_eo) begin nz = nz + 1; pnz[21] = pnz[21] + 1; end if (a_ccm_eo !== b_ccm_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ccm_eo cycle=%0d ref=%h lpf=%h", cyc, a_ccm_eo, b_ccm_eo); end
+                nc = nc + 1; if (|a_ccw_eo) begin nz = nz + 1; pnz[22] = pnz[22] + 1; end if (a_ccw_eo !== b_ccw_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=ccw_eo cycle=%0d ref=%h lpf=%h", cyc, a_ccw_eo, b_ccw_eo); end
+                nc = nc + 1; if (|a_cct_eo) begin nz = nz + 1; pnz[23] = pnz[23] + 1; end if (a_cct_eo !== b_cct_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cct_eo cycle=%0d ref=%h lpf=%h", cyc, a_cct_eo, b_cct_eo); end
+                nc = nc + 1; if (|a_l9_eo) begin nz = nz + 1; pnz[24] = pnz[24] + 1; end if (a_l9_eo !== b_l9_eo) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=l9_eo cycle=%0d ref=%h lpf=%h", cyc, a_l9_eo, b_l9_eo); end
+                nc = nc + 1; if (|a_cw_n0) begin nz = nz + 1; pnz[25] = pnz[25] + 1; end if (a_cw_n0 !== b_cw_n0) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n0 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n0, b_cw_n0); end
+                nc = nc + 1; if (|a_cw_n1) begin nz = nz + 1; pnz[26] = pnz[26] + 1; end if (a_cw_n1 !== b_cw_n1) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n1 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n1, b_cw_n1); end
+                nc = nc + 1; if (|a_cw_n2) begin nz = nz + 1; pnz[27] = pnz[27] + 1; end if (a_cw_n2 !== b_cw_n2) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n2 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n2, b_cw_n2); end
+                nc = nc + 1; if (|a_cw_n3) begin nz = nz + 1; pnz[28] = pnz[28] + 1; end if (a_cw_n3 !== b_cw_n3) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_n3 cycle=%0d ref=%h lpf=%h", cyc, a_cw_n3, b_cw_n3); end
+                nc = nc + 1; if (|a_cw_s0) begin nz = nz + 1; pnz[29] = pnz[29] + 1; end if (a_cw_s0 !== b_cw_s0) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s0 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s0, b_cw_s0); end
+                nc = nc + 1; if (|a_cw_s1) begin nz = nz + 1; pnz[30] = pnz[30] + 1; end if (a_cw_s1 !== b_cw_s1) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s1 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s1, b_cw_s1); end
+                nc = nc + 1; if (|a_cw_s2) begin nz = nz + 1; pnz[31] = pnz[31] + 1; end if (a_cw_s2 !== b_cw_s2) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s2 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s2, b_cw_s2); end
+                nc = nc + 1; if (|a_cw_s3) begin nz = nz + 1; pnz[32] = pnz[32] + 1; end if (a_cw_s3 !== b_cw_s3) begin bad = bad + 1; if (bad <= 8) $display("LPF_MISMATCH port=cw_s3 cycle=%0d ref=%h lpf=%h", cyc, a_cw_s3, b_cw_s3); end
             end
         end
-        if (bad == 0 && nc > 0) $display("LPF_EQ PASS compared=%0d nonzero=%0d cycles=%0d", nc, nz, CYC);
-        else $display("LPF_EQ FAIL mismatches=%0d of %0d", bad, nc);
+        $display("LPF_NZ cmd_wo %0d", pnz[0]);
+        $display("LPF_NZ hr_wo %0d", pnz[1]);
+        $display("LPF_NZ st_eo %0d", pnz[2]);
+        $display("LPF_NZ st_wo %0d", pnz[3]);
+        $display("LPF_NZ sc_eo %0d", pnz[4]);
+        $display("LPF_NZ sc_wo %0d", pnz[5]);
+        $display("LPF_NZ arv_eo %0d", pnz[6]);
+        $display("LPF_NZ art_eo %0d", pnz[7]);
+        $display("LPF_NZ arm_eo %0d", pnz[8]);
+        $display("LPF_NZ arl_eo %0d", pnz[9]);
+        $display("LPF_NZ ard_eo %0d", pnz[10]);
+        $display("LPF_NZ dd_eo %0d", pnz[11]);
+        $display("LPF_NZ rv_wo %0d", pnz[12]);
+        $display("LPF_NZ re_wo %0d", pnz[13]);
+        $display("LPF_NZ rr_wo %0d", pnz[14]);
+        $display("LPF_NZ rl_wo %0d", pnz[15]);
+        $display("LPF_NZ rd_wo %0d", pnz[16]);
+        $display("LPF_NZ dr_wo %0d", pnz[17]);
+        $display("LPF_NZ ag_eo %0d", pnz[18]);
+        $display("LPF_NZ ss_eo %0d", pnz[19]);
+        $display("LPF_NZ ccv_eo %0d", pnz[20]);
+        $display("LPF_NZ ccm_eo %0d", pnz[21]);
+        $display("LPF_NZ ccw_eo %0d", pnz[22]);
+        $display("LPF_NZ cct_eo %0d", pnz[23]);
+        $display("LPF_NZ l9_eo %0d", pnz[24]);
+        $display("LPF_NZ cw_n0 %0d", pnz[25]);
+        $display("LPF_NZ cw_n1 %0d", pnz[26]);
+        $display("LPF_NZ cw_n2 %0d", pnz[27]);
+        $display("LPF_NZ cw_n3 %0d", pnz[28]);
+        $display("LPF_NZ cw_s0 %0d", pnz[29]);
+        $display("LPF_NZ cw_s1 %0d", pnz[30]);
+        $display("LPF_NZ cw_s2 %0d", pnz[31]);
+        $display("LPF_NZ cw_s3 %0d", pnz[32]);
+        if (bad == 0 && nc > 0) $display("LPF_EQ PASS quiet=%0d compared=%0d nonzero=%0d cycles=%0d", quiet, nc, nz, CYC);
+        else $display("LPF_EQ FAIL quiet=%0d mismatches=%0d of %0d", quiet, bad, nc);
         $finish;
     end
 endmodule

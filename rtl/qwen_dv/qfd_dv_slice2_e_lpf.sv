@@ -5,7 +5,7 @@
 // (spec tools/landed_parent/specs/qfd_dv_slice2_e_lpf.json).  Same port list as qfd_dv_slice2_e; cycle-exact to it
 // (tb rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv).  Face outputs pass wires-only children in their face regions.
 // =====================================================================================================================
-module qfd_dv_slice2_e_lpf #(parameter integer MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 1) (
+module qfd_dv_slice2_e_lpf #(parameter integer SL_MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 1) (
     input  wire ck,
     input  wire rst_n,
     input  wire [115:0] cmd_ei,
@@ -85,7 +85,7 @@ module qfd_dv_slice2_e_lpf #(parameter integer MUT = 0, parameter integer SU_TLS
     wire [23:0]   h_sw_a;
     wire [64*32-1:0] h_sw_d;
     wire [515:0]  h_n0, h_n1, h_n2, h_n3, h_s0, h_s1, h_s2, h_s3;
-    qfd_dv_slice2_lpc #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .DIR(1)) u_c (.ck(ck), .rst_n(rst_n),
+    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .DIR(1)) u_c (.ck(ck), .rst_n(rst_n),
         .cmd_i(cmd_ei), .cmd_o(c_cmd_o), .hr_i(hr_ei), .hr_o(c_hr_o),
         .rs_s0(rs_s0), .rs_s1(rs_s1), .rs_n0(rs_n0), .rs_n1(rs_n1), .l9_i(l9_wi), .l9_o(c_l9_o),
         .st_up_i(st_ei), .st_up_o(c_st_up_o), .st_dn_i(st_wi), .st_dn_o(c_st_dn_o),
@@ -94,7 +94,7 @@ module qfd_dv_slice2_e_lpf #(parameter integer MUT = 0, parameter integer SU_TLS
         .hd_sid(h_sid), .hd_xpf(h_xpf), .hd_gi(h_gi), .hd_sw_v(h_sw_v), .hd_sw_a(h_sw_a), .hd_sw_d(h_sw_d), .hd_fe(h_fe),
         .st_n(c_st_n), .cc_o(c_cc_o), .ag_up_i(ag_wi), .ag_n(c_ag_n));
     qfd_dv_slice2_lps u_s (.ck(ck), .rst_n(rst_n), .st_n(c_st_n), .ag_n(c_ag_n), .hd_fault(h_fault), .st(s_st), .ag_dn_o(s_ag));
-    qfd_dv_slice2_lph #(.MUT(MUT)) u_hd (.ck(ck), .rst_n(rst_n), .sid(h_sid), .xpf(h_xpf), .gi(h_gi), .sw_v(h_sw_v),
+    qfd_dv_slice2_lph #(.MUT(SL_MUT)) u_hd (.ck(ck), .rst_n(rst_n), .sid(h_sid), .xpf(h_xpf), .gi(h_gi), .sw_v(h_sw_v),
         .sw_a(h_sw_a), .sw_d(h_sw_d), .fe_i(h_fe), .cw_n0(h_n0), .cw_n1(h_n1), .cw_n2(h_n2), .cw_n3(h_n3),
         .cw_s0(h_s0), .cw_s1(h_s1), .cw_s2(h_s2), .cw_s3(h_s3), .fault(h_fault));
     qfd_dv_slice2_e_te u_te (.ck(ck), .rst_n(rst_n), .st_dn_o(c_st_dn_o), .sc_dn_o(c_sc_dn_o), .ch_dn_o(c_ch_dn_o),
