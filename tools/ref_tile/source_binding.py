@@ -534,6 +534,30 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 "multi-root kit without hard children: unchanged" if ok else
                 "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
             continue
+        if n in ("rc_cal_spine_hold", "balanced_reset_profile"):
+            # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
+            # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                if not isinstance(sp, dict):
+                    raise ValueError("spec is not an object")
+            except (OSError, ValueError, TypeError):
+                rows.append(dict(requires=n, ok=False, text=f"{n}: kit spec unreadable (re-gate)"))
+                continue
+            if n == "rc_cal_spine_hold":
+                hit = sp.get("kind") == "cluster" and sp.get("clock", "spine") == "spine"
+                rows.append(dict(requires=n, ok=not hit, text="rc_cal_spine_hold: " + (
+                    "spine cluster: gate CTS hold repair ran with the calibrated RC, re-gate" if hit else
+                    "no spine: gate CTS never applied the calibrated hold RC, verdict unchanged")))
+            else:
+                hit = bool((sp.get("reset_landing") or {}).get("first_copies")) if isinstance(sp.get("reset_landing"),
+                                                                                             dict) else False
+                rows.append(dict(requires=n, ok=not hit, text="balanced_reset_profile: " + (
+                    "kit declares reset_landing.first_copies: the balanced proof applies, re-gate" if hit else
+                    "no reset_landing.first_copies: textbook_lint checks unchanged")))
+            continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")
