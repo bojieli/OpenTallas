@@ -5,6 +5,9 @@
 set -u
 O=$1; mkdir -p "$O"
 S=rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv
+# HKV-PVRS3 10-19: f2 native PASS -> pv_trunk_gen default --rs-hd f; the committed netlist already binds qkd_pv_rs_hd_f at
+# RS_D 50, so bench it as committed (the r -> f swap below is kept only for an r netlist).
+if grep -q '^ qkd_pv_rs_hd_f #(.KV(32)) u_RH_r0 ' "$S"; then exec bash tools/qwen_kv_die/pv_rtrunk_bench.sh "$@"; fi
 n=$(grep -c '^ qkd_pv_rs_hd_r #(.KV(32)) u_RH_r0 ' "$S")
 [ "$n" = 1 ] || { echo "PV_PAIR_RS FAIL hdf: expected one qkd_pv_rs_hd_r header instance in $S, found $n"; exit 1; }
 # HKV-PVRS2 10-19: qkd_pv_rs_hd_f rev f2 registers every input at its pin -> header 2 edges, pv_trunk_gen --rs-hd f emits

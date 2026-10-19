@@ -42,6 +42,26 @@ def test():
     assert status(c)[0] == 'PASS'
     c['instances']['xl']['params']['RD_LAT'] = [10, 12]
     assert status(c)[0] == 'FAIL'
+    c['instances']['xl']['params']['RD_LAT'] = [10, 13]                                       # vector on a scalar-only
+    c['instances']['xl']['master'] = 'ot_hgi_sm_xload_cl2p_ctlx'                              # master (cl2p) -> FAIL
+    assert status(c)[0] == 'FAIL'
+    c['instances']['xl']['params']['RD_LAT'] = 13
+    assert status(c)[0] == 'FAIL'                                                             # scalar, unequal lanes
+    import contract_die_v as CV                                                                # list -> packed Verilog
+    assert CV.vparam([10, 13, 23, 25, 26, 29, 39, 41]) == "{8'd41, 8'd39, 8'd29, 8'd26, 8'd25, 8'd23, 8'd13, 8'd10}"
+    assert CV.vparam(6) == '6'
+    # HBM-BANKLAT-DMA: DMA back RR_RT (ref 7 at ot_vms_bank_static direct) -- faces +1, lanes 2+1 -> 11; a budget above
+    # the round trip FAILs until the die pads every lane to it (pads reported)
+    def dma(rr_rt, extra=0):
+        c = contract(0, 2, 1, bank2_extra=extra); x = c['instances']['xl']
+        x.update(master='ot_hgi_dma_back_static_vp4_banks_cp', params={'RR_RT': rr_rt})
+        return c
+    assert status(dma(11))[:2] == ('PASS', 11)
+    st, want, _ = status(dma(14)); r = [x for x in L.check(dma(14))[0] if x['client'] == 'xl'][0]
+    assert st == 'FAIL' and want == 11 and r['pads_to_param'] == {'vmb0': 3, 'vmb1': 3}
+    assert status(dma(12, extra=1))[:2] == ('FAIL', 12)                                       # unequal: pad bank 0
+    assert status(dma([11, 12], extra=1))[0] == 'FAIL'                                         # no vector form (VECTOR_OK)
+    assert L.dma_min_drain_lag(7) == 10 and L.dma_min_drain_lag() == L.DMA_RR_RT_BUDGET + 3
     print('test_d4g_bank_latency PASS')
 
 

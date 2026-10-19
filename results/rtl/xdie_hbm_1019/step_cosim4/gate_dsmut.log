@@ -1,0 +1,89 @@
+ot-run: ot-epyc6       admits   706 GB (avail 592, growth 98, headroom 0, waiters 0/0 GB) load 31/128 running 12 disk 6651 GB 
+ot-run: ot-epyc7       admits  1176 GB (avail 920, growth 96, headroom 0, waiters 0/0 GB) load 56/96 running 24 disk 6667 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-270156-1792403039 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+XDIE4 build obj ok
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE4_CFG ds_rs48 PASS
+XDIE4_GATE rc=0
+Verilator 5.050 2026-07-01 rev v5.050
+XDIE4 build obj ok
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE4_CFG qw_rs16 PASS
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE2_FAULT d=1 rel=214 coll=1 cause=0800 gq=0/0 cp=0 cal=0 ep=0 epcause=000 link=000 abort=0
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE2_ERR d=1 delivery 1 payload mismatch meta 1ff010001/1ff010001
+XDIE2_ERR d=1 delivery 1 lane 0 got 4001246e expected 40004061
+XDIE2_ERR d=1 delivery 1 lane 1 got 434f5cac expected 432334b6
+XDIE2_ERR d=1 delivery 1 lane 2 got 3e524064 expected 3d3bbc10
+XDIE2_ERR d=1 delivery 1 lane 3 got 3c906017 expected bcecba53
+XDIE2_ERR d=1 delivery 1 lane 4 got c47387d9 expected c3b40f24
+XDIE2_ERR d=1 delivery 1 lane 5 got c303bcae expected c3813800
+XDIE4 build obj_nostep ok
+XDIE3_ADR d=1 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=0 delivery 0 offset 0000000000 expected 000001c000
+XDIE3_ADR d=1 delivery 2 offset 0000000000 expected 000001c080
+XDIE3_ADR d=0 delivery 1 offset 0000000000 expected 000001c040
+XDIE3_ADR d=1 delivery 3 offset 0000000000 expected 000001c0c0
+XDIE3_ADR d=0 delivery 2 offset 0000000000 expected 000001c080
+XDIE2_FAULT d=1 rel=213 coll=1 cause=0800 gq=0/0 cp=0 cal=0 ep=0 epcause=000 link=000 abort=0
+XDIE4_MUTANT m_arstep REJECTED
+XDIE4_MUTANT m_rsrc REJECTED
+XDIE4_MUTANT m_nostep REJECTED
+XDIE4_GATE rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-270156-1792403039): exit 0

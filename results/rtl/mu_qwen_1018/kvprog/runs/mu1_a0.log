@@ -1,0 +1,9 @@
+# case mu1_a0 build b1 args +USERS=1 +ROOTS=1 +OWNCHK=1 host regular-crane 2026-10-19T04:11:31-07:00 commit f3647da820896024289a398c8659be6cace38204
+HASH u0 writer 265db0f41bd9fb37 attention 442cc3aee1caf8a3
+HASH own 8ab777b5411d77f3
+PASS KVPROG_MU LMU=1 OMU=1 OMUT=0 users=1 roots=1 xmut=0 cal=kvprog_cal_good.hex end_cycle=250603
+- results/rtl/mu_qwen_1018/kvprog/tb_kvprog_mu.sv:235: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 0.163 s; speed 15.347 ms/s
+- Verilator: cpu 0.163 s on 1 threads; allocated 7 MB
+# exit 0

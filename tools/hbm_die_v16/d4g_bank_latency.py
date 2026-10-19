@@ -48,7 +48,11 @@ RULES = {
         ('lg_rq', 'rd', 'READ_RETURN', 10, 10, BANK_RD, 'ot_hbm_vm_lg_static_bank: near SU 10 = 4 own + bank read 6'),
         ('lg_wq', 'wr', 'WRITE_RETURN', 7, 7, BANK_WR, 'near SU 7 = 4 own + bank commit 3')],
     'ot_hgi_sm_xload_cl2_ctlx': [
-        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'die contract note: RD_LAT 6 = ot_vms_bank_static rq->rr n+6, zero die stages')],
+        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'RD_LAT 6 = ot_vms_bank_static rq->rr n+6, zero die stages; list = per-bank vector '
+         '(HBM-BANKLAT-XL: element b = registers rq pin -> bank b -> rr pin; ctl staggers bank b issue by max - l_b)')],
+    'ot_hgi_sm_xload_cl2p_ctlx': [
+        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'cl2p (x_fmt 3) ctlx: same RD_LAT contract as cl2 ctlx; SCALAR only until its '
+         'ctl gets the cl2 per-bank stagger')],
     'ot_hbm_idx_vm_query_static_n12': [
         ('vm_rq', 'rd', 'VM_RT_EXTRA', 4, 4, BANK_RD + 2, 'header: VM_RT_EXTRA 4 = 2 shell pins + 2 die edges (1 relay each way)')],
     'ot_hbm_idx_rootctl_static_am': [
@@ -59,9 +63,27 @@ RULES = {
         ('vm_rq', 'share', 'BANK_RT', 6, 6, BANK_RD, 'REG 0 owner own[BANK_RT]: bank answer at n+1+BANK_RT (own[6] = n+6 bank)')],
     'ot_hbm_idx_vm_share2_static_r': [
         ('vm_rq', 'share', 'BANK_RT', 6, 6, BANK_RD, 'REG 1 (pin-registered leaf): same owner rule behind its own pins')],
+    # HBM-BANKLAT-DMA 10-19: drain_rel (descriptor, compiler-owned) does NOT absorb the round trip: the controller's
+    # landing write slot and response-valid check are presented RR_RT edges after the request.  RR_RT = rq launch ->
+    # rr launch at the controller pins; 7 = closed design point (production bench: ot_vms_bank_static wired directly =
+    # BANK_RD 6 here).  SCALAR: the die pads the short 17-bit rq lanes to the budget (pads_to_param).  The compiler
+    # schedules drain_at - issue_at >= RR_RT + 3 (dma_min_drain_lag); the controller faults any move below it.
     'ot_hgi_dma_back_static_vp4_banks_cp': [
-        ('rq', 'rd', 'DRAIN_RT', None, None, BANK_RD, 'drain_rel32 comes from the descriptor (compiler-owned): reported, owner confirms')],
+        ('rq', 'rd', 'RR_RT', 7, 7, BANK_RD, 'DMA back RR_RT 7 = ot_vms_bank_static direct (landing slot / response check)')],
+    'ot_hgi_dma_back_static_vp4_banks': [
+        ('rq', 'rd', 'RR_RT', 7, 7, BANK_RD, 'DMA back RR_RT 7 = ot_vms_bank_static direct (landing slot / response check)')],
 }
+# d4g budget the die binds on every hb_dbk_<q> (one controller master for all quadrants; die pads rq lanes to it)
+DMA_RR_RT_BUDGET = 80
+
+
+def dma_min_drain_lag(rr_rt=DMA_RR_RT_BUDGET):
+    """compiler rule for ot_hgi_dma_back_static_vp4_*: drain_at - issue_at >= RR_RT + 3 (the landing slot of the
+    last chunk is written before its drain read; the controller faults a smaller lag)."""
+    return int(rr_rt) + 3
+
+# masters whose RTL accepts a per-bank VECTOR (contract list) for the rule's param; a list on any other master FAILS
+VECTOR_OK = {('ot_hgi_sm_xload_cl2_ctlx', 'RD_LAT')}
 # downstream clients of a share: (share master, share request port) -> (client param, RTL default, ref value, ref lanes, why)
 SHARE_PORTS = {
     ('ot_hbm_idx_rootctl_static_am', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 2, 'n12 SW behind the registered share: 2 fixed edges'),
@@ -196,6 +218,10 @@ def check(c):
             row['status'] = 'FAIL'; row['bad'].append('no return path traced'); rows.append(row); continue
         need = max(rts)
         vec = I[ci].get('params', {}).get(pname)
+        if isinstance(vec, list) and (m, pname) not in VECTOR_OK:
+            row.update(have=vec, status='FAIL')
+            row['bad'].append(f'{ci}.{pname} is a list but {m} has no per-bank vector form (VECTOR_OK)')
+            rows.append(row); continue
         if isinstance(vec, list) and ref is not None:
             row.update(have=vec, want=[None] * len(vec))
             for p in ps:
@@ -204,7 +230,11 @@ def check(c):
                 if bi < len(vec):
                     row['want'][bi] = w
                 if bi >= len(vec) or int(vec[bi]) != w:
-                    row['bad'].append(f'{ci}.{pname}[{bi}] = {vec[bi] if bi < len(vec) else None}, bank {p["bank"]} needs {w}')
+                    pad = (f' (budget above the lanes: die pads the {p["bank"]}:{p["bank_port"]} lane +{int(vec[bi]) - w})'
+                           if bi < len(vec) and int(vec[bi]) > w else '')
+                    row['bad'].append(f'{ci}.{pname}[{bi}] = {vec[bi] if bi < len(vec) else None}, bank {p["bank"]} needs {w}{pad}')
+                    if pad:
+                        row.setdefault('lane_pads', []).append(f'{p["bank"]}:{p["bank_port"]}+{int(vec[bi]) - w}')
             if rule[1] == 'share':
                 excess[ci] = need - ref_rt
             row['status'] = 'FAIL' if row['bad'] else 'PASS'
@@ -220,9 +250,12 @@ def check(c):
         have = param(I, ci, pname, dflt)
         want = ref + need - ref_rt
         row.update(have=have, want=want)
+        if have > want:                          # a budget above the lanes: the die pads every bank lane up to it
+            row['pads_to_param'] = {p['bank']: have - (ref + p['rt'] - ref_rt) for p in ps}
         if have != want:
             row['bad'].append(f'{ci}.{pname} = {have}, bank contract + lanes need {want} '
-                              f'(ref {ref} at round trip {ref_rt}; actual {need} = bank {BANK_RD if kind == "rd" else BANK_WR}'
+                              + (f'(budget: pad every bank lane to it: {row["pads_to_param"]}) ' if have > want else '')
+                              + f'(ref {ref} at round trip {ref_rt}; actual {need} = bank {BANK_RD if kind == "rd" else BANK_WR}'
                               f' + pin {ps[0]["pin"]} + lanes)')
         row['status'] = 'FAIL' if row['bad'] else 'PASS'
         rows.append(row)

@@ -14,7 +14,7 @@ OK=()
 SSH='ssh -o ControlPath=none -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3'
 for h in $HOSTS; do   # stage fully or not at all (a partial tree on a host would be picked by --dir): marker written last
   if timeout 300 $SSH "$h" "rm -rf $RD.part && mkdir -p $RD.part" && \
-     timeout 600 rsync -a --exclude "/$OUTREL" --exclude '.git' --include '/results/' --include '/results/rtl/' --include '/results/rtl/q_collcal_1018/***' --exclude '/results/**' -e "$SSH" "$W/" "$h:$RD.part/" && \
+     timeout 600 rsync -a --exclude "/$OUTREL" --exclude '.git' --include '/results/' --include '/results/rtl/' --include '/results/rtl/q_collcal_1018/***' --include '/results/rtl/qcollcal_rl_1018/' --include '/results/rtl/qcollcal_rl_1018/gen_*/***' --include '/results/rtl/mu_qwen_1018/' --include '/results/rtl/mu_qwen_1018/coll/' --include '/results/rtl/mu_qwen_1018/coll/mu_cal.json' --exclude '/results/**' -e "$SSH" "$W/" "$h:$RD.part/" && \
      timeout 120 $SSH "$h" "rm -rf $RD && mv $RD.part $RD && touch $RD/.staged"; then OK+=("$h"); else
      echo "stage to $h failed (skipped)"; timeout 60 $SSH "$h" "rm -rf $RD.part" ; fi
 done

@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_sys_face_mu_dhuser-k3-46980a0f6 bench bench_entry_late_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_sys_face_mu_dhuser-k3-46980a0f6 log cl/bench_entry_late_mutant.a1b1.log captured 2026-10-19T04:50:26-07:00
+# fail_regex '^TB_DHUSER_PINREG FAIL MUT=4 .* mism=[1-9]'
+Verilator 5.050 2026-07-01 rev v5.050
+TB_DHUSER_PINREG info T=251675 H=4026800 anchor=202 end=8093802 drift=0
+TB_DHUSER_PINREG mismatch edge 1924 ref v1 u1 s1 f0 c9 fc0 | dut v0 u0 s0 f0 c0 fc0 | fc_q r0 d0 mf d0
+TB_DHUSER_PINREG FAIL MUT=4 drift=0 edges=8093802 starts=8113 per_user=1481/3463/3169 mism=16226 first=1924 ref_fcode=0 dut_fcode=0 drift_edge=-1
+- /srv/opentallas-scratch/claude/closure-loop/qfd_sys_face_mu_dhuser-k3-46980a0f6/bench_src_a1/rtl/test/mu_qwen_seq/tb_dhuser_pinreg.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8ms; walltime 12.318 s; speed 657.056 us/s
+- Verilator: cpu 12.318 s on 1 threads; allocated 7 MB

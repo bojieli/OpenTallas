@@ -139,14 +139,32 @@ def kv_programme_constants(kv_commit):
                 law='TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)')
 
 
-def rtl_txdp(commit):
+def rtl_txdp(commit, compute_params=None):
+    """the TXDP vector each die's qfd/qkd_d2d_static is elaborated with: the PR = 1 hard-wired vector of the core
+    (pre QXF-LINK), or -- since QXF-LINK 6ef1a097f made TXDP a REQUIRED master parameter -- the compute die's
+    die.v.params.json qfd_d2d_static.TXDP (QLB-GEN, the GEN's assignment) and the KV die's D2D_TXDP_K of the image
+    (ROOT-QLINE 54aef0490: the KV static model binds it).  Fail closed when neither exists."""
     t = git_show(commit, 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv')
+    img = None
     out = {}
     for end, core in (('C', 'qfd_d2d_static_core'), ('K', 'qkd_d2d_static_core')):
         m = re.search(core + r"\s*#\([^;]*?\.TXDP\(PR \? \{8'd(\d+), 8'd(\d+), 8'd(\d+), 8'd(\d+)\}", t, re.S)
-        if not m:
-            raise SystemExit(f'layer_compile: PR TXDP of {core} not found')
-        out[end] = [int(x) for x in m.groups()][::-1]          # {p3, p2, p1, p0} -> [p0..p3]
+        if m:
+            out[end] = [int(x) for x in m.groups()][::-1]          # {p3, p2, p1, p0} -> [p0..p3]
+            continue
+        if end == 'C':
+            if not compute_params:
+                raise SystemExit('layer_compile: qfd_d2d_static TXDP is a die parameter at this commit: pass --compute-params die.v.params.json')
+            v = json.loads(Path(compute_params).read_text()).get('masters', {}).get('qfd_d2d_static', {}).get('TXDP')
+            if v is None:
+                raise SystemExit(f'layer_compile: {compute_params} assigns no qfd_d2d_static TXDP')
+        else:
+            img = img or git_show(commit, 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh')
+            mm = re.search(r"D2D_TXDP_K\s*=\s*32'h([0-9a-fA-F_]+)", img)
+            if not mm:
+                raise SystemExit('layer_compile: no D2D_TXDP_K in d2d_cal_image.svh')
+            v = int(mm.group(1).replace('_', ''), 16)
+        out[end] = [(int(v) >> (8 * i)) & 0xff for i in range(4)]
     return out
 
 
@@ -236,6 +254,7 @@ def main(argv=None):
     ap.add_argument('--compute-stages', required=True); ap.add_argument('--kv-stages', required=True)
     ap.add_argument('--token-path', default='results/arch/token_path_20261009/qwen_rom.json')
     ap.add_argument('--link-handoff', default='results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json')
+    ap.add_argument('--compute-params', help='compute die.v.params.json (TXDP as the die elaborates it)')
     ap.add_argument('--compute-commit', default='0a9c93921'); ap.add_argument('--kv-commit', default='f05f9338f')
     ap.add_argument('--txl', type=int, default=6); ap.add_argument('--phy', type=int, default=5)
     ap.add_argument('--n59-land-edges', type=int, default=8,
@@ -259,11 +278,11 @@ def main(argv=None):
     S = compile_stages(ba)
     kvp = kv_programme_constants(a.kv_commit)
     raw, txd = txd_of(S, kv_codec=kvp['KV_CODEC'])
-    hard = rtl_txdp(a.compute_commit)
+    hard = rtl_txdp(a.compute_commit, a.compute_params)
     for e in ('C', 'K'):
         if hard[e] != txd[e]:
             findings.append(dict(id=f'TXDP {e}', severity='FAIL', owner='Q-LINK / die leads',
-                                 what=f'{"qfd" if e == "C" else "qkd"}_d2d_static PR=1 hard-wires TXDP {hard[e]} (ports 0..3); '
+                                 what=f'{"qfd" if e == "C" else "qkd"}_d2d_static is elaborated with TXDP {hard[e]} (ports 0..3); '
                                       f'the die stages need {txd[e]}',
                                  fix='make TXDP a parameter of the die master set from this compiler (d2d/txdp.svh), '
                                      'or re-harden with the compiled vector'))

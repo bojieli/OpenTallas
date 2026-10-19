@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hbm_accel_smh_fc_xr2.lef",
-    "sha256": "050476910841ae4d2840bda17ba43faf68bd50dd4664292e4b03f2992213a937"
+    "sha256": "1fac48393845a2057a0be4aa44b819e980d4295cad7bb29ac6f896c719213a30"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg1/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2/record/views/ot_hbm_accel_smh_fc_xr2/provenance/raw/ot_hbm_accel_smh_fc_xr2.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2/record/views/ot_hbm_accel_smh_fc_xr2/provenance/ot_hbm_accel_smh_fc_xr2.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg1/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg1/record/views/ot_hbm_accel_smh_fc_xr2/provenance/raw/ot_hbm_accel_smh_fc_xr2.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg1/record/views/ot_hbm_accel_smh_fc_xr2/provenance/ot_hbm_accel_smh_fc_xr2.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 659 OBS rects added on M6 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: xi[135]; pockets: 851 OBS rects added on M6 (gaps < 2.048 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg2/record/views/ot_hbm_accel_smh_fc_xr2/provenance/ot_hbm_accel_smh_fc_xr2.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/smn_fcxr2_ref_fa-r2-dd7fca4ca-arg1/record/views/ot_hbm_accel_smh_fc_xr2/provenance/ot_hbm_accel_smh_fc_xr2.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hbm_accel_smh_fc_xr2 218.16 x 151.2: PG M6 VDD 14 stripes (93% spread, 100% cov) / VSS 14 stripes (93% spread, 100% cov); strap M7; face pins 5286 blocked-above 0 blocked-same 0; clock clk insertion 342 ps; pockets M6 0 (closed)",
+    "summary": "ot_hbm_accel_smh_fc_xr2 218.16 x 151.2: PG M6 VDD 14 stripes (93% spread, 100% cov) / VSS 14 stripes (93% spread, 100% cov); strap M7; face pins 5286 blocked-above 0 blocked-same 0; clock clk insertion 339 ps; pockets M6 0 (closed)",
     "info": {
       "cell": "ot_hbm_accel_smh_fc_xr2",
       "W": 218.16,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 5286,
         "blocked_above": 0,
-        "covered_below": 835,
+        "covered_below": 846,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 341.96,
-          "min_ps": 228.87
+          "max_ps": 339.14,
+          "min_ps": 236.67
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M6",
           "d_um": 2.048,
-          "added": 659
+          "added": 851
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hbm_accel_smh_fc_xr2.lef",
-    "sha256": "889e5bc4985a30a6724d94401254bee1b332cb837fed5704b16796bbf761ffff"
+    "sha256": "6a55107f33a12414588b491dae24c914d7f839d75d225a38aeb6527bceca890a"
   }
 }

@@ -481,6 +481,20 @@ def discover_records(root=None):
     return sorted(found.items())
 
 
+def missing_records(root=None):
+    """Tracked record-family json files that are NOT on disk (sparse worktree: skip-worktree 'S', or deleted).
+    Discovery reads the working tree, so a sparse checkout without e.g. results/rtl/xdie_qwen_1018 silently drops the
+    pair_r2 override and recomputes Qwen ROM AR 4,767.1 instead of 4,766.5 (MU-S81-2/CHK 10-19).  Callers refuse."""
+    root = Path(root or ROOT)
+    try:
+        ls = subprocess.run(['git', '-C', str(root), 'ls-files', '-t', '--', *[p + '/*.json' for p in FAMILIES.values()]],
+                            capture_output=True, text=True, check=True).stdout.splitlines()
+    except Exception:
+        return []
+    return sorted(rel for tag, rel in (l.split(' ', 1) for l in ls if ' ' in l)
+                  if tag == 'S' or not (root / rel).is_file())
+
+
 def default_xdie_records():
     """compatibility: the discovered TOKEN-XDIE records (absolute paths)"""
     return [str(ROOT / r) for r, f in discover_records() if f == 'xdie']
@@ -745,6 +759,12 @@ def main():
         return
     explicit = a.pass_records is not None or a.xdie_records is not None
     pr, xr = (a.pass_records, a.xdie_records) if explicit else (None, None)
+    miss = [] if explicit else missing_records()
+    if miss:
+        dirs = sorted({'/'.join(m.split('/')[:3]) for m in miss})
+        print(f'INCOMPLETE: {len(miss)} tracked record files are not on disk (sparse worktree?); discovery would drop '
+              f'their overrides. Check out: {" ".join(dirs)}')
+        sys.exit(2)
     out, seen = run(pr, xr)
     if a.check:
         bad = 0
