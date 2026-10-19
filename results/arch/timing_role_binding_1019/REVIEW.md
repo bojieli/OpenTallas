@@ -1,3 +1,25 @@
+# ROOT erratum: all-corner MIN admission refused
+
+The native API calibration below remains valid and unchanged. The earlier
+claim that FF-MIN had a reviewed conservative intrinsic CQ minimum is
+superseded: FF 346.043664 ps, TT 415.195299 ps and SS 524.072474 ps all come
+from nominal analytical CQ, and none is qualified as earliest CQ. No positive
+nominal CQ may be admitted as MIN. A conditional zero CQ proposal and its
+unresolved threshold/transition dependencies are in
+`../sc2_same_corner_min_model_1019/REVIEW.md`. It does not authorize Liberty.
+
+The unconnected manifest prototype now requires six explicit same-corner
+roles and deliberately refuses admission because no complete independently
+reviewed MIN policy exists. This also prevents max-only caller declarations
+from hiding internal minimum clock/constraint queries. An externally approved
+manifest hash alone cannot establish an unstated numerical bound. ROOT must
+approve the complete policy and all 33 reader/writer implementations before
+future admission logic is implemented. Legacy production helpers are untouched.
+
+Original REVIEW, manifest source/probe/log and hash list are retained in
+`.historical` files; old claims below are historical where this erratum
+supersedes them. Native logs, source libraries and receipt are unchanged.
+
 # Timing-role binding prototype: native API PASS, production adoption BLOCKED
 
 Inspected source is `22f53efd97b219b16039486b0638e3c592d37a63`.
@@ -47,7 +69,8 @@ cannot certify a numerical lower bound. The structural fixture used by
 in STA; its eight witnesses test admission semantics only.
 
 Initial exact roles are TT-MAX, SS-MAX, FF-MIN and FF-MAX. FF-MIN added access
-delay is zero, with reviewed original conservative CQ minimum; all role
+delay was proposed as zero; its original positive intrinsic CQ is now
+unqualified and superseded by the ROOT erratum above. All role
 files carry upper constraint requirements, including hold. FF-MAX carries
 its actual load-dependent maximum. Inputs receive actual input capacitance;
 outputs require correctly modeled intrinsic/output lead loading, not input
@@ -68,8 +91,7 @@ Legacy masters without this opt-in manifest remain byte-identical.
 **The four current roles do not yet authorize a mixed TT or SS session.**
 A maximum setup query can depend on early capture clock paths and minimum
 checks can be invoked internally by resizer/export. Such dependencies must
-be inventoried, not hidden behind a max-only headline. TT/SS minimum queries
-currently refuse. A separately reviewed explicit TT-MIN / SS-MIN lower
+be inventoried, not hidden behind a max-only headline. TT/SS/FF minimum admission now refuses under the ROOT erratum. A separately reviewed explicit TT-MIN / SS-MIN lower
 bound, including clock dependencies, is required before those mixed sessions
 can run. Do not substitute the TT/SS MAX table or silently borrow FF across
 corners. Extending the schema to those roles is a subsequent reviewed step.

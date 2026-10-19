@@ -1,8 +1,5 @@
-positive PASS structural schema only
-missing ROLE_BINDING_REFUSED missing or foreign explicit role
-swapped ROLE_BINDING_REFUSED swapped role metadata ff_max
-stale_source ROLE_BINDING_REFUSED master/source/model/geometry/behavior identity
-positive_access_min ROLE_BINDING_REFUSED manufactured minimum access delay
-tt_minimum ROLE_BINDING_REFUSED unreviewed role requested; TT/SS minimum has no bound
-ss_minimum ROLE_BINDING_REFUSED unreviewed role requested; TT/SS minimum has no bound
-unreviewed_digest ROLE_BINDING_REFUSED unreviewed manifest digest
+tt_minimum ROLE_BINDING_REFUSED TT/SS/FF MIN unqualified; nominal CQ forbidden; reviewed complete bound policy absent
+ss_minimum ROLE_BINDING_REFUSED TT/SS/FF MIN unqualified; nominal CQ forbidden; reviewed complete bound policy absent
+ff_minimum ROLE_BINDING_REFUSED TT/SS/FF MIN unqualified; nominal CQ forbidden; reviewed complete bound policy absent
+max_only_hidden_min ROLE_BINDING_REFUSED TT/SS/FF MIN unqualified; nominal CQ forbidden; reviewed complete bound policy absent
+all_roles ROLE_BINDING_REFUSED TT/SS/FF MIN unqualified; nominal CQ forbidden; reviewed complete bound policy absent

@@ -2,7 +2,7 @@
 """Unconnected, fail-closed timing-role manifest prototype. No production imports."""
 import hashlib,json,pathlib,re
 MASTER='ot_sram_1r1w_512x128_m4_r2c2_p192_sc2'
-ROLES={'tt_max','ss_max','ff_min','ff_max'}
+ROLES={'tt_max','tt_min','ss_max','ss_min','ff_min','ff_max'}
 IDENTITY={'master','source_sha256','model_sha256','geometry_sha256','behavior_sha256'}
 def digest(p):return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
 def refuse(message):raise ValueError('ROLE_BINDING_REFUSED '+message)
@@ -23,23 +23,8 @@ def read(path,approved_manifest_sha256,expected_identity,required_roles):
     if m.get('schema')!='opentallas.sc2-timing-roles.prototype.v1':refuse('schema')
     rows=m.get('roles',{})
     if set(rows)!=ROLES:refuse('missing or foreign explicit role')
-    if not set(required_roles)<=ROLES:refuse('unreviewed role requested; TT/SS minimum has no bound')
-    result={}
-    for role,row in rows.items():
-        if row.get('corner')!=role[:2] or row.get('analysis')!=role[3:]:refuse('swapped role metadata '+role)
-        if row.get('domain')!={'slew_ps':[5,320],'load_ff':[0.72,46.08]}:refuse('domain '+role)
-        if row.get('constraint_policy')!='upper_requirements':refuse('constraint policy '+role)
-        if role=='ff_min' and row.get('added_access_minimum_delay_ps')!=0:refuse('manufactured minimum access delay')
-        rel=pathlib.Path(row.get('file',''))
-        if rel.is_absolute() or '..' in rel.parts or not rel.name:refuse('nonlocal role path')
-        f=path.parent/rel
-        if not f.is_file() or digest(f)!=row.get('sha256'):refuse('missing/wrong role bytes '+role)
-        text=f.read_text()
-        if not re.search(r'\bcell\s*\(\s*'+re.escape(MASTER)+r'\s*\)',text):refuse('wrong actual cell '+role)
-        library=re.search(r'\blibrary\s*\(\s*([^\s)]+)\s*\)',text)
-        if not library or library[1]!=row.get('library'):refuse('wrong actual library '+role)
-        result[role]={'file':str(f.resolve()),'sha256':row['sha256'],'library':library[1]}
-    # Distinct roles must not alias one file; exact approved hashes certify their
-    # reviewed numerical meanings. A self-authored sidecar cannot certify a bound.
-    if len({r['file'] for r in result.values()})!=4:refuse('role file alias')
-    return {'identity':expected_identity,'approved_manifest_sha256':approved_manifest_sha256,'roles':result}
+    if not set(required_roles)<=ROLES:refuse('foreign role requested')
+    # ROOT correction: nominal CQ is not a minimum at ANY corner. The
+    # conditional zero model has unresolved transition/reference dependencies.
+    # No reviewed complete MIN policy exists, so this prototype admits none.
+    refuse('TT/SS/FF MIN unqualified; nominal CQ forbidden; reviewed complete bound policy absent')
