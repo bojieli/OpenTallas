@@ -340,7 +340,7 @@
     }
   },
   "lead_bound": "Longest physical M4 contactlead fromcompact core:macroheight-coreheight; length-specific0.38RC+actualcalibrateddriverR*C, not arbitrary delay. No localterminaldriver/repeatedcore was previously modeled.",
-  "RTL_bound": false,
+  "RTL_bound": true,
   "data_edge_delta": 0,
   "compiler_claim": "Complete calibrated analytical LEF/PG/contact/RC/Lib/behavioral abstract; no transistorGDS",
   "still_open": [

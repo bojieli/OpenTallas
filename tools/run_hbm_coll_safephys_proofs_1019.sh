@@ -3,7 +3,7 @@ set -euo pipefail
 out=${1:?output};mkdir -p "$out";out=$(realpath "$out")
 export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
 D=rtl/hbm_accel/generic/collective/p2p
-S=("$D/ot_hfd_coll_q_hard_v5.sv" "$D/ot_hgi_coll_ctl_v5.sv" "$D/ot_hgi_coll_ctl_v5_safephys.sv" "$D/ot_hgi_coll_ctl_release_safephys.sv" "$D/ot_hgi_coll_fixed_delay_sram_safephys.sv" "$D/ot_hgi_coll_slice_v7.sv" rtl/hdc/ot_hdc_prefix.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v)
+S=("$D/ot_hfd_coll_q_hard_v5.sv" "$D/ot_hgi_coll_ctl_v5.sv" "$D/ot_hgi_coll_ctl_v5_safephys.sv" "$D/ot_hgi_coll_ctl_release_safephys.sv" "$D/ot_hgi_coll_fixed_delay_sram_safephys.sv" "$D/ot_hgi_coll_slice_v7.sv" rtl/hdc/ot_hdc_prefix.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v)
 verilator --version
 run(){
  local tag=$1 top=$2 expect=$3;shift 3

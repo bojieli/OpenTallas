@@ -17,10 +17,10 @@ module ot_hgi_coll_fixed_delay_sram_safephys #(
  wire [MW-1:0] rd;
  wire [MW-1:0] wd={{(MW-W){1'b0}},in_q};
  generate if(SMALL)begin:g_small
- ot_sram_1r1w_32x128_m1 u_mem(.clk(clk),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd),
+ ot_sram_1r1w_32x128_m1_p192_rc u_mem(.clk(clk),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd),
   .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(wd),.w_mask_in({MW{1'b1}}));
  end else begin:g_large
- ot_sram_1r1w_128x256_m1_r2c2 u_mem(.clk(clk),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd),
+ ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_mem(.clk(clk),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd),
   .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(wd),.w_mask_in({MW{1'b1}}),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
