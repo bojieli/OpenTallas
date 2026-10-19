@@ -1,0 +1,24 @@
+{
+  "diagnostic_only": true,
+  "adoption": false,
+  "constraints_unchanged": true,
+  "actual_clock_phase_not_measured": true,
+  "records": {
+    "clock.sdc": {
+      "sha256": "43b74730b5cdbdec06f6a94aff0193c891b0e1a028eb3e05058109077a89c50b",
+      "period_ps": 770.0,
+      "setup_base_plus_residual_ps": 210.0,
+      "default_phi_fraction": 0.75,
+      "zero_skew_ideal_data_budget_ps": -17.5,
+      "before_cell_setup_c2q_and_wire": true
+    },
+    "signoff.sdc": {
+      "sha256": "65d0e15f223395531555e7fb2936aa2f04362080c6ded05e4a16486a127717bd",
+      "period_ps": 833.333,
+      "setup_base_plus_residual_ps": 210.0,
+      "default_phi_fraction": 0.75,
+      "zero_skew_ideal_data_budget_ps": -1.666749999999979,
+      "before_cell_setup_c2q_and_wire": true
+    }
+  }
+}

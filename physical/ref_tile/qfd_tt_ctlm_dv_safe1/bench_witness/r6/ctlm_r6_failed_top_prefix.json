@@ -1,0 +1,116 @@
+{
+  "place": {
+    "cells": 14769,
+    "physical_area_um2": 1710.5547600000325,
+    "masters": [
+      [
+        "BUFx3_ASAP7_75t_R",
+        7642
+      ],
+      [
+        "BUFx6f_ASAP7_75t_R",
+        7081
+      ],
+      [
+        "BUFx10_ASAP7_75t_R",
+        45
+      ],
+      [
+        "BUFx24_ASAP7_75t_R",
+        1
+      ]
+    ]
+  },
+  "u_lpl_": {
+    "cells": 14648,
+    "physical_area_um2": 1494.508319999869,
+    "masters": [
+      [
+        "INVx1_ASAP7_75t_R",
+        3896
+      ],
+      [
+        "OA21x2_ASAP7_75t_R",
+        3896
+      ],
+      [
+        "BUFx3_ASAP7_75t_R",
+        2187
+      ],
+      [
+        "AOI22x1_ASAP7_75t_R",
+        1916
+      ],
+      [
+        "BUFx6f_ASAP7_75t_R",
+        1788
+      ]
+    ]
+  },
+  "wire": {
+    "cells": 833,
+    "physical_area_um2": 240.59916000000086,
+    "masters": [
+      [
+        "BUFx16f_ASAP7_75t_R",
+        545
+      ],
+      [
+        "BUFx10_ASAP7_75t_R",
+        150
+      ],
+      [
+        "BUFx12f_ASAP7_75t_R",
+        102
+      ],
+      [
+        "BUFx12_ASAP7_75t_R",
+        36
+      ]
+    ]
+  },
+  "other": {
+    "cells": 59,
+    "physical_area_um2": 5.744520000000008,
+    "masters": [
+      [
+        "BUFx3_ASAP7_75t_R",
+        49
+      ],
+      [
+        "BUFx6f_ASAP7_75t_R",
+        10
+      ]
+    ]
+  },
+  "output": {
+    "cells": 1916,
+    "physical_area_um2": 139.67640000000324,
+    "masters": [
+      [
+        "BUFx2_ASAP7_75t_R",
+        1916
+      ]
+    ]
+  },
+  "_": {
+    "cells": 1,
+    "physical_area_um2": 0.04374,
+    "masters": [
+      [
+        "INVx1_ASAP7_75t_R",
+        1
+      ]
+    ]
+  },
+  "input": {
+    "cells": 212,
+    "physical_area_um2": 15.454800000000056,
+    "masters": [
+      [
+        "BUFx2_ASAP7_75t_R",
+        212
+      ]
+    ]
+  }
+}
