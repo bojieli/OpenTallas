@@ -1,0 +1,180 @@
+{
+  "scope": "MODEL ONLY; no physical engine",
+  "die_um": [
+    140.4,
+    140.4
+  ],
+  "core_um": [
+    2.16,
+    2.16,
+    138.24,
+    138.24
+  ],
+  "legal_rows": 504,
+  "sites_per_row": 2520,
+  "site_um": [
+    0.054,
+    0.27
+  ],
+  "all_rows_retained": true,
+  "band": {
+    "kind": "ONE FULLWIDTH CONNECTED allocation; not FENCE or placement",
+    "row_first": 200,
+    "row_count": 104,
+    "xlo": 2.16,
+    "xhi": 138.24,
+    "ylo": 56.16,
+    "yhi": 84.24000000000001,
+    "capacity_um2": 3821.1264000000006,
+    "target_local_fill": 0.55
+  },
+  "native_area_um2": 1651.1850000000002,
+  "physical_lef_area_um2": 1651.1850000000002,
+  "cell_width_sum_um": 6115.5,
+  "whole_core_fill": 0.08916761148904005,
+  "band_fill_before_cts": 0.43211996336996333,
+  "analytical_clock_cells": 95,
+  "analytical_clock_area_um2": 16.6212,
+  "band_fill_with_clock_allowance": 0.4364697802197802,
+  "additional_area_to_55pct_um2": 433.8133200000005,
+  "actual_INT8_clock_reference_um2": 75.86,
+  "band_fill_with_INT8_reference": 0.4519727481404436,
+  "additional_area_to_55pct_with_INT8_reference_um2": 374.57452000000046,
+  "root_selected_rows": 104,
+  "native_master_dimensions_um": {
+    "A2O1A1Ixp33_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "AND2x2_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "AO21x1_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "AOI21xp33_ASAP7_75t_R": [
+      0.27,
+      0.27
+    ],
+    "AOI221xp5_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "BUFx8_ASAP7_75t_R": [
+      0.648,
+      0.27
+    ],
+    "DFFHQNx1_ASAP7_75t_R": [
+      1.08,
+      0.27
+    ],
+    "INVx1_ASAP7_75t_R": [
+      0.162,
+      0.27
+    ],
+    "MAJIxp5_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "MAJx2_ASAP7_75t_R": [
+      0.486,
+      0.27
+    ],
+    "NAND2xp33_ASAP7_75t_R": [
+      0.216,
+      0.27
+    ],
+    "NAND3xp33_ASAP7_75t_R": [
+      0.27,
+      0.27
+    ],
+    "NAND4xp25_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "NAND5xp2_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "NOR2xp33_ASAP7_75t_R": [
+      0.216,
+      0.27
+    ],
+    "NOR3xp33_ASAP7_75t_R": [
+      0.27,
+      0.27
+    ],
+    "O2A1O1Ixp33_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "OA21x2_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "OA222x2_ASAP7_75t_R": [
+      0.648,
+      0.27
+    ],
+    "OA22x2_ASAP7_75t_R": [
+      0.54,
+      0.27
+    ],
+    "OAI21xp33_ASAP7_75t_R": [
+      0.27,
+      0.27
+    ],
+    "OAI221xp5_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "OAI22xp33_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "OAI31xp33_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "OAI321xp33_ASAP7_75t_R": [
+      0.432,
+      0.27
+    ],
+    "OAI32xp33_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "OR2x2_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "OR3x1_ASAP7_75t_R": [
+      0.324,
+      0.27
+    ],
+    "OR4x1_ASAP7_75t_R": [
+      0.378,
+      0.27
+    ],
+    "XNOR2xp5_ASAP7_75t_R": [
+      0.486,
+      0.27
+    ],
+    "XOR2xp5_ASAP7_75t_R": [
+      0.486,
+      0.27
+    ]
+  },
+  "pg": {
+    "birth_binding": "a92 full-MTerm policy REQUIRED for every newly created native instance; no kit activation",
+    "terminals_before_cts": 22290,
+    "rail_pitch_um": 0.27,
+    "rail_contact": "legal-row/M1-contact MODEL only; actual terminal rectangles/vias/connectivity OPEN",
+    "actual_connected_terminals": null
+  },
+  "placement": null,
+  "cts": null,
+  "route": null
+}

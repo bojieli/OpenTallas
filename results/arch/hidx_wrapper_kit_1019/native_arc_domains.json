@@ -1,0 +1,1420 @@
+{
+  "scope": "native table facts in ps; min/max only tabulated bounds within specified axes, not earliest physical guarantees",
+  "clock_model": "sourceSTA uses ideal zero transition; out-of-table cases remain unqualified",
+  "corners": {
+    "TT": {
+      "native_libraries": [
+        {
+          "path": "out/all.lib",
+          "sha256": "7110a7a75b4d2802053266c170bed511640a53d1c85ba9e43939fd4cb8dfe817"
+        }
+      ],
+      "arcs": [
+        {
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "Y",
+          "arc": {
+            "related_pin": "A",
+            "timing_type": "combinational",
+            "timing_sense": "positive_unate"
+          },
+          "tables": [
+            {
+              "type": "cell_rise",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 22.736,
+              "tabulated_max_ps": 263.253,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "cell_fall",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 24.9376,
+              "tabulated_max_ps": 244.681,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "rise_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 13.784,
+              "tabulated_max_ps": 438.413,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 13.1181,
+              "tabulated_max_ps": 337.125,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "Y",
+          "arc": {
+            "related_pin": "A",
+            "timing_type": "combinational",
+            "timing_sense": "negative_unate"
+          },
+          "tables": [
+            {
+              "type": "cell_rise",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 6.90715,
+              "tabulated_max_ps": 305.864,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "cell_fall",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 6.00518,
+              "tabulated_max_ps": 267.697,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "rise_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 8.76233,
+              "tabulated_max_ps": 437.925,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 6.80847,
+              "tabulated_max_ps": 347.642,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "rising_edge",
+            "timing_sense": "non_unate"
+          },
+          "tables": [
+            {
+              "type": "cell_rise",
+              "template": "delay_template_7x7",
+              "axis_roles": null,
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 46.8856,
+              "tabulated_max_ps": 274.383,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "cell_fall",
+              "template": "delay_template_7x7",
+              "axis_roles": null,
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 45.3965,
+              "tabulated_max_ps": 247.907,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "rise_transition",
+              "template": "delay_template_7x7",
+              "axis_roles": null,
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 17.9011,
+              "tabulated_max_ps": 404.339,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_transition",
+              "template": "delay_template_7x7",
+              "axis_roles": null,
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 18.7451,
+              "tabulated_max_ps": 313.8,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "CLK",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "min_pulse_width",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 35.4004,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 21.9727,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "CLK",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "min_pulse_width",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 28.0762,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 25.9399,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "hold_rising",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -19.5422,
+              "tabulated_max_ps": 11.1162,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -8.57305,
+              "tabulated_max_ps": 49.9207,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "setup_rising",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -3.38166,
+              "tabulated_max_ps": 39.2443,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -38.201,
+              "tabulated_max_ps": 38.5446,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        }
+      ]
+    },
+    "FF": {
+      "native_libraries": [
+        {
+          "path": "canonical/seq_FF.lib",
+          "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+        },
+        {
+          "path": "canonical/invbuf_FF.lib",
+          "sha256": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26"
+        }
+      ],
+      "arcs": [
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "QN",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "rising_edge",
+            "timing_sense": "non_unate"
+          },
+          "tables": [
+            {
+              "type": "cell_rise",
+              "template": "delay_template_7x7",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 33.7549,
+              "tabulated_max_ps": 184.711,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "cell_fall",
+              "template": "delay_template_7x7",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 32.221,
+              "tabulated_max_ps": 174.31,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "rise_transition",
+              "template": "delay_template_7x7",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 12.6084,
+              "tabulated_max_ps": 274.709,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_transition",
+              "template": "delay_template_7x7",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 12.8815,
+              "tabulated_max_ps": 230.977,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "CLK",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "min_pulse_width",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 25.6348,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 13.4277,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "CLK",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "min_pulse_width",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 20.1416,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "mpw_constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": null
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": 20.1416,
+              "tabulated_max_ps": 321.045,
+              "values_count": 7,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "hold_rising",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -9.48992,
+              "tabulated_max_ps": 5.53786,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -9.46325,
+              "tabulated_max_ps": 31.6873,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "pin": "D",
+          "arc": {
+            "related_pin": "CLK",
+            "timing_type": "setup_rising",
+            "timing_sense": null
+          },
+          "tables": [
+            {
+              "type": "rise_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -0.230367,
+              "tabulated_max_ps": 21.2424,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_constraint",
+              "template": "constraint_template_7x7",
+              "axis_roles": {
+                "1": "constrained_pin_transition",
+                "2": "related_pin_transition"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ]
+              },
+              "tabulated_min_ps": -24.7308,
+              "tabulated_max_ps": 30.7678,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "BUFx8_ASAP7_75t_R",
+          "pin": "Y",
+          "arc": {
+            "related_pin": "A",
+            "timing_type": "combinational",
+            "timing_sense": "positive_unate"
+          },
+          "tables": [
+            {
+              "type": "cell_rise",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 17.2971,
+              "tabulated_max_ps": 181.93,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "cell_fall",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 18.1055,
+              "tabulated_max_ps": 181.287,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "rise_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 10.0397,
+              "tabulated_max_ps": 311.5,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08,
+                  92.16,
+                  184.32,
+                  368.64
+                ]
+              },
+              "tabulated_min_ps": 9.47366,
+              "tabulated_max_ps": 255.898,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        },
+        {
+          "master": "INVx1_ASAP7_75t_R",
+          "pin": "Y",
+          "arc": {
+            "related_pin": "A",
+            "timing_type": "combinational",
+            "timing_sense": "negative_unate"
+          },
+          "tables": [
+            {
+              "type": "cell_rise",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 5.14806,
+              "tabulated_max_ps": 233.942,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "cell_fall",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 4.69356,
+              "tabulated_max_ps": 207.424,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "rise_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 6.29858,
+              "tabulated_max_ps": 320.871,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            },
+            {
+              "type": "fall_transition",
+              "template": "delay_template_7x7_x1",
+              "axis_roles": {
+                "1": "input_net_transition",
+                "2": "total_output_net_capacitance"
+              },
+              "axes": {
+                "1": [
+                  5.0,
+                  10.0,
+                  20.0,
+                  40.0,
+                  80.0,
+                  160.0,
+                  320.0
+                ],
+                "2": [
+                  0.72,
+                  1.44,
+                  2.88,
+                  5.76,
+                  11.52,
+                  23.04,
+                  46.08
+                ]
+              },
+              "tabulated_min_ps": 5.3158,
+              "tabulated_max_ps": 276.932,
+              "values_count": 49,
+              "zero_transition_in_table_domain": false,
+              "earliest_physical_minimum_qualified": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

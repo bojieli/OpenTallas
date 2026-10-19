@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc6       admits  1225 GB (avail 918, growth 60, headroom 0, waiters 0/0 GB) load 35/128 running 20 disk 5720 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc8       admits  1330 GB (avail 988, growth 35, headroom 0, waiters 0/0 GB) load 13/128 running 9 disk 106 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1945229-1792445215 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-wrapper-kit-1019/tools/hbm_hidx_wrapper/geometry.py", line 15, in <module>
+    assert abs(area-1651.18308)<1e-4
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1945229-1792445215): exit 1

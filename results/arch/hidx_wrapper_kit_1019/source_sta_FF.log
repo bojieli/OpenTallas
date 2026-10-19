@@ -1,0 +1,648 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+SOURCE_DIAGNOSTIC_ONLY FF; actual wire clock and neighbor NOT QUALIFIED
+[WARNING STA-0168] unknown field nets.
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_100
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50117/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50117/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_100/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_100/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_100/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_100/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_101
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50112/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50112/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_101/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_101/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_101/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_101/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_102
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50109/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50109/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_102/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_102/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_102/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_102/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_103
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[7].own.$auto$ff.cc:337:slice$23427/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50069/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50073/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50081/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50085/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50086/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50092/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50095/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50231/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[7].own.$abc$50024$auto$blifparse.cc:397:parse_blif$50231/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_103/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_103/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_103/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_103/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_104
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49907/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49907/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_104/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_104/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_104/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_104/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_105
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49902/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49902/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_105/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_105/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_105/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_105/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_106
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49899/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49899/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_106/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_106/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_106/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_106/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+Startpoint: $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467
+            (rising edge-triggered flip-flop clocked by coupon_clk)
+Endpoint: wrapper_s1_ff_107
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                      0.000000    0.000000    0.000000 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/CLK (DFFHQNx1_ASAP7_75t_R)
+    14    8.243177   55.924118   56.963787   56.963787 ^ $flatten\\on.slice[8].own.$auto$ff.cc:337:slice$23467/QN (DFFHQNx1_ASAP7_75t_R)
+                     55.924118    0.000000   56.963787 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/B (XNOR2xp5_ASAP7_75t_R)
+     3    2.478328   44.394211   33.641373   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49859/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.394211    0.000000   90.605164 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.569010   63.237907   42.215870  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49863/Y (XNOR2xp5_ASAP7_75t_R)
+                     63.237907    0.000000  132.821030 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/B (XNOR2xp5_ASAP7_75t_R)
+     9    5.079641   72.727081   50.588726  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49871/Y (XNOR2xp5_ASAP7_75t_R)
+                     72.727081    0.000000  183.409760 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/B (XNOR2xp5_ASAP7_75t_R)
+     6    4.215322   66.135887   48.342621  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49875/Y (XNOR2xp5_ASAP7_75t_R)
+                     66.135887    0.000000  231.752380 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/B (XNOR2xp5_ASAP7_75t_R)
+     7    4.589808   68.405006   48.645851  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49876/Y (XNOR2xp5_ASAP7_75t_R)
+                     68.405006    0.000000  280.398224 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/B (XNOR2xp5_ASAP7_75t_R)
+     4    2.180041   44.172993   34.403618  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49882/Y (XNOR2xp5_ASAP7_75t_R)
+                     44.172993    0.000000  314.801849 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/D (NAND5xp2_ASAP7_75t_R)
+     4    1.936580   61.727776   33.983040  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$49885/Y (NAND5xp2_ASAP7_75t_R)
+                     61.727776    0.000000  348.784882 v $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$50021/A2 (OAI221xp5_ASAP7_75t_R)
+     1    0.683678   34.010849   27.601616  376.386505 ^ $flatten\\on.slice[8].own.$abc$49814$auto$blifparse.cc:397:parse_blif$50021/Y (OAI221xp5_ASAP7_75t_R)
+                     34.010849    0.000000  376.386505 ^ wrapper_s1_inv_107/A (INVx1_ASAP7_75t_R)
+     1    0.619256   10.357929    8.305940  384.692444 v wrapper_s1_inv_107/Y (INVx1_ASAP7_75t_R)
+                     10.357929    0.000000  384.692444 v wrapper_s1_ff_107/D (DFFHQNx1_ASAP7_75t_R)
+                                            384.692444   data arrival time
+
+                      0.000000  833.000000  833.000000   clock coupon_clk (rise edge)
+                                  0.000000  833.000000   clock network delay (ideal)
+                                -60.000000  773.000000   clock uncertainty
+                                  0.000000  773.000000   clock reconvergence pessimism
+                                            773.000000 ^ wrapper_s1_ff_107/CLK (DFFHQNx1_ASAP7_75t_R)
+                                -11.005032  761.994995   library setup time
+                                            761.994995   data required time
+---------------------------------------------------------------------------------------------
+                                            761.994995   data required time
+                                           -384.692444   data arrival time
+---------------------------------------------------------------------------------------------
+                                            377.302521   slack (MET)
+
+
+[WARNING STA-0168] unknown field nets.
+[WARNING STA-0503] report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: payload[0] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23155
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[0] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23155/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23155/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[1] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23156
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[1] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23156/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23156/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[2] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23157
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[2] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23157/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23157/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[3] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23158
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[3] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23158/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23158/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[36] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23159
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[36] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23159/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23159/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[37] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23160
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[37] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23160/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23160/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[38] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23161
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[38] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23161/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23161/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+
+Startpoint: payload[39] (input port clocked by coupon_clk)
+Endpoint: $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23162
+          (rising edge-triggered flip-flop clocked by coupon_clk)
+Path Group: coupon_clk
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 30.000000   30.000000 v input external delay
+     1    0.548002    6.021244    0.249047   30.249046 v payload[39] (in)
+                      6.021244    0.000000   30.249046 v $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23162/D (DFFHQNx1_ASAP7_75t_R)
+                                             30.249046   data arrival time
+
+                      0.000000    0.000000    0.000000   clock coupon_clk (rise edge)
+                                  0.000000    0.000000   clock network delay (ideal)
+                                 25.000000   25.000000   clock uncertainty
+                                  0.000000   25.000000   clock reconvergence pessimism
+                                             25.000000 ^ $flatten\\on.slice[0].own.$auto$ff.cc:337:slice$23162/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  8.648378   33.648380   library hold time
+                                             33.648380   data required time
+---------------------------------------------------------------------------------------------
+                                             33.648380   data required time
+                                            -30.249046   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -3.399333   slack (VIOLATED)
+
+

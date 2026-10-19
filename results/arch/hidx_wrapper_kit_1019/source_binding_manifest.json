@@ -1,0 +1,49 @@
+{
+  "verdict": "PASS",
+  "source_parent": "5af00a1ab:rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv:273,432",
+  "source_capture": "unconditional unreset s1_gc<=gc; corresponding288bits",
+  "canonical_cells_kept": 8265,
+  "canonical_cell_records_identical": true,
+  "output_ports": 2304,
+  "buf_A_Y_aliases": 0,
+  "capture_ff": 288,
+  "pred_polarity_inv": 288,
+  "selector_age_unchanged": true,
+  "native_functions": {
+    "DFFHQNx1_ASAP7_75t_R": {
+      "functions": [
+        "IQN",
+        "(!VDD) + (VSS)",
+        "(!VDD) + (VSS)"
+      ],
+      "next_state": [
+        "!D"
+      ],
+      "clocked_on": [
+        "CLK"
+      ],
+      "body_sha256": "92b61a6533e6ee39b4265e6ceed7fa26a977ac1a376951dd3f5c3a94647a6ebd"
+    },
+    "INVx1_ASAP7_75t_R": {
+      "functions": [
+        "!A",
+        "(!VDD) + (VSS)"
+      ],
+      "next_state": [],
+      "clocked_on": [],
+      "body_sha256": "8b0f8c962ae24c777de6738244d97a72a021cab4ab8357f18c6a9fac760f8e23"
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "functions": [
+        "A",
+        "(!VDD) + (VSS)"
+      ],
+      "next_state": [],
+      "clocked_on": [],
+      "body_sha256": "0bf4fa3b354fe7be332b0b792962c9b6626bfd44d763a4d8502d2d5bc08b4778"
+    }
+  },
+  "initial_sat_verdict": "WITHDRAWN: malformed Verilog stale port aliases",
+  "replacement_sat": "out/formal.log; only valid after out/roundtrip_equivalence.json",
+  "sourcebench": "original byte-identical wrapper/tb; all65537samples at II1 after2edgepriming"
+}

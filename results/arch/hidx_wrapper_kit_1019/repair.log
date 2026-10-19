@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc6       admits  1188 GB (avail 918, growth 87, headroom 0, waiters 0/0 GB) load 27/128 running 20 disk 5719 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc8       admits  1330 GB (avail 988, growth 40, headroom 0, waiters 0/0 GB) load 16/128 running 11 disk 103 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1986118-1792445599 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-wrapper-kit-1019/tools/hbm_hidx_wrapper/roundtrip.py", line 18, in <module>
+    assert a==b,'JSON/Verilog endpoint-network mismatch'
+           ^^^^
+AssertionError: JSON/Verilog endpoint-network mismatch
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1986118-1792445599): exit 1

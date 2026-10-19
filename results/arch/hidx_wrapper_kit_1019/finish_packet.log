@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc6       admits  1225 GB (avail 929, growth 71, headroom 0, waiters 0/0 GB) load 26/128 running 17 disk 5717 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc8       admits  1229 GB (avail 917, growth 38, headroom 0, waiters 0/0 GB) load 12/128 running 10 disk 101 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2034290-1792446219 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hidx-wrapper-kit-1019/tools/hbm_hidx_wrapper/binding.py", line 37, in <module>
+    fn='tools/hbm_hidx_wrapper/'+name;h=hashlib.sha256(Path(fn).read_bytes()).hexdigest();assert initial[fn]==h;sourcefiles[fn]=h
+                                                                                                 ~~~~~~~^^^^
+KeyError: 'tools/hbm_hidx_wrapper/wrapper.sv'
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2034290-1792446219): exit 1

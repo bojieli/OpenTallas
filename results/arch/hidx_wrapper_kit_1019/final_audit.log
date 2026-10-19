@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc6       admits  1221 GB (avail 926, growth 71, headroom 0, waiters 0/0 GB) load 22/128 running 19 disk 5718 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-epyc8       admits  1329 GB (avail 987, growth 51, headroom 0, waiters 0/0 GB) load 14/128 running 12 disk 101 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hidx-wrapper-kit-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2004655-1792445997 after 0 s
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2004655-1792445997): exit 0

@@ -1,0 +1,147 @@
+{
+  "scope": "uncapped per-actual-endpoint source timing queries; ideal clock and no wire RC; actual neighbor qualification OPEN",
+  "corners": {
+    "TT": {
+      "roles": {
+        "raw_input_capture": {
+          "endpoints": 600,
+          "worst": {
+            "corner": "TT",
+            "target_kind": "FF",
+            "target": "$flatten\\\\on.slice[0].own.$auto$ff.cc:337:slice$23155/D",
+            "startpoint": "payload[0] (input port clocked by coupon_clk)",
+            "role": "raw_input_capture",
+            "min_slack_ps": -3.550507,
+            "data_arrival_ps": -30.304165,
+            "data_required_ps": 33.854671,
+            "native_hold_constraint_ps": 33.854671,
+            "clock_ideal": true,
+            "wire_rc_qualified": false,
+            "neighbor_qualified": false,
+            "provisional_upstream_delay_ps": 30,
+            "upstream_external_delay_for_zero_slack_ps": 33.550507,
+            "upstream_external_delay_for_30ps_slack_ps": 63.550507,
+            "pin_earliest_for_30ps_margin_ps": 63.854671
+          },
+          "negative_endpoints": 288,
+          "below_30ps_margin": 600
+        },
+        "internal_capture": {
+          "endpoints": 2304,
+          "worst": {
+            "corner": "TT",
+            "target_kind": "FF",
+            "target": "wrapper_s1_ff_254/D",
+            "startpoint": "$flatten\\\\on.slice[0].own.$auto$ff.cc:337:slice$23154\n            (rising edge-triggered flip-flop clocked by coupon_clk)",
+            "role": "internal_capture",
+            "min_slack_ps": 49.021683,
+            "data_arrival_ps": -82.514374,
+            "data_required_ps": 33.492687,
+            "native_hold_constraint_ps": 33.492687,
+            "clock_ideal": true,
+            "wire_rc_qualified": false,
+            "neighbor_qualified": false
+          },
+          "negative_endpoints": 0,
+          "below_30ps_margin": 0
+        },
+        "registered_output_boundary": {
+          "endpoints": 2304,
+          "worst": {
+            "corner": "TT",
+            "target_kind": "OUTPUT",
+            "target": "compacted[287]",
+            "startpoint": "wrapper_s1_ff_287\n            (rising edge-triggered flip-flop clocked by coupon_clk)",
+            "role": "registered_output_boundary",
+            "min_slack_ps": 52.009544,
+            "data_arrival_ps": -107.009537,
+            "data_required_ps": 54.999996,
+            "native_hold_constraint_ps": null,
+            "clock_ideal": true,
+            "wire_rc_qualified": false,
+            "neighbor_qualified": false
+          },
+          "negative_endpoints": 0,
+          "below_30ps_margin": 0
+        }
+      },
+      "actual_ff_targets": 2904,
+      "actual_output_targets": 2304,
+      "global_endpoint_cap": null,
+      "every_endpoint_individually_queried": true
+    },
+    "FF": {
+      "roles": {
+        "raw_input_capture": {
+          "endpoints": 600,
+          "worst": {
+            "corner": "FF",
+            "target_kind": "FF",
+            "target": "$flatten\\\\on.slice[0].own.$auto$ff.cc:337:slice$23155/D",
+            "startpoint": "payload[0] (input port clocked by coupon_clk)",
+            "role": "raw_input_capture",
+            "min_slack_ps": -3.399333,
+            "data_arrival_ps": -30.249046,
+            "data_required_ps": 33.64838,
+            "native_hold_constraint_ps": 33.64838,
+            "clock_ideal": true,
+            "wire_rc_qualified": false,
+            "neighbor_qualified": false,
+            "provisional_upstream_delay_ps": 30,
+            "upstream_external_delay_for_zero_slack_ps": 33.399333,
+            "upstream_external_delay_for_30ps_slack_ps": 63.399333,
+            "pin_earliest_for_30ps_margin_ps": 63.64838
+          },
+          "negative_endpoints": 384,
+          "below_30ps_margin": 600
+        },
+        "internal_capture": {
+          "endpoints": 2304,
+          "worst": {
+            "corner": "FF",
+            "target_kind": "FF",
+            "target": "wrapper_s1_ff_252/D",
+            "startpoint": "$flatten\\\\on.slice[0].own.$auto$ff.cc:337:slice$23154\n            (rising edge-triggered flip-flop clocked by coupon_clk)",
+            "role": "internal_capture",
+            "min_slack_ps": 25.03038,
+            "data_arrival_ps": -58.518559,
+            "data_required_ps": 33.488178,
+            "native_hold_constraint_ps": 33.488178,
+            "clock_ideal": true,
+            "wire_rc_qualified": false,
+            "neighbor_qualified": false
+          },
+          "negative_endpoints": 0,
+          "below_30ps_margin": 288
+        },
+        "registered_output_boundary": {
+          "endpoints": 2304,
+          "worst": {
+            "corner": "FF",
+            "target_kind": "OUTPUT",
+            "target": "compacted[287]",
+            "startpoint": "wrapper_s1_ff_287\n            (rising edge-triggered flip-flop clocked by coupon_clk)",
+            "role": "registered_output_boundary",
+            "min_slack_ps": 21.262604,
+            "data_arrival_ps": -76.262604,
+            "data_required_ps": 54.999996,
+            "native_hold_constraint_ps": null,
+            "clock_ideal": true,
+            "wire_rc_qualified": false,
+            "neighbor_qualified": false
+          },
+          "negative_endpoints": 0,
+          "below_30ps_margin": 2304
+        }
+      },
+      "actual_ff_targets": 2904,
+      "actual_output_targets": 2304,
+      "global_endpoint_cap": null,
+      "every_endpoint_individually_queried": true
+    }
+  },
+  "raw_input_ports": 304,
+  "source_clock_domains": 1,
+  "reset_targets": 0,
+  "clock_slew_condition": "ideal zero; library-table domain qualification required, not true physical minimum"
+}
