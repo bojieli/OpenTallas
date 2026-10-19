@@ -59,8 +59,13 @@ module qfd_dv_redstn2 #(
                               kcm1 <= (MUT == 14) ? 8'd0 : cfg_kcm1; end
     // ---------------------------------------------------------------- level 7: two pairs in parallel
     wire [513:0] ns, nn;                           // the near words, SKEW edges later
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    qfd_dv_sram_delay #(.W(514), .D(SKEW), .MUT(MUT == 16)) u_sks (.ck(ck), .rst_n(rst_n), .d(rs_s[513:0]), .q(ns));
+    qfd_dv_sram_delay #(.W(514), .D(SKEW)) u_skn (.ck(ck), .rst_n(rst_n), .d(rs_n[513:0]), .q(nn));
+`else
     ot_hdc_delay #(.W(514), .D(SKEW), .RESET(1)) u_sks (.clk(ck), .rst_n(rst_n), .d(rs_s[513:0]), .q(ns));
     ot_hdc_delay #(.W(514), .D(SKEW), .RESET(1)) u_skn (.clk(ck), .rst_n(rst_n), .d(rs_n[513:0]), .q(nn));
+`endif
     wire [513:0] fs = rs_s[1027:514], fn = rs_n[1027:514];
     wire plo = fs[512] & ns[512], phi = fn[512] & nn[512];        // a pair word (every k step)
     // last-k selection: per pair stream, word index in the JB block and k index; klast_* = this block is k = kc - 1
@@ -100,7 +105,9 @@ module qfd_dv_redstn2 #(
     end endgenerate
     wire vlo = vlol[0], vhi = vhil[0];
     // MODE 0: the hi (up) block waits in an 8-word buffer and leaves on edges with no lo word
+`ifndef OT_QFD_DV_SAFE_STORAGE
     reg [511:0] hb [0:7];
+`endif
     reg [2:0]   hw, hr;
     reg [3:0]   hn;
     wire        hpop = mode == 2'd0 && !vlo && hn != 4'd0;
@@ -112,9 +119,21 @@ module qfd_dv_redstn2 #(
             if (hpop) hr <= hr + 3'd1;
             hn <= hn + ((vhi && mode == 2'd0) ? 4'd1 : 4'd0) - (hpop ? 4'd1 : 4'd0);
         end
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    wire [511:0] hb_q;
+    wire [2:0] hr_next = hr + (hpop ? 3'd1 : 3'd0);
+    qfd_dv_sram_lookahead #(.W(512)) u_hb (.ck(ck), .write(vhi && mode == 2'd0),
+        .wa({2'b0, hw}), .wd(yhi), .ra({2'b0, cfg_v ? 3'd0 : hr_next}), .q(hb_q));
+`else
     always @(posedge ck) if (vhi && mode == 2'd0) hb[hw] <= yhi;
+`endif
     wire        v7 = (mode == 2'd0) && (vlo || hpop);
-    wire [511:0] y7 = vlo ? ylo : hb[hr];
+    wire [511:0] y7 = vlo ? ylo :
+`ifdef OT_QFD_DV_SAFE_STORAGE
+        hb_q;
+`else
+        hb[hr];
+`endif
     // ---------------------------------------------------------------- level 8: lo + hi on the same edge
     wire v8_in = vlo && vhi && mode != 2'd0;
     wire [511:0] y8;
@@ -128,7 +147,9 @@ module qfd_dv_redstn2 #(
     // ---------------------------------------------------------------- level 9 (receiver): own level-8 word k + nb word k
     reg [2:0] c8, c9;
     reg [3:0] lead;                                 // own level-8 words held but not yet met (0 .. 8)
+`ifndef OT_QFD_DV_SAFE_STORAGE
     reg [511:0] h9 [0:7];
+`endif
     wire nbv = nb_i[512];
     wire own9 = v8 && mode == 2'd2;
     wire v9_in = nbv && mode == 2'd2;
@@ -140,13 +161,21 @@ module qfd_dv_redstn2 #(
             if (v9_in) c9 <= c9 + 3'd1;
             lead <= lead + (own9 ? 4'd1 : 4'd0) - (v9_in ? 4'd1 : 4'd0);
         end
+`ifdef OT_QFD_DV_SAFE_STORAGE
+    wire [511:0] h9_q;
+    wire [2:0] c9_next = c9 + (v9_in ? 3'd1 : 3'd0);
+    qfd_dv_sram_lookahead #(.W(512), .MUT(MUT == 17)) u_h9 (.ck(ck), .write(own9),
+        .wa({2'b0, c8}), .wd(y8), .ra({2'b0, cfg_v ? 3'd0 : c9_next}), .q(h9_q));
+`else
     always @(posedge ck) if (own9) h9[c8] <= y8;
+    wire [511:0] h9_q = h9[c9];
+`endif
     wire [511:0] y9;
     wire [15:0] v9l;
     wire [31:0] e9;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l9
         ot_hdc_fp32_add_lat #(.LAT(ADD_LAT), .DRST(0)) u_add (.clk(ck), .rst_n(rst_n), .valid_in(v9_in),
-            .a(h9[c9][32*l +: 32]), .b(nb_i[32*l +: 32]), .y(y9[32*l +: 32]), .err(e9[2*l +: 2]), .valid_out(v9l[l]));
+            .a(h9_q[32*l +: 32]), .b(nb_i[32*l +: 32]), .y(y9[32*l +: 32]), .err(e9[2*l +: 2]), .valid_out(v9l[l]));
     end endgenerate
     wire v9 = v9l[0];
     // ---------------------------------------------------------------- level-9 sender: own level-8 words leave on nb_o
@@ -208,4 +237,67 @@ module qfd_dv_redstn2 #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
         else fault <= fault | in_bad | fp_bad;
+endmodule
+
+// SAFE-QW-SLICE: real 1R1W storage, no data flop array. The read address is
+// the consumer's NEXT pointer; the macro's registered read is therefore the
+// current logical head throughout the next cycle. A write into the read slot
+// uses explicit forwarding and disables that read (no read/write-mode premise).
+module qfd_dv_sram_lookahead #(parameter integer W = 512, parameter integer MUT = 0) (
+    input wire ck, input wire write, input wire [4:0] wa, ra,
+    input wire [W-1:0] wd, output wire [W-1:0] q
+);
+    wire same = write && wa == ra;
+    wire [545:0] mq;
+    reg [W-1:0] bypass_data;
+    always @(posedge ck) bypass_data <= wd;
+    ot_sram_1r1w_32x546_m1 u_m (.clk(ck), .r_ce_in(!same), .r_addr_in(ra), .rd_out(mq),
+        .w_ce_in(write), .w_addr_in(wa), .wd_in({{(546-W){1'b0}}, wd}), .w_mask_in({546{1'b1}}));
+    genvar g;
+    generate for (g = 0; g < (W+31)/32; g = g + 1) begin : g_out
+        localparam integer B = ((W-32*g) < 32) ? W-32*g : 32;
+        wire sel;
+        (* keep_hierarchy = "yes" *) qfd_dv_kept_bit #(.ID(g)) u_sel (.ck(ck), .d(same && MUT == 0), .q(sel));
+        assign q[32*g +: B] = sel ? bypass_data[32*g +: B] : mq[32*g +: B];
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (W > 546 || W < 1) $fatal(1, "SRAM_LOOKAHEAD_WIDTH");
+`endif
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module qfd_dv_kept_bit #(parameter integer ID = 0) (input wire ck, d, output reg q);
+    always @(posedge ck) q <= d;
+endmodule
+
+// Exact D-edge fixed delay, one SRAM read/write per edge, pointers wrap at32.
+// Only a narrow warm-up pipeline is reset; invalid macro contents never leave.
+module qfd_dv_sram_delay #(parameter integer W = 514, parameter integer D = 14, parameter integer MUT = 0) (
+    input wire ck, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    reg [4:0] wp;
+    reg [D-2:0] valid;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin wp <= 0; valid <= 0; end
+        else begin wp <= wp + 1'b1; valid <= {valid[D-3:0], 1'b1}; end
+    wire [4:0] ra = wp - (D-1) + ((MUT != 0) ? 5'd1 : 5'd0);
+    wire [545:0] mq;
+    ot_sram_1r1w_32x546_m1 u_m (.clk(ck), .r_ce_in(rst_n), .r_addr_in(ra), .rd_out(mq),
+        .w_ce_in(rst_n), .w_addr_in(wp), .wd_in({{(546-W){1'b0}}, d}), .w_mask_in({546{1'b1}}));
+    genvar g;
+    generate for (g = 0; g < (W+31)/32; g = g + 1) begin : g_out
+        localparam integer B = ((W-32*g) < 32) ? W-32*g : 32;
+        // Separate hierarchy keeps the<=32-load valid copies through opt_merge.
+        wire warm_q;
+        (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(g)) u_v (.ck(ck), .rst_n(rst_n), .d(valid[D-2]), .q(warm_q));
+        assign q[32*g +: B] = warm_q ? mq[32*g +: B] : {B{1'b0}};
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (D < 3 || D > 31 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");
+`endif
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module qfd_dv_kept_valid #(parameter integer ID = 0) (input wire ck, rst_n, d, output reg q);
+    always @(posedge ck or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule
