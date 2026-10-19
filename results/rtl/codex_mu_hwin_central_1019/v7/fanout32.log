@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv7-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv7-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv7-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv7-1019
+ot-run: ot-epyc8       admits  1173 GB (avail 934, growth 113, headroom 0, waiters 0/0 GB) load 49/128 running 31 disk 257 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv7-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-centralv7-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3254093-1792431621 after 0 s
+textbook_lint: WARN dsdv_mu_hwin cells 49,885 flops 9,963 depth 568.4 ps util None reach None um (1.3 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=10047 root=port:ck rule=PASS: 10,047 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN high_fanout: net _54038_/Y (AND5x2_ASAP7_75t_R): 314 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _52343_/Y (OR3x1_ASAP7_75t_R): 65 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _42897_/Y (NAND2x1_ASAP7_75t_R): 60 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _56292_/Y (AND2x2_ASAP7_75t_R): 59 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3254093-1792431621): exit 0
