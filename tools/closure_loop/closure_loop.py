@@ -297,6 +297,27 @@ def disk_roots(cfg):
     return dict(cfg.get("disk_roots", {}))
 
 
+def host_bases(cfg):
+    """run roots a host may place NEW job dirs in (FLEET-NEW2 2026-10-19, coordinator: EPYC4/5 have two 2.9 TB scratch
+    NVMe volumes and only one was used): hosts.json base + alt_bases.  A job keeps the run dir it was given."""
+    return [cfg["base"]] + [b for b in cfg.get("alt_bases", []) if b != cfg["base"]]
+
+
+FLEET_REF = None      # the daemon's Fleet (set in main) -- run_base reads its cached probe
+
+
+def run_base(name):
+    """the run root (of host_bases) with the most free disk in the latest probe; the base when unknown"""
+    cfg = host_cfg(name)
+    bases = host_bases(cfg)
+    if len(bases) == 1 or FLEET_REF is None:
+        return bases[0]
+    cached = FLEET_REF.probe_cache.get(name)
+    info = cached[1] if isinstance(cached, tuple) and len(cached) > 1 else None
+    free = (info or {}).get("bases_gb") or {}
+    return max(bases, key=lambda b: (free.get(b, -1), b == bases[0]))
+
+
 def drop_retired_hosts(spec):
     """RETIRED-HOST (HOSTFIX 2026-10-17): (spec', warnings) with retired fleet hosts removed from hosts / host_require
     (retired_hosts.py; an emptied list falls back to admission) instead of an INVALID 'unknown host' verdict."""
@@ -1679,6 +1700,8 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
 """.replace("__JOBS__", repr(json.dumps(external)))
             reservation_probe = "; python3 -c " + shlex.quote(probe)
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
+        alts = host_bases(cfg)[1:]
+        dfs += "".join(f"; mkdir -p {shlex.quote(p)} && df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in alts)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
 mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
 {PAUSE_PROBE}; {STOPPED_PROBE}; {DIE_OOM_PROBE}; {EMERGENCY_PROBE}""", timeout=40)
@@ -1688,6 +1711,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             v = r.stdout.split()
             info = dict(load1=float(v[0]), mem_gb=int(v[5]), disk_gb=int(v[6]),
                         roots_gb=dict(zip(roots, (int(x) for x in v[7:7 + len(roots)]))))
+            # FLEET-NEW2: free GB per run root; admission's run-root disk = the best root (new dirs go there, run_base)
+            info["bases_gb"] = dict(zip(host_bases(cfg), [info["disk_gb"]] + [int(x) for x in v[7 + len(roots):7 + len(roots) + len(alts)]]))
+            info["disk_gb"] = max(info["bases_gb"].values())
             external_line = next((x[len("OT_EXTERNAL_JOBS "):] for x in r.stdout.splitlines() if x.startswith("OT_EXTERNAL_JOBS ")), None)
             if external and external_line is None:
                 return None  # cannot admit without measuring the declared live reservations
@@ -4810,7 +4836,7 @@ def crash(j, st, fleet, why):
         if h:
             event(j, f"{st['key']} crashed ({why}); resource-related -> retry once on {host_cfg(h)['label']}")
             j["hosts_tried"].append(h)
-            j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
+            j["host"], j["run"] = h, f"{run_base(h)}/{j['name']}"
             j["status"] = "SYNC"
             # Keep existing bench receipts; the bench chain retains its producer host/run.
             # Resume the migrated physical track at its first non-bench stage.
@@ -5189,7 +5215,7 @@ def move_to_other_host(j, fleet, spec, stl, reason):
     fleet.launched(h, spec.get("threads", 16), claim_ram(spec), j["name"])  # 2026-10-08: claim, no herd moves
     event(j, f"{reason}; moving to {host_cfg(h)['label']}")
     j["hosts_tried"].append(h)
-    j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
+    j["host"], j["run"], j["status"], j["wait"] = h, f"{run_base(h)}/{j['name']}", "SYNC", None
     j.pop("wait_since", None)
     cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
     if cal is not None and j.get("stage_idx", 0) > cal:
@@ -5341,7 +5367,7 @@ def offload_bench_location(j, fleet, st):
             ok, _ = fleet.fits(h, st["threads"], st["ram"])
         if not ok:
             continue
-        v = dict(j, host=h, run=f"{cfg['base']}/{j['name']}-bench", resume=None, checkpoint_affinity=None)
+        v = dict(j, host=h, run=f"{run_base(h)}/{j['name']}-bench", resume=None, checkpoint_affinity=None)
         # A new bench directory is not the route's executed helper directory.
         # Relocate only after read-only verification at the original location;
         # ship_helpers then installs the original committed payload, never main's
@@ -6071,7 +6097,7 @@ def step(j, fleet):
                 event(j, f"waiting for capacity: {why}")
             return
         j["wait"] = None
-        j["host"], j["run"] = h, f"{host_cfg(h)['base']}/{j['name']}"
+        j["host"], j["run"] = h, f"{run_base(h)}/{j['name']}"
         j["hosts_tried"].append(h)
         j["status"] = "SYNC"
         experiment(j, "running: sync source", register=True)
@@ -7334,8 +7360,8 @@ def migrate_checkpoint(j, dest):
     src = j["host"]
     if src == dest or (is_local(src) and is_local(dest)):
         raise ValueError("checkpoint migration requires a different host")
-    if host_cfg(src)["base"] != host_cfg(dest)["base"]:
-        raise ValueError(f"checkpoint move needs the same run root ({host_cfg(src)['base']} vs {host_cfg(dest)['base']})")
+    if os.path.dirname(j["run"].rstrip("/")) not in host_bases(host_cfg(dest)):
+        raise ValueError(f"checkpoint move needs the same run root ({j['run']} vs {host_bases(host_cfg(dest))} on {dest})")
     run = j["run"]
     j["status"] = "MIGRATING"
     save_job(j)
@@ -7423,7 +7449,7 @@ def migrate_overloaded(jobs, fleet):
         else:
             idx = cal if cal is not None else j["stage_idx"]
         j["hosts_tried"].append(h)
-        j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", stage_idx=idx, wait=None,
+        j.update(host=h, run=f"{run_base(h)}/{j['name']}", status="SYNC", stage_idx=idx, wait=None,
                  attempt=j["attempt"] + 1)
         j.pop("wait_since", None)
         fleet.launched(h, j["spec"].get("threads", 16), claim_ram(j["spec"]), j["name"])  # 2026-10-08
@@ -9315,7 +9341,8 @@ def cmd_daemon(a):
     lock.write(str(os.getpid()))
     lock.flush()
     DROP.mkdir(parents=True, exist_ok=True)
-    fleet = Fleet()
+    global FLEET_REF
+    fleet = FLEET_REF = Fleet()
     log(f"closure-loop daemon up (pid {os.getpid()}, interval {a.interval}s, state {STATE})")
     try:
         log(f"variant-keyed insertion backfill: {backfill_variants()} variants added")
@@ -10015,7 +10042,7 @@ def resume_postroute(j, to_host=None, dry=False):
         raise ValueError(f"closed attempt {c['attempt']} closed with a {eco.get('kind')} ECO but {src_host}:{src_run} "
                          f"holds no installed ECO db (6_final.odb.pre_eco missing)")
     dst_host = to_host or src_host
-    dst_run = src_run if dst_host == src_host else f"{host_cfg(dst_host)['base']}/{j['name']}"
+    dst_run = src_run if dst_host == src_host else f"{run_base(dst_host)}/{j['name']}"
     what = (f"resume {j['name']} ({j['status']}) at verdict on closed attempt {c['attempt']}'s routed state "
             f"{src_host}:{src_run}" + (f" copied to {dst_host}:{dst_run}" if dst_host != src_host else "")
             + (f" with its installed {eco.get('kind')} ECO" if eco else ""))
