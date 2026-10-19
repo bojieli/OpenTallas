@@ -5,11 +5,13 @@
 // visibility glue).  A is driven on the 425-b engine ABI with so[423:413] random and so[412] (legacy node-beat valid) 0;
 // B gets the 413-b ABI {so[424], so[411:0]}.  Every edge compares: the engine si bus (A si[633] must stay 0), the hub
 // sideband ap (A's P.V fields must stay 0), lt, the 4 e-read responses (valid, addr, data), the ctl fault, the e-read
-// fault (A er_service fault | visibility fault) against the tap fault, and the sticky strip fault af.
+// fault (A er_service fault | visibility fault) against the tap fault.  KV-ERTAP 2026-10-18: the tap registers every pin, so
+// A takes the reads 2 edges late and B's responses / er_fault are compared 2 / 1 edges late (A's af not compared).
 // Phase 1: T 8192 functional stimulus (8,192 score words, 4 LMAX, 64 Z, 2,048 e reads on 4 ports to distinct owners,
 // commits ffff, no fault) with the functional checks on B.  Phase 2: restart T 600 with random so / am / 4-port reads
 // (collisions and reads of uncommitted groups occur: both fault laws compared).
-// Mutants: +define+KVD_STMUT=1 ep_s, 2 ex_s, 3 ctl_s, 4 tap visibility check removed, 5 tap response owner one stage early.
+// Mutants: +define+KVD_STMUT=1 ep_s, 2 ex_s, 3 ctl_s, 4 tap visibility check removed, 5 tap response owner one stage early,
+// 6 tap e quad bypassing its esi pin registers (KV-ERTAP).
 `ifndef KVD_STMUT
 `define KVD_STMUT 0
 `endif
@@ -22,12 +24,17 @@ module tb_qkd_astk_strip_er_st;
  reg [539:0] aq=0;reg [35:0] am=0;reg [47:0] cal={16'(EXP_AGE),16'(Z_AGE),16'(LMAX_AGE)};
  reg [3399:0] so=0;
  reg [N-1:0] er_v=0;reg [11*N-1:0] er_addr=0;
+ // KV-ERTAP 2026-10-18: B's e-read tap registers every pin (request reaches the EP 2 edges after the read pin, response
+ // 4 edges later than the service, er_fault 1 edge later relative to the EP read).  A gets the reads 2 edges late (its EPs
+ // then read in the same cycle as B's, so si stays exact); B's responses are compared with A's 2 edges late, er_fault 1.
+ reg [N-1:0] er_v1=0,er_v2=0;reg [11*N-1:0] er_a1=0,er_a2=0;
+ always @(posedge ck)begin er_v1<=er_v;er_v2<=er_v1;er_a1<=er_addr;er_a2<=er_a1;end
  // ---- A: the current composition ------------------------------------------------------------------------------------
  wire [5071:0] si_a;wire [562:0] ap_a;wire af_a;wire [20:0] lt_a;wire [N-1:0] erv_a;wire [11*N-1:0] era_a;wire [64*N-1:0] erd_a;
  wire [15:0] com_a;wire scom_a;
  qkd_astk_native_stack_w4_cal #(.STATIC_SCHEDULE(1),.Z_STRIDE(Z_STRIDE)) ua(.cal(cal),
   .ck_c(ck),.ck_z({4{ck}}),.ck_x({32{ck}}),.ck_e({8{ck}}),.ck_r(ck),.rst_n(rst_n),.st(2'd0),
-  .aq(aq),.am(am),.ap(ap_a),.af(af_a),.lt(lt_a),.er_v(er_v),.er_addr(er_addr),.er_rsp_v(erv_a),.er_rsp_addr(era_a),.er_data(erd_a),
+  .aq(aq),.am(am),.ap(ap_a),.af(af_a),.lt(lt_a),.er_v(er_v2),.er_addr(er_a2),.er_rsp_v(erv_a),.er_rsp_addr(era_a),.er_data(erd_a),
   .exp_committed(com_a),.score_committed(scom_a),
   .so0(so[0+:425]),.so1(so[425+:425]),.so2(so[850+:425]),.so3(so[1275+:425]),
   .so4(so[1700+:425]),.so5(so[2125+:425]),.so6(so[2550+:425]),.so7(so[2975+:425]),
@@ -50,14 +57,16 @@ module tb_qkd_astk_strip_er_st;
  reg ret_b=0;
  wire obs_b=af_b|erf_b;
  always @(posedge ck or negedge rst_n)if(!rst_n)ret_b<=0;else if(obs_b)ret_b<=1;
- wire erf_a=ua.er_fault|ua.visibility_fault;
+ wire erf_a0=ua.er_fault|ua.visibility_fault;
+ reg erf_a=0;reg [N-1:0] erv_a1=0,erv_ad=0;reg [11*N-1:0] era_a1=0,era_ad=0;reg [64*N-1:0] erd_a1=0,erd_ad=0;
+ always @(posedge ck)begin erf_a<=erf_a0;erv_a1<=erv_a;erv_ad<=erv_a1;era_a1<=era_a;era_ad<=era_a1;erd_a1<=erd_a;erd_ad<=erd_a1;end
  always @(negedge ck)if(rst_n)begin
   cycle=cycle+1;
-  if(si_bw!==si_a || ap_b!==ap_a[42:0] || ap_a[562:43]!==0 || lt_b!==lt_a || erv_b!==erv_a || era_b!==era_a || erd_b!==erd_a ||
-     af_b!==ua.ctl_fault || erf_b!==erf_a || (obs_b|ret_b)!==af_a || ua.legacy_fault!==0)begin
+  if(si_bw!==si_a || ap_b!==ap_a[42:0] || ap_a[562:43]!==0 || lt_b!==lt_a || erv_b!==erv_ad || era_b!==era_ad || erd_b!==erd_ad ||
+     af_b!==ua.ctl_fault || erf_b!==erf_a || ua.legacy_fault!==0)begin
    mism=mism+1;
    if(mism<6)$display("MISMATCH cycle=%0d si=%b ap=%b apPV0=%b lt=%b er=%b%b%b ctlf=%b/%b erf=%b/%b af=%b/%b",cycle,si_bw===si_a,
-     ap_b===ap_a[42:0],ap_a[562:43]===0,lt_b===lt_a,erv_b===erv_a,era_b===era_a,erd_b===erd_a,af_b,ua.ctl_fault,erf_b,erf_a,obs_b|ret_b,af_a);
+     ap_b===ap_a[42:0],ap_a[562:43]===0,lt_b===lt_a,erv_b===erv_ad,era_b===era_ad,erd_b===erd_ad,af_b,ua.ctl_fault,erf_b,erf_a,obs_b|ret_b,af_a);
   end
  end
  // ---- phase-1 functional checks on B ---------------------------------------------------------------------------------
