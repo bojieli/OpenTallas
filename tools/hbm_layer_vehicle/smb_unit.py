@@ -417,7 +417,8 @@ SVG_SRC = ["rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
 
 def build(work: Path, bundle: Path, defines):
     tag = "_".join(d.replace("=", "") for d in defines) or "base"
-    obj = work / f"obj_{tag}"
+    rev = (ROOT / "REV").read_text().strip()[:9] if (ROOT / "REV").exists() else "wt"
+    obj = work / f"obj_{tag}_{rev}"
     exe = obj / "Vtb_hbm_svg_rel_sm"
     if exe.exists():
         return exe
