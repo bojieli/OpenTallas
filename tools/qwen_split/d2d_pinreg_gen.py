@@ -81,8 +81,8 @@ def main():
          '// producer capture latency is +2 per EXTERNAL port (slot out + payload in); the compute STATUS codec\n// (port 2) is inside the core and keeps 1; see the generator docstring for the cost.  TXDP (PR = 1) is a REQUIRED\n// parameter: the compiler emits it with the die seam stages (the producers sit behind die relays / landings).',
          wrapper('qfd_d2d_static', 'parameter integer MUT = 0', pc,
                  ".MUT(MUT), .TXDP(PR ? TXDP : {8'd2, 8'd1, 8'd2, 8'd1})"),
-         wrapper('qkd_d2d_static', 'parameter integer MUT = 0, parameter integer NL = 2', pk,
-                 ".MUT(MUT), .NL(NL), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})")]
+         wrapper('qkd_d2d_static', 'parameter integer MUT = 0, parameter integer NL = 2, parameter integer SAFE_RC = 0', pk,
+                 ".MUT(MUT), .NL(NL), .SAFE_RC(SAFE_RC), .TXDP(PR ? TXDP : {8'd1, 8'd1, 8'd2, 8'd1})")]
     SRC.write_text(t + '\n' + '\n\n'.join(w) + '\n')
     print('pinreg wrappers:', len(pc), 'compute ports,', len(pk), 'KV ports')
 
