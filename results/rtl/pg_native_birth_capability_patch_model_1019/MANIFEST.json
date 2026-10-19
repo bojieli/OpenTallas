@@ -1,0 +1,106 @@
+{
+  "native_source": "6cb3f2b704",
+  "status": "PROPOSAL_UNCOMPILED_INCOMPLETE_NATIVE_INTEGRATION",
+  "files": {
+    "BUILD_INVENTORY.txt": {
+      "bytes": 1128,
+      "sha256": "6be952293ab30eedbf8fa7c035c5ad995d996ff48805e02f60ebe9ef089a8f6c"
+    },
+    "FLEET_INVENTORY.txt": {
+      "bytes": 516,
+      "sha256": "ea0f978969617b5b7a4114d089a4cc82f5803b76ae1f7ab1a92afd3bf6fec7a3"
+    },
+    "README.md": {
+      "bytes": 13475,
+      "sha256": "b846f8f57aef9341ebc588386cd7d8388040924585d09f9cc6ac1a6bec48df4e"
+    },
+    "proposal/NativePgBirthGuard.cc": {
+      "bytes": 5277,
+      "sha256": "056bb96c4635c7de70c9e0e9e75bf2f2c2961866c5ccc1b03f1e841944386372"
+    },
+    "proposal/NativePgBirthGuard.hh": {
+      "bytes": 2057,
+      "sha256": "f410979adc200edb8a36e0d30acdce2a80b347e3954ade8a96423e651d12bb7c"
+    },
+    "proposal/native-boundaries.patch": {
+      "bytes": 1452,
+      "sha256": "1296aa3284fc85b7b835f2c1c5f0f121a9b7bce7d30800c2496a003d60eeeb7f"
+    },
+    "upstream/CMakeLists.txt": {
+      "bytes": 11741,
+      "sha256": "29d2f1c2f3cf12cf63c923bf341f48d63de56a270654a6c2edc5c3b9366b5f46"
+    },
+    "upstream/Dockerfile": {
+      "bytes": 2691,
+      "sha256": "edc281c0eaf80a8d9b155b56caa203e80c09d07eb8f3f3c0e20a7ac5303bbaeb"
+    },
+    "upstream/etc__DependencyInstaller.sh": {
+      "bytes": 74667,
+      "sha256": "5b7ca14ed1ca27d1878b119a2826c612ae2ced1f295a59ff3b00f1fdf7f18db9"
+    },
+    "upstream/include__ord__OpenRoad.hh": {
+      "bytes": 7689,
+      "sha256": "b0e29ff69cd83fdeb0ba67bd754ed6d93df5258b89718080ff568ae223888401"
+    },
+    "upstream/src__CMakeLists.txt": {
+      "bytes": 11532,
+      "sha256": "0701d0a2f2ab5720b165c7c1e393b957070ffdc5f8746577ade2ec29e03edc2d"
+    },
+    "upstream/src__OpenRoad.cc": {
+      "bytes": 22097,
+      "sha256": "4fa9a74b97f549788dcff7534bf374fdc80eaf8b200467e0dfd52c6e0adb1cf0"
+    },
+    "upstream/src__OpenRoad.i": {
+      "bytes": 11842,
+      "sha256": "8f0271ed04d2f2e59daf05af28e52d8fe2d46b6839e04341c7c6bc5ec83c5127"
+    },
+    "upstream/src__OpenRoad.tcl": {
+      "bytes": 19302,
+      "sha256": "f65e0abbe01522b024c5843064a60f5ad8259224f1656dbe72c1e00a0c0afd41"
+    },
+    "upstream/src__Timing.cc": {
+      "bytes": 19484,
+      "sha256": "884a8fb45530b85c685797ccaf7d927e387398ef72891ab611bb017c79583977"
+    },
+    "upstream/src__est__CMakeLists.txt": {
+      "bytes": 161,
+      "sha256": "853ec7273e25bd651c1267d2eaf718c1cc41a737509b096806aba45830d625d7"
+    },
+    "upstream/src__est__include__est__EstimateParasitics.h": {
+      "bytes": 11721,
+      "sha256": "96e1e8921cff2abd2451bca6045af32bdd709266415bbff4b76def543fcb1ac0"
+    },
+    "upstream/src__odb__include__odb__db.h": {
+      "bytes": 283480,
+      "sha256": "e028a5a79de0cde00ba307fdcbc2d3e6eb6452159c72501f0f43a0e48b4fdb82"
+    },
+    "upstream/src__odb__src__db__CMakeLists.txt": {
+      "bytes": 4966,
+      "sha256": "5457e12e93c7f435cde7feff27f26ca974aeaeedb3759f7ea5a6e0132ef7b4cf"
+    },
+    "upstream/src__odb__src__db__dbBlockCallBackObj.cpp": {
+      "bytes": 788,
+      "sha256": "e99b3f140092e969eb215529b371e89463636068aa7f44ed927be63a810e5988"
+    },
+    "upstream/src__odb__src__db__dbITerm.cpp": {
+      "bytes": 23143,
+      "sha256": "606e2fa82007fc70f208afdf1c0803a7a755babce1e837ca6802b831dd9b921e"
+    },
+    "upstream/src__odb__src__db__dbMTerm.cpp": {
+      "bytes": 12492,
+      "sha256": "6cde9e65fc803bab667fdc06065a3db4dc41b22bf503b4648c8dc39e29c6b7b7"
+    },
+    "upstream/src__odb__src__db__dbMaster.cpp": {
+      "bytes": 20374,
+      "sha256": "53987f7a7bd144868d30d0fac6f3c1fd334f7592b76144a8d96f0f64c6dbbb14"
+    },
+    "upstream/src__odb__src__db__dbNet.cpp": {
+      "bytes": 80348,
+      "sha256": "f6c7581c87dc5e233e1bd166d56d6dbdb1ba889a8a859e0bfd2bf0494a689a46"
+    },
+    "upstream/src__odb__src__db__dbRegion.cpp": {
+      "bytes": 9209,
+      "sha256": "ba16feea35fee50547c9225640f3c7d003e84c4dc405de80ab818e379f9dc11f"
+    }
+  }
+}

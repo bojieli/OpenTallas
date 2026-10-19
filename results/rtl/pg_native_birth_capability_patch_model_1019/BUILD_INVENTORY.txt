@@ -1,0 +1,28 @@
+2026-10-19T23:17:59.562076+00:00
+READ ONLY shell inventory; no OpenROAD/compiler execution.
+total 16
+drwxr-xr-x 1 root root 4096 Aug 27 14:41 .
+drwxr-xr-x 1 root root 4096 Aug 27 14:23 ..
+drwxr-xr-x 5 root root 4096 Aug 27 14:21 AutoTuner
+drwxr-xr-x 6 root root 4096 Aug 27 14:41 install
+drwxr-xr-x   6 root root  4096 Aug 27 14:41 /OpenROAD-flow-scripts/tools/install
+drwxr-xr-x 129 root root 12288 Jul 21 19:03 /usr/include/boost
+lrwxrwxrwx   1 root root     6 Mar 25  2022 /usr/include/tcl -> tcl8.6
+drwxr-xr-x   3 root root  4096 Jul 21 19:03 /usr/include/tcl8.6
+/usr/local/bin/cmake
+/usr/local/bin/swig
+/usr/local/bin/wrapped-cc/g++
+/usr/bin/make
+176K	/OpenROAD-flow-scripts/tools/AutoTuner
+318M	/OpenROAD-flow-scripts/tools/install
+/usr/bin/g++
+/usr/bin/ccache
+/usr/bin/docker
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/md0        7.3T  758G  6.2T  11% /
+tmpfs           504G  1.6G  503G   1% /tmp
+               total        used        free      shared  buff/cache   available
+Mem:            1007         185         471           1         359         822
+Swap:            135           0         135
+
+RC=0

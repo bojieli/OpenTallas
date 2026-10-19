@@ -1,0 +1,48 @@
+--- a/src/odb/include/odb/dbBlockCallBackObj.h
++++ b/src/odb/include/odb/dbBlockCallBackObj.h
+@@ -48,6 +48,10 @@
+   virtual ~dbBlockCallBackObj() { removeOwner(); }
+ 
+   // dbInst Start
++  // Proposal: begin/end guard boundaries around ALL existing creation callbacks.
++  virtual void inDbInstCreateBegin(dbInst*) {}
++  virtual void inDbInstCreateEnd(dbInst*) {}
++  virtual void inDbInstDoNotTouchBefore(dbInst*) {}
+   virtual void inDbInstCreate(dbInst*) {}
+   virtual void inDbInstDestroy(dbInst*) {}
+   virtual void inDbInstPlacementStatusBefore(dbInst*, const dbPlacementStatus&)
+--- a/src/odb/src/db/dbInst.cpp
++++ b/src/odb/src/db/dbInst.cpp
+@@ -759,6 +759,12 @@
+ void dbInst::setDoNotTouch(bool v)
+ {
+   _dbInst* inst = (_dbInst*) this;
++  if (v && !inst->flags_.dont_touch) {
++    _dbBlock* block = (_dbBlock*) inst->getOwner();
++    for (dbBlockCallBackObj* cb : block->callbacks_) {
++      cb->inDbInstDoNotTouchBefore(this);
++    }
++  }
+   inst->flags_.dont_touch = v;
+ }
+ 
+@@ -1415,6 +1421,9 @@
+     region->addInst((dbInst*) inst_impl);
+   }
+   for (dbBlockCallBackObj* cb : block->callbacks_) {
++    cb->inDbInstCreateBegin((dbInst*) inst_impl);
++  }
++  for (dbBlockCallBackObj* cb : block->callbacks_) {
+     cb->inDbInstCreate((dbInst*) inst_impl);
+   }
+ 
+@@ -1425,6 +1434,9 @@
+     }
+   }
+ 
++  for (dbBlockCallBackObj* cb : block->callbacks_) {
++    cb->inDbInstCreateEnd((dbInst*) inst_impl);
++  }
+   return (dbInst*) inst_impl;
+ }
+ 
