@@ -4,7 +4,10 @@
 // 8 leaves + E glue tile) against the flat ot_hbm_idx_score_quarter_static, identical stimulus, EVERY edge compared:
 // new.score / new.fault == old one edge earlier (the W tile's registered output stage = +1 on every leaf input).
 // Two frames (query load of all 32 heads, key beats with partial last beat, keep bitmap, different rank / first_ord),
-// strap HALF from -GHALF. PASS requires >= 1 score event per beat, non-trivial values, no fault on the old design.
+// strap HALF from -GHALF. Reset defines only score.ev and fault (payload flops have no reset).
+// During reset assert those controls; from the FIRST rst_n-high edge compare the ENTIRE score bus,
+// including idle cycles and reset-release relay cycles, at +1. No warmup window or valid-only mask.
+// PASS requires one score event per beat, finite nonzero scores on both rows, no score-lane faults.
 module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0)();
  localparam integer RANK_W=$clog2(TP);
  reg clk=0; always #1 clk=~clk;
@@ -23,25 +26,45 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
   .keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.beat_v(beat_v),
   .beat_index(beat_index),.key_lines(key_lines),.score(sn),.fault(fn));
  reg [305:0] so_d; reg fo_d; integer cyc=0, errs=0, evs=0, nz=0, oldfault_cyc=-1, newev=0;
+ integer nz_row0=0, nz_row1=0, lane_faults=0;
+ bit finite_frame=0;
  always @(posedge clk) begin
   so_d<=so; fo_d<=fo; cyc<=cyc+1;
   if (cyc>2) begin
-   if (sn!==so_d || fn!==fo_d) begin
+   if ((!rst_n && ({sn[0],so[0],fn,fo} !== 4'b0)) ||
+       (rst_n && (sn!==so_d || fn!==fo_d))) begin
     errs<=errs+1;
     if (errs<8) $display("QSPLIT_BAD cyc%0d new{ev%0d last%0d f%0d idx0 %05h val0 %04h} old_d1{ev%0d last%0d f%0d idx0 %05h val0 %04h}",
       cyc, sn[0], sn[1], fn, sn[305-:20], sn[145-:16], so_d[0], so_d[1], fo_d, so_d[305-:20], so_d[145-:16]);
    end
-   if (so[0]) begin evs<=evs+1; if (so[145:18]!=0) nz<=nz+1; end
+   if (so[0]) begin
+    evs<=evs+1;
+    if (finite_frame && so[9:2] != 0) lane_faults<=lane_faults+1;
+    for (int l=0;l<8;l++) begin
+     if (finite_frame && so[10+l] && so[18+16*l+:16]!=0 && so[18+16*l+:16]!=16'hff80 && so[18+16*l+7+:8]!=8'hff) begin
+      nz<=nz+1;
+      if(l<4) nz_row0<=nz_row0+1; else nz_row1<=nz_row1+1;
+     end
+    end
+   end
    if (sn[0]) newev<=newev+1;
    if (fo && oldfault_cyc<0) oldfault_cyc<=cyc;
   end
  end
  function automatic [511:0] r512(); for (int i=0;i<16;i++) r512[i*32+:32]=$urandom; endfunction
- task automatic frame(input integer nb, input integer nk, input integer fo_v, input integer rk_v, input bit kep);
-  @(negedge clk); rank=RANK_W'(rk_v); first_ord=11'(fo_v); nkeys=12'(nk); keep_en=kep;
+ task automatic frame(input integer nb, input integer nk, input integer fo_v, input integer rk_v, input bit kep, input bit bounded);
+  @(negedge clk); finite_frame=bounded; rank=RANK_W'(rk_v); first_ord=11'(fo_v); nkeys=12'(nk); keep_en=kep;
   for (int i=0;i<6;i++) keep_bitmap[i*32+:32]=$urandom;
   for (int h=0;h<32;h++) begin
-   ql_v=1; ql_head=8'(h); ql_codes=r512(); ql_sc=$urandom; ql_w=16'($urandom); @(negedge clk);
+   ql_v=1; ql_head=8'(h); ql_codes=r512(); ql_sc=$urandom; ql_w=16'($urandom);
+   if(bounded) begin
+   // Positive E2M1 codes, UE8M0 scales near unity and bounded BF16 weight.
+   // Arbitrary raw scale/weight bits mostly test arithmetic refusal/zeroing.
+   for(int q=0;q<128;q++) ql_codes[q*4+:4]=4'(1+($urandom%7));
+   for(int q=0;q<4;q++) ql_sc[q*8+:8]=8'(125+($urandom%3));
+   ql_w=16'h3e80+16'(h*3);
+   end
+   @(negedge clk);
   end
   ql_v=0; repeat (8) @(negedge clk);
   for (int b=0;b<nb;b++) begin
@@ -49,6 +72,10 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
    for (int j=0;j<4;j++) begin
     key_lines[j*1099]=1'b1; key_lines[j*1099+1+:10]=10'((4*HALF+j)*128+b);
     for (int w=0;w<34;w++) key_lines[j*1099+11+w*32+:32]=$urandom;
+    if(bounded) for(int k=0;k<2;k++) begin
+     for(int q=0;q<128;q++) key_lines[j*1099+11+k*544+q*4+:4]=4'(1+($urandom%7));
+     for(int q=0;q<4;q++) key_lines[j*1099+11+k*544+512+q*8+:8]=8'(125+((j+k+b+q)%3));
+    end
    end
    @(negedge clk);
   end
@@ -57,11 +84,13 @@ module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0
  initial begin
   void'($urandom(32'h1d5c0de + HALF));
   repeat (10) @(negedge clk); rst_n=1; repeat (40) @(negedge clk);
-  frame(20, 16*20-5, 3, 7, 0);
-  frame(9, 16*9-13, 41, 191 % TP, 1);
+  frame(20, 16*20-5, 3, 7, 0, 0);
+  frame(9, 16*9-13, 41, 191 % TP, 1, 0);
+  frame(20, 16*20-5, 19, 73 % TP, 0, 1);
   repeat (20) @(negedge clk);
   $display("IDX_QUARTER_SPLIT half%0d errors%0d old_events%0d nonzero%0d new_events%0d old_first_fault_cyc%0d", HALF, errs, evs, nz, newev, oldfault_cyc);
-  if (errs==0 && evs>=20 && nz>0 && newev==evs && oldfault_cyc<0) begin $display("IDX_QUARTER_SPLIT PASS"); $finish; end
+  $display("IDX_QUARTER_SPLIT coverage row0_nonzero_events%0d row1_nonzero_events%0d lane_fault_events%0d",nz_row0,nz_row1,lane_faults);
+  if (errs==0 && evs==49 && nz_row0>0 && nz_row1>0 && lane_faults==0 && newev==evs && oldfault_cyc<0) begin $display("IDX_QUARTER_SPLIT PASS"); $finish; end
   $display("IDX_QUARTER_SPLIT FAIL"); $stop;
  end
 endmodule
