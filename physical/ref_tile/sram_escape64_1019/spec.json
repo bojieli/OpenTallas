@@ -1,93 +1,116 @@
 {
- "name": "sram_escape64_1019",
- "top": "ot_sram_escape64_1019",
- "kind": "tile",
- "sources": [
-  "rtl/test/sram_pin_access_1019/escape_harness.sv",
-  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v"
- ],
- "clock_port": "clk",
- "reset_ports": [
-  "rst_n"
- ],
- "outline": {
-  "w": 108,
-  "h": 108,
-  "exact": true
- },
- "pins": {
-  "N": [
-   "wd_in"
+  "name": "sram_escape64_1019",
+  "top": "ot_sram_escape64_1019",
+  "kind": "tile",
+  "sources": [
+    "rtl/test/sram_pin_access_1019/escape_harness.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v"
   ],
-  "S": [
-   "w_mask_in"
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
   ],
-  "E": [
-   "rd_out"
+  "outline": {
+    "w": 108,
+    "h": 108,
+    "exact": true
+  },
+  "pins": {
+    "N": [
+      "wd_in"
+    ],
+    "S": [
+      "w_mask_in"
+    ],
+    "E": [
+      "rd_out"
+    ],
+    "W": [
+      "clk",
+      "rst_n",
+      "r_ce_in",
+      "w_ce_in",
+      "r_addr_in",
+      "w_addr_in"
+    ]
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+      "count": 1,
+      "at": [
+        43.2,
+        43.2
+      ],
+      "inst": "u_mem"
+    }
   ],
-  "W": [
-   "clk",
-   "rst_n",
-   "r_ce_in",
-   "w_ce_in",
-   "r_addr_in",
-   "w_addr_in"
-  ]
- },
- "macros": [
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
-   "count": 1,
-   "at": [
-    43.2,
-    43.2
-   ],
-   "inst": "u_mem"
+  "layer_cap": "M5",
+  "recipe": 4,
+  "hold_budget": "die",
+  "pin_regs": {
+    "enable": true
+  },
+  "reset_landing": {
+    "enable": true
+  },
+  "keep_pin_regs": true,
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "macro_halo_um": 10.8,
+    "hold_margin_ns": 0.03,
+    "io_hold_margin_ns": 0.03,
+    "pin_min_tracks": 3
+  },
+  "job": {
+    "owner": "Codex:SRAM-PIN-ACCESS",
+    "branch": "codex/sram-escape-collect-1019",
+    "tag": "coupon",
+    "purpose": "External native-pin escape coupon, not production client or die qualification. Actual64bit dualclock SRAM preserved; native W/E103 contacts clustered0.096pitch. Paid108square/43.2lattice with>32umedgeclearance; generatedpinregisters/resetlanding. Fullface5.952/um is not claimed as access proof. Need routedPG/via/DRC after gate rootreview. Both clocks synchronous coupon; no CDCclaim.",
+    "extra_paths": [
+      "rtl/test/sram_pin_access_1019",
+      "tools/mem_compiler",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+      "results/arch/sram_pin_access_1019"
+    ],
+    "benches": [
+      {
+        "name": "escape_functional",
+        "cmd": "verilator --binary --timing -Wno-fatal --top-module tb_escape -GMUT=0 --Mdir {RUN}/obj_0 -o sim_escape rtl/test/sram_pin_access_1019/tb_escape.sv rtl/test/sram_pin_access_1019/escape_harness.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v > {RUN}/build_0.log 2>&1 && {RUN}/obj_0/sim_escape",
+        "expect": "pass",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "escape_mask_mutant",
+        "cmd": "verilator --binary --timing -Wno-fatal --top-module tb_escape -GMUT=1 --Mdir {RUN}/obj_1 -o sim_escape rtl/test/sram_pin_access_1019/tb_escape.sv rtl/test/sram_pin_access_1019/escape_harness.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v > {RUN}/build_1.log 2>&1 && {RUN}/obj_1/sim_escape",
+        "expect": "fail",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "ESCAPE_MISMATCH",
+        "fail_witness": "results/arch/sram_escape_collect_1019/run_1.log"
+      }
+    ],
+    "views_to": "physical/ref_tile/sram_escape64_1019/views",
+    "record_to": "results/rtl/ref_tile/sram_escape64_1019"
+  },
+  "structural_change": "New actual narrow bank geometry/Lib/model, no edit to oldwide masters; coupon prices native external access.",
+  "params": {},
+  "children": [],
+  "inter": [],
+  "inhold": false,
+  "outhold": false,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
   }
- ],
- "layer_cap": "M5",
- "recipe": 4,
- "hold_budget": "die",
- "pin_regs": {
-  "enable": true
- },
- "reset_landing": {
-  "enable": true
- },
- "keep_pin_regs": true,
- "route": {
-  "pd": 0.5,
-  "period_ps": 833.333,
-  "threads": 4,
-  "peak_ram_gb": 16,
-  "macro_halo_um": 10.8,
-  "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.03,
-  "pin_min_tracks": 3
- },
- "job": {
-  "owner": "Codex:SRAM-PIN-ACCESS",
-  "branch": "codex/sram-pin-access-1019",
-  "tag": "coupon",
-  "purpose": "External native-pin escape coupon, not production client or die qualification. Actual64bit dualclock SRAM preserved; native W/E103 contacts clustered0.096pitch. Paid108square/43.2lattice with>32umedgeclearance; generatedpinregisters/resetlanding. Fullface5.952/um is not claimed as access proof. Need routedPG/via/DRC after gate rootreview. Both clocks synchronous coupon; no CDCclaim.",
-  "extra_paths": [
-   "rtl/test/sram_pin_access_1019",
-   "tools/mem_compiler",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
-   "results/arch/sram_pin_access_1019"
-  ],
-  "benches": [],
-  "views_to": "physical/ref_tile/sram_escape64_1019/views",
-  "record_to": "results/rtl/ref_tile/sram_escape64_1019"
- },
- "structural_change": "New actual narrow bank geometry/Lib/model, no edit to oldwide masters; coupon prices native external access.",
- "params": {},
- "children": [],
- "inter": [],
- "inhold": false,
- "outhold": false,
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- }
 }

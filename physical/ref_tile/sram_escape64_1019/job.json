@@ -1,92 +1,114 @@
 {
- "name": "sram_escape64_1019-coupon-COMMIT",
- "block": "ot_sram_escape64_1019",
- "ref_tile": true,
- "owner": "Codex:SRAM-PIN-ACCESS",
- "purpose": "External native-pin escape coupon, not production client or die qualification. Actual64bit dualclock SRAM preserved; native W/E103 contacts clustered0.096pitch. Paid108square/43.2lattice with>32umedgeclearance; generatedpinregisters/resetlanding. Fullface5.952/um is not claimed as access proof. Need routedPG/via/DRC after gate rootreview. Both clocks synchronous coupon; no CDCclaim.",
- "threads": 4,
- "peak_ram_gb": 16,
- "source": {
-  "branch": "codex/sram-pin-access-1019",
-  "commit": "COMMIT",
-  "extra_paths": [
-   "rtl/test/sram_pin_access_1019",
-   "tools/mem_compiler",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
-   "results/arch/sram_pin_access_1019"
-  ]
- },
- "stages": {
-  "bench": [
-   {
-    "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_sram_escape64_1019 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/test/sram_pin_access_1019/escape_harness.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v && echo lint-ok",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
+  "name": "sram_escape64_1019-coupon-COMMIT",
+  "block": "ot_sram_escape64_1019",
+  "ref_tile": true,
+  "owner": "Codex:SRAM-PIN-ACCESS",
+  "purpose": "External native-pin escape coupon, not production client or die qualification. Actual64bit dualclock SRAM preserved; native W/E103 contacts clustered0.096pitch. Paid108square/43.2lattice with>32umedgeclearance; generatedpinregisters/resetlanding. Fullface5.952/um is not claimed as access proof. Need routedPG/via/DRC after gate rootreview. Both clocks synchronous coupon; no CDCclaim.",
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/sram-escape-collect-1019",
+    "commit": "COMMIT",
+    "extra_paths": [
+      "rtl/test/sram_pin_access_1019",
+      "tools/mem_compiler",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+      "results/arch/sram_pin_access_1019"
     ]
-   }
-  ],
-  "calibrate": {
-   "enabled": false,
-   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
-  "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/sram_escape64_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/sram_escape64_1019/kit.env {LABEL} {RUN}/routes",
-   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
-   "logs": [
-    "{RUN}/routes/{LABEL}/flow.log"
-   ],
-   "threads": 4,
-   "peak_ram_gb": 16
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_sram_escape64_1019 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/test/sram_pin_access_1019/escape_harness.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "escape_functional",
+        "cmd": "verilator --binary --timing -Wno-fatal --top-module tb_escape -GMUT=0 --Mdir {RUN}/obj_0 -o sim_escape rtl/test/sram_pin_access_1019/tb_escape.sv rtl/test/sram_pin_access_1019/escape_harness.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v > {RUN}/build_0.log 2>&1 && {RUN}/obj_0/sim_escape",
+        "expect": "pass",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "escape_mask_mutant",
+        "cmd": "verilator --binary --timing -Wno-fatal --top-module tb_escape -GMUT=1 --Mdir {RUN}/obj_1 -o sim_escape rtl/test/sram_pin_access_1019/tb_escape.sv rtl/test/sram_pin_access_1019/escape_harness.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v > {RUN}/build_1.log 2>&1 && {RUN}/obj_1/sim_escape",
+        "expect": "fail",
+        "threads": 2,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "ESCAPE_MISMATCH",
+        "fail_witness": "results/arch/sram_escape_collect_1019/run_1.log"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/sram_escape64_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/sram_escape64_1019/kit.env {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 4,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/sram_escape64_1019 --out {RUN}/record/views/ot_sram_escape64_1019 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+    }
   },
-  "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/sram_escape64_1019 --out {RUN}/record/views/ot_sram_escape64_1019 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
-  }
- },
- "verdict": {
-  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
-  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
-  "checks": [
-   {
-    "name": "ttb_routed_at_TC",
-    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
-   }
-  ],
-  "post_sdc": [
-   "physical/ref_tile/sram_escape64_1019/signoff.sdc",
-   "physical/common_flow/link_budget_consistent.sdc"
-  ],
-  "macros": [
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
-  ]
- },
- "hold_eco": {
-  "enabled": true,
-  "session": "mm",
-  "reason": "ref_tile: corrected FF hold flow"
- },
- "budget": {
-  "enabled": false,
-  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
- },
- "record": [
-  {
-   "from": "{RUN}/record/views",
-   "to": "physical/ref_tile/sram_escape64_1019/views"
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/ref_tile/sram_escape64_1019/signoff.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+    ]
   },
-  {
-   "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/sram_escape64_1019/sram_escape64_1019-coupon-COMMIT"
-  }
- ],
- "cycles_added": 0,
- "route_hold_corners": "mm",
- "route_hold_margin_ns": 0.03,
- "route_corner": "TC",
- "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null,
- "structural_change": "New actual narrow bank geometry/Lib/model, no edit to oldwide masters; coupon prices native external access."
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/ref_tile/sram_escape64_1019/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/ref_tile/sram_escape64_1019/sram_escape64_1019-coupon-COMMIT"
+    }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "New actual narrow bank geometry/Lib/model, no edit to oldwide masters; coupon prices native external access."
 }
