@@ -298,7 +298,7 @@
   "benches": [
    {
     "name": "grp_h_lockstep",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m0 grp_h 0",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m0 grp_h 0",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -311,7 +311,7 @@
    },
    {
     "name": "grp_h_mut1",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m1 grp_h 1",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m1 grp_h 1",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -324,7 +324,7 @@
    },
    {
     "name": "grp_h_mut2",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m2 grp_h 2",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m2 grp_h 2",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -337,7 +337,7 @@
    },
    {
     "name": "grp_h_mut3",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m3 grp_h 3",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m3 grp_h 3",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -350,7 +350,7 @@
    },
    {
     "name": "grp_h_mut4",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m4 grp_h 4",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m4 grp_h 4",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -363,7 +363,7 @@
    },
    {
     "name": "grp_h_mut5",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m5 grp_h 5",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m5 grp_h 5",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -376,7 +376,7 @@
    },
    {
     "name": "grp_h_mut6",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m6 grp_h 6",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m6 grp_h 6",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -389,7 +389,7 @@
    },
    {
     "name": "grp_h_mut7",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m7 grp_h 7",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m7 grp_h 7",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -402,7 +402,7 @@
    },
    {
     "name": "grp_h_mut8",
-    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m8 grp_h 8",
+    "cmd": "OT_KV_DOMSPLIT=1 KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/grp_h_m8 grp_h 8",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
