@@ -1,0 +1,38 @@
+{
+  "source_commit": "edd785320",
+  "status": "PASS scoped default-off candidate",
+  "fleet": {
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-284348-1792430586",
+    "path": "/srv/opentallas-scratch/claude/sysface-accepted-epoch-1019/out"
+  },
+  "checks": 510,
+  "mutants": {
+    "1": "FAIL raw acceptance",
+    "5": "FAIL wrong epoch",
+    "6": "FAIL wrong user",
+    "7": "FAIL static role bypass"
+  },
+  "state": {
+    "FF": {
+      "old": 242,
+      "0": 242,
+      "1": 262
+    },
+    "extra_FF": 20,
+    "scope": "generic source census only; no mapped physical area"
+  },
+  "sources": {
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_epoch.sv": "61b1eed4136388c6664335cc5102177190ec0f27d7517aec6f01b7e2f047b975",
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv": "47dcb86af69604092ab294721f22a1b00fb7774f3f10ea78e22f01bc022421dd",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv": "94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f",
+    "rtl/test/qwen_split/tb_sysface_accepted_epoch.sv": "33b6b5130e0d6a4c9af425a76295a60fd05f4132774171b75fdfa274fec8abf6",
+    "rtl/test/qwen_split/run_sysface_accepted_epoch.sh": "0a9e194c3b4aa814425b58c6565a11237407e0a6c4626693b1a12376b0bfc13f"
+  },
+  "limitations": [
+    "No FACE top wiring or production ABI enable",
+    "Static calendar epoch_slot/user role remains unbound",
+    "CTLM bank publication and active epoch register binding remain open",
+    "Native mapped area/fanout/timing unpriced; frozen control-safe physical source unchanged"
+  ]
+}
