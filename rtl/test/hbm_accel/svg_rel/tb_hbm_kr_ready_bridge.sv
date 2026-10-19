@@ -8,6 +8,14 @@ module tb_hbm_kr_ready_bridge;
  wire ready=(epoch==0)?((cyc<100)||(PRODUCER!=0&&cyc>=150&&cyc<180)):((cyc<100)||(cyc%19>=7));
  wire iv,source_ready;wire[276:0]bridge_data;wire[17:0]native_valid;
  integer bridge_sent=0;
+ integer pop_truth[0:17][0:3];
+ initial for(integer r=0;r<18;r=r+1)for(integer t=0;t<4;t=t+1)pop_truth[r][t]=0;
+ always @(posedge clk)if(rst_n)for(integer r=0;r<18;r=r+1)begin
+  pop_truth[r][{dut.valid_regions[r],ready}]=pop_truth[r][{dut.valid_regions[r],ready}]+1;
+  if(dut.pop_regions[r] !== (dut.valid_regions[r]&&ready))
+   $fatal(1,"KR_POP_EQUATION_MISMATCH region=%0d",r);
+ end
+
  function automatic[276:0]payload(input integer n);payload={21'(n),{8{32'(n*32'h01020305)}}};endfunction
  generate if(PRODUCER!=0)begin:g_producer
   reg ready_q;
@@ -49,6 +57,10 @@ module tb_hbm_kr_ready_bridge;
   if(ov||occupancy!=0||dut.ready_prev||ir)$fatal(1,"KR_BRIDGE_RESET_FAIL");
   epoch=1;rst_n=1;wait(received==256);repeat(4)@(negedge clk);
   if(sent!=256||received!=256||occupancy!=0||max_occ!=3)$fatal(1,"KR_BRIDGE_TOTAL_FAIL");
+  for(integer r=0;r<18;r=r+1)begin
+   for(integer t=0;t<4;t=t+1)if(pop_truth[r][t]==0)$fatal(1,"KR_POP_TRUTH_MISSING region=%0d state=%0d",r,t);
+   $display("KR_POP_TRUTH region=%0d 00=%0d 01=%0d 10=%0d 11=%0d",r,pop_truth[r][0],pop_truth[r][1],pop_truth[r][2],pop_truth[r][3]);
+  end
   $display("KR_BRIDGE_PASS exact=256 II=1 max_occupancy=%0d occupied_reset=1 latency_hbm=1",max_occ);$finish;
  end
 endmodule

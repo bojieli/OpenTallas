@@ -539,6 +539,24 @@ module ot_hbm_r14_aq_pc_safe #(
       else if(refresh_update_regions[g])refreshed[g*8+:8]<=refresh_marked[g*8+:8];
   end
 `ifndef SYNTHESIS
+  integer issue_truth[0:3],clear_truth[0:3][0:3];
+  initial begin
+    for(integer t=0;t<4;t=t+1)begin
+      issue_truth[t]=0;
+      for(integer g=0;g<4;g=g+1)clear_truth[g][t]=0;
+    end
+  end
+  always @(posedge clk)if(rst_n)begin
+    issue_truth[{slot_next,r_v}]=issue_truth[{slot_next,r_v}]+1;
+    for(integer g=0;g<4;g=g+1)
+      clear_truth[g][{refresh_update_regions[g],refresh_round_complete}]=
+        clear_truth[g][{refresh_update_regions[g],refresh_round_complete}]+1;
+  end
+  final begin
+    $display("BW_ROW_GRANT_TRUTH 00=%0d 01=%0d 10=%0d 11=%0d",issue_truth[0],issue_truth[1],issue_truth[2],issue_truth[3]);
+    for(integer g=0;g<4;g=g+1)
+      $display("BW_REFRESH_CLEAR_TRUTH group=%0d 00=%0d 01=%0d 10=%0d 11=%0d",g,clear_truth[g][0],clear_truth[g][1],clear_truth[g][2],clear_truth[g][3]);
+  end
   always @(negedge clk)if(rst_n&&refresh_update_regions!=={4{row_fire&&c_op==REFPB}})
     $fatal(1,"BW_AQ_REFRESH_UPDATE_MISMATCH");
 `endif
