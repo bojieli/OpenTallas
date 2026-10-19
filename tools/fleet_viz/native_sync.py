@@ -269,8 +269,11 @@ def main(argv=None):
         if own is None:
             if job and job in own_jobs: continue
             v = dict(r); v.update(src='receipt ' + path, receipt=path); views.append(v); n_fill += 1
-        elif own.get('pass') is False and r.get('pass') is True and r.get('relative_to'):
-            own.update({k: r.get(k) for k in ('pass', 'fail_why', 'relative_to', 'relative', 'launch_ps', 'capture_ps')})
+        elif own.get('pass') is False and r.get('pass') is True and (r.get('relative_to') or r.get('static_pins')):
+            # S81-MISC 10-18: a static-pin receipt (identity straps tied by the die, native_pin_audit --static-pins) also
+            # stands over an own FAIL; the exempted ports stay listed on the record
+            own.update({k: r.get(k) for k in ('pass', 'fail_why', 'relative_to', 'relative', 'launch_ps', 'capture_ps',
+                                              'static_pins', 'static_evidence')})
             own['receipt'] = path; own['own_fail_why'] = own.get('fail_why'); n_rel += 1
     log('receipts: %d records, %d fill uncovered jobs, %d relative PASS over own FAIL' % (len(receipts), n_fill, n_rel))
 
@@ -281,7 +284,7 @@ def main(argv=None):
         out.append(dict(cell=v.get('cell'), view=v.get('view'), job=v.get('job'), native=nat, native_why=why,
                         launch_ps=v.get('launch_ps'), capture_ps=v.get('capture_ps'), spread_ps=v.get('spread_ps'),
                         ff_spread_ps=v.get('ff_spread_ps'), R_ps=v.get('R_ps'), src=v.get('src'), receipt=v.get('receipt'),
-                        relative_to=v.get('relative_to')))
+                        relative_to=v.get('relative_to'), static_pins=v.get('static_pins')))
     c = collections.Counter(x['native'] for x in out)
     doc = dict(schema='opentallas.margin_thin.v1', generator='tools/fleet_viz/native_sync.py',
                generated=datetime.datetime.now().astimezone().isoformat(timespec='seconds'), source_main=main_rev,

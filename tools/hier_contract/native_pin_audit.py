@@ -26,6 +26,13 @@ RELATIVE MODE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017): wit
 parent's compensation C (or the neighbour's boundary mean for a landed link) instead of the view's own R: launch O - C,
 capture S + C, and the boundary match max |pin-flop arrival - C| <= 80 ps at TT and FF.  Every record also reports the
 pin-flop spread at TT and FF; spread > 80 ps at either corner is a FAIL (insertion alone never is).
+
+STATIC PINS (S81-MISC 2026-10-18, coordinator 0gs (b) for the Qwen qfd_landh k straps, same class on the S81 landings):
+    native_pin_audit.py --view DIR --static-pins k,nw,rb [--static-evidence TEXT]
+names input ports (bus base names) that are IDENTITY STRAPS: the die binder ties them to constants (tie cells /
+case_analysis in the die SDC), so they carry no timed transition and are left out of the capture / launch / comb
+budgets.  Every other pin is judged as before; the record lists static_pins (+ evidence) so the exemption is visible.
+Only inputs can be static; naming a port the view does not have is an error (a typo must not pass a pin silently).
 """
 from __future__ import annotations
 
@@ -124,6 +131,7 @@ def audit_one(arg):
     """arg = (root, cell, view) or (root, cell, view, comp): comp = pinreg_audit.compensation() dict (relative mode)."""
     root, cell, view = arg[:3]
     comp = arg[3] if len(arg) > 3 else None
+    static = set(arg[4]) if len(arg) > 4 and arg[4] else set()
     root = Path(root)
     lib_path = root / view / f"{cell}_tt.lib"
     if not lib_path.exists():
@@ -151,7 +159,14 @@ def audit_one(arg):
     wl = wc = None
     nl = nc = nout = nin = 0
     comb = []
+    static_hit = collections.Counter()
     for name, m in PA.pin_metrics(lib, refs).items():
+        base = re.sub(r"\[\d+\]$", "", name)
+        if base in static:
+            if m["dir"] != "input":
+                return dict(cell=cell, view=view, error=f"static pin {name} is {m['dir']}, only inputs can be static")
+            static_hit[base] += 1
+            continue
         if m["comb"] and m["dir"] in ("input", "output"):
             comb.append(name)
         if m["dir"] == "output" and m["out"] is not None:
@@ -167,6 +182,11 @@ def audit_one(arg):
     rec.update(outputs=nout, inputs=nin, launch_ps=round(wl[1], 1) if wl else None, launch_pin=wl[0] if wl else None,
                capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
                comb_pins=len(comb), comb_first=sorted(comb)[:3])
+    if static:
+        miss = sorted(static - set(static_hit))
+        if miss:
+            return dict(cell=cell, view=view, error=f"static pins not input ports of the view: {miss}")
+        rec.update(static_pins={b: static_hit[b] for b in sorted(static_hit)})
     # DIE HOLD BUDGET inputs (FLOW-HOLD 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md): at FF, the
     # sender's guaranteed launch (min over outputs of O_min - R) and the receiver's pin hold need (max over inputs of
     # H - R; negative = data may arrive that long before the edge).  Die FF STA reads the same ETM arcs; reported here,
@@ -184,7 +204,7 @@ def audit_one(arg):
             if comp is not None and frefs and comp.get("ff") is not None:
                 rel["ff"] = PA.boundary_match(frefs, comp["ff"])
                 frefs = PA.relative_refs(frefs, comp["ff"])
-            fm = PA.pin_metrics(flib, frefs)
+            fm = {n: m for n, m in PA.pin_metrics(flib, frefs).items() if re.sub(r"\[\d+\]$", "", n) not in static}
             lm = [m["lmin"] for m in fm.values() if m["dir"] == "output" and m["lmin"] is not None]
             hn = [m["hold"] for m in fm.values() if m["dir"] == "input" and m["hold"] is not None]
             rec.update(ff_launch_min_ps=round(min(lm), 1) if lm else None, ff_hold_need_ps=round(max(hn), 1) if hn else None)
@@ -254,13 +274,19 @@ def main(argv=None) -> int:
     ap.add_argument("--cell", help="cell of --view (default: the only <cell>_tt.lib in it)")
     ap.add_argument("--relative-to", help="parent compensation C: ps, tt=PS,ff=PS, a neighbour view dir or its "
                                           "insertion.json (boundary mean); launch O - C, capture S + C, boundary match")
+    ap.add_argument("--static-pins", help="--view: comma list of identity-strap input ports (die-tied constants) left "
+                                          "out of the pin budgets")
+    ap.add_argument("--static-evidence", help="--view: where the die ties the static pins (bind table / RTL contract)")
     a = ap.parse_args(argv)
     root = Path(a.root).resolve()
     comp = PA.compensation(a.relative_to) if a.relative_to else None
     if a.view:
         vd = root / a.view
         cell = a.cell or next(p.name[:-7] for p in sorted(vd.glob("*_tt.lib")))
-        r = audit_one((str(root), cell, a.view, comp))
+        static = [x.strip() for x in (a.static_pins or "").split(",") if x.strip()]
+        r = audit_one((str(root), cell, a.view, comp, static))
+        if static and a.static_evidence:
+            r["static_evidence"] = a.static_evidence
         print(json.dumps(r, indent=1))
         return 0 if r.get("pass") else 1
     if not a.out:

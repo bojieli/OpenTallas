@@ -1,0 +1,241 @@
+{
+ "schema": "opentallas.native_pin_audit.static_pins.v1",
+ "generated": "2026-10-18 S81-MISC",
+ "tool": "tools/hier_contract/native_pin_audit.py --view V --static-pins P (claude/s81-misc-1018)",
+ "rule": "identity-strap inputs tied to constants by the die binder carry no timed transition: excluded from the 220/190 pin budgets (coordinator 0gs (b) waiver class, Qwen landh k). Every other pin and the TT/FF pin-flop spread are judged unchanged. DIE OBLIGATION: the die netlist ties these ports (tie cells) and the die SDC case-analyses them.",
+ "views": [
+  {
+   "cell": "dsfd_dvland_70",
+   "view": "physical/ref_tile/s81dv_land_70/views/dsfd_dvland_70",
+   "lib_cell": "dsfd_dvland_70",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 66.5,
+   "spread_ps": 4.0,
+   "outputs": 71,
+   "inputs": 71,
+   "launch_ps": 113.4,
+   "launch_pin": "fault",
+   "capture_ps": 102.0,
+   "capture_pin": "i[33]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "k": 3
+   },
+   "ff_spread_ps": 3.3,
+   "ff_launch_min_ps": 61.0,
+   "ff_hold_need_ps": -16.7,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_70-l1-9ff99b94c",
+   "view_src": "origin/codex/closure-record-s81dv_land_70-l1-9ff99b94c",
+   "own_fail_why": "capture 436.11731 > 190 (3 pins)"
+  },
+  {
+   "cell": "dsfd_dvland_276",
+   "view": "physical/ref_tile/s81dv_land_276/views/dsfd_dvland_276",
+   "lib_cell": "dsfd_dvland_276",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 97.5,
+   "spread_ps": 12.9,
+   "outputs": 277,
+   "inputs": 277,
+   "launch_ps": 116.4,
+   "launch_pin": "fault",
+   "capture_ps": 112.0,
+   "capture_pin": "i[181]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "k": 3
+   },
+   "ff_spread_ps": 13.5,
+   "ff_launch_min_ps": 60.6,
+   "ff_hold_need_ps": -31.7,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_276-l2-101b4b20c",
+   "view_src": "origin/codex/closure-record-s81dv_land_276-l2-101b4b20c",
+   "own_fail_why": "capture 445.1264 > 190 (3 pins)"
+  },
+  {
+   "cell": "dsfd_dvland_276l",
+   "view": "physical/ref_tile/s81dv_land_276l/views/dsfd_dvland_276l",
+   "lib_cell": "dsfd_dvland_276l",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 114.8,
+   "spread_ps": 18.1,
+   "outputs": 277,
+   "inputs": 277,
+   "launch_ps": 123.1,
+   "launch_pin": "fault",
+   "capture_ps": 130.3,
+   "capture_pin": "i[275]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "k": 6
+   },
+   "ff_spread_ps": 18.9,
+   "ff_launch_min_ps": 55.7,
+   "ff_hold_need_ps": -23.5,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_276l-l1-9ff99b94c",
+   "view_src": "origin/codex/closure-record-s81dv_land_276l-l1-9ff99b94c",
+   "own_fail_why": "capture 454.85873 > 190 (4 pins)"
+  },
+  {
+   "cell": "dsfd_dvland_562",
+   "view": "physical/ref_tile/s81dv_land_562/views/dsfd_dvland_562",
+   "lib_cell": "dsfd_dvland_562",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 115.4,
+   "spread_ps": 22.7,
+   "outputs": 563,
+   "inputs": 563,
+   "launch_ps": 111.1,
+   "launch_pin": "fault",
+   "capture_ps": 112.4,
+   "capture_pin": "i[0]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "k": 3
+   },
+   "ff_spread_ps": 23.3,
+   "ff_launch_min_ps": 56.3,
+   "ff_hold_need_ps": -28.6,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_562-l1-1da4d6aae",
+   "view_src": "origin/codex/closure-record-s81dv_land_562-l1-1da4d6aae",
+   "own_fail_why": "capture 447.2382 > 190 (3 pins)"
+  },
+  {
+   "cell": "dsfd_dvland_682",
+   "view": "physical/ref_tile/s81dv_land_682/views/dsfd_dvland_682",
+   "lib_cell": "dsfd_dvland_682",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 95.0,
+   "spread_ps": 10.0,
+   "outputs": 683,
+   "inputs": 683,
+   "launch_ps": 112.0,
+   "launch_pin": "fault",
+   "capture_ps": 124.3,
+   "capture_pin": "i[254]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "k": 3
+   },
+   "ff_spread_ps": 10.1,
+   "ff_launch_min_ps": 56.1,
+   "ff_hold_need_ps": -26.1,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_682-l1-1da4d6aae",
+   "view_src": "origin/codex/closure-record-s81dv_land_682-l1-1da4d6aae",
+   "own_fail_why": "capture 444.73251 > 190 (3 pins)"
+  },
+  {
+   "cell": "dsfd_dvland_pvrd",
+   "view": "physical/ref_tile/s81dv_land_pvrd/views/dsfd_dvland_pvrd",
+   "lib_cell": "dsfd_dvland_pvrd",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 127.6,
+   "spread_ps": 18.0,
+   "outputs": 527,
+   "inputs": 515,
+   "launch_ps": 138.5,
+   "launch_pin": "fault",
+   "capture_ps": 131.2,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "k": 3,
+    "nw": 8,
+    "rb": 10
+   },
+   "ff_spread_ps": 17.5,
+   "ff_launch_min_ps": 56.1,
+   "ff_hold_need_ps": -18.5,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "dsfd_dvland_pvrd.sv header: 'Straps (identity, die ties): k (ring K), nw, rb' (dv_bind adapter_straps)",
+   "job": "s81dv_land_pvrd-p3-b15a4ddad",
+   "view_src": "origin/codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad",
+   "own_fail_why": "capture 442.6766 > 190 (21 pins)"
+  },
+  {
+   "cell": "dsfd_cfifo_crs4",
+   "view": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4",
+   "lib_cell": "dsfd_cfifo_crs4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 176.6,
+   "spread_ps": 61.3,
+   "outputs": 1171,
+   "inputs": 1173,
+   "launch_ps": 182.5,
+   "launch_pin": "xa[208]",
+   "capture_ps": 183.8,
+   "capture_pin": "rst",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "static_pins": {
+    "lk": 12
+   },
+   "ff_spread_ps": 60.6,
+   "ff_launch_min_ps": 92.9,
+   "ff_hold_need_ps": -54.3,
+   "pass": true,
+   "fail_why": "",
+   "static_evidence": "dsfd_cfifo_crs4.sv: lk[3k +: 3] = lane k's K, an identity strap tied by the die binder (L7)",
+   "job": "s81coll_cfifo_crs4-c4a-f11bb1950",
+   "view_src": "origin/codex/closure-record-s81coll_cfifo_crs4-c4a-f11bb1950",
+   "own_fail_why": "capture 438.85198 > 190 (12 pins)"
+  }
+ ]
+}
