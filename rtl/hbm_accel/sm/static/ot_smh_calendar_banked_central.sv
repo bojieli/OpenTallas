@@ -9,7 +9,7 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  output wire[TW-1:0]request0,request1,
  input wire[W-1:0]row0,row1,input wire[QW-1:0]ok0,ok1,input wire[TW-1:0]token0,token1,
  output reg[W-1:0]calendar,output reg[XW-1:0]calendar_ctx,output reg[15:0]calendar_iter,
- output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n,output wire[7:0]app_reset_branches,output wire[W-1:0]app_next_calendar,output wire app_next_valid
+ output reg calendar_lastit,calendar_v,output reg[31:0]ordinal,output reg active,done,fault,output wire app_reset_n,output wire[7:0]app_reset_branches,output wire[W-1:0]app_next_calendar,output wire app_next_valid,output wire app_next_fault
 );
  initial if(AW!=11||W<1||W>223)$fatal(1,"banked provider requires AW11 and protected payload");
  (* keep=1 *) reg[1:0]reset_landing;
@@ -112,6 +112,7 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  wire identity1=token1_q[TW-2:0]==expected_q&&token1_q[TW-1];
  wire identity_ok=select_canonical?identity1:identity0;
  wire selected_ok=select_canonical?ok1_q[0]:ok0_q[0];
+ assign app_next_fault=fault||(expected_v&&(!identity_ok||!selected_ok))||(cw&&(busy||sv))||(sv&&(busy||cw||!legal_start));
  for(genvar g=0;g<QW;g=g+1)begin:g_calendar_out
   localparam integer BW=(W-16*g<16)?W-16*g:16;
   wire good=select_good_q[g]?ok1_q[g]:ok0_q[g];
