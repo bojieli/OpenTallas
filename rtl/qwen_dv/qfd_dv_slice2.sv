@@ -209,13 +209,13 @@ module qfd_dv_slice2 #(
     function automatic [31:0] okey(input [31:0] v);
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
-    wire am_emit_empty, am_mu_fault;
+    wire am_emit_empty, am_mu_fault, am_stn_pend;
 `ifdef OT_DV_AMAX_MUT
     localparam integer AM_MUT = `OT_DV_AMAX_MUT;   // bench only (MU-ADOPT-SLICE mutant witnesses): qfd_dv_amax_mu MUT 1..4
 `else
     localparam integer AM_MUT = 0;
 `endif
-    qfd_dv_amax_mu #(.NU(MU_NU), .MUT(AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]),
+    qfd_dv_amax_mu #(.NU(MU_NU), .MUT(AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(go && kind == 3'd6), .am_clr(cmd_q[4]), .am_emit_cmd(cmd_q[5]),
         .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
     // ------------------------------------------------------------------ stream
@@ -355,6 +355,8 @@ module qfd_dv_slice2 #(
     // station busy: results outstanding (modes 0-2 count r_v words; the L9 sender counts its l9_o words)
     reg [8:0] stn_left; reg stn_snd;
     wire stn_busy = stn_left != 9'd0;
+    // MU-QWEN R4 (qfd_dv_amax_mu): an r_v result word of the previous op is still due after this edge
+    assign am_stn_pend = stn_busy && !stn_snd && !(stn_left == 9'd1 && r_v);
     always @(posedge ck or negedge rst)
         if (!rst) begin stn_left <= 9'd0; stn_snd <= 1'b0; end
         else if (c_stn) begin stn_left <= {1'b0, cmd_q[14:7]}; stn_snd <= cmd_q[5:4] == 2'd3; end

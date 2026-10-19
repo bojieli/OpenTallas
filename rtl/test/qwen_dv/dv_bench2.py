@@ -451,6 +451,7 @@ def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
     the user must travel down the tree).  Check: per emit, the root token, the ring broadcast and slice 1's token
     equal the golden single-shot argmax of that user's rows (np.argmax: lowest index of the maximum); no fault.
     At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL."""
+    seed = int(os.environ.get("DV2_SEED", seed))
     rng = np.random.default_rng(seed)
     gap = int(os.environ.get("DV2_GAP", "18"))
     ev = B.Ev()
@@ -540,6 +541,43 @@ def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
     return ok, len(exp), errs
 
 
+def bench_o(work, mut, seed=31):
+    """MU-ADOPT-SLICE (F-TOK-1 / B2): an STN issued while the previous amax op's station results are still pending is a
+    sticky port fault at MU_NU > 1 (it would drop / misattribute them).  Slice 0: STN amax user 1, its 8 data words,
+    then DV2_OGAP edges later (default 4: results still streaming) an STN of user 2 (no amax).  Slice 1: the same first
+    op, then the second STN 30 edges after the data (legal).  PASS iff slice 0's port fault (status bit 63) is set and
+    slice 1's is clear; a second run with both second STNs legal must leave both clear."""
+    rng = np.random.default_rng(seed)
+    og = int(os.environ.get("DV2_OGAP", "4"))
+    ok, errs = 0, []
+    for case, g0 in (("ovl", og), ("legal", 30)):
+        ev = B.Ev()
+        v = (rng.standard_normal(256) * 4.0).astype(F)
+        for sl in (0, 1):
+            ev.at(B.P_CMD + sl, cmd_amax_u(clear=1, user=1), t=ev.t + sl)
+        ev.step(4)
+        for sl in (0, 1):
+            ev.at(B.P_CMD + sl, cmd_stn_u(0, 1, 8, 0, 0, sl * 128, amax=1, user=1), t=ev.t + sl)
+        ev.step(4 + SK)
+        for k in range(8):
+            for sl in (0, 1):
+                pair2(ev, sl, v[sl * 128 + 16 * k:sl * 128 + 16 * k + 16], np.zeros(16, dtype=F), None, None, ev.t)
+            ev.step()
+        t0 = ev.t
+        ev.at(B.P_CMD + 0, cmd_stn_u(0, 1, 8, 0, 0, 0x800, amax=0, user=2), t=t0 + g0)
+        ev.at(B.P_CMD + 1, cmd_stn_u(0, 1, 8, 0, 0, 0x800, amax=0, user=2), t=t0 + 30 + 1)
+        ev.step(80)
+        log = run_sim2(f"o_{case}_g{g0}", ev, work, mut, ev.t + 20)
+        pf = [(log[f"S{sl}ST"][0][1] >> 63) & 1 for sl in (0, 1)]
+        want = [1, 0] if case == "ovl" else [0, 0]
+        if pf == want:
+            ok += 1
+        else:
+            errs.append(f"{case} (slice-0 second STN {g0} edges after the data): port fault slice0/slice1 {pf}, want {want}")
+    print(f"    bench2 (o): ovl gap {og} vflags {' '.join(VFLAGS)}")
+    return ok, 2, errs
+
+
 def install():
     B.Ev = Ev2
     B.load_vm = load_vm2
@@ -548,7 +586,7 @@ def install():
 
 
 BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
-           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m}
+           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o}
 
 
 def main():
