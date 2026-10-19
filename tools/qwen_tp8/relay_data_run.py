@@ -144,34 +144,6 @@ if '--case' in sys.argv:
         rec['fwd_lanes'] = {k_: fl[k_] for k_ in ('lanes', 'stations', 'landings', 'masters', 'plain_relays_left',
                                                   'reclassed_reset_hops')} | dict(lanes=len(fl['lanes']), skipped=len(fl['skipped']))
         (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
-    # QW-DIEFIX 10-19 (QW-XHEAD XT1: the GEN bound NO tile ROM content -> die-netlist sims read empty code ROMs): every
-    # qfd_c_b16_dv tile gets its sim-only ROM_TILE (= tile_id strap) in case/rom_bind.vh + case/rom_bind.json; the
-    # structural audit always runs and fails the GEN closed; OT_QWEN_ROM_MASKS=<code-mask manifest> (tools/qwen_code_rom/
-    # build.py) adds the per-macro content check (every macro has an existing, non-empty, sha256-matching mask file)
-    _dv = out / 'case' / 'die.v'
-    if _dv.exists() and 'qfd_c_b16_dv ' in _dv.read_text():
-        from qwen_split import die_rom_bind as _RB2
-        _mk = os.environ.get('OT_QWEN_ROM_MASKS', '').strip()
-        _rbv, _rbd, _rbh = _RB2.run(_dv, Path.cwd(), Path(_mk) if _mk else None,
-                                    int(os.environ['OT_QWEN_ROM_RANK']) if os.environ.get('OT_QWEN_ROM_RANK') else None,
-                                    '`OT_ROM_BIND_TOP.', [], 0)
-        (out / 'case' / 'rom_bind.vh').write_text(_rbh)
-        (out / 'case' / 'rom_bind.json').write_text(json.dumps(_rbd, indent=1) + '\n')
-        rec['rom_bind'] = {k_: _rbd['audit'][k_] for k_ in ('verdict', 'fails', 'clusters', 'tiles', 'macros')}
-        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
-        print(f"ROM_BIND_AUDIT {_rbv} tiles={_rbd['audit']['tiles']} masks="
-              f"{'none' if not _mk else _rbd['audit']['masks'].get('files_ok')}", flush=True)
-        if _rbv != 'PASS':
-            raise SystemExit(f"ROM_BIND_AUDIT FAIL: {_rbd['audit']['fails'][:5]} (case/rom_bind.json)")
-    if (m.get('reset_sync') or {}).get('endpoints'):
-        # Q-RSTGEN7 10-19: declared reset synchroniser inputs of this build (tools/qwen_split/reset_sync_contract.py) ->
-        # die STA false paths with their structural reason (read by tools/qwen_tp8/die_sta_libs.py after landing.sdc)
-        from qwen_split import reset_sync_contract as _RS
-        (out / 'case' / 'reset_sync.json').write_text(json.dumps(dict(schema='opentallas.qwen.reset-sync.v1',
-            **m['reset_sync']), indent=1) + '\n')
-        (out / 'case' / 'reset_sync.sdc').write_text(_RS.sdc(m['reset_sync']['endpoints']))
-        rec['reset_sync'] = dict(endpoints=len(m['reset_sync']['endpoints']), reclock=m['reset_sync']['reclock'])
-        (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
     # r10: pin directions of every die master as the bus list has them (driver first), for the placeholder Liberty
     # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word
     byi = {i.name: i for i in m['insts']}

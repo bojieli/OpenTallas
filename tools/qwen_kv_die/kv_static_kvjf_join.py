@@ -172,17 +172,22 @@ def die_cfg_join(graph, root=K.ROOT, boot='boot', name='diecfg', nrst=B.DIE_CFG_
     return bound, joins
 
 
-def die_cfg_image(ectl_a, ectl_b, ectl_c, dly, capability):
+def die_cfg_image(ectl_a, ectl_b, ectl_c, dly, capability, ages=None):
     """The dispatcher target-10 image (64-bit words, address = index) for qkd_kv_die_cfg CAP=1: 32 ECTL words, len(dly) reset
     words, the capability word (data[0] = the fused attention-programme capability, RTL-BUILD-KV/FAULT P8), then the seal.
-    ectl_*: 32 five-bit values (group 8*stack+g); dly: one 8-bit value per reset region; capability: 0 / 1."""
+    ectl_*: 32 five-bit values (group 8*stack+g); dly: one 8-bit value per reset region; capability: 0 / 1.
+    KV-BOOTAGE 10-19: ages = the 19 static-schedule age words (kv_bootage.image_ages(...)['words']) for qkd_kv_die_cfg_a
+    AGES=1, placed between the capability word and the seal."""
     if capability not in (0, 1):
         raise ValueError('capability is one bit')
     if not (len(ectl_a) == len(ectl_b) == len(ectl_c) == 32):
         raise ValueError('32 ECTL groups required')
     if any(not 0 <= v < 32 for v in (*ectl_a, *ectl_b, *ectl_c)) or any(not 0 <= v < 256 for v in dly):
         raise ValueError('field out of range')
-    words = [a | (b << 5) | (c << 10) for a, b, c in zip(ectl_a, ectl_b, ectl_c)] + list(dly) + [capability, DIE_CFG_SEAL]
+    if ages is not None and (len(ages) != 19 or any(not 0 <= v < (1 << 32) for v in ages)):
+        raise ValueError('ages: 19 words of <= 32 bits (kv_bootage.words_of)')
+    words = [a | (b << 5) | (c << 10) for a, b, c in zip(ectl_a, ectl_b, ectl_c)] + list(dly) + [capability] + \
+        list(ages or []) + [DIE_CFG_SEAL]
     if len(words) > 256:
         raise ValueError('image exceeds the 8-bit die cfg address')
     return words

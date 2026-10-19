@@ -268,22 +268,7 @@ def build(a):
                 continue
             leaves = rt.cluster(sinks)
             b_ = rt.Builder(g, 'dc_' + t['name'], r_of=lambda key: (target(*key.rsplit('/', 1)) or [0, 0, 0])[2])
-            txy = rxy
-            if t.get('local_root'):
-                # STAND-IN regional clock entry (landed-regions standard): the region tree starts at a local root
-                # (sink median, or the given [x, y]) instead of the shared generator pin; the spine from the generator
-                # to it is NOT built here (the GEN owes a regional clock entry / forwarded spine).  The clock is defined
-                # at the local root buffer input, so only the region tree is measured.
-                lr = t['local_root']
-                if isinstance(lr, (list, tuple)):
-                    txy = (float(lr[0]), float(lr[1]))
-                else:
-                    xs = sorted(z[2] for z in sinks); ys = sorted(z[3] for z in sinks)
-                    txy = (xs[len(xs) // 2], ys[len(ys) // 2])
-                if len(ts) != 1:
-                    raise ValueError(f'local_root needs one tree per root ({root})')
-                rec.setdefault('local_root_xy', {})[root] = [round(txy[0], 3), round(txy[1], 3)]
-            model = b_.build(root, txy, leaves)
+            model = b_.build(root, rxy, leaves)
             for s in sinks:
                 sink_pins[s[0]] = dict(tree=t['name'], master=s[1], x=round(s[2], 3), y=round(s[3], 3),
                                       R=target(s[1], pin_key(s[0])[1]))
@@ -355,8 +340,7 @@ def build(a):
             continue      # from co driving 350-460 um to the first trunk repeater) drives one buffer beside it
         rb = root_it.getBBox()
         rn = f"dc_root_{ts[0]['name']}"
-        lxy = rec.get('local_root_xy', {}).get(root)
-        ri = mk(rn, rt.BUF, *(lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)))
+        ri = mk(rn, rt.BUF, (rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
         insts[rn] = ri
         rec['cell_tree'][rn] = ''
         nn = odb.dbNet.create(blk, f'n_{rn}')
@@ -368,136 +352,17 @@ def build(a):
             if rec['parent'].get(c) == root:
                 rec['parent'][c] = rn
         ri.findITerm('Y').connect(nn)
-        if lxy:
-            # local_root stand-in: the generator->region spine is not built; the root buffer input sits on its own
-            # (undriven) net so STA sees an ideal clock source there, not a mm-long unbuffered wire from the generator
-            sn = odb.dbNet.create(blk, f'n_{rn}_spine')
-            sn.setSigType('CLOCK')
-            ri.findITerm('A').connect(sn)
-        else:
-            ri.findITerm('A').connect(rnet)
+        ri.findITerm('A').connect(rnet)
         rec['parent'][rn] = root
         rec.setdefault('root_buffer', {})[root] = rn
         log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
-    # ITEM 5 (GEN16): a root buffer driving more than one trunk input gets one BUFx24 per trunk (HBM t4 / Qwen v0:
-    # 5 trunk inputs at 382-413 ps slew > 320 when one driver fed several trunks)
-    for root, rn in list(rec.get('root_buffer', {}).items()):
-        if spec.get('split_root_fanout', True) is False:
-            break
-        nn = insts[rn].findITerm('Y').getNet()
-        loads = [x for x in nn.getITerms() if x.getIoType() == 'INPUT']
-        if len(loads) < 2:
-            continue
-        x0, y0 = cell_xy[rn]
-        for j, x in enumerate(loads):
-            tn = f'{rn}_t{j}'
-            ti = mk(tn, rt.BUF, x0, y0)
-            insts[tn] = ti
-            rec['cell_tree'][tn] = rec['cell_tree'].get(x.getInst().getName(), '')
-            tnet = odb.dbNet.create(blk, f'n_{tn}')
-            tnet.setSigType('CLOCK')
-            x.disconnect()
-            x.connect(tnet)
-            ti.findITerm('Y').connect(tnet)
-            ti.findITerm('A').connect(nn)
-            c = x.getInst().getName()
-            if rec['parent'].get(c) == rn:
-                rec['parent'][c] = tn
-            rec['parent'][tn] = rn
-        log('root buffer', rn, 'split: one buffer per trunk input,', len(loads), 'trunks')
-    # ITEM 1 (GEN16): FORWARDED CLOCK SPINE.  spec "spine": {"source": "inst/pin", "period": ps, "trees": [..] (opt)}:
-    # a real buffered DME spine (obstacle grid, repeaters, legal sites) from ONE generator pin to every member region's
-    # entry (local-root buffer input); the clock is defined at the spine source, so every measured arrival = spine +
-    # region tree.  The spine merge compensates each region tree's model insertion (key = tree name), and the measured
-    # trim may add elements on spine nodes only for spec "neighbours" pairs: there is no die-wide balance target.
-    spine_roots = set()
-    sp_ = spec.get('spine')
-    if sp_:
-        src = sp_['source']
-        members = rt.spine_members(trees, set(rec['trees']), rec.get('root_buffer', {}), sp_)
-        if not members:
-            raise ValueError(f'spine {src}: no member region trees')
-        src_it = blk.findITerm(src)
-        if not src_it:
-            raise ValueError(f'spine source missing: {src}')
-        src_net = src_it.getNet()
-        if not src_net:
-            src_net = odb.dbNet.create(blk, 'n_dc_spine_gen')
-            src_net.setSigType('CLOCK')
-            src_it.connect(src_net)
-        mrb = {rb for _, rb in members}
-        for x in [x for x in src_net.getITerms() if x.getIoType() == 'INPUT']:
-            if x.getInst().getName() not in mrb:
-                raise ValueError(f'spine source {src} also drives non-member {x.getInst().getName()}/{x.getMTerm().getName()}')
-            x.disconnect()
-        rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
-        sb = rt.Builder(g, 'dc_spine', r_of=lambda key: rmodel.get(key, 0.0))
-        sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
-               (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
-        smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
-        for n, cell, x, y in sb.bufs:
-            insts[n] = mk(n, cell, x, y)
-            rec['cell_tree'][n] = 'spine'
-        # the generator pin drives ONE spine source buffer beside it (a generator model without output drive left the
-        # first trunk input at 382-413 ps slew); the spine starts at its output
-        sbn = 'dc_spine_src'
-        insts[sbn] = mk(sbn, rt.BUF, *sxy)
-        rec['cell_tree'][sbn] = 'spine'
-        insts[sbn].findITerm('A').connect(src_net)
-        spine_net = odb.dbNet.create(blk, 'n_dc_spine_src')
-        spine_net.setSigType('CLOCK')
-        insts[sbn].findITerm('Y').connect(spine_net)
-        rec['parent'][sbn] = src
-        orphan = []
-        for t, rb in members:
-            ai = insts[rb].findITerm('A')
-            old = ai.getNet()
-            ai.disconnect()
-            if old and old.getName() != src_net.getName() and not old.getITerms():
-                odb.dbNet.destroy(old)
-            spine_roots.add(t['root'])
-            gn = blk.findITerm(t['root'])
-            if t['root'] != src and gn and gn.getNet() and not [x for x in gn.getNet().getITerms() if x.getIoType() == 'INPUT']:
-                orphan.append(t['root'])
-        for n, drv, loads in sb.nets:
-            if drv[0] == 'pin':
-                net = spine_net
-            else:
-                net = odb.dbNet.create(blk, f'n_{drv[1]}')
-                net.setSigType('CLOCK')
-                insts[drv[1]].findITerm('Y').connect(net)
-            for ld in loads:
-                if ld[0] == 'buf':
-                    insts[ld[1]].findITerm('A').connect(net)
-                else:
-                    x = blk.findITerm(ld[1])
-                    x.disconnect()
-                    x.connect(net)
-        for k_, v_ in sb.parent.items():
-            rec['parent'][k_[:-2] if k_.endswith('/A') and k_[:-2] in mrb else k_] = sbn if v_ == src else v_
-        lv = {}
-        for c_ in [b_[0] for b_ in sb.bufs]:
-            d_, x_ = 1, c_
-            while sb.parent.get(x_) not in (None, src):
-                x_ = sb.parent[x_]; d_ += 1
-            lv[c_] = d_ + 1      # + the spine source buffer
-        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)), members=[t['name'] for t, _ in members],
-                            cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
-                            generator_pins_without_loads=orphan)
-        log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
-            'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')
-    clocks_orig = list(clocks)
     if spec.get('clock_at_root_buffer'):
         # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
         # the clock is defined at the root buffer input beside the PLL pin, so the delivered tree is what is measured
         clocks = [(n, rec.get('root_buffer', {}).get(p) + '/A' if rec.get('root_buffer', {}).get(p) else p, per)
                   for n, p, per in clocks]
         rec['clock_source'] = 'root buffer input (spec clock_at_root_buffer)'
-    if spine_roots:
-        per_ = rec['spine']['period']
-        clocks = [c_ for c_, o_ in zip(clocks, clocks_orig) if o_[1] not in spine_roots] + [('spine', rec['spine']['source'], per_)]
-        rec['clock_source'] = (rec.get('clock_source', '') + '; spine trees: clock at the spine source').lstrip('; ')
     D.setup_sta(clocks, spec.get('rc_layer', 'M8'))
     # measured trim.  Two delay elements: PAD (BUFx12f stacked on one site: gate delay, FF/TT ~0.77) and WPAD (BUFx24
     # local/far buffer PAIRS WPAD_UM apart: buffered wire like the tree's own repeater stages, FF/TT ~0.84).  One corner: PAD only.
@@ -735,9 +600,7 @@ def build(a):
         # (min over its leaves minus what its parent already carries): group offsets land on the common path at the
         # root, subtree offsets at their branch point, only the residual at the leaves
         plan = []
-        src_bufs = {b_ for r_, b_ in rec.get('root_buffer', {}).items() if r_ not in spine_roots} if spec.get('clock_at_root_buffer') else set()
-        if spine_roots:
-            src_bufs.add('dc_spine_src')     # the clock is defined at the generator pin: nothing above the spine source buffer
+        src_bufs = set(rec.get('root_buffer', {}).values()) if spec.get('clock_at_root_buffer') else set()
         for ty in ('W', 'P'):   # W first: wire stages above, gate pads nearer the node
             units, par_of = {}, {}
             for lb, nn_ in need.items():

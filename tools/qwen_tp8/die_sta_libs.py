@@ -50,6 +50,9 @@ def domain(net):
     return 'stream'
 
 
+MEASURED_SRCS = ('insertion.json boundary mean', 'insertion.json child_flop boundary mean')
+
+
 def measured_clock_refs(lib_path, insertion_path, corner):
     """Require the bound view's own per-clock boundary measurement, never a lib estimate."""
     if not insertion_path.is_file():
@@ -60,7 +63,9 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     result = {}
     for pin in clocks:
         r = refs.get(pin)
-        if not r or r['src'] != 'insertion.json boundary mean' or not math.isfinite(r['rise']):
+        # KVR-PLACE2 10-19: a parent with hard children carries the NATIVE-REF child_flop boundary mean (pinreg_audit
+        # clock_refs; cts_native_probe.MEASURED_SRCS) -- also the view's own measurement (expanded ASTK qkd_astk_ep_s)
+        if not r or r['src'] not in MEASURED_SRCS or not math.isfinite(r['rise']):
             raise ValueError(f"missing {corner} boundary mean for {lib_path}:{pin}")
         result[pin] = r['rise']
     return result
@@ -275,10 +280,6 @@ def main():
     # Q-DIE11-RLY 10-18: forwarded-lane landings (case/landing.sdc from relay_data_run.py, LANDING-CONTRACT L5): the
     # lane is checked at the landing pins against the receiving root E edges later (MCP -setup E -hold D-1)
     land = (case / 'landing.sdc').read_text() if (case / 'landing.sdc').exists() else ''
-    # Q-RSTGEN7 10-19: declared reset synchroniser inputs (case/reset_sync.sdc, tools/qwen_split/reset_sync_contract.py:
-    # a tile's own 2-flop reset synchroniser pin, or the d pin of the last reset hop re-clocked onto a PHY clock)
-    if (case / 'reset_sync.sdc').exists():
-        land += (case / 'reset_sync.sdc').read_text()
     for c in ('tt', 'ff', 'ss'):
         (out / f'clocks_{c}.tcl').write_text(clock_tcl(leaf_doms, leaves, c, periods, related, a.hold_budget) + land)
     # Existing callers naming clocks.tcl are redirected by sta_tcl.py per corner.

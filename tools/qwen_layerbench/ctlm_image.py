@@ -394,20 +394,13 @@ def cal_entries(events, S, C):
     return out
 
 
-def is_tload(c):
-    return (c >> 112) == 14 and (c & 1) and (c >> 1) & 7 == 3
-
-
 def cal_model(entries, S):
     """cycle model of qfd_dv_cmd_cal fetch / FIFO / issue (RTL qfd_dv_cmd_cal.sv): returns the issue edges or raises."""
     n = len(entries)
     times, t = [], 0
-    tl_at = set()
-    for d, c, _ in entries:
+    for d, _, _ in entries:
         t += d
         times.append(t)
-        if is_tload(c):
-            tl_at.add(t)
     f_rem, fifo, infl, rce, rd_v, rd_n, r_n_q = n, [], 0, False, False, 0, 0
     fetched = 0
     tcount = 1
@@ -423,9 +416,7 @@ def cal_model(entries, S):
         if late:
             raise CompileError(f'cmd_cal late: entry at T {fifo[0]} not fetched in time (tcount {tcount})')
         f_n = min(4, f_rem)
-        # QLB-C4b: a TLOAD entry's block read takes the store read port -> no fetch decision on its issue edge
-        tl_fire = fire and tl_at is not None and fifo[0] in tl_at
-        can_read = f_rem != 0 and len(fifo) + infl + 4 <= 8 and not tl_fire
+        can_read = f_rem != 0 and len(fifo) + infl + 4 <= 8
         # register updates
         push = []
         if rd_v:
@@ -445,46 +436,6 @@ def cal_model(entries, S):
         if len(issued) == n:
             return issued
     raise CompileError('cmd_cal model did not finish')
-
-
-# ------------------------------------------------------------------------------------------------ QLB-C4b TLOAD
-TL_SPACING = 2          # TLOAD entries >= 2 edges apart (the block read suppresses that edge's fetch decision)
-TL_OUT_EDGES = 2        # issue edge -> tl register (qfd_dv_cmd_cal: read decision, macro read, tl load)
-TL_SRC = 0xE            # stream src field of a tt_ctlm table word
-
-
-def cmd_tload(row, kind, dst, eaddr, src=TL_SRC, tag=0):
-    """LOCAL kind 3 TLOAD entry (qfd_dv_cmd_cal.sv ENTRY KINDS): [9:4] row, [12:10] kind, [16:13] dst, [20:17] src,
-    [44:21] eaddr, [72:45] tag"""
-    if not (0 <= row < 61 and kind in (1, 2, 3) and 0 <= dst < 16 and 0 <= eaddr < 1 << 24 and 0 <= tag < 1 << 28):
-        raise CompileError('TLOAD field out of range')
-    return cmdw(1, 3, row | (kind << 6) | (dst << 9) | (src << 13) | (eaddr << 17) | (tag << 41), 14)
-
-
-def tl_word(kind, dst, eaddr, payload, src=TL_SRC, tag=0):
-    """the 1,088-b stream word the TLOAD entry leaves on tt_ctlm.tl (= dv_lower.stream_table_word)"""
-    ctl = (1 << 63) | (kind << 60) | (dst << 56) | (src << 52) | (eaddr << 28) | tag
-    return (ctl << 1024) | payload
-
-
-def table_words(dv_lower=True):
-    """the slice table words the die must load: dv_lower.py PROG streams (kind 3) -> [(kind, dst, eaddr, payload)]"""
-    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_layerbench'))
-    import dv_lower as DL
-    lw = DL.lower()
-    out = []
-    for s in sorted(lw['prog_stream'], key=int):
-        for w in lw['prog_stream'][s]:
-            out.append((3, int(s), int(w['eaddr']), int(w['payload'], 16)))
-    return out, lw
-
-
-def tload_gap(R, margin=4):
-    """SETID issue -> first TLOAD issue (edges).  Slice j takes its id from cmd_q one edge after SETID lands (W5 at
-    k0 + R_CMD + 1, then 2 edges a hop) and taps a table word in sw_q (W5 at k1 + TL_OUT_EDGES + R_ST + 1, then 2 edges
-    a hop: the same hop cost), so k1 - k0 >= R_CMD - R_ST - 1 + 1; margin edges on top (fail-closed: a word that
-    overtakes SETID is taken by no slice or the wrong one, and the bench / die run sees the missing table)."""
-    return max(TL_SPACING, R['R_CMD'] - R['R_ST'] + margin)
 
 
 def cal_image(segs_entries, base, meta_rows):
@@ -537,8 +488,6 @@ def compile_image(a):
         la = json.loads((ROOT / a.lane_ages).read_text())
         for k in ('R_CMD', 'R_HR', 'R_SS', 'R_AG'):
             R[k] = la[k]
-        if 'R_ST' in la:
-            R['R_ST'] = la['R_ST']              # QLB-C4b: tt_ctlm.tl -> dvs_W5.st_wi
         R['source'] = f'{a.lane_ages} (measured lane ages; the die exports no land plan)'
     plan_meta.update(R)
     stage = a.stage
@@ -565,20 +514,7 @@ def compile_image(a):
             # the head must accept the segment start SEG_TO_HEAD edges after the pulse, before its first ME candidate
             ev.append((p['at'] - C['LOC_EDGES'], cmdw(1, 2, p['base'] << 0, 14), f'SEG base {p["base"]}'))
     decode = cal_entries(ev, C['CAL_S'], C)
-    boot_ev = [(C['CAL_S'] + C['FIRST_T'], cmdw(1, 7, 0, 15), 'SETID 0')]
-    tl_tab, tl_rec = [], None
-    if a.tload:
-        tl_tab, _ = table_words()
-        R.setdefault('R_ST', R['R_HR'])
-        gap = tload_gap(R)
-        t1 = C['CAL_S'] + C['FIRST_T'] + gap
-        # rows are assigned after the entry count is known (blocks sit above the entry area); placeholders first
-        for i, (k_, d_, e_, _) in enumerate(tl_tab):
-            boot_ev.append((t1 + TL_SPACING * i, cmd_tload(0, k_, d_, e_), f'TLOAD k{k_} s{d_} e{e_}'))
-        tl_rec = dict(gap=gap, spacing=TL_SPACING, out_edges=TL_OUT_EDGES, R_CMD=R['R_CMD'], R_ST=R['R_ST'],
-                      R_ST_source='lane ages R_ST' if a.lane_ages and 'R_ST' in json.loads((ROOT / a.lane_ages).read_text())
-                      else 'assumed = R_HR (same tt_ctlm -> W5 route; check on the GEN die: dvw_st_wi lane)')
-    boot = cal_entries(boot_ev, C['CAL_S'], C)
+    boot = cal_entries([(C['CAL_S'] + C['FIRST_T'], cmdw(1, 7, 0, 15), 'SETID 0')], C['CAL_S'], C)
     stage0 = cal_entries([(C['CAL_S'] + C['FIRST_T'], cmdw(1, 1, 0, 14), 'EMB')], C['CAL_S'], C)
     # SEG / EMB: cmd field [15:4] = base for SEG (loc_base = hc[15:4]); cmdw shifts f by 4
     issue = cal_model(decode, C['CAL_S'])
@@ -614,30 +550,7 @@ def compile_image(a):
     meta_rows = len(words)
     base = (16 * meta_rows + 7) // 8 * 8
     cpw, dw, cdesc, ents = cal_image({SEG_BOOT: boot, SEG_STAGE0: stage0, SEG_DECODE: decode}, base, meta_rows)
-    tl_blocks = {}
-    if tl_tab:
-        row0 = (base + 2 * len(ents) + 15) // 16
-        if row0 + len(tl_tab) > CMD_CEIL // 16:
-            raise CompileError(f'slice tables do not fit the image: {len(tl_tab)} blocks from PW row {16 * row0} '
-                               f'(free blocks {max(0, CMD_CEIL // 16 - row0)})')
-        it = iter(range(len(tl_tab)))
-        boot = [(d, cmd_tload(row0 + next(it), *[(c >> s) & m for s, m in ((10, 7), (13, 15), (21, (1 << 24) - 1))]), l)
-                if is_tload(c) else (d, c, l) for d, c, l in boot]
-        cpw, dw, cdesc, ents = cal_image({SEG_BOOT: boot, SEG_STAGE0: stage0, SEG_DECODE: decode}, base, meta_rows)
-        for i, (k_, d_, e_, pay) in enumerate(tl_tab):
-            for b in range(16):
-                tl_blocks[16 * (row0 + i) + b] = (pay >> (64 * b)) & ((1 << 64) - 1)
-        tl_rec.update(rows=[row0 + i for i in range(len(tl_tab))], pw_first=16 * row0, pw_end=16 * (row0 + len(tl_tab)),
-                      words=len(tl_tab), capacity_blocks=CMD_CEIL // 16 - row0)
-        bi = cal_model(boot, C['CAL_S'])
-        if bi != [C['CAL_S'] + t for t in _acc(boot)]:
-            raise CompileError('cmd_cal model: BOOT issue edges differ from the compiled entry times')
-    for k, v in tl_blocks.items():
-        if k in cpw:
-            raise CompileError('table block overlaps a calendar entry')
     for k, v in cpw.items():
-        pw[k] = v
-    for k, v in tl_blocks.items():
         pw[k] = v
     for n, r in enumerate(rows):
         pw[976 + n] = int(r['hex'], 16)
@@ -690,16 +603,10 @@ def compile_image(a):
                       hr_rom_go_at_w5_pin=[dict(e, edge=e['edge'] + R['R_HR']) for e in exp_rom],
                       hr_xpf_arm_at_w5_pin=[dict(e, edge=e['edge'] + R['R_HR']) for e in exp_xpf],
                       boot_cmd_after_seal=[dict(edge=C['CAL_S'] + t, cmd=f'{c:029x}', label=l)
-                                           for t, (d, c, l) in zip(_acc(boot), boot) if not is_tload(c)],
-                      boot_tl_after_seal=[dict(edge=C['CAL_S'] + t + TL_OUT_EDGES, label=l,
-                                               word=f'{tl_word(k_, d_, e_, pay):0272x}')
-                                          for t, (d, c, l), (k_, d_, e_, pay) in
-                                          zip([t for t, (d, c, l) in zip(_acc(boot), boot) if is_tload(c)],
-                                              [x for x in boot if is_tload(x[1])], tl_tab)],
-                      boot_end_after_seal=C['CAL_S'] + _acc(boot)[-1] + (TL_OUT_EDGES if tl_tab else 0),
+                                           for t, (d, c, l) in zip(_acc(boot), boot)],
                       stage0_local=[dict(edge=C['CAL_S'] + t + C['LOC_EDGES'], kind='EMB', label=l)
                                     for t, (d, c, l) in zip(_acc(stage0), stage0)]),
-        status=status, tload=tl_rec,
+        status=status,
         digest=f'{digest(image):016x}', footer=f'{pw[1023]:016x}',
         not_compiled=[
             'G-C4 DV slice lowering: slice PROG image (the 457-b SU words of the SU commands\' pidx = ISA PC), STN / ROOT / '
@@ -707,34 +614,7 @@ def compile_image(a):
             'stage-0 slice commands beyond the LOCAL EMB start (E calendar / embedding landing not compiled)',
             'LM-head (stage 37) ME programme: the head has one fixed-issue calendar per image, armed at base 0 only',
             'per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)'])
-    if getattr(a, 'dv_lower', False):
-        rec.update(dv_lower_section(rec))
     return image, rec
-
-
-def dv_lower_section(rec):
-    """QLB-C4 (G-C4): the DV slice lowering (tools/qwen_layerbench/dv_lower.py) of this image's programme."""
-    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_layerbench'))
-    import dv_lower as DL
-    lw = DL.lower()
-    su_bc = [e['label'] for e in rec['cal']['decode'] if e['label'].startswith('SU PC') and
-             int(e['label'][5:]) in lw['isa']['ssq_pcs']]
-    nc = [x for x in rec['not_compiled'] if not x.startswith('G-C4 DV slice lowering')]
-    nc = ['G-C4 DV slice lowering (dv_lower.py): LOWERED = slice map / SETID ids / cmd + scalar chain ages, row '
-          'ownership of every matrix, slice-local VM map, PROG image + kind-3 stream words, the global RMSNorm sum of '
-          'squares (per-slice SSQ, PSUM tags = golden block positions, fused ROOT r) with a collision-free scalar-chain '
-          'schedule; NOT LOWERED: ' + '; '.join(lw['not_lowered'])] + nc
-    nc.append('decode calendar still issues the sum-of-squares ops as broadcast SU commands (%s): dv_lower --mutant '
-              'broadcast shows that schedule collides on the scalar chain (%d collisions); the calendar must take '
-              "dv_lower's per-slice entries (ssq_entry) -- next step" % (', '.join(su_bc), len(DL.lower('broadcast')['expected']['collisions'])))
-    nc.append('RTL GAP (LM head): ot_qfd_tt_ctlm_head_static_rk / split_static arm the fixed-issue calendar only at '
-              'prog_base 0 (u_fixed_issue .start(q_h_start && q_prog_base == 0)) and PW976..983 hold ONE 8-row '
-              'calendar per image: an LM-head ME programme at another base cannot issue on a compiled cycle')
-    return dict(not_compiled=nc, dv_lowering=dict(
-        tool='tools/qwen_layerbench/dv_lower.py', slices=lw['slice_map']['names'], cmd_arrival=lw['slice_map']['cmd_arrival'],
-        residual_blocks=lw['ownership']['residual']['blocks_per_slice'], vm=lw['vm'], root=lw['root'],
-        prog_sha256={s: hashlib.sha256(''.join(w).encode()).hexdigest() for s, w in lw['prog'].items()},
-        commands=lw['commands'], ssq_entry=lw['ssq_entry'], ages=lw['ages'], die_gaps=lw['die_gaps']))
 
 
 def _acc(entries):
@@ -824,19 +704,11 @@ def main():
                     help='tt_ctlm XPF_TRANSPORT_EDGES (default 1 + R_HR: the hr register + the hr relays)')
     ap.add_argument('--me-observe-edges', type=int, default=1, help='head fixed issue -> actual_me_observe edges')
     ap.add_argument('--su-first-write', type=int, default=12, help='SU command at the W5 pin -> its first VM write')
-    ap.add_argument('--dv-lower', action='store_true', help='attach the DV slice lowering (dv_lower.py, G-C4)')
-    ap.add_argument('--tload', action='store_true',
-                    help='compile BOOT table-load entries and payload blocks for tt_ctlm.tl -> dvs_W5.st_wi')
     a = ap.parse_args()
     try:
         image, rec = compile_image(a)
     except (CompileError, AssertionError) as e:
         print(f'CTLM_IMAGE REFUSED: {e}')
-        return 2
-    except Exception as e:                       # dv_lower.LowerError
-        if type(e).__name__ != 'LowerError':
-            raise
-        print(f'CTLM_IMAGE REFUSED (dv lowering): {e}')
         return 2
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

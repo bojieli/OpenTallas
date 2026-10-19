@@ -32,10 +32,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 # Q-DIE13 10-18: qfd_rst_rep / _p8 are CLOSED (979687b41); a case planned with OT_RST_REP_VIEW=closed binds them
 SKIP_RE = re.compile(r'^(q[fk]d_rly)' if os.environ.get('OT_RST_REP_VIEW', '') == 'closed' else r'^(q[fk]d_rly|qfd_rst_rep)')
-# Q17-PILOT 10-19: OT_BIND_FWD_RLYH0=1 binds forwarded hop-0 lanes (qfd_rlyh0_*) by name like any master (closed qfwd_rlyh0
-# f1 views, main a66242c97); a frame without a same-name view stays assumed and is listed in no_view. Plain relays stay skipped.
-if os.environ.get('OT_BIND_FWD_RLYH0', '0') == '1':
-    SKIP_RE = re.compile(r'^(?!qfd_rlyh0_)' + SKIP_RE.pattern.lstrip('^'))
 PG = ('VDD', 'VSS', 'VDDM', 'VSSM')
 # Slot-name wrappers are identity renames only: pins, geometry and timing stay in the
 # CLOSED source view. tp8b_v5 emits the source RTL ports and preserves the clock pin clk.
