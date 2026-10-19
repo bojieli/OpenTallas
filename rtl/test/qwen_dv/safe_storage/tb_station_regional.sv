@@ -23,7 +23,7 @@ endfunction
 localparam integer INJ = NCYC/4;
 localparam [13:0] PAT = 14'b10110110100000;
 reg inj_done = 0;
-reg [13:0] lo_hist = 0; reg active = 0; integer ph = 0;
+reg [14:0] lo_hist = 0; reg active = 0; integer ph = 0;   // far (hi) valid = near (lo) valid SKEW=14 edges earlier: bit 14 (bit 0 = this edge)
 always @(negedge ck) begin
     cycle = cycle + 1;
     rst_n = !((cycle < 6) || (cycle >= NCYC/2 && cycle < NCYC/2 + 6));
@@ -38,11 +38,11 @@ always @(negedge ck) begin
         active = (cycle >= 60 && cycle < NCYC/2 - 80);
         cfg_v = (cycle == 40) || (active && ph == 1 && (cycle % 224) < 14);
         cfg_mode = 0; cfg_wsrc = (cycle/8)%2; cfg_nwords = 8'd255; cfg_sbase = (cycle/16)%512; cfg_kcm1 = 0;
-        lo_hist = {lo_hist[12:0], active && PAT[ph]};
+        lo_hist = {lo_hist[13:0], active && PAT[ph]};
         rs_s[512] = active && PAT[ph]; rs_n[512] = active && PAT[ph];
-        rs_s[1026] = lo_hist[13]; rs_n[1026] = lo_hist[13];
+        rs_s[1026] = lo_hist[14]; rs_n[1026] = lo_hist[14];
         rs_s[513] = 0; rs_s[1027] = 0; rs_n[513] = 0; rs_n[1027] = 0; nb_i[513:512] = 0;
-        if (cycle >= INJ && lo_hist[13] && !inj_done) begin rs_s[514+32*6 +: 32] = 32'h7fc00000; inj_done = 1; end
+        if (cycle >= INJ && lo_hist[14] && !inj_done) begin rs_s[514+32*6 +: 32] = 32'h7fc00000; inj_done = 1; end
     end else if (quiet) begin
         cfg_v = 0; rs_s = 0; rs_n = 0; nb_i = 0;
     end else begin
@@ -103,6 +103,8 @@ always @(posedge ck) begin
         if (m_hist[FLT_LAG] && !g_fault) $fatal(1, "REGIONAL_FAULT_LATE edge%0d (> %0d edges)", cycle, FLT_LAG);
     end
     m_out_d = m_out;
+    if (rst_n && m_fault && !m_hist[1] && flt_m_n == 0)
+        $display("FAULT_SOURCE edge%0d mono in_bad%0d fp_bad%0d cfg_sched%0d", cycle, u_m.in_bad, u_m.fp_bad, u_m.cfg_schedule_fault);
     if (cycle < INJ && rst_n && m_fault) $fatal(1, "PHASE1_UNEXPECTED_FAULT edge%0d (stimulus not protocol-legal)", cycle);
     if (cycle == NCYC/2 - 2 && !(m_fault && g_fault)) $fatal(1, "PHASE1_INJECTED_FAULT_MISSING mono%0d regional%0d", m_fault, g_fault);
     if (m_r_v) rv_n = rv_n + 1;
