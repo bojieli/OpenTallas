@@ -1,0 +1,27 @@
+{
+ "scope": "Actual recorded TP8 Q4/K1/V1 stage component, old frozen arithmetic RTL only",
+ "source_commit": "9f185989e",
+ "fixture_commit": "cbd33f5a9",
+ "driver_commit": "707450fc4",
+ "binary_sha256": "186f99c45ae285d86dbc7bb1daf533da555b7dfb75031d4ba8c2b2b42552fb9c",
+ "cases": [
+  {
+   "case": "L0_qk",
+   "result": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L0_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+   "rc": 0,
+   "expected_rc": 0
+  },
+  {
+   "case": "L1_qk",
+   "result": "DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L1_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+   "rc": 0,
+   "expected_rc": 0
+  },
+  {
+   "case": "MUT_L0_qk_ropesign",
+   "result": "DV_LOWER_VEC qk FAIL 5/7 mutant=ropesign commands=26 collisions=0 ar_order=slice fixture=L0_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768",
+   "rc": 1,
+   "expected_rc": 1
+  }
+ ]
+}

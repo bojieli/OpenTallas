@@ -1,0 +1,98 @@
+{
+ "schema": "opentallas.qwen.dv-layer-fixture-tp8stages.v1",
+ "layer": 1,
+ "position": 8191,
+ "tp_gold": 8,
+ "tp8_die": 0,
+ "oracle_collective_profile": "production_tp8_two_level (rank 4*DIE+PKG, pair r[p]+r[p+4], ((P0+P1)+P2)+P3)",
+ "provenance": "Recorded native TP8 snapshots and collective returns; no TP4 inputs or re-execution",
+ "image_sha256": {
+  "program.hex": "44e0e715c33b14b6d630325e832c8fb94f7427c895c05df9b2be4207bd345dce",
+  "segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+  "crom.hex": "e34f31be589e941d6aa788332049dc247a7f51d9a854051b6eb658b0bbccf649",
+  "matrix_scale_bf16.hex": "0d23db625759e9c40fe85d870999218623556848ab067bc5c4e01ffd34f1884c",
+  "layer1_rom.json": "70b2eeaac2375cac841188c2ead2b0d1531ee9b5a11d851f54d8452263b25181"
+ },
+ "inputs_sha256": {
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/oracle.json": "e10fb57fab813f80d119b33e0cc5b6639b398e90ebb1ab5c5fe4e7dd2e8b7aaa",
+  "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc0_vm.npz": "42f17ccbdf938756bee95b0f90d320503c571fa5783c5d57a8311355fe1c4f9f",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc1_vm.npz": "4d79183b0df4b40fe50e710746efcef39ef4a31b704e9919567dddf7f371eb61",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc2_vm.npz": "1645e692055ddfc23a6ae47ef2ed8fd03e3af8f0b14e781a5c120b46dc99671a",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc9_vm.npz": "27c5d2b61fc57e2a43881f4ea7cc9c07b5eab0db3549acd8764819630c58e929",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc14_vm.npz": "831e002d6fcb731062c565040159caec795d8aeb46d5dd2120178ed5dfdbf495",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc16_vm.npz": "7a19de464d42e978b202393232567e758ccaba9024d78e0030444dc69b7e26ed",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc17_vm.npz": "5e50215a9a4f51caeddcb3286a0cedcf0baa50c639f69793fc1e7431f6918bb0",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc18_vm.npz": "49d1ed9b644f018b609244f0d16afef8f907760b8cd4f15855fb54d8214e6dd6",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc19_vm.npz": "7cdfac2e156b9b3c731300944657b82b85c70283c2e73aaf5582a5d52be4f9a1",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/candidate_pc20_vm.npz": "4e74760e0e390372feec421f06b865a9a0af8c8f02e210cfe0cb03194b709d10",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/collective0_return.hex": "57e417a3025372a0275182f011315163f60273efc1b87f14d5b8fec9b3515106",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/collective1_return.hex": "f56eedf374fbc80ece19f3aba9f5ccb189dd3d2228ddcae909d5ac7a4638acda",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/new_K_row_fp32.hex": "35f4db6c833747f0fc6026fc68b3344c26365925bd6ca94cdc0a0afc818e2061",
+  "/srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019/gold/P8191/P8191/die0/L1/new_V_row_fp32.hex": "a764e23a155e5a7adead58ff664ffc8dbb26776b2fcf841796f8bdd208655f2e"
+ },
+ "stages": {
+  "resid1": {
+   "file": "L1_resid1_tp8.npz",
+   "sha256": "ba35fc5cf2fe87c587cf52f4163cf0981fed76d4c692919d9958ea2ee94e79a1",
+   "keys": [
+    "gold_r",
+    "gold_x",
+    "pos",
+    "ps1",
+    "t",
+    "x"
+   ]
+  },
+  "qk": {
+   "file": "L1_qk_tp8.npz",
+   "sha256": "a9ab1bea85c086b348ec5b952643ae30b9ea50a05dc491766f63fe1ea182e4c3",
+   "keys": [
+    "gold_k",
+    "gold_q",
+    "gold_v",
+    "k_norm",
+    "pos",
+    "q_norm",
+    "qkv",
+    "r"
+   ]
+  },
+  "silu": {
+   "file": "L1_silu_tp8.npz",
+   "sha256": "1a3c8ca7773b8a4edcdaa124525ecad9b6bacd781a6d4e56d9d5cb889c79e0db",
+   "keys": [
+    "gold_act",
+    "gu",
+    "gu_r",
+    "r"
+   ]
+  },
+  "mat_qkv": {
+   "file": "L1_mat_qkv_tp8.npz",
+   "sha256": "4854a083d486d12763b3e20e8bf3c27d4eb02b7129a512253f82dbce9f7a0ba1",
+   "keys": [
+    "gold_y",
+    "s",
+    "split",
+    "w",
+    "x"
+   ]
+  },
+  "mat_gu": {
+   "file": "L1_mat_gu_tp8.npz",
+   "sha256": "c90e600a531233d0a1521e2a7aa010948c84effc276512f67d30d2b49b8e0d53",
+   "keys": [
+    "gold_y",
+    "s",
+    "split",
+    "w",
+    "x"
+   ]
+  }
+ },
+ "missing": [
+  "resid2: no recorded next-layer normalization; no synthetic golden emitted"
+ ],
+ "tool_sha256": "146d8301ce6f68ca82c7e411f4af795ecadb1ed6549230cbbdcee7fd47240151"
+}

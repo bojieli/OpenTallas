@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-epyc5       admits   539 GB (avail 490, growth 113, headroom 0, waiters 0/0 GB) load 67/128 running 11 disk 1038 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-tp8-stages-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1710828-1792428891 after 0 s
+TP8STAGES 0 ['mat_gu', 'mat_qkv', 'qk', 'resid1', 'resid2', 'silu'] missing []
+TP8STAGES 1 ['mat_gu', 'mat_qkv', 'qk', 'resid1', 'silu'] missing ['resid2: no recorded next-layer normalization; no synthetic golden emitted']
+DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L0_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768
+DV_LOWER_VEC qk PASS 7/7 mutant=0 commands=26 collisions=0 ar_order=slice fixture=L1_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768
+DV_LOWER_VEC qk FAIL 5/7 mutant=ropesign commands=26 collisions=0 ar_order=slice fixture=L0_qk_tp8.npz q heads 4 / k / v, d2d words=96 span_cycles=926 isa_gold_words=768/768
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1710828-1792428891): exit 0
