@@ -982,12 +982,20 @@ def _host_rt_v14(b):
 DCAL = __import__('os').environ.get('OT_KV_DCAL', '0') == '1'
 DCAL_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv'
 DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_seg']
+# DIE-KV-LEAD 10-19 (KV-PLAN5 d2d cfg double-producer finding): the static D2D end's calendar cfg loader (cfg_tx_we /
+# cfg_rx_we / cfg_addr / cfg_data) has ONE producer, the boot dispatcher image target 11 (KVJ-SMALL LINKCFG=1, compiled
+# from the current d2d_cal_image by kv_static_programme.link_cfg_words; kv_static_boot_join binds it on the link end, so the
+# die nets n_ks_kvs_ctl__boot__link_cfg_* reach the d2ds identity pins). The calendar sequencer qkd_dcal drives only the
+# run strobes cal_start / cal_seg; its own cfg_* outputs (a compile-time image, stale whenever TXDP changes) are load-less.
+DCAL_CS = ['cal_start', 'cal_seg']
+DCAL_CFGW = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data']
 DCAL_WH = (18.792, 28.08)
 
 
 def dcal_binding():
     return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),
-                ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CFG), ego=['epoch_go'], hlt=['halt'], rld=['reload']),
+                ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'], hlt=['halt'],
+                           rld=['reload']),
                 sliced={}, classed={})
 
 
@@ -995,7 +1003,7 @@ def _d2ds_binding_dcal():
     # always bound (a die without the dcal instance has no cal / eab pins, so the groups are unused): the post-prep
     # chain re-runs the strict bind without the OT_KV_* environment and must see the same bindings
     b = d2ds_binding()
-    b['ports'].update(cal=list(DCAL_CFG), eab=['epoch_abort'])
+    b['ports'].update(cal=list(DCAL_CS), eab=['epoch_abort'])
     return b
 
 
@@ -1013,8 +1021,8 @@ RTL.update(qkd_dcal=DCAL_FILE)
 KVNC = __import__('os').environ.get('OT_KV_KVNC', '0') == '1'
 KVNC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv'
 KVNC_WH = (12.96, 19.44)
-KVNC_CS_BIT = sum(dict(cfg_tx_we=1, cfg_rx_we=1, cfg_addr=6, cfg_data=32)[p_] for p_ in DCAL_CFG[:DCAL_CFG.index('cal_start')])
-assert KVNC_CS_BIT == 40      # LSB-first bit of cal_start in n_dcal_cfg
+KVNC_CS_BIT = DCAL_CS.index('cal_start')
+assert KVNC_CS_BIT == 0       # LSB-first bit of cal_start in n_dcal_cfg (cal_start / cal_seg only, DIE-KV-LEAD 10-19)
 BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, parameters=dict(MUT=0),
                               ports=dict(ck=['ck'], rst_n=['rst_n'], cs=['cal_start'], lay=['layer'], cht=['cohort_tag'],
                                          chg=['cohort_gen'], kvi=['compiled_identity', 'compiled_generation']),
@@ -2443,7 +2451,7 @@ def _d2ds_swap(m):
         it = F.Inst('dcal', 'qkd_dcal', up(d_.x + d_.w + 21.6, GX), up(d_.y + d_.h / 2 - h_ / 2, GY), w_ - SHAVE, h_ - SHAVE,
                     'R0', kind='ctl', region='io')
         m['insts'].append(it)
-        add(('dcal_cfg', 'spine_local', 1 + 1 + 6 + 32 + 1 + 1, [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        add(('dcal_cfg', 'spine_local', len(DCAL_CS), [('dcal', 'cal'), ('d2d_kv', 'cal')]))
         add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
         add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
         for i_, (bid, cl, bits, eps) in enumerate(B):
