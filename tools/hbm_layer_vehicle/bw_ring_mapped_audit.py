@@ -10,8 +10,9 @@ base = Path(sys.argv[1]).resolve()
 sys.path.insert(0, str(base/'src/tools'))
 import textbook_lint as T
 
-netlist = base/'routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_svc_pc_ctrl_leaf_cfg_safe_asap7_ref_gate/base/1_2_yosys.v'
-g, top = T.flatten(T.parse_verilog(netlist.read_text()), 'ot_hbm_svc_pc_ctrl_leaf_cfg_safe')
+top_name=sys.argv[2] if len(sys.argv)>2 else 'ot_hbm_svc_pc_ctrl_leaf_cfg_safe'
+netlist=next((base/'routes/gate/work/orfs/results/asap7').glob('*/base/1_2_yosys.v'))
+g, top = T.flatten(T.parse_verilog(netlist.read_text()), top_name)
 a = T.build(g, None)
 clks, _ = T.clock_nets(g, a)
 

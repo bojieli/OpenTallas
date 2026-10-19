@@ -7,13 +7,14 @@ p.add_argument('--netlist',type=Path,required=True)
 p.add_argument('--fanout',type=Path,required=True)
 p.add_argument('--contract',type=Path,required=True)
 p.add_argument('--output',type=Path,required=True)
+p.add_argument('--prefix',default='u_ot_pr_core.controller.')
 a=p.parse_args()
 t=a.netlist.read_text(); contract=json.loads(a.contract.read_text())
 families=contract['families']; found={k:[] for k in families}; forbidden=[]; errors=[]
 for m in re.finditer(r'\b(\w+)\s+(\\?[^\s()]+)\s*\((.*?)\);',t,re.S):
  typ,cell,body=m.groups()
  if 'DFF' not in typ: continue
- name=cell.lstrip('\\'); prefix='u_ot_pr_core.controller.'
+ name=cell.lstrip('\\'); prefix=a.prefix
  if not name.startswith(prefix):continue
  suffix=name[len(prefix):]
  base=re.split(r'[\[$]',suffix,maxsplit=1)[0]
