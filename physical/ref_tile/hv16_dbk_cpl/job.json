@@ -1,5 +1,5 @@
 {
- "name": "hv16_dbk_cpl-h7-HEAD",
+ "name": "hv16_dbk_cpl-h7-dc442ca97",
  "block": "ot_hgi_dma_back_static_vp4_banks_cp",
  "ref_tile": true,
  "owner": "Claude:HOURLY-HBM/HH-7",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hh7-dbkcpl-1019",
-  "commit": "HEAD",
+  "commit": "dc442ca97",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -139,7 +139,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv16_dbk_cpl/hv16_dbk_cpl-h7-HEAD"
+   "to": "results/rtl/ref_tile/hv16_dbk_cpl/hv16_dbk_cpl-h7-dc442ca97"
   }
  ],
  "cycles_added": 0,
