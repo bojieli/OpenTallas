@@ -145,8 +145,8 @@ The timeline is the S2 CP schedule. With fixed unit costs the dispatch times are
 | golden | content | state |
 |---|---|---|
 | `goldens/ar_mtp_g5/` | prompt [0]: AR positions 0–6, MTP verify N = 6 (draft 1 **accepted**, draft 2 **rejected**), DSpark draft rows, seeds; npz + json byte-identical to the committed `hbm_mtp_1015/sim_gamma5` SHA256SUMS; `manifest.json` has 630 per-array sha256 | **DONE** |
-| `mu4` | 4 users, 2-token prompts. User 0 = [0, 5] is the control: it must reproduce `ar_mtp_g5` h / pre of positions 0–1 bit for bit. | RUNNING on ot-epyc5 (fetch-on-demand, `serve2`) |
-| `mtp_all5` | forced drafter, all 5 accepted + bonus, plus the layer-major identity check | RUNNING on ot-epyc5 (`serve2`) |
+| `goldens/mu4/` | 4 users, 2-token prompts ([0,5], [2,12366], [3,4521], [4,17808]; argmax 5/223, 17/28, 29/201, 5/16); position 1 of every user = the users N = 4 step. User 0 is the control: reproduces `ar_mtp_g5` h / pre of positions 0–1 bit for bit (160 arrays compared, 0 mismatches, CONTROL PASS). `mu4.npz` sha256 fc19651c… = `mu4.json` npz_sha256; manifest PASS 640 arrays | **DONE** (10-19 06:10) |
+| `goldens/mtp_all5/` | forced drafter, all 5 accepted + bonus, plus the layer-major identity check | **DONE** (sec. 16) |
 
 **The checkpoint problem.** The full 476 GB snapshot exists only on the workstation. So `tools/hbm_next/goldens.py` runs the golden **on the fleet**, over its 14 GB sparse subset, and a light local daemon ships exactly the missing expert tensors and the embedding and Engram rows on demand. Every fetched range is logged with its sha256 in `fetch/ledger.jsonl`.
 
@@ -301,7 +301,7 @@ Per unit (P4 (a), vs priced): IDXN −0.32% MTP / 0 users (was −3.10% at 953);
 
 ## 10. Pending / next (updated step 5, 10-19 03:55)
 
-1. **Goldens:** `mu4` still running on ot-epyc5 (ETA ~04:40): collect (CONTROL PASS), package, commit. `mtp_all5` DONE.
+1. **Goldens:** DONE (`ar_mtp_g5`, `mtp_all5`, `mu4` CONTROL PASS, 10-19 06:10).
 2. **Whole-token images:** DONE except the layer-20 live-in (IDX.INDEX index frame + index_q.rope, 1,398 words a position): pin it across segments; then VEH runs the images.
 3. **Re-time as redesigns land:** SM4 parallel publish (skew −2.0% in ALL v2), M1 measured; `plane_compiler.py meas --step5`.
 4. Static calendar for the data-dependent spans (union loop U ≤ 6N, KV plan 128 lines a SM): extend `static_check` to the image form.
