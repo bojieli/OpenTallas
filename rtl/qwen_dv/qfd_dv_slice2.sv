@@ -191,7 +191,12 @@ module qfd_dv_slice2 #(
     wire        am_v, tok_v, tok_own;
     wire [23:0] am_idx, tok_idx;
     wire [31:0] am_val, tok_val;
-    qfd_dv_scalar2 #(.MUT(MUT)) u_sc (.ck(ck), .rst_n(rst),
+`ifdef OT_DV_AMAX_MUT
+    localparam integer AM_MUT = `OT_DV_AMAX_MUT;   // bench only (MU-ADOPT-SLICE mutant witnesses): qfd_dv_amax_mu MUT 1..5; 6 = root merge no per-token restart (qfd_dv_scalar2 MU_MUT 1)
+`else
+    localparam integer AM_MUT = 0;
+`endif
+    qfd_dv_scalar2 #(.MUT(MUT), .MU_NU(MU_NU), .MU_MUT((AM_MUT == 6) ? 1 : 0)) u_sc (.ck(ck), .rst_n(rst),
         .cfg_v(c_root), .cfg_root(cmd_q[4]), .cfg_nb(cmd_q[10:5]), .cfg_ss(cmd_q[34:11]),
         .cfg_fuse(cmd_q[35]), .cfg_rx(cmd_q[59:36]), .cfg_eps(cmd_q[91:60]), .cfg_k(cmd_q[96:92]),
         .cfg_amnb(cmd_q[102:97]), .cfg_rdir(cmd_q[103]),
@@ -210,12 +215,7 @@ module qfd_dv_slice2 #(
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
     wire am_emit_empty, am_mu_fault, am_stn_pend;
-`ifdef OT_DV_AMAX_MUT
-    localparam integer AM_MUT = `OT_DV_AMAX_MUT;   // bench only (MU-ADOPT-SLICE mutant witnesses): qfd_dv_amax_mu MUT 1..4
-`else
-    localparam integer AM_MUT = 0;
-`endif
-    qfd_dv_amax_mu #(.NU(MU_NU), .MUT(AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
+    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT == 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(go && kind == 3'd6), .am_clr(cmd_q[4]), .am_emit_cmd(cmd_q[5]),
         .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
     // ------------------------------------------------------------------ stream

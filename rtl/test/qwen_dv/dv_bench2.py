@@ -450,7 +450,10 @@ def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
     data word (default 18: the next STN issues while the previous op's last results are still in the compare tree, so
     the user must travel down the tree).  Check: per emit, the root token, the ring broadcast and slice 1's token
     equal the golden single-shot argmax of that user's rows (np.argmax: lowest index of the maximum); no fault.
-    At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL."""
+    At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL.  One ROOT cfg at the start: at MU_NU > 1
+    the root restarts its argmax merge after each token (qfd_dv_scalar2 MU_NU; a ROOT cfg per user token would clear
+    other users' PSUM slots); DV2_AM_MUT 6 removes that restart and must FAIL (every token = the largest head so far).
+    DV2_GAP 12 / 14 issue the next STN while the previous op's results are pending: the stn_pend fault must fire (FAIL)."""
     seed = int(os.environ.get("DV2_SEED", seed))
     rng = np.random.default_rng(seed)
     gap = int(os.environ.get("DV2_GAP", "18"))
