@@ -93,4 +93,24 @@ endmodule
 module qfd_c_land_r258_safe(input wire ck,rsi, input wire [1031:0] bank, output wire [257:0] o);
  qfd_c_land_safe_r #(.W(258)) u(.ck(ck),.rsi(rsi),.bank(bank),.o(o));
 endmodule
+
+module qfd_c_land_w257_narrow(input wire ck,rsi,input wire [256:0] i,output wire [513:0] bank_w,bank_e);
+ wire [1027:0] b; assign {bank_e,bank_w}=b;
+ qfd_c_land_safe_w #(.W(257)) u(.ck(ck),.rsi(rsi),.i(i),.bank(b));
+endmodule
+
+module qfd_c_land_r257_narrow(input wire ck,rsi,output wire [256:0] o,input wire [513:0] bank_w,bank_e);
+ wire [1027:0] b; assign b={bank_e,bank_w};
+ qfd_c_land_safe_r #(.W(257)) u(.ck(ck),.rsi(rsi),.bank(b),.o(o));
+endmodule
+
+module qfd_c_land_w258_narrow(input wire ck,rsi,input wire [257:0] i,output wire [515:0] bank_w,bank_e);
+ wire [1031:0] b; assign {bank_e,bank_w}=b;
+ qfd_c_land_safe_w #(.W(258)) u(.ck(ck),.rsi(rsi),.i(i),.bank(b));
+endmodule
+
+module qfd_c_land_r258_narrow(input wire ck,rsi,output wire [257:0] o,input wire [515:0] bank_w,bank_e);
+ wire [1031:0] b; assign b={bank_e,bank_w};
+ qfd_c_land_safe_r #(.W(258)) u(.ck(ck),.rsi(rsi),.bank(b),.o(o));
+endmodule
 `default_nettype wire
