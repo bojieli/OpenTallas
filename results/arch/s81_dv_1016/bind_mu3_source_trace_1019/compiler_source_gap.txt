@@ -1,0 +1,24 @@
+Exact current-main 58fc3dbc1aa63cb27a6bd3b3117ac2c04e13f3dc tools/s81_dv/layer_prog/lower_svc.py
+97: QF_PRODUCER_GAP = ('the q words reach the entry q pins from u_s_3S (W) / u_s_4S (E) ot_s81sl_xr band bo; the slice send '
+98:                    'programme of the svc q stream (frame header rows + q / own-row payload rows) is not compiled, so a '
+99:                    'cut holding the producer slice cannot be checked for these words (a cut holding the svc entry is '
+100:                    'driven with them)')
+461:     else:
+462:         st = 'GAP'
+463:         r['gap'] = dict(module='results/arch/s81_dv_1016/bind_p4l3_g8/die.v u_rsv_00..15 (dsdv_svc_rs SM face) -- die gap G9',
+464:                         port='w_v / w_a / w_m / w_d / w_st',
+465:                         missing='the SM head (ot_s81_su_sms, dsdv_svc_rs.sv:215-219) computes the head\'s max / exp / '
+466:                                 'den from the SE rows, but its write face has NO consumer anywhere in rtl/ (open outputs '
+467:                                 'on all 16 u_rsv_*; die_port_bind does not count unconnected outputs, so strict bind '
+468:                                 'PASSes and synthesis would remove the SM): the P operand of the PV frame (16 heads x 2 '
+469:                                 'rows BF16 a word, from 16 different slices) and the normalised o rows have no on-die '
+470:                                 'path; the bench feeds P = bf16(fixture attn.exp) as runtime data. Needs an RTL dataflow '
+471:                                 'decision (gaps.json G9 options), not a lowering') if not PPATH else dict(
+472:                         module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
+473:                         port='w_v / w_a / w_m / w_d (SO o rows; die.v: open)',
+474:                         missing='the SO job (den divide + inverse RoPE -> BF16 o rows) runs in slice g, but its o rows '
+475:                                 'leave only on w_*, which nothing on the die reads, and its operand rows (P.V of head g, '
+476:                                 'all dims) exist on-die only as the owners\' P.V quarter words at the entry pv pins: '
+477:                                 'needs (a) the SO operand rows back as SMJ frames (slice band send programme) or an '
+478:                                 'in-grid head gather, (b) an o-row exit (return tree -> pv pins), (c) the cross-die '
+479:                                 'quarters (G10)')

@@ -1,0 +1,6 @@
+EXPECTED_FAIL upper_payload_tie SEND bit ownership changed; no literal-zero proof
+EXPECTED_FAIL top_bit_live SEND bit ownership changed; no literal-zero proof
+EXPECTED_FAIL truncated_payload SEND bit ownership changed; no literal-zero proof
+EXPECTED_FAIL bo_bypass bo no longer exact registered packet
+CLASSIFIER_PASS {"functional_header": [[1, 12], [21, 51]], "functional_upper_payload": [564, 1075], "literal_zero": [1076, 1103], "reserved_zero_header": [13, 20]}
+RELEASE_FAIL functional unread1110; no selected producer SEND programme; no SM target

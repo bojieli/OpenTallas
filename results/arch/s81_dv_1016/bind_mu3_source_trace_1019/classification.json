@@ -1,0 +1,123 @@
+{
+  "schema": "opentallas.s81.mu3.source_gap.v1",
+  "source_ref": "ceaed19c4",
+  "checker_ref": "58fc3dbc1aa63cb27a6bd3b3117ac2c04e13f3dc",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c3x.sv": "b647368f53b6c1d05b6e4afa6ac08c24d5b3b19dd1f518e00e709609093dcdab",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv": "eec357161b92f13d2c97ede20534358d4f3abc6bb014a44ab6dca0b81a6727ea",
+    "results/arch/s81_dv_1016/bind/bind_table_p4l3_mu.json": "7c8055600dc8cd57c48332ee0d0ad6a3b065fc6ca8da6ee975e8128b9860f2de"
+  },
+  "producer_programme": {
+    "source": "tools/s81_dv/layer_prog/lower_svc.py",
+    "ref": "58fc3dbc1aa63cb27a6bd3b3117ac2c04e13f3dc",
+    "sha256": "70f0d9f13a3ced7b0df25dfee463324758c7beabcefdd86716eea04c7fd1ddd4",
+    "selected_slice_SEND_compiled": false,
+    "pair_count_proven": false,
+    "reason": "QF_PRODUCER_GAP: entry-cut q words injected, producer slice SEND programme absent"
+  },
+  "unread_classes": [
+    {
+      "instances": [
+        "u_s_3S",
+        "u_s_4S"
+      ],
+      "port": "bo",
+      "lo": 1,
+      "hi": 12,
+      "bits_each": 12,
+      "role": "functional SEND header, no die consumer",
+      "spare_authorized": false
+    },
+    {
+      "instances": [
+        "u_s_3S",
+        "u_s_4S"
+      ],
+      "port": "bo",
+      "lo": 13,
+      "hi": 20,
+      "bits_each": 8,
+      "role": "literal zero reserved header bits from snd[20:13]=8'd0",
+      "spare_authorized": false
+    },
+    {
+      "instances": [
+        "u_s_3S",
+        "u_s_4S"
+      ],
+      "port": "bo",
+      "lo": 21,
+      "hi": 51,
+      "bits_each": 31,
+      "role": "functional SEND header, no die consumer",
+      "spare_authorized": false
+    },
+    {
+      "instances": [
+        "u_s_3S",
+        "u_s_4S"
+      ],
+      "port": "bo",
+      "lo": 564,
+      "hi": 1075,
+      "bits_each": 512,
+      "role": "pk[1023:512], arbitrary functional upper payload",
+      "spare_authorized": false
+    },
+    {
+      "instances": [
+        "u_s_3S",
+        "u_s_4S"
+      ],
+      "port": "bo",
+      "lo": 1076,
+      "hi": 1103,
+      "bits_each": 28,
+      "role": "literal zero from snd default, never overwritten",
+      "spare_authorized": false,
+      "reason": "classification only; no canonical pad/RTL boundary change"
+    }
+  ],
+  "unread_total": 1182,
+  "functional_unread": 1110,
+  "literal_zero_unread": 72,
+  "SM_target": {
+    "instances": 16,
+    "ports": {
+      "w_v": 1,
+      "w_a": 14,
+      "w_m": 16,
+      "w_d": 512,
+      "w_st": 12
+    },
+    "width_total": 555,
+    "clock": "regional ck",
+    "producer": "ot_s81_su_sms, SE/SO mutable operand/result rows",
+    "missing": "actual row-memory/result consumer; G9/G9b documented by compiler",
+    "minimal_target_model": {
+      "capture": "registered fixed-age v/a/m/data plus jid/status, matching regional clock or landed CDC",
+      "write_semantics": "16 lanes x32-bit masked writes to actual runtime mutable memory, real address mapping and capacity",
+      "completion": "preserve currentjid and status; propagate faults to immutable status fold",
+      "timing": "actual u_sms output age / capture / SO return age must be measured; unknown, not zero",
+      "storage": "actual result lifetime and depth required before selecting SRAM (>2kb) or finite FF",
+      "parent_route": "all16source regions\u2192head/gather/rowexit source mapped, <=405um hops and TT/FF neighbor clock proof"
+    },
+    "no_sink_or_spare_permitted": true
+  },
+  "verdict": "FAIL_FUNCTIONAL_SOURCE_GAPS",
+  "strict_replay": {
+    "remote": "ot-epyc7:/srv/opentallas-scratch/claude/codex-s81-bind-source-1019",
+    "client_pid": 2162248,
+    "checker_pid": 4187588,
+    "state": "RUNNING",
+    "die_sha256": "61b683b697d17b7d6d1619352d302648d835822677c02097ce48639a0aa399b8",
+    "checker_sha256": "4bf68f06b20f43fe1e8950422d3633e5705acd3da951ae7e63f7645e4941d5f7",
+    "table_sha256": "7c8055600dc8cd57c48332ee0d0ad6a3b065fc6ca8da6ee975e8128b9860f2de",
+    "verified_source_sha256": {
+      "tools/s81_dv/dv_bind.py": "675582684d43664621177437214344b56e3b6332036656ca3b9b8fc14467a94e",
+      "tools/s81_dv/dv_spare_out.py": "4a862dccc5c77f877cdcb080e69e09746f8c54d35a8fda5fc7b229583ad582a7"
+    }
+  }
+}
