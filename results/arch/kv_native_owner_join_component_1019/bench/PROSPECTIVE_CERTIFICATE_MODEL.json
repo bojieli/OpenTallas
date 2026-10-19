@@ -16,10 +16,13 @@
   },
   "shared_predicates": {
     "certificate_key_match": "certificate_key == {a_q.client,a_q.slot,a_q.desc_gen,terminal37(a_q.request_tag),a_q.native_gen}",
-    "raw_seen_now": "a_q.raw_seen || (raw_done_v && !raw_unready && raw_active_match)",
-    "terminal_seen_now": "a_q.terminal_seen || (terminal_v && terminal_tag==expected_terminal && terminal_gen==a_q.native_gen)",
-    "enabled_eligible": "a_q.valid && !fault_q && !a_q.cert_seen && certificate_health_bound && certificate_key_match && raw_seen_now && terminal_seen_now",
-    "certificate_key_ok": "!ENABLE_NATIVE_OWNER_JOIN || enabled_eligible"
+    "raw_seen_now": "a_q.raw_seen || (raw_done_v && raw_current_valid)",
+    "terminal_seen_now": "a_q.terminal_seen || (terminal_v && terminal_current_valid)",
+    "enabled_eligible": "a_q.valid && !fault_q && !a_q.cert_seen && certificate_health_bound && certificate_key_match && raw_seen_now && terminal_seen_now && current_events_valid",
+    "certificate_key_ok": "!ENABLE_NATIVE_OWNER_JOIN || enabled_eligible",
+    "raw_current_valid": "raw_active_match && !raw_unready && !a_q.raw_seen",
+    "terminal_current_valid": "a_q.valid && !a_q.terminal_seen && terminal_tag==expected_terminal && terminal_gen==a_q.native_gen",
+    "current_events_valid": "(!raw_done_v || raw_current_valid) && (!terminal_v || terminal_current_valid)"
   },
   "DAG": [
     [
@@ -55,7 +58,9 @@
     "certificate_v -> certificate_key_ok",
     "certify -> prospective key",
     "a_d including certificate branch -> certificate_key_ok",
-    "late rc_bad mask -> already committed mirror"
+    "late rc_bad mask -> already committed mirror",
+    "event_copy_v -> certificate_key_ok",
+    "retained seen1 masking an invalid/duplicate CURRENT event"
   ],
   "authoritative_cut": "pending_v && pending_age+1==H, unchanged actual edge",
   "same_edge_boundary": "D==H allowed by original scheduler. Use genuine validated raw/terminal events in OR with retained seen bits, preserving existing a_d same-edge semantics without circular dependency. Pure retained-only eligibility would reject a previously legal rawdone-at-H trace. Parent review required.",
@@ -64,7 +69,7 @@
     "existing_raw_owner_compare_bits_reused": 44,
     "existing_terminal_compare_bits_reused": 61,
     "additional_equality_comparator_bits_if_shared_exactly": 0,
-    "predicate_glue": "about12 two-input AND/OR equivalents plus input inversions, mode/default and bad-next insertion; exact mapping OPEN",
+    "predicate_glue": "explicit raw_current_valid, terminal_current_valid, current-event guards, seen ORs, mode/default and cut veto; roughly18-22 small two-input AND/OR equivalents/inversions depending exact reuse; exact source/mapped census OPEN, no zero combinational-cost claim",
     "key87_tree_if_duplicated": "87XNOR plus22+6+2+1 reduction nodes, five logic levels including XNOR; duplicate is not priced as zero",
     "fanout": "key bits one shared comparator each; existing seen/match flags gain roughly1 eligibility load; eligibility drives scheduler cut veto and core certification guard, bounded logical2 plus optional diagnostic1. Strict all-driver <=32/copy/route census remains required before physical adoption."
   },
@@ -75,5 +80,14 @@
     "old CQ/event keys immutable across next unbound issue",
     "no production H/calendar/native health/CDC/physical claims"
   ],
-  "negative_witness_before_repair": "On current first prompt malformed certificate cases10..13, initial committed pos/tok/ngen must stay0 after the genuine attempted certification edge. Current source is expected to fail; preserve exact source/log before repair."
+  "negative_witness_before_repair": "On current first prompt malformed certificate cases10..13, initial committed pos/tok/ngen must stay0 after the genuine attempted certification edge. Current source is expected to fail; preserve exact source/log before repair.",
+  "mandatory_source_diagnostics": {
+    "native_certificate_attempt_v": "ENABLE_NATIVE_OWNER_JOIN && cut_now, independent accepted certificate_v",
+    "event_certified_v": "actual ENABLE_JOIN && ep_v && certify && cert_generated event-lineage certificate constructor"
+  },
+  "old_source_negative_cases": {
+    "10": "first prompt malformed epoch, known committed initial0",
+    "15": "step0 prompt healthy, then actual generated step1 malformed epoch; prior known mirror1/70002/0 and normal-event count0"
+  },
+  "gate_edit_status": "NOT_EDITED; parent must review exact amended DAG and preserve old-source failures first"
 }
