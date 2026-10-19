@@ -1,9 +1,9 @@
 COLLQ FAULT PASS scenario=3 gq0000 ra0000 rb0000 ks0010
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:259: Verilog $finish
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:264: Verilog $finish
 COLLQ unexpected fault gq0000 ra0000 rb0000 rs0000 ks0010
-COLLQ missing write q1 b0 cyc176
+COLLQ missing write q1 b0 cyc178
 COLLQ FAIL errors=2
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.125 s; speed 16.251 us/s
-- Verilator: cpu 0.126 s on 1 threads; alloced 1023 MB
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:283: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.082 s; speed 24.821 us/s
+- Verilator: cpu 0.073 s on 1 threads; allocated 13 MB
