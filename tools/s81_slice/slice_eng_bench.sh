@@ -11,10 +11,11 @@ CAL="rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv rtl/dsrom_sys
 XS="rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv $CAL rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv"
 CAP="rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv rtl/hdc/ot_hdc_cg.sv rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv"
 EG=$(ls rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg*.sv 2>/dev/null | grep -v test | tr '\n' ' ')
+SL=${SLICE_SRCS:-rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv}
 srcs="$(cat physical/hbm_norm_split_20261008/sources.f rtl/dsrom_sys/s81_dv/slice/test/leaf_bench.f | sort -u | tr '\n' ' ') $MAC
  rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv $EG
  rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv
- rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv $XS $CAP rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_eng.sv"
+ rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv $XS $CAP $SL ${SLICE_ENG_TB:-rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_eng.sv}"
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD +define+DSFD_PQ_STATIC_X2 -GVS_MUT=$M --top-module tb_s81sl_slice_eng -Mdir $O/obj $srcs \
   --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; grep -m8 "%Error" $O/build.log; tail -n 4 $O/build.log; exit 3; }
 grep -E "PINMISSING|PINCONNECTEMPTY|PINNOCONNECT" $O/build.log | grep -i "s81sl_\|s81dv_" | head -8
