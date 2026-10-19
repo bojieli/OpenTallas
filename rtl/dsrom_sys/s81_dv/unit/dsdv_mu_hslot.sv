@@ -64,7 +64,8 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
     always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == su) udup = 1'b1; end
     wire col = vld[ss];
     wire cfg_bad = cs < 24'(NSLOT) || crl <= 24'(NSLOT);
-    wire rec = st && on_cal && !udup && (!col || MUT == 2) && !(!armed && cfg_bad);   // the start is recorded
+    wire m2c = MUT == 2 && col;                          // MUT 2: the collision (and the dup it implies) goes unchecked
+    wire rec = st && on_cal && ((!col && !udup) || m2c) && !(!armed && cfg_bad);    // the start is recorded
     wire [31:0] rd = ed[rp];
     wire hit = vld[rp] && rd == tm;
     wire late = vld[rp] && rd != tm && rd - tm > 32'h7fffffff;                     // due edge already passed
@@ -92,8 +93,8 @@ module dsdv_mu_hslot #(parameter integer NSLOT = 47, parameter integer MUT = 0) 
                     if (cfg_bad) t_mf[3] <= 1'b1;
                     else begin armed <= 1'b1; ph <= 24'd1; end
                 end
-                if (!on_cal || udup) t_mf[1] <= 1'b1;
-                else if (col && MUT != 2) t_mf[0] <= 1'b1;
+                if (col && MUT != 2) t_mf[0] <= 1'b1;                            // (a slot collision is also a user dup)
+                else if (!on_cal || (udup && !m2c)) t_mf[1] <= 1'b1;
             end
             // return of the oldest outstanding start, on its due edge
             t_ku <= 32'd0;
