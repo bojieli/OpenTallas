@@ -1,0 +1,125 @@
+{
+  "actual_full_token_delta": null,
+  "added_data_edges_intended": 0,
+  "binary_pointer_alternative": {
+    "actual_area_um2": null,
+    "actual_delay_ps": null,
+    "decode_inv": 2880,
+    "increment_and2": 960,
+    "increment_xor2": 1920,
+    "next_bounded_implementation": "ROOT choice pending reset/lifetime closure",
+    "pointer_bits_per_ring": 9,
+    "pointer_clock_pins": 2880,
+    "pointer_copies_per_ring": 3,
+    "pointer_mux2": 2880,
+    "pointer_q_fanout_upper_model": 11,
+    "reset_forest_ff_lower_bound": 94,
+    "select_to_head_logic_levels": 7,
+    "slot_decode_and2": 15360,
+    "store_fanout_model": 24,
+    "valid_fanout_model": 10
+  },
+  "depth": 8,
+  "kind": "MODEL ONLY; no RTL, synthesis, gate or adoption",
+  "mapped_area_um2": null,
+  "measured_tt_delay_ps": null,
+  "model_fanout": {
+    "incoming_payload_bit": 8,
+    "pointer_q": 12,
+    "store": 24,
+    "valid": 25,
+    "write_enable": 11
+  },
+  "mutants": {
+    "advance_on_bubble": "qualified OLD head mismatch",
+    "clobber_recirculation": "qualified OLD head mismatch",
+    "read_next": "qualified OLD head mismatch",
+    "wrong_head": "qualified OLD head mismatch"
+  },
+  "occupied_reset_counterexample": {
+    "old_head": 3,
+    "reset_pointer_head": 0,
+    "verdict": "raw stale outputs differ; fresh-job block-0 overwrite is REQUIRED"
+  },
+  "outline": null,
+  "parent_fit": null,
+  "payload_bits": 84480,
+  "payload_clock_pins": 84480,
+  "payload_hold_mux2": 84480,
+  "pointer_bits_per_ring": 24,
+  "pointer_clock_pins": 7680,
+  "pointer_copies_per_ring": 3,
+  "pointer_mux2": 7680,
+  "proof": {
+    "bubbles": 400513,
+    "occupied_resets": 1600,
+    "qualified_old_heads": 47776,
+    "wraps": 32960
+  },
+  "read_and2": 84480,
+  "read_logic_levels": 4,
+  "read_or2": 73920,
+  "reset_forest_ff_lower_bound": 249,
+  "rings": 320,
+  "source_sha256": "4675ccc00253cc67d07a9820bcb7c8f6c8b5020cd18dd2118ec7dfae8a1ba32b",
+  "source_simulator": "NOT RUN",
+  "store_and_terms": 320,
+  "unreset_binary_pointer": {
+    "added_reset_loads": 0,
+    "pointer_ff": 2880,
+    "proof_by_initial_offset": {
+      "0": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33240
+      },
+      "1": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33280
+      },
+      "2": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33320
+      },
+      "3": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33360
+      },
+      "4": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33400
+      },
+      "5": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33440
+      },
+      "6": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33480
+      },
+      "7": {
+        "bubbles": 400513,
+        "occupied_resets": 1600,
+        "qualified_old_heads": 47776,
+        "wraps": 33520
+      }
+    },
+    "restrictions": "all encodings legal; no pointer0 assumption; physical power-up definite state; fresh fill and tile/tag reset alignment still need RTL proof"
+  },
+  "word_bits": 33,
+  "write_enable_and2": 7680,
+  "write_logic_levels": 2
+}
