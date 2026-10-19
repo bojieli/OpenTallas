@@ -1,0 +1,136 @@
+{
+ "top": "ot_hbm_smh_rp4_flat",
+ "top_lp": "ot_hbm_smh_rp4_flat_lp",
+ "sources": [
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv"
+ ],
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "out_dir": "rtl/hbm_accel/sm/repack/lp",
+ "record_dir": "results/arch/landed_parent_1018/pl_smt",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n",
+  "rst_a"
+ ],
+ "regions": [
+  {
+   "name": "n",
+   "centre": [
+    229,
+    1100
+   ],
+   "insts": [
+    "u_sr_n",
+    "u_pr_n",
+    "u_pb",
+    "u_row0",
+    "u_beat_t",
+    "u_land_n",
+    "u_rowe0",
+    "u_beate",
+    "u_lf0",
+    "u_gn"
+   ],
+   "why": "leaf 0 (y 1101-1503) + row 0 (pins y 1055-1282, row_w/row_e y 894-985) + the whole bin beat path (bin pins y 476-1055, beat_t / pte beat y 657-873, land_n y 1007) + N gather relays"
+  },
+  {
+   "name": "s",
+   "centre": [
+    229,
+    330
+   ],
+   "insts": [
+    "u_sr_s",
+    "u_pr_s",
+    "u_row1",
+    "u_land_s",
+    "u_rowe1",
+    "u_lf1",
+    "u_gs"
+   ],
+   "why": "leaf 1 (y 26-425) + row 1 (pins y 250-476, row_w/row_e y 544-635) + land_s (y 480) + S-edge gather outputs (gout pins S face)"
+  }
+ ],
+ "D": 4,
+ "E": 2,
+ "bench": {
+  "cycles": 4000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "quiet_reset": true,
+  "warm": 800,
+  "warm_note": "the tcl/bdc accumulators (OT_FP_DATA_NORST) are not reset: acc_q takes the multiplier's kill value (0x00400000) from power-up until a protocol i_first clears the slot; the landed leaf 1 runs t = 3 edges later relative to power-up, so random stimulus needs ~210 cycles to flush that garbage (probe 10-18: last mismatch cycle 210 of 600, only leaf-1 lane, only gy exponent bits). Compare from cycle 800 of 4000.",
+  "skip_muts": {
+   "4": "not observable in rp4: every child's reset only clears valid flags (sync kreg RST=2 / hard-child rst relays; no counters, epochs or phase state), and the die (and bench, quiet_reset) presents no data before reset release + offsets, so a child released one edge late behaves identically (10-18 bench1: MUT 4 on u_pr_n PASSED lockstep). Reset alignment of the landings themselves is covered by MUT 2 (read K+1)."
+  }
+ },
+ "why": "PL-SMT 10-18: HBM SM tile rp4 (457.92 x 1529.28 um, 18 hard children) as 2 landed regions. Minimum-crossing cut: bin is broadcast to land_n, beat_t AND land_s, so one 2,069-b landing is unavoidable; keeping the bin pin register, beat_t and pte beat with N leaves only bin_l -> land_s + 50 b leaf-0 gather + 100 b pass-through gather crossing, and every output except gout keeps offset 0.",
+ "defines_note": "kit defines minus SYNTHESIS: under SYNTHESIS ot_hdly instantiates ASAP7 HB4xp67 hold cells (identity in simulation); the kit itself synthesises with -DSYNTHESIS"
+}

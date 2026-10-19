@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_smh_rp4_flat_lp",
+ "enable": false,
+ "reason": "Actual RTL pin capture and launch registers retained from rp4 (rin / bin pin flops in ot_rp4l_pinrow / pinbeat, rout / bout launched by the hard row_e / beat_e cells, gin / gout by the gather registers, xs_* through the five-stage straps); TWO regional roots (ck_n, ck_s, lp.py landed regions), every n->s data net landed (bin_l 2,069 b, leaf-0 gather 50 b, pass-through gather 100 b), 1-bit reset runs only. External gating companion separate as rp4m."
+}

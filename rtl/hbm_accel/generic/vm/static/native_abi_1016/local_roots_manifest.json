@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.vm_local_roots_source.v1",
+  "source": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv",
+  "source_sha256": "23da38206654758ee3375c155ed166e853769f1e030ddf3c02ee91f2962aee31",
+  "generated": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv",
+  "generated_sha256": "75a0f184a066417db057d3dc195ddcb2322a7b84a1cbf63e1acea2a5be3a17da",
+  "always_block_root_order": [
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    5
+  ],
+  "local_roots": [
+    "input_payload_valid",
+    "slot_strap_reset",
+    "S1_decode_egress",
+    "S2_macro_pin_registers",
+    "macro_capture_ECC_pipeline",
+    "response_status"
+  ],
+  "direct_macro_entries": {
+    "clk_macro[0]": "u_a/clk",
+    "clk_macro[1]": "u_b/clk",
+    "clk_macro[2]": "u_c/clk"
+  },
+  "data_edges_added": 0,
+  "scope": "Candidate only; direct9clockentries require actual die delivery phi-R, local placement, CTS and TT/FF/DRC/native proof. Stable native quadrant master source is unchanged."
+}

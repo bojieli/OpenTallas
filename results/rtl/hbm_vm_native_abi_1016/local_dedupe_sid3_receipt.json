@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.hbm.local_clock_literal_component.v1",
+  "source_commit": "b4a7727c1",
+  "host": "ot-epyc4",
+  "otrun_unit": "oth-ubuntu-1339438-1792147010",
+  "otrun_exit": 0,
+  "scope": "SID3 dispatch instantiates actual q2 master, not q3 renamed view; one positive + four negative checks only. Runner generic four-shape footer is not the executed scope.",
+  "positive_runs": 1,
+  "mutant_rejections": 4,
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv": "75a0f184a066417db057d3dc195ddcb2322a7b84a1cbf63e1acea2a5be3a17da",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_local_physical.sv": "3819d7ae5a3641e91312b142b09f4676c521134d411fe082ccf3d4696b4d04dc",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/run_local_literal.sh": "8fe55505e7d6eb8ac715e7c783b07a5e804d75ba5d15b87468254f8c0bdaa9b2",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv": "72e6b25ad13b33bfa938a06970536e577bd3e474d0cb5521cc44feca0b2cc8da",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q3.sv": "ff4d6cfdb697d05debd481bdd653be081f7c60b4a113278a5bec294b80517cea",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q0.sv": "0a46eea6cd2d759ec58ee98d2ad1daff3b5489020809acc6ad09086843277a10",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q1.sv": "497c22a3d1a70fc71d45fd45d1d755c37077015f3f3e69c9aaa807e5a9ea4bf1",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q2.sv": "54e8e79bf7f5a83f9c356457a84ff8e4e7f43e78b01d14bb1d5899c95c851b94",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "runs": [
+    {
+      "path": "results/rtl/hbm_vm_native_abi_1016/local_dedupe_sid3/q3_m0.log",
+      "sha256": "553284c58e8c99ed39a4ce6a313b5060eb84a7faccece221c25316bdb350d906",
+      "result": "PASS"
+    },
+    {
+      "path": "results/rtl/hbm_vm_native_abi_1016/local_dedupe_sid3/q3_m1.log",
+      "sha256": "1991145461e32790f330630c1860c2bdcd1e851c4efc1606c51eba98b6fd0737",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_native_abi_1016/local_dedupe_sid3/q3_m3.log",
+      "sha256": "98b9363813956aa93c64138f839f1e6265ec7ee70636e87262569c2efc3a3f35",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_native_abi_1016/local_dedupe_sid3/q3_m4.log",
+      "sha256": "98b9363813956aa93c64138f839f1e6265ec7ee70636e87262569c2efc3a3f35",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_native_abi_1016/local_dedupe_sid3/q3_m5.log",
+      "sha256": "d225fb64640247ce2363af63da1a861c3217d87ec7f8779e152bef2bfb31060b",
+      "result": "MUTANT_REJECTED"
+    }
+  ],
+  "selected_sid": 3,
+  "actual_master": "hfd_vms_bank_local_q2"
+}

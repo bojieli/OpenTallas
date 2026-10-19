@@ -1,0 +1,419 @@
+{
+ "name": "smh_tile_rp4lp",
+ "top": "ot_hbm_smh_rp4_flat_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/sm/repack/lp/ot_hbm_smh_rp4_flat_lp.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "clock_port": "ck_n",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 457.92,
+  "h": 1598.4
+ },
+ "child_lattice_um": 4.32,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    51.84,
+    1170.72
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_lh.u_xs",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    51.84,
+    1356.48
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_lh.u_bdc",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    190.08,
+    1451.52
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_lh.u_tcc.u_h0",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    302.4,
+    1451.52
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_lh.u_tcc.u_h1",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    190.08,
+    1356.48
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_lh.u_tcc.u_tr",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    51.84,
+    267.864
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.u_lh.u_xs",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    51.84,
+    99.36
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.u_lh.u_bdc",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    190.08,
+    25.92
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.u_lh.u_tcc.u_h0",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    302.4,
+    25.92
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.u_lh.u_tcc.u_h1",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    211.68,
+    168.576
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.u_lh.u_tcc.u_tr",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+   "count": 1,
+   "at": [
+    60.48,
+    479.544
+   ],
+   "orient": "MX",
+   "inst": "u_land_s",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    60.48,
+    544.344
+   ],
+   "orient": "MX",
+   "inst": "u_row1",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "count": 1,
+   "at": [
+    60.48,
+    725.76
+   ],
+   "orient": "R0",
+   "inst": "u_beat_t",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    60.48,
+    963.36
+   ],
+   "orient": "R0",
+   "inst": "u_row0",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+   "count": 1,
+   "at": [
+    60.48,
+    1075.68
+   ],
+   "orient": "R0",
+   "inst": "u_land_n",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    388.8,
+    544.344
+   ],
+   "orient": "MX",
+   "inst": "u_rowe1",
+   "region": "s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e",
+   "count": 1,
+   "at": [
+    388.8,
+    725.76
+   ],
+   "orient": "R0",
+   "inst": "u_beate",
+   "region": "n"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    388.8,
+    963.36
+   ],
+   "orient": "R0",
+   "inst": "u_rowe0",
+   "region": "n"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin_n",
+   "rin_s",
+   "bin"
+  ],
+  "E": [
+   "rout_n",
+   "rout_s",
+   "bout"
+  ],
+  "S": [
+   "gout",
+   "xss_a1",
+   "xss_g1",
+   "xss_a2",
+   "xss_g2",
+   "ck_s"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "rst_n",
+   "ck_n"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tile_rp4lp_pins.tcl",
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1",
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_tile_rp4lp_stations.tcl"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL pin capture and launch registers retained from rp4 (rin / bin pin flops in ot_rp4l_pinrow / pinbeat, rout / bout launched by the hard row_e / beat_e cells, gin / gout by the gather registers, xs_* through the five-stage straps); TWO regional roots (ck_n, ck_s, lp.py landed regions), every n->s data net landed (bin_l 2,069 b, leaf-0 gather 50 b, pass-through gather 100 b), 1-bit reset runs only. External gating companion separate as rp4m."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude PL-SMT (PARENTS-LANDED)",
+  "branch": "claude/pl-smt-1018",
+  "tag": "rp4lp",
+  "purpose": "MATVEC body clock-structure closure as LANDED REGIONS (landed-regions-standard-1018); not attention/fullSM/native chip qualification.",
+  "structural_change": "rp4lp (PL-SMT 10-18, landed-regions-standard-1018): rp4m ran ONE balanced spine over 457.92 x 1529.28 um (TT insertion 1.53 ns, child-flop boundary ~91 ps). Now 2 clock regions from tools/landed_parent/lp.py (spec results/arch/landed_parent_1018/pl_smt/rp4_lp_spec.json): n = leaf 0 + row 0 + the whole bin beat path (pin flops, beat_t, pte beat, land_n) + N gather relays; s = leaf 1 + row 1 + land_s + S-edge gather outputs. Minimum-crossing cut (bin is broadcast to land_n, beat_t and land_s): 3 landings (bin_l->land_s 2,069 b, leaf-0 gather 50 b, pass gather 100 b; ring D4/E=K=2, +3 edges), pads 3 x (818 + 26) b in front of leaf 1, reset runs depth 3 replace the 5-stage u_rt tree. Ports: kit top = lp output ot_hbm_smh_rp4_flat_lp (rin / rout split per region: rin_n / rout_n = old 817:0, rin_s / rout_s = old 1635:818), clk -> ck_n + ck_s; offsets gout +3, all others 0. PL-KIT landed-cluster clock (multiple_cts_roots per region, landed_record) replaces the gate-1 spine form, whose S-root IO latency mismatch gave FF hold -957 ps on 1,282 S-region input endpoints. Outline h 1529.28 -> 1598.4 (GEN2 SM frame row): N half +69.12. Same 18 CLOSED child views.",
+  "extra_paths": [
+   "physical/common_flow/anchor_row_packing.tcl",
+   "tools/hbm_sm_repack_1015",
+   "tools/landed_parent",
+   "results/arch/landed_parent_1018/pl_smt",
+   "rtl/hbm_accel/sm/repack/lp"
+  ],
+  "benches": [
+   {
+    "name": "lp_lockstep",
+    "expect": "pass",
+    "pass_regex": "BENCH_EXIT 0",
+    "threads": 8,
+    "peak_ram_gb": 40,
+    "cmd": "LP_ROOT=$PWD SIM=verilator bash rtl/hbm_accel/sm/repack/lp/ot_hbm_smh_rp4_flat_lp_bench.sh {RUN}/lp"
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "clock_ports": [
+  "ck_n",
+  "ck_s"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_n"
+   ],
+   "inputs": [
+    "rst_n",
+    "xs_a1",
+    "xs_g1",
+    "xs_a2",
+    "xs_g2",
+    "rin_n",
+    "bin",
+    "gin"
+   ],
+   "outputs": [
+    "rout_n",
+    "bout"
+   ]
+  },
+  "s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_s"
+   ],
+   "inputs": [
+    "xss_a1",
+    "xss_g1",
+    "xss_a2",
+    "xss_g2",
+    "rin_s"
+   ],
+   "outputs": [
+    "rout_s",
+    "gout"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/pl_smt/ot_hbm_smh_rp4_flat_lp_record.json",
+ "child_clock_ref": "boundary"
+}

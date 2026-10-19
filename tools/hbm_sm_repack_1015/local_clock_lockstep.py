@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Clock-only SM body equivalence using the established production-shape vectors.
+This is component arithmetic/clock proof. The legacy PQ test driver does not
+qualify the fixed-cycle production compiler, attention path or full native die.
+"""
+import argparse,inspect,json,pathlib,re,sys
+p=argparse.ArgumentParser();p.add_argument('--out',required=True);p.add_argument('--workdir',required=True);p.add_argument('--mut-clockdrop',action='store_true');p.add_argument('--jobs',type=int,default=8);p.add_argument('--one',action='store_true',help='RP4f one-root tile (ot_hbm_smh_rp4_one_gated)');p.add_argument('--flat',action='store_true',help='PL-SMT wires-only flat parent (ot_hbm_smh_rp4_flat_gated; implies --one defines)');a=p.parse_args()
+if a.flat:a.one=True
+r=pathlib.Path(__file__).resolve().parents[2];sys.path.insert(0,str(r/'tools'));import dshbm_sm_pq_seq as M
+out=pathlib.Path(a.workdir).resolve();out.mkdir(parents=True,exist_ok=True)
+base=r/'rtl/hbm_accel/sm/ot_hbm_accel_smh.sv';s=base.read_text()
+for name in ['ot_hbm_accel_smh_tile_eg','ot_hbm_accel_smh_tile_wg']:
+ m=re.search(r'^module '+name+r'\b.*?^endmodule',s,re.M|re.S)
+ if not m:raise RuntimeError(name)
+ body=m[0];header=body[:body.index(');')+2]
+ body=header+'\n '+('ot_hbm_smh_rp4_flat_gated' if a.flat else 'ot_hbm_smh_rp4_one_gated' if a.one else 'ot_hbm_smh_rp4_gated')+' #(.MUT_CLKDROP('+str(int(a.mut_clockdrop))+')) u(.*);\nendmodule'
+ s=s[:m.start()]+body+s[m.end():]
+shadow=out/'smh_rp4_shadow.sv';shadow.write_text(s)
+M.SMH_SRC=[str(shadow) if x=='rtl/hbm_accel/sm/ot_hbm_accel_smh.sv' else x for x in M.SMH_SRC]
+M.SMH_SRC+=['rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv']+(['rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_one.sv'] if a.one else [])+(['rtl/hbm_accel/sm/repack/ot_rp4l_children.sv','rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_flat.sv'] if a.flat else [])
+# Preserve the test's coarse-gate activity monitor after the real controller
+# moved into the die-level distributor. This changes no stimulus or checker.
+tb=(r/'rtl/test/tb_hbm_accel_sm_pq_seq.sv').read_text()
+# The monitor reads the gate ENABLE (tb line ~96: dut_g...g_tw.u_t.u.u_cgt.en), not gclk; 8934fe46d looked for gclk.
+if tb.count('u_t.u.u_cgt.en')!=1:raise RuntimeError('gate monitor path changed')
+tb=tb.replace('u_t.u.u_cgt.en','u_t.u.u_clk.g_root[0].u_cgt.en')
+tbshadow=out/'tb_rp4_monitor.sv';tbshadow.write_text(tb)
+M.SRC=[str(tbshadow) if x=='rtl/test/tb_hbm_accel_sm_pq_seq.sv' else x for x in M.SRC]
+# Change optimization only; preserve the existing parser/vector/checker/compiler.
+f=inspect.getsource(M.compile_bench).replace('"-O2"','"-O1", "-CFLAGS", "-O1"')
+exec(compile(f,'<production compile_bench with O1>', 'exec'),M.__dict__)
+spec=json.loads((r/'physical/ref_tile/smh_tile_rp3/spec.json').read_text())
+args=['run','--seq','stress','--nc','8','--active','8','--rmax','4096','--req-credit','--smh','--cg','--cg-gap','300','--build-jobs',str(a.jobs),'--workdir',str(out),'--out',a.out]
+for d in spec['defines']:args+=['--define',d]
+if a.one:args+=['--define','OT_SMH_RP4_SRST']
+raise SystemExit(M.main(args))
