@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.native_pin_audit.case_pins.v1",
- "generated": "2026-10-18 NATIVE-SWEEP/NS-CASE",
+ "generated": "2026-10-18 NATIVE-SWEEP/NS-CASE; +dsfd_dvland_512 (G3 end-slice landing, CLOSED s81dv_land_512-g3a-7a9c99ef3) OWN-S81/LAND 10-18",
  "tool": "tools/hier_contract/native_pin_audit.py --root SCRATCH --view V --case PAT --case-evidence TEXT (claude/ns-case-1018, the ONE case-pin mechanism; supersedes --static-pins of claude/s81-misc-1018 1eccb3cbc)",
  "supersedes": "results/arch/s81_misc_1018/native_static_straps.json @ origin/claude/s81-misc-1018 (same 7 views, same numbers, record field case_pins instead of static_pins)",
  "roots": "each view git-archived from its view_src closure-record branch into a scratch root",
@@ -368,6 +368,50 @@
    "job": "s81coll_cfifo_crs4-c4a-f11bb1950",
    "view_src": "origin/codex/closure-record-s81coll_cfifo_crs4-c4a-f11bb1950",
    "own_fail_why": "capture 438.85198 > 190 (12 pins)"
+  },
+  {
+   "cell": "dsfd_dvland_512",
+   "view": "physical/ref_tile/s81dv_land_512/views/dsfd_dvland_512",
+   "lib_cell": "dsfd_dvland_512",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 109.6,
+   "spread_ps": 16.9,
+   "outputs": 513,
+   "inputs": 513,
+   "launch_ps": 118.3,
+   "launch_pin": "fault",
+   "capture_ps": 116.2,
+   "capture_pin": "i[218]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 307.6,
+    "k[1]": 436.2,
+    "k[0]": 447.2
+   },
+   "ff_spread_ps": 17.3,
+   "ff_launch_min_ps": 56.7,
+   "ff_hold_need_ps": -26.6,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_512-g3a-7a9c99ef3",
+   "view_src": "origin/codex/closure-record-s81dv_land_512-g3a-7a9c99ef3",
+   "own_fail_why": "capture 447.18179 > 190 (3 pins)",
+   "audited_by": "OWN-S81/LAND 10-18 21:50 (same tool @ claude/ns-case-1018 6e5312fa7, view git-archived from view_src)"
   }
  ]
 }
