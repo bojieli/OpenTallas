@@ -21,7 +21,7 @@ try:r=json.loads((p/'original_pdn_v1/out/record.json').read_text())
 except (OSError,ValueError):r={}
 try:c=pathlib.Path('/proc/'+pid+'/cmdline').read_bytes();alive=b'/original_pdn_v1/qwen_clock_pre_pdn.py' in c
 except OSError:alive=False
-print(json.dumps(dict(alive=alive,power_checks_pass=r.get('actual_contacts_stack_shorts_native_continuity_pass',False),generated_sha=r.get('generated_odb_sha256'))))'''
+print(json.dumps(dict(alive=alive,power_checks_pass=r.get('actual_contacts_stack_shorts_native_continuity_pass',False),generated_sha=r.get('generated_odb_sha256'),manifest_sha=r.get('manifest_sha256'),gen_source=r.get('gen_source'))))'''
     while True:
         try:state=json.loads(remote(probe,a.lane,a.pid))
         except (subprocess.SubprocessError,ValueError):time.sleep(30);continue
@@ -57,6 +57,8 @@ for k in ('geometry','pg'):
 print(json.dumps(out))'''
     receipts=json.loads(remote(fetch,a.lane));g=receipts['geometry'];pg=receipts['pg']
     passed=bool(state['power_checks_pass'] and results=={'geometry':0,'pg':0} and g.get('geometry_pass')
+                and g.get('odb_sha256')==pg.get('odb_sha256')==state['generated_sha']
+                and g.get('manifest_sha256')==pg.get('manifest_sha256')==state['manifest_sha']
                 and pg.get('unconnected_clock_pg_pins')==0 and pg.get('canonical_m8_phase_conflict_pins')==0
                 and pg.get('macro_halo_conflict_cells')==0)
     combined=dict(schema='opentallas.qwen.clock_physical_collection.v1',native_state=state,
