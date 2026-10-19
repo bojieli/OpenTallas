@@ -13,7 +13,7 @@ OLD = {'ot_s81sl_slice_lepw_mu', 'ot_s81sl_slice_lepw_mus', 'ot_s81sl_slice_lepe
        'ot_s81sl_slice_lepe_nh_mus', 'ot_s81sl_slice_lepw_mab'}
 FILES = [SOURCE, 'rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe2.sv',
          'rtl/common/ot_link_credit_rx_sram.sv', 'rtl/lib/ot_sram_showahead_1r1w.sv',
-         'rtl/dsrom_sys/s81_ph/coll/ot_s81ph_link_ep_safe2.sv',
+         'rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe2.sv',
          'rtl/lib/ot_sram_oldread_wreg.sv', 'rtl/lib/ot_rst_relay_tree3.sv']
 DEFINE = 'OT_S81PH_COLL_TF_CLEANUP'
 
