@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.s81.hb1.fixedpoint.v1",
+  "scope": "MODEL ONLY; graph capacity conditional on exact same-edge retained source correspondence",
+  "source_commit": "ceaed19c4",
+  "source_sha256": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+  "census_sha256": "be1eb336679eae54430f6d15c9c89ee5ac57dfd2280084c394003b4ad5027930",
+  "native_odb_sha256": "5ed7a16d3e4b7b5580451da61f8fdcb43b509a39b7c4362855569b7c8166faad",
+  "native_cells": 64383,
+  "native_ff": 18352,
+  "all_nonclock_roots": 54140,
+  "original_over32": 73,
+  "round_totals": [
+    1161,
+    1248,
+    1250,
+    1250
+  ],
+  "added": {
+    "ff": 841,
+    "comb": 344,
+    "tie": 65
+  },
+  "added_area_um2": 355.72283999999996,
+  "functional_added_area_um2": 352.87973999999997,
+  "physical_tie_added_area_um2": 2.8430999999999997,
+  "library_sha256": {
+    "TT": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "FF": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+  },
+  "clock_increment": {
+    "TT": {
+      "masters_fF": {
+        "DFFHQNx1_ASAP7_75t_R": 0.474736,
+        "DFFASRHQNx1_ASAP7_75t_R": 0.462899
+      },
+      "added_fF": 389.3217329999998
+    },
+    "FF": {
+      "masters_fF": {
+        "DFFHQNx1_ASAP7_75t_R": 0.52201,
+        "DFFASRHQNx1_ASAP7_75t_R": 0.503152
+      },
+      "added_fF": 423.188548
+    }
+  },
+  "raw_input_max": 9,
+  "extra_data_edges": 0,
+  "unqualified": [
+    "RTL retention/miter",
+    "cold/occupied reset assertion and release",
+    "actual mapped successor",
+    "reach/outline/PG/clock/parent/token dates"
+  ]
+}
+families {"u_ot_pr_core.u.rwe": 320, "u_ot_pr_core.u.u_rr.rst_n": 59, "u_ot_pr_core.u.un": 240, "u_ot_pr_core.u.pn": 18, "u_ot_pr_core.u.rwr": 60, "u_ot_pr_core.u.el": 22, "u_ot_pr_core.u.pk_go$_DFF_PN0_": 10, "u_ot_pr_core.u.vct$_DFF_PN0_": 9, "u_ot_pr_core.u.lov": 40, "u_ot_pr_core.u.ev_c": 30, "u_ot_pr_core.u.pi": 10, "u_ot_pr_core.u.tg": 4, "u_ot_pr_core.u.erun$_DFF_PN0_": 2, "u_ot_pr_core.u.ekd": 3, "u_ot_pr_core.u.pv": 10, "rst_n__ot_rl1$_DFF_P_": 2, "u_ot_pr_core.u.u_rr.sync_q": 1, "u_ot_pr_core.u.s_dir": 1}
+PASS full fixedpoint/all inputs/terminal polarity; assignments 41023 classifier cone 98
+REJECT one-pass lowerbound 1161 != fixedpoint 1250
