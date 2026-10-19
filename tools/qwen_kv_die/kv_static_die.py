@@ -43,6 +43,9 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 
 ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
+# KV-DCAL-BOOTCFG 10-19 (= kv_die.DCAL_BC / DCAL_BC_LINK): the D2D end's cfg port <- dcal cfg; boot link_cfg_* -> dcal bcfg
+DCAL_BC = os.environ.get('OT_KV_DCAL_BC', '0') == '1'
+DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')
 # KV-PLAN 10-17 (HANDOFF 0cx+4 decision 1): one control root per die half (kvs_hroot_N / kvs_hroot_S), each serving its
 # own two stacks (es chain heads, fan words, group gathers, embedding return trains); off = the single top-centre root
 HROOT = os.environ.get('OT_KV_HROOT', '0') == '1'
@@ -1668,6 +1671,13 @@ def inject(m, K):
             continue
         if bits is None:
             raise ValueError(f'kv_static_die: no width for {dinst}.{dport}')
+        if DCAL_BC and any(l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK for l_ in loads):
+            # KV-DCAL-BOOTCFG (OT_KV_DCAL_BC=1): boot target 11 (link_cfg_*) ends on the calendar sequencer's bcfg pins;
+            # the sequencer's merged cfg word (dcal_dcfg, kv_die) is the D2D end's only cfg producer
+            if 'dcal' not in {i_.name for i_ in m['insts']}:
+                raise ValueError('OT_KV_DCAL_BC needs the dcal instance (OT_KV_DCAL=1)')
+            loads = [('dcal', DCAL_BC_LINK[l_[1]]) if l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK else l_ for l_ in loads]
+            rec.setdefault('dcal_bc', []).append(f'{dinst}.{dport} -> ' + ', '.join(f'{a}.{b}' for a, b in loads))
         bid = _bid(dinst, dport, seen_buses)
         add((bid, 'kv_oneway', bits, [(dinst, dport), loads[0]]))
         if len(loads) > 1:

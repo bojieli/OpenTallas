@@ -1006,9 +1006,27 @@ DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_
 DCAL_CS = ['cal_start', 'cal_seg']
 DCAL_CFGW = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data']
 DCAL_WH = (18.792, 28.08)
+# KV-DCAL-BOOTCFG 10-19 (OT_KV_DCAL_BC=1, needs OT_KV_DCAL=1 + OT_KV_STATIC_DIE=1; default off): the boot-only producer above
+# lost the sequencer's RUNTIME segment-1 base writes (SEG1 after each admission, SEG2 at each epoch), so every KV token run
+# replayed the admission segment.  With DCAL_BC the dcal slot is qkd_d2d_cal_seq_pin_bc (qkd_d2d_cal_seq_bootcfg.sv, kit
+# physical/ref_tile/qkd_d2d_cal_seq_pin_bc): the boot dispatcher's link_cfg_* die nets end on its bcfg_* pins
+# (kv_static_die re-targets the four ks_kvs_ctl__boot__link_cfg_* buses), and its cfg_* word (the boot write, else the
+# sequencer's runtime base write) drives the D2D end's cfg port: one producer per pin, no load-less cfg output.
+DCAL_BC = __import__('os').environ.get('OT_KV_DCAL_BC', '0') == '1'
+DCAL_BC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bootcfg.sv'
+DCAL_BC_GROUPS = dict(btx='bcfg_tx_we', brx='bcfg_rx_we', bad='bcfg_addr', bdt='bcfg_data')   # die group -> RTL port
+DCAL_BC_LINK = dict(cfg_tx_we='btx', cfg_rx_we='brx', cfg_addr='bad', cfg_data='bdt')         # d2ds cfg port -> dcal group
+if DCAL_BC:
+    DCAL_FILE = DCAL_BC_FILE
+    DCAL_WH = (18.792, 34.56)          # the bc kit outline (+94 flops vs ep3 / _mu; MU-DIE-KV2 notified)
 
 
 def dcal_binding():
+    if DCAL_BC:
+        return dict(module='qkd_d2d_cal_seq_pin_bc', file=DCAL_BC_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0, MUT=0),
+                    ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'],
+                               hlt=['halt'], rld=['reload'], **{g: [p] for g, p in DCAL_BC_GROUPS.items()}),
+                    sliced={}, classed={})
     return dict(module='qkd_d2d_cal_seq_pin', file=DCAL_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0),
                 ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'], hlt=['halt'],
                            rld=['reload']),
@@ -1018,8 +1036,11 @@ def dcal_binding():
 def _d2ds_binding_dcal():
     # always bound (a die without the dcal instance has no cal / eab pins, so the groups are unused): the post-prep
     # chain re-runs the strict bind without the OT_KV_* environment and must see the same bindings
+    # (KV-DCAL-BOOTCFG: dcfg only under OT_KV_DCAL_BC, which kvsys_prep records in kv_flags.env for the re-run)
     b = d2ds_binding()
     b['ports'].update(cal=list(DCAL_CS), eab=['epoch_abort'])
+    if DCAL_BC:
+        b['ports'].update(dcfg=list(DCAL_CFGW))
     return b
 
 
@@ -2527,6 +2548,8 @@ def _d2ds_swap(m):
                     'R0', kind='ctl', region='io')
         m['insts'].append(it)
         add(('dcal_cfg', 'spine_local', len(DCAL_CS), [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        if DCAL_BC:      # KV-DCAL-BOOTCFG: the merged cfg word (boot + runtime base writes) -> the D2D end's cfg port
+            add(('dcal_dcfg', 'spine_local', 1 + 1 + 6 + 32, [('dcal', 'dcfg'), ('d2d_kv', 'dcfg')]))
         add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
         add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
         for i_, (bid, cl, bits, eps) in enumerate(B):

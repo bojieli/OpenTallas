@@ -70,7 +70,14 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
       DCV=$MDCV; echo "OT_KV_DCAL MU: qkd_dcal -> $MDCV (MU calendar image)"
     else echo "OT_KV_DCAL STAND-IN: no MU view at $MDCV; qkd_dcal bound to qkd_d2d_cal_seq_pin_ep3 (production image)"; fi
   fi
-  BV="$BV --view qkd_dcal=$DCV"
+  # KV-DCAL-BOOTCFG 10-19 (OT_KV_DCAL_BC=1, kv_die.DCAL_BC): the dcal slot is qkd_d2d_cal_seq_pin_bc (boot target 11 merged:
+  # bcfg_* in, the D2D end's cfg port out); only its OWN view binds (the ep3 / _mu views have no bcfg pins): frame until then
+  if [ "${OT_KV_DCAL_BC:-0}" = 1 ]; then BCV=physical/ref_tile/qkd_d2d_cal_seq_pin_bc/views/qkd_d2d_cal_seq_pin_bc; DCV=
+    if [ -f $BCV/qkd_d2d_cal_seq_pin_bc.lef ] && [ -f $BCV/qkd_d2d_cal_seq_pin_bc_tt.lib ] && [ -f $BCV/qkd_d2d_cal_seq_pin_bc_ff.lib ]; then
+      DCV=$BCV; echo "OT_KV_DCAL_BC: qkd_dcal -> $BCV (boot cfg merged)"
+    else echo "OT_KV_DCAL_BC FRAME: no view at $BCV yet; qkd_dcal stays an ASSUMED frame (kit qkd_d2d_cal_seq_pin_bc not closed)"; fi
+  fi
+  [ -z "$DCV" ] || BV="$BV --view qkd_dcal=$DCV"
 fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
