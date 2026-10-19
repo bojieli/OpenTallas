@@ -1,0 +1,62 @@
+
+20. Printing statistics.
+
+=== ot_hbm_xcal_prog_native ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2925        - wires
+     5546        - wire bits
+       82        - public wires
+     2359        - public wire bits
+       15        - ports
+      491        - port bits
+     4329  637.015 cells
+       18    1.575   A2O1A1Ixp33_ASAP7_75t_R
+        1    0.131   A2O1A1O1Ixp25_ASAP7_75t_R
+       10    0.875   AND2x2_ASAP7_75t_R
+        4     0.35   AND3x1_ASAP7_75t_R
+       13    1.327   AND4x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+       13    1.137   AO21x1_ASAP7_75t_R
+       30    2.187   AOI21xp33_ASAP7_75t_R
+        4    0.408   AOI221xp5_ASAP7_75t_R
+        1    0.146   AOI222xp33_ASAP7_75t_R
+        4     0.35   AOI22xp33_ASAP7_75t_R
+        9    0.787   AOI31xp33_ASAP7_75t_R
+        1    0.102   AOI32xp33_ASAP7_75t_R
+      102   38.666   DFFASRHQNx1_ASAP7_75t_R
+     1531   446.44   DFFHQNx1_ASAP7_75t_R
+     1528   66.835   INVx1_ASAP7_75t_R
+        1    0.102   MAJIxp5_ASAP7_75t_R
+      307   17.904   NAND2xp33_ASAP7_75t_R
+       12    0.875   NAND3xp33_ASAP7_75t_R
+       18    1.575   NAND4xp25_ASAP7_75t_R
+       19    1.939   NAND5xp2_ASAP7_75t_R
+      223   13.005   NOR2xp33_ASAP7_75t_R
+       15    1.093   NOR3xp33_ASAP7_75t_R
+        9    0.787   NOR4xp25_ASAP7_75t_R
+       17    1.735   NOR5xp2_ASAP7_75t_R
+        2    0.233   OA211x2_ASAP7_75t_R
+        2    0.204   OA21x2_ASAP7_75t_R
+        1    0.175   OA222x2_ASAP7_75t_R
+        7    0.612   OAI211xp5_ASAP7_75t_R
+      296   21.578   OAI21xp33_ASAP7_75t_R
+       13    1.327   OAI221xp5_ASAP7_75t_R
+       17    1.487   OAI22xp33_ASAP7_75t_R
+        8      0.7   OAI31xp33_ASAP7_75t_R
+       13    1.327   OAI32xp33_ASAP7_75t_R
+       14    1.225   OR2x2_ASAP7_75t_R
+        5    0.437   OR3x1_ASAP7_75t_R
+        9    0.919   OR4x1_ASAP7_75t_R
+        6      0.7   OR5x1_ASAP7_75t_R
+       35    4.593   XNOR2xp5_ASAP7_75t_R
+        8     1.05   XOR2xp5_ASAP7_75t_R
+        2        -   ot_sram_1r1w_1024x256_m2_r2c2
+
+   Area for cell type \ot_sram_1r1w_1024x256_m2_r2c2 is unknown!
+
+   Chip area for module '\ot_hbm_xcal_prog_native': 637.014780
+     of which used for sequential elements: 485.105760 (76.15%)
+
