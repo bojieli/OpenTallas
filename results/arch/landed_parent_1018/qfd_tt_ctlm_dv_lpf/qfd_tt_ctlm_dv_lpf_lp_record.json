@@ -16,6 +16,7 @@
    "children": [
     "u_go",
     "u_hr",
+    "u_hrp",
     "u_thru"
    ]
   }
@@ -290,6 +291,23 @@
   },
   {
    "name": "15",
+   "net": "g_tl",
+   "src_region": "core",
+   "dst_region": "hr",
+   "src_nodes": [
+    "u_gi"
+   ],
+   "width": 1088,
+   "readers": [
+    "u_thru.tl_i"
+   ],
+   "ring": "u_lpl_15_w (ck_core)",
+   "read": "u_lpl_15_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+  },
+  {
+   "name": "16",
    "net": "g_cal_program_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -300,13 +318,13 @@
    "readers": [
     "u_thru.cal_program_obs_i"
    ],
-   "ring": "u_lpl_15_w (ck_core)",
-   "read": "u_lpl_15_r (ck_hr)",
+   "ring": "u_lpl_16_w (ck_core)",
+   "read": "u_lpl_16_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
   },
   {
-   "name": "16",
+   "name": "17",
    "net": "g_cal_descriptor_obs",
    "src_region": "core",
    "dst_region": "hr",
@@ -317,13 +335,13 @@
    "readers": [
     "u_thru.cal_descriptor_obs_i"
    ],
-   "ring": "u_lpl_16_w (ck_core)",
-   "read": "u_lpl_16_r (ck_hr)",
+   "ring": "u_lpl_17_w (ck_core)",
+   "read": "u_lpl_17_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
   },
   {
-   "name": "17",
+   "name": "18",
    "net": "g_cal_image_ready",
    "src_region": "core",
    "dst_region": "hr",
@@ -334,13 +352,13 @@
    "readers": [
     "u_thru.cal_image_ready_i"
    ],
-   "ring": "u_lpl_17_w (ck_core)",
-   "read": "u_lpl_17_r (ck_hr)",
+   "ring": "u_lpl_18_w (ck_core)",
+   "read": "u_lpl_18_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
   },
   {
-   "name": "18",
+   "name": "19",
    "net": "g_emb_start",
    "src_region": "core",
    "dst_region": "hr",
@@ -351,13 +369,13 @@
    "readers": [
     "u_thru.emb_start_i"
    ],
-   "ring": "u_lpl_18_w (ck_core)",
-   "read": "u_lpl_18_r (ck_hr)",
+   "ring": "u_lpl_19_w (ck_core)",
+   "read": "u_lpl_19_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
   },
   {
-   "name": "19",
+   "name": "20",
    "net": "g_emb_token",
    "src_region": "core",
    "dst_region": "hr",
@@ -368,10 +386,10 @@
    "readers": [
     "u_thru.emb_token_i"
    ],
-   "ring": "u_lpl_19_w (ck_core)",
-   "read": "u_lpl_19_r (ck_hr)",
+   "ring": "u_lpl_20_w (ck_core)",
+   "read": "u_lpl_20_r (ck_hr)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
   }
  ],
  "pads": [],
@@ -386,7 +404,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 3490,
+  "landing": 8943,
   "pads": 0,
   "reset": 14
  },
@@ -404,7 +422,8 @@
    "u_gi": 0,
    "u_hr": 3,
    "u_go": 3,
-   "u_thru": 3
+   "u_thru": 3,
+   "u_hrp": 3
   },
   "input_port_offset_edges": {
    "pw": 0,
@@ -431,14 +450,19 @@
    "native_cmd": 3,
    "hr": 3,
    "cmd": 3,
+   "tl": 3,
    "emb_start": 3,
    "emb_token": 3,
    "cf": 3
   },
   "reset_release_added_edges": 3,
+  "schedule": "offsets",
+  "ref_params": null,
   "max_added_edges": 3
  },
- "warnings": [],
+ "warnings": [
+  "child u_hrp runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)"
+ ],
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
   "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
@@ -447,7 +471,7 @@
  ],
  "audit": {
   "ok": true,
-  "landings": 20,
+  "landings": 21,
   "reset_hops": 1,
   "fails": []
  }
