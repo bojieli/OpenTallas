@@ -96,3 +96,26 @@ Bench `tb_hnx_hc_q`: the real lg pair leaves, the split tap and a fixed-latency 
 
 - The landed root (claude/hc-xrdu-1018, XRD/XRU 11) changes latency only: HC_MIX P1 1,020. Re-fork the root when it merges to main.
 - A third Sinkhorn tail unit would take the II to the 240 compute floor (-4 %). It is not worth it (owner: significant gains only).
+
+## Re-gate scope beyond the hub (10-19 restart check)
+
+I diffed every `rtl/hbm_next/hc/*.sv` against its d4g source after reversing the rename (`ot_hnx_hc_* -> ot_hbm_hc_*_static`, `ot_hnx_hgi_* -> ot_hgi_*_static`, `ot_hnx_hcp_sys1 -> ot_hdc_v41x_hcp_sys1_static`).
+
+**Only three modules differ:**
+- `ot_hnx_hc_q`;
+- `ot_hnx_hgi_hc_residual_vm`;
+- `ot_hnx_hgi_hc_result_vm`.
+
+All three sit inside the quarter hub `ot_hnx_hc_qhub`, which is kit `hnx_hcq_hub_1019`, closure job `hnx_hcq_hub_1019-n1-c8a284b41`.
+
+**Identical apart from module names:**
+- the root (programme, HCP core TPRE 6, mix store);
+- both Sinkhorn/tail units (`ot_hnx_hc_tail_unit`, `ot_hnx_hgi_hc_tail`);
+- the bank tiles (`bank`, `bankq`);
+- `qcen`, `qeng`, `xw_rx`, `eng_seq`, `gathered_mix_reader`.
+
+The core already takes `cmd_npos` up to PMAX 8, and `tb_hnx_hc_eng4` shows the tails keeping pace at 250 cycles a row up to N = 8.
+
+**Verdict:** no further HC tile needs an hnx re-gate. The die binds the d4g HC root/bank/tail views unchanged. Only the hub view changes.
+
+**If the VM grows to 2^19 (`units/vm/README.md`),** the hc_q residual/result base fields widen by one sector bit. That is a hub-only delta, to fold into the next hub revision.
