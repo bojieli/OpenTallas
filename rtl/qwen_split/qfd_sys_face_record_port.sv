@@ -96,7 +96,7 @@ module qfd_sys_face_fill_ctx (
     input  wire [46:0]  rx_fill,          // rx_record[188:142]
     input  wire         host_epoch_valid, // the receiver's verdict on the slot edge (registered by it)
     input  wire         prog_dw_busy,     // the face's DW replay drives the lane on this edge
-    output reg  [67:0]  dw,               // {dw_v, dw_addr3, dw_data64}, OR-ed onto seq_dh's DW field
+    output reg  [67:0]  dw,               // {dw_v, dw_addr3, dw_data64}; replaces seq_dh's DW field when dw[67]
     output reg          fault
 );
     reg        slot_q;

@@ -80,7 +80,7 @@
 // FILL_CTX (MU-DQ-BOOTCTX 2026-10-19, coordinator 0kg (1); opt-in, 0 = unchanged on every edge): the multi-user fillers'
 // runtime initial context comes from the KV/system die host plane over the EXISTING D2D HOST context record (kind 12,
 // context_slot): its DATA[188:142] field FC = {pos18, tok18, seq8, user2, v} (qfd_host_native_context_rx FILL 1) is
-// decoded by qfd_sys_face_fill_ctx (qfd_sys_face_record_port.sv) into one runtime context word on seq_dh's DW lane
+// decoded by qfd_sys_face_fill_ctx (qfd_sys_face_record_port.sv) into one runtime context word that replaces seq_dh's DW lane
 // (dw_addr 5, tag 'CF') on the edge after the slot; qfd_tt_ctlm_dv OPSEG (qfd_dv_cmd_cal_mu CTX_DW) applies it to
 // that user's token / position bank.  No new port, no new D2D slot; +116 flops; 0 edges on every existing path.
 // =====================================================================================================================
@@ -237,7 +237,9 @@ module qfd_sys_face #(
     reg  [142:0] dh_prog;                      // {dw_v, dw_addr3, dw_data64, pw_v, pw_addr10, pw_data64}
     reg  [43:0]  dh_run;                       // {kv_write_drained, h_start, stage6, tp_token18, tp_pos18}
     wire [67:0]  fc_dw;                        // FILL_CTX runtime context word (0 when FILL_CTX = 0)
-    always @* seq_dh = {dh_prog[142:75] | fc_dw, dh_prog[74:0], dh_run};
+    // the DW lane holds its last replay address / data when dw_v is 0, so the runtime word REPLACES the field (FILL_CTX 0:
+    // fc_dw = 0, the field is dh_prog's, bit-identical)
+    always @* seq_dh = {fc_dw[67] ? fc_dw : dh_prog[142:75], dh_prog[74:0], dh_run};
     wire        any_running;
     wire        boot_row = dq_boot && st == S_BOOT;
     always @(posedge ck or negedge rst_boot) begin

@@ -50,7 +50,7 @@ Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collisi
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
 check dropped, 27 context record never loaded (red), 28 records rotated between fillers (red), 29 record not checked
 (neg_ctx), 32 runtime record armed into the wrong user (d2d_ctx), 33 runtime seq / late check dropped (neg_late).
-C8 (d2d_ctx): every record armed (RTA log: cycle = slot + 4, user, tok, pos) and no receiver / face-fill fault (RXF).
+C8 (d2d_ctx): every record armed (RTA log: label = slot + 3, armed on slot + 4; user, tok, pos) and no receiver / face-fill fault (RXF).
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
@@ -209,7 +209,7 @@ def rt_records(res, seqs):
         lo = rs[q - 1] if q >= 1 else S0
         c = (lo + rs[q]) // 2
         assert c + RT_ARM <= rs[q] and c > lo + 2, (u, q, lo, rs[q])
-        recs.append((c, u, q, (0x30000 + 0x101 * u) & 0x3FFFF, 4000 + 17 * u))
+        recs.append((c, u, q, 0x10000 + 0x101 * u, 4000 + 17 * u))
     return recs
 
 
@@ -225,8 +225,9 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         e = r['end']
         if r['faults'] or r['opf'] or r['rxf'] or e is None or e[0] or e[2] or e[3] or e[4] != '0000':
             fails.append(f'{name} C1 {n} faulted: cal {r["faults"][:3]} opf {r["opf"][:3]} rxf {r["rxf"][:2]} end {e}')
-    # C8 runtime records: each armed RT_ARM edges after its slot, for its user, with its tok / pos
-    w8 = sorted((c + RT_ARM, u, tok, pos) for c, u, q, tok, pos in RT['recs'])
+    # C8 runtime records: each armed RT_ARM edges after its slot, for its user, with its tok / pos (the RTA line is
+    # labelled with the posedge before the arming one, as STA: rt_arm is the D of the pending register)
+    w8 = sorted((c + RT_ARM - 1, u, tok, pos) for c, u, q, tok, pos in RT['recs'])
     if sorted(mu['rta']) != w8:
         fails.append(f'{name} C8 runtime context arms {sorted(mu["rta"])[:4]} != records {w8[:4]}')
     # calibration from the reference: K = STA log cycle - event cycle, C = fire log cycle - (start log + entry time)
@@ -346,7 +347,7 @@ def neg_case(name, cal, e4, work, romdir, fails, summ):
         # user 1's record naming result 1, arriving 2 edges AFTER that result's event: op_fault on its arming edge
         pb, L, face, starts, res = model(cal, 2, S0 + 2 * H)
         r1 = sorted(c for c, u, tok, val in res if u == 1)
-        RT['recs'] = [(r1[1] + 2, 1, 1, 0x30101, 4017)]
+        RT["recs"] = [(r1[1] + 2, 1, 1, 0x10101, 4017)]
         want_edge = r1[1] + 2 + RT_ARM
     elif name == 'neg_ctx':
         # the context record with a bad tag: op_fault on the seal edge (DW7 event at 2 + 1024 + 7, + dh_q + seal + load)

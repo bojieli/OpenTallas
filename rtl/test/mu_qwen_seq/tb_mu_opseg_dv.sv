@@ -11,7 +11,7 @@
 //   4 CTX {seq 8 [45:38], user 2 [37:36], tok 18 [35:18], pos 18 [17:0]} (MU-DQ-BOOTCTX 10-19): the KV die's D2D HOST
 //         context record (opaque548 kind 12, the latency user's HOST tag + this filler-context field DATA[188:142]) on
 //         the face's context slot for one edge, into the REAL receiver qfd_host_native_context_rx #(FILL 1) and the
-//         face's qfd_sys_face_fill_ctx; its dw output is OR-ed onto dh's DW lane exactly as qfd_sys_face FILL_CTX 1 does.
+//         face's qfd_sys_face_fill_ctx; its dw output replaces dh's DW lane exactly as qfd_sys_face FILL_CTX 1 does.
 // Log (+LOG), label = the posedge just taken:
 //   "c CMD u hex", "c EMB u tok", "c SEG u base tok pos", "c MES tok pos", "c SUA n", "c HD hex", "c CST stage",
 //   "c DC hex" (dc on change), "c STA user stage rng first cnt" (u_cal start consumed at the next posedge),
@@ -37,7 +37,7 @@ module tb_mu_opseg_dv;
         .host_fusedcap(hcap), .host_image_epoch(hiep), .host_image_digest(hidg), .fault(rx_cf));
     qfd_sys_face_fill_ctx u_fill (.ck(ck), .rst_n(rst_n), .context_slot(ctx_slot), .rx_v(ctx_slot), .rx_fill(rx_rec[188:142]),
         .host_epoch_valid(hev), .prog_dw_busy(dh[186]), .dw(fdw), .fault(fl_f));
-    wire [186:0] dh_in = {dh[186:119] | fdw, dh[118:0]};
+    wire [186:0] dh_in = {fdw[67] ? fdw : dh[186:119], dh[118:0]};
     reg rxf_l = 0; integer kn = 0;
     qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(1), .MUT(MUT), .NU(NU), .STAGE_ME(1), .OPSEG(OPSEG)) dut (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh_in), .dh_user(dh_user), .kok(1'b0), .kwd(1'b1), .fab(1'b0), .program_obs(pobs),
