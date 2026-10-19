@@ -65,7 +65,7 @@ def audit(netlist, lanes, roots):
         g += HOP0_EN_REG              # hop-0 en registered before the gate (landh0 QK-LANDEN, rlyh0 RLYH0-EN): epoch G + 1
         k = (int(row['E']) - read_cycles + g - r0) % 8
         rows.append(dict(bid=row['bid'], landing=row['landing'], E=row['E'], E_sta=row['E_sta'],
-                         n=row['n'], G=g, R0=r0, calendar=g-r0, K_before=row['K'], K=k,
+                         n=row['n'], G=g, R0=r0, calendar=g-r0-read_cycles, K_before=row['K'], K=k,
                          changed=k != row['K'], safe_land_read_cycles=read_cycles,
                          simulation_phase_gap=int(row['E_sta']) < 2))
     return rows
@@ -146,7 +146,7 @@ def finalize_model(model, root_release=None):
             pins = [(name, f'k{bit}') for bit in range(3) if ((k >> bit) & 1) == value]
             if pins:
                 buses.append((f"ftk_{row['bid']}_{pol}", 'constant', 1, [(name, f'tie_{pol}')] + pins))
-        row.update(K=k, cal=g-r0, safe_land_reset_cycles=reset_cycles, safe_land_read_cycles=read_cycles, G_reset_tree=g, R0_reset_tree=r0,
+        row.update(K=k, cal=g-r0-read_cycles, safe_land_reset_cycles=reset_cycles, safe_land_read_cycles=read_cycles, G_reset_tree=g, R0_reset_tree=r0,
                    reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8'
                    + ' with G + 1 (hop-0 en registered: landh0 QK-LANDEN, rlyh0 RLYH0-EN)'
                    + ('; G + 1 write epoch, R0 + 2 receiver reset (safe landing)' if row.get('safe_land_reset_cycles') else '')

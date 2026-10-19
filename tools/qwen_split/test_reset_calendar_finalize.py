@@ -69,7 +69,7 @@ mg=model(); mg['insts'].append(SimpleNamespace(name='last',master='qfd_landh_180
 mg['fwd_lanes']['lanes'][0]['E']=3
 finalize_model(mg,{'external.s':16,'external.r':20})
 rg=mg['fwd_lanes']['lanes'][0]
-assert (rg['G_reset_tree'],rg['R0_reset_tree'],rg['K'],rg['cal'],rg['safe_land_read_cycles'])==(20,32,6,-12,1),rg
+assert (rg['G_reset_tree'],rg['R0_reset_tree'],rg['K'],rg['cal'],rg['safe_land_read_cycles'])==(20,32,6,-13,1),rg
 finalize_model(mg,{'external.s':16,'external.r':20})
 assert rg['K']==6
 assert (rg['K'] - LG.hop0_en_reg(dict(rg,n=1)) + LG.safe_land_reset_cycles(rg) + LG.safe_land_read_cycles(rg)) % 8 == rg['E']
