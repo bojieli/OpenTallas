@@ -1,0 +1,1463 @@
+{
+  "schema": "opentallas.qwen.d8.hybrid.MODEL.v1",
+  "status": "ROOT_REVIEW_MODEL_ONLY_NO_RTL_NO_GATE",
+  "sources": {
+    "prior_commit": "cdf9e0528",
+    "prior_model_sha256": "03c4dbc4171d5fadc3cbb4dcd0640e9c9c9cff2eecaa0f1f860959f690a0d8eb",
+    "age_packet": "f68bd657b",
+    "original_production_contract": "fd363bb2c"
+  },
+  "selection_policy": "Entire actual independent lane, including all declared state. No split of a coherent word to evade SRAM. New source/lifecycle/physical copies must be counted before final selection.",
+  "common_FF_state": {
+    "bank_epoch": 32,
+    "bank_valid": 8,
+    "wc": 4,
+    "rc": 4,
+    "k_q": 4,
+    "expected_epoch_q": 4,
+    "readslot_q": 3,
+    "readrun_q": 1,
+    "fill": 4,
+    "full_w": 1,
+    "warm": 1,
+    "ready": 2,
+    "writeface_reset": 2,
+    "readface_reset": 2,
+    "sticky_fault": 1
+  },
+  "regional_FF_state": {
+    "write_select": 8,
+    "read_select": 8,
+    "write_reset": 2,
+    "read_reset": 2,
+    "read_run": 1
+  },
+  "direct_FF_formula": "9*W + 73 + 21*ceil(W/16)",
+  "gated_FF_formula": "direct + 8*(W+4) + 8*ceil(W/16) + 8",
+  "SRAM_soft_formula": "W+46+2*B: common73 minus32 bank_epoch +5 returned epoch/valid +2B kept read/write enable pins",
+  "rows": [
+    {
+      "bus": "dvs_W5.ag_wo -> tt_ctlm.ag5",
+      "width": 10,
+      "source_root": "n_clk_r135",
+      "receiver_root": "n_clk_r54",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 9
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 10,
+          "hi": 13
+        },
+        {
+          "name": "written_valid",
+          "lo": 14,
+          "hi": 14
+        }
+      ],
+      "historical": {
+        "bid": "dvw_ag_wo",
+        "n": 23,
+        "E": 16,
+        "E_sta": 6,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 7,
+        "G": 1267,
+        "R0": 1332,
+        "calendar": -65,
+        "source_gate_clock": "n_clk_r135",
+        "landing_read_clock": "n_clk_r54",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_r135",
+        "destination_metadata_clock": "clk_r54",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_ag_wo_0",
+          "rly_dvw_ag_wo_1",
+          "rly_dvw_ag_wo_2",
+          "rly_dvw_ag_wo_3",
+          "rly_dvw_ag_wo_4",
+          "rly_dvw_ag_wo_5",
+          "rly_dvw_ag_wo_6",
+          "rly_dvw_ag_wo_7",
+          "rly_dvw_ag_wo_8",
+          "rly_dvw_ag_wo_9",
+          "rly_dvw_ag_wo_10",
+          "rly_dvw_ag_wo_11",
+          "rly_dvw_ag_wo_12",
+          "rly_dvw_ag_wo_13",
+          "rly_dvw_ag_wo_14",
+          "rly_dvw_ag_wo_15",
+          "rly_dvw_ag_wo_16",
+          "rly_dvw_ag_wo_17",
+          "rly_dvw_ag_wo_18",
+          "rly_dvw_ag_wo_19",
+          "rly_dvw_ag_wo_20",
+          "rly_dvw_ag_wo_21",
+          "rly_dvw_ag_wo_22"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 15,
+      "nominal_is_candidate_K": false,
+      "regions16": 1,
+      "direct_FF_declared_bits": 184,
+      "gated_FF_declared_bits": 312,
+      "choice": "FF_POINTER_RING_DIRECT_R",
+      "FF_threshold_headroom": 1864,
+      "macros": 0,
+      "selected_declared_soft_FF": 184,
+      "source_port_evidence": {
+        "snapshot": "109_qfd_dv_slice2_faces.sv",
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "port_lines": [
+          {
+            "line": 42,
+            "text": "output wire [9:0] ag_wo,"
+          },
+          {
+            "line": 110,
+            "text": ".ag_dn_o(ag_wo),"
+          }
+        ],
+        "publication_edge": "posedge ck (face alias of u_core.ag_dn_o register)",
+        "status": "WRAPPED_ROOT_REGISTER"
+      },
+      "destination_port_evidence": {
+        "snapshot": "110_qfd_tt_ctlm_dv.sv",
+        "sha256": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
+        "port_lines": [
+          {
+            "line": 156,
+            "text": "input  wire [9:0]    ag5,"
+          },
+          {
+            "line": 170,
+            "text": "else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "dvs_W5.dd_wo -> native59.dd_i",
+      "width": 548,
+      "source_root": "n_clk_r135",
+      "receiver_root": "n_clk_r54",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 547
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 548,
+          "hi": 551
+        },
+        {
+          "name": "written_valid",
+          "lo": 552,
+          "hi": 552
+        }
+      ],
+      "historical": {
+        "bid": "dvw_dd_wo",
+        "n": 26,
+        "E": 19,
+        "E_sta": 7,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 2,
+        "G": 1267,
+        "R0": 1596,
+        "calendar": -329,
+        "source_gate_clock": "n_clk_r135",
+        "landing_read_clock": "n_clk_r54",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_r135",
+        "destination_metadata_clock": "clk_r54",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_dd_wo_0",
+          "rly_dvw_dd_wo_1",
+          "rly_dvw_dd_wo_2",
+          "rly_dvw_dd_wo_3",
+          "rly_dvw_dd_wo_4",
+          "rly_dvw_dd_wo_5",
+          "rly_dvw_dd_wo_6",
+          "rly_dvw_dd_wo_7",
+          "rly_dvw_dd_wo_8",
+          "rly_dvw_dd_wo_9",
+          "rly_dvw_dd_wo_10",
+          "rly_dvw_dd_wo_11",
+          "rly_dvw_dd_wo_12",
+          "rly_dvw_dd_wo_13",
+          "rly_dvw_dd_wo_14",
+          "rly_dvw_dd_wo_15",
+          "rly_dvw_dd_wo_16",
+          "rly_dvw_dd_wo_17",
+          "rly_dvw_dd_wo_18",
+          "rly_dvw_dd_wo_19",
+          "rly_dvw_dd_wo_20",
+          "rly_dvw_dd_wo_21",
+          "rly_dvw_dd_wo_22",
+          "rly_dvw_dd_wo_23",
+          "rly_dvw_dd_wo_24",
+          "rly_dvw_dd_wo_25"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 10,
+      "nominal_is_candidate_K": false,
+      "regions16": 35,
+      "direct_FF_declared_bits": 5740,
+      "gated_FF_declared_bits": 10444,
+      "choice": "REAL_DUAL_CLOCK_SRAM_READ_R_OUTPUT_R_PLUS1",
+      "FF_threshold_headroom": null,
+      "macros": 9,
+      "selected_declared_soft_FF": 612,
+      "source_port_evidence": {
+        "snapshot": "109_qfd_dv_slice2_faces.sv",
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "port_lines": [
+          {
+            "line": 28,
+            "text": "output wire [547:0] dd_wo,"
+          },
+          {
+            "line": 70,
+            "text": "assign dd_wo = w_ch_dn_o[547:0];"
+          }
+        ],
+        "publication_edge": "posedge ck (face alias of u_core.ch_dn_o register)",
+        "status": "WRAPPED_ROOT_REGISTER"
+      },
+      "destination_port_evidence": {
+        "snapshot": "114_qfd_native59_dv_service.sv",
+        "sha256": "8c40360594c677b1b416ef50dcd9e7658525e5931cae1d91dd8c8e96dc4a28bb",
+        "port_lines": [
+          {
+            "line": 54,
+            "text": "input wire[547:0]dd_i,"
+          },
+          {
+            "line": 82,
+            "text": "p_lcv<=layer_context_v;p_stage<=command_stage;p_tok<=native_token;p_pos<=native_position;p_cmd<=native_cmd;p_dd<=dd_i;"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "dvs_W5.ss_wo -> tt_ctlm.ss5",
+      "width": 107,
+      "source_root": "n_clk_r135",
+      "receiver_root": "n_clk_r54",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 106
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 107,
+          "hi": 110
+        },
+        {
+          "name": "written_valid",
+          "lo": 111,
+          "hi": 111
+        }
+      ],
+      "historical": {
+        "bid": "dvw_ss_wo",
+        "n": 22,
+        "E": 16,
+        "E_sta": 6,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 7,
+        "G": 1267,
+        "R0": 1332,
+        "calendar": -65,
+        "source_gate_clock": "n_clk_r135",
+        "landing_read_clock": "n_clk_r54",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_r135",
+        "destination_metadata_clock": "clk_r54",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_ss_wo_0",
+          "rly_dvw_ss_wo_1",
+          "rly_dvw_ss_wo_2",
+          "rly_dvw_ss_wo_3",
+          "rly_dvw_ss_wo_4",
+          "rly_dvw_ss_wo_5",
+          "rly_dvw_ss_wo_6",
+          "rly_dvw_ss_wo_7",
+          "rly_dvw_ss_wo_8",
+          "rly_dvw_ss_wo_9",
+          "rly_dvw_ss_wo_10",
+          "rly_dvw_ss_wo_11",
+          "rly_dvw_ss_wo_12",
+          "rly_dvw_ss_wo_13",
+          "rly_dvw_ss_wo_14",
+          "rly_dvw_ss_wo_15",
+          "rly_dvw_ss_wo_16",
+          "rly_dvw_ss_wo_17",
+          "rly_dvw_ss_wo_18",
+          "rly_dvw_ss_wo_19",
+          "rly_dvw_ss_wo_20",
+          "rly_dvw_ss_wo_21"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 15,
+      "nominal_is_candidate_K": false,
+      "regions16": 7,
+      "direct_FF_declared_bits": 1183,
+      "gated_FF_declared_bits": 2135,
+      "choice": "FF_POINTER_RING_DIRECT_R",
+      "FF_threshold_headroom": 865,
+      "macros": 0,
+      "selected_declared_soft_FF": 1183,
+      "source_port_evidence": {
+        "snapshot": "109_qfd_dv_slice2_faces.sv",
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "port_lines": [
+          {
+            "line": 44,
+            "text": "output wire [106:0] ss_wo,"
+          },
+          {
+            "line": 112,
+            "text": ".st(ss_wo),"
+          }
+        ],
+        "publication_edge": "posedge ck (face alias of u_core.st register)",
+        "status": "WRAPPED_ROOT_REGISTER"
+      },
+      "destination_port_evidence": {
+        "snapshot": "110_qfd_tt_ctlm_dv.sv",
+        "sha256": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
+        "port_lines": [
+          {
+            "line": 155,
+            "text": "input  wire [106:0]  ss5,"
+          },
+          {
+            "line": 170,
+            "text": "else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "io_collective.cmd_free -> sys_face.io_cmd_free",
+      "width": 1,
+      "source_root": "n_clk_coll",
+      "receiver_root": "n_clk_d2d",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 0
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 1,
+          "hi": 4
+        },
+        {
+          "name": "written_valid",
+          "lo": 5,
+          "hi": 5
+        }
+      ],
+      "historical": {
+        "bid": "dvw_io_collective_cmd_free",
+        "n": 26,
+        "E": 19,
+        "E_sta": 7,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 5,
+        "G": 671,
+        "R0": 21,
+        "calendar": 650,
+        "source_gate_clock": "n_clk_coll",
+        "landing_read_clock": "n_clk_d2d",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_coll",
+        "destination_metadata_clock": "clk_d2d",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_io_collective_cmd_free_0",
+          "rly_dvw_io_collective_cmd_free_1",
+          "rly_dvw_io_collective_cmd_free_2",
+          "rly_dvw_io_collective_cmd_free_3",
+          "rly_dvw_io_collective_cmd_free_4",
+          "rly_dvw_io_collective_cmd_free_5",
+          "rly_dvw_io_collective_cmd_free_6",
+          "rly_dvw_io_collective_cmd_free_7",
+          "rly_dvw_io_collective_cmd_free_8",
+          "rly_dvw_io_collective_cmd_free_9",
+          "rly_dvw_io_collective_cmd_free_10",
+          "rly_dvw_io_collective_cmd_free_11",
+          "rly_dvw_io_collective_cmd_free_12",
+          "rly_dvw_io_collective_cmd_free_13",
+          "rly_dvw_io_collective_cmd_free_14",
+          "rly_dvw_io_collective_cmd_free_15",
+          "rly_dvw_io_collective_cmd_free_16",
+          "rly_dvw_io_collective_cmd_free_17",
+          "rly_dvw_io_collective_cmd_free_18",
+          "rly_dvw_io_collective_cmd_free_19",
+          "rly_dvw_io_collective_cmd_free_20",
+          "rly_dvw_io_collective_cmd_free_21",
+          "rly_dvw_io_collective_cmd_free_22",
+          "rly_dvw_io_collective_cmd_free_23",
+          "rly_dvw_io_collective_cmd_free_24",
+          "rly_dvw_io_collective_cmd_free_25"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 13,
+      "nominal_is_candidate_K": false,
+      "regions16": 1,
+      "direct_FF_declared_bits": 103,
+      "gated_FF_declared_bits": 159,
+      "choice": "FF_POINTER_RING_DIRECT_R",
+      "FF_threshold_headroom": 1945,
+      "macros": 0,
+      "selected_declared_soft_FF": 103,
+      "source_port_evidence": {
+        "snapshot": "107_ot_qfd_collective_static_io_production.sv",
+        "sha256": "323c3acb8c99a9362f0c1a6d2b6eb5f29f177fd7925620a9251ef53c5e23b511",
+        "port_lines": [
+          {
+            "line": 50,
+            "text": "output wire  cmd_free,"
+          },
+          {
+            "line": 103,
+            "text": ".cmd_free(cmd_free),"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "destination_port_evidence": {
+        "snapshot": "115_qfd_sys_face.sv",
+        "sha256": "7e355ea683e92c351e26d786b5915c69622d13093c1d8e6c1b31353b73dc7421",
+        "port_lines": [
+          {
+            "line": 174,
+            "text": "input  wire          io_cmd_free,"
+          },
+          {
+            "line": 538,
+            "text": "collective_drained <= !seq_dc[53] && io_cmd_free;"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "io_collective.fault -> sys_face.io_fault",
+      "width": 1,
+      "source_root": "n_clk_coll",
+      "receiver_root": "n_clk_d2d",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 0
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 1,
+          "hi": 4
+        },
+        {
+          "name": "written_valid",
+          "lo": 5,
+          "hi": 5
+        }
+      ],
+      "historical": {
+        "bid": "sf_io_fault",
+        "n": 26,
+        "E": 18,
+        "E_sta": 6,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 4,
+        "G": 671,
+        "R0": 21,
+        "calendar": 650,
+        "source_gate_clock": "n_clk_coll",
+        "landing_read_clock": "n_clk_d2d",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_coll",
+        "destination_metadata_clock": "clk_d2d",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_sf_io_fault_0",
+          "rly_sf_io_fault_1",
+          "rly_sf_io_fault_2",
+          "rly_sf_io_fault_3",
+          "rly_sf_io_fault_4",
+          "rly_sf_io_fault_5",
+          "rly_sf_io_fault_6",
+          "rly_sf_io_fault_7",
+          "rly_sf_io_fault_8",
+          "rly_sf_io_fault_9",
+          "rly_sf_io_fault_10",
+          "rly_sf_io_fault_11",
+          "rly_sf_io_fault_12",
+          "rly_sf_io_fault_13",
+          "rly_sf_io_fault_14",
+          "rly_sf_io_fault_15",
+          "rly_sf_io_fault_16",
+          "rly_sf_io_fault_17",
+          "rly_sf_io_fault_18",
+          "rly_sf_io_fault_19",
+          "rly_sf_io_fault_20",
+          "rly_sf_io_fault_21",
+          "rly_sf_io_fault_22",
+          "rly_sf_io_fault_23",
+          "rly_sf_io_fault_24",
+          "rly_sf_io_fault_25"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 12,
+      "nominal_is_candidate_K": false,
+      "regions16": 1,
+      "direct_FF_declared_bits": 103,
+      "gated_FF_declared_bits": 159,
+      "choice": "FF_POINTER_RING_DIRECT_R",
+      "FF_threshold_headroom": 1945,
+      "macros": 0,
+      "selected_declared_soft_FF": 103,
+      "source_port_evidence": {
+        "snapshot": "107_ot_qfd_collective_static_io_production.sv",
+        "sha256": "323c3acb8c99a9362f0c1a6d2b6eb5f29f177fd7925620a9251ef53c5e23b511",
+        "port_lines": [
+          {
+            "line": 48,
+            "text": "output wire  fault,"
+          },
+          {
+            "line": 65,
+            "text": "assign fault=collective_fault|shared_fault|(|transport_cdc_fault)|(|transport_abort);"
+          },
+          {
+            "line": 115,
+            "text": ".fault(collective_fault),"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "destination_port_evidence": {
+        "snapshot": "115_qfd_sys_face.sv",
+        "sha256": "7e355ea683e92c351e26d786b5915c69622d13093c1d8e6c1b31353b73dc7421",
+        "port_lines": [
+          {
+            "line": 175,
+            "text": "input  wire          io_fault,"
+          },
+          {
+            "line": 544,
+            "text": "result_cause <= {io_fault | io_shared_fault, native_fault, d2d_fault, face_fault};"
+          },
+          {
+            "line": 552,
+            "text": "tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "io_collective.shared_fault -> sys_face.io_shared_fault",
+      "width": 1,
+      "source_root": "n_clk_coll",
+      "receiver_root": "n_clk_d2d",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 0
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 1,
+          "hi": 4
+        },
+        {
+          "name": "written_valid",
+          "lo": 5,
+          "hi": 5
+        }
+      ],
+      "historical": {
+        "bid": "sf_io_shared_fault",
+        "n": 27,
+        "E": 19,
+        "E_sta": 7,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 5,
+        "G": 671,
+        "R0": 21,
+        "calendar": 650,
+        "source_gate_clock": "n_clk_coll",
+        "landing_read_clock": "n_clk_d2d",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_coll",
+        "destination_metadata_clock": "clk_d2d",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_sf_io_shared_fault_0",
+          "rly_sf_io_shared_fault_1",
+          "rly_sf_io_shared_fault_2",
+          "rly_sf_io_shared_fault_3",
+          "rly_sf_io_shared_fault_4",
+          "rly_sf_io_shared_fault_5",
+          "rly_sf_io_shared_fault_6",
+          "rly_sf_io_shared_fault_7",
+          "rly_sf_io_shared_fault_8",
+          "rly_sf_io_shared_fault_9",
+          "rly_sf_io_shared_fault_10",
+          "rly_sf_io_shared_fault_11",
+          "rly_sf_io_shared_fault_12",
+          "rly_sf_io_shared_fault_13",
+          "rly_sf_io_shared_fault_14",
+          "rly_sf_io_shared_fault_15",
+          "rly_sf_io_shared_fault_16",
+          "rly_sf_io_shared_fault_17",
+          "rly_sf_io_shared_fault_18",
+          "rly_sf_io_shared_fault_19",
+          "rly_sf_io_shared_fault_20",
+          "rly_sf_io_shared_fault_21",
+          "rly_sf_io_shared_fault_22",
+          "rly_sf_io_shared_fault_23",
+          "rly_sf_io_shared_fault_24",
+          "rly_sf_io_shared_fault_25",
+          "rly_sf_io_shared_fault_26"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 13,
+      "nominal_is_candidate_K": false,
+      "regions16": 1,
+      "direct_FF_declared_bits": 103,
+      "gated_FF_declared_bits": 159,
+      "choice": "FF_POINTER_RING_DIRECT_R",
+      "FF_threshold_headroom": 1945,
+      "macros": 0,
+      "selected_declared_soft_FF": 103,
+      "source_port_evidence": {
+        "snapshot": "107_ot_qfd_collective_static_io_production.sv",
+        "sha256": "323c3acb8c99a9362f0c1a6d2b6eb5f29f177fd7925620a9251ef53c5e23b511",
+        "port_lines": [
+          {
+            "line": 60,
+            "text": "output wire shared_tx_valid,output wire[1042:0]shared_tx,output wire shared_fault,"
+          },
+          {
+            "line": 65,
+            "text": "assign fault=collective_fault|shared_fault|(|transport_cdc_fault)|(|transport_abort);"
+          },
+          {
+            "line": 113,
+            "text": ".shared_fault(shared_fault),"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "destination_port_evidence": {
+        "snapshot": "115_qfd_sys_face.sv",
+        "sha256": "7e355ea683e92c351e26d786b5915c69622d13093c1d8e6c1b31353b73dc7421",
+        "port_lines": [
+          {
+            "line": 176,
+            "text": "input  wire          io_shared_fault,"
+          },
+          {
+            "line": 544,
+            "text": "result_cause <= {io_fault | io_shared_fault, native_fault, d2d_fault, face_fault};"
+          },
+          {
+            "line": 552,
+            "text": "tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "native59.dr_o -> dvs_W5.dr_wi",
+      "width": 520,
+      "source_root": "n_clk_r54",
+      "receiver_root": "n_clk_r135",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 519
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 520,
+          "hi": 523
+        },
+        {
+          "name": "written_valid",
+          "lo": 524,
+          "hi": 524
+        }
+      ],
+      "historical": {
+        "bid": "dvw_dr_wi",
+        "n": 27,
+        "E": 19,
+        "E_sta": 7,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 6,
+        "G": 1597,
+        "R0": 1266,
+        "calendar": 331,
+        "source_gate_clock": "n_clk_r54",
+        "landing_read_clock": "n_clk_r135",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_r54",
+        "destination_metadata_clock": "clk_r135",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_dr_wi_0",
+          "rly_dvw_dr_wi_1",
+          "rly_dvw_dr_wi_2",
+          "rly_dvw_dr_wi_3",
+          "rly_dvw_dr_wi_4",
+          "rly_dvw_dr_wi_5",
+          "rly_dvw_dr_wi_6",
+          "rly_dvw_dr_wi_7",
+          "rly_dvw_dr_wi_8",
+          "rly_dvw_dr_wi_9",
+          "rly_dvw_dr_wi_10",
+          "rly_dvw_dr_wi_11",
+          "rly_dvw_dr_wi_12",
+          "rly_dvw_dr_wi_13",
+          "rly_dvw_dr_wi_14",
+          "rly_dvw_dr_wi_15",
+          "rly_dvw_dr_wi_16",
+          "rly_dvw_dr_wi_17",
+          "rly_dvw_dr_wi_18",
+          "rly_dvw_dr_wi_19",
+          "rly_dvw_dr_wi_20",
+          "rly_dvw_dr_wi_21",
+          "rly_dvw_dr_wi_22",
+          "rly_dvw_dr_wi_23",
+          "rly_dvw_dr_wi_24",
+          "rly_dvw_dr_wi_25",
+          "rly_dvw_dr_wi_26"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 14,
+      "nominal_is_candidate_K": false,
+      "regions16": 33,
+      "direct_FF_declared_bits": 5446,
+      "gated_FF_declared_bits": 9910,
+      "choice": "REAL_DUAL_CLOCK_SRAM_READ_R_OUTPUT_R_PLUS1",
+      "FF_threshold_headroom": null,
+      "macros": 9,
+      "selected_declared_soft_FF": 584,
+      "source_port_evidence": {
+        "snapshot": "114_qfd_native59_dv_service.sv",
+        "sha256": "8c40360594c677b1b416ef50dcd9e7658525e5931cae1d91dd8c8e96dc4a28bb",
+        "port_lines": [
+          {
+            "line": 62,
+            "text": "output reg[519:0]dr_o,"
+          },
+          {
+            "line": 295,
+            "text": "if(!rst_n)begin dr_o<=0;dr_tag<=0;end"
+          },
+          {
+            "line": 298,
+            "text": "dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:"
+          },
+          {
+            "line": 303,
+            "text": ".emit_v(dr_o[519]&&!dr_o[518]),.emit_beat(dr_o[516:512]),.emit_tag59(dr_tag),.visibility_slot(p_vis),"
+          }
+        ],
+        "publication_edge": "posedge ck (output nonblocking assignment)",
+        "status": "DIRECT_ROOT_REGISTER"
+      },
+      "destination_port_evidence": {
+        "snapshot": "109_qfd_dv_slice2_faces.sv",
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "port_lines": [
+          {
+            "line": 40,
+            "text": "input  wire [519:0] dr_wi,"
+          },
+          {
+            "line": 74,
+            "text": "assign w_ch_dn_i = {rv_wi, re_wi, rr_wi, rl_wi, rd_wi, dr_wi};"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "tt_ctlm.cmd -> dvs_W5.cmd_wi",
+      "width": 116,
+      "source_root": "n_clk_r54",
+      "receiver_root": "n_clk_r135",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 115
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 116,
+          "hi": 119
+        },
+        {
+          "name": "written_valid",
+          "lo": 120,
+          "hi": 120
+        }
+      ],
+      "historical": {
+        "bid": "dvw_cmd_wi",
+        "n": 25,
+        "E": 18,
+        "E_sta": 7,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 5,
+        "G": 1333,
+        "R0": 1266,
+        "calendar": 67,
+        "source_gate_clock": "n_clk_r54",
+        "landing_read_clock": "n_clk_r135",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_r54",
+        "destination_metadata_clock": "clk_r135",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_cmd_wi_0",
+          "rly_dvw_cmd_wi_1",
+          "rly_dvw_cmd_wi_2",
+          "rly_dvw_cmd_wi_3",
+          "rly_dvw_cmd_wi_4",
+          "rly_dvw_cmd_wi_5",
+          "rly_dvw_cmd_wi_6",
+          "rly_dvw_cmd_wi_7",
+          "rly_dvw_cmd_wi_8",
+          "rly_dvw_cmd_wi_9",
+          "rly_dvw_cmd_wi_10",
+          "rly_dvw_cmd_wi_11",
+          "rly_dvw_cmd_wi_12",
+          "rly_dvw_cmd_wi_13",
+          "rly_dvw_cmd_wi_14",
+          "rly_dvw_cmd_wi_15",
+          "rly_dvw_cmd_wi_16",
+          "rly_dvw_cmd_wi_17",
+          "rly_dvw_cmd_wi_18",
+          "rly_dvw_cmd_wi_19",
+          "rly_dvw_cmd_wi_20",
+          "rly_dvw_cmd_wi_21",
+          "rly_dvw_cmd_wi_22",
+          "rly_dvw_cmd_wi_23",
+          "rly_dvw_cmd_wi_24"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 5,
+      "nominal_is_candidate_K": false,
+      "regions16": 8,
+      "direct_FF_declared_bits": 1285,
+      "gated_FF_declared_bits": 2317,
+      "choice": "FF_POINTER_RING_DIRECT_R",
+      "FF_threshold_headroom": 763,
+      "macros": 0,
+      "selected_declared_soft_FF": 1285,
+      "source_port_evidence": {
+        "snapshot": "110_qfd_tt_ctlm_dv.sv",
+        "sha256": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
+        "port_lines": [
+          {
+            "line": 153,
+            "text": "output wire [115:0]  cmd,"
+          },
+          {
+            "line": 229,
+            "text": ".start_cnt(l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),"
+          },
+          {
+            "line": 366,
+            "text": "ot_qfd_native_cmd_route u_native_route (.clk(ck), .rst_n(rst_n), .cmd(hcmd), .rom_ret(rom_ret),"
+          },
+          {
+            "line": 380,
+            "text": ".cmd(hcmd), .ret(ret));"
+          },
+          {
+            "line": 427,
+            "text": "qfd_dv_hr_pack #(.ASBUILT(HR_ASBUILT)) u_hr_pack (.cmd(ib_q), .hr(ib_hr));"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "destination_port_evidence": {
+        "snapshot": "109_qfd_dv_slice2_faces.sv",
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "port_lines": [
+          {
+            "line": 6,
+            "text": "input  wire [115:0] cmd_wi,"
+          },
+          {
+            "line": 94,
+            "text": ".cmd_i(cmd_wi),"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    },
+    {
+      "bus": "tt_ctlm.hr -> dvs_W5.hr_wi",
+      "width": 453,
+      "source_root": "n_clk_r54",
+      "receiver_root": "n_clk_r135",
+      "record_order": [
+        {
+          "name": "complete_original_bus",
+          "lo": 0,
+          "hi": 452
+        },
+        {
+          "name": "write_epoch_mod16",
+          "lo": 453,
+          "hi": 456
+        },
+        {
+          "name": "written_valid",
+          "lo": 457,
+          "hi": 457
+        }
+      ],
+      "historical": {
+        "bid": "dvw_hr_wi",
+        "n": 26,
+        "E": 19,
+        "E_sta": 7,
+        "D": 4,
+        "declared_window_ok": false,
+        "K": 6,
+        "G": 1333,
+        "R0": 1266,
+        "calendar": 67,
+        "source_gate_clock": "n_clk_r54",
+        "landing_read_clock": "n_clk_r135",
+        "landing_output_register": true,
+        "source_metadata_clock": "clk_r54",
+        "destination_metadata_clock": "clk_r135",
+        "reset_root": "__declared_calendar__",
+        "chain": [
+          "rly_dvw_hr_wi_0",
+          "rly_dvw_hr_wi_1",
+          "rly_dvw_hr_wi_2",
+          "rly_dvw_hr_wi_3",
+          "rly_dvw_hr_wi_4",
+          "rly_dvw_hr_wi_5",
+          "rly_dvw_hr_wi_6",
+          "rly_dvw_hr_wi_7",
+          "rly_dvw_hr_wi_8",
+          "rly_dvw_hr_wi_9",
+          "rly_dvw_hr_wi_10",
+          "rly_dvw_hr_wi_11",
+          "rly_dvw_hr_wi_12",
+          "rly_dvw_hr_wi_13",
+          "rly_dvw_hr_wi_14",
+          "rly_dvw_hr_wi_15",
+          "rly_dvw_hr_wi_16",
+          "rly_dvw_hr_wi_17",
+          "rly_dvw_hr_wi_18",
+          "rly_dvw_hr_wi_19",
+          "rly_dvw_hr_wi_20",
+          "rly_dvw_hr_wi_21",
+          "rly_dvw_hr_wi_22",
+          "rly_dvw_hr_wi_23",
+          "rly_dvw_hr_wi_24",
+          "rly_dvw_hr_wi_25"
+        ]
+      },
+      "nominal_old_epoch_formula_mod16": 6,
+      "nominal_is_candidate_K": false,
+      "regions16": 29,
+      "direct_FF_declared_bits": 4759,
+      "gated_FF_declared_bits": 8655,
+      "choice": "REAL_DUAL_CLOCK_SRAM_READ_R_OUTPUT_R_PLUS1",
+      "FF_threshold_headroom": null,
+      "macros": 8,
+      "selected_declared_soft_FF": 515,
+      "source_port_evidence": {
+        "snapshot": "110_qfd_tt_ctlm_dv.sv",
+        "sha256": "9d5ab14b4ba5bfa09e4aa11160a16f2dde8094d9fab2d4cd52997737ab70d4d2",
+        "port_lines": [
+          {
+            "line": 127,
+            "text": "parameter integer HR_ASBUILT = 0                // QW-DIEFIX: 1 = bench mutant (as-built hr layout)"
+          },
+          {
+            "line": 152,
+            "text": "output wire [452:0]  hr,"
+          },
+          {
+            "line": 324,
+            "text": "wire [379:0] ib_q;                         // the relocated ROM command, registered (hr ib field)"
+          },
+          {
+            "line": 427,
+            "text": "qfd_dv_hr_pack #(.ASBUILT(HR_ASBUILT)) u_hr_pack (.cmd(ib_q), .hr(ib_hr));"
+          },
+          {
+            "line": 435,
+            "text": "assign hr = {ib_hr, hr_lo};"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "destination_port_evidence": {
+        "snapshot": "109_qfd_dv_slice2_faces.sv",
+        "sha256": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+        "port_lines": [
+          {
+            "line": 8,
+            "text": "input  wire [452:0] hr_wi,"
+          },
+          {
+            "line": 96,
+            "text": ".hr_i(hr_wi),"
+          }
+        ],
+        "publication_edge": null,
+        "status": "OUTPUT_CONE_UNRESOLVED"
+      },
+      "production_semantic_fields_certified": false,
+      "production_D8_K": null,
+      "source_epoch": null,
+      "native_phase": null,
+      "first_use": null
+    }
+  ],
+  "aggregate": {
+    "independent_lanes": 9,
+    "FF_ring_lanes": 6,
+    "SRAM_ring_lanes": 3,
+    "macro_count": 26,
+    "physical_SRAM_bits": 53248,
+    "macro_clock_pins": 52,
+    "macro_signal_contacts": 5356,
+    "macro_PG_pins": 52,
+    "macro_area_um2": 14393.328768,
+    "macro_TT_clock_cap_fF": 485.9816,
+    "macro_TT_read_energy_fJ": 1553.8260745978878,
+    "macro_TT_write_energy_fJ": 2946.6659593978875,
+    "macro_TT_eight_init_writes_fJ": 23573.3276751831,
+    "declared_soft_FF": 4672,
+    "extra_source_edges_vsD4": 4,
+    "initial_writes": 8
+  },
+  "macro": {
+    "master": "ot_sram_1r1w2c_32x64_m1",
+    "introduced_commit": "e26d9250357da1ee4ef670cc209a440cc38c348d",
+    "view_sha256": {
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.json": "b29a2cbba8646cf6b05367e317af4162a25a0ddf101309507459966522c7c8f5",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef": "d7a029998af5a52564714748de1529d82273b118f2bae53658f5af92ed148d2b",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v": "a21c47f48da07db2e746b68c5519a41f0b53185d8de066689040631b29c1a19e",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib": "a2fc1ab2421ecf212aaaecec108a5b1a8d0fd3010c9b584c3648ffd96f2b5989",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ss.lib": "0c7692196d7fc8e8b123455828956499e24ac24d5781de273a0253b63a4b1880",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib": "fd9dfbb0ab5127026d7024a5c59cac0d87b57a6ea42cf9c547abb3e501a2cbe7",
+      "tools/mem_compiler/sram_gen.py": "b876be0fa55dad638d999cfee084c2176014e60720236e32025f53cef63faccf",
+      "tools/mem_compiler/behav.py": "56db6bf14906a4152ea975a038dbce585e84ecbbf76fff778e99dbffac9685c5",
+      "tools/mem_compiler/views.py": "903794eb3e93fc6bee510ad90d84f16a30bcfba5a97b3b6dc1babec235be8dfa",
+      "tools/mem_compiler/build_banked_2c_1019.py": "cefdb8878131179f979233afe07c04bdb8848971edd1e64f94ebfb6a30d23b69",
+      "tools/mem_compiler/build_aligned_v2.py": "a880643a4e3f3ee2e417dc6ebb2652d8c4300035b60478ec41372a2d4ec2db2f",
+      "tools/mem_compiler/asap7_calibration.json": "db9005199aaf928750e61b6831e7b9552d0eafa0522a1220fe3cdd526a2902b0"
+    },
+    "area": {
+      "array_efficiency": 0.12082243861936355,
+      "array_height_um": 3.456,
+      "array_width_um": 19.3536,
+      "bank_control_height_um": 0.0,
+      "cell_area_um2": 0.03265919999999999,
+      "cell_col_pitch_um": 0.3024,
+      "cell_row_pitch_um": 0.108,
+      "column_height_um": 13.623163260579265,
+      "core_height_um": 17.079163260579264,
+      "core_width_um": 31.8536,
+      "data_array_area_um2": 66.88604159999998,
+      "decoder_width_um": 12.5,
+      "density_mb_per_mm2": 3.6994916782824925,
+      "geometry_constants_um": {
+        "column_fixed": 9.082108840386176,
+        "column_per_mux_bit": 0.5,
+        "control_extra": 1.5,
+        "decoder_fixed": 4.0,
+        "decoder_per_row_bit": 0.45,
+        "fuse_compare_per_spare": 0.6,
+        "rom_column_fixed": 5.0,
+        "rom_decoder_fixed": 3.2
+      },
+      "macro_area_um2": 553.589568,
+      "macro_height_um": 17.304,
+      "macro_width_um": 31.992,
+      "outline": {
+        "aligned_v2": {
+          "delta_height_nm": 24,
+          "delta_width_nm": 24,
+          "height_um": 17.304,
+          "row_multiple": false,
+          "rule": "H and W = 0.024 mod 0.048 um: pins on track at origin 0 mod 0.048 in R0/MX/MY/R180, M5 crossing on both pin edges",
+          "v1_height_um": 17.28,
+          "v1_width_um": 31.968,
+          "width_um": 31.992
+        },
+        "pin_limited": false,
+        "pin_stretch_um": 0.0,
+        "pins_per_edge": 103,
+        "signal_pins": 206,
+        "snap_overhead_um2": 8.374
+      },
+      "physical_array_area_um2": 66.8860416
+    },
+    "timing": {
+      "ff": {
+        "breakdown": {
+          "bitline_cap_ff": 1.99296,
+          "bitline_ps": 8.062026101238347,
+          "cell_current_ua": 24.720336736368004,
+          "column_mux_ps": 0.0,
+          "control_ps": 44.33172322666667,
+          "decode_ps": 62.80327457111112,
+          "fo4_ps": 14.777241075555557,
+          "output_ps": 36.94310268888889,
+          "precharge_ps": 29.990744086461433,
+          "read_cycle_ps": 188.91159079052287,
+          "sense_ps": 29.554482151111113,
+          "wordline_cap_ff": 16.61088815786667,
+          "wordline_ps": 14.169340653934201,
+          "write_cycle_ps": 196.06306770019043,
+          "write_ps": 166.072323613729
+        },
+        "clk_cap_ff": 10.3732,
+        "clk_to_q_ps": 196.09236835047227,
+        "corner": "ff",
+        "hold_ps": 19.67222053777778,
+        "leakage_nw": 2767.9478400000003,
+        "min_period_ps": 196.06306770019043,
+        "min_pulse_ps": 78.42522708007618,
+        "out_r_kohm": 0.31724855211381614,
+        "out_slew_intrinsic_ps": 22.165861613333334,
+        "pin_cap_ff": 0.683716,
+        "read_energy_fj": 71.33054432213248,
+        "setup_ps": 24.694771075555558,
+        "temperature": 0.0,
+        "voltage": 0.77,
+        "write_energy_fj": 137.13330041813248
+      },
+      "ss": {
+        "breakdown": {
+          "bitline_cap_ff": 1.99296,
+          "bitline_ps": 12.87177526211413,
+          "cell_current_ua": 15.483178966509284,
+          "column_mux_ps": 0.0,
+          "control_ps": 70.7797235075,
+          "decode_ps": 100.27127496895834,
+          "fo4_ps": 23.593241169166667,
+          "output_ps": 58.98310292291667,
+          "precharge_ps": 48.160563275655754,
+          "read_cycle_ps": 306.43221627606323,
+          "sense_ps": 47.186482338333334,
+          "wordline_cap_ff": 16.61088815786667,
+          "wordline_ps": 27.16239692350166,
+          "write_cycle_ps": 318.1277631204382,
+          "write_ps": 269.96719984478244
+        },
+        "clk_cap_ff": 8.68376,
+        "clk_to_q_ps": 317.7647673045979,
+        "corner": "ss",
+        "hold_ps": 30.074020584583334,
+        "leakage_nw": 2767.9478400000003,
+        "min_period_ps": 318.1277631204382,
+        "min_pulse_ps": 127.25110524817529,
+        "out_r_kohm": 0.7083491406580278,
+        "out_slew_intrinsic_ps": 35.38986175375,
+        "pin_cap_ff": 0.578766,
+        "read_energy_fj": 49.21121994985728,
+        "setup_ps": 39.800541169166664,
+        "temperature": 100.0,
+        "voltage": 0.63,
+        "write_energy_fj": 91.79997796585728
+      },
+      "tt": {
+        "breakdown": {
+          "bitline_cap_ff": 1.99296,
+          "bitline_ps": 9.9648,
+          "cell_current_ua": 20.0,
+          "column_mux_ps": 0.0,
+          "control_ps": 54.79475631333334,
+          "decode_ps": 77.62590477722223,
+          "fo4_ps": 18.264918771111113,
+          "output_ps": 45.66229692777778,
+          "precharge_ps": 37.157256710066854,
+          "read_cycle_ps": 234.86002341329987,
+          "sense_ps": 36.529837542222225,
+          "wordline_cap_ff": 16.61088815786667,
+          "wordline_ps": 18.787468070455215,
+          "write_cycle_ps": 243.7875613522556,
+          "write_ps": 206.63030464218875
+        },
+        "clk_cap_ff": 9.3458,
+        "clk_to_q_ps": 243.69356910131563,
+        "corner": "tt",
+        "hold_ps": 21.600259385555557,
+        "leakage_nw": 2767.9478400000003,
+        "min_period_ps": 243.7875613522556,
+        "min_pulse_ps": 97.51502454090225,
+        "out_r_kohm": 0.4562575976456151,
+        "out_slew_intrinsic_ps": 27.39737815666667,
+        "pin_cap_ff": 0.619928,
+        "read_energy_fj": 59.762541330687995,
+        "setup_ps": 28.256178771111113,
+        "temperature": 25.0,
+        "voltage": 0.7,
+        "write_energy_fj": 113.33330613068799
+      }
+    },
+    "pins": {
+      "wclk": "forwarded lane final write root; actual last instance ck_o, not source PLL alias",
+      "rclk": "receiving regional root; exact macro-read edge unbound",
+      "w_ce_in": 1,
+      "r_ce_in": 1,
+      "w_addr_in": "{2b00,wc[2:0]}",
+      "r_addr_in": "{2b00,source-proven read index}",
+      "wd_in": "ordered 64bit slice; unused width mask0",
+      "w_mask_in": "ones for live record bits only",
+      "rd_out": "all live bits consumed; no epoch/valid stubs",
+      "PG": [
+        "VDD",
+        "VSS"
+      ]
+    },
+    "semantics": {
+      "registered_read_edges": 1,
+      "disabled_read": "holds previous rd_out",
+      "same_address_simultaneous_write_read": "FORBIDDEN: independent always blocks do not specify OLD ordering",
+      "initialization": "OT_MEM_NO_INIT required; arbitrary array and rd_out state",
+      "spares": 0,
+      "ECC": "none existing; academic fault-free SRAM assumption"
+    },
+    "ten_bank_clock_ports": [
+      "u_bank[0].wclk",
+      "u_bank[0].rclk",
+      "u_bank[1].wclk",
+      "u_bank[1].rclk",
+      "u_bank[2].wclk",
+      "u_bank[2].rclk",
+      "u_bank[3].wclk",
+      "u_bank[3].rclk",
+      "u_bank[4].wclk",
+      "u_bank[4].rclk",
+      "u_bank[5].wclk",
+      "u_bank[5].rclk",
+      "u_bank[6].wclk",
+      "u_bank[6].rclk",
+      "u_bank[7].wclk",
+      "u_bank[7].rclk",
+      "u_bank[8].wclk",
+      "u_bank[8].rclk",
+      "u_bank[9].wclk",
+      "u_bank[9].rclk"
+    ],
+    "ten_bank_binding_authorized": false
+  },
+  "ABI": {
+    "depth": 8,
+    "AW": 3,
+    "K_bits": 4,
+    "counter_modulus": 16,
+    "logical_K0_means": 16,
+    "candidate_wrapper": "ckf ea i[W-1:0] ck rs k0 k1 k2 k3 -> o[W-1:0] fault; preserve tie_hi/tie_lo ownership",
+    "record": "ordered full payload in [W-1:0], write epoch mod16 in [W+3:W], written flag at W+4",
+    "index": "write wc[2:0], read (rc-k_q)[2:0]; predecode previous edge rc+1-k_q",
+    "epoch_definition": "wc and rc refer to PREEDGE counter values at actual write/read captures; source reset/meta/face stages move their zero edge and must regenerate G/R0/K together",
+    "first_use": "NULL: requires all8 distinct writes, valid lifetime and fixed receiving reset/warm qualification. Eight writes alone not a first-use certificate.",
+    "mod16_alias": "Any stop/reset mismatch can alias after16 edges; producer-only reset must invalidate receiving use before any stale record. Full lifetime proof required.",
+    "production_binding": null
+  },
+  "clock_cost": {
+    "FF_pointer": "No inherited bank ICGs. All8*(W+4) write-bank clock pins see every write-root edge; write enables use feedback muxes. Output/pointers/selects/reset receive their declared roots. Exact split by domain and selected FF/ICG cell caps remains unbound.",
+    "gated_reference": "8 write+8 read ICGs per lane, plus FIRST hop0 when needed. Read banks and delayed output are separately priced; gated phase assumptions cannot transfer to direct FF.",
+    "SRAM": "2 clocks per macro, addresses/masks/enables/PG functional. No clock alias or common-edge assumption.",
+    "soft_total_clock_pins": 4672,
+    "soft_clock_cap_fF": null,
+    "soft_area_um2": null,
+    "ICG_count": null,
+    "complete_physical_clock_cap_fF": null
+  },
+  "logic_cost": {
+    "FF_pointer": "Each lane has 8*(W+4) enabled-write feedback mux bits, W independent8:1 read selects plus4 epoch bits, onehot next/seed logic and comparator. All masks/enable trees/face/reset copies must map and be counted; 16-bit chunks are fanout copies only, never independent memories.",
+    "write_feedback_mux_bits": 2080,
+    "read_mux_8to1_bits": 260,
+    "mapped_cell_area_um2": null
+  },
+  "unpriced_required": [
+    "actual per-lane ordered semantic fields beyond complete original bus",
+    "native phase and exact reset/publication/consumer zero edges",
+    "extra source-control fanout and reset forest beyond declared budget",
+    "PG hooks, all signal contact escape and actual parent outline",
+    "arbitrary-state lifecycle and stopped-clock invalidation logic",
+    "source FF/ICG masters and clock capacitance by domain",
+    "TT setup/FF hold with unchanged uncertainties and original reserves",
+    "actual compiler/token composition"
+  ],
+  "edge_contract": {
+    "legacy_production": "Write W(s,j), directly select bank into output at receiver R(j).",
+    "direct_FF_candidate": "Preserves direct output at R only if new pointer/predecode/reset mapping and complete8:1 data+epoch path close. No gated-period timing assumption.",
+    "gated_candidate": "Write W(s,j), selected read bank at R(j), output at R(j)+1. Extra receiver edge relative to direct legacy must be composed.",
+    "SRAM_candidate": "Write W(s,j), synchronous macro read at R(j), output at R(j)+1. Can replace gated read bank only after same-edge proof; cannot silently replace legacy direct read.",
+    "read_advance": "NOT AUTHORIZED; old1.25T minus1T yields0.25T=208.333ps before60+150ps reserves and macro setup."
+  },
+  "preserved_failures": {
+    "CTLM_HR": {
+      "packet_commit": "f68bd657b",
+      "bus": "tt_ctlm.hr low73 -> dvs_W5.hr_wi",
+      "observed_age": 16,
+      "expected_age": 20,
+      "failures": 512,
+      "total": 512,
+      "roots": "unchanged ideal functional clock roots, not native phase"
+    },
+    "D4_nine_lanes": "All nine original E_sta6/7 vs D4<=3 failures retained from f68; no old packet modified."
+  },
+  "prototype_authorized": false,
+  "new_RTL": false,
+  "new_heavy_jobs": false,
+  "token_delta": null,
+  "boundary_pin_registers": {
+    "FF_ring": "Every data input first reaches selected write-bank FF; output is an explicit FF. Kept16-bit select/reset regions are copies, not storage partitions. Source proof and mapped first/last-Q audit remain required.",
+    "SRAM_clocked_storage_is_pin_FF_proof": false,
+    "SRAM_extra_input_face_FF_if_required": 1521,
+    "soft_FF_with_separate_SRAM_input_face": 6193,
+    "new_macro_write_edge_if_face_added": "W+1 source edge; original R not preserved by assumption",
+    "old_gated_min_age_if_one_T_lost": 0.25,
+    "status": "HOLD: root must qualify clocked-macro boundary or price added source/read stage with actual publication/consumer ledger."
+  },
+  "physical": {
+    "macro_origins_um": 43.2,
+    "per_macro_signal_face_contacts": 103,
+    "per_macro_face_height_um": 17.304,
+    "contacts_per_um": 5.9523809523809526,
+    "per_macro_clock_pins": 2,
+    "all_contacts_accessed": null,
+    "PG_connected": null,
+    "legal_parent_slot": null,
+    "FF_outline_from_measured_synth_area": null,
+    "standard_band": "one full-width band; no power islands",
+    "hypothetical_macro_grid_only": [
+      {
+        "banks": 9,
+        "columns": 3,
+        "rows": 3,
+        "macro_grid_um": [
+          129.6,
+          129.6
+        ],
+        "band_added_structural_rectangle_um": [
+          129.6,
+          172.8
+        ]
+      },
+      {
+        "banks": 8,
+        "columns": 4,
+        "rows": 2,
+        "macro_grid_um": [
+          172.8,
+          86.4
+        ],
+        "band_added_structural_rectangle_um": [
+          172.8,
+          129.6
+        ]
+      }
+    ],
+    "grid_is_actual_fit_or_escape_proof": false
+  }
+}
