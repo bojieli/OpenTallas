@@ -1,13 +1,14 @@
 `timescale 1ps/1ps
 module tb_svg_return_regional;
  parameter integer MUT=0;
- reg cache_clk=0;wire [3:0] pair_clk;
+ reg cache_clk=0;wire [3:0] pair_clk,return_clk;
  always #417 cache_clk=~cache_clk;
  genvar c;generate for(c=0;c<4;c=c+1)begin:g_clk
   reg clk=0;initial begin #(c*10);forever #417 clk=~clk;end
-  assign pair_clk[c]=clk;
+  reg rclk=0;initial begin #(40+c*10);forever #417 rclk=~rclk;end
+  assign pair_clk[c]=clk;assign return_clk[c]=rclk;
  end endgenerate
- reg [3:0] pair_rst_n=0;reg cache_rst_n=0;
+ reg [3:0] pair_rst_n=0,return_rst_n=0;reg cache_rst_n=0;
  reg [2047:0] bank_data=0;reg [11:0] in_ordinal=0;reg [3:0] in_valid=0;
  wire [1023:0] out_data;wire [2:0] out_ordinal;wire out_valid,fault;
  ot_hbm_svg_return_regional #(.MUT(MUT)) dut(.*);
@@ -68,9 +69,9 @@ module tb_svg_return_regional;
  end
  initial begin
   for(round=0;round<3;round=round+1)begin
-   pair_rst_n=0;cache_rst_n=0;in_valid=0;
+   pair_rst_n=0;return_rst_n=0;cache_rst_n=0;in_valid=0;
    repeat(5)@(negedge cache_clk);
-   drive(0,1,0);pair_rst_n=15;cache_rst_n=1;
+   drive(0,1,0);pair_rst_n=15;return_rst_n=15;cache_rst_n=1;
    repeat(2)@(negedge cache_clk);
    for(n=0;n<272;n=n+1)begin drive(n,1,0);@(negedge cache_clk);end
    for(n=0;n<272;n=n+1)begin
@@ -85,6 +86,7 @@ module tb_svg_return_regional;
    end
   end
   if(outputs!=1632||windows!=3||warm_checks!=3||latency_min!=7||latency_max!=7)begin errors=errors+1;$display("RETURN_COUNTS_FAIL outputs=%0d windows=%0d warm_checks=%0d",outputs,windows,warm_checks);end
+  $display("RETURN_ROOTS pair_ps=0,10,20,30 return_ps=40,50,60,70 cache_ps=0 physical_stream_trees=9");
   $display("RETURN_LATENCY samples=%0d minimum_edges=%0d maximum_edges=%0d",latency_samples,latency_min,latency_max);
   // Deliberate ordinal disagreement must trip the cache slip guard.
   check_nominal=0;drive(5,1,3);in_ordinal[8:6]=2;@(negedge cache_clk);

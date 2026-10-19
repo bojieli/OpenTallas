@@ -136,22 +136,26 @@ module ot_hbm_svg_return_cache #(parameter integer MUT=0)(
 endmodule
 
 // in_ordinal contains one local native copy per pair, not a shared distant root.
-// Assert and release all reset pins together; source/cache clock phases are fixed.
+// The ENTIRE u_ring (including read pointer, mux and return-Q) is pair-local.
+// return_clk is a local forwarded cache-phase root, distinct from cache_clk.
+// Pair outputs are registered return-Q; cache input capture is the next edge.
+// Assert/release all reset pins together; pair/return/cache phases are fixed.
 module ot_hbm_svg_return_regional #(parameter integer MUT=0)(
- input wire [3:0] pair_clk,pair_rst_n,input wire cache_clk,cache_rst_n,
+ input wire [3:0] pair_clk,pair_rst_n,return_clk,return_rst_n,input wire cache_clk,cache_rst_n,
  input wire [2047:0] bank_data,input wire [11:0] in_ordinal,input wire [3:0] in_valid,
  output wire [1023:0] out_data,output wire [2:0] out_ordinal,output wire out_valid,fault);
- wire [3:0] prst;wire crst;
+ wire [3:0] prst,rrst;wire crst;
  wire [1023:0] landed_data;wire [11:0] landed_ord;wire [3:0] landed_valid,phase_fault;
  ot_hbm_svg_return_reset u_cache_reset(.clk(cache_clk),.rst_n(cache_rst_n),.landed_n(crst));
  genvar j;generate for(j=0;j<4;j=j+1)begin:g_pair
   wire [255:0] pd;wire [2:0] po;wire pv;
   ot_hbm_svg_return_reset u_reset(.clk(pair_clk[j]),.rst_n(pair_rst_n[j]),.landed_n(prst[j]));
+  ot_hbm_svg_return_reset u_return_reset(.clk(return_clk[j]),.rst_n(return_rst_n[j]),.landed_n(rrst[j]));
   ot_hbm_svg_return_pair #(.J(j),.MUT(MUT==1&&j==0?1:0)) u_pair(
    .clk(pair_clk[j]),.rst_n(prst[j]),.lo(bank_data[j*256+:256]),.hi(bank_data[(j+4)*256+:256]),
    .ordinal(in_ordinal[j*3+:3]),.valid(in_valid[j]),.data_out(pd),.ordinal_out(po),.valid_out(pv));
   ot_hbm_svg_return_ring4 #(.MUT(MUT==3&&j==0?1:0)) u_ring(
-   .src_clk(pair_clk[j]),.src_rst_n(prst[j]),.dst_clk(cache_clk),.dst_rst_n(crst),
+   .src_clk(pair_clk[j]),.src_rst_n(prst[j]),.dst_clk(return_clk[j]),.dst_rst_n(rrst[j]),
    .data_in(pd),.ordinal_in(po),.valid_in(pv),.data_out(landed_data[j*256+:256]),
    .ordinal_out(landed_ord[j*3+:3]),.valid_out(landed_valid[j]),.phase_fault(phase_fault[j]));
  end endgenerate
