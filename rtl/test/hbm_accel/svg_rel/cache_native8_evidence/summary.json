@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS",
+  "source_commit": "97de3fcd2356428b2255380f84ef8b360d373bdc",
+  "model_commit": "848e5cb84",
+  "host": "ot-epyc6",
+  "remote_root": "/srv/opentallas-scratch/claude/codex-cache-native8-1019",
+  "tool": "Verilator 5.050",
+  "positive": "CACHE_NATIVE8 PASS maxlive=8 recycled=10382 cycles=10406 exact_reference_rows=4243 cache_reads=4323 crossbank_cycles=80 packed_source_edges=5376 packed_sectors=18276 bytes_per_record=136 faults=7",
+  "mutants": [
+    {
+      "mut": 1,
+      "witness": "m1.log",
+      "fail_regex": "EQUIV row cycle=5"
+    },
+    {
+      "mut": 2,
+      "witness": "m2.log",
+      "fail_regex": "EQUIV row cycle=6"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native8.sv": "08039173df1a8134c57b264b6d112a3c1ca12a2216f2ff05dba303309022f097",
+    "rtl/test/hbm_accel/svg_rel/tb_cache_native8.sv": "33f729099bec9896d126d99a36cb14cc86fb2fd1521a37ef350f2a200137096a",
+    "rtl/test/hbm_accel/svg_rel/run_cache_native8.sh": "c5846c26a588f4fce7a92ded94672338476cb06ddaca54bc4f74760b948a7014",
+    "tools/hbm_layer_vehicle/cache_native8_model.py": "c675c3cf8dbc8247a826cdf0fc9302adc9310040e473104b4a29c489af0fbc2a",
+    "rtl/gpu/ot_gpu_payload_assemble.sv": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "added_cycles": 0,
+  "claim_scope": "component functional/storage exactness only; physical qualification OPEN"
+}
