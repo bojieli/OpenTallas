@@ -40,6 +40,21 @@ def audit(root, terminal, tile):
     assert packing in re.sub(r"\s+", "", nc_return)
     used_co_bits = set(range(26,282)) | set(range(12,18)) | set(range(9,12)) | set(range(1,8))
     omitted_co_bits = sorted(set(range(1,282)) - used_co_bits)
+    def frozen(path):
+        item = next(f for f in binding["files"] if f["path"] == path)
+        data = subprocess.check_output(["git", "-C", str(repo), "show", item["git_blob"]])
+        assert hashlib.sha256(data).hexdigest() == item["sha256"]
+        return item, re.sub(r"//[^\n]*", "", data.decode())
+    chain_item, chain = frozen("rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv")
+    assert "land_es[287:1] <= {1'b1, 1'b1," in chain
+    assert set(map(int,re.findall(r"land_er\[(\d+)\]", chain))) == {0,259,260}
+    assert "|| bfault ||" in chain and "fault <= 1'b1" in chain
+    top_item, top = frozen("rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv")
+    module_name = "qkd_kvs_pc" if tile == "pc" else "qkd_kvs_pc_h"
+    top = re.search(r"module " + module_name + r"\s*\(.*?endmodule", top, re.S).group(0)
+    assert len(re.findall(r"\bw_pc__chain_fault\b", top)) == 2
+    assert ".chain_fault(w_pc__chain_fault)" in top
+    assert not any(term in i for i in cells for term in ("u_chain.ler_v", "u_chain.ler_cr", "u_chain.ler_f", "u_chain.bfault", "u_chain.fault"))
     masters = collections.Counter(c["master"] for c in cells.values())
     assert all(m == "TIELOx1_ASAP7_75t_R" or
                (m in geom["masters"] and geom["masters"][m]["type"] in ("CORE", "CORE_TIEHIGH") and
@@ -123,7 +138,7 @@ def audit(root, terminal, tile):
             sequential_only = bool(r["drivers"]) and all(i in ffs for i, p in r["drivers"])
             data_only = sequential_only
             direct_owners = sorted({i for i, p in r["drivers"] if i in ffs}) if sequential_only else []
-            category = ("direct_data" if data_only else "literal_output" if r["drivers"] and
+            category = ("direct_data" if data_only else "native_constant_output" if r["drivers"] and
                         all(i in cells and cells[i]["master"].startswith(("TIEHI", "TIELO"))
                             for i,p in r["drivers"]) else "active_comb_after_FF")
         for owner in direct_owners:
@@ -209,6 +224,15 @@ def audit(root, terminal, tile):
                        exclusive_front_co_consumer="u_return.controller_co",
                        downstream_unused_co_payload_bits=omitted_co_bits,
                        native_storage_pruning_explained_bits=32*len(omitted_co_bits)),
+                   boot_return_fault_contract=dict(
+                       chain_source_sha256=chain_item["sha256"], top_source_sha256=top_item["sha256"],
+                       source_used_land_er_bits=[0,259,260], native_all_land_er_bits_unused=True,
+                       source_path="land_er -> ler_v/cr/f -> bfault -> u_chain.fault -> w_pc__chain_fault",
+                       top_chain_fault_unexported=True, status="FAIL_FUNCTIONAL_FAULT_CLOSURE_NOT_SPARE_INPUT_WAIVER"),
+                   native_constant_output_contract=dict(ports=["pc__land_es[286]","pc__land_es[287]"],
+                       source="on bh: land_es[287:1] <= {1'b1,1'b1,address29,data256}; otherwise hold",
+                       source_initial_payload_unreset=True, validity_port="pc__land_es[0]",
+                       registered_pin_and_invalid_first_use_waiver_approved=False),
                    ff_groups=dict(ff_groups.most_common()),
                    native_master_area_known_subtotal_um2=native_area,
                    missing_area_masters=missing_area_masters,
