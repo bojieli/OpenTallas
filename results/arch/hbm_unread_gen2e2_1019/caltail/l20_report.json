@@ -1,0 +1,69 @@
+{
+ "layer": "l20_caltail_role",
+ "master": "hfd_hgi_vm_calendar_f20_role",
+ "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+ "instances": [
+  {
+   "instance": "epcal_NE",
+   "W": 19,
+   "removed_tail_bits": 168,
+   "edges_remapped": 9,
+   "open_output_records_dropped": 14
+  },
+  {
+   "instance": "epcal_NW",
+   "W": 19,
+   "removed_tail_bits": 168,
+   "edges_remapped": 9,
+   "open_output_records_dropped": 14
+  },
+  {
+   "instance": "epcal_SE",
+   "W": 19,
+   "removed_tail_bits": 168,
+   "edges_remapped": 9,
+   "open_output_records_dropped": 14
+  },
+  {
+   "instance": "epcal_SW",
+   "W": 38,
+   "removed_tail_bits": 149,
+   "edges_remapped": 19,
+   "open_output_records_dropped": 12
+  },
+  {
+   "instance": "vmfc_NE",
+   "W": 89,
+   "removed_tail_bits": 98,
+   "edges_remapped": 128,
+   "open_output_records_dropped": 7
+  },
+  {
+   "instance": "vmfc_NW",
+   "W": 89,
+   "removed_tail_bits": 98,
+   "edges_remapped": 128,
+   "open_output_records_dropped": 7
+  },
+  {
+   "instance": "vmfc_SE",
+   "W": 89,
+   "removed_tail_bits": 98,
+   "edges_remapped": 128,
+   "open_output_records_dropped": 7
+  },
+  {
+   "instance": "vmfc_SW",
+   "W": 89,
+   "removed_tail_bits": 98,
+   "edges_remapped": 128,
+   "open_output_records_dropped": 7
+  }
+ ],
+ "removed_tail_bits": 1045,
+ "universal_sha256": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b",
+ "role_sha256": "14ab5c39bf793e1da1b551630847ee1a7b8660c60421c45ee679be2bb52cbb55",
+ "successful_edges_added": 0,
+ "bench": "rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_role.sh",
+ "qualification": "SOURCE_ONLY_NEEDS_TILE_CLOSURE (role master; universal hard view hv16_vm_cal_f20_ww not reused)"
+}

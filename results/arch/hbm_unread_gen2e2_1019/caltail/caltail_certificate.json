@@ -1,0 +1,1583 @@
+{
+ "schema": "opentallas.hbm_caltail_certificate_1019.v1",
+ "klass": "universal_calendar_capacity_tail_review",
+ "contract_sha256": "fd7492f2dafdd81d1f7d5e974fe30ca6056e39e23e62d694dbfc800dbebffbf7",
+ "universal_sha256": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b",
+ "held_candidates_sha256": "da40ca71158624a0f8fea538c74281e6cce818c75eaf0785077ec0a989864d7a",
+ "role_widths": {
+  "epcal_NE": 19,
+  "epcal_NW": 19,
+  "epcal_SE": 19,
+  "epcal_SW": 38,
+  "vmfc_NE": 89,
+  "vmfc_NW": 89,
+  "vmfc_SE": 89,
+  "vmfc_SW": 89
+ },
+ "structure_verdict": "PASS",
+ "held_bits": 1045,
+ "per_instance_bits": {
+  "epcal_NE": 168,
+  "epcal_NW": 168,
+  "epcal_SE": 168,
+  "epcal_SW": 149,
+  "vmfc_NE": 98,
+  "vmfc_NW": 98,
+  "vmfc_SE": 98,
+  "vmfc_SW": 98
+ },
+ "generator_rows_checked": 53016,
+ "generator_tail_zero": "PASS",
+ "generator_violations": [],
+ "compiler_coverage": {
+  "epcal_NE": "COMPILER_TAIL_ZERO (vehicle generators xdie_hbm_step/coll; epcal RX ABI word[18:0], same 19-bit role ABI)",
+  "epcal_NW": "COMPILER_TAIL_ZERO (vehicle generators xdie_hbm_step/coll; epcal RX ABI word[18:0], same 19-bit role ABI)",
+  "epcal_SE": "COMPILER_TAIL_ZERO (vehicle generators xdie_hbm_step/coll; epcal RX ABI word[18:0], same 19-bit role ABI)",
+  "epcal_SW": "NO_GENERATOR_EXISTS",
+  "vmfc_NE": "NO_GENERATOR_EXISTS",
+  "vmfc_NW": "NO_GENERATOR_EXISTS",
+  "vmfc_SE": "NO_GENERATOR_EXISTS",
+  "vmfc_SW": "NO_GENERATOR_EXISTS"
+ },
+ "compiler_certified_bits": 504,
+ "compiler_uncertifiable_bits": 541,
+ "negatives": {
+  "N1_nonzero_tail_row_detected": "PASS",
+  "N2_consumed_epcal_SW_bank_client_4_0_refused": "PASS",
+  "N3_widened_range_into_payload_refused": "PASS"
+ },
+ "entries": [
+  {
+   "instance": "epcal_NE",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    33,
+    56
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "bank_enable",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    25,
+    32
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    59,
+    64
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    57,
+    58
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "response_seq",
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    19,
+    24
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    81,
+    104
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    65,
+    72
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    73,
+    80
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    33,
+    56
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "bank_enable",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    25,
+    32
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    59,
+    64
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    57,
+    58
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "response_seq",
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    19,
+    24
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    81,
+    104
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    65,
+    72
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    73,
+    80
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    33,
+    56
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "bank_enable",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    25,
+    32
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    59,
+    64
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    57,
+    58
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "response_seq",
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    19,
+    24
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    81,
+    104
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    65,
+    72
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    73,
+    80
+   ],
+   "role_width": 19,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     5,
+     23
+    ]
+   ],
+   "bit_count": 19,
+   "calendar_bits": [
+    38,
+    56
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    59,
+    64
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    57,
+    58
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    81,
+    104
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    65,
+    72
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "calendar_bits": [
+    73,
+    80
+   ],
+   "role_width": 38,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "calendar_bits": [
+    89,
+    104
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "calendar_bits": [
+    89,
+    104
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "calendar_bits": [
+    89,
+    104
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    139,
+    162
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    163,
+    186
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    137,
+    137
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "calendar_bits": [
+    138,
+    138
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "calendar_bits": [
+    129,
+    130
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "calendar_bits": [
+    131,
+    136
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "calendar_bits": [
+    89,
+    104
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "calendar_bits": [
+    105,
+    128
+   ],
+   "role_width": 89,
+   "verdict": "CERTIFIED_TAIL"
+  }
+ ],
+ "hardware_note": "universal hfd_hgi_vm_calendar_f20 word check is captured[223:187]==0 only: a nonzero tail is accepted and exported (bench phase B universal_exported_tail>0, no fault). Real fix = hfd_hgi_vm_calendar_f20_role #(W) (rejects with existing sticky fault, no tail ports) via l20_caltail_role: strict unread 70320 -> 69275 (exactly these 1045 bits).",
+ "verdict": "STRUCTURE PASS; compiler tail-zero certificate only for 504 bits (epcal_NE/NW/SE, vehicle generators); 541 bits (vmfc_*, epcal_SW) have no generator -> hardware fix l20 required"
+}
