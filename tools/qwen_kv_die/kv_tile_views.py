@@ -145,7 +145,10 @@ def judge(master, vm, kit, vdir, die_rtl, die_text, charge, KSD):
     src, route = view_source(vdir)
     r.update(source_commit=src, route=route)
     if not src:
-        return dict(r, verdict='REFUSE', why='view source commit unknown (provenance route name not resolvable here)')
+        hs = json.loads(show('HEAD', f'{REF}/{kit}/spec.json') or '{}')
+        e = effective(hs)
+        return dict(r, verdict='REFUSE', why=f'view source commit {route} not in this repository (fetch its branch); HEAD kit '
+                    f'spec face edges pin_in {e["pin_in"]} / pin_out {e["pin_out"]} vs die 0 / 0')
     spec_txt = show(src, f'{REF}/{kit}/spec.json')
     if not spec_txt:
         return dict(r, verdict='REFUSE', why=f'kit spec absent at the view source {src[:9]}')
