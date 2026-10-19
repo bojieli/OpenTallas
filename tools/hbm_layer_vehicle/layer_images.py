@@ -713,7 +713,7 @@ def main():
     ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
-    ap.add_argument("--safe-calendar", action="store_true", help="opt-in exclusive control lifetime, legal absent readers, OLD-read drain gap")
+    ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     if (a.native_read_return is None) != (a.native_write_return is None):
