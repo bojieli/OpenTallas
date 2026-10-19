@@ -1,0 +1,9 @@
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2290 relativeE210
+SYS_FACE_COLD_PASS MUT0 Tprefix3 Esegment1 init1 row64+scale
+- /srv/opentallas-scratch/claude/sysface-cold-selector-v3-1019/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv:209: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.009 s; speed 221.512 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

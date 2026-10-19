@@ -1,0 +1,11 @@
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+ERR @2290 INIT not stage0/aligned init_u0
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2290 relativeE210
+FAULT boot0 prog0 cal0 emb0 rp0 armed0 go0 mu0 accepted0 cold1
+ERR @2443 fault raised
+SYS_FACE_COLD_FAIL MUT2 errors2 face1 provider0
+[2037000] %Fatal: tb_qfd_sys_face_cold.sv:208: Assertion failed in tb_qfd_sys_face_cold
+%Error: /srv/opentallas-scratch/claude/sysface-cold-selector-v3-1019/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv:208: Verilog $stop
+Aborting...

@@ -22,6 +22,9 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
  "$R/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v" \
  "$R/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v" \
  "$R/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv" > "$OUT/build.log" 2>&1
+set +e
 "$OUT/obj/Vtb_qfd_sys_face_cold" > "$OUT/run.log" 2>&1
+rc=$?
+set -e
 cat "$OUT/run.log"
-grep -q SYS_FACE_COLD_PASS "$OUT/run.log"
+if [ "${MUT:-0}" = 0 ]; then test "$rc" = 0; grep -q SYS_FACE_COLD_PASS "$OUT/run.log"; else test "$rc" != 0; grep -q SYS_FACE_COLD_FAIL "$OUT/run.log"; fi
