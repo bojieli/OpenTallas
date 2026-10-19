@@ -28,7 +28,16 @@
 //      pin path)  -> must FAIL.
 // KSF (KV-D2D 10-19, compile with -DKSF): every KV end is the SAFE FAN-OUT master qkd_d2d_static_sf / qkd_d2d_static_ovl_sf
 // (ot_qwen_d2d_safe_fo.sv; NTX 3, the KV tile's lane count); the LOCK shadow then runs the safe master in lockstep.
-`ifdef KSF
+// KSFM (KV-SRAM-D2D 10-19, compile with -DKSFM [-DKSFM_SRAMV=2]): every KV end is the right-sized-storage master
+// qkd_d2d_static_sfm / qkd_d2d_static_ovl_sfm (ot_qwen_d2d_sfm.sv; d2d_sram 64x137 slot store, first-epoch guard on).
+`ifdef KSFM
+`define QKD_M qkd_d2d_static_sfm
+`define QKD_OVL_M qkd_d2d_static_ovl_sfm
+`define QKD_NTX .NTX(3),
+`ifndef KSFM_SRAMV
+`define KSFM_SRAMV 1
+`endif
+`elsif KSF
 `define QKD_M qkd_d2d_static_sf
 `define QKD_OVL_M qkd_d2d_static_ovl_sf
 `define QKD_NTX .NTX(3),
@@ -125,6 +134,9 @@ module tb_qwen_d2d_dies;
     `QKD_M #(.SAFE_RC(KRC), `QKD_NTX .MUT(MUT == 2 ? 2 : 0), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
 `endif
+`ifdef KSFM
+        .rx_zero17(),
+`endif
         .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
         .att_tx_slot(k_txs0), .att_tx_kind(k_tk), .att_tx_beat(k_tb), .att_tx_v(k_tv0), .att_tx_payload(k_tp0),
@@ -147,6 +159,9 @@ module tb_qwen_d2d_dies;
         .fdi_tx_up(k_up), .fdi_tx_v(k_ptx_v), .fdi_tx_flit(k_ptx), .fdi_rx_v(k_prx_v), .fdi_rx_flit(k_prx),
         .phy_rst_n(k_phy_rst_n), .epoch_abort(k_abort), .recovery_cycles(k_rcyc), .fault(k_f));
     // ---------------- S-QTIES QC-12 lockstep shadow: KV end without the dead port-3 TX lane (NTX = 3) ----------------
+`ifdef KSFM
+    defparam u_k.SRAMV = `KSFM_SRAMV;
+`endif
     integer lock_mm = 0, lock_cmp = 0; integer lock_tx [0:3];
     initial begin lock_tx[0] = 0; lock_tx[1] = 0; lock_tx[2] = 0; lock_tx[3] = 0; end
     if (LOCK) begin : g_lock

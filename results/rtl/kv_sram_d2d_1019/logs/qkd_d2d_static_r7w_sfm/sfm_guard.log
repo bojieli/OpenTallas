@@ -1,0 +1,6 @@
+GUARD case A: missing entry -> no TX start, TX fault, RX authorised; no retry after the late write
+GUARD case B: a start at W+1 is rejected per calendar (RX in B, TX in B2), W+2 / W+3 authorised
+GUARD case C: start at W+2 runs both calendars, no fault
+GUARD case D: cold POR clears the receipt (start without image rejected)
+GUARD case E/F: warm reset keeps image + receipt; writes inside the reset release window are counted
+GUARD_PASS mutfo=0

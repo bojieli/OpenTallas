@@ -1,0 +1,354 @@
+{
+ "name": "qkd_d2d_static_r7w_sfm",
+ "top": "qkd_d2d_static_sfm",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_sfo.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_bb.v"
+ ],
+ "params": {
+  "NTX": 3,
+  "TXDP": 50529302,
+  "SAFE_RC": 1,
+  "SRAMV": 1,
+  "FEG": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 280.8
+ },
+ "recipe": 4,
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": "2.4",
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_PIN_REGS_RESET": "^(por_n|rst_n)$",
+  "OT_RST_COPIES_MAX": "24"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "count": 1,
+   "at": [
+    86.4,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "count": 1,
+   "at": [
+    345.6,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "count": 1,
+   "at": [
+    86.4,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "count": 1,
+   "at": [
+    345.6,
+    172.8
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "fdi_tx_flit",
+   "fdi_rx_v",
+   "fdi_rx_flit",
+   "phy_rst_n"
+  ],
+  "S": [
+   "att_tx_slot",
+   "att_tx_kind",
+   "att_tx_beat",
+   "att_tx_v",
+   "att_tx_payload",
+   "att_rx_v",
+   "att_rx_slot",
+   "att_rx_kind",
+   "att_rx_beat",
+   "rx_payload",
+   "rx_zero17",
+   "record_tx_observed_v",
+   "record_tx",
+   "record_send_kind",
+   "record_witness_slot",
+   "record_rx_v",
+   "record_rx"
+  ],
+  "W": [
+   "emb_tx_slot",
+   "emb_tx_v",
+   "emb_tx_payload",
+   "kvn_compiled_identity",
+   "kvn_compiled_generation",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "kvn_word_data",
+   "kvn_word_identity",
+   "kvn_word_generation",
+   "kvn_word_slot",
+   "kvn_word_index"
+  ],
+  "E": [
+   "ck",
+   "por_n",
+   "rst_n",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "host_link_reset_req",
+   "host_recovery_clear",
+   "host_boot_begin",
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "status_epoch16",
+   "serdes_up",
+   "kv_drained_local",
+   "kv_flush_local",
+   "host_drained_local",
+   "kv_active_local",
+   "link_up",
+   "transport_fault",
+   "native_links_drained",
+   "native_link_reset_seen",
+   "native_retrained",
+   "abort_drained",
+   "native_kv_drained",
+   "native_vm_drained",
+   "native_collective_drained",
+   "native_host_drained",
+   "native_collective_busy",
+   "native_kv_flush",
+   "native_admit_ready",
+   "crom_fault",
+   "execution_active",
+   "engine_result_v",
+   "engine_result_done",
+   "engine_result_fault",
+   "engine_result_cause",
+   "engine_result_tag",
+   "engine_result_gen",
+   "engine_result_token",
+   "engine_result_value",
+   "engine_result_cycles",
+   "epoch_abort",
+   "recovery_cycles",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 20,
+   "diameter_um": 40,
+   "extra": "-no_obstruction_aware -distance_between_buffers 40 -sink_clustering_levels 2"
+  },
+  "io_hold_margin_ns": 0.03,
+  "pd": 0.6,
+  "macro_halo_x_um": 20
+ },
+ "job": {
+  "owner": "Claude:KV-SRAM-D2D 10-19",
+  "branch": "claude/kv-sram-d2d-1019",
+  "tag": "sfm",
+  "purpose": "KV-die static D2D link end qkd_d2d_static_sfm (TXDP_K 0x03030416, NTX3, SAFE_RC1, SRAMV 1, FEG 1): right-sized slot store d2d_sram_1r1w_64x137_m1_r2c2_p192 x4 (64x137 = the stored width; W/E 229 pins at 0.192 um = 5.23/um, was 64x512 at 10.2/um), registered RX CRC, 5-b recovery counter, first-epoch guard (FEG 1), Z17 sideband rx_zero17. PHY on face N.",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "rtl/lib/ot_rst_pipe.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288"
+  ],
+  "benches": [
+   {
+    "name": "leaf_eq",
+    "cmd": "SRAMV=1 bash rtl/test/qwen_split/run_d2d_sram_leaf_eq.sh {RUN}/bench/le",
+    "expect": "pass",
+    "pass_regex": "^LEAF_EQ_PASS sramv=1 ",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "leaf_mutw_col136",
+    "cmd": "SRAMV=1 MUTW=1 bash rtl/test/qwen_split/run_d2d_sram_leaf_eq.sh {RUN}/bench/lm",
+    "expect": "fail",
+    "fail_regex": "^LEAF_EQ_FAIL mismatches$",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_sfm/leaf_mutw_col136.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "sfm_miter_feg0",
+    "cmd": "SRAMV=1 FEG=0 bash rtl/test/qwen_split/run_kv_d2d_sfm_miter.sh {RUN}/bench/s0",
+    "expect": "pass",
+    "pass_regex": "^SFO_MITER_PASS ovlm=0 randinit=0 seed=0 mutfo=0 sramv=1 feg=0",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_miter_feg1",
+    "cmd": "SRAMV=1 FEG=1 bash rtl/test/qwen_split/run_kv_d2d_sfm_miter.sh {RUN}/bench/s1",
+    "expect": "pass",
+    "pass_regex": "^SFO_MITER_PASS ovlm=0 randinit=0 seed=0 mutfo=0 sramv=1 feg=1",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_miter_randinit",
+    "cmd": "SRAMV=1 FEG=1 RANDINIT=1 SEED=13 bash rtl/test/qwen_split/run_kv_d2d_sfm_miter.sh {RUN}/bench/sr",
+    "expect": "pass",
+    "pass_regex": "^SFO_MITER_PASS ovlm=0 randinit=1 seed=13 mutfo=0 sramv=1 feg=1",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_mutfo2_bypass_select",
+    "cmd": "SRAMV=1 FEG=0 MUTFO=2 bash rtl/test/qwen_split/run_kv_d2d_sfm_miter.sh {RUN}/bench/m2",
+    "expect": "fail",
+    "fail_regex": "^SFO_MITER_FAIL mismatches$",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_sfm/sfm_mutfo2_bypass_select.log",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_mutfo6_crc_late",
+    "cmd": "SRAMV=1 FEG=0 MUTFO=6 bash rtl/test/qwen_split/run_kv_d2d_sfm_miter.sh {RUN}/bench/m6",
+    "expect": "fail",
+    "fail_regex": "^SFO_MITER_FAIL mismatches$",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_sfm/sfm_mutfo6_crc_late.log",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_mutfo7_z17_bit19",
+    "cmd": "SRAMV=1 FEG=0 MUTFO=7 bash rtl/test/qwen_split/run_kv_d2d_sfm_miter.sh {RUN}/bench/m7",
+    "expect": "fail",
+    "fail_regex": "^SFO_MITER_FAIL Z17 cycle",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_sfm/sfm_mutfo7_z17_bit19.log",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_guard",
+    "cmd": "bash rtl/test/qwen_split/run_kv_d2d_sfm_guard.sh {RUN}/bench/g0",
+    "expect": "pass",
+    "pass_regex": "^GUARD_PASS mutfo=0",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "sfm_guard_mutfo5_off",
+    "cmd": "MUTFO=5 bash rtl/test/qwen_split/run_kv_d2d_sfm_guard.sh {RUN}/bench/g5",
+    "expect": "fail",
+    "fail_regex": "^GUARD_FAIL A ",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_sfm/sfm_guard_mutfo5_off.log",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "d2d_dies_ksfm",
+    "cmd": "KSF=2 SRAMV=1 KRC=1 KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0 && grep -q \"QKD_D2D_TXDP = 32'h03030416\" {RUN}/bench/d0/cal/txdp.svh",
+    "expect": "pass",
+    "pass_regex": "^D2D_DIES_PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "d2d_dies_ksfm_mut_slot",
+    "cmd": "KSF=2 SRAMV=1 KRC=1 KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/dm 1",
+    "expect": "fail",
+    "fail_regex": "^D2D_DIES_FAIL$",
+    "fail_witness": "results/closure_witness/qkd_d2d_static_r7w_sfm/d2d_dies_ksfm_mut_slot.log",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "d2d_ksfm_lock",
+    "cmd": "KSF=2 SRAMV=1 KRC=1 LOCK=1 KDLY=19 bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/l0 0 && grep -q \"QKD_D2D_TXDP = 32'h03030416\" {RUN}/bench/l0/cal/txdp.svh",
+    "expect": "pass",
+    "pass_regex": "^D2D_LOCK edges \\d+ mismatches 0 ",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_static_r7w_sfm/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_static_r7w_sfm"
+ },
+ "pinreg_r4": "r4 (2026-10-15): die master is pin-registered (PR=1, tools/qwen_split/d2d_pinreg_gen.py): every functional port has one flop at its pin, placed FIRM at the pin by recipe-2 io_flop_at_pins; fixes qkd r1 EARLY_FAIL_SETUP (-434 ps, all boundary paths) and qfd r1 TT -79 / FF -32.6.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qkd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
+ },
+ "structural_change": "KV-SRAM-D2D successor of qkd_d2d_static_r7w_sf: right-sized slot store d2d_sram_1r1w_64x137_m1_r2c2_p192 x4 (64x137 = the stored width; W/E 229 pins at 0.192 um = 5.23/um, was 64x512 at 10.2/um), registered RX CRC, 5-b recovery counter, first-epoch guard (FEG 1), Z17 sideband rx_zero17; same outline / pin faces (S re-spread +17 pins).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "params": {
+   "TXDP": "0x03030416",
+   "SAFE_RC": 1,
+   "SRAMV": 1,
+   "FEG": 1,
+   "top": "qkd_d2d_static_sfm"
+  },
+  "source": "KV-SRAM-D2D lane (LEAD2-KV brief 10-19): Codex HOLD 12:48 macro face 10.2 pins/um > 6; sf/sfb gates reg-reg -16.1/-23.4/-95.5/-100.7 ps",
+  "cell": "qkd_d2d_static_sfm",
+  "fix": "KV-SRAM-D2D successor of qkd_d2d_static_r7w_sf: right-sized slot store d2d_sram_1r1w_64x137_m1_r2c2_p192 x4 (64x137 = the stored width; W/E 229 pins at 0.192 um = 5.23/um, was 64x512 at 10.2/um), registered RX CRC, 5-b recovery counter, first-epoch guard (FEG 1), Z17 sideband rx_zero17; same outline / pin faces (S re-spread +17 pins)."
+ },
+ "io_tcl": "physical/ref_tile/qkd_d2d_static_r7w_sfm/assigned_pins.tcl",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qkd_d2d_static_r7w_sfm/local_reset_capture.tcl"
+ ],
+ "hold_budget": "die",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "reset_role_review": "Only por_n/rst_n reset sequential state. host_link_reset_req is a PR-registered protocol request; phy_rst_n/fwd_link_rst_n are PR-registered protocol outputs. Restrict the compatibility regex to literal reset roles, preserving their data pin flops and landing exactly the two real resets. This fixes pre-synthesis OT_PIN_REGS refusal, not a timing failure."
+}

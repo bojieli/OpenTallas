@@ -1,0 +1,130 @@
+{
+ "builder": "tools/mem_compiler/build_d2d_sram_1019.py",
+ "builder_sha256": "94bbe35bcf84b7b5b204dc45527854cfdd3e40b68a67c34753a4a4962261db2b",
+ "limit_pins_per_um": 6.0,
+ "macros": {
+  "d2d_sram_1r1w_64x137_m1_r2c2_p192": {
+   "area_um2": 2644.957,
+   "delta": {
+    "area_pct": 0.0,
+    "area_um2": 0.0,
+    "height_nm": 0,
+    "width_nm": 0
+   },
+   "face_rule_pass": true,
+   "height_um": 45.672,
+   "kind": "sram",
+   "m5_crossing_at_origin_0": {
+    "MY": {
+     "L": true,
+     "R": true
+    },
+    "R0": {
+     "L": true,
+     "R": true
+    }
+   },
+   "pin_faces": {
+    "E": {
+     "max_in_1um": 6,
+     "min_pitch_um": 0.192,
+     "pins": 229,
+     "pins_per_um": 5.231,
+     "span_um": 43.776
+    },
+    "W": {
+     "max_in_1um": 6,
+     "min_pitch_um": 0.192,
+     "pins": 229,
+     "pins_per_um": 5.231,
+     "span_um": 43.776
+    }
+   },
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 44.476,
+    "height_um": 46.44,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "views": {
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192.json": "c49288ff5551086ffef5b317f7a2f20bda8e177817b5b0ff875a018630d52aac",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192.lef": "da305511bdf202c31a026264c9e1c69ef879a1f6c5e18e8df476294d29cf8046",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192.v": "8132fdec1459664f468d91461d5c7bc9bd202003de5e40be551be0b553fd341b",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192_bb.v": "69027506af25d592c73ae83903fddb65d101fda7247a5be2148e99fe27c43a41",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192_ff.lib": "e23e110d7892cf8a39a5cb0c196c8d45134ae759a522007d95239ddca282cd07",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192_ss.lib": "79a0f4105e4ddc446427f78c6c7d1caf2e0cae86a3026e5a990a968352f846b4",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib": "b4ca6b8161fe48a12cbd283e26d0400b8afcbc303a1570eae2b1c363b916caa8"
+   },
+   "width_um": 57.912
+  },
+  "d2d_sram_1r1w_64x137_m1_r2c2_p288": {
+   "area_um2": 3909.755,
+   "delta": {
+    "area_pct": 0.0,
+    "area_um2": 0.0,
+    "height_nm": 0,
+    "width_nm": 0
+   },
+   "face_rule_pass": true,
+   "height_um": 67.512,
+   "kind": "sram",
+   "m5_crossing_at_origin_0": {
+    "MY": {
+     "L": true,
+     "R": true
+    },
+    "R0": {
+     "L": true,
+     "R": true
+    }
+   },
+   "pin_faces": {
+    "E": {
+     "max_in_1um": 4,
+     "min_pitch_um": 0.288,
+     "pins": 229,
+     "pins_per_um": 3.487,
+     "span_um": 65.664
+    },
+    "W": {
+     "max_in_1um": 4,
+     "min_pitch_um": 0.288,
+     "pins": 229,
+     "pins_per_um": 3.487,
+     "span_um": 65.664
+    }
+   },
+   "pin_layers": [
+    "M4"
+   ],
+   "row_grid_alternative": {
+    "area_um2_delta": 30.578,
+    "height_um": 68.04,
+    "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ],
+   "v1_dir": "physical/asap7_v41x_pdie_macros/d2d_sram_1r1w_64x137_m1_r2c2_p288",
+   "views": {
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288.json": "4fbc1a416ea6dc8f99b9260e81ba42307e9e92f2815730c50b35555a1f643470",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288.lef": "7a5ff93c1de1b01a36138557afae16c14958309713bbf8d8833e9f201af99d2c",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288.v": "72030756d9fc8b866efabfb7dc6a189bba118e32eb06344b910763466d7897f4",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288_bb.v": "1c73f0dd60671fec51283900ff52663936188d1e32385ea6ce3e61faaff9b308",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288_ff.lib": "43c8d7eee358009f4c3b8585bce552121ac3a6a6527d66fffa645a30263ed654",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288_ss.lib": "de9aed9e18218e4eb5428bbbab614797b94b590248c5cd7ed716193e34854d6e",
+    "d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib": "8381347fd8a3528b10e09365c16227a147333aa80a2e3bfad83540824d69fded"
+   },
+   "width_um": 57.912
+  }
+ },
+ "replaces": "ot_sram_1r1w_64x512_m1_r2c2 (137/512 columns used, W/E 793/792 pins = 10.195/10.182 per um)"
+}
