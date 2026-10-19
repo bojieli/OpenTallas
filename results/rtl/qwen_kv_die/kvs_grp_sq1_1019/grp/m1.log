@@ -1,0 +1,6 @@
+MISMATCH t=11 out o_pc0[32:23] D=1
+MISMATCH t=14 out o_pc0[32:23] D=1
+MISMATCH t=16 out o_pc0[32:23] D=1
+MISMATCH t=17 out o_pc0[32:23] D=1
+MISMATCH t=18 out o_pc0[32:23] D=1
+KVS_TILE FAIL tile=grp edges=4000 checks=683080 errors=3322 mut=1 (dropped w_lro_pc0__q0[9:0] in assign o_pc0)

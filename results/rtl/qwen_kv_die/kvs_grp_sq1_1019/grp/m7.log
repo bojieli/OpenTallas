@@ -1,0 +1,6 @@
+MISMATCH t=7 child u_bcdc0.cfg_addr D=2
+MISMATCH t=7 child u_bcdc0.cfg_data D=2
+MISMATCH t=7 child u_bcdc0.cfg_last D=2
+MISMATCH t=8 child u_bcdc0.cfg_we D=2
+MISMATCH t=8 child u_bcdc0.cfg_addr D=2
+KVS_TILE FAIL tile=grp edges=4000 checks=683080 errors=11911 mut=7 (u_bcdc0 leg registers one stage short)

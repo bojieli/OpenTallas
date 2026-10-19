@@ -1,0 +1,6 @@
+MISMATCH t=3 child u_slg.epoch
+MISMATCH t=3 child u_slg.layer
+MISMATCH t=3 child u_slg.expected_put
+MISMATCH t=4 child u_slg.epoch
+MISMATCH t=4 child u_slg.layer
+KVS_TILE FAIL tile=grp edges=4000 checks=683080 errors=10216 mut=6 (core reset relay bypassed)

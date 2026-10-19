@@ -1,0 +1,6 @@
+MISMATCH t=7 child u_drain.ctrl_idle_core D=2
+MISMATCH t=7 child u_drain.ring_idle_core D=2
+MISMATCH t=8 child u_drain.ctrl_idle_core D=2
+MISMATCH t=8 child u_drain.ring_idle_core D=2
+MISMATCH t=9 child u_drain.ctrl_idle_core D=2
+KVS_TILE FAIL tile=grp edges=4000 checks=683080 errors=7478 mut=2 (swapped .ctrl_idle_core(w_lgdrain__q1[3:0]) <-> .ring_idle_core(w_lgdrain__q1[7:4]))

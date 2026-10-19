@@ -1,0 +1,6 @@
+MISMATCH t=7 child u_cf1.fault_in D=2
+MISMATCH t=8 child u_cf1.fault_in D=2
+MISMATCH t=9 child u_cf1.fault_in D=2
+MISMATCH t=10 child u_cf1.fault_in D=2
+MISMATCH t=11 child u_cf1.fault_in D=2
+KVS_TILE FAIL tile=grp edges=4000 checks=683080 errors=3923 mut=5 (u_cf1 leg registers bypassed)
