@@ -15,6 +15,7 @@
 # reset (rst_n read as a level) stay on copy 0.
 #   OT_RST_SPLIT=1        enable (ref_tile spec "rst_split": true writes it into the kit)
 #   OT_RST_SPLIT_MAX=256  error out when a copy would drive more loads than this (the RTL K is too small)
+# NOTE: ORFS sources this hook inside a proc: shared state lives in ::globals (the procs read ::ot_rs_w / ::ot_rs_par).
 # Report: one line per split wire, and $RESULTS_DIR/ot_rst_split.tsv (module wire copies loads max_per_copy).
 set ot_rs_max [expr {[info exists ::env(OT_RST_SPLIT_MAX)] && [string is integer -strict $::env(OT_RST_SPLIT_MAX)] ? $::env(OT_RST_SPLIT_MAX) : 256}]
 set ot_rs_dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : "."}]
@@ -37,13 +38,13 @@ foreach ot_rs_m $ot_rs_mods {
   yosys tee -q -o $f dump $ot_rs_m
   set fh [open $f r]; set il [read $fh]; close $fh; if {![info exists ::env(OT_RST_SPLIT_KEEP_DUMP)]} { file delete $f }
   # bit-level alias closure over the module's connections (connect <lhs> <rhs>; names, [i], [i:j], { concatenations })
-  array unset ot_rs_par; array unset ot_rs_w
+  array unset ::ot_rs_par; array unset ::ot_rs_w
   set ot_rs_cells {}; set cur ""; set ctype ""; set conns {}
   foreach l [split $il "\n"] {
     set l [string trim $l]
     if {[string match "wire *" $l]} {
       set ws [split $l " "]
-      set ot_rs_w([lindex $ws end]) [expr {[regexp {^wire width (\d+) } $l -> kw] ? $kw : 1}]
+      set ::ot_rs_w([lindex $ws end]) [expr {[regexp {^wire width (\d+) } $l -> kw] ? $kw : 1}]
       continue
     }
     if {[regexp {^cell (\S+) (\S+)$} $l -> ctype cur]} { continue }
@@ -84,7 +85,7 @@ foreach ot_rs_m $ot_rs_mods {
     if {[llength $lb] != [llength $rb]} continue
     foreach a $lb b $rb {
       set ra [ot_rs_find $a]; set rb2 [ot_rs_find $b]
-      if {$ra ne $rb2} { set ot_rs_par($ra) $rb2 }
+      if {$ra ne $rb2} { set ::ot_rs_par($ra) $rb2 }
     }
   }
   foreach o $ot_rs_objs {

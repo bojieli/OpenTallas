@@ -59,14 +59,15 @@ WRAP = {
 # KV-PEER5 (10-19): the root mux wrapper's inner member is _pl2 (same ports as _pl / the source)
 INNER = {'qkd_host_ctrl_token_service_packet_collected': 'qkd_host_ctrl_token_service_packet_collected_pd',
          'qkd_host_peer_root_mux_pl': 'qkd_host_peer_root_mux_pl2'}
-# KV-PEER5: relay copies per reset pin (r4 gate loads on the single relay flop / 200, rounded up)
+# KV-PEER5: relay copies per reset pin, sized from the PRE-optimisation async loads the synthesis hook counts
+# (r5 canonicalize, ot_rst_split.tcl; they run 1.3-4x the final-netlist count), <= ~235 a copy
 COPIES = {
-    ('qkd_host_tp8_coordinator', 'por_n'): 26,                          # 5,165
-    ('qkd_host_peer_rank_codec', 'por_n'): 5,                           # 893
-    ('qkd_host_ctrl_token_service_packet_collected', 'rst_n'): 11,      # 2,165
-    ('qkd_host_ctrl_token_service_packet_collected', 'por_n'): 4,       # < 1,056 (not in the r4 top 8)
-    ('qkd_host_peer_link', 'rst_n'): 7,                                 # 1,260
-    ('qkd_host_peer_root_mux_pl', 'por_n'): 3,                          # pl2: physical_tx_data 512 + control
+    ('qkd_host_tp8_coordinator', 'por_n'): 28,                          # 6,532 pre-opt (r4 netlist 5,165)
+    ('qkd_host_peer_rank_codec', 'por_n'): 16,                          # 3,624 (893)
+    ('qkd_host_ctrl_token_service_packet_collected', 'rst_n'): 12,      # 2,732 (2,165)
+    ('qkd_host_ctrl_token_service_packet_collected', 'por_n'): 1,       # 58
+    ('qkd_host_peer_link', 'rst_n'): 7,                                 # 1,596 (1,260)
+    ('qkd_host_peer_root_mux_pl', 'por_n'): 3,                          # 536
 }
 # KV-PEER5: member inputs registered one edge in the wrapper (see (b) above)
 STAGE = {
