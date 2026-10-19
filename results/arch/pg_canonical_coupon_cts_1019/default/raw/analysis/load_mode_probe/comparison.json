@@ -1,0 +1,98 @@
+{
+  "after_boundary_ff.sdc": {
+    "loads": [
+      "-pin_load 80.0000 [get_ports {y[15]}]",
+      "-pin_load 80.0000 [get_ports {y[14]}]",
+      "-pin_load 80.0000 [get_ports {y[13]}]",
+      "-pin_load 80.0000 [get_ports {y[12]}]",
+      "-pin_load 80.0000 [get_ports {y[11]}]",
+      "-pin_load 80.0000 [get_ports {y[10]}]",
+      "-pin_load 80.0000 [get_ports {y[9]}]",
+      "-pin_load 80.0000 [get_ports {y[8]}]",
+      "-pin_load 80.0000 [get_ports {y[7]}]",
+      "-pin_load 80.0000 [get_ports {y[6]}]",
+      "-pin_load 80.0000 [get_ports {y[5]}]",
+      "-pin_load 80.0000 [get_ports {y[4]}]",
+      "-pin_load 80.0000 [get_ports {y[3]}]",
+      "-pin_load 80.0000 [get_ports {y[2]}]",
+      "-pin_load 80.0000 [get_ports {y[1]}]",
+      "-pin_load 80.0000 [get_ports {y[0]}]"
+    ],
+    "input_delay_values": [
+      "100.0000"
+    ],
+    "output_delay_values": [
+      "100.0000"
+    ]
+  },
+  "after_boundary_ss.sdc": {
+    "loads": [
+      "-pin_load 80.0000 [get_ports {y[15]}]",
+      "-pin_load 80.0000 [get_ports {y[14]}]",
+      "-pin_load 80.0000 [get_ports {y[13]}]",
+      "-pin_load 80.0000 [get_ports {y[12]}]",
+      "-pin_load 80.0000 [get_ports {y[11]}]",
+      "-pin_load 80.0000 [get_ports {y[10]}]",
+      "-pin_load 80.0000 [get_ports {y[9]}]",
+      "-pin_load 80.0000 [get_ports {y[8]}]",
+      "-pin_load 80.0000 [get_ports {y[7]}]",
+      "-pin_load 80.0000 [get_ports {y[6]}]",
+      "-pin_load 80.0000 [get_ports {y[5]}]",
+      "-pin_load 80.0000 [get_ports {y[4]}]",
+      "-pin_load 80.0000 [get_ports {y[3]}]",
+      "-pin_load 80.0000 [get_ports {y[2]}]",
+      "-pin_load 80.0000 [get_ports {y[1]}]",
+      "-pin_load 80.0000 [get_ports {y[0]}]"
+    ],
+    "input_delay_values": [
+      "100.0000"
+    ],
+    "output_delay_values": [
+      "100.0000"
+    ]
+  },
+  "after_define_scene_ff.sdc": {
+    "loads": [],
+    "input_delay_values": [
+      "100.0000"
+    ],
+    "output_delay_values": [
+      "100.0000"
+    ]
+  },
+  "after_define_scene_ss.sdc": {
+    "loads": [],
+    "input_delay_values": [
+      "100.0000"
+    ],
+    "output_delay_values": [
+      "100.0000"
+    ]
+  },
+  "before_define_scene_ss.sdc": {
+    "loads": [
+      "-pin_load 80.0000 [get_ports {y[15]}]",
+      "-pin_load 80.0000 [get_ports {y[14]}]",
+      "-pin_load 80.0000 [get_ports {y[13]}]",
+      "-pin_load 80.0000 [get_ports {y[12]}]",
+      "-pin_load 80.0000 [get_ports {y[11]}]",
+      "-pin_load 80.0000 [get_ports {y[10]}]",
+      "-pin_load 80.0000 [get_ports {y[9]}]",
+      "-pin_load 80.0000 [get_ports {y[8]}]",
+      "-pin_load 80.0000 [get_ports {y[7]}]",
+      "-pin_load 80.0000 [get_ports {y[6]}]",
+      "-pin_load 80.0000 [get_ports {y[5]}]",
+      "-pin_load 80.0000 [get_ports {y[4]}]",
+      "-pin_load 80.0000 [get_ports {y[3]}]",
+      "-pin_load 80.0000 [get_ports {y[2]}]",
+      "-pin_load 80.0000 [get_ports {y[1]}]",
+      "-pin_load 80.0000 [get_ports {y[0]}]"
+    ],
+    "input_delay_values": [
+      "100.0000"
+    ],
+    "output_delay_values": [
+      "100.0000"
+    ]
+  }
+}

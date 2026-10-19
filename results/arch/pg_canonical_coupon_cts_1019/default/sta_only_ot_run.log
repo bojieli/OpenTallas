@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/output/default
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/output/default
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/output/default
+ot-run: ot-epyc7       admits  1070 GB (avail 807, growth 58, headroom 0, waiters 0/0 GB) load 22/96 running 13 disk 6275 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/output/default
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/output/default
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pg-canonical-coupon-cts-1019/output/default
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-167292-1792449236 after 0 s
+CORNER TT actual_rc=0
+CORNER FF actual_rc=0
+CORNER SS actual_rc=0
+CENSUS actual_rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-167292-1792449236): exit 0

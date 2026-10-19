@@ -1,0 +1,100 @@
+{
+  "verdict": "DIAGNOSTIC_HOLD",
+  "not_a_physical_release": true,
+  "engine_source_commit": "861254acdbc185983a250505032cd858d2faad53",
+  "archive_sha256": "135c5e9eed265f0d8f162e3ef11d3e2c30f419026a5fdd568833fa5c74823156",
+  "coherent_flow_commit": "efae17de2128f3813aff8cf76226e8be8d60ea97",
+  "engine_unit": "oth-ubuntu-156086-1792448866",
+  "engine_host": "ot-epyc7",
+  "engine_exit": 0,
+  "default_helper_count": 49,
+  "strict_planned_helper_count": 53,
+  "odb_sha256": "7177b0d5a8a56500aaf53d2ed68ce6a95370d4eac580a5cca32b84a20921f068",
+  "cells": 255,
+  "source_FF": 51,
+  "source_XOR": 16,
+  "real_ties": 52,
+  "native_pg_only_taps": 16,
+  "native_clock_buffers_BUFx8": 5,
+  "genuine_open_clock_loads": [
+    "INVx3 input1.76686fF",
+    "INVx4 input2.33645fF"
+  ],
+  "maximum_direct_clock_driver_loads": 15,
+  "maximum_transparent_nonclock_pin_loads": 24,
+  "new_FF_or_logic_functions_or_source_edges": 0,
+  "native_state_logic_relationships": 252,
+  "std_area_um2": 33.65064,
+  "band_area_um2": 62.9856,
+  "band_util_percent": 53.42592592592593,
+  "whole_outline_util_percent": 1.8031250000000003,
+  "core_util_percent": 2.2260802469135803,
+  "rows": 6,
+  "row_y_um": [
+    20.79,
+    22.41
+  ],
+  "clock_pin_um": [
+    8.7,
+    43.158
+  ],
+  "reset_pin_um": [
+    8.796,
+    43.158
+  ],
+  "native_timing_placement_rc_ps": {
+    "TT": {
+      "setup": 293.12,
+      "hold": 19.76,
+      "rise_spread": 3.9,
+      "fall_spread": 3.73,
+      "rise_fall_envelope": 7.97,
+      "slew_violations": 16
+    },
+    "FF": {
+      "setup": 387.5,
+      "hold": 30.15,
+      "rise_spread": 3.16,
+      "fall_spread": 3.09,
+      "rise_fall_envelope": 4.54,
+      "slew_violations": 0
+    },
+    "SS_sensitivity": {
+      "setup": 121.57,
+      "hold": -3.12,
+      "rise_spread": 5.29,
+      "fall_spread": 4.86,
+      "rise_fall_envelope": 15.83,
+      "slew_violations": 16
+    }
+  },
+  "endpoint_coverage": {
+    "unique": 169,
+    "D": 51,
+    "SETN_RESETN": 102,
+    "outputs": 16,
+    "total_visits_in_each_corner": 271,
+    "duplicate_async_visits": 102
+  },
+  "pg": {
+    "native_master_and_iterm_terms": 510,
+    "metadata_bound": 308,
+    "metadata_UNBOUND": 202,
+    "pg_conductor_shapes": 8388,
+    "native_vias": 175,
+    "rooted_components": 2,
+    "all_510_pg_rectangles_touch_rooted_correct_single_CORE_pg": true,
+    "cross_net_pg_shorts": 0,
+    "wrong_bound_pin_contacts": 0,
+    "native_drc_ir_em": "not_run"
+  },
+  "holds": [
+    "W/E signal pin contacts .096um pitch and 11 per1um violate <=6/um",
+    "actual north clock/reset at x8.700/8.796 differ from centered source MODEL",
+    "16 actual BUFx2 output drivers violate 320ps TT slew (380.84..408.44ps) with actual80fF load",
+    "202 native POWER/GROUND terminals remain unbound despite physical contact",
+    "canonical multi-scene define_scene drops source80fF output loads in1_synth..3_place; privatePRECTS restores them before CTS/repair; final80fF verified",
+    "placement RC only; no GRT/DRT/SPEF/export/adoption"
+  ],
+  "scope": "Canonical private source-owned boundary PG callback diagnostic. Source code and canonical3fixhooks+repair_budget preserved. No default PG rebinding/ODB edits/physical retry."
+}

@@ -1,0 +1,304 @@
+{
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "top": "ot_pg_canonical_xor16_1019",
+  "max_allowed": 32,
+  "verdict": "PASS",
+  "unphysicalized_literals": [],
+  "literal_load_excess": [],
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "max_loads": 24,
+  "max_nonliteral_loads": 24,
+  "violations": [],
+  "counts": {
+    "cells": 239,
+    "drivers": 273,
+    "logical_endpoints": 372,
+    "roles": {
+      "comb": 136,
+      "ff": 51,
+      "static": 52,
+      "input": 34
+    }
+  },
+  "disconnected_outputs": [
+    {
+      "pin": "cell:clkload0/Y",
+      "master": "INVx3_ASAP7_75t_R",
+      "direction": "output",
+      "disconnected": true,
+      "transparent": true,
+      "physical_input_pins": [
+        {
+          "pin": "cell:clkload0/A",
+          "nets": [
+            227
+          ],
+          "role": "data",
+          "native_capacitance": {
+            "capacitance": "1.76686",
+            "rise_capacitance": "1.76574",
+            "fall_capacitance": "1.76686"
+          },
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ]
+        }
+      ]
+    },
+    {
+      "pin": "cell:clkload1/Y",
+      "master": "INVx4_ASAP7_75t_R",
+      "direction": "output",
+      "disconnected": true,
+      "transparent": true,
+      "physical_input_pins": [
+        {
+          "pin": "cell:clkload1/A",
+          "nets": [
+            228
+          ],
+          "role": "data",
+          "native_capacitance": {
+            "capacitance": "2.33645",
+            "rise_capacitance": "2.3361",
+            "fall_capacitance": "2.33645"
+          },
+          "capacitance_unit": [
+            "1",
+            "ff"
+          ]
+        }
+      ]
+    }
+  ],
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "physical_only_pg_masters": [
+    {
+      "instance": "PHY_EDGE_ROW_69_Right_0",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_70_Right_1",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_71_Right_2",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_72_Right_3",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_73_Right_4",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_74_Right_5",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_69_Left_6",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_70_Left_7",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_71_Left_8",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_72_Left_9",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_73_Left_10",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "PHY_EDGE_ROW_74_Left_11",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "TAP_TAPCELL_ROW_69_12",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "TAP_TAPCELL_ROW_70_13",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "TAP_TAPCELL_ROW_72_14",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    },
+    {
+      "instance": "TAP_TAPCELL_ROW_74_15",
+      "master": "TAPCELL_ASAP7_75t_R",
+      "all_native_pins": {
+        "VDD": {
+          "direction": "inout",
+          "signal_type": "POWER"
+        },
+        "VSS": {
+          "direction": "inout",
+          "signal_type": "GROUND"
+        }
+      }
+    }
+  ]
+}

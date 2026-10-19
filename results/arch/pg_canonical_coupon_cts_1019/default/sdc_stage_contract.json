@@ -1,0 +1,28 @@
+{
+  "source_1_2_yosys": {
+    "period": 770,
+    "setup_uncertainty": 60,
+    "hold_uncertainty": 25,
+    "input_output_delay": 100,
+    "output_load_fF": 80,
+    "propagation": "ideal"
+  },
+  "canonical_1_synth_through_3_place": {
+    "period": 770,
+    "setup_uncertainty": 60,
+    "hold_uncertainty": 25,
+    "input_output_delay": 100,
+    "output_load_fF": "ABSENT after define_scene; do not claim80",
+    "propagation": "ideal"
+  },
+  "actual_PRECTS_report_checkpoint_and_final_4_cts": {
+    "period": 770,
+    "setup_uncertainty": 60,
+    "hold_uncertainty": 25,
+    "input_output_delay": 100,
+    "output_load_fF": 80,
+    "propagation": "actual core_clk propagated"
+  },
+  "controlled_native_probe": "16x80 before define_scene; zero loads after TC/BC definition in both SS/FF; boundary reapplication restores16x80 in both. No helper/profile fix performed.",
+  "actual_unused_virtual_clock": "ot_lb_v_core_clk remains with no launch/capture paths and no IO delay references"
+}

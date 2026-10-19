@@ -1,0 +1,26 @@
+{
+ "pre_cts_orig": "/work/hooks/pre_cts_pre_cts.tcl",
+ "fixes": [
+  {
+   "path": "physical/common_flow/cg_pushdown.tcl",
+   "name": "ot_cts_fix_0_cg_pushdown.tcl",
+   "sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118"
+  },
+  {
+   "path": "physical/common_flow/clk_net_protect.tcl",
+   "name": "ot_cts_fix_1_clk_net_protect.tcl",
+   "sha256": "94cc061d8ce0705457b239ea7422d233e8c06c9cddce7272be1ea3ca329cc902"
+  },
+  {
+   "path": "physical/common_flow/link_budget_hook.tcl",
+   "name": "ot_cts_fix_2_link_budget_hook.tcl",
+   "sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a"
+  },
+  {
+   "path": "tests/pg_canonical_coupon_cts_1019/after_cts_component.tcl",
+   "name": "ot_cts_fix_3_after_cts_component.tcl",
+   "sha256": "712c3371e56344bb2582f5c1564d39d136cb2509d012e3fd5e04ebc7d371f0d0"
+  }
+ ],
+ "env_knobs": {}
+}

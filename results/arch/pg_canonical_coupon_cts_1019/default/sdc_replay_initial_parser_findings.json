@@ -1,0 +1,130 @@
+{
+  "all_stage_constraints_pass": false,
+  "stages": [
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/coupon_before_report_1.sdc",
+      "input_delay_values": [
+        "100.0000"
+      ],
+      "input_delay_count": 33,
+      "output_delay_values": [
+        "100.0000"
+      ],
+      "output_delay_count": 16,
+      "load_values": [
+        "80.0000"
+      ],
+      "propagated": true,
+      "period_770": true,
+      "setup_60": true,
+      "hold_25": true,
+      "pass": true
+    },
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/3_place.sdc",
+      "input_delay_values": [
+        "100.0000"
+      ],
+      "input_delay_count": 33,
+      "output_delay_values": [
+        "100.0000"
+      ],
+      "output_delay_count": 16,
+      "load_values": [],
+      "propagated": false,
+      "period_770": true,
+      "setup_60": true,
+      "hold_25": true,
+      "pass": false
+    },
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/2_floorplan.sdc",
+      "input_delay_values": [
+        "100.0000"
+      ],
+      "input_delay_count": 33,
+      "output_delay_values": [
+        "100.0000"
+      ],
+      "output_delay_count": 16,
+      "load_values": [],
+      "propagated": false,
+      "period_770": true,
+      "setup_60": true,
+      "hold_25": true,
+      "pass": false
+    },
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/1_2_yosys.sdc",
+      "input_delay_values": [
+        "100"
+      ],
+      "input_delay_count": 1,
+      "output_delay_values": [
+        "100"
+      ],
+      "output_delay_count": 1,
+      "load_values": [
+        "80"
+      ],
+      "propagated": false,
+      "period_770": true,
+      "setup_60": false,
+      "hold_25": false,
+      "pass": false
+    },
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/4_cts.sdc",
+      "input_delay_values": [
+        "100.0000"
+      ],
+      "input_delay_count": 33,
+      "output_delay_values": [
+        "100.0000"
+      ],
+      "output_delay_count": 16,
+      "load_values": [
+        "80.0000"
+      ],
+      "propagated": true,
+      "period_770": true,
+      "setup_60": true,
+      "hold_25": true,
+      "pass": true
+    },
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/2_1_floorplan.sdc",
+      "input_delay_values": [
+        "100.0000"
+      ],
+      "input_delay_count": 33,
+      "output_delay_values": [
+        "100.0000"
+      ],
+      "output_delay_count": 16,
+      "load_values": [],
+      "propagated": false,
+      "period_770": true,
+      "setup_60": true,
+      "hold_25": true,
+      "pass": false
+    },
+    {
+      "path": "default/routes/canonical_cts/work/orfs/results/asap7/opentallas_ot_pg_canonical_xor16_1019_asap7_ref_canonical_cts/base/1_synth.sdc",
+      "input_delay_values": [
+        "100.0000"
+      ],
+      "input_delay_count": 33,
+      "output_delay_values": [
+        "100.0000"
+      ],
+      "output_delay_count": 16,
+      "load_values": [],
+      "propagated": false,
+      "period_770": true,
+      "setup_60": true,
+      "hold_25": true,
+      "pass": false
+    }
+  ]
+}
