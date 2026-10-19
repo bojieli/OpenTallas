@@ -85,6 +85,13 @@
 //   go-back-N replay / credits, FROZEN HF-3) is end-to-end per peer pair across the switch (tb_xdie_s81 ACK timeout set
 //   by the 553-cycle crossing); alternating one lane's frames between two peers would mix two sequence spaces in one
 //   endpoint, so a destination field needs a per-destination link layer inside the frozen tile.
+// S81-FIX3 (10-19, route s81sl_lepnh-90fc20580 NEEDS_RTL TT -55.92: all 66 failing endpoints = lane-1 TX SRAM rd_out
+// (macro clk->q 421 ps TT) -> WREG forward mux (AO21) -> ~265 ps of buffered wire -> the lo1_d output pin flop across
+// the lane-0 SRAM column; not fanout, not depth): TXRP = 1 adds ONE read pipeline register (odr, no reset) that the
+// placer keeps beside the SRAM column, so the macro read word crosses the tile in its own cycle (odr -> od pin flop).
+// lo_v follows one edge later (inf -> inr -> ov).  TX: issue -> lo_v 3 edges (was 2); TX credit round trip ~8 cycles
+// <= CRED 8 (full beat rate kept); the elastic off-die boundary absorbs the edge (no static-calendar change on-die).
+// Applies to every lep variant (lep / lep_nh / lep_mu*), as they share this core.
 // Mutants (bench only): OT_S81SL_LEP_MUT_TAGDROP (TX window does not stamp), OT_S81SL_LEP_MUT_WRONGCOPY (ab ignored: all
 // beats on pair A), OT_S81SL_LEP_MUT_LANDCUT (RX ignores the land bit: landed beats cut through to ri; MU-S81b).
 module ot_s81sl_lep_core #(
@@ -95,7 +102,8 @@ module ot_s81sl_lep_core #(
     parameter integer HOST_EN = 1,     // 1: host plane (THOST / TKD out, HOST / KS in, f_lf); 0: ring beats only
     parameter integer MU_EN = 0,       // 1: user-tag windows (TX stamp, RX strip / land / replay merge)
     parameter integer AB_EN = 0,       // 1: second lane pair (copy B static circuit)
-    parameter integer NB = 80          // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
+    parameter integer NB = 80,         // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
+    parameter integer TXRP = 1         // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -245,7 +253,7 @@ module ot_s81sl_lep_core #(
     // Storage: ot_s81ph_mem1r1w SRAM = 1 (5 x ot_sram_1r1w_512x128_m4_r2c2 a lane, registered write port WREG = 1,
     // registered read), DT entries.  Credit sender: lo_r (a credit pulse per freed lane landing slot) lands in the pin flop
     // cr_q; a read is issued only with a credit in hand (the credit is spent at issue), its word leaves on lo_v / lo_d
-    // from flops two edges later.  lo_d loads the SRAM read word every cycle (the lane samples it only with lo_v).
+    // from flops two edges later (three at TXRP 1).  lo_d loads the SRAM read word every cycle (the lane samples it only with lo_v).
     // Lanes 2 / 3 (AB_EN 1) = pair B, same structure, fed by pp[1] (reset regions: lane 2 with lane 0, lane 3 with 1).
     wire [NL-1:0] ovf;
     wire [3:0] lo_v; wire [3:0] lo_r = {lo3_r, lo2_r, lo1_r, lo0_r};
@@ -256,6 +264,7 @@ module ot_s81sl_lep_core #(
         wire rt = rr[t % 2];
         reg [AT-1:0] wp, rp; reg [AT:0] n; reg [CW-1:0] cnt;
         reg inf, of, ov; reg [H:0] od;
+        wire inq; wire [H:0] qd;                      // read word / valid one stage before the lo pin flops
         (* keep = "true" *) reg cr_q;                  // lo_r pin flop
         wire [H:0] q;
         wire iss = n != 0 && cnt != 0;
@@ -272,12 +281,20 @@ module ot_s81sl_lep_core #(
                 if (iss) rp <= (rp == DT - 1) ? 0 : rp + 1'b1;
                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
                 inf <= iss;
-                ov <= inf;
+                ov <= inq;
 `ifndef OT_S81SL_LEP_MUT_NOOVF
                 if (psh && n == DT && !iss) of <= 1'b1;
 `endif
             end
-        always @(posedge clk) od <= q;
+        if (TXRP != 0) begin : g_rp                   // S81-FIX3: read pipeline register beside the SRAM column
+            reg inr; reg [H:0] odr;
+            always @(posedge clk or negedge rt) if (!rt) inr <= 1'b0; else inr <= inf;
+            always @(posedge clk) odr <= q;
+            assign inq = inr; assign qd = odr;
+        end else begin : g_nrp
+            assign inq = inf; assign qd = q;
+        end
+        always @(posedge clk) od <= qd;
         assign lo_v[t] = ov; assign lo_d[t * (H + 1) +: H + 1] = od; assign ovf[t] = of;
     end
     if (NL == 2) begin : g_txnb                         // AB_EN 0: no pair-B lanes (lo2 / lo3 unread outputs = 0)
