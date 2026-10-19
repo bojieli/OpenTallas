@@ -306,7 +306,12 @@ def trace_model(insts, buses, is_relay, thru, port_base=None, skip_cls=('clock',
     -> (bus records for make_doc, problems): one record per (origin inst.port -> terminal inst.port) pin pair, stages =
        relay instances walked; width = bits of the distinct last-hop buses; bid = the origin generator bus id(s)."""
     pb = port_base or (lambda p: p)
+    buses = list(buses)
     outs = {}
+    # A reset-tree attachment can reclassify the final relay output as reset.
+    # Such explicitly excluded legs are intentional boundaries, not open data.
+    skipped_outs = {(eps[0][0], pb(eps[0][1])) for _, cls, _, eps in buses
+                    if cls in skip_cls and len(eps) >= 2}
     for bid, cls, bits, eps in buses:
         if cls in skip_cls or len(eps) < 2:
             continue
@@ -329,6 +334,8 @@ def trace_model(insts, buses, is_relay, thru, port_base=None, skip_cls=('clock',
                             problems.append(f'relay loop at {li}.{o} from {di}.{dp}'); continue
                         nxt = outs.get(key)
                         if not nxt:
+                            if key in skipped_outs:
+                                continue
                             problems.append(f'relay {li}.{o} drives nothing (chain from {di}.{dp} ends)'); continue
                         for b2, bits2, l2 in nxt:
                             stack.append((b2, bits2, l2, n + 1, seen | {key}))
