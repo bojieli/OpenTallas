@@ -43,6 +43,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
     parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check,
                                    //        5 (XSER=1) stream domain left without its reset, 6 (XSER=1) binary event sequence (not Gray),
                                    //        7 (XSER=1) one synchroniser stage short, 8 (XSER=0) core state without the synchronised reset
+    parameter integer FAN32=0,    // opt-in same-edge retained configuration/read selector banks
     parameter integer AW=PAGE_W+11
 )(
     input  wire clk, clk_in, rst_n,
@@ -57,15 +58,17 @@ module ot_hbm_static_cfg_collar_idx256 #(
     input  wire c_done,
     input  wire [NF-1:0] c_fault,
     output reg  [NS-1:0] pw_we,
-    output reg  [AW-1:0] pw_addr,
-    output reg  [255:0] pw_data,
-    output reg  [NPR*256-1:0] prm,
+    output wire  [AW-1:0] pw_addr,
+    output wire  [255:0] pw_data,
+    output wire  [NPR*256-1:0] prm,
     output reg  start_v,
     output reg  [NGO-1:0] go,
-    output reg  [220:0] rec,
+    output wire  [220:0] rec,
     output reg  ready, active, fault
 );
     initial begin
+        if (FAN32 != 0 && (NPR != 6 || NREC != 8 || NGO != 2))
+            $fatal(1, "IDX256 FAN32 requires production NPR6/NREC8/NGO2");
         if (NS != 1 || PAGE_W != 1 || AW != 12 || XSER != 0)
             $fatal(1, "IDX256 collar requires NS1/PAGE_W1/AW12/XSER0");
         if (NS<1 || NS>4 || NPR<1 || NPR>1024 || NREC<0 || NREC>512 || NGO<1 || NGO>2 || PAGE_W<1 || AW>31)
@@ -198,6 +201,19 @@ module ot_hbm_static_cfg_collar_idx256 #(
     reg [RN-1:0] r_val;
     reg [1:0] r_go [0:RN-1];
     reg [220:0] r_pay [0:RN-1];
+    reg [AW-1:0] pw_addr_raw;
+    reg [255:0] pw_data_raw;
+    reg [NPR*256-1:0] prm_raw;
+    reg [220:0] rec_raw;
+    wire [AW-1:0] pw_addr_banked;
+    wire [255:0] pw_data_banked;
+    wire [NPR*256-1:0] prm_banked;
+    wire [220:0] rec_banked;
+    wire [255:0] selected_record;
+    assign pw_addr = FAN32 ? pw_addr_banked : pw_addr_raw;
+    assign pw_data = FAN32 ? pw_data_banked : pw_data_raw;
+    assign prm = FAN32 ? prm_banked : prm_raw;
+    assign rec = FAN32 ? rec_banked : rec_raw;
     wire hit = cv && ct == tg;
     wire dhit = dv && ct == tg;
     wire [AW:0] lin = {1'b0, page[sel], ca[10:0]};
@@ -213,9 +229,32 @@ module ot_hbm_static_cfg_collar_idx256 #(
         inst_ok = need_set && (&loaded);
         for (s = 0; s < NS; s = s + 1) if (hwm[s] < need[s] && MUT != 2) inst_ok = 0;
     end
-    wire recs_done = (NREC == 0) || (rptr >= NREC) || !r_val[rptr];
-    wire [31:0] cur_off = r_off[(NREC == 0) ? 0 : rptr];
+    wire recs_done = (NREC == 0) || (rptr >= NREC) || !selected_record[32];
+    wire [31:0] cur_off = selected_record[31:0];
     wire [31:0] cmp_cnt = (MUT == 3) ? cnt + 1 : cnt;
+    wire launch_ok = lv && armed && inst_ok && !fault && !run && !install_depth_bad;
+    wire record_step = run && !recs_done && cur_off == cmp_cnt;
+    wire [RW-1:0] rptr_next = !rst_c_n ? {RW{1'b0}} :
+        record_step ? rptr + 1'b1 : launch_ok ? {RW{1'b0}} : rptr;
+    wire [31:0] cnt_next = !rst_c_n ? 32'd0 : run ? cnt + 1'b1 : launch_ok ? 32'd0 : cnt;
+    wire programme_accept = hit && !run && !ca[11] && !depth_write_bad &&
+        (((lin == hwm[sel] || MUT == 1) && !hwm[sel][AW]) ||
+         (lin != hwm[sel] && MUT != 1 && lin == 0));
+    generate if (FAN32 != 0) begin : g_fan32
+        ot_hbm_idx256_banks #(.AW(AW),.MUT(MUT)) u_banks(
+            .clk(clk),.rst_c_n(rst_c_n),.cfg_v(cfg_v),.cfg_target(cfg_target),
+            .cfg_addr(cfg_addr),.cd(cd),.tg(tg),.run(run),.recs_done(recs_done),
+            .cur_off(cur_off),.cnt_next(cnt_next),.rptr_next(rptr_next),
+            .programme_accept(programme_accept),.lin(lin[AW-1:0]),
+            .selected_record(selected_record),.pw_addr(pw_addr_banked),.pw_data(pw_data_banked),
+            .prm(prm_banked),.rec(rec_banked));
+    end else begin : g_original_banks
+        assign selected_record = {r_pay[rptr],r_go[rptr],r_val[rptr],r_off[(NREC == 0) ? 0 : rptr]};
+        assign pw_addr_banked = 0;
+        assign pw_data_banked = 0;
+        assign prm_banked = 0;
+        assign rec_banked = 0;
+    end endgenerate
     integer k;
     always @(posedge clk or negedge rst_c_n) begin
         if (!rst_c_n) begin
@@ -234,13 +273,13 @@ module ot_hbm_static_cfg_collar_idx256 #(
                 else if (!ca[11]) begin
                     if (lin == hwm[sel] || MUT == 1) begin
                         if (hwm[sel][AW]) fault <= 1;
-                        else begin pw_we[sel] <= 1; pw_addr <= lin[AW-1:0]; pw_data <= cd; hwm[sel] <= lin + 1'b1; end
+                        else begin pw_we[sel] <= 1; pw_addr_raw <= lin[AW-1:0]; pw_data_raw <= cd; hwm[sel] <= lin + 1'b1; end
                     end else if (lin == 0) begin
-                        pw_we[sel] <= 1; pw_addr <= 0; pw_data <= cd; hwm[sel] <= 1;
+                        pw_we[sel] <= 1; pw_addr_raw <= 0; pw_data_raw <= cd; hwm[sel] <= 1;
                     end else fault <= 1;
                 end else if (ca[11:10] == 2'b10) begin
                     if (ca[9:0] >= NPR) fault <= 1;
-                    else begin prm[ca[9:0]*256 +: 256] <= cd; loaded[ca[9:0]] <= 1; end
+                    else begin prm_raw[ca[9:0]*256 +: 256] <= cd; loaded[ca[9:0]] <= 1; end
                 end else if (ca[11:9] == 3'b110) begin
                     if (ca[8:0] >= NREC) fault <= 1;
                     else begin
@@ -275,7 +314,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
                 if (done_q) wait_done <= 0;
                 if (!recs_done) begin
                     if (cur_off == cmp_cnt) begin
-                        go <= r_go[rptr][NGO-1:0]; rec <= r_pay[rptr]; rptr <= rptr + 1'b1; tail <= TAIL[7:0];
+                        go <= selected_record[33 +: NGO]; rec_raw <= selected_record[255:35]; rptr <= rptr + 1'b1; tail <= TAIL[7:0];
                     end else if (cur_off < cnt) fault <= 1;
                 end else if (!start_v && tail == 0 && !(|busy_q) && !wait_done && go == 0) run <= 0;
             end
@@ -283,5 +322,84 @@ module ot_hbm_static_cfg_collar_idx256 #(
             ready <= armed && inst_ok && !fault && !run && !hit;
         end
     end
+endmodule
+
+// Same physical edge as the original pin/state registers. The canonical
+// ot_keep_regs.tcl synthesis hook must retain these declared register copies.
+// Each constant-index bank owns <=28 bits; no binary pointer drives a wide mux.
+module ot_hbm_idx256_banks #(parameter integer AW=12,MUT=0)(
+ input wire clk,rst_c_n,cfg_v,run,recs_done,programme_accept,
+ input wire [7:0] cfg_target,tg,
+ input wire [11:0] cfg_addr,
+ input wire [255:0] cd,
+ input wire [31:0] cur_off,cnt_next,
+ input wire [3:0] rptr_next,
+ input wire [AW-1:0] lin,
+ output wire [255:0] selected_record,
+ output reg [AW-1:0] pw_addr,
+ output wire [255:0] pw_data,
+ output wire [1535:0] prm,
+ output wire [220:0] rec
+);
+ genvar g,r;
+ generate for(g=0;g<11;g=g+1)begin:g_bank
+  (* keep *) reg cv;
+  (* keep *) reg [7:0] ct;
+  (* keep *) reg [11:0] ca;
+  always @(posedge clk)begin ct<=cfg_target;ca<=cfg_addr;end
+  always @(posedge clk or negedge rst_c_n)if(!rst_c_n)cv<=0;else cv<=cfg_v;
+  if(g<10)begin:g_payload
+   localparam integer LO=g*28;
+   localparam integer B=(256-LO<28)?256-LO:28;
+   (* keep *) reg [7:0] rd_oh;
+   wire [3:0] rp = (MUT==12 && g==2) ? {1'b0,rptr_next[2:0]+3'd1} : rptr_next;
+   always @(posedge clk)rd_oh <= (rptr_next<8) ? (8'b1<<rp) : 8'd0;
+   reg [B-1:0] rows[0:7];
+   wire record_cfg=cv && ct==tg && !run && ca[11:9]==3'b110 && ca[8:0]<8;
+   wire operand_cfg=cv && ct==tg && !run && ca[11:10]==2'b10 && ca[9:0]<6;
+   wire output_cfg=programme_accept && cv;
+   reg [B-1:0] pw_q;
+   always @(posedge clk)if(output_cfg)pw_q<=cd[LO+:B];
+   assign pw_data[LO+:B]=pw_q;
+   for(r=0;r<8;r=r+1)begin:g_record
+    always @(posedge clk)if(record_cfg && ca[8:0]==r)rows[r]<=cd[LO+:B];
+   end
+   reg [7:0] val;
+   if(LO<=32 && LO+B>32)begin:g_valid
+    integer v;
+    always @(posedge clk or negedge rst_c_n)
+     if(!rst_c_n)val<=0;
+     else for(v=0;v<8;v=v+1)if(record_cfg && ca[8:0]==v)val[v]<=cd[32];
+   end else begin:g_no_valid
+    always @* val=8'd0;
+   end
+   reg [B-1:0] selected;
+   integer j;
+   always @*begin
+    selected=0;
+    for(j=0;j<8;j=j+1)selected=selected|(rows[j]&{B{rd_oh[j]}});
+    if(LO<=32 && LO+B>32)selected[32-LO]=|(val&rd_oh);
+   end
+   assign selected_record[LO+:B]=selected;
+   for(r=0;r<6;r=r+1)begin:g_operand
+    reg [B-1:0] operand;
+    always @(posedge clk)if(operand_cfg && ca[9:0]==r)operand<=cd[LO+:B];
+    assign prm[r*256+LO+:B]=operand;
+   end
+   if(LO+B>35)begin:g_emit
+    localparam integer EL=(LO<35)?35:LO;
+    localparam integer EB=LO+B-EL;
+    (* keep *) reg [31:0] local_cnt;
+    always @(posedge clk)local_cnt<=cnt_next;
+    wire [31:0] local_cmp=(MUT==3)?local_cnt+1'b1:local_cnt;
+    wire step=run && !recs_done && cur_off==local_cmp;
+    reg [EB-1:0] emitted;
+    always @(posedge clk)if(step)emitted<=selected[EL-LO+:EB];
+    assign rec[EL-35+:EB]=emitted;
+   end
+  end else begin:g_addr
+   always @(posedge clk)if(programme_accept && cv)pw_addr<=lin;
+  end
+ end endgenerate
 endmodule
 `default_nettype wire
