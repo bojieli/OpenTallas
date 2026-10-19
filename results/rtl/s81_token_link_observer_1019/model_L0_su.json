@@ -1,0 +1,1354 @@
+{
+  "schema": "opentallas.s81.link_observation_adapter.v1",
+  "status": "BLOCKED_SOURCE_CONTRACT",
+  "qualification": false,
+  "replay_sha256": "c4e047c17ad1f7a7a9793364849d010cd83a5d955bb9150f033eb859b8afbad6",
+  "schedule_sha256": "6c909b32ea7abf351c7668dfeed52b6a3b06f96aaf7504ed90adfafeb08e2db9",
+  "programme_manifest_sha256": "2504b54c86bd7fe9c28db47cc3e0388cadc276517f7cf8964aed6c905e18b2f4",
+  "mu_slots_sha256": null,
+  "die_v_sha256": "81498f42b9ead925dc6c8c03d17fb72314a21e7764ebeb603e3105f75d9df360",
+  "original_verdict_kind": "SCHEDULE",
+  "original_t0": 100,
+  "obligations": [
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 0..7 -> sid 1",
+      "producer_programme_edge": 1200,
+      "producer_ro_edge": 1300,
+      "epb_rov_edge": 1301,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c000000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 8..15 -> sid 1",
+      "producer_programme_edge": 1205,
+      "producer_ro_edge": 1305,
+      "epb_rov_edge": 1306,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c080000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 0..7 -> sid 0",
+      "producer_programme_edge": 1210,
+      "producer_ro_edge": 1310,
+      "epb_rov_edge": 1311,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c000000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 16..23 -> sid 1",
+      "producer_programme_edge": 1210,
+      "producer_ro_edge": 1310,
+      "epb_rov_edge": 1311,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c100000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 8..15 -> sid 0",
+      "producer_programme_edge": 1215,
+      "producer_ro_edge": 1315,
+      "epb_rov_edge": 1316,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c080000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 24..31 -> sid 1",
+      "producer_programme_edge": 1215,
+      "producer_ro_edge": 1315,
+      "epb_rov_edge": 1316,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c180000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 16..23 -> sid 0",
+      "producer_programme_edge": 1220,
+      "producer_ro_edge": 1320,
+      "epb_rov_edge": 1321,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c100000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 32..39 -> sid 1",
+      "producer_programme_edge": 1220,
+      "producer_ro_edge": 1320,
+      "epb_rov_edge": 1321,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c200000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 24..31 -> sid 0",
+      "producer_programme_edge": 1225,
+      "producer_ro_edge": 1325,
+      "epb_rov_edge": 1326,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c180000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 40..47 -> sid 1",
+      "producer_programme_edge": 1225,
+      "producer_ro_edge": 1325,
+      "epb_rov_edge": 1326,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c280000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 32..39 -> sid 0",
+      "producer_programme_edge": 1230,
+      "producer_ro_edge": 1330,
+      "epb_rov_edge": 1331,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c200000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 48..55 -> sid 1",
+      "producer_programme_edge": 1230,
+      "producer_ro_edge": 1330,
+      "epb_rov_edge": 1331,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c300000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 40..47 -> sid 0",
+      "producer_programme_edge": 1235,
+      "producer_ro_edge": 1335,
+      "epb_rov_edge": 1336,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c280000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 56..63 -> sid 1",
+      "producer_programme_edge": 1235,
+      "producer_ro_edge": 1335,
+      "epb_rov_edge": 1336,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c380000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 48..55 -> sid 0",
+      "producer_programme_edge": 1240,
+      "producer_ro_edge": 1340,
+      "epb_rov_edge": 1341,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c300000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 64..71 -> sid 1",
+      "producer_programme_edge": 1240,
+      "producer_ro_edge": 1340,
+      "epb_rov_edge": 1341,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c400000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 56..63 -> sid 0",
+      "producer_programme_edge": 1245,
+      "producer_ro_edge": 1345,
+      "epb_rov_edge": 1346,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c380000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 72..79 -> sid 1",
+      "producer_programme_edge": 1245,
+      "producer_ro_edge": 1345,
+      "epb_rov_edge": 1346,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c480000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 64..71 -> sid 0",
+      "producer_programme_edge": 1250,
+      "producer_ro_edge": 1350,
+      "epb_rov_edge": 1351,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c400000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 320..327 -> sid 1",
+      "producer_programme_edge": 1250,
+      "producer_ro_edge": 1350,
+      "epb_rov_edge": 1351,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d400000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 72..79 -> sid 0",
+      "producer_programme_edge": 1255,
+      "producer_ro_edge": 1355,
+      "epb_rov_edge": 1356,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c480000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 328..335 -> sid 1",
+      "producer_programme_edge": 1255,
+      "producer_ro_edge": 1355,
+      "epb_rov_edge": 1356,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d480000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 320..327 -> sid 0",
+      "producer_programme_edge": 1260,
+      "producer_ro_edge": 1360,
+      "epb_rov_edge": 1361,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d400000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 336..343 -> sid 1",
+      "producer_programme_edge": 1260,
+      "producer_ro_edge": 1360,
+      "epb_rov_edge": 1361,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d500000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 328..335 -> sid 0",
+      "producer_programme_edge": 1265,
+      "producer_ro_edge": 1365,
+      "epb_rov_edge": 1366,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d480000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7N",
+      "kind": "RD",
+      "tag": "rows 344..351 -> sid 1",
+      "producer_programme_edge": 1265,
+      "producer_ro_edge": 1365,
+      "epb_rov_edge": 1366,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d580000401e19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 2,
+      "destination_sids": [
+        1
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_EN0",
+          "port": "o__w_lt_lk_EN0_lnd",
+          "local_peer": [
+            "u_lk_EN0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_EN1",
+          "port": "o__w_lt_lk_EN1_lnd",
+          "local_peer": [
+            "u_lk_EN1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 336..343 -> sid 0",
+      "producer_programme_edge": 1270,
+      "producer_ro_edge": 1370,
+      "epb_rov_edge": 1371,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d500000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    },
+    {
+      "source": "u_s_7S",
+      "kind": "RD",
+      "tag": "rows 344..351 -> sid 0",
+      "producer_programme_edge": 1275,
+      "producer_ro_edge": 1375,
+      "epb_rov_edge": 1376,
+      "frame_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d580000201c19",
+      "mask_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fffffffffffff",
+      "destination_slice_mask": 1,
+      "destination_sids": [
+        0
+      ],
+      "payload_missing_bits": 1052,
+      "lanes": [
+        {
+          "lane": "lt_lk_ES0",
+          "port": "o__w_lt_lk_ES0_lnd",
+          "local_peer": [
+            "u_lk_ES0"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        },
+        {
+          "lane": "lt_lk_ES1",
+          "port": "o__w_lt_lk_ES1_lnd",
+          "local_peer": [
+            "u_lk_ES1"
+          ],
+          "age": 6,
+          "stations": 3,
+          "K": 3
+        }
+      ],
+      "far_die": null,
+      "far_endpoint": null,
+      "pma_lane_ages": null,
+      "remote_reset_clock_contract": null,
+      "landing_replay_calendar": null,
+      "consumer_edge": null,
+      "user": 0,
+      "user_shift": 0,
+      "position": 0,
+      "copy": "A"
+    }
+  ],
+  "blockers": [
+    "compiled offdie gold masks payload: actual row producer/golden placement required",
+    "die builder exposes local PHY peers only: remote die/endpoint and two PMA ages required",
+    "remote reset/clock and fixed landing/replay/user ownership calendar required",
+    "qualified producer, pair release, ml_wv/ml_rv and ri/mu_rt trace not collected",
+    "positive and causal wrong-owner/corrupt/early/late/omitted-consumer RTL witnesses absent"
+  ],
+  "receiver_observation": {
+    "source": "actual ot_s81sl_lep_core; no synthetic frame source",
+    "frame": "fr with push=rov||hp_go||kp_go; pair=bsel; parity=sq[pair]",
+    "release": "rel with h0/h1: parity equal, rb={h1[551:0],h0[551:0]}",
+    "cutthrough": "ri at release+1, valid only riv; full payload and mu_rt",
+    "landing": "ml_wv at release+1; full mwd stored, not immediate ri",
+    "replay": "ml_rv/ml_rd -> mrv/mrd -> ri (two sampled rising edges)",
+    "identity": "qualified user0 payload+mu_rt vs original SU at identical edges",
+    "transport_age": "elastic; never substituted by a constant",
+    "scope": "source model only; arithmetic/token/native qualification false"
+  },
+  "source_identity": {
+    "run_kit_sha256": "e2cd506d41803486dbc8a574b6219df79564c8715226f204e460ec72949e9b08",
+    "run_rtl_commit": "9c2f5fe60ea8a01fa86088768e58b22ec36638e7",
+    "actual_lep_sha256": "b4a9e8af712d3e4b1140e0e8bb94bebc6fcd8393fe458f78bb3cdaa29ae7fa3b",
+    "source_contract_sha256": "af1d326165352a7abcdb287399adda98d11d6659c6a16c36e7661ac90545add0"
+  }
+}

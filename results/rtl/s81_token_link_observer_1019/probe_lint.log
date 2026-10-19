@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits  1006 GB (avail 782, growth 78, headroom 0, waiters 0/0 GB) load 40/128 running 24 disk 412 GB 
+ot-run: ot-epyc5       admits   634 GB (avail 526, growth 83, headroom 0, waiters 0/0 GB) load 60/128 running 10 disk 562 GB 
+ot-run: ot-epyc6       admits   992 GB (avail 807, growth 113, headroom 0, waiters 0/0 GB) load 127/128 running 41 disk 559 GB 
+ot-run: ot-epyc7       admits   436 GB (avail 406, growth 101, headroom 0, waiters 0/0 GB) load 358/96 running 72 disk 502 GB 
+ot-run: ot-epyc8       admits  1130 GB (avail 901, growth 111, headroom 0, waiters 0/0 GB) load 55/128 running 34 disk 565 GB 
+ot-run: ot-pve1        admits   137 GB (avail 108, growth 2, headroom 0, waiters 0/0 GB) load 8/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    98 GB (avail 81, growth 13, headroom 0, waiters 0/0 GB) load 22/64 running 11 disk 46 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3547381-1792439210 after 0 s
+59f718543196249cef79ccd45633bc929f4aea353706799a28af674104d7d420  s81_link_observation_probe.sv
+Verilator 5.050 2026-07-01 rev v5.050
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.037 MB sources in 2 modules, into 0.014 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.004 s (elab=0.000, cvt=0.002, bld=0.000); cpu 0.004 s on 1 threads; allocated 33.387 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3547381-1792439210): exit 0

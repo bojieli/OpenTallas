@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   994 GB (avail 784, growth 88, headroom 0, waiters 0/0 GB) load 39/128 running 24 disk 412 GB 
+ot-run: ot-epyc5       admits   639 GB (avail 529, growth 82, headroom 0, waiters 0/0 GB) load 52/128 running 10 disk 562 GB 
+ot-run: ot-epyc6       admits   992 GB (avail 808, growth 113, headroom 0, waiters 0/0 GB) load 158/128 running 42 disk 559 GB 
+ot-run: ot-epyc7       admits   430 GB (avail 402, growth 101, headroom 0, waiters 0/0 GB) load 388/96 running 73 disk 502 GB 
+ot-run: ot-epyc8       admits  1114 GB (avail 893, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 35 disk 564 GB 
+ot-run: ot-pve1        admits   137 GB (avail 108, growth 2, headroom 0, waiters 0/0 GB) load 9/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    99 GB (avail 82, growth 13, headroom 0, waiters 0/0 GB) load 27/64 running 11 disk 46 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1211856-1792439163 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+%Error: Specified --top-module 's81_link_observation_probe' was not found in design.
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1211856-1792439163): exit 1

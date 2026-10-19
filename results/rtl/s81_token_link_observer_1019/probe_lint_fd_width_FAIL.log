@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       admits  1002 GB (avail 784, growth 82, headroom 0, waiters 0/0 GB) load 41/128 running 24 disk 412 GB 
+ot-run: ot-epyc5       admits   637 GB (avail 529, growth 83, headroom 0, waiters 0/0 GB) load 62/128 running 10 disk 562 GB 
+ot-run: ot-epyc6       admits   992 GB (avail 808, growth 113, headroom 0, waiters 0/0 GB) load 136/128 running 42 disk 559 GB 
+ot-run: ot-epyc7       admits   435 GB (avail 405, growth 101, headroom 0, waiters 0/0 GB) load 367/96 running 72 disk 502 GB 
+ot-run: ot-epyc8       admits  1124 GB (avail 897, growth 110, headroom 0, waiters 0/0 GB) load 56/128 running 34 disk 564 GB 
+ot-run: ot-pve1        admits   135 GB (avail 106, growth 2, headroom 0, waiters 0/0 GB) load 9/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    98 GB (avail 81, growth 13, headroom 0, waiters 0/0 GB) load 24/64 running 11 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1548393-1792439195 after 0 s
+c66c4d471cecc859770a6bc332e4eecb1df0e96ba22760d4b796efab91fa96e1  s81_link_observation_probe.sv
+Verilator 5.050 2026-07-01 rev v5.050
+%Warning-WIDTHTRUNC: s81_link_observation_probe.sv:29:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'fd' generates 32 bits.
+                                                        : ... note: In instance 's81_link_observation_probe'
+   29 |         if (!fd) $fatal(1, "LINK_OBSERVER cannot open output");
+      |             ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Error: Exiting due to 1 warning(s)
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1548393-1792439195): exit 1

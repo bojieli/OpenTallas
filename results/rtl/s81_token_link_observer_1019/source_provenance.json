@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.s81.link_observer_provenance.v1",
+  "qualification": false,
+  "intended_probe_source": "original run snapshot; not current branch RTL",
+  "run_rtl_commit": "9c2f5fe60ea8a01fa86088768e58b22ec36638e7",
+  "kit_json_path": "/home/ubuntu/scratch/mu-die-s81/tok/kits/K_cut_7/kit.json",
+  "kit_json_sha256": "e2cd506d41803486dbc8a574b6219df79564c8715226f204e460ec72949e9b08",
+  "remote_readback": {
+    "host": "ot-epyc8",
+    "directory": "/srv/opentallas-scratch/claude/mu-die-s81-tok/K_cut_7",
+    "lep_sha256": "b4a9e8af712d3e4b1140e0e8bb94bebc6fcd8393fe458f78bb3cdaa29ae7fa3b",
+    "kit_json_sha256": "e2cd506d41803486dbc8a574b6219df79564c8715226f204e460ec72949e9b08"
+  },
+  "files": [
+    {
+      "path": "tools/s81_dv/dv_cut_replay.py",
+      "contract_sha256": "469ad9fe2538967ce53b94be8304652e79f94448aad3f3903f3b6393275b9c09",
+      "branch_b14d4cf87_sha256": "05c0b0fcff8ec5fe040e422b91075c8ae5357479c6bf4fd2564cdb9894987acc"
+    },
+    {
+      "path": "tools/s81_dv/dv_slice_tb.py",
+      "contract_sha256": "7da937143fb749870a34bdc2a5493592aece1514ab3b87039bb8eeb99ac07c29",
+      "branch_b14d4cf87_sha256": "cad9468fe0ce52c4104e4e5abffc3750fd3097c7e4126fbac98a0bc884311df4"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+      "contract_sha256": "b4a9e8af712d3e4b1140e0e8bb94bebc6fcd8393fe458f78bb3cdaa29ae7fa3b",
+      "branch_b14d4cf87_sha256": "b1f5c89cc32254643a2006b220dc17d7bb55ca6936938bf142f7731031809788",
+      "run_snapshot_path": "/home/ubuntu/scratch/mu-die-s81/tok/kits/K_cut_7/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+      "run_snapshot_sha256": "b4a9e8af712d3e4b1140e0e8bb94bebc6fcd8393fe458f78bb3cdaa29ae7fa3b",
+      "run_matches_contract": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_mu.sv",
+      "contract_sha256": "a1fec234cc2a9f2972e06e7d9323ef9349941a6c399c492d51e4715173bfe4d3",
+      "branch_b14d4cf87_sha256": "a1fec234cc2a9f2972e06e7d9323ef9349941a6c399c492d51e4715173bfe4d3"
+    }
+  ],
+  "generated_actual_bench": {
+    "path": "/home/ubuntu/scratch/mu-die-s81/tok/kits/K_cut_7/tb/tb_slice_top.sv",
+    "sha256": "4402418510b19957bd4178bd54e9e918b3e091cfb967267287c31798ee8186fe"
+  },
+  "saved_replay_tool": {
+    "path": "/home/ubuntu/scratch/mu-die-s81/mureplay/orig/dv_cut_replay.py",
+    "sha256": "a4d425811bb029ff1910021e151832c0e982c02e92b1003a0aa729a99e14aae6",
+    "note": "differs from contract and current branch; do not conflate with original generated stimulus"
+  },
+  "verdict": "original LEP RTL snapshot recovered and remotely hash-matched; current branch RTL must not substitute"
+}
