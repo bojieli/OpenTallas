@@ -13,16 +13,16 @@ module tb_svg_return_regional;
  ot_hbm_svg_return_regional #(.MUT(MUT)) dut(.*);
  integer errors=0,outputs=0,tick=0,release_edge=0,first_valid=0,warm_checks=0;
  integer round=0,n=0,b=0,k=0,i=0,tag=0,sweep=0,window_start=0,windows=0;
- integer driver_full=0,driver_sweep=0,driver_round=0;
+ integer driver_full=0,driver_sweep=0,driver_round=0,driver_launch=0,latency_min=999999,latency_max=0,latency_samples=0;
  reg check_nominal=1,phase_seen=0;
  reg [1023:0] gold[0:6];reg [2:0] gold_ord[0:6];reg [6:0] gold_v=0;
- integer gold_full[0:6],gold_sweep[0:6];
+ integer gold_full[0:6],gold_sweep[0:6],gold_launch[0:6];
  function automatic [255:0] pattern(input integer bank,full,epoch);
   begin pattern={32'(bank),32'(full),32'(epoch),32'(bank+full*17),32'(full^32'hdeadbeef),32'(epoch*271+bank),32'(full*8+bank),32'(epoch^full^bank)};end
  endfunction
  task drive(input integer full,v,sw);
   begin
-   driver_full=full;driver_sweep=sw;
+   driver_full=full;driver_sweep=sw;driver_launch=tick;
    in_ordinal={4{3'(full)}};in_valid=v?4'b1111:0;
    for(b=0;b<8;b=b+1)bank_data[b*256+:256]=pattern(b,full,round);
   end
@@ -34,17 +34,20 @@ module tb_svg_return_regional;
    release_edge=release_edge+1;
    for(i=6;i>0;i=i-1)begin
     gold[i]=gold[i-1];gold_ord[i]=gold_ord[i-1];gold_v[i]=gold_v[i-1];
-    gold_full[i]=gold_full[i-1];gold_sweep[i]=gold_sweep[i-1];
+    gold_full[i]=gold_full[i-1];gold_sweep[i]=gold_sweep[i-1];gold_launch[i]=gold_launch[i-1];
    end
    for(k=0;k<4;k=k+1)gold[0][k*256+:256]=bank_data[((in_ordinal[2:0]+k)%8)*256+:256];
    gold_ord[0]=in_ordinal[2:0];gold_v[0]=(release_edge>=3)&&(&in_valid);
-   gold_full[0]=driver_full;gold_sweep[0]=driver_sweep;
+   gold_full[0]=driver_full;gold_sweep[0]=driver_sweep;gold_launch[0]=driver_launch;
   end
   #80;
   if(check_nominal)begin
    if(out_valid!==gold_v[6])begin errors=errors+1;if(errors<8)$display("RETURN_VALID_FAIL tick=%0d got=%b expected=%b",tick,out_valid,gold_v[6]);end
    if(out_valid)begin
-    outputs=outputs+1;
+    outputs=outputs+1;latency_samples=latency_samples+1;
+    if(tick-gold_launch[6]<latency_min)latency_min=tick-gold_launch[6];
+    if(tick-gold_launch[6]>latency_max)latency_max=tick-gold_launch[6];
+    if(tick-gold_launch[6]!=7)begin errors=errors+1;if(errors<8)$display("RETURN_LATENCY_FAIL edges=%0d",tick-gold_launch[6]);end
     if(!first_valid)begin
      first_valid=release_edge;warm_checks=warm_checks+1;
      $display("RESET_WARM edge=%0d expected=9",first_valid);
@@ -81,7 +84,8 @@ module tb_svg_return_regional;
     for(n=0;n<3;n=n+1)begin drive(n+200,1,2);@(negedge cache_clk);end
    end
   end
-  if(outputs!=1632||windows!=3||warm_checks!=3)begin errors=errors+1;$display("RETURN_COUNTS_FAIL outputs=%0d windows=%0d warm_checks=%0d",outputs,windows,warm_checks);end
+  if(outputs!=1632||windows!=3||warm_checks!=3||latency_min!=7||latency_max!=7)begin errors=errors+1;$display("RETURN_COUNTS_FAIL outputs=%0d windows=%0d warm_checks=%0d",outputs,windows,warm_checks);end
+  $display("RETURN_LATENCY samples=%0d minimum_edges=%0d maximum_edges=%0d",latency_samples,latency_min,latency_max);
   // Deliberate ordinal disagreement must trip the cache slip guard.
   check_nominal=0;drive(5,1,3);in_ordinal[8:6]=2;@(negedge cache_clk);
   drive(0,0,3);repeat(12)@(negedge cache_clk);
