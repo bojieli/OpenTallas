@@ -405,6 +405,7 @@ class Prog:
         self.gunit_rows = []
         self.svc = []
         self.notes = []
+        self.mu_ctx = False          # MU-S81/TOK: the layer's first V command carries the user context (context 1)
 
     def template(self, name, payload):
         if payload in self.templates:
@@ -480,7 +481,9 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
           for k in range(5)]
     tx = prog.template(f'{which}.XFIN_GO', ctl_payload(smask, 1, 0, xfin_go(eps)))
     t = t0
-    prog.vrow(eng, t, th, what=f'{which} HLOAD {sl}')
+    # MU-S81/TOK (--mu-ctx, default off = byte-identical): the HLOAD beat carries the user's context header
+    # body[159:108] = {user 10, pos 21, tok 21} (seq_host context 1; HLOAD's template leaves those bits 0)
+    prog.vrow(eng, t, th, ctx=1 if prog.mu_ctx else 0, what=f'{which} HLOAD {sl}' + (' +ctx' if prog.mu_ctx else ''))
     prog.events.append(dict(cycle=t + lat, inst=sl, port=cp['entry_port'],
                             dir='in', kind='CTL', tag=f'{which}.HLOAD', payload=f'template {th}'))
     t += BEAT['hload_slot']
@@ -533,7 +536,7 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, mu_ctx=False):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -541,6 +544,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
     sched = layer_schedule(tree, layer, wl)
     sl = sl if sl.startswith('u_') else f'u_{sl}'
     prog = Prog(die)
+    prog.mu_ctx = mu_ctx
     low = []
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
@@ -656,6 +660,7 @@ def main(argv=None):
     ap.add_argument('--die-src', default=None, help='an extracted die-ref tree (else git archive of --die-ref)')
     ap.add_argument('--workload', default=None, choices=('ar', 'mtp'))
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
+    ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     a = ap.parse_args(argv)
     if a.mu_cal:
         t = mu_slot_tables(json.loads(Path(a.mu_cal).read_text()), a.layer)
@@ -666,7 +671,7 @@ def main(argv=None):
         if a.layer not in LAYERS:
             return
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload)
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, mu_ctx=a.mu_ctx)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
