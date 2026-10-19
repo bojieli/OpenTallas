@@ -24,7 +24,7 @@
     43.2,
     43.2
    ],
-   "inst": "*g_lane[0].g_lv[0].g_half[0].u_ring"
+   "inst": "*g_lane?0?.g_lv?0?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -33,7 +33,7 @@
     172.8,
     43.2
    ],
-   "inst": "*g_lane[0].g_lv[0].g_half[1].u_ring"
+   "inst": "*g_lane?0?.g_lv?0?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -42,7 +42,7 @@
     302.4,
     43.2
    ],
-   "inst": "*g_lane[0].g_lv[1].g_half[0].u_ring"
+   "inst": "*g_lane?0?.g_lv?1?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -51,7 +51,7 @@
     43.2,
     86.4
    ],
-   "inst": "*g_lane[0].g_lv[1].g_half[1].u_ring"
+   "inst": "*g_lane?0?.g_lv?1?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -60,7 +60,7 @@
     172.8,
     86.4
    ],
-   "inst": "*g_lane[0].g_lv[2].g_half[0].u_ring"
+   "inst": "*g_lane?0?.g_lv?2?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -69,7 +69,7 @@
     302.4,
     86.4
    ],
-   "inst": "*g_lane[0].g_lv[2].g_half[1].u_ring"
+   "inst": "*g_lane?0?.g_lv?2?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -78,7 +78,7 @@
     43.2,
     129.6
    ],
-   "inst": "*g_lane[1].g_lv[0].g_half[0].u_ring"
+   "inst": "*g_lane?1?.g_lv?0?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -87,7 +87,7 @@
     172.8,
     129.6
    ],
-   "inst": "*g_lane[1].g_lv[0].g_half[1].u_ring"
+   "inst": "*g_lane?1?.g_lv?0?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -96,7 +96,7 @@
     302.4,
     129.6
    ],
-   "inst": "*g_lane[1].g_lv[1].g_half[0].u_ring"
+   "inst": "*g_lane?1?.g_lv?1?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -105,7 +105,7 @@
     43.2,
     259.2
    ],
-   "inst": "*g_lane[1].g_lv[1].g_half[1].u_ring"
+   "inst": "*g_lane?1?.g_lv?1?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -114,7 +114,7 @@
     172.8,
     259.2
    ],
-   "inst": "*g_lane[1].g_lv[2].g_half[0].u_ring"
+   "inst": "*g_lane?1?.g_lv?2?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -123,7 +123,7 @@
     302.4,
     259.2
    ],
-   "inst": "*g_lane[1].g_lv[2].g_half[1].u_ring"
+   "inst": "*g_lane?1?.g_lv?2?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -132,7 +132,7 @@
     43.2,
     302.4
    ],
-   "inst": "*g_lane[2].g_lv[0].g_half[0].u_ring"
+   "inst": "*g_lane?2?.g_lv?0?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -141,7 +141,7 @@
     172.8,
     302.4
    ],
-   "inst": "*g_lane[2].g_lv[0].g_half[1].u_ring"
+   "inst": "*g_lane?2?.g_lv?0?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -150,7 +150,7 @@
     302.4,
     302.4
    ],
-   "inst": "*g_lane[2].g_lv[1].g_half[0].u_ring"
+   "inst": "*g_lane?2?.g_lv?1?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -159,7 +159,7 @@
     43.2,
     345.6
    ],
-   "inst": "*g_lane[2].g_lv[1].g_half[1].u_ring"
+   "inst": "*g_lane?2?.g_lv?1?.g_half?1?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -168,7 +168,7 @@
     172.8,
     345.6
    ],
-   "inst": "*g_lane[2].g_lv[2].g_half[0].u_ring"
+   "inst": "*g_lane?2?.g_lv?2?.g_half?0?.u_ring"
   },
   {
    "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
@@ -177,7 +177,7 @@
     302.4,
     345.6
    ],
-   "inst": "*g_lane[2].g_lv[2].g_half[1].u_ring"
+   "inst": "*g_lane?2?.g_lv?2?.g_half?1?.u_ring"
   }
  ],
  "pins": {
@@ -230,7 +230,8 @@
    "tools/hdc_golden_v41.py",
    "tools/hgi_sim",
    "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
-   "physical/hbm_next/att4/p3_spvm_band.tcl"
+   "physical/hbm_next/att4/p3_spvm_band.tcl",
+   "tools/orfs_allcorner_spef.py"
   ],
   "benches": [
    {
