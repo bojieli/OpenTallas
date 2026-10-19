@@ -13,6 +13,11 @@
 //   the latency user's beats (and the background) reach A's ri at the SAME cycles and bits as the single-user RA run;
 //   no fault in the main phase; then F1 two landed messages without a replay (write to a full slot) -> A fault,
 //   F2 replay of an empty slot -> B fault, F3 ab = 1 for user 0 -> P fault.
+// RETURN phase (MU-S81-2/RX 10-19: the A/B master's RX = post-group endpoint, pair-B merge + land on both pairs): after the
+//   main phase dies A and B transmit back to P one after the other (static calendar, no pair collision): A untagged
+//   NB beats, B user 3 cut-through, B user 4 land, A user 5 cut-through, A user 2 land.  P's ri must carry the cut-through
+//   / untagged beats bit-exact in order with mu_rt, and P's ml_wv / ml_wd the landed beats (tag kept), no fault.
+// Mutant +define+OT_S81SL_LEP_MUT_STALEHD (RX head register without show-ahead) must fail.
 // Mutants: +define+OT_S81SL_LEP_MUT_TAGDROP, +define+OT_S81SL_LEP_MUT_WRONGCOPY, +define+OT_DSDV_MU_LAND_MUT_OVR,
 //          +define+OT_S81SL_LEP_MUT_LANDCUT (RX side: dies A / B).
 // Verdict: "PASS lep_mu ..." or "FAIL lep_mu ...".
@@ -23,6 +28,8 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     // ------------------------------------------------------------------ die P (pre-group, AB_EN 1)
     reg [1103:0] p_ro = 0, rp_ro = 0; reg [33:0] p_mc = 0; reg [10:0] a_rc = 0, b_rc = 0;
+    reg [1103:0] a_ro = 0, b_ro = 0; reg [33:0] a_mc = 0, b_mc = 0;      // RETURN phase: dies A / B transmit to P
+    wire p_mwv; wire [1103:0] p_mwd;
     wire [1103:0] p_ri, a_ri, b_ri, rp_ri, ra_ri; wire [31:0] a_rt, b_rt, p_rt; wire p_f, a_f, b_f, rp_f, ra_f;
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
@@ -31,7 +38,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         .lo0_v(plv[0]), .lo0_r(plr[0]), .lo0_d(pld[0 +: 553]), .lo1_v(plv[1]), .lo1_r(plr[1]), .lo1_d(pld[553 +: 553]),
         .li0_v(piv[0]), .li0_r(pir[0]), .li0_d(pid[0 +: 553]), .li1_v(piv[1]), .li1_r(pir[1]), .li1_d(pid[553 +: 553]),
         .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]),
-        .mu_c(p_mc), .mu_rt(p_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+        .mu_c(p_mc), .mu_rt(p_rt), .ml_wv(p_mwv), .ml_wd(p_mwd), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
         .lo2_v(plv[2]), .lo2_r(plr[2]), .lo2_d(pld[1106 +: 553]), .lo3_v(plv[3]), .lo3_r(plr[3]), .lo3_d(pld[1659 +: 553]),
         .li2_v(piv[2]), .li2_r(pir[2]), .li2_d(pid[1106 +: 553]), .li3_v(piv[3]), .li3_r(pir[3]), .li3_d(pid[1659 +: 553]),
         .rxvb(prxv[3:2]), .l2_f(pf[8:6]), .l3_f(pf[11:9]), .fault(p_f));
@@ -46,11 +53,11 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     `define TB_RXDIE(X, LP) \
     wire [1:0] X``lv, X``lr, X``iv, X``ir, X``rxv; wire [2*553-1:0] X``ld, X``id; wire [5:0] X``fl; \
     wire [1023:0] X``tx, X``rx; wire [3:0] X``st; wire X``mwv, X``mrv, X``mf; wire [1103:0] X``mwd, X``mrd; \
-    ot_s81sl_lep_mu_a #(.SRAM(1), .NB(NB)) l``X (.clk(clk), .rst_n(rst_n), .ro(1104'd0), .ri(X``_ri), \
+    ot_s81sl_lep_mu_a #(.SRAM(1), .NB(NB)) l``X (.clk(clk), .rst_n(rst_n), .ro(X``_ro), .ri(X``_ri), \
         .lo0_v(X``lv[0]), .lo0_r(X``lr[0]), .lo0_d(X``ld[0 +: 553]), .lo1_v(X``lv[1]), .lo1_r(X``lr[1]), .lo1_d(X``ld[553 +: 553]), \
         .li0_v(X``iv[0]), .li0_r(X``ir[0]), .li0_d(X``id[0 +: 553]), .li1_v(X``iv[1]), .li1_r(X``ir[1]), .li1_d(X``id[553 +: 553]), \
         .rxv(X``rxv), .sl_f(1'b0), .l0_f(X``fl[2:0]), .l1_f(X``fl[5:3]), \
-        .mu_c(34'd0), .mu_rt(X``_rt), .ml_wv(X``mwv), .ml_wd(X``mwd), .ml_rv(X``mrv), .ml_rd(X``mrd), .ml_f(X``mf), \
+        .mu_c(X``_mc), .mu_rt(X``_rt), .ml_wv(X``mwv), .ml_wd(X``mwd), .ml_rv(X``mrv), .ml_rd(X``mrd), .ml_f(X``mf), \
         .fault(X``_f)); \
     dsdv_mu_land #(.NB(NB), .NS(1), .SRAM(1)) m``X (.clk(clk), .rst_n(rst_n), .wv(X``mwv), .wd(X``mwd), .rc(X``_rc), \
         .rv(X``mrv), .rd(X``mrd), .fault(X``mf)); \
@@ -104,6 +111,8 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     // latency-user identity: A's ri vs RA's ri for the reference traffic (background + user 0), cycle and bits
     reg [1103:0] ida [0:1023]; integer ica [0:1023]; reg [1103:0] idr [0:1023]; integer icr [0:1023];
     integer nia = 0, nir = 0, mtag = 0;
+    reg [1103:0] eqp [0:1023]; reg [31:0] etp [0:1023]; reg [1103:0] eqm [0:1023];   // RETURN: P ri / P landing port
+    integer np = 0, rpn = 0, nm = 0, rmn = 0;
     always @(posedge clk) begin
         if (a_ri[0]) begin
             if (ra >= na || a_ri !== eqa[ra] || a_rt !== eta[ra]) begin
@@ -123,7 +132,21 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
             rb = rb + 1;
         end
         if (ra_ri[0]) begin idr[nir] = ra_ri; icr[nir] = cyc; nir = nir + 1; end
-        if (p_ri[0]) bad = bad + 1;                                    // nothing travels back to P
+        if (p_ri[0]) begin                                            // RETURN phase only
+            if (rpn >= np || p_ri !== eqp[rpn] || p_rt !== etp[rpn]) begin
+                bad = bad + 1;
+                if (bad < 8) $display("MISMATCH P beat %0d cyc %0d: got %h.. rt %h exp %h.. rt %h", rpn, cyc, p_ri[63:0], p_rt,
+                    eqp[rpn][63:0], etp[rpn]);
+            end
+            rpn = rpn + 1;
+        end
+        if (p_mwv) begin
+            if (rmn >= nm || p_mwd !== eqm[rmn]) begin
+                bad = bad + 1;
+                if (bad < 8) $display("MISMATCH P landed beat %0d cyc %0d: got %h..", rmn, cyc, p_mwd[63:0]);
+            end
+            rmn = rmn + 1;
+        end
     end
     function automatic [1103:0] xb(input integer dummy);              // an XB ring beat (spare bits 0, as ot_s81sl_vq)
         integer i; reg [1103:0] b;
@@ -172,6 +195,33 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
             @(negedge clk); a_rc = 0; b_rc = 0;
         end
     endtask
+    task automatic send_ret(input integer onb, input integer uu, input integer lnd, input integer tgd);
+        integer kk; reg [1103:0] bs;
+        begin
+            if (tgd != 0) begin
+                @(negedge clk); if (onb != 0) b_mc = {21'(200 + uu), 10'(uu), 1'(lnd), 1'b0, 1'b1};
+                                else a_mc = {21'(200 + uu), 10'(uu), 1'(lnd), 1'b0, 1'b1};
+                @(negedge clk); a_mc = 0; b_mc = 0;
+                repeat (3) @(negedge clk);
+            end
+            kk = 0;
+            while (kk < NB) begin
+                a_ro = 0; b_ro = 0;
+                if (($urandom % 100) < 60) begin
+                    bt = xb(0); if (onb != 0) b_ro = bt; else a_ro = bt;
+                    if (tgd != 0 && lnd != 0) begin
+                        bs = bt; bs[1045 +: 33] = {21'(200 + uu), 10'(uu), 1'b1, 1'b1}; eqm[nm] = bs; nm = nm + 1;
+                    end else begin
+                        eqp[np] = bt; etp[np] = (tgd != 0) ? {1'b1, 10'(uu), 21'(200 + uu)} : 32'd0; np = np + 1;
+                    end
+                    kk = kk + 1;
+                end
+                @(negedge clk);
+            end
+            a_ro = 0; b_ro = 0;
+            repeat (300) @(negedge clk);                              // drain: the next sender's beats never collide
+        end
+    endtask
     initial begin
         void'($urandom(SEED));
         for (u = 0; u < 16; u = u + 1) lqn[u] = 0;
@@ -199,6 +249,8 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
             end
         join
         while (cyc < T0 + 6 * S) @(negedge clk);
+        // ---- RETURN phase: A / B -> P (pair A / pair B of the A/B master), one sender at a time
+        send_ret(0, 0, 0, 0); send_ret(1, 3, 0, 1); send_ret(1, 4, 1, 1); send_ret(0, 5, 0, 1); send_ret(0, 2, 1, 1);
         f_main = {p_f, a_f, b_f, rp_f, ra_f, ma.fault, mb.fault};
         // ---- latency-user identity (A vs single-user RA)
         idok = (nia == nir && nia == 40 + NB) ? 1 : 0;
@@ -215,13 +267,14 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         @(negedge clk); p_mc = {21'd5, 10'd0, 1'b0, 1'b1, 1'b1}; @(negedge clk); p_mc = 0;   // F3: ab = 1 for user 0
         repeat (20) @(negedge clk);
         fp3 = p_f;
-        $display("LEP_MU_STATS A recv %0d/%0d B recv %0d/%0d mismatches %0d | latency user identity %0d (A %0d beats, ref %0d) | main faults %b | F1 full-slot %0d F2 empty-replay %0d F3 ab-user0 %0d",
-            ra, na, rb, nb, bad, idok, nia, nir, f_main[6:0], fa1, fb2, fp3);
-        if (bad == 0 && ra == na && rb == nb && na == 40 + 3 * NB && nb == 3 * NB && idok && f_main[6:0] == 0 && fa1 && fb2 && fp3)
-            $display("PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), %0d + %0d beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (%0d beats), F1/F2/F3 faulted", ra, rb, nia);
+        $display("LEP_MU_STATS A recv %0d/%0d B recv %0d/%0d mismatches %0d | latency user identity %0d (A %0d beats, ref %0d) | main faults %b | F1 full-slot %0d F2 empty-replay %0d F3 ab-user0 %0d | return P ri %0d/%0d landed %0d/%0d",
+            ra, na, rb, nb, bad, idok, nia, nir, f_main[6:0], fa1, fb2, fp3, rpn, np, rmn, nm);
+        if (bad == 0 && ra == na && rb == nb && na == 40 + 3 * NB && nb == 3 * NB && idok && f_main[6:0] == 0 && fa1 && fb2 && fp3
+            && rpn == np && np == 3 * NB && rmn == nm && nm == 2 * NB)
+            $display("PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), %0d + %0d beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (%0d beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: %0d cut-through and %0d landed beats exact", ra, rb, nia, rpn, rmn);
         else
-            $display("FAIL lep_mu: recv A %0d/%0d B %0d/%0d mismatches %0d identity %0d main faults %b F1 %0d F2 %0d F3 %0d",
-                ra, na, rb, nb, bad, idok, f_main[6:0], fa1, fb2, fp3);
+            $display("FAIL lep_mu: recv A %0d/%0d B %0d/%0d mismatches %0d identity %0d main faults %b F1 %0d F2 %0d F3 %0d return P %0d/%0d L %0d/%0d",
+                ra, na, rb, nb, bad, idok, f_main[6:0], fa1, fb2, fp3, rpn, np, rmn, nm);
         $finish;
     end
     initial begin #(0.8333 * (WAIT + 12 * S + 20000)); $display("FAIL lep_mu: TIMEOUT recv A %0d/%0d B %0d/%0d", ra, na, rb, nb); $finish; end

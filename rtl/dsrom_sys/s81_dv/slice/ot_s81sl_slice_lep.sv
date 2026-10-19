@@ -87,6 +87,11 @@
 //   endpoint, so a destination field needs a per-destination link layer inside the frozen tile.
 // Mutants (bench only): OT_S81SL_LEP_MUT_TAGDROP (TX window does not stamp), OT_S81SL_LEP_MUT_WRONGCOPY (ab ignored: all
 // beats on pair A), OT_S81SL_LEP_MUT_LANDCUT (RX ignores the land bit: landed beats cut through to ri; MU-S81b).
+// MU-S81-2/RX (10-19, CTS gates: rpc -> 8:1 RX row mux -> tag / land decode -> 1,103-bit select fanout -> rid missed
+// setup by 71 ps (copy-A master) / 575 ps (A/B master: + pair-B mux and ~300 um)): MU_EN 1 only -- a show-ahead head
+// register per RX lane (head row from flops), a land bit pre-decoded per FIFO row, rid = one AO222 per bit with the
+// selects duplicated per column group.  Same cycles and bits; MU_EN 0 logic untouched.  Mutant
+// OT_S81SL_LEP_MUT_STALEHD (head register loads the old pointer's row: stale head after a pop / write).
 module ot_s81sl_lep_core #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
@@ -296,6 +301,7 @@ module ot_s81sl_lep_core #(
     localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
     wire [NL-1:0] rne, rxf; wire [NL*(H+1)-1:0] rhd; wire [NL-1:0] lir;
+    wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
     wire [1:0] relp;                                   // pair releases (pair B only at AB_EN 1)
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
     assign relp[0] = rne[0];
@@ -334,13 +340,51 @@ module ot_s81sl_lep_core #(
             dq <= li_d[t * (H + 1) +: H + 1];
             for (j = 0; j < DR; j = j + 1) if (we[j]) mem[j] <= dq;
         end
-        for (c = 0; c < RREP; c = c + 1) begin : g_c
+        // MU_EN 0: the head is read combinationally from mem[rpc] (pre-MU structure, unchanged; loop empty at MU_EN 1)
+        for (c = 0; c < ((MU_EN != 0) ? 0 : RREP); c = c + 1) begin : g_c
             localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
             if (LO < H + 1) begin : g_on
                 (* keep = "true" *) reg [AR-1:0] rpc;
                 always @(posedge clk or negedge rnx) if (!rnx) rpc <= 0; else rpc <= rp_nx;
                 wire [H:0] row = mem[rpc];
                 assign rhd[t * (H + 1) + LO +: HI - LO] = row[HI-1:LO];
+            end
+        end
+        // MU-S81-2/RX (10-19): SHOW-AHEAD head register (MU_EN 1).  hd = mem[rp] at every cycle, from flops: on each edge
+        // it loads the row the pointer will hold (rp_nx), or the landing word dq when that row is written on the same
+        // edge (registered one-hot enables we).  Same FIFO order, nz timing and full / empty faults; 0 added cycles.
+        // The pointer copy + increment is replicated per column group (as RREP above); pop = this pair's release (nz
+        // flops of the pair only), so rp_nx -> 8:1 row mux -> hd stays inside the lane.  hk = a PRE-DECODED land bit of
+        // the head row (stored per row at write): lane 0 of a pair = XB / XQ ring beat, lane 1 = tag && land bits.
+        if (MU_EN != 0) begin : g_sa
+            wire kd = (t % 2 == 0) ? (dq[0] && (dq[3:1] == K_XB || dq[3:1] == K_XQ)) : (dq[TG - H] && dq[TG + 1 - H]);
+            reg [DR-1:0] mk; reg hk;
+            integer jk;
+            always @(posedge clk) begin
+                for (jk = 0; jk < DR; jk = jk + 1) if (we[jk]) mk[jk] <= kd;
+`ifdef OT_S81SL_LEP_MUT_STALEHD
+                hk <= mk[rp];
+`else
+                hk <= we[rp_nx] ? kd : mk[rp_nx];
+`endif
+            end
+            assign rhk[t] = hk;
+            for (c = 0; c < RREP; c = c + 1) begin : g_h
+                localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
+                if (LO < H + 1) begin : g_on
+                    (* keep = "true" *) reg [AR-1:0] rpc;
+                    wire [AR-1:0] rpn = pop ? ((rpc == AR'(DR - 1)) ? '0 : rpc + 1'b1) : rpc;
+                    reg [HI-LO-1:0] hd;
+                    always @(posedge clk or negedge rnx) if (!rnx) rpc <= 0; else rpc <= rpn;
+                    wire [H:0] row = mem[rpn];
+                    always @(posedge clk)
+`ifdef OT_S81SL_LEP_MUT_STALEHD
+                        hd <= mem[rpc][HI-1:LO];               // MUTANT: no show-ahead (head of the OLD pointer / old row)
+`else
+                        hd <= we[rpn] ? dq[HI-1:LO] : row[HI-1:LO];
+`endif
+                    assign rhd[t * (H + 1) + LO +: HI - LO] = hd;
+                end
             end
         end
         assign rne[t] = nz; assign lir[t] = cr; assign rxf[t] = f;
@@ -374,7 +418,7 @@ module ot_s81sl_lep_core #(
     always @(posedge clk or negedge rnx)
         if (!rnx) riv <= 1'b0;
         else riv <= rel && h0[0];
-    assign mu_rt = 32'd0; assign ml_wv = 1'b0; assign ml_wd = 1104'd0; assign mcol_w = 1'b0;
+    assign mu_rt = 32'd0; assign ml_wv = 1'b0; assign ml_wd = 1104'd0; assign mcol_w = 1'b0; assign rhk = '0;
     end else begin : g_rxm
     // tagged = an XB / XQ ring beat with the tag bit; land = 1 -> landing leaf, else ri (tag stripped, tag on mu_rt)
     function automatic [1103:0] strip(input [1103:0] b);
@@ -385,16 +429,44 @@ module ot_s81sl_lep_core #(
     endfunction
     reg mrv, mcol, mwv; reg [1103:0] mrd, mwd; reg [31:0] rtq;
     always @(posedge clk) mrd <= ml_rd;
-    wire rr_ring = rel && h0[0];
+    // MU-S81-2/RX: selects straight from the show-ahead flops.  Per pair X: gX = X releases a ring beat (pair A wins a
+    // collision, as rpb), lX = its pre-decoded land bit (lane 0 XB / XQ ring beat && lane 1 tag && land); sX = deliver
+    // X's beat on ri, sM = deliver the replayed beat (cut-through wins a collision, mcol fault as before).
+    wire [1103:0] bA = {rhd[2*H:H+1], rhd[H-1:0]};     // pair A frame (lane 1 high half, lane 0 low half)
+    wire lA = rhk[0] && rhk[1];
+    wire gA = relp[0] && rhd[0];
+    wire [1103:0] bB; wire lB, gB;
+    if (NL == 4) begin : g_mb
+        assign bB = {rhd[4*H+2:3*H+3], rhd[3*H+1:2*H+2]};
+        assign lB = rhk[2] && rhk[3];
+        assign gB = rpb && rhd[2*(H+1)];               // rpb: nz flops only
+    end else begin : g_nmb
+        assign bB = 1104'd0; assign lB = 1'b0; assign gB = 1'b0;
+    end
 `ifdef OT_S81SL_LEP_MUT_LANDCUT
-    wire rr_land = 1'b0;                               // MUTANT: land bit ignored (landed beats cut through to ri)
+    wire ldA = 1'b0, ldB = 1'b0;                       // MUTANT: land bit ignored (landed beats cut through to ri)
 `else
-    wire rr_land = rr_ring && tagd(rb) && rb[TG + 1];
+    wire ldA = lA, ldB = lB;
 `endif
-    wire rr_dlv = rr_ring && !rr_land;
-    wire [1103:0] db = rr_dlv ? rb : mrd;               // delivered beat: cut-through or replayed
+    wire rr_land = (gA && ldA) || (gB && ldB);
+    wire rr_dlv = (gA && !ldA) || (gB && !ldB);
+    wire [1103:0] db = rr_dlv ? rb : mrd;               // delivered beat (tag fields only: rtq)
+    // rid: one AO222 per bit, {sA, sB, sM} duplicated per column group (keep) so each select net drives ~70 bits
+    localparam integer OREP = 16, OW = (1103 + OREP - 1) / OREP;
+    wire [1103:1] nrid;
+    wire [1103:0] sbA = strip(bA), sbB = strip(bB), sbM = strip(mrd);
+    for (c = 0; c < OREP; c = c + 1) begin : g_o
+        localparam integer LO = 1 + c * OW, HI = (1 + (c + 1) * OW > 1104) ? 1104 : 1 + (c + 1) * OW;
+        if (LO < 1104) begin : g_on
+            (* keep = "true" *) wire sA = gA && !ldA;
+            (* keep = "true" *) wire sB = gB && !ldB;
+            (* keep = "true" *) wire sM = mrv && !(gA && !ldA) && !(gB && !ldB);
+            assign nrid[HI-1:LO] = ({(HI - LO){sA}} & sbA[HI-1:LO]) | ({(HI - LO){sB}} & sbB[HI-1:LO])
+                                 | ({(HI - LO){sM}} & sbM[HI-1:LO]);
+        end
+    end
     always @(posedge clk) begin
-        rid <= (rr_dlv || mrv) ? strip(db) >> 1 : 1103'd0;
+        rid <= nrid;
         mwd <= rb;
         rtq <= tagd(db) ? {1'b1, db[TG + 2 +: 10], db[TG + 12 +: 21]} : 32'd0;
     end
