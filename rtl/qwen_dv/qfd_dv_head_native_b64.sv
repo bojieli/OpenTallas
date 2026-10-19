@@ -783,7 +783,7 @@ module qfd_dv_head_sram_delay #(parameter integer W=32,D=3)(
 `endif
 endmodule
 module qfd_dv_head_sram_delay_bank #(parameter integer D=3,BANK_ID=0,USED_BITS=64)(
- input wire clk,rst_n,input wire[63:0] d,output reg[63:0] q
+ input wire clk,rst_n,input wire[63:0] d,output wire[63:0] q
 );
  (* keep *) reg[4:0] wp;
  `ifdef OT_HEAD_RING_AGE_MUT
@@ -797,7 +797,9 @@ module qfd_dv_head_sram_delay_bank #(parameter integer D=3,BANK_ID=0,USED_BITS=6
  ot_sram_1r1w_32x64_m1 u_mem(.clk(clk),
   .r_ce_in(1'b1),.r_addr_in(rp),.rd_out(rq),
   .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(d),.w_mask_in(64'hffffffffffffffff >> (64-USED_BITS)));
- always @(posedge clk) q<=rq;
+ reg[USED_BITS-1:0] used_q;
+ assign q={{(64-USED_BITS){1'b0}},used_q};
+ always @(posedge clk) used_q<=rq[USED_BITS-1:0];
 endmodule
 
 // Finite narrow ring, no data reset or holding chain. D1/2 intentionally short.

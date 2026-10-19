@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_MODEL",
+  "base": "ea591f72d",
+  "change": "Capture only USED_BITS live native SRAM output lanes; zeroextend unconsumed high lanes. Macro geometry/pins/clock/masks/depth unchanged.",
+  "original_data_used_bits": [
+    141,
+    134,
+    36,
+    127,
+    127,
+    95
+  ],
+  "data_banks": 13,
+  "raw_bank_capture_FF": 832,
+  "new_live_capture_FF": 660,
+  "capture_FF_delta": -172,
+  "expected_total_FF": 6719,
+  "macros": 15,
+  "data_edges_added": 0,
+  "boot_edges_added": 0,
+  "all_used_bit_data_equivalence": "old CONTROL_SAFE0 pretrim vs new CONTROL_SAFE1 trim, all30outputsignals6000cycles required",
+  "production": "ExistingfullW10/mutants test ea591 only; trim successor distinct, cannot inherit sourcebound productionPASS automatically"
+}
