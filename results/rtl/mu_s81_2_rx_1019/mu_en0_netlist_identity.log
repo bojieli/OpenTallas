@@ -1,0 +1,44 @@
+DIFFER ot_s81sl_lep
+489c489
+<     .Y(_023_[8:0])
+---
+>     .Y(_025_[8:0])
+504c504
+<     .Y(_026_[8:0])
+---
+>     .Y(_024_[8:0])
+632c632
+<     else if (\u.g_tx[1].iss ) \u.g_tx[1].rp  <= _025_[8:0];
+---
+>     else if (\u.g_tx[1].iss ) \u.g_tx[1].rp  <= _026_[8:0];
+664c664
+<     else if (\u.g_tx[1].u_m.we ) \u.g_tx[1].u_m.wa  <= _024_[8:0];
+---
+>     else if (\u.g_tx[1].u_m.we ) \u.g_tx[1].u_m.wa  <= _023_[8:0];
+1039c1039
+<   assign _024_[8:0] = _055_ ? 9'h000 : _026_[8:0];
+---
+>   assign _023_[8:0] = _055_ ? 9'h000 : _024_[8:0];
+DIFFER ot_s81sl_lep_nh
+415c415
+<     .Y(_020_[8:0])
+---
+>     .Y(_018_[8:0])
+445c445
+<     .Y(_018_[8:0])
+---
+>     .Y(_024_[8:0])
+505c505
+<     .Y(_022_[8:0])
+---
+>     .Y(_021_[8:0])
+520c520
+<     .Y(_024_[8:0])
+---
+>     .Y(_023_[8:0])
+570c570
+<     else if (\u.g_tx[0].iss ) \u.g_tx[0].rp  <= _021_[8:0];
+---
+>     else if (\u.g_tx[0].iss ) \u.g_tx[0].rp  <= _020_[8:0];
+# canonical (anonymous yosys nets _N_ renamed, lines sorted) md5: lep ca881fe55f1c old = new, lep_nh 6f9446e29505 old = new: same cells, registers and names; only yosys auto-net numbering differs
+# script: yosys synth -flatten -run begin:fine; opt_clean -purge; write_verilog -noattr, origin/main lep source vs ddc529908
