@@ -15,9 +15,12 @@
 // LOCK = 1 (S-QTIES QC-12, 10-18): a shadow qkd_d2d_static #(.NTX(3)) (port-3 TX lane removed) runs in lockstep with
 //      u_k (NTX 4, the closed r7q form) on identical inputs; every output is compared every edge (D2D_LOCK_MISMATCH).
 //      LMUT 1: shadow TX write slot +1 (MUT 1); LMUT 2: shadow embedding (port 2) producer one edge late -> must FAIL.
+// KDLY (HKV-D2D18 10-19): KDLY extra edges between the KV attention-record producer (port 0) and the KV end's att_tx
+//      pins = the die seam stages; run_d2d_dies.sh compiles --txd-k (1+KDLY),2,1,1 so QKD_D2D_TXDP is the die's TXDP
+//      (KDLY 21 + pinreg 2 -> port 0 = 24: D2D_TXDP_K 32'h03030418, the KV die GEN with OT_KV_ATTN_LAND).
 module tb_qwen_d2d_dies;
     `include "txdp.svh"   // QXF-LINK F4: the masters' TXDP from the same compile (d2d_link_calendar.py)
-    parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 6, BAD_LAYER = 4, LOCK = 0, LMUT = 0;
+    parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 6, BAD_LAYER = 4, LOCK = 0, LMUT = 0, KDLY = 0;
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -50,7 +53,7 @@ module tb_qwen_d2d_dies;
     integer tok = 0, tstart = 0, trel = 0, emb_ok = 0, tok_res = 0;
     always @* trel = cyc - tstart;
     wire c_txs0, c_rxe0, c_rxs0, k_txs0, k_rxe0, k_rxs0; wire [3:0] c_tk, k_tk, c_rk, k_rk; wire [4:0] c_tb, k_tb, c_rb, k_rb;
-    wire [FW-1:0] c_rxp, k_rxp; wire c_tv0, k_tv0; wire [FW-1:0] c_tp0, k_tp0;
+    wire [FW-1:0] c_rxp, k_rxp; wire c_tv0, k_tv0, k_tv0r; wire [FW-1:0] c_tp0, k_tp0, k_tp0r;
     wire c_abort, k_abort, c_f, k_f; wire [7:0] c_tf, h_tf; wire [31:0] k_rcyc;
     wire [1:0] h_lu; wire h_ld, h_ls, h_rt; wire [3:0] h_ad;
     wire h_kvd, h_vmd, h_cod, h_hd, h_cb, h_kf, h_ar, h_cf, h_ea, h_wv, h_rxv; wire [1:0] h_sk; wire [547:0] h_rx;
@@ -167,6 +170,18 @@ module tb_qwen_d2d_dies;
             if (u_k.u_core.u_end.tx_slot[3]) lock_tx[3] = lock_tx[3] + 1;
         end
     end
+    // KV port-0 die seam stages (KDLY edges, record producer -> att_tx pins)
+    generate if (KDLY == 0) begin : g_kdly0
+        assign k_tv0 = k_tv0r; assign k_tp0 = k_tp0r;
+    end else begin : g_kdly
+        reg kd_v [0:KDLY-1]; reg [FW-1:0] kd_p [0:KDLY-1]; integer kq;
+        initial for (kq = 0; kq < KDLY; kq = kq + 1) begin kd_v[kq] = 1'b0; kd_p[kq] = '0; end
+        always @(posedge ck) begin
+            kd_v[0] <= k_tv0r; kd_p[0] <= k_tp0r;
+            for (kq = 1; kq < KDLY; kq = kq + 1) begin kd_v[kq] <= kd_v[kq-1]; kd_p[kq] <= kd_p[kq-1]; end
+        end
+        assign k_tv0 = kd_v[KDLY-1]; assign k_tp0 = kd_p[KDLY-1];
+    end endgenerate
     // real KVN producer: the compute die's fixed-slot KVN transport (2 seats), words pushed 1 cycle before their slot
     wire kvn_push = lay >= 0 && rel >= 41 && rel < 45;
     qfd_kvn_static_transport u_kvt (.ck(ck), .rst_n(rst_n & ~c_eb), .word_v(kvn_push), .word_tag({3'd2, 8'(rel - 41)}),
@@ -205,7 +220,7 @@ module tb_qwen_d2d_dies;
     qkd_native_attention_record #(.KV_SIDE(1)) u_ka (.ck(ck), .rst_n(rst_n & ~k_eb),
         .tx_event(k_r_ev), .tx_expected(k_txs0), .tx_kind(k_r_kind), .tx_expected_kind(k_tk),
         .tx_epoch(op_epoch), .tx_expected_epoch(op_epoch), .tx_layer(op_layer), .tx_expected_layer(op_layer),
-        .tx_beat(k_r_beat), .tx_expected_beat(k_tb), .tx_data(k_r_data), .tx_valid(k_tv0), .tx_payload(k_tp0),
+        .tx_beat(k_r_beat), .tx_expected_beat(k_tb), .tx_data(k_r_data), .tx_valid(k_tv0r), .tx_payload(k_tp0r),
         .rx_event(k_rxe0), .rx_expected(k_rxs0), .rx_payload(k_rxp), .rx_expected_kind(k_rk),
         .rx_expected_epoch(op_epoch), .rx_expected_layer(op_layer), .rx_expected_beat(k_rb),
         .rx_valid(ka_rv), .rx_kind(ka_rk), .rx_epoch(ka_re), .rx_layer(ka_rl), .rx_beat(ka_rb), .rx_data(ka_rd),
