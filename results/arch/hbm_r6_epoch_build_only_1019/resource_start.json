@@ -1,0 +1,13 @@
+{
+  "host": "ot-epyc5",
+  "meminfo": "MemTotal:       1188103344 kB\nMemFree:        911479164 kB\nMemAvailable:   1139507888 kB\nBuffers:        13313764 kB\nCached:         202342324 kB\nSwapCached:         7544 kB\nActive:         26489236 kB\nInactive:       210906084 kB\nActive(anon):   13957968 kB\nInactive(anon): 11639212 kB\nActive(file):   12531268 kB\nInactive(file): 199266872 kB\nUnevictable:       12200 kB\nMlocked:            9128 kB\nSwapTotal:      142606328 kB\nSwapFree:       142544724 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:             21944 kB\nWriteback:             0 kB\nAnonPages:      21758688 kB\nMapped:           918304 kB\nShmem:           3851452 kB\nKReclaimable:   23536176 kB\nSlab:           27722644 kB\nSReclaimable:   23536176 kB\nSUnreclaim:      4186468 kB\nKernelStack:       29584 kB\nPageTables:        74216 kB\nSecPageTables:     43356 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    736658000 kB\nCommitted_AS:   30690160 kB\nVmallocTotal:   13743895347199 kB\nVmallocUsed:      176020 kB\nVmallocChunk:          0 kB\nPercpu:           650752 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:   8194048 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:   7071744 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:        47283784 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      433244 kB\nDirectMap2M:    18018304 kB\nDirectMap1G:    1189085184 kB\n",
+  "disk": {
+    "total": 3149225934848,
+    "used": 2987098112,
+    "free": 3146222059520
+  },
+  "threads": 8,
+  "reserved_gb": 320,
+  "additional_scratch_gb": 60,
+  "cache": "clean normal build; original obj_r6 untouched"
+}
