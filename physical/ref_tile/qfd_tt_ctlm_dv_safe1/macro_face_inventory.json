@@ -1,0 +1,137 @@
+{
+  "schema": "opentallas.literal_macro_face_inventory.v1",
+  "literal_limit_pins_per_um": 6,
+  "escape_qualification": false,
+  "macros": [
+    {
+      "master": "ot_sram_1r1w_64x512_m1_r2c2",
+      "lef": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+      "sha256": "36346864c98588e41d85c8c9f095ce69bfe477119633ca9458aef3ee41127070",
+      "size_um": [
+        171.288,
+        77.76
+      ],
+      "signal_clock_rects_by_layer": {
+        "M4": 1585
+      },
+      "faces": {
+        "W": {
+          "signal_clock_pins": 793,
+          "face_length_um": 77.76,
+          "pins_per_um": 10.19804526748971,
+          "literal_pass": false,
+          "min_center_pitch_um": 0.09599999999998943,
+          "occupied_center_span_um": 76.032,
+          "occupied_center_density_pins_per_um": 10.429819023569024,
+          "pin_layers": [
+            "M4"
+          ],
+          "minimum_spread_length_for_literal6_um": 132.16666666666666
+        },
+        "E": {
+          "signal_clock_pins": 792,
+          "face_length_um": 77.76,
+          "pins_per_um": 10.185185185185185,
+          "literal_pass": false,
+          "min_center_pitch_um": 0.09599999999998943,
+          "occupied_center_span_um": 75.93599999999999,
+          "occupied_center_density_pins_per_um": 10.42983565107459,
+          "pin_layers": [
+            "M4"
+          ],
+          "minimum_spread_length_for_literal6_um": 132.0
+        },
+        "N": {
+          "signal_clock_pins": 0,
+          "face_length_um": 171.288,
+          "pins_per_um": 0.0,
+          "literal_pass": true,
+          "min_center_pitch_um": null,
+          "occupied_center_span_um": 0,
+          "occupied_center_density_pins_per_um": null,
+          "pin_layers": [],
+          "minimum_spread_length_for_literal6_um": 0.0
+        },
+        "S": {
+          "signal_clock_pins": 0,
+          "face_length_um": 171.288,
+          "pins_per_um": 0.0,
+          "literal_pass": true,
+          "min_center_pitch_um": null,
+          "occupied_center_span_um": 0,
+          "occupied_center_density_pins_per_um": null,
+          "pin_layers": [],
+          "minimum_spread_length_for_literal6_um": 0.0
+        }
+      }
+    },
+    {
+      "master": "ot_rom_4096x72_m8",
+      "lef": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+      "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
+      "size_um": [
+        38.016,
+        62.91
+      ],
+      "signal_clock_rects_by_layer": {
+        "M4": 86
+      },
+      "faces": {
+        "W": {
+          "signal_clock_pins": 43,
+          "face_length_um": 62.91,
+          "pins_per_um": 0.683516134159911,
+          "literal_pass": true,
+          "min_center_pitch_um": 0.09599999999999831,
+          "occupied_center_span_um": 4.031999999999999,
+          "occupied_center_density_pins_per_um": 10.664682539682541,
+          "pin_layers": [
+            "M4"
+          ],
+          "minimum_spread_length_for_literal6_um": 7.166666666666667
+        },
+        "E": {
+          "signal_clock_pins": 43,
+          "face_length_um": 62.91,
+          "pins_per_um": 0.683516134159911,
+          "literal_pass": true,
+          "min_center_pitch_um": 0.09599999999999831,
+          "occupied_center_span_um": 4.031999999999999,
+          "occupied_center_density_pins_per_um": 10.664682539682541,
+          "pin_layers": [
+            "M4"
+          ],
+          "minimum_spread_length_for_literal6_um": 7.166666666666667
+        },
+        "N": {
+          "signal_clock_pins": 0,
+          "face_length_um": 38.016,
+          "pins_per_um": 0.0,
+          "literal_pass": true,
+          "min_center_pitch_um": null,
+          "occupied_center_span_um": 0,
+          "occupied_center_density_pins_per_um": null,
+          "pin_layers": [],
+          "minimum_spread_length_for_literal6_um": 0.0
+        },
+        "S": {
+          "signal_clock_pins": 0,
+          "face_length_um": 38.016,
+          "pins_per_um": 0.0,
+          "literal_pass": true,
+          "min_center_pitch_um": null,
+          "occupied_center_span_um": 0,
+          "occupied_center_density_pins_per_um": null,
+          "pin_layers": [],
+          "minimum_spread_length_for_literal6_um": 0.0
+        }
+      }
+    }
+  ],
+  "required_actual_escape_evidence": [
+    "Actual successor placed macro orientations and pin-layer inventory",
+    "Allocated legal access strip and channel per face, with all PG/via obstructions deducted by routing layer",
+    "Legal track-to-pin transitions and spread row pitch; abstract projected count is insufficient",
+    "Actual GRT overflow and DRT pin-access/DRC evidence tied to exact source snapshot"
+  ]
+}
