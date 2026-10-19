@@ -1,0 +1,9 @@
+GUNIT CONTROL_SAFE mapped successor remains blocked
+
+The canonical floorplan-only run completed. Source archive has no .git commit, so physical.json honestly retains null. Every declared source hash is separately compared to pushed12ab196b6 in summary.json. Floorplan timing is diagnostic without placement parasitics, not a routed receipt. No CTS or production admission occurred.
+
+An initial console-only reading showed four large combinational examples. That list is truncated. The worker inspect script raised the metrics cap from8 to1000; its last entry still had47 loads. The uncapped inspector preserves all24820 multi-load drivers and filters loads>32, giving1874 offenders, including1464 DFF drivers. Hierarchical labels identify1437 Sinkhorn,410 flattened combinational,16 other,10 multiplier and1 reset offenders. No source change or threshold waiver is made.
+
+The reset maximum is143 at u_rst.rst_n[2], and six external raw reset pins enter first-stage reset landing flops. Worst logic remains661.8ps/17levels from Sinkhorn tc_q21 to fault D. The source controls/predecode golden, decoder and HOP proofs remain useful but do not qualify these physical/source issues.
+
+Fresh source owner next: inspect full compressed mapped netlist and exact over32 list; partition useful kept sequential/decoded controls and arithmetic operands by actual consumer cones, repair reset-region ownership while preserving assertion/deassertion edges, and restructure the fault/decode critical stage. Do not merely buffer roots or relabel truncation as a clean census. Confirm same-edge numerical/HC975N/973S or explicitly price changed registered edges and rerun real HOP mutants. Actual complete mapped census, physical-band mass, clock tree/native/PG/pin reach and ROOT PNG/checklist review are required before CTS.
