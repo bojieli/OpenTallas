@@ -1,0 +1,293 @@
+ot-run: ot-epyc8       admits  1200 GB (avail 930, growth 90, headroom 0, waiters 0/0 GB) load 39/128 running 27 disk 317 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1781839-1792429094 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2531 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.768097 (range 335.226807 .. 402.407471)
+QDM reference pin c_prog_tx_record[499]$_DFF_P_/CLK clock arrival max 350.768097 min 336.439087 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 336.439087 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/qfd_d2d_static_safe3/signoff.sdc (FF placement RC; diagnostic)
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[0\].u_store.u_sram/clk parent_net=clknet_1_0_0_ck master=BUFx24_ASAP7_75t_R seed_x=34.56 seed_y=43.74 one_real_clock_stage=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[1\].u_store.u_sram/clk parent_net=clknet_1_1_0_ck master=BUFx24_ASAP7_75t_R seed_x=250.56 seed_y=43.74 one_real_clock_stage=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[2\].u_store.u_sram/clk parent_net=clknet_1_0_0_ck master=BUFx24_ASAP7_75t_R seed_x=34.56 seed_y=151.73999999999998 one_real_clock_stage=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[3\].u_store.u_sram/clk parent_net=clknet_1_1_0_ck master=BUFx24_ASAP7_75t_R seed_x=250.56 seed_y=151.73999999999998 one_real_clock_stage=1
+EXACT_PG_CONNECT previously_open_pins_connected=1632 retained_original_DNT_flags=1
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 8383.50 um^2
+[INFO DPL-0008] Fixed instances area within core: 53742.58 um^2
+[INFO DPL-0009] Utilization: 47.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 76129 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.93s
+Placement Analysis
+---------------------------------
+total displacement          1.7 u
+average displacement        0.0 u
+max displacement            1.1 u
+original HPWL          900490.1 u
+legalized HPWL         900491.8 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2531 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.768097 (range 335.226807 .. 402.407471)
+QDM reference pin c_prog_tx_record[499]$_DFF_P_/CLK clock arrival max 350.768097 min 336.439087 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 336.439087 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT SRAM_clock_local_driver_before_hold_repair boundary=3697 min=333.819458 mincell=rx_payload[87]$_DFF_P_ max=397.845459 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=64.02600100000001 setup_s=2.1765189650579941e-10 hold_s=4.305777956403745e-12
+max slew
+
+Pin                                      Limit      Slew     Slack
+------------------------------------------------------------------
+ot_ctl_copy_00005/B                   260.0000  284.3775  -24.3775 (VIOLATED)
+ot_ctl_copy_00173/B                   260.0000  284.2769  -24.2769 (VIOLATED)
+ot_ctl_copy_00172/B                   260.0000  284.2487  -24.2487 (VIOLATED)
+ot_ctl_copy_00007/B                   260.0000  284.2322  -24.2322 (VIOLATED)
+ot_ctl_copy_00171/B                   260.0000  284.2183  -24.2183 (VIOLATED)
+ot_ctl_copy_00168/B                   260.0000  284.1553  -24.1553 (VIOLATED)
+ot_ctl_copy_00167/B                   260.0000  284.1324  -24.1324 (VIOLATED)
+ot_ctl_copy_00003/B                   260.0000  284.1186  -24.1186 (VIOLATED)
+ot_ctl_copy_00170/B                   260.0000  284.1022  -24.1022 (VIOLATED)
+ot_ctl_copy_00174/B                   260.0000  283.9888  -23.9888 (VIOLATED)
+ot_ctl_copy_00008/B                   260.0000  283.9237  -23.9237 (VIOLATED)
+ot_ctl_copy_00169/B                   260.0000  283.8010  -23.8010 (VIOLATED)
+ot_ctl_copy_00006/B                   260.0000  283.2541  -23.2541 (VIOLATED)
+ot_ctl_copy_00641/B                   260.0000  283.2402  -23.2402 (VIOLATED)
+ot_ctl_copy_00004/B                   260.0000  282.3523  -22.3523 (VIOLATED)
+_62894_/A                             260.0000  279.5453  -19.5453 (VIOLATED)
+ot_ctl_copy_00096/A                   260.0000  278.5490  -18.5490 (VIOLATED)
+ot_ctl_copy_00097/A                   260.0000  278.4790  -18.4790 (VIOLATED)
+ot_ctl_copy_00101/A                   260.0000  277.8282  -17.8283 (VIOLATED)
+ot_ctl_copy_00100/A                   260.0000  277.8253  -17.8253 (VIOLATED)
+ot_ctl_copy_00098/A                   260.0000  277.7185  -17.7185 (VIOLATED)
+ot_ctl_copy_00095/A                   260.0000  277.6287  -17.6287 (VIOLATED)
+ot_ctl_copy_00099/A                   260.0000  277.5798  -17.5798 (VIOLATED)
+ot_ctl_copy_00655/A                   260.0000  277.5398  -17.5398 (VIOLATED)
+ot_ctl_copy_00107/A                   260.0000  275.2327  -15.2327 (VIOLATED)
+ot_ctl_copy_00106/A                   260.0000  275.1969  -15.1969 (VIOLATED)
+ot_ctl_copy_00104/A                   260.0000  275.1890  -15.1890 (VIOLATED)
+ot_ctl_copy_00105/A                   260.0000  275.1674  -15.1674 (VIOLATED)
+ot_ctl_copy_00103/A                   260.0000  275.1310  -15.1310 (VIOLATED)
+ot_ctl_copy_00109/A                   260.0000  275.0142  -15.0142 (VIOLATED)
+ot_ctl_copy_00656/A                   260.0000  274.9424  -14.9424 (VIOLATED)
+ot_ctl_copy_00108/A                   260.0000  274.9339  -14.9339 (VIOLATED)
+ot_ctl_copy_00110/A                   260.0000  273.1424  -13.1424 (VIOLATED)
+
+max fanout
+
+Pin                                   Limit Fanout  Slack
+---------------------------------------------------------
+clkbuf_leaf_293_ck_regs/Y                32     85    -53 (VIOLATED)
+clkbuf_leaf_296_ck_regs/Y                32     74    -42 (VIOLATED)
+clkbuf_leaf_297_ck_regs/Y                32     62    -30 (VIOLATED)
+clkbuf_leaf_193_ck_regs/Y                32     57    -25 (VIOLATED)
+clkbuf_leaf_459_ck_regs/Y                32     57    -25 (VIOLATED)
+clkbuf_leaf_435_ck_regs/Y                32     55    -23 (VIOLATED)
+clkbuf_leaf_188_ck_regs/Y                32     43    -11 (VIOLATED)
+ot_eclk_copy_0011/Y                      32     41     -9 (VIOLATED)
+ot_eclk_copy_0012/Y                      32     40     -8 (VIOLATED)
+clkbuf_leaf_181_ck_regs/Y                32     38     -6 (VIOLATED)
+clkbuf_leaf_190_ck_regs/Y                32     38     -6 (VIOLATED)
+clkbuf_leaf_68_ck_regs/Y                 32     38     -6 (VIOLATED)
+clkbuf_leaf_309_ck_regs/Y                32     37     -5 (VIOLATED)
+clkbuf_leaf_308_ck_regs/Y                32     33        (VIOLATED)
+place17894/Y                             32     33        (VIOLATED)
+place21751/Y                             32     33        (VIOLATED)
+place21752/Y                             32     33        (VIOLATED)
+place21753/Y                             32     33        (VIOLATED)
+place21755/Y                             32     33        (VIOLATED)
+
+max capacitance
+
+Pin                                      Limit       Cap     Slack
+------------------------------------------------------------------
+_59722_/Y                              23.0400   24.2315   -1.1915 (VIOLATED)
+
+[INFO RSZ-0046] Found 62 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   4.306 |   0.000 | u_core.u_end.u_link.u_ctl.s1[1]$_DFFE_PN0N_/RESETN
+       10 |       0 |       2 |            0 |    +0.0% |  24.617 |   0.000 | u_core.u_end.u_txcal.seg1[4]$_DFFE_PP_/D
+       20 |       0 |       2 |            0 |    +0.0% |  24.617 |   0.000 | u_core.u_end.u_txcal.seg1[4]$_DFFE_PP_/D
+       30 |       0 |       6 |            0 |    +0.0% |  29.304 |   0.000 | fdi_tx_flit[250]
+       40 |       0 |      16 |            0 |    +0.0% |  29.527 |   0.000 | fdi_tx_flit[150]
+       50 |       0 |      26 |            0 |    +0.0% |  29.714 |   0.000 | rx_payload[147]
+       60 |       0 |      36 |            0 |    +0.0% |  29.949 |   0.000 | fdi_tx_flit[312]
+    final |       0 |      39 |            0 |    +0.0% |  30.008 |   0.000 | u_core.u_end.u_txcal.tbl[25][0]$_DFFE_PP_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 39 hold buffers.
+[INFO RSZ-0506] Runtime: 1.30s
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 8387.48 um^2
+[INFO DPL-0008] Fixed instances area within core: 53742.58 um^2
+[INFO DPL-0009] Utilization: 47.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 76168 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        204 |        32 |       172
+        1 |        103 |        19 |        84
+        2 |         92 |        14 |        78
+        3 |         83 |        16 |        67
+        4 |        107 |        11 |        96
+        5 |         70 |         8 |        62
+        6 |        119 |        11 |       108
+        7 |         75 |        10 |        65
+        8 |        144 |        17 |       127
+        9 |         82 |        15 |        67
+       10 |        140 |        14 |       126
+       20 |         79 |        17 |        62
+       30 |         17 |         4 |        13
+       40 |         10 |         2 |         8
+       50 |         23 |         3 |        20
+       51 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 51.
+[INFO DPL-0500] Runtime: 4.88s
+Placement Analysis
+---------------------------------
+total displacement        166.1 u
+average displacement        0.0 u
+max displacement            5.0 u
+original HPWL          900505.7 u
+legalized HPWL         900607.4 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2531 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.768097 (range 335.226807 .. 402.407471)
+QDM reference pin c_prog_tx_record[499]$_DFF_P_/CLK clock arrival max 350.768097 min 336.439087 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 336.439087 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT SRAM_clock_local_driver_after_hold_repair boundary=3697 min=333.819458 mincell=rx_payload[87]$_DFF_P_ max=397.845459 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=64.02600100000001 setup_s=2.1765189650579941e-10 hold_s=2.850017444266939e-11
+max slew
+
+Pin                                      Limit      Slew     Slack
+------------------------------------------------------------------
+ot_ctl_copy_00005/B                   260.0000  284.3775  -24.3775 (VIOLATED)
+ot_ctl_copy_00173/B                   260.0000  284.2769  -24.2769 (VIOLATED)
+ot_ctl_copy_00172/B                   260.0000  284.2487  -24.2487 (VIOLATED)
+ot_ctl_copy_00007/B                   260.0000  284.2322  -24.2322 (VIOLATED)
+ot_ctl_copy_00171/B                   260.0000  284.2183  -24.2183 (VIOLATED)
+ot_ctl_copy_00168/B                   260.0000  284.1553  -24.1553 (VIOLATED)
+ot_ctl_copy_00167/B                   260.0000  284.1324  -24.1324 (VIOLATED)
+ot_ctl_copy_00003/B                   260.0000  284.1186  -24.1186 (VIOLATED)
+ot_ctl_copy_00170/B                   260.0000  284.1022  -24.1022 (VIOLATED)
+ot_ctl_copy_00174/B                   260.0000  283.9888  -23.9888 (VIOLATED)
+ot_ctl_copy_00008/B                   260.0000  283.9237  -23.9237 (VIOLATED)
+ot_ctl_copy_00169/B                   260.0000  283.8010  -23.8010 (VIOLATED)
+ot_ctl_copy_00006/B                   260.0000  283.2541  -23.2541 (VIOLATED)
+ot_ctl_copy_00641/B                   260.0000  283.2402  -23.2402 (VIOLATED)
+ot_ctl_copy_00004/B                   260.0000  282.3523  -22.3523 (VIOLATED)
+_62894_/A                             260.0000  279.5453  -19.5453 (VIOLATED)
+ot_ctl_copy_00096/A                   260.0000  278.5490  -18.5490 (VIOLATED)
+ot_ctl_copy_00097/A                   260.0000  278.4790  -18.4790 (VIOLATED)
+ot_ctl_copy_00101/A                   260.0000  277.8282  -17.8283 (VIOLATED)
+ot_ctl_copy_00100/A                   260.0000  277.8253  -17.8253 (VIOLATED)
+ot_ctl_copy_00098/A                   260.0000  277.7185  -17.7185 (VIOLATED)
+ot_ctl_copy_00095/A                   260.0000  277.6287  -17.6287 (VIOLATED)
+ot_ctl_copy_00099/A                   260.0000  277.5798  -17.5798 (VIOLATED)
+ot_ctl_copy_00655/A                   260.0000  277.5398  -17.5398 (VIOLATED)
+ot_ctl_copy_00107/A                   260.0000  275.2327  -15.2327 (VIOLATED)
+ot_ctl_copy_00106/A                   260.0000  275.1969  -15.1969 (VIOLATED)
+ot_ctl_copy_00104/A                   260.0000  275.1890  -15.1890 (VIOLATED)
+ot_ctl_copy_00105/A                   260.0000  275.1674  -15.1674 (VIOLATED)
+ot_ctl_copy_00103/A                   260.0000  275.1310  -15.1310 (VIOLATED)
+ot_ctl_copy_00109/A                   260.0000  275.0142  -15.0142 (VIOLATED)
+ot_ctl_copy_00656/A                   260.0000  274.9424  -14.9424 (VIOLATED)
+ot_ctl_copy_00108/A                   260.0000  274.9339  -14.9339 (VIOLATED)
+ot_ctl_copy_00110/A                   260.0000  273.1424  -13.1424 (VIOLATED)
+
+max fanout
+
+Pin                                   Limit Fanout  Slack
+---------------------------------------------------------
+clkbuf_leaf_293_ck_regs/Y                32     85    -53 (VIOLATED)
+clkbuf_leaf_296_ck_regs/Y                32     74    -42 (VIOLATED)
+clkbuf_leaf_297_ck_regs/Y                32     62    -30 (VIOLATED)
+clkbuf_leaf_193_ck_regs/Y                32     57    -25 (VIOLATED)
+clkbuf_leaf_459_ck_regs/Y                32     57    -25 (VIOLATED)
+clkbuf_leaf_435_ck_regs/Y                32     55    -23 (VIOLATED)
+clkbuf_leaf_188_ck_regs/Y                32     43    -11 (VIOLATED)
+ot_eclk_copy_0011/Y                      32     41     -9 (VIOLATED)
+ot_eclk_copy_0012/Y                      32     40     -8 (VIOLATED)
+clkbuf_leaf_181_ck_regs/Y                32     38     -6 (VIOLATED)
+clkbuf_leaf_190_ck_regs/Y                32     38     -6 (VIOLATED)
+clkbuf_leaf_68_ck_regs/Y                 32     38     -6 (VIOLATED)
+clkbuf_leaf_309_ck_regs/Y                32     37     -5 (VIOLATED)
+clkbuf_leaf_308_ck_regs/Y                32     33        (VIOLATED)
+place17894/Y                             32     33        (VIOLATED)
+place21751/Y                             32     33        (VIOLATED)
+place21752/Y                             32     33        (VIOLATED)
+place21753/Y                             32     33        (VIOLATED)
+place21755/Y                             32     33        (VIOLATED)
+
+max capacitance
+
+Pin                                      Limit       Cap     Slack
+------------------------------------------------------------------
+_59722_/Y                              23.0400   24.2315   -1.1915 (VIOLATED)
+
+D2D_CONTROL_CLOCK_PROTOTYPE_DONE source_equivalence/native_all_driver_audit/TT_reload_required=1 adoption=0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1781839-1792429094): exit 0

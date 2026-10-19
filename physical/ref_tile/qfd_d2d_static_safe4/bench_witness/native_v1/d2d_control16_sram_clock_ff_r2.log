@@ -1,0 +1,252 @@
+ot-run: ot-epyc8       admits  1174 GB (avail 920, growth 99, headroom 0, waiters 0/0 GB) load 50/128 running 27 disk 301 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-3869316-1792429496 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2692 input pin flops (0 hard-child clock pins at +insertion), median arrival 351.210388 (range 335.047546 .. 398.413879)
+QDM reference pin c_native_tx_payload[302]$_DFF_P_/CLK clock arrival max 351.210388 min 337.639709 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 337.639709 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/qfd_d2d_static_safe3/signoff.sdc (FF placement RC; diagnostic)
+CLOCK_PART PASS copied_real_drivers=72 maximum_direct_clock_load=20 same_parent_master_polarity_level=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[0\].u_store.u_sram/clk parent_net=clknet_1_0_0_ck master=BUFx24_ASAP7_75t_R seed_x=34.56 seed_y=43.74 one_real_clock_stage=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[1\].u_store.u_sram/clk parent_net=clknet_1_1_0_ck master=BUFx24_ASAP7_75t_R seed_x=250.56 seed_y=43.74 one_real_clock_stage=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[2\].u_store.u_sram/clk parent_net=clknet_1_0_0_ck master=BUFx24_ASAP7_75t_R seed_x=34.56 seed_y=151.73999999999998 one_real_clock_stage=1
+SRAM_LOCAL_CLOCK owner=u_core.u_end.u_link.g_bank\[3\].u_store.u_sram/clk parent_net=clknet_1_1_0_ck master=BUFx24_ASAP7_75t_R seed_x=250.56 seed_y=151.73999999999998 one_real_clock_stage=1
+EXACT_PG_CONNECT previously_open_pins_connected=1746 retained_original_DNT_flags=1
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 8804.89 um^2
+[INFO DPL-0008] Fixed instances area within core: 53741.27 um^2
+[INFO DPL-0009] Utilization: 48.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 78470 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2472 |       238 |      2234
+        1 |       2283 |       215 |      2068
+        2 |       2219 |       197 |      2022
+        3 |       2124 |       165 |      1959
+        4 |       2075 |       175 |      1900
+        5 |       2050 |       180 |      1870
+        6 |       1944 |       182 |      1762
+        7 |       2002 |       211 |      1791
+        8 |       1865 |       185 |      1665
+        9 |       1794 |       204 |      1590
+       10 |       1811 |       195 |      1616
+       20 |       1251 |       175 |      1076
+       30 |        742 |       123 |       616
+       40 |        482 |        75 |       407
+       50 |        319 |        51 |       268
+       60 |        129 |        32 |        97
+       70 |         72 |        15 |        57
+       80 |         32 |         8 |        24
+       86 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 86.
+[INFO DPL-0500] Runtime: 10.21s
+Placement Analysis
+---------------------------------
+total displacement       2084.8 u
+average displacement        0.0 u
+max displacement            8.3 u
+original HPWL          997212.9 u
+legalized HPWL         998755.4 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2692 input pin flops (0 hard-child clock pins at +insertion), median arrival 351.210388 (range 335.047546 .. 398.413879)
+QDM reference pin c_native_tx_payload[302]$_DFF_P_/CLK clock arrival max 351.210388 min 337.639709 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 337.639709 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT SRAM_clock_local_driver_before_hold_repair boundary=3858 min=332.875641 mincell=rx_payload[87]$_DFF_P_ max=396.830383 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=63.95474200000001 setup_s=2.0221929686314866e-10 hold_s=-2.8180235922548036e-12
+[INFO RSZ-0046] Found 316 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |  -2.818 |  -5.374 | u_core.u_rec.epoch_begin$_DFF_PN0_/RESETN
+       10 |       0 |       3 |            0 |    +0.0% |   6.082 |   0.000 | u_core.u_end.u_txcal.ev_v$_DFF_PN0_/D
+       20 |       0 |       3 |            0 |    +0.0% |   6.082 |   0.000 | u_core.u_end.u_txcal.ev_v$_DFF_PN0_/D
+       30 |       0 |       3 |            0 |    +0.0% |   6.082 |   0.000 | u_core.u_end.u_txcal.ev_v$_DFF_PN0_/D
+       40 |       0 |       6 |            0 |    +0.0% |  14.299 |   0.000 | u_core.u_end.u_link.u_ctl.s1[5]$_DFFE_PN0N_/RESETN
+       50 |       0 |      10 |            0 |    +0.0% |  20.094 |   0.000 | u_core.u_rec.transport_fault[7]$_DFF_PN0_/RESETN
+       60 |       0 |      12 |            0 |    +0.0% |  21.970 |   0.000 | u_core.u_end.u_link.g_bank[3].u_store.dout[3]$_DFF_P_/D
+       70 |       0 |      15 |            0 |    +0.0% |  24.522 |   0.000 | u_core.u_kvn.tx_valid$_DFF_PN0_/RESETN
+       80 |       0 |      18 |            0 |    +0.0% |  25.592 |   0.000 | ot_ctl_copy_00873/RESETN
+       90 |       0 |      21 |            0 |    +0.0% |  26.895 |   0.000 | ot_ctl_copy_00870/RESETN
+      100 |       0 |      25 |            0 |    +0.0% |  27.577 |   0.000 | ot_ctl_copy_01365/RESETN
+      110 |       0 |      31 |            0 |    +0.0% |  27.983 |   0.000 | native_rx_slot_beat[2]
+      120 |       0 |      39 |            0 |    +0.0% |  28.113 |   0.000 | fdi_tx_flit[146]
+      130 |       0 |      43 |            0 |    +0.0% |  28.287 |   0.000 | fdi_tx_flit[141]
+      140 |       0 |      52 |            0 |    +0.0% |  28.437 |   0.000 | rx_payload[431]
+      150 |       0 |      61 |            0 |    +0.0% |  28.675 |   0.000 | rx_payload[288]
+      160 |       0 |      70 |            0 |    +0.0% |  28.756 |   0.000 | fdi_tx_flit[485]
+      170 |       0 |      78 |            0 |    +0.0% |  28.914 |   0.000 | rx_payload[98]
+      180 |       0 |      88 |            0 |    +0.0% |  29.007 |   0.000 | rx_payload[104]
+      190 |       0 |      98 |            0 |    +0.0% |  29.119 |   0.000 | fdi_tx_flit[473]
+      200 |       0 |     107 |            0 |    +0.0% |  29.226 |   0.000 | rx_payload[415]
+      210 |       0 |     117 |            0 |    +0.0% |  29.309 |   0.000 | rx_payload[117]
+      220 |       0 |     126 |            0 |    +0.0% |  29.417 |   0.000 | rx_payload[362]
+      230 |       0 |     134 |            0 |    +0.0% |  29.461 |   0.000 | rx_payload[244]
+      240 |       0 |     144 |            0 |    +0.0% |  29.506 |   0.000 | rx_payload[366]
+      250 |       0 |     154 |            0 |    +0.0% |  29.584 |   0.000 | fdi_tx_flit[309]
+      260 |       0 |     162 |            0 |    +0.0% |  29.663 |   0.000 | rx_payload[107]
+      270 |       0 |     172 |            0 |    +0.0% |  29.725 |   0.000 | fdi_tx_flit[255]
+      280 |       0 |     181 |            0 |    +0.0% |  29.740 |   0.000 | rx_payload[436]
+      290 |       0 |     191 |            0 |    +0.0% |  29.793 |   0.000 | u_core.u_end.u_link.g_bank[3].u_store.dout[100]$_DFF_P_/D
+      300 |       0 |     201 |            0 |    +0.0% |  29.869 |   0.000 | rx_payload[418]
+      310 |       0 |     211 |            0 |    +0.0% |  28.856 |   0.000 | u_core.u_end.u_link.u_ctl.s2[5]$_DFFE_PN0N_/D
+    final |       0 |     219 |            0 |    +0.0% |  30.003 |   0.000 | rx_payload[133]
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 219 hold buffers.
+[INFO RSZ-0506] Runtime: 2.04s
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 8827.24 um^2
+[INFO DPL-0008] Fixed instances area within core: 53741.27 um^2
+[INFO DPL-0009] Utilization: 48.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 78689 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1073 |       202 |       871
+        1 |        723 |       119 |       604
+        2 |        531 |        82 |       449
+        3 |        500 |        82 |       418
+        4 |        525 |        84 |       441
+        5 |        437 |        60 |       377
+        6 |        478 |        65 |       413
+        7 |        430 |        56 |       374
+        8 |        333 |        42 |       291
+        9 |        283 |        37 |       246
+       10 |        288 |        45 |       243
+       20 |        126 |        24 |       102
+       30 |         87 |        15 |        72
+       40 |         92 |        14 |        78
+       50 |         73 |        16 |        57
+       60 |         21 |         2 |        19
+       70 |         29 |         7 |        22
+       80 |         20 |         4 |        16
+       87 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 87.
+[INFO DPL-0500] Runtime: 8.50s
+Placement Analysis
+---------------------------------
+total displacement        693.8 u
+average displacement        0.0 u
+max displacement            5.9 u
+original HPWL          998821.7 u
+legalized HPWL         999373.6 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2692 input pin flops (0 hard-child clock pins at +insertion), median arrival 351.210388 (range 335.047546 .. 398.413879)
+QDM reference pin c_native_tx_payload[302]$_DFF_P_/CLK clock arrival max 351.210388 min 337.639709 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 337.639709 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT SRAM_clock_local_driver_after_hold_repair_1 boundary=3858 min=332.875641 mincell=rx_payload[87]$_DFF_P_ max=396.830383 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=63.95474200000001 setup_s=2.021220413261915e-10 hold_s=2.94662905186982e-11
+NATIVE_HOLD_CONVERGENCE round=1 hold_ps=29.4662905186982 required_margin_ps=30
+[INFO RSZ-0046] Found 7 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |  29.466 |   0.000 | rx_payload[96]
+    final |       0 |       7 |            0 |    +0.0% |  30.010 |   0.000 | u_core.u_end.u_link.u_ctl.q_pin[432]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 7 hold buffers.
+[INFO RSZ-0506] Runtime: 1.30s
+[INFO DPL-0006] Core area: 130188.90 um^2
+[INFO DPL-0007] Movable instances area: 8827.96 um^2
+[INFO DPL-0008] Fixed instances area within core: 53741.27 um^2
+[INFO DPL-0009] Utilization: 48.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 78696 cells
+[INFO DPL-0393]   height 289 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         31 |         5 |        26
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.98s
+Placement Analysis
+---------------------------------
+total displacement          7.4 u
+average displacement        0.0 u
+max displacement            2.2 u
+original HPWL          999376.8 u
+legalized HPWL         999385.0 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2692 input pin flops (0 hard-child clock pins at +insertion), median arrival 351.210388 (range 335.047546 .. 398.413879)
+QDM reference pin c_native_tx_payload[302]$_DFF_P_/CLK clock arrival max 351.210388 min 337.639709 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 337.639709 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+E_CLOCK_SNAPSHOT SRAM_clock_local_driver_after_hold_repair_2 boundary=3858 min=332.875641 mincell=rx_payload[87]$_DFF_P_ max=396.830383 maxcell=c_prog_tx_record[469]$_DFF_P_ spread=63.95474200000001 setup_s=2.021220413261915e-10 hold_s=3.001046633421822e-11
+NATIVE_HOLD_CONVERGENCE round=2 hold_ps=30.010466334218222 required_margin_ps=30
+EXACT_PG_CONNECT previously_open_pins_connected=452 retained_original_DNT_flags=1
+D2D_CONTROL_CLOCK_PROTOTYPE_DONE source_equivalence/native_all_driver_audit/TT_reload_required=1 adoption=0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-3869316-1792429496): exit 0

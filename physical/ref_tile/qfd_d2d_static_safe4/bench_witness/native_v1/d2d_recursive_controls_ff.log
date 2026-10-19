@@ -1,0 +1,142 @@
+ot-run: ot-epyc8       admits  1155 GB (avail 921, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 32 disk 322 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1720246-1792428779 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2457 input pin flops (0 hard-child clock pins at +insertion), median arrival 350.337067 (range 335.226807 .. 402.407471)
+QDM reference pin c_native_tx_payload[183]$_DFF_P_/CLK clock arrival max 350.337067 min 335.580109 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 335.580109 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/qfd_d2d_static_safe3/signoff.sdc (FF placement RC; diagnostic)
+OT_CTLC split=_33792_/Y original_loads=263
+OT_CTLC split=_33870_/Y original_loads=264
+OT_CTLC split=_33948_/Y original_loads=260
+OT_CTLC split=_33950_/Y original_loads=33
+OT_CTLC split=_34026_/Y original_loads=33
+OT_CTLC split=_34245_/Y original_loads=261
+OT_CTLC split=_34247_/Y original_loads=33
+OT_CTLC split=_34329_/Y original_loads=33
+OT_CTLC split=_34576_/Y original_loads=260
+OT_CTLC split=_34578_/Y original_loads=33
+OT_CTLC split=_34653_/Y original_loads=33
+OT_CTLC split=_34871_/Y original_loads=261
+OT_CTLC split=_34873_/Y original_loads=33
+OT_CTLC split=_34949_/Y original_loads=33
+OT_CTLC split=_35172_/Y original_loads=260
+OT_CTLC split=_35174_/Y original_loads=33
+OT_CTLC split=_35274_/Y original_loads=33
+OT_CTLC split=_35491_/Y original_loads=260
+OT_CTLC split=_35569_/Y original_loads=33
+OT_CTLC split=_35641_/Y original_loads=33
+OT_CTLC split=_35785_/Y original_loads=260
+OT_CTLC split=_35787_/Y original_loads=33
+OT_CTLC split=_35866_/Y original_loads=33
+OT_CTLC split=_36111_/Y original_loads=260
+OT_CTLC split=_36186_/Y original_loads=256
+OT_CTLC split=_36188_/Y original_loads=33
+OT_CTLC split=_36263_/Y original_loads=263
+OT_CTLC split=_36340_/Y original_loads=264
+OT_CTLC split=_36416_/Y original_loads=33
+OT_CTLC split=_36488_/Y original_loads=33
+OT_CTLC split=_36812_/Y original_loads=33
+OT_CTLC split=_37027_/Y original_loads=33
+OT_CTLC split=_37099_/Y original_loads=33
+OT_CTLC split=_37392_/Y original_loads=33
+OT_CTLC split=_37636_/Y original_loads=33
+OT_CTLC split=_37708_/Y original_loads=33
+OT_CTLC split=_37996_/Y original_loads=33
+OT_CTLC split=_38068_/Y original_loads=33
+OT_CTLC split=_38212_/Y original_loads=33
+OT_CTLC split=_38284_/Y original_loads=33
+OT_CTLC split=_40573_/Y original_loads=175
+OT_CTLC split=_43845_/Y original_loads=150
+OT_CTLC split=_55536_/Y original_loads=349
+OT_CTLC split=_55543_/Y original_loads=298
+OT_CTLC split=_62762_/Y original_loads=263
+OT_CTLC split=_62765_/Y original_loads=264
+OT_CTLC split=_62895_/Y original_loads=263
+OT_CTLC split=_62897_/Y original_loads=33
+OT_CTLC split=c_cal_seg$_DFF_P_/QN original_loads=73
+OT_CTLC split=c_cal_seg_rx$_DFF_P_/QN original_loads=73
+OT_CTLC split=c_cal_start$_DFF_P_/QN original_loads=84
+OT_CTLC split=c_cal_start_rx$_DFF_P_/QN original_loads=79
+OT_CTLC split=c_cfg_addr\[0\]$_DFF_P_/QN original_loads=71
+OT_CTLC split=c_cfg_addr\[1\]$_DFF_P_/QN original_loads=38
+OT_CTLC split=c_cfg_addr\[2\]$_DFF_P_/QN original_loads=72
+OT_CTLC split=c_cfg_addr\[3\]$_DFF_P_/QN original_loads=72
+OT_CTLC split=c_cfg_addr\[4\]$_DFF_P_/QN original_loads=72
+OT_CTLC split=c_cfg_addr\[5\]$_DFF_P_/QN original_loads=63
+OT_CTLC split=c_cfg_data\[0\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[10\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[11\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[12\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[13\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[14\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[15\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[16\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[17\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[18\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[19\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[1\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[20\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[21\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[22\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[23\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[24\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[25\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[26\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[27\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[28\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[29\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[2\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[30\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[31\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[3\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[4\]$_DFF_P_/QN original_loads=66
+OT_CTLC split=c_cfg_data\[5\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[6\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[7\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[8\]$_DFF_P_/QN original_loads=64
+OT_CTLC split=c_cfg_data\[9\]$_DFF_P_/QN original_loads=64
+[ERROR ODB-0373] Attempt to connect iterm to dont_touch net clknet_leaf_25_ck_regs
+Error: d2d_recursive_controls_ff.tcl, 154 ODB-0373
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1720246-1792428779): exit 1
