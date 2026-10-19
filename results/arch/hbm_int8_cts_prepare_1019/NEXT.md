@@ -1,0 +1,1 @@
+Concrete CTS-only kit prepared, finalPG47e03369c helper13e936... pinned. ROOT accepted geometry13:19; root-referencedIO explicitlydiagnostic. Read-onlyFF replay/raw+conductor export/strict969 pinned. No launch/grant. ROOT reviews manifest + exactgrant; fresh unpinned fleet execution only after explicitCTS grant.

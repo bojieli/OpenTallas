@@ -1,9 +1,9 @@
 # Exact INT8 bounded CTS request — HOLD
 
-Prepared source-only request, not an executed physical stage. ROOT must review
-this packet and give an explicit CTS-only grant after the new PG prototype's
-binding-order and independent native-coverage tests pass. No shared helper is
-activated here. `request.json` deliberately has no PG helper digest or grant.
+Prepared source-only request, not an executed physical stage. ROOT accepted the exact pin-bound placement at13:19. ROOT must separately
+review this source-only kit and give an explicit CTS-only grant; final PG
+prototype47e03369c test receipts are pinned. No shared helper is
+activated here. `request.json` pins the final PG helper; no grant is fabricated.
 
 ## Exact vehicle and planned operation
 
@@ -21,8 +21,9 @@ The scripts under `tools/hbm_int8_cts_prepare` load exact ODB, native platform
 libraries and RC, establish the source 833.333 ps clock and 60/25 ps uncertainty,
 insert a single bounded CTS tree with BUFx24 and 32-sink clusters, bind every new
 instance's PG MTerms before protection, and assert coverage over ALL native PG
-pins. The PG adapter interface is `ot_pg_bind_before_protect $inst` and
-`ot_pg_assert_all_native $block`, owned by `idx_clock_pg_binding`.
+pins. The PG adapter interface is `set mapping [ot_pg_prepare $block]`,
+`ot_pg_bind_before_protect $mapping $inst`, and
+`ot_pg_assert_all_native $block $mapping`, owned by `idx_clock_pg_binding`.
 Its exact tested code and native voltage-domain/global-rule resolution must be
 ROOT-pinned, including ambiguous/unproven mapping refusal; there is no supply-name
 fallback. Initial and final all-native coverage is mandatory, with no clock-name
@@ -81,9 +82,8 @@ asynchronous reset is not claimed. Compiler calendar is unchanged.
    If >600ps/~20 levels or timing fails, stop for source structural redesign.
 5. **PASS unchanged source inventory.** 2,782 actual FF; no new indexed array or
    three-deep delay chain. New clock buffers are not functional storage.
-6. **ROOT exception pending.** Legal 464-row placement, no macros, aspect1.833,
-   one continuous standard-cell core. Fill4.53% is pin-bound and needs ROOT's
-   specific acceptance. Full N/S faces have >=.192um spacing and <=6pins/um;
+6. **ROOT geometry accepted13:19.** Legal 464-row placement, no macros, aspect1.833,
+   one continuous standard-cell core. Fill4.53% is pin-bound; ROOT personally accepted this exact outline/image. Full N/S faces have >=.192um spacing and <=6pins/um;
    old .096um diagnostic is not selected. The original placement PNG remains
    in `results/arch/hbm_int8_tie_place_1019/placement.png` and durable artifact
    `/home/ubuntu/artifacts/hbm-int8-tie-place-1019/placement.png`.
@@ -112,3 +112,44 @@ is only first-stage CTS generation; a distinct read-only FF replay and independe
 final native/PG contact export must be pinned in the eventual ROOT grant. Parent
 reference and final electrical/hold qualification remain OPEN until actually
 measured. Stop after this bounded evidence; no automatic GRT/full gate/retry.
+
+## Concrete kit completion (source preparation only)
+
+`kit_manifest.json` / `tools/hbm_int8_cts_prepare/manifest.json` pin every script,
+functional mapped JSON/netlist, ODB, existing tie/PDN helpers, exact image, platform
+files and the five real TT plus five real FF Liberty files. FAKE libraries are
+never loaded. `run.sh` verifies actual in-container platform and library bytes.
+ROOT must pin the manifest SHA256 and helper SHA in a separate approval JSON with
+`root_authorized:true`, stage `INT8_CTS_ONLY`, exact candidate, `pg_tests_pass:true`,
+and `neighbor_timing_status:DIAGNOSTIC_ONLY`. Absent/wrong grant refuses before
+any output directory or physical tool. Source-only kit preparation is complete;
+no CTS, read-only STA, native export or gate has run for this new candidate.
+
+The PG helper SHA13e936d24fc2a2e35a9f8cc0c6047820753cb5cc8a559a13a7eb8fe56e1ebef3
+is the tested47e03369c prototype. `pg_test_receipt.json` retains exact upstream
+196864-terminal positive/original644negative and domain controls. Insertion is
+followed by fresh mapping, binding every new instance, legal placement, all-native
+coverage and only then instance protection. No existing protection is cleared.
+The unchanged placement fingerprint is checked before saving the new CTS ODB.
+
+`ff_replay.tcl` reads that ODB in a new OpenROAD process, loads only the five real
+FF libraries, repeats exact833.333ps/60ps/25ps constraints, propagates the clock,
+estimates placement RC and emits complete min/max/electrical/unconstrained reports.
+It writes no ODB and performs no repair. Before/after ODB hashes must match.
+Native register pin active-edge wire arrivals/slew use the existing39021
+clock_family.tcl API. Root-referenced I/O is explicitly diagnostic; parent match
+and routed timing remain unqualified.
+
+`export_metal.py` reuses the exact39021 native shape/via/pin extraction; all clone
+mutation is removed. `prove_metal_readonly.py` reuses its same conductor union,
+cut-enclosure and all-pin contact proof, removing only historical clone DEF
+comparison. Because that original graph groups supply roles, the exporter refuses
+anything beyond this candidate's exact VDD/POWER and VSS/GROUND two-net domain.
+No generic multidomain geometric claim is made. `export_raw.py` preserves all
+instances/masters/native pins/net roles with only source/output path parameters.
+The unchanged strict969 oracle and121b replay (plus exact dft Liberty dependency)
+are vendored; no alternate fanout graph implementation is introduced.
+
+Validation below is syntax and refusal-path validation only. A first native
+execution may reveal tool-interface or physical failures; preserve failures and
+stop for review. No result, spread, timing or CTS contact PASS is preclaimed.

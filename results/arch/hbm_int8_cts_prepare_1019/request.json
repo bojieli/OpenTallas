@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.bounded_cts_request.v1",
-  "status": "HOLD_ROOT_GRANT_AND_PG_TESTS",
+  "status": "PREPARED_NO_CTS_ROOT_GRANT_REQUIRED",
   "candidate": "smh_int8_safe_tie_t1_cts1",
   "source_commit": "da40a2a46037798be54f7a3bc70a52dc430798af",
   "placement_commit": "121b7ec9a243affe1bcaa04ae87aa5899f5c53c7",
@@ -39,7 +39,7 @@
       63.55
     ],
     "max_spread_ps_TT_FF": 80,
-    "neighbor_reference": "REQUIRED_PARENT_NOT_YET_SUPPLIED",
+    "neighbor_reference": "DIAGNOSTIC_ROOT_REFERENCED_ONLY_PARENT_UNQUALIFIED",
     "hold_margin_ps": 30
   },
   "source_ages": {
@@ -58,16 +58,17 @@
     ],
     "all_point_reach_bound_um": 367.2,
     "baseline_pg_contacts": 20740,
-    "native_logical_fanout_max": 24
+    "native_logical_fanout_max": 24,
+    "root_geometry_acceptance": "ROOT personal review13:19: exact237.6x129.6 pinbound4.53% accepted"
   },
   "pg_adapter": {
-    "path": null,
-    "sha256": null,
-    "tests_sha256": null,
+    "path": "kit/vendor/native_pg_binding.tcl",
+    "sha256": "13e936d24fc2a2e35a9f8cc0c6047820753cb5cc8a559a13a7eb8fe56e1ebef3",
     "owner": "idx_clock_pg_binding",
-    "bind_proc": "ot_pg_bind_before_protect",
-    "coverage_proc": "ot_pg_assert_all_native",
-    "state": "NO_TESTED_FINGERPRINT"
+    "bind_proc": "ot_pg_bind_before_protect $mapping $inst",
+    "coverage_proc": "ot_pg_assert_all_native $block $mapping",
+    "prepare_proc": "ot_pg_prepare $block",
+    "state": "TEST_RECEIPT47e03369c_PINNED_ROOT_REVIEW_REQUIRED"
   },
   "root_grant": null
 }

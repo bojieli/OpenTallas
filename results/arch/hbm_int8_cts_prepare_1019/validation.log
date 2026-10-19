@@ -1,0 +1,6 @@
+PASS Python AST12; no module execution/native tool
+PASS bash -n run.sh
+PASS Tcl info complete allscripts; no sourcing/OpenROAD
+PASS absentROOTgrant refuses before files/tools
+PASS wrongROOTmanifest refuses before native tool
+PASS allkitfilehashes match exactmanifest; physicalinput bytes checked only upon authorizedsnapshot
