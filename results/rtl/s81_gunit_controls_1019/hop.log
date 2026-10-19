@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/hop_src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/hop_src
+ot-run: ot-epyc6       admits   810 GB (avail 680, growth 113, headroom 0, waiters 0/0 GB) load 30/128 running 16 disk 6018 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/hop_src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/hop_src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/hop_src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/hop_src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1936050-1792431322 after 0 s
+kit0: GU_LAYER PASS layer edges: 3 jobs, 1655 HP/SC beats in, 15 CTL rows out each side, roots 50, rsqrt 2, no fault
+m_old_age: GU_LAYER FAIL 35
+m_wrong_age_p1: GU_LAYER FAIL 35
+GU_BENCH PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1936050-1792431322): exit 0

@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/src
+ot-run: ot-epyc6       admits   825 GB (avail 691, growth 113, headroom 0, waiters 0/0 GB) load 18/128 running 12 disk 6021 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-309420-1792431155 after 0 s
+MUT=0: GUNIT PASS cases=8 router_lat=56 (last SC -> ids row at the stop pins; 68 at the unit pins) hc_lat=964 (last HP -> first coef row at the stop pins; 976 at the unit pins)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-309420-1792431155): exit 0

@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019
+ot-run: ot-epyc6       admits   803 GB (avail 676, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 6017 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-controls-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1937965-1792431351 after 0 s
+PREDECODE PASS cases=2048 all512 seed/square addresses both polarities same-edge
+- tb_predecode.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.010 s; speed 2.126 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1937965-1792431351): exit 0
