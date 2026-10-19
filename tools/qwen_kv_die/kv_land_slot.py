@@ -21,6 +21,8 @@ LAND_GAP = 4.32          # um, landing frame <-> receiving block frame (kv_pin_r
 RST_BUS = re.compile(r'^(rst_|hboot|rrs_)')
 RLY_MASTER = re.compile(r'^qkd_rly_(\d+)$')
 CELL = 43.2
+# KV-PLAN6 10-18: tier 4 re-spaces at most this many stations before the landing (OT_KV_LAND_TAIL_K)
+TAIL_K = int(__import__('os').environ.get('OT_KV_LAND_TAIL_K', '4'))
 
 
 def _rect(it, pad=0.0):
@@ -116,7 +118,7 @@ def reserve(K, m, gap=LAND_GAP):
     keep = [(it.name, _rect(it)) for it in m['insts']] + \
         [(f'keepout:{k[0]}', (k[1], k[2], k[1] + k[3], k[2] + k[4])) for k in m.get('keepouts', [])]
     idx = _Index(keep)
-    rows, moved = [], {}
+    rows, moved, tails = [], {}, {}
     for R, B, pb, bits, bid in sorted(cands):
         it, ib = by[R], by[B]
         ibid, (P, pp) = into[R]
@@ -148,6 +150,109 @@ def reserve(K, m, gap=LAND_GAP):
                 if q[0] < x + w and x < q[2] and q[1] < y + h and y < q[3]:
                     return None
             return (h1, h2)
+        def _tail(R, B, it, ib, bits, w, h, bp, face, flow, lim, lim1, lim2, old_h2):
+            """tier 4: landing at a free receiving-face / near spot + the last k stations re-spaced (see the call)."""
+            chain, cur = [], R
+            while len(chain) < TAIL_K:
+                _ib, (Pq, _pp) = into[cur]
+                if not isrly(Pq) or Pq not in into or tree.get(Pq) != tree[R]:
+                    break
+                chain.insert(0, Pq)
+                cur = Pq
+            if not chain:
+                return None, {}
+            # landing spots: free, out-hop within reach, in-hop ignored (the tail is re-spaced to meet it)
+            spots = []
+            x0, y0, x1, y1 = _rect(ib)
+            for g in [gap + k * K.GY for k in range(9)]:
+                for s in [0.0] + [sg * j * K.GY for j in range(1, 41) for sg in (1, -1)]:
+                    if face == 'W':
+                        x, y, o = K.F.dn(x0 - g - w, K.GX), K.up(bp[1] - h / 2 + s, K.GY), 'R0'
+                    elif face == 'E':
+                        x, y, o = K.up(x1 + g, K.GX), K.up(bp[1] - h / 2 + s, K.GY), 'MY'
+                    elif face == 'S':
+                        x, y, o = K.up(bp[0] - w / 2 + s, K.GX), K.F.dn(y0 - g - h, K.GY), flow
+                    else:
+                        x, y, o = K.up(bp[0] - w / 2 + s, K.GX), K.up(y1 + g, K.GY), flow
+                    spots.append(('abut', x, y, o, round(g, 3)))
+            for i in range(-40, 41):
+                for j in range(-40, 41):
+                    for o in (it.orient, flow):
+                        spots.append(('near', K.up(it.x + i * 4.32, K.GX), K.up(it.y + j * 4.32, K.GY), o, None))
+            free = []
+            for tier, x, y, o, g in spots:
+                if x < 4.32 or y < 4.32 or x + w + 4.32 > Wd or y + h + 4.32 > Hd:
+                    continue
+                _a, b_ = _pins(x, y, w, h, o)
+                h2 = abs(b_[0] - bp[0]) + abs(b_[1] - bp[1])
+                if h2 > max(lim2, old_h2) + 1e-6:
+                    continue
+                if idx.hits((x - 4.32, y - 4.32, x + w + 4.32, y + h + 4.32), skip={B} | set(chain)):
+                    continue
+                q = _rect(ib, gap - 0.01)
+                if q[0] < x + w and x < q[2] and q[1] < y + h and y < q[3]:
+                    continue
+                free.append((tier != 'abut', h2, tier, x, y, o, g))
+            free.sort(key=lambda t: t[:2])
+            for k in range(1, len(chain) + 1):
+                sts = chain[-k:]
+                _ia, (A, pa) = into[sts[0]]
+                apt = pin(A, pa)
+                l0 = lim1 if sts[0] == chain[0] else lim
+                l0 = min(l0, K.PHY_REACH) if (phy and A in by and by[A].master in K.PHY_MASTERS) else l0
+                olds = {s_: dict(x=by[s_].x, y=by[s_].y, orient=by[s_].orient) for s_ in sts}
+                for s_ in sts:
+                    idx.drop(s_)
+                for _p, h2, tier, lx, ly, lo, g in free[:80]:
+                    la, _lb = _pins(lx, ly, w, h, lo)
+                    lr = (lx - 4.32, ly - 4.32, lx + w + 4.32, ly + h + 4.32)
+                    if idx.hits(lr, skip={B}):
+                        continue
+                    idx.add(R, _rect(type('r', (), dict(x=lx, y=ly, w=w, h=h))))
+                    prev, placed, okk = apt, [], True
+                    for i_, s_ in enumerate(sts):
+                        st = by[s_]
+                        lseg = l0 if i_ == 0 else lim
+                        best = None
+                        tx = prev[0] + (la[0] - prev[0]) / (k - i_ + 1)
+                        ty = prev[1] + (la[1] - prev[1]) / (k - i_ + 1)
+                        for di in range(-30, 31):
+                            for dj in range(-30, 31):
+                                x = K.up(tx - st.w / 2 + di * 4.32, K.GX)
+                                y = K.up(ty - st.h / 2 + dj * 4.32, K.GY)
+                                if x < 4.32 or y < 4.32 or x + st.w + 4.32 > Wd or y + st.h + 4.32 > Hd:
+                                    continue
+                                a_, b_ = _pins(x, y, st.w, st.h, st.orient)
+                                hin = abs(a_[0] - prev[0]) + abs(a_[1] - prev[1])
+                                if hin > lseg + 1e-6:
+                                    continue
+                                rem = abs(b_[0] - la[0]) + abs(b_[1] - la[1])
+                                if best is not None and rem >= best[0]:
+                                    continue
+                                if idx.hits((x - 4.32, y - 4.32, x + st.w + 4.32, y + st.h + 4.32)):
+                                    continue
+                                best = (rem, x, y, b_)
+                        if best is None:
+                            okk = False
+                            break
+                        _r, x, y, b_ = best
+                        st.x, st.y = x, y
+                        idx.add(s_, _rect(st))
+                        placed.append(s_)
+                        prev = b_
+                    if okk and abs(prev[0] - la[0]) + abs(prev[1] - la[1]) <= lim + 1e-6:
+                        idx.drop(R)
+                        h1 = abs(prev[0] - la[0]) + abs(prev[1] - la[1])
+                        return ('tail', lx, ly, lo, (h1, h2), g), olds
+                    for s_ in placed:
+                        idx.drop(s_)
+                        by[s_].x, by[s_].y = olds[s_]['x'], olds[s_]['y']
+                    idx.drop(R)
+                for s_ in sts:
+                    by[s_].x, by[s_].y = olds[s_]['x'], olds[s_]['y']
+                    idx.add(s_, _rect(by[s_]))
+            return None, {}
+
         got = None
         # tier 1: abutted to the receiving face nearest B's pin, b face towards B
         x0, y0, x1, y1 = _rect(ib)
@@ -195,6 +300,15 @@ def reserve(K, m, gap=LAND_GAP):
                         if r_ and (best is None or r_[1] < best[4][1]):
                             best = ('near', x, y, o, r_, None)
             got = best
+        tail_moved = {}
+        if got is None and TAIL_K > 0:
+            # tier 4 'tail' (KV-PLAN6 10-18, kvs14p-014fc0154: rly_aq_WS_73 540 b -> astk_WS N, rly_pvin_WN_3_40 1055 b ->
+            # pvfork_WN_3 W): the wider landing frame moves its a pin 43-60 um back, past the in-hop reach, and the free
+            # spots beside the old station are taken.  RESERVE the landing frame at a free spot at the receiving face (or
+            # beside the old station) regardless of the in-hop, then RE-SPACE the last k (<= TAIL_K) stations of the same
+            # tree-X chain between the fixed anchor (stage n-k-1) and the landing: every hop <= the plan reach, stage
+            # count unchanged, every moved station recorded (put back with the landing).
+            got, tail_moved = _tail(R, B, it, ib, bits, w, h, bp, face, flow, lim, lim1, lim2, old_h2)
         row = dict(relay=R, bus=bid, bits=bits, rev=rev, receiver=B, receiver_port=pb, face=face,
                    src_tree=sorted(tree[R]), dst_tree=sorted(tree[B]), old=old, old_hops=[round(old_h1, 1), round(old_h2, 1)],
                    lim=[lim1, lim2], frame=[round(w, 3), round(h, 3)])
@@ -208,6 +322,9 @@ def reserve(K, m, gap=LAND_GAP):
             idx.add(R, _rect(it))
             moved[R] = old
             row.update(tier=tier, at=[x, y, o], gap=g, hops=[round(h1, 1), round(h2, 1)])
+            if tail_moved:
+                tails[R] = tail_moved
+                row['tail'] = {n: dict(old=[o_['x'], o_['y']], at=[by[n].x, by[n].y]) for n, o_ in tail_moved.items()}
         rows.append(row)
     # verification: overlaps and pin hops against the reach, before vs after (a landing adding a violation goes back)
     reach = min(hop, getattr(K, 'KV_REACH', 0) or hop)
@@ -216,14 +333,21 @@ def reserve(K, m, gap=LAND_GAP):
         bad = K.pin_reach(m, K.masters(m, 1), reach=reach)['all']
         hit = {e['a'].split('.')[0] for e in bad} | {e['b'].split('.')[0] for e in bad}
         lim_of = {r['relay']: max(r['lim'] + r['old_hops']) for r in rows if r['relay'] in moved}
-        worse = sorted(n for n in hit & set(moved)
+        lim_of.update({s_: lim_of[r_] for r_, t_ in tails.items() if r_ in lim_of for s_ in t_})
+        worse = sorted(n for n in hit & (set(moved) | {s_ for t_ in tails.values() for s_ in t_})
                        if any(n in (e['a'].split('.')[0], e['b'].split('.')[0]) and e['um'] > lim_of[n] + 1e-6 for e in bad))
         if not worse:
             break
         for n in worse:
+            if n not in moved:
+                # a re-spaced tail station (tier 4) added the violation: put its whole landing back
+                n = next(r_ for r_, t_ in tails.items() if n in t_)
             o_ = moved.pop(n)
             it = by[n]
             it.master, it.x, it.y, it.w, it.h, it.orient = o_['master'], o_['x'], o_['y'], o_['w'], o_['h'], o_['orient']
+            for s_, so_ in tails.pop(n, {}).items():
+                st_ = by[s_]
+                st_.x, st_.y, st_.orient = so_['x'], so_['y'], so_['orient']
             put_back.append(n)
             for r in rows:
                 if r['relay'] == n:
