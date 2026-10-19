@@ -1,0 +1,17 @@
+{
+  "source_commit": "d223fc727",
+  "scope": "COLD_PREFIX=0 actual FACE/provider regression; does not qualify enabled cold prefix",
+  "unit": "oth-ubuntu-1816402-1792426985",
+  "host": "ot-epyc8",
+  "status": "PASS",
+  "checks": {
+    "events": 1512,
+    "boot_records": 54,
+    "pw": 1024,
+    "dw": 8,
+    "head_contexts": 4,
+    "row_words": 64,
+    "scale": 1
+  },
+  "verilator": "5.050"
+}
