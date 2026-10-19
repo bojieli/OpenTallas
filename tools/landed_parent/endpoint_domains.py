@@ -74,12 +74,14 @@ def audit(design, top, roots, native=None):
             if cp not in con or len(con[cp]) != 1 or any(p not in con for p in outs + resets):
                 raise ValueError('native contract pin mismatch: ' + name)
             endpoints[name] = dict(clock=con[cp][0], edge=contract['edge'], outputs=[b for p in outs for b in con[p]],
-                inputs=[b for p, bs in con.items() if p != cp and p not in resets + outs for b in bs])
+                inputs={p: bs for p, bs in con.items() if p != cp and p not in outs},
+                reset_pins=resets)
         elif re.fullmatch(r'\$_(?:DFF|DFFE|SDFF|SDFFE|SDFFCE|DFFSR|DFFSRE)_[A-Z0-9]+_', typ):
             if not all(p in con for p in ('C', 'D', 'Q')) or len(con['C']) != 1:
                 raise ValueError('sequential pin mismatch: ' + name)
             endpoints[name] = dict(clock=con['C'][0], edge='posedge' if typ.split('_')[2][0] == 'P' else 'negedge', outputs=con['Q'],
-                inputs=[b for p, bs in con.items() if p in ('D', 'E') for b in bs])
+                inputs={p: bs for p,bs in con.items() if p not in ('C','Q')},
+                reset_pins=[p for p in con if p in ('R','S')])
         elif typ in ('$_NOT_', '$_BUF_'):
             clock_buffers.append((con['A'][0], con['Y'][0], typ == '$_NOT_'))
             comb.append((name, con['A'], con['Y']))
@@ -148,12 +150,15 @@ def audit(design, top, roots, native=None):
     for name, e in endpoints.items():
         owner = (e['owner'][0], e['phase']) if e['owner'] else None
         foreign = defaultdict(list)
-        for b in e['inputs']:
-            for source in domains[b]:
-                if source != owner:
-                    foreign[source].append(aliases[b][:2])
-        for source, samples in sorted(foreign.items()):
+        for pin, bits in e['inputs'].items():
+            for b in bits:
+                for source in domains[b]:
+                    if source != owner:
+                        foreign[(source, pin)].append(aliases[b][:2])
+        for (source, pin), samples in sorted(foreign.items()):
             crossings.append(dict(sink=name, sink_root=owner[0] if owner else None,
+                                  sink_pin=pin,
+                                  pin_role='reset_set' if pin in e['reset_pins'] else 'data_enable',
                                   sink_active_phase=owner[1] if owner else None,
                                   source_root=source[0], source_active_phase=source[1],
                                   input_bits=len(samples), examples=samples[:3]))

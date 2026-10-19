@@ -54,6 +54,12 @@ def main():
     assert any('unknown leaf' in e for e in r['issues'])
     r=audit(x,'top',roots,{'sram':{'clock':'clk','edge':'posedge','outputs':['dout'],'reset':[]}})
     assert not r['issues'] and r['endpoints_per_root']['A']==2
+    # Synchronous and asynchronous set/reset control sources remain visible.
+    x=deepcopy(d);c=x['modules']['paramod_child']['cells']['capture']
+    c['type']='$_SDFFE_PP0P_';c['connections'].update(R=[5],E=[4])
+    r=audit(x,'top',roots)
+    assert any(c['sink_pin']=='R' and c['pin_role']=='reset_set' and
+               c['source_root']=='A' for c in r['crossings'])
     # Conflicting actual port aliases and width omissions reject explicitly.
     x=deepcopy(d);x['modules']['top']['ports']['ck_b']['bits']=[10]
     try:audit(x,'top',roots)
