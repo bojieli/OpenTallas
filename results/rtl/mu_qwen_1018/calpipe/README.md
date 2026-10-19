@@ -58,3 +58,13 @@ lockstep PASS, calendarMUT33 FAIL. Source qfd_calpipe_selector is in the same
 SV file; no source-list addition. keep_hierarchy deliberately preserves the
 per-source/per-chunk select registers through flatten/opt_merge. Placement
 must treat these small internal modules as soft logic in the core region.
+
+Strict CE/mask follow-up: qfd_calpipe_readvalid keeps sixteen local read-valid
+copies per user, each enabling32 WD register bits, with the original
+clear/freeze/read-pipeline semantics. qfd_calpipe_mask keeps two copies per
+programme mask bit so each drives32 macro pins. Yosys inventory confirms64
+CE modules/64 identities (maximum direct output load1, followed by local
+32-bit write-enable logic),32 mask modules/32 identities (maximum32loads),
+and48 selectors retained. seq_ce lockstep+dense PASS; MUT33 FAIL. All helpers
+live in the existing SV source. Selector-only fullOPSEG repeated PASS is
+selector_opseg_m0.out; CE/mask fullOPSEG harvest pending in lane log.
