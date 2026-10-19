@@ -57,13 +57,24 @@
 // one job's 8 beats and only the static checks remain: fault 15 = pvq overflow (a 9th beat before the drain popped),
 // fault 19 = underflow (the drain slot finds no beat).
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
-// the pair, 3 = q chunk of the neighbouring tile.
+// the pair, 3 = q chunk of the neighbouring tile, 4 = p store: words read from the wrong (even / odd) bank,
+// 5 = p store: no prefetch (the banks are read at the CURRENT pr, so the step gets the previous step's words).
+// SVCB (HOURLY-S81/SVCB 10-19, COORD 0ix (2) option (b)): the p store pmem (was a 512 x 512 flop memory written in all
+// 16 slices) is two banks (even / odd word address) of 2 x ot_sram_1r1w_256x256 (256 rows x 512 b a bank), so the
+// step's two words pr / pr + 1 are one read in each bank.  The macros read on the clock edge (rd_out registered), so
+// the banks are read ONE CYCLE AHEAD at the step's address pr_n = the pr the next cycle will hold (static: ep_v and
+// pstep are known a cycle ahead from registered state).  Read schedule unchanged (0 cycles); the only cost is that a
+// p word must land one cycle before its step's PREFETCH cycle (fault 20 now checks the words written up to the cycle
+// before, pw_q; the compiler PO rule already leaves >= 1 cycle).  PMEM 0 drops the store (the slices that never own
+// P.V: kits for the non-owner positions; pointers and fault checks stay); a PMEM 0 slice whose role is a P.V owner is
+// fault 23 (static configuration error).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att #(
     parameter integer MUT = 0,
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
-    parameter integer PFIFO = 512,
+    parameter integer PFIFO = 512,                // p store depth: 512 = 2 banks x 256 rows (the macro depth)
+    parameter integer PMEM = 1,                   // 1: the p store (4 x ot_sram_1r1w_256x256), 0: dropped (non-owner)
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0
@@ -306,16 +317,41 @@ module dsdv_svc_att #(
         end
     end
 
-    // ------------------------------------------------------------------ p FIFO (stored in all; used by quarter ST)
-    reg [TD*16-1:0] pmem [0:PFIFO-1];
-    reg [PFW:0] pw, pr;
+    // ------------------------------------------------------------------ p store (SVCB: 2 SRAM banks even / odd, prefetch)
+    reg [PFW:0] pw, pr, pw_q;
     wire [PFW:0] pcnt = pw - pr;
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
     wire pvown = tile[3:2] == 2'(ST);
     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
-    wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
+    wire p_wr = pay_mine && f_type == 4'd5;
+    // the pr of the next cycle (the step's address one cycle ahead): registered state only
+    wire [PFW:0] pr_n = ep_v ? pr + (PFW+1)'(pstep) : pr;
+    wire [PFW:0] pr_a = (MUT == 5) ? pr : pr_n;                 // MUT 5: no prefetch
+    wire [2*TD*16-1:0] pb_rd;                                   // {bank 1, bank 0} read words
+    reg pr_odd;                                                  // bank of word pr (registered with the read)
+    generate if (PMEM != 0) begin : g_pmem
+        // word a -> bank a[0], row a[PFW-1:1]; word pr_a in bank pr_a[0], word pr_a + 1 in the other bank
+        wire [PFW-2:0] row_e = pr_a[PFW-1:1] + (PFW-1)'(pr_a[0]);
+        wire [PFW-2:0] row_o = pr_a[PFW-1:1];
+        genvar bk, hf;
+        for (bk = 0; bk < 2; bk = bk + 1) begin : g_bank
+            for (hf = 0; hf < 2; hf = hf + 1) begin : g_half
+                ot_sram_1r1w_256x256_m2_r2c2 u_mem (.clk(clk), .r_ce_in(pvown),
+                    .r_addr_in(bk == 0 ? row_e : row_o), .rd_out(pb_rd[TD*16*bk + 256*hf +: 256]),
+                    .w_ce_in(p_wr && pvown && pw[0] == 1'(bk)), .w_addr_in(pw[PFW-1:1]), .wd_in(q_d[256*hf +: 256]),
+                    .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            end
+        end
+        always @(posedge clk) pr_odd <= (MUT == 4) ? ~pr_a[0] : pr_a[0];
+    end else begin : g_nopmem
+        assign pb_rd = '0;
+        always @(posedge clk) pr_odd <= 1'b0;
+    end endgenerate
+    wire [TD*16-1:0] pw0 = pr_odd ? pb_rd[TD*16 +: TD*16] : pb_rd[0 +: TD*16];   // word pr
+    wire [TD*16-1:0] pw1 = pr_odd ? pb_rd[0 +: TD*16] : pb_rd[TD*16 +: TD*16];   // word pr + 1
+    wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pw1 : {TD*16{1'b1}}, pw0} : '0;
 
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
@@ -358,8 +394,6 @@ module dsdv_svc_att #(
         for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
         // q store
         if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;
-        // p store
-        if (pay_mine && f_type == 4'd5) pmem[pw[PFW-1:0]] <= q_d;
         // landing writes: PC responses, ROWS
         for (k = 0; k < 2; k = k + 1) if (qrv[k]) begin
             reg [16:0] tg; reg [11:0] o144; reg [511:0] two; reg [9:0] slot;
@@ -402,7 +436,7 @@ module dsdv_svc_att #(
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
             po <= 0; pvo <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
-            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
+            ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pw_q <= 0; pr <= 0; p_left <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
             sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0; sm_rd <= 0;
@@ -499,12 +533,14 @@ module dsdv_svc_att #(
             if (eq_v && !eq_ready) fc[12] <= 1'b1;
             if (ekv_v && !kv_ready) fc[13] <= 1'b1;
             // ---- p feed (local: P.V is not cross-slice aligned)
-            if (pay_mine && f_type == 4'd5) begin pw <= pw + 1'b1; if (pcnt >= (PFW+1)'(PFIFO)) fc[14] <= 1'b1; end
+            if (p_wr) begin pw <= pw + 1'b1; if (pcnt >= (PFW+1)'(PFIFO)) fc[14] <= 1'b1; end
+            pw_q <= pw;                                                   // words written before the prefetch cycle
+            if (go && PMEM == 0 && pvown) fc[23] <= 1'b1;                 // a P.V owner role on a slice without the p store
             // ---- static p feed: the step is taken at its compiled cycle whatever the engine says; a refusal is a fault
             jc <= go ? 16'd1 : (jc == 16'hffff ? jc : jc + 1'b1);
             if (ep_v) begin
                 pr <= pr + (PFW+1)'(pstep); p_left <= p_left - 16'(pstep);
-                if (pcnt < (PFW+1)'(pstep)) fc[20] <= 1'b1;                   // p words not landed at the step's cycle
+                if ((PFW+1)'(pw_q - pr) < (PFW+1)'(pstep)) fc[20] <= 1'b1;    // p words not landed by the step's prefetch cycle
                 if (!ep_ready) fc[21] <= 1'b1;                                // the engine did not take the compiled step
             end
             // ---- scores: straight to the score exchange (valid-only, no credit)

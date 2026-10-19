@@ -65,7 +65,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 // attention share + its role inputs (root = ENTRY: ROOT 1 on the entry slices)
 module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                          parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0) (
+                          parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1) (
     input  wire             ck,
     input  wire             rst,
     input  wire [3:0]       sid,
@@ -105,7 +105,7 @@ module dsdv_svc_rs_attw #(parameter integer MUT = 0, parameter integer DIE_ID = 
     wire [7:0] gd = role[21:14];
 `endif
     wire [31:0] a_fc;
-    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO != 0)) u_att (
+    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO != 0), .PMEM(PMEM)) u_att (
         .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ROOT != 0),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[804:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
