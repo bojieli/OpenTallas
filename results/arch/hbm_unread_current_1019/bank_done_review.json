@@ -1,0 +1,3358 @@
+{
+ "schema": "opentallas.hbm_bank_done_review_1019.v1",
+ "manifest_adopted": false,
+ "bits": 88,
+ "entries": [
+  {
+   "instance": "vmb_NE0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE0__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20129,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE0__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE0__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20129,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE0__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20129,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_t0[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE1__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20172,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE1__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE1__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20172,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[561:281]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE1__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20172,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_t1[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE2__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20215,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE2__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE2__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20215,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[842:562]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE2__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20215,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_t2[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE3__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20258,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE3__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE3__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20258,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[1123:843]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE3__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20258,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_t3[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE4__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20301,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE4__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE4__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20301,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[1404:1124]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE4__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20301,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_s0[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE5__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20344,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE5__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE5__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20344,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[1685:1405]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE5__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20344,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_s1[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE6__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20387,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE6__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE6__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20387,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[1966:1686]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE6__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20387,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_s2[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NE7__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20430,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NE7__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NE7__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20430,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NE__vm_kq[2247:1967]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NE7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_NE7__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20430,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_NE__wq_s3[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW0__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19353,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW0__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b0_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW0__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19353,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b0_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW1__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19407,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW1__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b1_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW1__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19407,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[561:281]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b1_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW2__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19461,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW2__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b2_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW2__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19461,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[842:562]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b2_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW3__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19515,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW3__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b3_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW3__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19515,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[1123:843]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b3_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW4__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19569,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW4__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b4_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW4__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19569,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[1404:1124]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b4_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW5__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19623,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW5__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b5_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW5__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19623,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[1685:1405]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b5_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW6__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19677,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW6__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b6_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW6__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19677,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[1966:1686]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b6_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_NW7__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19731,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_NW7__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b7_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_NW7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_NW7__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19731,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_NW__vm_kq[2247:1967]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_NW",
+      "port": "b7_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE0__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19785,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE0__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE0__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19785,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE0__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19785,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_t0[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE1__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19828,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE1__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE1__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19828,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[561:281]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE1__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19828,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_t1[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE2__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19871,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE2__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE2__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19871,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[842:562]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE2__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19871,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_t2[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE3__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19914,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE3__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE3__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19914,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[1123:843]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE3__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19914,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_t3[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE4__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19957,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE4__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE4__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19957,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[1404:1124]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE4__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19957,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_s0[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE5__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20000,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE5__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE5__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20000,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[1685:1405]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE5__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20000,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_s1[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE6__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20043,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE6__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE6__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20043,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[1966:1686]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE6__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20043,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_s2[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SE7__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20086,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SE7__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SE7__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20086,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SE__vm_kq[2247:1967]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SE7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SE7__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 20086,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SE__wq_s3[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW0__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19009,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW0__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b0_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW0__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19009,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b0_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW0",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW0__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19009,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_s0[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b0_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW1__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19052,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW1__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b1_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW1__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19052,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[561:281]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b1_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW1",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW1__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19052,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_s1[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b1_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW2__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19095,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW2__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b2_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW2__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19095,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[842:562]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b2_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW2",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW2__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19095,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_s2[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b2_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW3__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19138,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW3__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b3_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW3__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19138,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[1123:843]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b3_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW3",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW3__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19138,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_s3[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b3_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW4__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19181,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW4__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b4_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW4__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19181,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[1404:1124]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b4_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW4",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW4__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19181,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_t0[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b4_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW5__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19224,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW5__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b5_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW5__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19224,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[1685:1405]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b5_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW5",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW5__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19224,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_t1[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b5_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW6__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19267,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW6__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b6_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW6__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19267,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[1966:1686]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b6_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW6",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW6__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19267,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_t2[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b6_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "dq_done",
+   "net": "vmb_SW7__dq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19310,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "dq",
+    "request_expression": "vmdel_SW7__dq[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b7_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "kq_done",
+   "net": "vmb_SW7__kq_done",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19310,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "kq",
+    "request_expression": "hcollks_SW__vm_kq[2247:1967]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b7_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmb_SW7",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "port": "wq_done1",
+   "net": "vmb_SW7__wq_done1",
+   "width": 1,
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "die_line": 19310,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "classification": "static_write_completion_observation_review",
+   "reason": "Done is a registered pulse from the macro-stage valid and selected writer identity; actual write already occurs on that fixed macro edge. Static producer never stalls or retries from these pulse exports. Bank checks active writers against calendar slots; schedule, protocol and UE failures are preserved in connected bank status and repaired quadrant fatal path.",
+   "evidence": {
+    "request_port": "wq1",
+    "request_expression": "smw_SW__wq_t3[280:0]",
+    "status_consumers": [
+     {
+      "instance": "hb_vms_SW",
+      "port": "b7_status",
+      "ranges": [
+       [
+        0,
+        17
+       ]
+      ]
+     }
+    ],
+    "source_equations": "dq_done<=s2w_v&&s2w_p==WG+4; kq_done<=s2w_v&&s2w_p==WG; wq_done[1]<=s2w_v&&s2w_p==1",
+    "physical_limit": "Native fixed-latency bank/parent timing remains separately required; this source proof does not qualify those clocks."
+   },
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "source_commit": "d517a76ad",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4",
+  "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621",
+  "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": "b069136bfe9572147c212d2c9ba2a11ad162663f777b8a52829e9327b7483a17"
+ },
+ "validation": "Read-only exact source and consumer proof; no new RTL mutant or native clock qualification."
+}
