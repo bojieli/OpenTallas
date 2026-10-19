@@ -232,5 +232,9 @@
     "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
    }
   ]
- }
+ },
+ "defines": [
+  "OT_DSDV_SEQHOST_HARD"
+ ],
+ "hard_define": "OT_DSDV_SEQHOST_HARD"
 }
