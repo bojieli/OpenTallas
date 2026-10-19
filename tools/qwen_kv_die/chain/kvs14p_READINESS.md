@@ -14,6 +14,12 @@ merge). That gate has no diagnostic bypass and refuses the known invalid
 transport reach before any physical case/CTS/GRT job. A diagnostic invocation
 is only useful after a concrete question has a legal source graph.
 
+HKV-STATIONS 10-19: step 1 is IMPLEMENTED in kv_fwd_lanes.py + kv_lane_stations.py: every overreaching
+incident hop gets a real relay stage (all slices of the bus, re-formed into its lane role, recompiled n/E/K/landed
+age) and unslotted wide landings get a legal free frame. On the fa7fe4ff9 actual inputs the reach gate goes 17,130
+overreaching bits -> 0, unmeasured 0, PASS (evidence/lane_stations_fa7fe4ff9.json: 178 stages, 4 moved landings,
+0.0905 mm2, +1/+2 fixed edges on 128 buses). Steps 2-6 remain.
+
 Next qualifying chain, in dependency order:
 
 1. Repair incident relay reservation/stages, including the two wide unslotted

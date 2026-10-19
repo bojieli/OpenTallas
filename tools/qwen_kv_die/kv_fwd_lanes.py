@@ -83,31 +83,13 @@ def landed_cost(n, E):
     return dict(today=n + 1, landed=st + 1 + E + 1, added=st + 2 + E - (n + 1))
 
 
-def main(argv=None):
-    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('--run', required=True, type=Path)
-    ap.add_argument('--netlist-only', action='store_true',
-                    help='bind check before the lane masters have closed views (no LEF / libs; never a physical run)')
-    ap.add_argument('--dry-run', action='store_true', help='write RUN/fwd_lanes.dry.json only')
-    a = ap.parse_args(argv)
-    case, libs = a.run / 'case_kv', a.run / 'libs'
-    lines = (case / 'die.v').read_text().split('\n')
+def form(lines, dirs, slots):
+    """lane formation on the replica netlist (unchanged rules); slots = landing frames (planner + kv_lane_stations)"""
     wires = {}
     for ln in lines:
         m = re.match(r'\s*wire\s+\[(\d+):0\]\s+(\S+);', ln)
         if m:
             wires[m.group(2)] = int(m.group(1)) + 1
-    elef = (case / 'elements.lef').read_text()
-    dirs = defaultdict(dict)
-    cur = pin = None
-    for ln in elef.split('\n'):
-        s = ln.strip()
-        if s.startswith('MACRO '):
-            cur, pin = s.split()[1], None
-        elif cur and s.startswith('PIN '):
-            pin = s.split()[1]
-        elif cur and pin and s.startswith('DIRECTION'):
-            dirs[cur][pin] = s.split()[1].rstrip(';').upper()
     insts, where = {}, {}
     for li, ln in enumerate(lines):
         m = INST.match(ln)
@@ -275,8 +257,6 @@ def main(argv=None):
     # KV-LANDSLOT 10-18: the landing must sit in a frame the die planner reserved for it (kv_land_slot.py ->
     # qkd_rly_<W>_land, kv_rly_std.py lays its forward replicas at the landing outlines; RUN/rly_std.json land_slots).
     # A 36 / 296 / 528-b landing outside one does not fit its station outline (KV-LANEKITS util 181 / 128 / 126 %)
-    rsj = a.run / 'rly_std.json'
-    slots = json.loads(rsj.read_text()).get('land_slots', {}) if rsj.exists() else {}
     lastst = {L['stations'][-1]: L for L in rep['lanes']}
     unslot = [dict(station=s, S=L['S'], src_tree=L['src_tree'], dst_tree=L['dst_tree'], dst=L['dst'])
               for s, L in sorted(lastst.items()) if s not in slots]
@@ -290,17 +270,206 @@ def main(argv=None):
     rep['skipped_examples'] = {k: v[:40] for k, v in skip_ex.items()}
     rep['totals'] = dict(rep['totals'])
     rep['per_master'] = dict(rep['per_master'])
+    return dict(rep=rep, new=new, add_wires=add_wires, where=where, lastst=lastst)
+
+
+def render(lines0, F):
+    """the laned netlist: lane masters on the formed stations + their clock / epoch / strap wires"""
+    lines = list(lines0)
+    for c, (mst, conn) in F['new'].items():
+        li, ind = F['where'][c]
+        lines[li] = f'{ind}{mst} {c} ({conn});'
+    k = max(i for i, ln in enumerate(lines) if re.match(r'\s*wire\b', ln))
+    lines[k + 1:k + 1] = F['add_wires']
+    return lines
+
+
+def reach_classes():
+    return sorted((int(k), float(v)) for k, v in
+                  (part.split(':') for part in os.environ.get('OT_KV_REACH_W', '36:400,296:370,100000:340').split(',')))
+
+
+def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT_KV_STATIONS_ITER', '6'))):
+    """HKV-STATIONS 10-19: form lanes -> adapt -> actual pin reach audit; every overreach becomes a REAL relay stage
+    (kv_lane_stations: BEFORE / AFTER, every slice of the bus) and every unslotted wide landing a legal free frame; the
+    lanes are re-formed so the new stages take their lane role and the lane E / K / landed age follow from n.  Stops at
+    PASS, or when nothing more can be placed (the final audit in main() then refuses)."""
+    import kv_lane_stations as KS
+    classes = reach_classes()
+    vm = {}
+    for fam in ('qkd_rlysh0_', 'qkd_rlysh_', 'qkd_landsh_', 'qkd_landsh0_'):
+        for S in (1, 36, 296, 528):
+            f = ROOT / f'physical/ref_tile/{fam}{S}/views/{fam}{S}/{fam}{S}.lef'
+            if f.exists():
+                vm.update({m['name']: m for m in LO.C.parse_lef(f.read_text())})
+    vlef = '\n'.join(RS.lef_macro(ROOT / f'physical/ref_tile/{n}/views/{n}/{n}.lef')[0] for n in sorted(vm)
+                     if not re.search(rf'^MACRO {n}\s*$', elef, re.M))
+    t = elef.rstrip()
+    end = re.search(r'^END LIBRARY\s*$', t, re.M)
+    elef_all = (t[:end.start()] + vlef + '\n' + t[end.start():]) if end else t + '\n' + vlef + '\n'
+    macros = {m['name']: m for m in LO.C.parse_lef(elef)}
+    macros.update(vm)
+    for m in macros.values():
+        m['pd'] = {x['name']: x for x in m['pins']}
+    die = KS.die_area(case)
+    place0 = (case / 'place.tcl').read_text()
+    pre, place = list(lines), place0
+    slots = dict(slots)
+    inserted, moved, records, refused, history = [], [], [], [], []
+    F = incident = None
+    for it in range(1, max_iter + 1):
+        F = form(pre, dirs, slots)
+        lane_lines = render(pre, F)
+        net = KS.Net(lane_lines, dirs, expr_bits)
+        masters = {n: v[0] for n, v in net.insts.items()}
+        # SLOT: a wide landing with no planner frame -> a legal free frame of its own outline within reach
+        uns = [(s, L) for s, L in sorted(F['lastst'].items()) if s not in slots and L['S'] != 1]
+        if uns:
+            geo = KS.Geo(macros, KS.parse_place(place), die, dirs)
+            geo.build_bins(masters)
+            for s, L in uns:
+                lm = F['new'][s][0]
+                r = KS.reach_of(L['S'], classes)
+                cons, cin = [], []
+                for i, b in enumerate(net.bits(s, 'a')):
+                    d = net.drv.get(b) if b not in ('0', '1') else None
+                    if d:
+                        cin.append((geo.pin(lm, f'a[{i}]') or geo.pin(lm, 'a'), geo.ep_points(d[0], masters[d[0]], d[1], d[2]), r))
+                for i, b in enumerate(net.bits(s, 'b')):
+                    for e in net.lds.get(b, ()):
+                        if e[0] != s:
+                            cons.append((geo.pin(lm, f'b[{i}]') or geo.pin(lm, 'b'), geo.ep_points(e[0], masters[e[0]], e[1], e[2]), r))
+                if L['n'] > 1:
+                    P = L['stations'][-2]
+                    cons.append((geo.pin(lm, 'ckf'), geo.ep_points(P, masters[P], 'ck_o', 0), r))
+                    cons.append((geo.pin(lm, 'ea'), geo.ep_points(P, masters[P], 'eb', 0), r))
+                if L['n'] > 1:
+                    cin += cons[-2:]
+                    cons = cons[:-2]
+                xy = geo.find(lm, cin + cons, ignore=(s,))
+                side = 'both'
+                if xy is None:
+                    # the landing frame beside its receiver (loads within reach); the driver side becomes an ordinary
+                    # overreaching hop that the next iteration repairs with real stations
+                    xy, side = geo.find(lm, cons, ignore=(s,)), 'receiver'
+                if xy is None:
+                    refused.append(dict(op='slot', station=s, master=lm, reason='no legal free landing frame within reach'))
+                    continue
+                m = macros[lm]
+                geo.put(xy[0], xy[1], m['W'], m['H'], s)
+                place = KS.move(place, s, xy)
+                slots[s] = dict(source='kv_lane_stations', master=lm, x_um=xy[0] / 1000, y_um=xy[1] / 1000)
+                moved.append(s)
+                records.append(dict(op='slot', inst=s, master=lm, S=L['S'], within_reach=side, x_um=xy[0] / 1000, y_um=xy[1] / 1000,
+                                    w_um=m['W'] / 1000, h_um=m['H'] / 1000, iteration=it))
+            history.append(dict(iteration=it, slotted=[s for s, _ in uns if s in slots]))
+            if any(s in slots for s, _ in uns):
+                continue
+        placed, orientation = LO.adapt(place, F['new'], vm)
+        incident = LR.audit('\n'.join(lane_lines), elef_all, place, placed, orientation, classes,
+                            extra=set(inserted) | set(moved))
+        history.append(dict(iteration=it, status=incident['status'], **incident['summary']))
+        print(f"kv_lane_stations: iteration {it}: {incident['status']} {json.dumps(incident['summary'])}", flush=True)
+        if incident['status'] == 'PASS':
+            break
+        pairs = {(g['src'][0], g['dst'][0]) for g in incident['groups'] if g['transport'] and g['after_overreach_bits']}
+        history[-1]['violating'] = sorted(pairs)[:40]
+        history[-1]['unmeasured'] = [dict(net=u.get('net'), reason=u.get('reason'), src=u.get('src'), dst=u.get('dst'),
+                                          endpoint=u.get('endpoint')) for u in incident['unmeasured'][:20]]
+        geo = KS.Geo(macros, KS.parse_place(placed), die, dirs)
+        geo.build_bins(masters)
+        edits, recs, ref = KS.plan_repairs(pairs, pre, lane_lines, F['new'], F['rep']['lanes'], geo, dirs, expr_bits,
+                                           classes, it, None)
+        refused += [dict(r, iteration=it) for r in ref]
+        (run / 'lane_stations.partial.json').write_text(json.dumps(dict(history=history, stations=records + recs,
+                                                                         refused=refused), indent=1, default=str) + '\n')
+        if not edits:
+            break
+        pre, place = KS.apply_edits(pre, place, edits, expr_bits)
+        inserted += [e['inst'] for e in edits]
+        records += [dict(r, iteration=it) for r in recs]
+    # lane records: inserted stages and the receiving-side stage after a landing are fixed latency on the bus
+    ins, post = set(inserted), defaultdict(int)
+    for r in records:
+        if r['op'] == 'after':
+            post[r['of']] = 1                    # forks of one stage are parallel: one edge
+    for L in F['rep']['lanes']:
+        L['inserted_stations'] = [c for c in L['stations'] if c in ins]
+        p = post.get(L['stations'][-1], 0)
+        if p:
+            L['post_stages'] = p
+            L['today'] += p
+            L['landed'] += p
+    sm = defaultdict(lambda: dict(count=0, area_um2=0.0))
+    for r in records:
+        if r['op'] in ('before', 'after'):
+            sm[r['predicted_master']]['count'] += 1
+            sm[r['predicted_master']]['area_um2'] += r['w_um'] * r['h_um']
+    summary = dict(inserted=len(inserted), moved_landings=len(moved), refused=len(refused),
+                   iterations=len(history), per_master=dict(sm),
+                   added_area_mm2=round(sum(v['area_um2'] for v in sm.values()) / 1e6, 6),
+                   lanes_with_inserted=sum(1 for L in F['rep']['lanes'] if L['inserted_stations']),
+                   lanes_with_post_stage=sum(1 for L in F['rep']['lanes'] if L.get('post_stages')),
+                   final_status=incident['status'] if incident else None)
+    # bus-level added stages outside any lane (kv_static_ages.fwd_overlay; lane stages already ride n / landed)
+    import kv_static_ages as KSA
+    in_lane = {c for L in F['rep']['lanes'] for c in L['stations']}
+    pos = defaultdict(set)
+    for r in records:
+        if r['op'] == 'before' and r['inst'] not in in_lane:
+            pos[KSA.lane_bid(r['of'])].add(re.sub(r'__s\d+$', '', r['of']))
+    F['rep']['plain_added_stages'] = {b: len(v) for b, v in sorted(pos.items())}
+    summary['plain_added_stages'] = F['rep']['plain_added_stages']
+    record = dict(schema='opentallas.kv_lane_stations.v1', tool='tools/qwen_kv_die/kv_lane_stations.py',
+                  rule='every overreaching transport hop of a forwarded lane gets a REAL relay stage in every slice of '
+                       'its bus (closed qkd_rlys_<S> replica re-formed into its lane role) or a legal moved landing frame',
+                  summary=summary, history=history, stations=records, refused=refused)
+    return F, pre, dict(inserted=inserted, moved=moved, extra=set(inserted) | set(moved), place_pre=place,
+                        summary=summary, record=record)
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument('--run', required=True, type=Path)
+    ap.add_argument('--netlist-only', action='store_true',
+                    help='bind check before the lane masters have closed views (no LEF / libs; never a physical run)')
+    ap.add_argument('--dry-run', action='store_true', help='write RUN/fwd_lanes.dry.json only')
+    a = ap.parse_args(argv)
+    case, libs = a.run / 'case_kv', a.run / 'libs'
+    lines = (case / 'die.v').read_text().split('\n')
+    elef = (case / 'elements.lef').read_text()
+    dirs = defaultdict(dict)
+    cur = pin = None
+    for ln in elef.split('\n'):
+        s = ln.strip()
+        if s.startswith('MACRO '):
+            cur, pin = s.split()[1], None
+        elif cur and s.startswith('PIN '):
+            pin = s.split()[1]
+        elif cur and pin and s.startswith('DIRECTION'):
+            dirs[cur][pin] = s.split()[1].rstrip(';').upper()
+    rsj = a.run / 'rly_std.json'
+    slots = json.loads(rsj.read_text()).get('land_slots', {}) if rsj.exists() else {}
+    lines0, stations = lines, None
+    if a.netlist_only or a.dry_run:
+        F = form(lines, dirs, slots)
+    else:
+        F, lines0, stations = iterate(a.run, case, lines, elef, dirs, slots)
+    rep, new, add_wires, where = F['rep'], F['new'], F['add_wires'], F['where']
+    if stations is not None:
+        rep['stations'] = stations['summary']
     if a.dry_run:
         (a.run / 'fwd_lanes.dry.json').write_text(json.dumps(rep, indent=1) + '\n')
         print(json.dumps(dict(totals=rep['totals'], skipped=rep['skipped'], per_master=rep['per_master'])))
         return 0
-    for c, (mst, conn) in new.items():
-        li, ind = where[c]
-        lines[li] = f'{ind}{mst} {c} ({conn});'
-    k = max(i for i, ln in enumerate(lines) if re.match(r'\s*wire\b', ln))
-    lines[k + 1:k + 1] = add_wires
+    lines = render(lines0, F)
     if not (case / 'die.v.prefwd').exists():
         shutil.copy(case / 'die.v', case / 'die.v.prefwd')
+    if stations is not None and stations['inserted']:
+        # HKV-STATIONS: die.v.prestations = the replica netlist as planned; die.v.prefwd = + the inserted relay stations
+        if not (case / 'die.v.prestations').exists():
+            shutil.copy(case / 'die.v.prefwd', case / 'die.v.prestations')
+        (case / 'die.v.prefwd').write_text('\n'.join(lines0))
     (case / 'die.v').write_text('\n'.join(lines))
     masters = sorted(rep['per_master'])
     # the lane stations / landings keep the relay standard's connections, so a lane master of width S ties the same
@@ -339,9 +508,13 @@ def main(argv=None):
         macros = {m['name']: m for mst, vd in views.items()
                   for m in LO.C.parse_lef((ROOT / vd / f'{mst}.lef').read_text())}
         pf = case / 'place.tcl'
-        placed, orientation = LO.adapt(pf.read_text(), new, macros)
         if not (case / 'place.tcl.prefwd').exists():
             shutil.copy(pf, case / 'place.tcl.prefwd')
+        if stations is not None and (stations['inserted'] or stations['moved']):
+            if not (case / 'place.tcl.prestations').exists():
+                shutil.copy(case / 'place.tcl.prefwd', case / 'place.tcl.prestations')
+            (case / 'place.tcl.prefwd').write_text(stations['place_pre'])
+        placed, orientation = LO.adapt((case / 'place.tcl.prefwd').read_text(), new, macros)
         pf.write_text(placed)
         (case / 'lane_orientations.json').write_text(json.dumps(orientation, indent=1) + '\n')
         rep['orientation_changes'] = len(orientation['changes'])
@@ -364,8 +537,12 @@ def main(argv=None):
                          (part.split(':') for part in os.environ.get('OT_KV_REACH_W',
                                                                     '36:400,296:370,100000:340').split(',')))
         incident = LR.audit((case / 'die.v').read_text(), (case / 'elements.lef').read_text(),
-                            (case / 'place.tcl.prefwd').read_text(), pf.read_text(), orientation, classes)
+                            (case / 'place.tcl.prefwd').read_text(), pf.read_text(), orientation, classes,
+                            extra=stations['extra'] if stations else ())
         (case / 'lane_incident_reach.json').write_text(json.dumps(incident, indent=1) + '\n')
+        rep['reach_gate'] = dict(status=incident['status'], **incident['summary'])
+        if stations is not None:
+            (a.run / 'lane_stations.json').write_text(json.dumps(stations['record'], indent=1) + '\n')
         if incident['status'] != 'PASS':
             raise SystemExit('kv_fwd_lanes: actual adapted lane pin reach FAIL: '
                              + json.dumps(incident['summary'])

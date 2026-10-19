@@ -14,11 +14,12 @@ import re
 import kv_lane_orientation as L
 
 
-def audit(netlist, lef, before_place, after_place, orientation, reach_classes):
+def audit(netlist, lef, before_place, after_place, orientation, reach_classes, extra=()):
+    """extra: instances added to the audited scope (HKV-STATIONS inserted relay stations / moved landing frames)"""
     from kv_fwd_lanes import expr_bits, INST, CONN
 
     report = orientation
-    changed = {x["instance"] for x in report["changes"]}
+    changed = {x["instance"] for x in report["changes"]} | set(extra)
     txt = lef
     macros = {m["name"]: m for m in L.C.parse_lef(txt)}
     # Attach direction (shared LEF reader intentionally omits direction).
@@ -40,6 +41,12 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes):
     wires = {
         m[1]: int(m[0]) + 1 for m in re.findall(r"wire\s+\[(\d+):0\]\s+(\S+);", text)
     }
+    # a net assigned a literal (die.v `assign n_x__tie0 = 1'b0;`) is a constant, not lane transport
+    const = {
+        f"{m[0]}[{i}]"
+        for m in re.findall(r"^\s*assign\s+(\S+)\s*=\s*(\d+)'[bB][01]+\s*;", text, re.M)
+        for i in range(int(m[1]))
+    }
     insts = {}
     for line in text.splitlines():
         m = INST.match(line)
@@ -60,7 +67,7 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes):
     for n in changed:
         for port, expr in insts[n][1].items():
             for bit, b in enumerate(expr_bits(expr, wires)):
-                if b not in ("0", "1"):
+                if b not in ("0", "1") and b not in const:
                     incident.setdefault(b, []).append((n, port, bit))
     ends = collections.defaultdict(list)
     for n, (master, cs) in insts.items():
@@ -124,7 +131,7 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes):
                 widths = [
                     int(insts[e[0]][0].rsplit("_", 1)[1])
                     for e in (s, d)
-                    if insts[e[0]][0].startswith(("qkd_rlysh", "qkd_landsh"))
+                    if insts[e[0]][0].startswith(("qkd_rlys", "qkd_landsh"))
                 ]
                 width = max(widths, default=1)
                 reach = next(
@@ -204,7 +211,7 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes):
         width = max(
             int(insts[e][0].rsplit("_", 1)[1])
             for e in (source, target)
-            if insts[e][0].startswith(("qkd_rlysh", "qkd_landsh"))
+            if insts[e][0].startswith(("qkd_rlys", "qkd_landsh"))
         )
         station = f"qkd_rlysh_{width}"
         m = macros.get(station)
@@ -225,6 +232,7 @@ def audit(netlist, lef, before_place, after_place, orientation, reach_classes):
         schema="opentallas.kv_lane_incident_reach.v1",
         status="FAIL" if violations or unmeasured else "PASS",
         summary=dict(
+            audited_instances=len(changed),
             measured_pairs=len(rows),
             unmeasured_pairs=len(unmeasured),
             transport_pairs=sum(g["bit_pairs"] for g in transport),

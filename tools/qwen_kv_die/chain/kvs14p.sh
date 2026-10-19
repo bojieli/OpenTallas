@@ -61,6 +61,7 @@ say "BUNDLE_EQ: $(grep -m1 -i 'bundle' $R/prep.log | head -c 400)"
 say "prep done: $(tail -1 $R/prep.log | head -c 300)"
 say "LANDSLOT: $(python3 -c "import json;d=json.load(open('$R/case_kv/land_slots.json'));print(d['crossings'],'crossing runs, tiers',d['tiers'],'legality',d['legality']['overlaps'],'/',d['legality']['outside'])" 2>&1)"
 say "FWD: $(tail -1 $R/fwd_lanes.log | head -c 600)"
+say "STATIONS + REACH GATE: $(python3 -c "import json;d=json.load(open('$R/fwd_lanes.json'));print(json.dumps(dict(stations=d.get('stations'),reach_gate=d.get('reach_gate'))))" 2>&1 | head -c 900)"
 say "RST_PER_TREE: $(grep -c '#g' $R/rst_regional.json || true) split reset nets"
 say "STRICT BIND (laned netlist): $(tail -1 $R/port_bind_v2/port_bind_v2.txt 2>/dev/null | head -c 400)"
 python3 tools/qwen_kv_die/kv_fwd_lane_price.py --lanes $R/fwd_lanes.json --out $R/fwd_lane_price.json > $R/fwd_lane_price.log 2>&1 \

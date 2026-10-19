@@ -216,6 +216,13 @@ def fwd_overlay(src, fl):
         if b['bid'] in worst and worst[b['bid']] > b['stages']:
             landed[b['bid']] = (b['stages'], worst[b['bid']])
             b['stages'] = worst[b['bid']]
+    # HKV-STATIONS 10-19: relay stages kv_lane_stations inserted OUTSIDE a lane (plain replicas) are fixed edges too
+    plain = fl.get('plain_added_stages') or {}
+    for b in out['buses']:
+        k = plain.get(b['bid'], 0)
+        if k and b['bid'] not in worst:
+            landed[b['bid']] = (b['stages'], b['stages'] + k)
+            b['stages'] += k
     return out, landed
 
 
