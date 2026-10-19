@@ -1,0 +1,515 @@
+{
+  "schema": "opentallas.attn_b27_physical_admission_model.v1",
+  "verdict": "MODEL_INCOMPLETE_NO_BUILD_ADMISSION",
+  "candidate_sha256": "ac6af21580867b0e1224c7cf7e6476309d5b036cd2ba558ad5014737fbfeddde",
+  "input_hashes": {
+    "old_layout": "47d9c400be78cea49e820e73d7572d7ae22473fe7b74aab896efb77d7346168e",
+    "old_dump": "356f12f9de5be45afbff73f0d3220ca5c332f1efcb917f522744e82f00ce5d89",
+    "reset_partition": "4861d88ad817fe8f8a3de02e324cca77200d422299b5f8fc26cde71bbffd1d01",
+    "boolean_model": "fde15cafe7a0e134bc41db8d3694ea9ed01a97f7f413563b39d58fbd7d27f5f5"
+  },
+  "geometry": {
+    "outline": [
+      216,
+      216
+    ],
+    "macro_count": 0,
+    "proposed_connected_full_core_region": [
+      2.16,
+      2.16,
+      213.84,
+      213.84
+    ],
+    "row_height": 0.27,
+    "rows": 784,
+    "row_capacity_um2": 44808.4224,
+    "original_source_area_um2": 4185.20358,
+    "source_delta_um2": 5.5841400000000005,
+    "candidate_area_um2": 4190.78772,
+    "candidate_util_pct": 9.352678571428571,
+    "old_gate_cells": 44691,
+    "old_gate_cell_area_um2": 5585.087700003141,
+    "old_gate_area_plus_delta_util_pct": 12.476832569769607,
+    "old_gate_rows": 784,
+    "old_cells_outside_full_core": 0,
+    "old_coordinates_do_not_prove_new_source_legal_placement": true,
+    "max_face_density": 5.208333333333333,
+    "pins": 3284,
+    "faces": "N1080 W998 E658 S548; preserve original names/faces/coordinates",
+    "clock_proposal": "preserve original S-centre ck, no pin move",
+    "old_FF_count": 6390,
+    "old_FF_centroid": [
+      80.97038028169051,
+      104.67764788732359
+    ],
+    "S_centre_clock_distance_to_old_mass_um": 131.7072676056331,
+    "pin_bound_minimum_face_span_um": {
+      "N": 207.36,
+      "W": 191.616,
+      "E": 126.336,
+      "S": 105.21600000000001
+    },
+    "pin_bound_low_fill_requires_root_review": true
+  },
+  "reset_copy_targets": [
+    {
+      "name": "cpr32_c12184_1",
+      "endpoints": 32,
+      "old_endpoint_bbox": [
+        4.104,
+        4.995,
+        8.694,
+        52.245000000000005
+      ],
+      "proposed_row_site_seed": [
+        6.804,
+        36.72
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c12184",
+      "ancestor_position_old": [
+        12.906,
+        60.614999999999995
+      ]
+    },
+    {
+      "name": "cpr32_c12184_2",
+      "endpoints": 32,
+      "old_endpoint_bbox": [
+        3.942,
+        2.835,
+        9.18,
+        209.115
+      ],
+      "proposed_row_site_seed": [
+        6.048,
+        14.85
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c12184",
+      "ancestor_position_old": [
+        12.906,
+        60.614999999999995
+      ]
+    },
+    {
+      "name": "cpr32_c12184_3",
+      "endpoints": 32,
+      "old_endpoint_bbox": [
+        3.942,
+        5.265000000000001,
+        8.1,
+        30.915
+      ],
+      "proposed_row_site_seed": [
+        5.454,
+        22.95
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c12184",
+      "ancestor_position_old": [
+        12.906,
+        60.614999999999995
+      ]
+    },
+    {
+      "name": "cpr32_c12184_4",
+      "endpoints": 3,
+      "old_endpoint_bbox": [
+        7.074,
+        23.625,
+        8.694,
+        31.995
+      ],
+      "proposed_row_site_seed": [
+        8.046,
+        24.03
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c12184",
+      "ancestor_position_old": [
+        12.906,
+        60.614999999999995
+      ]
+    },
+    {
+      "name": "cpr32_c12185_1",
+      "endpoints": 32,
+      "old_endpoint_bbox": [
+        3.9960000000000004,
+        6.885,
+        9.936,
+        66.82499999999999
+      ],
+      "proposed_row_site_seed": [
+        6.21,
+        55.89
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c12185",
+      "ancestor_position_old": [
+        13.176,
+        61.425
+      ]
+    },
+    {
+      "name": "cpr32_c12185_2",
+      "endpoints": 25,
+      "old_endpoint_bbox": [
+        4.104,
+        6.075,
+        8.694,
+        27.945
+      ],
+      "proposed_row_site_seed": [
+        6.75,
+        16.74
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c12185",
+      "ancestor_position_old": [
+        13.176,
+        61.425
+      ]
+    },
+    {
+      "name": "cpr32_c27386_1",
+      "endpoints": 16,
+      "old_endpoint_bbox": [
+        4.05,
+        69.525,
+        8.856,
+        73.845
+      ],
+      "proposed_row_site_seed": [
+        6.318,
+        71.82
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27386",
+      "ancestor_position_old": [
+        10.908,
+        70.875
+      ]
+    },
+    {
+      "name": "cpr32_c27387_1",
+      "endpoints": 32,
+      "old_endpoint_bbox": [
+        4.104,
+        57.105000000000004,
+        9.072,
+        208.035
+      ],
+      "proposed_row_site_seed": [
+        6.426,
+        139.86
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27387",
+      "ancestor_position_old": [
+        12.474,
+        68.445
+      ]
+    },
+    {
+      "name": "cpr32_c27388_1",
+      "endpoints": 15,
+      "old_endpoint_bbox": [
+        4.05,
+        60.345,
+        9.126,
+        199.39499999999998
+      ],
+      "proposed_row_site_seed": [
+        5.454,
+        62.1
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27388",
+      "ancestor_position_old": [
+        25.218,
+        181.305
+      ]
+    },
+    {
+      "name": "cpr32_c27389_1",
+      "endpoints": 10,
+      "old_endpoint_bbox": [
+        3.942,
+        201.555,
+        8.694,
+        204.255
+      ],
+      "proposed_row_site_seed": [
+        5.832,
+        202.77
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27389",
+      "ancestor_position_old": [
+        29.646,
+        115.155
+      ]
+    },
+    {
+      "name": "cpr32_c27394_1",
+      "endpoints": 32,
+      "old_endpoint_bbox": [
+        4.104,
+        42.795,
+        9.234,
+        210.195
+      ],
+      "proposed_row_site_seed": [
+        7.074,
+        122.04
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27394",
+      "ancestor_position_old": [
+        11.07,
+        59.265
+      ]
+    },
+    {
+      "name": "cpr32_c27394_2",
+      "endpoints": 10,
+      "old_endpoint_bbox": [
+        3.8339999999999996,
+        203.715,
+        10.152,
+        211.005
+      ],
+      "proposed_row_site_seed": [
+        7.02,
+        206.82
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27394",
+      "ancestor_position_old": [
+        11.07,
+        59.265
+      ]
+    },
+    {
+      "name": "cpr32_c27395_1",
+      "endpoints": 21,
+      "old_endpoint_bbox": [
+        4.104,
+        43.605000000000004,
+        9.234,
+        210.735
+      ],
+      "proposed_row_site_seed": [
+        7.074,
+        204.12
+      ],
+      "seed_is_not_legalized": true,
+      "ancestor_original": "c27395",
+      "ancestor_position_old": [
+        28.728,
+        81.13499999999999
+      ]
+    }
+  ],
+  "balanced_cone": {
+    "leaves": [
+      "n3954",
+      "n3956",
+      "n5071",
+      "n5081",
+      "n5069",
+      "n5073",
+      "n5067",
+      "n5077",
+      "n5089",
+      "n5083",
+      "n5091",
+      "n5075",
+      "n5085",
+      "n5079",
+      "n5087",
+      "n3958",
+      "n5094",
+      "n3960",
+      "n5096",
+      "n5106",
+      "n5104",
+      "n5110",
+      "n5108",
+      "n3952",
+      "n5098",
+      "n5102",
+      "n5100"
+    ],
+    "nodes": [
+      {
+        "name": "cpr27_1_0",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "n3952",
+          "n3954",
+          "n3956",
+          "n3958"
+        ],
+        "output": "npr27_1_0",
+        "level": 1
+      },
+      {
+        "name": "cpr27_1_1",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "n3960",
+          "n5067",
+          "n5069",
+          "n5071"
+        ],
+        "output": "npr27_1_1",
+        "level": 1
+      },
+      {
+        "name": "cpr27_1_2",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "n5073",
+          "n5075",
+          "n5077",
+          "n5079"
+        ],
+        "output": "npr27_1_2",
+        "level": 1
+      },
+      {
+        "name": "cpr27_1_3",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "n5081",
+          "n5083",
+          "n5085",
+          "n5087"
+        ],
+        "output": "npr27_1_3",
+        "level": 1
+      },
+      {
+        "name": "cpr27_1_4",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "n5089",
+          "n5091",
+          "n5094",
+          "n5096"
+        ],
+        "output": "npr27_1_4",
+        "level": 1
+      },
+      {
+        "name": "cpr27_1_5",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "n5098",
+          "n5100",
+          "n5102",
+          "n5104"
+        ],
+        "output": "npr27_1_5",
+        "level": 1
+      },
+      {
+        "name": "cpr27_1_6",
+        "master": "AND3x1_ASAP7_75t_R",
+        "inputs": [
+          "n5106",
+          "n5108",
+          "n5110"
+        ],
+        "output": "npr27_1_6",
+        "level": 1
+      },
+      {
+        "name": "cpr27_2_0",
+        "master": "AND4x1_ASAP7_75t_R",
+        "inputs": [
+          "npr27_1_0",
+          "npr27_1_1",
+          "npr27_1_2",
+          "npr27_1_3"
+        ],
+        "output": "npr27_2_0",
+        "level": 2
+      },
+      {
+        "name": "cpr27_2_1",
+        "master": "AND3x1_ASAP7_75t_R",
+        "inputs": [
+          "npr27_1_4",
+          "npr27_1_5",
+          "npr27_1_6"
+        ],
+        "output": "npr27_2_1",
+        "level": 2
+      },
+      {
+        "name": "cpr27_3_0",
+        "master": "AND2x2_ASAP7_75t_R",
+        "inputs": [
+          "npr27_2_0",
+          "npr27_2_1"
+        ],
+        "output": "n6774",
+        "level": 3
+      }
+    ],
+    "seed": [
+      7.614,
+      211.14
+    ],
+    "physical_stage_reach_um": null,
+    "logic_levels": 3,
+    "added_edges": 0,
+    "added_ff": 0
+  },
+  "timing": {
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "io_hold_margin_ps_min": 30,
+    "old_stage_clock_to_data_ps": 769.4745,
+    "old_replaced_cone_ps": 178.03499999999997,
+    "old_downstream_logic_and_wire_ps": 534.0820000000001,
+    "old_launch_cq_ps": 57.3576,
+    "candidate_total_ps_if_unchanged_downstream": "591.4396 + loaded new cone + added leaf-CQ/wire changes; downstream cannot actually be held constant after new placement",
+    "old_tt_regreg_setup_ps": -15.15021441633735,
+    "candidate_tt_setup_ps": null,
+    "candidate_ff_hold_ps": null,
+    "clock_reference_parent_ps": null,
+    "first_use_phase_age": null,
+    "pin_spread_limit_ps": 80,
+    "realistic_required_costs": [
+      "all27 new leaf capacitances from source model",
+      "13 added clock/reset/set/data FF loads and13INV",
+      "complete combinational-stage wire lengths, not endpoint-only",
+      "TT loaded NLDM cell arcs+actual wire RC",
+      "FF minimum arcs+clock skew+boundary hold",
+      "tree wire/cell power, endpoint activity not assumed zero"
+    ]
+  },
+  "placement_only_proposal": {
+    "requires_root_approval": true,
+    "source": "qkd_kvs_attn_safe_pr32b27.v",
+    "scope": "one exact native source, 216 square,784 connected full-width/full-height rows,3284 full-face track pins; no synthesis, CTS, route, resize, or submit",
+    "reuse": "old exact native LEF/libs/constraints read-only; do not mutate original ODB",
+    "jobs": "one unpinned ot-run memory-admitted placement-only job, finish with immutable hashes and uncapped graph/census/reach/PG/access export",
+    "acceptance": "no source/cycle changes; all cells legal; complete stage wire<=405; no unknown nodes; all-driver<=32; true first/last pin ownership; actual PG/VDD/VSS/contact access; ROOT personally reviews placement PNG",
+    "hold": "loaded TT/FF/native clock plus parent frame/regrant and first use remain separate admission prerequisites"
+  },
+  "closed_claims": {
+    "new_physical_placement": false,
+    "405um": false,
+    "TT_FF": false,
+    "parent": false,
+    "native_clock": false,
+    "full_token": false
+  }
+}
