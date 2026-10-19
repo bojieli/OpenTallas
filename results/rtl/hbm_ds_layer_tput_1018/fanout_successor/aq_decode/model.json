@@ -1,0 +1,28 @@
+{
+  "base": "3eea95a41",
+  "scope": "AQ only; CFG and K/KR owned separately",
+  "latency_hbm_edges_added": 0,
+  "sram_delta": 0,
+  "head_regions": {
+    "before": 4,
+    "after": 8,
+    "bits_each": 20,
+    "delta_ff": 80
+  },
+  "row_regions": {
+    "before": 2,
+    "after": 4,
+    "bits_each": 22,
+    "delta_ff": 44
+  },
+  "delta_ff": 148,
+  "architecture": "Canonical next-state muxes feed unconditional same-edge kept local captures. ACT summary row captures use independent existing ac_v_local state, outside global selected-group enable.",
+  "cost": "124 clock sinks; nominal DFF area subject to mapped census. Original slot not approved; actual standard-cell mass/clock/native reach admission remains required.",
+  "boundary_bits_delta": 0,
+  "memory_bytes_per_cycle_delta": 0,
+  "macs_per_cycle_delta": 0,
+  "routing": "head row each bit <= four banks; command flags each serve eight banks; mapped non-buffer fanout must be <=32 before CTS",
+  "qualification": "23,968-edge exact replay plus HEAD/ACT/REFRESH mutants; full66op154GO parent integration before gate",
+  "queue_count_local_copies": 4,
+  "queue_count_delta_ff": 24
+}

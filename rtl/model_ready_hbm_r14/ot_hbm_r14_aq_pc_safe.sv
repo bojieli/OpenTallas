@@ -66,13 +66,17 @@ module ot_hbm_r14_aq_pc_safe #(
   reg [29:0] qhead;
   // Same-edge local head copies: each row bit drives eight comparators and
   // eight look-row capture muxes; each read flag serves eight bank timers.
-  (* keep="true",dont_touch="true" *) reg [19:0] head_local[0:3];
-  for(genvar g=0;g<4;g=g+1)begin:HEAD_LOCAL
-    always @(posedge clk)if(head_from_push||(wr_ok&&q_n>1))
+  (* keep="true",dont_touch="true" *) reg [19:0] head_local[0:7];
+  // Canonical head mux owns hold/advance once. Local copies capture the
+  // identical next state unconditionally at the original head edge.
+  wire head_capture=head_from_push||(wr_ok&&q_n>1);
+  wire [29:0] head_d=head_capture?head_next:qhead;
+  for(genvar g=0;g<8;g=g+1)begin:HEAD_LOCAL
+    always @(posedge clk)
       `ifdef BW_AQ_MUT_HEAD
-      head_local[g]<=head_next[19:0] ^ (g==0?20'd2:20'd0);
+      head_local[g]<=head_d[19:0] ^ (g==0?20'd2:20'd0);
 `else
-      head_local[g]<=head_next[19:0];
+      head_local[g]<=head_d[19:0];
 `endif
   end
   reg [31:0] hb_oh;
@@ -105,11 +109,11 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk)begin qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};end
   always @(posedge clk)begin
     for(integer b=0;b<32;b=b+1)begin
-      if(q_ne&&hb_oh[b])look_row[b]<=head_local[b/8][19:1];
+      if(q_ne&&hb_oh[b])look_row[b]<=head_local[b/4][19:1];
       else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
     end
     for(integer b=0;b<32;b=b+1)
-      if(row_local[b/16][21]&&c_oh[b])orow[b]<=row_local[b/16][18:0];
+      if(row_local[b/8][21]&&c_oh[b])orow[b]<=row_local[b/8][18:0];
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=qhead[0];   // registered head (valid when q_n != 0)
@@ -122,8 +126,8 @@ module ot_hbm_r14_aq_pc_safe #(
   reg c_v; reg [2:0] c_op; reg [4:0] c_bank; reg [31:0] c_oh; reg [RW_ROW-1:0] c_row;
   // Registered decoded commands share the original command capture edge.
   // The three decoded controls and row word are local to sixteen banks.
-  (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:1];
-  for(genvar g=0;g<2;g=g+1)begin:ROW_LOCAL
+  (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:3];
+  for(genvar g=0;g<4;g=g+1)begin:ROW_LOCAL
     // Only validity/opcode flags reset. The row word is consumed only by ACT.
     always @(posedge clk)row_local[g][18:0]<=r_row;
     always @(posedge clk or negedge reset_regions[32+g])
@@ -133,6 +137,13 @@ module ot_hbm_r14_aq_pc_safe #(
                                 slot_next&&r_v&&r_op==REFPB};
   end
   wire row_fire = c_v;
+  wire [WQW:0] q_n_next=q_n+((qpush&&!wr_ok)?(WQW+1)'(1):
+                               ((!qpush&&wr_ok)?{(WQW+1){1'b1}}:(WQW+1)'(0)));
+  (* keep="true",dont_touch="true" *) reg [WQW:0] q_n_local[0:3];
+  for(genvar qg=0;qg<4;qg=qg+1)begin:QUEUE_COUNT_LOCAL
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)q_n_local[qg]<=0;else q_n_local[qg]<=q_n_next;
+  end
   wire q_ne = q_n != 0;
   wire ref_due = (ref_c == 0);
   wire slot_next = (phase != slot_parity);
@@ -151,7 +162,7 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [3:0] ac_v_local[0:2];
   wire [31:0] act_row_match;
   for(genvar b=0;b<32;b=b+1)begin:ACT_MATCH
-    assign act_row_match[b]=look_row[b]==ac2_row_local[b/16];
+    assign act_row_match[b]=look_row[b]==ac2_row_local[b/8];
   end
   always @* begin
     held=0;need=0;
@@ -176,6 +187,16 @@ module ot_hbm_r14_aq_pc_safe #(
           for(integer k=0;k<3;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
         end
       end
+          for(integer k=0;k<2;k=k+1)begin
+            for(integer b=0;b<RW_ROW;b=b+1)
+              begin:SROW
+                reg found_row;
+                found_row=0;ac2_row_local[k][b]<=ac2_row_local[0][b];
+                for(integer j=0;j<4;j=j+1)if(!found_row&&ac_v_local[b/8][j])begin
+                  found_row=1;ac2_row_local[k][b]<=ac_row[j][b];
+                end
+              end
+          end
       begin:S2 reg found;found=0;ac2_v<=0;
         for(integer g=0;g<4;g=g+1)if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];
 `ifdef BW_AQ_MUT_ACT
@@ -183,16 +204,6 @@ module ot_hbm_r14_aq_pc_safe #(
 `else
           ac2_oh<=32'b1<<ac_b[g];
 `endif
-          for(integer k=0;k<2;k=k+1)begin
-            for(integer b=0;b<RW_ROW;b=b+1)
-              begin:SROW
-                reg found_row;
-                found_row=0;ac2_row_local[k][b]<=0;
-                for(integer j=0;j<4;j=j+1)if(!found_row&&ac_v_local[b/8][j])begin
-                  found_row=1;ac2_row_local[k][b]<=ac_row[j][b];
-                end
-              end
-          end
         end
       end
     end
@@ -203,11 +214,11 @@ module ot_hbm_r14_aq_pc_safe #(
   wire hit_rd = col_v && !col_we, hit_wr = col_v && col_we;
   for (genvar b = 0; b < 32; b = b + 1) begin : bank
     reg [4:0] rcd, ras, wrr; reg [8:0] aok; reg [2:0] rtp;
-    wire act_e = row_local[b/16][21] && c_oh[b];
-    wire pre_e = row_local[b/16][20] && c_oh[b];
-    wire rfp_e = row_local[b/16][19] && c_oh[b];
-    wire rd_e = bank_col[b] && head_local[b/8][0];
-    wire wr_e = bank_col[b] && !head_local[b/8][0];
+    wire act_e = row_local[b/8][21] && c_oh[b];
+    wire pre_e = row_local[b/8][20] && c_oh[b];
+    wire rfp_e = row_local[b/8][19] && c_oh[b];
+    wire rd_e = bank_col[b] && head_local[b/4][0];
+    wire wr_e = bank_col[b] && !head_local[b/4][0];
     always @(posedge clk or negedge reset_regions[b])
       if (!reset_regions[b]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
       else begin
@@ -284,26 +295,26 @@ module ot_hbm_r14_aq_pc_safe #(
   // ---- column: the head entry, strictly in order --------------------------------------------------------------------
   wire [31:0] pre_fl;
   for(genvar b=0;b<32;b=b+1)begin:OPEN_LOCAL
-    assign pre_fl[b]=row_local[b/16][20]&&c_oh[b];
+    assign pre_fl[b]=row_local[b/8][20]&&c_oh[b];
     always @(posedge clk or negedge reset_regions[b])
       if(!reset_regions[b])open[b]<=0;
-      else if(row_local[b/16][21]&&c_oh[b])open[b]<=1;
-      else if(row_local[b/16][20]&&c_oh[b])open[b]<=0;
+      else if(row_local[b/8][21]&&c_oh[b])open[b]<=1;
+      else if(row_local[b/8][20]&&c_oh[b])open[b]<=0;
   end
   // Compare rows locally in parallel instead of selecting a 19-bit word
   // through a 32:1 mux before comparing it. Each head-row bit has 32 loads.
   wire [31:0] head_row_match;
   for(genvar b=0;b<32;b=b+1)begin:HEAD_ROW
-    assign head_row_match[b]=(orow[b]==head_local[b/8][19:1]);
+    assign head_row_match[b]=(orow[b]==head_local[b/4][19:1]);
   end
   wire [31:0] head_timer_ready;
   for(genvar b=0;b<32;b=b+1)begin:HEAD_TIMER
-    assign head_timer_ready[b]=head_local[b/8][0]?rcd_z[b]:rcdw_z[b];
+    assign head_timer_ready[b]=head_local[b/4][0]?rcd_z[b]:rcdw_z[b];
     // The one-hot bank owns its eligibility; the global column result no
     // longer broadcasts into all32 local timer/count update cones.
-    assign bank_col[b]=q_ne&&hb_oh[b]&&open[b]&&head_timer_ready[b]&&
+    assign bank_col[b]=(q_n_local[b/8]!=0)&&hb_oh[b]&&open[b]&&head_timer_ready[b]&&
       !blk[b]&&!pre_fl[b]&&head_row_match[b]&&ccdl_z[b%4]&&
-      (head_local[b/8][0]?(wtr_c==0):(rtw_c==0));
+      (head_local[b/4][0]?(wtr_c==0):(rtw_c==0));
   end
   wire head_bank_rdy = q_ne && |(hb_oh & open & head_timer_ready & ~blk & ~pre_fl & head_row_match);
   wire wr_ok = head_bank_rdy && ccdl_z[hb[1:0]] && (hr ? (wtr_c == 0) : (rtw_c == 0));
