@@ -14,6 +14,10 @@ foreach p [lsort -dictionary -index 0 $ot_ref_l] {
   set i [lindex $p 1]; dict lappend ot_ref_by [[$i getMaster] getName] $i
 }
 set ot_ref_used {}
+proc ot_ref_wrapped_match {sp n} {
+  if {![regsub {^u_ot_pr_core[./]} $n {} c]} { return 0 }
+  return [expr {$sp eq $c || [string match $sp $c]}]
+}
 proc ot_ref_pick {by master pat} {
   upvar ot_ref_used used
   if {![dict exists $by $master]} { error "ref_tile place: no instance of $master in the netlist" }
@@ -22,14 +26,14 @@ proc ot_ref_pick {by master pat} {
     if {[lsearch -exact $used $n] >= 0} continue
     set sp [ot_ref_strip $pat]
     # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
-    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n] && ![ot_ref_wrapped_match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x546_m1 {*u_cmem}]
-$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(129.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x546_m1 at 43.2 129.6 R0"
+$i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x546_m1 at 43.2 86.4 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 1} { error "ref_tile place: expected 1 macros, netlist has $nb" }
