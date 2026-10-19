@@ -140,7 +140,7 @@ module ot_host_if_pb2_observed_rc #(
     output wire [7:0] native_certificate_slot,
     output wire [15:0] event_client, cq_offer_client, report_drained_client,
     output wire [7:0] event_slot, cq_offer_slot, report_drained_slot,
-    output wire report_drained_v, report_drained_native_valid,
+    output wire report_drained_v, report_drained_cq, report_drained_native_valid,
     output wire [58:0] report_drained_tag,
     output wire [1:0] report_drained_gen, report_drained_descgen,
     input wire raw_por_n, warm_rst_n, pll_locked_i,
@@ -471,6 +471,7 @@ module ot_host_if_pb2_observed_rc #(
     assign native_certificate_client = sl_tag[0]; assign native_certificate_slot = 0;
     assign native_certificate_descgen = owner_gen;
     assign native_certificate_v = ENABLE_NATIVE_OWNER_JOIN && certify;
+    assign report_drained_cq = ENABLE_NATIVE_OWNER_JOIN && d_st == D_CQ0_B;
     assign report_drained_v = ENABLE_NATIVE_OWNER_JOIN &&
         ((d_st == D_CQ0_B && m_bvalid && cq_saved_owner_record) ||
          (certify && !cert_generated));
