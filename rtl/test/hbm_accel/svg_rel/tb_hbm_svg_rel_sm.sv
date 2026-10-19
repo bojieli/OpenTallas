@@ -56,19 +56,33 @@ module tb_hbm_svg_rel_sm;
   .fault(xc_fault),.active(xc_active));
  // ---------------- HBM: real controller leaves + DRAM command fixture
  wire[31:0]row_v,col_v,col_we,dram_rvalid;wire[95:0]row_op;wire[159:0]row_bank,col_bank,col_col;wire[607:0]row_row;wire[8191:0]col_data,dram_rdata;wire[1023:0]col_strb;wire native_fault;
+`ifdef HBM_SAFE
+ // Minimum production component: this SM owns PCs0..3. Four complete real
+ // leaves retain all bank/refresh state; the remaining DRAM fixture lanes have
+ // no requesting SM and are outside the measurement. Released masters stay32PC.
+ wire[3:0]safe_pf,safe_of;
+ assign native_fault=|safe_pf || |safe_of || (row_v[0]&&row_v[1]) || (row_v[2]&&row_v[3]);
+ for(genvar p=0;p<4;p=p+1)begin:g_safe_pc
+  ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)) u(
+   .clk(hbm),.rst_n(hrst),.k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(rv_[p]),.kr_rdy(rrdy[p]),.kr_tag(rt[p*17+:17]),.kr_beat(rb[p*4+:4]),.kr_data(rd[p*256+:256]),
+   .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
+   .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(safe_pf[p]),.owner_fault(safe_of[p]));
+ end
+ assign row_v[31:4]=0;assign col_v[31:4]=0;assign col_we[31:4]=0;
+ assign krdy[31:4]=0;assign rv_[31:4]=0;
+`else
 `ifdef HBM_MR
  // HBM-BW 2026-10-19: multi-row controller leaves (per-bank open rows, ACT ahead from a 64-entry queue, refresh key)
-`ifdef HBM_SAFE
- ot_hbm_svc_native_sector_pipeline_leaves_safe controller(.clk(hbm)
-`else
  ot_hbm_svc_native_sector_pipeline_leaves_mr controller(.clk(hbm)
-`endif
 `else
  ot_hbm_svc_native_sector_pipeline_leaves controller(.clk(hbm)
 `endif,.rst_n(hrst),.pc_clk({32{hbm}}),
   .k_tag(kt),.k_wdata(kw),.k_addr(ka),.kr_rdy(rrdy),.k_wstrb(ks),.k_we(kwe),.k_len(kl),.k_rdy(krdy),.kr_v(rv_),.kr_data(rd),.kr_beat(rb),
   .k_wr_done(kdone),.kr_tag(rt),.k_v(kv),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),.col_we(col_we),
   .col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata),.fault(native_fault));
+`endif
  tb_svg_rel_dram_sparse dram(.clk(hbm),.rst_n(hrst),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),
   .col_we(col_we),.col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata));
  // ---------------- the d4g die SM master
