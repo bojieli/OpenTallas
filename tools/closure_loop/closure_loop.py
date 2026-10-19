@@ -2873,6 +2873,21 @@ def installed_helper_receipt(host, run, frozen):
         raise ValueError("original remote helper verification receipt unreadable") from ex
 
 
+def _publish_refresh(frozen):
+    """(current plan, payloads, modes, sanctioned rows) when the effective helper set differs from the frozen plan ONLY
+    in PUBLISH_ONLY paths drifted to exactly origin/main (compare_plans_sanctioned rules); else None."""
+    try:
+        current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+        if HO.compare_plans(frozen, current)[0]:
+            return None
+        ok, _why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+    except (ValueError, OSError, subprocess.SubprocessError, KeyError, TypeError):
+        return None
+    if not ok or not sanctioned or any(r.get("kind") != "publish" for r in sanctioned):
+        return None
+    return current, payloads, {f["path"]: f["mode"] for f in current["files"]}, sanctioned
+
+
 def ship_helpers(host, run, job=None):
     """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -2892,9 +2907,29 @@ def ship_helpers(host, run, job=None):
                     HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
-                    return
+                    pub = _publish_refresh(frozen)
+                    if pub is None:
+                        return
+                    # PUBLISH REFRESH (RLYH0-FIN 2026-10-19): an installed, verified run dir is re-entered (resume-postroute
+                    # / re-collect) and ONLY publish helpers (view_export.py) drifted to exactly origin/main: ship the
+                    # current publish bytes into cl/ (the route's own helpers are byte-identical, nothing else changes).
+                    # Without this the PUBLISH_ONLY sanction never reached a preserved closed route: resume-postroute
+                    # of qfwd_rlyh0_128_ne_65x30-f1-fc2236d82 re-ran the frozen exporter and lost the CLOSED result again.
+                    current, payloads, modes, sanctioned = pub
+                    job.setdefault("route_overlay_plan_gate", frozen)
+                    job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
+                                                                           for r in sanctioned)
+                    for r in sanctioned:
+                        event(job, f"PUBLISH SANCTION (installed run): {r['path']} frozen {r['frozen_git_blob'][:9]} -> "
+                                   f"fleet/main {r['current_git_blob'][:9]} (origin/main {str(r['origin_main'])[:9]}); "
+                                   f"cl/ refreshed, route helpers unchanged")
+                    job["route_overlay_plan"] = frozen = current
+                    job["helper_overlay_verification"]["mutation"] = True
+                    HO.store_payloads(HELPER_STORE, frozen, payloads)
                 origin = job.get("bench_helper_origin")
-                if origin:
+                if payloads is not None:
+                    pass                                                   # publish refresh above
+                elif origin:
                     if origin == dict(host=host, run=run):
                         raise ValueError("bench helper origin must be a different execution location")
                     original = installed_helper_receipt(origin["host"], origin["run"], frozen)
