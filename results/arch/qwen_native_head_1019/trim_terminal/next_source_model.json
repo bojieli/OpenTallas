@@ -1,0 +1,1294 @@
+{
+  "status": "MODEL_ONLY_NOT_SOURCE_SAFE",
+  "source": "5cd31ebb8",
+  "FF": 6719,
+  "macros": {
+    "ot_sram_1r1w2c_128x64_m1": 2,
+    "ot_sram_1r1w_32x64_m1": 13
+  },
+  "unconsumed_capture_FF": 7,
+  "holding_chain_count": 201,
+  "holding_chain_bits": 722,
+  "unsafe_root_count": 83,
+  "copy_leaf_count_lower_bound": 231,
+  "copy_additional_FF_lower_bound": 95,
+  "roots": [
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$65649",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.rt",
+        "u_h.u_lane.g_new_ve1.u_v.rst_n",
+        "u_h.u_lane.g_packed_d38.u_d38.rst_n",
+        "u_h.u_lane.g_packed_d914.u_d914.rst_n"
+      ],
+      "ultimate": 1603,
+      "direct": 1603,
+      "minimum_32load_copies": 51
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$46326",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.g_tls.ring_on"
+      ],
+      "ultimate": 130,
+      "direct": 130,
+      "minimum_32load_copies": 5
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$48629",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.s1_tag",
+        "u_h.u_lane.t_lane"
+      ],
+      "ultimate": 128,
+      "direct": 128,
+      "minimum_32load_copies": 4
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$78867",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13401.BB",
+        "$auto$alumacc.cc:548:replace_alu$13401.BB",
+        "$auto$alumacc.cc:548:replace_alu$13401.BB",
+        "$auto$alumacc.cc:548:replace_alu$13401.BB"
+      ],
+      "ultimate": 119,
+      "direct": 118,
+      "minimum_32load_copies": 4
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$85012",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13831.BB",
+        "$auto$alumacc.cc:548:replace_alu$13831.BB",
+        "$auto$alumacc.cc:548:replace_alu$13831.BB",
+        "$auto$alumacc.cc:548:replace_alu$13831.BB"
+      ],
+      "ultimate": 119,
+      "direct": 118,
+      "minimum_32load_copies": 4
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$98831",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$14385.BB",
+        "$auto$alumacc.cc:548:replace_alu$14385.BB",
+        "$auto$alumacc.cc:548:replace_alu$14385.BB",
+        "$auto$alumacc.cc:548:replace_alu$14385.BB"
+      ],
+      "ultimate": 119,
+      "direct": 118,
+      "minimum_32load_copies": 4
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$97070",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13066.BB",
+        "$auto$alumacc.cc:548:replace_alu$13066.BB",
+        "$auto$alumacc.cc:548:replace_alu$13066.BB",
+        "$auto$alumacc.cc:548:replace_alu$13066.BB"
+      ],
+      "ultimate": 117,
+      "direct": 116,
+      "minimum_32load_copies": 4
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$56920",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.cmp_c",
+        "u_h.u_lane.u_ad.g_l.u.u_cmp.cout",
+        "u_h.u_lane.u_ad.g_l.u.u_cmp.g[5]"
+      ],
+      "ultimate": 89,
+      "direct": 89,
+      "minimum_32load_copies": 3
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$59176",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_e1.g_l.u.cmp_c",
+        "u_h.u_lane.u_e1.g_l.u.u_cmp.cout",
+        "u_h.u_lane.u_e1.g_l.u.u_cmp.g[5]"
+      ],
+      "ultimate": 88,
+      "direct": 88,
+      "minimum_32load_copies": 3
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$48712",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.s1_tag",
+        "u_h.u_lane.t_bsrc"
+      ],
+      "ultimate": 65,
+      "direct": 65,
+      "minimum_32load_copies": 3
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$48630",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.s1_tag",
+        "u_h.u_lane.t_lane"
+      ],
+      "ultimate": 64,
+      "direct": 64,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$74923",
+        "Y",
+        0
+      ],
+      "type": "$_XOR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13180.A",
+        "$auto$alumacc.cc:548:replace_alu$13180.P"
+      ],
+      "ultimate": 52,
+      "direct": 51,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$40352",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$share.cc:663:make_supercell$14999.B",
+        "$flatten\\u_h.\\u_lane.\\u_ad.\\g_l.u.$not$rtl/hdc/ot_hdc_fp32_add_lat.sv:86$11081_Y"
+      ],
+      "ultimate": 52,
+      "direct": 52,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$40347",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$share.cc:663:make_supercell$15019.B",
+        "$auto$wreduce.cc:514:run$12485"
+      ],
+      "ultimate": 51,
+      "direct": 51,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$51051",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$51052",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$51053",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$51054",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$53456",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$53457",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$53458",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$53459",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$61114",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$61115",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$61116",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$61117",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$63519",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$63520",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$63521",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$63522",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.s2_sh"
+      ],
+      "ultimate": 48,
+      "direct": 48,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$45105",
+        "Y",
+        0
+      ],
+      "type": "$_AND_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13106.B",
+        "$auto$alumacc.cc:548:replace_alu$13106.BB"
+      ],
+      "ultimate": 48,
+      "direct": 47,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$74922",
+        "Y",
+        0
+      ],
+      "type": "$_XOR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13180.A",
+        "$auto$alumacc.cc:548:replace_alu$13180.P"
+      ],
+      "ultimate": 45,
+      "direct": 43,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$50954",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.s2_prod",
+        "u_h.u_lane.u_ma.g_l.u.top"
+      ],
+      "ultimate": 43,
+      "direct": 43,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$53359",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.s2_prod",
+        "u_h.u_lane.u_mb.g_l.u.top"
+      ],
+      "ultimate": 43,
+      "direct": 43,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$61017",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.s2_prod",
+        "u_h.u_lane.u_mc.g_l.u.top"
+      ],
+      "ultimate": 43,
+      "direct": 43,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$63422",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.s2_prod",
+        "u_h.u_lane.u_md.g_l.u.top"
+      ],
+      "ultimate": 43,
+      "direct": 43,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$40346",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$share.cc:663:make_supercell$15019.B"
+      ],
+      "ultimate": 43,
+      "direct": 42,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$40351",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$share.cc:663:make_supercell$14999.B"
+      ],
+      "ultimate": 43,
+      "direct": 42,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$46202",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$14860.CO",
+        "$auto$alumacc.cc:548:replace_alu$14860.P",
+        "$auto$alumacc.cc:548:replace_alu$14947.Y",
+        "$auto$alumacc.cc:548:replace_alu$14983.Y"
+      ],
+      "ultimate": 43,
+      "direct": 37,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$51055",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.s2_sh"
+      ],
+      "ultimate": 40,
+      "direct": 40,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$53460",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.s2_sh"
+      ],
+      "ultimate": 40,
+      "direct": 40,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$61118",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.s2_sh"
+      ],
+      "ultimate": 40,
+      "direct": 40,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$63523",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.s2_sh"
+      ],
+      "ultimate": 40,
+      "direct": 40,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$45093",
+        "Y",
+        0
+      ],
+      "type": "$_AND_",
+      "names": [
+        "$auto$rtlil.cc:3270:ReduceAnd$13138",
+        "$auto$wreduce.cc:514:run$12758"
+      ],
+      "ultimate": 40,
+      "direct": 40,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$46957",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$simplemap.cc:277:simplemap_eqne$46952"
+      ],
+      "ultimate": 40,
+      "direct": 3,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$74921",
+        "Y",
+        0
+      ],
+      "type": "$_XOR_",
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$13180.A"
+      ],
+      "ultimate": 39,
+      "direct": 35,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$46125",
+        "Y",
+        0
+      ],
+      "type": "$_NOT_",
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$46487",
+        "$auto$wreduce.cc:514:run$12757"
+      ],
+      "ultimate": 38,
+      "direct": 38,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39434",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.b2_in",
+        "u_h.u_lane.u_ad.g_l.u.d2_in",
+        "u_h.u_lane.u_ad.g_l.u.t_sub",
+        "u_h.u_lane.u_ad.g_l.u.u_cb.g_r.r"
+      ],
+      "ultimate": 36,
+      "direct": 36,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39535",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_e1.g_l.u.b2_in",
+        "u_h.u_lane.u_e1.g_l.u.d2_in",
+        "u_h.u_lane.u_e1.g_l.u.t_sub",
+        "u_h.u_lane.u_e1.g_l.u.u_cb.g_r.r"
+      ],
+      "ultimate": 36,
+      "direct": 36,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$40345",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$share.cc:663:make_supercell$15019.B"
+      ],
+      "ultimate": 35,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$40350",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$share.cc:663:make_supercell$14999.B"
+      ],
+      "ultimate": 35,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:298:simplemap_mux$58051",
+        "Y",
+        0
+      ],
+      "type": "$_MUX_",
+      "names": [
+        "$auto$alumacc.cc:564:replace_alu$14339",
+        "u_h.u_lane.u_e1.g_l.u.a1",
+        "u_h.u_lane.u_e1.g_l.u.a2_in",
+        "u_h.u_lane.u_e1.g_l.u.a_exp"
+      ],
+      "ultimate": 35,
+      "direct": 35,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39199",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.c3",
+        "u_h.u_lane.u_ma.g_l.u.c4",
+        "u_h.u_lane.u_ma.g_l.u.o_sub",
+        "u_h.u_lane.u_ma.g_l.u.r_sub"
+      ],
+      "ultimate": 34,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39202",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.c3",
+        "u_h.u_lane.u_ma.g_l.u.c4",
+        "u_h.u_lane.u_ma.g_l.u.c6",
+        "u_h.u_lane.u_ma.g_l.u.e_byp"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39241",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.c3",
+        "u_h.u_lane.u_mb.g_l.u.c4",
+        "u_h.u_lane.u_mb.g_l.u.o_sub",
+        "u_h.u_lane.u_mb.g_l.u.r_sub"
+      ],
+      "ultimate": 34,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39244",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.c3",
+        "u_h.u_lane.u_mb.g_l.u.c4",
+        "u_h.u_lane.u_mb.g_l.u.c6",
+        "u_h.u_lane.u_mb.g_l.u.e_byp"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39283",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.c3",
+        "u_h.u_lane.u_md.g_l.u.c4",
+        "u_h.u_lane.u_md.g_l.u.o_sub",
+        "u_h.u_lane.u_md.g_l.u.r_sub"
+      ],
+      "ultimate": 34,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39286",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.c3",
+        "u_h.u_lane.u_md.g_l.u.c4",
+        "u_h.u_lane.u_md.g_l.u.c6",
+        "u_h.u_lane.u_md.g_l.u.e_byp"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39325",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.c3",
+        "u_h.u_lane.u_mc.g_l.u.c4",
+        "u_h.u_lane.u_mc.g_l.u.o_sub",
+        "u_h.u_lane.u_mc.g_l.u.r_sub"
+      ],
+      "ultimate": 34,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$39328",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_PN0_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.c3",
+        "u_h.u_lane.u_mc.g_l.u.c4",
+        "u_h.u_lane.u_mc.g_l.u.c6",
+        "u_h.u_lane.u_mc.g_l.u.e_byp"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$56579",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.c2_in",
+        "u_h.u_lane.u_ad.g_l.u.s2_byp",
+        "u_h.u_lane.u_ad.g_l.u.u_byp",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.d"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$58862",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_e1.g_l.u.c2_in",
+        "u_h.u_lane.u_e1.g_l.u.s2_byp",
+        "u_h.u_lane.u_e1.g_l.u.u_byp",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.d"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$55006",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.a1",
+        "u_h.u_lane.u_ad.g_l.u.a2_in",
+        "u_h.u_lane.u_ad.g_l.u.nonfinite",
+        "u_h.u_lane.u_ad.g_l.u.u_ca.d"
+      ],
+      "ultimate": 34,
+      "direct": 34,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$56581",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.c2_in",
+        "u_h.u_lane.u_ad.g_l.u.s2_zero",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.d",
+        "u_h.u_lane.u_ad.g_l.u.u_cc.q"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$ff.cc:337:slice$58864",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.u_e1.g_l.u.c2_in",
+        "u_h.u_lane.u_e1.g_l.u.s2_zero",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.d",
+        "u_h.u_lane.u_e1.g_l.u.u_cc.q"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$57832",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.u_esub.b"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:106:simplemap_bitop$59945",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_e1.g_l.u.u_esub.b"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$45698",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$opt_reduce.cc:137:opt_pmux$11981"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$46983",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$simplemap.cc:277:simplemap_eqne$46978"
+      ],
+      "ultimate": 33,
+      "direct": 1,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$47352",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$simplemap.cc:277:simplemap_eqne$47347"
+      ],
+      "ultimate": 33,
+      "direct": 1,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:157:simplemap_reduce$47365",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$simplemap.cc:277:simplemap_eqne$47360"
+      ],
+      "ultimate": 33,
+      "direct": 1,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:198:logic_reduce$55041",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$55040"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:198:logic_reduce$55077",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$55076"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:227:simplemap_lognot$46985",
+        "Y",
+        0
+      ],
+      "type": "$_NOT_",
+      "names": [
+        "$flatten\\u_h.\\u_lane.$procmux$11363_CMP"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:227:simplemap_lognot$47354",
+        "Y",
+        0
+      ],
+      "type": "$_NOT_",
+      "names": [
+        "$flatten\\u_h.\\u_lane.$procmux$11364_CMP"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:227:simplemap_lognot$47367",
+        "Y",
+        0
+      ],
+      "type": "$_NOT_",
+      "names": [
+        "$flatten\\u_h.\\u_lane.$procmux$11365_CMP"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$50636",
+        "Y",
+        0
+      ],
+      "type": "$_AND_",
+      "names": [
+        "u_h.u_lane.u_ma.g_l.u.c6",
+        "u_h.u_lane.u_ma.g_l.u.e_over",
+        "u_h.u_lane.u_ma.g_l.u.over",
+        "u_h.u_lane.u_ma.g_l.u.u_c6.d"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$53041",
+        "Y",
+        0
+      ],
+      "type": "$_AND_",
+      "names": [
+        "u_h.u_lane.u_mb.g_l.u.c6",
+        "u_h.u_lane.u_mb.g_l.u.e_over",
+        "u_h.u_lane.u_mb.g_l.u.over",
+        "u_h.u_lane.u_mb.g_l.u.u_c6.d"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$56128",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_ad.g_l.u.over"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$58464",
+        "Y",
+        0
+      ],
+      "type": "$_OR_",
+      "names": [
+        "u_h.u_lane.u_e1.g_l.u.over"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$60699",
+        "Y",
+        0
+      ],
+      "type": "$_AND_",
+      "names": [
+        "u_h.u_lane.u_mc.g_l.u.c6",
+        "u_h.u_lane.u_mc.g_l.u.e_over",
+        "u_h.u_lane.u_mc.g_l.u.over",
+        "u_h.u_lane.u_mc.g_l.u.u_c6.d"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "$auto$simplemap.cc:256:simplemap_logbin$63104",
+        "Y",
+        0
+      ],
+      "type": "$_AND_",
+      "names": [
+        "u_h.u_lane.u_md.g_l.u.c6",
+        "u_h.u_lane.u_md.g_l.u.e_over",
+        "u_h.u_lane.u_md.g_l.u.over",
+        "u_h.u_lane.u_md.g_l.u.u_c6.d"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    },
+    {
+      "driver": [
+        "u_h.u_lane.g_packed_dmc.u_dmc.g_bank[0].u_bank/$auto$ff.cc:337:slice$102758",
+        "Q",
+        0
+      ],
+      "type": "$_DFF_P_",
+      "names": [
+        "u_h.u_lane.c_tail",
+        "u_h.u_lane.g_packed_dmc.u_dmc.q",
+        "u_h.u_lane.g_packed_dmc.u_dmc.qo",
+        "u_h.u_lane.g_packed_dmc.u_dmc.g_bank[0].u_bank/q"
+      ],
+      "ultimate": 33,
+      "direct": 33,
+      "minimum_32load_copies": 2
+    }
+  ],
+  "reset": {
+    "old_release_local_edge": 1,
+    "provisional_new_release_local_edge": 4,
+    "face_FF": 2,
+    "branch_FF": 2,
+    "leaf_FF": 51,
+    "global_added_edges": null,
+    "parent_existing_guard_edges": 18,
+    "requirement": "Actual stopped-clock/native phase/cohort first-input ledger; local +3 is not global +3. Recompute after useful copies and ring controls."
+  },
+  "open": [
+    "201 chains require semantic/useful-consumer audit, not automatic replacement",
+    "Full retained BUF/INV-transparent all-role census after actual construction including copy-D and upstream inputs",
+    "Mapped area/depth/clock cap/reach/registered faces/PG contacts and 43.2 lattice before gate",
+    "No blanket zero epoch/assertion exception; no source or reset RTL changed"
+  ]
+}

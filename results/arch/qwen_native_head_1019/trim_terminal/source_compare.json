@@ -1,0 +1,178 @@
+[
+  {
+    "path": "collect_control_proof_pickup.py",
+    "matches_5cd31ebb8": false
+  },
+  {
+    "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/common/landed_parent/ot_pl_land.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/common/landed_parent/ot_pl_stream_land.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_fpu.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_sfu_q.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_vreduce.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_vstream_lane.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_vstream_lane_t.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/lib/ot_rst_pipe.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/physical/ot_hdc_vred_pending_guard.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_head_native_b64.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_heads.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_reset_bank.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_ring_delay.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_scalar2_csafe.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_slice2_landed_rsafe.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_stream.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_su8_landed.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_dv/qfd_dv_vm.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/full_sm_service/sram_models.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/hbm_rf_visibility/scale_sram_model.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/qwen_dv/dv_bench.py",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/qwen_dv/dv_bench2.py",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/qwen_dv/qfd_dv_su_lane_native_b64_fixture.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/qwen_dv/safe_storage/sram_model.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "rtl/test/qwen_dv/tb_qfd_dv2.sv",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "tools/hdc_golden.py",
+    "matches_5cd31ebb8": true
+  },
+  {
+    "path": "tools/qwen_native_head_1019/run_production.py",
+    "matches_5cd31ebb8": true
+  }
+]
