@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hgi_qw_dbq",
+ "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+ "lib_cell": "ot_hgi_qw_dbq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 168.7,
+ "spread_ps": 23.2,
+ "outputs": 514,
+ "inputs": 2036,
+ "launch_ps": 255.1,
+ "launch_pin": "byo[149]",
+ "capture_ps": 108.1,
+ "capture_pin": "xb[658]",
+ "launch_over": 78,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 22.3,
+ "ff_launch_min_ps": 119.1,
+ "ff_hold_need_ps": -35.7,
+ "pass": false,
+ "fail_why": "launch 255.08915 > 220 (78 pins)"
+}

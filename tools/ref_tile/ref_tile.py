@@ -44,6 +44,7 @@ sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
+import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
 
@@ -263,6 +264,11 @@ def pin_regs_plan(s: dict) -> dict | None:
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
 
 
+def ce_generate(s: dict) -> str:
+    """clock_entry_constraints.generate with the CDC fsm_extract guard (cdc_fsm_guard.py) after the CDC bindings."""
+    return cdc_fsm_guard.splice(clock_entry_constraints.generate(s, ROOT), s)
+
+
 def pin_regs_vars(s: dict) -> list:
     plan = pin_regs_plan(s)
     if not plan or not plan["enable"]:
@@ -465,8 +471,10 @@ def load_spec(path: str) -> dict:
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
-        if (s.get("clock") == "multiple_cts_roots" and s["kind"] != "tile" or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
-            raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile; '
+        # PL-KIT 10-18: multiple_cts_roots is also a LANDED cluster (tools/landed_parent/lp.py parents): kind cluster with
+        # hard children whose clock pins sit on their region root (clock_entry_constraints.landed_cluster)
+        if (s.get("clock") == "multiple_cts_roots" and s["kind"] not in ("tile", "cluster") or s.get("clock") == "entries" and s["kind"] != "cluster") or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
+            raise SpecError('spec: clock entries/hybrid_entries require kind cluster; multiple_cts_roots requires kind tile or cluster; '
                             'each requires clock_ports and clock_port == clock_ports[0]')
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
             raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
@@ -475,6 +483,11 @@ def load_spec(path: str) -> dict:
                 raise SpecError("multiple_cts_roots owns the clock relationship and boundary; custom timing/clock hooks are unsupported")
             if s.get("clock_cts_roots") is not None:
                 raise SpecError("multiple_cts_roots derives every CTS root from clock_ports")
+            if s["kind"] == "cluster":
+                try:
+                    clock_entry_constraints.landed_record(s, ROOT)
+                except (ValueError, OSError) as error:
+                    raise SpecError(str(error)) from error
             clock_entry_constraints.domains(s)
         elif s.get("clock") == "hybrid_entries":
             roots = s.get("clock_cts_roots")
@@ -1154,6 +1167,26 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
     return True
 
 
+def between_in_stack(a: dict, b: dict, blocks: list) -> bool:
+    """a and b are two members of ONE abutted N-S stack that are not neighbours: overlapping in x, and the y gap between
+    them is filled by a chain of blocks each abutted_stack() to the next (a 3+ high bank of arrays; KV-PROMPT4 10-18:
+    the pairwise channel test saw macro 0 / macro 2 of a 4-high stack 17.9 um apart and failed it)."""
+    lo, hi = (a, b) if a["y"] < b["y"] else (b, a)
+    if not (min(lo["x"] + lo["w"], hi["x"] + hi["w"]) > max(lo["x"], hi["x"])):
+        return False
+    chain = sorted((c for c in blocks if c["y"] >= lo["y"] - 1e-6 and c["y"] + c["h"] <= hi["y"] + hi["h"] + 1e-6
+                    and min(c["x"] + c["w"], lo["x"] + lo["w"]) > max(c["x"], lo["x"])
+                    and min(c["x"] + c["w"], hi["x"] + hi["w"]) > max(c["x"], hi["x"])), key=lambda c: c["y"])
+    if len(chain) < 3 or chain[0] is not lo or chain[-1] is not hi:
+        return False
+    for p, q in zip(chain, chain[1:]):
+        gx = max(q["x"] - (p["x"] + p["w"]), p["x"] - (q["x"] + q["w"]))
+        gy = q["y"] - (p["y"] + p["h"])
+        if not abutted_stack(p, q, gx, gy):
+            return False
+    return True
+
+
 def bare_face(b: dict, face: str) -> bool:
     """True when the hard MACRO's face that ends up toward tile face `face` carries no pin of any use (signal, clock,
     power, ground) within 200 nm (as abutted_row).  Such a face next to a core edge whose tile face has no pins needs
@@ -1333,6 +1366,8 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gx = max(b["x"] - (a["x"] + a["w"]), a["x"] - (b["x"] + b["w"]))
             gy = max(b["y"] - (a["y"] + a["h"]), a["y"] - (b["y"] + b["h"]))
             gap = max(gx, gy)
+            if gap < CHANNEL_UM - 1e-6 and between_in_stack(a, b, blocks):
+                continue    # non-neighbours of one abutted stack: the macros between them fill the "gap" (KV-PROMPT4)
             if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
                 continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
             if gap < CHANNEL_UM - 1e-6 and abutted_row(a, b, gx, gy):
@@ -1472,7 +1507,7 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + clock_entry_constraints.generate(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1504,7 +1539,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
-            + clock_entry_constraints.generate(s, ROOT) + "\nset_propagated_clock [all_clocks]\n")
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + "\nset_propagated_clock [all_clocks]\n")
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -1549,40 +1585,52 @@ def gen_signoff_ffrepair(s: dict, refglob: str, inter: str) -> str | None:
 
 
 def child_insertions(s: dict) -> dict:
-    """{child master: clock-pin insertion ps} from each hard child's TT lib (max_clock_tree_path), 0 when absent"""
+    """{child master: clock-pin insertion ps} from each hard child's TT lib (max_clock_tree_path), 0 when absent.
+    A child's "clock_tap_ps" (S81-DEC3 2026-10-18, HANDOFF 0fz) taps that child's clock pin that much LATER at TT
+    (spine target lowered by it) to match its LINKED neighbours at both corners; absent = 0 (kits byte-identical)."""
     out = {}
     for ch in s["children"]:
-        v = ch["view"]
-        if s.get("child_clock_ref") == "pin":
-            # Q-CLUSTER 2026-10-17 (cluster of clusters): every clock entry pin of a multi-entry child is its own spine
-            # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
-            name = view_name(v)
-            ij = ROOT / v / "insertion.json"
-            cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
-            p = ROOT / v / f"{name}_tt.lib"
-            ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
-            for pin in sorted(set(cm) | set(ins)):
-                b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
-                if b.get("n") and b.get("mean") is not None:
-                    out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
-                elif ins.get(pin):
-                    out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
-            continue
-        # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
-        # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
-        # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
-        # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
-        ij = ROOT / v / "insertion.json"
-        if s.get("child_clock_ref") == "boundary" and ij.exists():
-            b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
-            if b.get("n") and b.get("mean") is not None:
-                out[view_name(v)] = round(float(b["mean"]), 1)
-                continue
-        p = ROOT / v / f"{view_name(v)}_tt.lib"
-        ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
-        vals = [x["max_ps"] for x in ins.values() if x]
-        out[view_name(v)] = round(max(vals), 1) if vals else 0.0
+        before = dict(out)
+        _child_insertion(s, ch, out)
+        tap = ch.get("clock_tap_ps")
+        if tap:
+            for k in set(out) - set(before) or {view_name(ch["view"])}:
+                out[k] = round(out[k] - float(tap), 1)
     return out
+
+
+def _child_insertion(s: dict, ch: dict, out: dict) -> None:
+    """one child's spine target(s) into out (see child_insertions)"""
+    v = ch["view"]
+    if s.get("child_clock_ref") == "pin":
+        # Q-CLUSTER 2026-10-17 (cluster of clusters): every clock entry pin of a multi-entry child is its own spine
+        # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
+        name = view_name(v)
+        ij = ROOT / v / "insertion.json"
+        cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
+        p = ROOT / v / f"{name}_tt.lib"
+        ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+        for pin in sorted(set(cm) | set(ins)):
+            b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
+            if b.get("n") and b.get("mean") is not None:
+                out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
+            elif ins.get(pin):
+                out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
+        return
+    # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
+    # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
+    # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
+    # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
+    ij = ROOT / v / "insertion.json"
+    if s.get("child_clock_ref") == "boundary" and ij.exists():
+        b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
+        if b.get("n") and b.get("mean") is not None:
+            out[view_name(v)] = round(float(b["mean"]), 1)
+            return
+    p = ROOT / v / f"{view_name(v)}_tt.lib"
+    ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+    vals = [x["max_ps"] for x in ins.values() if x]
+    out[view_name(v)] = round(max(vals), 1) if vals else 0.0
 
 
 SPINE_INS = """# ref_tile cluster clock: the pre-placed balanced clock SPINE (physical/common_flow/clock_spine.tcl, el1011-hbm-attn
@@ -1639,6 +1687,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
         if s.get("clock") in ("hybrid_entries", "multiple_cts_roots"):
             roots = clock_ports(s) if s.get("clock") == "multiple_cts_roots" else s["clock_cts_roots"]
             pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(roots) + "}")
+            if clock_entry_constraints.landed_cluster(s):
+                pre_cts.append("set ::ot_ce_landed_cluster 1")
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
@@ -1665,7 +1715,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -1884,6 +1934,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_pad_vars(s)
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
+    # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
+    extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
@@ -2022,6 +2074,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
+        if clock_entry_constraints.landed_cluster(s):
+            out.append(s["landed_record"])
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]

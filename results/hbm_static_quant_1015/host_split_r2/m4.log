@@ -1,0 +1,5 @@
+PASS HGI_QDQ_HOST_SPLIT_R2_LOCKSTEP records=8 beats=104 reads=416 writes=416 cycles_compared=495 monolith_last_write=153 split_last_write=198 rq_offset=15 wq_done_offset=45 immutable_price=168 VM_latency_at_pins=7 relay_stages=12
+- rtl/test/hbm_accel/generic/tb_hgi_qdq_host_split_r2_lockstep.sv:195: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.007 s; speed 686.368 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 14 MB
