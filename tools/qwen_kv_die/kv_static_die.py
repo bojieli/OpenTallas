@@ -72,7 +72,8 @@ KIT_HARD = ('qkd_embedding_row_tx',)
 KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
-            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') + '.sv')   # MU-ADOPT-KV 10-19 (kv_static.MU)
+            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
+            ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') + '.sv')   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -366,6 +367,9 @@ def graph():
             _afault_join(g)
         if ATTN_LAND:
             _attn_land_join(g)
+        import kv_bootage as _KB              # KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1): boot-programmable schedule ages
+        if _KB.ON:
+            _KB.boot_ages_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
@@ -747,6 +751,10 @@ def tile(die_inst):
                 if ckind == 'ectl' and it['port'] in KG and kind == 'ctl':
                     outs.setdefault('kg', (rsp_expr('lprg', KG), 23, []))[2].append((cd, 'kg'))
                     continue
+                if ckind == 'vport' and p == 'cfg_age':          # KV-BOOTAGE: die cfg {DQ, RT} -> the V port's cfg pin
+                    pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
+                    outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
+                    continue
                 if ckind == 'ectl' and p == 'cfg':
                     pn = f'{loc[src]}__{it["port"]}__{lo}_{w}'
                     outs.setdefault(pn, (f'w_{loc[src]}__{it["port"]}[{lo + w - 1}:{lo}]', w, []))[2].append((cd, 'cfg'))
@@ -857,6 +865,9 @@ if SEQ_S:         # KV-WIRE2 SEQ: the attention programme's request / Q beat fac
 if BOOT:    # the pc_path's slice-facing outputs (note s5.5)
     DIE_EXPORTS['pc'].update({('pc', p[4:]): (p, w) for _b, p, _s, w, out in BOOT_HSL if out})
 DIE_EXPORTS['pc_h'] = DIE_EXPORTS['pc']
+import kv_bootage as KB   # noqa: E402  KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1)
+if KB.ON:   # the pair FIRST_INPUT_AGE bytes {pair 1, pair 0} -> both PV pair clusters (pvw cfa, a die join: kv_bootage)
+    DIE_EXPORTS['ctl'][('dcfg', 'age_pv')] = ('dcfg__age_pv', 16)
 if AFAULT:   # P7: each group's chain node -> the next slot's group (or, slot 7, the attention control tile)
     DIE_EXPORTS['grp'] = {('af', 'fault'): ('af__fault', 1)}
 
@@ -1600,6 +1611,10 @@ def _die_joins(m, K, B, add, fk, rec):
     if 'pvw_0' in by and 'pvw_1' in by:
         bus('ks_pvst', 'kv_oneway', 31, [('kvs_attn', 'pvst'), ('pvw_0', 'st')])
         fk['ks_pvst'] = [('pvw_1', 'st')]
+    # KV-BOOTAGE: the sealed die cfg's pair ages -> both PV pair clusters (static configuration word, no handshake)
+    if KB.ON and 'pvw_0' in by and 'pvw_1' in by:
+        bus('ks_age_pv', 'kv_oneway', 16, [('kvs_ctl', 'dcfg__age_pv'), ('pvw_0', 'cfa')])
+        fk['ks_age_pv'] = [('pvw_1', 'cfa')]
     # KV-PLAN-FIN: attention root -> final join command word; final join beat stream -> the stream face (kvs_attn fin)
     if PVFIN and 'pvfin' in by:
         bus('ks_pvfst', 'kv_oneway', 65, [('kvs_attn', 'pvfst'), ('pvfin', 'fs')])

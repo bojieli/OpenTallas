@@ -1134,7 +1134,7 @@ if KSD.ASTK_ST:
         SPLIT_BINDINGS[_mn]['sliced'] = dict(SPLIT_BINDINGS[_mn].get('sliced') or {}, iee='ie')
 if KSD.ON:
     SPLIT_BINDINGS.update(KSD.bindings())
-    if V144_R6:
+    if V144_R6 and not KSD.KB.ON:
         # KVR-DERIVE 10-19 (coordinator): bind exactly the closed kit's RT (the die-derived 9 + relays is checked against
         # it by kv_static_params VPORT_RT, never bound in its place)
         SPLIT_BINDINGS['qkd_pv16_vport']['parameters'] = dict(SPLIT_BINDINGS['qkd_pv16_vport']['parameters'],
@@ -1143,6 +1143,19 @@ if KSD.ON:
             for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
                 SPLIT_BINDINGS[_mn]['parameters'] = dict(SPLIT_BINDINGS[_mn]['parameters'],
                                                          FIRST_INPUT_AGE=KSD.tile_ages()['PV_FIRST_INPUT_AGE'])
+    if KSD.KB.ON:
+        # KV-BOOTAGE 10-19: the V ports and the pair control take their static ages from the sealed die cfg (boot image),
+        # not from RTL parameters: bind the boot-age successors at their hardware BOUNDS (kv_bootage.BOUNDS) + cfg pins
+        _vb = SPLIT_BINDINGS['qkd_pv16_vport']
+        SPLIT_BINDINGS['qkd_pv16_vport'] = dict(_vb, module=KSD.KB.SUCC['vport'][1], file=KSD.KB.SUCC['vport'][0],
+            parameters=dict(MUT=0, DQ=KSD.KB.BOUNDS['VPORT_DQ'], RT=KSD.KB.BOUNDS['VPORT_RT']),
+            ports=dict(_vb['ports'], cfg=['cfg_age']))
+        if PV_T:
+            for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
+                _pb = SPLIT_BINDINGS[_mn]
+                SPLIT_BINDINGS[_mn] = dict(_pb, module='qkd_pvw_die_tb', file=KSD.KB.pvw_file(_pb['file']),
+                    parameters=dict(_pb['parameters'], FIRST_INPUT_AGE=KSD.KB.BOUNDS['PV_FIRST_INPUT_AGE']),
+                    ports=dict(_pb['ports'], cfa=['cfg_age']))
     for _p in ('att_tx_v', 'att_tx_payload', 'emb_tx_v', 'emb_tx_payload', 'kv_drained_local', 'kv_flush_local',
                'kv_active_local', 'rx_payload', 'att_tx_slot', 'att_tx_kind', 'att_tx_beat', 'emb_tx_slot',
                'kvn_word_identity', 'kvn_word_generation'):
@@ -4512,10 +4525,11 @@ def static_instance_params(m):
     t = KSD.tile_ages()
     out = {i.name: dict(RESPONSE_LAT=t['ECTL_RESPONSE_LAT'], QK_ISSUE_AGE=t['ECTL_QK_ISSUE_AGE'])
            for i in m['insts'] if i.master == 'qkd_ectlk'}
-    out.update({i.name: dict(RT=t['VPORT_RT'], DQ=t['VPORT_DQ']) for i in m['insts'] if i.master == 'qkd_pv16_vport'})
+    out.update({i.name: (dict(RT=KSD.KB.BOUNDS['VPORT_RT'], DQ=KSD.KB.BOUNDS['VPORT_DQ']) if KSD.KB.ON else
+                         dict(RT=t['VPORT_RT'], DQ=t['VPORT_DQ'])) for i in m['insts'] if i.master == 'qkd_pv16_vport'})
     m['static_bindings'] = dict(ectl={k_: v for k_, v in out.items() if k_.startswith('ectl_')},
                                 vport={k_: v for k_, v in out.items() if k_.startswith('vport_')},
-                                pv_ctl_age=t['PV_FIRST_INPUT_AGE'])
+                                pv_ctl_age=KSD.KB.BOUNDS['PV_FIRST_INPUT_AGE'] if KSD.KB.ON else t['PV_FIRST_INPUT_AGE'])
     return out
 
 
@@ -5041,9 +5055,14 @@ def main(argv=None):
             # KVR-DERIVE 10-19 (coordinator): the plan's static-schedule ages vs the closed tiles' hard ages and the
             # generator's own bindings -- any mismatch fails the GEN (OT_KV_STATIC_SCHED_STRICT=1, default); =0 records it
             # (STATIC_SCHEDULE FAIL in case.log + static_model.json) and lets a placement-only run continue
+            boot_ = None
+            if KSD.KB.ON:     # KV-BOOTAGE 10-19: the compiler boot image's age words from THIS plan (case boot_ages.json)
+                boot_ = KSD.KB.image_ages(ml['static_schedule']['schedule'], ml['tile_ages'])
+                ml['boot_ages'] = boot_
+                (a.out / 'boot_ages.json').write_text(json.dumps(boot_, indent=1) + '\n')
             sf = KSP.schedule_check(ml['static_schedule']['schedule'], ml['tile_ages'],
                                     dict(ectl=ml['bindings']['ectl'], vport=ml['bindings']['vport'],
-                                         pv_ctl_age=ml['bindings']['pv_ctl_age'], attn=KSD.attn_tile_params()))
+                                         pv_ctl_age=ml['bindings']['pv_ctl_age'], attn=KSD.attn_tile_params()), boot=boot_)
             ml['static_schedule']['fails'] = sf
             (a.out / 'static_model.json').write_text(json.dumps(ml, indent=1, default=str) + '\n')
             print('kv die STATIC_SCHEDULE ' + ('FAIL: ' + '; '.join(f"{f_['id']} {f_['what'][:160]}" for f_ in sf) if sf

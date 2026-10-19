@@ -481,8 +481,11 @@ def bound_ages(die_v=None, sidecar=None, model=None):
     return out
 
 
-def schedule_check(sched, tile, bound=None, plan_paths_=None, table_paths_=None):
-    """FAIL ids (each with the numbers): every derived age must equal the hard tile age, and the die must bind the tile age"""
+def schedule_check(sched, tile, bound=None, plan_paths_=None, table_paths_=None, boot=None):
+    """FAIL ids (each with the numbers): every derived age must equal the hard tile age, and the die must bind the tile age.
+    KV-BOOTAGE 10-19: with boot (the generator's boot-age image, kv_bootage.image_ages; OT_KV_BOOT_AGES=1) the V port RT / DQ,
+    pair FIRST_INPUT_AGE, PV_LEAD and F_DLY are boot-programmable: they are checked as boot image == the ages derived on
+    THIS schedule (+ hardware bounds, kv_bootage.check_image) instead of against hard tile values."""
     fails = []
 
     def F(id_, what, rows, fix):
@@ -535,6 +538,16 @@ def schedule_check(sched, tile, bound=None, plan_paths_=None, table_paths_=None)
         F('PATH_STALE', 'path ages the generator planned differ on the post-station netlist',
           [dict(path=k, plan=plan_paths_.get(k), netlist=v) for k, v in table_paths_.items() if plan_paths_.get(k) != v],
           'the schedule is taken from the netlist table (this record); re-pad / re-GEN the changed paths')
+    if boot is not None:
+        import kv_bootage as KB
+        fails = [f for f in fails if f['id'] not in KB.REPLACED_CHECKS]
+        fails = KB.check_image(boot, sched, tile) + fails
+        if bound is not None:
+            F('BOOT_AGE_HW_BOUND', 'V ports / pair ctl not bound at the boot-age successors\' hardware bounds',
+              [dict(inst=i, bound=bound['vport'].get(i)) for i in V if (bound['vport'].get(i) or {}).get('RT')
+               != KB.BOUNDS['VPORT_RT'] or (bound['vport'].get(i) or {}).get('DQ', 0) != KB.BOUNDS['VPORT_DQ']]
+              + ([dict(pv_ctl_age=bound['pv_ctl_age'])] if bound.get('pv_ctl_age') not in (None, KB.BOUNDS['PV_FIRST_INPUT_AGE'])
+                 else []), 'kv_die binds qkd_pv16_vport_b / qkd_pvw_die_tb at kv_bootage.BOUNDS (OT_KV_BOOT_AGES=1)')
     return fails
 
 
@@ -624,7 +637,8 @@ def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=N
         fails.append(dict(id=p_['id'], what=json.dumps(p_)))
     bound = bound_ages(die_v, sidecar or (str(case_die_v) + '.params.json' if case_die_v else None), model)
     actual['static_schedule']['bound'] = bound
-    fails += schedule_check(sched, tile, bound, (model.get('static_schedule') or {}).get('paths'), tp)
+    fails += schedule_check(sched, tile, bound, (model.get('static_schedule') or {}).get('paths'), tp,
+                            boot=model.get('boot_ages'))     # KV-BOOTAGE: the GEN's boot image vs THIS table
     dv = case_die_v or die_v
     if dv and Path(dv).exists():
         f_, rows = slg_identity(dv)
