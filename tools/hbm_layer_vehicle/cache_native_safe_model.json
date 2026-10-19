@@ -47,7 +47,7 @@
     "unknown_cells": 0
   },
   "controls": {
-    "read_selector_bits": 2720,
+    "read_selector_bits": 2771,
     "write_select_bits": 512,
     "selector_q_data_loads": 16,
     "write_q_data_loads": 17,
@@ -57,11 +57,30 @@
   },
   "storage": {
     "payload_ring_bits": 2048,
-    "input_pipeline_bits": 2548,
+    "input_pipeline_bits": 2550,
     "input_pipeline_depth": 2,
     "payload_reset": false,
     "tag_array_bits": 0,
     "read_pointer_control_bits": 2720
   },
-  "physical": "OPEN: mapped area then macro channels/405um-reach region budget; no route claim"
+  "physical": "OPEN: mapped area then macro channels/405um-reach region budget; no route claim",
+  "reset_release": {
+    "raw_ff_sinks": 8,
+    "first_stage_ff_branches": [
+      23,
+      23,
+      23,
+      23,
+      22,
+      22,
+      22,
+      22
+    ],
+    "second_stage_count": 180,
+    "register_levels": 2,
+    "buffer_levels": 0,
+    "reset_equations": "P_i(t+)=rst_n?1:0 asynchronously0; R_j(t+)=P_(j%8)?1:0 asynchronously0. R_j releases on second common clk edge; constantD1 is equivalent to sampled P because P0 asynchronously holdsR0.",
+    "policy": "root-approved raw<=12/first<=24/final<=30 profile; needs source-bound strict2level checker and ROOTreview beforegate",
+    "reach": "OPEN until physical clock/reset audit"
+  }
 }
