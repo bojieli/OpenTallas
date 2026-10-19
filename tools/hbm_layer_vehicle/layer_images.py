@@ -257,12 +257,27 @@ def reducer_bound(words):
                 rule="1 reducer operand/edge/quarter (pgslice.sv:355-361, lane.sv:119); DEP 10, LAT 9 (reduce_static.sv)")
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None):
+def calendar_collision(target, candidate, offset, *, exclusive_controls=False):
+    """Detect static resource conflicts; an owned control cycle cannot be ORed.
+
+    Disjoint control bits do not identify independent datapaths. The opt-in
+    repaired contract therefore reserves the entire control word, including
+    all-zero values, until that record's final declared consumer commit.
+    """
+    return any(offset + edge in target.f[field] and
+               ((exclusive_controls and field == "control") or
+                bool(target.f[field][offset + edge] & value))
+               for field in Q_W for edge, value in candidate.f[field].items())
+
+
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
     from hbm_layer_vehicle.native_profile import NativeTiming
     if timing is not None and not isinstance(timing, NativeTiming):
         raise TypeError("timing must be a source-defined NativeTiming")
+    if safe_calendar and timing is None:
+        raise ValueError("safe calendar requires an explicit native return contract")
     fill_commit = FILL_COMMIT if timing is None else timing.fill_commit
     drain_done = DRAIN_DONE if timing is None else timing.drain_done
     import su_arith_lower as L
@@ -295,6 +310,22 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         off[n] = pos
         pos += w
     get = lambda v, n: (v >> off[n]) & ((1 << dict(FIELDS)[n]) - 1)
+    def put(v, name, value):
+        mask = ((1 << dict(FIELDS)[name]) - 1) << off[name]
+        return (v & ~mask) | (value << off[name])
+
+    if safe_calendar:
+        # All four physical readers qualify even when a semantic operand is absent.
+        # Use the live A stream's local identity; no additional FILL is required.
+        sched = [list(words) for words in sched]
+        for words in sched:
+            w = words[q]
+            terms, vb = get(w, "ld_c"), get(w, "vb")
+            for index, role in enumerate("ABCD"):
+                if role not in desc:
+                    terms |= (terms & ((1 << 240) - 1)) << (240 * index)
+                    vb |= (vb & 0xffffff) << (24 * index)
+            words[q] = put(put(w, "ld_c", terms), "vb", vb)
     # per issue group: the quarter's 128 lanes' logical VM word address of every role (vb + lane terms)
     ls = get(sched[0][q], "ls")
     terms = get(sched[0][q], "ld_c")
@@ -352,7 +383,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     def with_vb(w, G):
         vb = 0
         for s, r in enumerate("ABCDO"):
-            if r in desc:
+            if r in desc or (safe_calendar and r in "ABCD"):
                 rr = G["srow"].get(r, G["srow"].get("A", 0)) if r != "O" else G["orow"]
                 vb |= physical_word(q, rr) << (24 * s)
         return (w & ~vbmask) | (vb << off["vb"])
@@ -373,7 +404,9 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     commits = []
     if "O" in desc:
         for g, G in enumerate(groups):
-            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT)
+            # Pin-captured write and read coincide under the old calendar.
+            # OLD-read SRAM requires the DRAIN to sample one serial edge later.
+            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar)
             for k in range(16):
                 ln = slice(8 * k, 8 * k + 8)
                 m = G["act"][ln]
@@ -394,6 +427,21 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                 drains.append((int(la[0]) >> 3, de + drain_done))
                 expect.append(dict(sector=sec, mask=mask, edge=de + drain_done,
                                    words=[int(a) for a in G["addr"]["O"][8 * k:8 * k + 8]]))
+    if safe_calendar:
+        # Conservative full-operation reservation: direct backend controls are
+        # consumed throughout the pipeline, not only at emit. Different
+        # records must never share this reservation, even for disjoint bits.
+        variable = sum(((1 << dict(FIELDS)[name]) - 1) << off[name]
+                       for name in ("emit", "ld", "vb", "o_v", "i_v"))
+        signature = ctl0 & ~variable
+        if any((G["word"] & ~variable) != signature for G in groups):
+            raise ValueError("heterogeneous arithmetic controls in one live reservation")
+        hold = with_vb(ctl0, groups[0]) & ~(1 << off["ld"]) & ~(1 << off["emit"])
+        end = max(commits, default=max(issue_at, default=setup))
+        for edge in range(end + 1):
+            QL.f["control"].setdefault(edge, hold)
+        res["control_reservation"] = dict(first=0, last=end, policy="exclusive_record",
+                                            drain_extra_serial_edges=1)
     # operand values (fixture or seeded placeholder) and the expected O words (hdc_golden)
     rng = rng or np.random.default_rng(0)
     logical = sorted({a for v in preload.values() for a in v})
@@ -640,8 +688,18 @@ def main():
                     "ds_native state before each record, expected O checked against its state after (default: seeded "
                     "placeholder operands)")
     ap.add_argument("--rank", default="0", help="fixture rank")
+    ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
+    ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
+    ap.add_argument("--safe-calendar", action="store_true", help="opt-in exclusive control lifetime, legal absent readers, OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if (a.native_read_return is None) != (a.native_write_return is None):
+        ap.error("native read/write return contracts must be specified together")
+    if a.safe_calendar and a.native_read_return is None:
+        ap.error("--safe-calendar requires an explicit native read/write return contract")
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    native_timing = (None if a.native_read_return is None else
+                     NativeTiming(a.native_read_return, a.native_write_return))
     if a.design == "qwen":
         sys.exit("layer_images: Qwen D4G8 programme source (qwen_d4g_proof program.hgi1) not wired yet -- see lane notes")
     bnd = json.loads(a.boundary.read_text())
@@ -700,7 +758,7 @@ def main():
             if fr is not None:
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
-                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None)
+                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None, timing=native_timing, safe_calendar=a.safe_calendar)
             except AssertionError as ex:                # su_program_inventory.decode: adapter contract refusal
                 ent.update(status="adapter_refused", reasons=[f"su_record: {ex}"])
                 manifest.append(ent)
@@ -752,14 +810,15 @@ def main():
             progs.append(P)
         o = max(0, want0 - P["base"])
         while True:                                                     # first offset without a slot collision
-            clash = any((o + e) in P["ql"].f[fld] and (P["ql"].f[fld][o + e] & v) for fld in Q_W
-                        for e, v in su["ql"].f[fld].items())
+            clash = calendar_collision(P["ql"], su["ql"], o,
+                                       exclusive_controls=bool(su.get("control_reservation") or P.get("exclusive_control")))
             if not clash:
                 break
             o += 1
         for fld in Q_W:
             for e, v in su["ql"].f[fld].items():
                 P["ql"].f[fld][o + e] = P["ql"].f[fld].get(o + e, 0) | v
+        P["exclusive_control"] = P.get("exclusive_control", False) or bool(su.get("control_reservation"))
         P["end"] = max(P["end"], P["base"] + o + len(su["lines"]))
         P["recs"].append((r, ent, su, o))
     cfgs = []
