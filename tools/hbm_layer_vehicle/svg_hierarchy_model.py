@@ -29,6 +29,8 @@ def model():
             HBM_to_stream_ratio=1024/833.333,
             conservative_prefetch_added_stream_edges=math.ceil(2*1024/833.333)+1+1+2,
             selected_prefetch_margin_stream_edges=8,
+            optional_KR_bridge_HBM_edges=1,
+            with_KR_bridge_prefetch_edges=math.ceil(3*1024/833.333)+1+1+2,
             metadata_delay_stream_edges=2,
             cache_open_delay_stream_edges=2,
             cache_open_contract='Delay the complete OPEN envelope by the same2edges as drain sector data/labels; cache enforces fixed sector pulses from OPEN and cannot accept a gap.',
