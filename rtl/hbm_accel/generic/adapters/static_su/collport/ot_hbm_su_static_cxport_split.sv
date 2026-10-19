@@ -137,8 +137,15 @@ endmodule
 // serial edge (as rc_q writes cb). Same calendar as dl / rc: every seam arc has >= 3 quanta (833 ps) both for setup and
 // for rewrite-after-read; die STA owns the seam arcs with the epoch multicycle. Seam 2 x 32 + 2 x 1,024 + 2 = 2,114 b
 // (the hub's slots were 4 x 32 + 3 x 1,024). Same edges and outputs (lockstep vs the hub).
+// TW2-NATIVE-IJS 10-19 (native_pin_audit of the CLOSED view hbm_su_cx_ijs_1018-x1-4ba37c0fe: ob0/ob1 capture 210-306 ps
+// > 190 on 540 pins: the ob0[i] / ob1[i] pins sit 182 um apart on the W face and met in the wp mux before idl[ins]).
+// OBR=1 (opt-in, default 0 = the code above unchanged): ob0 / ob1 land in pin registers obr0 / obr1 on EVERY stream edge
+// (the same sampling edge p as idl[ins] before, so the seam calendar window is unchanged), and the bank mux + insertion
+// move to edge p+1 into idl[ins+1] (one of the X spare stages, X >= OBR): inj_d still updates at P+INJ_RET for every
+// phase, bit-exact (idl'[t] after p+1 == idl[t-1] after p). ins_coll (unreachable at SD=0: LMAX == LMIN) reports one
+// stream edge later. MUT 5 (OBR=1 only): bank select not re-timed (selects the bank of edge p+1).
 module ot_hbm_su_static_cxport_ij_s #(
- parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, R=8
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, R=8, OBR=0
 )(
  input wire clk_s, rst_s_n,
  input wire [1:0] inj_rd,
@@ -159,6 +166,8 @@ module ot_hbm_su_static_cxport_ij_s #(
  localparam integer K=LMAX-LMIN+X;
  initial if(X<0)$fatal(1,"cxport_ij: INJ_RET must be >= 1+RQ+LMAX");
  initial if(RQC>RQ)$fatal(1,"cxport_ij: RQC must be <= RQ");
+ initial if(OBR!=0 && OBR!=1)$fatal(1,"cxport_ij: OBR must be 0 or 1");
+ initial if(X<OBR)$fatal(1,"cxport_ij: OBR needs a spare stage (INJ_RET >= 1+RQ+LMAX+OBR)");
  // wp: bank of this event edge (write jb; ob read = ~wp); R kept copies (ob read select: 1,024 / R loads each)
  reg [1:0] sp; (* keep = "true" *) reg [R-1:0] wp;
  always @(posedge clk_s or negedge rst_s_n)
@@ -192,8 +201,15 @@ module ot_hbm_su_static_cxport_ij_s #(
  end
  // event p reads the ob bank written at serial m = p-1 (bank (p+1) mod 2; p = 0 reads bank 1, as the hub's slot 2)
  wire [1023:0] ev_i;
+ reg [1023:0] obr0, obr1;              // OBR=1: seam pin registers (every stream edge)
+ always @(posedge clk_s) begin obr0 <= ob0; obr1 <= ob1; end
  for(genvar r=0;r<R;r=r+1) begin : g_ob
-  assign ev_i[(1024/R)*r +: (1024/R)] = wp[r] ? ob0[(1024/R)*r +: (1024/R)] : ob1[(1024/R)*r +: (1024/R)];
+  if(OBR==0) begin : g_d
+   assign ev_i[(1024/R)*r +: (1024/R)] = wp[r] ? ob0[(1024/R)*r +: (1024/R)] : ob1[(1024/R)*r +: (1024/R)];
+  end else begin : g_r   // at p+1 wp has toggled (p is an event edge): bank of edge p = wp ? obr1 : obr0
+   wire sel = (MUT==5) ? ~wp[r] : wp[r];
+   assign ev_i[(1024/R)*r +: (1024/R)] = sel ? obr1[(1024/R)*r +: (1024/R)] : obr0[(1024/R)*r +: (1024/R)];
+  end
  end
  function automatic integer ins_of(input integer rp);
   integer ph, r; begin r=-1;
@@ -204,13 +220,15 @@ module ot_hbm_su_static_cxport_ij_s #(
  initial if(I2>=0)$fatal(1,"cxport_ij: an inject event maps to stream phase 2");
  reg [1023:0] idl [0:K];
  integer ins;
- always @* ins = (sp==2'd0)?I0:(sp==2'd1)?I1:(sp==2'd3)?I3:-1;
+ // OBR=1: the event of edge p inserts at edge p+1 (sp = phase(p)+1) one stage later
+ always @* if(OBR==0) ins = (sp==2'd0)?I0:(sp==2'd1)?I1:(sp==2'd3)?I3:-1;
+           else       ins = (sp==2'd1)?I0+1:(sp==2'd2)?I1+1:(sp==2'd0)?I3+1:-1;
  always @(posedge clk_s) begin
   for(integer t=0;t<=K;t=t+1) idl[t] <= (t==0) ? 1024'd0 : idl[t-1];
   if(ins>=0) idl[ins] <= ev_i;
  end
  always @(posedge clk_s or negedge rst_s_n)
-  if(!rst_s_n) ins_coll<=1'b0; else if(ins>0 && (|idl[ins-1])) ins_coll<=1'b1;
+  if(!rst_s_n) ins_coll<=1'b0; else if(ins>OBR && (|idl[ins-1])) ins_coll<=1'b1;
  always @* inj_d = idl[K];
 endmodule
 
@@ -265,7 +283,7 @@ endmodule
 
 // composition with the old leaf ports (bench lockstep vs the hub; the die binds ij_s + ij_q as two abutted leaves)
 module ot_hbm_su_static_cxport_ij #(
- parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, OBR=0
 )(
  input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
  input wire [1:0] inj_rd,
@@ -275,7 +293,7 @@ module ot_hbm_su_static_cxport_ij #(
  output wire fault
 );
  wire [31:0] jb0, jb1; wire [1023:0] ob0, ob1; wire sfs, icl;
- ot_hbm_su_static_cxport_ij_s #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT)) u_s(
+ ot_hbm_su_static_cxport_ij_s #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT),.OBR(OBR)) u_s(
   .clk_s(clk_s),.rst_s_n(rst_s_n),.inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(inj_d),.jb0(jb0),.jb1(jb1),.ob0(ob0),.ob1(ob1),
   .sfault_s(sfs),.ins_coll(icl));
  ot_hbm_su_static_cxport_ij_q #(.SD(SD),.MUT(MUT)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.jb0(jb0),.jb1(jb1),
@@ -451,7 +469,7 @@ endmodule
 
 // ------------------------------------------------------------------------------------------------ composition (bench)
 module ot_hbm_su_static_cxport_split #(
- parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, OBR=0
 )(
  input wire clk_s, clk_q, rst_n,
  input wire [1:0] inj_rd, input wire [159:0] inj_addr, output wire [1023:0] inj_d,
@@ -471,7 +489,7 @@ module ot_hbm_su_static_cxport_split #(
    .del_valid(del_valid[g]),.del_flit(del_flit[545*g+:545]),.del_obase(del_obase[40*g+:40]),
    .dw_v(dw_v[2*g+:2]),.dw_row(dw_row[18*g+:18]),.dw_d(dw_d[1024*g+:1024]),.fault(f_dl[g]));
  end
- ot_hbm_su_static_cxport_ij #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT)) u_ij(
+ ot_hbm_su_static_cxport_ij #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT),.OBR(OBR)) u_ij(
   .clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_n),.rst_q_n(rst_n),.inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(inj_d),.inj_q0(inj_q[0+:1024]),.inj_q1(inj_q[1024+:1024]),.inj_q2(inj_q[2048+:1024]),.inj_q3(inj_q[3072+:1024]),.fault(f_ij));
  ot_hbm_su_static_cxport_rc #(.MUT(MUT)) u_rc(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_n),.rst_q_n(rst_n),.rc_v(rc_v),.rc_tag(rc_tag),
   .rc_d(rc_d),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.rr_wv(rr_wv),

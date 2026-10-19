@@ -4,21 +4,21 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qkd_rlys_36.lef",
-    "sha256": "f78cb95d25e3bb3fbaf498916fc791b0a7bb0a32ac7d76c911024784be271151"
+    "sha256": "f549884d16c21c487e82ca004211eb537ab132e9c93208135bcc4e61c3d091b8"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-v1-6da52734e/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-v1-6da52734e/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-v1-6da52734e/record/views/qkd_rlys_36/provenance/raw/qkd_rlys_36.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-v1-6da52734e/record/views/qkd_rlys_36/provenance/qkd_rlys_36.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c/record/views/qkd_rlys_36/provenance/raw/qkd_rlys_36.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c/record/views/qkd_rlys_36/provenance/qkd_rlys_36.candidate.lef"
   ],
   "returncode": 0,
   "stdout": "pinstub: 1 OBS rects moved into 1 pins: ck; pockets: 0 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
@@ -30,7 +30,7 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-v1-6da52734e/record/views/qkd_rlys_36/provenance/qkd_rlys_36.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c/record/views/qkd_rlys_36/provenance/qkd_rlys_36.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 51.1,
-          "min_ps": 45.04
+          "max_ps": 50.74,
+          "min_ps": 44.54
         }
       },
       "pockets": {
@@ -92,11 +92,12 @@
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qkd_rlys_36.lef",
-    "sha256": "a6d74f7f64e38eba07eebeb482ea31204681b1575fec167f65053db9a6be76a5"
+    "sha256": "080594245a1be830780866166e677a66ea01e439d6490bdf515287ab127e19fd"
   }
 }

@@ -1,0 +1,39 @@
+{
+ "name": "ds_l3_k0_rg",
+ "layer": 3,
+ "k": 0,
+ "source": 2,
+ "tag": "selected compressed-KV rows to the head dies",
+ "n_sel": 512,
+ "rows_sha256": "b5816b2c5a0208b5845a2bc07758816737d7ce4a02cc362d392a976c08264fa5",
+ "a_row0_sha256": "4f1d0cc0e1889e4e9a963678f435e384a91719519ca680046d271e76a0413e1a",
+ "fixture_a_sha256": "4f1d0cc0e1889e4e9a963678f435e384a91719519ca680046d271e76a0413e1a",
+ "a_match": true,
+ "fixture_o_sha256": "a0f89c51287066c3ed52ebd4604e48024dbc5a05b64f1c7265d6e769dd466bca",
+ "o_matches_sel_index": [
+  0
+ ],
+ "state_sha": "eebb3e71e4e34731a8fd1f5135c2b451b3b85dc58e9bc185fc83177a4d77dc09",
+ "rank": 0,
+ "rank_owned": 4,
+ "rank_owned_sel": [
+  59141,
+  122883,
+  198147,
+  307205
+ ],
+ "rank_owned_local": [
+  621,
+  1283,
+  2067,
+  3205
+ ],
+ "rank_owned_addr": [
+  8591206400,
+  8592562176,
+  8594167808,
+  8596498432
+ ],
+ "rank_owned_rows_sha256": "e7765e30d766594290ac77fd84a31b93a9ad0039b318256c99802997e3b51ac6",
+ "provenance": "w19_hbm_tp96_isa.State (released checkpoint gains + seeded reference state) + refs appended row"
+}

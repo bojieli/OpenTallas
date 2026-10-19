@@ -76,6 +76,33 @@ def test_encoders():
             bits(c, 71, 56), bits(c, 72, 72), bits(c, 73, 73)) == (0xFFF, 0x123, 7, 2, 0xBEEF, 320, 0x1234, 1, 1)
 
 
+def test_previous_pre_source():
+    """Current HC is deliberately late and different: it must never gate/use NORMR."""
+    tree = C.die_tree()
+    die = C.Die(tree)
+    sl = 'u_s_0S'
+    p = C.Prog(die)
+    p.events = [dict(cycle=1481, tag='attn.hc.coef_row0', port='vo_s'),
+                dict(cycle=9000, tag='ffn.hc.coef_row0', port='vo_s')]
+    a = C.lower_norm_smoke(die, p, sl, 3, which='attn')
+    assert a['hc_pre_row'] == 1008 and a['dep_shift'] == 0
+    assert not a['hc_pre_source_bound'] and a['hc_pre_row_land'] is None
+    assert a['hc_pre_source'] == 'entry.previous_ffn.hc.coef_row0'
+    p = C.Prog(die)
+    p.events = [dict(cycle=1481, tag='attn.hc.coef_row0', port='vo_s'),
+                dict(cycle=9000, tag='ffn.hc.coef_row0', port='vo_s')]
+    f = C.lower_norm_smoke(die, p, sl, 3, which='ffn')
+    assert f['hc_pre_row'] == 1000 and f['hc_pre_source_event_present'] and not f['hc_pre_source_bound']
+    assert f['hc_pre_row_land'] < 2000 and f['dep_shift'] < 2000
+    assert f['hc_pre_source'] == 'attn.hc.coef_row0'
+    # The op status must not inherit full-layer qualification from the vp bench.
+    m = dict(C.family_lowerings())['vpx']
+    for op in ('attn.hc_pre', 'ffn.hc_pre'):
+        r = m.lower(die, {'op': op}, {'slice': sl})
+        assert r['status'] == 'PARTIAL' and 'binding is absent' in r['gap']['missing']
+    return {'attn': a, 'ffn': f}
+
+
 def test_compile_l0():
     tree = C.die_tree()
     out = Path(tempfile.mkdtemp(prefix='dvlc_'))
@@ -94,17 +121,26 @@ def test_compile_l0():
     tm = json.loads((out / 'prog/ctl_templates.json').read_text())
     assert tm['n'] <= C.NOPS
     assert all((x['arg'] & 0x7F) < tm['n'] for x in cmds if x['engine'] in (0, 1))
-    hs = (out / 'prog/host_boot.memh').read_text().split()
-    assert len(hs) == 2 + 3 * len(rows) + 1 + tm['n']
-    # every V command's CTL template targets the smoke slice's sid only
-    sid = C.Die(tree).slices()['u_s_0S']['sid']
+    j0 = cal['job'][0]
+    hs = (out / ('prog/host_boot.memh' if cal['jobs'] == 1 else 'prog/job0/host_boot.memh')).read_text().split()
+    ngu = len(json.loads((out / 'prog/gunit_rows.json').read_text())['rows'])
+    assert len(hs) == j0['host_words'] == 2 + 3 * j0['nops'] + 1 + len(j0.get('templates') or range(tm['n'])) + ngu
+    # every V command's CTL template targets ONE slice: the smoke slice, or (vpx collective legs) its end slice
+    sl = C.Die(tree).slices()
+    sid = sl['u_s_0S']['sid']
     for t in tm['templates']:
-        assert int(t['payload186'], 16) & 0xFFFF == 1 << sid
+        m = int(t['payload186'], 16) & 0xFFFF
+        if t['name'].startswith('gu.'):          # gunit job words (engine 2 cw), not CTL beats
+            continue
+        if t['name'].startswith('vpx.'):
+            assert m == 1 << sl[t['name'].split('.')[1]]['sid'], t['name']
+        else:
+            assert m == 1 << sid, t['name']
     # op schedule = the committed p4l price
     sch = json.loads((out / 'schedule.json').read_text())
     lp = json.loads((ROOT / 'results/rtl/s81_layer_tput_1018/layer_price_p4l.json').read_text())['workloads']['ar']['layers']['L0']
     assert len(sch['ops']) == lp['nodes'] and abs(sch['price']['crit'] - lp['dv_crit']) < 0.5, (sch['price'], lp)
-    assert all(e['inst'] in C.Die(tree).inst for e in sch['events'] if not e.get('plan_only'))
+    assert all(e['inst'] in C.Die(tree).inst for e in sch['events'] if not e.get('plan_only') and e['dir'] != 'internal')
     man = json.loads((out / 'manifest.json').read_text())
     for f, h in man['files'].items():
         assert hashlib.sha256((out / f).read_bytes()).hexdigest() == h, f
@@ -113,7 +149,79 @@ def test_compile_l0():
     return r
 
 
+def test_events_g8():
+    """LB2-S81/EVENTS on the G8 die (bind_p4l3_g8 + land plan p4l3) with the L0 fixtures: every V calendar row has its
+    CTL arrival at each slice of its mask (row issue + ctl_path), family CTL events agree with it and name their template
+    in the shared table, every vs command rides one (ctl_at), QF / PV / SVCDONE / RD carry bit-exact words"""
+    import gzip, os, re, shutil
+    fx = Path(os.environ.get('DV_L0_FIXTURES', str(Path.home() / 'scratch/layerbench-s81/fixtures/L0')))
+    g8 = ROOT / 'results/arch/s81_dv_1016/bind_p4l3_g8/die.v.gz'
+    if not fx.exists() or not g8.exists():
+        print('SKIP test_events_g8 (no L0 fixtures / G8 bind)')
+        return None
+    tree = Path(tempfile.mkdtemp(prefix='dvlc_g8_'))
+    for d, src in (('results/arch/s81_dv_1016/bind9/die.v.gz', g8),
+                   ('results/arch/s81_dv_1016/p4l/plan.json', ROOT / 'results/arch/s81_dv_1016/p4l/plan.json'),
+                   ('results/arch/s81_dv_1016/landing/p4l/land_plan.json',
+                    ROOT / 'results/arch/s81_dv_1016/landing/p4l3/land_plan.json')):
+        (tree / d).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(src, tree / d)
+    out = tree / 'prog'
+    C.compile_layer('L0', out, tree, 's_0S', fixtures=fx)
+    die = C.Die(tree)
+    sch = json.loads((out / 'schedule.json').read_text())
+    T = json.loads((out / 'prog/ctl_templates.json').read_text())['templates']
+    # rows: per job; arg[6:0] is the JOB-local template index (job 'templates' = global indices), issue job-relative
+    rows = []
+    for j in json.loads((out / 'prog/calendar.json').read_text())['job']:
+        tm = j.get('templates') or list(range(len(T)))
+        for r in j['rows']:
+            rows.append(dict(r, issue=r['issue'] + j['layer_issue0'], ti=tm[r['arg'] & 0x7F] if r['engine'] in (0, 1, 2) else None))
+    ev = sch['events']
+    # slice-bound CTL beats only (the G-unit's own CTL row beats out of vo_n / vo_s are dir out, payload 'row R ...')
+    ev_ctl = [e for e in ev if e['kind'] == 'CTL' and e['dir'] == 'in']
+    ctl = {(e['inst'], int(e['payload'].split()[1].rstrip(';')), e['cycle']) for e in ev_ctl}
+    sid_of = {v['sid']: k for k, v in die.slices().items()}
+    n = 0
+    for r in rows:
+        if r['engine'] not in (0, 1):
+            continue
+        ti = r['ti']
+        m = int(T[ti]['payload186'], 16) & 0xFFFF
+        for sid in range(16):
+            sl = sid_of.get(sid)
+            if (m >> sid) & 1 and sl and sl.endswith('N' if r['engine'] == 0 else 'S'):
+                assert (sl, ti, r['issue'] + C.ctl_path(die, sl)['edges']) in ctl, (r, sl)
+                n += 1
+    assert n == len(ev_ctl) and sch['row_ctl_events'] > 0
+    for e in ev:
+        if e['kind'] == 'CTL' and e['dir'] == 'in':
+            tn = T[int(e['payload'].split()[1].rstrip(';'))]['name']
+            assert tn.endswith(e['tag']), (e, tn)
+        if e['kind'] == 'VS':
+            assert e['dir'] == 'internal' and e['ctl_at'] is not None, e
+    job = json.loads((out / 'prog/svc_jobs.json').read_text())['jobs'][0]
+    qf = [e for e in ev if e['kind'] == 'QF']
+    assert sum(len(e['words']) for e in qf) == 2 * job['q_words']
+    q = [ln.split() for ln in (out / 'prog/svc/L0/qwd.hex').read_text().splitlines()]
+    w5 = sorted((c, int(v, 16)) for e in qf if e['inst'] == 'u_rsv_05' for c, v, _ in e['words'])
+    assert w5 == [(int(c), (int(x, 16) << 1) | 1) for c, x in q], 'QF words = the svc bench q image {d, v}'
+    pv = next(e for e in ev if e['kind'] == 'PV')
+    assert len(pv['words']) == 161 and pv['words'][0][0] == job['pv_first'] - 1
+    assert all(int(v, 16) & 1 for _, v, _ in pv['words'][:160]) and int(pv['words'][0][1], 16) >> 513 & 1
+    dn = [e for e in ev if e['kind'] == 'SVCDONE']
+    assert sorted((e['inst'], e['words'][0][0] + 1) for e in dn) == sorted(job['done_pin'].items())
+    for e in ev:
+        if e['kind'] == 'RD':
+            h = int(e['words'][0][1], 16)
+            assert e['boundary'] == 'offdie' and (h >> 1) & 7 == 4 and (h >> 4) & 0x1F == 1 and h & 1
+    return dict(ctl=n, row_ctl=sch['row_ctl_events'], qf_words=sum(len(e['words']) for e in qf))
+
+
 if __name__ == '__main__':
     test_encoders()
+    test_previous_pre_source()
+    print('test_previous_pre_source PASS')
+    print('test_events_g8', test_events_g8())
     r = test_compile_l0()
     print('TEST_DV_LAYER_COMPILE PASS', json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke')))

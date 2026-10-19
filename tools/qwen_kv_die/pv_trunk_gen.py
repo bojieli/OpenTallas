@@ -1032,7 +1032,7 @@ def main(argv=None):
     ap.add_argument('--no-rtrunk', dest='rtrunk', action='store_false', help='KV-RTRUNK: omit the 512-b result trunk (rs_*)')
     ap.add_argument('--rs-legacy', dest='rs_native', action='store_false',
                     help='KV-KITS/NATIVE: the r1 result-trunk leaves (qkd_rlyi_258 / qkd_pv_rs_hd, native capture FAIL on their selects)')
-    ap.add_argument('--rs-hd', choices=('r', 'f'), default='r',
+    ap.add_argument('--rs-hd', choices=('r', 'f'), default='f',
                     help='AD3-KV-RSHD 10-18: native header leaf: r = qkd_pv_rs_hd_r (cross-half V AND selects, native capture '
                          'FAIL 259.9), f = qkd_pv_rs_hd_f (half-local selects; rev f2 HKV-PVRS2 10-19: input pin registers, '
                          'header 2 edges -> RS_D + 1)')

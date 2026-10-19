@@ -1,0 +1,2 @@
+MU_SEQ_FAIL mut 4: C1 lockstep mismatches lock 4 solo1 2 | C8 lock TLOAD words 4 != expected 4 (or payload / header differs) | C8 mu4 TLOAD words 2 != expected 2 (or payload / header differs)
+{"mut": 4, "verdict": "FAIL", "C_issue_offset": 0, "lock": {"mismatches": 4, "faults": [[22388, "000001"]]}, "solo1_events": 72, "mu4_events": 288, "mu4_done_per_user": {"0": 3, "1": 3, "2": 3, "3": 3}, "landed_words": 1536, "busy4_fault_code": "000001", "coll4_fault_code": "000010", "mu4_fault_code": "000000"}
