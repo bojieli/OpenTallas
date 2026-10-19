@@ -69,6 +69,7 @@ always @(posedge clk)begin
  #0.001;
  if(runrq&&root_v&&!root_seen)begin
   root_seen=1;
+  $display("SUPPORT_ROOT_DIAGNOSTIC qt=%0d startqt=%0d age=%0d cycle=%0d root=%h gold=%h captures=%0d adds=%0d fault=%b ctl_fault=%b gbad=%b sf=%h",qt,startqt,qt-startqt,cycle,root_x,gold[episode],capture_count,add_count,fault,station.g_on.ctl_fault,station.g_on.gbad,station.g_on.sf);
   if(qt-startqt!=591||root_x!==gold[episode]||capture_count!=1280||add_count!=1281||fault)$fatal(1,"SUPPORT_ROOT_ID_COUNT_AGE");
   roots++;$display("SUPPORT_ROOT episode=%0d age=%0d data=%h captures=%0d adds=%0d",episode,qt-startqt,root_x,capture_count,add_count);
  end
