@@ -29,12 +29,6 @@ _FILL = re.compile(rb"\x02+")
 _RECT = r"RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"
 
 
-def _abut(a, b):  # closed rects touching along an edge of positive length (or overlapping)
-    ox = min(a[2], b[2]) - max(a[0], b[0])
-    oy = min(a[3], b[3]) - max(a[1], b[1])
-    return (ox > 0 and oy >= 0) or (oy > 0 and ox >= 0)
-
-
 def _ov(a, b):  # overlap with positive area
     return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
 
@@ -91,28 +85,8 @@ def move_stubs(head, obs, pins):
                 # the OBS keeps only the rect minus those pin rects (child_lint (f) band: no OBS over a face pin)
                 holes = [x[1:] for p in hit for x in pins[p] if x[0] == cur and _ov(r, x[1:])]
                 ind = re.match(r"\s*", line).group()
-                pieces = rect_minus(tuple(map(_iu, r)), [tuple(map(_iu, h)) for h in holes])
-                # 1c (TW2-COLLP 2026-10-19, vmwrite_roots_v6 rgx_data1[286]/[289]): a carved band piece lies between
-                # neighbouring face pins; where it comes closer than the wide-metal spacing to a pin it does NOT abut, it
-                # is the merged band of the ABUTTING pin's jog (a DRC-clean child keeps real metal of another net at
-                # legal spacing; the exporter merge made it look wide): trim it back to that spacing so the other pin
-                # keeps a clean access stub (pin_spacing_violations / DRT-0073).  Pieces abutting nothing, and every
-                # single-pin or non-band OBS rect, are unchanged.
-                ws = WIDE_SPACING_UM.get(cur)
-                if ws:
-                    k = _iu(ws)
-                    lay = [tuple(map(_iu, x[1:])) for rs in pins.values() for x in rs if x[0] == cur]
-                    trimmed = []
-                    for pc in pieces:
-                        if any(_abut(pc, q) for q in lay):
-                            near = [q for q in lay if not _abut(pc, q) and not _ov(pc, q)
-                                    and pc[0] < q[2] + k and q[0] - k < pc[2] and pc[1] < q[3] + k and q[1] - k < pc[3]]
-                            pc_l = rect_minus(pc, [(q[0] - k, q[1] - k, q[2] + k, q[3] + k) for q in near]) if near else [pc]
-                            trimmed += pc_l
-                        else:
-                            trimmed.append(pc)
-                    pieces = trimmed
-                out += [f"{ind}RECT  {_um(a)} {_um(b)} {_um(c)} {_um(e)} ;" for a, b, c, e in pieces]
+                out += [f"{ind}RECT  {_um(a)} {_um(b)} {_um(c)} {_um(e)} ;"
+                        for a, b, c, e in rect_minus(tuple(map(_iu, r)), [tuple(map(_iu, h)) for h in holes])]
                 continue
         out.append(line)
     obs = "\n".join(out)

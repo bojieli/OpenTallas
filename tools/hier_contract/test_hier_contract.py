@@ -125,20 +125,6 @@ class ChildLint(unittest.TestCase):
         left = APS.obs_rects(APS.split_lef(out)[1])["M5"]
         self.assertAlmostEqual(sum((c - a) * (d - b) for a, b, c, d in left), 5.0 * 0.3 - 2 * 0.024 * 0.092, places=6)
 
-    def test_band_piece_trimmed_off_non_abutting_pin(self):
-        # TW2-COLLP 2026-10-19 (vmwrite_roots_v6 rgx_data1[286]/[289]): a merged band rect over two W-face M4 pins leaves
-        # carved pieces abutting one pin and 0.024 um from the next one; 1c trims them to the wide spacing (0.072) from
-        # the pin they do not abut, so no pin loses its access stub; the piece between the two covered pins is kept
-        import abstract_pin_stub as APS
-        sig = (("p0", "M4", 0.0, 5.0), ("p1", "M4", 0.0, 5.288), ("p2", "M4", 0.0, 5.432), ("p3", "M4", 0.0, 5.576))
-        text = lef(sig=sig, obs=[("M4", 0.025, 5.048, 0.06, 5.552)])
-        self.assertEqual(len(APS.pin_spacing_violations(text)), 2)
-        out, _ = APS.process(text)
-        self.assertEqual(APS.pin_spacing_violations(out), [])
-        left = sorted(APS.obs_rects(APS.split_lef(out)[1])["M4"], key=lambda r: r[1])
-        self.assertEqual([tuple(round(v, 3) for v in r) for r in left],
-                         [(0.025, 5.096, 0.06, 5.288), (0.025, 5.312, 0.06, 5.432), (0.025, 5.456, 0.06, 5.504)])
-
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})
         self.assertIn("d", self.checks(r))
