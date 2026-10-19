@@ -220,7 +220,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[se+1])
             if(!rr[se+1]) begin pe[se]<=OH0; pbi[se]<=SI'(0); h_fr[se]<=1'b0; end
             else begin
-                if(adv[se]) begin pe[se]<=rot(pe[se],lm); pbi[se]<=pbi[se]==lw?SI'(0):pbi[se]+1'b1; end
+                if(adv[se]) begin pe[se]<=rot(pe[se],lm); pbi[se]<=((|(pe[se]&lm)) || pe[se][NSLOT-1])?SI'(0):pbi[se]+1'b1; end
                 h_fr[se]<=!adv[se] && !(rec_q && |(pe[se]&ssq));
             end
         wire [62:0] head;
@@ -250,14 +250,14 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
                     end
                 end end
             if (armed) begin
-                if (ph == cg) begin ph <= 24'd0; sl <= rot(sl, lm); slb<=slb==lw?SI'(0):slb+1'b1; cg <= ng; gx <= gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1; end else ph <= ph + 24'd1;
+                if (ph == cg) begin ph <= 24'd0; sl <= rot(sl, lm); slb<=((|(sl&lm)) || sl[NSLOT-1])?SI'(0):slb+1'b1; cg <= ng; gx <= gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1; end else ph <= ph + 24'd1;
             end
             if (st && !armed) begin
                 if (bad_d) t_wf[1] <= 1'b1;
                 if (!hcfg_bad) begin armed <= 1'b1; ph <= 24'd1; cg <= ng; gx <= gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1; end
             end
             rec_q <= rec;
-            if (radv) begin rp <= rot(rp, lm); rpb<=rpb==lw?SI'(0):rpb+1'b1; end
+            if (radv) begin rp <= rot(rp, lm); rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1; end
             h_rfr <= !radv && !(rec_q && |(rp & ssq));
             vld <= (vld & ~(due ? rp : {NSLOT{1'b0}})) | (rec_q ? ssq : {NSLOT{1'b0}});
             c_q <= c_n; rc_q <= rc_n;
@@ -265,6 +265,16 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if (fq0) t_wf[0] <= 1'b1;
             if ((wv && (!idle || mw_q[22:21] == 2'd3)) || fq1) t_wf[1] <= 1'b1;
         end
+`ifdef DSDV_MU_POINTER_ASSERT
+    integer ae;
+    always @(posedge ck) if(rn) begin
+        if(rp !== (OH0 << rpb)) $fatal(1,"retire SRAM pointer mismatch");
+        if(sl !== (OH0 << slb)) $fatal(1,"slot SRAM pointer mismatch");
+        if(gx !== (OH0 << gxb)) $fatal(1,"gap SRAM pointer mismatch");
+        for(ae=0;ae<NEV;ae=ae+1)
+            if(pe[ae] !== (OH0 << pbi[ae])) $fatal(1,"event SRAM pointer mismatch e%0d",ae);
+    end
+`endif
 endmodule
 
 // ---------------------------------------------------------------- MU-S81-2/DIE: parameter-free p4l die master (MU dies)

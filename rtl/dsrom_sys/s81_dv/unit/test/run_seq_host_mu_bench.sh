@@ -32,7 +32,7 @@ sha256sum $F $T/tb_dsdv_seq_host_mu.sv $T/check_seq_host_mu.py $T/seq_host_mu_ca
 python3 $T/seq_host_mu_cases.py --root $R --out $O/cases > /dev/null || { echo "SEQHOST_MU_GATE FAIL (cases)"; exit 2; }
 bad=0
 build() { local n=$1; shift
-  verilator --binary --timing -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT \
+  verilator --binary --timing +define+DSDV_MU_POINTER_ASSERT -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT \
     --top-module tb_dsdv_seq_host_mu "$@" --Mdir "$O/obj_$n" -o tb $F $T/tb_dsdv_seq_host_mu.sv > "$O/build_$n.log" 2>&1 \
     || { echo "BUILD_FAIL $n"; grep -m5 %Error "$O/build_$n.log"; bad=1; return 2; }
 }

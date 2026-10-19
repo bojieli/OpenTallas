@@ -15,3 +15,5 @@ Safe-design checklist before gate:
 6 Macro18.36x20.79 +10.8halo fits43.2gridcell;84macros arranged10x9withfull-widthbottom32.4band. Area estimate8300 inherited from earlierflopimplementation untilsynth; raw20%fill reflects143kbank-accesskeepouts, fully stated in fill_reason. No fit claim untilmeasuredarea/PNG and wrapperallocation.
 7 io_hold.03/reset2, per-eventregionalresets. CTS spread pending.
 8 Static schedule; zeroaddedoutputedge, originalD>=nw+2 unchanged.
+
+ROOT notice 10-19 08:20 accepted truthful lattice_channel_bound sizing/schema: measuredstd6535um2 / full32.4um band gives42.8%;84macro lattice/channels verifiedalgebraically. Finalvisual/reach/fanout/clockreview remainsrequired. Earlier pin_bound label was incorrect and removed. Diagnostic firstgate has oldpointer source and never qualifies finalRTL. Binaryshadows now use exactlyregisteredlm masks and NSLOT-1fallback, with simulationpointer-correspondence assertions; realcalendar validation pending.

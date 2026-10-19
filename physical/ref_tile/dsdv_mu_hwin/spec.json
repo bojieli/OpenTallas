@@ -18,7 +18,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 8300,
+ "std_area_um2": 6535,
  "pins": {
   "W": [
    "f_ks",
@@ -882,6 +882,16 @@
   "h": 432.0
  },
  "fill_reason": {
-  "pin_bound": "Macro-face access bound:84independent 1R1W banks, each18.36x20.79um with10.8um pin-face halo =>39.96x42.39keepout on43.2grid (about143k um2 occupiedby bank-access slots, versus32k rawmacroarea).84banks carry84x63=5292macro pins; one full-width32.4um standard-cell band and6spare lattice slots retain routing/access.10columns x9rows plusedgehalos require475.2x432outline. External W pins431approx<1/um; the limitation is independent macro-face access, not external pins."
+  "lattice_channel_bound": {
+   "why": "ROOT sizing/schema approval 10-19 08:20: measured diagnostic gate iop area38598 minus32063macro =6535um2 std. Full-width band y2.16..34.56 gives~42.8% std utilization.84tiny true1R1W SRAM banks on43.2um lattice have vertical/horizontal22.41/24.84umchannels >=20; rawoverallfill18.8% is lattice/channel cost. Final corrected-pointer RTL gate, actualPNG, wire reach<=405, fanout and nativeclock checks required beforefinalreview/submit.",
+   "lattice_um": 43.2,
+   "min_channel_um": 22.41,
+   "std_band_util": 0.428,
+   "approved_by": "codex coordinator (ROOT notice 10-19 08:20; sizing/schema only)",
+   "std_band_y_um": [
+    2.16,
+    34.56
+   ]
+  }
  }
 }

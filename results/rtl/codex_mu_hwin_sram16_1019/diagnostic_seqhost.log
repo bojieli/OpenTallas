@@ -1,0 +1,35 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc7       admits   753 GB (avail 628, growth 101, headroom 0, waiters 0/0 GB) load 72/96 running 24 disk 6468 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: -> ot-epyc7
+ot-heavy: request 16G is charged 11G (class 'run_seq_host_mu_bench.sh' measured peak 2.5G, n=9+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2749474-1792422640 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SEQHOST_MU FAIL starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=92/92 events=1308 max_outstanding=1 (b) 480 unexpected events (first ('MC0', 428743, '000fa60a1')); (c) fault line in the multi run: PROG MF 2429 bit 2; (c) t_mf 0100
+SEQHOST_MU FAIL starts=22 users=11 user0_identical=True zero_latency_vs_plain=True kd_tagged=22/22 events=314 max_outstanding=1 (b) 116 unexpected events (first ('MC0', 623515, '0003ee02b')); (c) fault line in the multi run: PROG MF 850 bit 2; (c) t_mf 0100
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=0110 first=[(66177, 1), (66242, 2)] issuer=[]
+SEQHOST_MU FAULT1 FAIL t_mf=0110 first=[(2429, 2), (66365, 1)] issuer=[]
+SEQHOST_MU FAULT1 FAIL t_mf=1110 first=[(446, 2), (449, 1)] issuer=[]
+SEQHOST_MU FAULT0 FAIL t_mf=1101 first=[(446, 2), (489, 0)] issuer=[]
+SEQHOST_MU FAULT2 PASS (fault raised) t_mf=0100 first=[(2429, 2)] issuer=[]
+SEQHOST_MU FAIL starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=92/92 events=1308 max_outstanding=1 (b) 90 expected events missing (first ('KD', 23796, '2003ef004000ce')); (b) 570 unexpected events (first ('KD', 23796, '2003ef000000ce')); (c) fault line in the multi run: PROG MF 2429 bit 2
+mutant 1 (user field dropped) detected (FAIL as required)
+SEQHOST_MU FAULT0 FAIL t_mf=1100 first=[(446, 2), (489, 3)] issuer=[]
+mutant 2 (collision check dropped) detected (FAIL as required)
+SEQHOST_MU FAIL starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=3/92 events=1308 max_outstanding=1 (b) 89 expected events missing (first ('KD', 66424, '2003fd00c0025e')); (b) 569 unexpected events (first ('KD', 66424, '2003fd00000000')); (c) fault line in the multi run: PROG MF 2429 bit 2
+mutant 5 (gap index stuck) detected (FAIL as required)
+lint dsdv_mu_hslot clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_mu_hwin FAIL: %Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:75:123: Signal flopped as both synchronous and async: '__VdfgRegularize_h6e95ff9d_0_0'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:210:27: Signal has multiple driving blocks with different clocking: 'dsdv_mu_hwin.id_c'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:131:21: Signal has multiple driving blocks with different clocking: 'dsdv_mu_hwin.pe'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:132:18: Signal has multiple driving blocks with different clocking: 'dsdv_mu_hwin.pbi'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:135:19: Signal has multiple driving blocks with different clocking: 'dsdv_mu_hwin.h_fr'
+lint dsdv_seq_host_mux FAIL: %Warning-SYNCASYNCNET: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:75:123: Signal flopped as both synchronous and async: '__VdfgRegularize_h6e95ff9d_0_0'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:210:27: Signal has multiple driving blocks with different clocking: 'dsdv_seq_host_mux.u_win.id_c'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:131:21: Signal has multiple driving blocks with different clocking: 'dsdv_seq_host_mux.u_win.pe'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:132:18: Signal has multiple driving blocks with different clocking: 'dsdv_seq_host_mux.u_win.pbi'
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:135:19: Signal has multiple driving blocks with different clocking: 'dsdv_seq_host_mux.u_win.h_fr'

@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc7       admits   776 GB (avail 644, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 26 disk 6478 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2787768-1792423158 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SEQHOST_MU PASS starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=92/92 events=1444 max_outstanding=1 
