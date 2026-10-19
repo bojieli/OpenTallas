@@ -203,6 +203,16 @@ PRG_W, ARH_W = 537, 8
 # K.tx_record +1 (attn__tx_valid / attn__tx_payload), ks_prg +1, ks_arh +1; RX bundles K.rx_record / K.tx_slot +0.
 ATTN_LAND = os.environ.get('OT_KV_ATTN_LAND', '0') == '1'
 ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0, 'K.tx_slot': 0}
+# HKV-RSTCAP 10-19 (lanes/HKV-RSTCAP.md): face-landed tile wrappers <kit>_fl (reset_ports landed at the face: +3 reset-release
+# edges, tile clock; zero steady-state cycles) and, on kvs_attn, fin (pvfin stream) / i_ctl (ctl -> attn issue / run / cal go /
+# authority) landed at +1 edge each.  OT_KV_FACE_LAND=1 binds the _fl views (ONLY once CLOSED) and the compiler takes the
+# edges (kv_static_programme profile die: att += i_ctl; F_DLY += fin; startup: reset release + 3 per landed tile);
+# kv_static_params FAILS when the die.v masters and this flag disagree.
+FACE_LAND = os.environ.get('OT_KV_FACE_LAND', '0') == '1'
+FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
+                   'astk_rly_296': dict(master='qkd_astk_rly_296', rst_release=3),
+                   'hr_core_queue': dict(master='qkd_hr_core_queue', rst_release=3)}
+FACE_LAND_RST_BUDGET = 128 - 2     # region roots hold reset >= RELAY_FLUSH 128 cycles after the clock runs (kv_rst_window), E_r 2
 # KV-WIRE2 10-18 (RTL-BUILD-KV/ASTK (a)-(d), lanes/RTL-BUILD-KV.md ASTK; OT_KV_ASTK_ST, default ON with the static hub): the
 # static ASTK strip with its inline e-read (die face qkd_astk_strip_er_die = qkd_astk_strip_er_st + the vh -> read request
 # slicing + af | er_fault), the ECTL frames on qkd_ectl3_kiss_st (C = qkd_ectl_c_st: so 413 b, si 633 b, no nb_cr), heads
@@ -2050,6 +2060,8 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
+                face_land=dict(enabled=FACE_LAND, tiles=FACE_LAND_TILES if FACE_LAND else {},
+                               note='views bound only when CLOSED (lanes/HKV-RSTCAP.md)'),
                 attn_landing=dict(enabled=ATTN_LAND, added_edges=ATTN_LAND_EDGES if ATTN_LAND else {},
                                   codec_edges=2 if ATTN_LAND else 1,
                                   schedule_binding='compiler must compose launch edges with actual die relay/land ages'),

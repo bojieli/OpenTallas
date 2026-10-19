@@ -4863,6 +4863,9 @@ def main(argv=None):
             print(f'kv die relay_stages.json export FAILED: {_e!r}'[:600])
         if m.get('land_slots'):
             (a.out / 'land_slots.json').write_text(json.dumps(m['land_slots'], indent=1, default=str) + '\n')
+        if KSD.ON and m['geo'].get('static_die'):   # HKV-DIE2 10-19: stage-derived params are recomputed post-station
+            import kv_static_params as KSP            # (kv_static_params.py on the die netlist table; plan values = record)
+            (a.out / 'static_model.json').write_text(json.dumps(KSP.model_lite(m), indent=1, default=str) + '\n')
         return 0
     rec = record(m)
     rec['legality'] = check(m)

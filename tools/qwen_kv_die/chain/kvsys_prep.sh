@@ -60,10 +60,10 @@ elif [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_K
   # OT_KV_LPRG_PROGRAM (PW1024 + DW8 hex; default the sys_face bench program) / OT_KV_LPRG_EPOCH (default 0x0b0b) on the
   # link compiler's calendar and refuse a committed image (= the hardened view's constants) that differs
   mkdir -p $O/lprg_image
-  python3 tools/qwen_split/d2d_link_calendar.py --out $O/lprg_image/cal --txl 6 --phy 5 --profile program --txd-c 1,1,1,2 --txd-k 1,2,1,1 \
-    --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg > $O/lprg_image/cal.log
-  python3 tools/qwen_static_kv/layer_roots_from_link.py $O/lprg_image/cal $O/lprg_image/lp ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} \
-    --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
+  # HKV-DIE2 10-19: the SAME compile as the committed image = kv_static_programme.py --profile component (production link
+  # calendar: d2d image die stages + compiled token path; the pre-TXDP '--txd-c 1,1,1,2 --txd-k 1,2,1,1' compile is gone)
+  python3 tools/qwen_kv_die/kv_static_programme.py --profile component --out $O/lprg_image/lp \
+    ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
   if cmp -s $O/lprg_image/lp/layer_programme_image.svh rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh; then echo MATCH > $O/lprg_image/verdict
   else echo MISMATCH > $O/lprg_image/verdict; echo "OT_KV_SEQ_STATIC: committed layer image != installed program's (re-run layer_roots_from_link.py, re-harden lprg)"
     [ "${OT_KV_LPRG_ALLOW_MISMATCH:-0}" = 1 ] || exit 5; fi
