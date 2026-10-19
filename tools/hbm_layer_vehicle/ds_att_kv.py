@@ -98,7 +98,6 @@ def main():
                             idx, blocks = MC.index_owned(d.rank % M.cfg["coll_group_size"], rd.imm_a,
                                                          M.cfg["coll_group_size"])
                             ent["idx"] = np.asarray(idx, dtype=np.int64)
-                            ent["keys"] = np.asarray(M.index_keys(d, rd.imm_b, idx), dtype=F)
                         pre[d.rank] = ent
                 finally:
                     M.cur = cur
@@ -124,6 +123,8 @@ def main():
                                     raise SystemExit(f"{base}: captured operands do not reproduce O (lane {h})")
                         else:
                             idx_, v = d.index_last
+                            # the key store accessor is attached by ds_native's index_frame handler at the call
+                            ent["keys"] = np.asarray(M.index_keys(d, rd.imm_b, ent["idx"]), dtype=F)
                             ent["v"] = np.asarray(v, dtype=np.float64)
                             ent["O"] = M.read(o, d, L).view(np.uint32).copy()
                         meta = dict(layer=layer, rank=d.rank, op=name, tag=rd.tag, occ=occ,
