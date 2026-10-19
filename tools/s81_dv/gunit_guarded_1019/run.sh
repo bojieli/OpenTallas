@@ -4,7 +4,11 @@ cd "$(dirname "$0")/../../.."
 R=$PWD
 D=$R/tools/s81_dv/gunit_guarded_1019
 O=$R/out
-mkdir -p "$O"
+# Reserve a fresh output directory atomically; never overwrite a failed receipt.
+if ! mkdir "$O"; then
+  printf '%s\n' "GUARDED_OUTPUT_EXISTS: refusing existing output $O" >&2
+  exit 2
+fi
 V=/opt/verilator-5.050/bin/verilator
 if [ ! -x "$V" ]; then V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; fi
 "$V" --version | tee "$O/verilator.version"
