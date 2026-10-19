@@ -95,6 +95,12 @@ def timing_profile(*, native_landing=False, native_return=False,
 
 def model():
     return dict(preferred=context_model(), fallback=context_model('explicit200'),
+                class_guard=dict(sites=['post-mrel XC command','assembled SM command'],
+                    rule='every A2 word requires aligned context_valid, mode!=3 and mode[2]==descriptor_class',
+                    command_envelope_with_explicit_valid=85,
+                    added_svg_valid_ff=4, added_xc_class_ff=4, added_xc_valid_ff=4, added_guard_sticky_ff=2,
+                    complete_banked_native_source_ff_delta=89,
+                    note='existing aligned valid may be reused only after source audit; no new command edge'),
                 timing=dict(storage=timing_profile(),
                             native_cache_proven=timing_profile(native_landing=True, native_return=True, native_cache_safe=True),
                             banked_native_proposed=timing_profile(native_landing=True, native_return=True, native_cache_safe=True, banked_calendar=True)),
