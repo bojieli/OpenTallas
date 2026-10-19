@@ -75,6 +75,20 @@ class StationTest(unittest.TestCase):
         std = {'rly_pvin_EN_0_21__s0', 'rly_pvin_EN_0_21__s1', 'rly_pvin_EN_0_22__s0'}
         self.assertEqual(KS.siblings('rly_pvin_EN_0_21__s1', std), ['rly_pvin_EN_0_21__s0', 'rly_pvin_EN_0_21__s1'])
 
+    def test_pvfork_payload_and_header_replicas_are_atomic(self):
+        base = {f'pvfork_ES_2__u_r{i}' for i in range(4)}
+        repaired = {n + '_x2' for n in base}
+        other = {'pvfork_ES_3__u_r1', 'unrelated__u_r1', 'pvfork_ES_2__u_r1_x3'}
+        for n in base:
+            self.assertEqual(KS.siblings(n, base | repaired | other), sorted(base))
+        for n in repaired:
+            self.assertEqual(KS.siblings(n, base | repaired | other), sorted(repaired))
+        self.assertEqual(KS.siblings('unrelated__u_r1', base | other), ['unrelated__u_r1'])
+
+    def test_inserted_standard_stage_preserves_replica_depth(self):
+        std = {'rly_q_0__s0_x2', 'rly_q_0__s1_x2', 'rly_q_0__s1_x3', 'rly_q_0__s1'}
+        self.assertEqual(KS.siblings('rly_q_0__s1_x2', std), ['rly_q_0__s0_x2', 'rly_q_0__s1_x2'])
+
 
 def blk(name='blk'):
     out = dict(name=name, W=12960, H=12960, pins=[dict(name='i', use='SIGNAL', rects=[('M3', (8100, 0, 8118, 37))])])
