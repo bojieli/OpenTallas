@@ -1,0 +1,40 @@
+{
+  "source": "private/qkd_host_native_owner_join_rc.sv",
+  "sha256": "d818152edc96cd87aed380e0f09c65740bd97282e47210d7271fc4016672e5ef",
+  "state": {
+    "pending_t": {
+      "fields": {
+        "client": 16,
+        "slot": 8,
+        "position": 18,
+        "input_token": 18,
+        "package_gen": 2,
+        "desc_gen": 2,
+        "phase": 2
+      },
+      "bits": 66
+    },
+    "active_t": {
+      "fields": {
+        "client": 16,
+        "slot": 8,
+        "request_tag": 59,
+        "native_gen": 2,
+        "desc_gen": 2,
+        "valid": 1,
+        "raw_seen": 1,
+        "cert_seen": 1,
+        "terminal_seen": 1,
+        "event_copied": 1,
+        "post_seen": 1,
+        "report_needed": 1,
+        "report_drained": 1
+      },
+      "bits": 95
+    }
+  },
+  "sticky_protocol_fault_bits": 1,
+  "total_register_bits": 162,
+  "next_state_variables": "combinational only; not additional registers",
+  "validation": "Python declaration census only. No HDL compile or simulation run."
+}
