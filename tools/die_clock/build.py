@@ -206,9 +206,17 @@ def build(a):
                     taken.add((ix, iy))
     log('obstacles', len(obstacles), 'std cell sites taken', len(taken))
     region_exact=bool(spec.get('exact_region_bays',False))
+    power_sites=None
+    if spec.get('pg_safe_clock_bays',False):
+        if not region_exact or not spec.get('spine',{}).get('exact_footprint_bays') or not a.geometry_only:
+            raise ValueError('PG-safe clock bays require exact regional/spine geometry-only model')
+        from qwen_clock_power_sites import ClockPowerSites
+        power_sites=ClockPowerSites.from_block(blk,odb,[D.design.getDb().findMaster(n) for n in (rt.BUF,rt.PAD)])
+        fixed_rows=power_sites.occupied_rows(blk)
+        log('actual PG-safe clock site policy',json.dumps(power_sites.identity()))
     if region_exact:
         from qwen_exact_corridor import ExactBayGrid,ExactRegionalBuilder
-        g=ExactBayGrid(D.W,D.H,fixed_rows)
+        g=ExactBayGrid(D.W,D.H,fixed_rows,site_validator=power_sites)
     else:
         g = rt.dct.Grid(D.W, D.H, obstacles)
     sites = Sites(g, D.W, D.H, taken)
@@ -230,6 +238,7 @@ def build(a):
         trees = [t for t in trees if t['name'] in keep or t['name'].split('_')[0] in keep]
     rec = dict(schema='opentallas.die_clock.manifest.v1', odb=a.odb, spec=spec, trees={}, cells=[], parent={}, cell_tree={},
                leaves={}, iterations=[])
+    if power_sites is not None:rec['clock_power_site_model']=power_sites.identity()
     clocks, sink_pins, builders = [], {}, {}
     tree_group = {t['name']: t['balance_group'] for t in trees if t.get('balance_group')}
     by_root = defaultdict(list)
@@ -466,7 +475,8 @@ def build(a):
             for obj in blk.getInsts():
                 if obj.getMaster().isBlock() or obj.isPlaced():
                     bx=obj.getBBox();rows.append((obj.getName(),(bx.xMin()/u,bx.yMin()/u,bx.xMax()/u,bx.yMax()/u)))
-            eg=ExactBayGrid(D.W,D.H,rows)
+            if power_sites is not None:rows=power_sites.occupied_rows(blk)
+            eg=ExactBayGrid(D.W,D.H,rows,site_validator=power_sites)
             sb=ExactForwardedBuilder(eg,'dc_spine')
         else:
             sb = (rt.ForwardedBuilder(g, 'dc_spine') if topology == 'forwarded'

@@ -18,8 +18,9 @@ SPINE_BLOCKED_RUN=340.0
 
 
 class ExactBayGrid(rt.dct.Grid):
-    def __init__(self,width,height,rows):
+    def __init__(self,width,height,rows,site_validator=None):
         self.rows=rows
+        self.site_validator=site_validator
         super().__init__(width,height,[r for _,r in rows])
         affected=set()
         for name,(x0,y0,x1,y1) in rows:
@@ -36,20 +37,26 @@ class ExactBayGrid(rt.dct.Grid):
                     if (i,j) in affected:self.boxes[i,j].append(r)
         self.points={}
         for c in affected:
-            p=bay(c,self.boxes[c])
+            p=bay(c,self.boxes[c],self.site_validator)
             if p is not None:self.points[c]=p;self.blk[c[1]*self.nx+c[0]]=0
         self.refined_cells=len(self.points)
 
     def point(self,c):
-        if not self.free(c):return None
-        if c not in self.points:self.points[c]=bay(c,self.boxes[c])
+        if not super().free(c):return None
+        if c not in self.points:
+            self.points[c]=bay(c,self.boxes[c],self.site_validator)
+            if self.points[c] is None:self.blk[c[1]*self.nx+c[0]]=1
         return self.points[c]
+
+    def free(self,c):
+        if c in getattr(self,'route_endpoints',()):return True
+        return self.point(c) is not None
 
     def reserve(self,c):
         p=self.point(c)
         if p is None:raise ValueError('no whole clock footprint bay: '+str(c))
         x,y=p;self.boxes[c].append((x,y,x+XP,y+YP))
-        nxt=bay(c,self.boxes[c]);self.points[c]=nxt
+        nxt=bay(c,self.boxes[c],self.site_validator);self.points[c]=nxt
         self.blk[c[1]*self.nx+c[0]]=int(nxt is None)
         return tuple(p)
 
@@ -57,10 +64,13 @@ class ExactBayGrid(rt.dct.Grid):
         # The two endpoint footprints are already reserved, but are legal
         # stage endpoints. Only these two cells may reset the blocked run.
         saved={c:self.blk[c[1]*self.nx+c[0]] for c in (a,b)}
+        previous=getattr(self,'route_endpoints',set())
         try:
+            self.route_endpoints=previous|{a,b}
             for c in saved:self.blk[c[1]*self.nx+c[0]]=0
             return self._route(a,b,max_run)
         finally:
+            self.route_endpoints=previous
             for c,v in saved.items():self.blk[c[1]*self.nx+c[0]]=v
 
     def route(self,a,b,max_run=None):

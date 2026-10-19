@@ -22,13 +22,14 @@ def overlap(a,b):
     return a[0]<b[2] and b[0]<a[2] and a[1]<b[3] and b[1]<a[3]
 
 
-def bay(cell,rects):
+def bay(cell,rects,validator=None):
     x0,y0=cell[0]*GRID,cell[1]*GRID
     # A whole legal site must fit in this cell; do not count a wire-only sliver.
     for iy in range(math.ceil(y0/YP),math.floor((y0+GRID-YP+1e-9)/YP)+1):
         for ix in range(math.ceil(x0/XP),math.floor((x0+GRID-XP+1e-9)/XP)+1):
             r=(ix*XP,iy*YP,(ix+1)*XP,(iy+1)*YP)
-            if not any(overlap(r,b) for b in rects):return [round(r[0],3),round(r[1],3)]
+            if not any(overlap(r,b) for b in rects) and (validator is None or validator(r[0],r[1])):
+                return [round(r[0],3),round(r[1],3)]
     return None
 
 

@@ -17,7 +17,11 @@
 #   source die_tie_rows.tcl; ot_tie_rows <m8_pitch> <m8_width> <m9_pitch> <m9_width>
 namespace eval ot_tie_rows {}
 
-proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {off9 0.0}} {
+proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {off9 0.0} {preserve_clock_cells {}}} {
+  # Default off. The final argument is an explicit manifest-derived list, not a
+  # name-pattern exemption. Clocks must already occupy PG-safe fixed sites.
+  # This remains a row/PG candidate: continuity, literal contact, short and
+  # independent actual-pin reach audits must pass before any timing adoption.
   # off8 / off9 (KV die 2026-10-15): the core M8 / M9 -offset of the grid (the compute die's is 0; the KV die's 2.0)
   set block [ord::get_db_block]
   set dbu [$block getDbUnitsPerMicron]
@@ -45,9 +49,24 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
       lappend obstacles [list [expr {[$bb xMin]-$HL}] [expr {[$bb yMin]-$HL}] [expr {[$bb xMax]+$HL}] [expr {[$bb yMax]+$HL}]]
     } else { lappend cells $inst }
   }
+  set ::ot_tie_rows::actual_m8 {}; set ::ot_tie_rows::actual_m9 {}
+  set preserved {}; set fixed_segs {}; set clock_occupied {}
+  if {[llength $preserve_clock_cells]} {
+    lassign [ot_clock_rows_prepare $block $dbu $obstacles $preserve_clock_cells $HALF $CLR $P8 $w8 $site] preserved fixed_segs clock_occupied
+  }
   # core M8 stripe centres per net (pdngen -starts_with GROUND, two nets per pitch: VSS at offset, VDD at offset+P/2,
   # offset measured to the stripe edge) -- verified against the written shapes by ot_tie_rows_verify after pdngen
   proc ::ot_tie_rows::m8net {yc cy0 P8 w8dbu CLR} {
+    if {[dict size $::ot_tie_rows::actual_m8]} {
+      dict for {net edge} $::ot_tie_rows::actual_m8 {
+        set k [expr {floor(($yc-$edge)/$P8)}]
+        foreach kk [list [expr {$k-1}] $k [expr {$k+1}]] {
+          set a [expr {$edge+$kk*$P8}]
+          if {$yc >= $a-$CLR && $yc <= $a+$w8dbu+$CLR} { return $net }
+        }
+      }
+      return ""
+    }
     # returns VSS / VDD if a stripe of that net is within CLR of yc, else ""
     set r [expr {fmod(fmod($yc - $cy0, $P8) + $P8, $P8)}]
     set h [expr {$w8dbu/2.0}]
@@ -58,6 +77,17 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
   }
   set w8d [expr {round($w8*$dbu)}]
   proc ::ot_tie_rows::m9ok {lo hi cx0 P9 W9} {
+    if {[dict size $::ot_tie_rows::actual_m9]} {
+      dict for {net stripes} $::ot_tie_rows::actual_m9 {
+        set found 0
+        foreach r $stripes {
+          lassign $r a b c d
+          if {$a >= $lo+300 && $c <= $hi-300} {set found 1; break}
+        }
+        if {!$found} {return 0}
+      }
+      return 1
+    }
     # need a VSS (offset edge 0) and a VDD (P9/2) stripe fully inside [lo,hi] with 0.3 um margin
     set got {}
     set k [expr {int(floor(double($lo-$cx0)/$P9))-1}]
@@ -70,8 +100,9 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
     }
     return [expr {[dict exists $got VSS] && [dict exists $got VDD]}]
   }
-  set moved 0; set maxd 0; set segs {}; set mspan {}; set kspan {}
+  set moved 0; set maxd 0; set segs $fixed_segs; set mspan {}; set kspan {}
   foreach inst $cells {
+    if {[dict exists $preserved [$inst getName]]} { continue }
     lassign [$inst getLocation] tx ty
     set to [$inst getOrient]
     $inst setPlacementStatus PLACED
@@ -98,6 +129,10 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
           dict set mspan $ri $sp
         }
         set spans [dict get $mspan $ri]
+        foreach r $clock_occupied {
+          lassign $r a b c d
+          if {$b < $ry+$mh && $d > $ry} { lappend spans [list $a $c] }
+        }
         if {[dict exists $kspan $ri]} { set spans [concat $spans [dict get $kspan $ri]] }
         lappend spans [list $ex $ex]
         set cursor $rx; set best {}; set bd Inf
@@ -129,6 +164,14 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
     }
     if {!$done} { error "OT_TIE_ROWS: no legal PG-connectable position for [$inst getName]" }
   }
+  # No clock mutation until every preserved site has passed preflight. Bind
+  # literal PG pins without changing any signal net or clock coordinate.
+  dict for {name original} $preserved {
+    set inst [$block findInst $name]
+    if {[list [$inst getLocation] [$inst getOrient]] ne $original} {error "OT_CLOCK_ROWS: fixed clock moved: $name"}
+    foreach net {VDD VSS} {[$inst findITerm $net] connect [$block findNet $net]}
+    $inst setPlacementStatus FIRM
+  }
   # rebuild rows: merged segments per (y, orient)
   set merged {}
   foreach s [lsort -integer -index 2 $segs] {
@@ -153,7 +196,88 @@ proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {of
       incr n; incr sites $num
     }
   }
-  puts "OT_TIE_ROWS cells=[llength $cells] moved=$moved max_move_um=[expr {$maxd/double($dbu)}] rows_before=$nold rows_after=$n sites=$sites"
+  puts "OT_TIE_ROWS cells=[llength $cells] moved=$moved max_move_um=[expr {$maxd/double($dbu)}] rows_before=$nold rows_after=$n sites=$sites preserved_clock_cells=[dict size $preserved] power_qualified=0"
+}
+
+# Readonly preflight for explicit fixed clock cells. Actual core stripe phase is
+# read from the existing supply polygons, because getCoreArea changes with rows.
+# Return row segments/occupancy only after ALL sites pass. No row-only PASS.
+proc ot_clock_rows_prepare {block dbu obstacles names HALF CLR P8 w8 site} {
+  set die [$block getDieArea]; set phases {}; set stripes {}
+  set width [expr {round($w8*$dbu)}]; set margin [expr {round(.3*$dbu)}]
+  set pitch [$site getWidth]; set height [$site getHeight]
+  if {$pitch != 54 || $height != 270 || $dbu != 1000} {error "OT_CLOCK_ROWS: unsupported physical site/DBU"}
+  foreach name {VDD VSS} {
+    set net [$block findNet $name]
+    if {$net eq "NULL"} {error "OT_CLOCK_ROWS: actual supply missing: $name"}
+    set edges {}; set vertical {}
+    foreach sw [$net getSWires] {
+      foreach r [$sw getWires] {
+        if {[$r isVia]} continue
+        set layer [[$r getTechLayer] getName]
+        if {$layer eq "M8" && [$r xMax]-[$r xMin] > ([$die xMax]-[$die xMin])/2} {
+          if {[$r yMax]-[$r yMin] != $width} {error "OT_CLOCK_ROWS: unexpected actual M8 width"}
+          dict set edges [expr {(([$r yMin]%$P8)+$P8)%$P8}] 1
+        }
+        if {$layer eq "M9" && [$r yMax]-[$r yMin] > ([$die yMax]-[$die yMin])/2} {
+          lappend vertical [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]]
+        }
+      }
+    }
+    if {[dict size $edges] != 1 || ![llength $vertical]} {error "OT_CLOCK_ROWS: ambiguous/missing actual mesh $name"}
+    dict set phases $name [lindex [dict keys $edges] 0]
+    dict set stripes $name $vertical
+  }
+  set preserved {}; set segs {}; set occupied {}
+  foreach name $names {
+    if {[dict exists $preserved $name]} {error "OT_CLOCK_ROWS: duplicate clock $name"}
+    set inst [$block findInst $name]
+    if {$inst eq "NULL"} {error "OT_CLOCK_ROWS: clock missing: $name"}
+    set master [$inst getMaster]
+    if {[$master isBlock] || [$master isPad] || ![$inst isPlaced]} {error "OT_CLOCK_ROWS: not a placed clock cell: $name"}
+    lassign [$inst getLocation] x y
+    set orient [expr {($y/$height)%2 ? "MX" : "R0"}]
+    if {$x%$pitch || $y%$height || [$inst getOrient] ne $orient || [$master getHeight] != $height} {error "OT_CLOCK_ROWS: unsupported clock site: $name"}
+    set bb [$inst getBBox]; set xmin [$bb xMin]; set xmax [$bb xMax]; set bottom [$bb yMin]; set top [$bb yMax]
+    foreach net {VDD VSS} {
+      set pin [$inst findITerm $net]
+      if {$pin eq "NULL"} {error "OT_CLOCK_ROWS: missing actual PG pin $name/$net"}
+      if {[$pin getNet] ne "NULL" && [$pin getNet] ne [$block findNet $net]} {error "OT_CLOCK_ROWS: wrong clock PG net $name/$net"}
+      set q [$pin getBBox]
+      set xmin [expr {min($xmin,[$q xMin])}]; set xmax [expr {max($xmax,[$q xMax])}]
+      set bottom [expr {min($bottom,[$q yMin])}]; set top [expr {max($top,[$q yMax])}]
+      set other [expr {$net eq "VDD" ? "VSS" : "VDD"}]; set edge [dict get $phases $other]
+      set k [expr {int(floor(double([$q yMin]-$edge)/$P8))}]
+      foreach kk [list [expr {$k-1}] $k [expr {$k+1}]] {
+        set a [expr {$edge+$kk*$P8}]
+        if {[$q yMin] <= $a+$width+$CLR && [$q yMax] >= $a-$CLR} {error "OT_CLOCK_ROWS: unsafe actual M8 phase $name/$net"}
+      }
+    }
+    set lo [$die xMin]; set hi [$die xMax]
+    foreach r $obstacles {
+      lassign $r a b c d
+      if {$b < $top && $d > $bottom} {
+        if {$a < $xmax && $c > $xmin} {error "OT_CLOCK_ROWS: clock PG footprint inside macro halo: $name"}
+        if {$c <= $xmin} {set lo [expr {max($lo,$c)}]}
+        if {$a >= $xmax} {set hi [expr {min($hi,$a)}]}
+      }
+    }
+    set lo [expr {int(ceil(double(max($lo,$x-$HALF))/$pitch))*$pitch}]
+    set hi [expr {int(floor(double(min($hi,[$bb xMax]+$HALF))/$pitch))*$pitch}]
+    foreach net {VDD VSS} {
+      set q [[$inst findITerm $net] getBBox]; set found 0
+      foreach r [dict get $stripes $net] {
+        lassign $r a b c d
+        if {$a >= $lo+$margin && $c <= $hi-$margin && $b <= [$q yMin] && $d >= [$q yMax]} {set found 1; break}
+      }
+      if {!$found} {error "OT_CLOCK_ROWS: no actual M9 stack budget $name/$net"}
+    }
+    dict set preserved $name [list [$inst getLocation] [$inst getOrient]]
+    lappend occupied [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    lappend segs [list $y $orient $lo $hi $pitch]
+  }
+  set ::ot_tie_rows::actual_m8 $phases; set ::ot_tie_rows::actual_m9 $stripes
+  return [list $preserved $segs $occupied]
 }
 
 # after pdngen (fail closed): no M7-M8 / M8-M9 via of a die-top-cell rail stack may overlap an opposite-net M8 wire
