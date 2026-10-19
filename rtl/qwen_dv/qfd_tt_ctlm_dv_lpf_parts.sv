@@ -28,6 +28,7 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
     parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
+    parameter integer EMB_ID = 0,              // opt-in embedding bank identity; no epoch ingress
     parameter integer OPSEG = 0,
     parameter integer OPSEG_EXPANDED = 0,
     parameter integer OPSEG_PINREG = 0,
@@ -55,6 +56,7 @@ module qfd_tt_ctlm_dv_gi #(
     output wire          cal_image_ready,
     output reg           emb_start,
     output reg  [17:0]   emb_token,
+    output reg  [1:0]    emb_user,
     output wire          s_start,                // head stage start (u_hr stage_start; NU > 1 see hd_start)
     output wire [5:0]    s_stage,
     output wire [48:0]   st,
@@ -187,7 +189,7 @@ module qfd_tt_ctlm_dv_gi #(
         if (!rst_n) begin
             for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
             st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
-            start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
+            start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0; emb_user <= 2'd0;
         end else begin
             if (ctx_ld)
                 for (ub_i = 1; ub_i < NU; ub_i = ub_i + 1)
@@ -201,6 +203,7 @@ module qfd_tt_ctlm_dv_gi #(
             else if (c_seg) begin st_tok <= tok_b[c_user]; st_pos <= pos_b[c_user]; st_base <= c_base; end
             if (s_me && c_seg) start_fault <= 1'b1;
             emb_start <= c_emb; emb_token <= tok_b[c_user];
+            emb_user <= (EMB_ID != 0 && NU > 1) ? 2'(c_user) : 2'd0;
         end
     assign st = {st_h, st_tok, st_pos, st_base};
     // MU-DQ-D2DUSER (10-19): as qfd_tt_ctlm_dv hu (same edge as st; NU = 1 constant 0)
@@ -340,6 +343,7 @@ module qfd_tt_ctlm_dv_thru (
     input  wire          cal_image_ready_i,
     input  wire          emb_start_i,
     input  wire [17:0]   emb_token_i,
+    input  wire [1:0]    emb_user_i,
     input  wire [379:0]  ib_i,                   // QW-DIEFIX 10-19: the head's registered ROM command (cmd380 order)
     output wire [379:0]  ib_hr,                  //   -> hr[452:73] in the slice layout (qfd_dv_hr_pack, zero logic)
     input  wire [37:0]   fctx_i,
@@ -355,7 +359,8 @@ module qfd_tt_ctlm_dv_thru (
     output wire [68:0]   cal_descriptor_obs,
     output wire          cal_image_ready,
     output wire          emb_start,
-    output wire [17:0]   emb_token
+    output wire [17:0]   emb_token,
+    output wire [1:0]    emb_user
 );
     assign cmd = cmd_i;
     assign layer_context_v = lcv_i | fctx_i[37];
@@ -366,6 +371,7 @@ module qfd_tt_ctlm_dv_thru (
     assign cal_image_ready = cal_image_ready_i;
     assign emb_start = emb_start_i;
     assign emb_token = emb_token_i;
+    assign emb_user = emb_user_i;
     qfd_dv_hr_pack #(.ASBUILT(0)) u_hr_pack (.cmd(ib_i), .hr(ib_hr));
     wire unused = &{1'b0, ck, rst_n};
 endmodule

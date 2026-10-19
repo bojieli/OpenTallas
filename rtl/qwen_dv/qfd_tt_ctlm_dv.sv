@@ -145,6 +145,7 @@ module qfd_tt_ctlm_dv #(
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
     parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
+    parameter integer EMB_ID = 0,              // opt-in embedding bank identity; no epoch ingress
     parameter integer OPSEG = 0,
     parameter integer OPSEG_EXPANDED = 0,
     parameter integer OPSEG_PINREG = 0,
@@ -191,6 +192,7 @@ module qfd_tt_ctlm_dv #(
     // ---------------- embedding provider
     output reg           emb_start,
     output reg  [17:0]   emb_token,
+    output reg  [1:0]    emb_user,
     output wire          cf
 );
     // ------------------------------------------------------------------ pin registers (flop-first inputs)
@@ -330,7 +332,7 @@ module qfd_tt_ctlm_dv #(
         if (!rst_n) begin
             for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
             st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
-            start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
+            start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0; emb_user <= 2'd0;
         end else begin
             // boot context (OPSEG): masked fillers take their record (MUT 28: rotated records); the image loads only while
             // no segment plays (calendar image fault), so no start / result of a filler shares this edge in a legal run
@@ -347,6 +349,7 @@ module qfd_tt_ctlm_dv #(
             else if (c_seg) begin st_tok <= tok_b[b_rd]; st_pos <= pos_b[b_rd]; st_base <= c_base; end
             if (s_me && c_seg) start_fault <= 1'b1;
             emb_start <= c_emb; emb_token <= tok_b[b_rd];
+            emb_user <= (EMB_ID != 0 && NU > 1) ? 2'(c_user) : 2'd0;
         end
     wire [48:0] st = {st_h, st_tok, st_pos, st_base};
     // MU-DQ-D2DUSER (10-19): the user of the latest head start (0 on the face's dh start, cmd_user on a LOCAL SEG start;

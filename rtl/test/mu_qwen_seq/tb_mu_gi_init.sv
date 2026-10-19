@@ -15,11 +15,11 @@ module tb_mu_gi_init;
  .host_accept_v(accept_v),.host_epoch_valid(host_valid),.host_epoch(he),.host_tag(ht),.host_gen(hg),
  .program_ready(1'b1),.program_cap(1'b1),.program_fault(rx_fault),.program_epoch(16'hbeef),.program_digest(64'h123456789abcdef0),.ctx_x(ctx_x),.fault(observer_fault));
  reg [106:0] ss5=0;
- wire [115:0] cmd; wire [61:0] dcs; wire emb_start,s_start; wire [17:0] emb_token; wire [5:0] s_stage; wire [48:0] st;
- qfd_tt_ctlm_dv_gi #(.NU(4),.STAGE_ME(1),.OPSEG(1),.OPSEG_EXPANDED(1),.OPSEG_PINREG(1),.CTX_SRC(1),.FCTX(1),
+ wire [115:0] cmd; wire [61:0] dcs; wire emb_start,s_start; wire [17:0] emb_token; wire[1:0] emb_user; wire [5:0] s_stage; wire [48:0] st;
+ qfd_tt_ctlm_dv_gi #(.NU(4),.STAGE_ME(1),.OPSEG(1),.OPSEG_EXPANDED(1),.OPSEG_PINREG(1),.CTX_SRC(1),.FCTX(1),.EMB_ID(1),
  .INIT_U0(1),.INIT_FIRST(BAD_COUNT?0:52),.INIT_CNT(BAD_COUNT?1024:3)) dut
  (.ck(ck),.rst_n(rst_n),.dh(dh),.dh_user(2'd0),.init_u0(init_u0),.ctx_x(ctx_x),.mu_fault(rx_fault|observer_fault),.ss5(ss5),.ag5(10'd0),.fab(1'b0),
- .cmd(cmd),.dcs(dcs),.emb_start(emb_start),.emb_token(emb_token),.s_start(s_start),.s_stage(s_stage),.st(st),
+ .cmd(cmd),.dcs(dcs),.emb_start(emb_start),.emb_token(emb_token),.emb_user(emb_user),.s_start(s_start),.s_stage(s_stage),.st(st),
  .tl(),.cal_program_obs(),.cal_descriptor_obs(),.cal_image_ready(),.fctx(),.hu(),.su_obs_o(),.su_acc_o(),.x_oprog(),.x_orows(),.x_oidle(),.rom_ret_v());
  reg [63:0] pw[0:1023],dw[0:7];
  integer et[0:4095],ek[0:4095]; reg[128:0] ev[0:4095];
@@ -71,6 +71,7 @@ module tb_mu_gi_init;
  #0.1;
  if(dcs[2:1]!=0)fail("sticky controller/calendar fault");
  if(checkemb&&u==0&&cyc<2000)$display("GI_INIT_EDGE emb_start_pin=%0d token=%0d",cyc,emb_token);
+ if(checkemb&&emb_user!=((mut==4)?2'(u^1):2'(u)))fail($sformatf("EMB identity got%0d expected%0d",emb_user,u));
  if(checkemb&&(!emb_start||emb_token!=expected))fail($sformatf("EMB u%0d got%0d expected%0d",u,emb_token,expected));
  if(cmd[0]&&cmd[3:1]==6&&cmd[5])begin
   u=cmd[9:8];if(cyc<2000)fail("cold INIT emitted argmax");

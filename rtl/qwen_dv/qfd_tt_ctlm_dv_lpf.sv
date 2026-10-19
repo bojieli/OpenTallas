@@ -34,6 +34,7 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter integer CTX_SRC = 0, FCTX = 0,
     parameter [11:0] NCTX_BASE = 12'h010,
     parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
+    parameter integer EMB_ID = 0,              // opt-in embedding bank identity; no epoch ingress
     parameter integer OPSEG = 0,
     parameter integer OPSEG_EXPANDED = 0,
     parameter integer OPSEG_PINREG = 0,
@@ -72,6 +73,7 @@ module qfd_tt_ctlm_dv_lpf #(
     input  wire [9:0]    ag5,
     output wire          emb_start,
     output wire [17:0]   emb_token,
+    output wire [1:0]    emb_user,
     output wire          cf
 );
     wire [115:0] g_cmd;
@@ -79,6 +81,7 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [68:0]  g_cal_descriptor_obs;
     wire         g_cal_image_ready, g_emb_start;
     wire [17:0]  g_emb_token;
+    wire [1:0]   g_emb_user;
     wire         s_start;
     wire [5:0]   s_stage;
     wire [48:0]  st;
@@ -98,10 +101,10 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [72:0]  hr_lo;
     wire [379:0] ib_hr;
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
-        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_PINREG(OPSEG_PINREG), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .EMB_ID(EMB_ID), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_PINREG(OPSEG_PINREG), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
         u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .init_u0(init_u0), .mu_fault(mu_fault), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
-        .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
+        .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .emb_user(g_emb_user), .s_start(s_start),
         .s_stage(s_stage), .st(st), .hu(hu), .fctx(fctx), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),
         .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));
     ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0)) u_hr (
@@ -122,8 +125,8 @@ module qfd_tt_ctlm_dv_lpf #(
         .dcs(dcs), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));
     qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .hu_i(hu), .fctx_i(fctx), .lcv_i(lcv_h), .ntok_i(ntok_h), .layer_context_v(layer_context_v), .native_tok(native_tok), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
         .cal_descriptor_obs_i(g_cal_descriptor_obs), .cal_image_ready_i(g_cal_image_ready), .emb_start_i(g_emb_start),
-        .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
-        .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));
+        .emb_token_i(g_emb_token), .emb_user_i(g_emb_user), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
+        .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token), .emb_user(emb_user));
     // QW-DIEFIX 10-19: hr[452:73] in the slice layout: u_thru's qfd_dv_hr_pack (zero-logic permutation of the registered
     // ib_q; hr_contract.py follows the child port)
     assign hr = {ib_hr, hr_lo};
