@@ -326,18 +326,32 @@ def reset_landing_plan(s: dict) -> dict | None:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
     plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    fc = rl.get("first_copies")
+    if fc is not None:
+        if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 32 for n in fc.values())):
+            raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
+        if st != 2:
+            raise SpecError('spec: balanced first_copies requires exactly two landing stages')
+        if not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32:
+            raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
+        plan['first_copies'] = dict(fc)
     cp = rl.get("copies")
     if cp is not None:
         # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
         # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
         if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
-                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= (1024 if fc is not None else 64) for n in cp.values())):
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
         if st < 2:
             raise SpecError("spec: reset_landing.copies needs stages >= 2")
         if not reset_relay_split_plan(s):
             raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
+            raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
         plan["copies"] = dict(cp)
+    elif fc is not None:
+        raise SpecError('spec: first_copies requires final copies')
     return plan
 
 
@@ -373,6 +387,8 @@ def reset_relay_split_vars(s: dict) -> list:
     rl = reset_landing_plan(s)
     if rl and rl.get("enable") and rl.get("copies"):
         out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    if rl and rl.get("enable") and rl.get("first_copies"):
+        out.append("--orfs-var OT_RST_LAND_FIRST_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["first_copies"].items())))
     return out
 
 
