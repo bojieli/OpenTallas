@@ -1,8 +1,8 @@
 {
-  "source_commit": "ac7e3ab71",
+  "source_commit": "84f67a381",
   "tool": "Verilator5.050",
   "host": "ot-agidock128",
-  "remote_root": "/srv/opentallas-scratch/claude/hbm-xcal-partition-ac7e3a-1019",
+  "remote_root": "/srv/opentallas-scratch/claude/hbm-xcal-partition-84f67a-1019",
   "positive": {
     "verdict": "PASS",
     "words": 4,
@@ -64,14 +64,14 @@
     }
   },
   "source_sha256": {
-    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_target_native.sv": "d38f3b0d20065252eec8bd83c218810aca25673136652021be0613879feeb09b",
-    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv": "53119a359f5ef3b2c249cb07c5ca5ccc6c36de393fa02bff25dcae3635ccf056",
-    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv": "fa5d8ef4173ba2506fd176d979ac91f9f7d9f8af2f415f5f7b1ce2e38896e871",
-    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv": "c01ad5de9467b0b5d4dbaee6b270ab4ecd98405ef8995ff77fd68d17fb021e3d",
-    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv": "ed1651702ec2f679e7fda249b12081ccb77bfd04b1c74b379a52ab578f1ec98c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_target_native.sv": "8bd510dcf79354d3bfaa461e6b11c7a53d9529096b724f3038f0d49eb4984331",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv": "5f990075afdfcfc8594dda09c9510ad8789023bbe6c117909a4d922de1aae304",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv": "1bcaf057e598e18b46e1fd4985f01794bf2edb714c062a542b1241a028e1968a",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv": "15cc96fd55e97ca42ac8b91bd13330fc7de7a0d2cbb793ead953e2015058954c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv": "45ae34727425aab114b05689f8cf82cc3984c9a13a58fb11eab04d64e2a1936b",
     "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_partition_t.sv": "6905eeddce68d9cc97557c9725f4778bdaa0eaef8becf67cfbaae8d8b5321467",
-    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv": "d88aeccc8a36ea06140d5e52431684280720d0b3efa01db5b0dccb90f406a92f",
-    "rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv": "09fa909766f3a7d395419bd042931da1339c5def1969fb89a84e470247b97b5e",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv": "be7cab52f2190ba3665b4c8ab7655848b2f10601c1db27d383057894f722482f",
+    "rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv": "d0765844465a69cb532f1e0b8582fd54584ad4596ef5d6ab2b3089ce9f3db7c6",
     "rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh": "91d655984581b8c429a1fdb7739e57a7f83ef9a1f48bc190dfbf7e80efd8e330"
   },
   "physical_verdict": "NOT_RUN: canonical descriptor density scope, mapped audit and parent geometry/source review required",
@@ -90,5 +90,6 @@
     "second_delta_edges": 38,
     "exactly_one_completion": true
   },
-  "completion_note": "Static n_done counter counts every returned programme completion; only final completion clears outstanding/active."
+  "completion_note": "Static n_done counter counts every returned programme completion; only final completion clears outstanding/active.",
+  "reset_release_assertions": "Every18 kept reset branch Q equals original second-stage Q after every edge; zero added release edges."
 }
