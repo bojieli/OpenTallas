@@ -1,0 +1,1018 @@
+[
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[0\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.go$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[0]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[0]",
+        "QN": "_09637_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.go_i$_DFF_PN0_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.go$_DFF_P_/QN"
+        ],
+        "RESETN": [
+          "a0_reset_leaf_03/QN"
+        ],
+        "SETN": [
+          "_52460_/H"
+        ]
+      },
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[0\\]",
+        "QN": "_01408_",
+        "RESETN": "a0_reset_leaf_03_q",
+        "SETN": "_21602_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[126\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[126\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[126]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[126]",
+        "QN": "_09763_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[125\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[126\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[126\\]",
+        "QN": "_00090_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[127\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[127\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[127]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[127]",
+        "QN": "_09764_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[126\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[127\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[127\\]",
+        "QN": "_05055_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[128\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[128\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[128]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[128]",
+        "QN": "_09765_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[127\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[128\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[128\\]",
+        "QN": "_05054_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[129\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[129\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[129]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[129]",
+        "QN": "_09766_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[128\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[129\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[129\\]",
+        "QN": "_00089_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[325\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[325\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[325]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[325]",
+        "QN": "_09962_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[324\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[325\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[325\\]",
+        "QN": "_04871_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[326\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[326\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[326]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[326]",
+        "QN": "_09963_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[325\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[326\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[326\\]",
+        "QN": "_04870_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[327\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[327\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[327]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[327]",
+        "QN": "_09964_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[326\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[327\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[327\\]",
+        "QN": "_04869_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[328\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[328\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[328]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[328]",
+        "QN": "_09965_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[327\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[328\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[328\\]",
+        "QN": "_04868_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[329\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[329\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[329]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[329]",
+        "QN": "_09966_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[328\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[329\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[329\\]",
+        "QN": "_04867_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[330\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[330\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[330]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[330]",
+        "QN": "_09967_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[329\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[330\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[330\\]",
+        "QN": "_04866_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[331\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[331\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[331]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[331]",
+        "QN": "_09968_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[330\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[331\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[331\\]",
+        "QN": "_04865_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[332\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[332\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[332]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[332]",
+        "QN": "_09969_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[331\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[332\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[332\\]",
+        "QN": "_04864_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[333\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[333\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[333]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[333]",
+        "QN": "_09970_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[332\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[333\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[333\\]",
+        "QN": "_04863_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[334\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[334\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[334]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[334]",
+        "QN": "_09971_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[333\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[334\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[334\\]",
+        "QN": "_04862_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[335\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[335\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[335]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[335]",
+        "QN": "_09972_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[334\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[335\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[335\\]",
+        "QN": "_04861_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[336\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[336\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[336]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[336]",
+        "QN": "_09973_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[335\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[336\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[336\\]",
+        "QN": "_04860_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[337\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[337\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[337]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[337]",
+        "QN": "_09974_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[336\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[337\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[337\\]",
+        "QN": "_04859_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[338\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[338\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[338]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[338]",
+        "QN": "_09975_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[337\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[338\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[338\\]",
+        "QN": "_04858_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[339\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[339\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[339]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[339]",
+        "QN": "_09976_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[338\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[339\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[339\\]",
+        "QN": "_04857_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[340\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[340\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[340]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[340]",
+        "QN": "_09977_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[339\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[340\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[340\\]",
+        "QN": "_04856_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[341\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[341\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[341]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[341]",
+        "QN": "_09978_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[340\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[341\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[341\\]",
+        "QN": "_04855_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[342\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[342\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[342]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[342]",
+        "QN": "_09979_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[341\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[342\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[342\\]",
+        "QN": "_00091_"
+      }
+    }
+  },
+  {
+    "cut_nets": [
+      "u_g.tap_q\\[343\\]"
+    ],
+    "external_transaction_identity": null,
+    "native_relative_phase": null,
+    "producer": {
+      "cell": "u_g.tap_q\\[343\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck_fa4"
+        ],
+        "D": [
+          "PORT/tap[343]"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck_fa4",
+        "D": "tap[343]",
+        "QN": "_09980_"
+      }
+    },
+    "production_boot_authority": null,
+    "receiver": {
+      "cell": "u_g.u_tile.u_tile.u_logic.ib_i\\[342\\]$_DFF_P_",
+      "input_storage_or_ports": {
+        "CLK": [
+          "PORT/ck"
+        ],
+        "D": [
+          "u_g.tap_q\\[343\\]$_DFF_P_/QN"
+        ]
+      },
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "ck",
+        "D": "u_g.tap_q\\[343\\]",
+        "QN": "_00092_"
+      }
+    }
+  }
+]

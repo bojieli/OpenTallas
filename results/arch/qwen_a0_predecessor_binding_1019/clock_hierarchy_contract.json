@@ -1,0 +1,200 @@
+{
+  "local_eight_regions": [
+    {
+      "added_schedule_edges": null,
+      "g": 0,
+      "lsl": "ck_lsl0",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx0"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 1,
+      "lsl": "ck_lsl1",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx1"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 2,
+      "lsl": "ck_lsl2",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx2"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 3,
+      "lsl": "ck_lsl3",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx3"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 4,
+      "lsl": "ck_lsl4",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx4"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 5,
+      "lsl": "ck_lsl5",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx5"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 6,
+      "lsl": "ck_lsl6",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx6"
+    },
+    {
+      "added_schedule_edges": null,
+      "g": 7,
+      "lsl": "ck_lsl7",
+      "native_phase": null,
+      "new_storage_bits": null,
+      "primary_su_root": null,
+      "reach_405um": null,
+      "reset_recovery": null,
+      "tx": "ck_tx7"
+    }
+  ],
+  "primary_su_roots": [
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 0,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 1,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 2,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 3,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 4,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 5,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 6,
+      "station_contract": null
+    },
+    {
+      "actual_source_root": null,
+      "local_root_map": null,
+      "phase": null,
+      "proposed_primary_index": 7,
+      "station_contract": null
+    }
+  ],
+  "qualification": "UNRESOLVED; top-level eight SU roots are not local LSL/TX roots",
+  "selected_parent": {
+    "REGROOT": 2,
+    "all_tile_entries_source_tied_to": "ck_c0r0",
+    "external_ck": "n_clk_r1",
+    "hierarchy": "c16_W5_1.u_t_0_0.u_g.u_tile",
+    "physical_equal_phase": null,
+    "source_commit": "0d4c9808fe7d2370185a4313e831b6f59f7a2f75",
+    "tile_clock_entries": [
+      "ck",
+      "ck_de",
+      "ck_dw",
+      "ck_fa0",
+      "ck_fa1",
+      "ck_fa2",
+      "ck_fa3",
+      "ck_fa4",
+      "ck_lsl0",
+      "ck_lsl1",
+      "ck_lsl2",
+      "ck_lsl3",
+      "ck_lsl4",
+      "ck_lsl5",
+      "ck_lsl6",
+      "ck_lsl7",
+      "ck_node",
+      "ck_rn",
+      "ck_rnw",
+      "ck_rp0",
+      "ck_rp1",
+      "ck_rp2",
+      "ck_rp3",
+      "ck_rp4",
+      "ck_rp5",
+      "ck_rp6",
+      "ck_rp7",
+      "ck_rp8",
+      "ck_rp9",
+      "ck_rs",
+      "ck_rsw",
+      "ck_tx0",
+      "ck_tx1",
+      "ck_tx2",
+      "ck_tx3",
+      "ck_tx4",
+      "ck_tx5",
+      "ck_tx6",
+      "ck_tx7"
+    ]
+  }
+}

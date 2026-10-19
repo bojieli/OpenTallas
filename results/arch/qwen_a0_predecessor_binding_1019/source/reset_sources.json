@@ -1,0 +1,527 @@
+[
+  {
+    "cell": "a0_reset_leaf_18",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx7"
+      ],
+      "D": [
+        "a0_reset_leaf_18_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_18_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx7",
+      "D": "a0_reset_leaf_18_hi",
+      "QN": "a0_reset_leaf_18_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_18_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_17",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx6"
+      ],
+      "D": [
+        "a0_reset_leaf_17_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_17_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx6",
+      "D": "a0_reset_leaf_17_hi",
+      "QN": "a0_reset_leaf_17_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_17_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_16",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx5"
+      ],
+      "D": [
+        "a0_reset_leaf_16_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_16_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx5",
+      "D": "a0_reset_leaf_16_hi",
+      "QN": "a0_reset_leaf_16_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_16_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_15",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx4"
+      ],
+      "D": [
+        "a0_reset_leaf_15_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_15_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx4",
+      "D": "a0_reset_leaf_15_hi",
+      "QN": "a0_reset_leaf_15_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_15_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_14",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx3"
+      ],
+      "D": [
+        "a0_reset_leaf_14_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_14_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx3",
+      "D": "a0_reset_leaf_14_hi",
+      "QN": "a0_reset_leaf_14_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_14_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_13",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx2"
+      ],
+      "D": [
+        "a0_reset_leaf_13_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_13_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx2",
+      "D": "a0_reset_leaf_13_hi",
+      "QN": "a0_reset_leaf_13_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_13_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_12",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx1"
+      ],
+      "D": [
+        "a0_reset_leaf_12_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_12_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx1",
+      "D": "a0_reset_leaf_12_hi",
+      "QN": "a0_reset_leaf_12_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_12_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_11",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_tx0"
+      ],
+      "D": [
+        "a0_reset_leaf_11_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_11_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_tx0",
+      "D": "a0_reset_leaf_11_hi",
+      "QN": "a0_reset_leaf_11_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_11_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_10",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_rsw"
+      ],
+      "D": [
+        "a0_reset_leaf_10_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_10_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_rsw",
+      "D": "a0_reset_leaf_10_hi",
+      "QN": "a0_reset_leaf_10_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_10_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_09",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_rs"
+      ],
+      "D": [
+        "a0_reset_leaf_09_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_09_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_rs",
+      "D": "a0_reset_leaf_09_hi",
+      "QN": "a0_reset_leaf_09_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_09_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_08",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_rnw"
+      ],
+      "D": [
+        "a0_reset_leaf_08_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_08_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_rnw",
+      "D": "a0_reset_leaf_08_hi",
+      "QN": "a0_reset_leaf_08_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_08_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_07",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_rn"
+      ],
+      "D": [
+        "a0_reset_leaf_07_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_07_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_rn",
+      "D": "a0_reset_leaf_07_hi",
+      "QN": "a0_reset_leaf_07_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_07_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_06",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_node"
+      ],
+      "D": [
+        "a0_reset_leaf_06_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_06_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_node",
+      "D": "a0_reset_leaf_06_hi",
+      "QN": "a0_reset_leaf_06_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_06_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_05",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_fa3"
+      ],
+      "D": [
+        "a0_reset_leaf_05_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_05_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_fa3",
+      "D": "a0_reset_leaf_05_hi",
+      "QN": "a0_reset_leaf_05_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_05_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_04",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_fa2"
+      ],
+      "D": [
+        "a0_reset_leaf_04_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_04_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_fa2",
+      "D": "a0_reset_leaf_04_hi",
+      "QN": "a0_reset_leaf_04_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_04_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_03",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck"
+      ],
+      "D": [
+        "a0_reset_leaf_03_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_03_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck",
+      "D": "a0_reset_leaf_03_hi",
+      "QN": "a0_reset_leaf_03_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_03_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_02",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck"
+      ],
+      "D": [
+        "a0_reset_leaf_02_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_02_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck",
+      "D": "a0_reset_leaf_02_hi",
+      "QN": "a0_reset_leaf_02_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_02_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_01",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck"
+      ],
+      "D": [
+        "a0_reset_leaf_01_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_01_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck",
+      "D": "a0_reset_leaf_01_hi",
+      "QN": "a0_reset_leaf_01_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_01_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_leaf_00",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck"
+      ],
+      "D": [
+        "a0_reset_leaf_00_tie/H"
+      ],
+      "RESETN": [
+        "a0_reset_branch/QN"
+      ],
+      "SETN": [
+        "a0_reset_leaf_00_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck",
+      "D": "a0_reset_leaf_00_hi",
+      "QN": "a0_reset_leaf_00_qn",
+      "RESETN": "a0_reset_branch_q",
+      "SETN": "a0_reset_leaf_00_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_branch",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_fa4"
+      ],
+      "D": [
+        "a0_reset_branch_tie/H"
+      ],
+      "RESETN": [
+        "u_g.reset_q$_DFF_P_/QN"
+      ],
+      "SETN": [
+        "a0_reset_branch_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_fa4",
+      "D": "a0_reset_branch_hi",
+      "QN": "a0_reset_branch_qn",
+      "RESETN": "a0_reset_face2_q",
+      "SETN": "a0_reset_branch_hi"
+    }
+  },
+  {
+    "cell": "a0_reset_face1",
+    "input_storage_or_ports": {
+      "CLK": [
+        "PORT/ck_fa4"
+      ],
+      "D": [
+        "a0_reset_face1_tie/H"
+      ],
+      "RESETN": [
+        "PORT/rst_n"
+      ],
+      "SETN": [
+        "a0_reset_face1_tie/H"
+      ]
+    },
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "ck_fa4",
+      "D": "a0_reset_face1_hi",
+      "QN": "a0_reset_face1_qn",
+      "RESETN": "rst_n",
+      "SETN": "a0_reset_face1_hi"
+    }
+  }
+]
