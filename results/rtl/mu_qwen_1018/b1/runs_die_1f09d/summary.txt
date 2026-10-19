@@ -1,0 +1,5 @@
+REFILL-0730/PROG 10-19 (owner MU-DIE-QW): rtl/test/mu_qwen_seq/run_mu_opseg.sh parts landed / pass / mut on claude/mu-die-qw-1019 1f09d70af; Verilator 5.050, ot-agidock128 via ot-run (leg.sh NAME opseg PART). All three parts: MU_OPSEG BENCHES: PASS.
+landed  LMUT 0 LANDED_LOCKSTEP PASS red (845,542 cmp, 0 mism, 952 op starts) + full, MU_OPSEG_PASS; LMUT 1 FAIL (181,332 mism); LMUT 2 FAIL (40,663 mism)
+pass    mut 0 MU_OPSEG_PASS (red, neg_drift, neg_coll, full)
+mut     21 / 22 (neg_coll) / 23 / 24 / 25 / 26 (neg_drift) each MU_OPSEG_FAIL as required
+fail regex: 'MU_OPSEG_FAIL' / 'LANDED_LOCKSTEP FAIL'
