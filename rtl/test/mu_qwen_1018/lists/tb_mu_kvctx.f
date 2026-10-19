@@ -37,7 +37,15 @@ rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
 rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv
 rtl/qwen_sys/mu_qwen_20261018/qkd_host_record_port_mu.sv
 rtl/qwen_split/mu/qfd_mu_ctx_rx.sv
+# CAL mode (MU-DQ-SYSFACE 10-19): both link ends' real D2D sequencers (MU image, the qfd_sys_face MU kit's source) + calendar playback
+rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
+rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
+rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv
 rtl/test/mu_qwen_1018/tb_mu_kvctx.sv
+# included: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh (-I); read by the bench script: d2d_cal_image_mu.svh, d2d_cal_image.svh
 # python inputs (not compiled; mu_kvctx_bench.py imports rtl/test/mu_qwen_seq/mu_opseg_bench.py unchanged):
 # rtl/test/mu_qwen_1018/mu_kvctx_bench.py
 # rtl/test/mu_qwen_seq/mu_opseg_bench.py
