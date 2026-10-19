@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hnx_rp3lp3_xs3",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T11:39:00-07:00",
+ "gate_commit": "217fff8b6",
+ "checklist": {
+  "lattice": "PASS: 12 SRAM 3x4 on 43.2, even channels",
+  "std_cell_band": "PASS: one band, fill 38% pin/lattice-bound waiver",
+  "pin_spread": "PASS: S face 5.2/um, W/E groups",
+  "clock_entry": "PASS: N face; spread 58.6/57.1",
+  "shape": "PASS: 561.6x289.44 (1.94); GRT 0"
+ },
+ "notes": "next-release P3 shared x store",
+ "geometry_sha256": "aa171043b474e8038fd24264f22b58103e9774f53eaa14086919d1c2b46dcef4"
+}
