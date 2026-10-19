@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.hbm_unread_fix_prm.v1",
+ "lane": "LH-UNREAD/F-P",
+ "held_classes_removed": {
+  "reserved_operand_abi_review col_idx prm": 767,
+  "idx alias col_idx pw_addr[11:8]": 4
+ },
+ "successor": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv",
+ "successor_sha256": "2e1abae161b2146061cc2938f03ecdddda2d2bfbe6578c065b3933d9a2e1dd0e",
+ "layer": "tools/hbm_die_v16/d4g_layers/l20p_idx_collar_prm.py",
+ "input_contract_sha256": "fd7492f2dafdd81d1f7d5e974fe30ca6056e39e23e62d694dbfc800dbebffbf7",
+ "output_contract_sha256": "159e63926ba6f216c3ff5b8becbf207f4725d188468ed85eaff5f37e6e1cecb1",
+ "die_sha256": "219e01ab30bb766f2c7c9b5e92df90fc9ef2cd7193186bb6adcd054cd71138b6",
+ "strict_bind": {
+  "masters": 101,
+  "instances": 1223,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 69549,
+  "output_open_ports": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 46,
+  "pad_bits": 0,
+  "spare_out_bits": 0,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 8
+ },
+ "unread_before": 70320,
+ "unread_after": 69549,
+ "functional_bind": "PASS paths=1284 bits=289940 fail_paths=0 open_gaps=0 (--lat warn, as chain S1)",
+ "bench": {
+  "runner": "rtl/test/hbm_collar_idx256r/run_idx256r.sh",
+  "verilator": "5.050",
+  "fleet_unit": "oth-ubuntu-4079192-1792437964 ot-epyc7",
+  "mut0": "IDX256R_PASS cases=7 reserved_rejects=15 identity_edges=4852 writes=929 launches=12",
+  "mut12": "FAIL nonzero reserved row0 bit44 accepted (witness committed)"
+ },
+ "added_cycles": 0,
+ "storage_ffs_removed": 767,
+ "safe_design": "header of successor: 8/8 PASS or n/a (floorplan: SYNTH view)",
+ "qualification": "SOURCE_ONLY: needs synth + native TT/FF + physical regrant; manifest entries for col_idx rec must be re-pointed to idx256r (renewed review)"
+}
