@@ -38,7 +38,8 @@
     "expect": "pass",
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m0.log"
    },
    {
     "name": "gunit_mut8",
@@ -46,7 +47,8 @@
     "expect": "fail",
     "fail_regex": "^MUT=8: GUNIT FAIL ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m8.log"
    },
    {
     "name": "gunit_mut10",
@@ -54,23 +56,35 @@
     "expect": "fail",
     "fail_regex": "^MUT=10: GUNIT FAIL ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/gunit_m10.log"
    },
    {
-    "name": "sinkhorn_p_eq",
-    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_p_eq.sh {RUN}/skeq 300 0",
+    "name": "sinkhorn_fs_eq",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skeq 300 0 0",
     "expect": "pass",
-    "pass_regex": "^MUT=0: SKP PASS cases=300 ",
+    "pass_regex": "^MUT=0 MUTQ4=0: SKF PASS cases=300 ",
     "threads": 4,
-    "peak_ram_gb": 8
+    "peak_ram_gb": 8,
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_eq.log"
    },
    {
-    "name": "sinkhorn_p_mut1",
-    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_p_eq.sh {RUN}/skmut 40 1",
+    "name": "sinkhorn_fs_mut1",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skmut 40 1 0",
     "expect": "fail",
-    "fail_regex": "^MUT=1: SKP FAIL ",
+    "fail_regex": "^MUT=1 MUTQ4=0: SKF FAIL ",
     "threads": 4,
-    "peak_ram_gb": 8
+    "peak_ram_gb": 8,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_mut1.log"
+   },
+   {
+    "name": "sinkhorn_fs_mutq4",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skq4 300 0 1",
+    "expect": "fail",
+    "fail_regex": "^MUT=0 MUTQ4=1: SKF FAIL ",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench/skf_mutq4.log"
    }
   ],
   "calibrate": {

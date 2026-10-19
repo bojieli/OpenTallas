@@ -1,0 +1,11 @@
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1345683-1792436152 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MUT=0 MUTQ4=1: ERR case 0 class 0 fault ref 0 pipe 1 y0 ref 36db9a8f pipe 00000000
+MUT=0 MUTQ4=1: ERR case 1 class 7 fault ref 0 pipe 1 y0 ref 3eb8f5cb pipe 00000000
+MUT=0 MUTQ4=1: ERR case 3 class 6 fault ref 0 pipe 1 y0 ref 3f032061 pipe 00000000
+MUT=0 MUTQ4=1: ERR case 4 class 0 fault ref 0 pipe 1 y0 ref 3e2f86b9 pipe 00000000
+MUT=0 MUTQ4=1: ERR case 9 class 7 fault ref 0 pipe 1 y0 ref 3eb2c3ae pipe 00000000
+MUT=0 MUTQ4=1: SKF FAIL 180 errors in 300 cases
+BENCH_RC=1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1345683-1792436152): exit 0
