@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.s81.ctrl_sram_sizing.v1",
+ "kind": "storage replacement, opt-in; not physical qualification",
+ "compute_macs_per_cycle": 0,
+ "pc_per_tile": 2,
+ "macro": "ot_sram_1r1w2c_16x546_m1",
+ "macro_count": 4,
+ "macro_um": [
+  176.904,
+  81.0
+ ],
+ "macro_area_um2": 57316.896,
+ "logical_storage_bits": 9872,
+ "physical_storage_bits": 34944,
+ "request": {
+  "logical_word_bits": 340,
+  "entries": 8,
+  "write_clock": "cks",
+  "read_clock": "ckh",
+  "write_port_capacity_words_per_cycle": 1,
+  "read_port_capacity_words_per_cycle": 1,
+  "physical_port_bits": 546,
+  "consumer_budget": "at most 1 request / 2 ckh per PC, inherited current safe controller"
+ },
+ "response": {
+  "logical_word_bits": 277,
+  "entries": 8,
+  "write_clock": "ckh",
+  "read_clock": "cks",
+  "write_port_capacity_words_per_cycle": 1,
+  "read_port_capacity_words_per_cycle": 1,
+  "physical_port_bits": 546
+ },
+ "added_stream_or_hbm_edges": 0,
+ "edge_proof": "registered next-head prefetch, delayed-Gray valid-head read enable; exact FIFO comparison then full controller test",
+ "macro_candidate_origins": [
+  [
+   43.2,
+   43.2
+  ],
+  [
+   259.2,
+   43.2
+  ],
+  [
+   43.2,
+   172.8
+  ],
+  [
+   259.2,
+   172.8
+  ]
+ ],
+ "candidate_outline_um": [
+  531.25,
+  302.4
+ ],
+ "min_macro_channel_um": [
+  39.096000000000004,
+  48.599999999999994
+ ],
+ "std_area_um2": "pending synthesis; original all-flop kit ~7.5k; dynamic row band must size from actual new std area at40-60%",
+ "std_band_candidate_y_um": [
+  135.0,
+  162.0
+ ],
+ "slot_growth_um": [
+  0,
+  52.4
+ ],
+ "parent_slot_action": "must update actual MU die ctrl plan before binding; original531.25x250 is not claimed fit",
+ "escape_proof": "not qualified until actual macro signal pins/PG/vias/route evidence; raw physical width padding and unused rows paid"
+}
