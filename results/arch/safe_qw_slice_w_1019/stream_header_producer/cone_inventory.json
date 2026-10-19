@@ -1,0 +1,334 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_stream_header_producer",
+  "cells": 321,
+  "issues": [],
+  "register_outputs_over32": [],
+  "driven_nets_over32_count": 0,
+  "highest_fanout_nets": [
+    {
+      "bit": 2,
+      "loads": 201,
+      "names": [
+        "ck",
+        "u_pre0.ck",
+        "u_pre1.ck",
+        "u_pre2.ck",
+        "u_pre3.ck"
+      ],
+      "driver": null,
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "u_pre0.g_group[0].u_group.g_copy[0].u_ff.$auto$ff.cc:337:slice$1585",
+      "pin": "D",
+      "bit": 9291,
+      "generic_levels": 5,
+      "names": [
+        "u_pre0.g_group[0].u_group.captured",
+        "u_pre0.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[2].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.g_copy[1].u_ff.$auto$ff.cc:337:slice$1584",
+      "pin": "D",
+      "bit": 9291,
+      "generic_levels": 5,
+      "names": [
+        "u_pre0.g_group[0].u_group.captured",
+        "u_pre0.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[2].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.g_copy[2].u_ff.$auto$ff.cc:337:slice$1583",
+      "pin": "D",
+      "bit": 9291,
+      "generic_levels": 5,
+      "names": [
+        "u_pre0.g_group[0].u_group.captured",
+        "u_pre0.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[2].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.g_copy[3].u_ff.$auto$ff.cc:337:slice$1582",
+      "pin": "D",
+      "bit": 9291,
+      "generic_levels": 5,
+      "names": [
+        "u_pre0.g_group[0].u_group.captured",
+        "u_pre0.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[2].u_ff.d",
+        "u_pre0.g_group[0].u_group.g_copy[3].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre1.g_group[0].u_group.g_copy[0].u_ff.$auto$ff.cc:337:slice$1585",
+      "pin": "D",
+      "bit": 9324,
+      "generic_levels": 5,
+      "names": [
+        "u_pre1.g_group[0].u_group.captured",
+        "u_pre1.g_group[0].u_group.g_copy[0].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre2.g_group[0].u_group.g_copy[0].u_ff.$auto$ff.cc:337:slice$1585",
+      "pin": "D",
+      "bit": 9357,
+      "generic_levels": 5,
+      "names": [
+        "u_pre2.g_group[0].u_group.captured",
+        "u_pre2.g_group[0].u_group.g_copy[0].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre3.g_group[0].u_group.g_copy[0].u_ff.$auto$ff.cc:337:slice$1585",
+      "pin": "D",
+      "bit": 9390,
+      "generic_levels": 5,
+      "names": [
+        "u_pre3.g_group[0].u_group.captured",
+        "u_pre3.g_group[0].u_group.g_copy[0].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.g_copy[0].u_ff.$auto$ff.cc:337:slice$1585",
+      "pin": "D",
+      "bit": 9423,
+      "generic_levels": 5,
+      "names": [
+        "u_pre4.g_group[0].u_group.captured",
+        "u_pre4.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre4.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre4.g_group[0].u_group.g_copy[2].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.g_copy[1].u_ff.$auto$ff.cc:337:slice$1584",
+      "pin": "D",
+      "bit": 9423,
+      "generic_levels": 5,
+      "names": [
+        "u_pre4.g_group[0].u_group.captured",
+        "u_pre4.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre4.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre4.g_group[0].u_group.g_copy[2].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.g_copy[2].u_ff.$auto$ff.cc:337:slice$1583",
+      "pin": "D",
+      "bit": 9423,
+      "generic_levels": 5,
+      "names": [
+        "u_pre4.g_group[0].u_group.captured",
+        "u_pre4.g_group[0].u_group.g_copy[0].u_ff.d",
+        "u_pre4.g_group[0].u_group.g_copy[1].u_ff.d",
+        "u_pre4.g_group[0].u_group.g_copy[2].u_ff.d"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.$auto$ff.cc:337:slice$1509",
+      "pin": "E",
+      "bit": 9289,
+      "generic_levels": 4,
+      "names": [
+        "u_pre0.g_group[0].u_group.$eq$rtl/common/landed_parent/ot_pl_land_field_copies.sv:37$380_Y"
+      ]
+    },
+    {
+      "cell": "u_pre1.g_group[0].u_group.$auto$ff.cc:337:slice$1436",
+      "pin": "E",
+      "bit": 9322,
+      "generic_levels": 4,
+      "names": [
+        "u_pre1.g_group[0].u_group.$eq$rtl/common/landed_parent/ot_pl_land_field_copies.sv:37$366_Y"
+      ]
+    },
+    {
+      "cell": "u_pre2.g_group[0].u_group.$auto$ff.cc:337:slice$1436",
+      "pin": "E",
+      "bit": 9355,
+      "generic_levels": 4,
+      "names": [
+        "u_pre2.g_group[0].u_group.$eq$rtl/common/landed_parent/ot_pl_land_field_copies.sv:37$366_Y"
+      ]
+    },
+    {
+      "cell": "u_pre3.g_group[0].u_group.$auto$ff.cc:337:slice$1436",
+      "pin": "E",
+      "bit": 9388,
+      "generic_levels": 4,
+      "names": [
+        "u_pre3.g_group[0].u_group.$eq$rtl/common/landed_parent/ot_pl_land_field_copies.sv:37$366_Y"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.$auto$ff.cc:337:slice$1307",
+      "pin": "E",
+      "bit": 9421,
+      "generic_levels": 4,
+      "names": [
+        "u_pre4.g_group[0].u_group.$eq$rtl/common/landed_parent/ot_pl_land_field_copies.sv:37$36_Y"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.$auto$ff.cc:337:slice$1516",
+      "pin": "D",
+      "bit": 9282,
+      "generic_levels": 2,
+      "names": [
+        "u_pre0.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1216.Y[2]"
+      ]
+    },
+    {
+      "cell": "u_pre1.g_group[0].u_group.$auto$ff.cc:337:slice$1443",
+      "pin": "D",
+      "bit": 9315,
+      "generic_levels": 2,
+      "names": [
+        "u_pre1.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[2]"
+      ]
+    },
+    {
+      "cell": "u_pre2.g_group[0].u_group.$auto$ff.cc:337:slice$1443",
+      "pin": "D",
+      "bit": 9348,
+      "generic_levels": 2,
+      "names": [
+        "u_pre2.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[2]"
+      ]
+    },
+    {
+      "cell": "u_pre3.g_group[0].u_group.$auto$ff.cc:337:slice$1443",
+      "pin": "D",
+      "bit": 9381,
+      "generic_levels": 2,
+      "names": [
+        "u_pre3.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[2]"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.$auto$ff.cc:337:slice$1314",
+      "pin": "D",
+      "bit": 9414,
+      "generic_levels": 2,
+      "names": [
+        "u_pre4.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1222.Y[2]"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.$auto$ff.cc:337:slice$1514",
+      "pin": "D",
+      "bit": 9278,
+      "generic_levels": 1,
+      "names": [
+        "u_pre0.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1216.P[0]",
+        "u_pre0.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1216.Y[0]"
+      ]
+    },
+    {
+      "cell": "u_pre0.g_group[0].u_group.$auto$ff.cc:337:slice$1515",
+      "pin": "D",
+      "bit": 9281,
+      "generic_levels": 1,
+      "names": [
+        "u_pre0.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1216.Y[1]"
+      ]
+    },
+    {
+      "cell": "u_pre1.g_group[0].u_group.$auto$ff.cc:337:slice$1441",
+      "pin": "D",
+      "bit": 9311,
+      "generic_levels": 1,
+      "names": [
+        "u_pre1.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.P[0]",
+        "u_pre1.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[0]"
+      ]
+    },
+    {
+      "cell": "u_pre1.g_group[0].u_group.$auto$ff.cc:337:slice$1442",
+      "pin": "D",
+      "bit": 9314,
+      "generic_levels": 1,
+      "names": [
+        "u_pre1.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[1]"
+      ]
+    },
+    {
+      "cell": "u_pre2.g_group[0].u_group.$auto$ff.cc:337:slice$1441",
+      "pin": "D",
+      "bit": 9344,
+      "generic_levels": 1,
+      "names": [
+        "u_pre2.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.P[0]",
+        "u_pre2.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[0]"
+      ]
+    },
+    {
+      "cell": "u_pre2.g_group[0].u_group.$auto$ff.cc:337:slice$1442",
+      "pin": "D",
+      "bit": 9347,
+      "generic_levels": 1,
+      "names": [
+        "u_pre2.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[1]"
+      ]
+    },
+    {
+      "cell": "u_pre3.g_group[0].u_group.$auto$ff.cc:337:slice$1441",
+      "pin": "D",
+      "bit": 9377,
+      "generic_levels": 1,
+      "names": [
+        "u_pre3.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.P[0]",
+        "u_pre3.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[0]"
+      ]
+    },
+    {
+      "cell": "u_pre3.g_group[0].u_group.$auto$ff.cc:337:slice$1442",
+      "pin": "D",
+      "bit": 9380,
+      "generic_levels": 1,
+      "names": [
+        "u_pre3.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1219.Y[1]"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.$auto$ff.cc:337:slice$1312",
+      "pin": "D",
+      "bit": 9410,
+      "generic_levels": 1,
+      "names": [
+        "u_pre4.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1222.P[0]",
+        "u_pre4.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1222.Y[0]"
+      ]
+    },
+    {
+      "cell": "u_pre4.g_group[0].u_group.$auto$ff.cc:337:slice$1313",
+      "pin": "D",
+      "bit": 9413,
+      "generic_levels": 1,
+      "names": [
+        "u_pre4.g_group[0].u_group.$auto$alumacc.cc:548:replace_alu$1222.Y[1]"
+      ]
+    }
+  ],
+  "all_comb_terminal_influence_registers_over32": [],
+  "all_comb_terminal_influence_inputs_over32": [],
+  "bit_namespace": "Diagnostic flattened alias IDs; locate raw elaborated bits using names/source hash.",
+  "terminal_influence_scope": "Conservative logical influence through ALL combinational gates to sequential/native input pin bits plus each top output bit as one boundary stop. This exceeds buffer-transparent electrical fanout and is not the native rule verdict or a mandatory replica count; early registered decodes can partition it. Parent consumers beyond outputs remain unproven.",
+  "scope": "Generic synthesis before ABC/physical buffers. Primitive levels are not TT ps; native macro clk-to-Q/setup, mapped logic, placement/route and retained replicas require separate proof. Clock/reset boundary loads retained and labeled, not counted as data-fanout failures.",
+  "netlist_sha256": "815029108e72caee27428e9979c211cd45136aacc32019eb0fcb41177dd4a999"
+}
