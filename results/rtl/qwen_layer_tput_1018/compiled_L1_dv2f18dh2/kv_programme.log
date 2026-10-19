@@ -1,0 +1,2 @@
+/usr/bin/python3 tools/qwen_static_kv/layer_roots_from_link.py /home/ubuntu/scratch/mu-die-qw/dh2/compiled_L1/d2d/program /home/ubuntu/scratch/mu-die-qw/dh2/compiled_L1/kv_programme
+LAYER_ROOTS PASS T=8192 rel={'ctrl_go': 512, 'kgo': 512, 'vgo': 1364, 'attention_issue': 615, 'attention_run': 619, 'writer_start': 654, 'link_start': 3, 'expected_quiet': 2404} l0_base=272 token_cycles=246287
