@@ -79,24 +79,24 @@ module ot_hbm_su_red_pretree_s #(parameter integer LAT=6,MUT=0,OPR=1)(
  output reg fault
 );
  localparam integer NL=LAT+(OPR!=0);    // node latency
- // stage 1: capture the block (edge E)
- reg [31:0] x1 [0:31]; reg [31:0] v1; reg m1; reg bad1; integer n;
- always @(posedge clk) begin
-  for(n=0;n<32;n=n+1) x1[n]<=ro_x[n*32+:32];
-  m1<=(MUT==3)?1'b0:tree_cmd[10];
+ // stage 1: capture the block (edge E).  p3 (TW6-HBM 10-19, SAFE-DESIGN item 1/4): every input lands in a PLAIN pin
+ // register at E (x1 <- ro_x, rv1 <- ro_v, tc1 <- tree_cmd); the per-lane valid decode (cnt compare) runs AFTER the
+ // register, in the E+1 stage beside the node operand select (p2 put tree_cmd[3] -> v1/bad1 through 7 levels at the
+ // boundary).  v1/m1 are now that decode of tc1, so lanes and valids still reach the chains at E+1: PT_RED unchanged (80).
+ // The missing-valid check (bad1) is registered one edge later (sticky fault only; no schedule term).
+ reg [31:0] x1 [0:31]; reg [31:0] rv1; reg [11:0] tc1; integer n;
+ always @(posedge clk) begin for(n=0;n<32;n=n+1) x1[n]<=ro_x[n*32+:32]; rv1<=ro_v; end
+ always @(posedge clk or negedge rst_n) if(!rst_n) tc1<=12'd0; else tc1<=tree_cmd;
+ wire m1=(MUT==3)?1'b0:tc1[10];
+ wire [31:0] v1, miss;
+ for(genvar g=0;g<32;g=g+1) begin:g_lv
+  wire [4:0] cn=(g<16)?tc1[4:0]:tc1[9:5];
+  wire on=tc1[11]&&(5'(g%16)<cn);
+  assign v1[g]=(MUT==4)?(tc1[11]&&5'(g%16)<=cn):on;
+  assign miss[g]=on&&!rv1[g];
  end
- always @(posedge clk or negedge rst_n)
-  if(!rst_n) begin v1<=32'd0; bad1<=1'b0; end
-  else begin
-   bad1<=1'b0;
-   for(n=0;n<32;n=n+1) begin : lv
-    reg [4:0] cn; reg on;
-    cn=(n<16)?tree_cmd[4:0]:tree_cmd[9:5];
-    on=tree_cmd[11]&&(5'(n%16)<cn);
-    v1[n]<=(MUT==4)?(tree_cmd[11]&&5'(n%16)<=cn):on;
-    if(on&&!ro_v[n]) bad1<=1'b1;
-   end
-  end
+ reg bad1;
+ always @(posedge clk or negedge rst_n) if(!rst_n) bad1<=1'b0; else bad1<=|miss;
  // chunk chains: chunk c = lanes 8c..8c+7 (c 0,1 half A; 2,3 half B)
  wire [3:0] c_m, c_v; wire [31:0] c_x [0:3]; wire [3:0] c_err;
  for(genvar c=0;c<4;c=c+1) begin:g_chunk
