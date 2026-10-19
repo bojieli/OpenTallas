@@ -15,7 +15,9 @@
   "rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v"
  ],
- "params": {},
+ "params": {
+  "TXDP": 33620481
+ },
  "clock_port": "ck",
  "reset_ports": [
   "por_n",
@@ -210,5 +212,5 @@
   "physical/ref_tile/qfd_d2d_static_r8c/local_reset_capture.tcl"
  ],
  "hold_budget": "die",
- "slot_change_request": "QW-SRAM3 10-19 DIAGNOSTIC (critical prefix, no submit): r9c RTL/pins unchanged; four 64x512 stores bind ot_sram_1r1w_64x512_m1_r2c2_p192_mir (<=5.21 pins/um vs 10.2). Two abutted N-S stacks at x=43.2/259.2, outline 475.2x280.8 -> 475.2x388.8."
+ "slot_change_request": "QW-SRAM3 10-19 DIAGNOSTIC (critical prefix, no submit): r9c RTL/pins unchanged; four 64x512 stores bind ot_sram_1r1w_64x512_m1_r2c2_p192_mir (<=5.21 pins/um vs 10.2). Two abutted N-S stacks at x=43.2/259.2, outline 475.2x280.8 -> 475.2x388.8. TXDP=0x02010201 (= qfd_d2d_static_core component default) only so current main RTL elaborates; the die GEN sets the compiled TXDP."
 }
