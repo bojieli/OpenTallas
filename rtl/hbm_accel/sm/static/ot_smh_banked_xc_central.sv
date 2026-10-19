@@ -11,7 +11,7 @@
 // Positive R/C behavior is unchanged; CALMUT is the generic core mutant space,
 // separate from legacy field-slice and pipeline-bypass diagnostic mutants.
 module ot_smh_banked_xc_central #(
- parameter integer PREL=1,CALMUT=0,COMMANDALIGN=0,CLASS_ENABLE=0
+ parameter integer PREL=1,CALMUT=0,COMMANDALIGN=0,CLASS_ENABLE=0,CLASS_MUT=0
 )(
  input wire clk,rst_n,
  input wire cfg_we,input wire[10:0]cfg_addr,input wire[255:0]cfg_data,
@@ -50,8 +50,8 @@ module ot_smh_banked_xc_central #(
     generate if(CLASS_ENABLE!=0)begin:g_class
      reg class_r,class_c,valid_r,valid_c,fault_q;
      always @(posedge clk)begin
-      class_r<=cal_v?wctx[4]:1'b0;class_c<=class_r;
-      if(PREL!=0&&cal_v&&word_ord==0&&wctx[0])class_c<=wctx[4];
+      class_r<=cal_v?(wctx[4]^1'(CLASS_MUT==1)):1'b0;class_c<=class_r;
+      if(PREL!=0&&cal_v&&word_ord==0&&wctx[0]&&CLASS_MUT!=2)class_c<=wctx[4];
      end
      always @(posedge clk or negedge app_reset_n)
       if(!app_reset_n)begin valid_r<=0;valid_c<=0;fault_q<=0;end
@@ -61,7 +61,7 @@ module ot_smh_banked_xc_central #(
        // Same consuming edge as guard1cd1fe595; full actual POST-mrel mode.
        // Local fault is oneedge after pins, before parent's later mirror+2.
        fault_q<=fault_q||app_next_fault||
-        (word[108:101]==MAGIC&&(!command_context_valid_observe||word[100:98]==3'd3||word[100]!=command_class_observe));
+        (CLASS_MUT!=3&&word[108:101]==MAGIC&&(!command_context_valid_observe||word[100:98]==3'd3||word[100]!=command_class_observe));
       end
      assign command_class_observe=PREL!=0?class_c:class_r;
      assign command_context_valid_observe=PREL!=0?valid_c:valid_r;
