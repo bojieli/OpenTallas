@@ -39,7 +39,7 @@
 // do not fire or participate in offset-validity checks. Fault meanings and CSR encoding are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -179,8 +179,16 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 3]),
         .we(mc_q[25] && !mc_q[24] && !armed && table_empty && gn != SJ'(NSLOT)),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
+    wire retire_wrap=(|(rp&lm)) || rp[NSLOT-1];
+    wire [SI-1:0] rpb_next=!rr[RPTR_BASE+6*SLOT_RG] ? SI'(0) :
+        !radv ? rpb : retire_wrap ? SI'(0) : rpb+1'b1;
+    generate if(EARLY_HEAD_CAPTURE==0) begin:g_retire_legacy
     dsdv_mu_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
+    end else begin:g_retire_early
+    dsdv_mu_mem_early_capture #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
+        .we(rec_q),.wa(ssqb),.wd(tsq),.ra_current(rpb),.ra_next(rpb_next),.q(h_rts));
+    end endgenerate
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
     // ---- event rows
     wire [31:0] ts_event[0:NEV-1], tm_event[0:NEV-1];
@@ -441,11 +449,21 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         end
         wire [62:0] head;
         wire [31:0] due_at_start=ts_event[se]+{11'd0,eD[se]};
+        wire event_wrap=(|(pe_r&lm_event[se])) || pe_r[NSLOT-1];
+        wire [SI-1:0] pb_next=!rr[se+1] ? SI'(0) : !adv[se] ? pb_r :
+            event_wrap ? SI'(0) : pb_r+1'b1;
+        if(EARLY_HEAD_CAPTURE==0) begin:g_legacy
         dsdv_mu_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
         dsdv_mu_mem #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
             .we(attr_boot[se]),
             .wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra(pbi[se]),.q(h_at[se]));
+        end else begin:g_early
+        dsdv_mu_mem_early_capture #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
+            .wa(ssqb),.wd({due_at_start,spq,suq}),.ra_current(pbi[se]),.ra_next(pb_next),.q(head));
+        dsdv_mu_mem_early_capture #(.W(2),.AW(SI)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
+            .we(attr_boot[se]),.wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra_current(pbi[se]),.ra_next(pb_next),.q(h_at[se]));
+        end
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
     end endgenerate
     // Same-edge physical copies: independent event address, due-time, compare-time,
