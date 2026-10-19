@@ -9,6 +9,7 @@ module tb_svg_landing_boundary;
  reg read_v=0;reg[1:0]read_bank=0;reg[5:0]read_row=0;wire[255:0]read_data;
  integer errors=0,completes=0,b,r,reads=0,tx=0,wp=0,rp=0,round=0,stall_cycles=0,streak=0,max_streak=0;
  reg[284:0] accepted[0:2047];
+ integer accept_edge[0:2047];integer hc=0,pin_start=0,core_start=0,pin_windows=0,core_windows=0;
  wire old_ready,old_over,old_complete,old_fault;wire[1:0]old_bank;wire[255:0]old_data;
  reg rv=0,st=1,rd=0;reg[1:0]rb=0,rdb=0;reg[15:0]ep=0;reg[11:0]total=0;reg[5:0]row=0;
  reg[255:0] read_expected=0;reg read_expected_v=0;
@@ -25,16 +26,31 @@ module tb_svg_landing_boundary;
  .complete_v(old_complete),.complete_bank(old_bank),.fault(old_fault),
  .read_v(rd),.read_bank(rdb),.read_row(row),.read_data(old_data));
  always @(posedge hbm_clk)begin
+  hc=hc+1;
   if(dut.hreset)begin
-   if(in_v&&in_ready)begin accepted[wp]=in_data;wp=wp+1;tx=tx+1;streak=streak+1;if(streak>max_streak)max_streak=streak;end else streak=0;
+   if(in_v&&in_ready)begin accepted[wp]=in_data;accept_edge[wp]=hc;
+    if(in_data[282:277]==16)pin_start=hc;
+    if(in_data[282:277]==31)begin
+     pin_windows=pin_windows+1;
+     $display("PIN_SUSTAIN window=%0d sectors=16 HBM_edges=%0d",pin_windows,hc-pin_start+1);
+     if(hc-pin_start!=15)errors=errors+1;
+    end
+    wp=wp+1;tx=tx+1;streak=streak+1;if(streak>max_streak)max_streak=streak;end else streak=0;
    if(dut.pop)begin
     if(rp>=wp||dut.head!==accepted[rp])begin errors=errors+1;if(errors<8)$display("INGRESS_ORDER_FAIL rp=%0d wp=%0d",rp,wp);end
+    if(accepted[rp][282:277]>=16&&accepted[rp][282:277]<=31&&hc-accept_edge[rp]!=2)begin errors=errors+1;if(errors<8)$display("INGRESS_LATENCY_FAIL got=%0d expected=2",hc-accept_edge[rp]);end
+    if(accepted[rp][282:277]==16)core_start=hc;
+    if(accepted[rp][282:277]==31)begin
+     core_windows=core_windows+1;
+     $display("CORE_SUSTAIN window=%0d sectors=16 HBM_edges=%0d",core_windows,hc-core_start+1);
+     if(hc-core_start!=15)errors=errors+1;
+    end
     rp=rp+1;
    end
    if(wp-rp>3)begin errors=errors+1;if(errors<8)$display("ADMISSION_FAIL used=%0d",dut.used);end
    if(!in_ready)stall_cycles=stall_cycles+1;
    #1;
-   if(dut.used!=wp-rp||(MUT!=1&&in_ready!==(dut.used<3)))begin errors=errors+1;$display("RESERVATION_INVARIANT_FAIL used=%0d outstanding=%0d",dut.used,wp-rp);end
+   if(dut.used!=wp-rp||(MUT!=1&&in_ready!==(dut.used<3)))begin errors=errors+1;if(errors<8)$display("RESERVATION_INVARIANT_FAIL used=%0d outstanding=%0d",dut.used,wp-rp);end
   end
  end
  // Avoid advancing the reference read pointer in the same active event as its
@@ -80,7 +96,7 @@ module tb_svg_landing_boundary;
    if(fault||overflow||rp!=wp)errors=errors+1;
    if(round<2)begin stop=1;idle(3);send(0,0);send(0,1);@(negedge hbm_clk);in_v=0;end
   end
-  if(completes!=12||reads!=408||stall_cycles<6||max_streak<8)errors=errors+1;
+  if(completes!=12||reads!=408||stall_cycles<6||max_streak<8||pin_windows!=12||core_windows!=12)errors=errors+1;
   // Duplicate ordinal must still trip the original epoch/duplicate/count guard.
   send(0,0);@(negedge hbm_clk);in_v=0;idle(20);if(!fault)begin errors=errors+1;$display("GUARD_FAIL");end
   $display("SVG_BOUNDARY %s mut=%0d errors=%0d tx=%0d reads=%0d completes=%0d stalls=%0d max_burst=%0d",errors==0?"PASS":"FAIL",MUT,errors,tx,reads,completes,stall_cycles,max_streak);
