@@ -63,9 +63,25 @@ RULES = {
         ('vm_rq', 'share', 'BANK_RT', 6, 6, BANK_RD, 'REG 0 owner own[BANK_RT]: bank answer at n+1+BANK_RT (own[6] = n+6 bank)')],
     'ot_hbm_idx_vm_share2_static_r': [
         ('vm_rq', 'share', 'BANK_RT', 6, 6, BANK_RD, 'REG 1 (pin-registered leaf): same owner rule behind its own pins')],
+    # HBM-BANKLAT-DMA 10-19: drain_rel (descriptor, compiler-owned) does NOT absorb the round trip: the controller's
+    # landing write slot and response-valid check are presented RR_RT edges after the request.  RR_RT = rq launch ->
+    # rr launch at the controller pins; 7 = closed design point (production bench: ot_vms_bank_static wired directly =
+    # BANK_RD 6 here).  SCALAR: the die pads the short 17-bit rq lanes to the budget (pads_to_param).  The compiler
+    # schedules drain_at - issue_at >= RR_RT + 3 (dma_min_drain_lag); the controller faults any move below it.
     'ot_hgi_dma_back_static_vp4_banks_cp': [
-        ('rq', 'rd', 'DRAIN_RT', None, None, BANK_RD, 'drain_rel32 comes from the descriptor (compiler-owned): reported, owner confirms')],
+        ('rq', 'rd', 'RR_RT', 7, 7, BANK_RD, 'DMA back RR_RT 7 = ot_vms_bank_static direct (landing slot / response check)')],
+    'ot_hgi_dma_back_static_vp4_banks': [
+        ('rq', 'rd', 'RR_RT', 7, 7, BANK_RD, 'DMA back RR_RT 7 = ot_vms_bank_static direct (landing slot / response check)')],
 }
+# d4g budget the die binds on every hb_dbk_<q> (one controller master for all quadrants; die pads rq lanes to it)
+DMA_RR_RT_BUDGET = 80
+
+
+def dma_min_drain_lag(rr_rt=DMA_RR_RT_BUDGET):
+    """compiler rule for ot_hgi_dma_back_static_vp4_*: drain_at - issue_at >= RR_RT + 3 (the landing slot of the
+    last chunk is written before its drain read; the controller faults a smaller lag)."""
+    return int(rr_rt) + 3
+
 # masters whose RTL accepts a per-bank VECTOR (contract list) for the rule's param; a list on any other master FAILS
 VECTOR_OK = {('ot_hgi_sm_xload_cl2_ctlx', 'RD_LAT')}
 # downstream clients of a share: (share master, share request port) -> (client param, RTL default, ref value, ref lanes, why)
@@ -77,15 +93,24 @@ SHARE_PORTS = {
     ('ot_hbm_idx_rootctl_static_am_pin', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 0, 'n12 SW behind the registered share'),
     ('ot_hbm_idx_rootctl_static_am', 'argmax_rq'): ('VMX', 5, 5, 0, 'argmax r2 VMX 5 behind rootctl_am (argmax_m)'),
     ('ot_hbm_idx_rootctl_static_am_pin', 'argmax_rq'): ('VMX', 5, 5, 0, 'argmax r2 VMX behind rootctl_am_pin'),
+    # HBM-BANKLAT-COLL 10-19: VM_RT of hb_coll v8x/v8g (ot_hgi_coll_q_static_ctl_v5 capture n+8+VM_RT) and hcollgi
+    # (ot_hgi_coll_gq_issue #(VM_RT), capture n+8+VM_RT) = edges beyond the n+8 face capture; the 4 bank-pair faces
+    # of the share are traced separately (SHARE_PAIRS) and must have equal client lanes (else the die pads).
     ('ot_hbm_idx_vm_share2_static', 'a_rq'): ('VM_RT', 0, 0, 0, 'face A of a share2 captures n+8 (+VM_RT)'),
     ('ot_hbm_idx_vm_share2_static', 'b_rq'): ('VM_RT', 0, 0, 0, 'face B of a share2 captures n+8 (+VM_RT)'),
     ('ot_hbm_idx_vm_share2_static_r', 'a_rq'): ('VM_RT', 0, 0, 0, 'face A of a share2_r captures n+10 (+VM_RT)'),
     ('ot_hbm_idx_vm_share2_static_r', 'b_rq'): ('VM_RT', 0, 0, 0, 'face B of a share2_r captures n+10 (+VM_RT)'),
 }
-# per-master overrides of the downstream param name (the n12 reader keeps VM_RT_EXTRA behind a share2 too: the
-# combinational share2 face adds no edge, so its 2 reference die edges count as ref lanes). Applied only where the share
-# port's own entry names a different param (a share port written for that client keeps its own reference).
-DOWN_PARAM = {'ot_hbm_idx_vm_query_static_n12': ('VM_RT_EXTRA', 4, 4, 2)}
+# edges a share adds at its client faces beyond the n+8 the downstream refs assume (REG 1 leaf: rq +1, rr +1)
+SHARE_EXTRA = {'ot_hbm_idx_vm_share2_static_r': 2}
+# shares whose client ports are 4 bank-pair faces: rq bits [34p +: 34], rr bits [514p +: 514]; every pair traced
+SHARE_PAIRS = {'ot_hbm_idx_vm_share2_static': 4, 'ot_hbm_idx_vm_share2_static_r': 4}
+# per-master overrides of the downstream param name, applied only where the share port's own entry names a different
+# param (a share port written for that client keeps its own reference; the n12 reader keeps VM_RT_EXTRA behind a share2; the host QDQ
+# keeps its RL = fixed VM read latency at its pins, 7 = rq register n -> share face n+8 capture at RL 7, HBM-BANKLAT-COLL)
+DOWN_PARAM = {'ot_hbm_idx_vm_query_static_n12': ('VM_RT_EXTRA', 4, 4, 2),
+              'ot_hgi_qdq_host_split': ('RL', 7, 7, 0), 'ot_hgi_qdq_host_split_r2': ('RL', 7, 7, 0),
+              'ot_hgi_qdq_host_static': ('RL', 7, 7, 0)}
 INFO_MASTERS = re.compile(r'^(hfd_hgi_vms|hfd_hgi_vm_calendar|hfd_vms_wq2_merge|ot_hbm_svc_vmdel|ot_hgi_coll_kq_share2|'
                           r'ot_hbm_sm_vm_wr_q)')
 
@@ -239,11 +264,14 @@ def check(c):
         have = param(I, ci, pname, dflt)
         want = ref + need - ref_rt
         row.update(have=have, want=want)
+        if have > want:                          # a budget above the lanes: the die pads every bank lane up to it
+            row['pads_to_param'] = {p['bank']: have - (ref + p['rt'] - ref_rt) for p in ps}
         if have != want:
             if isinstance(have, int) and have > want:
                 row['pad_to_param'] = f'die pads every bank lane of {ci} +{have - want} (param budget {have} > lanes {want})'
             row['bad'].append(f'{ci}.{pname} = {have}, bank contract + lanes need {want} '
-                              f'(ref {ref} at round trip {ref_rt}; actual {need} = bank {BANK_RD if kind == "rd" else BANK_WR}'
+                              + (f'(budget: pad every bank lane to it: {row["pads_to_param"]}) ' if have > want else '')
+                              + f'(ref {ref} at round trip {ref_rt}; actual {need} = bank {BANK_RD if kind == "rd" else BANK_WR}'
                               f' + pin {ps[0]["pin"]} + lanes)')
         row['status'] = 'FAIL' if row['bad'] else 'PASS'
         rows.append(row)
@@ -253,30 +281,46 @@ def check(c):
         for (smm, sport), (pname, dflt, ref, ref_lanes, why) in SHARE_PORTS.items():
             if smm != sm or sport not in I[si]['ports']:
                 continue
-            d, hq = G.back(si, sport, 0)
-            if d is None:
+            rport = {'index_rq': 'index_rr', 'argmax_rq': 'argmax_m', 'a_rq': 'a_rr', 'b_rq': 'b_rr'}[sport]
+            npair = SHARE_PAIRS.get(sm, 1)
+            pairs = []                           # (pair, client inst, client port, lane rq, lane rr, notes)
+            for pp in range(npair):
+                d, hq = G.back(si, sport, 34 * pp)
+                if d is None:
+                    continue
+                lq, nq = G.lane_latency(hq)
+                ret = [(s, h) for s, h in G.fwd(si, rport, 514 * pp) if s[0] == d[0]]
+                lr, nr = G.lane_latency(ret[0][1]) if ret else (None, [])
+                pairs.append((pp, d[0], d[1], lq, lr, nq + nr))
+            if not pairs:
                 continue
-            ci, cp = d[0], d[1]
+            ci, cp = pairs[0][1], pairs[0][2]
             cm = I[ci]['master']
             if cm in DOWN_PARAM and DOWN_PARAM[cm][0] != pname:
                 pname, dflt, ref, ref_lanes = DOWN_PARAM[cm]
-            lq, nq = G.lane_latency(hq)
-            rport = {'index_rq': 'index_rr', 'argmax_rq': 'argmax_m', 'a_rq': 'a_rr', 'b_rq': 'b_rr'}[sport]
-            ret = [(s, h) for s, h in G.fwd(si, rport, 0) if s[0] == ci]
-            lr, nr = G.lane_latency(ret[0][1]) if ret else (None, [])
+            extra = SHARE_EXTRA.get(sm, 0)
             row = dict(client=ci, master=cm, port=cp, kind='rd_via_share', share=si, banks=0, param=pname, why=why,
-                       unresolved=sorted({n for n in nq + nr if 'NO_E' in n})[:4], status='PASS', bad=[])
-            if lr is None:
-                row['status'] = 'FAIL'; row['bad'].append(f'no return path {si}.{rport} -> {ci}'); rows.append(row); continue
-            have = param(I, ci, pname, dflt)
-            want = ref + ex + (lq + lr - ref_lanes)
-            row.update(have=have, want=want, lanes=lq + lr, share_excess=ex)
-            if have != want:
+                       unresolved=sorted({n for p in pairs for n in p[5] if 'NO_E' in n})[:4], status='PASS', bad=[])
+            if any(p[4] is None for p in pairs):
                 row['status'] = 'FAIL'
+                row['bad'].append(f'no return path {si}.{rport} -> {ci} (pairs {[p[0] for p in pairs if p[4] is None]})')
+                rows.append(row); continue
+            if len({p[1] for p in pairs}) > 1:
+                row['bad'].append(f'share {si}.{sport} pairs driven by different clients {sorted({p[1] for p in pairs})}')
+            lanes = [p[3] + p[4] for p in pairs]
+            lmax = max(lanes)
+            if len(set(lanes)) > 1:
+                row['bad'].append(f'unequal client<->share lanes over the bank pairs {lanes}: pad to {lmax} '
+                                  f'({", ".join(f"pair{p[0]}+{lmax - l}" for p, l in zip(pairs, lanes) if l != lmax)})')
+            have = param(I, ci, pname, dflt)
+            want = ref + ex + extra + (lmax - ref_lanes)
+            row.update(have=have, want=want, lanes=lmax, pair_lanes=lanes, share_excess=ex, share_extra=extra)
+            if have != want:
                 if isinstance(have, int) and have > want:
                     row['pad_to_param'] = f'die pads the {ci} <-> {si} lanes +{have - want} (param budget {have})'
-                row['bad'].append(f'{ci}.{pname} = {have}, need {want} (ref {ref} + share {si} excess {ex} + lanes '
-                                  f'{lq}+{lr} - ref lanes {ref_lanes})')
+                row['bad'].append(f'{ci}.{pname} = {have}, need {want} (ref {ref} + share {si} excess {ex} + face extra '
+                                  f'{extra} + lanes {lmax} - ref lanes {ref_lanes})')
+            row['status'] = 'FAIL' if row['bad'] else 'PASS'
             rows.append(row)
     fails = [r for r in rows if r['status'] == 'FAIL']
     summ = dict(clients=len(rows), checked=sum(r['status'] in ('PASS', 'FAIL') for r in rows), fail=len(fails),

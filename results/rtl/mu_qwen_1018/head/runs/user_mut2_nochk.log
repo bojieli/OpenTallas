@@ -1,0 +1,17 @@
+# case user_mut2_nochk top tb_user_event MUT=2 plusargs '+seed=1' host ot-epyc5 2026-10-18T23:48:41-07:00
+# sources: rtl/qwen_split/mu/qfd_sys_face_mu_user.sv results/rtl/mu_qwen_1018/head/tb_user_event.sv
+2687a8b3babae9d9ae7650ebef88887efd2885ef9486c5a03da334d0ba4e76be  rtl/qwen_split/mu/qfd_sys_face_mu_user.sv
+ae84f24946b85de407f928dc4544165293d67cfe223971682c2faaa122ab36aa  results/rtl/mu_qwen_1018/head/tb_user_event.sv
+NU4 USER-EVENT MISMATCH edge 104 ta 12b: ev 1 bad 0
+NU4 USER-EVENT MISMATCH edge 148 ta 06d: ev 1 bad 0
+NU4 USER-EVENT MISMATCH edge 162 ta 010: ev 1 bad 0
+NU4 USER-EVENT MISMATCH edge 166 ta 1f2: ev 1 bad 0
+NU4 USER-EVENT MISMATCH edge 192 ta 1fb: ev 1 bad 0
+edges 200000: USER events 38218 (reserved-bit 7598), user-carrying events 88540 (26444 right behind a USER event)
+NU1 identity mismatches 0, NU4 mismatches 7598
+TB_USER_EVENT FAIL MUT=2 seed=1
+- results/rtl/mu_qwen_1018/head/tb_user_event.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 0.083 s; speed 4.799 ms/s
+- Verilator: cpu 0.083 s on 1 threads; allocated 7 MB
+# exit 0

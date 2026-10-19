@@ -8,13 +8,18 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     
     parameter integer XPF_TRANSPORT_EDGES = -1,
     parameter integer LAST_STAGE = 37,
-    parameter integer STAGE_ME = 0
+    parameter integer STAGE_ME = 0,
+    parameter integer NU = 4,                    
+    parameter integer UVM_STRIDE = 4096,         
+    parameter integer PIDX_STRIDE = 128,         
+    parameter integer UTAG_LSB = 6               
 ,
     parameter integer MUT = 0
 ) (
     input wire rst_n,
     input wire [74:0] pw,
     input wire [186:0] dh,
+    input wire [1:0] dh_user,
     input wire kok,
     input wire kwd,
     input wire fab,
@@ -168,8 +173,15 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     wire lpr_c_u_go;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_go (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_go));   // t(u_go) = 3
     wire lpr_c_u_thru;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_thru (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_thru));   // t(u_thru) = 3
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME)) u_gi (.ck(ck_core), .rst_n(lpr_c_u_gi), .dh(dh), .ss5(ss5), .ag5(ag5), .fab(fab), .cmd(g_cmd), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs), .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start), .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows), .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));   // region core, t = 0
+    qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB)) u_gi (.ck(ck_core), .rst_n(lpr_c_u_gi), .dh(dh), .dh_user(dh_user), .ss5(ss5), .ag5(ag5), .fab(fab), .cmd(g_cmd), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs), .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start), .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows), .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));   // region core, t = 0
+    // HF-4c 10-18: the hard view (h16c/h17, hardened STAGE_ME 1) has no parameters -> no #() under SYNTHESIS (spec hard_define);
+    // simulation keeps the RTL leaf at the cluster's STAGE_ME.  Hand edit after lp.py (lp.py resolves `ifdefs): keep it on regen.
+`ifndef SYNTHESIS
     ot_qfd_tt_ctlm_static_hr #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0)) u_hr (.stage_start(s_start__l_hr), .stage(s_stage__l_hr), .rom_ret_i({rom_ret_v__l_hr[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v__l_hr[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs), .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q), .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe), .native_ret(native_ret__l_hr), .ck_head(ck_hr), .ck_pm0(ck_hr), .ck_pm1(ck_hr), .rst_n(lpr_c_u_hr), .h_start(st__l_hr[48]), .token(st__l_hr[47:30]), .pos(st__l_hr[29:12]), .prog_base(st__l_hr[11:0]), .pw_v(pw__l_hr[74]), .pw_addr(pw__l_hr[73:64]), .pw_data(pw__l_hr[63:0]), .x_oacc(su_acc__l_hr), .x_oidle(x_oidle__l_hr), .x_oprog(x_oprog__l_hr), .x_orows(x_orows__l_hr), .kv_ok(kok__l_hr), .kv_write_drained(kwd__l_hr), .me_mem_ok(1'b1), .m_fin_o(), .m_fidx_o(), .m_fval_o(), .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(), .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));   // region hr, t = 3
+`else
+    ot_qfd_tt_ctlm_static_hr u_hr (.stage_start(s_start__l_hr), .stage(s_stage__l_hr), .rom_ret_i({rom_ret_v__l_hr[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v__l_hr[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs), .layer_context_v(layer_context_v), .native_tok(native_tok), .native_pos(native_pos), .rom_cmd(ib_q), .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe), .native_ret(native_ret__l_hr), .ck_head(ck_hr), .ck_pm0(ck_hr), .ck_pm1(ck_hr), .rst_n(lpr_c_u_hr), .h_start(st__l_hr[48]), .token(st__l_hr[47:30]), .pos(st__l_hr[29:12]), .prog_base(st__l_hr[11:0]), .pw_v(pw__l_hr[74]), .pw_addr(pw__l_hr[73:64]), .pw_data(pw__l_hr[63:0]), .x_oacc(su_acc__l_hr), .x_oidle(x_oidle__l_hr), .x_oprog(x_oprog__l_hr), .x_orows(x_orows__l_hr), .kv_ok(kok__l_hr), .kv_write_drained(kwd__l_hr), .me_mem_ok(1'b1), .m_fin_o(), .m_fidx_o(), .m_fval_o(), .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(), .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));   // region hr, t = 3
+`endif
     qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck_hr), .rst_n(lpr_c_u_go), .pw(pw__l_hr), .st(st__l_hr), .su_obs(su_obs__l_hr), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault), .dcs(dcs__l_hr), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));   // region hr, t = 3
     qfd_tt_ctlm_dv_thru u_thru (.ck(ck_hr), .rst_n(lpr_c_u_thru), .cmd_i(g_cmd__l_hr), .cal_program_obs_i(g_cal_program_obs__l_hr), .cal_descriptor_obs_i(g_cal_descriptor_obs__l_hr), .cal_image_ready_i(g_cal_image_ready__l_hr), .emb_start_i(g_emb_start__l_hr), .emb_token_i(g_emb_token__l_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs), .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));   // region hr, t = 3
 endmodule

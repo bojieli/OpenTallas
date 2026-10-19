@@ -5,20 +5,22 @@
 module tb_qfd_tt_ctlm_dv_lpf_eq;
     parameter integer DMUT = 0;
     parameter integer CYC = 4000;
+    parameter integer NU = 4;                   // MU-ADOPT-CTLM 10-19: both sides at the cluster's NU, random dh_user
     reg ck = 1'b0; always #0.5 ck = ~ck;
     reg rst_n = 1'b0;
+    reg [1:0] dh_user;
     reg [74:0] pw; reg [186:0] dh; reg kok, kwd, fab; reg [94:0] native_ret; reg [106:0] ss5; reg [9:0] ag5;
     wire [75:0] a_program_obs, b_program_obs; wire a_csr, b_csr, a_lcv, b_lcv; wire [17:0] a_nt, b_nt, a_np, b_np;
     wire [5:0] a_cs, b_cs; wire [75:0] a_cpo, b_cpo; wire [68:0] a_cdo, b_cdo; wire a_cir, b_cir; wire [55:0] a_dc, b_dc;
     wire [379:0] a_nc, b_nc; wire [452:0] a_hr, b_hr; wire [115:0] a_cmd, b_cmd; wire a_es, b_es; wire [17:0] a_et, b_et;
     wire a_cf, b_cf;
-    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .HARD_HR(1), .MUT(DMUT)) u_a (.ck(ck), .rst_n(rst_n),
-        .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(a_program_obs), .control_stores_ready(a_csr),
+    qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .HARD_HR(1), .MUT(DMUT), .NU(NU)) u_a (.ck(ck), .rst_n(rst_n),
+        .pw(pw), .dh(dh), .dh_user(dh_user), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(a_program_obs), .control_stores_ready(a_csr),
         .layer_context_v(a_lcv), .native_tok(a_nt), .native_pos(a_np), .command_stage(a_cs), .cal_program_obs(a_cpo),
         .cal_descriptor_obs(a_cdo), .cal_image_ready(a_cir), .dc(a_dc), .native_cmd(a_nc), .native_ret(native_ret),
         .hr(a_hr), .cmd(a_cmd), .ss5(ss5), .ag5(ag5), .emb_start(a_es), .emb_token(a_et), .cf(a_cf));
-    qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1)) u_b (.ck(ck), .rst_n(rst_n),
-        .pw(pw), .dh(dh), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(b_program_obs), .control_stores_ready(b_csr),
+    qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .NU(NU)) u_b (.ck(ck), .rst_n(rst_n),
+        .pw(pw), .dh(dh), .dh_user(dh_user), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(b_program_obs), .control_stores_ready(b_csr),
         .layer_context_v(b_lcv), .native_tok(b_nt), .native_pos(b_np), .command_stage(b_cs), .cal_program_obs(b_cpo),
         .cal_descriptor_obs(b_cdo), .cal_image_ready(b_cir), .dc(b_dc), .native_cmd(b_nc), .native_ret(native_ret),
         .hr(b_hr), .cmd(b_cmd), .ss5(ss5), .ag5(ag5), .emb_start(b_es), .emb_token(b_et), .cf(b_cf));
@@ -29,6 +31,7 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
     task rnd; begin
         pw = {$urandom, $urandom, $urandom}; dh = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
         // stage starts / program writes sparse enough that the calendar and head run segments, not only faults
+        dh_user = $urandom;
         dh[42] = ($urandom % 61) == 0; dh[118] = ($urandom % 3) == 0; dh[186] = ($urandom % 5) == 0; pw[74] = ($urandom % 3) == 0;
         kok = $urandom; kwd = $urandom; fab = ($urandom % 97) == 0; native_ret = {$urandom, $urandom, $urandom};
         ss5 = {$urandom, $urandom, $urandom, $urandom}; ag5 = $urandom; ag5[8] = ($urandom % 53) == 0;
