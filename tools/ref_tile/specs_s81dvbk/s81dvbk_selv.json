@@ -42,7 +42,7 @@
    "inst": "g_q[0].u_q",
    "at": [
     43.2,
-    43.2
+    86.4
    ],
    "orient": "R0"
   },
@@ -51,7 +51,7 @@
    "inst": "g_q[1].u_q",
    "at": [
     345.6,
-    43.2
+    86.4
    ],
    "orient": "R0"
   },
@@ -60,7 +60,7 @@
    "inst": "g_q[2].u_q",
    "at": [
     43.2,
-    820.8
+    777.6
    ],
    "orient": "MX"
   },
@@ -69,9 +69,27 @@
    "inst": "g_q[3].u_q",
    "at": [
     345.6,
-    820.8
+    777.6
    ],
    "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/s81dv_rly_276_sn/views/dsfd_dvrly_276_SN",
+   "inst": "u_rs",
+   "at": [
+    518.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "inst": "u_rn",
+   "at": [
+    518.4,
+    1252.8
+   ],
+   "orient": "R0"
   }
  ],
  "pins": {
@@ -127,7 +145,7 @@
   "threads": 16,
   "peak_ram_gb": 64
  },
- "structural_change": "S81U-BK3 vertical cut (coordinator 0cj (b)): wires-only cluster of re-pinned square-ish leaves stacked in the 680-um column; plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json. NOT GENERATED YET: the child views (views_to of the leaf kits) exist only after the leaves close.",
+ "structural_change": "S81U-BK3 vertical cut (coordinator 0cj (b)): wires-only cluster of re-pinned square-ish leaves stacked in the 680-um column; plan results/rtl/s81_dv_1016/bk_units_bk2/vcut_plan.json. Rung relays (S81-TILES6 10-17): one closed 276-b relay per direction (u_rs SN at the S face, u_rn NS at the N face), quarter rows moved 43.2 toward the middle. NOT GENERATED YET: the child views (views_to of the leaf kits) exist only after the leaves close.",
  "job": {
   "owner": "Claude:S81U-BK3",
   "branch": "claude/s81u2-bk-1017",
@@ -136,5 +154,15 @@
   "benched_by": "the leaf jobs (dsdv_bk_col / dsdv_bk_sel exact + mutant benches)",
   "views_to": "physical/ref_tile/s81dvbk_selv/views",
   "record_to": "results/rtl/ref_tile/s81dvbk_selv"
+ },
+ "rung_relays": {
+  "decision": "coordinator S81-TILES6 10-17: the sel rung segment (~518-562 um > 405) takes ONE closed 276-b relay per direction inside the cluster (instead of die stations at the unit faces)",
+  "views": {
+   "u_rs": "s81dv_rly_276_sn (closed s81dv_rly_276_sn dv4c: TT +378.10 / FF +24.26 ps, DRC 0; 25.92 x 17.28, i S / o + ck_o N / ck + rs E)",
+   "u_rn": "s81dv_rly_276_ns (closed s81dv_rly_276_ns dv4c: TT +383.87 / FF +28.89 ps, DRC 0; 25.92 x 17.28, i N / o + ck_o S / ck + rs E)"
+  },
+  "placement": "northbound: vi_s (S face, x 479-557) -> u_rs at (518.4, 43.2), 43 um in -> glue vi_s (S face of u_g, y 561.6): ~500 um + <= 65 um jog, one registered hop inside the measured repeated reach (600-750); southbound: vi_n (N face) -> u_rn at (518.4, 1252.8) -> glue vi_n. The glue outputs vo_n / vo_s run ~562 um to the faces and land in the NEXT unit's face relay (abutting units), so every rung hop is one relay-to-glue or glue-to-relay segment. To make room the S quarter row moves up 43.2 (y 43.2 -> 86.4; middle channel 43.2) and the N quarter row moves down 43.2 (820.8 -> 777.6); every quarter <-> glue / control hop shortens.",
+  "latency": "+1 cycle per direction per sel unit on the V rung (vstop schedule: SLAT / rung arrival re-derived by the compiler; report to the model)",
+  "rtl": "DONE (S81-TILES8/bk 10-18): dsdv_bk_sel.sv instantiates dsfd_dvrly_276_SN u_rs (.ck(clk), .rs(rst_n), .i(vi_s) -> vi_s_r) and dsfd_dvrly_276_NS u_rn (.i(vi_n) -> vi_n_r) in the hard and soft builds alike; the glue takes vi_s_r / vi_n_r; ck_o unused. Bench model tb_dsdv_bk_wrap RL = 1 for the sel unit (+1 rung cycle per direction); run_bk_bench.sh compiles rtl/dsrom_sys/s81_glue/ot_s81_rly.sv + dsfd_rly_masters_dv276.sv."
  }
 }
