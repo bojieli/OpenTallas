@@ -368,6 +368,61 @@ def width_text(rng: str | None) -> str:
 
 
 # ----------------------------------------------------------------------------------------------------------- the model
+def regional_bindings(spec, insts, csrc):
+    """Exact LSB-first regional clock/reset vector bindings; no datapath waiver.
+
+    Flat inputs must be a literal replication of the parent clock/reset. Vector
+    aliases, expressions and parameter-dependent port shapes are rejected so
+    the generated bit-to-root contract can be audited without interpretation.
+    """
+    result = {}
+    regions = {r['name'] for r in spec['regions']}
+    by_inst = {i['inst']: i for i in insts}
+    for role in ('clocks', 'resets'):
+        key = 'regional_child_' + role
+        rows = spec.get(key) or []
+        if not isinstance(rows,list):
+            raise SystemExit(f'{key}: requires a list')
+        for row in rows:
+            if not isinstance(row,dict) or set(row) != {'inst', 'pin', 'regions'}:
+                raise SystemExit(f'{key}: requires exact inst/pin/regions fields')
+            inst, pin, rs = row['inst'], row['pin'], row['regions']
+            if not isinstance(inst,str) or not isinstance(pin,str) or inst not in by_inst or (inst, pin) in result:
+                raise SystemExit(f'{key}: missing or duplicate instance/pin {inst}.{pin}')
+            i = by_inst[inst]
+            cm = parse_module(csrc, i['module'])
+            port = next((p for p in cm['ports'] if p['name'] == pin), None)
+            declared = spec.get('clock_pins' if role == 'clocks' else 'reset_pins') or []
+            if not port or port['dir'] != 'in' or pin not in declared or pin not in i['conns']:
+                raise SystemExit(f'{key}: {inst}.{pin} is not a declared {role} input')
+            if not isinstance(rs, list) or len(rs) < 2 or any(not isinstance(r,str) for r in rs) or len(set(rs)) != len(rs) or any(r not in regions for r in rs):
+                raise SystemExit(f'{key}: regions must be distinct known roots in LSB-first order')
+            # The initial interface is deliberately constant-sized, descending,
+            # zero-based; accept no vector direction or param alias ambiguity.
+            rng = re.sub(r'\s+', '', port['range'] or '')
+            if rng != f'[{len(rs)-1}:0]':
+                raise SystemExit(f'{key}: {inst}.{pin} must have literal range [{len(rs)-1}:0]')
+            roots = (spec.get('clock_ports') or []) if role == 'clocks' else [spec.get('reset_port')]
+            ex = re.sub(r'\s+', '', i['conns'][pin])
+            if ex not in {f'{{{len(rs)}{{{r}}}}}' for r in roots}:
+                raise SystemExit(f'{key}: {inst}.{pin} must replicate one parent {role} root, no aliases')
+            result[inst, pin] = dict(role=role, regions=list(rs))
+    if result:
+        clock_roots = {r for b in result.values() if b['role']=='clocks' for r in b['regions']}
+        ordinary_roots = {r['name'] for r in spec['regions'] if any(
+            fnmatch.fnmatchcase(i['inst'],pattern) for i in insts for pattern in r['insts'])}
+        if regions - ordinary_roots - clock_roots:
+            raise SystemExit('regional_child_clocks: every extra root needs an explicit child clock bit')
+        for (inst,pin), b in result.items():
+            if b['role']=='resets' and not any(j==inst and q['role']=='clocks' and q['regions']==b['regions']
+                                               for (j,p),q in result.items()):
+                raise SystemExit(f'regional_child_resets: {inst}.{pin} has no matching clock-bit epochs')
+            if b['role']=='clocks' and not any(j==inst and q['role']=='resets' and q['regions']==b['regions']
+                                               for (j,p),q in result.items()):
+                raise SystemExit(f'regional_child_clocks: {inst}.{pin} needs explicit matching reset-bit epochs; reset-free exceptions unsupported')
+    return result
+
+
 class Parent:
     def __init__(self, spec: dict):
         self.S = spec
@@ -384,6 +439,7 @@ class Parent:
             raise SystemExit(f"unknown synthesis hard instances: {sorted(unknown)}")
         self.env = {k: v for k, v in self.mod["params"].items()}
         self.env.update({k: str(v) for k, v in (spec.get("params") or {}).items()})
+        self.regional_bindings = regional_bindings(spec, self.insts, csrc)
         self.cports, self.cwidth = {}, {}
         for ins in self.insts:
             m = ins["module"]
@@ -751,13 +807,32 @@ class Parent:
                 w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
                   + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
                 rsub[i] = f"lpr_c_{i}"
+        # Internal regional reset ports receive the same logical child delay as
+        # the ordinary child reset, each on its own root. No reset/data mask.
+        brsub = {}
+        for (i,pin), binding in self.regional_bindings.items():
+            if binding['role'] != 'resets':
+                continue
+            tc = P['t'].get(i, 0) + self.rx
+            names = []
+            for bit,r in enumerate(binding['regions']):
+                name = f'lpr_b_{i}_{pin}_{bit}'
+                kk = f'(MUT == 4) ? {tc+1} : {tc}' if i == mc and mut else str(tc)
+                w(f'    wire {name}; ot_pl_pad #(.W(1), .N({kk})) u_lprb_{i}_{pin}_{bit} '
+                  f'(.ck(ck_{r}), .d(lpr_{r}), .q({name}));')
+                names.append(name)
+            brsub[i,pin] = '{' + ', '.join(reversed(names)) + '}'
         # children
         w("    // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)")
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
             cs = []
             for pin, ex in ins["conns"].items():
-                if pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
+                binding = self.regional_bindings.get((i,pin))
+                if binding:
+                    ex = ('{' + ', '.join('ck_'+r for r in reversed(binding['regions'])) + '}'
+                          if binding['role']=='clocks' else brsub[i,pin])
+                elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
                     cw = self.cwidth[ins["module"]].get(pin, 1)
                     ex = f"ck_{r}" if cw == 1 else f"{{{cw}{{ck_{r}}}}}"
                 elif i in rsub and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
@@ -937,6 +1012,14 @@ class Parent:
                 landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
                                             compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
                                             overwrite_gap_min_T=1.25))),
+            **({} if not self.regional_bindings else dict(
+                regional_child_bindings=[dict(inst=i,pin=p,role=b['role'],
+                    bits=[dict(bit=j,region=r,clock_port='ck_'+r,
+                               reset_net=(f'lpr_b_{i}_{p}_{j}' if b['role']=='resets' else None),
+                               reset_delay_edges=(t.get(i,0)+self.rx if b['role']=='resets' else None))
+                          for j,r in enumerate(b['regions'])])
+                    for (i,p),b in sorted(self.regional_bindings.items())],
+                internal_crossing_obligation='Vector binding is clock/reset connectivity only. Every declared root must appear in native entry and internal crossing audits; no internal datapath coverage is implied.')),
             die_obligations=[
                 "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
                 "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
@@ -1135,10 +1218,18 @@ def audit(spec: dict, rtl_text: str) -> dict:
     for i in insts:
         if i["module"] not in dirs:
             dirs[i["module"]] = {p["name"]: p["dir"] for p in parse_module(csrc, i["module"])["ports"]}
+    bindings = Parent(spec).regional_bindings if (spec.get('regional_child_clocks') or spec.get('regional_child_resets')) else {}
+    for (name,pin), binding in bindings.items():
+        child = next((i for i in insts if i['inst']==name), None)
+        expected = ('{' + ','.join('ck_'+r for r in reversed(binding['regions'])) + '}'
+                    if binding['role']=='clocks' else
+                    '{' + ','.join(f'lpr_b_{name}_{pin}_{j}' for j in reversed(range(len(binding['regions'])))) + '}')
+        if child is None or re.sub(r'\s+','',child['conns'].get(pin,'')) != expected:
+            return dict(ok=False, fails=[f'{name}.{pin}: regional {binding["role"]} bit mapping differs from declared contract'])
     rcks = {f"ck_{r['name']}" for r in spec["regions"]}     # region clocks only (a parent port may be named ck_*)
     reg = {}
     for i in insts:
-        cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks]
+        cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks and (i['inst'],pin) not in bindings]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
         reg[i["inst"]] = cks[0][3:]
@@ -1156,7 +1247,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
     fails, landed, rst = [], 0, 0
     for i in insts:
         for pin, ex in i["conns"].items():
-            if dirs[i["module"]].get(pin) != "in" or ckname(ex) in rcks:
+            if dirs[i["module"]].get(pin) != "in" or ckname(ex) in rcks or (i['inst'],pin) in bindings:
                 continue
             for n in idents(ex):
                 for d in drv.get(n, ()):

@@ -89,8 +89,8 @@
  "job": {
   "owner": "CODEX-HBM-IDX256",
   "branch": "codex/hbm-idx256-physical-1019",
-  "tag": "g2",
-  "purpose": "ActualNF5 IDX256 guards plus optin retained28bitrecord/operand/pin banks;0edges; actualfanoutcensus beforeCTS",
+  "tag": "fan32g1",
+  "purpose": "Exact458299321 FAN32 protected16bit banks/counter/run/reset distribution, +960 mappedFF, zero successful data edges; ROOT-approved129.6sq pin-bound component characterization only",
   "extra_paths": [
    "rtl/test/hbm_collar_idx256",
    "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
@@ -119,7 +119,7 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m9.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_458299321/runf1_m9.log"
    },
    {
     "name": "idx256_10",
@@ -132,7 +132,7 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m10.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_458299321/runf1_m10.log"
    },
    {
     "name": "idx256_11",
@@ -145,7 +145,7 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m11.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_458299321/runf1_m11.log"
    },
    {
     "name": "idx256_12",
@@ -158,7 +158,20 @@
     ],
     "pass_regex": "IDX256_PASS cases=9",
     "fail_regex": "IDX256_FAIL",
-    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_9765103b8/runf1_m12.log"
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_458299321/runf1_m12.log"
+   },
+   {
+    "name": "idx256_13",
+    "cmd": "bash rtl/test/hbm_collar_idx256/run_idx256_one.sh {RUN}/bench/idx256_13 13",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "IDX256_PASS cases=9",
+    "fail_regex": "IDX256_FAIL",
+    "fail_witness": "results/arch/hbm_idx_collar256_1019/fan32_458299321/runf1_m13.log"
    }
   ],
   "views_to": "physical/ref_tile/hdie_col_idx256_1019/views",
@@ -170,7 +183,7 @@
   }
  },
  "slot_change_request": "col_idx old59.4sqSYNTHestimate cannotfit2330pins; needs129.6sqactualsourcebound successor beforebinding.",
- "structural_change": "IDX-only opt-in256programme row/page0/full32bitneed guards suppress aliaswrites and simultaneousbadinstalllaunch; canonicalsourceunchanged,0state+0successcycles.",
+ "structural_change": "SeparateIDX256 guardedmaster,FAN32=1;16protected16bit banks andsame-edge retainedcontrols plus25 existingresetstage2copies; +960 actualmappedFF,0successfuldataedges; canonicalunchanged.",
  "io_tcl": "physical/ref_tile/hdie_col_idx256_1019/io.tcl",
  "std_area_um2": 3100,
  "reset_landing": {
@@ -178,6 +191,7 @@
   "reason": "RTL g_rst_same.rc[0:1] is two-stage face reset landing; rawpin only rc0, no addedresetedges"
  },
  "fill_reason": {
-  "pin_bound": "2330 realNF5pins across583/583/582/582 contacts onfullM4/M5faces atnominal0.216umpitch andcornermargin require129.6umlatticeoutline; actualdensity,sourcearea,nativeTTFF stillrequired."
+  "pin_bound": "2330 realNF5pins across583/583/582/582 contacts onfullM4/M5faces atnominal0.216umpitch andcornermargin require129.6umlatticeoutline; actualdensity,sourcearea,nativeTTFF stillrequired.",
+  "root_review": "ROOT 2026-10-19 approves exact458299321129.6sq pin-bound~20.4%fill component CTS/native characterization; no shrink/submit/die adoption. Actual SW bias retained."
  }
 }

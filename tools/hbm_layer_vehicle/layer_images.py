@@ -18,7 +18,8 @@ Unit formats (RTL of record = GEN2 die rev abbf5d21f; SU files byte-identical to
        vmr {v,sector16,grp4,row9} / vmw {v,src,grp4,row9,sector16,mask8} and their edges: ot_hbm_su_static_pgslice.sv:
        14-22 (FILL commit E+13; DRAIN LG write E+4, done +7).  Column image: su_programme_compile.lower_columns
        (config bank = 32 x column + local; 16 edges of 16-b dictionary index per row; leaf caps 3/13).
-       Start -> command line 0 at the consumer = DEPTH(1)+4 = 5 edges (pgcol.sv:16-17 "start advance DEPTH+4");
+       Start -> command line 0 at the native pslice_c5 consumer = 9 edges (measured native producer, including
+       registered column pins and PIPE=2 index/dictionary stages; the older five-edge reference is insufficient).
        config writes while idle, >= 2 edges before start (pgcol.sv:23-25).  Programme capacity EDGES 7111 a start
        (pgcol.sv:56): one programme per SU record, reloaded while the producer is idle (load-window conflicts listed).
   IDX  hb_idx__qctl_SW (ot_hbm_idx_qctl_static.sv) programme bus from col_idx (outside): col_idx__pw_we/pw_addr/pw_data,
@@ -59,7 +60,7 @@ for p in (TOOLS, TOOLS / "hbm_static", TOOLS / "hgi_adapters"):
     sys.path.insert(0, str(p))
 
 SB_W, Q_W = 2422, dict(control=1742, vmr=240, vmw=312, rf=54, red=74)
-START_ADVANCE, CFG_LEAD, EDGES_MAX = 5, 2, 7111
+START_ADVANCE, CFG_LEAD, EDGES_MAX = 9, 2, 7111
 FILL_COMMIT, LANE_FETCH, DRAIN_DONE = 13, 3, 11       # pgslice.sv:14-22
 SETUP_TO_EMIT = 8                                       # su_arith_compile.py: ld at cycle 0, emits from cycle 8
 # first lane output after the setup line: su_top_compile FO = 8 + 23 + 4(MLAT-3) + (ALAT-3) + LEAF + 4 PIN_REG with
@@ -429,7 +430,8 @@ def column_image(lines, work):
     import su_programme_compile as PC
     work.mkdir(parents=True, exist_ok=True)
     (work / "quarter.mem").write_text("".join(f"{v:0{(SB_W + 3) // 4}x}\n" for v in lines))
-    man = PC.lower_columns(work / "quarter.mem", work / "cols", line_bits=SB_W)
+    man = PC.lower_columns(work / "quarter.mem", work / "cols", line_bits=SB_W,
+                           resident_edges=EDGES_MAX)
     cfg = [(int(l[:4], 16), int(l[4:6], 16), l[6:]) for l in (work / "cols/config.mem").read_text().split()]
     return man, cfg
 

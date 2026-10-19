@@ -408,15 +408,28 @@ def kv_check(die_v, lanes_path, relay_stages=None, lane_stations=None):
         if probs:
             fails['structure'] += probs
         E = kv_e(r)
-        cal = int(r.get('cal', KV_CAL)) if 'cal' in r and r.get('cal') is not None else KV_CAL
+        raw_cal = int(r.get('cal', KV_CAL)) if r.get('cal') is not None else KV_CAL
         h = LG.HOP0_EN_REG if n == 1 else 0
-        k_exp = (E + cal + h) % 8
-        x.update(E=E, cal=cal, h0=h, K_row=r.get('K'), K_expected=k_exp, post_stages=int(r.get('post_stages') or 0),
+        # Canonical seam tables use cal=G-R0+h0; legacy KV rows use
+        # cal=G-R0. Do not add the registered hop-0 epoch twice.
+        basis = r.get('cal_basis')
+        canonical = basis == 'G-R0+h0' or (basis is None and
+                    str(r.get('age_contract', '')).startswith('KVR-FWDAGE: G=R0;'))
+        if basis not in (None, 'G-R0', 'G-R0+h0'):
+            fails['structure'].append(f'{land}: unknown calendar basis {basis!r}')
+        cal = raw_cal - h if canonical else raw_cal
+        total_cal = raw_cal if canonical else cal + h
+        if canonical and r.get('h0', h) != h:
+            fails['structure'].append(f'{land}: recorded h0 {r.get("h0")} != actual lane hop-0 epoch {h}')
+        if canonical and r.get('reset_cal', cal) != cal:
+            fails['structure'].append(f'{land}: total cal {raw_cal} != reset_cal {r.get("reset_cal")} + h0 {h}')
+        k_exp = (E + total_cal) % 8
+        x.update(E=E, cal=cal, cal_total=total_cal, cal_basis='G-R0+h0', h0=h, K_row=r.get('K'), K_expected=k_exp, post_stages=int(r.get('post_stages') or 0),
                  inserted_stations=len(r.get('inserted_stations') or []), fwd_e_est=LG_fwd_e_est(n))
         if K is not None and K != k_exp:
             fails['strap'].append(f'{land}: K {K} != (E {E} + cal {cal} + h0 {h}) mod 8 = {k_exp} (n {n})')
         if K is not None:
-            v = (K - cal - h) % 8
+            v = (K - total_cal) % 8
             E_hw = E + ((v - E + 4) % 8) - 4
             es = E_hw - LG_fwd_e_est(n) + FWD_E0
             x.update(E_hw=E_hw, E_sta_hw=es, LAG=max(0, es - FWD_E0))

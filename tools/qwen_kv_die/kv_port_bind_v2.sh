@@ -16,7 +16,19 @@ F=(); [ -f "$RLY" ] && F+=(--rtl-file "$(readlink -f $RLY)")
 P=(); [ -f "$D.pads.json" ] && P+=(--existing "$D.pads.json")
 python3 "$R/tools/qwen_kv_die/kv_output_pads.py" "$O/die_bound.v" "${P[@]}" --out "$O/output_pads.json" \
   > "$O/output_pads.log" 2>&1 || { tail -3 "$O/output_pads.log"; exit 3; }
-F+=(--pad-file "$O/output_pads.json")
+PADS="$O/output_pads.json"
+if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  [ -f "$EXP" ] || { echo "static head output contract requires expand provenance"; exit 3; }
+  python3 "$R/tools/qwen_kv_die/kv_static_head_unused.py" --run "$(dirname "$EXP")" --die "$O/die_bound.v" \
+    --root "$R" --existing "$PADS" --out "$O/output_pads.head.json" > "$O/output_pads.head.log" 2>&1 \
+    || { tail -3 "$O/output_pads.head.log"; exit 3; }
+  PADS="$O/output_pads.head.json"
+  python3 "$R/tools/qwen_kv_die/kv_pvw_padding.py" --run "$(dirname "$EXP")" --die "$O/die_bound.v" \
+    --root "$R" --existing "$PADS" --out "$O/output_pads.pv.json" > "$O/output_pads.pv.log" 2>&1 \
+    || { tail -3 "$O/output_pads.pv.log"; exit 3; }
+  PADS="$O/output_pads.pv.json"
+fi
+F+=(--pad-file "$PADS")
 # relay standards (OT_KV_RLY_STD=1): the qkd_rlys_* replicas bind their real RTL (not a stub)
 grep -q "qkd_rlys_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv")
 # KV-CLOCK 10-18 (OT_KV_FWD=1, kv_fwd_lanes.py): forwarded half-cycle lane stations + landings bind their real RTL
