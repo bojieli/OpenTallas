@@ -39,7 +39,14 @@ export OT_KV_HROOT=1 OT_KV_FANFOLD=1 OT_KV_V144_DW=2462.4 OT_KV_SN_LIFT=432 OT_K
 export OT_KV_STATIC_DIE_STRICT=1 OT_KV_TILE_KITS=1 OT_KV_PVFORK_GAP=64.8 OT_KV_ATTN_LAND=1 ${KVS14R_EXTRA:-}
 export OT_KV_EXPAND=qkd_rhead,qkd_rhead_ft,qkd_ectl,qkd_ctrl,qkd_ctrl_n,qkd_pvfork,qkd_pvtap2,qkd_pvtap3,qkd_pvtap4,qkd_seq_st,qkd_pvw_s,qkd_pvw_n
 export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_KV_BUNDLE_EQ=1 OT_KV_D2D_NTX=3
-export OT_KV_D2DS_VIEW=0
+# KVR-VIEWS 10-19 view defaults (each binds ONLY a CLOSED view; overridable from the caller's environment / KVS14R_EXTRA):
+#  * OT_KV_FACE_LAND=astk_rly_296: the expanded ASTK strip's relay child binds the CLOSED face-landed view
+#    qkd_astk_rly_296_fl (qkd_astk_rly_296-fl1-bd369b99e; +3 reset-release edges taken by the compiler)
+#  * OT_KV_D2DS_VIEW=auto: qkd_d2ds binds the r7v view only once it is on the branch with TXDP == the die's 0x03030418
+#    (d2ds_view_select.py; fails closed on a mismatch; frame while absent)
+#  * OT_KV_HROOT_VIEW=auto (kvsys_prep): qkd_kvs_hroot binds the CLOSED k1 view as a stand-in (native FAIL)
+export OT_KV_FACE_LAND=${OT_KV_FACE_LAND:-astk_rly_296}
+export OT_KV_D2DS_VIEW=${OT_KV_D2DS_VIEW:-auto} OT_KV_HROOT_VIEW=${OT_KV_HROOT_VIEW:-auto}
 # Clock evidence and legal landing reservations are mandatory even in diagnostics.
 unset OT_KV_FWD_UNLANDED_DIAG OT_KV_CLK_UNMEASURED_DIAG
 [ -f tools/qwen_kv_die/kv_lane_reach.py ] || {
