@@ -12,7 +12,9 @@ SOURCE = 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mux_coll_safe2.sv'
 OLD = {'ot_s81sl_slice_lepw_mu', 'ot_s81sl_slice_lepw_mus', 'ot_s81sl_slice_lepe_mu',
        'ot_s81sl_slice_lepe_nh_mus', 'ot_s81sl_slice_lepw_mab'}
 FILES = [SOURCE, 'rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe2.sv',
-         'rtl/common/ot_link_credit_rx_sram.sv', 'rtl/lib/ot_sram_showahead_1r1w.sv']
+         'rtl/common/ot_link_credit_rx_sram.sv', 'rtl/lib/ot_sram_showahead_1r1w.sv',
+         'rtl/dsrom_sys/s81_ph/coll/ot_s81ph_link_ep_safe2.sv',
+         'rtl/lib/ot_sram_oldread_wreg.sv', 'rtl/lib/ot_rst_relay_tree3.sv']
 DEFINE = 'OT_S81PH_COLL_TF_CLEANUP'
 
 
@@ -45,7 +47,7 @@ def candidate(original, source):
     table['rtl_files'] = list(dict.fromkeys([*table.get('rtl_files',[]), *FILES]))
     table['coll_safe2_candidate'] = {'changes':changes,'required_define':DEFINE,
         'scope':'SOURCE_INTERFACE_ONLY_NOT_BEHAVIOR_NATIVE_OR_PARENT_FIT',
-        'dependencies':{'safe_lane':'2822bc004','helpers':'ba7479f59'}}
+        'dependencies':{'safe_lane':'83d6b8b7f','helpers':'ba7479f59','TXSAFE':1}}
     return table
 
 

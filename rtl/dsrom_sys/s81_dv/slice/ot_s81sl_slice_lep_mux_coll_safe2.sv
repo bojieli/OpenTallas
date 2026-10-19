@@ -49,28 +49,28 @@ module ot_s81sl_slice_lep_mux_coll_safe2 #(
         ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(lri), .ri_e(ri_n), .ro_e(ro_n), .ro_w(lro),
             .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc),
             .ck_rt(ck_rt), .fault(sf));
-        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
+        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
             .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
+        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
             .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
         if (AB_EN != 0) begin : g_b
-        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
+        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
             .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
-        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
+        dsfd_coll_lane_w_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
             .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
         end
     end else begin : g_e
         ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_n), .ri_e(lri), .ro_e(lro), .ro_w(ro_n),
             .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc),
             .ck_rt(ck_rt), .fault(sf));
-        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
+        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx0[512], rx0[513], rx0[511:0], rxv[0]}),
             .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
+        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
             .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
         if (AB_EN != 0) begin : g_b
-        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
+        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln2 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx2[512], rx2[513], rx2[511:0], rxvb[0]}),
             .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));
-        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
+        dsfd_coll_lane_e_safe2 #(.GFMT(1), .EPPIPE(2), .LCR(1), .RXSRAM(1), .RXLOCAL(1), .EPRX(1), .EPTO(1), .EPMW(1), .CH_BOARD(700), .SAFE(1), .TXSAFE(1)) u_ln3 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx3[512], rx3[513], rx3[511:0], rxvb[1]}),
             .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));
         end
     end endgenerate
