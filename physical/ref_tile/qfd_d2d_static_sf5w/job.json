@@ -1,0 +1,170 @@
+{
+ "name": "qfd_d2d_static_sf5w-sf5w-COMMIT",
+ "block": "qfd_d2d_static_ovl_sf",
+ "ref_tile": true,
+ "owner": "Claude:QW-D2D 10-19",
+ "purpose": "MU release compute D2D end, structurally safe successor of mu1/safe3 (critical: gate + packet only): qfd_d2d_static_ovl_sf = qfd_d2d_static_ovl ports/behaviour (TXDP 0x0a010308), safe-design checklist items 3/5/6 fixed in source.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qw-d2d-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "rtl/hdc",
+   "results/arch/token_path_20261009",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/rtl/mu_qwen_1018/d2d_ovl/qw_d2d_safe5",
+   "physical/ref_tile/qfd_d2d_static_sf5w/audit_actual_pins.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_d2d_static_ovl_sf #(.TXDP(167838472)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_pipe.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe5.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf.sv rtl/qwen_split/qfd_kvn_static_transport.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192/ot_sram_1r1w_64x137_m1_r2c2_p192_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sfeq_equiv",
+    "cmd": "JOBS=4 bash rtl/test/qwen_split/run_qfd_d2d_sf_equiv.sh {RUN}/bench/sfeq_m0 0 200000",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SFEQ_PASS "
+   },
+   {
+    "name": "sfeq_mut_bypass_age",
+    "cmd": "JOBS=4 bash rtl/test/qwen_split/run_qfd_d2d_sf_equiv.sh {RUN}/bench/sfeq_m1 1 200000",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SFEQ_FAIL cycle=",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/qw_d2d_safe5/sfeq_m1.log"
+   },
+   {
+    "name": "sfeq_mut_cal_onehot",
+    "cmd": "JOBS=4 bash rtl/test/qwen_split/run_qfd_d2d_sf_equiv.sh {RUN}/bench/sfeq_m2 2 200000",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SFEQ_FAIL cycle=",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/qw_d2d_safe5/sfeq_m2.log"
+   },
+   {
+    "name": "xsf_gen_txdp",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=3' XQ_GEN_TXDP_EXPECT=PASS XQ_GEN_TXDP=8,3,1,10/21,4,3,3 bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xsf_gen_txdp pair_gen_txdp",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^pair_gen_txdp expect=PASS got=PASS -> OK"
+   },
+   {
+    "name": "xsf_mut_txdp_c0_late",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=3' XQ_GEN_TXDP_EXPECT=PASS XQ_GEN_TXDP=9,3,1,10/21,4,3,3 bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xsf_mut_txdp_c0_late pair_gen_txdp",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/qw_d2d_safe5/x_sf_mut_c0_late.log"
+   },
+   {
+    "name": "xsf_mut_bypass_age",
+    "cmd": "XQ_PLAN=2,2,2,3,2,2/11,11,9,9,9,9,9 XQ_G='-GK_NTX=3 -GC_OVL=3 -GC_SFMUT=1' XQ_GEN_TXDP_EXPECT=PASS XQ_GEN_TXDP=8,3,1,10/21,4,3,3 bash rtl/test/qwen_split/run_xdie_exchange.sh {RUN}/bench/xsf_mut_bypass_age pair_gen_txdp",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^pair_gen_txdp expect=PASS got=FAIL -> UNEXPECTED",
+    "fail_witness": "results/rtl/mu_qwen_1018/d2d_ovl/qw_d2d_safe5/x_sf_mut_byp.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_d2d_static_sf5w/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_d2d_static_sf5w/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_d2d_static_sf5w --out {RUN}/record/views/qfd_d2d_static_ovl_sf --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_d2d_static_sf5w/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x137_m1_r2c2_p192"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_d2d_static_sf5w/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_d2d_static_sf5w/qfd_d2d_static_sf5w-sf5w-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "sf5w = PARALLEL fallback of sf5 (same RTL qfd_d2d_static_ovl_sf): single macro row at y 43.2 (x 43.2/129.6/216/302.4, 28.5 um channels), outline 388.8 x 172.8 (aspect 2.25, 67.2k um2), shorter N-S reach; pins 0.192 um full faces, ck N centre. sf5 (QW-D2D 10-19): RTL successor qfd_d2d_static_ovl_sf (ot_qwen_d2d_safe5.sv): right-sized sparse-pin slot store SRAM ot_sram_1r1w_64x137_m1_r2c2_p192 (57.9x45.7, 229 pins/face at 0.192 um = 5.2/um; the 64x512 used 137/512 columns at 10.4/um), KEPT copies for every >32-load register in the r9j/mu1 census (hit_age, calendar ptr/seg1 -> registered one-hot, fire, cmd_ws/s1 -> one-hot, result_v/cfg_data/cal_start/cal_seg pin-flop copies, epoch_begin), cycle-identical to qfd_d2d_static_ovl (lockstep bench 200k cycles). Outline 345.6x216 (was 475.2x280.8: -44%), macros 2x2 on the 43.2 lattice with 10.8 um halos, full-width std band between rows, pins re-spread at 0.192 um on full faces, ck at the N centre track."
+}
