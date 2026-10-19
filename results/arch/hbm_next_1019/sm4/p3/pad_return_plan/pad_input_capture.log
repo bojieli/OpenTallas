@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   999 GB (avail 797, growth 98, headroom 0, waiters 0/0 GB) load 73/128 running 31 disk 293 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex_hnx_pad
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex_hnx_pad
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex_hnx_pad
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex_hnx_pad
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex_hnx_pad
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex_hnx_pad
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3667625-1792424809 after 0 s
+HNXPAD PASS checks=984 errors=0
+HNXPAD FAIL checks=984 errors=984
+HNXPAD FAIL checks=984 errors=984
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3667625-1792424809): exit 0

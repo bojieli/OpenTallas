@@ -1,0 +1,681 @@
+{
+ "status": "PASS",
+ "groups": [
+  {
+   "bits": [
+    0,
+    31
+   ],
+   "source_capture_um": 337.77,
+   "capture_write_um": 41.064000000000036,
+   "read_xs3_um": 389.42999999999995,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    32,
+    63
+   ],
+   "source_capture_um": 330.042,
+   "capture_write_um": 88.95599999999997,
+   "read_xs3_um": 387.126,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    64,
+    95
+   ],
+   "source_capture_um": 333.114,
+   "capture_write_um": 90.28800000000008,
+   "read_xs3_um": 384.822,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    96,
+    127
+   ],
+   "source_capture_um": 325.38599999999997,
+   "capture_write_um": 82.56000000000002,
+   "read_xs3_um": 382.518,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    128,
+    159
+   ],
+   "source_capture_um": 328.45799999999997,
+   "capture_write_um": 67.25400000000003,
+   "read_xs3_um": 342.61199999999997,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    160,
+    191
+   ],
+   "source_capture_um": 320.72999999999996,
+   "capture_write_um": 91.806,
+   "read_xs3_um": 334.16399999999993,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    192,
+    223
+   ],
+   "source_capture_um": 323.802,
+   "capture_write_um": 94.87800000000006,
+   "read_xs3_um": 325.71599999999995,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    224,
+    255
+   ],
+   "source_capture_um": 316.074,
+   "capture_write_um": 87.15000000000005,
+   "read_xs3_um": 317.268,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    256,
+    287
+   ],
+   "source_capture_um": 319.146,
+   "capture_write_um": 127.46400000000001,
+   "read_xs3_um": 389.62199999999996,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    288,
+    319
+   ],
+   "source_capture_um": 311.418,
+   "capture_write_um": 152.01600000000002,
+   "read_xs3_um": 387.318,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    320,
+    351
+   ],
+   "source_capture_um": 314.49,
+   "capture_write_um": 176.688,
+   "read_xs3_um": 385.01399999999995,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    352,
+    383
+   ],
+   "source_capture_um": 306.762,
+   "capture_write_um": 168.95999999999998,
+   "read_xs3_um": 382.806,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    384,
+    415
+   ],
+   "source_capture_um": 309.834,
+   "capture_write_um": 67.25399999999998,
+   "read_xs3_um": 261.3,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    416,
+    447
+   ],
+   "source_capture_um": 302.106,
+   "capture_write_um": 91.806,
+   "read_xs3_um": 263.604,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    448,
+    479
+   ],
+   "source_capture_um": 305.178,
+   "capture_write_um": 94.878,
+   "read_xs3_um": 265.908,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    480,
+    511
+   ],
+   "source_capture_um": 297.45,
+   "capture_write_um": 87.14999999999999,
+   "read_xs3_um": 268.212,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    512,
+    543
+   ],
+   "source_capture_um": 300.52200000000005,
+   "capture_write_um": 88.85400000000006,
+   "read_xs3_um": 239.60400000000004,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    544,
+    575
+   ],
+   "source_capture_um": 292.79400000000004,
+   "capture_write_um": 113.40600000000002,
+   "read_xs3_um": 241.90800000000002,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    576,
+    607
+   ],
+   "source_capture_um": 295.86600000000004,
+   "capture_write_um": 116.47800000000002,
+   "read_xs3_um": 244.212,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    608,
+    639
+   ],
+   "source_capture_um": 288.13800000000003,
+   "capture_write_um": 108.75000000000001,
+   "read_xs3_um": 246.51600000000002,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    640,
+    671
+   ],
+   "source_capture_um": 121.76599999999998,
+   "capture_write_um": 114.52999999999999,
+   "read_xs3_um": 126.99600000000004,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    672,
+    703
+   ],
+   "source_capture_um": 133.39,
+   "capture_write_um": 106.22600000000001,
+   "read_xs3_um": 118.54800000000006,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    704,
+    735
+   ],
+   "source_capture_um": 147.262,
+   "capture_write_um": 28.58599999999991,
+   "read_xs3_um": 98.58000000000004,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    736,
+    767
+   ],
+   "source_capture_um": 161.13399999999996,
+   "capture_write_um": 34.22600000000001,
+   "read_xs3_um": 90.13200000000006,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    768,
+    799
+   ],
+   "source_capture_um": 246.55800000000005,
+   "capture_write_um": 94.00200000000014,
+   "read_xs3_um": 180.41999999999996,
+   "overlap": [],
+   "pass": true
+  },
+  {
+   "bits": [
+    800,
+    817
+   ],
+   "source_capture_um": 254.28599999999994,
+   "capture_write_um": 101.73000000000009,
+   "read_xs3_um": 171.92399999999998,
+   "overlap": [],
+   "pass": true
+  }
+ ],
+ "capture_regions": [
+  {
+   "bits": [
+    0,
+    31
+   ],
+   "center": [
+    275.4,
+    310.5
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    32,
+    63
+   ],
+   "center": [
+    286.2,
+    310.5
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    64,
+    95
+   ],
+   "center": [
+    275.4,
+    321.3
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    96,
+    127
+   ],
+   "center": [
+    286.2,
+    321.3
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    128,
+    159
+   ],
+   "center": [
+    275.4,
+    332.1
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    160,
+    191
+   ],
+   "center": [
+    286.2,
+    332.1
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    192,
+    223
+   ],
+   "center": [
+    275.4,
+    342.9
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    224,
+    255
+   ],
+   "center": [
+    286.2,
+    342.9
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    256,
+    287
+   ],
+   "center": [
+    275.4,
+    353.7
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    288,
+    319
+   ],
+   "center": [
+    286.2,
+    353.7
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    320,
+    351
+   ],
+   "center": [
+    275.4,
+    364.5
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    352,
+    383
+   ],
+   "center": [
+    286.2,
+    364.5
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    384,
+    415
+   ],
+   "center": [
+    275.4,
+    375.3
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    416,
+    447
+   ],
+   "center": [
+    286.2,
+    375.3
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    448,
+    479
+   ],
+   "center": [
+    275.4,
+    386.1
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    480,
+    511
+   ],
+   "center": [
+    286.2,
+    386.1
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    512,
+    543
+   ],
+   "center": [
+    275.4,
+    396.9
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    544,
+    575
+   ],
+   "center": [
+    286.2,
+    396.9
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    576,
+    607
+   ],
+   "center": [
+    275.4,
+    407.7
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    608,
+    639
+   ],
+   "center": [
+    286.2,
+    407.7
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    640,
+    671
+   ],
+   "center": [
+    500,
+    585.0
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    672,
+    703
+   ],
+   "center": [
+    500,
+    595.8
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    704,
+    735
+   ],
+   "center": [
+    500,
+    606.6
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    736,
+    767
+   ],
+   "center": [
+    500,
+    617.4
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    768,
+    799
+   ],
+   "center": [
+    589.2,
+    632.88
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  },
+  {
+   "bits": [
+    800,
+    817
+   ],
+   "center": [
+    600.0,
+    632.88
+   ],
+   "region_um": [
+    10.8,
+    8.1
+   ]
+  }
+ ],
+ "maxima_um": [
+  337.77,
+  176.688,
+  389.62199999999996
+ ],
+ "latency": "One input capture plus native2-edge SRAM ring = existing3edge pad; zero extra data edges, II1",
+ "native_face_density_per_um": {
+  "N": 5.331196581196581,
+  "S": 3.7126068376068373,
+  "W": 2.719043670536208,
+  "E": 1.8345771144278606
+ },
+ "transport_maxima_um": [
+  396.74999999999994,
+  403.0699999999999
+ ],
+ "physical_gate_pass": false,
+ "remaining": [
+  "materialize transport W/E y retarget and overlapping bounded capture regions in legal placement",
+  "all row/bk1/strap/control/clock endpoint checks",
+  "actual stdcell area in capture regions",
+  "fresh XS3 N-face gate and native clock audit",
+  "final parent synthesis/gate"
+ ]
+}

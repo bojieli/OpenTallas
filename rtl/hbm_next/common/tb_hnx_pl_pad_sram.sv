@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_hnx_pl_pad_sram #(parameter integer MUT=0);
+module tb_hnx_pl_pad_sram #(parameter integer MUT=0, OUTREG=0, INREG=0);
  reg ck=0; always #5 ck=~ck;
  reg rst_n=0;
  reg [817:0] d;
@@ -7,7 +7,7 @@ module tb_hnx_pl_pad_sram #(parameter integer MUT=0);
  wire [25:0] qs;
  reg [817:0] hist[0:2];
  integer t,j,k,age=0,checks=0,errors=0;
- hnx_pl_pad_sram #(.W(818),.N(3),.MUT(MUT==1),.SMALL(1)) dut(.*);
+ hnx_pl_pad_sram #(.W(818),.N(3),.MUT(MUT==1),.SMALL(1),.OUTREG(OUTREG),.INREG(INREG)) dut(.*);
  hnx_pl_pad_ring #(.W(26),.N(3),.MUT(MUT==2)) ctl(.ck(ck),.rst_n(rst_n),.d(d[25:0]),.q(qs));
  initial begin
   d=0;
