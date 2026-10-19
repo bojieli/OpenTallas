@@ -11,7 +11,12 @@ files=("$R/rtl/lib/ot_rst_relay.sv" "$R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
  "$R/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v"
  "$U/dsdv_mu_hslot.sv" "$U/dsdv_mu_mem.sv" "$U/dsdv_mu_mem_early_capture.sv" "$U/dsdv_mu_hwin.sv"
  "$U/test/tb_dsdv_mu_hwin_early_capture.sv" "$U/test/tb_dsdv_mu_mem_early_capture.sv")
-sha256sum "${files[@]}" > "$O/sources.sha256"
+sha256sum "${files[@]}" "$U/test/run_mu_hwin_early_capture.sh" > "$O/sources.sha256"
+python3 - "$O/run_spec.json" "${2:-initial}" <<'PYSPEC'
+import json,os,pathlib,sys
+keys=['SWEEP_LOW','SWEEP_HIGH','FOUR_STATE_NS','FOUR_STATE_NEV','BOOT_NS','BOOT_NEV','SHORT_NS','RUN_SEEDS','OT_THREADS','SIM_RESET_PHASE','SIM_RX_SHIFT','SIM_RELEASE_STAGE']
+pathlib.Path(sys.argv[1]).write_text(json.dumps({'phase':sys.argv[2],'environment':{k:os.environ.get(k) for k in keys},'walltime_deadline':None,'receipt_policy':'atomic new root and case directories; refuse existing; all failures retained'},indent=2)+'\n')
+PYSPEC
 verilator --version > "$O/verilator_version.txt"
 grep -q 'Verilator 5.050' "$O/verilator_version.txt"
 run() {
@@ -27,6 +32,9 @@ run() {
   "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=${SIM_RESET_PHASE:-0} +rx_shift=${SIM_RX_SHIFT:--1} +release_word_stage=${SIM_RELEASE_STAGE:-1} > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
   if [[ "$expected" == FAIL:* ]]; then
     [[ $rc -ne 0 ]]; grep -q "${expected#FAIL:}" "$case_dir/run_seed$seed.log"
+  elif [[ "$expected" == CONFIG_NEG:* ]]; then
+    [[ $rc -eq 0 ]];grep -q '^MUWIN FAIL' "$case_dir/run_seed$seed.log"
+    grep -q 'hslot 0000 hwin 10' "$case_dir/run_seed$seed.log"
   elif [[ "$expected" == REJECT:* ]]; then
     [[ $rc -eq 0 ]]; grep -q '^ERR' "$case_dir/run_seed$seed.log"; grep -q "${expected#REJECT:}" "$case_dir/run_seed$seed.log"
   else
@@ -57,7 +65,7 @@ matrix)
  run headcompare tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+HEAD_COMPARE
  for mut in 3 4; do RUN_SEEDS=1 run old_mut$mut tb_dsdv_mu_hwin_early_capture 'REJECT:^MUWIN FAIL' +define+WMUT=$mut; done
  run ns2_collision tb_dsdv_mu_hwin_early_capture '^MUWIN COLLISION PASS' +define+NSLOT_TEST=2 +define+NEV=2 +define+MIN_D +define+COLLIDE_EVENTS
- run ns2_illegal_original tb_dsdv_mu_hwin_early_capture '^MUWIN FAIL' +define+NSLOT_TEST=2 +define+MIN_D
+ run ns2_illegal_original tb_dsdv_mu_hwin_early_capture 'CONFIG_NEG:original illegal NS2/full16 requires config fault' +define+NSLOT_TEST=2 +define+MIN_D
  run s256_ns2 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+MIN_D +define+SWEEP256
  run s256_ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D +define+SWEEP256
  ;;
