@@ -94,8 +94,8 @@ Four real single-clock128x256 payload SRAMs supply up to128 bytes/core edge
 for reads and128 for writes at the group boundary. All four lanes may be active;
 32 group replication is not a throughput measurement. Selected CHECK_PIPE1 uses
 128 valid bits plus tk2[128]x2 per PC, not legacy ticket[128]x9. Four PCs can make
-8 ticket write bits and16 checker read bits per edge (two independent wa/ra
-read addresses each). Metadata per bank is384 bits, below2kb.
+8 ticket write bits,8 ticket read bits at ra and8 valid read bits at wa/ra
+per edge (valid has two independent read addresses; tk2 has one). Metadata per bank is384 bits, below2kb.
 
 The existing SRAM behavioral equation reads OLD data on simultaneous same-row
 read/write. The checker permits that event; put wins valid and the consumer

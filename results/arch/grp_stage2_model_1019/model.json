@@ -109,9 +109,10 @@
     "condition": "four32-byte banks concurrently active; actual valid calendar required"
   },
   "memory_metadata_bits_per_cycle": {
-    "tk2_max_writes": 8,
-    "tk2_two_checker_read_ports": 16,
-    "condition": "four PCs; k_wa and k_ra both read even if SRAM shared proposal rejected"
+    "tk2_max_write_bits": 8,
+    "tk2_read_bits_at_k_ra": 8,
+    "valid_read_bits_at_k_wa_and_k_ra": 8,
+    "condition": "four PCs; valid has two independently indexed read addresses; tk2 one read and one write"
   },
   "original_request_response_intervals": 8,
   "candidate_request_response_intervals": 10,
