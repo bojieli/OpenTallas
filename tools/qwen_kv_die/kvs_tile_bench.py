@@ -45,6 +45,9 @@ def gen(t, ck1):
     return json.loads(subprocess.check_output([sys.executable, '-c', code], env=env, cwd=ROOT))
 
 
+M3_INERT = {'qkd_static_kv_boot_dispatch'}
+
+
 def mutate(txt, mut):
     """returns (mutated text, removed child loc or None, description)"""
     lines = txt.split('\n')
@@ -100,7 +103,11 @@ def mutate(txt, mut):
     if mut == 3:
         assigns = '\n'.join(ln for ln in lines if ln.strip().startswith('assign '))
         for i, ln in enumerate(lines):
-            m = re.match(r'\s*\w+(?: #\(.*?\))? u_(\w+) \(', ln)
+            m = re.match(r'\s*(\w+)(?: #\(.*?\))? u_(\w+) \(', ln)
+            # KV-KITS/PARENTS 10-18: skip M3_INERT children (outputs constant 0 under random stimulus on 2-state Verilator,
+            # so their removal is invisible: ctl u_boot = qkd_static_kv_boot_dispatch, idle without an authenticated image)
+            m = m if m and m.group(1) not in M3_INERT else None
+            m = re.match(r'\s*\w+(?: #\(.*?\))? u_(\w+) \(', ln) if m else None
             if m and f'w_{m.group(1)}__' in assigns:
                 del lines[i]
                 return '\n'.join(lines), m.group(1), f'removed child u_{m.group(1)}'
