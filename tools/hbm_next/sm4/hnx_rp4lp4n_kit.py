@@ -48,7 +48,7 @@ H = round(Y_L0 + LEAF_H + M, 3)
 
 
 def leaf_children():
-    out = [("xs4", "u_xs", XS_DX, 0.0)]
+    out = [("xs4", "g_xs.u_xs", XS_DX, 0.0)]
     by = kx.SZ["xs4"][1] + kx.GAP_ST
     for p in range(kx.P):
         out.append(("bdc", f"g_ln[{p}].u_bdc", XS_DX + 129.6 * p, by))

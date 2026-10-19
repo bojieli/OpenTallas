@@ -507,5 +507,46 @@
    "empty ~190 x 458 um centre pocket above each bdc row (leaf ends, not on a link path)"
   ],
   "die_hint": "tile 1.4702 mm2 vs 1080x1339.2 1.4463 (+0.024 mm2/tile); DIE prices the die on its lattice"
+ },
+ "p3_tile": {
+  "tile": "hnx_rp3lp3x",
+  "owner_decision": "10-19 0le P3+(a) (supersedes P=4 for the next-release HBM die)",
+  "top": "hnx_rp3lp3x_flat_lp (lp.py from hnx_rp3lp3x_flat, rtl/hbm_next/sm/hnx_rp3lp3.sv; leaf hnx_rp4lp4_lfx #(.P(3)), store hnx_xs3)",
+  "kit": "spec physical/hbm_next/sm4/hnx_rp3lp3x_spec.json (generator tools/hbm_next/sm4/hnx_rp3lp3x_kit.py); ref_tile gen + --cts gate need the hnx_xs3 view (xs3 kit hnx_rp3lp3_xs3 --cts gate running 10-19)",
+  "status": "FLOORPLANNED (lattice + 10.8 halo asserted by the generator), NOT gated (critical: report only)",
+  "outline_um": {
+   "w": 630.72,
+   "h": 2203.2,
+   "area_mm2": 1.3896,
+   "aspect": 3.49,
+   "note": "= DIE P3 SM slot (f4c_t9p3 lever stand-in) exactly; 2 landed regional halves 630.72 x ~1,100"
+  },
+  "hard_children": 34,
+  "hard_area_um2": 690565,
+  "hard_fill": 0.497,
+  "std_area_um2_est": "45-60k (gate synthesis measures it) -> total fill ~0.53",
+  "all_children_on_43p2_lattice": true,
+  "xs3": {
+   "kit": "hnx_rp3lp3_xs3",
+   "outline_um": [
+    561.6,
+    289.44
+   ],
+   "macros": 12,
+   "macro_origins": "43.2+129.6i, 43.2+86.4j (all on 43.2)",
+   "clock": "single root N face, xs4c2 recipe"
+  },
+  "pins": {
+   "W/E": "bin/rin_n/rin_s | bout/rout_n/rout_s, 3,705 per face over y 781-1421 (5.8/um), centred on the band",
+   "N": "gin (x 21.6-40.8, aligned with gout[100+j]), xs_*, rst_n, ck_n (x 315.4)",
+   "S": "gout (x 2.4-40.8), xss_*, ck_s (x 315.4)"
+  },
+  "latency_vs_hnx_rp4lp4x": {
+   "gather pass lanes gin->gout": "+4 (NREL 2 per half)",
+   "leaf-0 lane": "+4",
+   "leaf-1 lane": "+0",
+   "other ports": "as hnx_rp4lp4x (lp record)"
+  },
+  "die_area_mm2": "767.41 (DIE t9p3 with this slot; unchanged since the outline = slot)"
  }
 }

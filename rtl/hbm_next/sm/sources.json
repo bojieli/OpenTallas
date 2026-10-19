@@ -46,8 +46,10 @@
   "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
   "rtl/hbm_next/sm/hnx_rp4l_children.sv",
   "rtl/hbm_next/sm/hnx_xs4.sv",
+  "rtl/hbm_next/sm/hnx_xs3.sv",
   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
-  "rtl/hbm_next/sm/hnx_rp4lp4.sv"
+  "rtl/hbm_next/sm/hnx_rp4lp4.sv",
+  "rtl/hbm_next/sm/hnx_rp3lp3.sv"
  ],
  "kit_sources": [
   "rtl/lib/ot_hdly.sv",
@@ -94,8 +96,10 @@
   "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
   "rtl/hbm_next/sm/hnx_rp4l_children.sv",
   "rtl/hbm_next/sm/hnx_xs4.sv",
+  "rtl/hbm_next/sm/hnx_xs3.sv",
   "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
-  "rtl/hbm_next/sm/hnx_rp4lp4.sv"
+  "rtl/hbm_next/sm/hnx_rp4lp4.sv",
+  "rtl/hbm_next/sm/hnx_rp3lp3.sv"
  ],
  "defines": [
   "OT_SMH_CG_ENREG",
@@ -114,5 +118,6 @@
   "OT_SMH_WEST_SPLIT",
   "OT_SMH_TRANSPORT_KEEP",
   "OT_SMH_RP4_SRST"
- ]
+ ],
+ "note_p3": "P3-SM 10-19: + hnx_xs3.sv (P = 3 production store, gen_xs4.py --p 3 --name hnx_xs3) and hnx_rp3lp3.sv (P = 3 flat parent hnx_rp3lp3x_flat)"
 }

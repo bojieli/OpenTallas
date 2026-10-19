@@ -77,7 +77,7 @@ def r3(x):
 
 def leaf_children():
     """(kind, inst suffix, dx, dy) in the R0 leaf frame (origin bottom-left, store at the bottom facing the band)."""
-    out = [("xs4", "u_xs", XS_DX, 0.0)]
+    out = [("xs4", "g_xs.u_xs", XS_DX, 0.0)]
     by = SZ["xs4"][1] + GAP_ST
     for p in range(P):
         out.append(("bdc", f"g_ln[{p}].u_bdc", XS_DX + 129.6 * p, by))
