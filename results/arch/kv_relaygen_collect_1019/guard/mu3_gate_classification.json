@@ -1,0 +1,16 @@
+{
+  "source_commit": "2752e68a3",
+  "gate": "WARN0fail",
+  "outline_um": [
+    140.4,
+    140.4
+  ],
+  "util_percent": 52,
+  "tt_setup_ps": 63.9409,
+  "ff_hold_ps": 12.9008,
+  "tt_pin_spread_ps": 12.7,
+  "ff_pin_spread_ps": 12.5,
+  "trial_grt_overflow": 0,
+  "geometry_visual": "uniformfullwidthstdcellregion,nomacros,Wclock,fullfaces",
+  "storage_audit": "INELIGIBLE: qkd_host_service_guard markers=qkd_host_guard_fifo(W64),mem128x64=8192bits; earlierSAFEchecklistmissedinstantiatedsubmodule. CanonicalSRAMfixassignedsram_layout; noexception/REVIEW/submit."
+}
