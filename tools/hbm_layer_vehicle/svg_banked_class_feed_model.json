@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.svg-banked-class-feed.v1",
+  "status": "source/model before isolated composition RTL; functional proof pending",
+  "module": "ot_hbm_svc_sm_feed_programmed_rel_banked_class",
+  "baseline": "ot_hbm_svc_sm_feed_programmed_rel_sram_id at f35dc08a0",
+  "programme": {
+    "banks": 2,
+    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "leaf": "ot_smh_calendar_bank_leaf W135 XW47",
+    "application": "ot_smh_banked_svg_central PREL1 XW47 CLASS_ENABLE1 COMMANDALIGN0",
+    "application_source": "2210ef72c",
+    "context": "[46:0], class bit46, lower46 unchanged; descriptor200 reserved unchanged",
+    "clock_roots": [
+      "program_core_clk",
+      "program_bank_clk[0]",
+      "program_bank_clk[1]"
+    ],
+    "extra_calendar_edges": 2,
+    "new_read_admission_calibration": 8
+  },
+  "cache": {
+    "command_alignment_edges": 2,
+    "envelope_bits": 85,
+    "envelope": "{context_valid,class,word83}",
+    "class_and_valid_aligned_with_command": true,
+    "READ_retire_input_issue": "unchanged relative to banked application; cache internally captures+2",
+    "GO_to_command_total": 11,
+    "completion_tail_extra": 2
+  },
+  "metadata": {
+    "OPEN_delay": 8,
+    "drain_delay": 8,
+    "conservative_prefetch_margin": 22,
+    "leaf_source": "48fa0a785",
+    "old_whole_proofs": "baseline only, not banked/class/cohort1"
+  },
+  "area": {
+    "banked_svg_banks_and_application_um2": 1909.07604,
+    "cache_command_envelope_bits": 170,
+    "delta_class_alignment_state_bits": 4,
+    "observation_pin_aliases": "count if retained at physical boundary"
+  },
+  "proof_obligations": [
+    "full85 command mirror exact2 including extension-only magic valid",
+    "banked application READ+2 command+2 vs old frontend before cache",
+    "whole matched-cohort two-run class semantics",
+    "actual invalid mode witnesses and legal mixed-programme split pricing",
+    "mapped native reset source and <=32 loads; all new composition frontend unqualified"
+  ],
+  "physical_claim": "NONE"
+}
