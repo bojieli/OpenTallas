@@ -1,0 +1,670 @@
+[
+  {
+    "root": "_000025_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.sh[0]$_DFFE_PN0P_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000025_"
+      }
+    ],
+    "loads": 2382,
+    "receiver_families": {
+      "other": 2382
+    },
+    "minimum_output_copies_at16": 149,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_000484_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.sh[1]$_DFFE_PN0P_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000484_"
+      }
+    ],
+    "loads": 1191,
+    "receiver_families": {
+      "other": 1191
+    },
+    "minimum_output_copies_at16": 75,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_047906_",
+    "drivers": [
+      {
+        "cell": "_095782_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_047906_"
+      }
+    ],
+    "loads": 1190,
+    "receiver_families": {
+      "other": 1190
+    },
+    "minimum_output_copies_at16": 75,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_027926_",
+    "drivers": [
+      {
+        "cell": "_064611_",
+        "type": "NAND2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_027926_"
+      }
+    ],
+    "loads": 1108,
+    "receiver_families": {
+      "other": 1107,
+      "credit_tx": 1
+    },
+    "minimum_output_copies_at16": 70,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_014982_",
+    "drivers": [
+      {
+        "cell": "u.u_ep.a_rep$_DFF_P_",
+        "type": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_014982_"
+      }
+    ],
+    "loads": 1106,
+    "receiver_families": {
+      "other": 1106
+    },
+    "minimum_output_copies_at16": 70,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_000028_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.mc[0]$_DFFE_PN0P_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000028_"
+      }
+    ],
+    "loads": 882,
+    "receiver_families": {
+      "other": 882
+    },
+    "minimum_output_copies_at16": 56,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_000491_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.mc[1]$_DFFE_PN0P_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000491_"
+      }
+    ],
+    "loads": 845,
+    "receiver_families": {
+      "other": 845
+    },
+    "minimum_output_copies_at16": 53,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_046450_",
+    "drivers": [
+      {
+        "cell": "_093138_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_046450_"
+      }
+    ],
+    "loads": 734,
+    "receiver_families": {
+      "other": 734
+    },
+    "minimum_output_copies_at16": 46,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_035269_",
+    "drivers": [
+      {
+        "cell": "_078600_",
+        "type": "AND2x2_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_035269_"
+      }
+    ],
+    "loads": 632,
+    "receiver_families": {
+      "other": 632
+    },
+    "minimum_output_copies_at16": 40,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_045721_",
+    "drivers": [
+      {
+        "cell": "_091815_",
+        "type": "OR3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_045721_"
+      }
+    ],
+    "loads": 595,
+    "receiver_families": {
+      "other": 595
+    },
+    "minimum_output_copies_at16": 38,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_045726_",
+    "drivers": [
+      {
+        "cell": "_091820_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_045726_"
+      }
+    ],
+    "loads": 595,
+    "receiver_families": {
+      "other": 595
+    },
+    "minimum_output_copies_at16": 38,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_047178_",
+    "drivers": [
+      {
+        "cell": "_094460_",
+        "type": "OR3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_047178_"
+      }
+    ],
+    "loads": 595,
+    "receiver_families": {
+      "other": 595
+    },
+    "minimum_output_copies_at16": 38,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_047182_",
+    "drivers": [
+      {
+        "cell": "_094464_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_047182_"
+      }
+    ],
+    "loads": 595,
+    "receiver_families": {
+      "other": 595
+    },
+    "minimum_output_copies_at16": 38,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_035263_",
+    "drivers": [
+      {
+        "cell": "_078594_",
+        "type": "OA21x2_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_035263_"
+      }
+    ],
+    "loads": 456,
+    "receiver_families": {
+      "other": 456
+    },
+    "minimum_output_copies_at16": 29,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_035267_",
+    "drivers": [
+      {
+        "cell": "_078598_",
+        "type": "OAI21x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_035267_"
+      }
+    ],
+    "loads": 456,
+    "receiver_families": {
+      "other": 456
+    },
+    "minimum_output_copies_at16": 29,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_046623_",
+    "drivers": [
+      {
+        "cell": "_093450_",
+        "type": "OR3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_046623_"
+      }
+    ],
+    "loads": 456,
+    "receiver_families": {
+      "other": 456
+    },
+    "minimum_output_copies_at16": 29,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_016799_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.idle_q$_DFF_PN0_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_016799_"
+      }
+    ],
+    "loads": 439,
+    "receiver_families": {
+      "other": 438,
+      "gearbox": 1
+    },
+    "minimum_output_copies_at16": 28,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_000027_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.ph[0]$_DFFE_PN0N_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000027_"
+      }
+    ],
+    "loads": 431,
+    "receiver_families": {
+      "other": 431
+    },
+    "minimum_output_copies_at16": 27,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_036474_",
+    "drivers": [
+      {
+        "cell": "_080260_",
+        "type": "AND2x2_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_036474_"
+      }
+    ],
+    "loads": 421,
+    "receiver_families": {
+      "other": 421
+    },
+    "minimum_output_copies_at16": 27,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_041202_",
+    "drivers": [
+      {
+        "cell": "_085495_",
+        "type": "NAND2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_041202_"
+      }
+    ],
+    "loads": 420,
+    "receiver_families": {
+      "other": 420
+    },
+    "minimum_output_copies_at16": 27,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_036523_",
+    "drivers": [
+      {
+        "cell": "_080309_",
+        "type": "NOR2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_036523_"
+      }
+    ],
+    "loads": 315,
+    "receiver_families": {
+      "other": 315
+    },
+    "minimum_output_copies_at16": 20,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_036499_",
+    "drivers": [
+      {
+        "cell": "_080285_",
+        "type": "AND2x2_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_036499_"
+      }
+    ],
+    "loads": 294,
+    "receiver_families": {
+      "other": 294
+    },
+    "minimum_output_copies_at16": 19,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_000483_",
+    "drivers": [
+      {
+        "cell": "u.u_gb.g_f1.ph[1]$_DFFE_PN0N_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000483_"
+      }
+    ],
+    "loads": 288,
+    "receiver_families": {
+      "other": 288
+    },
+    "minimum_output_copies_at16": 18,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_026662_",
+    "drivers": [
+      {
+        "cell": "_062386_",
+        "type": "OR2x2_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_026662_"
+      }
+    ],
+    "loads": 283,
+    "receiver_families": {
+      "other": 283
+    },
+    "minimum_output_copies_at16": 18,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_014258_",
+    "drivers": [
+      {
+        "cell": "u.g_safe_rst.g_distributed.u_rr.g_local[3].local_r$_DFF_PN0_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_014258_"
+      }
+    ],
+    "loads": 191,
+    "receiver_families": {
+      "endpoint": 191
+    },
+    "minimum_output_copies_at16": 12,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_035817_",
+    "drivers": [
+      {
+        "cell": "_079427_",
+        "type": "NAND2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_035817_"
+      }
+    ],
+    "loads": 176,
+    "receiver_families": {
+      "other": 176
+    },
+    "minimum_output_copies_at16": 11,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_036475_",
+    "drivers": [
+      {
+        "cell": "_080261_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_036475_"
+      }
+    ],
+    "loads": 174,
+    "receiver_families": {
+      "other": 174
+    },
+    "minimum_output_copies_at16": 11,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_036472_",
+    "drivers": [
+      {
+        "cell": "_080258_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_036472_"
+      }
+    ],
+    "loads": 164,
+    "receiver_families": {
+      "other": 164
+    },
+    "minimum_output_copies_at16": 11,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_032770_",
+    "drivers": [
+      {
+        "cell": "_073266_",
+        "type": "AND3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_032770_"
+      }
+    ],
+    "loads": 163,
+    "receiver_families": {
+      "other": 162,
+      "gearbox": 1
+    },
+    "minimum_output_copies_at16": 11,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_035461_",
+    "drivers": [
+      {
+        "cell": "_078931_",
+        "type": "NAND2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_035461_"
+      }
+    ],
+    "loads": 140,
+    "receiver_families": {
+      "other": 140
+    },
+    "minimum_output_copies_at16": 9,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_036520_",
+    "drivers": [
+      {
+        "cell": "_080306_",
+        "type": "NOR2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_036520_"
+      }
+    ],
+    "loads": 140,
+    "receiver_families": {
+      "other": 140
+    },
+    "minimum_output_copies_at16": 9,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_042548_",
+    "drivers": [
+      {
+        "cell": "_087376_",
+        "type": "NAND2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_042548_"
+      }
+    ],
+    "loads": 68,
+    "receiver_families": {
+      "other": 67,
+      "endpoint": 1
+    },
+    "minimum_output_copies_at16": 5,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_025470_",
+    "drivers": [
+      {
+        "cell": "_059725_",
+        "type": "OR3x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_025470_"
+      }
+    ],
+    "loads": 61,
+    "receiver_families": {
+      "other": 60,
+      "credit_rx": 1
+    },
+    "minimum_output_copies_at16": 4,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_014980_",
+    "drivers": [
+      {
+        "cell": "u.u_ep.rr_ok$_DFF_PN0_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_014980_"
+      }
+    ],
+    "loads": 58,
+    "receiver_families": {
+      "other": 58
+    },
+    "minimum_output_copies_at16": 4,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_000021_",
+    "drivers": [
+      {
+        "cell": "u.u_ep.una[6]$_DFF_PN0_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_000021_"
+      }
+    ],
+    "loads": 42,
+    "receiver_families": {
+      "other": 42
+    },
+    "minimum_output_copies_at16": 3,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_029105_",
+    "drivers": [
+      {
+        "cell": "_067763_",
+        "type": "OA22x2_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_029105_"
+      }
+    ],
+    "loads": 37,
+    "receiver_families": {
+      "other": 37
+    },
+    "minimum_output_copies_at16": 3,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_042528_",
+    "drivers": [
+      {
+        "cell": "_087347_",
+        "type": "NOR2x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_042528_"
+      }
+    ],
+    "loads": 37,
+    "receiver_families": {
+      "other": 37
+    },
+    "minimum_output_copies_at16": 3,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_014257_",
+    "drivers": [
+      {
+        "cell": "u.g_safe_rst.g_distributed.u_rr.g_local[4].local_r$_DFF_PN0_",
+        "type": "DFFASRHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "net": "_014257_"
+      }
+    ],
+    "loads": 36,
+    "receiver_families": {
+      "gearbox": 36
+    },
+    "minimum_output_copies_at16": 3,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  },
+  {
+    "root": "_029958_",
+    "drivers": [
+      {
+        "cell": "_068786_",
+        "type": "OAI22x1_ASAP7_75t_R",
+        "pin": "Y",
+        "net": "_029958_"
+      }
+    ],
+    "loads": 33,
+    "receiver_families": {
+      "other": 33
+    },
+    "minimum_output_copies_at16": 3,
+    "upstream_producer_closure": "OPEN: recursively localize same-edge input cones; no common n-load D expression accepted"
+  }
+]

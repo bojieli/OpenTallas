@@ -1,0 +1,138 @@
+[
+  {
+    "master": "ot_sram_1r1w_512x128_m4_r2c2",
+    "source_ref": "HEAD",
+    "count": 10,
+    "dimensions_um": [
+      174.12,
+      29.736
+    ],
+    "source_sha256": {
+      "lef": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
+      "v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+      "tt.lib": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1",
+      "ff.lib": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063"
+    },
+    "signal_clock_contacts_per_face": {
+      "W": 219,
+      "E": 218
+    },
+    "pg_contacts_per_face": {
+      "S": 38,
+      "N": 39
+    },
+    "signal_contact_density_per_um": {
+      "W": 7.364810330912026,
+      "E": 7.331181059994619
+    },
+    "active_contact_spans_um": {
+      "W": [
+        0.78,
+        21.708
+      ],
+      "E": [
+        0.78,
+        21.612000000000002
+      ]
+    },
+    "raw_bits": 655360,
+    "logical_width": 553,
+    "logical_depth": 512,
+    "logical_bits": 566272,
+    "clock_ports": [
+      "clk"
+    ],
+    "actual_array_escape_qualified": false
+  },
+  {
+    "master": "ot_sram_1r1w_32x128_m1",
+    "source_ref": "HEAD",
+    "count": 5,
+    "dimensions_um": [
+      51.408,
+      20.79
+    ],
+    "source_sha256": {
+      "lef": "eaeda6a04d73124db159a54e0160ad4f5f72cc35375732b9b7d7a4c2bf42cbc9",
+      "v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+      "tt.lib": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7",
+      "ff.lib": "a98066b7e8130854b9300f617dd9be0546499a6cbd84397aa30a1629400608a0"
+    },
+    "signal_clock_contacts_per_face": {
+      "W": 199,
+      "E": 198
+    },
+    "pg_contacts_per_face": {
+      "S": 26,
+      "N": 27
+    },
+    "signal_contact_density_per_um": {
+      "W": 9.571909571909572,
+      "E": 9.523809523809524
+    },
+    "active_contact_spans_um": {
+      "W": [
+        0.78,
+        19.788
+      ],
+      "E": [
+        0.78,
+        19.692
+      ]
+    },
+    "raw_bits": 20480,
+    "logical_width": 553,
+    "logical_depth": 8,
+    "logical_bits": 4424,
+    "clock_ports": [
+      "clk"
+    ],
+    "actual_array_escape_qualified": false
+  },
+  {
+    "master": "ot_sram_1r1w2c_32x64_m1",
+    "source_ref": "1298888bc",
+    "count": 10,
+    "dimensions_um": [
+      31.992,
+      17.304
+    ],
+    "source_sha256": {
+      "lef": "d7a029998af5a52564714748de1529d82273b118f2bae53658f5af92ed148d2b",
+      "v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+      "tt.lib": "fd9dfbb0ab5127026d7024a5c59cac0d87b57a6ea42cf9c547abb3e501a2cbe7",
+      "ff.lib": "a2fc1ab2421ecf212aaaecec108a5b1a8d0fd3010c9b584c3648ffd96f2b5989"
+    },
+    "signal_clock_contacts_per_face": {
+      "W": 103,
+      "E": 103
+    },
+    "pg_contacts_per_face": {
+      "S": 22,
+      "N": 22
+    },
+    "signal_contact_density_per_um": {
+      "W": 5.9523809523809526,
+      "E": 5.9523809523809526
+    },
+    "active_contact_spans_um": {
+      "W": [
+        0.78,
+        10.572
+      ],
+      "E": [
+        0.78,
+        10.572
+      ]
+    },
+    "raw_bits": 20480,
+    "logical_width": 595,
+    "logical_depth": 4,
+    "logical_bits": 2380,
+    "clock_ports": [
+      "wclk",
+      "rclk"
+    ],
+    "actual_array_escape_qualified": false
+  }
+]

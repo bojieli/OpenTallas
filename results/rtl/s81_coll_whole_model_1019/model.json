@@ -1,0 +1,83 @@
+{
+  "status": "MODEL_ONLY_NOT_SOURCE_ADMISSION",
+  "netlist_sha256": "512e2b3b6362acd91360d73e09d5c9191163e53cb55d4b07cb22cd86a1d75e0e",
+  "top_cells": 66640,
+  "expanded_cells": 66676,
+  "all_electrical_roots": 52513,
+  "all_over32": 42,
+  "over32_by_role": {
+    "clock": 1,
+    "constant": 2,
+    "data_control": 37,
+    "reset_or_mixed": 2
+  },
+  "output_copy_lower_bound_at16": 1159,
+  "no_sink_cap": true,
+  "transparent_buffers_inverters": true,
+  "expanded_combinational_helper": true,
+  "storage": {
+    "width": 595,
+    "depth": 4,
+    "banks": 10,
+    "bank_width": 64,
+    "bank_depth": 32,
+    "physical_bits": 20480,
+    "logical_bits": 2380,
+    "paid_unused_bits": 18100,
+    "last_bank_useful_bits": 19,
+    "zero_tail_bits": 45,
+    "unreachable_rows": 28,
+    "macro_area_um2": 5535.89568,
+    "macro_clock_pins": 20,
+    "macro_clock_cap_ff": 186.916,
+    "ports_bits_per_cycle": 595,
+    "ports_bytes_per_cycle": 74.375,
+    "logical_peak_slots_per_cycle": 1,
+    "average_sustainable_slots_per_cycle": 0.749267578125,
+    "helper_payload_ff": 1190,
+    "helper_flags": 76,
+    "helper_address_valid_ff": 3,
+    "helper_total_ff": 1269,
+    "helper_compare_groups": 3,
+    "added_edges_proposed": 0
+  },
+  "admission": {
+    "actual_candidate_mapping": null,
+    "actual_clockcap_std": null,
+    "actual_slot": null,
+    "actual_band_fill": null,
+    "actual_pin_reach": null,
+    "new_boundary_miter": null
+  },
+  "whole_lane_memory_decision": {
+    "status": "BLOCKED_EXISTING_512x128_AND_32x128_CONTACT_DENSITY",
+    "preferred_investigation": "actual wider-pitch compiler masters plus primitive escape qualification",
+    "bank64_fallback": {
+      "deep_stores": 2,
+      "banks_per_deep_store": 144,
+      "credit_banks": 9,
+      "gearbox_banks": 10,
+      "total_banks": 307,
+      "raw_bits": 628736,
+      "useful_bits": 573076,
+      "macro_area_um2": 169951.99737599998,
+      "macro_clock_pins": 614,
+      "macro_clock_cap_ff": 5738.3212,
+      "read_merge_inputs_per_deep_store": 16,
+      "arithmetic_outline_um": [
+        1166.4,
+        1166.4
+      ],
+      "actual_fit": null,
+      "added_edges": null
+    },
+    "partial_gearbox_only_outline_um": [
+      648,
+      561.6
+    ],
+    "partial_outline_full_lane_admission": false,
+    "existing_parent_width_lower_bound_um": 1080.0,
+    "existing_parent_reserved_width_um": 950,
+    "producer_copy_graph_complete": false
+  }
+}

@@ -1,0 +1,120 @@
+[
+  {
+    "master": "ot_sram_1r1w_512x128_m4_r2c2",
+    "source_ref": "HEAD",
+    "count": 10,
+    "dimensions_um": [
+      174.12,
+      29.736
+    ],
+    "signal_clock_contacts_per_face": {
+      "W": 219,
+      "E": 218
+    },
+    "pg_contacts_per_face": {
+      "S": 38,
+      "N": 39
+    },
+    "signal_contact_density_per_um": {
+      "W": 7.364810330912026,
+      "E": 7.331181059994619
+    },
+    "active_contact_spans_um": {
+      "W": [
+        0.78,
+        21.708
+      ],
+      "E": [
+        0.78,
+        21.612000000000002
+      ]
+    },
+    "raw_bits": 655360,
+    "logical_width": 553,
+    "logical_depth": 512,
+    "logical_bits": 566272,
+    "clock_ports": [
+      "clk"
+    ],
+    "actual_array_escape_qualified": false
+  },
+  {
+    "master": "ot_sram_1r1w_32x128_m1",
+    "source_ref": "HEAD",
+    "count": 5,
+    "dimensions_um": [
+      51.408,
+      20.79
+    ],
+    "signal_clock_contacts_per_face": {
+      "W": 199,
+      "E": 198
+    },
+    "pg_contacts_per_face": {
+      "S": 26,
+      "N": 27
+    },
+    "signal_contact_density_per_um": {
+      "W": 9.571909571909572,
+      "E": 9.523809523809524
+    },
+    "active_contact_spans_um": {
+      "W": [
+        0.78,
+        19.788
+      ],
+      "E": [
+        0.78,
+        19.692
+      ]
+    },
+    "raw_bits": 20480,
+    "logical_width": 553,
+    "logical_depth": 8,
+    "logical_bits": 4424,
+    "clock_ports": [
+      "clk"
+    ],
+    "actual_array_escape_qualified": false
+  },
+  {
+    "master": "ot_sram_1r1w2c_32x64_m1",
+    "source_ref": "1298888bc",
+    "count": 10,
+    "dimensions_um": [
+      31.992,
+      17.304
+    ],
+    "signal_clock_contacts_per_face": {
+      "W": 103,
+      "E": 103
+    },
+    "pg_contacts_per_face": {
+      "S": 22,
+      "N": 22
+    },
+    "signal_contact_density_per_um": {
+      "W": 5.9523809523809526,
+      "E": 5.9523809523809526
+    },
+    "active_contact_spans_um": {
+      "W": [
+        0.78,
+        10.572
+      ],
+      "E": [
+        0.78,
+        10.572
+      ]
+    },
+    "raw_bits": 20480,
+    "logical_width": 595,
+    "logical_depth": 4,
+    "logical_bits": 2380,
+    "clock_ports": [
+      "wclk",
+      "rclk"
+    ],
+    "actual_array_escape_qualified": false
+  }
+]
