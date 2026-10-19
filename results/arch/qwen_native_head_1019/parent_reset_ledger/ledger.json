@@ -1,0 +1,206 @@
+{
+  "status": "MODEL_ONLY_NATIVE_PARENT_HOLD",
+  "source_commit": "5cd31ebb8",
+  "terminal_receipts_commit": "cd660e13e",
+  "source_sha256": {
+    "rtl/qwen_dv/qfd_dv_slice2_landed_rsafe.sv": "0ed8b53d34155cba493056d16f3186c1d4a0d3163d92bbbe67f8ddc1da8137dd",
+    "rtl/qwen_dv/qfd_dv_su8_landed.sv": "e7780f891c2e18a0b9dfb7e7d15ae9a591a7666fbcae815bbe98ad4dad9b3ec1",
+    "rtl/qwen_dv/qfd_dv_reset_tree.sv": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+    "rtl/test/qwen_dv/qfd_dv_su_lane_native_b64_fixture.sv": "fb4012513ceab19b57db4e5cce46e4ddcfa6631f8fb136b468e5aac027f54775",
+    "rtl/qwen_dv/qfd_dv_head_native_b64.sv": "e42ab0024f36bf139459b2d0945e521549d457318be08f14106d7f783dc45016",
+    "rtl/common/landed_parent/ot_pl_stream_land.sv": "5fefa666adf4533bf33e86601f40571cdf80f4755f60176ed65009e6034a7dab",
+    "rtl/common/landed_parent/ot_pl_land.sv": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+    "rtl/test/qwen_dv/dv_bench.py": "6f1e4bc01176d52b158ec8d5eff0c23480f9e05bc57b749dfbbc3e65df09bd7a",
+    "rtl/test/qwen_dv/dv_bench2.py": "942b31cb8679b3340a4f0e3471aca6fefcaab90d28d6d7fb4a76d171aa3723e4",
+    "rtl/test/qwen_dv/tb_qfd_dv2.sv": "bd6a1a480211a20e8ec5d1e446a848df56c3023fca1a95265debdf03b890dfb3",
+    "rtl/qwen_dv/qfd_dv_slice2_faces.sv": "5bcb6c66809fe10ceff9be87cae62b6534976641979d07b36acb49443c628fc5",
+    "tools/qwen_native_head_1019/run_production.py": "5bfddf3591800230a93cb64da2c16472250d02ab7624085fe88e7ed6b5d41676",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083"
+  },
+  "edge_convention": "E1 is first rising ck after external slice reset deassertion; NBA consumers read old Q. Same-clock, continuously running, reset long enough for synchronous reset trees. Not native signoff.",
+  "same_clock_reset_chain": [
+    {
+      "signal": "slice.rs1",
+      "release_post_edge": 1
+    },
+    {
+      "signal": "slice.rst",
+      "release_post_edge": 2
+    },
+    {
+      "signal": "slice.u_safe_reset.branch",
+      "release_post_edge": 3
+    },
+    {
+      "signal": "slice.sr_reset[319]",
+      "release_post_edge": 4
+    },
+    {
+      "signal": "su.g_rc.rc and su.g_lane[*].g_rl.rl",
+      "release_post_edge": 5
+    },
+    {
+      "signal": "lane_fixture.g_rs.rsr",
+      "release_post_edge": 6
+    },
+    {
+      "signal": "head.u_h.rt existing",
+      "release_post_edge": 7
+    },
+    {
+      "signal": "head.q_* valid first capture permitted",
+      "first_capture_edge": 8
+    },
+    {
+      "signal": "head provisional two-face/two-tree reset replacing rt",
+      "release_post_edge": 10
+    },
+    {
+      "signal": "head provisional q_* valid first capture permitted",
+      "first_capture_edge": 11
+    }
+  ],
+  "candidate_local_release_delta": 3,
+  "native_global_added_edges": null,
+  "native_parent_phase_ps": null,
+  "native_stopped_clock_first_use": null,
+  "native_warm_abort_cohort_clear": null,
+  "guard_semantics": {
+    "run_production_RESET_WARM": 18,
+    "type": "bench event-file offset, not RTL admission guard",
+    "base_Ev_initial_time": 16,
+    "result_first_ordinary_base_event": 34,
+    "setid_event_cycle": 20,
+    "source_parser_subtracts_RESET_WARM_from_outputs": true,
+    "no_production_first_op_contract": true
+  },
+  "actual_terminal_event_inventory": {
+    "a.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 34,
+      "first_SU_command_cycle": 325,
+      "last_SU_command_cycle": 8027,
+      "SU_command_count": 36
+    },
+    "c.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 34,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "e.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 34,
+      "first_SU_command_cycle": 191,
+      "last_SU_command_cycle": 191,
+      "SU_command_count": 1
+    },
+    "f.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 33,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "g.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 34,
+      "first_SU_command_cycle": 248,
+      "last_SU_command_cycle": 1463,
+      "SU_command_count": 5
+    },
+    "k.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 34,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "m_g18_s21.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 33,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "n_legal.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 33,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "n_mixed.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 33,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "o_legal_g30.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 33,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "o_ovl_g4.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 33,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    },
+    "q.ev": {
+      "first_event_cycle": 20,
+      "first_non_setid_event_cycle": 34,
+      "first_SU_command_cycle": null,
+      "last_SU_command_cycle": null,
+      "SU_command_count": 0
+    }
+  },
+  "cohort": {
+    "SU_ready": "!active && ((i_sfu == cls) || inflight == 0)",
+    "accept": "go unconditionally; ready is diagnostic only",
+    "class_clear": "accept && i_sfu != cls, observed after lane input pipeline",
+    "user_port_on_head": false,
+    "user3_evidence": "MU_NU=4 slice transport passes; no per-user reset/cohort identity on head ports; caller schedule must serialize actual class ownership",
+    "all_class_orderings_proved": false
+  },
+  "storage": {
+    "same_native_macros": {
+      "ot_sram_1r1w_32x64_m1": 13,
+      "ot_sram_1r1w2c_128x64_m1": 2
+    },
+    "head_data_edge_delta": 0,
+    "regional_SU_edge_delta_separate": 6,
+    "holding_candidates": 201,
+    "holding_bits": 722,
+    "unused_dmd_tail_captures": 7,
+    "unsafe_roots": 83,
+    "current_rt_ultimate_loads": 1603
+  },
+  "next_proposal": {
+    "stage": "model review required before RTL",
+    "reset": "Recompute real sink partition after useful copies and legal holding rings; retain or explicitly price all inherited reset stages; separate assertion behavior from warm release. Require native per-root reset and first accepted pin cohort ledger.",
+    "control": "Useful Boolean/same-edge functional replicas with full transparent all-role recensus, including upstream D/reset roots.",
+    "holding": "Audit each of 201 chains: exact enable/hold/clear and consumer-live interval, then finite ring construction for depth>=3; no blanket packing or shift exemption.",
+    "tail": "Prune seven unused tail captures only after all output/SFU/class consumer cones and actual numerical witnesses retain identity."
+  },
+  "first_input_ledger": {
+    "producer": "slice c_su=go && kind==1 decoded from registered cmd_q; actual SU configuration si read by SRAM p_re(c_su)",
+    "SU_go": "two resettable ck stages u_sug; distinct reset leaves318 and319 require equal-depth native release proof",
+    "head_route": "SU accept/active -> HOPS3 u_ctl -> outer lane IREG1 -> head input FF -> e_v=emit0",
+    "fixed_steady_HOPS3_contract_edges": 3,
+    "native_first_accepted_head_cohort_edge": null,
+    "earliest_source_SU_command_epoch": null,
+    "price_status": "Cannot claim scalar guard absorbs reset delta before producer epoch and independently running lane reset first-use proof."
+  },
+  "limitations": [
+    "No new simulation: this is source and terminal-event inspection only.",
+    "Existing trimmed W10 source has no reset forest; conditional provisional reset chain is a model, not observed RTL.",
+    "Existing dirty-reset pair/unit evidence is not a stopped-parent-clock, arbitrary regional phase, warm-abort or all class/user permutation proof."
+  ]
+}
