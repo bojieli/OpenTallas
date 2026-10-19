@@ -51,11 +51,11 @@ module tb_hbm_bw_pc4;
  tb_svg_rel_dram_sparse dram(.clk(hbm),.rst_n(rst_n),.row_v(row_v),.row_op(row_op),.row_bank(row_bank),.row_row(row_row),.col_v(col_v),
   .col_we(col_we),.col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata));
  // ---------------- owner model per PC
- integer cyc=0;
+ integer cyc=0;integer pause_until[0:3];
  integer bi[0:3],t[0:3],outst[0:3],beats[0:3][0:31],done_at[0:3],first_at[0:3],warm_at[0:3],cols[0:3],ret[0:3],refs[0:3],acts[0:3];
  integer blk_ret[0:3][0:MAXB-1],blk_need[0:3][0:MAXB-1],tagblk[0:3][0:31];
  integer gap_n[0:3],gap_cyc[0:3],last_col[0:3];
- initial for(integer p=0;p<4;p=p+1)begin bi[p]=0;t[p]=0;outst[p]=0;done_at[p]=-1;first_at[p]=-1;warm_at[p]=-1;cols[p]=0;ret[p]=0;refs[p]=0;acts[p]=0;
+ initial for(integer p=0;p<4;p=p+1)begin pause_until[p]=0;bi[p]=0;t[p]=0;outst[p]=0;done_at[p]=-1;first_at[p]=-1;warm_at[p]=-1;cols[p]=0;ret[p]=0;refs[p]=0;acts[p]=0;
   gap_n[p]=0;gap_cyc[p]=0;last_col[p]=-1;for(integer e=0;e<32;e=e+1)beats[p][e]=0;end
  function automatic [29:0]addr_of(input integer pc,input [14:0]row,input [2:0]slot,input [9:0]tt,input full);
   reg[9:0]ts,mt;reg[4:0]db,col,hi5;reg[2:0]bhi;reg[1:0]blo;
@@ -77,12 +77,16 @@ module tb_hbm_bw_pc4;
    if(kv[p]&&krdy[p])begin
     if(first_at[p]<0)first_at[p]=cyc;
     beats[p][ktag[p][4:0]]=klen[p];tagblk[p][ktag[p][4:0]]=bi[p];outst[p]=outst[p]+1;
-    w=blk_m[bi[p]][7:0];t[p]=t[p]+klen[p];if(t[p]>=w)begin bi[p]=bi[p]+1;t[p]=0;end
+    w=blk_m[bi[p]][7:0];t[p]=t[p]+klen[p];if(t[p]>=w)begin bi[p]=bi[p]+1;t[p]=0;
+`ifdef BURST_GAPS
+      pause_until[p]=cyc+((bi[p]*37)%97);
+`endif
+     end
    end
    if(!(kv[p]&&!krdy[p]))begin:ISS
     integer e2;
     kv[p]<=0;e2=-1;for(integer e=31;e>=0;e=e-1)if(beats[p][e]==0)e2=e;
-    if(bi[p]<nb&&outst[p]<32&&e2>=0)begin
+    if(bi[p]<nb&&outst[p]<32&&e2>=0&&cyc>=pause_until[p])begin
      row=blk_m[bi[p]][25:11];slot=blk_m[bi[p]][10:8];w=blk_m[bi[p]][7:0];full=(w>=t[p]+4);
      kv[p]<=1;kaddr[p]<=addr_of(p,row,slot,10'(t[p]),full);klen[p]<=full?4'd4:4'd1;ktag[p]<=17'(e2);
     end

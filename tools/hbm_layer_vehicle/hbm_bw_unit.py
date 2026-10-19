@@ -97,6 +97,7 @@ def run(a):
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
     defs = (["H9B"] if a.h9b else (["MR","SAFE"] if a.safe else (["MR"] if a.mr else []))) + (["MRKEY0"] if a.mrkey0 else []) + (["GAPS"] if a.gaps else [])
     defs += ["OT_PC_CFG_MUT_PC"] if a.pc_mut else []
+    defs += ["BURST_GAPS"] if a.burst else []
     tag = "_".join(defs) or "base"
     import hashlib
     h = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in FILES)).hexdigest()[:10]
@@ -136,7 +137,7 @@ def main():
     g = sp.add_parser("gen"); g.add_argument("--pattern", required=True); g.add_argument("--out", required=True)
     g.add_argument("--layers", type=int, default=4); g.add_argument("--seed", type=int, default=1)
     r = sp.add_parser("run"); r.add_argument("--work", required=True); r.add_argument("--pattern", required=True)
-    r.add_argument("--pc-mut", action="store_true"); r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
+    r.add_argument("--burst", action="store_true"); r.add_argument("--pc-mut", action="store_true"); r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
     r.add_argument("--gaps", action="store_true"); r.add_argument("--layers", type=int, default=4)
     r.add_argument("--seed", type=int, default=1); r.add_argument("--warm", type=int, default=8)
     a = ap.parse_args()
