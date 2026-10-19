@@ -1,0 +1,30 @@
+{
+  "scope": "native_first_record_programme_component",
+  "qualifies_full_token": false,
+  "qualifies_full_layer": false,
+  "verilator": "5.050",
+  "source_vehicle": "ot-epyc5:/srv/opentallas-scratch/claude/layerbench-hbm/sw5e",
+  "native_master_sha256": "62fd2c9884b4589d8dcc9be3528c46700e7dff92c83b491774ccb02b866f6b73",
+  "commands": 44,
+  "config_writes": 56,
+  "production_positive": "PASS",
+  "old_bank_mutant": "FAIL edge0",
+  "old_startup_mutant": "FAIL got9 expected5",
+  "physical_index_banks": 4,
+  "old_image_index_banks": 1,
+  "startup_consumer_edges": 9,
+  "job": "oth-ubuntu-2212937-1792425920",
+  "hashes": {
+    "config_fixed.mem": "e3f9a066d9cf195491b7a0ec3a152b1e463c6a709b93f8026fa56b83d6dc0ea7",
+    "run_compiler_test.py": "a7776a5c57db221873faa187cdebb70e13b5bb4227a9334b7db78d1c1f93d872",
+    "mutant_old_startup.log": "490b63092719c8ca834a42b884c7557c9bc806ca022736703c21311761e2e349",
+    "config_old.mem": "dc4446946659937f27c3e309c48a8b10f756a84a1d042a0aa1b974118aa41f67",
+    "expected.mem": "098fae463af25a592f1e7a99eeceed80a7eae546460c1addd6a760de73f7060c",
+    "positive2.log": "132a9d351bce78f333eef7a03b9a64ae3c920fb7f30ba739bc2709d8387267a4",
+    "mutant_old_bank2.log": "66844e9c4d436f273f61f1d715c0b8adf627b16b99ecef214e314fe3e7e4d7b0",
+    "tb.sv": "638913c3f33d201e3904504b30ecca605ce7c19f1b2f54a8c511b18b10eb9e86",
+    "compiler.log": "7ea99c510488a1cc3463dabf78675ea367c7a0f4666f7dd5d4dab4e1a8b1081e",
+    "patch_first_replay.py": "9c6561f7cab9f994a60aa791c6e391ecc113fe2bea6dc357f5b3709e2d87d964",
+    "ot_hbm_su_programme_pslice_c5.sv": "62fd2c9884b4589d8dcc9be3528c46700e7dff92c83b491774ccb02b866f6b73"
+  }
+}
