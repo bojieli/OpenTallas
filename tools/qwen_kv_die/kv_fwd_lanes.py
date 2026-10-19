@@ -523,11 +523,13 @@ def main(argv=None):
     if pf.exists():
         pj = json.loads(pf.read_text())
         pads = pj.setdefault('pads', {})
+        # Pin source masters before render() replaces the original relay lines.
+        source_masters = {m.group(3): m.group(2) for ln in lines0 if (m := INST.match(ln))}
         # Instance-exact relay pads retain their payload bit indexes when a standard becomes a lane station/landing.
         for inst, (mst, _conn) in new.items():
             ent = pj.get('instances', {}).get(inst)
             if ent is not None:
-                if ent.get('master') != insts[inst][0]:
+                if ent.get('master') != source_masters.get(inst):
                     raise ValueError(f'{inst}: pad declaration master does not match the replaced standard')
                 ent['master'] = mst
                 ent['reason'] = 'Forwarded lane preserves this replica payload bit indexes: ' + ent['reason']
