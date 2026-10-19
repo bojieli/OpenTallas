@@ -586,8 +586,17 @@ def cmd_run(a):
     d = a.out_dir
     n = write_events(c, d)
     t0 = time.time()
+    phase_case = dict(hbm_ref_base=int(os.environ.get('SMB_HBM_REF_BASE', 0)),
+                      hbm_clock_offset_ps=int(os.environ.get('SMB_HBM_CLOCK_OFFSET_PS', 173)),
+                      hbm_reset_extra=int(os.environ.get('SMB_HBM_RESET_EXTRA', 0)))
+    if (phase_case != dict(hbm_ref_base=0,hbm_clock_offset_ps=173,hbm_reset_extra=0)
+            and 'HBM_SAFE_COMPOSED' not in defines):
+        raise SystemExit('adverse phase cases require source-owned HBM_SAFE_COMPOSED')
+    phase_args=[f"+HBM_REF_BASE={phase_case['hbm_ref_base']}",
+                f"+HBM_CLOCK_OFFSET_PS={phase_case['hbm_clock_offset_ps']}",
+                f"+HBM_RESET_EXTRA={phase_case['hbm_reset_extra']}"]
     r = subprocess.run([str(exe), f"+ING={d}/ing.hex", f"+XW={d}/xw.hex", f"+IDS={d}/ids.hex", f"+MEM={d}/mem.hex",
-                        f"+NI={n['NI']}", f"+NX={n['NX']}", f"+ND={n['ND']}", f"+END={n['END']}"],
+                        f"+NI={n['NI']}", f"+NX={n['NX']}", f"+ND={n['ND']}", f"+END={n['END']}"]+phase_args,
                        capture_output=True, text=True, cwd=d)
     log = r.stdout + r.stderr
     (d / "run.log").write_text(log)
@@ -605,6 +614,7 @@ def cmd_run(a):
                static_schedule=dict(first_go=FIRST_GO, op_gap=OP_GAP, x_gap=X_GAP, drain=DRAIN,
                                     pace_num=PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, fetch=FETCH,
                                     expert_first=EXP_FIRST, ids_lag=IDS_LAG, go_latency=LAT_GO, layout=LAYOUT),
+               physical_phase=phase_case, native_reset_release_edges=5 if "HBM_SAFE_COMPOSED" in defines else None,
                budget=c["budget"], events=n, fault=fault, done=done, runs_done=runs, gos=len(gos), go_slots_exact=go_ok,
                sim_s=round(time.time() - t0, 1), run_rc=r.returncode, run_log_sha256=sha(d / "run.log"), ops=ops,
                verdict="PASS" if ok else "FAIL")

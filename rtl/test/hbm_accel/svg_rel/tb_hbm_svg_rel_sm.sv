@@ -17,7 +17,18 @@
 module tb_hbm_svg_rel_sm;
  parameter integer MAXI=8192, MAXX=65536, MAXD=64, NID=6;
  reg stream=0,hbm=0;initial forever begin #416.666 stream=1;#416.667 stream=0;end
- initial begin #173;forever #512 hbm=~hbm;end
+ integer hbm_clock_offset_ps=173,hbm_ref_base=0,hbm_reset_extra=0;
+ initial begin
+  if($value$plusargs("HBM_CLOCK_OFFSET_PS=%d",hbm_clock_offset_ps))begin end
+  if(hbm_clock_offset_ps<0||hbm_clock_offset_ps>1023)$fatal(1,"HBM clock phase");
+  #(hbm_clock_offset_ps);forever #512 hbm=~hbm;
+ end
+ initial begin
+  if($value$plusargs("HBM_REF_BASE=%d",hbm_ref_base))begin end
+  if($value$plusargs("HBM_RESET_EXTRA=%d",hbm_reset_extra))begin end
+  if(hbm_ref_base<0||hbm_ref_base>28||hbm_ref_base%4!=0||hbm_reset_extra<0||hbm_reset_extra>118)
+    $fatal(1,"HBM static phase configuration");
+ end
  reg srst=0,hrst=0;
  // ---------------- event lists
  reg[351:0]ing_m[0:MAXI-1];reg[2095:0]xw_m[0:MAXX-1];reg[95:0]ids_m[0:MAXD-1];
@@ -60,21 +71,35 @@ module tb_hbm_svg_rel_sm;
  // Minimum production component: this SM owns PCs0..3. Four complete real
  // leaves retain all bank/refresh state; the remaining DRAM fixture lanes have
  // no requesting SM and are outside the measurement. Released masters stay32PC.
- wire[3:0]safe_pf,safe_of,safe_bridge_fault;
- wire[3:0]native_rv,native_rrdy;wire[67:0]native_rt;wire[15:0]native_rb;wire[1023:0]native_rd;
- assign native_fault=|safe_pf || |safe_of || |safe_bridge_fault || (row_v[0]&&row_v[1]) || (row_v[2]&&row_v[3]);
+ wire[3:0]safe_pf,safe_of;
+ assign native_fault=|safe_pf || |safe_of || (row_v[0]&&row_v[1]) || (row_v[2]&&row_v[3]);
  for(genvar p=0;p<4;p=p+1)begin:g_safe_pc
-  ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)) u(
-   .clk(hbm),.rst_n(hrst),.k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
-   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(native_rv[p]),.kr_rdy(native_rrdy[p]),.kr_tag(native_rt[p*17+:17]),.kr_beat(native_rb[p*4+:4]),.kr_data(native_rd[p*256+:256]),
+`ifdef HBM_SAFE_COMPOSED
+  wire[5:0]owner_split;
+  wire[7:0]rp=8'((hbm_ref_base+p)*118/32%118);
+  wire[7:0]reload=8'(118+rp+((rp+118+hbm_ref_base+p)%2));
+  assign safe_of[p]=|owner_split;
+  ot_hbm_svc_pc_ctrl_leaf_cfg_safe_legacy #(.RESET_LANDING(2)) u(
+   .clk(hbm),.rst_n(hrst),.pc_id(5'(p)),.refresh_reload(reload),
+   .k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(rv_[p]),.kr_rdy(rrdy[p]),.kr_tag(rt[p*17+:17]),.kr_beat(rb[p*4+:4]),.kr_data(rd[p*256+:256]),
    .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
    .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
-   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(safe_pf[p]),.owner_fault(safe_of[p]));
-  // Compatibility with this legacy SM producer's same-edge return arbiter.
-  // Released native H9b/SAFE controllers retain their previous-ready ABI.
-  ot_hbm_svc_kr_ready_bridge u_kr_bridge(.clk(hbm),.rst_n(hrst),
-   .in_v(native_rv[p]),.in_rdy(native_rrdy[p]),.in_data({native_rt[p*17+:17],native_rb[p*4+:4],native_rd[p*256+:256]}),
-   .out_v(rv_[p]),.out_rdy(rrdy[p]),.out_data({rt[p*17+:17],rb[p*4+:4],rd[p*256+:256]}),.fault(safe_bridge_fault[p]),.occupancy());
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(safe_pf[p]),.owner_fault_split(owner_split));
+`else
+  wire native_v,native_rdy,native_pf,bridge_pf;wire[17:0]native_v_regions;
+  wire[16:0]native_tag;wire[3:0]native_beat;wire[255:0]native_data;
+  assign safe_pf[p]=native_pf|bridge_pf;
+  ot_hbm_svc_pc_ctrl_leaf_safe #(.P(p)) u(
+   .clk(hbm),.rst_n(hrst),.k_v(kv[p]),.k_rdy(krdy[p]),.k_we(kwe[p]),.k_addr(ka[p*30+:30]),.k_len(kl[p*4+:4]),.k_tag(kt[p*17+:17]),
+   .k_wdata(kw[p*256+:256]),.k_wstrb(ks[p*32+:32]),.kr_v(native_v),.kr_v_regions(native_v_regions),.kr_rdy(native_rdy),.kr_tag(native_tag),.kr_beat(native_beat),.kr_data(native_data),
+   .k_wr_done(kdone[p]),.row_v(row_v[p]),.row_op(row_op[p*3+:3]),.row_bank(row_bank[p*5+:5]),.row_row(row_row[p*19+:19]),
+   .col_v(col_v[p]),.col_we(col_we[p]),.col_bank(col_bank[p*5+:5]),.col_col(col_col[p*5+:5]),.col_data(col_data[p*256+:256]),.col_strb(col_strb[p*32+:32]),
+   .dram_rvalid(dram_rvalid[p]),.dram_rdata(dram_rdata[p*256+:256]),.pc_fault(native_pf),.owner_fault(safe_of[p]));
+  ot_hbm_svc_kr_ready_bridge #(.REGIONAL_VALID(1)) u_kr_bridge(.clk(hbm),.rst_n(hrst),
+   .in_v(native_v),.in_v_regions(native_v_regions),.in_rdy(native_rdy),.in_data({native_tag,native_beat,native_data}),
+   .out_v(rv_[p]),.out_rdy(rrdy[p]),.out_data({rt[p*17+:17],rb[p*4+:4],rd[p*256+:256]}),.fault(bridge_pf),.occupancy());
+`endif
  end
  assign row_v[31:4]=0;assign col_v[31:4]=0;assign col_we[31:4]=0;
  assign krdy[31:4]=0;assign rv_[31:4]=0;
@@ -140,7 +165,7 @@ module tb_hbm_svg_rel_sm;
   f=$fopen(fm,"r");if(f==0)$fatal(1,"MEM");
   while(!$feof(f))begin code=$fscanf(f,"%h %h\n",sa,sd);if(code==2)begin dram.mem[sa]=sd;nm=nm+1;end end
   $fclose(f);$display("MEM sectors=%0d",nm);
-  repeat(4)@(negedge stream);srst=1;repeat(3)@(negedge hbm);hrst=1;
+  repeat(4)@(negedge stream);srst=1;repeat(3+hbm_reset_extra)@(negedge hbm);hrst=1;
   wait(cyc>=nend);
   $display("DONE cycles=%0d results=%0d gos=%0d runs=%0d ing=%0d/%0d xw=%0d/%0d ids=%0d/%0d dram_reads=%0d",cyc,nres,ngo,nrun,pi,ni,px,nx,pd,nd,dram.reads);
   $finish;
