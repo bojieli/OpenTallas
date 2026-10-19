@@ -58,7 +58,27 @@ module ot_dsdv_host_afifo_sram #(parameter integer W=514, AW=4, SYNC=2) (
 `endif
  wire we=wrst_n&&push;
  wire [3:0] wa={{(4-AW){1'b0}},wbin[AW-1:0]};
-`ifdef OT_S81_SH_BANK64
+`ifdef OT_S81_SH_RSZ
+ // S81-SHLK s10: right-sized dual-clock masters (tools/mem_compiler/build_sh_rsz_1019.py): W 514 = two 16x257
+ // (89.4 x 39.4 um), W 289 = one 16x289 (99.1 x 44.0 um), instead of one pin-limited 16x546 (176.9 x 81 um, 825
+ // contacts a face, write data split over both faces).  Same addresses, enables, Gray/credit law and edges.
+ if(W==514) begin:g_rsz2
+`ifdef S81SH_RSZ_MUT_SWAP
+  ot_sram_1r1w2c_16x257_m1 u_mem0(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[256:0]),
+   .w_ce_in(we),.w_addr_in(wa),.wd_in({wdata[256:1],wdata[0]^wdata[300]}),.w_mask_in({257{1'b1}}));   // mutant: one bit of the low half corrupted by the high half
+`else
+  ot_sram_1r1w2c_16x257_m1 u_mem0(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[256:0]),
+   .w_ce_in(we),.w_addr_in(wa),.wd_in(wdata[256:0]),.w_mask_in({257{1'b1}}));
+`endif
+  ot_sram_1r1w2c_16x257_m1 u_mem1(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata[513:257]),
+   .w_ce_in(we),.w_addr_in(wa),.wd_in(wdata[513:257]),.w_mask_in({257{1'b1}}));
+ end else if(W==289) begin:g_rsz1
+  ot_sram_1r1w2c_16x289_m1 u_mem(.wclk(wclk),.rclk(rclk),.r_ce_in(re),.r_addr_in(ra),.rd_out(rdata),
+   .w_ce_in(we),.w_addr_in(wa),.wd_in(wdata),.w_mask_in({289{1'b1}}));
+ end else begin:g_rsz_bad
+  initial $fatal(1,"OT_S81_SH_RSZ: no right-sized master for W=%0d",W);
+ end
+`elsif OT_S81_SH_BANK64
  // S81-SHLK s10 (sr9 gate: the 176.9 x 81 um 16x546 macro is pin-limited, 825 contacts a face = 10.2/um, its write
  // data split over both faces, 2% array efficiency): ceil(W/64) native 32x64 dual-clock banks (31.99 x 17.30 um,
  // 103 contacts a face <= 6/um), rows 16..31 unused, address zero-extended.  Same Gray/credit law, same edges.

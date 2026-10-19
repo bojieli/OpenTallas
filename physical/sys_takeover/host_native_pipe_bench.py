@@ -60,7 +60,7 @@ extra = {
 }
 extra["raw_fenced_stall"]["mstall"] = 90
 # Exercise the actual failed block-address cone across ap1_gs[7] / sb boundary.
-if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10','banktail10'):
+if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10','banktail10','rszswap10','sramcur10'):
     extra['ikey_cross_sb'] = C.case_ikey(np.random.default_rng(20261019),256,first=32720,ndie=4,die=2,ns=4)
 for name, c in extra.items():
     c["nb"] = [(d >> 240) & 0xFFFF for d in c["descs"]]
@@ -99,6 +99,8 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         "sprh10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPRH"], "spkind10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_SPKIND"],
         "rac10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_RAC"],
         "banktail10": ["-DOT_HOSTNATIVE_PIPE10", "-DS81SH_BANK_MUT_TAIL"],   # run with HNP_SRAM=1 HNP_BANK64=1
+        "rszswap10": ["-DOT_HOSTNATIVE_PIPE10", "-DS81SH_RSZ_MUT_SWAP"],     # run with HNP_SRAM=1 HNP_RSZ=1
+        "sramcur10": ["-DOT_HOSTNATIVE_PIPE10", "-DS81SH_SRAM_MUT_CURRENT"],  # run with HNP_SRAM=1 (+ HNP_RSZ=1)
         "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
         "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
@@ -133,6 +135,10 @@ if os.environ.get('HNP_VERILATOR') == '1':
 if os.environ.get('HNP_SRAM') == '1':
     defs += ['-DOT_S81_SH_SRAM']
     srcs += [R/'rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv', R/'physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v']
+if os.environ.get('HNP_RSZ') == '1':         # S81-SHLK s10: right-sized 16x257 / 16x289 masters
+    defs += ['-DOT_S81_SH_RSZ']
+    srcs += [R/'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1.v',
+             R/'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1.v']
 if os.environ.get('HNP_BANK64') == '1':      # S81-SHLK s10: native 32x64 banks instead of the 16x546 macro
     defs += ['-DOT_S81_SH_BANK64']
     srcs += [R/'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v']

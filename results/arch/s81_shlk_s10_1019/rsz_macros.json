@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.s81shlk.rsz_macros.1019",
+ "masters": [
+  {
+   "master": "ot_sram_1r1w2c_16x257_m1",
+   "words": 16,
+   "bits": 257,
+   "width_um": 89.448,
+   "height_um": 39.432,
+   "area_um2": 3527.113536,
+   "contacts": 783,
+   "contacts_per_um_face": 9.928,
+   "clk_to_q_ps_tt": 258.62350680788563
+  },
+  {
+   "master": "ot_sram_1r1w2c_16x289_m1",
+   "words": 16,
+   "bits": 289,
+   "width_um": 99.144,
+   "height_um": 44.04,
+   "area_um2": 4366.30176,
+   "contacts": 879,
+   "contacts_per_um_face": 9.98,
+   "clk_to_q_ps_tt": 262.49432711968024
+  }
+ ]
+}

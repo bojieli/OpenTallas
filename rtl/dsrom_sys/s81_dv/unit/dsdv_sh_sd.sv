@@ -72,7 +72,12 @@ module dsdv_sh_sd #(
     wire [2:0] read_next=rp+sd_pop;
     wire have_next=n>{3'd0,sd_pop};
     wire [545:0] mem_q;
-`ifdef OT_S81_SH_BANK64
+`ifdef OT_S81_SH_RSZ
+    // S81-SHLK s10: one right-sized 16x289 dual-clock master (both clocks ck), rows 8..15 unused, address zero-extended
+    ot_sram_1r1w2c_16x289_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q[288:0]),
+      .w_ce_in(rn&&iv),.w_addr_in({1'b0,wp}),.wd_in({iwe,ia,id}),.w_mask_in({289{1'b1}}));
+    assign mem_q[545:289] = 257'd0;
+`elsif OT_S81_SH_BANK64
     // S81-SHLK s10: four native 32x64 banks for the 256 data bits (see ot_dsdv_host_afifo_sram) instead of the
     // pin-limited 16x546 macro; {we, addr} (33 b) in an 8 x 33 flop array with the same synchronous held read
     genvar mb;
