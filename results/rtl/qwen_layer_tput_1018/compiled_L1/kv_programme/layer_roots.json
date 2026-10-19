@@ -5,16 +5,16 @@
  "kv_qk_start_after_prefetch": 111,
  "pv_start": 852,
  "layer_relative": {
-  "ctrl_go": 512,
-  "kgo": 512,
-  "vgo": 1364,
-  "attention_issue": 615,
-  "attention_run": 619,
+  "ctrl_go": 514,
+  "kgo": 514,
+  "vgo": 1366,
+  "attention_issue": 617,
+  "attention_run": 621,
   "writer_start": 653,
   "link_start": 3,
-  "expected_quiet": 2404
+  "expected_quiet": 2406
  },
- "start_qk": 622,
+ "start_qk": 624,
  "programme": {
   "source": "tools/qwen_split/sys_face_image.py bench_program()",
   "digest": "514bb0b28004c8e8",
@@ -30,549 +30,549 @@
   "LINK_START": 3
  },
  "stage_end": [
-  6853,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6841,
-  6840
+  6855,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6843,
+  6842
  ],
  "l0_base": 272,
- "token_core_cycles": 246287,
- "link_token_cycles_through_L35": 246287,
+ "token_core_cycles": 246359,
+ "link_token_cycles_through_L35": 246359,
  "rows": [
   {
    "stage": 1,
    "roots": {
-    "ctrl_go": 784,
-    "kgo": 784,
-    "vgo": 1636,
-    "attention_issue": 887,
-    "attention_run": 891,
+    "ctrl_go": 786,
+    "kgo": 786,
+    "vgo": 1638,
+    "attention_issue": 889,
+    "attention_run": 893,
     "writer_start": 925,
     "link_start": 3,
-    "expected_quiet": 2676,
-    "stage_end": 6853
+    "expected_quiet": 2678,
+    "stage_end": 6855
    }
   },
   {
    "stage": 2,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 3,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 4,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 5,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 6,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 7,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 8,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 9,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 10,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 11,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 12,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 13,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 14,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 15,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 16,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 17,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 18,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 19,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 20,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 21,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 22,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 23,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 24,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 25,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 26,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 27,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 28,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 29,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 30,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 31,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 32,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 33,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 34,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 35,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6841
+    "expected_quiet": 2406,
+    "stage_end": 6843
    }
   },
   {
    "stage": 36,
    "roots": {
-    "ctrl_go": 512,
-    "kgo": 512,
-    "vgo": 1364,
-    "attention_issue": 615,
-    "attention_run": 619,
+    "ctrl_go": 514,
+    "kgo": 514,
+    "vgo": 1366,
+    "attention_issue": 617,
+    "attention_run": 621,
     "writer_start": 653,
     "link_start": 3,
-    "expected_quiet": 2404,
-    "stage_end": 6840
+    "expected_quiet": 2406,
+    "stage_end": 6842
    }
   }
  ],
@@ -580,32 +580,32 @@
   {
    "stage": 1,
    "kind": "ctrl_go",
-   "stage_cycle": 784,
-   "token_cycle": 784
+   "stage_cycle": 786,
+   "token_cycle": 786
   },
   {
    "stage": 1,
    "kind": "kgo",
-   "stage_cycle": 784,
-   "token_cycle": 784
+   "stage_cycle": 786,
+   "token_cycle": 786
   },
   {
    "stage": 1,
    "kind": "vgo",
-   "stage_cycle": 1636,
-   "token_cycle": 1636
+   "stage_cycle": 1638,
+   "token_cycle": 1638
   },
   {
    "stage": 1,
    "kind": "attention_issue",
-   "stage_cycle": 887,
-   "token_cycle": 887
+   "stage_cycle": 889,
+   "token_cycle": 889
   },
   {
    "stage": 1,
    "kind": "attention_run",
-   "stage_cycle": 891,
-   "token_cycle": 891
+   "stage_cycle": 893,
+   "token_cycle": 893
   },
   {
    "stage": 1,
@@ -622,1904 +622,1904 @@
   {
    "stage": 1,
    "kind": "expected_quiet",
-   "stage_cycle": 2676,
-   "token_cycle": 2676
+   "stage_cycle": 2678,
+   "token_cycle": 2678
   },
   {
    "stage": 1,
    "kind": "stage_end",
-   "stage_cycle": 6853,
-   "token_cycle": 6853
+   "stage_cycle": 6855,
+   "token_cycle": 6855
   },
   {
    "stage": 2,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 7365
+   "stage_cycle": 514,
+   "token_cycle": 7369
   },
   {
    "stage": 2,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 7365
+   "stage_cycle": 514,
+   "token_cycle": 7369
   },
   {
    "stage": 2,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 8217
+   "stage_cycle": 1366,
+   "token_cycle": 8221
   },
   {
    "stage": 2,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 7468
-  },
-  {
-   "stage": 2,
-   "kind": "attention_run",
-   "stage_cycle": 619,
+   "stage_cycle": 617,
    "token_cycle": 7472
   },
   {
    "stage": 2,
+   "kind": "attention_run",
+   "stage_cycle": 621,
+   "token_cycle": 7476
+  },
+  {
+   "stage": 2,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 7506
+   "token_cycle": 7508
   },
   {
    "stage": 2,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 6856
+   "token_cycle": 6858
   },
   {
    "stage": 2,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 9257
+   "stage_cycle": 2406,
+   "token_cycle": 9261
   },
   {
    "stage": 2,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 13694
+   "stage_cycle": 6843,
+   "token_cycle": 13698
   },
   {
    "stage": 3,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 14206
+   "stage_cycle": 514,
+   "token_cycle": 14212
   },
   {
    "stage": 3,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 14206
+   "stage_cycle": 514,
+   "token_cycle": 14212
   },
   {
    "stage": 3,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 15058
+   "stage_cycle": 1366,
+   "token_cycle": 15064
   },
   {
    "stage": 3,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 14309
+   "stage_cycle": 617,
+   "token_cycle": 14315
   },
   {
    "stage": 3,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 14313
+   "stage_cycle": 621,
+   "token_cycle": 14319
   },
   {
    "stage": 3,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 14347
+   "token_cycle": 14351
   },
   {
    "stage": 3,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 13697
+   "token_cycle": 13701
   },
   {
    "stage": 3,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 16098
+   "stage_cycle": 2406,
+   "token_cycle": 16104
   },
   {
    "stage": 3,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 20535
+   "stage_cycle": 6843,
+   "token_cycle": 20541
   },
   {
    "stage": 4,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 21047
+   "stage_cycle": 514,
+   "token_cycle": 21055
   },
   {
    "stage": 4,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 21047
+   "stage_cycle": 514,
+   "token_cycle": 21055
   },
   {
    "stage": 4,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 21899
+   "stage_cycle": 1366,
+   "token_cycle": 21907
   },
   {
    "stage": 4,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 21150
+   "stage_cycle": 617,
+   "token_cycle": 21158
   },
   {
    "stage": 4,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 21154
+   "stage_cycle": 621,
+   "token_cycle": 21162
   },
   {
    "stage": 4,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 21188
+   "token_cycle": 21194
   },
   {
    "stage": 4,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 20538
+   "token_cycle": 20544
   },
   {
    "stage": 4,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 22939
+   "stage_cycle": 2406,
+   "token_cycle": 22947
   },
   {
    "stage": 4,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 27376
+   "stage_cycle": 6843,
+   "token_cycle": 27384
   },
   {
    "stage": 5,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 27888
+   "stage_cycle": 514,
+   "token_cycle": 27898
   },
   {
    "stage": 5,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 27888
+   "stage_cycle": 514,
+   "token_cycle": 27898
   },
   {
    "stage": 5,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 28740
+   "stage_cycle": 1366,
+   "token_cycle": 28750
   },
   {
    "stage": 5,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 27991
+   "stage_cycle": 617,
+   "token_cycle": 28001
   },
   {
    "stage": 5,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 27995
+   "stage_cycle": 621,
+   "token_cycle": 28005
   },
   {
    "stage": 5,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 28029
+   "token_cycle": 28037
   },
   {
    "stage": 5,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 27379
+   "token_cycle": 27387
   },
   {
    "stage": 5,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 29780
+   "stage_cycle": 2406,
+   "token_cycle": 29790
   },
   {
    "stage": 5,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 34217
+   "stage_cycle": 6843,
+   "token_cycle": 34227
   },
   {
    "stage": 6,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 34729
+   "stage_cycle": 514,
+   "token_cycle": 34741
   },
   {
    "stage": 6,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 34729
+   "stage_cycle": 514,
+   "token_cycle": 34741
   },
   {
    "stage": 6,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 35581
+   "stage_cycle": 1366,
+   "token_cycle": 35593
   },
   {
    "stage": 6,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 34832
+   "stage_cycle": 617,
+   "token_cycle": 34844
   },
   {
    "stage": 6,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 34836
+   "stage_cycle": 621,
+   "token_cycle": 34848
   },
   {
    "stage": 6,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 34870
+   "token_cycle": 34880
   },
   {
    "stage": 6,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 34220
+   "token_cycle": 34230
   },
   {
    "stage": 6,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 36621
+   "stage_cycle": 2406,
+   "token_cycle": 36633
   },
   {
    "stage": 6,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 41058
+   "stage_cycle": 6843,
+   "token_cycle": 41070
   },
   {
    "stage": 7,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 41570
+   "stage_cycle": 514,
+   "token_cycle": 41584
   },
   {
    "stage": 7,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 41570
+   "stage_cycle": 514,
+   "token_cycle": 41584
   },
   {
    "stage": 7,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 42422
+   "stage_cycle": 1366,
+   "token_cycle": 42436
   },
   {
    "stage": 7,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 41673
+   "stage_cycle": 617,
+   "token_cycle": 41687
   },
   {
    "stage": 7,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 41677
+   "stage_cycle": 621,
+   "token_cycle": 41691
   },
   {
    "stage": 7,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 41711
+   "token_cycle": 41723
   },
   {
    "stage": 7,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 41061
+   "token_cycle": 41073
   },
   {
    "stage": 7,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 43462
+   "stage_cycle": 2406,
+   "token_cycle": 43476
   },
   {
    "stage": 7,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 47899
+   "stage_cycle": 6843,
+   "token_cycle": 47913
   },
   {
    "stage": 8,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 48411
+   "stage_cycle": 514,
+   "token_cycle": 48427
   },
   {
    "stage": 8,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 48411
+   "stage_cycle": 514,
+   "token_cycle": 48427
   },
   {
    "stage": 8,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 49263
+   "stage_cycle": 1366,
+   "token_cycle": 49279
   },
   {
    "stage": 8,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 48514
+   "stage_cycle": 617,
+   "token_cycle": 48530
   },
   {
    "stage": 8,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 48518
+   "stage_cycle": 621,
+   "token_cycle": 48534
   },
   {
    "stage": 8,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 48552
+   "token_cycle": 48566
   },
   {
    "stage": 8,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 47902
+   "token_cycle": 47916
   },
   {
    "stage": 8,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 50303
+   "stage_cycle": 2406,
+   "token_cycle": 50319
   },
   {
    "stage": 8,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 54740
+   "stage_cycle": 6843,
+   "token_cycle": 54756
   },
   {
    "stage": 9,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 55252
+   "stage_cycle": 514,
+   "token_cycle": 55270
   },
   {
    "stage": 9,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 55252
+   "stage_cycle": 514,
+   "token_cycle": 55270
   },
   {
    "stage": 9,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 56104
+   "stage_cycle": 1366,
+   "token_cycle": 56122
   },
   {
    "stage": 9,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 55355
+   "stage_cycle": 617,
+   "token_cycle": 55373
   },
   {
    "stage": 9,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 55359
+   "stage_cycle": 621,
+   "token_cycle": 55377
   },
   {
    "stage": 9,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 55393
+   "token_cycle": 55409
   },
   {
    "stage": 9,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 54743
+   "token_cycle": 54759
   },
   {
    "stage": 9,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 57144
+   "stage_cycle": 2406,
+   "token_cycle": 57162
   },
   {
    "stage": 9,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 61581
+   "stage_cycle": 6843,
+   "token_cycle": 61599
   },
   {
    "stage": 10,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 62093
+   "stage_cycle": 514,
+   "token_cycle": 62113
   },
   {
    "stage": 10,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 62093
+   "stage_cycle": 514,
+   "token_cycle": 62113
   },
   {
    "stage": 10,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 62945
+   "stage_cycle": 1366,
+   "token_cycle": 62965
   },
   {
    "stage": 10,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 62196
+   "stage_cycle": 617,
+   "token_cycle": 62216
   },
   {
    "stage": 10,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 62200
+   "stage_cycle": 621,
+   "token_cycle": 62220
   },
   {
    "stage": 10,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 62234
+   "token_cycle": 62252
   },
   {
    "stage": 10,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 61584
+   "token_cycle": 61602
   },
   {
    "stage": 10,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 63985
+   "stage_cycle": 2406,
+   "token_cycle": 64005
   },
   {
    "stage": 10,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 68422
+   "stage_cycle": 6843,
+   "token_cycle": 68442
   },
   {
    "stage": 11,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 68934
+   "stage_cycle": 514,
+   "token_cycle": 68956
   },
   {
    "stage": 11,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 68934
+   "stage_cycle": 514,
+   "token_cycle": 68956
   },
   {
    "stage": 11,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 69786
+   "stage_cycle": 1366,
+   "token_cycle": 69808
   },
   {
    "stage": 11,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 69037
+   "stage_cycle": 617,
+   "token_cycle": 69059
   },
   {
    "stage": 11,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 69041
+   "stage_cycle": 621,
+   "token_cycle": 69063
   },
   {
    "stage": 11,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 69075
+   "token_cycle": 69095
   },
   {
    "stage": 11,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 68425
+   "token_cycle": 68445
   },
   {
    "stage": 11,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 70826
+   "stage_cycle": 2406,
+   "token_cycle": 70848
   },
   {
    "stage": 11,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 75263
+   "stage_cycle": 6843,
+   "token_cycle": 75285
   },
   {
    "stage": 12,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 75775
+   "stage_cycle": 514,
+   "token_cycle": 75799
   },
   {
    "stage": 12,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 75775
+   "stage_cycle": 514,
+   "token_cycle": 75799
   },
   {
    "stage": 12,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 76627
+   "stage_cycle": 1366,
+   "token_cycle": 76651
   },
   {
    "stage": 12,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 75878
+   "stage_cycle": 617,
+   "token_cycle": 75902
   },
   {
    "stage": 12,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 75882
+   "stage_cycle": 621,
+   "token_cycle": 75906
   },
   {
    "stage": 12,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 75916
+   "token_cycle": 75938
   },
   {
    "stage": 12,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 75266
+   "token_cycle": 75288
   },
   {
    "stage": 12,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 77667
+   "stage_cycle": 2406,
+   "token_cycle": 77691
   },
   {
    "stage": 12,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 82104
+   "stage_cycle": 6843,
+   "token_cycle": 82128
   },
   {
    "stage": 13,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 82616
+   "stage_cycle": 514,
+   "token_cycle": 82642
   },
   {
    "stage": 13,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 82616
+   "stage_cycle": 514,
+   "token_cycle": 82642
   },
   {
    "stage": 13,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 83468
+   "stage_cycle": 1366,
+   "token_cycle": 83494
   },
   {
    "stage": 13,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 82719
+   "stage_cycle": 617,
+   "token_cycle": 82745
   },
   {
    "stage": 13,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 82723
+   "stage_cycle": 621,
+   "token_cycle": 82749
   },
   {
    "stage": 13,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 82757
+   "token_cycle": 82781
   },
   {
    "stage": 13,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 82107
+   "token_cycle": 82131
   },
   {
    "stage": 13,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 84508
+   "stage_cycle": 2406,
+   "token_cycle": 84534
   },
   {
    "stage": 13,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 88945
+   "stage_cycle": 6843,
+   "token_cycle": 88971
   },
   {
    "stage": 14,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 89457
+   "stage_cycle": 514,
+   "token_cycle": 89485
   },
   {
    "stage": 14,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 89457
+   "stage_cycle": 514,
+   "token_cycle": 89485
   },
   {
    "stage": 14,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 90309
+   "stage_cycle": 1366,
+   "token_cycle": 90337
   },
   {
    "stage": 14,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 89560
+   "stage_cycle": 617,
+   "token_cycle": 89588
   },
   {
    "stage": 14,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 89564
+   "stage_cycle": 621,
+   "token_cycle": 89592
   },
   {
    "stage": 14,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 89598
+   "token_cycle": 89624
   },
   {
    "stage": 14,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 88948
+   "token_cycle": 88974
   },
   {
    "stage": 14,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 91349
+   "stage_cycle": 2406,
+   "token_cycle": 91377
   },
   {
    "stage": 14,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 95786
+   "stage_cycle": 6843,
+   "token_cycle": 95814
   },
   {
    "stage": 15,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 96298
+   "stage_cycle": 514,
+   "token_cycle": 96328
   },
   {
    "stage": 15,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 96298
+   "stage_cycle": 514,
+   "token_cycle": 96328
   },
   {
    "stage": 15,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 97150
+   "stage_cycle": 1366,
+   "token_cycle": 97180
   },
   {
    "stage": 15,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 96401
+   "stage_cycle": 617,
+   "token_cycle": 96431
   },
   {
    "stage": 15,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 96405
+   "stage_cycle": 621,
+   "token_cycle": 96435
   },
   {
    "stage": 15,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 96439
+   "token_cycle": 96467
   },
   {
    "stage": 15,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 95789
+   "token_cycle": 95817
   },
   {
    "stage": 15,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 98190
+   "stage_cycle": 2406,
+   "token_cycle": 98220
   },
   {
    "stage": 15,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 102627
+   "stage_cycle": 6843,
+   "token_cycle": 102657
   },
   {
    "stage": 16,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 103139
+   "stage_cycle": 514,
+   "token_cycle": 103171
   },
   {
    "stage": 16,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 103139
+   "stage_cycle": 514,
+   "token_cycle": 103171
   },
   {
    "stage": 16,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 103991
+   "stage_cycle": 1366,
+   "token_cycle": 104023
   },
   {
    "stage": 16,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 103242
+   "stage_cycle": 617,
+   "token_cycle": 103274
   },
   {
    "stage": 16,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 103246
+   "stage_cycle": 621,
+   "token_cycle": 103278
   },
   {
    "stage": 16,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 103280
+   "token_cycle": 103310
   },
   {
    "stage": 16,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 102630
+   "token_cycle": 102660
   },
   {
    "stage": 16,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 105031
+   "stage_cycle": 2406,
+   "token_cycle": 105063
   },
   {
    "stage": 16,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 109468
+   "stage_cycle": 6843,
+   "token_cycle": 109500
   },
   {
    "stage": 17,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 109980
+   "stage_cycle": 514,
+   "token_cycle": 110014
   },
   {
    "stage": 17,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 109980
+   "stage_cycle": 514,
+   "token_cycle": 110014
   },
   {
    "stage": 17,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 110832
+   "stage_cycle": 1366,
+   "token_cycle": 110866
   },
   {
    "stage": 17,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 110083
+   "stage_cycle": 617,
+   "token_cycle": 110117
   },
   {
    "stage": 17,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 110087
-  },
-  {
-   "stage": 17,
-   "kind": "writer_start",
-   "stage_cycle": 653,
+   "stage_cycle": 621,
    "token_cycle": 110121
   },
   {
    "stage": 17,
+   "kind": "writer_start",
+   "stage_cycle": 653,
+   "token_cycle": 110153
+  },
+  {
+   "stage": 17,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 109471
+   "token_cycle": 109503
   },
   {
    "stage": 17,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 111872
+   "stage_cycle": 2406,
+   "token_cycle": 111906
   },
   {
    "stage": 17,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 116309
+   "stage_cycle": 6843,
+   "token_cycle": 116343
   },
   {
    "stage": 18,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 116821
+   "stage_cycle": 514,
+   "token_cycle": 116857
   },
   {
    "stage": 18,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 116821
+   "stage_cycle": 514,
+   "token_cycle": 116857
   },
   {
    "stage": 18,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 117673
+   "stage_cycle": 1366,
+   "token_cycle": 117709
   },
   {
    "stage": 18,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 116924
+   "stage_cycle": 617,
+   "token_cycle": 116960
   },
   {
    "stage": 18,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 116928
+   "stage_cycle": 621,
+   "token_cycle": 116964
   },
   {
    "stage": 18,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 116962
+   "token_cycle": 116996
   },
   {
    "stage": 18,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 116312
+   "token_cycle": 116346
   },
   {
    "stage": 18,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 118713
+   "stage_cycle": 2406,
+   "token_cycle": 118749
   },
   {
    "stage": 18,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 123150
+   "stage_cycle": 6843,
+   "token_cycle": 123186
   },
   {
    "stage": 19,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 123662
+   "stage_cycle": 514,
+   "token_cycle": 123700
   },
   {
    "stage": 19,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 123662
+   "stage_cycle": 514,
+   "token_cycle": 123700
   },
   {
    "stage": 19,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 124514
+   "stage_cycle": 1366,
+   "token_cycle": 124552
   },
   {
    "stage": 19,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 123765
-  },
-  {
-   "stage": 19,
-   "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 123769
-  },
-  {
-   "stage": 19,
-   "kind": "writer_start",
-   "stage_cycle": 653,
+   "stage_cycle": 617,
    "token_cycle": 123803
   },
   {
    "stage": 19,
+   "kind": "attention_run",
+   "stage_cycle": 621,
+   "token_cycle": 123807
+  },
+  {
+   "stage": 19,
+   "kind": "writer_start",
+   "stage_cycle": 653,
+   "token_cycle": 123839
+  },
+  {
+   "stage": 19,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 123153
+   "token_cycle": 123189
   },
   {
    "stage": 19,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 125554
+   "stage_cycle": 2406,
+   "token_cycle": 125592
   },
   {
    "stage": 19,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 129991
+   "stage_cycle": 6843,
+   "token_cycle": 130029
   },
   {
    "stage": 20,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 130503
+   "stage_cycle": 514,
+   "token_cycle": 130543
   },
   {
    "stage": 20,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 130503
+   "stage_cycle": 514,
+   "token_cycle": 130543
   },
   {
    "stage": 20,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 131355
+   "stage_cycle": 1366,
+   "token_cycle": 131395
   },
   {
    "stage": 20,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 130606
+   "stage_cycle": 617,
+   "token_cycle": 130646
   },
   {
    "stage": 20,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 130610
+   "stage_cycle": 621,
+   "token_cycle": 130650
   },
   {
    "stage": 20,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 130644
+   "token_cycle": 130682
   },
   {
    "stage": 20,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 129994
+   "token_cycle": 130032
   },
   {
    "stage": 20,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 132395
+   "stage_cycle": 2406,
+   "token_cycle": 132435
   },
   {
    "stage": 20,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 136832
+   "stage_cycle": 6843,
+   "token_cycle": 136872
   },
   {
    "stage": 21,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 137344
+   "stage_cycle": 514,
+   "token_cycle": 137386
   },
   {
    "stage": 21,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 137344
+   "stage_cycle": 514,
+   "token_cycle": 137386
   },
   {
    "stage": 21,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 138196
+   "stage_cycle": 1366,
+   "token_cycle": 138238
   },
   {
    "stage": 21,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 137447
+   "stage_cycle": 617,
+   "token_cycle": 137489
   },
   {
    "stage": 21,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 137451
+   "stage_cycle": 621,
+   "token_cycle": 137493
   },
   {
    "stage": 21,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 137485
+   "token_cycle": 137525
   },
   {
    "stage": 21,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 136835
+   "token_cycle": 136875
   },
   {
    "stage": 21,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 139236
+   "stage_cycle": 2406,
+   "token_cycle": 139278
   },
   {
    "stage": 21,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 143673
+   "stage_cycle": 6843,
+   "token_cycle": 143715
   },
   {
    "stage": 22,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 144185
+   "stage_cycle": 514,
+   "token_cycle": 144229
   },
   {
    "stage": 22,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 144185
+   "stage_cycle": 514,
+   "token_cycle": 144229
   },
   {
    "stage": 22,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 145037
+   "stage_cycle": 1366,
+   "token_cycle": 145081
   },
   {
    "stage": 22,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 144288
+   "stage_cycle": 617,
+   "token_cycle": 144332
   },
   {
    "stage": 22,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 144292
+   "stage_cycle": 621,
+   "token_cycle": 144336
   },
   {
    "stage": 22,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 144326
+   "token_cycle": 144368
   },
   {
    "stage": 22,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 143676
+   "token_cycle": 143718
   },
   {
    "stage": 22,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 146077
+   "stage_cycle": 2406,
+   "token_cycle": 146121
   },
   {
    "stage": 22,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 150514
+   "stage_cycle": 6843,
+   "token_cycle": 150558
   },
   {
    "stage": 23,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 151026
+   "stage_cycle": 514,
+   "token_cycle": 151072
   },
   {
    "stage": 23,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 151026
+   "stage_cycle": 514,
+   "token_cycle": 151072
   },
   {
    "stage": 23,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 151878
+   "stage_cycle": 1366,
+   "token_cycle": 151924
   },
   {
    "stage": 23,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 151129
+   "stage_cycle": 617,
+   "token_cycle": 151175
   },
   {
    "stage": 23,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 151133
+   "stage_cycle": 621,
+   "token_cycle": 151179
   },
   {
    "stage": 23,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 151167
+   "token_cycle": 151211
   },
   {
    "stage": 23,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 150517
+   "token_cycle": 150561
   },
   {
    "stage": 23,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 152918
+   "stage_cycle": 2406,
+   "token_cycle": 152964
   },
   {
    "stage": 23,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 157355
+   "stage_cycle": 6843,
+   "token_cycle": 157401
   },
   {
    "stage": 24,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 157867
+   "stage_cycle": 514,
+   "token_cycle": 157915
   },
   {
    "stage": 24,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 157867
+   "stage_cycle": 514,
+   "token_cycle": 157915
   },
   {
    "stage": 24,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 158719
+   "stage_cycle": 1366,
+   "token_cycle": 158767
   },
   {
    "stage": 24,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 157970
+   "stage_cycle": 617,
+   "token_cycle": 158018
   },
   {
    "stage": 24,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 157974
+   "stage_cycle": 621,
+   "token_cycle": 158022
   },
   {
    "stage": 24,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 158008
+   "token_cycle": 158054
   },
   {
    "stage": 24,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 157358
+   "token_cycle": 157404
   },
   {
    "stage": 24,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 159759
+   "stage_cycle": 2406,
+   "token_cycle": 159807
   },
   {
    "stage": 24,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 164196
+   "stage_cycle": 6843,
+   "token_cycle": 164244
   },
   {
    "stage": 25,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 164708
+   "stage_cycle": 514,
+   "token_cycle": 164758
   },
   {
    "stage": 25,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 164708
+   "stage_cycle": 514,
+   "token_cycle": 164758
   },
   {
    "stage": 25,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 165560
+   "stage_cycle": 1366,
+   "token_cycle": 165610
   },
   {
    "stage": 25,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 164811
+   "stage_cycle": 617,
+   "token_cycle": 164861
   },
   {
    "stage": 25,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 164815
+   "stage_cycle": 621,
+   "token_cycle": 164865
   },
   {
    "stage": 25,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 164849
+   "token_cycle": 164897
   },
   {
    "stage": 25,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 164199
+   "token_cycle": 164247
   },
   {
    "stage": 25,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 166600
+   "stage_cycle": 2406,
+   "token_cycle": 166650
   },
   {
    "stage": 25,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 171037
+   "stage_cycle": 6843,
+   "token_cycle": 171087
   },
   {
    "stage": 26,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 171549
+   "stage_cycle": 514,
+   "token_cycle": 171601
   },
   {
    "stage": 26,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 171549
+   "stage_cycle": 514,
+   "token_cycle": 171601
   },
   {
    "stage": 26,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 172401
+   "stage_cycle": 1366,
+   "token_cycle": 172453
   },
   {
    "stage": 26,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 171652
+   "stage_cycle": 617,
+   "token_cycle": 171704
   },
   {
    "stage": 26,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 171656
+   "stage_cycle": 621,
+   "token_cycle": 171708
   },
   {
    "stage": 26,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 171690
+   "token_cycle": 171740
   },
   {
    "stage": 26,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 171040
+   "token_cycle": 171090
   },
   {
    "stage": 26,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 173441
+   "stage_cycle": 2406,
+   "token_cycle": 173493
   },
   {
    "stage": 26,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 177878
+   "stage_cycle": 6843,
+   "token_cycle": 177930
   },
   {
    "stage": 27,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 178390
+   "stage_cycle": 514,
+   "token_cycle": 178444
   },
   {
    "stage": 27,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 178390
+   "stage_cycle": 514,
+   "token_cycle": 178444
   },
   {
    "stage": 27,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 179242
+   "stage_cycle": 1366,
+   "token_cycle": 179296
   },
   {
    "stage": 27,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 178493
+   "stage_cycle": 617,
+   "token_cycle": 178547
   },
   {
    "stage": 27,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 178497
+   "stage_cycle": 621,
+   "token_cycle": 178551
   },
   {
    "stage": 27,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 178531
+   "token_cycle": 178583
   },
   {
    "stage": 27,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 177881
+   "token_cycle": 177933
   },
   {
    "stage": 27,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 180282
+   "stage_cycle": 2406,
+   "token_cycle": 180336
   },
   {
    "stage": 27,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 184719
+   "stage_cycle": 6843,
+   "token_cycle": 184773
   },
   {
    "stage": 28,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 185231
+   "stage_cycle": 514,
+   "token_cycle": 185287
   },
   {
    "stage": 28,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 185231
+   "stage_cycle": 514,
+   "token_cycle": 185287
   },
   {
    "stage": 28,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 186083
+   "stage_cycle": 1366,
+   "token_cycle": 186139
   },
   {
    "stage": 28,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 185334
+   "stage_cycle": 617,
+   "token_cycle": 185390
   },
   {
    "stage": 28,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 185338
+   "stage_cycle": 621,
+   "token_cycle": 185394
   },
   {
    "stage": 28,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 185372
+   "token_cycle": 185426
   },
   {
    "stage": 28,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 184722
+   "token_cycle": 184776
   },
   {
    "stage": 28,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 187123
+   "stage_cycle": 2406,
+   "token_cycle": 187179
   },
   {
    "stage": 28,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 191560
+   "stage_cycle": 6843,
+   "token_cycle": 191616
   },
   {
    "stage": 29,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 192072
+   "stage_cycle": 514,
+   "token_cycle": 192130
   },
   {
    "stage": 29,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 192072
+   "stage_cycle": 514,
+   "token_cycle": 192130
   },
   {
    "stage": 29,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 192924
+   "stage_cycle": 1366,
+   "token_cycle": 192982
   },
   {
    "stage": 29,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 192175
+   "stage_cycle": 617,
+   "token_cycle": 192233
   },
   {
    "stage": 29,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 192179
+   "stage_cycle": 621,
+   "token_cycle": 192237
   },
   {
    "stage": 29,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 192213
+   "token_cycle": 192269
   },
   {
    "stage": 29,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 191563
+   "token_cycle": 191619
   },
   {
    "stage": 29,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 193964
+   "stage_cycle": 2406,
+   "token_cycle": 194022
   },
   {
    "stage": 29,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 198401
+   "stage_cycle": 6843,
+   "token_cycle": 198459
   },
   {
    "stage": 30,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 198913
+   "stage_cycle": 514,
+   "token_cycle": 198973
   },
   {
    "stage": 30,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 198913
+   "stage_cycle": 514,
+   "token_cycle": 198973
   },
   {
    "stage": 30,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 199765
+   "stage_cycle": 1366,
+   "token_cycle": 199825
   },
   {
    "stage": 30,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 199016
+   "stage_cycle": 617,
+   "token_cycle": 199076
   },
   {
    "stage": 30,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 199020
+   "stage_cycle": 621,
+   "token_cycle": 199080
   },
   {
    "stage": 30,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 199054
+   "token_cycle": 199112
   },
   {
    "stage": 30,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 198404
+   "token_cycle": 198462
   },
   {
    "stage": 30,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 200805
+   "stage_cycle": 2406,
+   "token_cycle": 200865
   },
   {
    "stage": 30,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 205242
+   "stage_cycle": 6843,
+   "token_cycle": 205302
   },
   {
    "stage": 31,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 205754
+   "stage_cycle": 514,
+   "token_cycle": 205816
   },
   {
    "stage": 31,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 205754
+   "stage_cycle": 514,
+   "token_cycle": 205816
   },
   {
    "stage": 31,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 206606
+   "stage_cycle": 1366,
+   "token_cycle": 206668
   },
   {
    "stage": 31,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 205857
+   "stage_cycle": 617,
+   "token_cycle": 205919
   },
   {
    "stage": 31,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 205861
+   "stage_cycle": 621,
+   "token_cycle": 205923
   },
   {
    "stage": 31,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 205895
+   "token_cycle": 205955
   },
   {
    "stage": 31,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 205245
+   "token_cycle": 205305
   },
   {
    "stage": 31,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 207646
+   "stage_cycle": 2406,
+   "token_cycle": 207708
   },
   {
    "stage": 31,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 212083
+   "stage_cycle": 6843,
+   "token_cycle": 212145
   },
   {
    "stage": 32,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 212595
+   "stage_cycle": 514,
+   "token_cycle": 212659
   },
   {
    "stage": 32,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 212595
+   "stage_cycle": 514,
+   "token_cycle": 212659
   },
   {
    "stage": 32,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 213447
+   "stage_cycle": 1366,
+   "token_cycle": 213511
   },
   {
    "stage": 32,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 212698
+   "stage_cycle": 617,
+   "token_cycle": 212762
   },
   {
    "stage": 32,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 212702
+   "stage_cycle": 621,
+   "token_cycle": 212766
   },
   {
    "stage": 32,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 212736
+   "token_cycle": 212798
   },
   {
    "stage": 32,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 212086
+   "token_cycle": 212148
   },
   {
    "stage": 32,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 214487
+   "stage_cycle": 2406,
+   "token_cycle": 214551
   },
   {
    "stage": 32,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 218924
+   "stage_cycle": 6843,
+   "token_cycle": 218988
   },
   {
    "stage": 33,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 219436
+   "stage_cycle": 514,
+   "token_cycle": 219502
   },
   {
    "stage": 33,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 219436
+   "stage_cycle": 514,
+   "token_cycle": 219502
   },
   {
    "stage": 33,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 220288
+   "stage_cycle": 1366,
+   "token_cycle": 220354
   },
   {
    "stage": 33,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 219539
+   "stage_cycle": 617,
+   "token_cycle": 219605
   },
   {
    "stage": 33,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 219543
+   "stage_cycle": 621,
+   "token_cycle": 219609
   },
   {
    "stage": 33,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 219577
+   "token_cycle": 219641
   },
   {
    "stage": 33,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 218927
+   "token_cycle": 218991
   },
   {
    "stage": 33,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 221328
+   "stage_cycle": 2406,
+   "token_cycle": 221394
   },
   {
    "stage": 33,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 225765
+   "stage_cycle": 6843,
+   "token_cycle": 225831
   },
   {
    "stage": 34,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 226277
+   "stage_cycle": 514,
+   "token_cycle": 226345
   },
   {
    "stage": 34,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 226277
+   "stage_cycle": 514,
+   "token_cycle": 226345
   },
   {
    "stage": 34,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 227129
+   "stage_cycle": 1366,
+   "token_cycle": 227197
   },
   {
    "stage": 34,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 226380
+   "stage_cycle": 617,
+   "token_cycle": 226448
   },
   {
    "stage": 34,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 226384
+   "stage_cycle": 621,
+   "token_cycle": 226452
   },
   {
    "stage": 34,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 226418
+   "token_cycle": 226484
   },
   {
    "stage": 34,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 225768
+   "token_cycle": 225834
   },
   {
    "stage": 34,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 228169
+   "stage_cycle": 2406,
+   "token_cycle": 228237
   },
   {
    "stage": 34,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 232606
+   "stage_cycle": 6843,
+   "token_cycle": 232674
   },
   {
    "stage": 35,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 233118
+   "stage_cycle": 514,
+   "token_cycle": 233188
   },
   {
    "stage": 35,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 233118
+   "stage_cycle": 514,
+   "token_cycle": 233188
   },
   {
    "stage": 35,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 233970
+   "stage_cycle": 1366,
+   "token_cycle": 234040
   },
   {
    "stage": 35,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 233221
+   "stage_cycle": 617,
+   "token_cycle": 233291
   },
   {
    "stage": 35,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 233225
+   "stage_cycle": 621,
+   "token_cycle": 233295
   },
   {
    "stage": 35,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 233259
+   "token_cycle": 233327
   },
   {
    "stage": 35,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 232609
+   "token_cycle": 232677
   },
   {
    "stage": 35,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 235010
+   "stage_cycle": 2406,
+   "token_cycle": 235080
   },
   {
    "stage": 35,
    "kind": "stage_end",
-   "stage_cycle": 6841,
-   "token_cycle": 239447
+   "stage_cycle": 6843,
+   "token_cycle": 239517
   },
   {
    "stage": 36,
    "kind": "ctrl_go",
-   "stage_cycle": 512,
-   "token_cycle": 239959
+   "stage_cycle": 514,
+   "token_cycle": 240031
   },
   {
    "stage": 36,
    "kind": "kgo",
-   "stage_cycle": 512,
-   "token_cycle": 239959
+   "stage_cycle": 514,
+   "token_cycle": 240031
   },
   {
    "stage": 36,
    "kind": "vgo",
-   "stage_cycle": 1364,
-   "token_cycle": 240811
+   "stage_cycle": 1366,
+   "token_cycle": 240883
   },
   {
    "stage": 36,
    "kind": "attention_issue",
-   "stage_cycle": 615,
-   "token_cycle": 240062
+   "stage_cycle": 617,
+   "token_cycle": 240134
   },
   {
    "stage": 36,
    "kind": "attention_run",
-   "stage_cycle": 619,
-   "token_cycle": 240066
+   "stage_cycle": 621,
+   "token_cycle": 240138
   },
   {
    "stage": 36,
    "kind": "writer_start",
    "stage_cycle": 653,
-   "token_cycle": 240100
+   "token_cycle": 240170
   },
   {
    "stage": 36,
    "kind": "link_start",
    "stage_cycle": 3,
-   "token_cycle": 239450
+   "token_cycle": 239520
   },
   {
    "stage": 36,
    "kind": "expected_quiet",
-   "stage_cycle": 2404,
-   "token_cycle": 241851
+   "stage_cycle": 2406,
+   "token_cycle": 241923
   },
   {
    "stage": 36,
    "kind": "stage_end",
-   "stage_cycle": 6840,
-   "token_cycle": 246287
+   "stage_cycle": 6842,
+   "token_cycle": 246359
   }
  ],
  "gaps": [

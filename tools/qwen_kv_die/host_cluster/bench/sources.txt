@@ -114,3 +114,10 @@ rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_loader_target_rr.s
 rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_rx_target_rr.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_prompt_capture_pins_rr.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_record_port_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_hkv_cnt_la.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_host_if_pb2_observed_pd.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_qfd_prompt_sram_capture_pd.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_pd/qkd_host_if_pins_observed_pd.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_pd/qkd_host_prompt_capture_pins_pd.sv
+rtl/test/qwen_host/tb_hkv_prompt_pd_equiv.sv
+rtl/test/qwen_host/tb_hkv_cnt_la.sv
