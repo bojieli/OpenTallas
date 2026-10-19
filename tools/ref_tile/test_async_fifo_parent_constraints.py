@@ -267,4 +267,47 @@ class ParentAdmission(unittest.TestCase):
                     self.assertIn('ACTUAL_PARENT_GRAPH_PASS',p.stdout+p.stderr)
 
 
+    # QF-SFAULT 10-18 Gate-Rule: cross-domain asynchronous control only into an ot_reset_sync pipe (rule (c) analogue).
+    FAULT_PARENT = '''module audited_parent(
+ input wire stream_clk,hbm_clk,stream_rst_n,hbm_rst_n,input wire src,output wire wr_ready,output reg [1:0] dout,output reg valid);
+ wire hrst,srst,flt;
+ ot_reset_sync u_hrst(.clk(hbm_clk),.async_rst_n(hbm_rst_n),.sync_rst_n(hrst));
+ ot_reset_sync u_srst(.clk(stream_clk),.async_rst_n(stream_rst_n),.sync_rst_n(srst));
+ reg s_q;always @(posedge hbm_clk or negedge hrst)if(!hrst)s_q<=0;else s_q<=src;
+ ot_hbm_svc_fault_cdc u_cdc(.wr_clk(hbm_clk),.wr_rst_n(hrst),.rd_clk(stream_clk),.rd_rst_n(srst),.src_fault(s_q),
+  .dst_fault(flt),.wr_overflow(),.rd_underflow());
+ assign wr_ready=s_q;
+ wire rx=RSTX;
+ always @(posedge stream_clk or negedge rx)if(!rx)begin dout<=0;valid<=0;end else begin dout<={flt,flt};valid<=flt;end
+endmodule
+'''
+
+    def test_actual_mapped_reset_sync_inputs_bounded_and_unsynchronised_reset_refused(self):
+        for case,rst in (('positive','srst'),('both_reset_mutant','hrst&&srst')):
+            with self.subTest(case=case),tempfile.TemporaryDirectory()as tmp:
+                root=Path(tmp);source_tree(root);s=parent_spec()
+                s['clock_entry_domains']['core'].update(inputs=['stream_rst_n'],outputs=['dout','valid'])
+                s['clock_entry_domains']['hbm'].update(inputs=['hbm_rst_n','src'],outputs=['wr_ready'])
+                (root/'parent.sv').write_text(self.FAULT_PARENT.replace('RSTX',rst))
+                record=A.load(s,root)
+                self.assertIn('u_cdc.u_src_reset',record['reset_syncs']);self.assertIn('u_cdc.u_status.u_wr_reset',record['reset_syncs'])
+                args='read_verilog -sv -DSYNTHESIS '+' '.join(str(root/f)for f in s['sources'])
+                args+='; hierarchy -check -top audited_parent; synth -top audited_parent -flatten -noabc; dffunmap; abc -g simple; clean; write_verilog -noattr -noexpr '+str(root/'mapped.v')+'; write_json '+str(root/'parent.json')
+                p=subprocess.run([YOSYS,'-Q','-T','-p',args],capture_output=True,text=True)
+                self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                m=json.loads((root/'parent.json').read_text())['modules']['audited_parent']
+                (root/'probe.lib').write_text(fixture_lib(m))
+                body=f'read_liberty {{{root}/probe.lib}}\nread_verilog {{{root}/mapped.v}}\nlink_design audited_parent\n'
+                body+=C.clocks(s,833.333)+C.generate(s,root).rsplit('\not_ce_apply\n',1)[0]
+                body+='\nset ins [dict create stream_rst_n core hbm_rst_n hbm src hbm]\n'
+                body+='set outs [dict create wr_ready hbm {dout[0]} core {dout[1]} core valid core]\n'
+                body+='if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message;exit 1}\nputs ACTUAL_PARENT_GRAPH_PASS\nexit 0\n'
+                (root/'mapped.tcl').write_text(body)
+                p=subprocess.run([STA,'-exit',str(root/'mapped.tcl')],capture_output=True,text=True);log=p.stdout+p.stderr
+                if case=='positive':
+                    self.assertEqual(p.returncode,0,log);self.assertIn('ACTUAL_PARENT_GRAPH_PASS',log)
+                    self.assertIn('OT_ASYNC_GRAY BOUNDED reset',log)
+                else:
+                    self.assertNotEqual(p.returncode,0,log);self.assertIn('only an ot_reset_sync pipe may take it',log)
+
 if __name__=='__main__':unittest.main()

@@ -659,8 +659,18 @@ endmodule
 //        clk_r3 : groups 6-7 + the overflow group 8 + ovf_v/ovf_b; captures up_in
 //      Every flop keeps its edge; roots meet only register to register (ordinary related STA, no exception).
 //      up_out / ovf use their own group's control copy (identical D and edge to the CDUP NGR-1 copy).
+// PRE (HH-4 2026-10-18, default 0 = the lockstep-checked form above): PRE = 1 adds ONE input stage in front of the tile.
+//   Route hcoll_v7_tkm_tile_e86-d4f2-21a3c7d78 (TT -166.81, 1,613 D pins; ORFS top paths and the pre-route gate all
+//   u.p_bg[g][*] -> 85-b ot_tkm_lt_live tree -> gn insertion OR -> u.gt[q][j]): p_bg sat on the pin-stage root clk at the
+//   N-face pins (~200 ps of buffered wire to the far row groups) and gt on the regional root, so the 10-level compare
+//   cone crossed roots and paid the different-entry setup reserve (210 ps, clock.sdc pair rule) on top of 60 ps.  Not
+//   fan-out (<= 12 loads a bit) and not a yosys ROM/merge (all 9 p_bg copies present).  With PRE = 1 the pin stage
+//   s_* (clk, one copy at the pins) only registers the inputs; every p_bg / p_vg copy is clocked by ITS row group's root,
+//   so the root crossing is flop -> wire -> flop and the whole compare cone p_bg -> gt is inside one regional tree.
+//   Function = the PRE = 0 tile with clr / conv / ins_v / ins_b (and tid / tau_*) delayed one edge: 4 edges a chain hop
+//   instead of 3; tkm_static's calendar takes TLAT = 4 for this shape (SETTLE = 4 NT + 8, up-chain capture tap +1).
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
-                                 parameter integer LW = 7) (
+                                 parameter integer LW = 7, parameter integer PRE = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -691,11 +701,29 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     (* keep *) reg q_vg [0:NGR-1];
     (* keep *) reg [4*EW-1:0] q_bg [0:NGR-1];
     reg [3:0] gt [0:NP-1];
-    always @(posedge clk) begin
-        p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l; q_v <= p_v;
-        for (integer g = 0; g < NGR; g = g + 1) begin p_vg[g] <= ins_v; p_bg[g] <= ins_b; end
-    end
+    wire i_clr, i_conv, i_v; wire [TW-1:0] i_tid, i_tt; wire [LW-1:0] i_tl; wire [4*EW-1:0] i_b;
     genvar gp, gj, gk, gg;
+    if (PRE != 0) begin : g_pre
+        reg s_clr, s_conv, s_v; reg [TW-1:0] s_tid, s_tt; reg [LW-1:0] s_tl; reg [4*EW-1:0] s_b;
+        always @(posedge clk) begin
+            s_clr <= clr; s_conv <= conv; s_v <= ins_v; s_tid <= tid; s_tt <= tau_t; s_tl <= tau_l; s_b <= ins_b;
+        end
+        assign i_clr = s_clr; assign i_conv = s_conv; assign i_v = s_v; assign i_tid = s_tid; assign i_tt = s_tt;
+        assign i_tl = s_tl; assign i_b = s_b;
+    end else begin : g_nopre
+        assign i_clr = clr; assign i_conv = conv; assign i_v = ins_v; assign i_tid = tid; assign i_tt = tau_t;
+        assign i_tl = tau_l; assign i_b = ins_b;
+    end
+    always @(posedge clk) begin
+        p_clr <= i_clr; p_conv <= i_conv; p_v <= i_v; p_tid <= i_tid; p_tt <= i_tt; p_tl <= i_tl; q_v <= p_v;
+    end
+    for (gg = 0; gg < NGR; gg = gg + 1) begin : g_pbg
+        if (PRE != 0) begin : g_r
+            always @(posedge ckr[rg(gg)]) begin p_vg[gg] <= i_v; p_bg[gg] <= i_b; end
+        end else begin : g_c
+            always @(posedge clk) begin p_vg[gg] <= i_v; p_bg[gg] <= i_b; end
+        end
+    end
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_ctl
         always @(posedge ckr[rg(gg)]) begin
             q_clr_g[gg] <= p_clr; q_conv_g[gg] <= p_conv; q_v_g[gg] <= p_v; q_vg[gg] <= p_vg[gg]; q_bg[gg] <= p_bg[gg];

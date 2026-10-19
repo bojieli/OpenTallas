@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_tkm_static;
  parameter integer KMAX=2048,MUT=0,TP=96,TIE_W_MUT=0;
+ // HH-4 10-18: tile chain hop edges (tkm_static TLAT): 4 for the e86 shape (EW 86 = 78 + RANK_W 8), else 3.
+ localparam integer RW_=TIE_W_MUT?7:$clog2(TP),TL=(78+RW_==86&&KMAX>=64)?4:3;
  reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
  reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
  reg[3:0]slots=0,valids=0;reg[2179:0]flits=0;
@@ -48,7 +50,7 @@ module tb_hgi_coll_tkm_static;
   $readmemh({dir,"/cfg.hex"},cfg);$readmemh({dir,"/a.hex"},a);$readmemh({dir,"/b.hex"},b);
   $readmemh({dir,"/o.hex"},eo);$readmemh({dir,"/r.hex"},er);$readmemh({dir,"/n.hex"},ns);
   G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G>=96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;
-  expected=8+((G*PF+3)/4)*8+2*(3*((KMAX+63)/64)+8)+3*((NOUT+3)/4)+24+1;
+  expected=8+((G*PF+3)/4)*8+2*(TL*((KMAX+63)/64)+8)+3*((NOUT+3)/4)+24+1;
   repeat(10)@(negedge clk);rst_n=1;repeat(10)@(negedge clk);start=1;@(negedge clk);start=0;
   while(!done&&elapsed<expected+20)begin @(negedge clk);elapsed=elapsed+1;end
   if(!done||cycles!=32'(expected))begin errs=errs+1;$display("TIMELINE got%0d expected%0d done%0d",cycles,expected,done);end

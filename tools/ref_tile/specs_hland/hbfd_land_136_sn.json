@@ -1,0 +1,160 @@
+{
+ "name": "hbfd_land_136_sn",
+ "top": "hbfd_land_136_SN",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv",
+  "rtl/hbm_accel/die_glue/ot_hbm_lane.sv",
+  "rtl/qwen_split/qfd_fwd_lane.sv",
+  "rtl/hdc/ot_hdc_cg.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 32.4,
+  "h": 43.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "ckf",
+   "ea",
+   "a"
+  ],
+  "N": [
+   "b"
+  ],
+  "E": [
+   "ck",
+   "rs",
+   "k0",
+   "k1",
+   "k2",
+   "fault"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [
+  "*"
+ ],
+ "refglob": "u_land.o*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "forwarded_clock": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays and Qwen qfwd frames): a lane station is one flip-flop per bit between its pins, a landing is the ring + its registered output; a flow pin register would add a stage the die calendar does not price"
+ },
+ "sdc_extra": [
+  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl",
+  "physical/hbm_lane/land_straps.tcl"
+ ],
+ "boundary_tcl": [
+  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl",
+  "physical/hbm_lane/land_straps.tcl"
+ ],
+ "route": {
+  "pd": 0.45,
+  "threads": 2,
+  "peak_ram_gb": 6,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "HBM-LANDING 10-18 (CLOCK-AUDIT HBM row, LANDING-CONTRACT 2-3, 7): 136-b HBM d4g forwarded-clock lane master hbfd_land_136_SN: landing (4-slot ring, read on the sink regional root) (Qwen cores rtl/qwen_split/qfd_fwd_lane.sv + rtl/hbm_accel/die_glue/ot_hbm_lane.sv); replaces the full-cycle hbfd_rly_136_SN_fc BUFx12f forward (sink-root re-time stage). Recipe 4 flop-first, hold_budget die, M5 cap.",
+ "job": {
+  "owner": "Claude:HBM-LANDING",
+  "branch": "claude/hland-rtl-1018",
+  "tag": "l1",
+  "purpose": "HBM d4g forwarded half-cycle lane master hbfd_land_136_SN (landing (4-slot ring, read on the sink regional root), 136 b)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hbfd_land_136_SN u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/die_glue/hbfd_lane_masters.sv rtl/hbm_accel/die_glue/ot_hbm_lane.sv rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hbm_lane_exact",
+    "cmd": "bash tools/hbm_die_v16/hbm_lane_bench.sh pass {RUN}/bench_p 136",
+    "expect": "pass",
+    "pass_regex": "LANE_BENCH PASS 0 errors in [0-9]+ checks",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sel_mutant",
+    "cmd": "bash tools/hbm_die_v16/hbm_lane_bench.sh sel {RUN}/bench_sel 136",
+    "expect": "fail",
+    "fail_regex": "LANE_BENCH FAIL",
+    "fail_witness": "results/rtl/hbm_lane_1018/w_sel136.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "naive_mutant",
+    "cmd": "bash tools/hbm_die_v16/hbm_lane_bench.sh naive {RUN}/bench_naive 136",
+    "expect": "fail",
+    "fail_regex": "LANE_BENCH FAIL",
+    "fail_witness": "results/rtl/hbm_lane_1018/w_naive136.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vld_mutant",
+    "cmd": "bash tools/hbm_die_v16/hbm_lane_bench.sh vld {RUN}/bench_vld 136",
+    "expect": "fail",
+    "fail_regex": "LANE_BENCH FAIL",
+    "fail_witness": "results/rtl/hbm_lane_1018/w_vld136.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hbfd_land_136_sn/views",
+  "record_to": "results/rtl/ref_tile/hbfd_land_136_sn",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "physical/hbm_lane",
+   "rtl/qwen_split/qfd_fwd_lane.sv",
+   "rtl/hdc",
+   "rtl/hbm_accel/die_glue",
+   "tools/hbm_die_v16/hbm_lane_bench.sh",
+   "results/rtl/hbm_lane_1018"
+  ]
+ }
+}
