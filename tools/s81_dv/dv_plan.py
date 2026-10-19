@@ -78,6 +78,7 @@ PATHFIX = False                   # --pathfix (MU-DIE-S81/PATH 10-19, p4l only):
                                   # relay bodies -- lr/lt_lk lanes 25 um from the end-column frame faces (562 relay 62.6 um
                                   # across), jd_W 10 um under the row-2 frames, 276 xring / unit lanes 15-30 um apart (relay
                                   # 32.4 um across), HBM rq / rd jogs 30 um over the controllers (682 relay 75.6 um across)
+PLACEFIX = False                  # --placefix: true lane/relay geometry, preserve every block slot
 STREET_PITCH = 34.0               # PATHFIX: 276 street lanes 34 um apart (relay 32.4 across + 1.6 um); 11 slots -170..+170
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
@@ -247,7 +248,9 @@ def place_rsv(P, facts):
     controller at cut <= 0.55 (21.1 tracks/um on two layers at 75%: 1,244 / 0.55 / 21.1 = 107 um)."""
     rows1 = [P.blocks[P.idx[f'f_{c}{s}01']] for c, s in P4H_DROP]
     x0 = min(b['x'] for b in rows1); x1 = max(b['x'] + b['w'] for b in rows1)
-    ytop = min(b['y'] for b in rows1) - 30.0
+    # Spend 70 um of the existing north-edge whitespace on the MU south
+    # channel. BAND shifts the frame/slice array, while service slots stay exact.
+    ytop = min(b['y'] for b in rows1) - (100.0 if PLACEFIX else 30.0)
     ctop = 1200.0 + CTRL_H
     y0 = ctop + RSV_CH
     # each upper slice takes the column gap (left or right) nearest its controller; a gap is RSV_GU wide per
@@ -1249,6 +1252,64 @@ def lane_band_over_block(P, pin_pitch=0.096, eps=0.5):
     return over, pairs
 
 
+def legalize_stations(P):
+    """Slide overlapping relay bodies along their own straight lane (no added edge).
+
+    Adjacent 16-um margin tracks are narrower than a 25.92-um relay. Stagger
+    their *station* positions rather than widening all die columns. Preserve
+    the path, register count, and <=405-um register-to-register wire budget.
+    """
+    from dv_rvcase import Placer
+    placer = Placer(DIE_W, DIE_H)
+    for b in P.blocks:
+        placer.add((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+    sizes = {70: ((12.96, 17.28), (17.28, 12.96)),
+             276: ((17.28, 32.4), (25.92, 17.28)),
+             512: ((17.28, 58.32), (58.32, 17.28)),
+             562: ((17.28, 62.64), (58.32, 17.28)),
+             682: ((17.28, 75.6), (71.28, 17.28))}
+    moved = []
+    for l in P.links:
+        for k, (x, y) in enumerate(l['sp']):
+            on = [h for h in l['h'] if (x, y) in ((h[0], h[1]), (h[2], h[3]))]
+            horiz = bool(on) and all(abs(h[1] - h[3]) < 0.11 for h in on)
+            vertical = bool(on) and all(abs(h[0] - h[2]) < 0.11 for h in on)
+            if not horiz and not vertical:
+                raise ValueError(f'{l["i"]} station {k} is not on a straight segment')
+            w, h = sizes[l['b']][0 if horiz else 1]
+            rect = lambda a, b: (a - w / 2, b - h / 2, a + w / 2, b + h / 2)
+            xx, yy = x, y
+            if placer.hits(rect(x, y)):
+                # 0.1-um rounding is allowed, never a larger reach relaxation.
+                near = [l['e'][0][2:4]] + l['sp'] + [l['e'][1][2:4]]
+                before, after = near[k], near[k + 2]
+                for delta in (d * sign for d in range(1, 50) for sign in (1, -1)):
+                    a, b = (x + delta, y) if horiz else (x, y + delta)
+                    axis = 0 if horiz else 1
+                    if not all(min(q[axis], q[axis + 2]) - .01 <= (a, b)[axis] <= max(q[axis], q[axis + 2]) + .01 for q in on):
+                        # The two station-adjacent pieces meet at x/y; moving
+                        # inside their UNION is allowed, preserving the corner.
+                        low = min(q[axis] for q in on)
+                        low = min(low, *(q[axis + 2] for q in on))
+                        high = max(*(q[axis] for q in on), *(q[axis + 2] for q in on))
+                        if not low + 20 <= (a, b)[axis] <= high - 20:
+                            continue
+                    if max(abs(a - p[0]) + abs(b - p[1]) for p in (before, after)) > HOP_UM + .11:
+                        continue
+                    if not placer.hits(rect(a, b)):
+                        xx, yy = a, b
+                        break
+                else:
+                    raise ValueError(f'cannot legally stagger {l["i"]} station {k} at {(x,y)}')
+                for q in on:
+                    if (q[0], q[1]) == (x, y): q[0], q[1] = xx, yy
+                    if (q[2], q[3]) == (x, y): q[2], q[3] = xx, yy
+                l['sp'][k] = [xx, yy]
+                moved.append(dict(link=l['i'], station=k, from_xy=[x,y], to_xy=[xx,yy]))
+            placer.add(rect(xx, yy))
+    return moved
+
+
 def fill(P, facts, ws):
     """Fill every over-channel empty rectangle inside a slice column with a designated fill block (PDN decap for
     the slices' SU/HC lanes + relay / repeater site bank for the column and street die nets + ECO spares).  The
@@ -1346,6 +1407,7 @@ def main():
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
+    ap.add_argument('--placefix', action='store_true', help='p4l MU: open a 100-um south lane channel using 70-um north whitespace; legalize relay stations without adding stages')
     ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
@@ -1358,9 +1420,13 @@ def main():
     P4F = a.p4f or a.p4g or a.p4h
     global P4G, P4H, P4H_DROP, P4I, P4J, RET, NO_MIX4
     NO_MIX4 = a.no_mix4
-    global P4K, P4L, MU, PATHFIX
+    global P4K, P4L, MU, PATHFIX, PLACEFIX, BAND
     P4L = a.p4l
-    PATHFIX = a.pathfix
+    PLACEFIX = a.placefix
+    assert not PLACEFIX or (P4L and a.mu), '--placefix needs --p4l --mu'
+    if PLACEFIX:
+        BAND += 70.0
+    PATHFIX = a.pathfix or PLACEFIX
     assert not PATHFIX or P4L, '--pathfix needs --p4l'
     MU = a.mu
     global LK_SLOTS
@@ -1402,6 +1468,11 @@ def main():
         DIE_W = 2 * EDGE + NCOL * PITCH
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P, facts = build()
+    if PLACEFIX:
+        facts['placefix'] = dict(south_channel_um=100, array_shift_um=70,
+            service_slots_preserved=True, die_outline_preserved=True,
+            north_frame_clearance_um=round(DIE_H - facts['frame_top_um'], 2))
+        facts['placefix']['station_moves'] = legalize_stations(P)
     geometry_facts(P, facts)
     if P4I:
         p4i_facts(P, facts)

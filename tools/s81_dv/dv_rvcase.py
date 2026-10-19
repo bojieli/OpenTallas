@@ -253,21 +253,39 @@ class Placer:
     def put(self, x, y, w, h, prefer=None, step=None, rmax=400.0):
         """lower-left nearest (x, y) with no overlap: first along `prefer` (unit vector list), then a square spiral"""
         step = step or max(2.0, min(w, h) / 2)
-        cands = [(0.0, 0.0)]
-        for k in range(1, int(rmax / step) + 1):
-            d = k * step
-            for ux, uy in (prefer or []):
-                cands.append((ux * d, uy * d))
-            for t in range(-k, k + 1):
-                cands += [(t * step, d), (t * step, -d), (d, t * step), (-d, t * step)]
-        for dx, dy in cands:
+        def candidates():
+            yield 0.0, 0.0
+            for k in range(1, int(rmax / step) + 1):
+                d = k * step
+                for ux, uy in (prefer or []):
+                    yield ux * d, uy * d
+                for t in range(-k, k + 1):
+                    yield t * step, d
+                    yield t * step, -d
+                    yield d, t * step
+                    yield -d, t * step
+        for dx, dy in candidates():
             r = (x + dx, y + dy, x + dx + w, y + dy + h)
             if not self.hits(r):
                 self.add(r)
                 return r[0], r[1], abs(dx) + abs(dy)
-        r = (x, y, x + w, y + h)
-        self.add(r)
-        return x, y, None
+        raise ValueError(f'no legal {w}x{h} placement within {rmax} um of {(x, y)}')
+
+
+def reserve_lanes(placer, links):
+    """Keep reset stations out of payload/forward-clock bands, including their pin span.
+
+    Reserve the realized band, not just station bodies: an otherwise legal reset
+    station between two payload stations can displace hundreds of die repeaters.
+    """
+    for L in links.values():
+        half = max(3.0, L['bits'] * PITCH / 2 + 1.5)
+        for x0, y0, x1, y1, *_ in L['hops']:
+            if abs(y0 - y1) < 1e-6:
+                placer.add((min(x0, x1), y0 - half, max(x0, x1), y0 + half))
+            else:
+                placer.add((x0 - half, min(y0, y1), x0 + half, max(y0, y1)))
+
 
 
 def lef_pins(path):
@@ -469,25 +487,34 @@ def main():
         area = flops * 0.29 / 0.45
         long_ = max(nb * PITCH + 6.0, math.sqrt(area)); short = max(area / long_, 12.0)
         x, y = L['dxy']; f = face_of(b, x, y)
+        if mst_of[i] in vsize:
+            # A CLOSED view has fixed R0 dimensions; the analytical shape below
+            # only sizes a stand-in. Never reserve a smaller/rotated fiction.
+            w_, h_ = vsize[mst_of[i]]
+        else:
+            w_, h_ = (long_, short) if f in 'SN' else (short, long_)
         if f in 'SN':
-            w_, h_ = long_, short; xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
+            xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
             pref = [(1, 0), (-1, 0), (0, -1 if f == 'S' else 1)]
         else:
-            w_, h_ = short, long_; yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
+            yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
             pref = [(0, 1), (0, -1), (-1 if f == 'W' else 1, 0)]
         px_, py_, dd = placer.put(xx, yy, w_, h_, prefer=pref)
         loc[i] = (px_, py_, w_, h_, 'FIRM'); moved['landing'] += dd is not None and dd > 0
         if dd is None or dd > 200:
             far.append((i, dd))
+    # Landings are allocated first (their endpoint attachment is intentional).
+    # Reset stations then avoid every lane, not only the sparse relay bodies.
+    reserve_lanes(placer, links)
     for p in hints['reset_place']:
         i = p['inst']; x, y = p['xy']
-        px_, py_, dd = placer.put(x - rw / 2, y - rh / 2, rw, rh, step=4.0)
+        px_, py_, dd = placer.put(x - rw / 2, y - rh / 2, rw, rh, step=4.0, rmax=1200.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM'); moved['reset'] += dd is not None and dd > 0
         if dd is None or dd > 100:
             far.append((i, dd))
     rx, ry = hints['reset_root_xy']
     for k, i in enumerate(('rst_root0', 'rst_root1')):
-        px_, py_, dd = placer.put(rx - rw / 2 + k * (rw + 1), max(ry, 2.0), rw, rh, step=4.0)
+        px_, py_, dd = placer.put(rx - rw / 2 + k * (rw + 1), max(ry, 2.0), rw, rh, step=4.0, rmax=1200.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM')
     for mst, i, _, _ in insts:
         if i.startswith('fwd_'):
@@ -536,9 +563,15 @@ def main():
                 pn = f'{p}[{wdt - 1 - k}]' if bus else p
                 # ---- role of the bit -> pin location
                 f = t = None
-                if n_ in ('CONST', 'Z', 'UNDECL') or (n_ not in top and touch.get(n_, set()) <= {nm}):
+                if n_ == 'CONST' and d == 'input':
+                    kinds.add('data')
+                    f, t = 'S', 0.3 + PITCH * slot['const']
+                    slot['const'] += 1
+                elif n_ in ('CONST', 'Z', 'UNDECL') or (n_ not in top and touch.get(n_, set()) <= {nm}):
                     inner.append(pn); continue
-                if n_ in top:
+                if f is not None:
+                    pass
+                elif n_ in top:
                     kinds.add('clock' if n_.startswith('ck_') else 'data')
                     if bname:
                         f, t = 'S', w / 2 + PITCH * (3 + slot['top']); slot['top'] += 1
