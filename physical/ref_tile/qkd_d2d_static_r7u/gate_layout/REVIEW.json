@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_r7u",
+ "reviewer": "coordinator (HANDOFF 0ix 2026-10-19 ~01:25, decision 7; recorded by HOURLY-ROOT restart agent)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T01:25:00-07:00",
+ "gate_commit": "7043bb137",
+ "checklist": {
+  "geometry": "PASS: coordinator decision 0ix (7): geometry = the approved/reviewed r7t (geometry_sha256 a22cc79472ee, same outline/macros/pins/clock entry)",
+  "lattice": "PASS: 4 x ot_sram_1r1w_64x512_m1_r2c2 in a 2x2 array, as r7t",
+  "clock_entry": "PASS: E-face clock entry; pin-flop spread TT 61.6 / FF 56.3 (<= 80)",
+  "grt": "PASS: trial GRT overflow 0, fill 45.7%"
+ },
+ "notes": "r7u = the die's compiled TXDP [23,4,3,3] + NTX 3 + recipe-4 flop-first pins (r7t own-R native FAIL launch 237.8 / capture 201.8). Gate WARN 0 fail.",
+ "geometry_sha256": "a22cc79472ee183198f2a9f43b58008b478896c4d0873f2e1256824561f07052"
+}
