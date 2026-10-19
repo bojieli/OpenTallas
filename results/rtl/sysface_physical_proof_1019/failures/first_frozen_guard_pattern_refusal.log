@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-epyc7       admits  1129 GB (avail 841, growth 50, headroom 0, waiters 0/0 GB) load 25/96 running 16 disk 6425 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-physical-proof-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3302669-1792433328 after 0 s
+{"status": "PASS", "scope": "arbitrary prior copied FF and boundary state after actual reset; no memory first-use waiver", "copied_state_bits": 116, "kinds": {"$_DFFE_PN0P_": 29, "$_DFF_PN0_": 82, "$_DFF_PN1_": 5}, "reset_forest_bits": 259, "boundary_copy_convergence_edges": 1, "external_reset_landing_edges": 2, "outer_inherited_release_edges": 3, "maximum_copied_reset_ancestry_edges": 4, "reset_over_enable_priority_cases": 48, "zero_initialization_assumed": false, "first_observable_use": "must follow original reset, programme ROM payload and SRAM written-before-read contracts; functional physical-source tests separately required"}
+EXPECTED_REFUSAL shortened_reset
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/sysface-physical-proof-1019/tools/qwen_split/sysface_control_safe/test_frozen_boundary.py", line 19, in <module>
+    assert mw!=w or mc!=c
+           ^^^^^^^^^^^^^^
+AssertionError
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3302669-1792433328): exit 1

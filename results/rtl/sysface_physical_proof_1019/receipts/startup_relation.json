@@ -1,0 +1,1193 @@
+{
+  "status": "PASS",
+  "scope": "arbitrary prior copied FF and boundary state after actual reset; no memory first-use waiver",
+  "copied_state_bits": 116,
+  "kinds": {
+    "$_DFFE_PN0P_": 29,
+    "$_DFF_PN0_": 82,
+    "$_DFF_PN1_": 5
+  },
+  "reset_forest_bits": 259,
+  "boundary_copy_convergence_edges": 1,
+  "external_reset_landing_edges": 2,
+  "outer_inherited_release_edges": 3,
+  "maximum_copied_reset_ancestry_edges": 4,
+  "reset_over_enable_priority_cases": 48,
+  "zero_initialization_assumed": false,
+  "first_observable_use": "must follow original reset, programme ROM payload and SRAM written-before-read contracts; functional physical-source tests separately required",
+  "copies": [
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14835,
+      "actual_reset_ancestry_bits": [
+        14835,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_2",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14835,
+      "actual_reset_ancestry_bits": [
+        14835,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_3",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14835,
+      "actual_reset_ancestry_bits": [
+        14835,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_4",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14835,
+      "actual_reset_ancestry_bits": [
+        14835,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_5",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_6",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__copy_7",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12275__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12277__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12278__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12279__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12279__copy_2",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12280__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12280__copy_2",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12281__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12281__copy_2",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14836,
+      "actual_reset_ancestry_bits": [
+        14836,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$13581__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$13581__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$13582__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23272__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 15294,
+      "actual_reset_ancestry_bits": [
+        15294,
+        15295,
+        15296,
+        15297
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__copy_3",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__copy_4",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__copy_5",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__copy_6",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_3",
+      "kind": "$_DFF_PN0_",
+      "reset": 14837,
+      "actual_reset_ancestry_bits": [
+        14837,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_4",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_5",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_6",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_7",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_8",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_9",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_10",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_11",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_12",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_13",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_14",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23346__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 15172,
+      "actual_reset_ancestry_bits": [
+        15172,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23346__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 15172,
+      "actual_reset_ancestry_bits": [
+        15172,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23350__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 15172,
+      "actual_reset_ancestry_bits": [
+        15172,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14838,
+      "actual_reset_ancestry_bits": [
+        14838,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_3",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_4",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_5",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_6",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_7",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_8",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_9",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_10",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_11",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_12",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_13",
+      "kind": "$_DFF_PN0_",
+      "reset": 14839,
+      "actual_reset_ancestry_bits": [
+        14839,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_14",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_15",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23354__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23354__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23422__copy_1",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23422__copy_2",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23422__copy_3",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23422__copy_4",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23422__copy_5",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23422__copy_6",
+      "kind": "$_DFF_PN0_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23425__copy_1",
+      "kind": "$_DFF_PN1_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23425__copy_2",
+      "kind": "$_DFF_PN1_",
+      "reset": 14840,
+      "actual_reset_ancestry_bits": [
+        14840,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23425__copy_3",
+      "kind": "$_DFF_PN1_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23425__copy_4",
+      "kind": "$_DFF_PN1_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$9810__copy_1",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$9810__copy_2",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$9810__copy_3",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$9810__copy_4",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$9810__copy_5",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$9810__copy_6",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 14841,
+      "actual_reset_ancestry_bits": [
+        14841,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12622__useful_186",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15188,
+      "actual_reset_ancestry_bits": [
+        15188,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12622__useful_187",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15188,
+      "actual_reset_ancestry_bits": [
+        15188,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12622__useful_188",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15188,
+      "actual_reset_ancestry_bits": [
+        15188,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__useful_259",
+      "kind": "$_DFF_PN0_",
+      "reset": 15182,
+      "actual_reset_ancestry_bits": [
+        15182,
+        15224,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__useful_260",
+      "kind": "$_DFF_PN0_",
+      "reset": 15182,
+      "actual_reset_ancestry_bits": [
+        15182,
+        15224,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23120__useful_261",
+      "kind": "$_DFF_PN0_",
+      "reset": 15183,
+      "actual_reset_ancestry_bits": [
+        15183,
+        15218,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23120__useful_262",
+      "kind": "$_DFF_PN0_",
+      "reset": 15183,
+      "actual_reset_ancestry_bits": [
+        15183,
+        15218,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23354__useful_266",
+      "kind": "$_DFF_PN0_",
+      "reset": 15182,
+      "actual_reset_ancestry_bits": [
+        15182,
+        15224,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23123__useful_276",
+      "kind": "$_DFF_PN0_",
+      "reset": 15183,
+      "actual_reset_ancestry_bits": [
+        15183,
+        15218,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23272__useful_284",
+      "kind": "$_DFF_PN0_",
+      "reset": 15172,
+      "actual_reset_ancestry_bits": [
+        15172,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23350__useful_287",
+      "kind": "$_DFF_PN0_",
+      "reset": 15172,
+      "actual_reset_ancestry_bits": [
+        15172,
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_11__useful_288",
+      "kind": "$_DFF_PN0_",
+      "reset": 15191,
+      "actual_reset_ancestry_bits": [
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23517__useful_296",
+      "kind": "$_DFF_PN0_",
+      "reset": 15234,
+      "actual_reset_ancestry_bits": [
+        15234,
+        15235,
+        15236
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23425__useful_297",
+      "kind": "$_DFF_PN1_",
+      "reset": 15237,
+      "actual_reset_ancestry_bits": [
+        15237,
+        15238,
+        15241
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_6__useful_304",
+      "kind": "$_DFF_PN0_",
+      "reset": 15191,
+      "actual_reset_ancestry_bits": [
+        15191,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10961__useful_305",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15226,
+      "actual_reset_ancestry_bits": [
+        15226,
+        15227,
+        15231
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$10411__useful_306",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15291,
+      "actual_reset_ancestry_bits": [
+        15291,
+        15292,
+        15293,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$13582__useful_316",
+      "kind": "$_DFF_PN0_",
+      "reset": 15217,
+      "actual_reset_ancestry_bits": [
+        15217,
+        15218,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23545__useful_324",
+      "kind": "$_DFF_PN0_",
+      "reset": 15229,
+      "actual_reset_ancestry_bits": [
+        15229,
+        15230,
+        15231
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23539__useful_325",
+      "kind": "$_DFF_PN0_",
+      "reset": 15232,
+      "actual_reset_ancestry_bits": [
+        15232,
+        15233,
+        15236
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_1__useful_326",
+      "kind": "$_DFF_PN0_",
+      "reset": 15228,
+      "actual_reset_ancestry_bits": [
+        15228,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23346__useful_327",
+      "kind": "$_DFF_PN0_",
+      "reset": 15288,
+      "actual_reset_ancestry_bits": [
+        15288,
+        15289,
+        15290,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$13581__useful_328",
+      "kind": "$_DFF_PN0_",
+      "reset": 15217,
+      "actual_reset_ancestry_bits": [
+        15217,
+        15218,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12276__useful_331",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15239,
+      "actual_reset_ancestry_bits": [
+        15239,
+        15240,
+        15241
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23545__useful_364",
+      "kind": "$_DFF_PN0_",
+      "reset": 15261,
+      "actual_reset_ancestry_bits": [
+        15261,
+        15262,
+        15263
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23421__useful_368",
+      "kind": "$_DFF_PN0_",
+      "reset": 15267,
+      "actual_reset_ancestry_bits": [
+        15267,
+        15268,
+        15269
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23354__copy_1__useful_372",
+      "kind": "$_DFF_PN0_",
+      "reset": 15271,
+      "actual_reset_ancestry_bits": [
+        15271,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23354__useful_374",
+      "kind": "$_DFF_PN0_",
+      "reset": 15273,
+      "actual_reset_ancestry_bits": [
+        15273,
+        15274,
+        15275
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__useful_259__useful_378",
+      "kind": "$_DFF_PN0_",
+      "reset": 15182,
+      "actual_reset_ancestry_bits": [
+        15182,
+        15224,
+        15225
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__copy_1__useful_379",
+      "kind": "$_DFF_PN0_",
+      "reset": 15278,
+      "actual_reset_ancestry_bits": [
+        15278,
+        14653,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23353__useful_382",
+      "kind": "$_DFF_PN0_",
+      "reset": 15283,
+      "actual_reset_ancestry_bits": [
+        15283,
+        15284,
+        15285
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23350__useful_387",
+      "kind": "$_DFF_PN0_",
+      "reset": 15288,
+      "actual_reset_ancestry_bits": [
+        15288,
+        15289,
+        15290,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_11__useful_388",
+      "kind": "$_DFF_PN0_",
+      "reset": 15289,
+      "actual_reset_ancestry_bits": [
+        15289,
+        15290,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_1__useful_391",
+      "kind": "$_DFF_PN0_",
+      "reset": 15292,
+      "actual_reset_ancestry_bits": [
+        15292,
+        15293,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__useful_394",
+      "kind": "$_DFF_PN0_",
+      "reset": 15295,
+      "actual_reset_ancestry_bits": [
+        15295,
+        15296,
+        15297
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23342__useful_398",
+      "kind": "$_DFF_PN0_",
+      "reset": 15299,
+      "actual_reset_ancestry_bits": [
+        15299,
+        15300,
+        15301
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23272__useful_402",
+      "kind": "$_DFF_PN0_",
+      "reset": 15303,
+      "actual_reset_ancestry_bits": [
+        15303,
+        15304,
+        15305,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$23343__copy_11__useful_403",
+      "kind": "$_DFF_PN0_",
+      "reset": 15304,
+      "actual_reset_ancestry_bits": [
+        15304,
+        15305,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$13581__copy_1__useful_406",
+      "kind": "$_DFF_PN0_",
+      "reset": 15307,
+      "actual_reset_ancestry_bits": [
+        15307,
+        15308,
+        14637
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$12279__copy_1__useful_409",
+      "kind": "$_DFFE_PN0P_",
+      "reset": 15310,
+      "actual_reset_ancestry_bits": [
+        15310,
+        15311,
+        14637
+      ]
+    }
+  ]
+}

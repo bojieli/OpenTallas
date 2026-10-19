@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
-python3 tools/qwen_split/sysface_control_safe/build_miter.py --graph cold/original.json --manifest cold/manifest.json --receipt cold/generated/receipt.json --source rtl/qwen_split/qfd_sys_face.sv --out cold/miter
+python3 tools/qwen_split/sysface_control_safe/build_miter.py --graph cold/original.json --manifest cold/manifest.json --receipt cold/generated/receipt.json --source rtl/qwen_split/qfd_sys_face.sv --out cold/miter ${PHYSICAL_BOUNDARY:+--physical-boundary "$PHYSICAL_BOUNDARY"}
 python3 rtl/test/qwen_split/build_sysface_cold_fixture.py . cold/sim_two_epochs/img 0
 python3 tools/qwen_split/sysface_control_safe/build_reset_bench.py --graph cold/original.json --receipt cold/generated/receipt.json --out cold/reset_tb.sv
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
