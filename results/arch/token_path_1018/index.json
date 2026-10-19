@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "6866444b0",
+ "generated_from": "d40991f87",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",
@@ -39,7 +39,7 @@
    "path": "results/arch/s81_scand_1018/scand.json",
    "origin": "claude/s81-scand-1018 (S81-SCAND: option D, measured 1-stack reader, keys over k = 3 TP4 stages)",
    "sha256": "7a836e5b56593544",
-   "commit": "uncommitted"
+   "commit": "29c341723"
   },
   "ds_dag_mtp": {
    "path": "results/arch/token_path_20261009/ds_rom_mtp.json",
@@ -154,6 +154,13 @@
    "why": "no token_compose block (record not yet in the override format)"
   },
   {
+   "record": "results/rtl/xdie_qtp8_2_1019/record.json",
+   "family": "xdie",
+   "used": true,
+   "n_terms": 2,
+   "why": null
+  },
+  {
    "record": "results/rtl/xdie_qwen_1018/pair_r2/record.json",
    "family": "xdie",
    "used": true,
@@ -227,16 +234,16 @@
   "qwen_rom": {
    "ar": {
     "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
-    "tok_s": 4766.5,
-    "T_token_cycles": 251759.0,
-    "per_accepted_cycles": 251759.0,
+    "tok_s": 6194.3,
+    "T_token_cycles": 193727.0,
+    "per_accepted_cycles": 193727.0,
     "tau": null,
-    "pct_measured_current_rtl": 0.8,
-    "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
+    "pct_measured_current_rtl": 4.62,
+    "banner": "4.6% of token cycles measured on current RTL (87.3% on older RTL, 7.2% modelled PHY, 0.8% priced)",
     "by_grade": {
-     "measured-current-RTL": 2016.0,
-     "measured-old-RTL": 247743.0,
-     "modelled-PHY": 360.0,
+     "measured-current-RTL": 8942.4,
+     "measured-old-RTL": 169119,
+     "modelled-PHY": 14025.6,
      "priced": 1640.0
     },
     "price_of_record": {
@@ -244,7 +251,7 @@
      "cycles": 249431.0,
      "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
     },
-    "vs_price_pct": -0.92
+    "vs_price_pct": 28.76
    },
    "mtp": {
     "available": false,
