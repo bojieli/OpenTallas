@@ -6,6 +6,7 @@
 #    20-node merge == fixture) + 'early' schedule mutant on qk sm_SW0 sub-runs (must FAIL).
 # B: att_merge_su.py vectors (pos + ORDER mutant) -> tb_su_static_arithmetic (Verilator 5.050, die lane MLAT 4 / ALAT 3 /
 #    LEAF 1): base must PASS; ADDR / PHASE / DATA tb mutants and the ORDER control must FAIL.
+# SKIP_UNIT=1: (B) only, on the nodes of an earlier (A).  MEM_SU: the hierarchical SU build was killed at 24 GB.
 # REUSE_OBJ: an already built tb_hbm_smh_attn obj dir of the same bundle + tb (hard-linked into the work dir).
 set -uo pipefail
 REV=$1; KV=$2; BUNDLE=$3; OUT=$4; SUB=${5:-32}; L=${6:-2}; HOST=${HOST:-ot-epyc5}
@@ -20,10 +21,11 @@ echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"
 if [ -n "${REUSE_OBJ:-}" ]; then ssh "$HOST" "[ -d $OUT/work_pos/obj_d0_p0 ] || cp -al $REUSE_OBJ $OUT/work_pos/obj_d0_p0"; fi
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/att_images.py unit --kv $KV --layer $L --bundle $BUNDLE --subrun $SUB"
+if [ -n "${SKIP_UNIT:-}" ]; then R1=0; else
 /home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir "$OUT" -- bash -c "$T --work $OUT/work_pos --out $OUT/out/L${L}_s${SUB}_pos.json \
   > $OUT/out/L${L}_s${SUB}_pos.log 2>&1; rc=\$?; $T --work $OUT/work_pos --smut early --sms 0 --kinds qk --out $OUT/out/L${L}_s${SUB}_mut_early.json \
   > $OUT/out/L${L}_s${SUB}_mut_early.log 2>&1; echo POS_RC \$rc EARLY_RC \$?; tail -n 1 $OUT/out/L${L}_s${SUB}_pos.log; exit \$rc"
-R1=$?
+R1=$?; fi
 echo "ATT_GAP_UNIT pos_rc=$R1"
 [ "$R1" = 0 ] || exit 1
 NODES=$OUT/out/L${L}_s${SUB}_pos.nodes.npz
@@ -46,5 +48,5 @@ set +e; B=$OUT/merge/obj/Vtb_su_static_arithmetic; \
 for m in ADDR PHASE DATA; do \$B +DIR=$OUT/merge/vec_pos +MUT_\$m > $OUT/merge/mut_\$m.log 2>&1; echo MUT_\$m \$?; done; \
 \$B +DIR=$OUT/merge/vec_order > $OUT/merge/mut_ORDER.log 2>&1; echo MUT_ORDER \$?; \
 grep -h 'SU_ARITH' $OUT/merge/*.log | cut -c1-240"
-/home/ubuntu/bin/ot-run --mem ${MEM_SU:-24} --threads 8 --dir "$OUT" -- bash -c "$M"
+/home/ubuntu/bin/ot-run --mem ${MEM_SU:-96} --threads 8 --dir "$OUT" -- bash -c "$M"
 echo "ATT_GAP_MERGE rc=$?"
