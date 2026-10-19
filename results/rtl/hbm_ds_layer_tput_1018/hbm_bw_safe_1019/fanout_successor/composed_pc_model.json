@@ -92,5 +92,15 @@
     "added_ff": 0,
     "added_data_edges": 0,
     "status": "modelbeforeRTL, exactQD64+mutants and actualmappedcensus required"
+  },
+  "bridge_nonempty_state_successor": {
+    "base": "0a3f58ea2",
+    "actual_map3_failure": "portkr_rdy57 actualloads after reset-factor removal:18regional3-bit nonzero expressions factorready acrosscountbits",
+    "structure": "Bridge-only REGIONAL_NONEMPTY1:18 real onebit nonempty state capturesfromcanonicalcnt_next!=0 on original countedge. Replace54 regional3-bit counts by18usefulnonemptyFF, consumed bylocalpop. K ring defaultREGIONAL_NONEMPTY0 unchanged.",
+    "extra_ff": -36,
+    "data_edges_added": 0,
+    "reset": "same synchronous ring count reset, unchanged nativefiveedge release",
+    "critical_source_load_target": "canonicalnextnonempty18D; consumerkr_rdy18localAND pluscanonical <=24; eachliveQ<=8RPcontrol loads",
+    "status": "modelbeforeRTL; fullwidthoccupiedreset/II1/+1/mutants+actualcombinedcensus required"
   }
 }

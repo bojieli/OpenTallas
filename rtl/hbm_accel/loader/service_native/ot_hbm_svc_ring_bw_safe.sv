@@ -6,7 +6,7 @@
 // flops. rp is replicated per 64-bit slice (each slice reads mem[rp_s] through a DEPTH:1 mux). cnt is a register.
 // The caller guarantees no push when full (k_rdy credit / in_r); an overflow or a pop when empty latches fault.
 // MUT 1 (bench): every slice except slice 0 reads the entry one behind (rp-1).
-module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONAL=0,REGIONAL_RESET=0)(
+module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONAL=0,REGIONAL_RESET=0,REGIONAL_NONEMPTY=0)(
  input wire clk,rst_n,
  input wire in_v,input wire [WIDTH-1:0]in_data,
  output wire out_v,input wire pop,output wire [WIDTH-1:0]out_data,
@@ -30,10 +30,17 @@ module ot_hbm_svc_ring_bw_safe #(parameter integer WIDTH=1,DEPTH=3,MUT=0,REGIONA
  for(genvar r=0;r<(WIDTH+15)/16;r=r+1)begin:g_control
   wire local_rst_n=(REGIONAL_RESET!=0)?rst_n_regions[r]:rst_n;
   if(REGIONAL!=0)begin:g_local
-   (* keep="true",dont_touch="true" *) reg[2:0] count_q;
-   always @(posedge clk)if(!local_rst_n)count_q<=0;
-    else count_q<=cnt_next;
-   assign out_v_regions[r]=count_q!=0;
+   if(REGIONAL_NONEMPTY!=0)begin:g_nonempty
+    (* keep="true",dont_touch="true" *) reg live_q;
+    always @(posedge clk)if(!local_rst_n)live_q<=0;
+     else live_q<=cnt_next!=0;
+    assign out_v_regions[r]=live_q;
+   end else begin:g_count
+    (* keep="true",dont_touch="true" *) reg[2:0] count_q;
+    always @(posedge clk)if(!local_rst_n)count_q<=0;
+     else count_q<=cnt_next;
+    assign out_v_regions[r]=count_q!=0;
+   end
   end else begin:g_common
    assign out_v_regions[r]=out_v;
   end
