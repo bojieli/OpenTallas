@@ -24,9 +24,9 @@ REMOTE (--remote HOST, minutes, on the fleet via ot-heavy): the real ORFS synthe
 fails here, not after hours), floorplan + PDN + IO placement of the kit (PDN-0217/0233/0006, PPL-0061 surface here),
 then the netlist textbook lint (clock root size / span, high fanout + reset on datapath, logic behind pins, ICG enable
 from a port, logic depth, > 500 um wire per stage) on the synthesized netlist + the placed-IO floorplan, and the pin
-plan against the SYNTHESIZED port names.  MEASURED CLOCK RULE (owner 2026-10-13, constants in tools/textbook_lint.py):
-> 15,000 sinks on one clock root FAILs unless this run's --cts measured TT insertion <= 300 ps and leaf spread <= 80 ps;
-a declared spine does not waive it.  A --remote run writes <kit>/gate_result.json (commit it: the submit gate reads it).  --cts continues through CTS and reports clock insertion spread (ck_insertion)
+plan against the SYNTHESIZED port names.  MEASURED CLOCK RULE (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval):
+FAIL only on a pin-flop (child-flop per linked pair for a parent) spread > 80 ps at TT or FF, or a neighbour-boundary
+mismatch (native_pin_audit --relative-to); > 15,000 sinks on one root or insertion > 300 ps is a WARN (guidance).  A --remote run writes <kit>/gate_result.json (commit it: the submit gate reads it).  --cts continues through CTS and reports clock insertion spread (ck_insertion)
 and the worst-path classes.
 Exit 0 PASS / WARN, 1 FAIL, 2 usage.
 """
