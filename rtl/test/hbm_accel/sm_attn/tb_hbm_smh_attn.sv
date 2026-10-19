@@ -11,6 +11,7 @@
 module tb_hbm_smh_attn;
     parameter integer MAXC = 4096;
     parameter integer DMUT = 0;
+    parameter integer HOPD = 4;             // BE control delay per column hop (5 with OT_SMH_PINREG tiles: +1 pin register a hop)
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg [191:0]  cmd_m [0:MAXC-1];
@@ -22,9 +23,9 @@ module tb_hbm_smh_attn;
     wire [42:0] request; wire rv, fault, sfault; wire [11:0] rrow; wire [255:0] rdata;
 `ifdef OT_SMH_ATTN_FLAT
     // HF-5c 10-18: the wires-only flat form (sm_elem_bench.py --flat), same ports and cycles
-    ot_hbm_accel_smh_attn_flat #(.KVMUT(DMUT)) u_dut (
+    ot_hbm_accel_smh_attn_flat #(.KVMUT(DMUT), .HOPD(HOPD)) u_dut (
 `else
-    ot_hbm_accel_smh_attn #(.KVMUT(DMUT)) u_dut (
+    ot_hbm_accel_smh_attn #(.KVMUT(DMUT), .HOPD(HOPD)) u_dut (
 `endif.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), .packet(packet),
         .request(request), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),
         .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(sfault));

@@ -389,11 +389,12 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
 FLAT_SRC = ["rtl/hbm_accel/sm/attn/flat/ot_hbm_sm_attn_front_split.sv", "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_flat.sv"]
+EXTRA_DEF, EXTRA_SRC, HOPD = [], [], 4   # --defines / --extra-src / --hopd (HF-5c: rp4 define-set trial)
 FLAT = False                      # --flat (HF-5c 10-18): bench the wires-only flat parent ot_hbm_accel_smh_attn_flat
 
 
 def build(work, probe, dmut):
-    obj = work / f"obj_p{int(probe)}_d{dmut}{'_flat' if FLAT else ''}"
+    obj = work / f"obj_p{int(probe)}_d{dmut}{'_flat' if FLAT else ''}{'_x' if EXTRA_DEF or HOPD != 4 else ''}"
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
@@ -401,7 +402,8 @@ def build(work, probe, dmut):
     cmd = [vl, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
            "-Wno-MULTIDRIVEN", "--unroll-count", "256", "--top-module", "tb_hbm_smh_attn", "-DOT_SMH_HIER", "-DOT_SMH_FC_HIER",
            f"-GDMUT={dmut}", "--Mdir", str(obj)] + (["-DPROBE"] if probe else []) + (["-DOT_SMH_ATTN_FLAT"] if FLAT else []) + \
-        [str(ROOT / s) for s in SRC[:-1] + (FLAT_SRC if FLAT else []) + SRC[-1:]]
+        [f"-D{d}" for d in EXTRA_DEF] + ([f"-GHOPD={HOPD}"] if HOPD != 4 else []) + \
+        [str(ROOT / s) for s in EXTRA_SRC + SRC[:-1] + (FLAT_SRC if FLAT else []) + SRC[-1:]]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (work / f"build_p{int(probe)}_d{dmut}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
@@ -494,6 +496,9 @@ def main(argv=None):
     p.add_argument("--probe", action="store_true")
     p.add_argument("--dmut", type=int, default=0, help="converter mutant (ot_hbm_sm_kv_line MUT), negative control")
     p.add_argument("--smut", default="", choices=["", "r7clear", "early"], help="calendar negative control")
+    p.add_argument("--defines", default="", help="extra comma-separated defines (e.g. the rp4 kit define set)")
+    p.add_argument("--extra-src", default="", help="extra comma-separated sources (read before SRC)")
+    p.add_argument("--hopd", type=int, default=4, help="BE control delay per column hop (top parameter HOPD)")
     p.add_argument("--flat", action="store_true", help="bench ot_hbm_accel_smh_attn_flat (HF-5c landed-parent input)")
     p.add_argument("--work", required=True)
     p.add_argument("--out", required=True)
@@ -514,8 +519,11 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(r, indent=1))
         print(json.dumps(r))
         return 0
-    global FLAT
+    global FLAT, EXTRA_DEF, EXTRA_SRC, HOPD
     FLAT = bool(getattr(a, "flat", False))
+    EXTRA_DEF = [d for d in getattr(a, "defines", "").split(",") if d]
+    EXTRA_SRC = [f for f in getattr(a, "extra_src", "").split(",") if f]
+    HOPD = int(getattr(a, "hopd", 4))
     if FLAT and a.probe:
         raise SystemExit("--flat has no PROBE hierarchy (u_dut.g_c[*]); run the probe on the generate form")
     work = Path(a.work).resolve()
@@ -549,7 +557,7 @@ def main(argv=None):
             res["span_first_line_to_last_result"] = res["last_result"] - exp["first_line"]
         results.append(res)
         print(("PASS " if res["pass"] else "FAIL ") + json.dumps({k: v for k, v in res.items() if k != "calendar"}), flush=True)
-    summ = dict(shape=a.shape, flat=FLAT, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut, smut=a.smut,
+    summ = dict(shape=a.shape, flat=FLAT, defines=EXTRA_DEF, hopd=HOPD, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut, smut=a.smut,
                 lat=lat, wall_s=round(time.time() - t0, 1),
                 verdict="PASS" if all(r["pass"] for r in results) else "FAIL")
     Path(a.out).write_text(json.dumps(dict(summary=summ, ops=results), indent=1))
