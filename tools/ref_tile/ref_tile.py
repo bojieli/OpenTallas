@@ -322,7 +322,7 @@ def reset_landing_plan(s: dict) -> dict | None:
     cp = rl.get("copies")
     if cp is not None:
         # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
-        # core's reset loads by reset_relay_split (ot_rst_split.tcl); latency unchanged (the copies are the last stage)
+        # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
         if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
                 or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
@@ -335,7 +335,7 @@ def reset_landing_plan(s: dict) -> dict | None:
 
 
 RESET_RELAY_SPLIT_RULE = ("KV-RELAYGEN 2026-10-19 / SAFE-DESIGN item 3: a reset relay copy drives <= ~256 loads; the "
-                          "RTL's kept identical relay copies take the loads by region (physical/common_flow/ot_rst_split.tcl)")
+                          "RTL's kept identical relay copies take the loads by region (physical/common_flow/ot_rst_copies.tcl)")
 
 
 def reset_relay_split_plan(s: dict) -> dict | None:
@@ -360,9 +360,9 @@ def reset_relay_split_vars(s: dict) -> list:
     plan = reset_relay_split_plan(s)
     if not plan:
         return []
-    out = [f"--orfs-var OT_RST_SPLIT_MAX={plan['max_loads']}"]
+    out = [f"--orfs-var OT_RST_COPIES_MAX={plan['max_loads']}"]
     if plan.get("re"):
-        out.append(f"--orfs-var OT_RST_SPLIT_RE={shq(plan['re'])}")
+        out.append(f"--orfs-var OT_RST_COPIES_RE={shq(plan['re'])}")
     rl = reset_landing_plan(s)
     if rl and rl.get("enable") and rl.get("copies"):
         out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))

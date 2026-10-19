@@ -132,7 +132,7 @@
    "hb_cr"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): host_rst_n landed relay drove 7,826 flops on one copy -> the last landing stage gets 34 KEPT identical copies (reset_landing.copies, ot_pin_regs.tcl OT_RST_LAND_COPIES) and reset_relay_split {256} spreads the core's reset loads over them in synthesis (ot_rst_split.tcl); release latency unchanged (+2 landing edges); io_hold_margin 0.025 -> 0.03. RTL unchanged.",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): host_rst_n landed relay drove 7,826 flops on one copy -> the last landing stage gets 36 KEPT identical copies (sized from the 7,982 reset loads the synthesis pass saw on gate r5a) (reset_landing.copies, ot_pin_regs.tcl OT_RST_LAND_COPIES) and reset_relay_split {256} spreads the core's reset loads over them in synthesis (ot_rst_copies.tcl); release latency unchanged (+2 landing edges); io_hold_margin 0.025 -> 0.03. RTL unchanged.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -369,7 +369,7 @@
   "enable": true,
   "stages": 2,
   "copies": {
-   "host_rst_n": 34
+   "host_rst_n": 36
   }
  },
  "reroute_reason": {
