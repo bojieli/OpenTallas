@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.hbm_bw_unit.v1",
+ "pattern": "rand",
+ "defines": [],
+ "seed": 1,
+ "layers": 1,
+ "blocks": 64,
+ "rc": 1,
+ "bw": null,
+ "pcs": [],
+ "fault": [
+  "FAULT pc0 pc_fault 0 owner_fault 1 cyc 459",
+  "%Error: /srv/opentallas-scratch/claude/hbm-bw-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv:82: Verilog $stop"
+ ],
+ "done": []
+}
