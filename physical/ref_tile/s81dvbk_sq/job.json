@@ -2,12 +2,12 @@
  "name": "s81dvbk_sq-q1-COMMIT",
  "block": "dsdv_bksel_q",
  "ref_tile": true,
- "owner": "Claude:S81U-BK3",
+ "owner": "Claude:S81-BKSQ",
  "purpose": "S81-DV bk_sel quarter tile, vertical cut (dsfd_selt_q2 frprildb configuration re-pinned / re-cut; lane S81U-BK3): closure.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81u2-bk-1017",
+  "branch": "claude/s81-bksq-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
