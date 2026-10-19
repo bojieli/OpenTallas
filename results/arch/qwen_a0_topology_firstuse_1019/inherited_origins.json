@@ -1,0 +1,289 @@
+{
+  "schema": "opentallas.qwen.a0.safe_model.v1",
+  "status": "MODEL_ONLY_NO_GATE",
+  "source": "985e49d6e+c980cbe47 / immutable NK c1r9f actual synth area",
+  "dimensions_um": [
+    1209.6,
+    648.0
+  ],
+  "aspect": 1.8666666666666665,
+  "area_um2": 783820.7999999999,
+  "previous_dimensions_um": [
+    457.92,
+    1166.4
+  ],
+  "parent_area_delta_um2": 249702.9119999999,
+  "hard_area_um2": 322971.5,
+  "mapped_relay_std_area_um2": 6283.16352,
+  "historical_std_plus_reserve_um2": 8756.0,
+  "raw_fill": 0.4200636976206807,
+  "full_width_std_band_um": [
+    0,
+    345.6,
+    1209.6,
+    358.56
+  ],
+  "std_band_fill_mapped": 0.4008035714285714,
+  "std_band_fill_with_historical_reserve": 0.5585460350120844,
+  "children": [
+    {
+      "name": "node",
+      "at": [
+        43.2,
+        129.6
+      ],
+      "size": [
+        47.52,
+        432.0
+      ]
+    },
+    {
+      "name": "rom0",
+      "at": [
+        129.6,
+        43.2
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom1",
+      "at": [
+        345.6,
+        43.2
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom2",
+      "at": [
+        561.6,
+        43.2
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom3",
+      "at": [
+        777.6,
+        43.2
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom4",
+      "at": [
+        993.6,
+        43.2
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom5",
+      "at": [
+        129.6,
+        216.0
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom6",
+      "at": [
+        345.6,
+        216.0
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom7",
+      "at": [
+        561.6,
+        216.0
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom8",
+      "at": [
+        777.6,
+        216.0
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "rom9",
+      "at": [
+        993.6,
+        216.0
+      ],
+      "size": [
+        172.8,
+        110.16
+      ]
+    },
+    {
+      "name": "lsl0",
+      "at": [
+        129.6,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl1",
+      "at": [
+        259.2,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl2",
+      "at": [
+        388.79999999999995,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl3",
+      "at": [
+        518.4,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl4",
+      "at": [
+        648.0,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl5",
+      "at": [
+        777.6,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl6",
+      "at": [
+        907.1999999999999,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    },
+    {
+      "name": "lsl7",
+      "at": [
+        1036.8,
+        432.0
+      ],
+      "size": [
+        99.792,
+        140.4
+      ]
+    }
+  ],
+  "operand_select_plan": {
+    "default_off": "REGROOT4",
+    "lanes": 64,
+    "bits_per_operand": 32,
+    "variable_bits_per_lane": 16,
+    "lanes_per_copy": 2,
+    "max_select_mux_inputs": 32,
+    "wsrc_copies": 32,
+    "group_mask_copies": 32,
+    "old_select_registers": 6,
+    "operand_added_registers": 58,
+    "round_added_registers": 7,
+    "added_registers": 65,
+    "added_edges": 0,
+    "upstream_wsrc_fanout": 32,
+    "requirement": "Actual synthesis must retain copies and prove all primitive-driver loads, including decode logic, <=32."
+  },
+  "reset_plan": {
+    "face_stages_required": 2,
+    "raw_pin_max_sinks": 2,
+    "local_branch_max_sinks": 32,
+    "existing_face_stages": 1,
+    "adopted": false,
+    "requirement": "Additional registered reset tree and warmup to be sized from actual census; one sampled reset_q is insufficient."
+  },
+  "schedule": {
+    "compute_macs_per_cycle": 64,
+    "rom_bytes_per_port_cycle": 33.25,
+    "physical_rom_ports": 10,
+    "raw_rom_return_bits_per_cycle": 5120,
+    "tile_output_bits_per_cycle": 514,
+    "upper_node_output_bits_per_cycle": 514,
+    "authorized_node_path_relay_edges": 1,
+    "node_landing_data_ff": 512,
+    "node_landing_valid_ff": 1,
+    "node_landing_clock_entries": "existing eight ck_tx entries",
+    "operand_copy_edges": 0,
+    "rom_return_landing_edges": null,
+    "reset_warmup_edges": null,
+    "full_token_delta": null,
+    "requirement": "Long paths must be bound to actual master pins and source event ledgers before choosing fixed landing depth."
+  },
+  "unresolved": [
+    "Native ROM/LSL/node pin geometry and PG/via escape on proposed orientations",
+    "Source-to-destination static relay epochs and every routed reach <=405um",
+    "Synthesized reset tree, operand copies, area and actual register/comb driver census",
+    "Keep all parent standard cells in the modeled full-width12.96um band; actual mapped mass fills40.08% and historical reserve55.85%, new mapped mass and clock/repair overhead must be re-sized",
+    "Native clock pairs, TT setup and FF hold, source reset mutants and numerical production proof",
+    "Die slot/area placement changes and compiler age pricing; no parent fit claimed"
+  ]
+}
