@@ -16,7 +16,10 @@
 //         drains exactly as the original.  With other users' steps in flight the die is never globally drained, so
 //         the step's terminal result -- emitted by the static calendar after that step's last scheduled KV/VM/collective
 //         work -- retires it without the global drains (OWNER/die-lane audit point, lanes/MU-QWEN-ADOPT.md ## HROOT).
-//         Recovery clear, cancel release and the allocator wrap fence still require the true global drains.
+//         Recovery clear, a cancel release of a LIVE step and the allocator wrap fence still require the true global
+//         drains.  MU-KV-PEER 10-19: the terminal barrier release (class5) of an already-RETIRED step follows the
+//         retire rule (drains, or other users' contexts still owned), and a pending release blocks only the request
+//         issue of its own user (with one global drain per release, 4 pipelined users would drain the die every step).
 // TAG59 = {epoch16, stage6, token18, position13, segment6}; terminal stage 37 / segment 0 (unchanged).
 module qkd_host_native_token_endpoint_cancel_mu #(parameter integer ENABLE_NATIVE=0,MUT=0,MU=1)(
  input wire ck,por_n,rst_n,input wire[181:0]hc,input wire[92:0]legacy_tk,
@@ -84,7 +87,6 @@ end else begin:g_mu
              hc_q[15:13]==0&&epoch_q[1:0]==u_in;
  // issue: the oldest not-yet-issued owned step (acceptance order)
  wire[1:0]ui=q_u[ip];
- wire issue=ENABLE_NATIVE&&n_i!=0&&c_pend[ui]&&(credit||MUT==3)&&!protocol_fault&&!fault_q&&!release_pending&&!cancel_release_v;
  wire skip_i=n_i!=0&&!c_pend[ui];                       // a released step that never issued
  // results: context by the epoch user of the result TAG
  wire[1:0]ur=rtag[44:43];
@@ -101,6 +103,7 @@ end else begin:g_mu
  wire release_matches=release_tag==term(c_epoch[uc],c_tok[uc],c_pos[uc])&&release_gen==c_gen[uc];
  wire release_fire=release_pending&&c_act[uc]&&release_matches&&(MUT==4||drains)&&credit;
  wire[1:0]ucv=cancel_release_tag[44:43];
+ wire issue=ENABLE_NATIVE&&n_i!=0&&c_pend[ui]&&(credit||MUT==3)&&!protocol_fault&&!fault_q&&!(release_pending&&uc==ui)&&!(cancel_release_v&&ucv==ui);
  always @(posedge ck or negedge por_n)if(!por_n)trace_counter<=0;
  else if(rst_n&&accept)trace_counter<=trace_counter+1'b1;
  integer k;
@@ -158,7 +161,7 @@ end else begin:g_mu
     released_tag<=release_tag;released_gen<=release_gen;
     if(c_seen[uc]&&c_done[uc]&&!(retire&&uh==uc))result_cr<=1;
    end
-   if(release_pending&&!c_act[uc]&&credit&&drains&&!start&&!hc_q[38]&&!hc[38]&&!request_v)begin
+   if(release_pending&&!c_act[uc]&&credit&&(drains||(|c_act))&&!start&&!hc_q[38]&&!hc[38]&&!request_v)begin
     release_pending<=0;cancel_released<=1;released_valid<=1;released_tag<=release_tag;released_gen<=release_gen;
    end
   end
