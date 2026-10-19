@@ -6,7 +6,7 @@
 // slot (s0 + r) mod 256, s0 = POS_SLOT mod 256 (8-bit ring index: the "+1 index bit" over the d4g 128-slot ring).  The
 // existing move227 descriptor carries m rows at a dense HBM stride n * 4 B: one move of m = N rows when the rows do not
 // cross slot 255; else the compiler splits the record into two moves (m1 = 256 - s0 rows at slot s0, then N - m1 rows at
-// slot 0), the second issued on the static calendar after the first releases the engine (first_drain + chunks + 2).
+// slot 0), the second commanded on the static calendar after the first releases the engine (first_drain + chunks + 2).
 // Golden per row: HBM[HB0 + ((s0 + r) mod 256) * 2048 + 4 k] = VM[VB + r * VS + k], k < 512, computed here from the
 // addresses.  Fixed timeline: every beat at drain_at(move) + K + ord / 8 (K learned on the first beat, then fixed).
 // Measured per case: first command -> last WB beat (cycles).
@@ -72,9 +72,11 @@ task run(input integer R,input integer s0,input integer VB);
     fork
       begin
         for(mi=0;mi<nmv;mi=mi+1)begin
-          issue_at=(mi==0)?t0+16:dr[0]+mrows[0]*N/64+2+2;
+          // the engine takes a move only when idle (busy clears at first_drain + chunks + 1): the split move's command
+          // is on the calendar at first_drain + chunks + 2, 16 edges before its issue (the same lead as move 0)
+          issue_at=(mi==0)?t0+16:dr[0]+mrows[0]*N/64+2+16;
           dr[mi]=issue_at+10;drain_at=dr[mi];
-          while(cycle+16<issue_at)@(negedge clk);    // command 16 edges before its issue (static calendar)
+          while(cycle+16<issue_at)@(negedge clk);
           mv=move(N,mrows[mi],mbase[mi],vs_d,HB0+mslot[mi]*ROWB);mv_v=1;@(negedge clk);mv_v=0;
         end
       end
