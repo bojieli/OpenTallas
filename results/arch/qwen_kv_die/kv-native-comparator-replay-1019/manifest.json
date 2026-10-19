@@ -1,0 +1,26 @@
+{
+  "authorization": "ROOT diagnostic only: one retained counterexample replay; observability only; no qualification",
+  "before_script_sha256": "83abdf055eaab288283ad1856224d03bc64ae3e7facbde54e1e4f735160043c9",
+  "after_script_sha256": "a3413dc47372fff09051b3b082f5b7a7da171605aa9c34ce1fa3bd5dc56e555f",
+  "dut_gold_cell_model_sha256_before_and_after_identical": {
+    "cells.v": "fdcee3ffb791aa6d20951b1321e3ccd94c81aecb2e7ab8c024cc561d2e8d86b4",
+    "gate.v": "65c257cab0c9bf533c8855cccac0d41a2365c1eecc7fc96ee18f2fca748bc464",
+    "gold1.il": "6a5d3c4194a277802de5892808afef07c10e00d496d1a3e2f0b25261018b8782"
+  },
+  "original_sat_formula": "sat -seq 10 -prove-asserts -prove-skip 6 -set-def-inputs -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -set-at 4 rst_n 0 -set-at 5 rst_n 0 -set-at 6 rst_n 0 -show-inputs -show-outputs -dump_json joint_base_cex.json -verify",
+  "formula_delta": "Only concretization to retained CEX; same seq10, asserts, skip6, six reset-low assumptions. Added cmp/trigger outputs only.",
+  "initial_signals_with_specified_bits": 10051,
+  "initial_known_bits_pinned": 19963,
+  "inputs": [
+    "clk",
+    "rst_n",
+    "kp_in",
+    "kpv_in",
+    "gf_in"
+  ],
+  "input_samples_pinned": 50,
+  "unspecified_x_or_blank": "Preserved unspecified, never coerced to zero",
+  "source_cex_sha256": "e77cae1e1090b3449a20a96d3d5f5d47d78041bdda57d7d7de5a0c14f0f1eea4",
+  "reservation_GB": 32,
+  "reservation_basis": "Original same base peaked 28440788 KiB; no resource expansion"
+}

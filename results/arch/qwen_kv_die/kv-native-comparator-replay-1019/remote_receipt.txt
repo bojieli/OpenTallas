@@ -1,0 +1,28 @@
+2026-10-19T15:56:57-07:00
+    PID     ELAPSED   RSS COMMAND
+2323674       35:38 31976944 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -l joint_base.log -q -s joint_base.ys
+total 52012
+-rw-rw-r-- 1 ubuntu ubuntu     9344 Oct 19 12:29 cells.v
+-rw-rw-r-- 1 ubuntu ubuntu 12205883 Oct 19 12:29 gate.v
+-rw-rw-r-- 1 ubuntu ubuntu 19775035 Oct 19 12:29 gold1.il
+-rw-rw-r-- 1 ubuntu ubuntu 11025199 Oct 19 15:45 joint_base.log
+-rw-rw-r-- 1 ubuntu ubuntu       45 Oct 19 15:21 joint_base.stderr
+-rw-rw-r-- 1 ubuntu ubuntu        0 Oct 19 15:21 joint_base.stdout
+-rw-rw-r-- 1 ubuntu ubuntu  1296978 Oct 19 13:52 joint_base.ys
+-rw-rw-r-- 1 ubuntu ubuntu  6323768 Oct 19 15:21 joint_induct.log
+-rw-rw-r-- 1 ubuntu ubuntu        2 Oct 19 15:21 joint_induct.rc
+-rw-rw-r-- 1 ubuntu ubuntu      887 Oct 19 15:21 joint_induct.stderr
+-rw-rw-r-- 1 ubuntu ubuntu        0 Oct 19 13:52 joint_induct.stdout
+-rw-rw-r-- 1 ubuntu ubuntu  1296749 Oct 19 13:52 joint_induct.ys
+-rw-rw-r-- 1 ubuntu ubuntu  1296682 Oct 19 13:52 joint_prelude.ys
+fdcee3ffb791aa6d20951b1321e3ccd94c81aecb2e7ab8c024cc561d2e8d86b4  cells.v
+65c257cab0c9bf533c8855cccac0d41a2365c1eecc7fc96ee18f2fca748bc464  gate.v
+6a5d3c4194a277802de5892808afef07c10e00d496d1a3e2f0b25261018b8782  gold1.il
+a3413dc47372fff09051b3b082f5b7a7da171605aa9c34ce1fa3bd5dc56e555f  replay.ys
+e659637f2a3225b13daf87f17e3c2e326594bd072e9eda2ce1d27af65a4d6156  manifest.json
+e77cae1e1090b3449a20a96d3d5f5d47d78041bdda57d7d7de5a0c14f0f1eea4  original_cex.json
+050ec65bef49a7c9ad83609668538b581e5373a510f4045078859c9ffc03b4d8  replay_cex.json
+040ebc678d12f6e9ba796afc9f7d8efa0ab2e9fd895a770bc63b715125d6a8fd  replay.log
+cd41dccfd62e67d783c480eb501aa6a1c61a9d7ebe1720d1fc2a7360cb8e6457  replay.stderr
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  replay.stdout
+4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865  replay.rc

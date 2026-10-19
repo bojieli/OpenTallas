@@ -1,0 +1,5 @@
+# Next owner pickup
+
+- ONE diagnostic replay is terminal FAIL rc1, fully collected; do not run it again. ROOT owns any future source/state-relation repair. All 213 checked-step7 original data mismatches and complete flags remain preserved; no reset extension, data mask, invalid-state exemption or native receipt is authorized.
+- Original lane8 base continues on ep6 at `/srv/opentallas-scratch/claude/kv-native-joint-proof-1019/lane8`, PID2323674 (last exact check: elapsed38:04 / RSS31978208KiB, no joint_base.rc). Unit oth-ubuntu-1606152/session40643. Fresh bounded collector: preserve terminal `joint_base.{log,stderr,stdout,rc,ys}` and any raw CEX; decode names-only with blank/initial datum semantics. Induction13251 PASS alone does not establish this base. Do not stop/restart or launch duplicate SAT.
+- Structural next decision must distinguish the old-data state relation from actual physical reset distribution/phase/POR and authoritative first consumption. Step8 agreement in one constrained witness does not close either proof obligation.
