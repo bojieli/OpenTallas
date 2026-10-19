@@ -1,0 +1,156 @@
+{
+ "name": "s81sl_lepmuh_sf-s81sl_lepmuh_sf-COMMIT",
+ "block": "ot_s81sl_lep_mu_h",
+ "ref_tile": true,
+ "owner": "Claude:MU-S81-2/HOSTEP",
+ "purpose": "MU-S81-2/HOSTEP: host-plane multi-user end-slice link endpoint (s_7N of non-duplicated dies; MU_EN 1, AB_EN 0, HOST_EN 1) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/mu-lep-rxsram-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_dv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/mu_s81_2_hostep_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep_mu_h #(.RX_SRAM(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lepmuh_exact_s1",
+    "cmd": "MU_RX_SRAM=1 bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmuh_exact_s1 lepmuh none 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS lepmuh MUT=none seed 1$",
+    "min_count_regex": "^PASS lep_muh: host-plane MU endpoint == single-user lep: (\\d+) H->die ring beats"
+   },
+   {
+    "name": "lepmuh_exact_s5",
+    "cmd": "MU_RX_SRAM=1 bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmuh_exact_s5 lepmuh none 5",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS lepmuh MUT=none seed 5$"
+   },
+   {
+    "name": "lepmuh_mut_hstamp",
+    "cmd": "MU_RX_SRAM=1 bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmuh_mut_hstamp lepmuh HSTAMP 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_hstamp.log"
+   },
+   {
+    "name": "lepmuh_mut_tagdrop",
+    "cmd": "MU_RX_SRAM=1 bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmuh_mut_tagdrop lepmuh TAGDROP 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_tagdrop.log"
+   },
+   {
+    "name": "lepmuh_mut_landcut",
+    "cmd": "MU_RX_SRAM=1 bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmuh_mut_landcut lepmuh LANDCUT 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^FAIL lep_muh: ok 0 rx [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_landcut.log"
+   },
+   {
+    "name": "lepmuh_mut_ksoff",
+    "cmd": "MU_RX_SRAM=1 bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmuh_mut_ksoff lepmuh KSOFF 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^LEPMUH_STATS .* ks 0/[1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_hostep_1019/witness_lepmuh_ksoff.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81sl_lepmuh_sf/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lepmuh_sf/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lepmuh_sf --out {RUN}/record/views/ot_s81sl_lep_mu_h --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lepmuh_sf/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lepmuh_sf/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lepmuh_sf/s81sl_lepmuh_sf-s81sl_lepmuh_sf-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "RX_SRAM=1 structural successor: five32x128 true SRAM RX banks per lane with exact same-edge show-ahead/forwarding; five512x128 true SRAM TX banks per lane with exact original OLD-read/hold semantics. Reset-distinct frame, pointer, forwarding and host-capture regions remove wide control enables; balanced reset retains three-edge local release. Existing TXRP=1 +1 lane edge already priced; no additional data edges. Measured H std6462.29; actual A area pending. New full-width band pruned before tapcell, GPL-only row envelope restores full paid core. All physical acceptance and parent fit remain pending."
+}
