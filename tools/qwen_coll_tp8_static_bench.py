@@ -152,6 +152,8 @@ def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd
            "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8_static", f"-GLATU={lu}", f"-GLATS={ls}", f"-GXU={xu}",
            f"-GXS={xs}", f"-GPR_B4={int(pr_b4)}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
+    if pr_b4:
+        cmd += ["+define+OT_COLL_B4_NATIVE"]
     if qfd:
         cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
     r = subprocess.run(cmd, capture_output=True, text=True)

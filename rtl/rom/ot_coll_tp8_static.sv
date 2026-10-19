@@ -419,6 +419,9 @@ module ot_coll_static_ring #(parameter integer OFF = 20, NATIVE64=0, USEFUL_W=54
 );
     localparam integer B  = (OFF <= 32) ? 1 : (OFF <= 64) ? 2 : 4;
     localparam integer AW = 5 + $clog2(B);
+`ifndef OT_COLL_B4_NATIVE
+    initial if(NATIVE64) $error("COLL_B4_REQUIRES_NATIVE_SOURCE_DEFINE");
+`endif
     initial if(NATIVE64 && (B!=4 || (USEFUL_W!=514 && USEFUL_W!=546))) $error("COLL_B4_CAPACITY_WIDTH");
     initial if (OFF < 2 || OFF > 128) $error("ot_coll_static_ring: 2 <= OFF <= 128");
     reg [AW-1:0] wa;
@@ -427,6 +430,7 @@ module ot_coll_static_ring #(parameter integer OFF = 20, NATIVE64=0, USEFUL_W=54
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
+`ifdef OT_COLL_B4_NATIVE
         if(NATIVE64) begin:g_native64
             ot_coll_sram_bank64 #(.W(USEFUL_W)) u_group (.clk(mem_ck[b]),.r_ce_in(1'b1),.r_addr_in(ra[4:0]),
                 .rd_out(rdb[b*546+:USEFUL_W]),.w_ce_in((B==1)?1'b1:(wa[AW-1:5]==b)),
@@ -436,6 +440,10 @@ module ot_coll_static_ring #(parameter integer OFF = 20, NATIVE64=0, USEFUL_W=54
         ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
             .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
         end
+`else
+        ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+            .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
+`endif
     end endgenerate
     generate if (B == 1) begin : g_one
         assign rd = rdb;
