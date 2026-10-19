@@ -332,6 +332,38 @@ class CyclicRes(M.Reservations):
                     lst.remove((a + t0 + k * self.H, b + t0 + k * self.H, owner))
 
 
+# ------------------------------------------------------------------------------------- filler initial context (0ka)
+CTX_TAG = 0x4D43            # qfd_tt_ctlm_dv OPSEG: CTX[127:112]
+CTX_DW = (5, 6)             # the calendar image words that carry CTX = {DW6, DW5} (reserved 0 at CTX_DW 0)
+
+
+def ctx_words(ctx, mask=None, tag=CTX_TAG):
+    """the boot context record of the OPSEG fillers (MU-QW-DIE 10-19, coordinator 0ka: loaded at boot through the image /
+    host config plane into the ctlm per-user token / position bank, no bench-only preload).  ctx = {u: (tok, pos)} for
+    fillers u = 1..NU-1; mask = the users the record loads (default: every user in ctx).  Returns (DW5, DW6):
+    CTX[36(u-1) +: 36] = {tok 18, pos 18}, CTX[108 +: 3] = mask (bit u-1), CTX[111] = 0, CTX[127:112] = tag."""
+    mask = set(ctx) if mask is None else set(mask)
+    v = 0
+    for u, (tok, pos) in ctx.items():
+        if not 1 <= u < NU or not 0 <= tok < (1 << 18) or not 0 <= pos < (1 << 18):
+            raise ScheduleError(f"context of user {u} out of range (filler 1..{NU - 1}, tok / pos 18 b)")
+        v |= ((tok << 18) | pos) << (36 * (u - 1))
+    if not mask <= set(ctx):
+        raise ScheduleError(f"context mask {sorted(mask)} names a user without a record")
+    v |= sum(1 << (u - 1) for u in mask) << 108
+    v |= (tag & 0xFFFF) << 112
+    return v & ((1 << 64) - 1), v >> 64
+
+
+def with_ctx(dw, ctx, mask=None, tag=CTX_TAG):
+    """the DW image with the context record in DW5 / DW6 (both must be 0 in the plain image)"""
+    if any(dw[i] for i in CTX_DW):
+        raise ScheduleError("DW5 / DW6 already used: the context record needs them")
+    out = list(dw)
+    out[CTX_DW[0]], out[CTX_DW[1]] = ctx_words(ctx, mask, tag)
+    return out
+
+
 def compile_frame(F=16, p=None, layers=36, starts=None):
     """periodic NU-user op-granular calendar over a frame of F latency-user tokens; ScheduleError on any collision"""
     p = M._need(dict(M.SOURCED, users=NU, occupancy="measured", head_chunks=8, **(p or {})))

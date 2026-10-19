@@ -13,6 +13,12 @@
 //   u_thru hr region: wires only.  It makes every core-driven output (cmd, cal_*, emb_*) cross into the hr region like
 //          the head's outputs, so the landed parent has ONE output offset (+3 edges on every output, 0 on every input).
 // Every input port is landed from the core region (port_regions), so the die presents all inputs on the flat schedule.
+// MU-QW-DIE 10-19: u_gi takes qfd_tt_ctlm_dv's OPSEG (MU-QW-B1 op-granular filler starts from the op-start leaf, explicit
+//   calendar ranges, per-user stage bank on leaf starts, filler result -> its tok / pos bank, dc user-0 gate) and the boot
+//   context record (coordinator 0ka: CTX_DW, image DW5 / DW6 -> filler banks on the seal edge).  The leaf itself is a
+//   sibling child of the flat parent (u_leaf, core region; its own hard tile, MU-LEAF-KIT) fed by dh_run_o = dh_q[43:0];
+//   op_fault (leaf fault | start collision | bad context record) rides the dcs start_fault bit (both OR into core_fault,
+//   as in qfd_tt_ctlm_dv).  OPSEG 0: the leaf inputs are tied 0 and every edge is the previous u_gi.
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_gi #(
     parameter integer LAST_STAGE = 37,
@@ -20,11 +26,19 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer NU = 4,
     parameter integer UVM_STRIDE = 4096,
     parameter integer PIDX_STRIDE = 128,
-    parameter integer UTAG_LSB = 6
+    parameter integer UTAG_LSB = 6,
+    parameter integer OPSEG = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [186:0]  dh,
+    output wire [43:0]   dh_run_o,               // OPSEG: dh_q[43:0] to the op-start leaf (u_leaf dh_run)
+    input  wire          op_v,                   // OPSEG: the leaf's registered op start {user, stage, first, cnt}
+    input  wire [1:0]    op_user,
+    input  wire [5:0]    op_stage,
+    input  wire [9:0]    op_first,
+    input  wire [9:0]    op_cnt,
+    input  wire          op_lfault,              // OPSEG: the leaf's sticky mu_fault
     input  wire [1:0]    dh_user,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
@@ -56,7 +70,10 @@ module qfd_tt_ctlm_dv_gi #(
         if (!rst_n) begin dh_q <= 187'd0; ss_q <= 107'd0; ag_q <= 10'd0; fab_q <= 1'b0; dhu_q <= 2'd0; end
         else begin dh_q <= dh; ss_q <= ss5; ag_q <= ag5; fab_q <= fab; dhu_q <= (NU > 1) ? dh_user : 2'd0; end
     localparam integer UB = (NU > 1) ? $clog2(NU) : 1;
-    wire [UB-1:0] s_user = dhu_q[UB-1:0];
+    localparam integer OPS = (OPSEG != 0 && NU > 1) ? 1 : 0;
+    localparam integer NF = (NU > 1) ? NU - 1 : 1;
+    wire [UB-1:0] s_user = (OPS != 0) ? {UB{1'b0}} : dhu_q[UB-1:0];
+    assign dh_run_o = dh_q[43:0];
     wire        d_start = dh_q[42];
     wire [5:0]  d_stage = dh_q[41:36];
     wire [17:0] s_tok = dh_q[35:18], s_pos = dh_q[17:0];
@@ -67,19 +84,38 @@ module qfd_tt_ctlm_dv_gi #(
     wire        ss_arland = ss_q[106];
     wire        ag_stn_busy = ag_q[9];
     wire        ag_any = ag_q[8], ag_vm = ag_q[6], ag_stn = ag_q[5], ag_su_busy = ag_q[1];
+    wire [1:0]  ss_tu = ss_q[27:26];                // OPSEG: the user of tok_idx when tok_v (MU-QW-AMIX contract)
+
+    // OPSEG op starts (leaf) and the boot context record (see qfd_tt_ctlm_dv OPSEG)
+    wire [127:0] c_ctx; wire c_ctxld;
+    wire        l_v = (OPS != 0) && op_v;
+    wire [UB-1:0] l_user = op_user[UB-1:0];
+    wire        l_start = l_v && !d_start;            // the face start wins a collision
+    wire        op_coll = l_v && d_start;
+    wire [2:0]  ctx_mask = c_ctx[110:108];
+    wire        ctx_ok = c_ctx[127:112] == 16'h4D43 && !c_ctx[111] && (({1'b0, ctx_mask} >> (NU - 1)) == 4'd0);
+    wire        ctx_ld = (OPS != 0) && c_ctxld && ctx_ok;
+    wire        ctx_bad = (OPS != 0) && c_ctxld && !ctx_ok;
+    reg         op_fault;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) op_fault <= 1'b0;
+        else if (((OPS != 0) && op_lfault) || op_coll || ctx_bad) op_fault <= 1'b1;
+    wire        u_start = d_start || l_start;
+    wire [5:0]  u_stage = l_start ? op_stage : d_stage;
+    wire [UB-1:0] u_user = l_start ? l_user : s_user;
 
     wire        c_emb, c_seg, c_su, c_xc, c_run, c_done, c_fault, c_ready;
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     qfd_dv_cmd_cal_mu #(.MUT(0), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
-        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0)) u_cal (.ck(ck), .rst_n(rst_n),
+        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (.ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
-        .start(d_start), .stage(d_stage), .start_user(s_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
+        .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(op_first), .start_cnt(op_cnt), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),
-        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode));
+        .done_user(c_done_user), .fault(c_fault), .fault_code(c_fcode), .ctx_dw(c_ctx), .ctx_load(c_ctxld));
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}});
     wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}});
     assign cal_image_ready = c_ready;
@@ -91,7 +127,10 @@ module qfd_tt_ctlm_dv_gi #(
     integer     sg_i;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin for (sg_i = 0; sg_i < NU; sg_i = sg_i + 1) stg_b[sg_i] <= 6'd0; end
-        else if (d_start) stg_b[s_user] <= d_stage;
+        else begin
+            if (d_start) stg_b[s_user] <= d_stage;
+            else if (l_start) stg_b[l_user] <= op_stage;            // OPSEG: the leaf start's user
+        end
     wire        hd_start = (NU == 1 || 1'b0) ? d_start : ((d_start && s_u0) || c_seg);
     wire [5:0]  hd_stage = (NU == 1 || 1'b0) ? d_stage : ((d_start && s_u0) ? d_stage : stg_b[c_user]);
     assign s_start = hd_start;                   // to u_hr stage_start / stage (the head running stage)
@@ -102,13 +141,21 @@ module qfd_tt_ctlm_dv_gi #(
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
     reg         start_fault;
     integer     ub_i;
+    wire        r_fill = (OPS != 0) && ss_tokv && ss_tu != 2'd0 && {1'b0, ss_tu} < 3'(NU);   // OPSEG filler result
+    wire [UB-1:0] r_wr = ss_tu[UB-1:0];
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
             for (ub_i = 0; ub_i < NU; ub_i = ub_i + 1) begin tok_b[ub_i] <= 18'd0; pos_b[ub_i] <= 18'd0; end
             st_h <= 1'b0; st_tok <= 18'd0; st_pos <= 18'd0; st_base <= 12'd0;
             start_fault <= 1'b0; emb_start <= 1'b0; emb_token <= 18'd0;
         end else begin
+            if (ctx_ld)
+                for (ub_i = 1; ub_i < NU; ub_i = ub_i + 1)
+                    if (ctx_mask[ub_i - 1]) begin
+                        tok_b[ub_i] <= c_ctx[36 * (ub_i - 1) + 18 +: 18]; pos_b[ub_i] <= c_ctx[36 * (ub_i - 1) +: 18];
+                    end
             if (d_start) begin tok_b[s_user] <= s_tok; pos_b[s_user] <= s_pos; end
+            if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
             st_h <= s_me | c_seg;
             if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_b[c_user]; st_pos <= pos_b[c_user]; st_base <= c_base; end
@@ -132,9 +179,11 @@ module qfd_tt_ctlm_dv_gi #(
     assign x_oidle = !ag_su_busy;
     // rom_ret = {ag_stn, 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, !ag_stn_busy, 1'b1}: constants assembled at the head pin
     assign rom_ret_v = {ag_stn, !ag_stn_busy};
-    assign dcs = {d_start && d_stage == 6'd0, ss_tokv, ss_tok[17:0], ss_tval, ss_arl, ss_arland,
-                  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault, c_ready};
-    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28:26], ss_tok[23:18], dh_q[43], c_run_u, c_done_user, c_fcode};
+    // OPSEG: dc ntok / nval / tok_seen take user-0 results only; op_fault joins start_fault (both into core_fault)
+    assign dcs = {d_start && d_stage == 6'd0, ss_tokv && (OPS == 0 || ss_tu == 2'd0), ss_tok[17:0], ss_tval, ss_arl, ss_arland,
+                  c_xc, ag_vm, ag_su_busy, ag_any, fab_q, c_fault, start_fault | op_fault, c_ready};
+    wire unused = &{1'b0, c_run, c_done, ss_q[73:61], ss_q[28], ss_tok[23:18], dh_q[43], c_run_u, c_done_user, c_fcode, op_user,
+                    NF[0]};
 endmodule
 
 module qfd_tt_ctlm_dv_go #(

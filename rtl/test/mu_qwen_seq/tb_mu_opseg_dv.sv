@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 // MU-QW-B1 bench harness (2026-10-19): qfd_tt_ctlm_dv (HARD_HR 1, STAGE_ME 1) at NU 1 / OPSEG 0 (the single-user
 // reference) or NU 4 / OPSEG 1 (the op-start leaf inside the cluster, ROM image from +OT_ROM_DIR=<dir> with instance
-// qfd_tt_ctlm_opseg), driven as qfd_sys_face drives it.  Built with +define+QFD_CTLM_MU_BENCH_PRELOAD (bench-only filler
-// initial context, +MU_PRE_TOK<u> / +MU_PRE_POS<u>).  Events (+EV, sorted "cycle kind hex", applied before posedge
+// qfd_tt_ctlm_opseg), driven as qfd_sys_face drives it.  The fillers' initial context arrives as the image's DW5 / DW6
+// boot context record (MU-QW-DIE 10-19, coordinator 0ka; no preload define / plusargs any more).  Events (+EV, sorted "cycle kind hex", applied before posedge
 // `cycle`):
 //   0 PW  {addr 10, data 64} -> tt pw and dh pw (both copies, the same edge)     1 DW {addr 3, data 64} -> dh dw
 //   2 RUN {user 2 [44:43], h_start [42], stage 6, tok 18, pos 18} -> dh run levels (h_start one edge) + dh_user

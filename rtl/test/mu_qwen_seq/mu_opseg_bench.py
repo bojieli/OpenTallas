@@ -14,6 +14,9 @@ Cases:
              every entry), the same checks, per-user measured token rates in frame 1.
   neg_drift  red, the latency user's 2nd L0 start one edge late: the leaf must raise op_fcode[1] (anchor drift).
   neg_coll   red, an extra face start on a leaf start's edge: the cluster must raise op_fault (start collision).
+  ctx_part   red (1 + 1 frames) with the boot context record loading users 1 and 3 only (mask 0b101): user 2's bank starts
+             at 0 (MU-QW-DIE 10-19).
+  neg_ctx    red, the context record with a bad tag: the cluster must raise op_fault on the seal edge (and load nothing).
 Checks (PASS needs all; positive cases):
   C1 no calendar fault, no start_fault, no op_fault / leaf fault code;
   C2 latency user identity vs the NU 1 reference: user 0's CMD (cycle + word), EMB / SEG / MES, the head SU accepted
@@ -25,8 +28,9 @@ Checks (PASS needs all; positive cases):
   C4 every user's command fire == the compiled fire (cycle and word, the user's relocation): fires derive from the
      compiled starts and the image entries [first, first + cnt);
   C5 filler token / position: every filler LOCAL EMB sends, and every filler LOCAL SEG starts the ME segment with, the
-     filler's bank: the bench-preloaded initial context (OPEN item: no hardware path), then tok = the root token and
-     pos + 1 at each of the user's results (ss5 tok_v, ss5[27:26] = user);
+     filler's bank: its BOOT CONTEXT RECORD (MU-QW-DIE 10-19, coordinator 0ka: the calendar image's DW5 / DW6,
+     mu_opcal.ctx_words, loaded on the seal edge; the bench-only preload is gone), then tok = the root token and pos + 1
+     at each of the user's results (ss5 tok_v, ss5[27:26] = user);
   C6 the head running stage after every ME start = that segment's user's stage (per-user stage bank);
   C7 (MU-OPCAL-EMB 10-19) every filler's token-start LOCAL EMB sends that user's JUST-COMPUTED token: the root result of
      the AMAX emit of the same token-start segment.  The result reaches ss5 (the ctlm ss_q capture edge) at the RTL-derived
@@ -38,7 +42,8 @@ edge that sees it).
 Negative cases: the named fault rises on the named edge.
 Mutants (--mut, each must FAIL): 21 range ignored (descriptor plays), 22 collision not flagged, 23 filler result into
 the next filler's bank, 24 leaf entry one edge late, 25 leaf re-anchors on every L0 start (anchor drift), 26 leaf drift
-check dropped.
+check dropped, 27 context record never loaded (red), 28 records rotated between fillers (red), 29 record not checked
+(neg_ctx).
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
@@ -58,7 +63,8 @@ C_CAL = 1                       # u_cal issue edge = start event + entry T + C_C
 RES_LAT = O.AM_EMIT_T + C_CAL + O.RES_SSQ    # a user's root result at ctlm ss_q: RTL-derived (MU-OPCAL-EMB; was 8 + 32)
 RES_SKEW = 0                    # bench witness --res-skew
 NU = 4
-PRE = {u: (0x2000 + 0x111 * u, 8186 - 6 * u) for u in range(1, NU)}   # bench-only filler initial context (tok, pos)
+PRE = {u: (0x2000 + 0x111 * u, 8186 - 6 * u) for u in range(1, NU)}   # filler boot context record (tok, pos): image DW5 / DW6
+CTX = dict(mask=None, tag=O.CTX_TAG)                                   # per case (ctx_part: mask {1, 3}; neg_ctx: bad tag)
 U0 = (0x1100, 8186)
 
 
@@ -73,7 +79,7 @@ def build(work, vl, nu, opseg, mut, jobs):
     srcs = [str(ROOT / l.strip()) for l in SRCF.read_text().split('\n') if l.strip()]
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_opseg_dv',
-           '+define+QFD_CTLM_MU_BENCH_PRELOAD', f'-GNU={nu}', f'-GMUT={mut}', f'-GOPSEG={opseg}', '-Mdir', str(d)] + srcs + [str(TB)]
+           f'-GNU={nu}', f'-GMUT={mut}', f'-GOPSEG={opseg}', '-Mdir', str(d)] + srcs + [str(TB)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)
@@ -87,7 +93,6 @@ def run(work, exe, name, events, ncyc, romdir):
     evf, lg = work / f'{name}.ev', work / f'{name}.log'
     evf.write_text(''.join(f'{c} {k} {v:x}\n' for c, k, v in events))
     args = [str(exe), f'+EV={evf}', f'+LOG={lg}', f'+NCYC={ncyc}', f'+OT_ROM_DIR={romdir}']
-    args += [f'+MU_PRE_TOK{u}={PRE[u][0]:x}' for u in PRE] + [f'+MU_PRE_POS{u}={PRE[u][1]:x}' for u in PRE]
     r = subprocess.run(args, capture_output=True, text=True)
     if r.returncode != 0: sys.exit(f'RUN FAILED {name}: {r.stdout[-2000:]} {r.stderr[-2000:]}')
     out = {k: [] for k in ('cmd', 'emb', 'seg', 'mes', 'sua', 'hd', 'cst', 'dc', 'sta', 'faults', 'opf')}
@@ -167,8 +172,10 @@ def expected_fires(starts, ent, K, C):
     return sorted(cmd), sorted(loc)
 
 
-def events_for(pb, face, res, users):
+def events_for(pb, face, res, users, ctx=True):
     pw, dw = pb['pw'], pb['dw']
+    if ctx:                       # the NU 4 OPSEG cluster: the boot context record in DW5 / DW6 (the NU 1 reference: plain)
+        dw = O.with_ctx(dw, PRE, CTX['mask'], CTX['tag'])
     ev = [(2 + a, 0, (a << 64) | pw[a]) for a in range(1024)] + [(2 + 1024 + a, 1, (a << 64) | dw[a]) for a in range(8)]
     for c, u, stg, tok, pos in face:
         ev.append((c, 2, (u << 43) | (1 << 42) | (stg << 36) | (tok << 18) | pos))
@@ -181,7 +188,7 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
     pb, L, face, starts, res = model(cal, nfr, ncyc_ev)
     H = cal['H']
     ncyc = ncyc_ev
-    sol = run(work, e1, f'{name}_solo', events_for(pb, face, res, {0}), ncyc, romdir)
+    sol = run(work, e1, f'{name}_solo', events_for(pb, face, res, {0}, ctx=False), ncyc, romdir)
     mu = run(work, e4, f'{name}_mu', events_for(pb, face, res, set(range(NU))), ncyc, romdir)
     end_cut = ncyc - 8
     # C1
@@ -224,7 +231,7 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
         if u == 0:
             v = [x for x in flog if x[0] < c]
             return (v[-1][1], v[-1][2]) if v else (0, 0)
-        tok, pos = PRE[u]
+        tok, pos = PRE[u] if (CTX['mask'] is None or u in CTX['mask']) else (0, 0)
         for rc, rt in rlog[u]:
             if rc <= c: tok, pos = rt, pos + 1
         return tok, pos
@@ -295,7 +302,10 @@ def check_case(name, cal, nfr, ncyc_ev, e1, e4, work, romdir, mut, fails, summ):
 def neg_case(name, cal, e4, work, romdir, fails, summ):
     H, T = cal['H'], cal['T']
     pb, L, face, starts, res = model(cal, 1, S0 + 2 * T + 2000)
-    if name == 'neg_drift':
+    if name == 'neg_ctx':
+        # the context record with a bad tag: op_fault on the seal edge (DW7 event at 2 + 1024 + 7, + dh_q + seal + load)
+        want_edge = 2 + 1024 + 7 + 2
+    elif name == 'neg_drift':
         # the latency user's L0 start of token 1 one edge late
         face = [(c + 1, u, s, t, p) if (s == 1 and c == S0 + T) else (c, u, s, t, p) for c, u, s, t, p in face]
         want_edge = S0 + T
@@ -305,8 +315,13 @@ def neg_case(name, cal, e4, work, romdir, fails, summ):
         want_edge = lst[0][0]
         face = sorted(face + [(want_edge, 0, 0, tok0(0), U0[1])])
     ncyc = want_edge + 3000
+    if name == 'neg_ctx':
+        CTX['tag'] = O.CTX_TAG ^ 0x0100
     r = run(work, e4, name, events_for(pb, face, res, set(range(NU))), ncyc, romdir)
-    if name == 'neg_drift':
+    CTX['tag'] = O.CTX_TAG
+    if name == 'neg_ctx':
+        hit = [x for x in r['opf'] if x[1] == '0000' and x[2] == 0]   # op_fault, no leaf code, no collision
+    elif name == 'neg_drift':
         hit = [x for x in r['opf'] if x[1][2] == '1']          # op_fcode[1] (string is MSB first: [3][2][1][0])
     else:
         hit = [x for x in r['opf'] if x[1] == '0000']           # op_fault rose with no leaf fault: the collision
@@ -319,7 +334,7 @@ def neg_case(name, cal, e4, work, romdir, fails, summ):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', required=True); ap.add_argument('--mut', type=int, default=0)
-    ap.add_argument('--cases', nargs='+', default=['red', 'neg_drift', 'neg_coll', 'full'])
+    ap.add_argument('--cases', nargs='+', default=['red', 'ctx_part', 'neg_drift', 'neg_coll', 'neg_ctx', 'full'])
     ap.add_argument('--full-frames', type=int, default=1)
     ap.add_argument('--verilator', default=os.environ.get('VERILATOR', 'verilator')); ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--emb-t', type=int, default=None, help='witness: image EMB at this T (compiler assertion bypassed)')
@@ -353,6 +368,10 @@ def main():
             rd = romdir_for('red', cal)
             if case == 'red':
                 check_case('red', cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
+            elif case == 'ctx_part':
+                CTX['mask'] = {1, 3}
+                check_case('ctx_part', cal, 2, S0 + cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
+                CTX['mask'] = None
             else:
                 neg_case(case, cal, e4, work, rd, fails, summ)
         print(f'case {case} done: {len(fails)} fails so far', flush=True)

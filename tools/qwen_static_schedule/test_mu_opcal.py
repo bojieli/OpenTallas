@@ -56,5 +56,32 @@ class OpcalEmbAfterResult(unittest.TestCase):
                 O.compile_frame(16, layers=2, p=dict(emb_t=et, head_tok_ofs=O.EMB_T))
 
 
+
+class OpcalCtx(unittest.TestCase):
+    """MU-QW-DIE 10-19 (coordinator 0ka): the fillers' boot context record in DW5 / DW6"""
+    def test_layout(self):
+        ctx = {1: (0x2111, 8180), 2: (0x2222, 8174), 3: (0x2333, 8168)}
+        d5, d6 = O.ctx_words(ctx)
+        v = (d6 << 64) | d5
+        for u, (tok, pos) in ctx.items():
+            self.assertEqual((v >> (36 * (u - 1))) & ((1 << 36) - 1), (tok << 18) | pos)
+        self.assertEqual((v >> 108) & 7, 7)
+        self.assertEqual((v >> 111) & 1, 0)
+        self.assertEqual(v >> 112, O.CTX_TAG)
+        self.assertEqual(((O.ctx_words(ctx, mask={1, 3})[1] << 64) >> 108) & 7, 0b101)
+
+    def test_refusals(self):
+        with self.assertRaises(ScheduleError):
+            O.ctx_words({0: (1, 1)})                  # user 0 is the face's (host context), never a record
+        with self.assertRaises(ScheduleError):
+            O.ctx_words({1: (1 << 18, 0)})
+        with self.assertRaises(ScheduleError):
+            O.ctx_words({1: (1, 1)}, mask={2})
+        with self.assertRaises(ScheduleError):
+            O.with_ctx([0, 0, 0, 0, 0, 1, 0, 0], {1: (1, 1)})
+        dw = O.with_ctx([7] * 5 + [0, 0, 0], {1: (1, 2)})
+        self.assertEqual(dw[:5], [7] * 5)
+        self.assertEqual(dw[7], 0)
+
 if __name__ == "__main__":
     unittest.main()

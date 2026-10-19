@@ -15,6 +15,10 @@
 // Every input port is landed from the core region (port_regions), so the die presents all inputs on the flat schedule.
 // MU-ADOPT-CTLM 10-19: NU (default 4 = the Qwen ROM 4-user calendar) / dh_user as qfd_tt_ctlm_dv (see its NU header);
 //   NU = 1 is the single-user cluster.  dh_user lands from the core region like dh (0 edges).
+// MU-QW-DIE 10-19: OPSEG / OPSEG_VIAMAP / OPSEG_INST as qfd_tt_ctlm_dv (MU-QW-B1 op-start leaf + coordinator 0ka boot
+//   context record in image DW5 / DW6).  OPSEG 1: the leaf qfd_sys_face_mu_dhuser #(OPSEG 1) is the child u_leaf (core
+//   region, beside u_gi; ROM ot_rom_4096x72_m8 inside; its own hard tile per MU-LEAF-KIT), observing u_gi's dh pin register
+//   (dh_run_o) and driving u_gi's calendar op start.  OPSEG 0 (default): no leaf, the previous cluster on every edge.
 // =====================================================================================================================
 module qfd_tt_ctlm_dv_lpf #(
     parameter integer XPF_TRANSPORT_EDGES = -1,
@@ -23,7 +27,10 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter integer NU = 4,                    // MU-ADOPT-CTLM 10-19: Qwen ROM 4 users (qfd_tt_ctlm_dv NU; 1 = single user)
     parameter integer UVM_STRIDE = 4096,         // = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE
     parameter integer PIDX_STRIDE = 128,         // = DV_PIDX_STRIDE
-    parameter integer UTAG_LSB = 6               // = DV_UTAG_LSB
+    parameter integer UTAG_LSB = 6,              // = DV_UTAG_LSB
+    parameter integer OPSEG = 0,                 // MU-QW-DIE 10-19: 1 = op-start leaf + boot context (Qwen ROM 4 users)
+    parameter string  OPSEG_VIAMAP = "",
+    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -71,8 +78,23 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [15:0]  me_observe;
     wire [379:0] ib_q;
     wire [72:0]  hr_lo;
+    wire [43:0]  dh_run;
+    wire         op_v, op_lfault;
+    wire [1:0]   op_user;
+    wire [5:0]   op_stage;
+    wire [9:0]   op_first, op_cnt;
+    generate if (OPSEG != 0 && NU > 1) begin : g_op
+        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP), .INSTANCE(OPSEG_INST))
+            u_leaf (.ck(ck), .rst_n(rst_n), .dh_run(dh_run), .dh_user(), .res_user(), .mu_fault(op_lfault), .op_v(op_v),
+            .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt), .op_ff(), .op_fcode());
+    end else begin : g_no_op
+        assign op_v = 1'b0; assign op_lfault = 1'b0; assign op_user = 2'd0; assign op_stage = 6'd0;
+        assign op_first = 10'd0; assign op_cnt = 10'd0;
+    end endgenerate
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
-        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB)) u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ss5(ss5),
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .OPSEG(OPSEG)) u_gi (.ck(ck), .rst_n(rst_n), .dh(dh),
+        .dh_run_o(dh_run), .op_v(op_v), .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt),
+        .op_lfault(op_lfault), .dh_user(dh_user), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
         .s_stage(s_stage), .st(st), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows),

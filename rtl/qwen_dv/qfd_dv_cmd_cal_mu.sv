@@ -52,6 +52,12 @@
 //   check: start_cnt 0, start_first not 4-aligned (one store row = 4 entries), or start_first + start_cnt > nent ->
 //   fault_code[0] and the start is refused (as any bad start).  start_rng = 0 (tie it so where unused): identical.
 //   MUT 21 (bench only): the range is ignored (the stage class's descriptor plays).
+// CTX_DW (MU-QW-DIE 2026-10-19, coordinator 0ka: the OPSEG fillers' initial context is boot-loaded through the image /
+//   host config plane, no bench-only preload; opt-in, 0 = unchanged): image words DW5 / DW6 (reserved 0 today: a
+//   non-zero DW5 / DW6 is a seal fault at CTX_DW 0) carry the per-user context record {DW6, DW5} and the seal no longer
+//   requires them to be 0.  Outputs ctx_dw = {DW6, DW5} (the existing dwr[5] / dwr[6] registers, no new storage) and
+//   ctx_load = one edge on the accepted seal (sealed rises without an image fault) -- the consumer (qfd_tt_ctlm_dv OPSEG)
+//   checks the record and loads it.  CTX_DW 0: ctx_load is 0, ctx_dw is still {dwr[6], dwr[5]} (= 0 on every sealed image).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -62,7 +68,8 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UVM_STRIDE = 0,               // per-user VM / landing base stride (address-field units)
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
-    parameter integer UFOLD = 0                     // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
+    parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
+    parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -94,7 +101,9 @@ module qfd_dv_cmd_cal_mu #(
     output reg           done,
     output reg  [UB-1:0] done_user,
     output reg           fault,
-    output reg  [5:0]    fault_code
+    output reg  [5:0]    fault_code,
+    output wire [127:0]  ctx_dw,                    // {DW6, DW5} of the sealed image (CTX_DW)
+    output wire          ctx_load                   // one edge: the image (with its context record) was sealed (CTX_DW)
 );
     // ================================================================ image load (as qfd_dv_cmd_cal)
     reg         loading, sealed, sealed_d;
@@ -110,7 +119,7 @@ module qfd_dv_cmd_cal_mu #(
     always @* begin
         seal_bad = d0[63:32] != 32'h43414c44 || d0[31:26] != 6'd0 || d0[15:9] != 7'd0 || base[2:0] != 3'd0 ||
                    nent == 9'd0 || {1'b0, base} + {1'b0, nent, 1'b0} > 11'd976 || {4'd0, base} < {meta_rows, 4'd0} ||
-                   dwr[5] != 64'd0 || dwr[6] != 64'd0 || dw_data != 64'd0;
+                   (CTX_DW == 0 && (dwr[5] != 64'd0 || dwr[6] != 64'd0)) || dw_data != 64'd0;
         for (s = 1; s <= 4; s = s + 1)
             if (dwr[s][63:32] != 32'd0 ||
                 (dwr[s][15:0] != 16'd0 && (dwr[s][17:16] != 2'd0 || {1'b0, dwr[s][31:16]} + {1'b0, dwr[s][15:0]} > {8'd0, nent})))
@@ -176,6 +185,8 @@ module qfd_dv_cmd_cal_mu #(
 
     // ================================================================ segment start
     wire       boot_go = sealed && !sealed_d && (MUT != 3);
+    assign     ctx_dw = {dwr[6], dwr[5]};
+    assign     ctx_load = (CTX_DW != 0) && sealed && !sealed_d && !fault;
     wire [1:0] sseg = (stage == 6'd0) ? 2'd0 : (stage == LAST_STAGE[5:0]) ? 2'd2 : 2'd1;
     wire       go = start || boot_go;
     wire [1:0] gseg = boot_go ? 2'd3 : sseg;
