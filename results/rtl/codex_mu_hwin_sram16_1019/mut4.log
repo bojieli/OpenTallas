@@ -1,0 +1,129 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-epyc7       admits   736 GB (avail 616, growth 101, headroom 0, waiters 0/0 GB) load 73/96 running 26 disk 6469 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hwin-sram16-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2739562-1792422514 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+ERR c1048 ev2 start0 mu_rc 001
+ERR c1087 ev2 start0 mu_rc 001
+ERR c1126 ev2 start0 mu_rc 001
+ERR c1165 ev2 start0 mu_rc 001
+ERR c1176 ev2 start0 mu_rc 005
+ERR c1204 ev2 start0 mu_rc 001
+ERR c1215 ev2 start0 mu_rc 005
+ERR c1254 ev2 start0 mu_rc 005
+ERR c1293 ev2 start0 mu_rc 005
+ERR c1304 ev2 start0 mu_rc 009
+ERR c1332 ev2 start0 mu_rc 005
+ERR c1343 ev2 start0 mu_rc 009
+ERR c1382 ev2 start0 mu_rc 009
+ERR c1421 ev2 start0 mu_rc 009
+ERR c1432 ev2 start0 mu_rc 00d
+ERR c1460 ev2 start0 mu_rc 009
+ERR c1471 ev2 start0 mu_rc 00d
+KU c1478 user 0 pos 0
+ERR c1510 ev2 start0 mu_rc 00d
+KU c1542 user 1 pos 0
+ERR c1549 ev2 start0 mu_rc 00d
+ERR c1560 ev2 start0 mu_rc 001
+ERR c1588 ev2 start0 mu_rc 00d
+ERR c1599 ev2 start0 mu_rc 001
+KU c1606 user 2 pos 0
+ERR c1638 ev2 start0 mu_rc 001
+KU c1670 user 3 pos 0
+ERR c1677 ev2 start0 mu_rc 001
+ERR c1688 ev2 start0 mu_rc 005
+ERR c1716 ev2 start0 mu_rc 001
+ERR c1727 ev2 start0 mu_rc 005
+KU c1734 user 4 pos 0
+ERR c1766 ev2 start0 mu_rc 005
+KU c1798 user 5 pos 0
+ERR c1805 ev2 start0 mu_rc 005
+ERR c1816 ev2 start0 mu_rc 009
+ERR c1844 ev2 start0 mu_rc 005
+ERR c1855 ev2 start0 mu_rc 009
+KU c1862 user 6 pos 0
+ERR c1894 ev2 start0 mu_rc 009
+KU c1926 user 7 pos 0
+ERR c1933 ev2 start0 mu_rc 009
+ERR c1944 ev2 start0 mu_rc 00d
+ERR c1972 ev2 start0 mu_rc 009
+ERR c1983 ev2 start0 mu_rc 00d
+KU c1990 user 0 pos 1
+ERR c2022 ev2 start0 mu_rc 00d
+KU c2054 user 1 pos 1
+ERR c2061 ev2 start0 mu_rc 00d
+ERR c2072 ev2 start0 mu_rc 001
+ERR c2100 ev2 start0 mu_rc 00d
+ERR c2111 ev2 start0 mu_rc 001
+KU c2118 user 2 pos 1
+ERR c2150 ev2 start0 mu_rc 001
+KU c2182 user 3 pos 1
+ERR c2189 ev2 start0 mu_rc 001
+ERR c2200 ev2 start0 mu_rc 005
+ERR c2228 ev2 start0 mu_rc 001
+ERR c2239 ev2 start0 mu_rc 005
+KU c2246 user 4 pos 1
+ERR c2278 ev2 start0 mu_rc 005
+KU c2310 user 5 pos 1
+ERR c2317 ev2 start0 mu_rc 005
+ERR c2328 ev2 start0 mu_rc 009
+ERR c2356 ev2 start0 mu_rc 005
+ERR c2367 ev2 start0 mu_rc 009
+KU c2374 user 6 pos 1
+ERR c2406 ev2 start0 mu_rc 009
+KU c2438 user 7 pos 1
+ERR c2445 ev2 start0 mu_rc 009
+ERR c2456 ev2 start0 mu_rc 00d
+ERR c2484 ev2 start0 mu_rc 009
+ERR c2495 ev2 start0 mu_rc 00d
+KU c2502 user 0 pos 2
+ERR c2534 ev2 start0 mu_rc 00d
+KU c2566 user 1 pos 2
+ERR c2573 ev2 start0 mu_rc 00d
+ERR c2584 ev2 start0 mu_rc 001
+ERR c2612 ev2 start0 mu_rc 00d
+ERR c2623 ev2 start0 mu_rc 001
+KU c2630 user 2 pos 2
+ERR c2662 ev2 start0 mu_rc 001
+KU c2694 user 3 pos 2
+ERR c2701 ev2 start0 mu_rc 001
+ERR c2712 ev2 start0 mu_rc 005
+ERR c2740 ev2 start0 mu_rc 001
+ERR c2751 ev2 start0 mu_rc 005
+KU c2758 user 4 pos 2
+ERR c2790 ev2 start0 mu_rc 005
+KU c2822 user 5 pos 2
+ERR c2829 ev2 start0 mu_rc 005
+ERR c2840 ev2 start0 mu_rc 009
+ERR c2868 ev2 start0 mu_rc 005
+ERR c2879 ev2 start0 mu_rc 009
+KU c2886 user 6 pos 2
+ERR c2918 ev2 start0 mu_rc 009
+KU c2950 user 7 pos 2
+ERR c2957 ev2 start0 mu_rc 009
+ERR c2968 ev2 start0 mu_rc 00d
+ERR c2996 ev2 start0 mu_rc 009
+ERR c3007 ev2 start0 mu_rc 00d
+KU c3014 user 0 pos 3
+ERR c3046 ev2 start0 mu_rc 00d
+KU c3078 user 1 pos 3
+ERR c3085 ev2 start0 mu_rc 00d
+ERR c3124 ev2 start0 mu_rc 00d
+KU c3142 user 2 pos 3
+KU c3206 user 3 pos 3
+KU c3270 user 4 pos 3
+KU c3334 user 5 pos 3
+KU c3398 user 6 pos 3
+KU c3462 user 7 pos 3
+MUWIN starts 32 fires 512 expected 432 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN FAIL errs 80
+- rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin.sv:102: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.049 s; speed 73.113 us/s
+- Verilator: cpu 0.049 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2739562-1792422514): exit 1

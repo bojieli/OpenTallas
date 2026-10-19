@@ -26,7 +26,7 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/hdc/ingest/ot_rom_host_ingest.sv $R/physical/rom_host_ingest/rtl/dsfd_host.sv
    $R/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
    $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
-   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv $U/dsdv_mu_hwin.sv"
+   $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv $U/dsdv_mu_mem.sv $R/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v $U/dsdv_mu_hwin.sv"
 sha256sum $F $T/tb_dsdv_seq_host_mu.sv $T/check_seq_host_mu.py $T/seq_host_mu_cases.py $P/prog/host_boot.memh \
   $R/results/arch/mu_s81_1018/calendar_ar.json $R/results/arch/mu_s81_1018/calendar_mtp.json > $O/sources.sha256
 python3 $T/seq_host_mu_cases.py --root $R --out $O/cases > /dev/null || { echo "SEQHOST_MU_GATE FAIL (cases)"; exit 2; }
