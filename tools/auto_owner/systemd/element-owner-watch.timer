@@ -1,5 +1,5 @@
 [Unit]
-Description=Every 30 min: element owner watch + release tree render (AUTO-OWNER, owner 10-18)
+Description=Every 30 min: element owner watch + release task watch + release tree render (AUTO-OWNER 10-18, TASK-WATCH 10-19)
 
 [Timer]
 OnCalendar=*-*-* *:05,35:00

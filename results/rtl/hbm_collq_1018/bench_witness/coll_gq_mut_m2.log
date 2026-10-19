@@ -29,7 +29,7 @@ COLLQ DATA row3 q2 seg3 word8 got 0000000000000000000000000000000000000000000000
 COLLQ DATA row3 q3 seg0 word8 got 0000000000000000000000000000000000000000000000007777777677777777 exp 0000000000000000000000000000000000000000000000007878787778787878
 COLLQ DATA row3 q3 seg1 word8 got 0000000000000000000000000000000000000000000000007e7e7e7d7d7d7d7e exp 0000000000000000000000000000000000000000000000007f7f7f7e7e7e7e7f
 COLLQ FAIL errors=64
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.139 s; speed 14.696 us/s
-- Verilator: cpu 0.139 s on 1 threads; alloced 1023 MB
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:285: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.071 s; speed 28.694 us/s
+- Verilator: cpu 0.071 s on 1 threads; allocated 13 MB

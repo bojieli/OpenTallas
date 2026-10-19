@@ -1,6 +1,6 @@
 {
  "top": "qkd_kvs_pc_h",
- "registers": 921,
+ "registers": 935,
  "clock_ports": [
   "?const",
   "ck",
@@ -50,7 +50,7 @@
    ],
    "feedthrough": [],
    "depth": 6,
-   "reg_sinks": 3030,
+   "reg_sinks": 4470,
    "async_reset": false
   },
   "pc__pi": {
@@ -111,11 +111,33 @@
    "dir": "input",
    "width": 1,
    "domains": [
-    "none"
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 1,
+   "reg_sinks": 1,
+   "async_reset": false
+  },
+  "pc__land_er": {
+   "dir": "input",
+   "width": 261,
+   "domains": [
+    "ck"
    ],
    "feedthrough": [],
    "depth": 0,
-   "reg_sinks": 0,
+   "reg_sinks": 3,
+   "async_reset": false
+  },
+  "pc__hes": {
+   "dir": "input",
+   "width": 288,
+   "domains": [
+    "ck"
+   ],
+   "feedthrough": [],
+   "depth": 0,
+   "reg_sinks": 288,
    "async_reset": false
   },
   "pc__fo": {
@@ -178,6 +200,46 @@
    "depth": 0,
    "reg_sources": 1
   },
+  "pc__land_es": {
+   "dir": "output",
+   "width": 288,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 288
+  },
+  "pc__her": {
+   "dir": "output",
+   "width": 261,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 261
+  },
+  "pc__hcompletion_v": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
+  "pc__hcompletion_we": {
+   "dir": "output",
+   "width": 1,
+   "domains": [
+    "ck"
+   ],
+   "from_inputs": [],
+   "depth": 0,
+   "reg_sources": 1
+  },
   "i_grp": {
    "dir": "input",
    "width": 128,
@@ -192,13 +254,13 @@
   },
   "i_next": {
    "dir": "input",
-   "width": 779,
+   "width": 780,
    "domains": [
     "ck"
    ],
    "feedthrough": [],
    "depth": 0,
-   "reg_sinks": 783,
+   "reg_sinks": 785,
    "async_reset": false
   },
   "o_grp": {

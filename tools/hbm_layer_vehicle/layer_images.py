@@ -507,6 +507,7 @@ CP_FRAME_EDGES = 8 * AXI_WRITE_EDGES               # one 256-b row
 CP_DESC_GUARD = AXI_WRITE_EDGES                    # kept for callers: one write slot
 CP_LAUNCH_GUARD = 7                                # ingress launch guard (README): no frame in the 7 edges after F30
 CP_DESC_TO_LAUNCH = 2 * AXI_WRITE_EDGES            # F2c -> F30: guard 5 must be 0 at the F30 execute edge
+CP_SCAN_GUARD = 8                                  # desc -> scan start (leaf CFG_LAT 2 + target capture) + margin
 # SW-slice targets (die.v GEN2 e92f4d03 scan: instances whose cfg_v is hleaf_SW__a/b_cfg_v, tgt strap) per HGI unit.
 # The PAYLOAD (row words) of each target is the target's own ABI (sm_images.py for SM / DMA; sibling lanes for the rest).
 # The SW slice holds 8 SMs, but only sm_SW0..3 are SW-leaf configured: cp_svg_SW4..7 / xc_SW4..7 hang on the SE leaf
@@ -531,7 +532,9 @@ DIRECT_TARGETS = [("hcollgi_SW", 176, "host_cp_ingress__")]          # COLL gath
 PAYLOAD_COMPILER = {
     "SM": "sm_images.py (cp_svg feed programme + issuer descriptors, xc ext calendar, xl_SW_ctl x-load table, smw_SW "
           "writer table, calendar_SW VM calendar, packed136 HBM image)",
-    "COLL": "tools/hbm_coll_static_calendar.py (transport reservations) + hb_coll_SW programme ABI",
+    "COLL": "ALL_GATHER on-die quadrant phase: hbm_layer_vehicle/coll_images.py (hcollgi_SW gq row + calendar_SW + far-end "
+            "ring replay, VEH-FMT-COLL); cross-die / GROUP_REDUCE_MCAST / TOPK_MERGE / ROW_GATHER: hb_coll_SW 1536-b ISA "
+            "rows (ot_hgi_coll_issuer_m) have no production compiler",
     "DMA": "sm_images.py (hb_dbk_SW command table) + calendar_SW",
     "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
     "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
@@ -585,10 +588,14 @@ class CpBus:
         s._d(c, "desc_v", 1, **kw)
         s._d(c + 1, "desc_v", 0, **kw)
         s.last_desc = c
+        # VEH-CUTS 10-19: the target scans rows [base, limit) one per edge after the descriptor
+        # (ot_static_program_target.sv: launch while scanning faults, measured on the GEN2b idxtk cut with a 151-row
+        # calendar: hleaf_SW s_fault, no programme start).  The launch waits for the scan of every armed target.
+        s.scan_end = max(getattr(s, "scan_end", -99), c + (limit - base) + CP_SCAN_GUARD)
         return c
 
     def launch(s, **kw):
-        c = max(s._write(), getattr(s, "last_desc", -99) + CP_DESC_TO_LAUNCH)
+        c = max(s._write(), getattr(s, "last_desc", -99) + CP_DESC_TO_LAUNCH, getattr(s, "scan_end", -99))
         s.t = c
         s._d(c, "launch_v", 1, **kw)
         s._d(c + 1, "launch_v", 0, **kw)
@@ -810,6 +817,8 @@ def main():
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
+               scope="component_probe", qualifies_native_layer=False, qualifies_native_chain=False,
+               state_seed_provenance=["released_checkpoint_fixture" if a.fixtures else "seeded_placeholder"],
                layer=a.layer, t0_serial=t0, priced_layer_cycles=pr["cycles"],
                assumptions=["serial = ceil(3*stream/4)", "SU quarter VM placement quarter-packed (compiler's own)",
                             "VM operands as M preload events (no slice VM input port)",
@@ -817,6 +826,8 @@ def main():
                events=events)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
+               scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,
+               state_seed_provenance=rep["state_seed_provenance"],
                priced=str(a.priced), programme=str(prog_src), programme_sha256=sha(Path(prog_src).read_bytes()),
                fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,

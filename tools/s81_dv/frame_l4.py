@@ -33,6 +33,19 @@ def derive(m, mutant=None):
     new = inst.replace('dsfd_cfifo_crs u_cf (', 'dsfd_cfifo_crs4 u_cf (').replace('.xf(xk[1]), ', '').replace(', .xf(xk[1])', '')
     new = new.replace('.xf2(xk[2])', '.xk(xk), .lk(lk)')
     assert '.xf' not in new
+    # S81-DIE7/CRS4 10-18: dsfd_cfifo_crs4 takes one port per lane (xl0..xl3 = {xd2, xd}[276k +: 276]) so each lane
+    # port is owned by exactly one forwarded-clock domain xk[k] in the hardened view; same bits, same order.
+    bits = {}
+    for p in ('xd', 'xd2'):
+        mm = re.search(r'\.' + p + r'\(\{([^}]*)\}\)', new)
+        assert mm, (m, p)
+        bits[p] = [b.strip() for b in mm.group(1).split(',')][::-1]          # LSB first
+    xin = bits['xd'] + bits['xd2']
+    assert len(bits['xd']) == 566 and len(xin) == 4 * LANE, m
+    lanes = ', '.join(f'.xl{k}({{{", ".join(xin[LANE * k:LANE * (k + 1)][::-1])}}})' for k in range(4))
+    new = re.sub(r'\.xd\(\{[^}]*\}\), ', '', new, count=1)
+    new = re.sub(r'\.xd2\(\{[^}]*\}\)', lanes, new, count=1)
+    assert '.xd' not in new and new.count('.xl') == 4, m
     if mutant == 'xlane':          # bench negative control: x lanes 1 and 2 swapped at the column FIFO entry
         def sw(mm):
             k = int(mm.group(1))
