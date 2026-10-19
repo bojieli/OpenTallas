@@ -1,0 +1,68 @@
+`timescale 1ns/1ps
+`default_nettype none
+// OWN-IDXSCORE 2026-10-18: lockstep of the wires-only IDX quarter scorer (ot_hbm_idx_score_quarter_wo = W glue tile +
+// 8 leaves + E glue tile) against the flat ot_hbm_idx_score_quarter_static, identical stimulus, EVERY edge compared:
+// new.score / new.fault == old one edge earlier (the W tile's registered output stage = +1 on every leaf input).
+// Two frames (query load of all 32 heads, key beats with partial last beat, keep bitmap, different rank / first_ord),
+// strap HALF from -GHALF. PASS requires >= 1 score event per beat, non-trivial values, no fault on the old design.
+module tb_idx_quarter_split #(parameter integer TP=192, parameter integer HALF=0)();
+ localparam integer RANK_W=$clog2(TP);
+ reg clk=0; always #1 clk=~clk;
+ reg rst_n=0;
+ reg [RANK_W-1:0] rank=0; reg [10:0] first_ord=0; reg [11:0] nkeys=0; reg keep_en=0; reg [170:0] keep_bitmap=0;
+ reg ql_v=0; reg [7:0] ql_head=0; reg [511:0] ql_codes=0; reg [31:0] ql_sc=0; reg [15:0] ql_w=0;
+ reg beat_v=0; reg [7:0] beat_index=0; reg [4395:0] key_lines=0;
+ wire [1:0] c2={clk,clk}; wire [7:0] c8={8{clk}}; wire [255:0] c256={256{clk}};
+ wire [305:0] so, sn; wire fo, fn;
+ ot_hbm_idx_score_quarter_static #(.TP(TP)) u_old(.clk_ctl(clk),.clk_engine(c2),.clk_meta(c2),.clk_tail(c2),.clk_chunk(c8),
+  .clk_hslice(c256),.rst_n(rst_n),.half(1'(HALF)),.rank(rank),.first_ord(first_ord),.nkeys(nkeys),.keep_en(keep_en),
+  .keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.beat_v(beat_v),
+  .beat_index(beat_index),.key_lines(key_lines),.score(so),.fault(fo));
+ ot_hbm_idx_score_quarter_wo #(.TP(TP)) u_new(.clk_ctl(clk),.clk_engine(c2),.clk_meta(c2),.clk_tail(c2),.clk_chunk(c8),
+  .clk_hslice(c256),.rst_n(rst_n),.half(1'(HALF)),.rank(rank),.first_ord(first_ord),.nkeys(nkeys),.keep_en(keep_en),
+  .keep_bitmap(keep_bitmap),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.beat_v(beat_v),
+  .beat_index(beat_index),.key_lines(key_lines),.score(sn),.fault(fn));
+ reg [305:0] so_d; reg fo_d; integer cyc=0, errs=0, evs=0, nz=0, oldfault_cyc=-1, newev=0;
+ always @(posedge clk) begin
+  so_d<=so; fo_d<=fo; cyc<=cyc+1;
+  if (cyc>2) begin
+   if (sn!==so_d || fn!==fo_d) begin
+    errs<=errs+1;
+    if (errs<8) $display("QSPLIT_BAD cyc%0d new{ev%0d last%0d f%0d idx0 %05h val0 %04h} old_d1{ev%0d last%0d f%0d idx0 %05h val0 %04h}",
+      cyc, sn[0], sn[1], fn, sn[305-:20], sn[145-:16], so_d[0], so_d[1], fo_d, so_d[305-:20], so_d[145-:16]);
+   end
+   if (so[0]) begin evs<=evs+1; if (so[145:18]!=0) nz<=nz+1; end
+   if (sn[0]) newev<=newev+1;
+   if (fo && oldfault_cyc<0) oldfault_cyc<=cyc;
+  end
+ end
+ function automatic [511:0] r512(); for (int i=0;i<16;i++) r512[i*32+:32]=$urandom; endfunction
+ task automatic frame(input integer nb, input integer nk, input integer fo_v, input integer rk_v, input bit kep);
+  @(negedge clk); rank=RANK_W'(rk_v); first_ord=11'(fo_v); nkeys=12'(nk); keep_en=kep;
+  for (int i=0;i<6;i++) keep_bitmap[i*32+:32]=$urandom;
+  for (int h=0;h<32;h++) begin
+   ql_v=1; ql_head=8'(h); ql_codes=r512(); ql_sc=$urandom; ql_w=16'($urandom); @(negedge clk);
+  end
+  ql_v=0; repeat (8) @(negedge clk);
+  for (int b=0;b<nb;b++) begin
+   beat_v=1; beat_index=8'(b);
+   for (int j=0;j<4;j++) begin
+    key_lines[j*1099]=1'b1; key_lines[j*1099+1+:10]=10'((4*HALF+j)*128+b);
+    for (int w=0;w<34;w++) key_lines[j*1099+11+w*32+:32]=$urandom;
+   end
+   @(negedge clk);
+  end
+  beat_v=0; key_lines=0; repeat (420) @(negedge clk);
+ endtask
+ initial begin
+  void'($urandom(32'h1d5c0de + HALF));
+  repeat (10) @(negedge clk); rst_n=1; repeat (40) @(negedge clk);
+  frame(20, 16*20-5, 3, 7, 0);
+  frame(9, 16*9-13, 41, 191 % TP, 1);
+  repeat (20) @(negedge clk);
+  $display("IDX_QUARTER_SPLIT half%0d errors%0d old_events%0d nonzero%0d new_events%0d old_first_fault_cyc%0d", HALF, errs, evs, nz, newev, oldfault_cyc);
+  if (errs==0 && evs>=20 && nz>0 && newev==evs && oldfault_cyc<0) begin $display("IDX_QUARTER_SPLIT PASS"); $finish; end
+  $display("IDX_QUARTER_SPLIT FAIL"); $stop;
+ end
+endmodule
+`default_nettype wire
