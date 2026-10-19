@@ -103,14 +103,14 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire st = ks_q[52]; wire [9:0] su = ks_q[51:42]; wire [20:0] sp = ks_q[20:0];
     // ---- one-hot pointer step: entries wrap at lw (lm = one-hot of lw); a pointer past lw (only while idle, after a
     // config shrink) wraps at NSLOT - 1
-    reg [NSLOT-1:0] lm, gm;
+    wire [NSLOT-1:0] lm, gm;
     function automatic [NSLOT-1:0] rot(input [NSLOT-1:0] o, input [NSLOT-1:0] l);
         rot = {o[NSLOT-2:0] & ~l[NSLOT-2:0], 1'b0};
         rot[0] = (|(o & l)) | o[NSLOT-1];
     endfunction
     // ---- start table: the same record rule / slot timer / due edge as dsdv_mu_hslot
     reg [23:0] cs, crl, crm; reg [31:0] tm, tm1, tm2, tmr; reg armed; reg [23:0] ph; reg [SI-1:0] lw;
-    reg [SI-1:0] slb, rpb, gxb, ssqb; reg [NSLOT-1:0] sl, rp, gx;                           // one-hot: slot, retire pointer, gap-table walker
+    reg [SI-1:0] slb, rpb, gxb, ssqb; wire [NSLOT-1:0] sl, rp, gx;                           // one-hot: slot, retire pointer, gap-table walker
     // MU-S81-2/SEQ (10-19): slot gap table, the same as dsdv_mu_hslot's (same f_mc words, same walk).  The record calendar (dv_mu_calendar --phase-q 4) has NON-uniform slots
     // (AR 46: shift_k = 4 floor(k (P/4) / 46) -> gaps 21,312 / 21,316; MTP 10 + filler: 10 x 124,524 then 58,160), so
     // one period S cannot hold it (user 3's start lands 4 edges off a uniform 21,312 grid -> t_mf[1] on the real unit).
@@ -119,7 +119,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     // calendar slot.  One sel-0 word (n = 1) = the former uniform period S with nw = NSLOT: the previous behaviour.
     // cs = the smallest gap.  gtm[k] = g[k] - 1 (the timer's compare value).
      reg [SI:0] gn; reg [23:0] cg; wire [23:0] ng;
-    reg [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; 
+    wire [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; 
     // sl stays OH0 until arming: directly use the same slot state, avoiding a broadcast mux.
     wire [NSLOT-1:0] ss = sl;
     wire on_cal = !armed || ph == 24'd0;
@@ -225,7 +225,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     end
     // outputs from the fired heads: on each endpoint the highest-numbered firing event wins (the former loop order)
     reg fq0, fq1;
-    reg rtbad, m; reg [NEP*34-1:0] c_n, c_q; reg [NEP*11-1:0] rc_n, rc_q; wire col_w;
+    reg rtbad, m; reg [NEP*34-1:0] c_n;wire [NEP*34-1:0] c_q;reg [NEP*11-1:0] rc_n;wire [NEP*11-1:0] rc_q; wire col_w;
     reg [NEV-1:0] tx, rpl, sc, sr, lc, lr; integer e3, k3, p3;
     assign mu_c = c_q; assign mu_rc = rc_q;
     always @* begin
@@ -466,7 +466,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         (* keep *) reg [31:0] ts_r, time_r;
         reg [23:0] rl_r;
         (* keep *) reg [SI-1:0] lw_r;
-        (* keep *) reg [NSLOT-1:0] lm_r;
+        wire [NSLOT-1:0] lm_r;
         (* keep *) reg arm_r;
         // Decode at the existing input landing edge, independently per event.
         // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
@@ -560,9 +560,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             else if(gap_write)
                 lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
         for(genvar lb=0;lb<NSLOT;lb=lb+1) begin:g_limit_reset
+            (* keep *) reg bit_r;assign lm_r[lb]=bit_r;
             always @(posedge ck or negedge rr[RLM_BASE+ce*SLOT_RG+lb/24])
-                if(!rr[RLM_BASE+ce*SLOT_RG+lb/24]) lm_r[lb]<=(lb==NSLOT-1);
-                else lm_r[lb]<=(lw_r==SI'(lb));
+                if(!rr[RLM_BASE+ce*SLOT_RG+lb/24]) bit_r<=(lb==NSLOT-1);
+                else bit_r<=(lw_r==SI'(lb));
         end
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
@@ -592,30 +593,35 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @(posedge ck or negedge rr[RTIME_BASE+1]) if(!rr[RTIME_BASE+1]) tm1<=1; else tm1<=tm2;
     always @(posedge ck or negedge rr[RTIME_BASE+2]) if(!rr[RTIME_BASE+2]) tm2<=2; else tm2<=tm2+32'd1;
     generate for(genvar ob=0;ob<NEP*34;ob=ob+1) begin:g_output_reset
+        reg data_r;assign c_q[ob]=data_r;
         always @(posedge ck or negedge rr[ROUT_BASE+ob/24])
-            if(!rr[ROUT_BASE+ob/24]) c_q[ob]<=0; else c_q[ob]<=c_n[ob];
+            if(!rr[ROUT_BASE+ob/24]) data_r<=0; else data_r<=c_n[ob];
     end
     for(genvar ob=0;ob<NEP*11;ob=ob+1) begin:g_replay_output_reset
+        reg data_r;assign rc_q[ob]=data_r;
         always @(posedge ck or negedge rr[ROUT_BASE+C_RG+ob/24])
-            if(!rr[ROUT_BASE+C_RG+ob/24]) rc_q[ob]<=0; else rc_q[ob]<=rc_n[ob];
+            if(!rr[ROUT_BASE+C_RG+ob/24]) data_r<=0; else data_r<=rc_n[ob];
     end
     for(genvar pb=0;pb<NSLOT;pb=pb+1) begin:g_pointer_reset
+        reg sl_r,rp_r,gx_r,gm_r,lm_bit_r,vld_r;
+        assign sl[pb]=sl_r;assign rp[pb]=rp_r;assign gx[pb]=gx_r;
+        assign gm[pb]=gm_r;assign lm[pb]=lm_bit_r;assign vld[pb]=vld_r;
         wire step_slot=slot_step[pb/8];
         wire step_gap=gap_step[pb/8];
         wire [NSLOT-1:0] sl_next=rot(sl,lm),rp_next=rot(rp,lm);
         always @(posedge ck or negedge rr[RPTR_BASE+pb/24])
-            if(!rr[RPTR_BASE+pb/24]) sl[pb]<=(pb==0); else if(step_slot) sl[pb]<=sl_next[pb];
+            if(!rr[RPTR_BASE+pb/24]) sl_r<=(pb==0); else if(step_slot) sl_r<=sl_next[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+SLOT_RG+pb/24]) rp[pb]<=(pb==0); else if(pointer_adv[pb/8]) rp[pb]<=rp_next[pb];
+            if(!rr[RPTR_BASE+SLOT_RG+pb/24]) rp_r<=(pb==0); else if(pointer_adv[pb/8]) rp_r<=rp_next[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+2*SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+2*SLOT_RG+pb/24]) gx[pb]<=(pb==0); else if(step_gap) gx[pb]<=gxn[pb];
+            if(!rr[RPTR_BASE+2*SLOT_RG+pb/24]) gx_r<=(pb==0); else if(step_gap) gx_r<=gxn[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+3*SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+3*SLOT_RG+pb/24]) gm[pb]<=0;
-            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) gm[pb]<=(gn[SI-1:0]==SI'(pb));
+            if(!rr[RPTR_BASE+3*SLOT_RG+pb/24]) gm_r<=0;
+            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) gm_r<=(gn[SI-1:0]==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+4*SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm[pb]<=(pb==NSLOT-1); else lm[pb]<=(lw==SI'(pb));
+            if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm_bit_r<=(pb==NSLOT-1); else lm_bit_r<=(lw==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+5*SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+5*SLOT_RG+pb/24]) vld[pb]<=0; else vld[pb]<=(vld[pb] && !(pointer_due[pb/8] && rp[pb])) || rec_slot[pb];
+            if(!rr[RPTR_BASE+5*SLOT_RG+pb/24]) vld_r<=0; else vld_r<=(vld[pb] && !(pointer_due[pb/8] && rp[pb])) || rec_slot[pb];
     end endgenerate
     always @(posedge ck or negedge rr[RPTR_BASE+6*SLOT_RG])
         if(!rr[RPTR_BASE+6*SLOT_RG]) begin slb<=0;rpb<=0;gxb<=0;end
