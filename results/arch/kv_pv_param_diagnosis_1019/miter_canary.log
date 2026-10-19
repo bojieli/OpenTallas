@@ -1,0 +1,79 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `miter_canary.ys' --
+
+1. Executing Verilog-2005 frontend: <<EOT
+Parsing Verilog input from `<<EOT' to AST representation.
+Generating RTLIL representation for module `\gold'.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+2. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: o_gold (\i_gold), o_gate ($not$<<EOT:2$1_Y_gate) -> o
+Presumably equivalent wires: i_gold (\i_gold), i_gate (\i_gate) -> i
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+3.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+4. Executing EQUIV_MITER pass.
+Creating miter miter from module equiv.
+Seed $equiv cell: $auto$equiv_make.cc:258:find_same_wires$2
+Gold cone: 1 cells (0 leaves).
+Gate cone: 2 cells (0 leaves).
+Selected 2 miter cells.
+Selected 3 miter wires.
+Created miter input port i.
+Created miter output port o.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \miter
+
+5.2. Analyzing design hierarchy..
+Top module:  \miter
+Removing unused module `\equiv'.
+Removed 1 unused modules.
+Module miter directly or indirectly contains formal properties -> setting "keep" attribute.
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 5 cells to SAT database.
+Import proof for assert: $auto$rtlil.cc:3321:Eq$4 when 1'1.
+Import show expression: \i
+Import show expression: \o
+
+Solving problem with 22 variables and 53 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Signal Name             Dec       Hex           Bin
+  --------------- ----------- --------- -------------
+  \i                        0         0             0
+  \o                        0         0             0
+
+ERROR: Called with -verify and proof did fail!

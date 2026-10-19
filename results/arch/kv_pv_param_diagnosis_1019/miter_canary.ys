@@ -1,0 +1,9 @@
+read_verilog <<EOT
+module gold(input i, output o); assign o=i; endmodule
+module gate(input i, output o); assign o=~i; endmodule
+EOT
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_miter -assert miter
+hierarchy -top miter
+sat -prove-asserts -show-inputs -show-outputs -verify

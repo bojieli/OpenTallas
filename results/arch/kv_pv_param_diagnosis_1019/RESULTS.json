@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.kv_pv_parameter_diagnosis.v1",
+  "native_qualified": false,
+  "receipt_issued": false,
+  "production_rtl_changed": false,
+  "proof_helper_changed": false,
+  "original": {
+    "verdict": "NOT PROVEN",
+    "proven_cells": 735,
+    "total_cells": 911,
+    "unproven_cells": 176,
+    "source_and_parameter_mismatch": false,
+    "reset_shell_stages": 2,
+    "source_reset_pin_stages": 1
+  },
+  "completed": {
+    "gold_opt": {
+      "unproven_cells": 176
+    },
+    "gold_width_opt": {
+      "unproven_cells": 176
+    },
+    "original_mut1_gold_opt": {
+      "unproven_cells": 209
+    },
+    "original_reset_bmc12": {
+      "verdict": "PASS",
+      "assertions": 911,
+      "reset_low_edges": 6,
+      "checked_edges": [
+        7,
+        12
+      ]
+    },
+    "invariant_reset_bmc12": {
+      "verdict": "PASS",
+      "assertions": 916,
+      "reset_low_edges": 6,
+      "checked_edges": [
+        7,
+        12
+      ]
+    },
+    "mut1_reset_bmc12": {
+      "verdict": "PASS",
+      "causal_negative_witness": false,
+      "reason": "Actual reset/start/arrival pipeline exceeds the short active window"
+    },
+    "miter_canary": {
+      "verdict": "EXPECTED FAIL",
+      "purpose": "Known unequal combinational functions test active assertion construction"
+    },
+    "invariant_induction": {
+      "verdict": "PROVEN",
+      "total_cells": 916,
+      "proven_cells": 916,
+      "unproven_cells": 0,
+      "seconds": 370.56,
+      "peak_mb": 1134.02,
+      "host": "ot-epyc6",
+      "directory": "/srv/opentallas-scratch/claude/kv-pv-param-diagnosis-1019/invariants",
+      "unit": "oth-ubuntu-347237-1792439386",
+      "session": 30426,
+      "script": "equiv_invariants.ys",
+      "assertions": 916
+    },
+    "arbitrary_source_step2": {
+      "verdict": "FAIL",
+      "trace": "INV=00000 then0000x with arbitrary hidden reset history",
+      "qualification_limit": "No transition-only claim from this experiment; full joint916 induction and valid reset base separately pass."
+    }
+  },
+  "pending": {
+    "mut1_reset_bmc18": {
+      "host": "ot-epyc6",
+      "directory": "/srv/opentallas-scratch/claude/kv-pv-param-diagnosis-1019/mut1",
+      "unit": "oth-ubuntu-1872662-1792439497",
+      "session": 53219,
+      "script": "reset_bmc18.ys"
+    },
+    "seq_xs_causal_mut8": {
+      "host": "ot-epyc6",
+      "unit_pid": 1713334,
+      "session": 64834
+    }
+  },
+  "additional_observations": [
+    "u_ot_pr_core.state[3] == 0",
+    "u_ot_pr_core.u_req.nq[0] == 0",
+    "u_ot_pr_core.u_req.nq[1] == 0",
+    "u_ot_pr_core.u_req.nq[2] == 0",
+    "u_ot_pr_core.u_req.nq[3] == 0"
+  ],
+  "qualification_limit": "Finite reset-base evidence cannot replace unbounded original-output/paired-state equivalence or production reset-contract qualification."
+}

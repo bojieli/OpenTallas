@@ -1,0 +1,157 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `source_invariant_step.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: gold1.il
+Added wire \INV to module \gold.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \gold
+
+2.2. Analyzing design hierarchy..
+Top module:  \gold
+Removed 0 unused modules.
+
+3. Executing ASYNC2SYNC pass.
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1866 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\state[3:0], Q=\u_ot_pr_core.state
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1871 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\age[15:0], Q=\u_ot_pr_core.age
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1876 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\ep[15:0], Q=\u_ot_pr_core.ep
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1881 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\lim[13:0], Q=\u_ot_pr_core.lim
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1886 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\nq[15:0], Q=\u_ot_pr_core.nq
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1891 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\flt[0:0], Q=\u_ot_pr_core.flt
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1896 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\nodes[4:0], Q=\u_ot_pr_core.nodes
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1901 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\ti[2:0], Q=\u_ot_pr_core.ti
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1906 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\drain_left[3:0], Q=\u_ot_pr_core.drain_left
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1911 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\reduce_left[3:0], Q=\u_ot_pr_core.reduce_left
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1916 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\wage[7:0], Q=\u_ot_pr_core.wage
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1921 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\u_ot_pr_core.ep, Q=\u_ot_pr_core.out_epoch
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1926 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\u_ot_pr_core.flt, Q=\u_ot_pr_core.fault
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1931 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\busy[0:0], Q=\u_ot_pr_core.busy
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1936 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.$0\out_age[15:0], Q=\u_ot_pr_core.out_age
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1941 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D={ 28'0000000000000000000000000000 $flatten\u_ot_pr_core.$0\cmd[59:0] [31] \u_ot_pr_core.ti $flatten\u_ot_pr_core.$0\cmd[59:0] [27:15] \u_ot_pr_core.qn [3:0] \u_ot_pr_core.n0_hi \u_ot_pr_core.n0_lo $flatten\u_ot_pr_core.$0\cmd[59:0] [8:1] \u_ot_pr_core.qn [4] }, Q=\u_ot_pr_core.cmd
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1947 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\u_ot_pr_core.rq, Q=\u_ot_pr_core.req_valid
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1956 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\start, Q=\u_ot_pr_core.start_r
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1961 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\in_valid, Q=\u_ot_pr_core.iv_r
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1966 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\col_valid, Q=\u_ot_pr_core.cv_r
+Replacing gold.$flatten\u_ot_pr_core.$procdff$1971 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=\col_fault, Q=\u_ot_pr_core.cf_r
+Replacing gold.$flatten\u_ot_pr_core.\u_req.$procdff$1992 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.\u_req.$0\lim[13:0], Q=\u_ot_pr_core.u_req.lim
+Replacing gold.$flatten\u_ot_pr_core.\u_req.$procdff$1997 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.\u_req.$0\nq[15:0], Q=\u_ot_pr_core.u_req.nq
+Replacing gold.$flatten\u_ot_pr_core.\u_req.$procdff$2002 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.\u_req.$0\active[0:0], Q=\u_ot_pr_core.u_req.active
+Replacing gold.$flatten\u_ot_pr_core.\u_req.$procdff$2007 ($adff): ARST=\u_ot_pr_core.g_reset_pin.rst_q, D=$flatten\u_ot_pr_core.\u_req.$0\q[15:0], Q=\u_ot_pr_core.u_req.q
+
+4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gold..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \INV = 5'00000
+Final constraint equation: \INV = 5'00000
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \start
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \pair_id
+Import def constraint for this timestep: \in_valid
+Import def constraint for this timestep: \cfg_fia
+Import def constraint for this timestep: \context_len
+Import def constraint for this timestep: \epoch
+Import def constraint for this timestep: \col_valid
+Import def constraint for this timestep: \col_fault
+Import def constraint for this timestep: \in_t
+Import def constraint for this timestep: \in_epoch
+Imported 672 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \start
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \pair_id
+Import def constraint for this timestep: \in_valid
+Import def constraint for this timestep: \cfg_fia
+Import def constraint for this timestep: \context_len
+Import def constraint for this timestep: \epoch
+Import def constraint for this timestep: \col_valid
+Import def constraint for this timestep: \col_fault
+Import def constraint for this timestep: \in_t
+Import def constraint for this timestep: \in_epoch
+Imported 672 cells to SAT database.
+Import proof-constraint: \INV = 5'00000
+Final proof equation: \INV = 5'00000
+Import show expression: \INV
+
+Solving problem with 1080587 variables and 3142510 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                       Dec       Hex                                                                                                                                 Bin
+  ---- ----------------------------------------- ----------- --------- -----------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:253:execute$2031               --        --                                                                                                                                0x11
+  init $auto$async2sync.cc:253:execute$2033               --        --                                                                                                                    00000x0000000000
+  init $auto$async2sync.cc:253:execute$2035                0         0                                                                                                                    0000000000000000
+  init $auto$async2sync.cc:253:execute$2037                0         0                                                                                                                      00000000000000
+  init $auto$async2sync.cc:253:execute$2039            49152      c000                                                                                                                    1100000000000000
+  init $auto$async2sync.cc:253:execute$2041                1         1                                                                                                                                   1
+  init $auto$async2sync.cc:253:execute$2043                0         0                                                                                                                               00000
+  init $auto$async2sync.cc:253:execute$2045                0         0                                                                                                                                 000
+  init $auto$async2sync.cc:253:execute$2047                1         1                                                                                                                                0001
+  init $auto$async2sync.cc:253:execute$2049               --        --                                                                                                                                000x
+  init $auto$async2sync.cc:253:execute$2051              143        8f                                                                                                                            10001111
+  init $auto$async2sync.cc:253:execute$2053                0         0                                                                                                                    0000000000000000
+  init $auto$async2sync.cc:253:execute$2055                0         0                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2057                0         0                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2059                0         0                                                                                                                    0000000000000000
+  init $auto$async2sync.cc:253:execute$2061               --        --                                                                        000000000000000000000000000000000000000000000000000000000000
+  init $auto$async2sync.cc:253:execute$2063                0         0                                                                                                                            00000000
+  init $auto$async2sync.cc:253:execute$2065                0         0                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2067                2         2                                                                                                                            00000010
+  init $auto$async2sync.cc:253:execute$2069               --        --                                                                                                    000000000000000000000000000000x0
+  init $auto$async2sync.cc:253:execute$2071                0         0                                                                                                    00000000000000000000000000000000
+  init $auto$async2sync.cc:253:execute$2073                0         0                                                                                                                      00000000000000
+  init $auto$async2sync.cc:253:execute$2075                0         0                                                                                                                    0000000000000000
+  init $auto$async2sync.cc:253:execute$2077                0         0                                                                                                                                   0
+  init $auto$async2sync.cc:253:execute$2079               --        --                                                                                                                    00000000000x0000
+  init \rst_n__ot_rl0                                      0         0                                                                                                                                   0
+  init \rst_n__ot_rl1                                      1         1                                                                                                                                   1
+  init \u_ot_pr_core.ctx_r                               126        7e                                                                                                                      00000001111110
+  init \u_ot_pr_core.epoch_r                               0         0                                                                                                                    0000000000000000
+  init \u_ot_pr_core.fia_bad                               0         0                                                                                                                                   0
+  init \u_ot_pr_core.fia_q                                --        --                                                                                                                            1010111x
+  init \u_ot_pr_core.g_reset_pin.rst_q                     1         1                                                                                                                                   1
+  init \u_ot_pr_core.ie_r                                 --        --    11111111111111101101111111111111111111111111111111111101111111111111111101111111111111111110111100000000000000001111111011111101
+  init \u_ot_pr_core.it_r                                 --        --                    1110111111110111111110111110111010100101111001111111111111101011111110011111101111111010111111111111101111101111
+  init \u_ot_pr_core.k_fe                                 --        --                                                                                                                    010000000000000x
+  init \u_ot_pr_core.k_fi                                 64        40                                                                                                                    0000000001000000
+  init \u_ot_pr_core.k_fi1                             33344      8240                                                                                                                    1000001001000000
+  init \u_ot_pr_core.k_oa                              16384      4000                                                                                                                    0100000000000000
+  init \u_ot_pr_core.k_qc                                 --        --                                                                                                                    011111111111111x
+  init \u_ot_pr_core.k_qn                              65513      ffe9                                                                                                                    1111111111101001
+  init \u_ot_pr_core.pid                                   1         1                                                                                                                                   1
+  init \u_ot_pr_core.req_t                                --        --                    0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  ---- ----------------------------------------- ----------- --------- -----------------------------------------------------------------------------------------------------------------------------------
+     1 \INV                                                0         0                                                                                                                               00000
+  ---- ----------------------------------------- ----------- --------- -----------------------------------------------------------------------------------------------------------------------------------
+     2 \INV                                               --        --                                                                                                                               0000x
+
+ERROR: Called with -verify and proof did fail!

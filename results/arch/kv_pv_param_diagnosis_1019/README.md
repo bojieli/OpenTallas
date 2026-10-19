@@ -1,0 +1,20 @@
+# PV control native parameter proof diagnosis
+
+The original positive native audit is NOT PROVEN: 735/911 equivalence cells prove, 176 remain unproven. This packet does not issue a receipt, native qualification, or waiver. No production RTL or proof helper has changed.
+
+The exact selected view ties by TT/FF Liberty bytes to CLOSED `qkd_pv_ctl_tb1-b1-cebb296c4`. Both synthesis source SHA values match the evaluated RTL, and the complete parameter profile matches: FIRST_INPUT_AGE=127, RESET_PIN=1, MUT=0, TRUNK_D=54, FLAG_D=58. The original audit reconstructs the same two-stage flow reset landing and the source's extra RESET_PIN stage. There is no demonstrated parameter/source/reset-wrapper mismatch.
+
+The source declares a 4-bit state but the native netlist retains three binary state bits; this is not an FSM recoding. The gold elaboration has 804 register bits, with 697 routed named-state/replica pairs and 116 gold-only names. Original proof uses proc/memory/opt_clean without the normal constant/width optimizations, followed by equiv_simple -seq 2 and equiv_induct. A NOT PROVEN result supplies no counterexample and does not establish a functional mismatch. The unproven set includes request payload/valid, request active/q[0], and control state bits.
+
+Completed diagnostics, preserving the original:
+
+- Ordinary gold `opt` and `opt; wreduce; opt` each leave exactly176 unproven cells. The same opt transformation on original MUT=1 leaves209. Neither transformation resolves the positive proof; neither is adopted.
+- The finite12-edge SAT miter PASSES every original port/paired-state comparison on edges7..12 after six actual reset-low edges, with all other inputs arbitrary. This finite check is diagnostic only. The same MUT=1 check also PASSES, because the actual reset landing/start/arrival pipeline has not exposed that predicate by edge12. The noncausal short window is retained; it is not a valid mutant rejection witness.
+
+Exact live paths, scripts, hashes, results, and next action are recorded in this packet as collected. Existing PV join/slice/ASTK/seq/ktree audit jobs and the causal-mutant collection remain preserved; no duplicate of those jobs was launched.
+
+Additional proof experiment (completed): add exactly five zero-invariant comparisons for source state[3] and request nq[3:0], whose native flop counterparts are optimized away. The source reset sets them to zero; every legal transition from zero preserves zero (state assignments0..7, nq assignment16 times an integer, or hold). No original comparison is removed and no assumption is added. All916 comparisons PROVE under induction (370.56s,1.1GB) and all916 pass the separate reset-prefix base. This identifies missing optimized-away zero invariants as the representation/weak-induction limitation. The actual production valid-reset contract still requires coordinator review; no native receipt is issued by this packet. The exact MUT=1 SAT window is extended to18 edges to include the earliest actual arrival-check effect. No RTL, native netlist, deadline, or golden data changes.
+
+The five collected controls are selected-causal predicates with proof refusals, not extracted functional counterexamples: healthy source proofs are PROVEN, but changing the selected MUT equation yields NOT PROVEN (score4M3:2; stinM4:2; stkM5:32; gatherM41:12; seqfanM9:64 unproven cells). Their exact failure logs are archived with audit log SHA verification. No numerical counterexample is claimed from an induction refusal. PV healthy176 versus MUT209 is also insufficient to claim a causal functional witness.
+
+A separate source-only two-edge transition experiment without the real reset history FAILS with INV=00000 then0000x (the state[3] observation becomes undefined through arbitrary hidden reset state). It is preserved and makes no transition-only claim. The successful proof is the joint916-observation induction plus its actual reset-prefix base, retaining every original observation. A production profile still requires explicit review of that valid-reset contract and source/view identity, and a real selected-causal divergence witness remains pending.

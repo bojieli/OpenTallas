@@ -1,0 +1,13 @@
+read_rtlil gold1.il
+cd gold
+add -wire INV 5
+connect -set INV[0] u_ot_pr_core.state[3]
+connect -set INV[1] u_ot_pr_core.u_req.nq[0]
+connect -set INV[2] u_ot_pr_core.u_req.nq[1]
+connect -set INV[3] u_ot_pr_core.u_req.nq[2]
+connect -set INV[4] u_ot_pr_core.u_req.nq[3]
+cd
+hierarchy -top gold
+async2sync
+opt_clean
+sat -seq 2 -set-def-inputs -set-at 1 INV 0 -prove INV 0 -prove-skip 1 -show INV -verify
