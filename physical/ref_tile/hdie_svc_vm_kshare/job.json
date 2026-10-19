@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/svc-small-1018",
+  "branch": "claude/hbm-kits-b-kshare-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh",
