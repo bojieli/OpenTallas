@@ -27,13 +27,25 @@ def generate():
     vm_names += [f'u_c.u_vm.g_btc[{cp}].g_btb[{bank}].u_m' for cp in range(2) for bank in range(4)]
     vm_names += [f'u_c.u_vm.g_prog[{bank}].u_{half}' for bank in range(2) for half in ['lo','hi']]
     if len(vm)!=22 or len(storage)!=42:raise ValueError('actual 22+42 contract changed')
+    # The legacy placement inventory interleaves small master families. Match
+    # named source instances by actual master, never by list position alone.
+    pools={}
+    for obj in vm:pools.setdefault(obj['view'].split('/')[-1],[]).append(obj)
+    ordered_vm=[]
+    for name in vm_names:
+        family=('ot_sram_1r1w_1024x256_m2_r2c2' if '.g_rep[' in name or '.g_crom[' in name else
+                'ot_sram_1r1w_128x256_m1_r2c2' if '.g_btc[' in name else 'ot_sram_1r1w_256x256_m2_r2c2')
+        if not pools.get(family):raise ValueError('placement master/source count mismatch: '+family)
+        ordered_vm.append(pools[family].pop(0))
+    if any(pools.values()):raise ValueError('unmatched legacy VM placement objects')
     entries=[]
-    for i,obj in enumerate(vm+storage):
+    for i,obj in enumerate(ordered_vm+storage):
         name=vm_names[i] if i<22 else obj['name']
         pin=clock_pin(obj['view']);at=obj['at']
         pos=[round(at[j]+pin['centre_um'][j],6) for j in range(2)]
-        if i<10:group=f'vm1024_pair{i//2}'
-        elif i<22:group=f'vm_small_triple{(i-10)//3}'
+        old_index=int(obj['name'][2:]) if i<22 else None
+        if i<10:group=f'vm1024_pair{old_index//2}'
+        elif i<22:group=f'vm_small_triple{(old_index-10)//3}'
         else:group='storage_'+name.split('.')[2]
         entries.append(dict(instance=name,master=obj['view'].split('/')[-1],clock_pin_path=name+'.clk',
             source_clock='ck_core',active_edge='posedge',native_clock_sink_count=1,macro_origin_um=at,

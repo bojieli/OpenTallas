@@ -507,78 +507,8 @@
     },
     {
       "instance": "u_c.u_vm.g_btc[1].g_btb[0].u_m",
-      "master": "ot_sram_1r1w_256x256_m2_r2c2",
-      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[0].u_m.clk",
-      "source_clock": "ck_core",
-      "active_edge": "posedge",
-      "native_clock_sink_count": 1,
-      "macro_origin_um": [
-        648,
-        604.8
-      ],
-      "pin_global_centre_um": [
-        648.012,
-        605.58
-      ],
-      "clock_pin": {
-        "pin": "clk",
-        "layer": "M4",
-        "rect_um": [
-          0.0,
-          0.768,
-          0.024,
-          0.792
-        ],
-        "centre_um": [
-          0.012,
-          0.78
-        ],
-        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
-        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
-      },
-      "distribution_anchor_group": "vm_small_triple1",
-      "reset_pin": null,
-      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
-    },
-    {
-      "instance": "u_c.u_vm.g_btc[1].g_btb[1].u_m",
-      "master": "ot_sram_1r1w_256x256_m2_r2c2",
-      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[1].u_m.clk",
-      "source_clock": "ck_core",
-      "active_edge": "posedge",
-      "native_clock_sink_count": 1,
-      "macro_origin_um": [
-        864,
-        604.8
-      ],
-      "pin_global_centre_um": [
-        864.012,
-        605.58
-      ],
-      "clock_pin": {
-        "pin": "clk",
-        "layer": "M4",
-        "rect_um": [
-          0.0,
-          0.768,
-          0.024,
-          0.792
-        ],
-        "centre_um": [
-          0.012,
-          0.78
-        ],
-        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
-        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
-      },
-      "distribution_anchor_group": "vm_small_triple1",
-      "reset_pin": null,
-      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
-    },
-    {
-      "instance": "u_c.u_vm.g_btc[1].g_btb[2].u_m",
       "master": "ot_sram_1r1w_128x256_m1_r2c2",
-      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[2].u_m.clk",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[0].u_m.clk",
       "source_clock": "ck_core",
       "active_edge": "posedge",
       "native_clock_sink_count": 1,
@@ -611,9 +541,9 @@
       "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
     },
     {
-      "instance": "u_c.u_vm.g_btc[1].g_btb[3].u_m",
+      "instance": "u_c.u_vm.g_btc[1].g_btb[1].u_m",
       "master": "ot_sram_1r1w_128x256_m1_r2c2",
-      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[3].u_m.clk",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[1].u_m.clk",
       "source_clock": "ck_core",
       "active_edge": "posedge",
       "native_clock_sink_count": 1,
@@ -646,9 +576,9 @@
       "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
     },
     {
-      "instance": "u_c.u_vm.g_prog[0].u_lo",
+      "instance": "u_c.u_vm.g_btc[1].g_btb[2].u_m",
       "master": "ot_sram_1r1w_128x256_m1_r2c2",
-      "clock_pin_path": "u_c.u_vm.g_prog[0].u_lo.clk",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[2].u_m.clk",
       "source_clock": "ck_core",
       "active_edge": "posedge",
       "native_clock_sink_count": 1,
@@ -681,9 +611,9 @@
       "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
     },
     {
-      "instance": "u_c.u_vm.g_prog[0].u_hi",
+      "instance": "u_c.u_vm.g_btc[1].g_btb[3].u_m",
       "master": "ot_sram_1r1w_128x256_m1_r2c2",
-      "clock_pin_path": "u_c.u_vm.g_prog[0].u_hi.clk",
+      "clock_pin_path": "u_c.u_vm.g_btc[1].g_btb[3].u_m.clk",
       "source_clock": "ck_core",
       "active_edge": "posedge",
       "native_clock_sink_count": 1,
@@ -712,6 +642,76 @@
         "lef_sha256": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
       },
       "distribution_anchor_group": "vm_small_triple3",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[0].u_lo",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_prog[0].u_lo.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        648,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        648.012,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+      },
+      "distribution_anchor_group": "vm_small_triple1",
+      "reset_pin": null,
+      "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
+    },
+    {
+      "instance": "u_c.u_vm.g_prog[0].u_hi",
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "clock_pin_path": "u_c.u_vm.g_prog[0].u_hi.clk",
+      "source_clock": "ck_core",
+      "active_edge": "posedge",
+      "native_clock_sink_count": 1,
+      "macro_origin_um": [
+        864,
+        604.8
+      ],
+      "pin_global_centre_um": [
+        864.012,
+        605.58
+      ],
+      "clock_pin": {
+        "pin": "clk",
+        "layer": "M4",
+        "rect_um": [
+          0.0,
+          0.768,
+          0.024,
+          0.792
+        ],
+        "centre_um": [
+          0.012,
+          0.78
+        ],
+        "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+        "lef_sha256": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+      },
+      "distribution_anchor_group": "vm_small_triple1",
       "reset_pin": null,
       "status": "EXPLICIT_CANDIDATE_BINDING_REQUIRES_ELABORATED_AND_NATIVE_GRAPH_MATCH"
     },
