@@ -1,0 +1,32 @@
+{
+  "verified_utc": "2026-10-19T17:54:34.851447+00:00",
+  "container": "a74679d0aba72cc0b8eac92abfc576d0f9f47f555cdd7eac10d041074cb47866",
+  "name": "/gate_grt_dscoll_lane_w_ltr-20261019-075813",
+  "source_start_commit": "c531449dfa4bf1fc9be9baefe2f06c729dad632f",
+  "source_checks": {
+    "physical/ref_tile/dscoll_lane_w_ltr/spec.json": {
+      "expected": "41a5e1a17602c3e5e01de2c767fb7acaac8da250f8c05d24e9123a9f054d0b95",
+      "actual": "41a5e1a17602c3e5e01de2c767fb7acaac8da250f8c05d24e9123a9f054d0b95"
+    },
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv": {
+      "expected": "b7576ac90d28435b1232bd24c477bcd96367aeaefe73846a109618ff90e38ffe",
+      "actual": "b7576ac90d28435b1232bd24c477bcd96367aeaefe73846a109618ff90e38ffe"
+    },
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv": {
+      "expected": "93e76d1463224171114cc244caccd866ce012416fc6083db453c06e380c94086",
+      "actual": "93e76d1463224171114cc244caccd866ce012416fc6083db453c06e380c94086"
+    },
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv": {
+      "expected": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c",
+      "actual": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c"
+    }
+  },
+  "original_failure_tail": [
+    "OT_SPINE iter 9 (fine) leaves 1979 sinks 15713 cells 50663 leaf arrival 870.6..1006.4 ps (spread 135.8) pad 65.2 / 17.5 ps",
+    "Error: cts.tcl, 36 OT_SPINE: no legal site near 471006 257310",
+    "Elapsed time: 1:53:29.55[h:]min:sec. CPU time: user 6943.55 sys 67.66 (102%). Peak memory: 1544892KB."
+  ],
+  "repeat_processes": "PID                 PPID                ELAPSED             %CPU                COMMAND\n3878279             3878256             47:24               0.0                 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n3878308             3878279             47:24               0.0                 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS=-allow_congestion -verbose GENERATE_ARTIFACTS_ON_FAILURE=1 grt\n3878353             3878308             47:23               0.0                 make GENERATE_ARTIFACTS_ON_FAILURE=1 WORK_HOME=/work DESIGN_CONFIG=/work/config.mk GLOBAL_ROUTE_ARGS=-allow_congestion -verbose FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-4_1_cts\n3878369             3878353             47:23               0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3878371             3878369             47:23               0.0                 bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts\n3878390             3878371             47:23               0.0                 /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/4_1_cts.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/4_1_cts.json\n3878391             3878390             47:23               108                 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/cts.tcl -metrics /work/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/4_1_cts.json\n",
+  "authorization": "ROOT via s81_coordinator: stop ONLY legacyW717394 exactcontainer after preserving receipt; P1W/E untouched",
+  "validated": true
+}

@@ -1,5 +1,5 @@
 {
-  "status": "BOUNDED_READ_ONLY_AUDIT_NO_STOP_AUTHORIZATION",
+  "status": "LEGACY_W_EXACT_REPEAT_STOP_AUTHORIZED_AND_COMPLETED_P1_UNTOUCHED",
   "captured_utc": "2026-10-19T17:51:44Z..17:52:54Z",
   "source": {
     "old_w": {
@@ -39,7 +39,9 @@
     "openroad_pid": 3878391,
     "cpu_percent": 108,
     "CTS_ODB": false,
-    "stop_choice": "report toROOT; specificoldWstop warranted by knownstagefailure/identicalrepeat; NOactiontaken"
+    "stop_choice": "report toROOT; specificoldWstop warranted by knownstagefailure/identicalrepeat; NOactiontaken",
+    "stop_result": "exact dockerstop30s exit0, containerabsent and7originalchildPIDsabsent10:55:35PT; localrunner717394+otrun828992+ssh829695gone",
+    "terminal_gate": "FAIL4fail8warn: originalCTSno-legal-site retained; GRT_RC137 explicitlyROOT-authorized stop ofrepeat, notnewroutefailure"
   },
   "p1_w": {
     "local_client": 1883886,
@@ -54,7 +56,8 @@
     "DPL_negotiation_illegal_cells": 70763,
     "DPL_phase2_start_illegal_cells": 71135,
     "CTS_ODB": false,
-    "interpretation": "Timingguard stalled but legalization slowlyprogressing; negotiationcount not final placementverdict"
+    "interpretation": "Timingguard stalled but legalization slowlyprogressing; negotiationcount not final placementverdict",
+    "after_stop": "samecontainer/PID3901168 stillrunning"
   },
   "p1_e": {
     "local_client": 1883887,
@@ -68,7 +71,9 @@
     "DPL_phase2_iteration": 470,
     "DPL_negotiation_illegal_cells": 84504,
     "CTS_ODB": false,
-    "interpretation": "Negotiationoscillates near84400; stillactive, count not finalplacementverdict"
+    "interpretation": "Negotiationoscillates near84400; stillactive, count not finalplacementverdict",
+    "after_stop": "samecontainer/PID3901244 stillrunning"
   },
-  "all_three": "adoptionblocked bysource_safety/unusedtf/native/slotdebts; no duplicate/retry/source edit/stop bythisaudit"
+  "all_three": "adoptionblocked bysource_safety/unusedtf/native/slotdebts; no duplicate/retry/source edit/stop bythisaudit",
+  "stop_authorization": "ROOT via s81_coordinator message: stop ONLY legacyW717394 exacta74679... failed-prerequisite CTSrepeat afterrevalidate/preserve, graceful dockerstop, noP1/variantstops"
 }

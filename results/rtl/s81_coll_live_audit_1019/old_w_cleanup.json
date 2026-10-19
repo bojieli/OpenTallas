@@ -1,0 +1,21 @@
+{
+  "captured_utc": "2026-10-19T17:55:35.365519+00:00",
+  "stopped_exact_container": "a74679d0aba72cc0b8eac92abfc576d0f9f47f555cdd7eac10d041074cb47866",
+  "container_absent": true,
+  "inspect_stderr": "error: no such object: a74679d0aba72cc0b8eac92abfc576d0f9f47f555cdd7eac10d041074cb47866\n",
+  "original_child_pids_still_exist": [],
+  "P1_containers_unchanged": [
+    {
+      "id": "a22f5bd2482da5cd98121edaefc9cfcfefeb6cd73a6ad09504607f2398560f90",
+      "name": "/gate_cts_dscoll_lane_w_ltr-20261019-092651",
+      "running": true,
+      "pid": 3901168
+    },
+    {
+      "id": "bc74f8b102c188ecc74fe8c334c5b6e014d0521f15f3ffe95a24d597162d7130",
+      "name": "/gate_cts_dscoll_lane_e_ltr-20261019-092651",
+      "running": true,
+      "pid": 3901244
+    }
+  ]
+}
