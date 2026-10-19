@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-topk-succ-1019/src
+ot-run: ot-epyc5       admits   958 GB (avail 758, growth 87, headroom 0, waiters 0/0 GB) load 55/128 running 17 disk 969 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-topk-succ-1019/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-topk-succ-1019/src
+ot-run: ot-epyc8       admits  1178 GB (avail 938, growth 113, headroom 0, waiters 0/0 GB) load 44/128 running 28 disk 160 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-topk-succ-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-topk-succ-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1166889-1792434859 after 0 s
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 73, "got_beats": 73}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 73, "got_beats": 73}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 69, "got_beats": 69}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 75, "got_beats": 75}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 75, "got_beats": 75}
+BK_LAYER FAIL {"pass_": false, "mismatches": 1, "first": [{"edge": 1065, "exp": "37e402de902bea029eb027ec", "got": "37e402de902bea029eb027ec"}], "fault_edge": null, "expected_beats": 69, "got_beats": 69}
+BK_LAYER FAIL {"pass_": false, "mismatches": 32, "first": [{"edge": 1065, "exp": "57a804d8803ff103dcd03d9b", "got": "5a96057a804d8803ff103dcd"}, {"edge": 1066, "exp": "322000000000000000000000", "got": "322000000000000000000000"}, {"edge": 1067, "exp": "b2550b03e0ab4109b1809563", "got": "b61c0b2550b03e0ab4109b18"}, {"edge": 1068, "exp": "322000000000000000000000", "got": "322000000000000000000000"}, {"edge": 1069, "exp": "69be15eda156f510c1c0fec6", "got": "6d7f169be15eda156f510c1c"}, {"edge": 1070, "exp": "322000000000000000000000", "got": "322000000000000000000000"}, {"edge": 1071, "exp": "19a121658212a921
+BK_LAYER FAIL {"pass_": false, "mismatches": 146, "first": [{"edge": 1055, "exp": "14c2b600801", "got": "0"}, {"edge": 1063, "exp": "4000b", "got": "0"}, {"edge": 1064, "exp": "400000000000000000000000", "got": "0"}, {"edge": 1065, "exp": "57a804d8803ff103dcd03d9b", "got": "0"}, {"edge": 1066, "exp": "322000000000000000000000", "got": "0"}, {"edge": 1067, "exp": "b2550b03e0ab4109b1809563", "got": "0"}, {"edge": 1068, "exp": "322000000000000000000000", "got": "0"}, {"edge": 1069, "exp": "69be15eda156f510c1c0fec6", "got": "0"}], "fault_edge": null, "expected_beats": 73, "got_beats": 73}
+BK_LAYER FAIL {"pass_": false, "mismatches": 43, "first": [{"edge": 1065, "exp": "57a804d8803ff103dcd03d9b", "got": "57a804d880000003dcd03d9b"}, {"edge": 1066, "exp": "322000000000000000000000", "got": "322000000000000000000000"}, {"edge": 1067, "exp": "b2550b03e0ab4109b1809563", "got": "b255000000ab4109b1809563"}, {"edge": 1069, "exp": "69be15eda156f510c1c0fec6", "got": "69be15eda156f510c1c0fec6"}, {"edge": 1071, "exp": "19a121658212a92102d20924", "got": "20000212a92102d209242026"}, {"edge": 1073, "exp": "c9d32c17d2c0da2b25d295fe", "got": "c9d32c17d2c0da2000020000"}, {"edge": 1074, "exp": "3220000000000000
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 73, "got_beats": 73}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 73, "got_beats": 73}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 69, "got_beats": 69}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 75, "got_beats": 75}
+BK_LAYER PASS {"pass_": true, "mismatches": 0, "first": [], "fault_edge": null, "expected_beats": 75, "got_beats": 75}
+COMPONENT MUT=0 rc=0 FIFO PASS
+COMPONENT MUT=1 rc=1 FIFO FAIL
+COMPONENT MUT=2 rc=1 FIFO FAIL
+SUCC_SUITE PASS {"indexed13": "PASS", "indexed13_corrupt": "FAIL", "indexed13_early": "FAIL", "indexed13_identity": "FAIL", "indexed13_ninf": "PASS", "indexed13_ties": "PASS", "indexed13_zeros": "PASS", "legacy": "PASS", "mut_oh": "FAIL", "probe0_indexed13": "PASS", "probe0_indexed13_ninf": "PASS", "probe0_indexed13_ties": "PASS", "probe0_indexed13_zeros": "PASS", "probe0_legacy": "PASS"}
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1166889-1792434859): exit 0
