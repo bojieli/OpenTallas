@@ -1,5 +1,5 @@
 {
-  "status": "PROPOSED before RTL;7aeca767d raw-collapse FAIL despite max27 ordinary load PASS",
+  "status": "FUNCTIONAL AND MAPPED STRICT NATIVE SHAPE PASS; canonical tool/root acceptance and physical proof OPEN",
   "clocks": {
     "HBM": "pair_hbm_clk",
     "pair": "pair_clk",
@@ -53,5 +53,40 @@
     "clock skew/phase",
     "TT/FF timing",
     "macro native access"
-  ]
+  ],
+  "measured_profile": {
+    "HBM": [
+      4,
+      19,
+      6
+    ],
+    "pair": [
+      2,
+      19,
+      12
+    ],
+    "return": [
+      2,
+      18,
+      9
+    ]
+  },
+  "profile_order": [
+    "raw_async_FF",
+    "max_first_to_second_async_FF",
+    "max_second_to_owned_async_FF"
+  ],
+  "measured": {
+    "max_nonclock_pin_load": 27,
+    "std_area_um2": 3107.20212,
+    "FF_total": 6551,
+    "unreset_FF": 5773,
+    "resettable_FF": 778,
+    "raw_buffers": 0,
+    "all_first_second_D_constant_one": true,
+    "all_first_second_clocks_match_root": true,
+    "FIFO_both_reset_AND_roots": 2,
+    "internal_FIFO_sync_FFs_per_bank": 4,
+    "internal_FIFO_final_async_FFs_per_domain": 18
+  }
 }

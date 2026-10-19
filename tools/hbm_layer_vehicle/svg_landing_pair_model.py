@@ -9,7 +9,7 @@ def model():
         'actual_macros':{'ot_sram_1r1w_256x256_m2_r2c2':2,'ot_sram_1r1w2c_8x285_m1':2},
         'macro_area_um2':22577.762304,
         'roots':['pair_hbm_clk','pair_clk','return_clk'],
-        'reset':'two release stages/root; HBM/stream FIFO and local return reset assertion/release balanced',
+        'reset':'two native landing release stages/root; existing internal FIFO reset AND +two additional per-domain synchronization stages separately disclosed; balanced assertion, tested unequal release',
         'native_landing':'opt-in ot_hbm_svc_sm8_landing_boundary_safe, BANK=J andJ+4; both share pair HBM/stream roots',
         'group_metadata':{'fields':'group_valid1+ordinal3','storage':'actual four-slot four-bit ring',
             'bits':16,'latency_edges':3,'validity':'group_valid is independent of BOTH native read_v; partial/unused data is ignored by parent delayed mask'},
@@ -40,6 +40,6 @@ def model():
             'registered_return_data_ordinal_valid_phasefault_outputs':261},
         'output_registers':'native ready/overflow/completion-bank/fault exported separately from their existing Q; data/ordinal/valid/phasefault are ring return Q; no combinational OR fault pin',
         'storage':'two native landing SRAMs +two native response SRAMs; 1140bit ingress ring per bank,1052bit return ring,16bit group-alignment ring; no >=3 unchanged flop delay chain',
-        'geometry':'source-bound reduced candidate380.16x198.72; mapped area3177.81306um2; 16.2um fullwidth band at51.6003% density; face access, <=405um reach and root spread OPEN',
-        'qualification':'source8792c55c3 actual-SRAM all-J old/new miter PASS; three mutants FAIL; fullflatten mapped fanout PASS; physical timing/reach/pin access OPEN; no gate/submit',
+        'geometry':'source-bound reduced candidate380.16x198.72; mapped strict-reset area3107.20212um2; 16.2um fullwidth band at50.45% density; face access, <=405um reach and root spread OPEN',
+        'qualification':'strict-reset source327ef3481 actual-SRAM all-J old/new miter PASS; three mutants FAIL; fullflatten mapped fanout PASS; physical timing/reach/pin access OPEN; no gate/submit',
     }

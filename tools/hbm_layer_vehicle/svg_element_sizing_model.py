@@ -31,7 +31,7 @@ def macro(name):
             status='PROPOSAL ONLY: regenerate real pin/periphery routing and macro abstracts/timing; preserve canonical views'))
 
 
-def model(pair_stdcell_area_um2=3177.813060,rotator_stdcell_area_um2=None):
+def model(pair_stdcell_area_um2=3107.202120,rotator_stdcell_area_um2=None):
     m={k:macro(v) for k,v in MACROS.items()}
     pair_area=2*(m['landing']['area_um2']+m['fifo']['area_um2'])
     inventory=dict(landing=8,fifo=8,cache=5,program=2,descriptor=2)
@@ -48,7 +48,7 @@ def model(pair_stdcell_area_um2=3177.813060,rotator_stdcell_area_um2=None):
         outline_proposal_um=[width,height],aspect=width/height,macro_only_fill=pair_area/(width*height),
         macro_placements=placements,all_macro_origins_on_43p2_lattice=True,
         full_width_cell_band_y_um=band,band_area_um2=band_area,macro_row_gap_y_um=gap,
-        measured_source_commit="8792c55c3",
+        measured_source_commit="327ef3481",
         measured_local_cell_band_density=pair_stdcell_area_um2/band_area if pair_stdcell_area_um2 is not None else None,
         placement_util_target=[.4,.6],measured_stdcell_area_um2=pair_stdcell_area_um2,
         outline_status='reduced source-legal GEOMETRY CANDIDATE, not smallest SAFE until measured cell area and native access/reach audits',
@@ -56,7 +56,7 @@ def model(pair_stdcell_area_um2=3177.813060,rotator_stdcell_area_um2=None):
         band_diagonal_um=(width**2+(band[1]-band[0])**2)**.5,
         stdcell_area_range_for_full_band_40_60pct_um2=[.4*band_area,.6*band_area],
         stdcell_band_height_at_50pct_um=None if pair_stdcell_area_um2 is None else pair_stdcell_area_um2/(.5*width),
-        stdcell_band_rule='60 rows of0.27um fullwidth at51.60% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN',
+        stdcell_band_rule='60 rows of0.27um fullwidth at50.45% measured density; remaining26.976um of macro gap reserved for real routing/clock/PG access; placement/reach OPEN',
         access_channels_um=dict(left=43.2,between_macro_columns=259.2-(43.2+m['landing']['width_um']),
           right=width-(259.2+m['fifo']['width_um']),top=height-(129.6+m['fifo']['height_um']),central_read_face_channel=gap[1]-gap[0]),
         proposed_fullface_orientation='bottom row R0 North-read faces band; upper row MX South-read faces band; write/mask face outward; canonical WE faces retain generous side channels',
