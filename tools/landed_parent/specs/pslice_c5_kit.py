@@ -58,12 +58,15 @@ def port_bit(c, k):
     return f"command_t[{256 * (c - 5) + k}]"
 
 
-# fence boxes (um, x0 y0 x1 y1) per region: landing write rings in their SOURCE region, reads in their DESTINATION region
+# fence boxes (um, x0 y0 x1 y1) per region: landing write rings in their SOURCE region, reads in their DESTINATION region.
+# AD-HBM-SUK 10-18: COMPACT bands beside the faces the landings serve, never whole-region rectangles.  A fence is exclusive
+# (DPL keeps every non-group cell -- the anonymous ring/read muxes, reset runs, repair buffers -- out of it): real2 fenced
+# 1.72 of 1.79 mm^2, GPL did not converge, repair_design added ~1.2 M buffers and DPL stuck at 1.1 M illegal cells.
 FENCES = {
-    "h": [(129.6, 540.0, 518.4, 604.8)],                             # beside the head's E (output) face, mid-channel
-    "l": [(43.2, 496.8, 1166.4, 540.0), (0.0, 0.0, 1166.4, 496.8)],   # channel band over the L row + the L row
-    "t": [(129.6, 604.8, 1900.8, 648.0), (0.0, 648.0, 1900.8, 950.4)],  # channel band under the top row + the row
-    "b": [(1166.4, 0.0, 1900.8, 572.4)],                             # the bottom S pair + the space over it
+    "h": [(129.6, 540.0, 518.4, 604.8)],      # beside the head's E (output) face, mid-channel
+    "l": [(43.2, 496.8, 1166.4, 518.4)],      # 21.6-um band on the L row's cfg (N) face
+    "t": [(129.6, 626.4, 1900.8, 648.0)],     # 21.6-um band under the top row's cfg (S) face
+    "b": [(1166.4, 302.4, 1900.8, 345.6)],    # 43.2-um band on c0/c4's cfg (N) face (y 302.4)
 }
 
 
