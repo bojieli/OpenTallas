@@ -153,6 +153,23 @@ module ot_s81ph_native_sel_slice #(
         end
     end
     always @(posedge clk) begin r_st <= c_st; r_Bt <= c_Bt; r_cg <= c_cg; r_fg <= c_fg; r_rem <= c_rem; end
+`ifdef OT_S81PH_SEL_FAN32
+    // S81-TOPK FAN32 (10-19, SAFE item 3): r_cg / r_fg (2816 loads each) -> 16 KEPT identical copies per histogram,
+    // one per gbin output bin, registered on r_cg / r_fg's edge (exact, 0 added edges).
+    wire [16*4-1:0] cg_c, fg_c;
+    genvar gcc;
+    for (gcc = 0; gcc < 16; gcc = gcc + 1) begin : g_gsc
+        (* keep = "true" *) reg [3:0] rc, rf;
+  `ifdef OT_S81PH_SEL_FAN32_MUT_GS
+        // mutant witness only: every group-select copy of both histograms reads the wrong group (^1)
+        always @(posedge clk) begin rc <= c_cg ^ 4'd1; rf <= c_fg ^ 4'd1; end
+  `else
+        always @(posedge clk) begin rc <= c_cg; rf <= c_fg; end
+  `endif
+        assign cg_c[4*gcc +: 4] = rc;
+        assign fg_c[4*gcc +: 4] = rf;
+    end
+`endif
 
     reg [2:0] init;
     always @(posedge clk or negedge rst_n) begin
@@ -308,11 +325,19 @@ module ot_s81ph_native_sel_slice #(
     wire hc_busy, hf_busy;
     ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hc (
         .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hi_digits(i1_k)),
-        .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
+        .gsel(r_cg),
+`ifdef OT_S81PH_SEL_FAN32
+        .gsel_c(cg_c),
+`endif
+        .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     wire f_clr = seg_clr || r_fclr || (sw_start && p2q);
     ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hf (
         .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(p2m ? r1_v : i1_v), .i_en(p2m ? p2_en : i1_fm),
-        .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
+        .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg),
+`ifdef OT_S81PH_SEL_FAN32
+        .gsel_c(fg_c),
+`endif
+        .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
     function automatic [W*8-1:0] hi_digits(input [W*16-1:0] k);
         integer j;
         for (j = 0; j < W; j = j + 1) hi_digits[8*j +: 8] = k[16*j + 8 +: 8];

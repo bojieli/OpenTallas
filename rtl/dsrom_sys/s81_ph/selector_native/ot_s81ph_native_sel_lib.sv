@@ -121,6 +121,31 @@ module ot_s81ph_native_sel_rstage #(
     endgenerate
 endmodule
 
+`ifdef OT_S81PH_SEL_FAN32
+// S81-TOPK FAN32 (10-19): rstage with one (KEPT, identical) select copy per output lane: the same function as
+// ot_s81ph_native_sel_rstage when every sh[j] equals the scalar sh; each copy drives RE mux selects, not N*RE.
+module ot_s81ph_native_sel_rstage_c #(
+    parameter integer N  = 32,
+    parameter integer RE = 38,
+    parameter integer S  = 0
+) (
+    input  wire [N*RE-1:0] a,
+    input  wire [N-1:0]    sh,
+    output wire [N*RE-1:0] y
+);
+    genvar j;
+    generate
+        for (j = 0; j < N; j = j + 1) begin : g_lane
+            if (j >= (1 << S)) begin : g_mv
+                assign y[RE*j +: RE] = sh[j] ? a[RE*(j - (1 << S)) +: RE] : a[RE*j +: RE];
+            end else begin : g_lo
+                assign y[RE*j +: RE] = sh[j] ? {RE{1'b0}} : a[RE*j +: RE];
+            end
+        end
+    endgenerate
+endmodule
+`endif
+
 // ---------------------------------------------------------------------------
 // 256-bin histogram.  A beat (i_v) carries W lanes; lane l counts in bin i_dg[l] when i_en[l].
 // Pipeline: predecode (two 16-way one-hots) -> per-bin popcount -> saturating bin add ->
@@ -146,6 +171,10 @@ module ot_s81ph_native_sel_hist #(
     input  wire [W-1:0]         i_en,
     input  wire [W*8-1:0]       i_dg,
     input  wire [3:0]           gsel,
+`ifdef OT_S81PH_SEL_FAN32
+    // S81-TOPK FAN32: 16 KEPT identical copies of gsel (one per gbin output bin), registered on gsel's edge
+    input  wire [16*4-1:0]      gsel_c,
+`endif
     output reg  [16*(CB+4)-1:0] gsum,
     output reg  [16*CB-1:0]     gbin,
     output wire                 busy
@@ -209,11 +238,47 @@ module ot_s81ph_native_sel_hist #(
             assign hbin_d[CB*gb +: CB] = s[CB] ? SAT : s[CB-1:0];
         end
     endgenerate
+`ifdef OT_S81PH_SEL_FAN32
+    // S81-TOPK FAN32 (10-19, SAFE item 3): the bin clear (2820 loads) and the bin update enable v2 (2112 loads) are
+    // replaced by NCL KEPT identical copies, each owning 256/NCL bins (2 bins = 22 bin flops per copy).  Each clear
+    // copy registers `clr` on the same edge as r_clr (HPIPE 1) and each v2 copy is v1 && !its clear copy, as v2.
+    localparam integer NCL = 128;
+    wire [NCL-1:0] x_clr_c, v2_c;
+    genvar gk;
+    for (gk = 0; gk < NCL; gk = gk + 1) begin : g_clc
+        if (HPIPE != 0) begin : g_r
+            (* keep = "true" *) reg rc;
+  `ifdef OT_S81PH_SEL_FAN32_MUT_CLR
+            // mutant witness only: the clear copies of the lower half of the bins never clear (stale counts)
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) rc <= 1'b0; else rc <= (gk < NCL / 2) ? 1'b0 : clr;
+  `else
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) rc <= 1'b0; else rc <= clr;
+  `endif
+            assign x_clr_c[gk] = rc;
+        end else begin : g_d
+            assign x_clr_c[gk] = clr;
+        end
+        (* keep = "true" *) reg rv;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rv <= 1'b0; else rv <= v1 && !x_clr_c[gk];
+        assign v2_c[gk] = rv;
+    end
+    for (gb = 0; gb < 256; gb = gb + 1) begin : g_hbu
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) hbin[CB*gb +: CB] <= {CB{1'b0}};
+            else if (x_clr_c[gb / (256 / NCL)]) hbin[CB*gb +: CB] <= {CB{1'b0}};
+            else if (v2_c[gb / (256 / NCL)]) hbin[CB*gb +: CB] <= hbin_d[CB*gb +: CB];
+        end
+    end
+`else
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) hbin <= {256*CB{1'b0}};
         else if (x_clr) hbin <= {256*CB{1'b0}};
         else if (v2) hbin <= hbin_d;
     end
+`endif
 
     // group sums: 4-bin sums, then 16-bin sums
     reg [64*(CB+2)-1:0] gs1;
@@ -253,7 +318,30 @@ module ot_s81ph_native_sel_hist #(
         end
         always @(posedge clk) begin p1 <= p1_d; gs1 <= gs1_d; p2 <= p2_d; gsum <= gsum_d; end
     end endgenerate
+`ifdef OT_S81PH_SEL_FAN32
+    // S81-TOPK FAN32: decoded constant-index group select.  Output bin o uses its own gsel copy, decoded to a
+    // one-hot over the 16 groups, AND-OR over hbin[16 g + o]: = hbin[16*CB*gsel +: 16*CB] bin o (exact, same edge).
+    wire [16*CB-1:0] gbin_d;
+    genvar go, gg;
+    for (go = 0; go < 16; go = go + 1) begin : g_gbo
+        wire [3:0]       s = gsel_c[4*go +: 4];
+        wire [16*CB-1:0] t;
+        for (gg = 0; gg < 16; gg = gg + 1) begin : g_gg
+            localparam [3:0] GI = gg;
+            assign t[CB*gg +: CB] = hbin[CB*(16*gg + go) +: CB] & {CB{s == GI}};
+        end
+        reg [CB-1:0] o;
+        integer m;
+        always @(*) begin
+            o = {CB{1'b0}};
+            for (m = 0; m < 16; m = m + 1) o = o | t[CB*m +: CB];
+        end
+        assign gbin_d[CB*go +: CB] = o;
+    end
+    always @(posedge clk) gbin <= gbin_d;
+`else
     always @(posedge clk) gbin <= hbin[16*CB*gsel +: 16*CB];
+`endif
     assign busy = ((HPIPE != 0) && x_v) || v1 || v2;
 endmodule
 
@@ -373,17 +461,53 @@ module ot_s81ph_native_sel_pack #(
             if (cp_v) frun <= cp_fl ? {LW{1'b0}} : frun + cp_cnt[LW-1:0];
         end
     end
+`ifdef OT_S81PH_SEL_FAN32
+    // S81-TOPK FAN32 (10-19, SAFE item 3): the rotate shift amounts (qf 1600 / sh 1413 loads) get one KEPT identical
+    // copy per output lane: frun's lane copies take frun's next value on frun's edge; each rotate stage forwards its
+    // lane copies on the same edge as qf.  Each copy bit drives one lane's RE selects.
+    wire [LW-1:0] frun_d = cp_v ? (cp_fl ? {LW{1'b0}} : frun + cp_cnt[LW-1:0]) : frun;
+    wire [2*W*LW-1:0] frc;
+    wire [NCR*2*W*LW-1:0] rfc;
+    for (gl = 0; gl < 2 * W; gl = gl + 1) begin : g_frc
+        (* keep = "true" *) reg [LW-1:0] r;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) r <= {LW{1'b0}}; else r <= frun_d;
+        assign frc[LW*gl +: LW] = r;
+    end
+`endif
     generate
         for (gr = 0; gr < NCR; gr = gr + 1) begin : g_rst
             wire [2*W*RE-1:0] a0 = (gr == 0) ? rin : rof[2*W*RE*(gr == 0 ? 0 : gr - 1) +: 2*W*RE];
             wire [LW-1:0]     f  = (gr == 0) ? frun : rff[LW*(gr == 0 ? 0 : gr - 1) +: LW];
             wire [2*W*RE-1:0] a1, a2;
+`ifdef OT_S81PH_SEL_FAN32
+            wire [2*W*LW-1:0] fc = (gr == 0) ? frc : rfc[2*W*LW*(gr == 0 ? 0 : gr - 1) +: 2*W*LW];
+            wire [2*W-1:0]    s0, s1;
+            for (gl = 0; gl < 2 * W; gl = gl + 1) begin : g_sl
+                assign s0[gl] = fc[LW*gl + 2 * gr];
+                assign s1[gl] = fc[LW*gl + ((2 * gr + 1 < LW) ? 2 * gr + 1 : 2 * gr)];
+                if (gr < NCR - 1) begin : g_fwd
+                    (* keep = "true" *) reg [LW-1:0] qfc;
+                    always @(posedge clk) qfc <= fc[LW*gl +: LW];
+                    assign rfc[2*W*LW*gr + LW*gl +: LW] = qfc;
+                end else begin : g_last
+                    assign rfc[2*W*LW*gr + LW*gl +: LW] = {LW{1'b0}};
+                end
+            end
+            ot_s81ph_native_sel_rstage_c #(.N(2 * W), .RE(RE), .S(2 * gr)) u_r0 (.a(a0), .sh(s0), .y(a1));
+            if (2 * gr + 1 < LW) begin : g_r1
+                ot_s81ph_native_sel_rstage_c #(.N(2 * W), .RE(RE), .S(2 * gr + 1)) u_r1 (.a(a1), .sh(s1), .y(a2));
+            end else begin : g_r1n
+                assign a2 = a1;
+            end
+`else
             ot_s81ph_native_sel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr)) u_r0 (.a(a0), .sh(f[2 * gr]), .y(a1));
             if (2 * gr + 1 < LW) begin : g_r1
                 ot_s81ph_native_sel_rstage #(.N(2 * W), .RE(RE), .S(2 * gr + 1)) u_r1 (.a(a1), .sh(f[2 * gr + 1]), .y(a2));
             end else begin : g_r1n
                 assign a2 = a1;
             end
+`endif
             reg [2*W*RE-1:0] q;
             reg [LW-1:0]     qf;
             reg [LW:0]       qc;
