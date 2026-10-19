@@ -1,0 +1,3286 @@
+{
+ "schema": "opentallas.hbm.d4g.su_lane_profile.v1",
+ "stage": "basis",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e/banklat/contract_gen2c_l12.json",
+ "contract_sha256": "305c8c1e14f7546c22f5f21bd94ba1171145a3adbe91d79e75f00b21282c781f",
+ "basis": "codex 708d112f3 su_SW0_gen2c_l12_source_profile (18/15)",
+ "lat_summary": {
+  "clients": 246,
+  "checked": 124,
+  "fail": 0,
+  "unequal": 0,
+  "unresolved_landings": 75
+ },
+ "su_clients": 32,
+ "su_at_budget": 32,
+ "max_delta_over_budget": 0,
+ "verdict": "PASS",
+ "violations": [],
+ "rows": [
+  {
+   "client": "hc_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE0",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE1",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE0",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE1",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE2",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE3",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE2",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE3",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE4",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE5",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE4",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE5",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE6",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE7",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE6",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE7",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW0",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW1",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW0",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW1",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW2",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW3",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW2",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW3",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW4",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW5",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW4",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW5",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW6",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW7",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_NW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW6",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW7",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_NW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE0",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE1",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE0",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE1",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE2",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE3",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE2",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE3",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE4",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE5",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE4",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE5",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE6",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE7",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE6",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE7",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 2,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW0",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW1",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW0",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW1",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW2",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW3",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW2",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW3",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW4",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW5",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW4",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW5",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 32,
+   "budget": 32,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW6",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW7",
+     "bank_port": "rq0",
+     "lane_rq": 3,
+     "lane_rr": 1,
+     "rt": 28,
+     "pin": 1,
+     "via": "sfu_SW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "hc_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 29,
+   "budget": 29,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW6",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW7",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 3,
+     "rt": 25,
+     "pin": 1,
+     "via": "sfu_SW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE0",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE1",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE0",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE1",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE2",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE3",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE2",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE3",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE4",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE5",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE4",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE5",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE6",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE7",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE6",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE7",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW0",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW1",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW0",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW1",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW2",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW3",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW2",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW3",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW4",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW5",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW4",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW5",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW6",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW7",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_NW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_NW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW6",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW7",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_NW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE0",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE1",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE0",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE1",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE2",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE3",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE2",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE3",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE4",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE5",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE4",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE5",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE6",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE7",
+     "bank_port": "rq0",
+     "lane_rq": 2,
+     "lane_rr": 0,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SE3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE6",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE7",
+     "bank_port": "wq0",
+     "lane_rq": 0,
+     "lane_rr": 2,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SE3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW0",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW1",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW0",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW0",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW0",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW1",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW0",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW2",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW3",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW1",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW2",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW1",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW3",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW1",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW4",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW5",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW2",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW4",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW2",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW5",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW2",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 24,
+   "want": 24,
+   "budget": 24,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW6",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW7",
+     "bank_port": "rq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 20,
+     "pin": 1,
+     "via": "su_SW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "sfu_SW3",
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 21,
+   "want": 21,
+   "budget": 21,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW6",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW3",
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW7",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 1,
+     "rt": 17,
+     "pin": 1,
+     "via": "su_SW3",
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE0",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE1",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE0",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE1",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE2",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE3",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE2",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 6,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE3",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE4",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE5",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE4",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 6,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE5",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE6",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE7",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NE6",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 6,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NE7",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW0",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW1",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW0",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW1",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW2",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW3",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW2",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW3",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW4",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW5",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW4",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW5",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW6",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW7",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_NW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_NW6",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_NW7",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE0",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE1",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE0",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE1",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE2",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE3",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE2",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE3",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE4",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE5",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE4",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE5",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE6",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE7",
+     "bank_port": "rq0",
+     "lane_rq": 6,
+     "lane_rr": 1,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SE3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SE6",
+     "bank_port": "wq0",
+     "lane_rq": 2,
+     "lane_rr": 5,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SE7",
+     "bank_port": "wq0",
+     "lane_rq": 1,
+     "lane_rr": 6,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW0",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW1",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW0",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW1",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW2",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW3",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW1",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW2",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW3",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW4",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW5",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW2",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW4",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW5",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "rd",
+   "param": "READ_RETURN",
+   "have": 18,
+   "want": 18,
+   "budget": 18,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW6",
+     "bank_port": "rq0",
+     "lane_rq": 4,
+     "lane_rr": 3,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW7",
+     "bank_port": "rq0",
+     "lane_rq": 5,
+     "lane_rr": 2,
+     "rt": 14,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  },
+  {
+   "client": "su_SW3",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "kind": "wr",
+   "param": "WRITE_RETURN",
+   "have": 15,
+   "want": 15,
+   "budget": 15,
+   "lat_status": "PASS",
+   "banks": [
+    {
+     "bank": "vmb_SW6",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    },
+    {
+     "bank": "vmb_SW7",
+     "bank_port": "wq0",
+     "lane_rq": 3,
+     "lane_rr": 4,
+     "rt": 11,
+     "pin": 1,
+     "via": null,
+     "unresolved": []
+    }
+   ],
+   "delta_over_budget": 0,
+   "bad": []
+  }
+ ],
+ "schedule_handoff": "every row with delta_over_budget > 0 is a priced cycle delta for TOK.HDS.PRICE / token calendar"
+}

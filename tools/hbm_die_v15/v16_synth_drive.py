@@ -18,7 +18,8 @@ ROOT = Path(__file__).resolve().parents[2]
 # ot-epyc1tb is retired (HANDOFF 0bu 10-16): never a synthesis host
 # HBM-CHAIN3 10-18: ot-epyc5 added -- push_prefer scp'd the prefer list only to the hosts named here, so a retry admitted
 # on ot-epyc5 died FILELIST_FAIL (GEN2 S2: ot_hbm_idx_query_static, ot_hgi_coll_gq_issue)
-HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1', 'ot-epyc5': 'ot-epyc5'}
+# LH-GEN2E 10-19: ot-epyc6 (GEN2e2 data host) added so push_prefer reaches it
+HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1', 'ot-epyc5': 'ot-epyc5', 'ot-epyc6': 'ot-epyc6'}
 PREFER = {'ot_hbm_lk_ep': ['rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv',
                            'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv',
                            'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv'],
