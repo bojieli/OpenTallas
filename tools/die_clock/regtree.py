@@ -207,3 +207,71 @@ def spine_leaves(members, cell_xy):
     """one spine leaf per regional entry: sink = the entry's root buffer input, key = the tree name (so its region
     tree's model insertion is compensated by the merge: neighbour regions meet at their FLOPS, not at their entries)."""
     return [[(f'{rb}/A', BUF, cell_xy[rb][0], cell_xy[rb][1], t['name'])] for t, rb in members]
+
+
+class ForwardedBuilder(Builder):
+    """Spatial binary delivery tree, with no insertion compensation or seed pads.
+
+    Each regional entry is reached by a real buffered path. Local region trees
+    still balance their own sinks. Only measured communicating-neighbour
+    constraints may request subsequent trim; unrelated regions have no target.
+    Unlike Grid.route(), strict routing never retries across a 1.2-mm macro.
+    """
+
+    def path(self, a, b):
+        return self.g._route(a, b, MAX_RUN)
+
+    def chain(self, src, path, tag):
+        reps, delay = self.plan(path)
+        stops = [path[0]] + reps + [path[-1]]
+        # Verify route distance, including bends and obstacles, between stages.
+        cursor = 0
+        for stop in stops[1:]:
+            end = path.index(stop, cursor)
+            distance = (end - cursor) * GRID
+            if distance > 405.0:
+                raise ValueError(f'forwarded clock corridor needs relay sites: {distance:.1f} um > 405')
+            cursor = end
+        return super().chain(src, path, tag)
+
+    def subtree(self, leaves):
+        if len(leaves) == 1:
+            # Leaf model is informational; never compare it with another region.
+            return self.leaf(leaves[0])
+        cen = [(sum(s[2] for s in L) / len(L), sum(s[3] for s in L) / len(L)) for L in leaves]
+        xs, ys = [p[0] for p in cen], [p[1] for p in cen]
+        ax = 0 if max(xs) - min(xs) >= max(ys) - min(ys) else 1
+        order = sorted(range(len(leaves)), key=lambda i: (cen[i][ax], cen[i][1-ax]))
+        half = len(order) // 2
+        children = [self.subtree([leaves[i] for i in ids]) for ids in (order[:half], order[half:])]
+        c = self.g.nearest_free(sorted(xs)[len(xs)//2], sorted(ys)[len(ys)//2])
+        branch = self.newbuf('F', c)
+        delays = []
+        for child in children:
+            route = self.path(c, child['cell'])
+            drv, delay = self.chain(('buf', branch), route, 'R')
+            self.nets.append([f'n_{child["buf"]}_i', drv, [('buf', child['buf'])]])
+            self.parent[child['buf']] = drv[1]
+            delays.append(delay + child['d'])
+        return dict(buf=branch, cell=c, n=sum(x['n'] for x in children), d=max(delays) + stage_ps(10.0))
+
+    def build(self, root_pin, root_xy, leaves):
+        if not leaves:
+            raise ValueError('forwarded spine has no regional entries')
+        top = self.subtree(leaves)
+        start = self.g.nearest_free(*root_xy)
+        drv, delay = self.chain(('pin', root_pin), self.path(start, top['cell']), 'T')
+        self.nets.append([f'n_{top["buf"]}_i', drv, [('buf', top['buf'])]])
+        self.parent[top['buf']] = drv[1]
+        by = {}
+        for name, driver, loads in self.nets:
+            if driver in by:
+                by[driver][2].extend(loads)
+            else:
+                by[driver] = [name, driver, list(loads)]
+        self.nets = list(by.values())
+        if any(len(loads) > 2 for _, _, loads in self.nets):
+            raise ValueError('forwarded spine fanout exceeds two')
+        return dict(top=top['buf'], topology='forwarded', model_insertion_ps=round(delay + top['d'], 1),
+                    leaves=len(leaves), buffers=len(self.bufs), pads=0, region_insertion_compensated=False,
+                    max_route_segment_um=405.0)

@@ -430,8 +430,14 @@ def build(a):
             if x.getInst().getName() not in mrb:
                 raise ValueError(f'spine source {src} also drives non-member {x.getInst().getName()}/{x.getMTerm().getName()}')
             x.disconnect()
+        topology = sp_.get('topology', 'dme')
+        if topology not in ('dme', 'forwarded'):
+            raise ValueError(f'unknown spine topology {topology}')
         rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
-        sb = rt.Builder(g, 'dc_spine', r_of=lambda key: rmodel.get(key, 0.0))
+        # Forwarded delivery does not balance the entire die against regional
+        # insertion estimates. Neighbour matching remains a measured obligation.
+        sb = (rt.ForwardedBuilder(g, 'dc_spine') if topology == 'forwarded'
+              else rt.Builder(g, 'dc_spine', r_of=lambda key: rmodel.get(key, 0.0)))
         sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
                (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
         smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
@@ -481,7 +487,7 @@ def build(a):
             while sb.parent.get(x_) not in (None, src):
                 x_ = sb.parent[x_]; d_ += 1
             lv[c_] = d_ + 1      # + the spine source buffer
-        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)), members=[t['name'] for t, _ in members],
+        rec['spine'] = dict(source=src, topology=topology, period=float(sp_.get('period', 833.333333)), members=[t['name'] for t, _ in members],
                             cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
                             generator_pins_without_loads=orphan)
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],

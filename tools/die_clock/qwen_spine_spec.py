@@ -25,6 +25,7 @@ def main():
     ap.add_argument('--period', type=float, default=833.333333)
     ap.add_argument('--neighbours', action='store_true')
     ap.add_argument('--budget', type=float, default=60.0)
+    ap.add_argument('--topology', choices=['dme', 'forwarded'], default='dme')
     a = ap.parse_args()
     sp = json.load(open(a.spec))
     for t in sp['trees']:
@@ -32,10 +33,19 @@ def main():
     stream = [t for t in sp['trees'] if abs(t['period'] - a.period) < 1e-3]
     src = a.source or max(stream, key=lambda t: t.get('sinks', 0))['root']
     sp['clock_at_root_buffer'] = True          # non-spine regions (other periods) keep their ideal entry
-    sp['spine'] = dict(source=src, period=a.period)
+    sp['spine'] = dict(source=src, period=a.period, topology=a.topology)
     sp['note'] = (sp.get('note', '') + ' GEN16 spine: regional entries (local root buffer at the sink median) fed by '
                   f'one buffered DME spine from {src}; clock defined at the spine source; families = components of the '
                   'unlanded cross-region root pairs (NEIGHBOUR check).')
+    if a.topology == 'forwarded':
+        # Other periods retain their own physically connected generator path;
+        # do not leave their median entry floating as an ideal stand-in.
+        for t in sp['trees']:
+            if t not in stream:
+                t.pop('local_root', None)
+        sp['note'] = (sp.get('note', '').replace('one buffered DME spine', 'one buffered forwarded spine'))
+        sp['note'] += (' Forwarded candidate: spatial binary buffered delivery, no die-wide DME or regional '
+                       'model-insertion compensation, no seed delay pads. Only measured neighbour constraints trim.')
     name = {t['root']: t['name'] for t in sp['trees']}
     lp = json.load(open(a.pairs))
     par = {t['root']: t['root'] for t in sp['trees']}
@@ -67,7 +77,7 @@ def main():
     json.dump(fam, open(a.out_families, 'w'), indent=1)
     big = max(sp['neighbour_components'], key=len, default=[])
     print('QCLK_SPINE_SPEC source', src, 'stream trees', len(stream), 'families', len(fam), 'largest component', len(big),
-          'neighbour pairs', len(nb), 'trim' if a.neighbours else 'judge only')
+          'neighbour pairs', len(nb), 'topology', a.topology, 'trim' if a.neighbours else 'judge only')
 
 
 if __name__ == '__main__':

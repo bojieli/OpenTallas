@@ -71,7 +71,7 @@ if [ "$MODE" = spine ]; then
   # GEN16 10-19: spine variant spec (regional entries at the sink medians fed by ONE buffered DME spine; families =
   # all spine members, NEIGHBOUR pairs recorded); DC_SPINE_SOURCE overrides the source pin, DC_SPINE_TRIM=1 trims them
   python3 $D/$TL/die_clock/qwen_spine_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
-    --out-families $D/families_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} $([ "${DC_SPINE_TRIM:-0}" = 1 ] && echo --neighbours) \
+    --out-families $D/families_$3.json --topology "${DC_SPINE_TOPOLOGY:-dme}" ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} $([ "${DC_SPINE_TRIM:-0}" = 1 ] && echo --neighbours) \
     | tee -a $D/STATUS.log || exit 1
   MODE=build
 fi
@@ -108,3 +108,17 @@ python3 $D/$TL/die_clock/plot.py tt/manifest.json $AT $D/geom/blocks.tsv png/die
 python3 $D/$TL/die_clock/plot.py tt/manifest.json $AF $D/geom/blocks.tsv png/die_ff.png --title "Q-CLK $V FF" >> png/plot.log 2>&1
 grep -h 'cells\|iter' build_tt.log | tail -4 >> $D/STATUS.log
 say "$V done: $O/die_clock_check.txt $O/landed_pairs.json $O/png"
+if [ "${DC_REQUIRE_PASS:-0}" = 1 ]; then
+  python3 - "$O" <<'PY'
+import json, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+r = json.load(open(p / 'spine_neighbour.json'))
+m = json.load(open(p / 'tt/manifest.json'))
+ok = (r.get('verdict') == 'PASS' and r['intra']['over'] == 0
+      and not m.get('unclaimed_disconnected'))
+print('QCLK_PHYSICAL_ADMISSION', 'PASS' if ok else 'FAIL',
+      'neighbour', r.get('verdict'), 'intra_over', r['intra']['over'])
+sys.exit(0 if ok else 1)
+PY
+fi
