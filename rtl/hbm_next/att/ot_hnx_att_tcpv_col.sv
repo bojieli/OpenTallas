@@ -36,7 +36,9 @@ module ot_hnx_att_tcpv_col #(
     parameter integer TAGW = 16,
     parameter integer ALAT = 7,
     parameter integer LV   = 4,         // merge stack levels: runs up to 2^(LV-1) chunks
-    parameter integer MUT  = 0
+    parameter integer MUT  = 0,
+    parameter integer STORE = 0,        // A1: merge stack 0 = 64x512 macro, 1 = flop stack (ot_hnx_att_stack_flop)
+    parameter integer MERGE = 1         // A1: 0 = no own merge; the chunk-sum events leave on m_* (shared 4-lane merge)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -54,6 +56,10 @@ module ot_hnx_att_tcpv_col #(
     output wire            pv_v,
     output wire [L*32-1:0] pv_y,
     output wire [TAGW-1:0] pv_tag,
+    // MERGE = 0: the PV chunk-sum event stream (the merge's ev / sum / tag_d inputs, unregistered)
+    output wire            m_ev,
+    output wire [L*32-1:0] m_sum,
+    output wire [TAGW-1:0] m_tag,
     output wire            fault
 );
     initial if (IL != 8 || ALAT != IL - 1 || L != 16 || LV < 1 || LV > 8)
@@ -111,11 +117,16 @@ module ot_hnx_att_tcpv_col #(
 
     // Shared merge leaf: the hierarchical SM can reuse its CLOSED tcl lanes.
     wire merge_fault;
-    ot_hnx_att_pv_merge #(.L(L), .IL(IL), .TAGW(TAGW), .ALAT(ALAT), .LV(LV), .MUT(MUT)) u_pv (
-        .clk(clk), .rst_n(rst_n), .ev(ll[LL] && pvd), .sum(sum), .tag_d(tag_d),
-        .pv_v(pv_v), .pv_y(pv_y), .pv_tag(pv_tag), .fault(merge_fault),
-        .pub_start(1'b0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(), .pub_out_slot(), .pub_tag(),
-        .fold_start(1'b0), .fold_a(3'd0), .fold_b(3'd0));
+    assign m_ev = ll[LL] && pvd; assign m_sum = sum; assign m_tag = tag_d;
+    generate if (MERGE != 0) begin : g_merge
+        ot_hnx_att_pv_merge #(.L(L), .IL(IL), .TAGW(TAGW), .ALAT(ALAT), .LV(LV), .MUT(MUT), .STORE(STORE)) u_pv (
+            .clk(clk), .rst_n(rst_n), .ev(ll[LL] && pvd), .sum(sum), .tag_d(tag_d),
+            .pv_v(pv_v), .pv_y(pv_y), .pv_tag(pv_tag), .fault(merge_fault),
+            .pub_start(1'b0), .pub_slot(3'd0), .pub_v(), .pub_data(), .pub_word(), .pub_out_slot(), .pub_tag(),
+            .fold_start(1'b0), .fold_a(3'd0), .fold_b(3'd0));
+    end else begin : g_nomerge
+        assign pv_v = 1'b0; assign pv_y = {L*32{1'b0}}; assign pv_tag = {TAGW{1'b0}}; assign merge_fault = 1'b0;
+    end endgenerate
     assign fault = lane_fault | tfault_q | merge_fault;
 endmodule
 `default_nettype wire

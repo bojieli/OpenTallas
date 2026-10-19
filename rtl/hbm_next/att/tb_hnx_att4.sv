@@ -12,6 +12,9 @@ module tb_hnx_att4;
     parameter integer PVMUT = 0;
     parameter integer IMUT = 0;
     parameter integer LV = 4;
+    parameter integer SHARED = 0;
+    parameter integer STORE = 0;
+    parameter integer SMUT = 0;
     localparam integer NLN = 4;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -26,7 +29,8 @@ module tb_hnx_att4;
     wire s_ready, op_issued, fault;
     wire [NLN-1:0] sc_v, pv_v, c_v; wire [32*NLN-1:0] sc_y; wire [16*NLN-1:0] sc_tag, pv_tag, c_tag; wire [2048*NLN-1:0] pv_y;
     wire [2:0] c_ph;
-    ot_hnx_att4_slice #(.NL(NLN), .LV(LV), .KVMUT(KVMUT), .PVMUT(PVMUT), .IMUT(IMUT)) dut (.clk(clk), .rst_n(rst_n),
+    ot_hnx_att4_slice #(.NL(NLN), .LV(LV), .KVMUT(KVMUT), .PVMUT(PVMUT), .IMUT(IMUT), .SHARED(SHARED), .STORE(STORE),
+        .SMUT(SMUT)) dut (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v), .cfg_qk(qk[0]), .cfg_kv4(kv4[0]), .cfg_n8(n8[12:0]), .cfg_rows(rows[12:0]),
         .s_valid(s_valid), .s_ready(s_ready), .s_data(s_data),
         .xw_en(xw_en), .xw_lane(xw_lane), .xw_addr(xw_addr), .xw_data(xw_data),
