@@ -1,7 +1,0 @@
-RESULT cycles 300 ops 1057 own_reads 50 returned 211 same_cycle_same_bank_reads 0 status 0 max_occ 3 errors 0
-COVERAGE_REFUSED 10 items
-FAIL
-- /var/tmp/codex-bgq-pc/src/rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bgl_lockstep.sv:133: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 5us; walltime 0.008 s; speed 665.678 us/s
-- Verilator: cpu 0.008 s on 1 threads; allocated 10 MB

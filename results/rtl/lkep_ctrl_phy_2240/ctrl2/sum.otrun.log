@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     admits   642 GB (avail 868, growth 35, headroom 64, waiters 0/0 GB) load 30/128 running 8 disk 829 GB 
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2580447-1791976070 after 0 s
-STATUS_SUM PASS vectors=1000000 includes unsigned wrap and carry boundaries
-- tb_lkep_status_sum_2240.sv:16: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 0s; walltime 0.004 s; speed 0.000 s/s
-- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2580447-1791976070): exit 0

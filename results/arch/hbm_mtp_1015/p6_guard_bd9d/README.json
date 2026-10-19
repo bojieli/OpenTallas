@@ -1,6 +1,0 @@
-{"scope": "component only: guarded P6 HC_PRE_NORM descriptor (functional source bd9d82744 = fc5451185 minus comments; executed staged tree wt_guard_bd9d, hashes in measurement.json), actual RTL + mapped VM, no die/token qualification",
- "legal": "PASS 56,320 VM words exact; P6 job 1,451 cycles vs 6 serial 2,788 (identical to unguarded 8fe5d18bd)",
- "mutant_row0_pre": "FAIL 25,521 numeric errors (HCE=6)",
- "invalid_descriptors": "5/5 (gain_rows raw m 2, pre_width C.n 3, a_extent, o_extent, c_extent) actual adapter fault: case 2 retired 0 of 1, faults 1; checked by tools/hgi_adapters/mtp_fused_invalid.py --check",
- "units": {"legal": "oth-ubuntu-2103407-1792135318", "mutant": "oth-ubuntu-2100443-1792135304", "negatives": "oth-ubuntu-2363772-1792137074"},
- "open": "physical view / clock root / area of the KX=2 x-buffer LL engine; full-token MTP"}

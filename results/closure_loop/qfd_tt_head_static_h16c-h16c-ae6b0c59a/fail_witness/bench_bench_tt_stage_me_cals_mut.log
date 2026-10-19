@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_tt_head_static_h16c-h16c-ae6b0c59a bench bench_bench_tt_stage_me_cals_mut host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a log cl/bench_bench_tt_stage_me_cals_mut.a1b1.log captured 2026-10-18T23:24:57-07:00
-# fail_regex 'CTLM_PROG MUT=9 BMUT=0 HARD_HR=1 DECODE=3: FAIL'
-CTLM_PROG MUT=9 BMUT=0 HARD_HR=1 DECODE=3: FAIL 119/123  rom_go-issue [2] nat_go-issue [1] csr@1042
-    missing STAGE at 1187 0x1
-    missing STAGE at 7768 0x2
-    missing STAGE at 14609 0x3
-    missing STAGE at 24719 0x25
-    unexpected STAGE at 1027 0x1

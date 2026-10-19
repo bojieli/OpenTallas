@@ -1,6 +1,0 @@
-{
-  "verdict": "FAIL_PREPARATION_STATIC_INCLUDE_PATH_NO_COMPILE",
-  "model_sha256": "cd7288ed2326b88eb7e3eaac709393d86e12aefe716fc8be30761858e84b2906",
-  "cause": "Prepared tb includes generated calendar.svh outside snapshot sources but initial compile argv omitted -I for its parent. Detected by static preparation review before any compiler; no RTL/runtime result.",
-  "action": "Preserve attempt1; additive attempt2 preparation will bind include file and command. No geometry or stimulus change."
-}

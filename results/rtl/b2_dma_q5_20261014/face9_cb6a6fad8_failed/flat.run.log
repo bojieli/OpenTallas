@@ -1,7 +1,0 @@
-B2_DMA_Q TPUT load_fp32_20480B cycles=682 cyc_per_sector=1.066 B_per_cycle=30.03 | store_fp32_20480B(posted) cycles=356 cyc_per_sector=0.556 B_per_cycle=57.53 | store+fence(drained) cycles=862 cyc_per_sector=1.347 B_per_cycle=23.76 | fp8_1024el cycles=202 cyc_per_elem=0.197
-B2_DMA_Q STATS records=235 faults=10 resets=18 burst_reqs=5164 kport_reqs=577 vm_packets=306 group_reads=3668 wide_writes=10474 cycles=60365
-B2_DMA_Q PASS checked=114821 records=235 MUT_B2=0
-- /srv/opentallas-scratch/dma-face9-cb6a6fad8/rtl/test/hbm_accel/b2_dma/tb_hgi_b2_dma_q.sv:538: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 50us; walltime 0.279 s; speed 180.252 us/s
-- Verilator: cpu 0.279 s on 1 threads; allocated 26 MB

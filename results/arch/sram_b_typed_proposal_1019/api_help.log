@@ -1,0 +1,46 @@
+ot-run: ot-epyc4       admits  1134 GB (avail 851, growth 51, headroom 0, waiters 0/0 GB) load 30/128 running 15 disk 428 GB 
+ot-run: ot-epyc5       admits   646 GB (avail 509, growth 18, headroom 0, waiters 0/0 GB) load 39/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1292 GB (avail 961, growth 33, headroom 0, waiters 0/0 GB) load 19/128 running 10 disk 5719 GB 
+ot-run: ot-epyc7       admits  1099 GB (avail 820, growth 34, headroom 0, waiters 0/0 GB) load 20/96 running 9 disk 6258 GB 
+ot-run: ot-epyc8       admits  1330 GB (avail 988, growth 36, headroom 0, waiters 0/0 GB) load 13/128 running 11 disk 48 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sram-b-api-metadata-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sram-b-api-metadata-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-174736-1792451205 after 0 s
+ot-epyc6
+2026-10-19T23:06:45Z
+"sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29" ["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+pin_access [-db_process_node name] [-bottom_routing_layer layer]
+   [-top_routing_layer layer] [-via_access_layer layer]
+   [-via_in_pin_bottom_layer layer] [-via_in_pin_top_layer layer]
+   [-min_access_points count] [-verbose level] [-distributed]
+   [-remote_host rhost] [-remote_port rport] [-shared_volume vol]
+   [-cloud_size sz] 
+
+detailed_route [-output_maze filename] [-output_drc filename]
+   [-output_guide_coverage filename] [-drc_report_iter_step step]
+   [-db_process_node name] [-disable_via_gen] [-droute_end_iter iter]
+   [-via_in_pin_bottom_layer layer] [-via_in_pin_top_layer layer]
+   [-via_access_layer layer] [-or_seed seed] [-or_k k]
+   [-bottom_routing_layer layer] [-top_routing_layer layer] [-verbose level]
+   [-distributed] [-remote_host rhost] [-remote_port rport] [-shared_volume vol]
+   [-cloud_size sz] [-clean_patches] [-no_pin_access] [-min_access_points count]
+   [-save_guide_updates] [-repair_pdn_vias layer] [-single_step_dr] 
+
+set_routing_layers [-signal min-max] [-clock min-max]   
+make_tracks [layer] [-x_pitch x_pitch] [-y_pitch y_pitch] [-x_offset x_offset]
+   [-y_offset y_offset] 
+initialize_floorplan [-utilization util] [-aspect_ratio ratio]
+   [-core_space space | {bottom top left right}]
+   [-die_area {lx ly ux uy | x1 y1 x2 y2 ...}]
+   [-core_area {lx ly ux uy | x1 y1 x2 y2 ...}] [-additional_sites site_names]
+   [-site site_name] [-row_parity NONE|ODD|EVEN] [-flip_sites site_names]
+   [-gap space] 
+place_pin [-pin_name pin_name] [-layer layer] [-location location]
+   [-pin_size pin_size] [-force_to_die_boundary] [-placed_status] 
+
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-174736-1792451205): exit 0

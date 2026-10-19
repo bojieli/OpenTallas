@@ -1,0 +1,84 @@
+ot-run: ot-epyc4       admits  1134 GB (avail 851, growth 51, headroom 0, waiters 0/0 GB) load 31/128 running 15 disk 428 GB 
+ot-run: ot-epyc5       admits   645 GB (avail 508, growth 18, headroom 0, waiters 0/0 GB) load 40/128 running 7 disk 907 GB 
+ot-run: ot-epyc6       admits  1293 GB (avail 962, growth 31, headroom 0, waiters 0/0 GB) load 18/128 running 10 disk 5719 GB 
+ot-run: ot-epyc7       admits  1101 GB (avail 821, growth 26, headroom 0, waiters 0/0 GB) load 16/96 running 8 disk 6258 GB 
+ot-run: ot-epyc8       admits  1329 GB (avail 987, growth 36, headroom 0, waiters 0/0 GB) load 13/128 running 11 disk 47 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sram-b-api-metadata-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sram-b-api-metadata-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-257001-1792451228 after 0 s
+ot-epyc7
+21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846  /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41  /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef
+4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1  /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+
+  sta::parse_key_args "pin_access" args  keys {-db_process_node -bottom_routing_layer -top_routing_layer -verbose  -min_access_points -remote_host -remote_port -shared_volume -cloud_size  -via_access_layer -via_in_pin_bottom_layer -via_in_pin_top_layer}  flags {-distributed}
+  sta::check_argc_eq0 "pin_access" $args
+  if { [info exists keys(-db_process_node)] } {
+    set db_process_node $keys(-db_process_node)
+  } else {
+    set db_process_node ""
+  }
+  if { [info exists keys(-bottom_routing_layer)] } {
+    utl::error DRT 511 "-bottom_routing_layer is deprecated. Use set_routing_layers command instead."
+  }
+  if { [info exists keys(-top_routing_layer)] } {
+    utl::error DRT 514 "-top_routing_layer is deprecated. Use set_routing_layers command instead."
+  }
+  if { [info exists keys(-via_access_layer)] } {
+    set via_access_layer $keys(-via_access_layer)
+  } else {
+    set via_access_layer ""
+  }
+  if { [info exists keys(-verbose)] } {
+    sta::check_positive_integer "-verbose" $keys(-verbose)
+    set verbose $keys(-verbose)
+  } else {
+    set verbose 1
+  }
+  if { [info exists keys(-min_access_points)] } {
+    sta::check_cardinal "-min_access_points" $keys(-min_access_points)
+    set min_access_points $keys(-min_access_points)
+  } else {
+    set min_access_points -1
+  }
+  if { [info exists keys(-via_in_pin_bottom_layer)] } {
+    set via_in_pin_bottom_layer $keys(-via_in_pin_bottom_layer)
+  } else {
+    set via_in_pin_bottom_layer ""
+  }
+  if { [info exists keys(-via_in_pin_top_layer)] } {
+    set via_in_pin_top_layer $keys(-via_in_pin_top_layer)
+  } else {
+    set via_in_pin_top_layer ""
+  }
+  if { [info exists flags(-distributed)] } {
+    if { [info exists keys(-remote_host)] } {
+      set rhost $keys(-remote_host)
+    } else {
+      utl::error DRT 552 "-remote_host is required for distributed routing."
+    }
+    if { [info exists keys(-remote_port)] } {
+      set rport $keys(-remote_port)
+    } else {
+      utl::error DRT 553 "-remote_port is required for distributed routing."
+    }
+    if { [info exists keys(-shared_volume)] } {
+      set vol $keys(-shared_volume)
+    } else {
+      utl::error DRT 554 "-shared_volume is required for distributed routing."
+    }
+    if { [info exists keys(-cloud_size)] } {
+      set cloudsz $keys(-cloud_size)
+    } else {
+      utl::error DRT 555 "-cloud_size is required for distributed routing."
+    }
+    drt::detailed_route_distributed $rhost $rport $vol $cloudsz
+  }
+  drt::pin_access_cmd $db_process_node  $via_access_layer $verbose $min_access_points  $via_in_pin_bottom_layer $via_in_pin_top_layer
+
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-257001-1792451228): exit 0

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_programme_pgcol_l",
- "enable": false,
- "reason": "ot_hbm_su_programme_pgcol registers every input in RTL: start/length at the pin (the pslice STAGES 1 stage), cfg_we/cfg_any/cfg_bank on the CPIN 1 pin stage (NATIVE-FIX3 10-18, +1 configuration edge), cfg_row/cfg_data on the per-bank config copy registers (the head presents them one edge after the control), rst_n only into ot_rst_relay; every output is a register (command, busy_q, valid, done, edge_index, fault_d). A kit flop stage would add an edge the start-advance contract (DEPTH+4) does not price."
-}

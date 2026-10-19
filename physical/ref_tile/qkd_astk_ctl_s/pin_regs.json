@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_astk_ctl_s",
- "enable": false,
- "reason": "the RTL registers every data pin: cal/st/aq/am/xi/zi/fz land in (* keep *) pin flops (cal_q, st_q, aq_q, am_q, xq, zq, fz_q) and lt/ap/af/qo are registers (qkd_astk_ctl_s, rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv)"
-}

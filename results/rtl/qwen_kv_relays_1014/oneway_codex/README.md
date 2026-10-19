@@ -1,9 +1,0 @@
-# One-way KV relay words
-
-The real-end checker found seven direction conflicts in the v1.2 candidate case: bit 32 of each of four kc words, bit 512 of gr, bit 181 of hc, and bit 92 of tk. The RTL declares these whole words in one direction. The kc generator comment also explicitly says there is no ready. The previous generic kvn rule treated the last bit as a reverse credit, so generated RTL would drive these bits backwards.
-
-The generator now assigns kv_oneway to kc in both profiles and to gr/hc/tk in the split profile. This class carries every bit from endpoint 0 to endpoint 1. It is not in the ABUT set; every existing relay stage, signal bit and geometric crossing remains counted. Mixed data/credit kvn words and historical non-split gr/hc/tk retain their original directions.
-
-The check used the original v1.2 candidate case and relay metadata, with source paths recorded in source.json. prove_oneway.py executes the direction helper from the modified die_top_lint.py and asserts that every affected relay-master instance belongs to exactly its named bus family before applying that rule. The metadata check changed seven conflicts to zero at the same 256 real endpoints. The generated all-master transport bench passed; stage-loss MUT1 failed with 651 errors and reverse-direction MUT2 failed with 192. Six regression tests cover valid mixed words, wrong endpoints, open tails, cycles, middle-stage direction changes and branches.
-
-This is a source and protocol-direction repair. A fresh complete die generation and full end-to-end RTL proof are still required before the candidate die is qualified. Earlier GRT/STA cases use the old placeholder direction model and remain diagnostic. No physical block is submitted from this record, no die contract is revised, and no timing threshold changes.

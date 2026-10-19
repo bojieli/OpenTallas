@@ -1,5 +1,0 @@
-DIAG port 0 ref we=1 a=32768 d=3d1e0000 | cut we=1 a=32768 d=bfa10000
-DIAG port 1 ref we=1 a=32770 d=bfbc0000 | cut we=1 a=32770 d=bde30000
-DIAG port 2 ref we=1 a=32772 d=be870000 | cut we=1 a=32772 d=3fbc0000
-DIAG port 3 ref we=1 a=32774 d=3cf20000 | cut we=1 a=32774 d=3e0b0000
-FAIL case=0 tick=353 port=o_data

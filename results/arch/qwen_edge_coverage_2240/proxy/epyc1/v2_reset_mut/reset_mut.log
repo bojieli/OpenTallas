@@ -1,4 +1,0 @@
-LATENCY proxy first_send=8 first_recv=275 delta=267
-RATE qfd_link_adp512 RXD=512 LAT=229 SRAM=1 rate=916/1000 words-per-cycle (min 950)
-FAIL qfd_link_adp512 bad=0 a_got=2000 b_got=2000 fault=0/0 cycles=2455
-/srv/opentallas-scratch/codex/qwen-edge-proxy2240/rtl/test/tb_qfd_link_proxy_candidate.sv:66: $finish called at 2455000 (1ps)

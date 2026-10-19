@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kvs_hroot",
- "enable": false,
- "reason": "Generated wires-only composition of the static join: every edge age (die_ages.json, kv_static_ages) is priced on the join + the die relay stages, so a flow-inserted pin stage would add a cycle the compiled calendar does not have (the lockstep bench vs the die tile would fail).  Pin facts measured on the RTL (results/arch/qwen_kv_kits_b_1018/hroot_ports.json): 2 ports with logic before the first register ['esh__stack', 'i_ctl'], 0 feed-through inputs [] (die-relayed chain words / pass words)."
-}

@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits  1134 GB (avail 851, growth 51, headroom 0, waiters 0/0 GB) load 29/128 running 15 disk 428 GB 
+ot-run: ot-epyc5       admits   646 GB (avail 509, growth 17, headroom 0, waiters 0/0 GB) load 41/128 running 7 disk 906 GB 
+ot-run: ot-epyc6       admits  1292 GB (avail 961, growth 31, headroom 0, waiters 0/0 GB) load 16/128 running 10 disk 5719 GB 
+ot-run: ot-epyc7       admits  1100 GB (avail 820, growth 28, headroom 0, waiters 0/0 GB) load 15/96 running 9 disk 6258 GB 
+ot-run: ot-epyc8       admits  1333 GB (avail 990, growth 32, headroom 0, waiters 0/0 GB) load 13/128 running 10 disk 47 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sram-b-api-metadata-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sram-b-api-metadata-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2318665-1792451242 after 0 s
+ot-epyc8
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+MPIN_AP_METHODS ['clearPinAccess', 'getGeometry', 'getPinAccess', 'getPolygonGeometry']
+ITERM_AP_METHODS ['clearPrefAccessPoints', 'getAccessPoints', 'getPrefAccessPoints', 'setAccessPoint']
+AP_METHODS ['getAccessPoint', 'getAccesses', 'getBPin', 'getDb', 'getDebugName', 'getHighType', 'getId', 'getLayer', 'getLowType', 'getMPin', 'getName', 'getObjectType', 'getPoint', 'getSegments', 'getTypeName', 'getVias']
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2318665-1792451242): exit 0
