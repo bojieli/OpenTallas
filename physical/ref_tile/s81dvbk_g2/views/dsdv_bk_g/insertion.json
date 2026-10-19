@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_g2-g2-3f5182cd2/routes/s81dvbk_g2_g2_3f5182cd2/work/orfs/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2_3f5182cd2/base",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_g2-g2lv-b3ca6169e/routes/s81dvbk_g2_g2lv_b3ca6169e/work/orfs/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2lv_b3ca6169e/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
@@ -8,123 +8,228 @@
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 3708,
-   "mean": 341.4,
-   "min": 315.7,
-   "max": 391.0
+   "n": 3711,
+   "mean": 350.8,
+   "min": 314.5,
+   "max": 410.7
   },
   "all": {
-   "n": 6158,
-   "mean": 337.6,
-   "min": 304.1,
-   "max": 391.0
+   "n": 6164,
+   "mean": 345.0,
+   "min": 307.6,
+   "max": 410.7
   },
   "errors": [],
   "macros": {
    "n": 2,
    "nets": 2,
    "max_per_net": 1,
-   "reg_mean": 337.6,
-   "max_slew": 27.7,
-   "max_late": -24.2,
+   "reg_mean": 345.0,
+   "max_slew": 24.2,
+   "max_late": -4.4,
    "pins": [
     {
      "pin": "u_vout.u_hi/clk",
-     "arr": 313.2,
-     "slew": 24.6,
-     "late": -24.4,
+     "arr": 339.9,
+     "slew": 22.7,
+     "late": -5.1,
      "net": "clknet_1_0__leaf_clk[0]"
     },
     {
      "pin": "u_vout.u_lo/clk",
-     "arr": 313.4,
-     "slew": 27.7,
-     "late": -24.2,
+     "arr": 340.6,
+     "slew": 24.2,
+     "late": -4.4,
      "net": "clknet_1_1__leaf_clk[0]"
     }
    ]
   },
-  "macro_libs": 1
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 3711,
+    "mean": 350.8,
+    "min": 314.5,
+    "max": 410.7
+   },
+   "all": {
+    "n": 6164,
+    "mean": 345.0,
+    "min": 307.6,
+    "max": 410.7
+   },
+   "refs": {
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 3711,
+     "mean": 350.8,
+     "min": 314.5,
+     "max": 410.7
+    },
+    "all": {
+     "n": 6162,
+     "mean": 345.0,
+     "min": 307.6,
+     "max": 410.7
+    }
+   }
+  }
  },
  "tt": {
   "boundary": {
-   "n": 3708,
-   "mean": 265.1,
-   "min": 238.6,
-   "max": 313.2
+   "n": 3711,
+   "mean": 274.1,
+   "min": 239.3,
+   "max": 329.3
   },
   "all": {
-   "n": 6158,
-   "mean": 260.9,
-   "min": 229.0,
-   "max": 313.2
+   "n": 6164,
+   "mean": 268.2,
+   "min": 234.0,
+   "max": 329.3
   },
   "errors": [],
   "macros": {
    "n": 2,
    "nets": 2,
    "max_per_net": 1,
-   "reg_mean": 260.9,
-   "max_slew": 23.6,
-   "max_late": -29.7,
+   "reg_mean": 268.2,
+   "max_slew": 19.8,
+   "max_late": -18.3,
    "pins": [
     {
      "pin": "u_vout.u_hi/clk",
-     "arr": 231.2,
-     "slew": 20.5,
-     "late": -29.7,
+     "arr": 249.2,
+     "slew": 18.2,
+     "late": -19.0,
      "net": "clknet_1_0__leaf_clk[0]"
     },
     {
      "pin": "u_vout.u_lo/clk",
-     "arr": 231.0,
-     "slew": 23.6,
-     "late": -29.9,
+     "arr": 249.9,
+     "slew": 19.8,
+     "late": -18.3,
      "net": "clknet_1_1__leaf_clk[0]"
     }
    ]
   },
-  "macro_libs": 1
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 3711,
+    "mean": 274.1,
+    "min": 239.3,
+    "max": 329.3
+   },
+   "all": {
+    "n": 6164,
+    "mean": 268.2,
+    "min": 234.0,
+    "max": 329.3
+   },
+   "refs": {
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 3711,
+     "mean": 274.1,
+     "min": 239.3,
+     "max": 329.3
+    },
+    "all": {
+     "n": 6162,
+     "mean": 268.2,
+     "min": 234.0,
+     "max": 329.3
+    }
+   }
+  }
  },
  "ff": {
   "boundary": {
-   "n": 3708,
-   "mean": 219.0,
-   "min": 192.9,
-   "max": 265.2
+   "n": 3711,
+   "mean": 227.3,
+   "min": 194.1,
+   "max": 278.3
   },
   "all": {
-   "n": 6158,
-   "mean": 214.7,
-   "min": 182.9,
-   "max": 265.2
+   "n": 6164,
+   "mean": 221.5,
+   "min": 189.6,
+   "max": 278.3
   },
   "errors": [],
   "macros": {
    "n": 2,
    "nets": 2,
    "max_per_net": 1,
-   "reg_mean": 214.7,
-   "max_slew": 22.6,
-   "max_late": -31.6,
+   "reg_mean": 221.5,
+   "max_slew": 18.4,
+   "max_late": -24.5,
    "pins": [
     {
      "pin": "u_vout.u_hi/clk",
-     "arr": 183.1,
-     "slew": 19.5,
-     "late": -31.6,
+     "arr": 196.4,
+     "slew": 16.6,
+     "late": -25.1,
      "net": "clknet_1_0__leaf_clk[0]"
     },
     {
      "pin": "u_vout.u_lo/clk",
-     "arr": 182.9,
-     "slew": 22.6,
-     "late": -31.8,
+     "arr": 197.0,
+     "slew": 18.4,
+     "late": -24.5,
      "net": "clknet_1_1__leaf_clk[0]"
     }
    ]
   },
-  "macro_libs": 1
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 3711,
+    "mean": 227.3,
+    "min": 194.1,
+    "max": 278.3
+   },
+   "all": {
+    "n": 6164,
+    "mean": 221.5,
+    "min": 189.6,
+    "max": 278.3
+   },
+   "refs": {
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 3711,
+     "mean": 227.3,
+     "min": 194.1,
+     "max": 278.3
+    },
+    "all": {
+     "n": 6162,
+     "mean": 221.5,
+     "min": 189.6,
+     "max": 278.3
+    }
+   }
+  }
  },
  "route_corner": null,
  "macro_clk": {
@@ -135,24 +240,24 @@
   "outliers": []
  },
  "env": {
-  "CK_SS_MEAN": 341,
-  "CK_SS_ALL_MEAN": 338,
-  "CK_SS_MIN": 316,
-  "CK_SS_ALL_MIN": 304,
-  "CK_SS_MAX": 391,
-  "CK_SS_ALL_MAX": 391,
-  "CK_TT_MEAN": 265,
-  "CK_TT_ALL_MEAN": 261,
+  "CK_SS_MEAN": 351,
+  "CK_SS_ALL_MEAN": 345,
+  "CK_SS_MIN": 314,
+  "CK_SS_ALL_MIN": 308,
+  "CK_SS_MAX": 411,
+  "CK_SS_ALL_MAX": 411,
+  "CK_TT_MEAN": 274,
+  "CK_TT_ALL_MEAN": 268,
   "CK_TT_MIN": 239,
-  "CK_TT_ALL_MIN": 229,
-  "CK_TT_MAX": 313,
-  "CK_TT_ALL_MAX": 313,
-  "CK_FF_MEAN": 219,
-  "CK_FF_ALL_MEAN": 215,
-  "CK_FF_MIN": 193,
-  "CK_FF_ALL_MIN": 183,
-  "CK_FF_MAX": 265,
-  "CK_FF_ALL_MAX": 265,
+  "CK_TT_ALL_MIN": 234,
+  "CK_TT_MAX": 329,
+  "CK_TT_ALL_MAX": 329,
+  "CK_FF_MEAN": 227,
+  "CK_FF_ALL_MEAN": 222,
+  "CK_FF_MIN": 194,
+  "CK_FF_ALL_MIN": 190,
+  "CK_FF_MAX": 278,
+  "CK_FF_ALL_MAX": 278,
   "CK_ROUTE_REF": "SS"
  },
  "lib_clock_pin": "clk[0]",
@@ -160,7 +265,7 @@
  "clock_measurements": {
   "clk[0]": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_g2-g2-3f5182cd2/routes/s81dvbk_g2_g2_3f5182cd2/work/orfs/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2_3f5182cd2/base",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/s81dvbk_g2-g2lv-b3ca6169e/routes/s81dvbk_g2_g2lv_b3ca6169e/work/orfs/results/asap7/opentallas_dsdv_bk_g_asap7_ref_s81dvbk_g2_g2lv_b3ca6169e/base",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
@@ -168,123 +273,228 @@
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 3708,
-     "mean": 341.4,
-     "min": 315.7,
-     "max": 391.0
+     "n": 3711,
+     "mean": 350.8,
+     "min": 314.5,
+     "max": 410.7
     },
     "all": {
-     "n": 6158,
-     "mean": 337.6,
-     "min": 304.1,
-     "max": 391.0
+     "n": 6164,
+     "mean": 345.0,
+     "min": 307.6,
+     "max": 410.7
     },
     "errors": [],
     "macros": {
      "n": 2,
      "nets": 2,
      "max_per_net": 1,
-     "reg_mean": 337.6,
-     "max_slew": 27.7,
-     "max_late": -24.2,
+     "reg_mean": 345.0,
+     "max_slew": 24.2,
+     "max_late": -4.4,
      "pins": [
       {
        "pin": "u_vout.u_hi/clk",
-       "arr": 313.2,
-       "slew": 24.6,
-       "late": -24.4,
+       "arr": 339.9,
+       "slew": 22.7,
+       "late": -5.1,
        "net": "clknet_1_0__leaf_clk[0]"
       },
       {
        "pin": "u_vout.u_lo/clk",
-       "arr": 313.4,
-       "slew": 27.7,
-       "late": -24.2,
+       "arr": 340.6,
+       "slew": 24.2,
+       "late": -4.4,
        "net": "clknet_1_1__leaf_clk[0]"
       }
      ]
     },
-    "macro_libs": 1
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 3711,
+      "mean": 350.8,
+      "min": 314.5,
+      "max": 410.7
+     },
+     "all": {
+      "n": 6164,
+      "mean": 345.0,
+      "min": 307.6,
+      "max": 410.7
+     },
+     "refs": {
+      "ot_sram_1r1w_128x256_m1_r2c2": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 3711,
+       "mean": 350.8,
+       "min": 314.5,
+       "max": 410.7
+      },
+      "all": {
+       "n": 6162,
+       "mean": 345.0,
+       "min": 307.6,
+       "max": 410.7
+      }
+     }
+    }
    },
    "tt": {
     "boundary": {
-     "n": 3708,
-     "mean": 265.1,
-     "min": 238.6,
-     "max": 313.2
+     "n": 3711,
+     "mean": 274.1,
+     "min": 239.3,
+     "max": 329.3
     },
     "all": {
-     "n": 6158,
-     "mean": 260.9,
-     "min": 229.0,
-     "max": 313.2
+     "n": 6164,
+     "mean": 268.2,
+     "min": 234.0,
+     "max": 329.3
     },
     "errors": [],
     "macros": {
      "n": 2,
      "nets": 2,
      "max_per_net": 1,
-     "reg_mean": 260.9,
-     "max_slew": 23.6,
-     "max_late": -29.7,
+     "reg_mean": 268.2,
+     "max_slew": 19.8,
+     "max_late": -18.3,
      "pins": [
       {
        "pin": "u_vout.u_hi/clk",
-       "arr": 231.2,
-       "slew": 20.5,
-       "late": -29.7,
+       "arr": 249.2,
+       "slew": 18.2,
+       "late": -19.0,
        "net": "clknet_1_0__leaf_clk[0]"
       },
       {
        "pin": "u_vout.u_lo/clk",
-       "arr": 231.0,
-       "slew": 23.6,
-       "late": -29.9,
+       "arr": 249.9,
+       "slew": 19.8,
+       "late": -18.3,
        "net": "clknet_1_1__leaf_clk[0]"
       }
      ]
     },
-    "macro_libs": 1
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 3711,
+      "mean": 274.1,
+      "min": 239.3,
+      "max": 329.3
+     },
+     "all": {
+      "n": 6164,
+      "mean": 268.2,
+      "min": 234.0,
+      "max": 329.3
+     },
+     "refs": {
+      "ot_sram_1r1w_128x256_m1_r2c2": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 3711,
+       "mean": 274.1,
+       "min": 239.3,
+       "max": 329.3
+      },
+      "all": {
+       "n": 6162,
+       "mean": 268.2,
+       "min": 234.0,
+       "max": 329.3
+      }
+     }
+    }
    },
    "ff": {
     "boundary": {
-     "n": 3708,
-     "mean": 219.0,
-     "min": 192.9,
-     "max": 265.2
+     "n": 3711,
+     "mean": 227.3,
+     "min": 194.1,
+     "max": 278.3
     },
     "all": {
-     "n": 6158,
-     "mean": 214.7,
-     "min": 182.9,
-     "max": 265.2
+     "n": 6164,
+     "mean": 221.5,
+     "min": 189.6,
+     "max": 278.3
     },
     "errors": [],
     "macros": {
      "n": 2,
      "nets": 2,
      "max_per_net": 1,
-     "reg_mean": 214.7,
-     "max_slew": 22.6,
-     "max_late": -31.6,
+     "reg_mean": 221.5,
+     "max_slew": 18.4,
+     "max_late": -24.5,
      "pins": [
       {
        "pin": "u_vout.u_hi/clk",
-       "arr": 183.1,
-       "slew": 19.5,
-       "late": -31.6,
+       "arr": 196.4,
+       "slew": 16.6,
+       "late": -25.1,
        "net": "clknet_1_0__leaf_clk[0]"
       },
       {
        "pin": "u_vout.u_lo/clk",
-       "arr": 182.9,
-       "slew": 22.6,
-       "late": -31.8,
+       "arr": 197.0,
+       "slew": 18.4,
+       "late": -24.5,
        "net": "clknet_1_1__leaf_clk[0]"
       }
      ]
     },
-    "macro_libs": 1
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 3711,
+      "mean": 227.3,
+      "min": 194.1,
+      "max": 278.3
+     },
+     "all": {
+      "n": 6164,
+      "mean": 221.5,
+      "min": 189.6,
+      "max": 278.3
+     },
+     "refs": {
+      "ot_sram_1r1w_128x256_m1_r2c2": {
+       "basis": "no reference: raw pin arrival",
+       "ref_ps": 0.0,
+       "pins": 2
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 3711,
+       "mean": 227.3,
+       "min": 194.1,
+       "max": 278.3
+      },
+      "all": {
+       "n": 6162,
+       "mean": 221.5,
+       "min": 189.6,
+       "max": 278.3
+      }
+     }
+    }
    },
    "route_corner": null,
    "macro_clk": {
@@ -295,24 +505,24 @@
     "outliers": []
    },
    "env": {
-    "CK_SS_MEAN": 341,
-    "CK_SS_ALL_MEAN": 338,
-    "CK_SS_MIN": 316,
-    "CK_SS_ALL_MIN": 304,
-    "CK_SS_MAX": 391,
-    "CK_SS_ALL_MAX": 391,
-    "CK_TT_MEAN": 265,
-    "CK_TT_ALL_MEAN": 261,
+    "CK_SS_MEAN": 351,
+    "CK_SS_ALL_MEAN": 345,
+    "CK_SS_MIN": 314,
+    "CK_SS_ALL_MIN": 308,
+    "CK_SS_MAX": 411,
+    "CK_SS_ALL_MAX": 411,
+    "CK_TT_MEAN": 274,
+    "CK_TT_ALL_MEAN": 268,
     "CK_TT_MIN": 239,
-    "CK_TT_ALL_MIN": 229,
-    "CK_TT_MAX": 313,
-    "CK_TT_ALL_MAX": 313,
-    "CK_FF_MEAN": 219,
-    "CK_FF_ALL_MEAN": 215,
-    "CK_FF_MIN": 193,
-    "CK_FF_ALL_MIN": 183,
-    "CK_FF_MAX": 265,
-    "CK_FF_ALL_MAX": 265,
+    "CK_TT_ALL_MIN": 234,
+    "CK_TT_MAX": 329,
+    "CK_TT_ALL_MAX": 329,
+    "CK_FF_MEAN": 227,
+    "CK_FF_ALL_MEAN": 222,
+    "CK_FF_MIN": 194,
+    "CK_FF_ALL_MIN": 190,
+    "CK_FF_MAX": 278,
+    "CK_FF_ALL_MAX": 278,
     "CK_ROUTE_REF": "SS"
    },
    "lib_clock_pin": "clk[0]",

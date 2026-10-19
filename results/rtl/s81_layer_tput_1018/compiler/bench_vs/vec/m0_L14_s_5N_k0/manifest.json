@@ -1,0 +1,262 @@
+{
+ "layer": "L14",
+ "slice": "u_s_5N",
+ "sid": 11,
+ "leaf": 0,
+ "G": 55,
+ "mutant": null,
+ "base": 600,
+ "first_issue": 22278,
+ "beats": [
+  {
+   "op": "ffn.softplus_sqrt",
+   "issue": 22278,
+   "bench_edge": 600,
+   "target": 0,
+   "body": "000000000000000000000000000002420600240a",
+   "what": "vs ffn.softplus_sqrt RA n=6 leaves 00001",
+   "model_dur": 147
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22880,
+   "bench_edge": 1202,
+   "target": 5,
+   "body": "0000104eeca8504eb34a504ee476504eeca87e45",
+   "what": "vs ffn.bias target-5 bias row 0 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22881,
+   "bench_edge": 1203,
+   "target": 5,
+   "body": "0000104ecff9504ecbe0504eea9bd04ed4127e47",
+   "what": "vs ffn.bias target-5 bias row 1 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22882,
+   "bench_edge": 1204,
+   "target": 5,
+   "body": "0000104ecbe0504eea9bd04e9cc0d04ed205fe49",
+   "what": "vs ffn.bias target-5 bias row 2 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22883,
+   "bench_edge": 1205,
+   "target": 5,
+   "body": "0000104ec9d3d04ee05d504ec5bad04ec7c77e4b",
+   "what": "vs ffn.bias target-5 bias row 3 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22884,
+   "bench_edge": 1206,
+   "target": 5,
+   "body": "0000104ebf95504eaf31504eea9bd04ead24fe4d",
+   "what": "vs ffn.bias target-5 bias row 4 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22885,
+   "bench_edge": 1207,
+   "target": 5,
+   "body": "0000104e6fadd04ee05d504ede50d04ee88f7e4f",
+   "what": "vs ffn.bias target-5 bias row 5 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.bias",
+   "issue": 22886,
+   "bench_edge": 1208,
+   "target": 0,
+   "body": "000000000000000000000000000002500600244b",
+   "what": "vs ffn.bias RB n=6 leaves 00001",
+   "model_dur": 25
+  },
+  {
+   "op": "ffn.shared_swiglu",
+   "issue": 22945,
+   "bench_edge": 1267,
+   "target": 0,
+   "body": "3f8000003f80000041200000000dde7810002588",
+   "what": "vs ffn.shared_swiglu SW n=16 leaves 00001",
+   "model_dur": 191
+  }
+ ],
+ "checks": [
+  {
+   "op": "ffn.softplus_sqrt",
+   "base": 578,
+   "rows": 2
+  },
+  {
+   "op": "ffn.bias",
+   "base": 592,
+   "rows": 6
+  },
+  {
+   "op": "ffn.shared_swiglu",
+   "base": 632,
+   "rows": 16
+  }
+ ],
+ "check_names": [
+  "ffn.bias",
+  "ffn.shared_swiglu",
+  "ffn.softplus_sqrt"
+ ],
+ "xq": 1,
+ "lowered": {
+  "attn.q_rope": {
+   "status": "LOWERED",
+   "rows": 0,
+   "gap": null,
+   "leaves": {},
+   "fused_into": null
+  },
+  "attn.z_quant": {
+   "status": "LOWERED",
+   "rows": 0,
+   "gap": null,
+   "leaves": {},
+   "fused_into": null
+  },
+  "ffn.softplus_sqrt": {
+   "status": "LOWERED",
+   "rows": 1,
+   "gap": null,
+   "leaves": {
+    "0": {
+     "cmd": 22278,
+     "op": "RA",
+     "wr": false,
+     "n": 6,
+     "dur": 147,
+     "end": 22425,
+     "tix": 0
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.bias": {
+   "status": "LOWERED",
+   "rows": 7,
+   "gap": null,
+   "leaves": {
+    "0": {
+     "cmd": 22886,
+     "op": "RB",
+     "wr": false,
+     "n": 6,
+     "dur": 25,
+     "end": 22911,
+     "tix": 6
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.shared_swiglu": {
+   "status": "LOWERED",
+   "rows": 5,
+   "gap": null,
+   "leaves": {
+    "0": {
+     "cmd": 22945,
+     "op": "SW",
+     "wr": false,
+     "n": 16,
+     "dur": 191,
+     "end": 23136,
+     "tix": 0
+    },
+    "1": {
+     "cmd": 22946,
+     "op": "SW",
+     "wr": false,
+     "n": 16,
+     "dur": 191,
+     "end": 23137,
+     "tix": 1
+    },
+    "2": {
+     "cmd": 22947,
+     "op": "SW",
+     "wr": false,
+     "n": 16,
+     "dur": 191,
+     "end": 23138,
+     "tix": 2
+    },
+    "3": {
+     "cmd": 22948,
+     "op": "SW",
+     "wr": false,
+     "n": 16,
+     "dur": 191,
+     "end": 23139,
+     "tix": 3
+    },
+    "4": {
+     "cmd": 22949,
+     "op": "SW",
+     "wr": false,
+     "n": 16,
+     "dur": 191,
+     "end": 23140,
+     "tix": 4
+    }
+   },
+   "fused_into": null
+  },
+  "ffn.shared_quant": {
+   "status": "LOWERED",
+   "rows": 0,
+   "gap": null,
+   "leaves": {},
+   "fused_into": "ffn.shared_swiglu"
+  },
+  "ffn.swiglu": {
+   "status": "PARTIAL",
+   "rows": 0,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
+    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
+   },
+   "leaves": {},
+   "fused_into": null
+  },
+  "ffn.route_w": {
+   "status": "PARTIAL",
+   "rows": 0,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
+    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
+   },
+   "leaves": {},
+   "fused_into": "ffn.swiglu"
+  },
+  "ffn.quant2": {
+   "status": "PARTIAL",
+   "rows": 0,
+   "gap": {
+    "module": "ot_s81sl_vs",
+    "port": "s_d imm[95:64] / imm[127:96] (SW w0 / w1)",
+    "missing": "the routing weights are runtime (gunit router, delivered as leaf-store rows by CTL target 5); SW takes w only from the command immediate (ot_s81sl_vs.sv:171), so a boot-loaded CTL template cannot carry them (the bench proves the SW / vq path with the fixture weights)",
+    "file_line": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv:171"
+   },
+   "leaves": {},
+   "fused_into": "ffn.swiglu"
+  }
+ }
+}

@@ -4449,6 +4449,25 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 fwd_reclass.add(b_)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
+    # QLB-GEN 10-18 (LAYERBENCH G-C1): the compiler-assigned elaboration parameters the die masters trap on --
+    # qfd_tt_ctlm_dv.XPF_TRANSPORT_EDGES = 1 hr pin register + the tt_ctlm.hr lane cycles AS BUILT (forwarded E + 1,
+    # plain n, direct 0) and qfd_d2d_static.TXDP = D2D_TXDP_C of the production image -> die.v.params.json (strict
+    # bind + tools/qwen_split/die_params.py audit re-derive both from die.v and fail closed)
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import die_params as _DP
+    _frow = {r_['bid']: r_ for r_ in fwd_rows if r_.get('E') is not None}
+    _hr = []
+    for pl in plans.values():
+        if (pl['eps'][0][0], pl['eps'][0][1].lstrip('*')) == ('tt_ctlm', _DP.TT_PORT) and \
+                any(by[i_].master == _DP.TT_MASTER for i_, _ in pl['eps'][:1]):
+            _hr.append((pl['bid'], _frow.get(pl['bid']) or (dict(bid=pl['bid'], n=len(pl['frames'])) if pl['frames'] else None)))
+    if not _hr:
+        _hr = [(b_, None) for b_, c_, n_, e_ in m['buses'] if e_ and e_[0][0] == 'tt_ctlm' and e_[0][1].lstrip('*') == _DP.TT_PORT]
+    _dmp, _dpr = _DP.gen_params([(i_.name, i_.master) for i_ in m['insts']], _hr)
+    for mst_, prm_ in _dmp.items():
+        m.setdefault('die_master_params', {})[mst_] = prm_
+    m['die_param_assign'] = _dpr
+    print('DIE_PARAMS ' + ' '.join(f'{k_}.{p_}={v_}' for k_, d_ in _dmp.items() for p_, v_ in d_.items() if not p_.startswith('_')))
     if FWDL:
         m['fwd_lanes'] = dict(schema='opentallas.qwen_split.fwd_lanes.v1', contract='lanes/LANDING-CONTRACT.md (Q-DIE11-RLY 10-18)',
                               D=4, lanes=fwd_rows, skipped=fwd_skip, reclassed_reset_hops=sorted(fwd_reclass),
@@ -4478,7 +4497,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             raise ValueError(f"collective lane latency: {cll['fails']}")
         if any(i_.name == _LG.COLL_INST and i_.master == _LG.COLL_MASTER for i_ in m['insts']):
             m.setdefault('die_master_params', {})[_LG.COLL_MASTER] = dict(
-                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j)')
+                cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j); Q-COLLCAL3: LS = compiled calendar lane_groups.collective_calendar')
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),

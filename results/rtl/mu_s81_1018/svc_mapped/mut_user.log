@@ -1,0 +1,37 @@
+SVCRS_CONFIG sram_macro=1 static_io=1 start2=8192
+SVCRS_ST hsdrop=-1 st_rg W=01 E=01 bad=0
+SVCRS_HOST sent=96 acks=96 credits=8/8 errors=0
+SVCRS_SCHED T=46 pvs=208 po=225 pvo=296 go=1334 last_fold_score=1475 pv_sent=1542 pv_early=0 pv_words=160 pv_first=1686 pv_last=1845 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=0 T=46 window=37 nsel=9 pairs_in=0 go=1334 first_score=1464 last_score=1475 end=1846 root_beats=12 sc_checked=304 sc_errors=0 order_errors=0 se_checked=304 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=2147 verdict=PASS
+SVCRS_JOB job=0 user=0 sb=00001000 wb=00000100 mumut=2 T=46 sc_checked=304 sc_errors=0 se_errors=0 pv_checked=2048 pv_errors=0 slice_faults=0000 verdict=PASS
+SC MISMATCH row 0 head 0 got 7f3d69af f1 exp 79f6217c f0
+SC MISMATCH row 0 head 1 got fd97319c f1 exp f9ac0033 f0
+SC MISMATCH row 0 head 2 got 7f5468a2 f1 exp 78931de2 f0
+SC MISMATCH row 0 head 3 got 7f2feb24 f1 exp f8a5947c f0
+SC MISMATCH row 0 head 4 got 7f4dae84 f1 exp f90a8592 f0
+SC MISMATCH row 0 head 5 got 7cd54414 f1 exp 799c8564 f0
+SC MISMATCH row 0 head 6 got fef74130 f1 exp 789099fe f0
+SE MISMATCH slice 8 row 0 got 7f5468a2 exp 78931de2
+SE MISMATCH slice 8 row 4 got fe47e941 exp 7e582d30
+SE MISMATCH slice 8 row 8 got f7705e7e exp f95ce8f9
+SE MISMATCH slice 8 row 12 got 7ea0520c exp 782039ce
+SE MISMATCH slice 12 row 0 got fd97319c exp f9ac0033
+SE MISMATCH slice 12 row 8 got 793d27e6 exp f984c06f
+SE MISMATCH slice 12 row 12 got fed1f9f6 exp f7bd35a5
+PV MISMATCH entry 11 tile 0 dim 0 head 0 got c42221e8 f0 exp c4889de8 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 1 got c50141f2 f0 exp 44c71b62 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 2 got 44a19230 f0 exp c2261a60 f0
+PV MISMATCH entry 11 tile 0 dim 0 head 3 got 4517a5cd f0 exp 44f6f05b f0
+PV MISMATCH entry 11 tile 0 dim 0 head 4 got c537c0ce f0 exp 43b04d1e f0
+PV MISMATCH entry 11 tile 0 dim 0 head 5 got c46cf776 f0 exp c5c4f04d f0
+PV MISMATCH entry 11 tile 0 dim 0 head 6 got c39fa84b f0 exp c3c7cd53 f0
+SVCRS_ST hsdrop=-1 st_rg W=01 E=01 bad=0
+SVCRS_HOST sent=96 acks=96 credits=8/8 errors=0
+SVCRS_SCHED T=428 pvs=685 po=797 pvo=964 go=12088 last_fold_score=12324 pv_sent=12773 pv_early=0 pv_words=160 pv_first=13108 pv_last=13267 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=0 T=428 window=128 nsel=300 pairs_in=992 go=12088 first_score=12218 last_score=12324 end=13268 root_beats=107 sc_checked=2240 sc_errors=487 order_errors=0 se_checked=2240 se_errors=323 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=2048 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=13569 verdict=FAIL
+SVCRS_JOB job=1 user=1 sb=0000a000 wb=00000100 mumut=2 T=428 sc_checked=2240 sc_errors=487 se_errors=323 pv_checked=2048 pv_errors=2048 slice_faults=0000 verdict=FAIL
+SVCRS_MU users=0,1 job0=PASS job1=FAIL verdict=FAIL
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs.sv:516: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 4924.752 s; speed 2.755 ns/s
+- Verilator: cpu 3917.699 s on 17 threads; allocated 3301 MB

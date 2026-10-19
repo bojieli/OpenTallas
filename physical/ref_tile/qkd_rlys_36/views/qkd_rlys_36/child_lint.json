@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-v1-6da52734e/record/views/qkd_rlys_36/provenance/qkd_rlys_36.candidate.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_rlys_36-po1-c3c9de24c/record/views/qkd_rlys_36/provenance/qkd_rlys_36.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
@@ -47,8 +47,8 @@
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 51.1,
-    "min_ps": 45.04
+    "max_ps": 50.74,
+    "min_ps": 44.54
    }
   },
   "pockets": {
@@ -62,6 +62,7 @@
    "count": 0,
    "area_um2": 0,
    "examples": []
-  }
+  },
+  "pin_access_violations": 0
  }
 }

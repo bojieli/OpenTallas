@@ -1,0 +1,14 @@
+amax_mut1_ge want=FAIL OK :: TB_AMAX_MU FAIL MUT=1 NEG=0 seed=1 (eq 0, mismatches 338, mu_fault 0, emit_empty 0)
+amax_mut2_xtalk want=FAIL OK :: TB_AMAX_MU FAIL MUT=2 NEG=0 seed=1 (eq 0, mismatches 416, mu_fault 0, emit_empty 0)
+amax_mut3_clrall want=FAIL OK :: TB_AMAX_MU FAIL MUT=3 NEG=0 seed=1 (eq 0, mismatches 370, mu_fault 0, emit_empty 128)
+amax_mut4_emitu want=FAIL OK :: TB_AMAX_MU FAIL MUT=4 NEG=0 seed=1 (eq 0, mismatches 388, mu_fault 1, emit_empty 16)
+amax_neg_clear want=FAIL OK :: TB_AMAX_MU FAIL MUT=0 NEG=1 seed=1 (eq 0, mismatches 1, mu_fault 1, emit_empty 0)
+amax_pass_s1 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=1
+amax_pass_s2 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=2
+amax_pass_s3 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=3
+user_mut1_late want=FAIL OK :: TB_USER_EVENT FAIL MUT=1 seed=1
+user_mut2_nochk want=FAIL OK :: TB_USER_EVENT FAIL MUT=2 seed=1
+user_mut3_nu1 want=FAIL OK :: TB_USER_EVENT FAIL MUT=3 seed=1
+user_pass_s1 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=1
+user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2
+overall rc=0

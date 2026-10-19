@@ -12,6 +12,9 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
     reg [186:0] fi_dh;
     reg [186:0] dli_dh [0:0];  wire [186:0] li_dh = fi_dh;
     always @(posedge clk) begin : g_dli_dh integer j; dli_dh[0] <= fi_dh; for (j = 1; j <= 0; j = j + 1) dli_dh[j] <= dli_dh[j - 1]; end
+    reg [1:0] fi_dh_user;
+    reg [1:0] dli_dh_user [0:0];  wire [1:0] li_dh_user = fi_dh_user;
+    always @(posedge clk) begin : g_dli_dh_user integer j; dli_dh_user[0] <= fi_dh_user; for (j = 1; j <= 0; j = j + 1) dli_dh_user[j] <= dli_dh_user[j - 1]; end
     reg [0:0] fi_kok;
     reg [0:0] dli_kok [0:0];  wire [0:0] li_kok = fi_kok;
     always @(posedge clk) begin : g_dli_kok integer j; dli_kok[0] <= fi_kok; for (j = 1; j <= 0; j = j + 1) dli_kok[j] <= dli_kok[j - 1]; end
@@ -56,20 +59,23 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
     always @(posedge clk) begin : g_dlo_hr integer j; dlo_hr[0] <= fo_hr; for (j = 1; j <= 3; j = j + 1) dlo_hr[j] <= dlo_hr[j - 1]; end
     wire [115:0] fo_cmd, lo_cmd;  reg [115:0] dlo_cmd [0:3];
     always @(posedge clk) begin : g_dlo_cmd integer j; dlo_cmd[0] <= fo_cmd; for (j = 1; j <= 3; j = j + 1) dlo_cmd[j] <= dlo_cmd[j - 1]; end
+    wire [1087:0] fo_tl, lo_tl;  reg [1087:0] dlo_tl [0:3];
+    always @(posedge clk) begin : g_dlo_tl integer j; dlo_tl[0] <= fo_tl; for (j = 1; j <= 3; j = j + 1) dlo_tl[j] <= dlo_tl[j - 1]; end
     wire [0:0] fo_emb_start, lo_emb_start;  reg [0:0] dlo_emb_start [0:3];
     always @(posedge clk) begin : g_dlo_emb_start integer j; dlo_emb_start[0] <= fo_emb_start; for (j = 1; j <= 3; j = j + 1) dlo_emb_start[j] <= dlo_emb_start[j - 1]; end
     wire [17:0] fo_emb_token, lo_emb_token;  reg [17:0] dlo_emb_token [0:3];
     always @(posedge clk) begin : g_dlo_emb_token integer j; dlo_emb_token[0] <= fo_emb_token; for (j = 1; j <= 3; j = j + 1) dlo_emb_token[j] <= dlo_emb_token[j - 1]; end
     wire [0:0] fo_cf, lo_cf;  reg [0:0] dlo_cf [0:3];
     always @(posedge clk) begin : g_dlo_cf integer j; dlo_cf[0] <= fo_cf; for (j = 1; j <= 3; j = j + 1) dlo_cf[j] <= dlo_cf[j - 1]; end
-    qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37)) u_flat (.ck(clk), .rst_n(rst_f), .pw(fi_pw), .dh(fi_dh), .kok(fi_kok), .kwd(fi_kwd), .fab(fi_fab), .native_ret(fi_native_ret), .ss5(fi_ss5), .ag5(fi_ag5), .program_obs(fo_program_obs), .control_stores_ready(fo_control_stores_ready), .layer_context_v(fo_layer_context_v), .native_tok(fo_native_tok), .native_pos(fo_native_pos), .command_stage(fo_command_stage), .cal_program_obs(fo_cal_program_obs), .cal_descriptor_obs(fo_cal_descriptor_obs), .cal_image_ready(fo_cal_image_ready), .dc(fo_dc), .native_cmd(fo_native_cmd), .hr(fo_hr), .cmd(fo_cmd), .emb_start(fo_emb_start), .emb_token(fo_emb_token), .cf(fo_cf));
-    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37), .MUT(MUT)) u_lp (.ck_core(clk), .ck_hr(clk), .rst_n(rst), .pw(li_pw), .dh(li_dh), .kok(li_kok), .kwd(li_kwd), .fab(li_fab), .native_ret(li_native_ret), .ss5(li_ss5), .ag5(li_ag5), .program_obs(lo_program_obs), .control_stores_ready(lo_control_stores_ready), .layer_context_v(lo_layer_context_v), .native_tok(lo_native_tok), .native_pos(lo_native_pos), .command_stage(lo_command_stage), .cal_program_obs(lo_cal_program_obs), .cal_descriptor_obs(lo_cal_descriptor_obs), .cal_image_ready(lo_cal_image_ready), .dc(lo_dc), .native_cmd(lo_native_cmd), .hr(lo_hr), .cmd(lo_cmd), .emb_start(lo_emb_start), .emb_token(lo_emb_token), .cf(lo_cf));
+    qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37), .NU(4), .OPSEG(1)) u_flat (.ck(clk), .rst_n(rst_f), .pw(fi_pw), .dh(fi_dh), .dh_user(fi_dh_user), .kok(fi_kok), .kwd(fi_kwd), .fab(fi_fab), .native_ret(fi_native_ret), .ss5(fi_ss5), .ag5(fi_ag5), .program_obs(fo_program_obs), .control_stores_ready(fo_control_stores_ready), .layer_context_v(fo_layer_context_v), .native_tok(fo_native_tok), .native_pos(fo_native_pos), .command_stage(fo_command_stage), .cal_program_obs(fo_cal_program_obs), .cal_descriptor_obs(fo_cal_descriptor_obs), .cal_image_ready(fo_cal_image_ready), .dc(fo_dc), .native_cmd(fo_native_cmd), .hr(fo_hr), .cmd(fo_cmd), .tl(fo_tl), .emb_start(fo_emb_start), .emb_token(fo_emb_token), .cf(fo_cf));
+    qfd_tt_ctlm_dv_lpf_lp #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .LAST_STAGE(37), .NU(4), .OPSEG(1), .MUT(MUT)) u_lp (.ck_core(clk), .ck_hr(clk), .rst_n(rst), .pw(li_pw), .dh(li_dh), .dh_user(li_dh_user), .kok(li_kok), .kwd(li_kwd), .fab(li_fab), .native_ret(li_native_ret), .ss5(li_ss5), .ag5(li_ag5), .program_obs(lo_program_obs), .control_stores_ready(lo_control_stores_ready), .layer_context_v(lo_layer_context_v), .native_tok(lo_native_tok), .native_pos(lo_native_pos), .command_stage(lo_command_stage), .cal_program_obs(lo_cal_program_obs), .cal_descriptor_obs(lo_cal_descriptor_obs), .cal_image_ready(lo_cal_image_ready), .dc(lo_dc), .native_cmd(lo_native_cmd), .hr(lo_hr), .cmd(lo_cmd), .tl(lo_tl), .emb_start(lo_emb_start), .emb_token(lo_emb_token), .cf(lo_cf));
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
     integer cyc, nc, bad;
     initial begin
         nc = 0; bad = 0;
         fi_pw = {$urandom,$urandom,$urandom};
         fi_dh = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+        fi_dh_user = {$urandom};
         fi_kok = {$urandom};
         fi_kwd = {$urandom};
         fi_fab = {$urandom};
@@ -81,6 +87,7 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
             if (cyc == 16) rst = 1;
             fi_pw = {$urandom,$urandom,$urandom};
             fi_dh = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+            fi_dh_user = {$urandom};
             fi_kok = {$urandom};
             fi_kwd = {$urandom};
             fi_fab = {$urandom};
@@ -101,6 +108,7 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
                 nc = nc + 1; if (lo_native_cmd !== dlo_native_cmd[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=native_cmd cycle=%0d flat=%h landed=%h", cyc, dlo_native_cmd[2], lo_native_cmd); end
                 nc = nc + 1; if (lo_hr !== dlo_hr[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hr cycle=%0d flat=%h landed=%h", cyc, dlo_hr[2], lo_hr); end
                 nc = nc + 1; if (lo_cmd !== dlo_cmd[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=cmd cycle=%0d flat=%h landed=%h", cyc, dlo_cmd[2], lo_cmd); end
+                nc = nc + 1; if (lo_tl !== dlo_tl[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tl cycle=%0d flat=%h landed=%h", cyc, dlo_tl[2], lo_tl); end
                 nc = nc + 1; if (lo_emb_start !== dlo_emb_start[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=emb_start cycle=%0d flat=%h landed=%h", cyc, dlo_emb_start[2], lo_emb_start); end
                 nc = nc + 1; if (lo_emb_token !== dlo_emb_token[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=emb_token cycle=%0d flat=%h landed=%h", cyc, dlo_emb_token[2], lo_emb_token); end
                 nc = nc + 1; if (lo_cf !== dlo_cf[2]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=cf cycle=%0d flat=%h landed=%h", cyc, dlo_cf[2], lo_cf); end
