@@ -17431,3 +17431,9 @@ def hbm_svg_return_regional_model():
     """Opt-in seven-edge source-pair/ring/cache SVG return prototype."""
     from hbm_layer_vehicle.svg_return_model import model
     return model()
+
+
+def hbm_attention_prel_svg_model(rows_per_sm=64, subrun_rows=8, kv4=False):
+    """Relative-SVG independent csum8 attention; model predates lowering RTL."""
+    from hbm_layer_vehicle.attention_prel_model import model
+    return model(rows_per_sm, subrun_rows, kv4)
