@@ -38,7 +38,10 @@ def model():
             protocol='Keep fixed GO and SM programme words unchanged. Delay actual landing data with metadata2edges; reserve is naturally1edge later inside the native bank and HBM response2edges later. Compiler first/fetch/ids residency margins add8edges; measure production smoke before accepting.',
             physical_scope='The aggregate still has unregistered/millimetre parent paths. This integration cannot establish physical closure.'),
         stage_B_regional_proposal=dict(
-            repeatable_element='one native landing bank with actual FIFO+landing SRAMs, two local clock roots',
+            repeatable_element='ot_hbm_svg_landing_pair_native: two landing256x256 plus two FIFO8x285, source-local pair/ring, three explicit roots',
+            group_replication='four actual leaf instances J0..3, each owns banks j/j+4; cache root owns rotate-only component; replace soft8bank+remote-mux tree without added cycles',
+            leaf_read_launch_to_registered_return_captures=7,
+            leaf_plus_cache_total_read_captures=10,
             paired_regions=landing_slots,
             parent_outline_um=None,
             packing="OPEN: four sized pair leaves plus separate129.6square rotator and nine remaining SRAMs require actual nonoverlapping slots and directed face/reach audit",
