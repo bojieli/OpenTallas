@@ -16,3 +16,5 @@ Final AQ RTL is `a2cb44a57`, component evidence in `proof_a2cb_wq64_regions8`. I
 Actual9d789 mapped-copy audit passes the expected kept-state counts and D/clock/reset classes, but142 total/101 nonreset drivers over32 remain a physical rejection. The successor partitions19-bit row captures into <=8-bit registered owners, adds independent per-word bank counts/head bank identities, and partitions head capture and tail-set state. Cost relative3ee: +625 FF at productionQD64, +549 at diagnostic32, zero added cycles or SRAM ports. Bank resets gain14 sinks each and need actual parent reset-tree rebalance. Source assertions cannot qualify loads; a combined actual mapped census, full66op/154GO replay, native timing and physical admission remain required.
 
 ProductionQD128 was rejected and reverted by parent (6659b35b0); QD64 is the agreed production/physical binding.
+
+Latest `a2cb44a57` default32/ROW_REGIONS0 also passes the original23,968 checked edges and2238/1982/1677 event counts plus all3 source mutants; see `proof_a2cb_wq32_legacy0`. All helper proof jobs ended normally. Parent BW owns the combined physical/mapped and66op154GO production follow-through.
