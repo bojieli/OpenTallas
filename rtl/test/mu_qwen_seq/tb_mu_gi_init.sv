@@ -71,7 +71,7 @@ module tb_mu_gi_init;
  #0.1;
  if(dcs[2:1]!=0)fail("sticky controller/calendar fault");
  if(checkemb&&u==0&&cyc<2000)$display("GI_INIT_EDGE emb_start_pin=%0d token=%0d",cyc,emb_token);
- if(checkemb&&emb_user!=((mut==4)?2'(u^1):2'(u)))fail($sformatf("EMB identity got%0d expected%0d",emb_user,u));
+ if(checkemb&&(emb_user ^ ((mut==4)?2'b01:2'b00))!=2'(u))fail($sformatf("EMB consumer identity got%0d expected%0d wire_mut=%0d",emb_user ^ ((mut==4)?2'b01:2'b00),u,mut==4));
  if(checkemb&&(!emb_start||emb_token!=expected))fail($sformatf("EMB u%0d got%0d expected%0d",u,emb_token,expected));
  if(cmd[0]&&cmd[3:1]==6&&cmd[5])begin
   u=cmd[9:8];if(cyc<2000)fail("cold INIT emitted argmax");
