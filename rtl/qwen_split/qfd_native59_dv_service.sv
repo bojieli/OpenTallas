@@ -60,9 +60,11 @@ module qfd_native59_dv_service #(
  // MU-DQ-D2DUSER: users (1 = single user, the as-built block) and the HOST allocator's initial sequence (INITIAL_EPOCH[15:2])
  parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,
  // MU-D2D-OVL: 1 = two operation context slots (overlapping D2D request / response; see the header)
- parameter integer MCTX=0
+ parameter integer MCTX=0, SAFE=0
 )(
  input wire ck,rst_n,
+ // SAFE regional roots, fixed-phase siblings of ck; unused in the legacy path.
+ input wire ck_fmt,ck_qbuf,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
  input wire[58:0]host_tag,input wire[1:0]host_generation,
  input wire layer_context_v,input wire[5:0]command_stage,
@@ -171,9 +173,36 @@ module qfd_native59_dv_service #(
  // 8 x 16384-b runtime $shift writes + the 512-b $shiftx read).  Same function as the per-lane loop it replaces: each
  // lane l decodes its element qe_l once; seat e takes the data of the HIGHEST hitting lane (the old loop's last write
  // wins); q_in_bad = a hit on a seat already seen this epoch, or two lanes of one word on the same seat.
- reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // MU-DQ-D2DUSER: restored (lost in the e28fa950f merge: the file did not elaborate)
+ wire[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // MU-DQ-D2DUSER: restored (lost in the e28fa950f merge: the file did not elaborate)
  wire[16383:0]qbuf_n;wire[511:0]qseen_n,qdup;
  wire[71:0]qe_all;wire[7:0]qhit_any,qhi_bad;
+ // Kept replicas capture the raw face on the SAME edge as p_dd/p_lcv.
+ // Each address/valid replica serves only32 seats; no extra data edge.
+ (* keep = "true" *) reg[71:0]qe_rep[0:15];
+ (* keep = "true" *) reg[7:0]qh_rep[0:15];
+ (* keep = "true" *) reg[15:0]qb_rep;
+ genvar gr;
+ generate if(SAFE!=0)begin:g_scatter_rep
+  for(gr=0;gr<16;gr=gr+1)begin:g_seg
+   always @(posedge ck)begin
+    qb_rep[gr]<=layer_context_v&&command_stage>=1&&command_stage<=36;
+    qh_rep[gr]<={8{dd_i[547]&&dd_i[546:545]==0&&!(layer_context_v&&command_stage>=1&&command_stage<=36)}}&dd_i[544:537];
+    for(integer lane=0;lane<8;lane=lane+1)
+     qe_rep[gr][9*lane+:9]<=dd_i[345+24*lane+:9]^9'(MUT==1);
+   end
+   always @(posedge ck or negedge rst_top)
+    if(!rst_top)qseen[32*gr+:32]<=0;
+    else if(qb_rep[gr])qseen[32*gr+:32]<=0;
+    else qseen[32*gr+:32]<=qseen_n[32*gr+:32];
+  end
+ end else begin:g_seen_legacy
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)qseen<=0;else if(begin_slot)qseen<=0;else qseen<=qseen_n;
+ end endgenerate
+ wire[1151:0]qe_copies;wire[127:0]qh_copies;
+ generate for(gr=0;gr<16;gr=gr+1)begin:g_scatter_bus
+  assign qe_copies[72*gr+:72]=qe_rep[gr];assign qh_copies[8*gr+:8]=qh_rep[gr];
+ end endgenerate
  genvar gl,ge;
  generate
   for(gl=0;gl<8;gl=gl+1)begin:g_qlane
@@ -184,7 +213,7 @@ module qfd_native59_dv_service #(
   for(ge=0;ge<512;ge=ge+1)begin:g_qseat
    wire[7:0]hit;
    for(gl=0;gl<8;gl=gl+1)begin:g_h
-    assign hit[gl]=qhit_any[gl]&&(qe_all[9*gl+:9]==ge);
+    assign hit[gl]=(SAFE!=0)?(qh_rep[ge/32][gl]&&(qe_rep[ge/32][9*gl+:9]==9'(ge))):(qhit_any[gl]&&(qe_all[9*gl+:9]==ge));
    end
    assign qbuf_n[32*ge+:32]=hit[7]?p_dd[89+32*7+:32]:hit[6]?p_dd[89+32*6+:32]:hit[5]?p_dd[89+32*5+:32]:
                              hit[4]?p_dd[89+32*4+:32]:hit[3]?p_dd[89+32*3+:32]:hit[2]?p_dd[89+32*2+:32]:
@@ -195,10 +224,16 @@ module qfd_native59_dv_service #(
  endgenerate
  wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||(|qhi_bad)||(|qdup);
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin qseen<=0;qctx<=0;qlock<=0;end
-  else if(begin_slot)begin qseen<=0;qctx<=1;qlock<=0;end
-  else begin qseen<=qseen_n;if(q_open)qlock<=1;end
- always @(posedge ck)if(!begin_slot)qbuf<=qbuf_n;
+  if(!rst_top)begin qctx<=0;qlock<=0;end
+  else if(begin_slot)begin qctx<=1;qlock<=0;end
+  else begin if(q_open)qlock<=1;end
+ generate if(SAFE==0)begin:g_qlegacy
+  reg[16383:0]qb;
+  always @(posedge ck)if(!begin_slot)qb<=qbuf_n;
+  assign qbuf=qb;
+ end else begin:g_qsafe
+  assign qbuf=16384'd0;
+ end endgenerate
  wire q_committed=qctx&&(&qseen);
  // beat read as a decoded AND-OR over the 32 constant beats (no runtime part-select)
  wire[511:0]qrow_t[0:32];wire[32:0]qfull_t;
@@ -209,7 +244,21 @@ module qfd_native59_dv_service #(
   assign qrow_t[gb+1]=qrow_t[gb]|({512{sel}}&qbuf[512*gb+:512]);
   assign qfull_t[gb+1]=qfull_t[gb]|(sel&&(&qseen[16*gb+:16]));
  end endgenerate
- wire[511:0]qrow=qrow_t[32];wire qrow_full=qfull_t[32];
+ wire[511:0]qrow;wire qrow_full;
+ generate if(SAFE==0)begin:g_qread_legacy
+  assign qrow=qrow_t[32];assign qrow_full=qfull_t[32];
+ end else begin:g_qread_safe
+  // 8 independent masked writers preserve the full scatter interface. Read and
+  // owner select land at the existing pin edge; SRAM read-before-write is exact.
+  qfd_native59_qseat_sram #(.MUT(MUT),.REGIONAL(1),.REPLICATE(1)) u_qseat(
+   .ck(ck),.ck_mem(ck_qbuf),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),
+   .write_element(qe_all),.write_data(p_dd[344:89]),
+   .element_copies(qe_copies),.valid_copies(qh_copies),
+   .read_v(q_slot),.read_beat(q_slot_beat),.read_data(qrow));
+  reg full_q;
+  always @(posedge ck)full_q<=!begin_slot&&(&qseen_n[16*q_slot_beat+:16]);
+  assign qrow_full=full_q;
+ end endgenerate
  wire q_miss=p_qs&&!qrow_full;
  wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qrow}:524'd0;
  wire export_control_fault;
@@ -254,8 +303,8 @@ module qfd_native59_dv_service #(
  wire[17:0]kv_nin=iss[0]?18'd128:18'd64;
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;
- ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1))u_formatter(
- .clk(ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
+ ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE))u_formatter(
+ .clk(SAFE?ck_fmt:ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
  .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_slot(p_kvs),.word_index(p_kvi),

@@ -9,7 +9,7 @@
 // the existing KVN class wire. The receiver's layer/position descriptor must
 // describe the SAME admitted epoch; this module does not fabricate that link.
 module ot_qfd_su_kv_static_posted #(
- parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0
+ parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0, SAFE=0
 )(
  input wire clk,rst_n,
  input wire epoch_begin,input wire [17:0] epoch_pos,
@@ -55,6 +55,7 @@ module ot_qfd_su_kv_static_posted #(
  wire take=word_v; // one-cycle pulse; delivery time belongs to the compiler
  assign epoch_idle=ENABLE!=0&&!active&&!word_v&&!fault&&!eb_q;
  assign drained=!active&&!word_v;
+ generate if(SAFE==0)begin:g_legacy
  always_comb begin
   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=0;
   allowed=issued;
@@ -83,6 +84,53 @@ module ot_qfd_su_kv_static_posted #(
   if(choose)sent_n[selected]=1;
 
  end
+ end else begin:g_safe
+  // Native59 has eight active lanes. Encode and validate each lane locally,
+  // then register its byte-seat address before the constant-index seat decode.
+  (* keep = "true" *) reg[7:0]dv[0:15];
+  (* keep = "true" *) reg[63:0]di[0:15],dc[0:15];reg[7:0]de;
+  integer j,seg;reg[23:0]da;reg[19:0]aa;reg[16:0]ww;reg[12:0]dp;
+  reg[7:0]ix;reg[8:0]co;reg[2:0]permit;
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin dv[seg]<=0;di[seg]<=0;dc[seg]<=0;end de<=0;end
+   else begin
+    for(seg=0;seg<16;seg=seg+1)dv[seg]<=we_q[7:0];de<=0;
+    permit=issued;if(iv_q&&ik_q<3)permit[ik_q]=1;
+    if(|we_q[63:8])de[0]<=1;
+    for(j=0;j<8;j=j+1)begin
+     da=wa_q[24*j+:24];aa=da[23:4];ww=aa-VBASE;co=encode(wd_q[32*j+:32]);
+     if(aa<VBASE)begin ix={1'b0,aa[6:0]};dp={aa[15:7],da[3:0]};end
+     else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
+     for(seg=0;seg<16;seg=seg+1)begin di[seg][8*j+:8]<=ix^8'(MUT_LANE!=0);dc[seg][8*j+:8]<=co[7:0];end
+     if(we_q[j])begin
+      if(!active||aa>=2*VBASE||(aa<VBASE?aa[16]:ww[16])||dp!=pos)de[0]<=1;
+      if(co[8]||KV_FP8==0)de[1]<=1;
+      if(!(aa<VBASE?permit[aa[6]?2:1]:permit[0]))de[2]<=1;
+     end
+    end
+   end
+  end
+  integer seat,lane;reg[7:0]hits;reg[7:0]value;
+  always_comb begin
+   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=de;
+   allowed=issued;e=0;a=0;w=0;pp=0;code=0;dim=0;head=0;kind=0;idx=0;halfidx=0;li=0;
+   hits=0;value=0;
+   for(seat=0;seat<NBYTES;seat=seat+1)begin
+    hits=0;value=bytes_r[8*seat+:8];
+    for(lane=0;lane<8;lane=lane+1)begin
+     hits[lane]=dv[seat/16][lane]&&(di[seat/16][8*lane+:8]==8'(seat));
+     if(hits[lane])value=dc[seat/16][8*lane+:8];
+    end
+    if(|hits)begin
+     if(seen[seat]||(|(hits&(hits-8'd1))))err[3]=1;
+     seen_n[seat]=1;bytes_n[8*seat+:8]=value;
+    end
+   end
+   choose=slot_q;selected=slot_index_q;
+   if(slot_q&&(!active||sent[selected]||!(&seen[64*selected+:64])))err[6]=1;
+   if(choose)sent_n[selected]=1;
+  end
+ end endgenerate
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;word_data<=0;fault<=0;fault_code<=0;end
   else if(ENABLE!=0)begin
@@ -98,7 +146,11 @@ module ot_qfd_su_kv_static_posted #(
     if(|err)begin fault<=1;fault_code<=fault_code|err;end
     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
-     word_data<=bytes_r[512*selected+:512];
+     case(selected)
+      0:word_data<=bytes_r[0+:512];1:word_data<=bytes_r[512+:512];
+      2:word_data<=bytes_r[1024+:512];3:word_data<=bytes_r[1536+:512];
+      default:word_data<=0;
+     endcase
      if(MUT_MASK!=0)word_data[7:0]<=0;
     end else if(take||fault||(|err))word_v<=0;
     if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;

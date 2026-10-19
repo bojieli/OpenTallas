@@ -21,7 +21,7 @@
 //   outputs of op k inside op k+1's window).  OVLP=1 MCTX=0 = the as-built single-context service: must FAIL.
 //   COLL=1 (OVLP): op 3's completion slot is never driven, so op 5's begin takes op 3's still-active slot -> fault.
 // Pass line N59MU_PASS ...; failure N59MU_FAIL ... and exit != 0.
-module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0)(input wire clk);
+module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,COLL=0,SAFE=0)(input wire clk);
  localparam integer NOP=14,P=OVLP?170:240,B0=10,BK=OVLP?60:0;
  localparam[13:0]SEQ0=14'd9;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
@@ -125,8 +125,8 @@ module tb_qfd_native59_dv_mu #(parameter integer MUT=0,RET_BAD=0,OVLP=0,MCTX=0,C
  wire m0=m0f;wire m0r=OVLP?m0b:m0f;
  // ------------------------------------------------------------------ DUTs
  wire[519:0]dr4,dr1;wire tv4,tv1,dn4,dn1,f4,f1;wire[58:0]xid4,xid1;wire[1:0]xg4,xg1;wire[523:0]x34,x31;wire[547:0]td4,td1;wire[94:0]ret4,ret1;
- qfd_native59_dv_service #(.MUT(MUT),.NU(4),.MU_SEQ0(SEQ0),.MCTX(MCTX))dut4(
- .ck(clk),.rst_n(rst_n),
+ qfd_native59_dv_service #(.MUT(MUT),.NU(4),.MU_SEQ0(SEQ0),.MCTX(MCTX),.SAFE(SAFE))dut4(
+ .ck(clk),.ck_fmt(clk),.ck_qbuf(clk),.rst_n(rst_n),
  .host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(he),.host_tag(htag),.host_generation(2'd1),
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
  .dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),

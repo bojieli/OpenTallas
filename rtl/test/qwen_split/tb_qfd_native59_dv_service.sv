@@ -16,7 +16,7 @@
 //   command pin: beat k = code word k (k 0..63), then beat 0 = {496'd0, scale}; provider and DUT fault-free.
 // BAD_Q=1: one Q dd word is never sent -> NEW must fault and never complete (schedule violation, no stall).
 // Pass line: N59DV_PASS ...; any failure prints N59DV_FAIL and $fatal.
-module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0)(input wire clk);
+module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0)(input wire clk);
  localparam integer HEADS=1;
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  localparam[58:0]TAG={16'd9,6'd1,18'd50994,13'd255,6'd0};
@@ -136,8 +136,8 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0)(input wire 
  // ------------------------------------------------------------------ NEW DUT + the real embedding provider
  wire[519:0]dr;wire n_tv,n_done,n_fault;wire[58:0]n_xid;wire[1:0]n_xg;wire[523:0]n_x3;wire[547:0]n_td;wire[94:0]n_ret;
  wire e_cre,e_sre;wire[23:0]e_caddr;wire[17:0]e_saddr;wire[511:0]e_cq;wire[15:0]e_sq;wire p_fault;
- qfd_native59_dv_service #(.MUT(MUT))dut(
- .ck(clk),.rst_n(rst_n),
+ qfd_native59_dv_service #(.MUT(MUT),.SAFE(SAFE))dut(
+ .ck(clk),.ck_fmt(clk),.ck_qbuf(clk),.rst_n(rst_n),
  .host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(16'd9),.host_tag({16'd9,6'd0,18'd50994,13'd255,6'd0}),.host_generation(2'd1),
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
  .dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),
