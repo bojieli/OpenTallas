@@ -597,6 +597,67 @@ def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now
           f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
 
 
+XCLK_RE = re.compile(r"^GATE_XCLK (launch=.*)$", re.M)
+
+
+def check_cross_clock(g: Gate, spec: dict, out: str, cts: bool):
+    """CROSS-CLOCK GATE (CX-IJ-ROOT 2026-10-18; Gate-Rule: tightening, scoped to multi-clock kits).  Same-tile reg->reg
+    paths BETWEEN two clocks of the tile (e.g. clk_s 1.2 GHz stream / clk_q 0.9 GHz serial under related_pll_ratio) are
+    timed by tools/ref_tile/cross_clock_paths.tcl after CTS under the kit's own signoff.sdc, i.e. with the sign-off
+    related edge windows and the distinct-entry reserve that SDC applies (setup 150/210, hold 100 inter-clock
+    uncertainty) -- the margins are read from the generated SDC, never re-stated here.  A crossing covered by an SDC
+    exception (false path / multicycle / max-min delay / clock groups: the declared CDC, epoch or landing rule) is not
+    counted.  An undeclared pair with setup slack < 0 FAILS (HBM SU cxport dl/rc 761317600: gate WARN, route TT -166.7 /
+    -173.4 on the 3:4 crossing inside one leaf); undeclared hold < 0 WARNs (route hold repair).  Kits with one clock
+    (one declared clock port and one register clock in STA) are unchanged: no item at all."""
+    scope = re.search(r"^GATE_XCLK_SCOPE clocks=(\d+)(?: names=(\S*))?", out, re.M)
+    sta_clocks = int(scope.group(1)) if scope else 0
+    ports = ([spec["clock_port"]] if spec.get("clock_port") else []) + list(spec.get("clock_ports") or [])
+    multi = len(dict.fromkeys(ports)) >= 2 or sta_clocks >= 2
+    if not multi:
+        return
+    if not cts:
+        g.add("WARN", "cross_clock", "multi-clock kit: same-tile cross-clock reg->reg paths are timed only by a --cts gate "
+              "(signoff.sdc inter-clock margins after CTS)", "rerun the gate with --cts")
+        return
+    if not re.search(r"^GATE_XCLK_DONE", out, re.M):
+        g.add("WARN", "cross_clock", "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote "
+              "pc.log: signoff.sdc read / STA error)", "fix the signoff SDC read and re-gate with --cts")
+        return
+    if sta_clocks < 2:
+        g.add("INFO", "cross_clock", f"{sta_clocks} clock(s) reach registers in STA: no same-tile cross-clock reg->reg path")
+        return
+    fails = []
+    for line in XCLK_RE.findall(out):
+        r = dict(re.findall(r"(\w+)=(\S+)", line))
+        pair = f"{r.get('launch')}->{r.get('capture')}"
+        timed, declared, bad = int(r.get("timed", 0)), int(r.get("declared", 0)), int(r.get("violating", 0))
+        worst = None if r.get("worst_ps", "-") == "-" else float(r["worst_ps"])
+        unc = r.get("uncertainty_ps", "-")
+        capped = " (path cap reached: count is a lower bound)" if r.get("capped") == "1" else ""
+        dk = r.get("declared_kinds", "-")
+        decl = f"; {declared} declared ({dk}) not counted" if declared else ""
+        if r.get("kind") == "max" and worst is not None and worst < 0:
+            fails.append(pair)
+            g.add("FAIL", "cross_clock",
+                  f"{bad} undeclared {pair} reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock "
+                  f"uncertainty {unc} ps): worst {worst:.1f} ps {r.get('startpoint')} -> {r.get('endpoint')}{capped}{decl}",
+                  "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the "
+                  "distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), "
+                  "move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule")
+        elif r.get("kind") == "min" and worst is not None and worst < 0:
+            g.add("WARN", "cross_clock",
+                  f"{bad} undeclared {pair} reg->reg endpoint(s) fail HOLD before route repair (inter-clock uncertainty "
+                  f"{unc} ps): worst {worst:.1f} ps at {r.get('endpoint')}{capped}{decl}",
+                  "route hold repair must buffer these; a same-endpoint setup FAIL makes that impossible")
+        elif timed or declared:
+            g.add("INFO", "cross_clock", f"{pair} {r.get('kind')}: {timed} undeclared timed path(s), worst "
+                  f"{'-' if worst is None else f'{worst:.1f}'} ps (uncertainty {unc} ps){decl}")
+    if not fails:
+        g.add("INFO", "cross_clock", f"{sta_clocks} register clocks ({scope.group(2) or ''}): no undeclared cross-clock "
+              "reg->reg setup violation under signoff.sdc")
+
+
 def check_memory_ff(g: Gate, out: str):
     """MEMORY-FF LINT (ROOT 2026-10-17, coordinator from S-ELEM): yosys memory inference folded a register into an
     inferred ROM/memory read port (MEMORY_DFF after PROC_ROM / MEMORY_BMUX2ROM).  The named RTL register disappears, and the
@@ -903,7 +964,7 @@ if [ "{CTS}" = 1 ]; then
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
-  grep "^GATE_PC" $R/pc.log
+  grep -E "^GATE_(PC|XCLK)" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
 fi
 # TRIAL ROUTE (owner rule 20:45 10-15; every kit since ROOT-0330-GRT 10-18, was parent / cluster kits only): place +
@@ -1512,6 +1573,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
+    check_cross_clock(g, spec, out, cts)
     clock_item(g, clock_record(out, cts, spec))
 
 
