@@ -1,0 +1,69 @@
+{
+ "variant": "recut",
+ "params": "QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1",
+ "cases": {
+  "baseline": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "forep": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=5.831 max=14.994 mean=9.090 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "fe_mut_add": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=3460cd60c0400010"
+   ]
+  },
+  "fe_mut_chain": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[4649000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=9 ref=1365e8d900404010 shadow=1365e8dd00404010"
+   ]
+  },
+  "fe_mut_tree": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[2243000] %Fatal: cand_ot_v41_pair_w17w10.sv:183: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=3325d5e6c0400010"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "94b17b213a2bbb4fc64822c86cd17094bb537c12",
+ "dirty": null,
+ "column_roots": false,
+ "mapped_candidate_rom": null,
+ "front_roots": false,
+ "column_west_roots": false,
+ "column_cl": false
+}

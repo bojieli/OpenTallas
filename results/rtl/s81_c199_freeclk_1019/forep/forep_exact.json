@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "scope": "OT_BF_FOREP (free clock + reset partition + kept fan-out copies <= 32 loads) vs default column: every valid/metadata/busy/fault output cycle identical on the full BF numerical + wake + transaction workload",
+  "trace_lines": 124422,
+  "trace_bytes": 6212138,
+  "trace_sha256": "c6cf9839168a375a834868cafa63e42973d5c49e8f3f203b1c8d25d8f495bf0d",
+  "extra_data_edges": 0,
+  "mutants": {
+    "fe_mut_add": {
+      "first_trace_mismatch_line": 2701,
+      "txn": "[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=3460cd60c0400010"
+    },
+    "fe_mut_chain": {
+      "first_trace_mismatch_line": 5582,
+      "txn": "[4649000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=9 ref=1365e8d900404010 shadow=1365e8dd00404010"
+    },
+    "fe_mut_tree": {
+      "first_trace_mismatch_line": 2689,
+      "txn": "[2243000] %Fatal: cand_ot_v41_pair_w17w10.sv:183: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=3325d5e6c0400010"
+    }
+  }
+}
