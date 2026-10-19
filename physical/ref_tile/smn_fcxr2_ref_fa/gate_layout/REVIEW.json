@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "smn_fcxr2_ref_fa",
+ "reviewer": "coordinator (2026-10-19 ~04:00)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T04:00:00-07:00",
+ "gate_commit": "131be4583",
+ "checklist": {
+  "lattice": "n/a: no macros",
+  "std_cell_band": "PASS: thin flop bands at the N/S/E pin faces, core empty by design (drop-in relay outline), fill 5.4%",
+  "pin_spread": "PASS: N and S faces ~92% full length, E two clusters = die-contract pin plan unchanged from the closed view",
+  "clock_entry": "PASS: SE corner; spread TT 48.5 / FF 45.8 (<=80)",
+  "shape": "PASS: 218.2x151.2 (1.44:1), GRT ovf 0"
+ },
+ "notes": "native re-route: recipe 4 hold_budget die, no boundary hold pads, reset_landing.",
+ "geometry_sha256": "2a04d2d7f18c94b3db4163b99d9213cd46b7df6aed00dfab83514dbdec3bb7a4"
+}
