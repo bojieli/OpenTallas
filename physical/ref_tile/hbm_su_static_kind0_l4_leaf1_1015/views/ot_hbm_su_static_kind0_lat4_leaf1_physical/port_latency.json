@@ -1,0 +1,197 @@
+{
+  "clock_reference": {
+    "clk_stage_0": {
+      "ff": {
+        "max": 168.6,
+        "mean": 151.7,
+        "min": 135.7,
+        "n": 1700,
+        "scope": "boundary"
+      },
+      "ss": {
+        "max": 258.5,
+        "mean": 241.7,
+        "min": 226.0,
+        "n": 1700,
+        "scope": "boundary"
+      },
+      "tt": {
+        "max": 201.6,
+        "mean": 184.9,
+        "min": 169.3,
+        "n": 1700,
+        "scope": "boundary"
+      }
+    },
+    "clk_stage_1": {
+      "ff": {
+        "max": 141.5,
+        "mean": 116.7,
+        "min": 94.6,
+        "n": 1112,
+        "scope": "all_internal_sinks"
+      },
+      "ss": {
+        "max": 199.3,
+        "mean": 173.2,
+        "min": 149.0,
+        "n": 1112,
+        "scope": "all_internal_sinks"
+      },
+      "tt": {
+        "max": 163.2,
+        "mean": 137.7,
+        "min": 114.6,
+        "n": 1112,
+        "scope": "all_internal_sinks"
+      }
+    },
+    "clk_stage_2": {
+      "ff": {
+        "max": 137.6,
+        "mean": 123.7,
+        "min": 109.6,
+        "n": 1612,
+        "scope": "all_internal_sinks"
+      },
+      "ss": {
+        "max": 214.0,
+        "mean": 194.7,
+        "min": 174.8,
+        "n": 1612,
+        "scope": "all_internal_sinks"
+      },
+      "tt": {
+        "max": 166.0,
+        "mean": 150.4,
+        "min": 134.1,
+        "n": 1612,
+        "scope": "all_internal_sinks"
+      }
+    },
+    "clk_stage_3": {
+      "ff": {
+        "max": 127.3,
+        "mean": 119.3,
+        "min": 99.8,
+        "n": 575,
+        "scope": "all_internal_sinks"
+      },
+      "ss": {
+        "max": 186.0,
+        "mean": 177.3,
+        "min": 160.0,
+        "n": 575,
+        "scope": "all_internal_sinks"
+      },
+      "tt": {
+        "max": 149.5,
+        "mean": 141.1,
+        "min": 122.5,
+        "n": 575,
+        "scope": "all_internal_sinks"
+      }
+    },
+    "clk_stage_5": {
+      "ff": {
+        "max": 142.0,
+        "mean": 134.4,
+        "min": 126.4,
+        "n": 1099,
+        "scope": "all_internal_sinks"
+      },
+      "ss": {
+        "max": 215.2,
+        "mean": 207.5,
+        "min": 196.9,
+        "n": 1099,
+        "scope": "all_internal_sinks"
+      },
+      "tt": {
+        "max": 170.0,
+        "mean": 162.4,
+        "min": 153.5,
+        "n": 1099,
+        "scope": "all_internal_sinks"
+      }
+    },
+    "clk_stage_6": {
+      "ff": {
+        "max": 120.7,
+        "mean": 117.6,
+        "min": 112.4,
+        "n": 732,
+        "scope": "all_internal_sinks"
+      },
+      "ss": {
+        "max": 181.6,
+        "mean": 178.1,
+        "min": 172.5,
+        "n": 732,
+        "scope": "all_internal_sinks"
+      },
+      "tt": {
+        "max": 144.3,
+        "mean": 141.0,
+        "min": 135.7,
+        "n": 732,
+        "scope": "all_internal_sinks"
+      }
+    },
+    "clk_stage_7": {
+      "ff": {
+        "max": 105.1,
+        "mean": 99.1,
+        "min": 95.6,
+        "n": 132,
+        "scope": "boundary"
+      },
+      "ss": {
+        "max": 155.2,
+        "mean": 149.7,
+        "min": 146.5,
+        "n": 132,
+        "scope": "boundary"
+      },
+      "tt": {
+        "max": 124.4,
+        "mean": 118.8,
+        "min": 115.4,
+        "n": 132,
+        "scope": "boundary"
+      }
+    }
+  },
+  "control_roles": {
+    "clocks": [
+      "clk_stage_0",
+      "clk_stage_1",
+      "clk_stage_2",
+      "clk_stage_3",
+      "clk_stage_5",
+      "clk_stage_6",
+      "clk_stage_7"
+    ],
+    "source": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835/signoff.sdc"
+  },
+  "job": "hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835",
+  "kit": "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015",
+  "pin_registers": false,
+  "provenance": {
+    "db": "6_final.odb",
+    "generator": "tools/ref_tile/port_latency.py --unregistered-view (ROOT-INF21 2026-10-19)",
+    "measurement": "STA on the routed view (closure_loop ck_insertion: 6_final.odb + SPEF, propagated clock arrival at every register clock pin per root and corner)",
+    "parasitics": "spef",
+    "routed_base": "/srv/opentallas-scratch2/claude/closure-loop/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835/routes/hbm_su_static_kind0_l4_leaf1_1015_r2_18978c835/work/orfs/results/asap7/opentallas_ot_hbm_su_static_kind0_lat4_leaf1_physical_asap7_ref_hbm_su_static_kind0_l4_leaf1_1015_r2_18978c835/base",
+    "sha256": {
+      "physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/views/ot_hbm_su_static_kind0_lat4_leaf1_physical/insertion.json": "316e9246dfc9d422c9a85dca9829f78274876a28157ea9fcfb650a8ffb7637ab",
+      "results/arch/hbm_su_f2_static_1014/arithmetic/physical/lat4_kind0_route/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835/signoff.sdc": "7578831ae9cbcf765f90d7584b881e3bd4906f3f12ee900a192f69b73e5e47fb",
+      "results/closure_loop/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835/verdict.json": "107be65a2dc95022d24c48ec2b5b2b6f64b3bdd690e77680eb1ceb4e323dcda9"
+    }
+  },
+  "register_edges_all_ports": 0,
+  "schema": "opentallas.ref_tile.port_latency.unregistered.v1",
+  "scope": "No pin registers: 0 additional wrapper edges on every port; clock_reference = routed-view per-root insertion (landed-parent co-timing reference); no physical qualification",
+  "source_commit": "18978c835e8d8abe7217fc6c661591b422eec65f",
+  "top": "ot_hbm_su_static_kind0_lat4_leaf1_physical"
+}
