@@ -33,16 +33,25 @@ SPEC (JSON; paths relative to the repo root):
   out_dir        where <top>_lp.sv / .sdc / tb / bench go; record_dir: where <top>_lp_record.json goes
   clock_ports    flat parent clock port(s) (removed; replaced by ck_<region>)
   clock_pins     child pin names that are clocks      reset_port: parent reset port   reset_pins: child reset pin names
+  reset_net      optional internal one-bit child-generated reset, reschedule mode only; reset_port remains external
   reset_active_low (default true)
   regions        [{name, insts: [fnmatch patterns], centre: [x, y] (um, optional)}]   the FIRST is the core region: its
                  clock port is the kit's clock_port (core_clk in the base SDC)
   port_regions   {port: region} overrides (default: input = region of its first reader, output = its driver's region)
   static         [ports / nets] identity straps: never landed (case-analysed), constant in the bench (tb_static {p: v})
   D, E           ring depth / read offset (default 4 / 2: as Q-CLUSTER-LANDALL)
+  mut4_stages    MUT 4 holds the first child's reset this many stages longer (default 1: a calendar slip).  Event-driven
+                 children (valid-qualified, no free-running calendar) hide a 1-stage slip from random lockstep, so such a
+                 parent sets it past the bench warm-up (the mutant then proves the reset run reaches the child).
   reach_um       reset-run hop reach (default 405)         residual_ps: inter-region die residual on the 1-bit reset hops (60)
   bench          {cycles, reset_cycles, sim: iverilog|verilator}
-  mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
-                 outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
+  reschedule     true: the parent's children form cross-region LOOPS (e.g. a bidirectional rung stack), so no offset
+                 schedule keeps the flat calendar.  Then every child keeps t = 0 (all resets released together, no pads)
+                 and every landed net is a COMPILER RE-SCHEDULE of +E+1 edges.  The lockstep reference becomes
+                 <top>_rsref = the flat parent with an (E+1)-stage delay on each landed net (zero until E+2 edges after
+                 the reset release, as the ring reads), written into the tb file: the bench proves the landing hardware
+                 and reset epochs exactly; whether the children's static calendars tolerate the re-schedule is the
+                 parent's own behavioural bench (run it on the landed parent), and the record lists every re-scheduled net.
 """
 from __future__ import annotations
 
@@ -295,7 +304,12 @@ class Parent:
                 self.cports[m] = {p["name"]: p["dir"] for p in cm["ports"]}
         self.ports = {p["name"]: p for p in self.mod["ports"]}
         self.ck = set(spec.get("clock_ports") or [])
-        self.rst = spec.get("reset_port")
+        self.reset_port = spec.get("reset_port")
+        self.rst = spec.get("reset_net") or self.reset_port
+        if self.reset_port not in self.ports:
+            raise SystemExit("reset_port must name a parent input port")
+        if spec.get("reset_net") and not spec.get("reschedule"):
+            raise SystemExit("reset_net currently requires reschedule mode")
         self.static = set(spec.get("static") or [])
         self.regions = [r["name"] for r in spec["regions"]]
         self.region = {}
@@ -308,6 +322,16 @@ class Parent:
         self.K = self.E
         self.A = self.E + 1
         self.AW = 1 if self.D <= 2 else math.ceil(math.log2(self.D))
+        if spec.get("reset_net"):
+            if self.rng(self.rst) is not None:
+                raise SystemExit("reset_net must be one bit")
+            drivers = [i for i in self.insts if any(
+                self.cports[i["module"]][pin] == "out" and self.rst in idents(ex)
+                for pin, ex in i["conns"].items())]
+            if len(drivers) != 1:
+                raise SystemExit("reset_net must have exactly one child driver")
+            self.reset_driver = drivers[0]["inst"]
+            spec.setdefault("reset_region", self.region[self.reset_driver])
 
     def rng(self, n):
         if n in self.wires:
@@ -399,7 +423,8 @@ class Parent:
                 edges.append((d, f"port:{p}", p, 0, False, None))
         nodes = sorted({e[0] for e in edges} | {e[1] for e in edges} | set(self.region))
         t = {v: 0 for v in nodes}
-        for it in range(len(nodes) + 1):
+        resched = bool(self.S.get("reschedule"))
+        for it in ([] if resched else range(len(nodes) + 1)):
             ch = False
             for a, b, n, add, _, _ in edges:
                 if t[a] + add > t[b]:
@@ -408,10 +433,11 @@ class Parent:
             if not ch:
                 break
         else:
+          if not resched:
             loop = [f"{a}->{b} ({n}, +{add})" for a, b, n, add, _, _ in edges if t[a] + add > t[b]]
             raise SystemExit("cross-region LOOP: the landed parent cannot keep the flat schedule (the compiler must "
                              "re-schedule, or keep the loop inside one region): " + "; ".join(loop[:8]))
-        for v in nodes:                         # input ports: as late as their earliest reader allows (no pad there)
+        for v in ([] if resched else nodes):    # input ports: as late as their earliest reader allows (no pad there)
             if v.startswith("port:") and self.ports[v[5:]]["dir"] == "in":
                 outs = [t[b] - add for a, b, n, add, _, _ in edges if a == v]
                 if outs:
@@ -425,6 +451,8 @@ class Parent:
             if b.startswith("port:"):
                 continue
             k = t[b] - t[a] - add
+            if resched:
+                continue
             if k > 0:
                 pads[(n, b)] = max(pads.get((n, b), 0), k)
             if k < 0:
@@ -432,7 +460,56 @@ class Parent:
         lst = sorted(lands.values(), key=lambda L: int(L["name"]))
         if mut_unland and lst:
             lst[0]["unlanded_mutant"] = True
-        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv)
+        return dict(t=t, edges=edges, lands=lst, landkey=lands, pads=pads, nreg=nreg, drv=drv, rd=rd, out_drv=out_drv,
+                    resched=resched)
+
+    def rsref(self, P):
+        """reschedule mode: the flat parent with an (E+1)-stage delay on every landed net at its landed readers, zero
+        until E+2 edges after the reset release (exactly what ot_pl_land_w/_r deliver); single flat clock"""
+        S, A = self.S, self.A
+        ck = sorted(self.ck)[0]
+        items = [p["item"] for p in self.mod["ports"]]
+        par = ("#(\n    " + self.mod["params_txt"].strip() + "\n) ") if (self.mod["params_txt"] or "").strip() else ""
+        L = [f"// GENERATED by tools/landed_parent/lp.py (reschedule): {S['top']} with +{A} edges on each of the "
+             f"{len(P['lands'])} landed nets (the compiler re-schedule) -- the lockstep reference of {S['top']}_lp",
+             f"module {S['top']}_rsref {par}(\n    " + ",\n    ".join(items) + "\n);"]
+        body = self.mod["body"]
+        pos = 0
+        for ins in self.insts:
+            L += [ln.rstrip() for ln in body[pos:ins["span"][0]].splitlines() if ln.strip()]
+            pos = ins["span"][1]
+        L += [ln.rstrip() for ln in body[pos:].splitlines() if ln.strip()]
+        ref_reset = self.rst
+        if S.get("reset_net"):
+            _, _, RB = self.reset_tree()
+            L.append(f"    wire lprs_reset; ot_pl_pad #(.W(1), .N({RB})) u_lprs_reset (.ck({ck}), .d({self.rst}), .q(lprs_reset));")
+            ref_reset = "lprs_reset"
+        rel = ref_reset if S.get("reset_active_low", True) else f"~{ref_reset}"
+        L.append(f"    wire lprs_g;  ot_pl_pad #(.W(1), .N({A + 1})) u_lprs_g (.ck({ck}), .d({rel}), .q(lprs_g));")
+        sub = {}
+        for Ld in P["lands"]:
+            n, net, r = Ld["name"], Ld["net"], Ld["dst_region"]
+            rng = self.rng(net)
+            wt = width_text(rng)
+            q, o = f"{net}__rq_{r}", f"{net}__rs_{r}"
+            L.append(f"    wire {rng or ''} {q}, {o};  ot_pl_pad #(.W({wt}), .N({A})) u_lprs_{n} (.ck({ck}), .d({net}), .q({q}));"
+                     f"  assign {o} = lprs_g ? {q} : {{({wt}){{1'b0}}}};")
+            for rp in Ld["readers"]:
+                sub[(rp.split(".")[0], net)] = o
+        for ins in self.insts:
+            i = ins["inst"]
+            cs = []
+            for pin, ex in ins["conns"].items():
+                if S.get("reset_net") and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
+                    ex = ref_reset
+                elif self.cports[ins["module"]][pin] == "in":
+                    for (si, net), rep_ in sub.items():
+                        if si == i:
+                            ex = re.sub(rf"(?<![\w$]){re.escape(net)}\b", rep_, ex)
+                cs.append(f".{pin}({ex})")
+            L.append(f"    {ins['module']} {ins['params'] + ' ' if ins['params'] else ''}{i} (" + ", ".join(cs) + ");")
+        L.append("endmodule")
+        return "\n".join(L) + "\n"
 
     # ---------------------------------------------------------------------------------------------------- emitters
     def reset_tree(self):
@@ -466,7 +543,7 @@ class Parent:
           f"{len(P['lands'])} landed crossings (D {D}, E = K = {E}, +{self.A} edges each), {len(P['pads'])} alignment pads,")
         w(f"// regional reset runs depth {RB} (+ t(child) per child).  Record: {S.get('record_dir', S['out_dir'])}/{top_lp}_record.json")
         w(f"// MUT (bench only; 0 in every kit): 1 = landing 0 bypassed, 2 = landing 0 read K+1, 3 = pad 0 one stage short,")
-        w(f"//     4 = child reset run of '{self.mut_child(P)}' one stage long")
+        w(f"//     4 = child reset run of '{self.mut_child(P)}' {int(S.get('mut4_stages', 1))} stage(s) long")
         w(f"module {top_lp} #(\n    {par}parameter integer MUT = 0\n) (\n    " + ",\n    ".join(items) + "\n);")
         body = self.mod["body"]
         # strip instance statements; they are re-emitted below
@@ -524,8 +601,9 @@ class Parent:
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
             tc = P["t"].get(i, 0)
-            if any(pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
-                kk = f"(MUT == 4) ? {tc + 1} : {tc}" if i == mc and mut else f"{tc}"
+            if any(self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
+                m4 = int(S.get("mut4_stages", 1))
+                kk = f"(MUT == 4) ? {tc + m4} : {tc}" if i == mc and mut else f"{tc}"
                 w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
                   f"   // t({i}) = {tc}")
                 rsub[i] = f"lpr_c_{i}"
@@ -536,8 +614,11 @@ class Parent:
             cs = []
             for pin, ex in ins["conns"].items():
                 if pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
-                    ex = f"ck_{r}"
-                elif i in rsub and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
+                    # A vector forwarded-clock port must drive every bit, not
+                    # zero-extend a scalar clock (which silently stops upper lanes).
+                    cw = eval_width(self.ports[ex.strip()]["range"], self.env) if ex.strip() in self.ports else 1
+                    ex = f"{{{cw}{{ck_{r}}}}}" if cw > 1 else f"ck_{r}"
+                elif i in rsub and self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
                     ex = rsub[i]
                 elif self.cports[ins["module"]][pin] == "in":
                     for (si, net), rep in sub.items():
@@ -550,7 +631,7 @@ class Parent:
 
     def mut_child(self, P):
         kids = [ins["inst"] for ins in self.insts
-                if any(pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
+                if any(self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
         want = self.S.get("mut_child")       # a child whose late reset is observable after warm-up (state that outlives
         if want:                             # the reset, e.g. a sticky flag); a pure pipeline child forgets it in 1 edge
             if want not in kids:
@@ -618,7 +699,7 @@ class Parent:
                    if p["dir"] == "in" and p["name"] not in self.ck | self.static | {self.rst}}
         port_out = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"] if p["dir"] == "out"}
         no_rst = [i["inst"] for i in self.insts if t.get(i["inst"], 0) and not any(
-            pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items())]
+            self.cports[i["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items())]
         return dict(
             lane="PARENTS-LANDED", generator="tools/landed_parent/lp.py", flat=S["top"], top=top_lp,
             standard="landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region "
@@ -632,7 +713,7 @@ class Parent:
                            sdc=f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L['name']}_w.* -to u_lpl_{L['name']}_r.*")
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
-            reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
+            reset=dict(port=self.reset_port, net=S.get("reset_net"), root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
                        note="flat reference == landed parent with its reset delayed by depth; child c's reset run is "
                             "depth + t(c)"),
             flops=dict(landing=flops_land, pads=flops_pad, reset=flops_rst),
@@ -643,6 +724,12 @@ class Parent:
                 child_offset_edges={i["inst"]: t.get(i["inst"], 0) for i in self.insts},
                 input_port_offset_edges=port_in, output_port_offset_edges=port_out,
                 reset_release_added_edges=rt["RB"],
+                rescheduled_nets=([dict(net=L["net"], src_region=L["src_region"], dst_region=L["dst_region"],
+                                        readers=L["readers"], width=L["width"], added_edges=self.A) for L in P["lands"]]
+                                  if P.get("resched") else []),
+                reschedule_note=("RESCHEDULE mode: cross-region loops; every child keeps its flat calendar (t = 0) and "
+                                 f"each landed net above arrives +{self.A} edges later than in the flat parent: the "
+                                 "compiler / the children's static calendars must absorb these" if P.get("resched") else None),
                 max_added_edges=max([0] + list(port_out.values()))),
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
@@ -659,7 +746,7 @@ class Parent:
         RB = rt["RB"]
         t = P["t"]
         act_low = S.get("reset_active_low", True)
-        ins = [p for p in self.mod["ports"] if p["dir"] == "in" and p["name"] not in self.ck and p["name"] != self.rst]
+        ins = [p for p in self.mod["ports"] if p["dir"] == "in" and p["name"] not in self.ck and p["name"] != self.reset_port]
         outs = [p for p in self.mod["ports"] if p["dir"] == "out"]
         W = {p["name"]: eval_width(p["range"], self.env) for p in self.mod["ports"]}
         maxoff = max([0] + [t.get(f"port:{p['name']}", 0) for p in outs] + [t.get(f"port:{p['name']}", 0) for p in ins])
@@ -689,12 +776,13 @@ class Parent:
             L.append(f"    always @(posedge clk) begin : g_dlo_{n} integer j; dlo_{n}[0] <= fo_{n}; "
                      f"for (j = 1; j <= {off}; j = j + 1) dlo_{n}[j] <= dlo_{n}[j - 1]; end")
         ck = sorted(self.ck)
-        fc = [f".{c}(clk)" for c in ck] + [f".{self.rst}(rst_f)"] + [f".{p['name']}(fi_{p['name']})" for p in ins] + \
+        fc = [f".{c}({{{W[c]}{{clk}}}})" for c in ck] + [f".{self.reset_port}({'rst' if S.get('reset_net') else 'rst_f'})"] + [f".{p['name']}(fi_{p['name']})" for p in ins] + \
              [f".{p['name']}(fo_{p['name']})" for p in outs]
-        lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.rst}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
+        lc = [f".ck_{r}(clk)" for r in self.regions] + [f".{self.reset_port}(rst)"] + [f".{p['name']}(li_{p['name']})" for p in ins] + \
              [f".{p['name']}(lo_{p['name']})" for p in outs]
         pv = ", ".join(f".{k}({v})" for k, v in (S.get("params") or {}).items())
-        L.append(f"    {S['top']} {('#(' + pv + ') ') if pv else ''}u_flat (" + ", ".join(fc) + ");")
+        fm = f"{S['top']}_rsref" if P.get("resched") else S["top"]
+        L.append(f"    {fm} {('#(' + pv + ') ') if pv else ''}u_flat (" + ", ".join(fc) + ");")
         L.append(f"    {top_lp} #({(pv + ', ') if pv else ''}.MUT(MUT)) u_lp (" + ", ".join(lc) + ");")
         L.append("    function [31:0] rnd; input integer k; rnd = $urandom; endfunction")
         L.append("    integer cyc, nc, bad;")
@@ -725,6 +813,8 @@ class Parent:
         L.append("        $finish;")
         L.append("    end")
         L.append("endmodule")
+        if P.get("resched"):
+            L.append(self.rsref(P))
         return "\n".join(L) + "\n"
 
     def bench_sh(self, top_lp, rel_out, P=None):
@@ -776,7 +866,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
             dirs[i["module"]] = {p["name"]: p["dir"] for p in parse_module(csrc, i["module"])["ports"]}
     reg = {}
     for i in insts:
-        cks = [ex.strip() for pin, ex in i["conns"].items() if re.fullmatch(r"ck_\w+", ex.strip())]
+        cks = [n for pin, ex in i["conns"].items() for n in idents(ex) if re.fullmatch(r"ck_\w+", n)]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
         reg[i["inst"]] = cks[0][3:]
