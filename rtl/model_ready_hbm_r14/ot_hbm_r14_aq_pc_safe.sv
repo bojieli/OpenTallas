@@ -102,6 +102,10 @@ module ot_hbm_r14_aq_pc_safe #(
 `endif
   end
   (* keep="true",dont_touch="true" *) reg [4:0] head_bank_local;
+  (* keep="true",dont_touch="true" *) reg [4:0] look_head_bank_local[0:1];
+  for(genvar h=0;h<2;h=h+1)begin:LOOK_BANK_LOCAL
+    always @(posedge clk)look_head_bank_local[h]<=head_d[29:25];
+  end
   wire [31:0] hb_oh=32'b1<<head_bank_local;
   wire [WQW-1:0] qsuccessor=q_rp_plus1;
   wire [29:0] qprefetch=(qfresh&&qfresh_addr==qsuccessor)?qfresh_data:qm[29:0];
@@ -114,27 +118,40 @@ module ot_hbm_r14_aq_pc_safe #(
   ot_sram_1r1w_128x256_m1_r2c2 u_queue(.clk(clk),.r_ce_in(1'b1),.r_addr_in(7'(qread)),.rd_out(qm),
     .w_ce_in(qpush),.w_addr_in(7'(qwp)),.wd_in({226'b0,wr_bank,wr_col,wr_row,wr_rd}),.w_mask_in({256{1'b1}}),
     .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-  reg [WQW:0] bank_n[0:31];
+  (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n[0:31];
+  (* keep="true",dont_touch="true" *) reg [WQW:0] bank_n_word_local[0:1][0:31];
   reg [RW_ROW-1:0] look_row[0:31];
   // Same-edge reset copies from the parent relay: each bank resets its own
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
+    wire bp=(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&wr_bank==b;
+    wire [WQW:0] bn_next=bank_n[b]+(bp&&!bank_col[b]?(WQW+1)'(1):
+                    (!bp&&bank_col[b]?{(WQW+1){1'b1}}:(WQW+1)'(0)));
     always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
-    else case({(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&wr_bank==b,bank_col[b]})
-      2'b10:bank_n[b]<=bank_n[b]+1'b1;
-      2'b01:bank_n[b]<=bank_n[b]-1'b1;
-      default:bank_n[b]<=bank_n[b];
-    endcase
+      else bank_n[b]<=bn_next;
+    for(genvar k=0;k<2;k=k+1)begin:WORD_COUNT
+      always @(posedge clk or negedge reset_regions[b])
+        if(!reset_regions[b])bank_n_word_local[k][b]<=0;
+        else bank_n_word_local[k][b]<=bn_next;
+    end
   end
   always @(posedge clk or negedge rst_n)if(!rst_n)qfresh<=0;else qfresh<=qpush;
   always @(posedge clk)begin qfresh_addr<=qwp;qfresh_data<={wr_bank,wr_col,wr_row,wr_rd};end
   always @(posedge clk)begin
     for(integer b=0;b<32;b=b+1)begin
-      if((q_n_local[b/8]!=0)&&hb_oh[b])look_row[b]<=head_local[b/4][19:1];
-      else if(qpush&&wr_bank==b&&bank_n[b]==0)look_row[b]<=wr_row;
+      for(integer k=0;k<3;k=k+1)begin
+        for(integer bit_=0;bit_<8;bit_=bit_+1)if(k*8+bit_<RW_ROW)begin
+          if((q_n_local[b/8]!=0)&&
+             (k==0?head_bank_local:look_head_bank_local[k-1])==5'(b))
+            look_row[b][k*8+bit_]<=head_local[b/4][k*8+bit_+1];
+          else if(qpush&&wr_bank==b&&
+              (k==0?bank_n[b]:bank_n_word_local[k-1][b])==0)
+            look_row[b][k*8+bit_]<=wr_row[k*8+bit_];
+          if(row_word_act_local[k][b/8]&&c_oh[b])
+            orow[b][k*8+bit_]<=row_local[b/8][k*8+bit_];
+        end
+      end
     end
-    for(integer b=0;b<32;b=b+1)
-      if(row_word_act_local[b/8]&&c_oh[b])orow[b]<=row_local[b/8][18:0];
   end
   reg [WQW:0] q_n; reg [WQW-1:0] q_rp;
   wire [4:0] hb=qhead[29:25], hc=qhead[24:20]; wire [RW_ROW-1:0] hrow=qhead[19:1]; wire hr=head_read_global;   // registered head (valid when q_n != 0)
@@ -155,11 +172,13 @@ module ot_hbm_r14_aq_pc_safe #(
   // Registered decoded commands share the original command capture edge.
   // The three decoded controls and row word are local to sixteen banks.
   (* keep="true",dont_touch="true" *) reg [21:0] row_local[0:3];
-  (* keep="true",dont_touch="true" *) reg [3:0] row_word_act_local;
+  (* keep="true",dont_touch="true" *) reg [3:0] row_word_act_local[0:2];
   for(genvar g=0;g<4;g=g+1)begin:ROW_LOCAL
-    always @(posedge clk or negedge reset_regions[32+g])
-      if(!reset_regions[32+g])row_word_act_local[g]<=0;
-      else row_word_act_local[g]<=slot_next&&r_v&&r_op==ACT;
+    for(genvar k=0;k<3;k=k+1)begin:WORD_ACT
+      always @(posedge clk or negedge reset_regions[32+g])
+        if(!reset_regions[32+g])row_word_act_local[k][g]<=0;
+        else row_word_act_local[k][g]<=slot_next&&r_v&&r_op==ACT;
+    end
     // Only validity/opcode flags reset. The row word is consumed only by ACT.
     always @(posedge clk)row_local[g][18:0]<=r_row;
     always @(posedge clk or negedge reset_regions[32+g])
