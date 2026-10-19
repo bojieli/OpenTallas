@@ -1,0 +1,16 @@
+{
+  "source_commit": "ae997fbd2",
+  "host": "ot-epyc6",
+  "snapshot": "/srv/opentallas-scratch/claude/kv-token-pickup-1019",
+  "waiter_pid": 2029982,
+  "waiter_ppid": 1,
+  "superseded_waiters": [665769, 1883470],
+  "gen8_source": "6bc53920d",
+  "programmes": ["u1", "u4cal", "u4pack"],
+  "cases_sha256": "d6caec64fcd32013398212158b34a37d81b05522fa5b60ba3c015dc9481daa28",
+  "kv_attn_grp_map_sha256": "446c56953e502200ae1d9e0dfa8dfa94231d7a2396e23fa35c58ee63b8af8891",
+  "kva_vehicle_sha256": "89fb90ef7a42381a331199770cbb4acdf7b53d7fcd8bd1429261b295a2c3f172",
+  "strict_binder_import": "PASS",
+  "vectors": "original ep5 vec copied65MB to same absolute path on ep6",
+  "state": "STAGED; waiting for exact GEN8 prep outputs; no token result"
+}

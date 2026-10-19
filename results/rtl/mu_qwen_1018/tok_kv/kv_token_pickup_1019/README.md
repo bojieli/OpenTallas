@@ -8,4 +8,4 @@ A second fixture omission left external age_pv and eight selected V-port age wor
 
 The pinned connectivity ledger for head_WS_0_0 records 54 actual instances: four front, sixteen input stages, sixteen lanes, sixteen output stages, tree, and score. They share n_clk_core_WS[0], but distinct regional and derived reset nets prevent a lockstep exemption without reset/phase/valid-age proof.
 
-The obsolete ep5 06a659135 GEN8 waiter665769 was stopped exactly. Replacement waiter1883470 watches actual ep6 6bc53920d GEN8 MU/mub prep inputs and a completed staging marker; original u1/u4cal/u4pack case files are reused. No duplicate of a progressing vehicle was launched.
+The obsolete ep5 06a659135 GEN8 waiter665769 was stopped exactly. Replacement waiter2029982 watches actual ep6 6bc53920d GEN8 MU/mub prep inputs and a completed staging marker; original u1/u4cal/u4pack case files are reused. No duplicate of a progressing vehicle was launched.
