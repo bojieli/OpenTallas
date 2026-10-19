@@ -1,0 +1,14 @@
+{
+ "source_commit": "e83443133",
+ "simulator": "Icarus Verilog g2012",
+ "host": "ot-epyc5",
+ "positive": "PASS words=4 first_delta=29 fault=0",
+ "mutants": {
+  "1": "FAIL one edge late",
+  "2": "FAIL field slicing",
+  "3": "FAIL reset stuck",
+  "4": "FAIL relocation removed, two edges early",
+  "5": "FAIL target id ignored"
+ },
+ "scope": "Actual relative XC wrapper + calendar + 4 behavioral SRAM macros; programme rows1024..1027 and descriptor255; fixed launch->first word29 edges at go_at20. Gate recipe reset settling precedes install; behavioural source data path only."
+}

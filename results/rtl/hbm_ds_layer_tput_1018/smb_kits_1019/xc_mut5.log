@@ -1,0 +1,4 @@
+XCAL_REL FAIL mut=5 errors=1 words=4 first_delta=29 fault=0
+FATAL: rtl/test/hbm_accel/svg_rel/tb_xcal_rel_t.sv:37: XCAL relative mismatch
+       Time: 1350000  Scope: tb_xcal_rel_t
+MUT=5 RC=1
