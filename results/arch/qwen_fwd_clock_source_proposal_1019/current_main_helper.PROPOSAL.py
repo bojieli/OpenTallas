@@ -22,5 +22,3 @@ def _fwd_clock_manifest_finalize(m):
         h0 = stations[0] if stations else landing
         ln['src_ck'] = require(h0, 'ck_s' if first else 'ck')
         ln['dst_ck'] = require(landing, 'ck')
-
-

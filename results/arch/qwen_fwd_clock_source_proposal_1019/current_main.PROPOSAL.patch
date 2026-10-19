@@ -1,17 +1,8 @@
 --- a/tools/qwen_rom_fulldie_b3r2.py
 +++ b/tools/qwen_rom_fulldie_b3r2.py
-@@ -1142,6 +1142,7 @@
-                 finalize_model(m, _reset_release)
-         if before_relays is not None:
-             _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
+@@ -1144,0 +1145 @@
 +            _fwd_clock_manifest_finalize(m)
-     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
-     if su_vm_abut:
-         # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
-@@ -6661,6 +6662,32 @@
-     m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), duplicate_sinks_removed=duplicates, refiled=moved, region_nets=len(per), split=split)
- 
- 
+@@ -6663,0 +6665,26 @@
 +def _fwd_clock_manifest_finalize(m):
 +    """Derive clock metadata from final construction; reject missing/conflicting pins."""
 +    net = {}
@@ -38,6 +29,3 @@
 +        ln['dst_ck'] = require(landing, 'ck')
 +
 +
- def region_spans(m):
-     """measured sink span per region clock net (clk_r<k>: every pin but the hub's pll_r<k>), from the placement."""
-     by = {i.name: i for i in m['insts']}
