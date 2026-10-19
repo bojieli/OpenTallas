@@ -1,0 +1,10 @@
+MISMATCH cyc 17 ring_fault
+MISMATCH cyc 18 ring_fault
+MISMATCH cyc 19 bk_pq
+MISMATCH cyc 19 ring_fault
+MISMATCH cyc 20 ring_fault
+VMS_GLUE_LT_EQUIV NW FAIL checks=33768 errors=446
+- /srv/opentallas-scratch/claude/hbm-safe-vmglue/out/NWg4/tb_vms_glue_lt.sv:230: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.024 s; speed 165.646 us/s
+- Verilator: cpu 0.024 s on 1 threads; allocated 8 MB

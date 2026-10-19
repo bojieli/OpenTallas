@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "hfd_hgi_vms_glue_e_t",
  "enable": false,
- "reason": "RTL registers every pin: bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_seq / bank_client / response_seq / enables on plain flops and drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an edge the contract (gen_vms_glue_tiles.py) does not have."
+ "reason": "RTL registers every pin (g4: each port is a pin flop + reach relays, gen_vms_glue_tiles.py DB / DD / DC): bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_seq / bank_client / response_seq / enables on plain flops and drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an edge the contract (gen_vms_glue_tiles.py) does not have."
 }

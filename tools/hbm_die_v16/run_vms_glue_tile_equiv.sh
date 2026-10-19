@@ -3,11 +3,11 @@
 # <tile>_ref (historical glue ot_vms_slice_static_glue, COMMIT_DELAY 8, one delay stage per bank-side port, tile reset
 # release) in lockstep: random inputs on every port, periodic resets, every output bit compared (vms_glue_tile_equiv.py).
 # pos must print "VMS_GLUE_LT_EQUIV <Q> PASS checks=N errors=0"; mutants (rmut: ring-stop flit bit; land: eg not landed;
-# sid: E strap = the other E quadrant's sid; g3: hub pq without the g3 face-group edge) must print "VMS_GLUE_LT_EQUIV <Q> FAIL checks=N errors=M>0".
+# sid: E strap = the other E quadrant's sid; g3: hub pq without the g3 face-group edge; g4: pi / rce without the g4 relays) must print "VMS_GLUE_LT_EQUIV <Q> FAIL checks=N errors=M>0".
 # Exit status 0 only on a counted PASS.
-#   run_vms_glue_tile_equiv.sh Q pos|rmut|land|sid|g3 OUT
+#   run_vms_glue_tile_equiv.sh Q pos|rmut|land|sid|g3|g4 OUT
 set -uo pipefail
-q=${1:?quadrant}; m=${2:?pos|rmut|land|sid|g3}; OUT=$(realpath -m "${3:?out}"); mkdir -p "$OUT"
+q=${1:?quadrant}; m=${2:?pos|rmut|land|sid|g3|g4}; OUT=$(realpath -m "${3:?out}"); mkdir -p "$OUT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 S=rtl/hbm_accel/generic/vm/static
 src=($S/hfd_hgi_vms_glue_tiles.sv $S/hfd_hgi_vms_glue_tiles_ref.sv $S/hfd_hgi_vms_glue_lt.sv $S/hfd_hgi_vms_static_glue.sv

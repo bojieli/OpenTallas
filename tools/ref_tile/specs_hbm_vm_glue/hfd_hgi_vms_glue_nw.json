@@ -17,6 +17,10 @@
  "reset_ports": [
   "rst_n"
  ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
  "pins": {
   "E": [
    "ccw_in_l5",
@@ -680,7 +684,7 @@
  "inter": [],
  "pin_regs": {
   "enable": false,
-  "reason": "RTL registers every pin: bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_seq / bank_client / response_seq / enables on plain flops and drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an edge the contract (gen_vms_glue_tiles.py) does not have."
+  "reason": "RTL registers every pin (g4: each port is a pin flop + reach relays, gen_vms_glue_tiles.py DB / DD / DC): bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_seq / bank_client / response_seq / enables on plain flops and drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an edge the contract (gen_vms_glue_tiles.py) does not have."
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -693,7 +697,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for NW (hb_vms_NW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref).",
+ "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 + HBM-SAFE-VMGLUE g4 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for NW (hb_vms_NW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref). g4 (SAFE-DESIGN checklist): reach stages (no single-cycle wire > ~405 um): bank-side ports pin flop + 2 relays (xq_done + 3, COMMIT_DELAY 13), hub client ports pin flop + 2 relays, hub <-> ring-stop relays (pi / ri / cco / rce / faults +1), stop inputs +2 with per-half relay copies, 3-level rce tree; registered one-hot schedule selects (bank / tx / replay); 11 reset regions; reset_landing on.",
  "pin_density_per_um": {
   "E": 5.76,
   "W": 3.62,
@@ -701,10 +705,10 @@
   "S": 4.38
  },
  "job": {
-  "owner": "Claude HOURLY-HBM/HH-3 1019",
-  "branch": "claude/vm-glue-g3-1018",
-  "tag": "g3",
-  "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for NW (hb_vms_NW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref).",
+  "owner": "Claude HBM-SAFE-VMGLUE 1019",
+  "branch": "claude/vm-glue-g4-1019",
+  "tag": "g4",
+  "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 + HBM-SAFE-VMGLUE g4 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for NW (hb_vms_NW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_nw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref). g4 (SAFE-DESIGN checklist): reach stages (no single-cycle wire > ~405 um): bank-side ports pin flop + 2 relays (xq_done + 3, COMMIT_DELAY 13), hub client ports pin flop + 2 relays, hub <-> ring-stop relays (pi / ri / cco / rce / faults +1), stop inputs +2 with per-half relay copies, 3-level rce tree; registered one-hot schedule selects (bank / tx / replay); 11 reset regions; reset_landing on.",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/lib",
@@ -723,7 +727,7 @@
     ],
     "pass_regex": "^VMS_GLUE_LT_EQUIV NW PASS checks=[1-9][0-9]* errors=0$",
     "min_count_regex": "VMS_GLUE_LT_EQUIV NW PASS checks=(\\d+)",
-    "pass_witness": "results/rtl/vm_glue_1018/bench_g3/NWpos.sim.log"
+    "pass_witness": "results/rtl/vm_glue_1018/bench_g4/NWpos.sim.log"
    },
    {
     "name": "mut_rmut_nw",
@@ -735,7 +739,7 @@
      "verilator"
     ],
     "fail_regex": "^VMS_GLUE_LT_EQUIV NW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench_g3/NWrmut.sim.log"
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g4/NWrmut.sim.log"
    },
    {
     "name": "mut_land_nw",
@@ -747,7 +751,7 @@
      "verilator"
     ],
     "fail_regex": "^VMS_GLUE_LT_EQUIV NW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench_g3/NWland.sim.log"
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g4/NWland.sim.log"
    },
    {
     "name": "mut_g3_nw",
@@ -759,7 +763,19 @@
      "verilator"
     ],
     "fail_regex": "^VMS_GLUE_LT_EQUIV NW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench_g3/NWg3.sim.log"
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g4/NWg3.sim.log"
+   },
+   {
+    "name": "mut_g4_nw",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh NW g4 {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_GLUE_LT_EQUIV NW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g4/NWg4.sim.log"
    }
   ],
   "views_to": "physical/ref_tile/hfd_hgi_vms_glue_nw/views"

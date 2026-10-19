@@ -21,6 +21,9 @@ from bank k's face.  g2:
   g3          (HH-3 10-19) ring_tx_enable / ring_tx_source move to the middle of the ring face beside the headers: they
               feed the per-lane-band control copies of both ring stops.
   boundary    every port lands on / leaves from a flop (bank-side ports through the tile's own landing / relay stage).
+  g4          (HBM-SAFE-VMGLUE 10-19, SAFE-DESIGN checklist) same outline / pin plan; RTL reach stages (gen_vms_glue_tiles.py
+              DB / DD / DC) so no single-cycle wire > ~405 um, registered one-hot schedule selects, 11 reset regions
+              (+ lower / upper lane-band halves of each ring stop); reset_landing on (tools from main).
     vms_glue_kit_specs.py [--check]
 """
 import json, re, sys
@@ -39,14 +42,14 @@ BANKP = ('xq', 'xq2', 'eg', 'pq', 'pr', 'status', 'xq_done', 'xq2_done', 'flt')
 RING = ('cw_in', 'cw_out', 'ccw_out', 'ccw_in')
 M = dict(
     sw=dict(top='hfd_hgi_vms_glue_sw_t', ring='E', far='W', plan='A', q='SW', inst='hb_vms_SW',
-            bench=[('SW', 'pos'), ('SW', 'rmut'), ('SW', 'land'), ('SW', 'g3')]),
+            bench=[('SW', 'pos'), ('SW', 'rmut'), ('SW', 'land'), ('SW', 'g3'), ('SW', 'g4')]),
     e=dict(top='hfd_hgi_vms_glue_e_t', ring='W', far='E', plan='A', q='SE (R0, sid 1) / NE (MX, sid 3)', inst='hb_vms_SE, hb_vms_NE',
-           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'rmut'), ('SE', 'land'), ('SE', 'sid'), ('NE', 'sid'), ('SE', 'g3')]),
+           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'rmut'), ('SE', 'land'), ('SE', 'sid'), ('NE', 'sid'), ('SE', 'g3'), ('SE', 'g4')]),
     nw=dict(top='hfd_hgi_vms_glue_nw_t', ring='E', far='W', plan='B', q='NW', inst='hb_vms_NW',
-            bench=[('NW', 'pos'), ('NW', 'rmut'), ('NW', 'land'), ('NW', 'g3')]))
+            bench=[('NW', 'pos'), ('NW', 'rmut'), ('NW', 'land'), ('NW', 'g3'), ('NW', 'g4')]))
 FACE = dict(E='right', W='left', N='top', S='bottom')
 TAG = 'VMS_GLUE_LT_EQUIV'
-WIT = 'results/rtl/vm_glue_1018/bench_g3/'
+WIT = 'results/rtl/vm_glue_1018/bench_g4/'
 
 
 def ports(top):
@@ -115,7 +118,7 @@ def spec(k, c):
         else:
             b.update(fail_regex=f'^{TAG} {q} FAIL checks=[0-9]+ errors=[1-9][0-9]*$', fail_witness=WIT + f'{q}{m}.sim.log')
         benches.append(b)
-    purpose = (f"OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 10-19 (HBM d4g plan (b), glue "
+    purpose = (f"OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 + HBM-SAFE-VMGLUE g4 10-19 (HBM d4g plan (b), glue "
                f"goes into a hardened tile): VM hub glue tile for {c['q']} ({c['inst']}) = hfd_vms_glue_core_lt "
                f"(ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level "
                f"instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header "
@@ -124,15 +127,20 @@ def spec(k, c):
                f"clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port "
                f"(COMMIT_DELAY 8){', sid strap pin (one master for SE and NE)' if k == 'e' else ''}. Contract vs the "
                f"historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response "
-               f"enables +1; reset release +3 (lockstep bench vs <tile>_ref).")
+               f"enables +1; reset release +3 (lockstep bench vs <tile>_ref). g4 (SAFE-DESIGN checklist): reach stages "
+               f"(no single-cycle wire > ~405 um): bank-side ports pin flop + 2 relays (xq_done + 3, COMMIT_DELAY 13), hub "
+               f"client ports pin flop + 2 relays, hub <-> ring-stop relays (pi / ri / cco / rce / faults +1), stop inputs +2 "
+               f"with per-half relay copies, 3-level rce tree; registered one-hot schedule selects (bank / tx / replay); 11 "
+               f"reset regions; reset_landing on.")
     return {
         'name': f'hfd_hgi_vms_glue_{k}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
-        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
+        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': True, 'stages': 2}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
         'clock': 'spine', 'orfs_vars': {'OT_SPINE_LEAF_N': '16'},
         'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 16, 'peak_ram_gb': 64, 'hold_margin_ns': 0.03,
                   'io_hold_margin_ns': 0.03, 'pin_balance': {'group_max': 1}},
         'outline': {'w': W, 'h': H}, 'pin_ranges': ranges, 'params': {}, 'children': [], 'inter': [],
-        'pin_regs': {'enable': False, 'reason': 'RTL registers every pin: bank-side inputs land on the tile landing flops '
+        'pin_regs': {'enable': False, 'reason': 'RTL registers every pin (g4: each port is a pin flop + reach relays, '
+                     'gen_vms_glue_tiles.py DB / DD / DC): bank-side inputs land on the tile landing flops '
                      '(eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / '
                      'xq2 / pq); the hub captures cq / client_seq / bank_client / response_seq / enables on plain flops and '
                      'drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault '
@@ -142,7 +150,7 @@ def spec(k, c):
         'pin_reg_split': True, 'hold_pad': {'cell': 'HB2xp67_ASAP7_75t_R'},
         'purpose': purpose,
         'pin_density_per_um': dens,
-        'job': {'owner': 'Claude HOURLY-HBM/HH-3 1019', 'branch': 'claude/vm-glue-g3-1018', 'tag': 'g3', 'purpose': purpose,
+        'job': {'owner': 'Claude HBM-SAFE-VMGLUE 1019', 'branch': 'claude/vm-glue-g4-1019', 'tag': 'g4', 'purpose': purpose,
                 'extra_paths': ['rtl/hbm_accel/generic/vm', 'rtl/lib', 'tools/hbm_die_v16'],
                 'record_to': f'results/rtl/ref_tile/hfd_hgi_vms_glue_{k}', 'benches': benches,
                 'views_to': f'physical/ref_tile/hfd_hgi_vms_glue_{k}/views'},

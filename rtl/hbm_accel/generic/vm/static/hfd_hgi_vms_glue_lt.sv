@@ -17,6 +17,21 @@
 //                    final OR / bookkeeping next edge: pr -> cr +1; response_enable / response_seq +1 (slot reuse
 //                    after a response +1).  == historical hub with D1 on pr / response_enable / response_seq, D1 on pq.
 //   hfd_vms_glue_core_lt  7 reset regions (hub, CW, CCW, replay + status, hub face groups E / N / S).
+// g4 (HBM-SAFE-VMGLUE 10-19, owner SAFE-DESIGN checklist): the g3 --cts gates sat > 6 h in GRT repair; their real TT
+// setup was -0.94..-1.11 ns, all LONG WIRE (hub / replay anchored at corner control pins, 1.1-2.6 mm single-cycle paths;
+// placed reach census: 21-33k reg->reg paths > 405 um).  g4 = reach stages, registered one-hot schedule selects, no
+// runtime arbitration (a schedule collision stays a status fault):
+//   ot_vms_rstop_lt  second landing (stop inputs +2 vs historical): header band copy + per-ring-face-half relay copies of
+//                    the one-hot tx select / header decode / injection + replay payloads; per-band valid relays to the
+//                    header band; every band select a kept copy per 35-b slice; cco built in band 0; rce 3-level tree
+//                    (pairs -> halves -> header band, +1 vs g3); commit delay line = ring buffer.
+//   ot_vms_rcl_lt    one-hot registered replay select (sa / sb) per 36-b slice.
+//   ot_vms_hub_lt    bank request = AND-OR of client requests under a registered one-hot select decoded a stage ahead
+//                    from bank_enable / bank_client (qualified: valid, local, bank match), kept per 36-b slice; slot
+//                    clears as kept per-(client, slot, 32-b) registers.
+//   hfd_vms_glue_core_lt  hub island <-> ring-stop relays (pi, ri, cco, rce, faults -> status: +1 each), 11 reset
+//                    regions; the tile ports carry pin flop + relays (gen_vms_glue_tiles.py DB / DD / DC).
+//   Contract: hfd_vms_glue_core_g4_ref (historical children + plain delays), lockstep bench vms_glue_tile_equiv.py.
 // g2 notes (still true): only valid / control state is reset; payload registers are plain flops; the hub response
 // demultiplex is a parallel tag decode + AND-OR + popcount (no 10-deep slot-mux chain).
 // Reset-light equivalence: every payload register without a reset is either overwritten on every edge from reset-held
@@ -25,9 +40,11 @@
 module ot_vms_rstop_lt #(
     parameter integer PHYSICAL_RING=1,
     parameter integer COMMIT_DELAY=5,
-    parameter integer MUT=0
+    parameter integer MUT=0,
+    parameter [7:0] UPPER=8'b00111100    // g4: lane bands in the upper half of the ring face (the rest: lower half)
 ) (
     input wire clk, rst_n,
+    input wire [1:0] rst_h,              // g4: reset leaves of the lower / upper lane-band halves
     input wire [1:0] sid,
     input wire dir,
     input wire tx_enable,
@@ -42,38 +59,71 @@ module ot_vms_rstop_lt #(
     input wire [265:0] ri,
     output reg [2:0] wko,
     input wire [2:0] wki,
-    output reg [263:0] cco,
+    output wire [263:0] cco,
     output reg ack_o,
     input wire ack_i,
     output reg mirror_busy,
     output reg fault
 );
-    // ---- stage A: plain landing of every input except xq_done (g3: +1 edge on every stop input) ----
+    // ---- stage A: plain landing of every input except xq_done (lane bits in their band, header / controls / pi / ri /
+    //      wki / ack in the header band at the middle of the ring face) ----
     reg [2223:0] a_l; reg [289:0] a_pi; reg [2207:0] a_eg; reg [265:0] a_ri;
     reg [2:0] a_wki, a_src; reg a_en, a_dr, a_ack; reg [1:0] a_me;
     always @(posedge clk) begin
         a_l<=l_in; a_pi<=pi; a_eg<=eg; a_ri<=ri; a_wki<=wki; a_src<=tx_source; a_en<=tx_enable;
         a_dr<=dir; a_ack<=ack_i; a_me<=sid;
     end
-    // ---- stage B, header / control band: the historical stop registers (same reset set) ----
-    reg [14:0] h_d; reg h_v;                 // l_in[2222:2208] / [2223]
+    // ---- g4 stage M (plain): the second landing.  Header band: a plain copy of the header-band inputs.  Header band ->
+    //      lane bands: one relay copy per ring-face half (<= ~390 um from the middle and <= ~390 um from its farthest
+    //      band) carrying the REGISTERED ONE-HOT tx select (decoded from the static schedule's tx_enable / tx_source),
+    //      the header decode (own / kind) and the hub-injection / replay payloads.  Lane bands -> header band: one relay
+    //      per band for the lane / egress valid bits. ----
+    reg [14:0] m_h; reg m_hv; reg [289:0] m_pi; reg [265:0] m_ri; reg [2:0] m_wki, m_src; reg m_en, m_dr, m_ack; reg [1:0] m_me;
+    always @(posedge clk) begin
+        m_h<=a_l[2222:2208]; m_hv<=a_l[2223]; m_pi<=a_pi; m_ri<=a_ri; m_wki<=a_wki; m_src<=a_src; m_en<=a_en;
+        m_dr<=a_dr; m_ack<=a_ack; m_me<=a_me;
+    end
+    wire own_a=a_l[2223] && a_l[2217+int'(a_me)];
+    wire [4:0] oh_a;                          // one-hot tx select: source k with tx_enable (5..7 / disabled: none)
+    for(genvar k=0;k<5;k=k+1) begin : g_oha
+        assign oh_a[k]=a_en && a_src==3'(k);
+    end
+    wire [4:0] hm_oh [0:1]; wire hm_own [0:1]; wire [1:0] hm_kind [0:1]; wire [277:0] hm_pi [0:1];
+    wire [255:0] hm_ri [0:1]; wire [6:0] hm_h7 [0:1];
+    for(genvar h=0;h<2;h=h+1) begin : half
+        (* keep = "true", dont_touch = "true" *) reg [4:0] oh_m;
+        (* keep = "true", dont_touch = "true" *) reg own_m;
+        (* keep = "true", dont_touch = "true" *) reg [1:0] kind_m;
+        (* keep = "true", dont_touch = "true" *) reg [277:0] pi_m;
+        always @(posedge clk) begin oh_m<=oh_a; own_m<=own_a; kind_m<=a_l[2222:2221]; pi_m<=a_pi[277:0]; end
+        assign hm_oh[h]=oh_m; assign hm_own[h]=own_m; assign hm_kind[h]=kind_m; assign hm_pi[h]=pi_m;
+        if(h==int'(UPPER[0])) begin : g_b0  // band 0 also takes the replay payload and the cco header bits
+            (* keep = "true", dont_touch = "true" *) reg [255:0] ri_m;
+            (* keep = "true", dont_touch = "true" *) reg [6:0] h7_m;
+            always @(posedge clk) begin ri_m<=a_ri[255:0]; h7_m<=a_l[2214:2208]; end
+            assign hm_ri[h]=ri_m; assign hm_h7[h]=h7_m;
+        end else begin : g_nb0
+            assign hm_ri[h]='0; assign hm_h7[h]='0;
+        end
+    end
+    // ---- stage B, header band: the historical stop registers (same reset set) ----
+    reg [14:0] h_d; reg h_v;
     reg [288:0] pi_d; reg pi_v;
     reg [264:0] ri_d; reg ri_v;
     reg [7:0] ev;
     reg [2:0] wki_q, source_q;
     reg enable_q, dr, ack_q;
     reg [1:0] me;
-    reg [7:0] lanes;                         // lane valid bits (plain, as the historical in_d)
+    reg [7:0] lanes;
+    wire [7:0] lv_m, ev_m;                    // band -> header band valid relays
     always @(posedge clk) begin
-        h_d<=a_l[2222:2208]; pi_d<=a_pi[288:0]; ri_d<=a_ri[264:0];
-        for(integer b=0;b<8;b=b+1) lanes[b]<=a_l[b*276+275];
+        h_d<=m_h; pi_d<=m_pi[288:0]; ri_d<=m_ri[264:0]; lanes<=lv_m;
     end
     always @(posedge clk or negedge rst_n)
         if(!rst_n) begin h_v<=0;pi_v<=0;ri_v<=0;ev<=0;wki_q<=0;source_q<=0;enable_q<=0;dr<=0;ack_q<=0;me<=0; end
         else begin
-            h_v<=a_l[2223];pi_v<=a_pi[289];ri_v<=a_ri[265];wki_q<=a_wki;source_q<=a_src;enable_q<=a_en;
-            dr<=a_dr;ack_q<=a_ack;me<=a_me;
-            for(integer b=0;b<8;b=b+1) ev[b]<=a_eg[b*276+275];
+            h_v<=m_hv;pi_v<=m_pi[289];ri_v<=m_ri[265];wki_q<=m_wki;source_q<=m_src;enable_q<=m_en;
+            dr<=m_dr;ack_q<=m_ack;me<=m_me;ev<=ev_m;
         end
     wire [1:0] kind=h_d[14:13];
     wire own=h_v && h_d[9+int'(me)];
@@ -98,81 +148,113 @@ module ot_vms_rstop_lt #(
         endcase
     end
     wire mut_hit=(MUT==1) && fh[15] && fh[14:13]==2'd1;
-    // ---- stage B, lane bands: per band k its own copy of the tx control and of the header decode (own / kind),
-    //      the lane data, the egress lane and the hub-injection lane; every flit / eject bit is band-local ----
-    wire [7:0] lv;                            // band valid bits (for the rce tree)
+    // ---- lane bands: second plain landing in the band, then stage B with the band's copies of the one-hot tx select and
+    //      the header decode (from its half relay); every flit / eject bit is band-local ----
+    wire [7:0] lv;
     wire [7:0] own_kind0;
     wire [275:0] lane_q [0:7];
     for(genvar b=0;b<8;b=b+1) begin : band
-        (* keep = "true", dont_touch = "true" *) reg en_b;
-        (* keep = "true", dont_touch = "true" *) reg [2:0] src_b;
-        (* keep = "true", dont_touch = "true" *) reg own_b;
-        (* keep = "true", dont_touch = "true" *) reg [1:0] kind_b;
-        (* keep = "true", dont_touch = "true" *) reg [277:0] pi_b;   // pi[277:0] (bank select + lane payload)
+        localparam integer H=UPPER[b] ? 1 : 0;
+        reg [275:0] ln_m; reg [275:0] eg_m;
+        (* keep = "true", dont_touch = "true" *) reg lv_r;
+        (* keep = "true", dont_touch = "true" *) reg ev_r;
+        always @(posedge clk) begin ln_m<=a_l[b*276+:276]; eg_m<=a_eg[b*276+:276]; lv_r<=a_l[b*276+275]; ev_r<=a_eg[b*276+275]; end
+        assign lv_m[b]=lv_r; assign ev_m[b]=ev_r;
         reg [275:0] ln;
         reg [274:0] eg_d; reg eg_v;
-        always @(posedge clk) begin
-            ln<=a_l[b*276+:276]; eg_d<=a_eg[b*276+:275]; kind_b<=a_l[2222:2221]; pi_b<=a_pi[277:0];
+        (* keep = "true", dont_touch = "true" *) reg [277:0] pi_b;
+        always @(posedge clk) begin ln<=ln_m; eg_d<=eg_m[274:0]; pi_b<=hm_pi[H]; end
+        always @(posedge clk or negedge rst_h[H]) if(!rst_h[H]) eg_v<=0; else eg_v<=eg_m[275];
+        // REGISTERED ONE-HOT selects per 35-b slice of the lane (kept copies, <= ~36 loads each): flit source 0 transit /
+        // 1 hub injection for THIS band (bank match folded in) / 2 mirror egress / 3 replay return (band 0); eject (own &
+        // kind 1), rce (own & kind 0), cco (own & kind 2, band 0); the lane valid bit for the rce pair OR
+        wire [275:0] m0, m1, m2, m3, mx, mk0, mcc, mlv;
+        for(genvar j=0;j<8;j=j+1) begin : sl
+            localparam integer LO=j*35, WD=(j==7)?31:35;
+            (* keep = "true", dont_touch = "true" *) reg [3:0] sel_q;
+            (* keep = "true", dont_touch = "true" *) reg xo_q, k0_q, cc_q;
+            (* keep = "true", dont_touch = "true" *) reg lv_q;
+            always @(posedge clk or negedge rst_h[H])
+                if(!rst_h[H]) begin sel_q<=0; xo_q<=0; k0_q<=0; cc_q<=0; end
+                else begin
+                    sel_q<={hm_oh[H][3] && b==0, hm_oh[H][2], hm_oh[H][1] && hm_pi[H][277:275]==3'(b), hm_oh[H][0]};
+                    xo_q<=hm_own[H] && hm_kind[H]==2'd1; k0_q<=hm_own[H] && hm_kind[H]==2'd0; cc_q<=hm_own[H] && hm_kind[H]==2'd2;
+                end
+            always @(posedge clk) lv_q<=ln_m[275];
+            assign m0[LO+:WD]={WD{sel_q[0]}}; assign m1[LO+:WD]={WD{sel_q[1]}}; assign m2[LO+:WD]={WD{sel_q[2]}};
+            assign m3[LO+:WD]={WD{sel_q[3]}}; assign mx[LO+:WD]={WD{xo_q}}; assign mk0[LO+:WD]={WD{k0_q}};
+            assign mcc[LO+:WD]={WD{cc_q}}; assign mlv[LO+:WD]={WD{lv_q}};
         end
-        always @(posedge clk or negedge rst_n)
-            if(!rst_n) begin en_b<=0; src_b<=0; own_b<=0; eg_v<=0; end
-            else begin
-                en_b<=a_en; src_b<=a_src; eg_v<=a_eg[b*276+275];
-                own_b<=a_l[2223] && a_l[2217+int'(a_me)];
-            end
+        wire [275:0] s1={1'b1,pi_b[274:264],pi_b[255:0],pi_b[263:256]};
+        wire [275:0] s2={eg_v,eg_d};
+        wire [275:0] s3;
+        if(b==0) begin : g_ri
+            reg [255:0] ri_b; reg [6:0] h7_b; reg [263:0] cco_b;
+            always @(posedge clk) begin ri_b<=hm_ri[H]; h7_b<=hm_h7[H]; end
+            assign s3={12'd0,ri_b,8'd0};
+            // cco built in band 0 (lane 0 payload + header bits relayed with the header decode)
+            always @(posedge clk) cco_b<=mcc[263:0] & {1'b1,h7_b,ln[263:8]};
+            assign cco=cco_b;
+        end else begin : g_nri
+            assign s3='0;
+        end
         reg [275:0] fl;
         always @* begin
-            fl='0;
-            if(en_b) case(src_b)
-                0: fl=ln;
-                1: if(pi_b[277:275]==3'(b)) fl={1'b1,pi_b[274:264],pi_b[255:0],pi_b[263:256]};
-                2: fl={eg_v,eg_d};
-                3: if(b==0) fl[263:8]=ri_d[255:0];
-                default: fl='0;
-            endcase
+            fl=(m0&ln)|(m1&s1)|(m2&s2)|(m3&s3);
             if(b==0 && mut_hit) fl[8]=~fl[8];
         end
         reg [275:0] lo, xo;
         always @(posedge clk) begin
             lo<=fl;
-            xo<=(own_b && kind_b==2'd1) ? ln : 276'd0;
+            xo<=mx & ln;
         end
         assign l_out[b*276+:276]=lo;
         assign xq[b*276+:276]=xo;
         assign lv[b]=ln[275];
-        assign own_kind0[b]=own_b && kind_b==2'd0;
-        assign lane_q[b]=ln;
+        assign own_kind0[b]=mk0[0];
+        assign lane_q[b]=ln & mk0 & mlv;     // rce pair term: the lane while own & kind 0 and the lane is valid
     end
-    // ---- rce: registered 2-level lane-OR tree (band pairs, then centre): +1 edge vs the historical eject ----
-    reg [274:0] pl [0:3]; reg [1:0] pv [0:3]; reg [9:0] ph;
+    // ---- rce: registered 3-level lane-OR tree (band pairs -> ring-face halves -> header band): +1 edge vs g3 ----
+    reg [274:0] pl [0:3]; reg [1:0] pv [0:3]; reg [9:0] ph, ph2;
     always @(posedge clk) begin
         for(integer p=0;p<4;p=p+1) begin
-            pl[p]<=own_kind0[2*p] ? ((lv[2*p] ? lane_q[2*p][274:0] : 275'd0) | (lv[2*p+1] ? lane_q[2*p+1][274:0] : 275'd0)) : 275'd0;
+            pl[p]<=lane_q[2*p][274:0] | lane_q[2*p+1][274:0];   // both bands of a pair sit in one half: same decode
             pv[p]<=own_kind0[2*p] ? {lv[2*p+1],lv[2*p]} : 2'd0;
         end
         ph<=(own && kind==2'd0) ? {1'b1,h_d[8:0]} : 10'd0;
+        ph2<=ph;
     end
-    reg [274:0] lor; reg [2:0] bnk;
+    // half h: OR of its pairs + the highest pair with a valid lane (the historical bank pick: the last valid pair wins)
+    reg [274:0] hl_n [0:1]; reg [3:0] hb_n [0:1];   // hb = {any, pair[1:0], lane-in-pair}
     always @* begin
-        lor=(pl[0]|pl[1])|(pl[2]|pl[3]); bnk=0;
-        for(integer p=0;p<4;p=p+1) if(pv[p]!=0) bnk={2'(p),pv[p][1]};
+        for(integer h=0;h<2;h=h+1) begin
+            hl_n[h]='0; hb_n[h]='0;
+            for(integer p=0;p<4;p=p+1) if(int'(UPPER[2*p])==h) begin
+                hl_n[h]=hl_n[h]|pl[p];
+                if(pv[p]!=0) hb_n[h]={1'b1,2'(p),pv[p][1]};
+            end
+        end
     end
+    reg [274:0] hl [0:1]; reg [3:0] hb [0:1];
+    always @(posedge clk) begin hl[0]<=hl_n[0]; hl[1]<=hl_n[1]; hb[0]<=hb_n[0]; hb[1]<=hb_n[1]; end
+    wire pick1=hb[1][3] && (!hb[0][3] || hb[1][2:1]>hb[0][2:1]);
+    wire [2:0] bnk=pick1 ? hb[1][2:0] : (hb[0][3] ? hb[0][2:0] : 3'd0);
+    wire [274:0] lor=hl[0]|hl[1];
+    always @(posedge clk) rce<=ph2[9] ? {ph2,bnk,lor[274:264],lor[7:0],lor[263:8]} : 288'd0;
     reg [15:0] lo_h;
     assign l_out[2223:2208]=lo_h;
-    always @(posedge clk) begin
-        lo_h<=fh;
-        rce<=ph[9] ? {ph,bnk,lor[274:264],lor[7:0],lor[263:8]} : 288'd0;
-        cco<=(own && kind==2'd2) ? {1'b1,h_d[6:0],lane_q[0][263:8]} : 264'd0;
-    end
+    always @(posedge clk) lo_h<=fh;
     // ---- control: commit / WACK / mirror accounting / faults (the historical logic on the header band) ----
     reg [COMMIT_DELAY-1:0] commit_v;
-    reg [7:0] commit_mask [0:COMMIT_DELAY-1];
-    reg [1:0] commit_src [0:COMMIT_DELAY-1];
     reg [15:0] outstanding;
-    always @(posedge clk) begin
-        commit_mask[0]<=lanes; commit_src[0]<=h_d[8:7];
-        for(integer t=1;t<COMMIT_DELAY;t=t+1) begin commit_mask[t]<=commit_mask[t-1]; commit_src[t]<=commit_src[t-1]; end
-    end
+    // g4: the commit mask / source delay line is a COMMIT_DELAY-slot ring buffer: the slot under the pointer was written
+    // COMMIT_DELAY - 1 edges ago (= the historical shift chain's last stage); no flop -> flop hold chain
+    reg [9:0] cring [0:COMMIT_DELAY-1];
+    reg [$clog2(COMMIT_DELAY)-1:0] cptr;
+    always @(posedge clk or negedge rst_n) if(!rst_n) cptr<='0; else cptr<=(int'(cptr)==COMMIT_DELAY-1) ? '0 : cptr+1'b1;
+    always @(posedge clk) cring[cptr]<={lanes,h_d[8:7]};
+    wire [9:0] cr_rd=cring[cptr];
+    wire [7:0] commit_mask_o=cr_rd[9:2]; wire [1:0] commit_src_o=cr_rd[1:0];
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             ack_o<=0;wko<='0;commit_v<='0;outstanding<=0;mirror_busy<=0;fault<=0;
@@ -190,8 +272,8 @@ module ot_vms_rstop_lt #(
             for(integer t=1;t<COMMIT_DELAY;t=t+1) commit_v[t]<=commit_v[t-1];
             wko<=0;
             if(commit_v[COMMIT_DELAY-1]) begin
-                if((xq_done & commit_mask[COMMIT_DELAY-1]) != commit_mask[COMMIT_DELAY-1]) fault<=1;
-                else wko<={1'b1,commit_src[COMMIT_DELAY-1]};
+                if((xq_done & commit_mask_o) != commit_mask_o) fault<=1;
+                else wko<={1'b1,commit_src_o};
             end
             outstanding<=outstanding + ((fh[15] && source_q==2)?(dr?16'd1:16'd2):16'd0) - (ack_q?16'd1:16'd0);
             mirror_busy<=outstanding!=0;
@@ -221,10 +303,11 @@ module ot_vms_rcl_lt #(parameter integer MUT=0) (
     assign hq={hq_v,hq_d}; assign ri0={ri0_v,ri0_d}; assign ri1={ri1_v,ri1_d};
     // g3: the replay select is replicated per 36-b slice of the 288-b rce mux (one copy beside each slice)
     wire [287:0] e;
+    // g4: registered one-hot replay select (static schedule replay_source), replicated per 36-b slice: AND-OR, no mux
     for(genvar i=0;i<8;i=i+1) begin : sel
-        (* keep = "true", dont_touch = "true" *) reg s_q;
-        always @(posedge clk or negedge rst_n) if(!rst_n) s_q<=0; else s_q<=rx_source;
-        assign e[i*36+:36]=s_q?b[i*36+:36]:a[i*36+:36];
+        (* keep = "true", dont_touch = "true" *) reg sa_q, sb_q;
+        always @(posedge clk or negedge rst_n) if(!rst_n) begin sa_q<=1; sb_q<=0; end else begin sa_q<=!rx_source; sb_q<=rx_source; end
+        assign e[i*36+:36]=({36{sa_q}}&a[i*36+:36])|({36{sb_q}}&b[i*36+:36]);
     end
     wire [14:0] sec={e[274]?2'b00:me,e[273:264],e[277:275]};
     wire [31:0] addr={11'b0,e[274],sec,5'b0};
@@ -436,21 +519,33 @@ module ot_vms_hub_lt #(
         localparam integer GL=(g==0)?0:(g==1)?4:6, GH=(g==0)?3:(g==1)?5:7;
         (* keep = "true", dont_touch = "true" *) reg [N*338-1:0] qr_g;
         (* keep = "true", dont_touch = "true" *) reg [N*2-1:0] sq_g;
-        (* keep = "true", dont_touch = "true" *) reg [N-1:0] qv_g;
-        (* keep = "true", dont_touch = "true" *) reg [7:0] be_g;
-        (* keep = "true", dont_touch = "true" *) reg [8*CW-1:0] bc_g;
-        (* keep = "true", dont_touch = "true" *) reg [1:0] me_g;
-        always @(posedge clk) begin qr_g<=qr; sq_g<=sq; qv_g<=qvalid; be_g<=be; bc_g<=bc; me_g<=me; end
+        always @(posedge clk) begin qr_g<=qr; sq_g<=sq; end
         for(genvar b=GL;b<=GH;b=b+1) begin : bank
-            reg [284:0] nx;
-            always @* begin : build
-                integer c; reg [337:0] q;
-                nx='0; c=int'(bc_g[b*CW+:CW]); q='0;
-                if(be_g[b] && c<N) begin
-                    q=qr_g[c*338+:338];
-                    if(qv_g[c] && ((c==NC)||q[324]||(q[323:322]==me_g)) && q[311:309]==3'(b))
-                        nx={1'b1,q[336],q[324],q[321:312],q[303:48],wordmask(q),4'(c),2'b00,sq_g[c*2+:2]};
+            // g4: REGISTERED ONE-HOT bank select, decoded one edge ahead from the static schedule (bank_enable /
+            // bank_client) and qualified with the request it selects (valid, local, bank match); the bank request is an
+            // AND-OR of the client requests (no runtime arbitration: two clients on one bank is a schedule fault in route)
+            // kept copy per 36-b slice of the 284-b request (<= ~36 loads per select flop)
+            wire [N-1:0] sel_n;
+            for(genvar c=0;c<N;c=c+1) begin : g_seln
+                assign sel_n[c]=be[b] && int'(bc[b*CW+:CW])==c && qvalid[c] &&
+                                ((c==NC)||qr[c*338+324]||(qr[c*338+322+:2]==me)) && qr[c*338+309+:3]==3'(b);
+            end
+            wire [284:0] nx;
+            for(genvar j=0;j<8;j=j+1) begin : sl
+                localparam integer LO=j*36, WD=(j==7)?33:36;    // 7 x 36 + 33 = 285
+                (* keep = "true", dont_touch = "true" *) reg [N-1:0] sel;
+                always @(posedge clk) sel<=sel_n;
+                reg [WD-1:0] nxs;
+                always @* begin
+                    nxs='0;
+                    for(integer c=0;c<N;c=c+1) if(sel[c]) begin : orc
+                        reg [284:0] f;
+                        f={1'b1,qr_g[c*338+336],qr_g[c*338+324],qr_g[c*338+312+:10],qr_g[c*338+48+:256],
+                           wordmask(qr_g[c*338+:338]),4'(c),2'b00,sq_g[c*2+:2]};
+                        nxs=nxs|f[LO+:WD];
+                    end
                 end
+                assign nx[LO+:WD]=nxs;
             end
             reg [283:0] pp; reg pv;
             wire [284:0] nq=(MUT==4) ? pq_next[b*285+:285] : nx;
@@ -542,13 +637,20 @@ module ot_vms_hub_lt #(
             end
         end
     end
+    // g4: the slot clear (qvalid & seq == k) as kept per-(client, slot, 32-b slice) registers beside the slot data (the
+    // historical qvalid flop fanned out to N x 4 x 256 slot bits)
+    (* keep = "true", dont_touch = "true" *) reg [N*4*8-1:0] clr;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) clr<='0;
+        else for(integer c=0;c<N;c=c+1) for(integer k=0;k<4;k=k+1) for(integer j=0;j<8;j=j+1)
+            clr[(c*4+k)*8+j]<=cq[c*338+337] && client_seq[c*2+:2]==2'(k);
     always @(posedge clk) for(integer c=0;c<N;c=c+1) begin
-        for(integer k=0;k<4;k=k+1) if(arr_f[(c*4+k)*3+:3]!=0)
-            response_data[c][k]<=response_data[c][k]|ret_f[(c*4+k)*256+:256];
-        if(qvalid[c]) begin
-            tags[c][sq[c*2+:2]]<=qr[c*338+:16];
-            response_data[c][sq[c*2+:2]]<=0;
+        for(integer k=0;k<4;k=k+1) for(integer j=0;j<8;j=j+1) begin
+            if(arr_f[(c*4+k)*3+:3]!=0)
+                response_data[c][k][j*32+:32]<=response_data[c][k][j*32+:32]|ret_f[(c*4+k)*256+j*32+:32];
+            if(clr[(c*4+k)*8+j]) response_data[c][k][j*32+:32]<=32'd0;
         end
+        if(qvalid[c]) tags[c][sq[c*2+:2]]<=qr[c*338+:16];
     end
 endmodule
 
@@ -559,10 +661,11 @@ module hfd_vms_glue_core_lt #(
     parameter integer NC=0,
     parameter integer CW=((NC+1)>1)?$clog2(NC+1):1,
     parameter integer COMMIT_DELAY=6,
-    parameter integer RMUT=0
+    parameter integer RMUT=0,
+    parameter [7:0] UPPER=8'b00111100     // g4: lane bands in the upper half of the ring face
 )(
     input wire clk,
-    input wire [6:0] rst_n,
+    input wire [10:0] rst_n,              // g4: + [8:7] CW stop lower / upper bands, [10:9] CCW stop lower / upper bands
     input wire [1:0] sid,
     input wire [((NC>0)?NC:1)*338-1:0] cq,
     output wire [((NC>0)?NC:1)*274-1:0] cr,
@@ -604,29 +707,40 @@ module hfd_vms_glue_core_lt #(
     wire [265:0] ri0,ri1;
     wire [2:0] wk01,wk10;
     wire ack01,ack10;
+    // g4 reach relays between the hub island and the ring-stop header bands (~400-700 um apart): one plain edge each way
+    // (hub -> stop injection pi, replay -> stop return ri, stop -> hub cco, stop -> replay rce) and on the ring faults
+    // into the status block; RMUT 5 (bench only) drops the pi and rce relays (contract break)
+    reg [289:0] pi0_r,pi1_r; reg [265:0] ri0_r,ri1_r; reg [263:0] cco0_r,cco1_r; reg [287:0] rce0_r,rce1_r; reg [2:0] rf_r;
+    wire [2:0] rfault;
+    always @(posedge clk) begin
+        pi0_r<=pi0; pi1_r<=pi1; ri0_r<=ri0; ri1_r<=ri1; cco0_r<=cco0; cco1_r<=cco1; rce0_r<=rce0; rce1_r<=rce1; rf_r<=rfault;
+    end
+    wire [289:0] pi0_s=(RMUT==5) ? pi0 : pi0_r, pi1_s=(RMUT==5) ? pi1 : pi1_r;
+    wire [287:0] rce0_s=(RMUT==5) ? rce0 : rce0_r, rce1_s=(RMUT==5) ? rce1 : rce1_r;
+    assign ring_fault=rfault;
     ot_vms_hub_lt #(.NC(NC),.CW(CW),.MUT(RMUT)) u_hub(
         .clk(clk),.rst_n(rst_n[0]),.rst_f(rst_n[6:4]),.sid(sid),.cq(hcq),.cr(hcr),
         .client_seq(client_seq),.response_enable(response_enable),.response_seq(response_seq),
         .bank_enable(bank_enable),.bank_client(bank_client),
         .cw_enable(hub_ring_enable[0]),.cw_client(hub_ring_client[0+:CW]),
         .ccw_enable(hub_ring_enable[1]),.ccw_client(hub_ring_client[CW+:CW]),
-        .pq(bk_pq),.pr(bk_pr),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
-    ot_vms_rstop_lt #(.COMMIT_DELAY(COMMIT_DELAY),.MUT(RMUT)) u_cw(
-        .clk(clk),.rst_n(rst_n[1]),.sid(sid),.dir(1'b0),
+        .pq(bk_pq),.pr(bk_pr),.cwi(pi0),.cci(pi1),.cco0(cco0_r),.cco1(cco1_r),.status(hub_status));
+    ot_vms_rstop_lt #(.COMMIT_DELAY(COMMIT_DELAY),.MUT(RMUT),.UPPER(UPPER)) u_cw(
+        .clk(clk),.rst_n(rst_n[1]),.rst_h(rst_n[8:7]),.sid(sid),.dir(1'b0),
         .tx_enable(ring_tx_enable[0]),.tx_source(ring_tx_source[0+:3]),
-        .l_in(cw_in),.l_out(cw_out),.pi(pi0),.eg(bk_eg),.xq(bk_xq),.xq_done(bk_xq_done),
-        .rce(rce0),.ri(ri0),.wko(wk01),.wki(wk10),.cco(cco0),
-        .ack_o(ack01),.ack_i(ack10),.mirror_busy(mirror_busy[0]),.fault(ring_fault[0]));
-    ot_vms_rstop_lt #(.COMMIT_DELAY(COMMIT_DELAY),.MUT(RMUT)) u_ccw(
-        .clk(clk),.rst_n(rst_n[2]),.sid(sid),.dir(1'b1),
+        .l_in(cw_in),.l_out(cw_out),.pi(pi0_s),.eg(bk_eg),.xq(bk_xq),.xq_done(bk_xq_done),
+        .rce(rce0),.ri(ri0_r),.wko(wk01),.wki(wk10),.cco(cco0),
+        .ack_o(ack01),.ack_i(ack10),.mirror_busy(mirror_busy[0]),.fault(rfault[0]));
+    ot_vms_rstop_lt #(.COMMIT_DELAY(COMMIT_DELAY),.MUT(RMUT),.UPPER(UPPER)) u_ccw(
+        .clk(clk),.rst_n(rst_n[2]),.rst_h(rst_n[10:9]),.sid(sid),.dir(1'b1),
         .tx_enable(ring_tx_enable[1]),.tx_source(ring_tx_source[3+:3]),
-        .l_in(ccw_in),.l_out(ccw_out),.pi(pi1),.eg(bk_eg),.xq(bk_xq2),.xq_done(bk_xq2_done),
-        .rce(rce1),.ri(ri1),.wko(wk10),.wki(wk01),.cco(cco1),
-        .ack_o(ack10),.ack_i(ack01),.mirror_busy(mirror_busy[1]),.fault(ring_fault[1]));
+        .l_in(ccw_in),.l_out(ccw_out),.pi(pi1_s),.eg(bk_eg),.xq(bk_xq2),.xq_done(bk_xq2_done),
+        .rce(rce1),.ri(ri1_r),.wko(wk10),.wki(wk01),.cco(cco1),
+        .ack_o(ack10),.ack_i(ack01),.mirror_busy(mirror_busy[1]),.fault(rfault[1]));
     ot_vms_rcl_lt u_replay(.clk(clk),.rst_n(rst_n[3]),.sid(sid),
-        .rx_enable(replay_enable),.rx_source(replay_source),.rce0(rce0),.rce1(rce1),
-        .hq(hq),.hr(hr),.ri0(ri0),.ri1(ri1),.fault(ring_fault[2]));
+        .rx_enable(replay_enable),.rx_source(replay_source),.rce0(rce0_s),.rce1(rce1_s),
+        .hq(hq),.hr(hr),.ri0(ri0),.ri1(ri1),.fault(rfault[2]));
     ot_vms_status_static u_status(.clk(clk),.rst_n(rst_n[3]),
-        .bank_status(bank_status),.hub_status(hub_status),.ring_fault(|ring_fault),.vmstat(vmstat));
+        .bank_status(bank_status),.hub_status(hub_status),.ring_fault(|rf_r),.vmstat(vmstat));
 endmodule
 `default_nettype wire

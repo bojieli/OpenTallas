@@ -31,8 +31,17 @@
 // response_enable and response_seq 1 edge later (bank round trip pq -> pr -> cr +4 in all with the g2 pin stages; slot
 // reuse after a response +1).  <tile>_ref states exactly that with the UNCHANGED historical children and explicit
 // 1-edge delays (hfd_vms_glue_core_g3_ref); tools/hbm_die_v16/vms_glue_tile_equiv.py runs tile vs ref in lockstep.
+// g4 part (HBM-SAFE-VMGLUE 10-19, SAFE-DESIGN checklist; g3 gates sat >6 h in GRT repair at WNS -21..-44 ps and a placed
+// reach census (3_place.odb, lanes/HBM-SAFE-VMGLUE_logs) found ~21-33k reg->reg paths > 405 um): REACH stages so that no
+// single-cycle wire exceeds ~405 um -- bank-side ports pin flop + 2 relays (xq_done / xq2_done + 3: COMMIT_DELAY 13), hub
+// client ports (cq / cr / schedule controls / status outputs / sid strap) pin flop + 2 relays, hub island <-> ring-stop
+// header band one relay each (pi, ri, cco, rce, faults -> status), ring stop: second landing with per-half relay copies of
+// the header decode / tx select / payloads (stop inputs +2 vs historical, ring transit +1 per hub vs g3) and a 3-level rce
+// tree (rce +1 vs g3).  Schedule selects are REGISTERED ONE-HOT, decoded a stage ahead from the static schedule: hub bank
+// select (bank_enable / bank_client, qualified), ring-stop tx select (tx_enable / tx_source), replay select (replay_source);
+// a schedule collision stays a fault (status), never an arbitration.  hfd_vms_glue_core_g4_ref states every edge.
 // Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 4 hub pq
-// without the g3 face-group edge (contract break).
+// without the g3 face-group edge (contract break), 5 hub -> ring pi and ring -> replay rce without the g4 relays (contract break).
 module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     input wire clk,
     input wire rst_n,
@@ -154,9 +163,9 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 7 region copies); release +3 edges
-    wire [6:0] rr;
-    ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges
+    wire [10:0] rr;
+    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -182,89 +191,164 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     assign ccw_out_l6 = ccw_out[1931:1656];
     assign ccw_out_l7 = ccw_out[2207:1932];
     assign ccw_out_h = ccw_out[2223:2208];
-    // bank-side ports: one plain register stage at the pin (inputs land, outputs relay)
+    // g4 reach stages: bank-side ports pin flop + 2 relays (xq_done / xq2_done + 3), hub-side client ports pin flop + 2 relays (plain registers, no reset: flushed while the regional resets are held)
     wire [2207:0] bk_xq_p, bk_xq_c;
-    reg [2207:0] bk_xq_r;
-    always @(posedge clk) bk_xq_r <= bk_xq_p;
-    assign bk_xq_p = bk_xq_c;
-    assign b0_xq = bk_xq_r[275:0];
-    assign b1_xq = bk_xq_r[551:276];
-    assign b2_xq = bk_xq_r[827:552];
-    assign b3_xq = bk_xq_r[1103:828];
-    assign b4_xq = bk_xq_r[1379:1104];
-    assign b5_xq = bk_xq_r[1655:1380];
-    assign b6_xq = bk_xq_r[1931:1656];
-    assign b7_xq = bk_xq_r[2207:1932];
+    reg [2207:0] bk_xq_s0; always @(posedge clk) bk_xq_s0 <= bk_xq_c;
+    reg [2207:0] bk_xq_s1; always @(posedge clk) bk_xq_s1 <= bk_xq_s0;
+    reg [2207:0] bk_xq_s2; always @(posedge clk) bk_xq_s2 <= bk_xq_s1;
+    assign bk_xq_p = bk_xq_s2;
+    assign b0_xq = bk_xq_p[275:0];
+    assign b1_xq = bk_xq_p[551:276];
+    assign b2_xq = bk_xq_p[827:552];
+    assign b3_xq = bk_xq_p[1103:828];
+    assign b4_xq = bk_xq_p[1379:1104];
+    assign b5_xq = bk_xq_p[1655:1380];
+    assign b6_xq = bk_xq_p[1931:1656];
+    assign b7_xq = bk_xq_p[2207:1932];
     wire [2207:0] bk_xq2_p, bk_xq2_c;
-    reg [2207:0] bk_xq2_r;
-    always @(posedge clk) bk_xq2_r <= bk_xq2_p;
-    assign bk_xq2_p = bk_xq2_c;
-    assign b0_xq2 = bk_xq2_r[275:0];
-    assign b1_xq2 = bk_xq2_r[551:276];
-    assign b2_xq2 = bk_xq2_r[827:552];
-    assign b3_xq2 = bk_xq2_r[1103:828];
-    assign b4_xq2 = bk_xq2_r[1379:1104];
-    assign b5_xq2 = bk_xq2_r[1655:1380];
-    assign b6_xq2 = bk_xq2_r[1931:1656];
-    assign b7_xq2 = bk_xq2_r[2207:1932];
+    reg [2207:0] bk_xq2_s0; always @(posedge clk) bk_xq2_s0 <= bk_xq2_c;
+    reg [2207:0] bk_xq2_s1; always @(posedge clk) bk_xq2_s1 <= bk_xq2_s0;
+    reg [2207:0] bk_xq2_s2; always @(posedge clk) bk_xq2_s2 <= bk_xq2_s1;
+    assign bk_xq2_p = bk_xq2_s2;
+    assign b0_xq2 = bk_xq2_p[275:0];
+    assign b1_xq2 = bk_xq2_p[551:276];
+    assign b2_xq2 = bk_xq2_p[827:552];
+    assign b3_xq2 = bk_xq2_p[1103:828];
+    assign b4_xq2 = bk_xq2_p[1379:1104];
+    assign b5_xq2 = bk_xq2_p[1655:1380];
+    assign b6_xq2 = bk_xq2_p[1931:1656];
+    assign b7_xq2 = bk_xq2_p[2207:1932];
     wire [7:0] bk_xq_done_p, bk_xq_done_c;
-    reg [7:0] bk_xq_done_r;
-    always @(posedge clk) bk_xq_done_r <= bk_xq_done_p;
     assign bk_xq_done_p = {b7_xq_done, b6_xq_done, b5_xq_done, b4_xq_done, b3_xq_done, b2_xq_done, b1_xq_done, b0_xq_done};
-    assign bk_xq_done_c = bk_xq_done_r;
+    reg [7:0] bk_xq_done_s0; always @(posedge clk) bk_xq_done_s0 <= bk_xq_done_p;
+    reg [7:0] bk_xq_done_s1; always @(posedge clk) bk_xq_done_s1 <= bk_xq_done_s0;
+    reg [7:0] bk_xq_done_s2; always @(posedge clk) bk_xq_done_s2 <= bk_xq_done_s1;
+    reg [7:0] bk_xq_done_s3; always @(posedge clk) bk_xq_done_s3 <= bk_xq_done_s2;
+    assign bk_xq_done_c = bk_xq_done_s3;
     wire [7:0] bk_xq2_done_p, bk_xq2_done_c;
-    reg [7:0] bk_xq2_done_r;
-    always @(posedge clk) bk_xq2_done_r <= bk_xq2_done_p;
     assign bk_xq2_done_p = {b7_xq2_done, b6_xq2_done, b5_xq2_done, b4_xq2_done, b3_xq2_done, b2_xq2_done, b1_xq2_done, b0_xq2_done};
-    assign bk_xq2_done_c = bk_xq2_done_r;
+    reg [7:0] bk_xq2_done_s0; always @(posedge clk) bk_xq2_done_s0 <= bk_xq2_done_p;
+    reg [7:0] bk_xq2_done_s1; always @(posedge clk) bk_xq2_done_s1 <= bk_xq2_done_s0;
+    reg [7:0] bk_xq2_done_s2; always @(posedge clk) bk_xq2_done_s2 <= bk_xq2_done_s1;
+    reg [7:0] bk_xq2_done_s3; always @(posedge clk) bk_xq2_done_s3 <= bk_xq2_done_s2;
+    assign bk_xq2_done_c = bk_xq2_done_s3;
     wire [2207:0] bk_eg_p, bk_eg_c;
-    reg [2207:0] bk_eg_r;
-    always @(posedge clk) bk_eg_r <= bk_eg_p;
     assign bk_eg_p = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
-    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_r;
+    reg [2207:0] bk_eg_s0; always @(posedge clk) bk_eg_s0 <= bk_eg_p;
+    reg [2207:0] bk_eg_s1; always @(posedge clk) bk_eg_s1 <= bk_eg_s0;
+    reg [2207:0] bk_eg_s2; always @(posedge clk) bk_eg_s2 <= bk_eg_s1;
+    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_s2;
     wire [2279:0] bk_pq_p, bk_pq_c;
-    reg [2279:0] bk_pq_r;
-    always @(posedge clk) bk_pq_r <= bk_pq_p;
-    assign bk_pq_p = bk_pq_c;
-    assign b0_pq = bk_pq_r[284:0];
-    assign b1_pq = bk_pq_r[569:285];
-    assign b2_pq = bk_pq_r[854:570];
-    assign b3_pq = bk_pq_r[1139:855];
-    assign b4_pq = bk_pq_r[1424:1140];
-    assign b5_pq = bk_pq_r[1709:1425];
-    assign b6_pq = bk_pq_r[1994:1710];
-    assign b7_pq = bk_pq_r[2279:1995];
+    reg [2279:0] bk_pq_s0; always @(posedge clk) bk_pq_s0 <= bk_pq_c;
+    reg [2279:0] bk_pq_s1; always @(posedge clk) bk_pq_s1 <= bk_pq_s0;
+    reg [2279:0] bk_pq_s2; always @(posedge clk) bk_pq_s2 <= bk_pq_s1;
+    assign bk_pq_p = bk_pq_s2;
+    assign b0_pq = bk_pq_p[284:0];
+    assign b1_pq = bk_pq_p[569:285];
+    assign b2_pq = bk_pq_p[854:570];
+    assign b3_pq = bk_pq_p[1139:855];
+    assign b4_pq = bk_pq_p[1424:1140];
+    assign b5_pq = bk_pq_p[1709:1425];
+    assign b6_pq = bk_pq_p[1994:1710];
+    assign b7_pq = bk_pq_p[2279:1995];
     wire [2127:0] bk_pr_p, bk_pr_c;
-    reg [2127:0] bk_pr_r;
-    always @(posedge clk) bk_pr_r <= bk_pr_p;
     assign bk_pr_p = {b7_pr, b6_pr, b5_pr, b4_pr, b3_pr, b2_pr, b1_pr, b0_pr};
-    assign bk_pr_c = bk_pr_r;
+    reg [2127:0] bk_pr_s0; always @(posedge clk) bk_pr_s0 <= bk_pr_p;
+    reg [2127:0] bk_pr_s1; always @(posedge clk) bk_pr_s1 <= bk_pr_s0;
+    reg [2127:0] bk_pr_s2; always @(posedge clk) bk_pr_s2 <= bk_pr_s1;
+    assign bk_pr_c = bk_pr_s2;
     wire [143:0] bank_status_p, bank_status_c;
-    reg [143:0] bank_status_r;
-    always @(posedge clk) bank_status_r <= bank_status_p;
     assign bank_status_p = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
-    assign bank_status_c = bank_status_r;
-    hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : 0)) u_core (
+    reg [143:0] bank_status_s0; always @(posedge clk) bank_status_s0 <= bank_status_p;
+    reg [143:0] bank_status_s1; always @(posedge clk) bank_status_s1 <= bank_status_s0;
+    reg [143:0] bank_status_s2; always @(posedge clk) bank_status_s2 <= bank_status_s1;
+    assign bank_status_c = bank_status_s2;
+    reg [675:0] cq_g_s0; always @(posedge clk) cq_g_s0 <= cq;
+    reg [675:0] cq_g_s1; always @(posedge clk) cq_g_s1 <= cq_g_s0;
+    reg [675:0] cq_g_s2; always @(posedge clk) cq_g_s2 <= cq_g_s1;
+    wire [675:0] cq_c = cq_g_s2;
+    reg [5:0] client_seq_g_s0; always @(posedge clk) client_seq_g_s0 <= client_seq;
+    reg [5:0] client_seq_g_s1; always @(posedge clk) client_seq_g_s1 <= client_seq_g_s0;
+    reg [5:0] client_seq_g_s2; always @(posedge clk) client_seq_g_s2 <= client_seq_g_s1;
+    wire [5:0] client_seq_c = client_seq_g_s2;
+    reg [2:0] response_enable_g_s0; always @(posedge clk) response_enable_g_s0 <= response_enable;
+    reg [2:0] response_enable_g_s1; always @(posedge clk) response_enable_g_s1 <= response_enable_g_s0;
+    reg [2:0] response_enable_g_s2; always @(posedge clk) response_enable_g_s2 <= response_enable_g_s1;
+    wire [2:0] response_enable_c = response_enable_g_s2;
+    reg [5:0] response_seq_g_s0; always @(posedge clk) response_seq_g_s0 <= response_seq;
+    reg [5:0] response_seq_g_s1; always @(posedge clk) response_seq_g_s1 <= response_seq_g_s0;
+    reg [5:0] response_seq_g_s2; always @(posedge clk) response_seq_g_s2 <= response_seq_g_s1;
+    wire [5:0] response_seq_c = response_seq_g_s2;
+    reg [7:0] bank_enable_g_s0; always @(posedge clk) bank_enable_g_s0 <= bank_enable;
+    reg [7:0] bank_enable_g_s1; always @(posedge clk) bank_enable_g_s1 <= bank_enable_g_s0;
+    reg [7:0] bank_enable_g_s2; always @(posedge clk) bank_enable_g_s2 <= bank_enable_g_s1;
+    wire [7:0] bank_enable_c = bank_enable_g_s2;
+    reg [15:0] bank_client_g_s0; always @(posedge clk) bank_client_g_s0 <= bank_client;
+    reg [15:0] bank_client_g_s1; always @(posedge clk) bank_client_g_s1 <= bank_client_g_s0;
+    reg [15:0] bank_client_g_s2; always @(posedge clk) bank_client_g_s2 <= bank_client_g_s1;
+    wire [15:0] bank_client_c = bank_client_g_s2;
+    reg [1:0] hub_ring_enable_g_s0; always @(posedge clk) hub_ring_enable_g_s0 <= hub_ring_enable;
+    reg [1:0] hub_ring_enable_g_s1; always @(posedge clk) hub_ring_enable_g_s1 <= hub_ring_enable_g_s0;
+    reg [1:0] hub_ring_enable_g_s2; always @(posedge clk) hub_ring_enable_g_s2 <= hub_ring_enable_g_s1;
+    wire [1:0] hub_ring_enable_c = hub_ring_enable_g_s2;
+    reg [3:0] hub_ring_client_g_s0; always @(posedge clk) hub_ring_client_g_s0 <= hub_ring_client;
+    reg [3:0] hub_ring_client_g_s1; always @(posedge clk) hub_ring_client_g_s1 <= hub_ring_client_g_s0;
+    reg [3:0] hub_ring_client_g_s2; always @(posedge clk) hub_ring_client_g_s2 <= hub_ring_client_g_s1;
+    wire [3:0] hub_ring_client_c = hub_ring_client_g_s2;
+    reg replay_enable_g_s0; always @(posedge clk) replay_enable_g_s0 <= replay_enable;
+    reg replay_enable_g_s1; always @(posedge clk) replay_enable_g_s1 <= replay_enable_g_s0;
+    reg replay_enable_g_s2; always @(posedge clk) replay_enable_g_s2 <= replay_enable_g_s1;
+    wire replay_enable_c = replay_enable_g_s2;
+    reg replay_source_g_s0; always @(posedge clk) replay_source_g_s0 <= replay_source;
+    reg replay_source_g_s1; always @(posedge clk) replay_source_g_s1 <= replay_source_g_s0;
+    reg replay_source_g_s2; always @(posedge clk) replay_source_g_s2 <= replay_source_g_s1;
+    wire replay_source_c = replay_source_g_s2;
+    wire [547:0] cr_c;
+    reg [547:0] cr_g_s0; always @(posedge clk) cr_g_s0 <= cr_c;
+    reg [547:0] cr_g_s1; always @(posedge clk) cr_g_s1 <= cr_g_s0;
+    reg [547:0] cr_g_s2; always @(posedge clk) cr_g_s2 <= cr_g_s1;
+    assign cr = cr_g_s2;
+    wire [2:0] hub_status_c;
+    reg [2:0] hub_status_g_s0; always @(posedge clk) hub_status_g_s0 <= hub_status_c;
+    reg [2:0] hub_status_g_s1; always @(posedge clk) hub_status_g_s1 <= hub_status_g_s0;
+    reg [2:0] hub_status_g_s2; always @(posedge clk) hub_status_g_s2 <= hub_status_g_s1;
+    assign hub_status = hub_status_g_s2;
+    wire [1:0] mirror_busy_c;
+    reg [1:0] mirror_busy_g_s0; always @(posedge clk) mirror_busy_g_s0 <= mirror_busy_c;
+    reg [1:0] mirror_busy_g_s1; always @(posedge clk) mirror_busy_g_s1 <= mirror_busy_g_s0;
+    reg [1:0] mirror_busy_g_s2; always @(posedge clk) mirror_busy_g_s2 <= mirror_busy_g_s1;
+    assign mirror_busy = mirror_busy_g_s2;
+    wire [18:0] vmstat_c;
+    reg [18:0] vmstat_g_s0; always @(posedge clk) vmstat_g_s0 <= vmstat_c;
+    reg [18:0] vmstat_g_s1; always @(posedge clk) vmstat_g_s1 <= vmstat_g_s0;
+    reg [18:0] vmstat_g_s2; always @(posedge clk) vmstat_g_s2 <= vmstat_g_s1;
+    assign vmstat = vmstat_g_s2;
+    wire [2:0] ring_fault_c;
+    reg [2:0] ring_fault_g_s0; always @(posedge clk) ring_fault_g_s0 <= ring_fault_c;
+    reg [2:0] ring_fault_g_s1; always @(posedge clk) ring_fault_g_s1 <= ring_fault_g_s0;
+    reg [2:0] ring_fault_g_s2; always @(posedge clk) ring_fault_g_s2 <= ring_fault_g_s1;
+    assign ring_fault = ring_fault_g_s2;
+    hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : 0)) u_core (
         .clk(clk),
         .rst_n(rr),
         .sid(2'd0),
-        .cq(cq),
-        .cr(cr),
-        .client_seq(client_seq),
-        .response_enable(response_enable),
-        .response_seq(response_seq),
-        .bank_enable(bank_enable),
-        .bank_client(bank_client),
-        .hub_ring_enable(hub_ring_enable),
-        .hub_ring_client(hub_ring_client),
+        .cq(cq_c),
+        .cr(cr_c),
+        .client_seq(client_seq_c),
+        .response_enable(response_enable_c),
+        .response_seq(response_seq_c),
+        .bank_enable(bank_enable_c),
+        .bank_client(bank_client_c),
+        .hub_ring_enable(hub_ring_enable_c),
+        .hub_ring_client(hub_ring_client_c),
         .cw_in(cw_in),
         .cw_out(cw_out),
         .ccw_in(ccw_in),
         .ccw_out(ccw_out),
         .ring_tx_enable(ring_tx_enable),
         .ring_tx_source(ring_tx_source),
-        .replay_enable(replay_enable),
-        .replay_source(replay_source),
+        .replay_enable(replay_enable_c),
+        .replay_source(replay_source_c),
         .bank_status(bank_status_c),
         .bk_xq(bk_xq_c),
         .bk_xq2(bk_xq2_c),
@@ -273,10 +357,10 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
         .bk_eg(bk_eg_c),
         .bk_pq(bk_pq_c),
         .bk_pr(bk_pr_c),
-        .hub_status(hub_status),
-        .mirror_busy(mirror_busy),
-        .vmstat(vmstat),
-        .ring_fault(ring_fault));
+        .hub_status(hub_status_c),
+        .mirror_busy(mirror_busy_c),
+        .vmstat(vmstat_c),
+        .ring_fault(ring_fault_c));
 endmodule
 module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     input wire clk,
@@ -398,9 +482,9 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 7 region copies); release +3 edges
-    wire [6:0] rr;
-    ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges
+    wire [10:0] rr;
+    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -426,79 +510,149 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     assign ccw_out_l6 = ccw_out[1931:1656];
     assign ccw_out_l7 = ccw_out[2207:1932];
     assign ccw_out_h = ccw_out[2223:2208];
-    // bank-side ports: one plain register stage at the pin (inputs land, outputs relay)
+    // g4 reach stages: bank-side ports pin flop + 2 relays (xq_done / xq2_done + 3), hub-side client ports pin flop + 2 relays (plain registers, no reset: flushed while the regional resets are held)
     wire [2207:0] bk_xq_p, bk_xq_c;
-    reg [2207:0] bk_xq_r;
-    always @(posedge clk) bk_xq_r <= bk_xq_p;
-    assign bk_xq_p = bk_xq_c;
-    assign b0_xq = bk_xq_r[275:0];
-    assign b1_xq = bk_xq_r[551:276];
-    assign b2_xq = bk_xq_r[827:552];
-    assign b3_xq = bk_xq_r[1103:828];
-    assign b4_xq = bk_xq_r[1379:1104];
-    assign b5_xq = bk_xq_r[1655:1380];
-    assign b6_xq = bk_xq_r[1931:1656];
-    assign b7_xq = bk_xq_r[2207:1932];
+    reg [2207:0] bk_xq_s0; always @(posedge clk) bk_xq_s0 <= bk_xq_c;
+    reg [2207:0] bk_xq_s1; always @(posedge clk) bk_xq_s1 <= bk_xq_s0;
+    reg [2207:0] bk_xq_s2; always @(posedge clk) bk_xq_s2 <= bk_xq_s1;
+    assign bk_xq_p = bk_xq_s2;
+    assign b0_xq = bk_xq_p[275:0];
+    assign b1_xq = bk_xq_p[551:276];
+    assign b2_xq = bk_xq_p[827:552];
+    assign b3_xq = bk_xq_p[1103:828];
+    assign b4_xq = bk_xq_p[1379:1104];
+    assign b5_xq = bk_xq_p[1655:1380];
+    assign b6_xq = bk_xq_p[1931:1656];
+    assign b7_xq = bk_xq_p[2207:1932];
     wire [2207:0] bk_xq2_p, bk_xq2_c;
-    reg [2207:0] bk_xq2_r;
-    always @(posedge clk) bk_xq2_r <= bk_xq2_p;
-    assign bk_xq2_p = bk_xq2_c;
-    assign b0_xq2 = bk_xq2_r[275:0];
-    assign b1_xq2 = bk_xq2_r[551:276];
-    assign b2_xq2 = bk_xq2_r[827:552];
-    assign b3_xq2 = bk_xq2_r[1103:828];
-    assign b4_xq2 = bk_xq2_r[1379:1104];
-    assign b5_xq2 = bk_xq2_r[1655:1380];
-    assign b6_xq2 = bk_xq2_r[1931:1656];
-    assign b7_xq2 = bk_xq2_r[2207:1932];
+    reg [2207:0] bk_xq2_s0; always @(posedge clk) bk_xq2_s0 <= bk_xq2_c;
+    reg [2207:0] bk_xq2_s1; always @(posedge clk) bk_xq2_s1 <= bk_xq2_s0;
+    reg [2207:0] bk_xq2_s2; always @(posedge clk) bk_xq2_s2 <= bk_xq2_s1;
+    assign bk_xq2_p = bk_xq2_s2;
+    assign b0_xq2 = bk_xq2_p[275:0];
+    assign b1_xq2 = bk_xq2_p[551:276];
+    assign b2_xq2 = bk_xq2_p[827:552];
+    assign b3_xq2 = bk_xq2_p[1103:828];
+    assign b4_xq2 = bk_xq2_p[1379:1104];
+    assign b5_xq2 = bk_xq2_p[1655:1380];
+    assign b6_xq2 = bk_xq2_p[1931:1656];
+    assign b7_xq2 = bk_xq2_p[2207:1932];
     wire [7:0] bk_xq_done_p, bk_xq_done_c;
-    reg [7:0] bk_xq_done_r;
-    always @(posedge clk) bk_xq_done_r <= bk_xq_done_p;
     assign bk_xq_done_p = {b7_xq_done, b6_xq_done, b5_xq_done, b4_xq_done, b3_xq_done, b2_xq_done, b1_xq_done, b0_xq_done};
-    assign bk_xq_done_c = bk_xq_done_r;
+    reg [7:0] bk_xq_done_s0; always @(posedge clk) bk_xq_done_s0 <= bk_xq_done_p;
+    reg [7:0] bk_xq_done_s1; always @(posedge clk) bk_xq_done_s1 <= bk_xq_done_s0;
+    reg [7:0] bk_xq_done_s2; always @(posedge clk) bk_xq_done_s2 <= bk_xq_done_s1;
+    reg [7:0] bk_xq_done_s3; always @(posedge clk) bk_xq_done_s3 <= bk_xq_done_s2;
+    assign bk_xq_done_c = bk_xq_done_s3;
     wire [7:0] bk_xq2_done_p, bk_xq2_done_c;
-    reg [7:0] bk_xq2_done_r;
-    always @(posedge clk) bk_xq2_done_r <= bk_xq2_done_p;
     assign bk_xq2_done_p = {b7_xq2_done, b6_xq2_done, b5_xq2_done, b4_xq2_done, b3_xq2_done, b2_xq2_done, b1_xq2_done, b0_xq2_done};
-    assign bk_xq2_done_c = bk_xq2_done_r;
+    reg [7:0] bk_xq2_done_s0; always @(posedge clk) bk_xq2_done_s0 <= bk_xq2_done_p;
+    reg [7:0] bk_xq2_done_s1; always @(posedge clk) bk_xq2_done_s1 <= bk_xq2_done_s0;
+    reg [7:0] bk_xq2_done_s2; always @(posedge clk) bk_xq2_done_s2 <= bk_xq2_done_s1;
+    reg [7:0] bk_xq2_done_s3; always @(posedge clk) bk_xq2_done_s3 <= bk_xq2_done_s2;
+    assign bk_xq2_done_c = bk_xq2_done_s3;
     wire [2207:0] bk_eg_p, bk_eg_c;
-    reg [2207:0] bk_eg_r;
-    always @(posedge clk) bk_eg_r <= bk_eg_p;
     assign bk_eg_p = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
-    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_r;
+    reg [2207:0] bk_eg_s0; always @(posedge clk) bk_eg_s0 <= bk_eg_p;
+    reg [2207:0] bk_eg_s1; always @(posedge clk) bk_eg_s1 <= bk_eg_s0;
+    reg [2207:0] bk_eg_s2; always @(posedge clk) bk_eg_s2 <= bk_eg_s1;
+    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_s2;
     wire [2279:0] bk_pq_p, bk_pq_c;
-    reg [2279:0] bk_pq_r;
-    always @(posedge clk) bk_pq_r <= bk_pq_p;
-    assign bk_pq_p = bk_pq_c;
-    assign b0_pq = bk_pq_r[284:0];
-    assign b1_pq = bk_pq_r[569:285];
-    assign b2_pq = bk_pq_r[854:570];
-    assign b3_pq = bk_pq_r[1139:855];
-    assign b4_pq = bk_pq_r[1424:1140];
-    assign b5_pq = bk_pq_r[1709:1425];
-    assign b6_pq = bk_pq_r[1994:1710];
-    assign b7_pq = bk_pq_r[2279:1995];
+    reg [2279:0] bk_pq_s0; always @(posedge clk) bk_pq_s0 <= bk_pq_c;
+    reg [2279:0] bk_pq_s1; always @(posedge clk) bk_pq_s1 <= bk_pq_s0;
+    reg [2279:0] bk_pq_s2; always @(posedge clk) bk_pq_s2 <= bk_pq_s1;
+    assign bk_pq_p = bk_pq_s2;
+    assign b0_pq = bk_pq_p[284:0];
+    assign b1_pq = bk_pq_p[569:285];
+    assign b2_pq = bk_pq_p[854:570];
+    assign b3_pq = bk_pq_p[1139:855];
+    assign b4_pq = bk_pq_p[1424:1140];
+    assign b5_pq = bk_pq_p[1709:1425];
+    assign b6_pq = bk_pq_p[1994:1710];
+    assign b7_pq = bk_pq_p[2279:1995];
     wire [2127:0] bk_pr_p, bk_pr_c;
-    reg [2127:0] bk_pr_r;
-    always @(posedge clk) bk_pr_r <= bk_pr_p;
     assign bk_pr_p = {b7_pr, b6_pr, b5_pr, b4_pr, b3_pr, b2_pr, b1_pr, b0_pr};
-    assign bk_pr_c = bk_pr_r;
+    reg [2127:0] bk_pr_s0; always @(posedge clk) bk_pr_s0 <= bk_pr_p;
+    reg [2127:0] bk_pr_s1; always @(posedge clk) bk_pr_s1 <= bk_pr_s0;
+    reg [2127:0] bk_pr_s2; always @(posedge clk) bk_pr_s2 <= bk_pr_s1;
+    assign bk_pr_c = bk_pr_s2;
     wire [143:0] bank_status_p, bank_status_c;
-    reg [143:0] bank_status_r;
-    always @(posedge clk) bank_status_r <= bank_status_p;
     assign bank_status_p = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
-    assign bank_status_c = bank_status_r;
-    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : 0)) u_core (
+    reg [143:0] bank_status_s0; always @(posedge clk) bank_status_s0 <= bank_status_p;
+    reg [143:0] bank_status_s1; always @(posedge clk) bank_status_s1 <= bank_status_s0;
+    reg [143:0] bank_status_s2; always @(posedge clk) bank_status_s2 <= bank_status_s1;
+    assign bank_status_c = bank_status_s2;
+    reg [1:0] client_seq_g_s0; always @(posedge clk) client_seq_g_s0 <= client_seq;
+    reg [1:0] client_seq_g_s1; always @(posedge clk) client_seq_g_s1 <= client_seq_g_s0;
+    reg [1:0] client_seq_g_s2; always @(posedge clk) client_seq_g_s2 <= client_seq_g_s1;
+    wire [1:0] client_seq_c = client_seq_g_s2;
+    reg response_enable_g_s0; always @(posedge clk) response_enable_g_s0 <= response_enable;
+    reg response_enable_g_s1; always @(posedge clk) response_enable_g_s1 <= response_enable_g_s0;
+    reg response_enable_g_s2; always @(posedge clk) response_enable_g_s2 <= response_enable_g_s1;
+    wire response_enable_c = response_enable_g_s2;
+    reg [1:0] response_seq_g_s0; always @(posedge clk) response_seq_g_s0 <= response_seq;
+    reg [1:0] response_seq_g_s1; always @(posedge clk) response_seq_g_s1 <= response_seq_g_s0;
+    reg [1:0] response_seq_g_s2; always @(posedge clk) response_seq_g_s2 <= response_seq_g_s1;
+    wire [1:0] response_seq_c = response_seq_g_s2;
+    reg [7:0] bank_enable_g_s0; always @(posedge clk) bank_enable_g_s0 <= bank_enable;
+    reg [7:0] bank_enable_g_s1; always @(posedge clk) bank_enable_g_s1 <= bank_enable_g_s0;
+    reg [7:0] bank_enable_g_s2; always @(posedge clk) bank_enable_g_s2 <= bank_enable_g_s1;
+    wire [7:0] bank_enable_c = bank_enable_g_s2;
+    reg [7:0] bank_client_g_s0; always @(posedge clk) bank_client_g_s0 <= bank_client;
+    reg [7:0] bank_client_g_s1; always @(posedge clk) bank_client_g_s1 <= bank_client_g_s0;
+    reg [7:0] bank_client_g_s2; always @(posedge clk) bank_client_g_s2 <= bank_client_g_s1;
+    wire [7:0] bank_client_c = bank_client_g_s2;
+    reg [1:0] hub_ring_enable_g_s0; always @(posedge clk) hub_ring_enable_g_s0 <= hub_ring_enable;
+    reg [1:0] hub_ring_enable_g_s1; always @(posedge clk) hub_ring_enable_g_s1 <= hub_ring_enable_g_s0;
+    reg [1:0] hub_ring_enable_g_s2; always @(posedge clk) hub_ring_enable_g_s2 <= hub_ring_enable_g_s1;
+    wire [1:0] hub_ring_enable_c = hub_ring_enable_g_s2;
+    reg [1:0] hub_ring_client_g_s0; always @(posedge clk) hub_ring_client_g_s0 <= hub_ring_client;
+    reg [1:0] hub_ring_client_g_s1; always @(posedge clk) hub_ring_client_g_s1 <= hub_ring_client_g_s0;
+    reg [1:0] hub_ring_client_g_s2; always @(posedge clk) hub_ring_client_g_s2 <= hub_ring_client_g_s1;
+    wire [1:0] hub_ring_client_c = hub_ring_client_g_s2;
+    reg replay_enable_g_s0; always @(posedge clk) replay_enable_g_s0 <= replay_enable;
+    reg replay_enable_g_s1; always @(posedge clk) replay_enable_g_s1 <= replay_enable_g_s0;
+    reg replay_enable_g_s2; always @(posedge clk) replay_enable_g_s2 <= replay_enable_g_s1;
+    wire replay_enable_c = replay_enable_g_s2;
+    reg replay_source_g_s0; always @(posedge clk) replay_source_g_s0 <= replay_source;
+    reg replay_source_g_s1; always @(posedge clk) replay_source_g_s1 <= replay_source_g_s0;
+    reg replay_source_g_s2; always @(posedge clk) replay_source_g_s2 <= replay_source_g_s1;
+    wire replay_source_c = replay_source_g_s2;
+    reg [1:0] sid_g_s0; always @(posedge clk) sid_g_s0 <= sid;
+    reg [1:0] sid_g_s1; always @(posedge clk) sid_g_s1 <= sid_g_s0;
+    reg [1:0] sid_g_s2; always @(posedge clk) sid_g_s2 <= sid_g_s1;
+    wire [1:0] sid_c = sid_g_s2;
+    wire [2:0] hub_status_c;
+    reg [2:0] hub_status_g_s0; always @(posedge clk) hub_status_g_s0 <= hub_status_c;
+    reg [2:0] hub_status_g_s1; always @(posedge clk) hub_status_g_s1 <= hub_status_g_s0;
+    reg [2:0] hub_status_g_s2; always @(posedge clk) hub_status_g_s2 <= hub_status_g_s1;
+    assign hub_status = hub_status_g_s2;
+    wire [1:0] mirror_busy_c;
+    reg [1:0] mirror_busy_g_s0; always @(posedge clk) mirror_busy_g_s0 <= mirror_busy_c;
+    reg [1:0] mirror_busy_g_s1; always @(posedge clk) mirror_busy_g_s1 <= mirror_busy_g_s0;
+    reg [1:0] mirror_busy_g_s2; always @(posedge clk) mirror_busy_g_s2 <= mirror_busy_g_s1;
+    assign mirror_busy = mirror_busy_g_s2;
+    wire [18:0] vmstat_c;
+    reg [18:0] vmstat_g_s0; always @(posedge clk) vmstat_g_s0 <= vmstat_c;
+    reg [18:0] vmstat_g_s1; always @(posedge clk) vmstat_g_s1 <= vmstat_g_s0;
+    reg [18:0] vmstat_g_s2; always @(posedge clk) vmstat_g_s2 <= vmstat_g_s1;
+    assign vmstat = vmstat_g_s2;
+    wire [2:0] ring_fault_c;
+    reg [2:0] ring_fault_g_s0; always @(posedge clk) ring_fault_g_s0 <= ring_fault_c;
+    reg [2:0] ring_fault_g_s1; always @(posedge clk) ring_fault_g_s1 <= ring_fault_g_s0;
+    reg [2:0] ring_fault_g_s2; always @(posedge clk) ring_fault_g_s2 <= ring_fault_g_s1;
+    assign ring_fault = ring_fault_g_s2;
+    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b00111100),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : 0)) u_core (
         .clk(clk),
         .rst_n(rr),
-        .sid(sid),
-        .client_seq(client_seq),
-        .response_enable(response_enable),
-        .response_seq(response_seq),
-        .bank_enable(bank_enable),
-        .bank_client(bank_client),
-        .hub_ring_enable(hub_ring_enable),
-        .hub_ring_client(hub_ring_client),
+        .sid(sid_c),
+        .client_seq(client_seq_c),
+        .response_enable(response_enable_c),
+        .response_seq(response_seq_c),
+        .bank_enable(bank_enable_c),
+        .bank_client(bank_client_c),
+        .hub_ring_enable(hub_ring_enable_c),
+        .hub_ring_client(hub_ring_client_c),
         .cq(338'd0),
         .cr(),
         .cw_in(cw_in),
@@ -507,8 +661,8 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
         .ccw_out(ccw_out),
         .ring_tx_enable(ring_tx_enable),
         .ring_tx_source(ring_tx_source),
-        .replay_enable(replay_enable),
-        .replay_source(replay_source),
+        .replay_enable(replay_enable_c),
+        .replay_source(replay_source_c),
         .bank_status(bank_status_c),
         .bk_xq(bk_xq_c),
         .bk_xq2(bk_xq2_c),
@@ -517,10 +671,10 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
         .bk_eg(bk_eg_c),
         .bk_pq(bk_pq_c),
         .bk_pr(bk_pr_c),
-        .hub_status(hub_status),
-        .mirror_busy(mirror_busy),
-        .vmstat(vmstat),
-        .ring_fault(ring_fault));
+        .hub_status(hub_status_c),
+        .mirror_busy(mirror_busy_c),
+        .vmstat(vmstat_c),
+        .ring_fault(ring_fault_c));
 endmodule
 module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     input wire clk,
@@ -649,9 +803,9 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 7 region copies); release +3 edges
-    wire [6:0] rr;
-    ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges
+    wire [10:0] rr;
+    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -677,73 +831,140 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     assign ccw_out_l6 = ccw_out[1931:1656];
     assign ccw_out_l7 = ccw_out[2207:1932];
     assign ccw_out_h = ccw_out[2223:2208];
-    // bank-side ports: one plain register stage at the pin (inputs land, outputs relay)
+    // g4 reach stages: bank-side ports pin flop + 2 relays (xq_done / xq2_done + 3), hub-side client ports pin flop + 2 relays (plain registers, no reset: flushed while the regional resets are held)
     wire [2207:0] bk_xq_p, bk_xq_c;
-    reg [2207:0] bk_xq_r;
-    always @(posedge clk) bk_xq_r <= bk_xq_p;
-    assign bk_xq_p = bk_xq_c;
-    assign b0_xq = bk_xq_r[275:0];
-    assign b1_xq = bk_xq_r[551:276];
-    assign b2_xq = bk_xq_r[827:552];
-    assign b3_xq = bk_xq_r[1103:828];
-    assign b4_xq = bk_xq_r[1379:1104];
-    assign b5_xq = bk_xq_r[1655:1380];
-    assign b6_xq = bk_xq_r[1931:1656];
-    assign b7_xq = bk_xq_r[2207:1932];
+    reg [2207:0] bk_xq_s0; always @(posedge clk) bk_xq_s0 <= bk_xq_c;
+    reg [2207:0] bk_xq_s1; always @(posedge clk) bk_xq_s1 <= bk_xq_s0;
+    reg [2207:0] bk_xq_s2; always @(posedge clk) bk_xq_s2 <= bk_xq_s1;
+    assign bk_xq_p = bk_xq_s2;
+    assign b0_xq = bk_xq_p[275:0];
+    assign b1_xq = bk_xq_p[551:276];
+    assign b2_xq = bk_xq_p[827:552];
+    assign b3_xq = bk_xq_p[1103:828];
+    assign b4_xq = bk_xq_p[1379:1104];
+    assign b5_xq = bk_xq_p[1655:1380];
+    assign b6_xq = bk_xq_p[1931:1656];
+    assign b7_xq = bk_xq_p[2207:1932];
     wire [2207:0] bk_xq2_p, bk_xq2_c;
-    reg [2207:0] bk_xq2_r;
-    always @(posedge clk) bk_xq2_r <= bk_xq2_p;
-    assign bk_xq2_p = bk_xq2_c;
-    assign b0_xq2 = bk_xq2_r[275:0];
-    assign b1_xq2 = bk_xq2_r[551:276];
-    assign b2_xq2 = bk_xq2_r[827:552];
-    assign b3_xq2 = bk_xq2_r[1103:828];
-    assign b4_xq2 = bk_xq2_r[1379:1104];
-    assign b5_xq2 = bk_xq2_r[1655:1380];
-    assign b6_xq2 = bk_xq2_r[1931:1656];
-    assign b7_xq2 = bk_xq2_r[2207:1932];
+    reg [2207:0] bk_xq2_s0; always @(posedge clk) bk_xq2_s0 <= bk_xq2_c;
+    reg [2207:0] bk_xq2_s1; always @(posedge clk) bk_xq2_s1 <= bk_xq2_s0;
+    reg [2207:0] bk_xq2_s2; always @(posedge clk) bk_xq2_s2 <= bk_xq2_s1;
+    assign bk_xq2_p = bk_xq2_s2;
+    assign b0_xq2 = bk_xq2_p[275:0];
+    assign b1_xq2 = bk_xq2_p[551:276];
+    assign b2_xq2 = bk_xq2_p[827:552];
+    assign b3_xq2 = bk_xq2_p[1103:828];
+    assign b4_xq2 = bk_xq2_p[1379:1104];
+    assign b5_xq2 = bk_xq2_p[1655:1380];
+    assign b6_xq2 = bk_xq2_p[1931:1656];
+    assign b7_xq2 = bk_xq2_p[2207:1932];
     wire [7:0] bk_xq_done_p, bk_xq_done_c;
-    reg [7:0] bk_xq_done_r;
-    always @(posedge clk) bk_xq_done_r <= bk_xq_done_p;
     assign bk_xq_done_p = {b7_xq_done, b6_xq_done, b5_xq_done, b4_xq_done, b3_xq_done, b2_xq_done, b1_xq_done, b0_xq_done};
-    assign bk_xq_done_c = bk_xq_done_r;
+    reg [7:0] bk_xq_done_s0; always @(posedge clk) bk_xq_done_s0 <= bk_xq_done_p;
+    reg [7:0] bk_xq_done_s1; always @(posedge clk) bk_xq_done_s1 <= bk_xq_done_s0;
+    reg [7:0] bk_xq_done_s2; always @(posedge clk) bk_xq_done_s2 <= bk_xq_done_s1;
+    reg [7:0] bk_xq_done_s3; always @(posedge clk) bk_xq_done_s3 <= bk_xq_done_s2;
+    assign bk_xq_done_c = bk_xq_done_s3;
     wire [7:0] bk_xq2_done_p, bk_xq2_done_c;
-    reg [7:0] bk_xq2_done_r;
-    always @(posedge clk) bk_xq2_done_r <= bk_xq2_done_p;
     assign bk_xq2_done_p = {b7_xq2_done, b6_xq2_done, b5_xq2_done, b4_xq2_done, b3_xq2_done, b2_xq2_done, b1_xq2_done, b0_xq2_done};
-    assign bk_xq2_done_c = bk_xq2_done_r;
+    reg [7:0] bk_xq2_done_s0; always @(posedge clk) bk_xq2_done_s0 <= bk_xq2_done_p;
+    reg [7:0] bk_xq2_done_s1; always @(posedge clk) bk_xq2_done_s1 <= bk_xq2_done_s0;
+    reg [7:0] bk_xq2_done_s2; always @(posedge clk) bk_xq2_done_s2 <= bk_xq2_done_s1;
+    reg [7:0] bk_xq2_done_s3; always @(posedge clk) bk_xq2_done_s3 <= bk_xq2_done_s2;
+    assign bk_xq2_done_c = bk_xq2_done_s3;
     wire [2207:0] bk_eg_p, bk_eg_c;
-    reg [2207:0] bk_eg_r;
-    always @(posedge clk) bk_eg_r <= bk_eg_p;
     assign bk_eg_p = {b7_eg, b6_eg, b5_eg, b4_eg, b3_eg, b2_eg, b1_eg, b0_eg};
-    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_r;
+    reg [2207:0] bk_eg_s0; always @(posedge clk) bk_eg_s0 <= bk_eg_p;
+    reg [2207:0] bk_eg_s1; always @(posedge clk) bk_eg_s1 <= bk_eg_s0;
+    reg [2207:0] bk_eg_s2; always @(posedge clk) bk_eg_s2 <= bk_eg_s1;
+    assign bk_eg_c = (MUT == 3) ? bk_eg_p : bk_eg_s2;
     wire [2279:0] bk_pq_p, bk_pq_c;
-    reg [2279:0] bk_pq_r;
-    always @(posedge clk) bk_pq_r <= bk_pq_p;
-    assign bk_pq_p = bk_pq_c;
-    assign b0_pq = bk_pq_r[284:0];
-    assign b1_pq = bk_pq_r[569:285];
-    assign b2_pq = bk_pq_r[854:570];
-    assign b3_pq = bk_pq_r[1139:855];
-    assign b4_pq = bk_pq_r[1424:1140];
-    assign b5_pq = bk_pq_r[1709:1425];
-    assign b6_pq = bk_pq_r[1994:1710];
-    assign b7_pq = bk_pq_r[2279:1995];
+    reg [2279:0] bk_pq_s0; always @(posedge clk) bk_pq_s0 <= bk_pq_c;
+    reg [2279:0] bk_pq_s1; always @(posedge clk) bk_pq_s1 <= bk_pq_s0;
+    reg [2279:0] bk_pq_s2; always @(posedge clk) bk_pq_s2 <= bk_pq_s1;
+    assign bk_pq_p = bk_pq_s2;
+    assign b0_pq = bk_pq_p[284:0];
+    assign b1_pq = bk_pq_p[569:285];
+    assign b2_pq = bk_pq_p[854:570];
+    assign b3_pq = bk_pq_p[1139:855];
+    assign b4_pq = bk_pq_p[1424:1140];
+    assign b5_pq = bk_pq_p[1709:1425];
+    assign b6_pq = bk_pq_p[1994:1710];
+    assign b7_pq = bk_pq_p[2279:1995];
     wire [2127:0] bk_pr_p, bk_pr_c;
-    reg [2127:0] bk_pr_r;
-    always @(posedge clk) bk_pr_r <= bk_pr_p;
     assign bk_pr_p = {b7_pr, b6_pr, b5_pr, b4_pr, b3_pr, b2_pr, b1_pr, b0_pr};
-    assign bk_pr_c = bk_pr_r;
+    reg [2127:0] bk_pr_s0; always @(posedge clk) bk_pr_s0 <= bk_pr_p;
+    reg [2127:0] bk_pr_s1; always @(posedge clk) bk_pr_s1 <= bk_pr_s0;
+    reg [2127:0] bk_pr_s2; always @(posedge clk) bk_pr_s2 <= bk_pr_s1;
+    assign bk_pr_c = bk_pr_s2;
     wire [143:0] bank_status_p, bank_status_c;
-    reg [143:0] bank_status_r;
-    always @(posedge clk) bank_status_r <= bank_status_p;
     assign bank_status_p = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
-    assign bank_status_c = bank_status_r;
+    reg [143:0] bank_status_s0; always @(posedge clk) bank_status_s0 <= bank_status_p;
+    reg [143:0] bank_status_s1; always @(posedge clk) bank_status_s1 <= bank_status_s0;
+    reg [143:0] bank_status_s2; always @(posedge clk) bank_status_s2 <= bank_status_s1;
+    assign bank_status_c = bank_status_s2;
     wire [7:0] bk_flt_p, bk_flt_c;
-    reg [7:0] bk_flt_r;
-    always @(posedge clk) bk_flt_r <= bk_flt_p;
     assign bk_flt_p = {b7_flt, b6_flt, b5_flt, b4_flt, b3_flt, b2_flt, b1_flt, b0_flt};
-    assign bk_flt_c = bk_flt_r;
+    reg [7:0] bk_flt_s0; always @(posedge clk) bk_flt_s0 <= bk_flt_p;
+    reg [7:0] bk_flt_s1; always @(posedge clk) bk_flt_s1 <= bk_flt_s0;
+    reg [7:0] bk_flt_s2; always @(posedge clk) bk_flt_s2 <= bk_flt_s1;
+    assign bk_flt_c = bk_flt_s2;
+    reg [1:0] client_seq_g_s0; always @(posedge clk) client_seq_g_s0 <= client_seq;
+    reg [1:0] client_seq_g_s1; always @(posedge clk) client_seq_g_s1 <= client_seq_g_s0;
+    reg [1:0] client_seq_g_s2; always @(posedge clk) client_seq_g_s2 <= client_seq_g_s1;
+    wire [1:0] client_seq_c = client_seq_g_s2;
+    reg response_enable_g_s0; always @(posedge clk) response_enable_g_s0 <= response_enable;
+    reg response_enable_g_s1; always @(posedge clk) response_enable_g_s1 <= response_enable_g_s0;
+    reg response_enable_g_s2; always @(posedge clk) response_enable_g_s2 <= response_enable_g_s1;
+    wire response_enable_c = response_enable_g_s2;
+    reg [1:0] response_seq_g_s0; always @(posedge clk) response_seq_g_s0 <= response_seq;
+    reg [1:0] response_seq_g_s1; always @(posedge clk) response_seq_g_s1 <= response_seq_g_s0;
+    reg [1:0] response_seq_g_s2; always @(posedge clk) response_seq_g_s2 <= response_seq_g_s1;
+    wire [1:0] response_seq_c = response_seq_g_s2;
+    reg [7:0] bank_enable_g_s0; always @(posedge clk) bank_enable_g_s0 <= bank_enable;
+    reg [7:0] bank_enable_g_s1; always @(posedge clk) bank_enable_g_s1 <= bank_enable_g_s0;
+    reg [7:0] bank_enable_g_s2; always @(posedge clk) bank_enable_g_s2 <= bank_enable_g_s1;
+    wire [7:0] bank_enable_c = bank_enable_g_s2;
+    reg [7:0] bank_client_g_s0; always @(posedge clk) bank_client_g_s0 <= bank_client;
+    reg [7:0] bank_client_g_s1; always @(posedge clk) bank_client_g_s1 <= bank_client_g_s0;
+    reg [7:0] bank_client_g_s2; always @(posedge clk) bank_client_g_s2 <= bank_client_g_s1;
+    wire [7:0] bank_client_c = bank_client_g_s2;
+    reg [1:0] hub_ring_enable_g_s0; always @(posedge clk) hub_ring_enable_g_s0 <= hub_ring_enable;
+    reg [1:0] hub_ring_enable_g_s1; always @(posedge clk) hub_ring_enable_g_s1 <= hub_ring_enable_g_s0;
+    reg [1:0] hub_ring_enable_g_s2; always @(posedge clk) hub_ring_enable_g_s2 <= hub_ring_enable_g_s1;
+    wire [1:0] hub_ring_enable_c = hub_ring_enable_g_s2;
+    reg [1:0] hub_ring_client_g_s0; always @(posedge clk) hub_ring_client_g_s0 <= hub_ring_client;
+    reg [1:0] hub_ring_client_g_s1; always @(posedge clk) hub_ring_client_g_s1 <= hub_ring_client_g_s0;
+    reg [1:0] hub_ring_client_g_s2; always @(posedge clk) hub_ring_client_g_s2 <= hub_ring_client_g_s1;
+    wire [1:0] hub_ring_client_c = hub_ring_client_g_s2;
+    reg replay_enable_g_s0; always @(posedge clk) replay_enable_g_s0 <= replay_enable;
+    reg replay_enable_g_s1; always @(posedge clk) replay_enable_g_s1 <= replay_enable_g_s0;
+    reg replay_enable_g_s2; always @(posedge clk) replay_enable_g_s2 <= replay_enable_g_s1;
+    wire replay_enable_c = replay_enable_g_s2;
+    reg replay_source_g_s0; always @(posedge clk) replay_source_g_s0 <= replay_source;
+    reg replay_source_g_s1; always @(posedge clk) replay_source_g_s1 <= replay_source_g_s0;
+    reg replay_source_g_s2; always @(posedge clk) replay_source_g_s2 <= replay_source_g_s1;
+    wire replay_source_c = replay_source_g_s2;
+    wire [2:0] hub_status_c;
+    reg [2:0] hub_status_g_s0; always @(posedge clk) hub_status_g_s0 <= hub_status_c;
+    reg [2:0] hub_status_g_s1; always @(posedge clk) hub_status_g_s1 <= hub_status_g_s0;
+    reg [2:0] hub_status_g_s2; always @(posedge clk) hub_status_g_s2 <= hub_status_g_s1;
+    assign hub_status = hub_status_g_s2;
+    wire [1:0] mirror_busy_c;
+    reg [1:0] mirror_busy_g_s0; always @(posedge clk) mirror_busy_g_s0 <= mirror_busy_c;
+    reg [1:0] mirror_busy_g_s1; always @(posedge clk) mirror_busy_g_s1 <= mirror_busy_g_s0;
+    reg [1:0] mirror_busy_g_s2; always @(posedge clk) mirror_busy_g_s2 <= mirror_busy_g_s1;
+    assign mirror_busy = mirror_busy_g_s2;
+    wire [18:0] vmstat_c;
+    reg [18:0] vmstat_g_s0; always @(posedge clk) vmstat_g_s0 <= vmstat_c;
+    reg [18:0] vmstat_g_s1; always @(posedge clk) vmstat_g_s1 <= vmstat_g_s0;
+    reg [18:0] vmstat_g_s2; always @(posedge clk) vmstat_g_s2 <= vmstat_g_s1;
+    assign vmstat = vmstat_g_s2;
+    wire [2:0] ring_fault_c;
+    reg [2:0] ring_fault_g_s0; always @(posedge clk) ring_fault_g_s0 <= ring_fault_c;
+    reg [2:0] ring_fault_g_s1; always @(posedge clk) ring_fault_g_s1 <= ring_fault_g_s0;
+    reg [2:0] ring_fault_g_s2; always @(posedge clk) ring_fault_g_s2 <= ring_fault_g_s1;
+    assign ring_fault = ring_fault_g_s2;
     // NW: the wq2-merge leaves (vmm_NWb) sticky flt -> bank status bit 17 (as hfd_hgi_vms_static_NW_glue)
     wire [143:0] bank_status_m;
     assign bank_status_m[17:0] = {bank_status_c[17] | bk_flt_c[0], bank_status_c[16:0]};
@@ -754,17 +975,17 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     assign bank_status_m[107:90] = {bank_status_c[107] | bk_flt_c[5], bank_status_c[106:90]};
     assign bank_status_m[125:108] = {bank_status_c[125] | bk_flt_c[6], bank_status_c[124:108]};
     assign bank_status_m[143:126] = {bank_status_c[143] | bk_flt_c[7], bank_status_c[142:126]};
-    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(13),.UPPER(8'b11000011),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : 0)) u_core (
         .clk(clk),
         .rst_n(rr),
         .sid(2'd2),
-        .client_seq(client_seq),
-        .response_enable(response_enable),
-        .response_seq(response_seq),
-        .bank_enable(bank_enable),
-        .bank_client(bank_client),
-        .hub_ring_enable(hub_ring_enable),
-        .hub_ring_client(hub_ring_client),
+        .client_seq(client_seq_c),
+        .response_enable(response_enable_c),
+        .response_seq(response_seq_c),
+        .bank_enable(bank_enable_c),
+        .bank_client(bank_client_c),
+        .hub_ring_enable(hub_ring_enable_c),
+        .hub_ring_client(hub_ring_client_c),
         .cq(338'd0),
         .cr(),
         .cw_in(cw_in),
@@ -773,8 +994,8 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
         .ccw_out(ccw_out),
         .ring_tx_enable(ring_tx_enable),
         .ring_tx_source(ring_tx_source),
-        .replay_enable(replay_enable),
-        .replay_source(replay_source),
+        .replay_enable(replay_enable_c),
+        .replay_source(replay_source_c),
         .bank_status(bank_status_m),
         .bk_xq(bk_xq_c),
         .bk_xq2(bk_xq2_c),
@@ -783,9 +1004,9 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
         .bk_eg(bk_eg_c),
         .bk_pq(bk_pq_c),
         .bk_pr(bk_pr_c),
-        .hub_status(hub_status),
-        .mirror_busy(mirror_busy),
-        .vmstat(vmstat),
-        .ring_fault(ring_fault));
+        .hub_status(hub_status_c),
+        .mirror_busy(mirror_busy_c),
+        .vmstat(vmstat_c),
+        .ring_fault(ring_fault_c));
 endmodule
 `default_nettype wire
