@@ -25,5 +25,11 @@
   "qualification": "23,968-edge exact replay plus HEAD/ACT/REFRESH mutants; full66op154GO parent integration before gate",
   "queue_count_local_copies": 4,
   "queue_count_delta_ff": 24,
-  "act_valid_local_delta_ff": 8
+  "act_valid_local_delta_ff": 8,
+  "timer_successor": {
+    "delta_ff": 0,
+    "delta_edges": 0,
+    "architecture": "Unconditional width-preserving saturating decrement datapaths with priority reload mux; remove duplicated reload and DFFE enable dependence on local bank commands.",
+    "qualification": "Exact trace and three mutants, then actual mapped all-driver loads; no source-level fanout claim."
+  }
 }

@@ -230,14 +230,15 @@ module ot_hbm_r14_aq_pc_safe #(
     always @(posedge clk or negedge reset_regions[b])
       if (!reset_regions[b]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; wrr <= 0; end
       else begin
-        if (wr_e) wrr <= 5'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
-        if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= 5'(T_RAS - 1); end
-        else begin if (rcd != 0) rcd <= rcd - 1'b1; if (ras != 0) ras <= ras - 1'b1; end
-        if (rd_e) rtp <= 3'(T_RTP - 1); else if (rtp != 0) rtp <= rtp - 1'b1;
-        if (act_e) aok <= 9'(T_RAS + T_RP - 1);
-        else if (rfp_e) aok <= 9'(T_RFCPB - 1);
-        else if (pre_e && aok < 9'(T_RP)) aok <= 9'(T_RP - 1);
-        else if (aok != 0) aok <= aok - 1'b1;
+        // Saturation belongs in the arithmetic datapath. Each command
+        // selects one reload value, without a separate wide DFFE enable.
+        wrr <= wr_e ? 5'(T_WRR-1) : wrr-5'(wrr!=0);
+        rcd <= act_e ? 5'(T_RCD-1) : rcd-5'(rcd!=0);
+        ras <= act_e ? 5'(T_RAS-1) : ras-5'(ras!=0);
+        rtp <= rd_e ? 3'(T_RTP-1) : rtp-3'(rtp!=0);
+        aok <= act_e ? 9'(T_RAS+T_RP-1) :
+               rfp_e ? 9'(T_RFCPB-1) :
+               ((pre_e&&aok<9'(T_RP)) ? 9'(T_RP-1) : aok-9'(aok!=0));
       end
     assign rcd_z[b] = (rcd == 0); assign rcdw_z[b] = (rcd <= 5'(T_RCD - T_RCDW));
     assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0) && (wrr == 0);
