@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm.d4g.gen2_rebind_set2.v1",
+ "by": "H-D4G5/REBIND 10-18 (HANDOFF 0gd)",
+ "how_to_apply": "GEN2 owner applies these AFTER SMFRAME (claude/hd4g5-smframe regenerates grants_d4g.py/plan_d4g.py coordinates). Sizes/faces only; no absolute coordinates here, so this stays separable from the SM frame change. Netlist-side items need the named RTL/owner first.",
+ "slot_changes": [
+  {"block": "dbk_<q> (grant hb_dbk_<q>, cell ot_hgi_dma_back_static_vp4_banks_cp)", "outline": [606.96, 542.16], "was": [604.8, 540.0],
+   "pins": "wd banks 0-3 on S face, banks 4-7 on N face (wires only, 0 cycles)", "source": "OWNERS-HBM/STK kit hv16_dbk_cpl (claude/owners-hbm-1018-stk)"},
+  {"block": "idx_sel (cell ot_hbm_idx_selector_static)", "outline": [600.0, 450.0], "was": [600.0, 450.0],
+   "pins": "in W, selected_line E, out_line S (unused); clock clk_ctl single (stale clock_entry offset 581.304 on E -> take from kit hidx_sel_g4)", "source": "IDX-SMALL claude/hbm-idx-small-1018"},
+  {"block": "idx_q (cell ot_hbm_idx_query_static) + l4 idx_q_<Q>", "outline": [260.0, 260.0], "was": [260.0, 260.0],
+   "clock_entry": "face W (kit hidx_q_r4 has clk on W; grant says E offset 224.3)", "source": "hidx_q_r4-r4-05854d3ef"},
+  {"block": "vmks_<q><k> x16 (ot_hbm_svc_vm_kshare_splitstrap; today slot pc_<q><k> 146.88)", "outline": [432.0, 388.8],
+   "note": "pin-sized (<= 5.8 pins/um); needs its own slot beside pc_<q><k>; netlist rebind already in GEN1 (l5)", "source": "SVC-SMALL kit hdie_svc_vm_kshare"},
+  {"block": "vmh_SW / vmh_NW (hb_vms_SW/NW = hfd_hgi_vms_glue_{sw,nw}_t, rebound in GEN1 l5)", "outline": [777.6, 1555.2], "was": [480.0, 3200.0],
+   "pins": "ring face 8,896 b toward the centre channel (SW/NW: E face), banks 0-3 far face, N banks 4,5 + cq, S banks 6,7 + cr/control; clock mid ring face", "source": "VM-GLUE vms_glue_kit_specs.py"},
+  {"block": "qdq decoders u_dxl/u_dbq/u_daq (inside hb_quant_NW split)", "outline": "closed qw_{dxl,dbq,daq}_ref views", "place": "beside quant_NW_xp E face (dec_x 1024 b out, y 512 b back)", "note": "no grant slot today"},
+  {"block": "qdq program_leaf (ot_hgi_qdq_native_program_leaf COMPACT1)", "outline": "OPEN: needs its own kit (start from closed hgi_qdq_program_sw125_r6)", "place": "near host_cp target 48 / quant_NW_xp"}
+ ],
+ "dropped": {"sfup_vs_sfucore_face_mismatch": "coordinator HANDOFF 0gj: decided (k9 pins E->N, cores take store orientations); owned by lane SFUPLAN claude/hd4g5-sfuplan. REBIND analysis agreed: N-face pins = ~0.10 mm links (2,213 b, 0 relays) vs E face avg 0.99 / max 1.83 mm; store-east blocked by dbk_SW + cij_SW."},
+ "netlist_items_not_in_gen1": [
+  {"item": "hb_argmax -> ot_hbm_argmax_static_sw_vm_r2", "why": "NOT port-identical: vm_rr 264 b (r2) vs 2,056 b; needs ot_hbm_idx_vm_share_static_am argmax_m (8:1 sector merge in the 4 pair leaves) on the IDX side, which the l4 rootctl does not expose", "owner": "HBM-RTL4 / HBM-B-RTL2 (IDX root share) then die layer", "compiler": "ARGMAX reads +VMX 5 edges"},
+  {"item": "cij_SE/NW/NE (ot_hgi_coll_inj_idx_join_rg x3 more)", "why": "not a rebind: inserts a block between cxij_<q>.inj_d and hb_coll_<q>.inj_d and needs hb_idx__link.tx (2,180 b) at every quadrant = +6,540 b die-wide fan-out from one link; hb_coll_<SE,NW,NE>.inj_idx/hgi_inj_addr idx use unknown", "owner": "coordinator decision (does any non-SW COLL engine inject IDX frames?) + HBM-B-RTL3"},
+  {"item": "hb_vms_SE / hb_vms_NE tiles", "why": "VM-GLUE E master hfd_hgi_vms_glue_e_t is the NC 1 SEb/NEb glue (cq 338 / cr 274, client_seq 4); l4 reverted SE/NE to NC 0 (no IDX hub client) -> an NC 0 E tile master (sid strap) is owed", "owner": "VM-GLUE"},
+  {"item": "fr_<q> / fcx_<q> fault wrappers", "why": "d4g layers widened them: fr_SE N9/0x30, fr_SW N11/0x120, fr_NW N9/0x50, fr_NE N10/0x50, fcx_<q> N6/0x3f; SVC-SMALL wrappers _n8_s40/_n9_s40/_n11_s100 are GEN0 parameters and match nothing in d4g", "owner": "SVC-SMALL (new thin wrappers at the d4g params); fs_<q> -> _n8_s0 already in GEN1"},
+  {"item": "su_prog root_h5 CPIN 1 / SDLY 3 (claude/hbm-rtl5-pg-1018 491daafd7)", "why": "GEN1 binds the benched SDLY 2 version (bench2 PASS); CPIN version (native capture fix) has no verdict yet; port-identical", "owner": "HBM-RTL5/pg"},
+  {"item": "cxport soft parent", "why": "nothing to do: l2 already binds 4 cxdl + cxij + cxrc per quadrant (SU-CX: parent = soft)"},
+  {"item": "SE/NE host leaves r2", "why": "nothing to do: l1 binds ot_hbm_host_cfg_leaf_se2/ne2"}
+ ],
+ "compiler_owed_by_gen1_rebinds": ["NW VM programme: Quant read slot +1, write slot +5 (qdq split)", "SU programme root5: start advance DEPTH+6, outputs +2, config image --root5, reset wait >= 3"]
+}

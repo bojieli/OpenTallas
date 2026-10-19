@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hbm_idx_vm_share2_leaf_r.lef",
+    "sha256": "50852c564437ba43646e4f249434a7b82a0b8d359e48bd5a79c0813c97e12c94"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r2-a1d3f7d2c/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r2-a1d3f7d2c/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r2-a1d3f7d2c/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/raw/ot_hbm_idx_vm_share2_leaf_r.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r2-a1d3f7d2c/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/ot_hbm_idx_vm_share2_leaf_r.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 105 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r2-a1d3f7d2c/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/ot_hbm_idx_vm_share2_leaf_r.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hbm_idx_vm_share2_leaf_r 108.0 x 108.0: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 1647 blocked-above 0 blocked-same 0; clock clk insertion 160 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hbm_idx_vm_share2_leaf_r",
+      "W": 108.0,
+      "H": 108.0,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 20,
+            "dir": "V",
+            "spread": 0.95,
+            "coverage": 1.0,
+            "shapes_on_top": 20
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 20,
+            "dir": "V",
+            "spread": 0.95,
+            "coverage": 1.0,
+            "shapes_on_top": 20
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1647,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 160.01,
+          "min_ps": 89.23
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 105
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_hbm_idx_vm_share2_leaf_r.lef",
+    "sha256": "9b636dd34d7fa7dff843159202dae6a2aa6f6a40aaa26fa8a2edff6b25695ac8"
+  }
+}

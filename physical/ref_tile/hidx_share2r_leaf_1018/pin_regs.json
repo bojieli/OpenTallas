@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_vm_share2_leaf_r",
+ "enable": false,
+ "reason": "RTL registers every OUTPUT at the pin (OWN-SHARE2P r2: vm_rq output flops with the one-gate owner select in front, one response flop set per client face a_rr*/b_rr* with the owner AND in front, fault flop); inputs reach their flop through at most one AND-OR: rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv ot_hbm_idx_vm_share2_leaf_r (coordinator 0hk, +1 rq / +1 rr, proven by run_vm_share2_r.sh lockstep). A synthesis wrapper would add a second unpriced stage. clk/rst_n pass through."
+}

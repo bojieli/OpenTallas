@@ -233,6 +233,47 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
     (out/'cols_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
+def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=32, mut_q=None, start_depth=2):
+    """HBM-RTL5 2026-10-18 (opt-in, --root5): whole-SU line lowered for ot_hbm_su_programme_root_h5 + PARTS per-column
+    clusters ot_hbm_su_programme_pslice_c5 (pgp_<q>): quarter k = lower_columns() of line bits [k*SB,(k+1)*SB) in
+    out/q<k>, host config bank = part_banks*k + col_bits*column + local.  Also lowers the r4 reference (root_h 4 x 98 +
+    pslice_q4, lower_partitioned) into out/ref4 so the whole-programme bench can run both on one host stimulus.
+    mut_q: quarter whose column 3 index (PC offset) and column 2 dictionary word are mutated in config_mut.mem."""
+    assert line_bits%parts==0
+    sb=line_bits//parts; cols=(sb+255)//256
+    assert col_bits*cols<=part_banks and part_banks*parts<65536
+    out.mkdir(parents=True,exist_ok=True)
+    rows=[int(t,16) for t in source.read_text().split()]
+    lines=[]; lines_mut=[]; caps=[]; per=[]
+    for k in range(parts):
+        d=out/f'q{k}'; d.mkdir(parents=True,exist_ok=True)
+        (d/'source.mem').write_text(''.join(f'{(r>>(k*sb))&((1<<sb)-1):0{(sb+3)//4}x}\n' for r in rows))
+        m=lower_columns(d/'source.mem',d,line_bits=sb,col_bits=col_bits,
+                        mut_pc_col=3 if mut_q==k else None,mut_tpl_col=2 if mut_q==k else None)
+        caps.append([c['dictionary_banks'] for c in m['columns']]); per.append(m)
+        for src,dst in (('config.mem',lines),('config_mut.mem',lines_mut)):
+            for l in (d/src).read_text().split():
+                dst.append(f'{part_banks*k+int(l[:4],16):04x}{l[4:]}\n')
+    # one cluster leaf layout for every quarter (one pgp_<q> master): leaf choice per column must agree
+    leaves=[[c['leaf'] for c in m['columns']] for m in per]
+    assert all(l==leaves[0] for l in leaves), f'quarter leaf layouts differ: {leaves}'
+    cap=[max(c[i] for c in caps) for i in range(cols)]
+    (out/'config.mem').write_text(''.join(lines)); (out/'config_mut.mem').write_text(''.join(lines_mut))
+    (out/'expected.mem').write_text(''.join(f'{r:0{(line_bits+3)//4}x}\n' for r in rows))
+    ref=lower_partitioned(source,out/'ref4',parts,line_bits,start_depth)
+    (out/'root5_params.svh').write_text(
+        f'localparam integer R5_PARTS={parts}, R5_SB={sb}, R5_NC={cols}, R5_EDGES={len(rows)}, R5_WRITES={len(lines)}, '
+        f'R5_PART_BANKS={part_banks};\n'
+        f'localparam [32*R5_NC-1:0] R5_CAP={{'+','.join("32'd"+str(x) for x in reversed(cap))+'};\n')
+    man=dict(schema='opentallas.hbm.su_programme.root5.v1',qualified=False,source=str(source),source_sha256=sha(source),
+             edges=len(rows),line_bits=line_bits,parts=parts,slice_bits=sb,columns=cols,part_banks=part_banks,
+             bank_numbering=f'{part_banks} x part + {col_bits} x column + local bank',leaves=leaves[0],
+             dictionary_caps_per_quarter=caps,config_transactions=len(lines),
+             reference=dict(parts=ref['parts'],slice_macros=ref['slice_macros'],config_transactions=ref['config_transactions']),
+             mut_q=mut_q)
+    (out/'root5_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
+    return man
+
 def main():
     p=argparse.ArgumentParser(); p.add_argument('source',type=Path); p.add_argument('out',type=Path)
     p.add_argument('--extra-mem',type=Path); p.add_argument('--extra-bits',type=int,default=0)
@@ -244,7 +285,11 @@ def main():
     p.add_argument('--mut-pc-slice',type=int)
     p.add_argument('--columns',action='store_true',help='opt-in: per-column cluster lowering of one quarter line')
     p.add_argument('--mut-pc-col',type=int); p.add_argument('--mut-tpl-col',type=int)
+    p.add_argument('--root5',action='store_true',help='opt-in: root_h5 + 4 per-column clusters (whole SU line)')
+    p.add_argument('--mut-q',type=int)
     a=p.parse_args()
+    if a.root5:
+        print(json.dumps(lower_root5(a.source,a.out,line_bits=a.line_bits,mut_q=a.mut_q,start_depth=a.start_depth),indent=2)); return
     if a.columns:
         print(json.dumps(lower_columns(a.source,a.out,a.line_bits,mut_pc_col=a.mut_pc_col,mut_tpl_col=a.mut_tpl_col),
                          indent=2)); return

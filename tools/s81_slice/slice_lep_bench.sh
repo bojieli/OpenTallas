@@ -1,9 +1,9 @@
 #!/bin/bash
-# slice_lep_bench.sh <outdir> [MUT none|swap]  (cwd = repo root): RTL-BUILD-S81 composition bench of the end-slice masters
+# slice_lep_bench.sh <outdir> [MUT none|swap] [B lepe|lepe_nh]  (cwd = repo root): RTL-BUILD-S81 composition bench of the end-slice masters
 # (tb_s81sl_slice_lep: ot_s81sl_slice_lepw + ot_s81sl_slice_lepe, full slice clusters, through 2 x 2 ot_pdie_ucie).
-set -u; O=$1; M=${2:-none}; mkdir -p $O
+set -u; O=$1; M=${2:-none}; BV=${3:-lepe}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"
+D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"; [ $BV = lepe_nh ] && D="$D +define+TB_SLEP_NH"; M0=$M; M=${M}_$BV
 MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
 CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
@@ -23,5 +23,5 @@ srcs="$(cat physical/hbm_norm_split_20261008/sources.f rtl/dsrom_sys/s81_dv/slic
 grep -E "PINMISSING|PINCONNECTEMPTY|PINNOCONNECT" $O/sbuild_$M.log | grep -v "tb_s81sl_slice_lep" | head -8
 $O/sobj_$M/Vtb_s81sl_slice_lep > $O/srun_$M.log 2>&1
 grep -E "^SLEP_STATS|^MISMATCH|^PASS|^FAIL" $O/srun_$M.log | head -10
-if [ $M = none ]; then grep -q '^PASS slice_lep' $O/srun_$M.log && { echo "BENCH_PASS slice_lep"; exit 0; }; echo "BENCH_FAIL slice_lep"; exit 1; fi
+if [ $M0 = none ]; then grep -q '^PASS slice_lep' $O/srun_$M.log && { echo "BENCH_PASS slice_lep"; exit 0; }; echo "BENCH_FAIL slice_lep"; exit 1; fi
 grep -q '^FAIL slice_lep' $O/srun_$M.log && { echo "NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=$M"; exit 0; }; echo "NEGATIVE_CONTROL_PASSED MUT=$M"; exit 1

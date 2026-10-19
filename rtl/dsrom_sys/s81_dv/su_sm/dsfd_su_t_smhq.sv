@@ -15,6 +15,10 @@
 //     lanes -> tap  (e row)    SRL stations here (flop-last)
 //     divide -> tap (o row)    SRL stations here (flop-last)
 //   Only quad 0's valids (lane 1, lane 0 sink) and its e_v / o_v are used by the parent (lockstep lanes).
+//   SMH 10-18: EVERY pin is registered (owner pin-register rule): the cfg_q strap is captured flop-first (static, no
+//   cycle cost) and the divide faults f leave flop-last (+1 edge on the sticky fault, read only at job end).  The 10-17 kit had
+//   cfg_q -> child cfg_p / sk_en and child o_f -> f unregistered, so the hard children's clock pins (spine-compensated
+//   ~225 ps early for their own insertion) were the pin flops: TT pin-flop spread 240 ps on raw child clock pins.
 // MUT (bench only; the kit builds MUT 0): 5 = stale den in the divide engines (behavioural smd STALEDEN),
 //   6 = the root -> quad hop one station short (a split-latency mutant).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -75,7 +79,9 @@ module dsfd_su_t_smhq #(
     ot_hdc_delay #(.W(64), .D(RQ)) u_rd (.clk(clk), .rst_n(rst_l), .d({m_nmb, dn}), .q({rnmb, rden}));
 
     wire [3:0] l_mxv, l_ev, l_es, l_el; wire [127:0] l_mx, l_e;
-    wire sk0 = (cfg_q == 2'd0);                        // the head's lane 0 carries the sink column
+    reg [1:0] r_cfg;                                   // strap, flop-first (static: no reset needed)
+    always @(posedge clk) r_cfg <= cfg_q;
+    wire sk0 = (r_cfg == 2'd0);                        // the head's lane 0 carries the sink column
     genvar ln, pp;
     generate for (ln = 0; ln < 4; ln = ln + 1) begin : g_l
         dsfd_su_t_sml u_sml (
@@ -93,21 +99,22 @@ module dsfd_su_t_smhq #(
     ot_hdc_delay #(.W(128), .D(SRL - 1)) u_ed (.clk(clk), .rst_n(rst_l), .d(q_e), .q(e_d));
 
     // divide engines: pairs 2q + pp
-    wire [1:0] d_ov; wire [63:0] d_o;
+    wire [1:0] d_ov; wire [63:0] d_o; wire [1:0] d_f;
     generate for (pp = 0; pp < 2; pp = pp + 1) begin : g_p
-        wire [2:0] CP = {cfg_q, pp[0]};
+        wire [2:0] CP = {r_cfg, pp[0]};
         if (MUT == 5) begin : g_mut
             ot_s81_su_smd #(.LPH(16), .LM(5), .LA(4), .STALEDEN(1)) u_smd (
                 .clk(clk), .rst_in(rst_l), .cfg_p(CP), .i_pv(rp_v), .i_pa(rd_d[64 * pp +: 64]),
                 .i_dv(rdv), .i_den(rden), .i_csv(rcs_v), .i_csi(rcs_i), .i_csd(rcs_d),
-                .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(f[pp]));
+                .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(d_f[pp]));
         end else begin : g_hard
             dsfd_su_t_smd u_smd (
                 .ck(clk), .rst(rst_l), .cfg_p(CP), .i_pv(rp_v), .i_pa(rd_d[64 * pp +: 64]),
                 .i_dv(rdv), .i_den(rden), .i_csv(rcs_v), .i_csi(rcs_i), .i_csd(rcs_d),
-                .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(f[pp]));
+                .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(d_f[pp]));
         end
     end endgenerate
     ot_hdc_delay #(.W(1), .D(SRL), .RESET(1)) u_ov (.clk(clk), .rst_n(rst_l), .d(d_ov[0]), .q(o_v));
     ot_hdc_delay #(.W(64), .D(SRL)) u_od (.clk(clk), .rst_n(rst_l), .d(d_o), .q(o_d));
+    ot_hdc_delay #(.W(2), .D(1), .RESET(1)) u_fo (.clk(clk), .rst_n(rst_l), .d(d_f), .q(f));   // faults flop-last
 endmodule

@@ -56,23 +56,23 @@ case "$c" in
   bash "$n/run_wb_cutthrough_cdc_bench.sh" "$out/cutthrough" | tee -a "$out/wb_default.log"
   grep -q 'WB_PIPELINE_CDC_MUTANT rejected' "$out/wb_default.log"
   echo "STK_WB_DEFAULT PASS" ;;
- sf_q)        ivl "$c" pass tb_hbm_svc_stack_fault_q "$n/tb_hbm_svc_stack_fault_q.sv" "$n/ot_hbm_svc_stack_fault.sv" ;;
- sf_mut_pair) IVP="-Ptb_hbm_svc_stack_fault_q.MUT=1" ivl "$c" fail tb_hbm_svc_stack_fault_q "$n/tb_hbm_svc_stack_fault_q.sv" "$n/ot_hbm_svc_stack_fault.sv" ;;
+ sf_q)        ivl "$c" pass tb_hbm_svc_stack_fault_q "$n/tb_hbm_svc_stack_fault_q.sv" "$n/ot_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_async_fifo.sv" rtl/lib/ot_reset_sync.sv ;;
+ sf_mut_pair) IVP="-Ptb_hbm_svc_stack_fault_q.MUT=1" ivl "$c" fail tb_hbm_svc_stack_fault_q "$n/tb_hbm_svc_stack_fault_q.sv" "$n/ot_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_async_fifo.sv" rtl/lib/ot_reset_sync.sv ;;
  sf_mut_share)
   # mutant applied to the quadrant instances only (module renamed so the references stay the master)
   sed -e 's/^module ot_hbm_svc_stack_fault /module ot_hbm_svc_stack_fault_mut /' -e 's/if(|sh_q)sh<=1;//' "$n/ot_hbm_svc_stack_fault.sv" > "$out/sf_mut.sv"
   grep -q 'if(|sh_q)sh<=1;' "$out/sf_mut.sv" && { echo 'mutant not applied'; exit 1; }
   sed -e 's/ot_hbm_svc_stack_fault #(.MUT(MUT),.OWN_W(6),.NPC(16)/ot_hbm_svc_stack_fault_mut #(.MUT(MUT),.OWN_W(6),.NPC(16)/' "$n/tb_hbm_svc_stack_fault_q.sv" > "$out/tb_sf_mut.sv"
-  ivl "$c" fail tb_hbm_svc_stack_fault_q "$out/tb_sf_mut.sv" "$out/sf_mut.sv" "$n/ot_hbm_svc_stack_fault.sv" ;;
+  ivl "$c" fail tb_hbm_svc_stack_fault_q "$out/tb_sf_mut.sv" "$out/sf_mut.sv" "$n/ot_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_async_fifo.sv" rtl/lib/ot_reset_sync.sv ;;
  sf_default)
-  ivl sf_default_m0 pass tb_hbm_svc_stack_fault "$n/tb_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_stack_fault.sv"
+  ivl sf_default_m0 pass tb_hbm_svc_stack_fault "$n/tb_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_async_fifo.sv" rtl/lib/ot_reset_sync.sv
   grep -q '^PASS tb_hbm_svc_stack_fault MUT=0' "$out/sf_default_m0.log"
-  iverilog -g2012 -s tb_hbm_svc_stack_fault -Ptb_hbm_svc_stack_fault.MUT=1 -o "$out/sf_default_m1.vvp" "$n/tb_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_stack_fault.sv"
+  iverilog -g2012 -s tb_hbm_svc_stack_fault -Ptb_hbm_svc_stack_fault.MUT=1 -o "$out/sf_default_m1.vvp" "$n/tb_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_stack_fault.sv" "$n/ot_hbm_svc_async_fifo.sv" rtl/lib/ot_reset_sync.sv
   vvp -n "$out/sf_default_m1.vvp" > "$out/sf_default_m1.log" 2>&1 || true
   grep -q '^FAIL tb_hbm_svc_stack_fault MUT=1' "$out/sf_default_m1.log"
   echo "STK_SF_DEFAULT PASS" ;;
- rc_q)          ivl "$c" pass tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" ;;
- rc_mut[1-4])   IVP="-Ptb_hbm_pc_refresh_cfg_q.MUT=${c#rc_mut}" ivl "$c" fail tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" ;;
+ rc_q)          ivl "$c" pass tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" rtl/lib/ot_rst_relay.sv ;;
+ rc_mut[1-4])   IVP="-Ptb_hbm_pc_refresh_cfg_q.MUT=${c#rc_mut}" ivl "$c" fail tb_hbm_pc_refresh_cfg_q "$n/tb_hbm_pc_refresh_cfg_q.sv" "$n/ot_hbm_pc_refresh_cfg.sv" rtl/lib/ot_rst_relay.sv ;;
  equiv_default)
   for m in stack_fault wb_cutthrough_cdc; do
    sed "s/^module ot_hbm_svc_${m} /module gold_${m} /" "$ref/ot_hbm_svc_${m}.gen0.sv" > "$out/gold_${m}.sv"

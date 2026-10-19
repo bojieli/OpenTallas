@@ -52,13 +52,21 @@
 // the TX landing burst bound are unchanged.
 // Mutants (bench only): OT_S81SL_LEP_MUT_SWAP (halves swapped onto the lanes), OT_S81SL_LEP_MUT_NOPAIR (re-assembly
 // releases on lane 0 alone), OT_S81SL_LEP_MUT_NOOVF (landing-FIFO overflow not flagged), OT_S81SL_LEP_MUT_KSOFF
-// (key-store payload decoded one bit off), OT_S81SL_LEP_MUT_HDROP (a pending t_v host word overwritten).
+// (key-store payload decoded one bit off), OT_S81SL_LEP_MUT_HDROP (a pending t_v host word overwritten),
+// OT_S81SL_LEP_MUT_NHACC (a HOST_EN = 0 endpoint accepts HOST / KS frames silently).
+// HOST_EN (S81-LEPV 2026-10-18, owner "remove ties where cheap"): only s_7N carries the host plane.  HOST_EN = 0 removes
+// the host plane from the leaf (no t_host / t_kd pin flops, no THOST / TKD pending registers, no f_host / f_ks / f_lf
+// registers; a HOST / KS frame arriving there is a protocol fault like any unknown frame type).  The PORTS go with it in
+// the parameter-free tops ot_s81sl_lep_nh (leaf) and ot_s81sl_slice_lepw / ot_s81sl_slice_lepe_nh (die masters), so the
+// three host-less endpoints carry no tied die pads.  The core's host ports are unread at HOST_EN = 0 (generate), so
+// synthesis of a _nh top keeps no host pin and no host logic.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_lep #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
     parameter integer CRED = 8,        // TX credits = the lane's core-face landing depth (ot_link_credit_rx DEPTH 8)
-    parameter integer SRAM = 1         // 1: TX storage in SRAM macros (0: flops, same cycle behaviour)
+    parameter integer SRAM = 1,        // 1: TX storage in SRAM macros (0: flops, same cycle behaviour)
+    parameter integer HOST_EN = 1      // 1: host plane (THOST / TKD out, HOST / KS in, f_lf); 0: ring beats only
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -81,7 +89,7 @@ module ot_s81sl_lep #(
     input  wire [76:0]     t_host,     // seq_host t_host {alive, st 11, t_v, t_d 64}  -> THOST frames
     input  wire [53:0]     t_kd,       // seq_host t_kd {done, tok 21, 32'b0}          -> TKD frames
     output wire [514:0]    f_host,     // -> seq_host f_host {h_cls 2, h_d 512, h_v}   <- HOST frames
-    output reg  [3:0]      f_lf,       // -> seq_host f_lf {fault, live} x 2 (lane 1, lane 0)
+    output wire [3:0]      f_lf,       // -> seq_host f_lf {fault, live} x 2 (lane 1, lane 0)
     output wire [52:0]     f_ks,       // -> seq_host f_ks {start, user 10, tok 21, pos 21} <- KS frames
     output reg             fault
 );
@@ -104,11 +112,33 @@ module ot_s81sl_lep #(
     // THOST is sent on t_v or on a change of {alive, st}; TKD on done.  A frame waits in its pending register while ring
     // beats (which never wait) take the lanes; a status-only change merges into a pending t_v frame; a second t_v / done
     // event while one is still pending is a sticky fault (the compiler's host slots respect the lane rate).
+    wire hp_go, kp_go, herr; wire [76:0] ph_d; wire [53:0] pk_d;
+    generate if (HOST_EN != 0) begin : g_htx
     reg [76:0] thq; reg [53:0] tkq;
     always @(posedge clk) begin thq <= t_host; tkq <= t_kd; end
-    reg ph_v, pk_v, herr; reg [76:0] ph_d; reg [53:0] pk_d; reg [11:0] st_l;
+    reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; reg [11:0] st_l;
     wire ev_h = thq[64] || thq[76:65] != st_l, ev_k = tkq[53];
-    wire hp_go = !rov && ph_v, kp_go = !rov && !ph_v && pk_v;
+    assign hp_go = !rov && ph_v; assign kp_go = !rov && !ph_v && pk_v;
+    assign herr = he; assign ph_d = pd; assign pk_d = kd;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin ph_v <= 1'b0; pk_v <= 1'b0; he <= 1'b0; st_l <= 12'd0; end
+        else begin
+            if (hp_go) ph_v <= 1'b0;
+            if (kp_go) pk_v <= 1'b0;
+            if (ev_h) begin
+                ph_v <= 1'b1; st_l <= thq[76:65];
+`ifdef OT_S81SL_LEP_MUT_HDROP
+                pd <= thq;                                             // MUTANT: a pending t_v word is overwritten
+`else
+                pd <= (ph_v && !hp_go && pd[64] && !thq[64]) ? {thq[76:65], pd[64:0]} : thq;
+                if (ph_v && !hp_go && pd[64] && thq[64]) he <= 1'b1;
+`endif
+            end
+            if (ev_k) begin pk_v <= 1'b1; kd <= tkq; if (pk_v && !kp_go) he <= 1'b1; end
+        end
+    end else begin : g_nhtx                            // HOST_EN 0: ring beats only (t_host / t_kd unread)
+    assign hp_go = 1'b0; assign kp_go = 1'b0; assign herr = 1'b0; assign ph_d = 77'd0; assign pk_d = 54'd0;
+    end endgenerate
     wire push = rov || hp_go || kp_go;
     reg [2*H-1:0] fr;
     always @(*) begin
@@ -117,22 +147,6 @@ module ot_s81sl_lep #(
         else if (hp_go) begin fr[3:1] = 3'd3; fr[4 +: 77] = ph_d; end
         else if (kp_go) begin fr[3:1] = 3'd4; fr[4 +: 54] = pk_d; end
     end
-    always @(posedge clk or negedge rn)
-        if (!rn) begin ph_v <= 1'b0; pk_v <= 1'b0; herr <= 1'b0; st_l <= 12'd0; end
-        else begin
-            if (hp_go) ph_v <= 1'b0;
-            if (kp_go) pk_v <= 1'b0;
-            if (ev_h) begin
-                ph_v <= 1'b1; st_l <= thq[76:65];
-`ifdef OT_S81SL_LEP_MUT_HDROP
-                ph_d <= thq;                                           // MUTANT: a pending t_v word is overwritten
-`else
-                ph_d <= (ph_v && !hp_go && ph_d[64] && !thq[64]) ? {thq[76:65], ph_d[64:0]} : thq;
-                if (ph_v && !hp_go && ph_d[64] && thq[64]) herr <= 1'b1;
-`endif
-            end
-            if (ev_k) begin pk_v <= 1'b1; pk_d <= tkq; if (pk_v && !kp_go) herr <= 1'b1; end
-        end
     reg sq;                                            // frame-sequence parity (TX)
     always @(posedge clk or negedge rn) if (!rn) sq <= 1'b0; else if (push) sq <= ~sq;
 `ifdef OT_S81SL_LEP_MUT_SWAP
@@ -232,32 +246,49 @@ module ot_s81sl_lep #(
     end endgenerate
     assign li0_r = lir[0]; assign li1_r = lir[1];
     wire [H:0] h0 = rhd[H:0], h1 = rhd[2*H+1:H+1];
-    reg perr; reg fh_v, fk_s; reg [513:0] fh_d; reg [51:0] fk_d;
-`ifdef OT_S81SL_LEP_MUT_KSOFF
-    wire [52:0] ksp = h0[5 +: 53];                     // MUTANT: key-store payload read one bit off
+    reg perr;
+    // host-plane frame types this endpoint accepts (HOST 1, KS 2) -- none at HOST_EN 0
+`ifdef OT_S81SL_LEP_MUT_NHACC
+    wire hacc = !h0[0] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);        // MUTANT: accepted even at HOST_EN 0
 `else
-    wire [52:0] ksp = h0[4 +: 53];
+    wire hacc = (HOST_EN != 0) && !h0[0] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);
 `endif
     reg [1103:1] rid; reg riv;
     assign ri = {rid, riv};
     always @(posedge clk) rid <= (rel && h0[0]) ? {h1[H-1:0], h0[H-1:1]} : 1103'd0;   // data: no reset
     always @(posedge clk or negedge rnx)
-        if (!rnx) begin riv <= 1'b0; perr <= 1'b0; fh_v <= 1'b0; fk_s <= 1'b0; end
+        if (!rnx) begin riv <= 1'b0; perr <= 1'b0; end
         else begin
             riv <= rel && h0[0];
             if (|rxf) perr <= 1'b1;                    // a beat landed on a full RX FIFO (credit protocol broken)
+            // a released pair must be one frame (equal sequence parity); a die endpoint accepts ring / HOST / KS only
+            // (ring only at HOST_EN 0)
+            if (rel && (h0[H] != h1[H] || (!h0[0] && !hacc))) perr <= 1'b1;
+        end
+    generate if (HOST_EN != 0) begin : g_hrx
+`ifdef OT_S81SL_LEP_MUT_KSOFF
+    wire [52:0] ksp = h0[5 +: 53];                     // MUTANT: key-store payload read one bit off
+`else
+    wire [52:0] ksp = h0[4 +: 53];
+`endif
+    reg fh_v, fk_s; reg [513:0] fh_d; reg [51:0] fk_d; reg [3:0] lf;
+    always @(posedge clk or negedge rnx)
+        if (!rnx) begin fh_v <= 1'b0; fk_s <= 1'b0; end
+        else begin
             fh_v <= rel && !h0[0] && h0[3:1] == 3'd1;
             fk_s <= rel && !h0[0] && h0[3:1] == 3'd2 && ksp[52];
-            // a released pair must be one frame (equal sequence parity); a die endpoint accepts ring / HOST / KS only
-            if (rel && (h0[H] != h1[H] || (!h0[0] && h0[3:1] != 3'd1 && h0[3:1] != 3'd2))) perr <= 1'b1;
         end
     always @(posedge clk) begin
         if (rel && !h0[0] && h0[3:1] == 3'd1) fh_d <= h0[4 +: 514];
         if (rel && !h0[0] && h0[3:1] == 3'd2) fk_d <= ksp[51:0];
-        f_lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
+        lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
     end
     assign f_host = {fh_d, fh_v};
     assign f_ks = {fk_s, fk_d};
+    assign f_lf = lf;
+    end else begin : g_nhrx                            // HOST_EN 0: no host outputs (the _nh tops have no such ports)
+    assign f_host = 515'd0; assign f_ks = 53'd0; assign f_lf = 4'd0;
+    end endgenerate
 
     // ---------------------------------------------------------------- fault collector (sticky)
     reg slq; reg [5:0] lfq;
@@ -269,12 +300,41 @@ module ot_s81sl_lep #(
         end
 endmodule
 
+// HOST_EN = 0 leaf top (hardened master of the three host-less endpoints s_0S / s_0N / s_7S): no host ports
+module ot_s81sl_lep_nh #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    output wire            fault
+);
+    // no l0_st / l1_st: the PHY lane status feeds only f_lf (host plane) at HOST_EN 1 (the lane tiles still take it in
+    // their rx word, and lane faults reach the fault collector through l0_f / l1_f).  The core reads none of t_host / t_kd /
+    // l*_st at HOST_EN 0 (generate), so these constants are not logic: synthesis of this top keeps no host pin or flop.
+    ot_s81sl_lep #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0)) u (.clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(fault));
+endmodule
+
 // ---------------------------------------------------------------------------------------------------------------------
 // The end-slice cluster: slice + lep + 2 link lanes.  SIDE 0 = W end (outward = ri_w / ro_w), 1 = E end.  The die
 // masters are the parameter-free tops below (one per outward face: pin plans differ, as dsfd_coll_lane_w / _e).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_slice_lep #(
-    parameter integer SIDE = 0
+    parameter integer SIDE = 0,
+    parameter integer HOST_EN = 1        // 0: leaf ot_s81sl_lep_nh, host ports unread / driven 0 (the _nh masters drop them)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -316,14 +376,25 @@ module ot_s81sl_slice_lep #(
         dsfd_coll_lane_e #(.LCR(1)) u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx({rx1[512], rx1[513], rx1[511:0], rxv[1]}),
             .tx(tx1), .tf(tf[1]), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
     end endgenerate
+    generate if (HOST_EN != 0) begin : g_h
     ot_s81sl_lep u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
         .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv),
         .sl_f(sf), .l0_f(f0), .l1_f(f1), .l0_st(rx0[513:512]), .l1_st(rx1[513:512]),
         .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks), .fault(fault));
+    end else begin : g_nh
+    ot_s81sl_lep_nh u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+        .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
+        .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv),
+        .sl_f(sf), .l0_f(f0), .l1_f(f1), .fault(fault));
+    assign f_host = 515'd0; assign f_lf = 4'd0; assign f_ks = 53'd0;
+    end endgenerate
 endmodule
 
-// die masters (dsdv_slice_lepw: s_0S / s_0N; dsdv_slice_lepe: s_7S / s_7N)
+// die masters (S81-LEPV 10-18: host plane only on s_7N)
+//   dsdv_slice_lepw     s_0S / s_0N   W end, no host plane (HOST_EN 0: no host ports)
+//   dsdv_slice_lepe     s_7N          E end, host plane (t_host / t_kd in, f_host / f_lf / f_ks out)
+//   dsdv_slice_lepe_nh  s_7S          E end, no host plane
 module ot_s81sl_slice_lepw (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire [1103:0] ri_e, output wire [1103:0] ro_e,
@@ -332,13 +403,12 @@ module ot_s81sl_slice_lepw (
     output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
     input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
     output wire [1:0] tf,
-    input  wire [76:0] t_host, input wire [53:0] t_kd, output wire [514:0] f_host, output wire [3:0] f_lf, output wire [52:0] f_ks,
     output wire fault
 );
-    ot_s81sl_slice_lep #(.SIDE(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_e), .ro_n(ro_e), .vi(vi), .vo(vo),
+    ot_s81sl_slice_lep #(.SIDE(0), .HOST_EN(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_e), .ro_n(ro_e), .vi(vi), .vo(vo),
         .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .ch_b(ch_b),
         .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
-        .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks), .fault(fault));
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(fault));   // host ports unread at HOST_EN 0
 endmodule
 module ot_s81sl_slice_lepe (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
@@ -351,8 +421,23 @@ module ot_s81sl_slice_lepe (
     input  wire [76:0] t_host, input wire [53:0] t_kd, output wire [514:0] f_host, output wire [3:0] f_lf, output wire [52:0] f_ks,
     output wire fault
 );
-    ot_s81sl_slice_lep #(.SIDE(1)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_w), .ro_n(ro_w), .vi(vi), .vo(vo),
+    ot_s81sl_slice_lep #(.SIDE(1), .HOST_EN(1)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_w), .ro_n(ro_w), .vi(vi), .vo(vo),
         .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .ch_b(ch_b),
         .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
         .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks), .fault(fault));
+endmodule
+module ot_s81sl_slice_lepe_nh (
+    input  wire clk, input wire rst_n, input wire [3:0] sid,
+    input  wire [1103:0] ri_w, output wire [1103:0] ro_w,
+    input  wire [275:0] vi, output wire [275:0] vo, input wire [1103:0] bi, output wire [1103:0] bo,
+    output wire [4*1104-1:0] xc, input wire [8*70-1:0] rt,
+    output wire [15:0] ck_line, output wire [1:0] ck_v, output wire [15:0] ck_xc, output wire [7:0] ck_rt,
+    input  wire ch_b, output wire [511:0] tx0, output wire [511:0] tx1, input wire [513:0] rx0, input wire [513:0] rx1,
+    output wire [1:0] tf,
+    output wire fault
+);
+    ot_s81sl_slice_lep #(.SIDE(1), .HOST_EN(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_n(ri_w), .ro_n(ro_w), .vi(vi), .vo(vo),
+        .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .ch_b(ch_b),
+        .tx0(tx0), .tx1(tx1), .rx0(rx0), .rx1(rx1), .tf(tf),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(), .fault(fault));   // host ports unread at HOST_EN 0
 endmodule
