@@ -15,6 +15,13 @@ class Contract(unittest.TestCase):
         self.assertIsNone(r['parent_phase_guarantee'])
         self.assertGreater(r['nonpositive_candidate_ideal_setup_bank_cases'],0)
         self.assertTrue(all(x['physical_admission']=='REFUSED' for x in r['rows']))
+        c=r['architecture_comparison']
+        self.assertIsNone(c['production_legal_K'])
+        self.assertEqual(c['minK2_is_not_age_bound']['remaining_nonpositive_setup_bank_cases'],48)
+        self.assertEqual(c['uniform_later_read_D4']['at_or_after_overwrite_bank_cases'],128)
+        self.assertEqual(c['uniform_later_read_D4']['negative_ideal_hold_bank_cases'],192)
+        self.assertEqual(c['deeper_D8_uniform_later_read']['single_W180']['total_state'],3298)
+        self.assertEqual(c['deeper_D8_uniform_later_read']['split_W108']['total_state'],2029)
 
     def changed(self, change):
         with tempfile.TemporaryDirectory() as td:

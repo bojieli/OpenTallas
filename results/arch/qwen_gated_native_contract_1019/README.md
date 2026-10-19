@@ -15,6 +15,13 @@ mapped ICG/Liberty identity, exact root waveform, reset origins and first use.
 It does not independently prove its enable-witness producer. This packet
 describes the source-side obligation and the remaining production join.
 
+`LATER_READ_MODEL.md` and `contract.json.architecture_comparison` add ROOT's
+requested min-K / later-read / D8 comparison. Its exact final fleet run is
+`oth-ubuntu-2457404-1792432623`, directory
+`/srv/opentallas-scratch/claude/qw-gated-native-contract-later-1019`;
+`fleet_later.log` records all four checks passing with model assertions for
+retained quarter-cycle failures, overwrite collisions, hold and D8 state.
+
 `fleet_final.log` records unpinned ot-run unit `oth-ubuntu-2453012-1792432450`
 on ot-epyc6, with exact c054 typed-certificate API validation. `fleet.log`
 retains the first model pass. `typed_import_packaging_fail.log` preserves the

@@ -76,6 +76,46 @@ def build(root):
                 active_edge='rising',period_parent_cycles=4,high_parent_cycles=.5,
                 enable=('meta_we && wslot' if side=='w' else 'warm && ready1 && readsel')+f'[{b}]',
                 edge_indices=None,edge_binding='per admitted reset epoch; source-bound phase required'))
+    later=[]
+    for row in rows:
+        age=row['age_T']+1
+        later.append(dict(scenario=row['scenario'],bank=row['bank'],K=row['K'],
+                          age_T=age,overwrite_gap_T=4-age,
+                          ideal_setup_ps=age*(2500/3)-210,
+                          ideal_hold_ps=(4-age)*(2500/3)-125))
+    def size(D,W):
+        aw=D.bit_length()-1
+        regions=(W+15)//16
+        # Generalization of the actual D4 declaration inventory, not new RTL.
+        global_ff=2+2+3*(aw+1)+D+(aw+1)+1+2+1+D+2*D*(aw+1)+(aw+1)+aw+1+1
+        icg=2*D+1
+        return dict(D=D,W=W,regions=regions,data_ff=(2*D+1)*W,
+                    region_ff=(D+1)*regions,global_ff=global_ff,icg_latches=icg,
+                    total_state=(2*D+1)*W+(D+1)*regions+global_ff+icg,
+                    bank_period_T=D,epoch_modulus=2*D,K_bits=aw+1,
+                    native_area_um2=None,physical_admission='REFUSED')
+    assert size(4,180)['total_state']==1748 # prior conservative source bound, mapped1746
+    comparison=dict(
+        status='MODEL_ONLY_NO_SOURCE_AUTHORIZATION',production_legal_K=None,hardware_legal_K=list(range(8)),
+        production_inventory_reason='No selected gated production GEN/netlist/strap exists; actual dv2f18dh2 is legacy.',
+        minK2_is_not_age_bound=dict(retained_K=list(range(2,8)),
+            remaining_nonpositive_setup_bank_cases=sum(r['K']>=2 and r['ideal_setup_budget_ps']<=0 for r in rows)),
+        extra_final_capture=dict(extra_receiver_edges=1,extra_payload_ff=180,
+            diagnostic_alignment_ff_upper_model=1,internal_bank_age_change_T=0,
+            remaining_nonpositive_setup_bank_cases=sum(r['ideal_setup_budget_ps']<=0 for r in rows)),
+        uniform_later_read_D4=dict(extra_receiver_edges=1,
+            at_or_after_overwrite_bank_cases=sum(r['overwrite_gap_T']<=0 for r in later),
+            negative_ideal_hold_bank_cases=sum(r['ideal_hold_ps']<0 for r in later),
+            maximum_age_T=max(r['age_T'] for r in later),rows=later),
+        deeper_D8_uniform_later_read=dict(extra_receiver_edges=1,extra_initial_fill_source_edges=4,
+            minimum_overwrite_gap_T=min(8-r['age_T'] for r in later),
+            single_W180=size(8,180),split_W108=size(8,108),split_W96=size(8,96),
+            boundary600_W108=dict(tiles=6,padding_bits=48,total_state=6*size(8,108)['total_state'],icgs=102),
+            boundary600_W96=dict(tiles=7,padding_bits=72,total_state=7*size(8,96)['total_state'],icgs=119),
+            state_threshold='W180 exceeds2kb source bound; partition or a genuine SRAM architecture required',
+            all_fields='payload,valid,slot,epoch,command controls must move together',
+            prologue='8physicalwrites then actualready/warm and2receiveredges; absoluteorigins unbound',
+            reset_abort='No-use/drain, pairedreset, modulo16 epoch and K-wrap firstuse require new source proof'))
     return dict(schema='opentallas.qwen.gated_native_contract.MODEL.v1',
         status='SOURCE_EDGE_MODEL_PASS_PHYSICAL_ADMISSION_REFUSED',
         source_commit='6b61a90c197f8248a026ca4937c9aebd9ff7dccb',
@@ -91,6 +131,7 @@ def build(root):
         minimum_candidate_ideal_setup_ps=min(r['ideal_setup_budget_ps'] for r in rows),
         nonpositive_candidate_ideal_setup_bank_cases=sum(r['ideal_setup_budget_ps']<=0 for r in rows),
         minimum_candidate_ideal_hold_ps=min(r['ideal_hold_budget_ps'] for r in rows),
+        architecture_comparison=comparison,
         rows=rows)
 
 if __name__=='__main__':
@@ -100,4 +141,4 @@ if __name__=='__main__':
     args=ap.parse_args()
     result=build(args.packet)
     args.out.write_text(json.dumps(result,indent=1)+'\n')
-    print(json.dumps({k:v for k,v in result.items() if k not in ('rows','clocks','source_sha256')}))
+    print(json.dumps({k:v for k,v in result.items() if k not in ('rows','clocks','source_sha256','architecture_comparison')}))
