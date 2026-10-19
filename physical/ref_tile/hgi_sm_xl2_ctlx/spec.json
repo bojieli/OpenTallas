@@ -179,7 +179,7 @@
   "cts_sink": {
    "size": 16,
    "diameter_um": 30,
-   "extra": "-balance_levels -no_obstruction_aware"
+   "extra": "-balance_levels -no_obstruction_aware -sink_clustering_levels 2"
   },
   "io_hold_margin_ns": 0.025
  },
