@@ -198,24 +198,23 @@
  },
  "outline": {
   "w": 254.88,
-  "h": 136.08
+  "h": 151.2
  },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
  },
  "keep_pin_regs": true,
- "std_area_um2": 16781,
+ "std_area_um2": 20230,
  "fill_reason": {
-  "pin_bound": "S81U-SEQ3: common leaf width 254.88 (vc needs 2 SRAMs side by side with 20 um channels: 3 x 20 + 2 x 94.824 + core margins); N face 1,207 pin bits = 4.7/um, W 596 / H 136.08 = 4.4/um, E 449 = 3.3/um. Std 16,781 um2 (gate 8940e10e9) -> H 136.08, util 51%."
+  "pin_bound": "S81-GUSEQ 10-18 (COORD 13:45 FLOORPLAN_MARGIN on 9de9eb2d6, util 61.3% = std 20,230 um2 in core 33,014): outline 254.88 x 136.08 -> 254.88 x 151.20 (3.5 x 43.2 lattice rows). Width kept = the common seq_host leaf width (lk N face abuts sq S face pin-for-pin; vc 2-SRAM width), so N/S pin x positions are unchanged; W/E pins rescaled along their faces (x 151.2/136.08, M4 tracks), ck stays at E mid. Core 250.56 x 146.88 = 36,802 um2 -> util 55.0%. N 1,207 bits = 4.7/um, W 596 / 151.2 = 3.9/um, E 447 = 3.0/um."
  },
  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
  "children": [],
  "inter": [],
  "reroute_reason": {
-  "kind": "native_spread",
-  "source": "results/closure/shlk_pick_1018/native_audit.json",
-  "cell": "dsdv_sh_lk",
-  "fix": "Boundary + clock structure, same outline and pin faces: rung hop landed at both faces (S-face capture/launch flops for vi_s/vo_s, N-face for rn_o/rs_i; +1 edge each way, RTL RL 1), st_rg_w/st_rg_e landed per pin before the fold, ONE CTS root ck (ck_ih/ck_ic removed: no inter-root die-skew reserve, no 20k hold-buffer flood) with sink clustering from a re-CTS sweep (boundary spread TT 17.5 ps at placement RC). Closed APIPE-6 view: spread TT 94.0 / FF 88.3, launch 254.9, capture 201.0."
+  "kind": "flow_failure",
+  "failed_job": "dsdv_sh_lk-dsdv_sh_lk-9de9eb2d6",
+  "failure": "FLOORPLAN_MARGIN at route: util 61.3% > 60% (std 20,230 um2 in 33,014 um2); retry with the outline grown to 254.88 x 151.20 (util 55.0%), same pin faces, same RTL/clock as 9de9eb2d6 (admitted native_spread, receipt results/closure/shlk_pick_1018/native_audit.json)"
  }
 }
