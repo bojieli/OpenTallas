@@ -724,7 +724,7 @@ class Gen:
     def rs_mods(self):
         n = getattr(self.a, 'rs_native', True)
         return dict(inj=f'qkd_rlyi_{RS_W}' + ('s' if n else ''), rly='qkd_rlys_296', dl='qkd_rlys_36',
-                    hd='qkd_pv_rs_hd' + ('_r' if n else ''))
+                    hd='qkd_pv_rs_hd' + (f"_{getattr(self.a, 'rs_hd', 'r')}" if n else ''))
 
     def rs_pin(self, name, pin, i):
         """pin model of a custom station (relay standards: their views; new leaves: spread over the kit spec faces)"""
@@ -1022,6 +1022,9 @@ def main(argv=None):
     ap.add_argument('--no-rtrunk', dest='rtrunk', action='store_false', help='KV-RTRUNK: omit the 512-b result trunk (rs_*)')
     ap.add_argument('--rs-legacy', dest='rs_native', action='store_false',
                     help='KV-KITS/NATIVE: the r1 result-trunk leaves (qkd_rlyi_258 / qkd_pv_rs_hd, native capture FAIL on their selects)')
+    ap.add_argument('--rs-hd', choices=('r', 'f'), default='r',
+                    help='AD3-KV-RSHD 10-18: native header leaf: r = qkd_pv_rs_hd_r (cross-half V AND selects, native capture '
+                         'FAIL 259.9), f = qkd_pv_rs_hd_f (half-local selects, same ports / schedule)')
     ap.add_argument('--rs-inj-y', type=float, default=320.0, help='inject stations: centre y in the block row (block-relative)')
     ap.add_argument('--rs-r1-y', type=float, default=500.0, help='first relay of a row pitch: centre y (block-relative)')
     ap.add_argument('--rs-r2-y', type=float, default=92.0, help='second relay: centre y relative to the next block row')

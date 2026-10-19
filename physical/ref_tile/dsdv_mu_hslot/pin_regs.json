@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_mu_hslot",
+ "enable": false,
+ "reason": "Source-registered: f_ks / f_kd / f_mc land in pin flops (ks_q / kd_q / mc_q), t_ku / t_mf leave flops."
+}

@@ -53,6 +53,7 @@ import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
+import clock_entry_constraints as CE  # noqa: E402
 import keep_module_audit as KA  # noqa: E402
 HO = SB.overlay_module()
 
@@ -1652,6 +1653,8 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
                 measured = corner_spreads({}, domain)
                 if landed_cluster:
                     measured.update(root_child_flops(domain, spec, graph))
+                    if measured.get("raw_pin_fail"):
+                        issues.append(f"{domain.get('source')}: " + "; ".join(measured["raw_pin_fail"]))
                 level, why = TL.clock_rule_eval(n, measured)
                 per_root.append(dict(source=domain.get("source"), sinks=n, **measured,
                                      verdict="REFUSE" if level == "FAIL" else level, text=why))
@@ -1996,19 +1999,43 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
         pins = ((cr.get("macros") or {}).get("pins")) or []
         if not pins:
             continue
-        span, ok = {}, True
+        span, ok, raw_rows, eff = {}, True, [], {}
         for x in pins:
-            inst = str(x.get("pin", "")).rsplit("/", 1)[0]
+            inst, lpin = (str(x.get("pin", "")).rsplit("/", 1) + [""])[:2]
             kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
                         or fnmatch.fnmatchcase(inst, ch["inst"])), None)
             try:
-                b = json.loads((ROOT / kid["view"] / "insertion.json").read_text())[c]["boundary"]
-                lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+                ins = json.loads((ROOT / kid["view"] / "insertion.json").read_text())
+                # HF-4d 10-19: a multi-clock child is referenced per clock pin (clock_measurements[pin]); a RAW SRAM
+                # clock entry (no routed boundary) takes the leaf's own pin -> SRAM wire from its closed record
+                # (clock_entry_constraints.landed_raw_pins) and is judged against its co-timed CTS-root pin below
+                cm = (ins.get("clock_measurements") or {}).get(lpin)
+                b = ((cm or {}).get(c) or {}).get("boundary") if cm else ins[c]["boundary"]
+                if b:
+                    lo, hi = float(x["arr"]) + float(b["min"]), float(x["arr"]) + float(b["max"])
+                    if b.get("mean") is not None:
+                        eff[(inst, lpin)] = float(x["arr"]) + float(b["mean"])
+                else:
+                    raw = CE.landed_raw_pins(ROOT / kid["view"], ROOT)[lpin]
+                    rlo, rmean, rhi = raw["refs"][c]
+                    lo, hi = float(x["arr"]) + rlo, float(x["arr"]) + rhi
+                    raw_rows.append((inst, lpin, float(x["arr"]) + rmean, raw))
             except (TypeError, OSError, ValueError, KeyError, AttributeError):
                 ok = False
                 break
             plo, phi = span.get(kid["inst"], (math.inf, -math.inf))
             span[kid["inst"]] = (min(plo, lo), max(phi, hi))
+        for inst, lpin, e, raw in raw_rows if ok else []:
+            r = eff.get((inst, raw["ref"]))
+            row = dict(root=src, corner=c, pin=f"{inst}/{lpin}", co_timed=f"{inst}/{raw['ref']}", eff=round(e, 1),
+                       eff_ref=None if r is None else round(r, 1), tol=raw["tol"], record=raw["record"])
+            row["skew"] = None if r is None else round(e - r, 1)
+            row["verdict"] = "FAIL" if r is None or abs(e - r) > raw["tol"] else "PASS"
+            out.setdefault("raw_pins", []).append(row)
+            if row["verdict"] == "FAIL":
+                out.setdefault("raw_pin_fail", []).append(
+                    f"{c.upper()} raw child clock pin {row['pin']} " + (f"not co-measured with {row['co_timed']}" if r is None
+                    else f"{row['skew']:+.1f} ps vs {row['co_timed']} (leaf sign-off tolerance {raw['tol']:g})"))
         if not ok:
             out[f"{c}_pin_spread_basis_note"] = "a hard child clock pin has no insertion.json boundary: measured kept"
             continue
