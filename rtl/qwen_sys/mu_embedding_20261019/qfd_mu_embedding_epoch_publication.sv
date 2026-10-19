@@ -25,7 +25,7 @@ module qfd_mu_embedding_epoch_publication #(parameter ENABLE=0, parameter NU=4)(
     pending[accepted_user]<=accepted_epoch;pending_valid[accepted_user]<=1;
    end
    if(publish_slot)begin
-    if(publish_mask==0 || (publish_mask & ~USERS)!=0)fault<=1;
+    if((publish_mask & ~USERS)!=0)fault<=1;
     for(u=0;u<NU;u=u+1)if(publish_mask[u])begin
      if(!pending_valid[u] || (reserved&&resident_user==u) || (fetch_slot&&fetch_user==u) || (consume_slot&&consume_user==u) || (retire_slot&&retire_mask[u]))fault<=1;
      active[u]<=pending[u];active_valid[u]<=1;pending_valid[u]<=0;
@@ -40,7 +40,7 @@ module qfd_mu_embedding_epoch_publication #(parameter ENABLE=0, parameter NU=4)(
     consumed<=1;
    end
    if(retire_slot)begin
-    if(retire_mask==0 || (retire_mask & ~USERS)!=0)fault<=1;
+    if((retire_mask & ~USERS)!=0)fault<=1;
     for(u=0;u<NU;u=u+1)if(retire_mask[u])begin
      if((reserved&&resident_user==u) || (publish_slot&&publish_mask[u]) || (accepted_v&&accepted_user==u) || (fetch_slot&&fetch_user==u) || (consume_slot&&consume_user==u))fault<=1;
      active_valid[u]<=0;pending_valid[u]<=0;

@@ -17,7 +17,7 @@ module tb_mu_embedding_epoch_masks;
  task tick;begin @(posedge ck);#0.1;@(negedge ck);end endtask
  task check;begin if(fault||bound_fault)$fatal(1,"MASK_FAIL sticky fault mut=%0d mask=%h",mut,pm);checks=checks+1;end endtask
  initial begin
-  void'($value$plusargs("MUT=%d",mut));tick();rst_n=1;tick();
+  void'($value$plusargs("MUT=%d",mut));tick();rst_n=1;tick();ps=1;ts=1;pm=0;tm=0;tick();ps=0;ts=0;check();
   // Exhaust every nonempty four-bank mask, including all seven legal filler combinations.
   for(m=1;m<16;m=m+1)begin
    for(u=0;u<4;u=u+1)if((m>>u)&1)begin
@@ -25,8 +25,8 @@ module tb_mu_embedding_epoch_masks;
    end
    ps=1;pm=4'(m);if(mut==1&&m==6)pm=4'b0010;
    if(mut==2&&m==1)pm=4'b1001;
-   if(mut==5&&m==1)pm=0;
-   tick();ps=0;check();
+   if(mut==5&&m==1)begin ts=1;tm=4'b1;end
+   tick();ps=0;ts=0;check();
    for(u=0;u<4;u=u+1)if((m>>u)&1)begin
     fu=2'(u);cu=2'(u);#0.1;
     if(fe!==expected[u] || ce!==expected[u])$fatal(1,"MASK_FAIL wrong mask/epoch mask=%h user=%0d",m,u);
@@ -40,7 +40,7 @@ module tb_mu_embedding_epoch_masks;
     cs=1;tick();cs=0;rs=1;tick();rs=0;check();
    end
    // Publish every pending reload together; verify distinct per-bank epochs survive.
-   ps=1;pm=4'(m);tick();ps=0;check();
+   ps=1;pm=4'(m);tick();ps=0;ts=0;check();
    for(u=0;u<4;u=u+1)if((m>>u)&1)begin
     fu=2'(u);#0.1;if(fe!==expected[u]+16'd64)$fatal(1,"MASK_FAIL reload epoch user=%0d",u);
    end
