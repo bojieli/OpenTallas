@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+ "enable": false,
+ "reason": "the RTL lands it: the leaf boundary reset register rst_pin (cold init holds rst_n >= 2 edges)"
+}
