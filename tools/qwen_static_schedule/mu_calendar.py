@@ -66,7 +66,8 @@ SOURCED = dict(
     embed_cycles=272,            # token_path_1018 embed xdie (priced): KV-die embedding row -> compute die
     kv_service=1555,             # measured-old-RTL KV-die static attention service (qwen_attention_rate_1015)
     d2d_record=32,               # 2 KB a KV die a layer over a 512-b lane (s81_balance_1018 section 2, modelled)
-    host_return=134,             # 133.5 cycles a token per user (rom_multiuser_1018 item 6)
+    host_return=135,             # 133.5 cycles a token per user (rom_multiuser_1018 item 6) + 1 edge pkgctl MU two-stage die
+                                 # reports (MU-KV-HCTL2 10-19: report -> retire +1 in qkd_host_ctl)
     ar_words=256,                # 4,096 FP32 = 256 x 512-b words an all-reduce (TP8 production shape)
     lu=53, ls=378,               # implemented UCIe / SerDes collective latencies (dv2f14bi calendar LS 378, qcollcal3_1018)
     users=4,
