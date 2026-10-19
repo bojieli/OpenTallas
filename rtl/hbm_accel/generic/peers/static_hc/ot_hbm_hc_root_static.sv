@@ -26,6 +26,7 @@ module ot_hbm_hc_root_static #(
     parameter integer XRD  = 0,                  // die relay stages root -> quarter (descriptor + ingest event)
     parameter integer XRU  = 0,                  // die relay stages quarter -> root (subtree sums)
     parameter integer QDRLY = 1,                 // quarter's centre <-> bank relays (ot_hbm_hc_qeng_static DRLY)
+    parameter integer QCHX = 0,                  // HH-9 10-19: quarter bank-chain pin-register edges (qeng CPR 1 -> 11)
     parameter integer TLA  = 7,                  // quarter tree adder stages
     parameter integer MUT  = 0
 )(
@@ -67,7 +68,7 @@ module ot_hbm_hc_root_static #(
 );
     localparam integer W = 256, AW = 10, R = K / (8 * W);
     localparam integer LM = 8, LA = 7, SOR = 1, ML = 2;
-    localparam integer SYS_LAT0 = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR + 2 * QDRLY;
+    localparam integer SYS_LAT0 = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR + 2 * QDRLY + QCHX;
     // d0 -> root out flop -> XRD -> quarter pin flop -> chain (SYS_LAT0) -> 6 tree levels -> quarter out flop -> XRU
     // -> root pin flop
     localparam integer SYS_LAT = SYS_LAT0 + 1 + XRD + 1 + 6 * TLA + 1 + XRU + 1;
