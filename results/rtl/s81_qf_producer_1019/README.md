@@ -117,7 +117,7 @@ whole projection/QR write→SRAM read path still needs a composed proof.
 explicit candidate cost. In-XR mode:64 eight-bit select groups, four mode-data
 copies and four enable copies (72 FF),512 three-NAND data muxes,512 zero-format
 ANDs,64 shared select inverters and72 enable muxes. Actual TT cells charge
-221.84928um² per entry, two-entry443.69856um², +34.180992fF clock per entry.
+222.1992um² per entry, two-entry444.3984um², +34.133644fF TT /37.509288fF FF clock per entry (68 HQN and4 ASRHQN cells).
 Four resettable enable copies are additional reset loads; other mode state is
 unreset and requires proof that every SEND config precedes all valid payload
 after cold/warm reset. New select load bound25 is modeled, not a native census.
@@ -198,3 +198,60 @@ read address remain unchanged only once both halves are valid. Its514 raw
 words at II2 span at least1027 edges, +769; source phase, all control/identity
 state, native fanout and full area remain unpriced. This is less simple than
 the uniform wire profile and is not implemented.
+
+## New zero-state head-local capture contract
+
+The initial model's runtime scatter and separate-coefficient-read alternatives
+can be avoided by an **explicit compiler storage-tag map**, not by changing
+hardware or synthesizing final Q data. The private `head_local_contract.py`
+maps only genuine rank-local semantic wq_b return identities; it generates no
+payload values, edits no production image or binding, and is not adopted.
+
+For head h (actual projection owner slice h), retain all448 non-RoPE dimensions
+at their original captured leaf/word addresses. Retag only tail dimension
+`448+s` to word `64+8*(s//4)+s%4` on leaf2. That is the unchanged QR's required
+input at even rows16..46, with its original16 coefficient rows at odd17..47.
+Issue the original QR16 command on leaf2 with a0=16 and ob=544; its sixteen
+output rows544..559 remain contiguous for real RDOUT. All other source32-value
+Q words likewise remain eight contiguous real VP rows, four row-pair reads
+per uniform packet. There is no runtime copy or new arithmetic/data path.
+The existing57-edge QR measurement is the implementation reference, not a
+fresh composed timing claim. Actual CAP/VP/VS producer timing is still unproved.
+
+CAP obase stays0; per-head semantic storage offsets use0..447 for unchanged
+dimensions and sparse448..507/768..827 for the interleaved tail. Allocate
+head-tag windows1024*h and rcnt828, fitting the existing14 semantic-row bits
+even at head15. Crucially, preserve both high row flags, position and golden
+tree lo/k/n bits. Real committed wq_b PV/RET evidence in `frame_source/` uses
+row flag1 (row0x4000+semantic row). Therefore its actual CAP rbase must be
+`0x4000+1024*h`, not merely1024*h. The current rank-only cap generator omits
+that flag base while its tag rewriter preserves flags; its installation is
+already an open source contract. No flag is cleared to make the range check
+pass. SENT/padding is explicitly rejected by the private adapter.
+
+The fleet address model passes8192 actual CAP decoder mappings,16 disjoint
+head windows, all projection/coefficient/output address disjointness, and
+source-format flags0/1 preservation. It rejects8192 foreign semantic identities
+and8192 wrong-flag capture configurations; old uninterleaved tail addressing
+is wrong on960 of1024 tail values. The model emits all16 head capture configs,
+512 dimension→real VP-address records per head, coefficient row lists, original
+QR command bodies, and sixteen real four-pair RDOUT bodies per head. Read-ready
+edges and central gather routes are intentionally NULL.
+
+Hardware increment is0 FF,0 gates,0 macros,0 pins,0 clock/reset loads and0 new
+stages. Each head uses16384 bits of already-existing capture storage,2048 bits
+of coefficient storage and2048 output bits, across its real VP SRAMs. This is
+an address reservation proposal; whole programme/MU lifetimes and phase ports
+must still be checked before it can be called safe or installed.
+
+The exact remaining dependency is the actual wq_b image writer and all11
+six-row-per-frame phases (K1280, nseg3, ten q-pairs, eight real frames/head).
+Every original semantic row must receive its mapped storage tag across all
+partials without altering weight indices, reduction order or original gold.
+Then real CAP partial live slots, both write ports, CFG/RETIRE boundaries,
+producer clocks/reset and SRAM write/read ages must pass. The packet emits
+possible same-slot identities per phase and deliberately marks actual live
+intervals/write-port calendars UNPROVED. A static address bijection does not
+prove those timing obligations. Subsequent real head→central6/8 gather,
+uniform q binding, job/MU identity/lifetime, original deadline and causal
+corrupt/owner/early/late/missing-payload proofs remain open.

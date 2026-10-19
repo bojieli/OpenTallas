@@ -10,6 +10,27 @@
       "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
     },
     {
+      "name": "DFFASRHQNx1_ASAP7_75t_R",
+      "area_um2": 0.37908,
+      "clock_cap_ff": 0.462899,
+      "library": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "name": "DFFHQNx1_ASAP7_75t_R",
+      "area_um2": 0.2916,
+      "clock_cap_ff": 0.52201,
+      "library": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "name": "DFFASRHQNx1_ASAP7_75t_R",
+      "area_um2": 0.37908,
+      "clock_cap_ff": 0.503152,
+      "library": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
       "name": "NAND2x1_ASAP7_75t_R",
       "area_um2": 0.08748,
       "clock_cap_ff": null,
@@ -98,7 +119,8 @@
     "enable_default": false,
     "new_ff": 72,
     "new_macro": 0,
-    "added_clock_cap_ff": 34.180991999999996,
+    "added_clock_cap_ff": 34.133644,
+    "added_clock_cap_fast_ff": 37.509288,
     "cell_network_counts": {
       "mode_ff": 64,
       "source_data_copy_ff": 4,
@@ -108,7 +130,7 @@
       "select_inv": 64,
       "enable_mux": 72
     },
-    "modeled_stdcell_area_um2": 221.84928000000002,
+    "modeled_stdcell_area_um2": 222.19920000000002,
     "physical_area_bound": false,
     "added_pipeline_edges": 0,
     "lo_pairs_per_q_word": 4,
@@ -122,7 +144,7 @@
     "old_combined_q_frame_span": 258,
     "lower_bound_extra_edges": 769,
     "minimum_mode_switch_cfg_bubbles": 3,
-    "two_entry_modeled_area_um2": 443.69856000000004,
+    "two_entry_modeled_area_um2": 444.39840000000004,
     "all_driver_census_pending": true,
     "new_select_load_bound": 25,
     "mode_validity": "loaded with SEND cfg before first lo; resetdir/valid suppress all output before cfg",

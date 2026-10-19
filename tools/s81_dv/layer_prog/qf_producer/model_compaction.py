@@ -22,7 +22,7 @@ def cell(lib, name):
     if end!=-1:b=b[:end]
     a=float(re.search(r'\barea\s*:\s*([\d.]+)',b)[1])
     cap=None
-    if 'DFFHQNx1' in name:
+    if name.startswith('DFF'):
         c=b[b.index('pin (CLK)'):]
         cap=float(re.search(r'\bcapacitance\s*:\s*([\d.]+)',c)[1])
     return dict(name=name,area_um2=a,clock_cap_ff=cap,library=lib.name,
@@ -34,6 +34,9 @@ def main():
     ap.add_argument('--pdk',default=str(Path.home()/'.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM'))
     a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True);pdk=Path(a.pdk)
     ff=cell(pdk/'asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib','DFFHQNx1_ASAP7_75t_R')
+    asr=cell(pdk/'asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib','DFFASRHQNx1_ASAP7_75t_R')
+    ff_fast=cell(pdk/'asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib','DFFHQNx1_ASAP7_75t_R')
+    asr_fast=cell(pdk/'asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib','DFFASRHQNx1_ASAP7_75t_R')
     nand=cell(pdk/'asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz','NAND2x1_ASAP7_75t_R')
     and2=cell(pdk/'asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz','AND2x2_ASAP7_75t_R')
     inv=cell(pdk/'asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz','INVx1_ASAP7_75t_R')
@@ -42,9 +45,9 @@ def main():
     # bound on physical implementation (sizing/CTS/native overhead still open).
     counts=dict(mode_ff=64,source_data_copy_ff=4,source_enable_copy_ff=4,
                 data_mux=512,upper_zero_and=512,select_inv=64,enable_mux=72)
-    area=(72*ff['area_um2']+(512+72)*mux+512*and2['area_um2']+64*inv['area_um2'])
+    area=(68*ff['area_um2']+4*asr['area_um2']+(512+72)*mux+512*and2['area_um2']+64*inv['area_um2'])
     rec=dict(schema='opentallas.s81.qf_compaction_candidates.v1',hardware_implemented=False,
-        primitive_libraries=[ff,nand,and2,inv],
+        primitive_libraries=[ff,asr,ff_fast,asr_fast,nand,and2,inv],
         uniform_static_wire=dict(preferred=True,new_ff=0,new_logic_cells=0,new_macro=0,
             added_clock_cap_ff=0,added_pipeline_edges=0,new_pin_count=0,
             payload_source_bits='bo[52+32*i+16 +:16], i0..31',
@@ -72,7 +75,9 @@ def main():
             minimum_added_edges=769,full_token_delta=None,
             reason_not_preferred='changes header payload count, parser indices, job stream and partial lifetime; wire profile preserves all'),
         in_xr=dict(preferred=False,enable_default=False,new_ff=72,new_macro=0,
-            added_clock_cap_ff=72*ff['clock_cap_ff'],cell_network_counts=counts,
+            added_clock_cap_ff=68*ff['clock_cap_ff']+4*asr['clock_cap_ff'],
+            added_clock_cap_fast_ff=68*ff_fast['clock_cap_ff']+4*asr_fast['clock_cap_ff'],
+            cell_network_counts=counts,
             modeled_stdcell_area_um2=area,physical_area_bound=False,
             added_pipeline_edges=0,lo_pairs_per_q_word=4,q_word_ii=4,
             combined_q_frame_words=258,diagnostic_all_compact_word_span=1029,
@@ -142,6 +147,8 @@ endmodule
         expected='SUCCESS!' if verify else 'model found: FAIL!'
         if p.returncode or expected not in p.stdout:raise RuntimeError(f'{name} unexpected {p.returncode}')
         print(name,expected)
-    print('COMPACTION_MODEL_AREA_UM2',area,'CLOCK_CAP_FF',72*ff['clock_cap_ff'])
+    print('COMPACTION_MODEL_AREA_UM2',area,'CLOCK_CAP_TT_FF',
+          68*ff['clock_cap_ff']+4*asr['clock_cap_ff'],
+          68*ff_fast['clock_cap_ff']+4*asr_fast['clock_cap_ff'])
 
 if __name__=='__main__':main()

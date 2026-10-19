@@ -6,10 +6,10 @@
  \----------------------------------------------------------------------------/
  Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
 
--- Running command `read_verilog -sv uniform_model_final/rounding_miter.sv; prep -top rounding_miter; flatten; sat -prove bad_bind_ok 1 -show x -show golden -show vs -show cap' --
+-- Running command `read_verilog -sv uniform_model_corners/rounding_miter.sv; prep -top rounding_miter; flatten; sat -prove bad_bind_ok 1 -show x -show golden -show vs -show cap' --
 
-1. Executing Verilog-2005 frontend: uniform_model_final/rounding_miter.sv
-Parsing SystemVerilog input from `uniform_model_final/rounding_miter.sv' to AST representation.
+1. Executing Verilog-2005 frontend: uniform_model_corners/rounding_miter.sv
+Parsing SystemVerilog input from `uniform_model_corners/rounding_miter.sv' to AST representation.
 Generating RTLIL representation for module `\rounding_miter'.
 Successfully finished Verilog frontend.
 
@@ -44,20 +44,20 @@ Promoted 8 assignments to connections.
 Converted 0 switches.
 
 2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
-Creating decoders for process `\rounding_miter.$proc$uniform_model_final/rounding_miter.sv:17$24'.
-Creating decoders for process `\rounding_miter.$proc$uniform_model_final/rounding_miter.sv:16$17'.
+Creating decoders for process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:17$24'.
+Creating decoders for process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:16$17'.
 
 2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
-No latch inferred for signal `\rounding_miter.\fmt_d$func$uniform_model_final/rounding_miter.sv:17$2.$result' from process `\rounding_miter.$proc$uniform_model_final/rounding_miter.sv:17$24'.
-No latch inferred for signal `\rounding_miter.\bf16$func$uniform_model_final/rounding_miter.sv:16$1.$result' from process `\rounding_miter.$proc$uniform_model_final/rounding_miter.sv:16$17'.
+No latch inferred for signal `\rounding_miter.\fmt_d$func$uniform_model_corners/rounding_miter.sv:17$2.$result' from process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:17$24'.
+No latch inferred for signal `\rounding_miter.\bf16$func$uniform_model_corners/rounding_miter.sv:16$1.$result' from process `\rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:16$17'.
 
 2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
 
 2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
 
 2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
-Removing empty process `rounding_miter.$proc$uniform_model_final/rounding_miter.sv:17$24'.
-Removing empty process `rounding_miter.$proc$uniform_model_final/rounding_miter.sv:16$17'.
+Removing empty process `rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:17$24'.
+Removing empty process `rounding_miter.$proc$uniform_model_corners/rounding_miter.sv:16$17'.
 Cleaned up 0 empty switches.
 
 2.2.12. Executing OPT_EXPR pass (perform const folding).
@@ -175,16 +175,16 @@ Optimizing module rounding_miter.
 2.7.20. Finished fast OPT passes. (There is nothing left to do.)
 
 2.8. Executing WREDUCE pass (reducing word size of cells).
-Removed top 17 bits (of 32) from port B of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:14$5 ($add).
-Removed top 31 bits (of 32) from port B of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:14$6 ($add).
-Removed top 1 bits (of 33) from port A of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:5$22 ($add).
-Removed top 18 bits (of 33) from port B of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:5$22 ($add).
-Removed top 32 bits (of 33) from port B of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:5$23 ($add).
-Removed top 1 bits (of 33) from port Y of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:5$23 ($add).
-Removed top 1 bits (of 33) from port A of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:5$23 ($add).
-Removed top 1 bits (of 33) from port Y of cell rounding_miter.$add$uniform_model_final/rounding_miter.sv:5$22 ($add).
-Removed top 1 bits (of 33) from wire rounding_miter.$0\bf16$func$uniform_model_final/rounding_miter.sv:16$3.s[32:0]$21.
-Removed top 1 bits (of 33) from wire rounding_miter.$add$uniform_model_final/rounding_miter.sv:10$29_Y.
+Removed top 17 bits (of 32) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:14$5 ($add).
+Removed top 31 bits (of 32) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:14$6 ($add).
+Removed top 1 bits (of 33) from port A of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$22 ($add).
+Removed top 18 bits (of 33) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$22 ($add).
+Removed top 32 bits (of 33) from port B of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$23 ($add).
+Removed top 1 bits (of 33) from port Y of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$23 ($add).
+Removed top 1 bits (of 33) from port A of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$23 ($add).
+Removed top 1 bits (of 33) from port Y of cell rounding_miter.$add$uniform_model_corners/rounding_miter.sv:5$22 ($add).
+Removed top 1 bits (of 33) from wire rounding_miter.$0\bf16$func$uniform_model_corners/rounding_miter.sv:16$3.s[32:0]$21.
+Removed top 1 bits (of 33) from wire rounding_miter.$add$uniform_model_corners/rounding_miter.sv:10$29_Y.
 
 2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \rounding_miter..
@@ -271,6 +271,6 @@ SAT proof finished - model found: FAIL!
   \vs             -2147483648  80000000    10000000000000000000000000000000
   \x               2147450882  7fff8002    01111111111111111000000000000010
 
-End of script. Logfile hash: 30a024f31a, time: 0.02s, user: 0.02s, system: 0.00s, MEM: 27.18 MB peak
+End of script. Logfile hash: c1f0edf247, time: 0.02s, user: 0.02s, system: 0.00s, MEM: 27.29 MB peak
 Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
 Time spent: 29% 1x sat (0 sec), 23% 6x opt_clean (0 sec), ...
