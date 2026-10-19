@@ -438,7 +438,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_FRONT PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/front_m0.log"
    },
    {
     "name": "kvpc_front_mut1",
@@ -451,7 +451,7 @@
     ],
     "pass_regex": "^KVPC_FRONT PASS ",
     "fail_regex": "^KVPC_FRONT FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/front_m1.log"
    },
    {
     "name": "kvpc_front_mut4",
@@ -464,7 +464,7 @@
     ],
     "pass_regex": "^KVPC_FRONT PASS ",
     "fail_regex": "^KVPC_FRONT FAIL .* mut=4",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m4.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/front_m4.log"
    },
    {
     "name": "kvpc_front_mut5",
@@ -477,7 +477,7 @@
     ],
     "pass_regex": "^KVPC_FRONT PASS ",
     "fail_regex": "^KVPC_FRONT FAIL .* mut=5",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/front_m5.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/front_m5.log"
    },
    {
     "name": "kvpc_return",
@@ -489,7 +489,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_RETURN PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/return_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/return_m0.log"
    },
    {
     "name": "kvpc_return_mut1",
@@ -502,7 +502,7 @@
     ],
     "pass_regex": "^KVPC_RETURN PASS ",
     "fail_regex": "^KVPC_RETURN FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/return_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/return_m1.log"
    },
    {
     "name": "kvpc_return_mut2",
@@ -515,7 +515,7 @@
     ],
     "pass_regex": "^KVPC_RETURN PASS ",
     "fail_regex": "^KVPC_RETURN FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/return_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/return_m2.log"
    },
    {
     "name": "kvpc_cdc",
@@ -527,7 +527,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_CDC PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/cdc_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/cdc_m0.log"
    },
    {
     "name": "kvpc_cdc_mut1",
@@ -540,7 +540,7 @@
     ],
     "pass_regex": "^KVPC_CDC PASS ",
     "fail_regex": "^KVPC_CDC FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/cdc_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/cdc_m1.log"
    },
    {
     "name": "kvpc_cdc_mut2",
@@ -553,7 +553,7 @@
     ],
     "pass_regex": "^KVPC_CDC PASS ",
     "fail_regex": "^KVPC_CDC FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/cdc_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/cdc_m2.log"
    },
    {
     "name": "kvpc_tq",
@@ -565,7 +565,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_TQ PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tq_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/tq_m0.log"
    },
    {
     "name": "kvpc_tq_mut1",
@@ -578,7 +578,7 @@
     ],
     "pass_regex": "^KVPC_TQ PASS ",
     "fail_regex": "^KVPC_TQ FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tq_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/tq_m1.log"
    },
    {
     "name": "kvpc_sched",
@@ -590,7 +590,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_SCHED PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/sched_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/sched_m0.log"
    },
    {
     "name": "kvpc_sched_mut1",
@@ -603,7 +603,7 @@
     ],
     "pass_regex": "^KVPC_SCHED PASS ",
     "fail_regex": "^KVPC_SCHED FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/sched_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/sched_m1.log"
    },
    {
     "name": "kvpc_ctrl",
@@ -615,7 +615,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_CTRL PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/ctrl_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/ctrl_m0.log"
    },
    {
     "name": "kvpc_ctrl_mut1",
@@ -628,7 +628,7 @@
     ],
     "pass_regex": "^KVPC_CTRL PASS ",
     "fail_regex": "^KVPC_CTRL FAIL .* mut=1",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/ctrl_m1.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/ctrl_m1.log"
    },
    {
     "name": "kvpc_ctrl_mut2",
@@ -641,7 +641,7 @@
     ],
     "pass_regex": "^KVPC_CTRL PASS ",
     "fail_regex": "^KVPC_CTRL FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/ctrl_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/ctrl_m2.log"
    },
    {
     "name": "kvpc_path",
@@ -653,7 +653,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_PATH PASS .* errors=0 .*mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/path_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/path_m0.log"
    },
    {
     "name": "kvpc_path_mut2",
@@ -666,7 +666,7 @@
     ],
     "pass_regex": "^KVPC_PATH PASS ",
     "fail_regex": "^KVPC_PATH FAIL .* mut=2",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/path_m2.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/path_m2.log"
    },
    {
     "name": "kvpc_tile_pc",
@@ -678,7 +678,7 @@
      "verilator"
     ],
     "pass_regex": "^KVPC_TILE PASS .* errors=0 mut=0",
-    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tile_pc_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/tile_pc_m0.log"
    },
    {
     "name": "kvpc_tile_pc_mut4",
@@ -691,7 +691,7 @@
     ],
     "pass_regex": "^KVPC_TILE PASS ",
     "fail_regex": "^KVPC_TILE FAIL .* mut=4",
-    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_1019/tile_pc_m4.log"
+    "fail_witness": "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019/tile_pc_m4.log"
    }
   ],
   "extra_paths": [
@@ -702,6 +702,7 @@
    "results/arch/qwen_kv_kits_b_1018",
    "results/arch/qwen_kv_static_programme_1017/die/target6.hex",
    "results/rtl/qwen_kv_die/kvpc_sram_1019",
+   "results/rtl/qwen_kv_die/kvpc_sram_sr3_1019",
    "results/rtl/qwen_kv_die/kvs_kits_gsrc_1018",
    "rtl",
    "rtl/lib/ot_rst_relay.sv",

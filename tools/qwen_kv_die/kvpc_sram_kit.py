@@ -38,7 +38,8 @@ STACKS = [
     ('cdc_down', '*u_ecdc.down.u_mem.g_b?{k}?.u_m', 6, 172.8, 23.76),
     ('cdc_up', '*u_ecdc.up.u_mem.g_b?{k}?.u_m', 5, 172.8, 151.2),
 ]
-WIT = 'results/rtl/qwen_kv_die/kvpc_sram_1019'
+WIT = WIT_SR1 = 'results/rtl/qwen_kv_die/kvpc_sram_1019'
+WIT_SR3 = 'results/rtl/qwen_kv_die/kvpc_sram_sr3_1019'   # KV-PC2 sr3+ receipts (Verilator 5.050, @96723d23b / tile @66c85f895)
 UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,)), ('ctrl', (1, 2)),
          ('path', (2,))]
 
@@ -56,6 +57,7 @@ def macros(variant='a'):
 
 
 def benches(tile, hfx=False):
+    WIT = WIT_SR3 if hfx else WIT_SR1
     sh = ('PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py '
           '--unit {u} --mut {m} --threads 4 --out {{RUN}}/bench/kvpc_{u}_m{m}')
     b = []
@@ -124,7 +126,7 @@ def derive(tile, tag, variant):
     j['tag'] = tag
     j['purpose'] = why
     j['benches'] = benches(tile, hfx=tag not in ('sr1', 'sr2', 'sr2b'))
-    j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, 'rtl', 'tools/qwen_kv_die'})
+    j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, WIT_SR3, 'rtl', 'tools/qwen_kv_die'})
     j['views_to'] = f'physical/ref_tile/{kit}/views'
     j['record_to'] = f'results/rtl/ref_tile/{kit}'
     kb = s.get('kits_b', {})
