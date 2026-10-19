@@ -667,6 +667,11 @@ def rr_pin_order(s: dict, flow: str) -> dict:
     s["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M3 M5"}
     s["route"]["io_hold_margin_ns"] = 0.03
     s["route"]["hold_margin_ns"] = max(float(s["route"]["hold_margin_ns"]), 0.03)   # io <= core margin (ref_tile rule)
+    if flow == "EW":
+        # gate 10-19 06:2x (twice, ot-agidock128 + ot-epyc8): with the balanced pin layout the EW strip's 30 um2 of movable
+        # cells left GPL overflow stuck at ~0.105 (> 0.10 stop) at density 0.45 (0.12 at 0.60) and RePlAce diverged (GPL-0305);
+        # 0.35 gates WARN (GRT overflow 0, spread 5.1 / 5.5 ps); WE / SN gated at 0.45
+        s["route"]["pd"] = 0.35
     s["job"]["tag"] = "rrpo"
     s["reroute_reason"] = {
         "kind": "pin_order", "source": RR_PO_SOURCE,
