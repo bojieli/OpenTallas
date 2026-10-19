@@ -409,6 +409,15 @@
       "MUT": 0,
       "WOPEN": 0
      },
+     "pin_regs": {
+      "clock": "stream_clk",
+      "enable": false,
+      "reason": "RTL registers every pin: stream inputs land in the wbk_q pin flops (rb_q/fb_q/re_q/fe_q/rt_q/rbase_q/wd_q/stk_q/q_s), stream outputs are flops (wb_ready/wa/wbw_*/fault), every K port has its own hbm_clk pin skid; a kit flop stage would add an unpriced edge and put a raw flop in front of the CDC FIFOs"
+     },
+     "reset_landing": {
+      "enable": true,
+      "stages": 2
+     },
      "reviewed_gray_fifo_extensions": {
       "die_constant_inputs": [
        "quad"
@@ -447,15 +456,19 @@
      "top": "ot_hbm_svc_wb_kport_q"
     },
     "tool": {
-     "cdc_sync_constraints.py": "eae479d05e11ce815d43b0e44b65b17d1b8a5d61664c28a97e499f39644b76e5",
-     "clock_entry_constraints.py": "c51561e3699fc5e4dae27a5eef91780140381a8ce74cb97983cf54bc11f8fd4d",
-     "gray_fifo_cdc_constraints.py": "fe215ab16768184c6fca9d55502ae8e6f3d87d446ce00b533868591571101661"
+     "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
+     "clock_entry_constraints.py": "7e184cb89837c924bbef6db763866e8dfb2c5a26b619ccd4847797bb9eb32351",
+     "gray_fifo_cdc_constraints.py": "e281f191526d4ffdcb9ab927607fe878679d04a5659b1e39d98f9166fe0a62d3",
+     "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
+    },
+    "tool_data": {
+     "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-18T18:15:49-0700",
-   "host": "ot-epyc4",
-   "key": "93fbce14154446d6511b3d0d024aedc64ae08066356f199725f69aefaf1b0edb",
+   "created": "2026-10-19T16:41:35-0700",
+   "host": "ot-epyc5",
+   "key": "48ef38500eb8991712777f468b8547249cf1ac2ce93d1bafe112dbcb4b76e299",
    "record": {
     "counts": {
      "consumer": 62,
@@ -639540,6 +639553,76 @@
       "f9"
      ]
     },
+    "launch_aliases": {
+     "u_wb.g_root[0].g_lane[0].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[0].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[0].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[0].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[1].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[1].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[1].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[1].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[2].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[2].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[2].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[2].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[3].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[3].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[3].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[3].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[4].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[4].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[4].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[4].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[5].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[5].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[5].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[5].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[6].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[6].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[6].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[6].u_fifo.wgray[2]",
+     "u_wb.g_root[0].g_lane[7].u_fifo.rbin[2]": "u_wb.g_root[0].g_lane[7].u_fifo.rgray[2]",
+     "u_wb.g_root[0].g_lane[7].u_fifo.wbin[2]": "u_wb.g_root[0].g_lane[7].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[0].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[0].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[0].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[0].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[1].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[1].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[1].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[1].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[2].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[2].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[2].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[2].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[3].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[3].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[3].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[3].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[4].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[4].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[4].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[4].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[5].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[5].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[5].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[5].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[6].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[6].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[6].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[6].u_fifo.wgray[2]",
+     "u_wb.g_root[1].g_lane[7].u_fifo.rbin[2]": "u_wb.g_root[1].g_lane[7].u_fifo.rgray[2]",
+     "u_wb.g_root[1].g_lane[7].u_fifo.wbin[2]": "u_wb.g_root[1].g_lane[7].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[0].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[0].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[0].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[0].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[1].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[1].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[1].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[1].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[2].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[2].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[2].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[2].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[3].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[3].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[3].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[3].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[4].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[4].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[4].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[4].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[5].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[5].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[5].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[5].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[6].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[6].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[6].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[6].u_fifo.wgray[2]",
+     "u_wb.g_root[2].g_lane[7].u_fifo.rbin[2]": "u_wb.g_root[2].g_lane[7].u_fifo.rgray[2]",
+     "u_wb.g_root[2].g_lane[7].u_fifo.wbin[2]": "u_wb.g_root[2].g_lane[7].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[0].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[0].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[0].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[0].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[1].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[1].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[1].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[1].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[2].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[2].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[2].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[2].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[3].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[3].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[3].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[3].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[4].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[4].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[4].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[4].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[5].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[5].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[5].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[5].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[6].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[6].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[6].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[6].u_fifo.wgray[2]",
+     "u_wb.g_root[3].g_lane[7].u_fifo.rbin[2]": "u_wb.g_root[3].g_lane[7].u_fifo.rgray[2]",
+     "u_wb.g_root[3].g_lane[7].u_fifo.wbin[2]": "u_wb.g_root[3].g_lane[7].u_fifo.wgray[2]",
+     "u_wb.u_ack.rbin[2]": "u_wb.u_ack.rgray[2]",
+     "u_wb.u_ack.wbin[2]": "u_wb.u_ack.wgray[2]",
+     "u_wb.u_meta.rbin[2]": "u_wb.u_meta.rgray[2]",
+     "u_wb.u_meta.wbin[2]": "u_wb.u_meta.wgray[2]"
+    },
     "levels": {
      "l0": {
       "dst": "core",
@@ -648501,6 +648584,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[0].u_fifo.rbin[2]": [
+      "src",
+      "f0",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[0].u_fifo.rg_w1[0]": [
       "sync1",
       "f0",
@@ -648565,6 +648654,12 @@
       "stage",
       "f0",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[0].u_fifo.wbin[2]": [
+      "src",
+      "f0",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[0].u_fifo.wg_r1[0]": [
@@ -655467,6 +655562,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[1].u_fifo.rbin[2]": [
+      "src",
+      "f1",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[1].u_fifo.rg_w1[0]": [
       "sync1",
       "f1",
@@ -655531,6 +655632,12 @@
       "stage",
       "f1",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[1].u_fifo.wbin[2]": [
+      "src",
+      "f1",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[1].u_fifo.wg_r1[0]": [
@@ -662433,6 +662540,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[2].u_fifo.rbin[2]": [
+      "src",
+      "f2",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[2].u_fifo.rg_w1[0]": [
       "sync1",
       "f2",
@@ -662497,6 +662610,12 @@
       "stage",
       "f2",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[2].u_fifo.wbin[2]": [
+      "src",
+      "f2",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[2].u_fifo.wg_r1[0]": [
@@ -669399,6 +669518,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[3].u_fifo.rbin[2]": [
+      "src",
+      "f3",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[3].u_fifo.rg_w1[0]": [
       "sync1",
       "f3",
@@ -669463,6 +669588,12 @@
       "stage",
       "f3",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[3].u_fifo.wbin[2]": [
+      "src",
+      "f3",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[3].u_fifo.wg_r1[0]": [
@@ -676365,6 +676496,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[4].u_fifo.rbin[2]": [
+      "src",
+      "f4",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[4].u_fifo.rg_w1[0]": [
       "sync1",
       "f4",
@@ -676429,6 +676566,12 @@
       "stage",
       "f4",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[4].u_fifo.wbin[2]": [
+      "src",
+      "f4",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[4].u_fifo.wg_r1[0]": [
@@ -683331,6 +683474,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[5].u_fifo.rbin[2]": [
+      "src",
+      "f5",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[5].u_fifo.rg_w1[0]": [
       "sync1",
       "f5",
@@ -683395,6 +683544,12 @@
       "stage",
       "f5",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[5].u_fifo.wbin[2]": [
+      "src",
+      "f5",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[5].u_fifo.wg_r1[0]": [
@@ -690297,6 +690452,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[6].u_fifo.rbin[2]": [
+      "src",
+      "f6",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[6].u_fifo.rg_w1[0]": [
       "sync1",
       "f6",
@@ -690361,6 +690522,12 @@
       "stage",
       "f6",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[6].u_fifo.wbin[2]": [
+      "src",
+      "f6",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[6].u_fifo.wg_r1[0]": [
@@ -697263,6 +697430,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[0].g_lane[7].u_fifo.rbin[2]": [
+      "src",
+      "f7",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[0].g_lane[7].u_fifo.rg_w1[0]": [
       "sync1",
       "f7",
@@ -697327,6 +697500,12 @@
       "stage",
       "f7",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[0].g_lane[7].u_fifo.wbin[2]": [
+      "src",
+      "f7",
+      "wptr",
       2
      ],
      "u_wb.g_root[0].g_lane[7].u_fifo.wg_r1[0]": [
@@ -704247,6 +704426,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[0].u_fifo.rbin[2]": [
+      "src",
+      "f8",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[0].u_fifo.rg_w1[0]": [
       "sync1",
       "f8",
@@ -704311,6 +704496,12 @@
       "stage",
       "f8",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[0].u_fifo.wbin[2]": [
+      "src",
+      "f8",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[0].u_fifo.wg_r1[0]": [
@@ -711213,6 +711404,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[1].u_fifo.rbin[2]": [
+      "src",
+      "f9",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[1].u_fifo.rg_w1[0]": [
       "sync1",
       "f9",
@@ -711277,6 +711474,12 @@
       "stage",
       "f9",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[1].u_fifo.wbin[2]": [
+      "src",
+      "f9",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[1].u_fifo.wg_r1[0]": [
@@ -718179,6 +718382,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[2].u_fifo.rbin[2]": [
+      "src",
+      "f10",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[2].u_fifo.rg_w1[0]": [
       "sync1",
       "f10",
@@ -718243,6 +718452,12 @@
       "stage",
       "f10",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[2].u_fifo.wbin[2]": [
+      "src",
+      "f10",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[2].u_fifo.wg_r1[0]": [
@@ -725145,6 +725360,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[3].u_fifo.rbin[2]": [
+      "src",
+      "f11",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[3].u_fifo.rg_w1[0]": [
       "sync1",
       "f11",
@@ -725209,6 +725430,12 @@
       "stage",
       "f11",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[3].u_fifo.wbin[2]": [
+      "src",
+      "f11",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[3].u_fifo.wg_r1[0]": [
@@ -732111,6 +732338,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[4].u_fifo.rbin[2]": [
+      "src",
+      "f12",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[4].u_fifo.rg_w1[0]": [
       "sync1",
       "f12",
@@ -732175,6 +732408,12 @@
       "stage",
       "f12",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[4].u_fifo.wbin[2]": [
+      "src",
+      "f12",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[4].u_fifo.wg_r1[0]": [
@@ -739077,6 +739316,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[5].u_fifo.rbin[2]": [
+      "src",
+      "f13",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[5].u_fifo.rg_w1[0]": [
       "sync1",
       "f13",
@@ -739141,6 +739386,12 @@
       "stage",
       "f13",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[5].u_fifo.wbin[2]": [
+      "src",
+      "f13",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[5].u_fifo.wg_r1[0]": [
@@ -746043,6 +746294,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[6].u_fifo.rbin[2]": [
+      "src",
+      "f14",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[6].u_fifo.rg_w1[0]": [
       "sync1",
       "f14",
@@ -746107,6 +746364,12 @@
       "stage",
       "f14",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[6].u_fifo.wbin[2]": [
+      "src",
+      "f14",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[6].u_fifo.wg_r1[0]": [
@@ -753009,6 +753272,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[1].g_lane[7].u_fifo.rbin[2]": [
+      "src",
+      "f15",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[1].g_lane[7].u_fifo.rg_w1[0]": [
       "sync1",
       "f15",
@@ -753073,6 +753342,12 @@
       "stage",
       "f15",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[1].g_lane[7].u_fifo.wbin[2]": [
+      "src",
+      "f15",
+      "wptr",
       2
      ],
      "u_wb.g_root[1].g_lane[7].u_fifo.wg_r1[0]": [
@@ -759993,6 +760268,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[0].u_fifo.rbin[2]": [
+      "src",
+      "f16",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[0].u_fifo.rg_w1[0]": [
       "sync1",
       "f16",
@@ -760057,6 +760338,12 @@
       "stage",
       "f16",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[0].u_fifo.wbin[2]": [
+      "src",
+      "f16",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[0].u_fifo.wg_r1[0]": [
@@ -766959,6 +767246,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[1].u_fifo.rbin[2]": [
+      "src",
+      "f17",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[1].u_fifo.rg_w1[0]": [
       "sync1",
       "f17",
@@ -767023,6 +767316,12 @@
       "stage",
       "f17",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[1].u_fifo.wbin[2]": [
+      "src",
+      "f17",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[1].u_fifo.wg_r1[0]": [
@@ -773925,6 +774224,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[2].u_fifo.rbin[2]": [
+      "src",
+      "f18",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[2].u_fifo.rg_w1[0]": [
       "sync1",
       "f18",
@@ -773989,6 +774294,12 @@
       "stage",
       "f18",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[2].u_fifo.wbin[2]": [
+      "src",
+      "f18",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[2].u_fifo.wg_r1[0]": [
@@ -780891,6 +781202,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[3].u_fifo.rbin[2]": [
+      "src",
+      "f19",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[3].u_fifo.rg_w1[0]": [
       "sync1",
       "f19",
@@ -780955,6 +781272,12 @@
       "stage",
       "f19",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[3].u_fifo.wbin[2]": [
+      "src",
+      "f19",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[3].u_fifo.wg_r1[0]": [
@@ -787857,6 +788180,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[4].u_fifo.rbin[2]": [
+      "src",
+      "f20",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[4].u_fifo.rg_w1[0]": [
       "sync1",
       "f20",
@@ -787921,6 +788250,12 @@
       "stage",
       "f20",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[4].u_fifo.wbin[2]": [
+      "src",
+      "f20",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[4].u_fifo.wg_r1[0]": [
@@ -794823,6 +795158,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[5].u_fifo.rbin[2]": [
+      "src",
+      "f21",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[5].u_fifo.rg_w1[0]": [
       "sync1",
       "f21",
@@ -794887,6 +795228,12 @@
       "stage",
       "f21",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[5].u_fifo.wbin[2]": [
+      "src",
+      "f21",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[5].u_fifo.wg_r1[0]": [
@@ -801789,6 +802136,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[6].u_fifo.rbin[2]": [
+      "src",
+      "f22",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[6].u_fifo.rg_w1[0]": [
       "sync1",
       "f22",
@@ -801853,6 +802206,12 @@
       "stage",
       "f22",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[6].u_fifo.wbin[2]": [
+      "src",
+      "f22",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[6].u_fifo.wg_r1[0]": [
@@ -808755,6 +809114,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[2].g_lane[7].u_fifo.rbin[2]": [
+      "src",
+      "f23",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[2].g_lane[7].u_fifo.rg_w1[0]": [
       "sync1",
       "f23",
@@ -808819,6 +809184,12 @@
       "stage",
       "f23",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[2].g_lane[7].u_fifo.wbin[2]": [
+      "src",
+      "f23",
+      "wptr",
       2
      ],
      "u_wb.g_root[2].g_lane[7].u_fifo.wg_r1[0]": [
@@ -815739,6 +816110,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[0].u_fifo.rbin[2]": [
+      "src",
+      "f24",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[0].u_fifo.rg_w1[0]": [
       "sync1",
       "f24",
@@ -815803,6 +816180,12 @@
       "stage",
       "f24",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[0].u_fifo.wbin[2]": [
+      "src",
+      "f24",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[0].u_fifo.wg_r1[0]": [
@@ -822705,6 +823088,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[1].u_fifo.rbin[2]": [
+      "src",
+      "f25",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[1].u_fifo.rg_w1[0]": [
       "sync1",
       "f25",
@@ -822769,6 +823158,12 @@
       "stage",
       "f25",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[1].u_fifo.wbin[2]": [
+      "src",
+      "f25",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[1].u_fifo.wg_r1[0]": [
@@ -829671,6 +830066,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[2].u_fifo.rbin[2]": [
+      "src",
+      "f26",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[2].u_fifo.rg_w1[0]": [
       "sync1",
       "f26",
@@ -829735,6 +830136,12 @@
       "stage",
       "f26",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[2].u_fifo.wbin[2]": [
+      "src",
+      "f26",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[2].u_fifo.wg_r1[0]": [
@@ -836637,6 +837044,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[3].u_fifo.rbin[2]": [
+      "src",
+      "f27",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[3].u_fifo.rg_w1[0]": [
       "sync1",
       "f27",
@@ -836701,6 +837114,12 @@
       "stage",
       "f27",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[3].u_fifo.wbin[2]": [
+      "src",
+      "f27",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[3].u_fifo.wg_r1[0]": [
@@ -843603,6 +844022,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[4].u_fifo.rbin[2]": [
+      "src",
+      "f28",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[4].u_fifo.rg_w1[0]": [
       "sync1",
       "f28",
@@ -843667,6 +844092,12 @@
       "stage",
       "f28",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[4].u_fifo.wbin[2]": [
+      "src",
+      "f28",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[4].u_fifo.wg_r1[0]": [
@@ -850569,6 +851000,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[5].u_fifo.rbin[2]": [
+      "src",
+      "f29",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[5].u_fifo.rg_w1[0]": [
       "sync1",
       "f29",
@@ -850633,6 +851070,12 @@
       "stage",
       "f29",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[5].u_fifo.wbin[2]": [
+      "src",
+      "f29",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[5].u_fifo.wg_r1[0]": [
@@ -857535,6 +857978,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[6].u_fifo.rbin[2]": [
+      "src",
+      "f30",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[6].u_fifo.rg_w1[0]": [
       "sync1",
       "f30",
@@ -857599,6 +858048,12 @@
       "stage",
       "f30",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[6].u_fifo.wbin[2]": [
+      "src",
+      "f30",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[6].u_fifo.wg_r1[0]": [
@@ -864501,6 +864956,12 @@
       "mem",
       0
      ],
+     "u_wb.g_root[3].g_lane[7].u_fifo.rbin[2]": [
+      "src",
+      "f31",
+      "rptr",
+      2
+     ],
      "u_wb.g_root[3].g_lane[7].u_fifo.rg_w1[0]": [
       "sync1",
       "f31",
@@ -864565,6 +865026,12 @@
       "stage",
       "f31",
       "rptr",
+      2
+     ],
+     "u_wb.g_root[3].g_lane[7].u_fifo.wbin[2]": [
+      "src",
+      "f31",
+      "wptr",
       2
      ],
      "u_wb.g_root[3].g_lane[7].u_fifo.wg_r1[0]": [
@@ -867219,6 +867686,12 @@
       "mem",
       0
      ],
+     "u_wb.u_ack.rbin[2]": [
+      "src",
+      "f32",
+      "rptr",
+      2
+     ],
      "u_wb.u_ack.rg_w1[0]": [
       "sync1",
       "f32",
@@ -867283,6 +867756,12 @@
       "stage",
       "f32",
       "rptr",
+      2
+     ],
+     "u_wb.u_ack.wbin[2]": [
+      "src",
+      "f32",
+      "wptr",
       2
      ],
      "u_wb.u_ack.wdata[0]": [
@@ -868233,6 +868712,12 @@
       "mem",
       0
      ],
+     "u_wb.u_meta.rbin[2]": [
+      "src",
+      "f33",
+      "rptr",
+      2
+     ],
      "u_wb.u_meta.rg_w1[0]": [
       "sync1",
       "f33",
@@ -868297,6 +868782,12 @@
       "stage",
       "f33",
       "rptr",
+      2
+     ],
+     "u_wb.u_meta.wbin[2]": [
+      "src",
+      "f33",
+      "wptr",
       2
      ],
      "u_wb.u_meta.wg_r1[0]": [
@@ -868393,7 +868884,7 @@
      "quad"
     ]
    },
-   "seconds": 336
+   "seconds": 355
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"

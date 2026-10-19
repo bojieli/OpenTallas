@@ -2,8 +2,8 @@
 """LAYERBENCH-S81: check the real dsdv_seq_host run of a compiled layer programme (tb_dv_prog_seqhost.sv log) against the
 compiled calendar (dv_layer_compile.py prog/calendar.json + ctl_templates.json).
 
-PASS = every V command row (engine 0 / 1) left as exactly one beat on vo_n / vo_s, on edge  KS + issue + C  with ONE
-constant C for all rows (the static schedule: no row moved relative to another), beat = {[0] 1, kind 0, hops 0, src 4,
+PASS = every V command row (engine 0 / 1) left as exactly one beat on vo_n / vo_s, on edge  KS + issue + C (+ SEQ vo_s_land
+on vo_s) with ONE constant C for all rows (the static schedule: no row moved relative to another), beat = {[0] 1, kind 0, hops 0, src 4,
 payload = the row's template}; the KIT done left t_kd; no other beat; unit status fault bit t_host[75] = 0.
 Also writes check.json (C, per-row edges).
     check_seqhost.py --dir PROGDIR --log RUN.LOG [--expect-c N]       exit 0 = PASS
@@ -53,7 +53,8 @@ def check(d, log, expect_c=None):
         # the earliest unused matching beat
         i = min(hit, key=lambda i: vo[i][1])
         used.add(i)
-        off = vo[i][1] - (ks[0] + r['issue'])
+        # one constant C over both sides; V south leaves vo_s SEQ['vo_s_land'] edges later (dsdv_sh_lk RL 1, S81-SHLK2)
+        off = vo[i][1] - (ks[0] + r['issue']) - (C.SEQ.get('vo_s_land', 0) if side == 'S' else 0)
         offs.append(off)
         per.append(dict(row=r['i'], what=r['what'], issue=r['issue'], edge=vo[i][1], offset=off))
     extra = [vo[i] for i in range(len(vo)) if i not in used]

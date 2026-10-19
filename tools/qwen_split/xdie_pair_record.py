@@ -21,7 +21,7 @@ N59_TX, N59_X3, KV_CODEC, N59_RX_DR = 2, 2, 1, 4      # d2d_link_calendar.py / x
 
 PASS_CFGS = ('pair', 'pair_t8192', 'pair_phy9', 'pair_l0', 'pair_l0_phy9')
 MUTANTS = {
-    'pair_mut_txdp_c_off1': ('compute die master built with TXDP C [7,3,1,9] (CMD/Q port one edge over the compiled 6)',
+    'pair_mut_txdp_c_off1': ('compute die master built with TXDP C port 0 one edge over the compiled value (CMD/Q port)',
                              r'^XQ_CAUSE d2d: compute fault 1 abort 0 end_fault 1'),
     'pair_mut_kseam_rx_torn': ('KV seam K.rx_record torn: att_rx_v 10 stages vs rx_payload 11',
                                r'^XQ_CAUSE kvs_attn\+pvfin .*record 1 \(codec cause 1010\)'),
@@ -91,6 +91,9 @@ def main():
     ap.add_argument('run', help='run dir (configs as subdirs)')
     ap.add_argument('--rel', default='results/rtl/xdie_qwen_1018/pair_r1', help='repo path of the committed run dir')
     ap.add_argument('--branch', default='')
+    # Q-XDIE-GEN 10-18: a re-run on the NETLISTED seam of named die GENs (run_xdie_exchange.sh XQ_PLAN)
+    ap.add_argument('--seam', default=None, help='seam provenance note (default: the fixed-GEN plan text of pair_r1)')
+    ap.add_argument('--lane', default='QXF-PAIR (Q-XDIE-FIX, TOKEN-XDIE-QWEN paired run)')
     a = ap.parse_args()
     R = Path(a.run)
     bad = []
@@ -164,6 +167,13 @@ def main():
             layer_period_priced=r['cal']['layer_period'], windows_priced=r['cal']['windows_priced'],
             O_source=r['cal']['overlap_note'])
     ex = {n: exch(n) for n in PASS_CFGS if n in cfgs}
+    # Q-XDIE-GEN: the die masters with the TXDP the GENs BIND (pair_gen_txdp, optional): recorded with its verdict
+    gen_txdp = None
+    if (R / 'pair_gen_txdp' / 'run.log').exists():
+        g = parse(R / 'pair_gen_txdp')
+        gen_txdp = dict(passed=g['passed'], cfg=g['cfg'], log=f'{a.rel}/pair_gen_txdp/run.log',
+                        first_cause=next((l for l in g['lines'] if l.startswith('XQ_CAUSE')), None),
+                        masters_txdp=g['cal'].get('masters_txdp'), compiled_txd=g['cal'].get('txd'))
     if bad:
         print('\n'.join('PAIR_RECORD BAD ' + b for b in bad))
     L1, L0 = ex.get('pair'), ex.get('pair_l0')
@@ -177,8 +187,8 @@ def main():
                             note='die masters qfd_d2d_static / qkd_d2d_static (PR=1, compiled TXDP) + native59 + kvs_attn '
                                  'programme pins, measured on the paired co-sim'),
                        dict(grade='measured-current-RTL', E=float(seam),
-                            note='die seam relays at the fixed-GEN bundle depth (compute C.tx_record 0 / C.rx_record 2, '
-                                 'KV K.rx_record 11 / K.tx_record 11; QXF-SEAMC / QXF-SEAMK), register chains in the vehicle'),
+                            note=a.seam or ('die seam relays at the fixed-GEN bundle depth (compute C.tx_record 0 / C.rx_record 2, '
+                                 'KV K.rx_record 11 / K.tx_record 11; QXF-SEAMC / QXF-SEAMK), register chains in the vehicle')),
                        dict(grade='modelled-PHY', E=float(phy),
                             note='UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 FDI cycles each way (3.5 ns, JSSC 2026 '
                                  'doi:10.1109/JSSC.2026.3651425)')],
@@ -190,7 +200,7 @@ def main():
         tcomp = dict(terms=[tc_term('Lc.xdie.d2d_attention', L1, 'exchanges.pair (C2K + K2C, PHY 5)'),
                             tc_term('L0.xdie.d2d_attention', L0, 'exchanges.pair_l0 (C2K + K2C, PHY 5)')])
     rec = dict(
-        schema='opentallas.xdie_qwen_pair.v1', lane='QXF-PAIR (Q-XDIE-FIX, TOKEN-XDIE-QWEN paired run)', date='2026-10-18',
+        schema='opentallas.xdie_qwen_pair.v1', lane=a.lane, date='2026-10-18',
         branch=a.branch, verdict='PASS' if not bad else 'FAIL', problems=bad,
         vehicle=dict(
             bench='rtl/test/qwen_split/tb_xdie_qwen_exchange.sv C_REAL=1 K_REAL=3, run_xdie_exchange.sh (Verilator 5.050, fleet)',
@@ -204,8 +214,8 @@ def main():
                       '(max(P0,P1,R) law, F3)',
                       'KV final join qkd_pv_fin_s (REAL fp32 add/mul: RESULT = (P0 + P1) * rz, 32-sum buffer, R join, F3)'],
             modelled=['UCIe PHY pair ot_qkvd_ucie_x64_phy_model LAT 5 (sensitivity 9)',
-                      'die seam relays / landings as register chains of the fixed-GEN bundle depth (compute 2,2,2,2,0,2; '
-                      'KV 11,11,9,9,9,11,11) -- the GENs that adopt QXF-SEAMC / QXF-SEAMK have not run',
+                      a.seam or ('die seam relays / landings as register chains of the fixed-GEN bundle depth (compute 2,2,2,2,0,2; '
+                      'KV 11,11,9,9,9,11,11) -- the GENs that adopt QXF-SEAMC / QXF-SEAMK have not run'),
                       'outer-pin stimuli only: native59 slice Q/K/V dd_i words, compute sys_face slots (q_slot, kv_word_slot, '
                       'visibility, complete), HOST context, KV layer-programme authority (go/issue/run, i_ctl)',
                       'the KV attention ARITHMETIC upstream of the final join is NOT on this vehicle: the PV pair streams '
@@ -221,7 +231,7 @@ def main():
                 'rx/tx_time + native59 rx/tx_time codecs (fault on any off-slot record), landing table below',
                 'no fault (ends, native59, programme, root, face, pvfin, calendar), no ready/credit wait',
                 'all 35 layers identical (static)'],
-        landing=landing, mutants=mut, exchanges=ex,
+        landing=landing, mutants=mut, gen_bound_txdp=gen_txdp, exchanges=ex,
         configs={n: dict(passed=r['passed'], E=r['E'], cfg=r['cfg'], meas_layer1=r['meas'][0] if r['meas'] else None,
                          log=f'{a.rel}/{n}/run.log') for n, r in cfgs.items()},
         vs_earlier=dict(record='results/rtl/xdie_qwen_1018/record.json (TOKEN-XDIE-QWEN, composed vc+vk, run_r3)',

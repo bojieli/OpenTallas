@@ -57,7 +57,7 @@
     "source": "qwen-hbmacc-8k/src snapshot",
     "evidence": "results/rtl/qwen_hbmacc_p8191_20261004/a_p8191/L0/token_result.json"
    },
-   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under /srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191; usable once its verify.json says PASS"
+   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under {fixtures}/qwen_p8191; usable once its verify.json says PASS"
   },
   {
    "bench": "hbm_qwen_head",
@@ -78,7 +78,7 @@
     "source": "qwen-hbmacc-8k/src snapshot",
     "evidence": "results/rtl/qwen_hbmacc_p8191_20261004/a_p8191_w224_head/head/token_result.json"
    },
-   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under /srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191; usable once its verify.json says PASS"
+   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under {fixtures}/qwen_p8191; usable once its verify.json says PASS"
   },
   {
    "bench": "hbm_ds_joint_p1",
@@ -192,7 +192,7 @@
     "source": "token-exact 2026-10-09 (main 54268eb16 + --jobs fix)",
     "evidence": "results/rtl/token_exact_20261009/s81/token_bench.json"
    },
-   "note": "gaps-design 2026-10-08 (tools/s81/token_bench_l20.py). Units without a stage in this bench (HC, norms, RoPE, compressor, indexer scoring, sparse attention + softmax, SwiGLU, combine; PQ root CAM and the BF HALF_PHL element, which are not field-vehicle slots) are golden-composed: their inputs are proven bit-identical to the golden at every op boundary, their outputs are the golden executor's. Fixture /srv/opentallas-scratch/claude/exactness/fixtures/s81_token_l20 (prep on the checkpoint host)."
+   "note": "gaps-design 2026-10-08 (tools/s81/token_bench_l20.py). Units without a stage in this bench (HC, norms, RoPE, compressor, indexer scoring, sparse attention + softmax, SwiGLU, combine; PQ root CAM and the BF HALF_PHL element, which are not field-vehicle slots) are golden-composed: their inputs are proven bit-identical to the golden at every op boundary, their outputs are the golden executor's. Fixture {fixtures}/s81_token_l20 (prep on the checkpoint host)."
   },
   {
    "bench": "v41_mtp_rom_rtl",
@@ -233,7 +233,7 @@
    },
    "last_pass": {
     "commit": "1ca5e0a7e",
-    "source": "Claude pinned /srv/opentallas-scratch/claude/mtp-exact/src snapshot; individual records contain source digests",
+    "source": "Claude pinned mtp-exact/src (fleet scratch) snapshot; individual records contain source digests",
     "evidence": "results/rtl/mtp_exact_20261008/validation/wf2.json"
    },
    "note": "Basic order only; successors after rejected position do not run before correction. Deep MR-5 remains unqualified; see wf2/mr5_isa_probe.json; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
@@ -258,7 +258,7 @@
    },
    "last_pass": {
     "commit": "1ca5e0a7e",
-    "source": "Claude pinned /srv/opentallas-scratch/claude/mtp-exact/src snapshot; individual records contain source digests",
+    "source": "Claude pinned mtp-exact/src (fleet scratch) snapshot; individual records contain source digests",
     "evidence": "results/rtl/mtp_exact_20261008/validation/hbm.json"
    },
    "note": "Trace-driven arithmetic responses; control/state exactness only, not full-target SM arithmetic or die physical qualification; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
@@ -305,19 +305,47 @@
   "The closure-block RTL (Qwen die masters r21/r22 stations, controller TMR/cancel, native links; S81 BF/selector/PQ/softmax/gearbox; HBM die views, SU/SFU/packet SRAM) is NOT instantiated by any bench above: those are physical-closure variants verified by their own component benches."
  ],
  "fixtures": {
-  "root": "/srv/opentallas-scratch/claude/exactness/fixtures",
-  "note": "Durable reference fixtures; STATUS.md (KEEP) in every dir; regenerate with tools/exactness/regen_fixtures.sh (GPU gold on the control host, verified against the committed oracle digests by tools/exactness/fixtures.py verify), copied to ot-epyc1tb and ot-epyc2.",
-  "qwen_gold_tp4": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191",
-  "qwen_gold_tp2": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp2/P8191",
-  "qwen_gold_tp2_l3": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp2_l3/P8191",
-  "qwen_kv_history": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/history",
-  "hbm_qwen_runs": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/hbmq_runs",
-  "hbm_ds_joint": "/srv/opentallas-scratch/claude/exactness/fixtures/hbm_ds_joint",
-  "qwen_rom_images": "/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1",
+  "root": "build/exactness/fixtures",
+  "root_env": "OT_EXACTNESS_FIXTURES",
+  "note": "INF.10 10-18: fixture paths are relative to {fixtures} = $OT_EXACTNESS_FIXTURES, else <repo>/build/exactness/fixtures (gitignored; ~16 GB of GPU goldens, too large to commit). tools/exactness/regress.py exports OT_EXACTNESS_FIXTURES for the bench host it stages. Regenerate deterministically with each entry's \"regenerate\" step; every regenerated gold is verified against the COMMITTED oracle digest in \"digests\" (tools/exactness/fixtures.py verify) before use. Previously: Durable reference fixtures; STATUS.md (KEEP) in every dir; regenerate with tools/exactness/regen_fixtures.sh (GPU gold on the control host, verified against the committed oracle digests by tools/exactness/fixtures.py verify), copied to ot-epyc1tb and ot-epyc2.",
+  "qwen_gold_tp4": {
+   "path": "qwen_p8191/gold/tp4/P8191",
+   "regenerate": "OT_EXACTNESS_FIXTURES=<root> SRC=<pinned source export> tools/exactness/regen_fixtures.sh tp4"
+  },
+  "qwen_gold_tp2": {
+   "path": "qwen_p8191/gold/tp2/P8191",
+   "regenerate": "OT_EXACTNESS_FIXTURES=<root> SRC=<pinned source export> tools/exactness/regen_fixtures.sh tp2"
+  },
+  "qwen_gold_tp2_l3": {
+   "path": "qwen_p8191/gold/tp2_l3/P8191",
+   "regenerate": "OT_EXACTNESS_FIXTURES=<root> SRC=<pinned source export> tools/exactness/regen_fixtures.sh tp2_l3"
+  },
+  "qwen_kv_history": {
+   "path": "qwen_p8191/history",
+   "regenerate": "python3 tools/exactness/fixtures.py history --gold {fixtures}/qwen_p8191/gold/tp4/P8191 --out {fixtures}/qwen_p8191/history (run by regen_fixtures.sh all)"
+  },
+  "hbm_qwen_runs": {
+   "path": "qwen_p8191/hbmq_runs",
+   "regenerate": "tools/qwen_hbmacc_layer_parallel.py --plan (regen_fixtures.sh hbmq_plan, run by regen_fixtures.sh all)"
+  },
+  "hbm_ds_joint": {
+   "path": "hbm_ds_joint",
+   "regenerate": "tools/hbm_opt_integrated_20261005_joint.py prep of the P1/P6 retained layouts; sha-check against results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json"
+  },
+  "mtp_exact": {
+   "path": "mtp_exact",
+   "regenerate": "GPU-host goldens (ROM MTP images rom_img/, wf2/, hbm/ traces) from the mtp-exact campaign (results/rtl/mtp_exact_20261008); records carry source digests"
+  },
+  "s81_token_l20": {
+   "path": "s81_token_l20",
+   "regenerate": "python3 tools/s81/token_bench_l20.py prep on the checkpoint host"
+  },
+  "qwen_rom_images": {
+   "path": null,
+   "note": "legacy qwen-dspark-system/img_p1 image dir under the fleet scratch root; kept by tools/exactness/keep_fixtures.sh, read by no bench in this file"
+  },
   "compat_links": {
-   "/srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191",
-   "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold",
-   "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/runs": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/hbmq_runs"
+   "note": "legacy host aliases (fleet scratch root) of the fixture dirs: codex/qwen-P8191-full36-history-r1 -> {fixtures}/qwen_p8191, claude/qwen-hbmacc-8k/gold -> {fixtures}/qwen_p8191/gold, claude/qwen-hbmacc-8k/runs -> {fixtures}/qwen_p8191/hbmq_runs"
   },
   "digests": {
    "qwen_gold_tp4": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json",
@@ -326,6 +354,16 @@
    "qwen_kv_history": "results/rtl/qwen_rom_combined_p0_20261005/linked_expected/expected.json (history_source_sha256, L0 die0)",
    "hbm_ds_joint": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json (source_sha256)"
   },
-  "mtp_exact": "/srv/opentallas-scratch/claude/exactness/fixtures/mtp_exact"
+  "sources": [
+   "tools/exactness/regen_fixtures.sh",
+   "tools/exactness/fixtures.py",
+   "tools/exactness/bench.py",
+   "results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json",
+   "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle.json",
+   "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle_l3.json",
+   "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json",
+   "results/rtl/qwen_rom_combined_p0_20261005/linked_expected/expected.json"
+  ],
+  "archive": "tools/exactness/fixtures_archive_1018/archive.json: AGIdock /archive copy of the ~16 GB golds (qwen_p8191 + goldens) with per-file sha256 manifests (ROOT-1945 10-18); restore from there before regenerating"
  }
 }

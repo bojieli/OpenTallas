@@ -67,6 +67,100 @@ assert 'cr' not in re.findall(r'\bcr\b', ep), 'cr left'
 for w in ('ui', 'kui', 'fo', 'u_l'):
     assert not re.search(r'\b' + w + r'\b', ep), w + ' left'
 
+# ---- EP ST3 (S-KVASTK 10-18): physical retiming, 0 cycles on every edge the lockstep bench compares -------------------
+# Route qkd_astk_ep_s-st2-71ef7d71e (TT -76.5, 751 D pins) classified on the routed netlist:
+#   xq -> xo (228)        the running-max compare (ABC ripple, 13 cells, 476 ps) + the W-band -> E-face xo wire (192 ps)
+#   qq -> u_row / u_ca (411), zq -> u_ca (24)  the join stage held the T compare (E-low qq -> W-band seq tags -> b_pos,
+#                         fanout 192), bf16 rounding, the Q slot mux and the adder's A1 decode / 31-b compare behind
+#                         S-face zq and E-face eq wires
+#   qq -> xd / u_sa / u_sb (15)  T - 1 - S x 128 (14-b subtract) recomputed from the E-face T every edge
+# Fixes: (1) the compare on two Kogge-Stone carry chains; (2) the join gets an operand register stage (row / tags / e
+# rounding / adder operands) and gives the edge back at the output: u_row is one stage shorter and the adders' output
+# registers (y / valid_out) are the zo pin registers, so zo keeps its edge; (3) T - 1 - S x 128 and the group count are
+# registered (T and S are held from the start edge through the command; every consumer is quiet / act-gated for
+# DT + 16 edges after a start).  The adders' error now leaves the output register one edge later, so it joins the
+# return-chain fault xo[0] directly (se_f, masked on the edge after a start as the start used to wipe it): xo[0] keeps its edge.
+ep = once(ep, '''            xo[11 + 32*(4*g_ + h_) +: 32] <= (la[g_] && (!xq[9 + g_] || fgt(lm[32*(4*g_ + h_) +: 32], xq[11 + 32*(4*g_ + h_) +: 32])))
+                                              ? lm[32*(4*g_ + h_) +: 32] : xq[11 + 32*(4*g_ + h_) +: 32];
+    end
+''', '''            xo[11 + 32*(4*g_ + h_) +: 32] <= (la[g_] && (!xq[9 + g_] || lm_gt[4*g_ + h_])) ? lm[32*(4*g_ + h_) +: 32]
+                                                                                          : xq[11 + 32*(4*g_ + h_) +: 32];
+    end
+''')
+ep = once(ep, '''    wire [1:0]   la = so_q[411:410];
+''', '''    wire [1:0]   la = so_q[411:410];
+    // ST3: fgt on two Kogge-Stone carry chains (log depth; the behavioural > / < mapped as a 13-cell ripple)
+    wire [7:0]   lm_gt;
+    genvar gw;
+    generate for (gw = 0; gw < 8; gw = gw + 1) begin : g_lmax
+        wire [31:0] la_ = lm[32*gw +: 32], lb_ = xq[11 + 32*gw +: 32];
+        wire        ab_ge, ba_ge;
+        wire [30:0] ab_s, ba_s;
+        ot_hdc_ksadd_k #(.W(31)) u_ab (.a(la_[30:0]), .b(~lb_[30:0]), .cin(1'b1), .s(ab_s), .cout(ab_ge));
+        ot_hdc_ksadd_k #(.W(31)) u_ba (.a(lb_[30:0]), .b(~la_[30:0]), .cin(1'b1), .s(ba_s), .cout(ba_ge));
+        assign lm_gt[gw] = (la_[31] != lb_[31]) ? !la_[31] : (!la_[31] ? ((`KVD_STMUT == 5) ? !ab_ge : !ba_ge) : !ab_ge);   // = fgt(la_, lb_)
+    end endgenerate
+''')
+ep = once(ep, '    qkd_astk_seq u_sa (', '    qkd_astk_seq_s u_sa (')
+ep = once(ep, '    qkd_astk_seq u_sb (', '    qkd_astk_seq_s u_sb (')
+ep = once(ep, "    wire [13:0]  rkb = T - 14'd1 - {5'd0, S, 7'd0} - {6'd0, rq[9:6], 3'd0};\n",
+          "    reg  [13:0]  tb_q;                                 // ST3: T - 1 - S x 128 (command-static), registered\n"
+          "    always @(posedge ck) tb_q <= T - 14'd1 - {5'd0, S, 7'd0};\n"
+          "    wire [13:0]  rkb = tb_q - {6'd0, rq[9:6], 3'd0};\n")
+ep = once(ep, '''    wire [63:0]  e16 = b_pos ? {bf16(e[127:96]), bf16(e[95:64]), bf16(e[63:32]), bf16(e[31:0])} : 64'd0;
+    wire [511:0] row_in = first ? 512'd0 : zq[650:139];
+''', '''    // ST3: the join operand stage (the bf16 rounding, the slot's b_pos, the incoming row, the tags, the adder operands)
+    reg  [63:0]  eb_q;
+    reg          bp_q, jv_q;
+    reg  [511:0] row_in_q;
+    reg  [8:0]   tag_q;
+    always @(posedge ck) begin
+        eb_q <= {bf16(e[127:96]), bf16(e[95:64]), bf16(e[63:32]), bf16(e[31:0])};
+        bp_q <= b_pos; row_in_q <= first ? 512'd0 : zq[650:139]; tag_q <= {b_gam, b_k, b_g};
+    end
+    always @(posedge ck or negedge rn_q) if (!rn_q) jv_q <= 1'b0; else jv_q <= b_v;
+    wire [63:0]  e16 = bp_q ? eb_q : 64'd0;
+    wire [511:0] row_in = row_in_q;
+''')
+ep = once(ep, "    ot_hdc_delay #(.W(521), .D(ADD_LAT)) u_row (.clk(ck), .rst_n(rn_q), .d({row_m, b_gam, b_k, b_g}), .q(jd));\n",
+          "    ot_hdc_delay #(.W(521), .D(ADD_LAT - 1 - ((`KVD_STMUT == 4) ? 1 : 0))) u_row (.clk(ck), .rst_n(rn_q), .d({row_m, tag_q}), .q(jd));\n")
+ep = once(ep, '''        ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_chain (.clk(ck), .rst_n(rn_q), .valid_in(b_v),
+            .a(first ? 32'd0 : zq[11 + 32*h +: 32]), .b(b_pos ? e[32*h +: 32] : 32'd0), .y(sum[32*h +: 32]), .err(err),
+            .valid_out(sv_[h]));
+''', '''        reg [31:0] ja_q, jb_q;
+        always @(posedge ck) begin ja_q <= first ? 32'd0 : zq[11 + 32*h +: 32]; jb_q <= b_pos ? e[32*h +: 32] : 32'd0; end
+        ot_hdc_fp32_add_lat_nr #(.LAT(ADD_LAT)) u_chain (.clk(ck), .rst_n(rn_q), .valid_in(jv_q), .a(ja_q), .b(jb_q),
+            .y(sum[32*h +: 32]), .err(err), .valid_out(sv_[h]));
+''')
+ep = once(ep, '    output reg  [650:0]  zo,\n', '    output wire [650:0]  zo,\n')
+ep = once(ep, '    reg          tok1;\n', '    reg          tok1, zo_tok, st_d;\n'
+          '    wire         se_f = (|se) && !st_d;              // ST3: the adder error at its original edge\n')
+ep = once(ep, 'if (j_bad || (|se) || (trig && a_busy)', 'if (j_bad || se_f || (trig && a_busy)')
+ep = once(ep, 'xo[0] <= xq[0] | so_q[424] | e_f | f;', 'xo[0] <= xq[0] | so_q[424] | e_f | f | se_f;')
+ep = once(ep, "zo[1:0] <= 2'b00; stl <= 8'd0; end", "zo_tok <= 1'b0; stl <= 8'd0; end")
+ep = once(ep, 'tok1 <= trig; zo[1] <= tok1; zo[0] <= sv_[0];', 'tok1 <= trig; zo_tok <= tok1;')
+ep = once(ep, "tok1 <= 1'b0; zo[1] <= 1'b0; end", "tok1 <= 1'b0; zo_tok <= 1'b0; end")
+ep = once(ep, "zo_tok <= 1'b0; stl <= 8'd0; end", "zo_tok <= 1'b0; st_d <= 1'b0; stl <= 8'd0; end")
+ep = once(ep, 'tok1 <= trig; zo_tok <= tok1;', 'tok1 <= trig; zo_tok <= tok1; st_d <= start;')
+ep = once(ep, '    always @(posedge ck) zo[650:2] <= {jd[520:9], sum, jd[8:5], jd[4:1], jd[0]};\n',
+          '    // ST3: zo = the row / tags behind their pin register and the adders\' output registers (y, valid_out) at the pin\n'
+          '    reg  [520:0] jd_q;\n'
+          '    always @(posedge ck) jd_q <= jd;\n'
+          '    assign zo = {jd_q[520:9], sum, jd_q[8:0], zo_tok, sv_[0]};\n')
+assert not re.search(r'\bfgt\(lm', ep) and 'zo[' not in ep.split('`ifdef KVD_AKDBG')[0].replace('zo[1:0]', '')
+
+# ---- SEQ ST3: qkd_astk_seq with the command-static T terms registered (gmax, T - 1 - S x 128) ---------------------------
+sq = mod(lv, 'qkd_astk_seq')
+sq = once(sq, 'module qkd_astk_seq (', 'module qkd_astk_seq_s (')
+sq = once(sq, "    wire [4:0]  gmax = !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));\n",
+          "    // ST3 (S-KVASTK 10-18): T / S are held from the start edge; a pass starts DT + 16 edges or more after it\n"
+          "    reg  [4:0]  gmax;\n"
+          "    reg  [13:0] tb;\n"
+          "    always @(posedge ck) begin gmax <= !any_s ? 5'd0 : ((rem >= 14'd128) ? 5'd16 : ((rem + 14'd7) >> 3));\n"
+          "                               tb <= T - 14'd1 - base_s; end\n")
+sq = once(sq, "    wire [13:0] kb = T - 14'd1 - base_s - {6'd0, gm[3:0], 3'd0};\n",
+          "    wire [13:0] kb = tb - {6'd0, gm[3:0], 3'd0};\n")
+
 # ---- EX: one head's exp pipe, no tree lanes ------------------------------------------------------------------------
 ex = mod(lv, 'qkd_astk_ex')
 ex = once(ex, 'module qkd_astk_ex (', 'module qkd_astk_ex_s (')
@@ -124,7 +218,10 @@ hdr = f'''`timescale 1ns/1ps
 // Every remaining data input is captured in a pin register (unchanged from the masters).  Bench (lockstep against the
 // selected composition qkd_astk_native_stack_cal): rtl/test/qwen_kv_die/tb_qkd_astk_strip_st.sv.
 // Mutants (`KVD_STMUT): 1 ep_s e rows written one address off; 2 ex_s e one ulp off; 3 ctl_s Z word one ulp off.
+// ST3 (S-KVASTK 10-18): ep_s physically retimed at 0 cycles (operand stage at the join, zo = the adders' y, Kogge-Stone
+// running-max compare, registered command-static T terms; qkd_astk_seq_s) -- see gen_astk_static.py.
+// ST3 mutants: 4 ep_s row / tag delay one edge short (the join retiming), 5 ep_s running-max compare on the wrong chain.
 // ---------------------------------------------------------------------------------------------------------------------
 '''
-out_p.write_text(hdr + '\n' + ep + '\n' + ex + '\n' + ct)
+out_p.write_text(hdr + '\n' + ep + '\n' + sq + '\n' + ex + '\n' + ct)
 print('wrote', out_p)

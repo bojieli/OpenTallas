@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_wb_kport_q",
+ "enable": true,
+ "stages": 2,
+ "clock": "stream_clk",
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+ "reset_release_cycles": 2
+}
