@@ -1,0 +1,10 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2644559-1792435404 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+B64_ORACLE PASS checks=59994 same_cycle_old=12434 suppressed_physical_collisions=2129
+- rtl/lib/test/oldread_b64/tb_oldread_b64.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.023 s; speed 2.640 ms/s
+- Verilator: cpu 0.023 s on 1 threads; allocated 7 MB
+sim exit 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2644559-1792435404): exit 0

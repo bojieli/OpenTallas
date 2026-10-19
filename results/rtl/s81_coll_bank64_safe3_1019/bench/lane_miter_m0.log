@@ -1,0 +1,11 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2620255-1792435233 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_SAFE3_COVERAGE naks=3/5 replays=7/5 timeouts=2/2 crc_err=12/31 relocks=7 fifo_fwd=9994 replay_fwd=0 credit_rx_fwd=20727 gearbox_fwd=24572
+COLL_SAFE3_BOUNDARY PASS checks=79994 sent=37025 received=36912 resets=2 crcerr_cycles=61 blackout_cycles=2507 faults=000/000
+- rtl/dsrom_sys/s81_ph/test/tb_coll_safe3_boundary.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 3.355 s; speed 11.923 us/s
+- Verilator: cpu 3.352 s on 1 threads; allocated 9 MB
+sim exit 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2620255-1792435233): exit 0
