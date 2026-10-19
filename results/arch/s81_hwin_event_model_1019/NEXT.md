@@ -1,0 +1,7 @@
+MODEL HOLD. Source/actual native packet pinned in README/model.json; all93pair ownership records preserved. No RTL, test date or gate changed.
+
+ROOT review: reject unpriced capture-only retry in current central band. Conservative full context + retire + boot alignment + fanout source copies adds1,816FF /533.74464um² before more clock/reset/logic and exceeds unchanged band's177.3216um² capacity. Retaining source event-local write captures adds465plainFF/135.594um² separately. This is a specific conservative additive variant, not a universal impossibility proof.
+
+Choose an explicitly calendar-priced smaller context architecture or a new legal macro/row/band parent model before source. +1 local compare is not a certified+1 HWIN ABI: event pointer/fired lifetime, retirement/count/boot admissibility and physical input predicate staging need a complete contract. Early-prefetch zero-date candidate remains unproved, with OLD/forwarding/cache invalidation witnesses listed. Parent C/HWINstart/PINPIPE/fulltoken deltas NULL. No implementation/gate authorization.
+
+Keep original source/regression running; preserve minD, first47, MC/MW collisions, calendar and mutants. Current macro slewTT503.3/FF525.8 and latency111.2/126.6 remain clock HOLD despite narrow boundary spread. Use84real macro clock pins TT785.0472/FF871.3488fF plus new FF clock load, no FF macro proxy. Every endpoint/fanout/PG/native result is still unqualified until actual new source/physical evidence exists.

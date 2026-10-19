@@ -1,0 +1,12 @@
+{
+  "tt": {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib",
+    "sha256": "1c312f6982f27ceb9205ea71a2ba013c633ddcdecaac679210a6ab8b1b2ff9de",
+    "clock_pin": "pin (clk) {\n      direction : input;\n      clock : true;\n      capacitance : 9.3458;\n      related_power_pin : VDD;\n      related_ground_pin : VSS;\n      min_period : 240.727;\n      min_pulse_width_high : 96.291;\n      min_pulse_width_low : 96.291;\n      internal_power () {\n        rise_power (mc_energy) {\n          index_1 (\"5, 20, 80, 160, 320\");\n          values (\"21.9824, 21.9824, 21.9824, 21.9824, 21.9824\");\n        }"
+  },
+  "ff": {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_ff.lib",
+    "sha256": "2f0f02e22456e3400945342b1dbc250c72f30ea8c0cb9afe5d28615252ab5310",
+    "clock_pin": "pin (clk) {\n      direction : input;\n      clock : true;\n      capacitance : 10.3732;\n      related_power_pin : VDD;\n      related_ground_pin : VSS;\n      min_period : 194.230;\n      min_pulse_width_high : 77.692;\n      min_pulse_width_low : 77.692;\n      internal_power () {\n        rise_power (mc_energy) {\n          index_1 (\"5, 20, 80, 160, 320\");\n          values (\"26.1076, 26.1076, 26.1076, 26.1076, 26.1076\");\n        }"
+  }
+}

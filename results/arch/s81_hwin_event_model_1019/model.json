@@ -1,0 +1,373 @@
+{
+  "scope": "MODEL ONLY: explicit new capture alternative; no retimed RTL proof; no admission",
+  "source_commit": "1e057b7bf",
+  "source_hashes": {
+    "dsdv_mu_hwin.sv": "9be6f5e15bc0c89804b565f67c4211b4e1b4dbef30cf3f276a1ecef3421fc971",
+    "endpoint_roots.json.gz": "bca7ea23ce258903095225c8aef7df29fc321e4e058deb165f850aff3db6dc32",
+    "overreach_pairs.json": "d1bc6e453822b345652ce74ec82959467522837e05ecc0630ce41f828180dae2",
+    "endpoint_macros.json": "74e391fe5774823328903ddefaee728a93e5bdae5f7316b3741454037a6e9f05",
+    "ck.json": "129220c58fb9303be5c1f375bf1394d8243eefa1fd51c016d88ad5f0121462ea"
+  },
+  "baseline": {
+    "native_roots": 49834,
+    "macro_clocks": 84,
+    "endpoint_pairs": 93,
+    "macro_sink_pairs": 91,
+    "macro_to_comb_pairs": 2,
+    "max_endpoint_manhattan_um": 498.062,
+    "tt_setup_ps": [
+      -371.04,
+      -356.902,
+      -354.383
+    ],
+    "macro_slew_tt_ff_ps": [
+      503.3,
+      525.8
+    ],
+    "macro_lateness_tt_ff_ps": [
+      111.2,
+      126.6
+    ],
+    "old_native_payload_write_ff": 543
+  },
+  "fanout_partition_model": [
+    {
+      "driver": "_48969_/Y",
+      "role": "comb",
+      "old_native_sink_pins": 40,
+      "partitions": 2,
+      "max_partition_sink_pins": 20,
+      "method": "independent useful source predicate",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.crl\\[5\\]$_DFFE_PN0P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 35,
+      "partitions": 2,
+      "max_partition_sink_pins": 18,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.gn\\[4\\]$_DFFE_PN0P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 33,
+      "partitions": 2,
+      "max_partition_sink_pins": 17,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.lw\\[0\\]$_DFFE_PN0P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 58,
+      "partitions": 3,
+      "max_partition_sink_pins": 20,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.lw\\[1\\]$_DFFE_PN1P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 60,
+      "partitions": 3,
+      "max_partition_sink_pins": 20,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.lw\\[2\\]$_DFFE_PN1P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 58,
+      "partitions": 3,
+      "max_partition_sink_pins": 20,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.lw\\[3\\]$_DFFE_PN1P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 54,
+      "partitions": 3,
+      "max_partition_sink_pins": 18,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.lw\\[4\\]$_DFFE_PN0P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 39,
+      "partitions": 2,
+      "max_partition_sink_pins": 20,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    },
+    {
+      "driver": "u_ot_pr_core.lw\\[5\\]$_DFFE_PN1P_/QN",
+      "role": "ff",
+      "old_native_sink_pins": 46,
+      "partitions": 2,
+      "max_partition_sink_pins": 23,
+      "method": "same-edge state copies with identical update/clear and separate actual consumer groups",
+      "native_closure": false
+    }
+  ],
+  "regional_contact_model": [
+    {
+      "event": 0,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        129.60000000000002,
+        270
+      ],
+      "max_manhattan_contact_um": 330.76800000000003,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 1,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        216.0,
+        270
+      ],
+      "max_manhattan_contact_um": 373.96799999999996,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 2,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        216.0,
+        270
+      ],
+      "max_manhattan_contact_um": 287.568,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 3,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        216.0,
+        270
+      ],
+      "max_manhattan_contact_um": 330.768,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 4,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        216.0,
+        270
+      ],
+      "max_manhattan_contact_um": 287.568,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 5,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        172.8,
+        270
+      ],
+      "max_manhattan_contact_um": 201.16799999999998,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 6,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        216.0,
+        270
+      ],
+      "max_manhattan_contact_um": 244.36799999999997,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 7,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        259.20000000000005,
+        270
+      ],
+      "max_manhattan_contact_um": 157.96799999999993,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 8,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        129.60000000000002,
+        270
+      ],
+      "max_manhattan_contact_um": 140.808,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 9,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        172.8,
+        270
+      ],
+      "max_manhattan_contact_um": 227.20799999999997,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 10,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        216.0,
+        270
+      ],
+      "max_manhattan_contact_um": 184.00799999999998,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 11,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        172.8,
+        270
+      ],
+      "max_manhattan_contact_um": 270.40799999999996,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 12,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        172.8,
+        270
+      ],
+      "max_manhattan_contact_um": 313.60799999999995,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 13,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        172.8,
+        270
+      ],
+      "max_manhattan_contact_um": 270.408,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 14,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        172.8,
+        270
+      ],
+      "max_manhattan_contact_um": 356.808,
+      "routed_reach_qualified": false
+    },
+    {
+      "event": 15,
+      "macro_count": 5,
+      "signal_contact_count": 315,
+      "candidate_q_xy": [
+        259.20000000000005,
+        270
+      ],
+      "max_manhattan_contact_um": 313.60799999999995,
+      "routed_reach_qualified": false
+    }
+  ],
+  "capture_components": {
+    "event_read_context_plain_ff": 1648,
+    "event_context_valid_asr_ff": 32,
+    "retire_context_plain_ff": 70,
+    "retire_context_valid_asr_ff": 2,
+    "boot_alignment_plain_ff": 50,
+    "boot_alignment_valid_asr_ff": 2,
+    "same_edge_state_copy_asr_ff": 12
+  },
+  "capture_ff_total": 1816,
+  "capture_variant_incremental_area_um2": 533.74464,
+  "capture_clock_cap_tt_ff_fF": [
+    861.5524,
+    947.064976
+  ],
+  "same_edge_write_unshare": {
+    "required_payload_write_ff": 1008,
+    "old_native_ff": 543,
+    "additional_plain_ff": 465,
+    "additional_area_lower_bound_um2": 135.59400000000002,
+    "additional_clock_cap_tt_ff_fF": [
+      220.75224,
+      242.73465
+    ],
+    "retention_proof": "OPEN: keep real event-local memory hierarchy and all consumer ownership; native census must demonstrate actual distinct cells"
+  },
+  "band": {
+    "area_um2": 16609.536000000004,
+    "current_standard_area_um2": 9788.4,
+    "current_fraction": 0.5893241087529476,
+    "maximum_same_geometry_fraction": 0.6,
+    "remaining_area_at_60pct_um2": 177.32160000000295,
+    "capture_only_fraction_lower_bound": 0.6214589402136218,
+    "verdict": "FAIL unchanged band budget; needs new modeled legal rows/macro/halo layout and parent grant"
+  },
+  "cost_coefficients": {
+    "DFFHQNx1": {
+      "area_um2": 0.2916,
+      "clock_cap_tt_ff": [
+        0.474736,
+        0.52201
+      ]
+    },
+    "DFFASRHQNx1": {
+      "area_um2": 0.37908,
+      "clock_cap_tt_ff": [
+        0.462899,
+        0.503152
+      ]
+    }
+  },
+  "unpriced_required": [
+    "additional boot payload/control alignment and all five predicate cone replicas",
+    "reset tree regional leaves/groups and asynchronous clear recovery",
+    "clock-tree cells/wire/capacitance for all 84 macros and added FF",
+    "new wire repeaters, pin landings, PG/contact/via escape and clock-root isolation",
+    "source-mapped exact AO21 equation and upstream fanout propagation",
+    "retire/boot count/record admissibility and whole parent calendar delta"
+  ],
+  "contract": {
+    "compare_capture_minimum_added_edges": 1,
+    "complete_hwin_output_edge_delta": null,
+    "parent_C_delta": null,
+    "hwin_start_delta": null,
+    "pinpipe_delta": null,
+    "full_token_delta": null,
+    "unchanged_gold_required": true,
+    "early_prefetch_zero_delta_proved": false
+  },
+  "implementation_authorized": false,
+  "existing_macro_clock_load_tt_ff_fF": [
+    785.0472000000001,
+    871.3488000000001
+  ],
+  "native_library_sha256": {
+    "tt": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "ff": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+  },
+  "native_library_coefficients_independently_verified": true
+}
