@@ -390,9 +390,15 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
         records += [dict(r, iteration=it) for r in recs]
     # lane records: inserted stages and the receiving-side stage after a landing are fixed latency on the bus
     ins, post = set(inserted), defaultdict(int)
-    for r in records:
-        if r['op'] == 'after':
-            post[r['of']] = 1                    # forks of one stage are parallel: one edge
+    # KVR-PLACE 10-19: an AFTER progress stage chains (P -> N1 -> N2 -> load): its depth counts on P's lane / bus
+    after_of = {r['inst']: r['of'] for r in records if r['op'] == 'after'}
+    after_root = {}
+    for n_ in after_of:
+        d_, q_ = 0, n_
+        while q_ in after_of:
+            d_, q_ = d_ + 1, after_of[q_]
+        after_root[n_] = q_
+        post[q_] = max(post[q_], d_)             # forks of one stage are parallel: one edge each level
     for L in F['rep']['lanes']:
         L['inserted_stations'] = [c for c in L['stations'] if c in ins]
         p = post.get(L['stations'][-1], 0)
@@ -418,6 +424,11 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
     for r in records:
         if r['op'] == 'before' and r['inst'] not in in_lane:
             pos[KSA.lane_bid(r['of'])].add(re.sub(r'__s\d+$', '', r['of']))
+    for q_, d_ in post.items():
+        if q_ not in in_lane and d_:
+            # AFTER stages behind a plain (non-lane) replica: fixed latency on its bus, one entry per level
+            for j_ in range(d_):
+                pos[KSA.lane_bid(q_)].add(re.sub(r'__s\d+$', '', q_) + f'__after{j_}')
     F['rep']['plain_added_stages'] = {b: len(v) for b, v in sorted(pos.items())}
     summary['plain_added_stages'] = F['rep']['plain_added_stages']
     record = dict(schema='opentallas.kv_lane_stations.v1', tool='tools/qwen_kv_die/kv_lane_stations.py',

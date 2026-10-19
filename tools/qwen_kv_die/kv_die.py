@@ -2725,6 +2725,25 @@ def _relays(m):
                     if it_.orient in ('MX', 'R180'):
                         y_ = it_.h - y_
                     _PIN_HINT[(it_.name, p_)] = (it_.x + x_, it_.y + y_)
+    if KSD.ON and KSD.ASTK_ST and ECTL == ECTL_ST:
+        # KVR-PLACE 10-19: the ASTK strip's e-read / calendar / V-header words have FIXED faces (KSD._pin_face: the S|N
+        # seam end); without a drawn pin (first pass) the chain left from the frame's nearest edge, so when the pin-hinted
+        # re-plans stopped, the kept first pass had pve_<st> leaving the strip's FAR end (10.9-mm unrepaired hop to the
+        # drawn N-face erd, local plan r2/r3).  Aim at the face centre from the first pass on (a drawn pin replaces it).
+        for it_ in m['insts']:
+            if it_.master not in ('qkd_astk', 'qkd_astk_n'):
+                continue
+            for p_ in ['erd', 'cal'] + [f'vh{k_}' for k_ in range(8)]:
+                f_ = KSD._pin_face(it_.master, p_)
+                if f_ is None:
+                    continue
+                if it_.orient in ('MX', 'R180') and f_ in 'NS':
+                    f_ = 'S' if f_ == 'N' else 'N'
+                if it_.orient in ('MY', 'R180') and f_ in 'WE':
+                    f_ = 'E' if f_ == 'W' else 'W'
+                _PIN_HINT.setdefault((it_.name, p_), dict(
+                    N=(it_.x + it_.w / 2, it_.y + it_.h), S=(it_.x + it_.w / 2, it_.y),
+                    W=(it_.x, it_.y + it_.h / 2), E=(it_.x + it_.w, it_.y + it_.h / 2))[f_])
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -2808,6 +2827,16 @@ def _relays(m):
                     # face right after lx / lr / host_fdi (every other chain's stage count is free; theirs is fixed)
                     pvx_ = tuple(__import__('os').environ.get('OT_KV_PVT_FIRST', 'pvh_,pvta_,pvtb_,pvc_').split(','))
                     order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi', not b_[0].startswith(pvx_)))
+                    # KVR-PLACE 10-19: the top engines' K response words (krs_<st>_7, own relay band: _krs_top_lane) take
+                    # their spots right after the exact-stage PV chains, before every other stack chain fills the
+                    # group <-> slg channel their first leg climbs (local plan r2: the pin-hinted re-plan passes stopped
+                    # at krs_ES_7 stage 4 in that channel, leaving the unhinted pass with 10.9-mm pve hops)
+                    if _krs_top_lane(m, 'krs_WS_7') is not None:
+                        top_ = [b_ for b_ in order_ if _krs_top_lane(m, b_[0]) is not None]
+                        rest_ = [b_ for b_ in order_ if _krs_top_lane(m, b_[0]) is None]
+                        j_ = max([i_ + 1 for i_, b_ in enumerate(rest_) if b_[0] in ('lx', 'lr', 'host_fdi')
+                                  or b_[0].startswith(pvx_)] or [0])
+                        order_ = rest_[:j_] + top_ + rest_[j_:]
     # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
     # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
@@ -3051,7 +3080,11 @@ def _relays(m):
         if PV_T and bid.startswith(('pvc_', 'pvta_', 'pvtb_')):
             # KVPLAN2 2215: an exact-stage PV trunk / chunk stage may sit up to PVT_OFFS grid cells off its lane (the free half of
             # the side channel beside the lanes) -- each hop is still checked against the reach
-            offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, PVT_OFFS + 1) for i in range(-r_, r_ + 1)
+            # KVR-PLACE 10-19: with the grown ECTL frame + native ASTK envelope the chunk lanes beside the pair face fill
+            # (pvc_WS_3_7 no spot at radius 8 = 173 um) while the outer half of the ~900-um side channel stays empty:
+            # default radius 16 (346 um, still inside the side channel; every hop is reach-checked) unless OT_KV_PVT_OFFS
+            po_ = PVT_OFFS if 'OT_KV_PVT_OFFS' in os.environ else (16 if ECTL == ECTL_ST else PVT_OFFS)
+            offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, po_ + 1) for i in range(-r_, r_ + 1)
                                     for j in range(-r_, r_ + 1) if max(abs(i), abs(j)) == r_]
         if bid in tree_meta:      # v1.4.2: a 1-bit tree hop may sit up to 24 grid cells off its path
             offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 25) for i in range(-r_, r_ + 1)
@@ -3399,32 +3432,44 @@ _LANES = {}
 
 
 def _krs_top_lane(m, bid):
-    """DIE-KV-REPLACE 10-19: waypoints (die um, in order driver -> load) of the top engine's K response word krs_<st>_7,
-    or None.  With the grown 725.76 x 261.36 ECTL frame (KV-ECTL5 / coordinator: keep the frame) each engine group is
-    4 x 131.76 um taller; the shortest path slg_<st>_7.krsp -> ectl_<st>_7.rs (1,062 b) hugs the group's top edge and then
-    the far head column's outer edge, the one-relay-deep rows every other stack chain already fills (prep e5g1..8: no spot
-    krs_ES_7 / krs_WN_7 for any SN_LIFT / KV_CHAN_EXTRA / V143_EXTRA knob), while the band above the group and the channel
-    between the far column and the PV column stay empty.  The word gets its own relay band: across the stack OT_KV_KRS_TOP_DY
-    um (default 259.2) beyond the group top (S stacks: up into the S|N seam band; N stacks: the band above the N group,
-    where slg_<st>_7 sits), then down / up the middle of the far channel (OT_KV_KRS_TOP_CH um outward of the ECTL's rs
-    face, default 648) to the rs pin's row.  OT_KV_KRS_TOP_LANE=0 turns it off; default on with the grown ECTL frame."""
+    """DIE-KV-REPLACE / KVR-PLACE 10-19: waypoints (die um, in order driver -> load) of a FAR-column engine's K response
+    word krs_<st>_<g> (g 4..7: the ECTL sits across the stack's ASTK column from its slg) that crosses the ASTK column
+    through the S|N seam or over the N column top, or None.  With the grown 725.76 x 261.36 ECTL frame (KV-ECTL5 /
+    coordinator: keep the frame) each engine group is 4 x 131.76 um taller and, with the native ASTK envelope, the ASTK
+    column stands 237 um above the S group top; the shortest paths of these 1,062-b words hug the column end, the one
+    relay row every other chain crossing it already fills (prep e5g1..8, local plans r1..r5: no spot krs_ES_7 / krs_WN_7,
+    krs_EN_5 re-routed over the N top = 73 stages, K round trip 106 > 80).  Each word gets its OWN relay row (lane):
+      S stacks, slg above the column top (g 6, 7):   ASTK top + 173 (g 7) / + 346 (g 6)      (lower half of the seam)
+      N stacks, slg below the column bottom (g 4, 5): ASTK bottom - 173 (g 4) / - 346 (g 5)  (upper half of the seam)
+      N stacks, slg above the column top (g 6, 7):   ASTK top + OT_KV_KRS_TOP_DY (432, g 7) / + DY - 216 (g 6)
+    then down / up its own column of the far channel (OT_KV_KRS_TOP_CH um outward of the ECTL's rs face, 648 for g 7 / 4,
+    864 for g 6 / 5) to the rs pin's row.  S stacks g 4 / 5 (slg below the die-edge end of the column) keep the shortest
+    path.  OT_KV_KRS_TOP_LANE=0 turns it off; default on with the grown ECTL frame."""
     import os as _os
     if _os.environ.get('OT_KV_KRS_TOP_LANE', '1' if ECTL == ECTL_ST else '0') != '1':
         return None
-    mt = re.fullmatch(r'krs_(WS|WN|ES|EN)_7(?:__f\d+)?', bid or '')
+    mt = re.fullmatch(r'krs_(WS|WN|ES|EN)_([4-7])(?:__f\d+)?', bid or '')
     g = m['geo'].get('grp_y', {})
     if not mt or mt.group(1) not in g:
         return None
-    st = mt.group(1)
-    dy = float(_os.environ.get('OT_KV_KRS_TOP_DY', '259.2'))
+    st, e = mt.group(1), int(mt.group(2))
+    dy = float(_os.environ.get('OT_KV_KRS_TOP_DY', '432'))
     dch = float(_os.environ.get('OT_KV_KRS_TOP_CH', '648'))
     by = {i.name: i for i in m['insts']}
-    ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_7')
+    ak, ec = by.get(f'astk_{st}'), by.get(f'ectl_{st}_{e}')
     if ak is None or ec is None:
         return None
-    ly = g[st][1] + dy
+    if st[1] == 'S':
+        if e < 6:
+            return None
+        ly = ak.y + ak.h + (173.0 if e == 7 else 346.0)
+    elif e < 6:
+        ly = ak.y - (173.0 if e == 4 else 346.0)
+    else:
+        ly = max(g[st][1], ak.y + ak.h) + (dy if e == 7 else dy - 216.0)
     rs_x = ec.x + (ec.w if ec.orient in ('MY', 'R180') else 0.0)
-    cx = rs_x + (dch if rs_x > ak.x + ak.w / 2 else -dch)
+    off = dch if e in (4, 7) else dch + 216.0
+    cx = rs_x + (off if rs_x > ak.x + ak.w / 2 else -off)
     ry = ec.y + ec.h / 2
     return [(ak.x + ak.w / 2, ly), (cx, ly), (cx, ry)]
 

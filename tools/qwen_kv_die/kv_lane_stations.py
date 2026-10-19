@@ -24,6 +24,7 @@ class reach (the gate's own metric).  The audit then re-runs on the actual adapt
 instances added to its scope; anything still failing is iterated (more stages) or refused.
 """
 import math
+import os
 import re
 from collections import defaultdict
 
@@ -366,11 +367,23 @@ def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_
                 if not loads:
                     continue
                 clusters = [sorted(loads)]
+                progress = set()
                 xy = geo.find(nmst, cons_for(clusters[0]))
                 placed = [(clusters[0], xy)] if xy is not None else []
                 if xy is None:
                     for li_ in sorted(loads):
                         xy_ = geo.find(nmst, cons_for([li_]))
+                        if xy_ is None and os.environ.get('OT_KV_STATIONS_AFTER_PROGRESS', '1') == '1':
+                            # KVR-PLACE 10-19 (kvs14r-131a7af2c-base: rly_pinfix_af_ES_r74_1__s0 -> seq__g_fan_2__u_fan.af,
+                            # 954 um > 2 x 400: no ONE frame reaches both ends, refused 3 iterations running): a PROGRESS
+                            # stage as BEFORE has -- within reach of P, as close to the load as the free space allows; the
+                            # remaining N -> load span is repaired by a further AFTER stage in the next iteration
+                            lp_ = [q for i, e in loads[li_] for q in pts(*e)]
+                            used_ = sorted({i for i, _ in loads[li_]})
+                            cin_ = [(geo.pin(nmst, f'a[{i}]') or geo.pin(nmst, 'a'), pts(P, 'b', i), r) for i in used_]
+                            xy_ = geo.find(nmst, cin_, toward=(sum(q[0] for q in lp_) / len(lp_), sum(q[1] for q in lp_) / len(lp_)))
+                            if xy_ is not None:
+                                progress.add(li_)
                         if xy_ is None:
                             ok = False
                             refused.append(dict(op='after', station=P, master=nmst, load=li_, group=group,
@@ -389,7 +402,8 @@ def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_
                     N = f'{P}_y{tag}' if len(placed) == 1 else f'{P}_y{tag}_{k}'
                     pend_e.append(dict(op='after', at=P, inst=N, ck=ck, S=S, xy=xy_, loads=grp))
                     pend_r.append(dict(op='after', inst=N, of=P, pair=[src, dst], S=S, lane_kind='plain_receiving',
-                                       predicted_master=nmst, master_before=pmst, loads=grp, within_reach='both',
+                                       predicted_master=nmst, master_before=pmst, loads=grp,
+                                       within_reach='driver' if any(l_ in progress for l_ in grp) else 'both',
                                        x_um=xy_[0] / 1000, y_um=xy_[1] / 1000, w_um=m['W'] / 1000, h_um=m['H'] / 1000))
             if not ok:
                 for nm_ in names:
