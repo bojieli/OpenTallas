@@ -159,7 +159,7 @@ module ot_hbm_r14_aq_pc_safe #(
   reg ac2_v;reg[4:0]ac2_b;wire[RW_ROW-1:0]ac2_row=ac2_row_local[0];
   (* keep="true",dont_touch="true" *) reg [31:0] ac2_oh;
   (* keep="true",dont_touch="true" *) reg [RW_ROW-1:0] ac2_row_local[0:1];
-  (* keep="true",dont_touch="true" *) reg [3:0] ac_v_local[0:2];
+  (* keep="true",dont_touch="true" *) reg [3:0] ac_v_local[0:4];
   wire [31:0] act_row_match;
   for(genvar b=0;b<32;b=b+1)begin:ACT_MATCH
     assign act_row_match[b]=look_row[b]==ac2_row_local[b/8];
@@ -176,15 +176,15 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk or negedge reset_regions[63])begin
     if(!reset_regions[63])begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_oh<=0;
       for(integer k=0;k<2;k=k+1)ac2_row_local[k]<=0;
-      for(integer k=0;k<3;k=k+1)ac_v_local[k]<=0;
+      for(integer k=0;k<5;k=k+1)ac_v_local[k]<=0;
       for(integer g=0;g<4;g=g+1)begin ac_b[g]<=0;ac_row[g]<=0;end
     end else begin
       for(integer g=0;g<4;g=g+1)begin:SG
         reg found;found=0;ac_v[g]<=0;
-        for(integer k=0;k<3;k=k+1)ac_v_local[k][g]<=0;
+        for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=0;
         for(integer j=0;j<8;j=j+1)if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
           found=1;ac_v[g]<=1;
-          for(integer k=0;k<3;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
+          for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);ac_row[g]<=look_row[g*8+j];
         end
       end
           for(integer k=0;k<2;k=k+1)begin
@@ -197,13 +197,21 @@ module ot_hbm_r14_aq_pc_safe #(
                 end
               end
           end
+      // Independent existing-edge one-hot captures use retained local valid
+      // state, avoiding one winner enable driving 32 one-hot plus row flops.
+      for(integer b=0;b<32;b=b+1)begin:ACT_ONEHOT_LOCAL
+        reg found;found=0;ac2_oh[b]<=0;
+        for(integer g=0;g<4;g=g+1)if(!found&&ac_v_local[3+b/16][g])begin
+          found=1;
+`ifdef BW_AQ_MUT_ACT
+          ac2_oh[b]<=((ac_b[g]^5'd1)==5'(b));
+`else
+          ac2_oh[b]<=(ac_b[g]==5'(b));
+`endif
+        end
+      end
       begin:S2 reg found;found=0;ac2_v<=0;
         for(integer g=0;g<4;g=g+1)if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];
-`ifdef BW_AQ_MUT_ACT
-          ac2_oh<=32'b1<<(ac_b[g]^5'd1);
-`else
-          ac2_oh<=32'b1<<ac_b[g];
-`endif
         end
       end
     end

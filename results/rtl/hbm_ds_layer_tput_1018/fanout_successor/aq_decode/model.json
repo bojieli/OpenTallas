@@ -15,8 +15,8 @@
     "bits_each": 22,
     "delta_ff": 44
   },
-  "delta_ff": 148,
-  "architecture": "Canonical next-state muxes feed unconditional same-edge kept local captures. ACT summary row captures use independent existing ac_v_local state, outside global selected-group enable.",
+  "delta_ff": 156,
+  "architecture": "Canonical next-state muxes feed unconditional same-edge kept local captures. ACT summary row captures use independent existing ac_v_local state, outside global selected-group enable. One-hot ACT bits capture from two additional retained valid regions; invalid one-hot clears while ac2_v=0.",
   "cost": "124 clock sinks; nominal DFF area subject to mapped census. Original slot not approved; actual standard-cell mass/clock/native reach admission remains required.",
   "boundary_bits_delta": 0,
   "memory_bytes_per_cycle_delta": 0,
@@ -24,5 +24,6 @@
   "routing": "head row each bit <= four banks; command flags each serve eight banks; mapped non-buffer fanout must be <=32 before CTS",
   "qualification": "23,968-edge exact replay plus HEAD/ACT/REFRESH mutants; full66op154GO parent integration before gate",
   "queue_count_local_copies": 4,
-  "queue_count_delta_ff": 24
+  "queue_count_delta_ff": 24,
+  "act_valid_local_delta_ff": 8
 }
