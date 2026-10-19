@@ -54,7 +54,7 @@ module tb_qfd_sys_face_cold;
     wire qs, kvs, vis, cpl; wire [4:0] qb; wire [1:0] kvi;
     wire ew_v, ew_s, ex_s, ex_sc, fb; wire [511:0] ew_d; wire [17:0] ew_t, ex_t, f_t; wire [5:0] ew_i, ex_w; wire [15:0] ew_e, ex_e, f_e, c_e;
     wire face_fault, init_u0;
-    reg fwd_epoch = 0;
+    reg fwd_epoch = 0, epoch_abort=0;
     reg hc_v = 0; reg [5:0] hc_st = 0; reg [17:0] hc_tok = 0, hc_pos = 0; integer n_hc = 0;
     // MUT 5 (Q-STUB 10-17): one-edge provider fault pulse after reset -- the face must latch it (face_fault / fab) and FAIL
     wire prov_fault; reg prov_inj = 0; integer rel_cyc = -1;
@@ -64,7 +64,7 @@ module tb_qfd_sys_face_cold;
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg), .fwd_epoch(fwd_epoch),
         .rx_payload(rx_payload), .prog_rx_v(prog_rx_v), .prog_witness_slot(prog_witness_slot), .prog_auth_slot(prog_auth_slot),
         .prog_context_slot(prog_context_slot), .prog_tx_observed_v(prog_tx_ov), .prog_tx_record(prog_tx_rec),
-        .emb_rx_v(emb_rx_v), .emb_rx_slot(emb_rx_v), .d2d_fault(1'b0), .d2d_epoch_abort(1'b0),
+        .emb_rx_v(emb_rx_v), .emb_rx_slot(emb_rx_v), .d2d_fault(1'b0), .d2d_epoch_abort(epoch_abort),
         .status_epoch16(st_ep), .vm_drained(vmd), .collective_drained(cod), .collective_busy(cob), .crom_fault(crf),
         .execution_active(exa), .admit_ready(adm), .result_v(rv), .result_done(rd), .result_fault(rf), .result_cause(rc),
         .result_tag(rt), .result_gen(rg), .result_token(rtok), .result_value(rval), .result_cycles(rcyc),
@@ -153,7 +153,7 @@ module tb_qfd_sys_face_cold;
         .program_installed_valid(w_inst), .installed_fusedcap(w_cap), .fault(w_f));
 
 
-    integer i,w,k,cstart=-1,epedge=-1,ecal=-1,init_edge=-1,ninit=0,nfill=0,nword=0;
+    integer round,i,w,k,cstart=-1,epedge=-1,ecal=-1,init_edge=-1,ninit=0,nfill=0,nword=0;
     reg [511:0] row[0:63]; reg [15:0] scale=16'h3f99; reg rows_read=0;
     always @(posedge ck) if(rst_n) begin
       if(fwd_epoch && epedge<0)epedge=cyc;
@@ -167,7 +167,7 @@ module tb_qfd_sys_face_cold;
       end else if(init_u0)err("init_u0 without DH");
       if(fb)begin nfill=nfill+1;$display("COLDAGE FILL_pin_sample%0d relativeE%0d",cyc,cyc-ecal);end
       if(ex_s)begin
-        if(nword==0 && cyc-ecal-1!=210)err("cold E SEG1 header offset");
+        if(nword%65==0 && cyc-ecal-1!=210)err("cold E SEG1 header offset");
         nword=nword+1;
       end
     end
@@ -179,6 +179,12 @@ module tb_qfd_sys_face_cold;
       wait(u_dut.boot_done);repeat(4)@(negedge ck);
       while(wi<nexp && wexp[wi][43:40]==6)begin if(u_dut.first_ofs!==wexp[wi][31:0])err("first offset");wi=wi+1;end
       if(wi!=nexp)err("boot count");
+      for(round=0;round<2;round=round+1)begin
+      cstart=-1;epedge=-1;ecal=-1;
+      if(round!=0)begin
+        epoch_abort=1;@(negedge ck);epoch_abort=0;repeat(4)@(negedge ck);
+        pw_seen=0;dw_seen=0;seq_rdy=0;tt_rdy=0;
+      end
       fwd_epoch=1;@(negedge ck);fwd_epoch=0;
       a_begin=1;@(negedge ck);a_begin=0;a_auth=1;@(negedge ck);a_auth=0;
       a_type=1;a_send=1;@(negedge ck);a_send=0;repeat(3)@(negedge ck);
@@ -202,9 +208,10 @@ module tb_qfd_sys_face_cold;
       for(k=0;k<64;k=k+1)begin code_re=1;code_addr={TOK0,6'(k)};@(negedge ck);code_re=0;#0.1;if(code_q!==row[k])err("row data");end
       scale_re=1;@(negedge ck);scale_re=0;#0.1;if(scale_q!==scale)err("scale");
       repeat(20)@(negedge ck);
-      if(ninit!=1 || nfill!=1 || nword!=65 || u_dut.cold_active || u_dut.t_run)err("prefix count/end");
+      if(ninit!=round+1 || nfill!=round+1 || nword!=65*(round+1) || u_dut.cold_active || u_dut.t_run)err("prefix count/end");
       if(face_fault || prov_fault || a_f || c_f || w_f || fab)begin $display("FAULT boot%b prog%b cal%b emb%b rp%b armed%b go%b mu%b accepted%b cold%b",u_dut.boot_fault,u_dut.prog_fault,u_dut.cal_fault,u_dut.emb_fault,u_dut.rp_fault,u_dut.armed_fault,u_dut.go_fault,u_dut.mu_hc_fault,u_dut.accepted_ctx_fault,u_dut.cold_fault);err("fault raised");end
-      if(errs==0)$display("SYS_FACE_COLD_PASS MUT%0d Tprefix3 Esegment1 init1 row64+scale",MUT);
+      end
+      if(errs==0)$display("SYS_FACE_COLD_PASS MUT%0d Tprefix3 Esegment1 init2 AUTH/re-admission row64+scale",MUT);
       else begin $display("SYS_FACE_COLD_FAIL MUT%0d errors%0d face%0d provider%0d",MUT,errs,face_fault,prov_fault);$fatal(1);end
       $finish;
     end
