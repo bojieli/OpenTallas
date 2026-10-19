@@ -120,12 +120,16 @@ module ot_s81ph_ctrl_pcr #(
     assign {k_wdata, k_wstrb, k_tag, k_len, k_addr, k_we} = h;
 `endif
     // ---- HBM side: response pin registers (plain flops, no input-gated enable) -> landing FIFO
-    reg           kr_q;
+    // kr_v lands in a plain pin flop (kr_vq); the ready this controller showed the PHY in that cycle (l_rdy, a register)
+    // is captured beside it (kr_rq): the transfer was kr_v && kr_rdy at that edge, so the FIFO write valid is
+    // kr_vq && kr_rq one cycle later -- no gate between the kr_v pin and its flop (native capture, cts_native_probe).
+    reg           kr_vq, kr_rq;
     reg [RW-1:0]  krd_q;
     wire          l_rdy;
     assign kr_rdy = l_rdy;                       // registered (ot_s81ph_afifo_g.w_rdy)
     always @(posedge ckh or negedge hrst_n)
-        if (!hrst_n) kr_q <= 1'b0; else kr_q <= kr_v && l_rdy;
+        if (!hrst_n) begin kr_vq <= 1'b0; kr_rq <= 1'b0; end else begin kr_vq <= kr_v; kr_rq <= l_rdy; end
+    wire          kr_q = kr_vq && kr_rq;
     always @(posedge ckh) krd_q <= {kr_data, kr_tag, kr_beat};
     wire          l_v;
     wire [RW-1:0] l_d;
