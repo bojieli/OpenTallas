@@ -1,0 +1,133 @@
+{
+  "source_commit": "9587da800",
+  "scope": "Actual combined SAFE-storage/stream-reset/station-CFG E/W component production, SU_LT1 HD_W1301 MU_NU4; not regional SU landed ML5, full token, native timing or physical admission.",
+  "source_files_rehashed": 8612,
+  "source_changed": [],
+  "manifest_sha256": "f3360d1829ea7797181297fa6260218fb1f2804a7bac0eac4175fb3e71c84c35",
+  "faces": {
+    "e": {
+      "status": "PASS_ALL10_TERMINAL_LOG",
+      "results": {
+        "a": [
+          24,
+          24
+        ],
+        "c": [
+          640,
+          640
+        ],
+        "f": [
+          3,
+          3
+        ],
+        "g": [
+          5,
+          5
+        ],
+        "k": [
+          512,
+          512
+        ],
+        "q": [
+          512,
+          512
+        ],
+        "m": [
+          8,
+          8
+        ],
+        "o": [
+          2,
+          2
+        ],
+        "n": [
+          2,
+          2
+        ],
+        "e": [
+          1024,
+          1024
+        ]
+      },
+      "log_sha256": "535a02932d6c1ad6c0fb564041e246d63cab85869a48dbacc40411fb6d14c1df",
+      "host": "ot-epyc5",
+      "unit": "1734729",
+      "process_absent": true,
+      "exit_status_note": "Original PTY session expired after agent end; terminal logs contain all10 final PASS rows and the process is absent. No independent saved shell exit-code receipt exists."
+    },
+    "w": {
+      "status": "PASS_ALL10_TERMINAL_LOG",
+      "results": {
+        "a": [
+          24,
+          24
+        ],
+        "c": [
+          640,
+          640
+        ],
+        "f": [
+          3,
+          3
+        ],
+        "g": [
+          5,
+          5
+        ],
+        "k": [
+          512,
+          512
+        ],
+        "q": [
+          512,
+          512
+        ],
+        "m": [
+          8,
+          8
+        ],
+        "o": [
+          2,
+          2
+        ],
+        "n": [
+          2,
+          2
+        ],
+        "e": [
+          1024,
+          1024
+        ]
+      },
+      "log_sha256": "f31599e8816773941108910195d20a78d4fee58981ea99beb3eb583ffe2c29dc",
+      "host": "ot-epyc6",
+      "unit": "237978",
+      "process_absent": true,
+      "exit_status_note": "Original PTY session expired after agent end; terminal logs contain all10 final PASS rows and the process is absent. No independent saved shell exit-code receipt exists."
+    }
+  },
+  "priced_spans": [
+    96,
+    86,
+    16,
+    16,
+    16
+  ],
+  "measured_spans": [
+    96,
+    86,
+    16,
+    16,
+    16
+  ],
+  "issue_to_last": [
+    183,
+    134,
+    104,
+    64,
+    190
+  ],
+  "fused_root_cycles": 61,
+  "stream_added_edges": 0,
+  "known_open": "Actual producer/control transparent fanout, native state/clock/TTFF/reach/geometry; no parent adoption."
+}
