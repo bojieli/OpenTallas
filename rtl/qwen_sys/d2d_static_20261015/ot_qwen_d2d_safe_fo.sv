@@ -725,7 +725,7 @@ module ot_qwen_d2d_recovery_sf #(
     output wire       fwd_epoch_o,
     output wire       fwd_link_rst_n,
     output wire       phy_rst_n,
-    output reg        epoch_begin,
+    output wire       epoch_begin,      // = KEPT eb_m (never merged into its copies ebc)
     output reg  [7:0] epoch,
     output reg        link_up,
     output wire       links_drained,
@@ -741,6 +741,8 @@ module ot_qwen_d2d_recovery_sf #(
     reg [BUMP-1:0] eq;
     reg [BUMP-1:0] fq;
     reg counting;
+    (* keep = "true", dont_touch = "true" *) reg eb_m;
+    assign epoch_begin = eb_m;
     assign fwd_epoch_o = fep;
     assign fwd_link_rst_n = ~lrst;
     assign phy_rst_n = rst_n & ~lrst;
@@ -790,10 +792,10 @@ module ot_qwen_d2d_recovery_sf #(
     // ---- everything else as built ----
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
-            n <= 0; seen <= 0; lrst <= 0; fep <= 0; eq <= 0; fq <= 0; epoch_begin <= 0; bq <= 0; link_up <= 0;
+            n <= 0; seen <= 0; lrst <= 0; fep <= 0; eq <= 0; fq <= 0; eb_m <= 0; bq <= 0; link_up <= 0;
             transport_fault <= 0;
         end else begin
-            fep <= 1'b0; epoch_begin <= begin_now; bq <= boot_begin;
+            fep <= 1'b0; eb_m <= begin_now; bq <= boot_begin;
             link_up <= p_tx_up && (st == S_RUN) && !abort;
             eq <= {eq, fep}; fq <= {fq, fwd_epoch_i};
             if (begin_now) begin seen <= 0; transport_fault <= 0; end

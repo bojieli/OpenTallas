@@ -1,0 +1,6 @@
+RECOVERY abort->epoch_begin KV 145 cycles, compute 0 cycles; HOST-visible 55 cycles
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+D2D_LOCK edges 1192 mismatches 0 ntx3 tx slots p0 198 p1 0 p2 64; ntx4 port-3 slots 0
+D2D_DIES_PASS
+localparam [31:0] QKD_D2D_TXDP = 32'h03030416;   // KV [22, 4, 3, 3]
+exit 0
