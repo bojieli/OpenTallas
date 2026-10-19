@@ -9,11 +9,11 @@
 (* keep_hierarchy = "yes" *)
 module qfd_c_land_safe_w_slice #(parameter integer W=24)(
  input wire ck,rsi, input wire [W-1:0] i, output wire [4*W-1:0] bank);
- (* keep = 1 *) reg r1, r2;
+ (* keep = 1 *) reg r2;
  (* keep = 1 *) reg [3:0] sel;
  reg [W-1:0] b0,b1,b2,b3;
  always @(posedge ck) begin
-  r1 <= rsi; r2 <= r1;
+  r2 <= rsi;
   if (!r2) sel <= 4'b0001;
   else sel <= {sel[2:0],sel[3]};
   if (r2 && sel[0]) b0 <= i;
@@ -26,11 +26,13 @@ endmodule
 
 module qfd_c_land_safe_w #(parameter integer W=258)(
  input wire ck,rsi, input wire [W-1:0] i, output wire [4*W-1:0] bank);
+ (* keep = 1 *) reg rst_l0;
+ always @(posedge ck) rst_l0 <= rsi;
  genvar g,s;
  generate for(g=0;g<(W+23)/24;g=g+1) begin:g_slice
   localparam integer N=(W-g*24<24)?W-g*24:24;
   wire [4*N-1:0] b;
-  qfd_c_land_safe_w_slice #(.W(N)) u(ck,rsi,i[g*24+:N],b);
+  qfd_c_land_safe_w_slice #(.W(N)) u(ck,rst_l0,i[g*24+:N],b);
   for(s=0;s<4;s=s+1) begin:g_bank
    assign bank[s*W+g*24+:N]=b[s*N+:N];
   end
@@ -43,7 +45,7 @@ endmodule
 (* keep_hierarchy = "yes" *)
 module qfd_c_land_safe_r_slice #(parameter integer W=24, K=2)(
  input wire ck,rsi, input wire [4*W-1:0] bank, output reg [W-1:0] o);
- (* keep = 1 *) reg r1,r2;
+ (* keep = 1 *) reg r2;
  (* keep = 1 *) reg [3:0] sel;
  (* keep = 1 *) reg warm;
  reg [1:0] age;
@@ -52,7 +54,7 @@ module qfd_c_land_safe_r_slice #(parameter integer W=24, K=2)(
                          |(bank[2*W+:W]&{W{sel[2]}})
                          |(bank[3*W+:W]&{W{sel[3]}});
  always @(posedge ck) begin
-  r1<=rsi; r2<=r1;
+  r2<=rsi;
   if(!r2) begin sel<=4'b0001 << ((4-K)%4); age<=0; warm<=0; end
   else begin
    sel<={sel[2:0],sel[3]}; age<=age+1'b1;
@@ -64,6 +66,8 @@ endmodule
 
 module qfd_c_land_safe_r #(parameter integer W=258, K=2)(
  input wire ck,rsi, input wire [4*W-1:0] bank, output wire [W-1:0] o);
+ (* keep = 1 *) reg rst_l0;
+ always @(posedge ck) rst_l0 <= rsi;
  genvar g,s;
  generate for(g=0;g<(W+23)/24;g=g+1) begin:g_slice
   localparam integer N=(W-g*24<24)?W-g*24:24;
@@ -71,7 +75,7 @@ module qfd_c_land_safe_r #(parameter integer W=258, K=2)(
   for(s=0;s<4;s=s+1) begin:g_bank
    assign b[s*N+:N]=bank[s*W+g*24+:N];
   end
-  qfd_c_land_safe_r_slice #(.W(N),.K(K)) u(ck,rsi,b,o[g*24+:N]);
+  qfd_c_land_safe_r_slice #(.W(N),.K(K)) u(ck,rst_l0,b,o[g*24+:N]);
  end endgenerate
 `ifndef SYNTHESIS
  initial if(W>258 || K<1 || K>3) $fatal(1,"invalid safe hard-child shape/epoch");
