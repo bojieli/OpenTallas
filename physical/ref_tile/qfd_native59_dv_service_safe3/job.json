@@ -1,0 +1,210 @@
+{
+ "name": "qfd_native59_dv_service_safe3-s3-COMMIT",
+ "block": "qfd_native59_dv_service_r1",
+ "ref_tile": true,
+ "owner": "Claude:QW-N59",
+ "purpose": "QW-N59-SAFE3 (10-19): SAFE2 NU4/MCTX1 exact 8-writer Q-seat SRAM service, structurally rebuilt after the safe2 gate FAIL (OT_HYBRID: multi-root tile cannot clock raw SRAMs; reset nets 5.5k loads): ONE ck root (formatter + 8 SRAMs on ck, top qfd_native59_dv_service_r1 drops ck_fmt/ck_qbuf), reset copy forest (2 landing stages, 32 kept landing copies -> 600 kept RTL copies, <=32 loads each), same ports/edges as SAFE2. Primary.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/n59-safe3-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "results/arch/qwen_split_compute_1014/q_n59_1017",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "results/rtl/mu_qwen_1018/n59_safe"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_dv_service_r1 #(.NU(4), .MCTX(1), .SAFE(2), .RST_FOREST(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_dv_service.sv rtl/qwen_split/qfd_native59_command_context.sv rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_static_service.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_split/qfd_native59_qseat_sram.sv physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "n59dv_positive",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59_ONLY=positive bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^positive OK \\(pass\\)"
+   },
+   {
+    "name": "n59dv_bad_q",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59_ONLY=bad_q bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_bad_q",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^bad_q OK \\(pass\\)"
+   },
+   {
+    "name": "n59dv_mut1_q_lane",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59_ONLY=mut1_q_lane bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_mut1_q_lane",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe3/n59dv_mut1_q_lane.log"
+   },
+   {
+    "name": "n59dv_mut2_kv_addr",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59_ONLY=mut2_kv_addr bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_mut2_kv_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe3/n59dv_mut2_kv_addr.log"
+   },
+   {
+    "name": "n59dv_mut3_emb_word",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59_ONLY=mut3_emb_word bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/n59_mut3_emb_word",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe3/n59dv_mut3_emb_word.log"
+   },
+   {
+    "name": "qseat_positive",
+    "cmd": "bash rtl/test/qwen_split/run_native59_qseat_sram.sh {RUN}/bench/qseat_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^QSEAT_PASS"
+   },
+   {
+    "name": "qseat_mut7_owner",
+    "cmd": "QSEAT_MUT=7 bash rtl/test/qwen_split/run_native59_qseat_sram.sh {RUN}/bench/qseat_mut7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^QSEAT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe3/qseat_mut7_owner.log"
+   },
+   {
+    "name": "mu_ovl_positive",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59MU_ONLY=ovl_positive bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/mu_ovl",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59MU_PASS"
+   },
+   {
+    "name": "n59_late_prefetch",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59_ONLY=late_prefetch bash rtl/test/qwen_split/run_native59_dv_service_bench.sh {RUN}/bench/late_prefetch",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59DV_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe3/n59_late_prefetch.log"
+   },
+   {
+    "name": "mu_ovl_mut5_wrong_user",
+    "cmd": "N59_R1=1 N59_SAFE=2 N59MU_ONLY=ovl_mut5_m7 bash rtl/test/qwen_split/run_native59_dv_mu_bench.sh {RUN}/bench/mu_ovl_mut5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59MU_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_safe3/mu_ovl_mut5_wrong_user.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_native59_dv_service_safe3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_native59_dv_service_safe3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_native59_dv_service_safe3 --out {RUN}/record/views/qfd_native59_dv_service_r1 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_native59_dv_service_safe3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_native59_dv_service_safe2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_native59_dv_service_safe2/qfd_native59_dv_service_safe3-s3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

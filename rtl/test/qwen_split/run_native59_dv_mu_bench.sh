@@ -27,7 +27,7 @@ rc_all=0
 run() { # name expect(pass|fail) -G...
   local n=$1 exp=$2; shift 2
   [[ -n ${N59MU_ONLY:-} && $n != "$N59MU_ONLY" ]] && return
-  verilator --cc --exe --build -O2 -Wno-fatal -Wno-lint -Wno-style --top-module tb_qfd_native59_dv_mu -GSAFE=${N59_SAFE:-0} "$@" \
+  verilator --cc --exe --build -O2 -Wno-fatal -Wno-lint -Wno-style --top-module tb_qfd_native59_dv_mu -GSAFE=${N59_SAFE:-0} ${N59_R1:+-DN59_R1} "$@" \
     -Mdir "$out/$n.obj" "${SRC[@]}" "$R/rtl/test/qwen_split/tb_qfd_native59_dv_mu_main.cpp" > "$out/$n.build.log" 2>&1 \
     || { echo "$n BUILD_FAILED"; tail -20 "$out/$n.build.log"; rc_all=1; return; }
   "$out/$n.obj/Vtb_qfd_native59_dv_mu" > "$out/$n.log" 2>&1; local rc=$?

@@ -138,8 +138,13 @@ module tb_qfd_native59_dv_service #(parameter integer MUT=0,BAD_Q=0,SAFE=0,LATE_
  wire[4:0]safe_qbeat=(SAFE==2&&LATE_PREFETCH==0)?5'(cyc-(QS0-1)):qb;
  wire[519:0]dr;wire n_tv,n_done,n_fault;wire[58:0]n_xid;wire[1:0]n_xg;wire[523:0]n_x3;wire[547:0]n_td;wire[94:0]n_ret;
  wire e_cre,e_sre;wire[23:0]e_caddr;wire[17:0]e_saddr;wire[511:0]e_cq;wire[15:0]e_sq;wire p_fault;
+`ifdef N59_R1
+ qfd_native59_dv_service_r1 #(.MUT(MUT),.SAFE(SAFE))dut(
+ .ck(clk),.rst_n(rst_n),
+`else
  qfd_native59_dv_service #(.MUT(MUT),.SAFE(SAFE))dut(
  .ck(clk),.ck_fmt(clk),.ck_qbuf(clk),.rst_n(rst_n),
+`endif
  .host_epoch_valid(1'b1),.host_fused_capability(1'b1),.host_epoch(16'd9),.host_tag({16'd9,6'd0,18'd50994,13'd255,6'd0}),.host_generation(2'd1),
  .layer_context_v(context_v),.command_stage(stage),.native_token(token),.native_position(position),.native_cmd(cmd),
  .dd_i(dd),.kv_word_slot(kvslot),.kv_word_index(kvindex),.kv_x3_slot(xslot),

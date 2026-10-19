@@ -60,7 +60,13 @@ module qfd_native59_dv_service #(
  // MU-DQ-D2DUSER: users (1 = single user, the as-built block) and the HOST allocator's initial sequence (INITIAL_EPOCH[15:2])
  parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,
  // MU-D2D-OVL: 1 = two operation context slots (overlapping D2D request / response; see the header)
- parameter integer MCTX=0, SAFE=0
+ parameter integer MCTX=0, SAFE=0,
+ // QW-N59-SAFE3 10-19 (structural, no function change): ROOTS 3 = ck / ck_fmt / ck_qbuf regional roots (SAFE2 kit);
+ // ROOTS 1 = formatter and the eight Q-seat SRAMs on ck (one CTS root: the tile flow builds raw SRAM clock sinks only
+ // on a single-root tile; ck_fmt / ck_qbuf are then unloaded and the r1 wrapper below removes them).  RST_FOREST 1 =
+ // each regional reset copy is a KEPT family of identical flops (same D / clock / async clear as rst_q) that
+ // ot_rst_copies.tcl spreads over <= 32 loads each; release latency unchanged (one edge after the landed port).
+ parameter integer ROOTS=3, RST_FOREST=0
 )(
  input wire ck,rst_n,
  // SAFE regional roots, fixed-phase siblings of ck; unused in the legacy path.
@@ -91,12 +97,30 @@ module qfd_native59_dv_service #(
  // immediate (async clear of the copies), release is synchronous one edge later; reset release latency is a scheduled
  // constant.  Copies: 0 formatter, 1 x3 transport, 2 static service, 3 record codec, 4 command context + Q export
  // control, 5 dr landing fence, 6 pin registers + native_ret, 7 the remaining top-level state.
+wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
+ generate if(RST_FOREST==0)begin:g_rst8
  (* keep = "true" *) reg[7:0]rst_q;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)rst_q<=8'd0;
   else rst_q<=8'hFF;
- wire rst_fmt=rst_q[0],rst_x3=rst_q[1],rst_svc=rst_q[2],rst_rec=rst_q[3],rst_ctx=rst_q[4],rst_land=rst_q[5],
-      rst_pin=rst_q[6],rst_top=rst_q[7];
+ assign rst_fmt=rst_q[0];assign rst_x3=rst_q[1];assign rst_svc=rst_q[2];assign rst_rec=rst_q[3];
+ assign rst_ctx=rst_q[4];assign rst_land=rst_q[5];assign rst_pin=rst_q[6];assign rst_top=rst_q[7];
+ end else begin:g_rstf
+ // Family widths = ceil(region reset loads / 28) from the SAFE2 synthesized netlist (textbook 10-19: fmt 5,517,
+ // svc 2,830, pin 2,173, rec 2,139, top 1,599, land 836, x3 577, ctx < 256); the copies pass re-points the loads,
+ // the gate's high_fanout lint on 1_2_yosys.v is the witness.
+ (* keep = "true" *) reg[199:0]rst_cp_fmt;(* keep = "true" *) reg[23:0]rst_cp_x3;(* keep = "true" *) reg[103:0]rst_cp_svc;
+ (* keep = "true" *) reg[79:0]rst_cp_rec;(* keep = "true" *) reg[11:0]rst_cp_ctx;(* keep = "true" *) reg[31:0]rst_cp_land;
+ (* keep = "true" *) reg[79:0]rst_cp_pin;(* keep = "true" *) reg[59:0]rst_cp_top;
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)begin
+   rst_cp_fmt<='0;rst_cp_x3<='0;rst_cp_svc<='0;rst_cp_rec<='0;rst_cp_ctx<='0;rst_cp_land<='0;rst_cp_pin<='0;rst_cp_top<='0;
+  end else begin
+   rst_cp_fmt<='1;rst_cp_x3<='1;rst_cp_svc<='1;rst_cp_rec<='1;rst_cp_ctx<='1;rst_cp_land<='1;rst_cp_pin<='1;rst_cp_top<='1;
+  end
+ assign rst_fmt=rst_cp_fmt[0];assign rst_x3=rst_cp_x3[0];assign rst_svc=rst_cp_svc[0];assign rst_rec=rst_cp_rec[0];
+ assign rst_ctx=rst_cp_ctx[0];assign rst_land=rst_cp_land[0];assign rst_pin=rst_cp_pin[0];assign rst_top=rst_cp_top[0];
+ end endgenerate
  // ---------------------------------------------------------------- pin registers (every input, flop-first)
  reg p_hev,p_hfc;reg[15:0]p_he;reg[58:0]p_ht;reg[1:0]p_hg;
  reg p_lcv;reg[5:0]p_stage;reg[17:0]p_tok,p_pos;reg[379:0]p_cmd;reg[547:0]p_dd;
@@ -260,7 +284,7 @@ module qfd_native59_dv_service #(
  end else begin:g_qread_safe
   // 8 independent masked writers preserve the full scatter interface. Read and
   // owner select land at the existing pin edge; SRAM read-before-write is exact.
-  qfd_native59_qseat_sram #(.MUT(MUT),.REGIONAL(1),.REPLICATE(1)) u_qseat(
+  qfd_native59_qseat_sram #(.MUT(MUT),.REGIONAL(ROOTS!=1),.REPLICATE(1)) u_qseat(
    .ck(ck),.ck_mem(ck_qbuf),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),
    .write_element(qe_all),.write_data(p_dd[344:89]),
    .element_copies(qe_copies),.valid_copies(qh_copies),
@@ -314,7 +338,7 @@ module qfd_native59_dv_service #(
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;
  ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE))u_formatter(
- .clk(SAFE?ck_fmt:ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
+ .clk((SAFE!=0&&ROOTS!=1)?ck_fmt:ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
  .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_slot(p_kvs),.word_index(p_kvi),
@@ -540,4 +564,46 @@ module qfd_native59_command_context_mu #(parameter integer NU=4)(
   end
  end
  initial if(NU<2||NU>4)$fatal(1,"qfd_native59_command_context_mu: NU %0d outside 2..4 (NU 1 binds qfd_native59_command_context)",NU);
+endmodule
+
+// QW-N59-SAFE3 one-root hardening top: the SAFE2 service with the formatter and the Q-seat SRAMs on ck (ROOTS 1) and the
+// reset copy forest (RST_FOREST 1).  Same ports minus the two regional clocks; same function and edges on every port.
+module qfd_native59_dv_service_r1 #(
+ parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
+ parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,SAFE=2,RST_FOREST=1
+)(
+ input wire ck,rst_n,
+ input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
+ input wire[58:0]host_tag,input wire[1:0]host_generation,
+ input wire layer_context_v,input wire[5:0]command_stage,
+ input wire[17:0]native_token,native_position,input wire[379:0]native_cmd,
+ input wire[547:0]dd_i,
+ input wire kv_word_slot,input wire[1:0]kv_word_index,input wire kv_x3_slot,
+ output wire[523:0]x3,output wire[58:0]x3_identity,output wire[1:0]x3_generation,
+ input wire q_slot,input wire[4:0]q_slot_beat,
+ input wire tx_slot,input wire[3:0]tx_slot_kind,input wire[4:0]tx_slot_beat,
+ output wire native_tx_v,output wire[547:0]native_tx_payload,
+ input wire native_rx_v,input wire[547:0]native_rx_payload,
+ input wire rx_slot,input wire[3:0]rx_slot_kind,input wire[4:0]rx_slot_beat,
+ output wire[519:0]dr_o,
+ output wire emb_code_re,output wire[23:0]emb_code_addr,output wire emb_scale_re,output wire[17:0]emb_scale_addr,
+ input wire[511:0]emb_code_q,input wire[15:0]emb_scale_q,
+ input wire visibility_slot,complete_slot,output wire completed,output wire[94:0]native_ret,
+ output wire fault
+);
+ qfd_native59_dv_service #(.MUT(MUT),.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE),.LAND_QUALIFIED(LAND_QUALIFIED),
+  .LAND_EDGES(LAND_EDGES),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.SAFE(SAFE),.ROOTS(1),.RST_FOREST(RST_FOREST))u_core(
+  .ck(ck),.rst_n(rst_n),.ck_fmt(ck),.ck_qbuf(ck),
+  .host_epoch_valid(host_epoch_valid),.host_fused_capability(host_fused_capability),.host_epoch(host_epoch),
+  .host_tag(host_tag),.host_generation(host_generation),.layer_context_v(layer_context_v),.command_stage(command_stage),
+  .native_token(native_token),.native_position(native_position),.native_cmd(native_cmd),.dd_i(dd_i),
+  .kv_word_slot(kv_word_slot),.kv_word_index(kv_word_index),.kv_x3_slot(kv_x3_slot),
+  .x3(x3),.x3_identity(x3_identity),.x3_generation(x3_generation),.q_slot(q_slot),.q_slot_beat(q_slot_beat),
+  .tx_slot(tx_slot),.tx_slot_kind(tx_slot_kind),.tx_slot_beat(tx_slot_beat),
+  .native_tx_v(native_tx_v),.native_tx_payload(native_tx_payload),.native_rx_v(native_rx_v),
+  .native_rx_payload(native_rx_payload),.rx_slot(rx_slot),.rx_slot_kind(rx_slot_kind),.rx_slot_beat(rx_slot_beat),
+  .dr_o(dr_o),.emb_code_re(emb_code_re),.emb_code_addr(emb_code_addr),.emb_scale_re(emb_scale_re),
+  .emb_scale_addr(emb_scale_addr),.emb_code_q(emb_code_q),.emb_scale_q(emb_scale_q),
+  .visibility_slot(visibility_slot),.complete_slot(complete_slot),.completed(completed),.native_ret(native_ret),
+  .fault(fault));
 endmodule
