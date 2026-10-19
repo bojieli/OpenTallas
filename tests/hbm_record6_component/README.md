@@ -46,3 +46,11 @@ required two;11 full-sector mask corruption;13 omitted second descriptor rearm;
 causal controls until actual fleet logs show the intended functional predicate.
 No timeout/compile error qualifies a negative. Station-local expression ordering,
 feedback and overwrite mutations remain station41's proof responsibility.
+
+Generation also requires --station-ledger pointing to the exact station41
+source_ledger.json. This derives all1281 independently evaluated canonical FP32
+addition inputs/results from symbolic expression identities, verifies the two
+real padding-zero subtrees, and emits adds.mem/adds.json. The bench checks and
+logs each real node's OPR1 registered oa/ob and subsequent native LAT6 output,
+with operation/station/episode/aborted-prefix identities. Top STATION_MUT forwards
+to the genuine station RTL parameter for its three source mutation builds.

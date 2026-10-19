@@ -60,6 +60,24 @@ ot_hbm_su_stree_root treeroot(.clk(clk),.rst_n(runrq),.up0_i(up[14]),.up1_i(41'b
   bm=binding['instances'][f'std_SW_{i:02d}b']['master']
   s.append(f'''wire[47:0] upwide{i};{upmaster} ur{i}(.ck(clk),.rs(runrq),.i({{7'b0,up[{i}]}}),.o(upwide{i}));assign up[{i+1}]=upwide{i}[40:0];
 wire[135:0] da{i};wire[47:0] db{i};{am} dra{i}(.ck(clk),.rs(runrq),.i(down[{i}][135:0]),.o(da{i}));{bm} drb{i}(.ck(clk),.rs(runrq),.i({{20'b0,down[{i}][163:136]}}),.o(db{i}));assign down[{i+1}]={{db{i}[27:0],da{i}}};\n''')
+ s.append('reg[95:0] adds[0:2561];initial $readmemh("adds.mem",adds);\n')
+ ops=json.loads((out/'adds.json').read_text())
+ for si in range(41):
+  node=f'station.g_on.s{si}.u_node'if si<40 else'station.g_on.u_global'
+  s.append(f'always @(posedge clk)if(runrq&&station.g_on.active)begin case(cycle)\n')
+  for oi,o in enumerate(ops):
+   if o['station']!=si:continue
+   s.append(f'''{o['source_start']+3}:begin
+ if(!{node}.ov||{{{node}.oa,{node}.ob}}!==adds[episode*1281+{oi}][95:32])$fatal(1,"ADD_INPUT_ID id={oi} station={si}");
+ $display("ADD_IN id={oi} station={si} episode=%0d aborted=%0d cycle=%0d a=%h b=%h",episode,(abort_mode&&qt<6100),cycle,{node}.oa,{node}.ob);
+end
+''')
+   s.append(f'''{o['source_done']}:begin
+ if(!{node}.vy||{node}.y!==adds[episode*1281+{oi}][31:0]||{node}.err)$fatal(1,"ADD_OUTPUT_ID id={oi} station={si}");
+ $display("ADD_OUT id={oi} station={si} episode=%0d aborted=%0d cycle=%0d y=%h",episode,(abort_mode&&qt<6100),cycle,{node}.y);
+end
+''')
+  s.append('default:begin end endcase end\n')
  s.append('''integer roots=0,scalars=0,checked=0,fillcount=0,retired=0;integer startqt=0;integer abortfills=0;reg root_seen=0;
 always @(posedge clk)begin
  if(station_start)begin startqt=qt;root_seen=0;end
