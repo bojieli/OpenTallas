@@ -2,12 +2,12 @@
  "name": "hbm_sfu_programme_store_r10_cl-r10-COMMIT",
  "block": "ot_hgi_sfu_programme_store_r10",
  "ref_tile": true,
- "owner": "Claude:HBM-CRIT",
+ "owner": "Claude:HBM-KITS-C/SFUPS",
  "purpose": "SFU programme store r10 parent cluster with decision B head + SFU-PS-4 per-row relays (D=5), balanced spine (child boundary R) (11 one-stripe leaves + head, 3 cols x 4 rows, head centre). CRITICAL (hbm_sfu_programme_store): coordinator reviews the gate PNG before submit. d4g slot pins (HBM-CRIT 10-18).",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hbm-crit-1018",
+  "branch": "claude/sfups-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros",
