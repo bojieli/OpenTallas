@@ -1,0 +1,41 @@
+{
+  "status": "SOURCE_PREPARATION_VALIDATED_NATIVE_ECO_NOT_EXECUTED",
+  "source_virtual_native_function_network": {
+    "status": "SOURCE_VIRTUAL_NETWORK_PASS",
+    "original_input_checks": 21607,
+    "cells": 12489,
+    "preserved_ff": 2782,
+    "zero_new_state": true,
+    "unchanged_clock_and_open_loads": true,
+    "reset_branches": 12,
+    "ordinary_branches": 594,
+    "async_hold_branches": 10,
+    "causal_rejections": {
+      "missing_branch_cell": "complete cell inventory",
+      "wrong_hold_master": "added master int8_reset_5264_b0_hb0",
+      "wrong_sink_net": "exact rewire ('$auto$ff.cc:337:slice$27207', 'RESETN')",
+      "changed_clock_or_state": "immutable cell/clock/state geometry $auto$ff.cc:337:slice$11967"
+    }
+  },
+  "reset_source": {
+    "status": "SOURCE_CALENDAR_AND_NATIVE_FUNCTION_INDUCTION_PASS",
+    "reset_identity_checks": 16384,
+    "assertion_edges": 2,
+    "release_edges": 2,
+    "added_edges": 0,
+    "source_output_ages": [
+      2,
+      3
+    ],
+    "age_basis": "all2782 native FF identities/clock/control/data functions unchanged, exact original RTL fixtures pinned",
+    "physical_pulse_and_native_fixture_replay": "OPEN_UNTIL_GRANTED_NATIVE_SUCCESSOR"
+  },
+  "negative_grant": "REJECTED_BEFORE_BASELINE_OR_ENGINE",
+  "shell_syntax": "bash -n PASS",
+  "python_syntax": "py_compile PASS",
+  "tcl_syntax": "info complete PASS, no Tcl source/execution of mutation script",
+  "native_readonly_smoke_exit": 0,
+  "native_readonly_introspection_exit": 0,
+  "frozen_checkpoint_rehash": "fc6b007164e4e5c2a934052922d40114cc4fc60602423d023aa53fa2a67d2081",
+  "actual_ECO_placement_CTS_route": false
+}

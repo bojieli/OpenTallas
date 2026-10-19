@@ -1,0 +1,71 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019
+ot-run: ot-epyc8       admits  1196 GB (avail 921, growth 84, headroom 0, waiters 0/0 GB) load 30/128 running 16 disk 85 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-int8-clone-eco-kit-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2057420-1792447247 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ global errorCode errorInfo; set redirect [parse_redirect_args args]; set code [catch { global sta_report_default_digits
+
+  parse_key_args "report_net" args keys {-corner -scene -digits} flags {}
+  check_argc_eq1 "report_net" $args
+
+  set scene [parse_scene_or_default keys]
+  set digits $sta_report_default_digits
+  if { [info exists keys(-digits)] } {
+      set digits $keys(-digits)
+  }
+
+  set net_path [lindex $args 0]
+  set net [find_net $net_path]
+  if { $net != "NULL" } {
+    report_net1 $net $scene $digits
+  } else {
+    set pin [find_pin $net_path]
+    if { $pin != "NULL" } {
+      set net [$pin net]
+      if { $net != "NULL" } {
+        report_net1 $net $scene $digits
+      } else {
+        sta_error 231 "net $net_path not found."
+      }
+    } else {
+      sta_error 232 "net $net_path not found."
+    }
+  } } ret ]; if {$redirect} { redirect_file_end }; if {$code == 1} {return -code $code -errorcode $errorCode -errorinfo $errorInfo $ret} else {return $ret} 
+args
+ global errorCode errorInfo; set redirect [parse_redirect_args args]; set code [catch { global sta_report_default_digits
+
+  parse_key_args "report_net" args keys {-corner -scene -digits} flags {}
+  check_argc_eq1 "report_net" $args
+
+  set scene [parse_scene_or_default keys]
+  set digits $sta_report_default_digits
+  if { [info exists keys(-digits)] } {
+      set digits $keys(-digits)
+  }
+
+  set net_path [lindex $args 0]
+  set net [find_net $net_path]
+  if { $net != "NULL" } {
+    report_net1 $net $scene $digits
+  } else {
+    set pin [find_pin $net_path]
+    if { $pin != "NULL" } {
+      set net [$pin net]
+      if { $net != "NULL" } {
+        report_net1 $net $scene $digits
+      } else {
+        sta_error 231 "net $net_path not found."
+      }
+    } else {
+      sta_error 232 "net $net_path not found."
+    }
+  } } ret ]; if {$redirect} { redirect_file_end }; if {$code == 1} {return -code $code -errorcode $errorCode -errorinfo $errorInfo $ret} else {return $ret} 
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2057420-1792447247): exit 0

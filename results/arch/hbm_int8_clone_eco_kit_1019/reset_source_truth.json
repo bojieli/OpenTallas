@@ -1,0 +1,13 @@
+{
+  "status": "SOURCE_CALENDAR_AND_NATIVE_FUNCTION_INDUCTION_PASS",
+  "reset_identity_checks": 16384,
+  "assertion_edges": 2,
+  "release_edges": 2,
+  "added_edges": 0,
+  "source_output_ages": [
+    2,
+    3
+  ],
+  "age_basis": "all2782 native FF identities/clock/control/data functions unchanged, exact original RTL fixtures pinned",
+  "physical_pulse_and_native_fixture_replay": "OPEN_UNTIL_GRANTED_NATIVE_SUCCESSOR"
+}

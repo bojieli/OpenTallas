@@ -1,0 +1,872 @@
+{
+  "upper_bound_report_count": 811072,
+  "basis": "All actual successor cells\u00d7native pin electrical types and all native timing groups\u00d7both check transitions\u00d7early/late; includes passing/nonpassing constraints; not design topN",
+  "master_counts": {
+    "INVx1_ASAP7_75t_R": 1482,
+    "NOR2xp33_ASAP7_75t_R": 1327,
+    "AOI21xp33_ASAP7_75t_R": 985,
+    "AND4x1_ASAP7_75t_R": 54,
+    "NAND5xp2_ASAP7_75t_R": 7,
+    "OR2x2_ASAP7_75t_R": 166,
+    "OAI21xp33_ASAP7_75t_R": 392,
+    "NAND2xp33_ASAP7_75t_R": 348,
+    "NOR3xp33_ASAP7_75t_R": 125,
+    "XNOR2xp5_ASAP7_75t_R": 234,
+    "AND3x1_ASAP7_75t_R": 49,
+    "OA21x2_ASAP7_75t_R": 69,
+    "OAI22xp33_ASAP7_75t_R": 53,
+    "AO21x1_ASAP7_75t_R": 24,
+    "XOR2xp5_ASAP7_75t_R": 209,
+    "AOI31xp33_ASAP7_75t_R": 110,
+    "A2O1A1Ixp33_ASAP7_75t_R": 118,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 36,
+    "AND2x2_ASAP7_75t_R": 31,
+    "O2A1O1Ixp33_ASAP7_75t_R": 102,
+    "OAI211xp5_ASAP7_75t_R": 24,
+    "OAI221xp5_ASAP7_75t_R": 53,
+    "AOI211xp5_ASAP7_75t_R": 26,
+    "NAND3xp33_ASAP7_75t_R": 78,
+    "AO31x2_ASAP7_75t_R": 5,
+    "OR5x1_ASAP7_75t_R": 4,
+    "OAI31xp33_ASAP7_75t_R": 32,
+    "NAND4xp25_ASAP7_75t_R": 21,
+    "NOR4xp25_ASAP7_75t_R": 33,
+    "AND5x1_ASAP7_75t_R": 7,
+    "AOI22xp33_ASAP7_75t_R": 11,
+    "OA22x2_ASAP7_75t_R": 2,
+    "OAI311xp33_ASAP7_75t_R": 17,
+    "OR3x1_ASAP7_75t_R": 10,
+    "OAI32xp33_ASAP7_75t_R": 2,
+    "OA211x2_ASAP7_75t_R": 2,
+    "DFFASRHQNx1_ASAP7_75t_R": 202,
+    "DFFHQNx1_ASAP7_75t_R": 2580,
+    "BUFx24_ASAP7_75t_R": 154,
+    "TIEHIx1_ASAP7_75t_R": 202,
+    "TIELOx1_ASAP7_75t_R": 64,
+    "CKINVDCx12_ASAP7_75t_R": 1,
+    "INVx5_ASAP7_75t_R": 10,
+    "INVx2_ASAP7_75t_R": 36,
+    "CKINVDCx11_ASAP7_75t_R": 1,
+    "CKINVDCx5p33_ASAP7_75t_R": 2,
+    "INVxp67_ASAP7_75t_R": 16,
+    "INVx3_ASAP7_75t_R": 15,
+    "INVx6_ASAP7_75t_R": 1085,
+    "CKINVDCx8_ASAP7_75t_R": 1,
+    "INVx4_ASAP7_75t_R": 2,
+    "INVx8_ASAP7_75t_R": 2,
+    "INVxp33_ASAP7_75t_R": 4,
+    "CKINVDCx6p67_ASAP7_75t_R": 2,
+    "NAND2x2_ASAP7_75t_R": 2,
+    "HB4xp67_ASAP7_75t_R": 1860
+  },
+  "native_counts": {
+    "O2A1O1Ixp33_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 12
+    },
+    "O2A1O1Ixp5_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 11
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "OA221x2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 25
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 58
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "OA31x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "OA331x1_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 73
+    },
+    "OA331x2_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 73
+    },
+    "OA332x1_ASAP7_75t_R": {
+      "pins": 9,
+      "timing_groups": 176
+    },
+    "OA332x2_ASAP7_75t_R": {
+      "pins": 9,
+      "timing_groups": 176
+    },
+    "OA333x1_ASAP7_75t_R": {
+      "pins": 10,
+      "timing_groups": 315
+    },
+    "OA333x2_ASAP7_75t_R": {
+      "pins": 10,
+      "timing_groups": 315
+    },
+    "OA33x2_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 42
+    },
+    "OAI211xp5_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "OAI21x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "OAI21xp33_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "OAI21xp5_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "OAI221xp5_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "OAI222xp33_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 58
+    },
+    "OAI22x1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "OAI22xp33_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "OAI22xp5_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "OAI311xp33_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 17
+    },
+    "OAI31xp33_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "OAI31xp67_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "OAI321xp33_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 45
+    },
+    "OAI322xp33_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 102
+    },
+    "OAI32xp33_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "OAI331xp33_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 73
+    },
+    "OAI332xp33_ASAP7_75t_R": {
+      "pins": 9,
+      "timing_groups": 176
+    },
+    "OAI333xp33_ASAP7_75t_R": {
+      "pins": 10,
+      "timing_groups": 315
+    },
+    "OAI33xp33_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 42
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "AND2x4_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "AND2x6_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "AND3x2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "AND3x4_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "AND4x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 5
+    },
+    "AND5x2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 5
+    },
+    "FAx1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 31
+    },
+    "HAxp5_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 9
+    },
+    "MAJIxp5_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 9
+    },
+    "MAJx2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 9
+    },
+    "MAJx3_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 9
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NAND2x1p5_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NAND2x2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NAND2xp33_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NAND2xp5_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NAND2xp67_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NAND3x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "NAND3x2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "NAND3xp33_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "NAND4xp25_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "NAND4xp75_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "NAND5xp2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 5
+    },
+    "NOR2x1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NOR2x1p5_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NOR2x2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NOR2xp33_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NOR2xp67_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "NOR3x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "NOR3x2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "NOR3xp33_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "NOR4xp25_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "NOR4xp75_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "NOR5xp2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 5
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "OR2x4_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "OR2x6_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 2
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "OR3x2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "OR3x4_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 3
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "OR4x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 4
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 5
+    },
+    "OR5x2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 5
+    },
+    "TIEHIx1_ASAP7_75t_R": {
+      "pins": 1,
+      "timing_groups": 0
+    },
+    "TIELOx1_ASAP7_75t_R": {
+      "pins": 1,
+      "timing_groups": 0
+    },
+    "XNOR2x1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 4
+    },
+    "XNOR2x2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 4
+    },
+    "XNOR2xp5_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 4
+    },
+    "XOR2x1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 4
+    },
+    "XOR2x2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 4
+    },
+    "XOR2xp5_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 4
+    },
+    "BUFx10_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx12_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx24_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx2_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx3_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx4_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx4f_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx5_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx10_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx11_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx12_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx14_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx16_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx20_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx5p33_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx6p67_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx8_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "CKINVDCx9p33_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "HB1xp67_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "HB2xp67_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "HB3xp67_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "HB4xp67_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx11_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx13_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx1_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx2_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx3_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx4_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx5_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx6_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVx8_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVxp33_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "INVxp67_ASAP7_75t_R": {
+      "pins": 2,
+      "timing_groups": 1
+    },
+    "A2O1A1Ixp33_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 11
+    },
+    "A2O1A1O1Ixp25_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 19
+    },
+    "AO211x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "AO21x2_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "AO221x1_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "AO221x2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "AO222x2_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 58
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "AO22x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "AO31x2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "AO322x2_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 102
+    },
+    "AO32x1_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "AO32x2_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "AO331x1_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 73
+    },
+    "AO331x2_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 73
+    },
+    "AO332x1_ASAP7_75t_R": {
+      "pins": 9,
+      "timing_groups": 176
+    },
+    "AO332x2_ASAP7_75t_R": {
+      "pins": 9,
+      "timing_groups": 176
+    },
+    "AO333x1_ASAP7_75t_R": {
+      "pins": 10,
+      "timing_groups": 315
+    },
+    "AO333x2_ASAP7_75t_R": {
+      "pins": 10,
+      "timing_groups": 315
+    },
+    "AO33x2_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 42
+    },
+    "AOI211x1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "AOI211xp5_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "AOI21x1_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "AOI21xp33_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "AOI21xp5_ASAP7_75t_R": {
+      "pins": 4,
+      "timing_groups": 6
+    },
+    "AOI221x1_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 25
+    },
+    "AOI221xp5_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "AOI222xp33_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 58
+    },
+    "AOI22x1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "AOI22xp33_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "AOI22xp5_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 16
+    },
+    "AOI311xp33_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 17
+    },
+    "AOI31xp33_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "AOI31xp67_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 10
+    },
+    "AOI321xp33_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 45
+    },
+    "AOI322xp5_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 102
+    },
+    "AOI32xp33_ASAP7_75t_R": {
+      "pins": 6,
+      "timing_groups": 26
+    },
+    "AOI331xp33_ASAP7_75t_R": {
+      "pins": 8,
+      "timing_groups": 73
+    },
+    "AOI332xp33_ASAP7_75t_R": {
+      "pins": 9,
+      "timing_groups": 176
+    },
+    "AOI333xp33_ASAP7_75t_R": {
+      "pins": 10,
+      "timing_groups": 315
+    },
+    "AOI33xp33_ASAP7_75t_R": {
+      "pins": 7,
+      "timing_groups": 42
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 46
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFHQNx2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFHQNx3_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFHQx4_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFLQNx1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFLQNx2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFLQNx3_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DFFLQx4_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 5
+    },
+    "DHLx1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 6
+    },
+    "DHLx2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 6
+    },
+    "DHLx3_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 6
+    },
+    "DLLx1_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 6
+    },
+    "DLLx2_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 6
+    },
+    "DLLx3_ASAP7_75t_R": {
+      "pins": 3,
+      "timing_groups": 6
+    },
+    "ICGx1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx2p67DC_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx3_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx4DC_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx4_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx5_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx5p33DC_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx6p67DC_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "ICGx8DC_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 13
+    },
+    "SDFHx1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFHx2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFHx3_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFHx4_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFLx1_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFLx2_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFLx3_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    },
+    "SDFLx4_ASAP7_75t_R": {
+      "pins": 5,
+      "timing_groups": 21
+    }
+  }
+}

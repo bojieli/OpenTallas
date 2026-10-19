@@ -1,0 +1,17 @@
+{
+  "status": "SOURCE_VIRTUAL_NETWORK_PASS",
+  "original_input_checks": 21607,
+  "cells": 12489,
+  "preserved_ff": 2782,
+  "zero_new_state": true,
+  "unchanged_clock_and_open_loads": true,
+  "reset_branches": 12,
+  "ordinary_branches": 594,
+  "async_hold_branches": 10,
+  "causal_rejections": {
+    "missing_branch_cell": "complete cell inventory",
+    "wrong_hold_master": "added master int8_reset_5264_b0_hb0",
+    "wrong_sink_net": "exact rewire ('$auto$ff.cc:337:slice$27207', 'RESETN')",
+    "changed_clock_or_state": "immutable cell/clock/state geometry $auto$ff.cc:337:slice$11967"
+  }
+}

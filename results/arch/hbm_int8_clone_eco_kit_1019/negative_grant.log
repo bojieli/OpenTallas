@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/artifacts/hbm-int8-clone-eco-kit-1019/kit/validate_inputs.py", line 4, in <module>
+    assert g['approved'] is True and g['owner']=='ROOT','NEW_EXACT_ROOT_GRANT_REQUIRED'
+AssertionError: NEW_EXACT_ROOT_GRANT_REQUIRED
+
+EXPECTED_REJECTION_PASS no baseline/engine accessed

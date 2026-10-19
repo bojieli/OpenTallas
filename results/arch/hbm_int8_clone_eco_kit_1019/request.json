@@ -1,0 +1,72 @@
+{
+  "schema": "int8.exact_clone_eco.request.v1",
+  "status": "PREPARED_NEW_EXACT_ROOT_GRANT_REQUIRED_NO_ECO_EXECUTED",
+  "candidate": "smh_int8_safe_tie_t1_ecofeb988",
+  "allowed_stage": "INT8_CLONE_ECO_FEB988_V1",
+  "model_commit": "feb988a7a",
+  "model_packet_manifest_sha256": "79dcdf989f28c6350fc17165c56f8a49643002bcbbba6d2a1e4d79e069271e66",
+  "model_receipt_sha256": "dc5226084623bb0152956de86a8719501227efe50f18b0fe1d9aa9fdf111cc93",
+  "frozen_checkpoint_sha256": "fc6b007164e4e5c2a934052922d40114cc4fc60602423d023aa53fa2a67d2081",
+  "native_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "placement_model_png_sha256": "0a6d722b9f6977a72bd9764081921fa3ade9554e469b40d868f021626b2b492b",
+  "allowlist_sha256": "0df273fffd51fabb7d2c1e9c078cc4d24d0a2c498e093828dc3827e02c4bf201",
+  "source_changes_tcl_sha256": "58bb1f297204cc801c323757270a86a63e052a3794ce1d299b875d4cb345c6ee",
+  "resource": {
+    "mem_GB": 16,
+    "threads": 2,
+    "disk_GB": 20,
+    "unpinned": true,
+    "baseline_native_cells": 10623,
+    "successor_native_cells": 12489,
+    "baseline_ff": 2782,
+    "successor_ff": 2782,
+    "baseline_area_um2": 1398.39696,
+    "successor_area_um2": 1667.54376,
+    "delta_area_um2": 269.1468,
+    "baseline_pg": 21246,
+    "successor_pg": 24978,
+    "clock_cells_preserved": 253,
+    "open_clock_loads_preserved": 110,
+    "historical_actual_cgroup_peak": "NOT_RETAINED_DO_NOT_INVENT",
+    "resource_basis": "8GB completed read-only census/native API vehicle; previous16GB CTS replay;17.57%extra cells;sequential proof stages"
+  },
+  "root_grant": null,
+  "forbidden": [
+    "synthesis",
+    "optimization",
+    "CTS",
+    "GRT",
+    "DRT",
+    "submit_exact",
+    "REVIEW.json",
+    "main_activation",
+    "IO_padding",
+    "constraint_relaxation",
+    "automatic_retry",
+    "qualified_publication"
+  ],
+  "source_ages": {
+    "reset_assertion_sampled_edges": 2,
+    "reset_release_sampled_edges": 2,
+    "outputs_edges": [
+      2,
+      3
+    ],
+    "added_edges": 0
+  },
+  "read_only_validation": {
+    "native_smoke_unit": "oth-ubuntu-2044943-1792447020",
+    "native_smoke_exit": 0,
+    "api_introspection_unit": "oth-ubuntu-2057420-1792447247",
+    "api_introspection_exit": 0
+  },
+  "mandatory_HOLD": [
+    "292TTsource actual lowerload .72fF",
+    "nativePGfullconductor contacts/shorts",
+    "completeactualTTFFinternal >=30ps",
+    "allnativepulse/electrical/conditionaldomains andRCbudgets",
+    "actualRTLfixturecausalresetproof",
+    "parent/neighbourIOreference",
+    "ROOTpersonalPNGandpacketreview"
+  ]
+}
