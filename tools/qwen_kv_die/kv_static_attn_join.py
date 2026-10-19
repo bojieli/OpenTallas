@@ -71,7 +71,10 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
 CALGEN_M = ('rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv', 'qkd_attn_cal_gen')
 # KVJ-G2b 10-17: the die image's STRETCH=1 parameters (kv_static_programme die report: profile die, d_qk = QK_ISSUE_AGE 62 -
 # 34, d_rl = RL 95 - 19, service_end 1777, compiled_rx_cmd 2; G3S2 = the v1.4.3 staged head ingress)
-CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=28, D_RL=76, SERVICE_END=1777, MUT=0)
+# KV-ECTL4 10-18: D_QK = the die's QK_ISSUE_AGE (K_RT_BUDGET + 11, one K round trip for every ECTL frame) - 34
+import kv_static_ages as _AGES   # noqa: E402
+CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=_AGES.K_RT_BUDGET + _AGES.QK_WRITE_BEFORE_READ - _AGES.QK_ISSUE_AGE_KIT,
+                D_RL=76, SERVICE_END=1777, MUT=0)
 PROG_FROM_CALGEN = (('compiled_calendar', 'cal'), ('compiled_rx_cmd', 'rx_cmd'), ('compiled_tx_first', 'tx_first'),
                     ('compiled_end', 'end_age'))
 

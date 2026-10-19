@@ -1,0 +1,4 @@
+/srv/opentallas-scratch/claude/qwen-kvsys/kvs14q-8503e0c89-mut_txdp/relay_stages_netlist.json.gz: qwen_kv buses 45318 relays 25253 max stages 91 problems 0 sha256:7df44a9f9f6b323ed8aae589be4d36be0c567432d8455384ff404af301610b55
+{"stages": {"CS_TXS": 2, "CS_RXV": 2, "CS_RXP": 2, "CS_X3S": 2, "SC_TX": 0, "SC_X3": 2, "KS_RXV": 11, "KS_RXP": 11, "KS_TXS": 9, "KS_TXK": 9, "KS_TXB": 9, "SK_TXV": 11, "SK_TXP": 11}, "txd": {"C": [6, 3, 1, 9], "K": [23, 4, 3, 3]}, "X": {"L0": -217, "L1": 5}, "relay_check": {"compute": "FAIL", "kv": "PASS"}, "findings": ["BUNDLE_AGE C.rx_record", "TXDP C", "TXDP K", "L0_WINDOW"], "gaps": 6, "files": 34}
+TXDP_K FAIL bound [[20, 4, 3, 3]] (qkd_d2d_static instances 1) compiled [23, 4, 3, 3]
+RELAY_CHECK FAIL TXDP_K FAIL bound [[20, 4, 3, 3]] (qkd_d2d_static instances 1) compiled [23, 4, 3, 3]
