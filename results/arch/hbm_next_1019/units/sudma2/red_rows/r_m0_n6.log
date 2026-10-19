@@ -1,0 +1,7 @@
+SU_RED_ROWS_EDGES first_cmd=8 last_event=989 span=981
+SU_RED_ROWS PASS quarters=4 scalars=30 bcast=24 drains=96 edges=985 MUT=0
+- rtl/hbm_next/su/tb/tb_hnx_su_red_rows.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.018 s; speed 563.979 us/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 9 MB
+RUN_RC=0

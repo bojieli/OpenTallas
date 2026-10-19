@@ -1,0 +1,13 @@
+SFU_ROWS round n=6 P=66 Pc=65 DP=1 P0=9 s_rd=72 s_wr=424 arith_starts=6
+SFU_ROWS round n=4 P=48 Pc=47 DP=1 P0=6 s_rd=152 s_wr=64 arith_starts=10
+SFU_ROWS_II row_arith_start_spacing min=48 max=66 (= P of each round; off-P spacings 0) starts=10
+SFU_ROWS edges=3882 mismatching=0 active_io=603 active_ctl=63 fault_edges=1839 MUT=0 DP=1
+SFU_ROWS RESTART DP=1 faulted=1
+- rtl/hbm_next/su/tb/tb_hnx_sfu_rows.sv:149: Verilog $finish
+[3892000] %Fatal: tb_hnx_sfu_rows.sv:151: Assertion failed in tb_hnx_sfu_rows: SFU_ROWS FAIL mismatching=0 faults=1839 active_io=603 active_ctl=63 MUT=0
+SFU_ROWS PASS MUT=0
+- rtl/hbm_next/su/tb/tb_hnx_sfu_rows.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.014 s; speed 270.492 us/s
+- Verilator: cpu 0.014 s on 1 threads; allocated 9 MB
+RUN_RC=0

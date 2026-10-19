@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hbm_next.qdq_rows.v1",
+ "n": 3,
+ "e": 512,
+ "op": "QDQ_FP8",
+ "block": 32,
+ "beats": 48,
+ "price_row": 16,
+ "price_c1": 24,
+ "cost_total": 56,
+ "mut_stride": false,
+ "rows": [
+  {
+   "row": 0,
+   "a_base": 51776,
+   "o_base": 55872,
+   "beats": 16,
+   "cost": 24
+  },
+  {
+   "row": 1,
+   "a_base": 52288,
+   "o_base": 56384,
+   "beats": 16,
+   "cost": 16
+  },
+  {
+   "row": 2,
+   "a_base": 52800,
+   "o_base": 56896,
+   "beats": 16,
+   "cost": 16
+  }
+ ],
+ "golden": "hdc_golden_v41 qdq_fp8"
+}
