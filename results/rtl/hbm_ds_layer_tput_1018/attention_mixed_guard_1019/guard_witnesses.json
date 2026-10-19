@@ -1,0 +1,28 @@
+{
+  "source_commit": "1cd1fe595",
+  "guard_sha256": "ffa302ca316b55637230dfcdacdf6cf673893db0983ee34d97c155ff70b34500",
+  "bench_sha256": "74632d210b550a71087abd8952281cb71b67746e99cabba238f60724515ff07d",
+  "verilator": "5.050",
+  "fleet_host": "ot-epyc8",
+  "unit": "oth-ubuntu-4012230-1792430588",
+  "scope": "standalone opt-in checker; common banked/issuer/frontend integration not qualified",
+  "positive": {
+    "rc": 0,
+    "pass_regex": "CLASS_GUARD_PASS offers=12",
+    "log": "mut0.log"
+  },
+  "mutants": [
+    {
+      "name": "descriptor class flip",
+      "rc": 1,
+      "fail_regex": "CLASS_GUARD_FAIL mut=1",
+      "log": "mut1.log"
+    },
+    {
+      "name": "actual command class flip",
+      "rc": 1,
+      "fail_regex": "CLASS_GUARD_FAIL mut=2",
+      "log": "mut2.log"
+    }
+  ]
+}
