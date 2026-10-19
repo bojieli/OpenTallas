@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits   972 GB (avail 793, growth 113, headroom 0, waiters 0/0 GB) load 101/128 running 35 disk 412 GB 
+ot-run: ot-epyc5       admits   784 GB (avail 662, growth 113, headroom 0, waiters 0/0 GB) load 74/128 running 12 disk 564 GB 
+ot-run: ot-epyc6       admits   435 GB (avail 418, growth 113, headroom 0, waiters 0/0 GB) load 33/128 running 19 disk 563 GB 
+ot-run: ot-epyc7       admits   957 GB (avail 755, growth 85, headroom 0, waiters 0/0 GB) load 60/96 running 23 disk 502 GB 
+ot-run: ot-epyc8       admits  1156 GB (avail 902, growth 92, headroom 0, waiters 0/0 GB) load 50/128 running 26 disk 565 GB 
+ot-run: ot-pve1        admits   113 GB (avail 92, growth 13, headroom 0, waiters 0/0 GB) load 54/28 running 6 disk 1198 GB 
+ot-run: ot-agidock128  admits    88 GB (avail 74, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2217234-1792425950 after 0 s
+META_PASS checks=782
+rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv:20: $finish called at 7820000 (1ps)
+META_FAIL q=00001d030 gold=00000d031
+META_FAIL q=00002d033 gold=00001d030
+META_FAIL q=00003d032 gold=00002d033
+META_FAIL mut=1 errors=753
+FATAL: rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv:19: 
+       Time: 7820000  Scope: tb_svg_meta_delay7
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2217234-1792425950): exit 0
