@@ -65,16 +65,18 @@
   "reset_release_added_edges": {
     "core": 2,
     "redstn": 2,
-    "amax": 2
+    "amax": 2,
+    "stream": 2
   },
   "new_bypass_payload_flops": 1024,
   "new_storage_control_flops": 128,
   "reset_tree_allocated_flops": {
     "core": 339,
     "station": 130,
-    "amax": 75
+    "amax": 75,
+    "stream": 81
   },
-  "estimated_net_std_flop_change": -19076,
+  "estimated_net_std_flop_change": -18995,
   "std_flop_change_scope": "Logical allocation plus recursive Yosys proc/opt scalar delta; excludes native mapping/placement buffering. Scalar baseline includes SAFE_STORAGE argmax pipeline, so63 logical pipeline bits are charged separately. Real mapped area and full native clock timing still pending.",
   "twelve_slice_macro_instances": 504,
   "twelve_slice_macro_area_mm2": 0.27841314816,
@@ -125,5 +127,21 @@
       "tail_masked_zero_bits": 0,
       "native_tail_unused_read_bits": "none"
     }
-  ]
+  ],
+  "stream_storage_inventory": {
+    "packer": {
+      "entries": 64,
+      "bits_per_entry": 16,
+      "total_bits": 1024,
+      "runtime_indexed": true
+    },
+    "completed_snapshot": {
+      "bits": 1024,
+      "runtime_indexed": false
+    },
+    "mask_bits": 64,
+    "mutable_array_over_2kb": false,
+    "fixed_delay_chain_depth_ge3": false,
+    "native_wide_mux_timing": "PENDING; reset proof does not qualify mux/packer path"
+  }
 }
