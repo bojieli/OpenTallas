@@ -86,7 +86,8 @@
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
-  "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv"
+  "rtl/qwen_sys/mu_qwen_20261018/qkd_host_native_token_endpoint_cancel_mu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -95,11 +96,20 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 140.4,
+  "w": 108.0,
   "h": 140.4,
   "exact": true
  },
- "macros": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true
+  }
+ ],
  "pins": {
   "N": [
    "service_status",
@@ -191,7 +201,7 @@
    "die_id"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 18 KEPT identical copies (sized from the 4,062 reset loads the synthesis pass saw on gate mu2a) (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_copies.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1. | ROOT geometry redesign10-19: 129.6x129.6 ->140.4x140.4um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence.",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_guard (core family, one ck_core entry): members u_guard, u_native + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | KV-RELAYGEN 10-19 (SAFE-AUDIT-KV item 3/7, results/arch/safe_audit_1019/kv.md): gate mu1: host_rst_n drove 3,222 loads -> landed (2 stages) with the last stage as 18 KEPT identical copies (sized from the 4,062 reset loads the synthesis pass saw on gate mu2a) (reset_landing.copies) and reset_relay_split {256} spreading the core's reset loads over them in synthesis (ot_rst_copies.tcl); por_n landed as before; release latency unchanged; io_hold_margin 0.025 -> 0.03. RTL unchanged from mu1. | ROOT geometry redesign10-19: 129.6x129.6 ->140.4x140.4um, fullface pins without renaming/remapping; measured gate pin counts require <=6/um. Zero cycle change; relay copies remain identical and synthesis-group load capped256. Original gate preserved as unqualified historical evidence. | ROOT storage recovery: W64markersmem128x64=8192bits becomes one real128x64_p192 SRAM, samefour-edgeprefetch/128logicalcapacity. W8fencedmem128x8=1024bits staysbyte-identicallegacy. CanonicalFIFOoptindefaultoff; thiskitdefinesOT_HOST_GUARD_SRAM_DEFAULT=1. Sourceandindependentqueueequivalence100140cycles/121resets/512simultaneousfullreplacements PASS Verilator5.050andIcarus; wrongprefetch/droppedstage/cap127mutantsallFAIL. Addededges0. New108x140.4umslot,fullfacesnoportremap,macroat43.2/43.2.",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -221,7 +231,7 @@
  "job": {
   "owner": "CODEX:KV-RELAYGEN",
   "branch": "codex/relaygen-guard-collect-1019",
-  "tag": "mu3",
+  "tag": "s1",
   "purpose": "MU 1 (Qwen ROM 4 users, owner MU.DECIDE A 10-18) successor of qkd_hr_core_guard r4 (MU 0): u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu (4 user contexts, hc pos[17:16] user strip, in-order retire, pkgctl-MU report; same ports), core rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_guard.v (gen_cluster --wrap-only). Records results/rtl/mu_qwen_1018/hroot (+ peer endpoint edit, results/rtl/mu_qwen_1018/peer; benches re-run at Verilator 5.050 on main f573a6d2b: hroot/runs_guard2). Reset landing 2 stages (ROOT-RST default, recipe >= 3).",
   "benches": [
    {
@@ -271,6 +281,53 @@
      "verilator"
     ],
     "fail_witness": "results/rtl/mu_qwen_1018/hroot/runs_guard2/mut/ep2.log"
+   },
+   {
+    "name": "guard_fifo_sram_m0",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "GUARD_FIFO_VERILATOR_PASS mutant=0 observed_exit=0"
+   },
+   {
+    "name": "guard_fifo_sram_m1",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m1 1 && exit 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "cycle .*data got",
+    "fail_witness": "results/rtl/kv_guard_fifo_sram_1019/verilator_v1/m1/run.log"
+   },
+   {
+    "name": "guard_fifo_sram_m2",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m2 2 && exit 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "cycle .*control got",
+    "fail_witness": "results/rtl/kv_guard_fifo_sram_1019/verilator_v1/m2/run.log"
+   },
+   {
+    "name": "guard_fifo_sram_m3",
+    "cmd": "bash results/rtl/kv_guard_fifo_sram_1019/run_verilator.sh {RUN}/bench/fifo_m3 3 && exit 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "cycle .*control got",
+    "fail_witness": "results/rtl/kv_guard_fifo_sram_1019/verilator_v1/m3/run.log"
    }
   ],
   "reroute_reason": {
@@ -286,6 +343,7 @@
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
@@ -297,6 +355,7 @@
    "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v",
    "physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1.v",
    "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v",
+   "results/rtl/kv_guard_fifo_sram_1019",
    "rtl/lib/ot_rst_relay.sv",
    "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv",
    "rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv",
@@ -310,7 +369,9 @@
    "rtl/test/mu_qwen_1018/lists/lint_guard_mu.f",
    "rtl/test/mu_qwen_1018/lists/tb_mu_hroot_e2e.f",
    "rtl/test/mu_qwen_1018/run_mu_hroot.sh",
-   "rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv"
+   "rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv",
+   "tools/orfs_allcorner_spef.py",
+   "tools/orfs_hold_mm.py"
   ]
  },
  "children": [],
@@ -330,19 +391,22 @@
  "reset_relay_split": {
   "max_loads": 256
  },
- "slot_change_request": "KV coordinator/host parent: qkd_hr_core_guard exact childslot changes to140.4x140.4um from129.6x129.6; faces/names unchanged, pin locations redistribute across complete faces. Repack parent from final LEF; added cycles0.",
+ "slot_change_request": "KVhostparentguardSRAMs1 exactslot108x140.4um (vsoriginal129.6squareandgeometry-onlymu3140.4square); one33.696x27.54SRAMat43.2/43.2; faces/namesunchangedbutpincoordinatesredistribute. Area15163.2um2 (-9.72%vsoriginal),0addededgesmeasured; parentmustrepack/bindfinalLEFafterphysicalclosure.",
  "reroute_reason": {
-  "kind": "slot_change",
-  "contract": "KV coordinator/host parent: qkd_hr_core_guard exact childslot changes to140.4x140.4um from129.6x129.6; faces/names unchanged, pin locations redistribute across complete faces. Repack parent from final LEF; added cycles0."
+  "kind": "rtl_change",
+  "reason": "Replace8192bitmarkerruntimeFIFO by realSRAMprefetchpreservingcapacityandcycles; historicalall-flopguardclosuredoesnotqualifySRAMimplementation."
  },
  "safe_design_checklist": {
   "1_pins": "PASS: pin_regs on, literal async reset roles only; two-stage reset_landing; gate elaborated port_latency recorded.",
-  "2_reach": "PASS: outline140.4x140.4um, maximum diagonal<405um.",
-  "3_fanout": "FIXED: identical KEPT reset copies; order36copies/7982loads/max222, guard18copies/4062loads/max226; each<=256 at synthesis pass. Critical data fanout remains inherited.",
-  "4_depth": "PASS: unchanged guard stage496.8ps<600ps, prior TTsetup+64ps; no added logic in geometry/copy recovery.",
-  "5_storage": "PASS: guard instantiated module closure u_guard dq[8]x40=320bits and bq[8]x32=256bits; native MU context arrays4x163=652bits combined. No runtime-indexed array>2kb or shift delay line. Imported but uninstantiated order boot FIFOs are a separate blocked tile.",
-  "6_floorplan": "FIXED: no macros, one full std-cell band, aspect<=2, exact legalgrid outline140.4x140.4; measured pin counts map<=6/um. Measured synthesis area sizes core40-60%.",
-  "7_clock": "PASS inherited measured spread order20/18.5ps,guard13.1/12.7ps TT/FF; noncentral clock entry is measured within80ps. io_hold_margin0.03. New geometry CTS must remeasure.",
-  "8_schedule": "PASS: geometry and identical reset-copy fanout change no data/reset latency; static accelerator schedule unchanged; host ingress credits are external host protocol."
- }
+  "2_reach": "PASS geometry:108x140.4um, evenoppositecornerManhattan248.4um<405.",
+  "3_fanout": "FIXED:18identicalKEPThostresetcopies, synthesisgroupcap256; previousgeometry-onlycopyauditmax226. Removingmarkersarrayandbankprefetchflopsreducesloads; recheckfreshsynthesis.",
+  "4_depth": "PASS design: realSRAMSSclkq382.333ps (TT293.679,FF236.533) feedsone64bitregisteredstage; existingcontrolstagesunchanged,noarbitrationdepthadded. Gatefreshmeasurementrequired.",
+  "5_storage": "FIXED:8192bitW64markerFIFO usesone real128x64SRAM; smallheadpipeline/frontbuffers andW8fencedFIFO1024bitsstayflops. Capacity128andfour-edgeprefetchpreserved; noexception.",
+  "6_floorplan": "FIXED:108x140.4um,onemacro33.696x27.54at43.2/43.2lattice,borderchannelsW/S43.2/E31.104/N69.66um; macroW105/27.54=3.813,E104/27.54=3.776pins/um,minpitch.192. FullwidthstdregionabovemacroplusconnectedIOrows,noislands. OuterW778/140.4=5.541,N154/108=1.426,E376/140.4=2.678. Estimated6000std/(136.08x103.68-927.988)=45.5%;gateactualarearequired.",
+  "7_clock": "PASS plan: oneck_coretoSRAMandstdcellregion,unchangedpinregisteredboundaries/resetlanding2,io_hold_margin.03; freshTT/FFCTSspread<=80required. Earliergeometry-onlymu3spread12.7/12.5psunqualifiedfornewSRAMslot.",
+  "8_schedule": "PASS measured: Verilator5.050+Icarus100140cyclelegacy-and-independentqueueequivalence,128entrycapacity,512fullsimultaneousreplacements,121resets;0addededges. Originalfour-edgeprefetchpreserved,externalhosthandshakes/runtimecomputescheduleunchanged. 3mutantsFAIL."
+ },
+ "defines": [
+  "OT_HOST_GUARD_SRAM_DEFAULT=1"
+ ]
 }
