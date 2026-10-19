@@ -84,6 +84,7 @@ def generate(a):
    rows[bank].append(row)
   (out/f'q{q}/occupancy.json').write_text(json.dumps({str(k):len(v)for k,v in rows.items()},indent=2)+'\n')
  for ep,data in enumerate((original,second)):
+  (out/f'square{ep}.mem').write_text(''.join(f'{int(v):08x}\n'for v in np.multiply(data.view(np.float32),data.view(np.float32),dtype=np.float32).view(np.uint32)))
   (out/f'input{ep}.mem').write_text(''.join(f'{int(v):08x}\n'for v in data))
   packs=[]
   for q,p,sec,words in payload:
