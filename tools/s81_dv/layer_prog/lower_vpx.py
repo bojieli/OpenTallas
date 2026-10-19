@@ -185,6 +185,16 @@ def lower(die, op, ctx):
         return dict(status='PARTIAL', unit='slice vp NORMR + vn / vq / xr / xfin', insts=[ctx.get('slice')], gap=GAP_NORM16,
                     bench=BENCH_VP)
     if name.endswith('hc_post'):
+        if name == 'ffn.hc_post' and 'final_ffn' in ctx:
+            from layer_prog.final_ffn import local_program
+            sl = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
+            sid = die.slices()[sl]['sid']
+            program = local_program(sid, int(ctx['leaf']), ctx['final_ffn'])
+            return dict(status='PARTIAL', unit='production FFN POST binding', insts=[sl],
+                        rows=[], templates=[program['templates'][1]], events=[], bench=BENCH_VP,
+                        pending_leaf_program=program['rows'][1],
+                        gap=dict(module='final FFN production composition', port='RD paths/reservations + VP/VN',
+                                 missing='actual source paths and all-leaf calendars; actual POST/native timing'))
         return dict(status='PARTIAL', unit='slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store',
                     insts=[ctx.get('slice')], gap=GAP_POST, bench=BENCH_VP)
     if name.endswith('a_allgather') or name.endswith('rows_allgather') or name.endswith('router_allgather') \
@@ -240,6 +250,16 @@ def lower(die, op, ctx):
         return dict(status=st, unit='end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive', insts=insts,
                     gap=gap, rows=rows, templates=templates, events=events, bench=BENCH)
     if name.endswith('allreduce'):
+        if name == 'ffn.combine_allreduce' and 'final_ffn' in ctx:
+            from layer_prog.final_ffn import local_program
+            sl = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
+            sid = die.slices()[sl]['sid']
+            program = local_program(sid, int(ctx['leaf']), ctx['final_ffn'])
+            return dict(status='PARTIAL', unit='VS13 routed-ID-order + shared combine; output-sharded down',
+                        insts=[sl], rows=[], templates=[program['templates'][0]], events=[], bench=BENCH,
+                        pending_leaf_program=program['rows'][0],
+                        gap=dict(module='final FFN production composition', port='RD paths/reservations',
+                                 missing='place actual4480 RD pairs on current die paths; qualify all leaf calendars'))
         return dict(status='GAP', unit='RS + AG over the end-slice endpoints + owner fold', insts=[], gap=GAP_FOLD,
                     bench=BENCH)
     return dict(status='GAP', unit='vpx', insts=[], gap=dict(module='lower_vpx', port='-', missing=f'{name} not lowered'))
