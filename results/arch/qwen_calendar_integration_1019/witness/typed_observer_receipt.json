@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.qwen.typed-SU-observer-component.v1",
+  "production_bound": false,
+  "default_ENABLE": 0,
+  "wrapper_instantiated": false,
+  "registered_stages": 1,
+  "source_vectors": 16416,
+  "actual_source_direct_SU_per_body": 114,
+  "scope": "isolated source encoding component; actual source command fields with all4user pidx relocation, repeated under36diagnostic stage identities; no schedule/lifecycle checker or full execution",
+  "mutants": {
+    "user_wire": "REJECT",
+    "invalid_unicast12": "stickyfault"
+  },
+  "binary_sha256": "6f52f0afa8baf95a09f4073e3bf50e8db837e3469d73629aafef983a6ce8696b",
+  "vectors_sha256": "d71b014000bddc797e4b2261575b978e8e73bd9f8ebe1efcec1fb03a389eb884",
+  "sha256": {
+    "rtl/qwen_dv/qfd_dv_typed_su_observer.sv": "e85e8c38648730d71be46b960806327c61fbf1323d823cff1c0e4a6ebc453eb0",
+    "rtl/test/qwen_dv/tb_qwen_typed_su_observer.sv": "5345d70fa60f350e7ba81ac7053cb475e7d03ac1e8d407237c4efe022154cf9f",
+    "results/arch/qwen_calendar_integration_1019/typed_observer_vectors.py": "da1d1fd0eb54bd6612f16c91b1ee29894419b12828de2ce8025ec8c594297014",
+    "results/arch/qwen_calendar_integration_1019/witness/typed_obs_nominal.log": "337b373c3387133985e92bbce8d391dc441075121a717a4e7f6e37d3ffb76b8f",
+    "results/arch/qwen_calendar_integration_1019/witness/typed_obs_wire_mut.log": "7f297c598055b5be3eb314128e055b0c876d571583bc8e10c5c7ae56bd281477"
+  },
+  "integration": "replace GI one-register su_obs when authorized; do not insert after old register; current wrappers untouched"
+}

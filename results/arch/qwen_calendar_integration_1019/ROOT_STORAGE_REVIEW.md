@@ -64,3 +64,13 @@ The concrete model, packed rows, per-request service ledger and source hashes
 are in witness/witness_storage. Native reproduction is native32_port.sh after
 extracting the exact b657 source to run/native32_source.v. The public PW,
 calendar1009, INIT800,88-read loader,103 caller window and all footers are unchanged.
+
+The updated WTN1 PW packet has now passed the actual calendar-copy receiver
+with the unchanged native binary: commit1044/digest198f7708b478a667, firstBOOT
+CMD1050. The earlier400-useful-PW test already transmitted all1024 PW words
+(including zero400..975), then8DW. New useful words410..448 replace those zeros;
+they add zero transfer edges to that full ascending image. The sidecar MODEL
+native writes finish452/seal453/usable454, before finalDW1034..1041 and calcopy
+commit1044. These sidecar sink times remain MODEL values; actual sidecar seal,
+other ME/XPF copy authentication and production L/player startup stay unbound.
+The fresh calcopy receipt preserves that distinction.
