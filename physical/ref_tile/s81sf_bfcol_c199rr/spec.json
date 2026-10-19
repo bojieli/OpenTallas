@@ -71,8 +71,8 @@
   "QP_P1": 1,
   "QP_CSAM": 10,
   "QZ": 1,
-  "QZ_NS": 24,
-  "QZ_NE": 20,
+  "QZ_NS": 8,
+  "QZ_NE": 4,
   "QY": 1,
   "QX": 10,
   "QBF": 2,
@@ -176,7 +176,7 @@
   "io_hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-C199-FANOUT 10-19 (successor of s81sf_bfcol_c199rq): OT_BF_FOREP data/control fan-out partition on top of FREECLK + RSTPART v2 -- no register drives more than ~32 loads through BUF/INV (rq synth census: 828 drivers > 32, max 1,060). Kept same-edge copies (zero cycles): q-lane + BF-lane chains read their accumulators through 2 kept ONE-HOT slot copies decoded one stage earlier (slot LSB 1,060 / t_lr 267 loads), per-slice first/forward copies, FP adder/multiplier cut fields (shift amounts, distances, carries) as per-slice copies, segment-tree control copies, q-lane fp4/sub/sign copies, capture enable/select copies QZ_NE 4->20 / QZ_NS 8->24, pair-tag `both` and BF valid copies. Floorplan/pins/landing/clock as c199rq.",
+ "structural_change": "S81-C199-FANOUT 10-19 (successor of s81sf_bfcol_c199rq): OT_BF_FOREP data/control fan-out partition on top of FREECLK + RSTPART v2 -- no register drives more than ~32 loads through BUF/INV (rq synth census: 828 drivers > 32, max 1,060). Kept same-edge copies (zero cycles): q-lane + BF-lane chains read their accumulators through 2 kept ONE-HOT slot copies decoded one stage earlier (slot LSB 1,060 / t_lr 267 loads), per-slice first/forward copies, FP adder/multiplier cut fields (shift amounts, distances, carries) as per-slice copies, segment-tree control copies, q-lane fp4/sub/sign copies, capture enable/select copies 24 select / 20 enable copies per macro inside OT_BF_FOREP (QZ_NS/QZ_NE params unchanged), pair-tag `both` and BF valid copies. Floorplan/pins/landing/clock as c199rq.",
  "slot_change_request": "bf_col slot 450.144x198.72 -> 432.0x216.0 (frame col_h9/col_h10 owner + MU-DIE-S81: +17.28 um per row, -18.144 um width; E-face pin pitch changes -> the front tile's facing pins re-assigned top-down)",
  "purpose": "S81-C199-FANOUT 10-19: c199rq + SAFE item 3 data fan-out partition (OT_BF_FOREP). Output cycle identity vs default column; reset release +2 (kit landing, as c199r).",
  "job": {

@@ -222,8 +222,14 @@ module ot_v41_bf_col #(
     wire              rst_m;            // lanes, b_issue control, capture, BF16 paths
     wire              rst_mc, rst_mp, rst_mt;   // chains; pair adder and its delays; segment tree and outputs
     wire              rst_ml, rst_mpv;          // q lanes (g_l3 u_l0 / u_l1); pair valid pipe (RSTPART copies, else = rst_m / rst_mp)
-    wire [QZ_NS-1:0]  mz_bk, mz_fp4;
-    wire [QZ_NE-1:0]  mz_c0, mz_c1;
+`ifdef OT_BF_FOREP
+    // FOREP: capture-select / enable copies per macro widened so each copy drives <= ~28 loads (was 74 / 138)
+    localparam integer ZNS = 24, ZNE = 20;
+`else
+    localparam integer ZNS = QZ_NS, ZNE = QZ_NE;
+`endif
+    wire [ZNS-1:0]  mz_bk, mz_fp4;
+    wire [ZNE-1:0]  mz_c0, mz_c1;
     wire [255:0]      mz_q0, mz_q1;
     wire [9:0]        mz_e0, mz_e1;
     if (QZ != 0) begin : g_mz
@@ -261,14 +267,14 @@ module ot_v41_bf_col #(
         ot_v41_kreg #(.W(TW + 2)) u_c2 (.clk(gclk_c), .arst_n(1'b1), .d({mi2x_bk, z2x_bf, z2x_t}), .q({z2_bk, mi2_bf, mi2_t}));
         assign mi2_bk = z2_bk;
         genvar zk;
-        for (zk = 0; zk < QZ_NS; zk = zk + 1) begin : g_ns     // bank select and FP4 select copies (= mi2_bk, mi2_t[0])
+        for (zk = 0; zk < ZNS; zk = zk + 1) begin : g_ns     // bank select and FP4 select copies (= mi2_bk, mi2_t[0])
 `ifdef QZ_MUTANT_BK
             ot_v41_kreg #(.W(2)) u_s (.clk(gclk_c), .arst_n(1'b1), .d({mi2x_bk ^ (zk == 3), z2x_t[0]}), .q({mz_bk[zk], mz_fp4[zk]}));  // negative control
 `else
             ot_v41_kreg #(.W(2)) u_s (.clk(gclk_c), .arst_n(1'b1), .d({mi2x_bk, z2x_t[0]}), .q({mz_bk[zk], mz_fp4[zk]}));
 `endif
         end
-        for (zk = 0; zk < QZ_NE; zk = zk + 1) begin : g_ne     // capture enables (= mi2x_v && !mi2x_bk, && mi2x_bk)
+        for (zk = 0; zk < ZNE; zk = zk + 1) begin : g_ne     // capture enables (= mi2x_v && !mi2x_bk, && mi2x_bk)
             ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_e (.clk(gclk_c), .arst_n(rst_m), .d({b_i1_v && b_i1_bk, b_i1_v && !b_i1_bk}),
                                                           .q({mz_c1[zk], mz_c0[zk]}));
         end
@@ -296,8 +302,8 @@ module ot_v41_bf_col #(
         assign mi2_t = i2_t; assign mi2_bf = i2_bf;
     end
     if (QZ == 0) begin : g_nzs
-        assign mz_bk = {QZ_NS{mi2_bk}}; assign mz_fp4 = {QZ_NS{mi2_t[0]}};
-        assign mz_c0 = {QZ_NE{mi2x_v && !mi2x_bk}}; assign mz_c1 = {QZ_NE{mi2x_v && mi2x_bk}};
+        assign mz_bk = {ZNS{mi2_bk}}; assign mz_fp4 = {ZNS{mi2_t[0]}};
+        assign mz_c0 = {ZNE{mi2x_v && !mi2x_bk}}; assign mz_c1 = {ZNE{mi2x_v && mi2x_bk}};
     end
     wire m_fp4 = mi2_t[0];
 
@@ -322,15 +328,15 @@ module ot_v41_bf_col #(
             u_rom1 (.clk(gclk_c), .ce_in(b_issue && b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd1));
         if (QZ != 0) begin : g_cz
             genvar ck;
-            for (ck = 0; ck < QZ_NE; ck = ck + 1) begin : g_e
-                localparam integer LO = (274 * ck) / QZ_NE, HI = (274 * (ck + 1)) / QZ_NE;
+            for (ck = 0; ck < ZNE; ck = ck + 1) begin : g_e
+                localparam integer LO = (274 * ck) / ZNE, HI = (274 * (ck + 1)) / ZNE;
                 always @(posedge gclk_c) begin
                     if (mz_c0[ck]) cap0[HI-1:LO] <= rd0[HI-1:LO];
                     if (mz_c1[ck]) cap1[HI-1:LO] <= rd1[HI-1:LO];
                 end
             end
-            for (ck = 0; ck < QZ_NS; ck = ck + 1) begin : g_s
-                localparam integer LO = (274 * ck) / QZ_NS, HI = (274 * (ck + 1)) / QZ_NS;
+            for (ck = 0; ck < ZNS; ck = ck + 1) begin : g_s
+                localparam integer LO = (274 * ck) / ZNS, HI = (274 * (ck + 1)) / ZNS;
                 assign cap[HI-1:LO] = mz_bk[ck] ? cap1[HI-1:LO] : cap0[HI-1:LO];
             end
         end else begin : g_ncz
@@ -382,8 +388,8 @@ module ot_v41_bf_col #(
     if (QZ != 0) begin : g_wz
         wire [255:0] w0n = nib(lcap[127:0]);
         genvar wk;
-        for (wk = 0; wk < QZ_NS; wk = wk + 1) begin : g_s
-            localparam integer LO = (256 * wk) / QZ_NS, HI = (256 * (wk + 1)) / QZ_NS;
+        for (wk = 0; wk < ZNS; wk = wk + 1) begin : g_s
+            localparam integer LO = (256 * wk) / ZNS, HI = (256 * (wk + 1)) / ZNS;
             assign w0q[HI-1:LO] = mz_fp4[wk] ? w0n[HI-1:LO] : lcap[HI-1:LO];
         end
         assign w0e = mz_fp4[0] ? lcap[135:128] : lcap[263:256];
