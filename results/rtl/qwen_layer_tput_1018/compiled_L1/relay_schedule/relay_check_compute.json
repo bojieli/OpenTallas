@@ -1,89 +1,68 @@
 {
  "schema": "opentallas.die_relay_check.v1",
- "verdict": "FAIL",
+ "verdict": "PASS",
  "design": "qwen_compute",
  "die_run": {
   "plan": {
-   "id": "dv2f14bn-netlist",
-   "commit": "0a9c93921",
+   "id": "dv2f14bq-netlist",
+   "commit": "7c660b3f7",
    "generator": "tools/qwen_layerbench/netlist_relay_stages.py",
    "sources": [
-    "/home/ubuntu/scratch/layerbench-qwen/in/c/die.v",
-    "git:0a9c93921:physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
-    "git:0a9c93921:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
-    "git:0a9c93921:physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
-    "git:0a9c93921:rtl/physical/ot_qfd_collective_static_io_production.sv",
-    "git:0a9c93921:rtl/physical/qcluster/qfd_c_b16_dv.sv",
-    "git:0a9c93921:rtl/qwen_dv/qfd_dv_slice2_faces.sv",
-    "git:0a9c93921:rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_embedding_word_provider.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_link_slots.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_native59_dv_service.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_sys_face.sv",
-    "git:0a9c93921:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
-    "local:/home/ubuntu/scratch/layerbench-qwen/in/c/die_glue.sv"
+    "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die.v",
+    "git:7c660b3f7:physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+    "git:7c660b3f7:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+    "git:7c660b3f7:physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+    "git:7c660b3f7:rtl/physical/ot_qfd_collective_static_io_production.sv",
+    "git:7c660b3f7:rtl/physical/qcluster/qfd_c_b16_dv.sv",
+    "git:7c660b3f7:rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+    "git:7c660b3f7:rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_embedding_word_provider.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_link_slots.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_native59_dv_service.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_sys_face.sv",
+    "git:7c660b3f7:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+    "local:/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die_glue.sv"
    ],
    "kind": "GEN netlist walk (die run)"
   },
-  "digest": "sha256:195fa08e4a42d1a588fb6b17771412fa0ffd1172ca9182cae46ab760cc7b3dfb",
-  "buses": 619
+  "digest": "sha256:0ce64d5f152e4a491728543c37b9ba3a4af35a395f0b3b9b137234108bb19339",
+  "buses": 635
  },
  "schedule": {
   "plan": {
-   "id": "dv2f14bn-netlist",
-   "commit": "0a9c93921",
+   "id": "dv2f14bq-netlist",
+   "commit": "7c660b3f7",
    "generator": "tools/qwen_layerbench/netlist_relay_stages.py",
    "sources": [
-    "/home/ubuntu/scratch/layerbench-qwen/in/c/die.v",
-    "git:0a9c93921:physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
-    "git:0a9c93921:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
-    "git:0a9c93921:physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
-    "git:0a9c93921:rtl/physical/ot_qfd_collective_static_io_production.sv",
-    "git:0a9c93921:rtl/physical/qcluster/qfd_c_b16_dv.sv",
-    "git:0a9c93921:rtl/qwen_dv/qfd_dv_slice2_faces.sv",
-    "git:0a9c93921:rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_embedding_word_provider.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_link_slots.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_native59_dv_service.sv",
-    "git:0a9c93921:rtl/qwen_split/qfd_sys_face.sv",
-    "git:0a9c93921:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
-    "local:/home/ubuntu/scratch/layerbench-qwen/in/c/die_glue.sv"
+    "/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die.v",
+    "git:7c660b3f7:physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+    "git:7c660b3f7:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+    "git:7c660b3f7:physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+    "git:7c660b3f7:rtl/physical/ot_qfd_collective_static_io_production.sv",
+    "git:7c660b3f7:rtl/physical/qcluster/qfd_c_b16_dv.sv",
+    "git:7c660b3f7:rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+    "git:7c660b3f7:rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_embedding_word_provider.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_link_slots.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_native59_dv_service.sv",
+    "git:7c660b3f7:rtl/qwen_split/qfd_sys_face.sv",
+    "git:7c660b3f7:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+    "local:/home/ubuntu/scratch/qlb-gen/rc/dv2f14bq/die_glue.sv"
    ],
    "kind": "GEN netlist walk (die run)"
   },
   "role": "compiled_schedule",
-  "digest": "sha256:3e6f397235a6c7d51d13d3312da20a88f1342056459a604751d9efa01c0ffc4f",
-  "buses": 619,
+  "digest": "sha256:0ce64d5f152e4a491728543c37b9ba3a4af35a395f0b3b9b137234108bb19339",
+  "buses": 635,
   "consumer": "tools/qwen_layerbench/layer_compile.py"
  },
- "fails": [
-  "4 buses with different relay stage counts, e.g. d2d_rom.native_rx_slot -> native59.rx_slot: die 0 vs sched 2, d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat: die 0 vs sched 2, d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind: die 0 vs sched 2"
- ],
+ "fails": [],
  "warnings": [],
  "only_in_die_run": [],
  "only_in_schedule": [],
- "stage_diffs": [
-  {
-   "bus": "d2d_rom.native_rx_slot -> native59.rx_slot",
-   "die_run": 0,
-   "schedule": 2
-  },
-  {
-   "bus": "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat",
-   "die_run": 0,
-   "schedule": 2
-  },
-  {
-   "bus": "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind",
-   "die_run": 0,
-   "schedule": 2
-  },
-  {
-   "bus": "d2d_rom.native_rx_v -> native59.native_rx_v",
-   "die_run": 0,
-   "schedule": 2
-  }
- ],
+ "stage_diffs": [],
  "width_diffs": [],
- "domain_diffs": []
+ "domain_diffs": [],
+ "torn_bundles": {},
+ "bundles_checked": true
 }

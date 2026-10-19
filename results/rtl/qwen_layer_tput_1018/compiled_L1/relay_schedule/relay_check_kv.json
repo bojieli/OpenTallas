@@ -87,7 +87,11 @@
   "consumer": "tools/qwen_layerbench/layer_compile.py"
  },
  "fails": [
-  "5 buses with different relay stage counts, e.g. d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5: die 9 vs sched 11, d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1: die 9 vs sched 11, d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0: die 9 vs sched 11"
+  "5 buses with different relay stage counts, e.g. d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5: die 9 vs sched 11, d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1: die 9 vs sched 11, d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0: die 9 vs sched 11",
+  "torn record bundle K.rx_record torn: d2d_kv.att_rx_v 9, d2d_kv.att_rx_kind 9, d2d_kv.att_rx_beat 9, d2d_kv.rx_payload 11",
+  "torn record bundle K.tx_slot torn: d2d_kv.att_tx_slot 9, d2d_kv.att_tx_kind 8, d2d_kv.att_tx_beat 9",
+  "torn record bundle K.tx_record torn: kvs_attn.attn__tx_valid 6, kvs_attn.attn__tx_payload 11",
+  "torn record bundle K.kvn_writer torn: d2d_kv.kvn_word_valid 2, d2d_kv.kvn_word_tag 2, d2d_kv.kvn_word_data 4, d2d_kv.kvn_word_identity 4, d2d_kv.kvn_word_generation 3"
  ],
  "warnings": [],
  "only_in_die_run": [],
@@ -120,5 +124,133 @@
   }
  ],
  "width_diffs": [],
- "domain_diffs": []
+ "domain_diffs": [],
+ "torn_bundles": {
+  "K.rx_record": {
+   "members": [
+    {
+     "bus": "d2d_kv.att_rx_v -> kvs_attn.d2d__srx__0_0",
+     "stages": 9,
+     "age": 9,
+     "width": 1
+    },
+    {
+     "bus": "d2d_kv.att_rx_kind -> kvs_attn.d2d__srx__4_1",
+     "stages": 9,
+     "age": 9,
+     "width": 4
+    },
+    {
+     "bus": "d2d_kv.att_rx_beat -> kvs_attn.d2d__srx__9_5",
+     "stages": 9,
+     "age": 9,
+     "width": 5
+    },
+    {
+     "bus": "d2d_kv.rx_payload -> kvs_attn.d2d__rx_payload",
+     "stages": 11,
+     "age": 11,
+     "width": 548
+    }
+   ],
+   "ages": [
+    9,
+    11
+   ],
+   "missing": [],
+   "torn": true
+  },
+  "K.tx_slot": {
+   "members": [
+    {
+     "bus": "d2d_kv.att_tx_slot -> kvs_attn.d2d__att_tx_slot",
+     "stages": 9,
+     "age": 9,
+     "width": 1
+    },
+    {
+     "bus": "d2d_kv.att_tx_kind -> kvs_attn.d2d__att_tx_kind",
+     "stages": 8,
+     "age": 8,
+     "width": 4
+    },
+    {
+     "bus": "d2d_kv.att_tx_beat -> kvs_attn.d2d__att_tx_beat",
+     "stages": 9,
+     "age": 9,
+     "width": 5
+    }
+   ],
+   "ages": [
+    8,
+    9
+   ],
+   "missing": [],
+   "torn": true
+  },
+  "K.tx_record": {
+   "members": [
+    {
+     "bus": "kvs_attn.attn__tx_valid -> d2d_kv.att_tx_v",
+     "stages": 6,
+     "age": 6,
+     "width": 1
+    },
+    {
+     "bus": "kvs_attn.attn__tx_payload -> d2d_kv.att_tx_payload",
+     "stages": 11,
+     "age": 11,
+     "width": 548
+    }
+   ],
+   "ages": [
+    6,
+    11
+   ],
+   "missing": [],
+   "torn": true
+  },
+  "K.kvn_writer": {
+   "members": [
+    {
+     "bus": "d2d_kv.kvn_word_valid -> kvs_ctl.d2d__skw__0_0",
+     "stages": 2,
+     "age": 2,
+     "width": 1
+    },
+    {
+     "bus": "d2d_kv.kvn_word_tag -> kvs_ctl.d2d__skw__11_1",
+     "stages": 2,
+     "age": 2,
+     "width": 11
+    },
+    {
+     "bus": "d2d_kv.kvn_word_data -> kvs_ctl.d2d__srx__521_10",
+     "stages": 4,
+     "age": 4,
+     "width": 512
+    },
+    {
+     "bus": "d2d_kv.kvn_word_identity -> kvs_ctl.d2d__kvn_word_identity",
+     "stages": 4,
+     "age": 4,
+     "width": 59
+    },
+    {
+     "bus": "d2d_kv.kvn_word_generation -> kvs_ctl.d2d__kvn_word_generation",
+     "stages": 3,
+     "age": 3,
+     "width": 2
+    }
+   ],
+   "ages": [
+    2,
+    3,
+    4
+   ],
+   "missing": [],
+   "torn": true
+  }
+ },
+ "bundles_checked": true
 }
