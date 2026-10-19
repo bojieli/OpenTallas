@@ -55,10 +55,16 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
  wire emit=pending&&good&&!fault&&credits[{stack,pc}]!=0&&(!ORDERED||ord_credit!=0);
  wire emit_marker=mark&&!fault&&issued==landed&&marker_credit;
  wire[32:0]sum={1'b0,landed}+33'(aq);
- wire[127:0]credit_overflow;
+ // Credit-overflow fault, restructured (HRORDER 10-18 gate: hd -> 128:1 credit mux -> emit -> per-k spend -> 128-input OR
+ // -> fault was 15 levels, -32 ps est): OR_k(crq[k]&&credits[k]==4&&!(emit&&sel==k)) ==
+ // OR_{k!=sel}(cfull[k]) | (cfull[sel]&&!emit). The 128-wide OR now runs in parallel with emit; same cycle, exact.
+ wire[6:0]sel={stack,pc};
+ wire[127:0]cfull;
+ wire ovf_other=|(cfull&~(128'd1<<sel));
+ wire ovf_sel=cfull[sel]&&!emit;
  for(genvar k=0;k<128;k++)begin:g_credit
-  wire spend=emit&&{stack,pc}==7'(k);
-  assign credit_overflow[k]=crq[k]&&credits[k]==4&&!spend;
+  wire spend=emit&&sel==7'(k);
+  assign cfull[k]=crq[k]&&credits[k]==4;
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)credits[k]<=4;
    else case({crq[k],spend})
@@ -85,7 +91,7 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
    if(ORDERED)case({ocq,emit})2'b10:begin if(ord_credit==256)fault<=1;else ord_credit<=ord_credit+1'b1;end 2'b01:ord_credit<=ord_credit-1'b1;default:;endcase
    crq<=out_cr;aq<=ack_n;mcq<=marker_cr;ing_cr<=0;marker_v<=0;
    for(integer k=0;k<4;k++)out[k*291]<=0;
-   if(|credit_overflow)fault<=1;
+   if(ovf_other||ovf_sel)fault<=1;
    if(sum[32]||sum[31:0]>issued)fault<=1;else landed<=sum[31:0];
    if(iq[0]&&!fault)begin if(count==8)fault<=1;else wp<=wp+1'b1;end
    if(adv)rp<=rp1;
