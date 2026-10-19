@@ -2,7 +2,7 @@ import sys,json,hashlib,gzip
 from pathlib import Path
 from collections import Counter
 root=Path(sys.argv[1]);sys.path.insert(0,str(root/'tools/closure_loop'));import safe_source_contract as S
-out=root/'evidence_native_v2';rawpath=out/'raw.json';raw=json.loads(rawpath.read_text());top='ot_pg_canonical_xor16_1019';mod=raw['modules'][top];pg=[]
+out=root/('evidence_native_v3' if len(sys.argv)>2 else 'evidence_native_v2');rawpath=out/'raw.json';raw=json.loads(rawpath.read_text());top='ot_pg_canonical_xor16_1019';mod=raw['modules'][top];pg=[]
 for name,c in mod['cells'].items():
  pins=raw['native_master_pins'][c['type']]
  S.require(set(c['connections'])==set(c['port_directions'])==set(c['pin_signal_types'])==set(pins),'complete native master/ITerm inventory '+name)
@@ -21,7 +21,7 @@ summary['violating_drivers']=[x for x in r['drivers'] if x['driver'] in r['viola
 (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
 clock={}
 for corner in ['TT','FF','SS']:
- ln=S.native_cells(sorted((out/('libs_'+corner)).glob('*.lib*')),used_masters=used);total=0;counts=Counter()
+ ln=S.native_cells([(out/('libs_'+corner)/n) for n in [f'asap7sc7p5t_AO_RVT_{corner}_nldm_211120.lib.gz',f'asap7sc7p5t_OA_RVT_{corner}_nldm_211120.lib.gz',f'asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz',f'asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib',f'asap7sc7p5t_SIMPLE_RVT_{corner}_nldm_211120.lib.gz']],used_masters=used);total=0;counts=Counter()
  for name,c in mod['cells'].items():
   cell=ln[c['type']];counts[cell['role']]+=1
   for pin,info in cell['pins'].items():

@@ -1,0 +1,492 @@
+{
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "top": "ot_pg_canonical_xor16_1019",
+  "max_allowed": 32,
+  "verdict": "FAIL",
+  "unphysicalized_literals": [],
+  "literal_load_excess": [],
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "max_loads": 50,
+  "max_nonliteral_loads": 50,
+  "violations": [
+    "cell:_99_/H"
+  ],
+  "counts": {
+    "cells": 89,
+    "drivers": 123,
+    "logical_endpoints": 271,
+    "roles": {
+      "comb": 35,
+      "static": 3,
+      "ff": 51,
+      "input": 34
+    }
+  },
+  "disconnected_outputs": [],
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "provenance": {
+    "raw_sha256": "700673c0d9fc102a792082337ab833fe773f93bd0e8fdd70e7e93552bb571ad1",
+    "source_odb_sha256": "a7106ef37a4f76a1649dd03e4a5e72f85f216e58bbdde1076465e7c91416af48",
+    "collector_sha256": "893a3f5566752a5ee38b7dd3495b43d8d84258cbbd49b975b3e01a38707bb9dd",
+    "parser_sha256": "debb83069aa0b0461e326e20ad191c3bbd432615829357e94fb8d5227f9a5c99",
+    "libs": [
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/evidence_native_v2/libs_TT/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      }
+    ]
+  },
+  "native_pg_term_count": 178,
+  "violating_drivers": [
+    {
+      "driver": "cell:_99_/H",
+      "net": 66,
+      "role": "static",
+      "transparent": false,
+      "disconnected": false,
+      "loads": 50,
+      "clock_loads": 0,
+      "endpoint_roles": {
+        "reset": 49,
+        "data": 1
+      },
+      "sink_classes": {
+        "ff": 50
+      },
+      "clock_only": false,
+      "endpoints": [
+        {
+          "pin": "cell:a_q\\[0\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[0\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[10\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[10\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[11\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[11\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[12\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[12\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[13\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[13\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[14\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[14\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[15\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[15\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[1\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[1\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[2\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[2\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[3\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[3\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[4\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[4\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[5\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[5\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[6\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[6\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[7\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[7\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[8\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[8\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:a_q\\[9\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "a_q\\[9\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[0\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[0\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[10\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[10\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[11\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[11\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[12\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[12\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[13\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[13\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[14\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[14\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[15\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[15\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[1\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[1\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[2\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[2\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[3\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[3\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[4\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[4\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[5\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[5\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[6\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[6\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[7\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[7\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[8\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[8\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:b_q\\[9\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "b_q\\[9\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:reset_first$_DFF_PN0_/D",
+          "role": "data",
+          "owner": "reset_first$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:reset_first$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "reset_first$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[0\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[0\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[10\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[10\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[11\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[11\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[12\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[12\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[13\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[13\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[14\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[14\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[15\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[15\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[1\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[1\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[2\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[2\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[3\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[3\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[4\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[4\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[5\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[5\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[6\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[6\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[7\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[7\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[8\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[8\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        },
+        {
+          "pin": "cell:y\\[9\\]$_DFF_PN0_/SETN",
+          "role": "reset",
+          "owner": "y\\[9\\]$_DFF_PN0_",
+          "owner_role": "ff",
+          "owner_master": "DFFASRHQNx1_ASAP7_75t_R",
+          "inverted": false
+        }
+      ],
+      "clock_endpoints": []
+    }
+  ]
+}

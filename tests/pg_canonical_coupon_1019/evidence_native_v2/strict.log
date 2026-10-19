@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/tests/pg_canonical_coupon_1019/strict_inventory.py", line 24, in <module>
+    ln=S.native_cells(sorted((out/('libs_'+corner)).glob('*.lib*')),used_masters=used);total=0;counts=Counter()
+  File "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/tools/closure_loop/safe_source_contract.py", line 59, in native_cells
+    require(args[0] not in cells, f'duplicate master {args}')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/pg-canonical-coupon-source-1019/tools/closure_loop/safe_source_contract.py", line 29, in require
+    raise ContractError(message)
+safe_source_contract.ContractError: duplicate master ['TIEHIx1_ASAP7_75t_R']
