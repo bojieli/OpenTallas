@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # LB2-S81/CC-svc: build + run the svc attention-job bench (tb_svc_lower.sv) on the images lower_svc.py emits.
 #   step 1: dsdv_svc_rs / dsdv_svc_rs_entry protect-libs (base RTL, DIE 0, ST 0 = die.v), as tools/s81_dv/svc_rs/rs_bench_pl.sh;
-#   step 2: tb_svc_lower against the two wrappers;  step 3: base (seeds 1 2) + compiler mutants slot / late (seed 1).
+#   step 2: tb_svc_lower against the two wrappers;  step 3: base (seeds 1 2) + compiler mutants slot / late or pio_early
+#   (seed 1, whichever image dirs exist).  MUTDEF=NAME builds the slices with -DNAME (an RTL mutant, e.g. RS_MUT_P) and
+#   runs base seed 1 only.
 # Usage (repo root): tools/s81_dv/layer_prog/svc/run_svc_bench.sh OUTDIR IMGDIR      (IMGDIR/{base,slot,late}/)
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -11,7 +13,7 @@ mkdir -p "$O"
 "$VL" --version > "$O/verilator.version"
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
         --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS -DSVCQ_ENG_FG3
-        "${RS_DEF[@]}" -DMUT=0)
+        "${RS_DEF[@]}" -DMUT=0 ${MUTDEF:+-D$MUTDEF})
 lib() {
   local L=$O/pl_$1
   [ -f "$L/lib$1_pl.a" ] && return 0
@@ -35,5 +37,8 @@ run() {  # $1 image, $2 seed
   "$O/obj/Vtb_svc_lower" +dir="$IMG/$1" +seed=$2 > "$O/run_$1_s$2.log" 2>&1 || true
   echo "$1 s$2: $(grep -h '^SVCLOW ' "$O/run_$1_s$2.log" | tail -1 | grep -o 'verdict=[A-Z]*')"
 }
-run base 1 & run base 2 & run slot 1 & run late 1 & wait
+if [ -n "${MUTDEF:-}" ]; then run base 1; echo "all done $(date)"; exit 0; fi
+run base 1 & run base 2 & run slot 1 &
+for m in late pio_early; do [ -d "$IMG/$m" ] && run $m 1 & done
+wait
 echo "all done $(date)"

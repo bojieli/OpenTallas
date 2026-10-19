@@ -9,6 +9,11 @@
 //   hkey.hex / hdat.hex the HBM window image (127 rows before the position) in the slices' own PCs
 //   sc.hex    expected q.k scores [T] x 16 heads (golden dots of the fixture q / rows; scaled = fixture attn.scores)
 //   pv.hex    expected P.V [512 dims] x 16 heads (= fixture attn.pv, bit-exact)
+//   meta [13] PMODE (TOK-S81-GAPS/SVCP 10-19: P produced ON-DIE -- GO PIO != 0, no host PV frame), [14] NPW = words of
+//             the PV frame;  pexp.hex = that frame (header + ceil(T / 2) words, word w = rows 2w, 2w + 1 x 16 heads
+//             BF16 = bf16(fixture attn.exp)).  PMODE checks: every root P beat (after the T / 4 score beats) bit-exact
+//             (head lanes {P, 16'h0}, flags 0, row tag), the PV frame on BOTH entries' dn stream (child face) exactly
+//             once, back to back, every word bit-exact; plus all the checks above (P.V of the on-die P bit-exact).
 // Cycle convention (tb_dsdv_svc_rs): the tb drives a value at cycle c (non-blocking), the pin holds it from the next
 // edge.  HBM is the elastic off-die boundary: per-PC request queue, <= 8 outstanding (DQ credits), latency lat + rand.
 // Checks (PASS = all): every complete root score beat (all T rows: window-only job, every row held) bit-exact and in
@@ -39,7 +44,8 @@ module tb_svc_lower;
     reg [255:0] hbm [longint];
     reg [1023:0] dir;
     integer seed = 1, lat = 40;
-    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i;
+    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i, PMODE, NPW;
+    reg [511:0] pexp [0:511];
     reg [32:0] JWORD;
     function automatic integer tile_of(input integer sd); reg [21:0] r; r = rs_role(4'(sd)); tile_of = r[3:0]; endfunction
     initial begin
@@ -49,6 +55,8 @@ module tb_svc_lower;
         $readmemh({dir, "/meta.hex"}, meta);
         NQ = meta[0]; T = meta[1]; JW = meta[2]; JE = meta[3]; JWORD = {meta[5][0], meta[4]}; NH = meta[6];
         EXP_PV0 = meta[7]; EXP_DONE = meta[8]; GO_C = meta[9]; PV_C = meta[10]; EXP_DONE_W = meta[12];
+        PMODE = meta[13]; NPW = meta[14];
+        if (PMODE != 0) $readmemh({dir, "/pexp.hex"}, pexp, 0, NPW - 1);
         if (meta[11] != ST) begin $display("image ST %0d != bench ST %0d", meta[11], ST); $finish; end
         $readmemh({dir, "/qcyc.hex"}, qcyc, 0, NQ - 1);
         $readmemh({dir, "/qwd.hex"}, qwd, 0, NQ - 1);
@@ -174,6 +182,10 @@ module tb_svc_lower;
     integer pv_err = 0, pv_chk = 0, pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;
     reg [7:0] pvc [0:15]; reg [63:0] pvf [0:15];
     integer first_rt = -1, last_rt = -1, done_c [0:1], n_done [0:1];
+    integer p_first = -1, p_last = -1, p_beats = 0, p_err = 0, p_chk = 0, pf_err = 0, we_first [0:15], we_last [0:15];
+    integer pf_i [0:1], pf_n [0:1], pf_c [0:1], pf_lc [0:1];
+    initial for (i = 0; i < 16; i = i + 1) begin we_first[i] = -1; we_last[i] = -1; end
+    initial for (i = 0; i < 2; i = i + 1) begin pf_i[i] = 0; pf_n[i] = 0; pf_c[i] = -1; pf_lc[i] = -1; end
     initial for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; wrows[i] = 0; end
     initial begin done_c[0] = -1; done_c[1] = -1; n_done[0] = 0; n_done[1] = 0; end
     localparam integer PVH = (ST >= 2) ? 0 : 1;
@@ -187,7 +199,24 @@ module tb_svc_lower;
         q_v <= 0;
         if (qi < NQ && cyc == qcyc[qi]) begin q_v <= 1; q_d <= qwd[qi]; qi = qi + 1; end
         else if (qi < NQ && cyc > qcyc[qi]) late_q = late_q + 1;
-        if (rt_vv[RS_FOLD]) begin
+        if (rt_vv[RS_FOLD] && PMODE != 0 && rt_beats >= (T + 3) / 4) begin
+            // on-die P beat k = rt beat (T + 3) / 4 + k: rows 4k .. 4k + 3, head lane h = {bf16 P, 16'h0}
+            reg [2131:0] b; integer r0, rr, h; reg [15:0] e16;
+            b = rt_dd[RS_FOLD];
+            r0 = b[2131:2116];
+            if (p_first < 0) p_first = cyc; p_last = cyc;
+            if (r0 != 4 * p_beats || b[63:0] != 64'd0) p_err = p_err + 1;
+            for (rr = 0; rr < 4; rr = rr + 1) for (h = 0; h < H; h = h + 1) begin
+                e16 = (r0 + rr < T) ? pexp[1 + (r0 + rr) / 2][16 * (((r0 + rr) % 2) * 16 + h) +: 16] : 16'd0;
+                p_chk = p_chk + 1;
+                if (b[64 + (rr*16 + h)*32 +: 32] !== {e16, 16'h0000}) begin
+                    p_err = p_err + 1;
+                    if (p_err < 8) $display("P MISMATCH root beat row %0d head %0d got %08x exp %04x0000", r0 + rr, h,
+                        b[64 + (rr*16 + h)*32 +: 32], e16);
+                end
+            end
+            p_beats = p_beats + 1;
+        end else if (rt_vv[RS_FOLD]) begin
             reg [2131:0] b; integer r0, rr, h;
             b = rt_dd[RS_FOLD];
             r0 = b[2131:2116];
@@ -247,6 +276,25 @@ module tb_svc_lower;
                 end
             end
         end
+        // PMODE: the PV frame on each entry's dn stream (11 -> 09 W face, 05 -> 07 E face) and the SM e-row cycles
+        for (int s = 0; s < 16; s++) if (w_v[s]) begin if (we_first[s] < 0) we_first[s] = cyc; we_last[s] = cyc; end
+        for (int k = 0; k < 2; k++) begin
+            integer es, ef; reg [DW-1:0] dw;
+            es = (k == 0) ? RS_ENTRY_W : RS_ENTRY_E; ef = (k == 0) ? 1 : 3;
+            dw = dn_o[es][DW*ef +: DW];
+            if (PMODE != 0 && dw[0]) begin
+                if (pf_i[k] == 0 && dw[512:1] == pexp[0]) begin pf_i[k] = 1; pf_n[k] = pf_n[k] + 1; pf_c[k] = cyc; end
+                else if (pf_i[k] > 0) begin
+                    if (dw[512:1] !== pexp[pf_i[k]]) begin
+                        pf_err = pf_err + 1;
+                        if (pf_err < 8) $display("PF MISMATCH entry %0d word %0d", es, pf_i[k]);
+                    end
+                    if (cyc != pf_lc[k] + 1) pf_err = pf_err + 1;            // back to back
+                    pf_i[k] = (pf_i[k] + 1 == NPW) ? 0 : pf_i[k] + 1;
+                end
+                pf_lc[k] = cyc;
+            end else if (PMODE != 0 && pf_i[k] > 0) begin pf_err = pf_err + 1; pf_i[k] = 0; end   // a gap inside the frame
+        end
         if ((n_done[0] > 0 && n_done[1] > 0 && cyc > done_c[0] + 300 && cyc > done_c[1] + 300) || cyc >= MAXCYC) begin
             integer bad_se, bad_w, sched_bad, pv_early; reg [15:0] fl; reg [31:0] fc0;
             bad_se = 0; bad_w = 0; fl = 0; fc0 = 0;
@@ -255,19 +303,30 @@ module tb_svc_lower;
                 if (wrows[s] != se_rows[s]) bad_w = bad_w + 1;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
-            pv_early = (last_rt >= PV_C) ? 1 : 0;
+            pv_early = (PMODE == 0 && last_rt >= PV_C) ? 1 : 0;
             sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + 159) + (done_c[0] != EXP_DONE_W) + (done_c[1] != EXP_DONE) +
                         (late_q != 0) + (qi != NQ) + pv_early;
             $display("SVCLOW_SCHED go=%0d pv_frame=%0d first_score=%0d last_score=%0d pv_first=%0d exp_pv_first=%0d pv_last=%0d done_W=%0d exp_done_W=%0d done_E=%0d exp_done_E=%0d n_done=%0d/%0d q_sent=%0d/%0d late_q=%0d pv_early=%0d hbm_wr=%0d hbm_rd=%0d sched_bad=%0d",
                 GO_C, PV_C, first_rt, last_rt, pv_first, EXP_PV0, pv_last, done_c[0], EXP_DONE_W, done_c[1], EXP_DONE, n_done[0], n_done[1],
                 qi, NQ, late_q, pv_early, hbm_wr, hbm_rd, sched_bad);
+            begin
+                integer wl_min, wl_max, wf_min; wl_min = 1 << 30; wl_max = -1; wf_min = 1 << 30;
+                for (int s = 0; s < 16; s++) begin
+                    if (we_last[s] < wl_min) wl_min = we_last[s]; if (we_last[s] > wl_max) wl_max = we_last[s];
+                    if (we_first[s] >= 0 && we_first[s] < wf_min) wf_min = we_first[s];
+                end
+                $display("SVCLOW_P pmode=%0d go=%0d p_nominal=%0d erow_first=%0d erow_last_min=%0d erow_last_max=%0d p_beat_first=%0d p_beat_last=%0d pf_W=%0d pf_E=%0d pf_n=%0d/%0d p_beats=%0d p_checked=%0d p_errors=%0d pf_errors=%0d npw=%0d",
+                    PMODE, GO_C, PV_C, wf_min, wl_min, wl_max, p_first, p_last, pf_c[0], pf_c[1], pf_n[0], pf_n[1], p_beats, p_chk, p_err, pf_err, NPW);
+            end
             $display("SVCLOW die=%0d st=%0d T=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_checked=%0d pv_errors=%0d pv_words=%0d pv_gaps=%0d pv_other_entry=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d sched_bad=%0d cycles=%0d verdict=%s",
                 DIE, ST, T, rt_beats, sc_chk, sc_err, ord_err, se_chk, se_err, bad_se, bad_w, pv_chk, pv_err, pv_n, pv_gap, pv_other,
                 jdx[0][1] | jdx[1][1], rfx != 0, fl, fc0, cred_err, sched_bad, cyc,
                 (sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk == T * H && se_err == 0 && se_chk == 16 * T &&
                  bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && pv_n == 160 && pv_gap == 0 &&
                  pv_other == 0 && n_done[0] == 1 && n_done[1] == 1 && !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 &&
-                 cred_err == 0 && sched_bad == 0 && cyc < MAXCYC) ? "PASS" : "FAIL");
+                 cred_err == 0 && sched_bad == 0 && cyc < MAXCYC &&
+                 (PMODE == 0 || (p_err == 0 && pf_err == 0 && p_beats == (T + 3) / 4 && p_chk == 64 * ((T + 3) / 4) &&
+                                 pf_n[0] == 1 && pf_n[1] == 1 && pf_i[0] == 0 && pf_i[1] == 0))) ? "PASS" : "FAIL");
             $finish;
         end
     end

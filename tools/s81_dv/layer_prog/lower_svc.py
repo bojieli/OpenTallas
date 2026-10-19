@@ -14,7 +14,7 @@ window image.  Every field is the decode of the BUILT RTL (main f93fea12a+, cred
       [511:508] type, [507] END (the job's last frame), [506:503] mask (bit 0 = this die's slices), [502:495] tag,
       [491:480] len (payload words), [479:459] pos / 21-b field, [458:449] user, [448:0] spec.
   frames (dsdv_svc_att.sv:17-31 + decode lines):
-      12 CFG      spec[29:0] WB (window ring base)                                  dsdv_svc_att.sv:151
+      12 CFG      spec[29:0] WB (window ring base), [32] ST valid, [31:30] ST (G10: the die's stack position)
        3 OWN_ROW  [465:459] slot = pos mod 128, [458:449] user; 16 words {scale 8, codes 256} (word t -> tile t):
                   codes -> sector WB + 68 u + slot[6:1] on PC slot[0]; scale byte slot[4:0] of sector
                   WB + 68 u + 64 + slot[6] on PC slot[5]                            dsdv_svc_att.sv:177-193
@@ -24,8 +24,12 @@ window image.  Every field is the decode of the BUILT RTL (main f93fea12a+, cred
        9 SMJ      spec[0] start, [4:1] kind (4 = SE), [12:5] jid; 2 parameter rows: row 0 {[13:0] obase, [64 +: 7]
                   nv = ceil(T / 16), [96 +: 32] scale, [128 +: 3] lt = log2(nv)}, row 1 sinks [32 h +: 32]
                                                                        rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv:12-13, 95
-      13 GO       len 0, spec[15:0] PO (p-feed start), [31:16] PVO (P.V drain base), cycles after the share start
-       5 PV       p words: word w = rows 2 w, 2 w + 1, head h at bits 16 (j 16 + h) (BF16)
+      13 GO       len 0, spec[15:0] PO (p-feed start), [31:16] PVO (P.V drain base), [47:32] PIO (on-die P injection
+                  start; TOK-S81-GAPS/SVCP 10-19), cycles after the share start
+       5 PV       p words: word w = rows 2 w, 2 w + 1, head h at bits 16 (j 16 + h) (BF16) -- ON-DIE since SVCP
+                  (PPATH): the SM e rows -> BF16 -> score-exchange P beats -> fold root rsv_09 packs this frame -> both
+                  entries put it on their dn stream (dsdv_svc_rs.sv P PATH); the host sends no PV frame.  PPATH False =
+                  the legacy host PV frame (bench reference only)
   static rules (no credit / ready; dsdv_svc_att.sv:33-58, tb_dsdv_svc_rs.sv build_frames):
       PV send >= GO + ceil(5 T / 4) + 150 (after the last fold score); PO = PVS + ceil(n / 2) + ceil(n / 250) + 4,
       n = ceil(T / 2); PVO = PO + 8 ceil(T / 32) + 55; the quarter-ST P.V leaves the entry of half PVH (ST < 2: E)
@@ -68,8 +72,12 @@ INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
 
 H, D, TD, WIN = 16, 512, 32, 128
 WB, SB, USER = 0x100, 0x1000, 3
-ST = 0                       # die.v: no ST override on u_rsv_* (default 0)
+ST = 0                       # the die's stack position, sent in the CFG frame ([32] valid, [31:30]) -- G10
 PVS0, KPV, PV_LAT = 150, 55, 56
+PPATH = True                 # TOK-S81-GAPS/SVCP: P is produced on-die (GO PIO != 0); False = legacy host PV frame
+# on-die P path constants (share cycles; measured by tb_svc_lower, results/rtl/s81_layer_tput_1018/compiler/bench_svc_p):
+#   PIO = PIO0 + 5 ceil(T / 4) / 4 ... see p_sched(); PO = PIO + P_ARR + ceil(n / 2) + P_PO_M; PVO = PO + 8 ceil(T / 32) + KPV
+PIO0, P_ARR, P_PO_M, PIO_EARLY = 600, 200, 8, 450
 W_SLACK = 560                # WIN_LOAD -> GO: 64 code + 2 scale reads a PC at DQ 8 credits x <= 56-edge latency + margin
 Q_ARM = 4                    # j pin -> first q header (job pin flop + table push, ot_s81_svc_job.sv:31-32, 91-92)
 JD_LAT = 1                   # last P.V word at the pv pin -> jd done pulse (SVC-PV3 logs: end = pv_last + 1)
@@ -162,7 +170,7 @@ class Job:
     def _frames(self):
         C, T, tag, mut = self.C, self.T, self.tag, self.mutant
         fr = []
-        fr.append(('CFG', [hdr(12, 0, tag, spec=WB)]))
+        fr.append(('CFG', [hdr(12, 0, tag, spec=WB | (1 << 32) | ((ST & 3) << 30))]))
         ow = []
         pos = self.pos - 1 if mut == 'slot' else self.pos             # MUTANT 'slot': wrong OWN_ROW pos field
         ow.append(hdr(3, 16, tag, pos=pos))
@@ -184,6 +192,7 @@ class Job:
         fr.append(('SMJ', [hdr(9, 2, tag, spec=1 | (4 << 1) | (0x21 << 5)), r0, r1]))
         fr.append(('GO', None))                                                                        # filled by schedule
         pb = C.bf16_bits(self.p)                                                                       # [16, T]
+        self.p_bits = pb
         n = -(-T // 2)
         pw = []
         for w in range(n):
@@ -195,7 +204,9 @@ class Job:
                         word |= int(pb[h, t]) << (16 * (jj * H + h))
             pw.append(word)
         assert n <= 250
-        fr.append(('PV', [hdr(5, n, tag, end=True)] + pw))
+        self.p_words = [hdr(5, n, tag, pos=0, user=0)] + pw    # the PV frame as the fold root packs it (on-die)
+        if not PPATH:
+            fr.append(('PV', [hdr(5, n, tag, end=True)] + pw))
         return fr
 
     # ------------------------------------------------------------------ static schedule (cycles at the entry q pins)
@@ -212,10 +223,22 @@ class Job:
                 t = max(t, t_q)
             if name == 'GO':
                 go = max(t, go_min)
-                pvs = max(-(-5 * T // 4) + PVS0, t_exp - go)
-                po = pvs + -(-n // 2) + -(-n // 250) + 4
+                pio = 0
+                if PPATH:
+                    # on-die P: PIO after the SM's last e row (measured), the PV frame reaches the owners P_ARR after
+                    # PIO, one word a cycle.  MUTANT 'pio_early': the GO frame's PIO PIO_EARLY cycles early, PO / PVO
+                    # unchanged (the first P beats find no e row in pbuf: sticky slice fault)
+                    pio = PIO0
+                    pvs = pio
+                    po = pio + P_ARR + -(-n // 2) + P_PO_M
+                    if self.mutant == 'pio_early':
+                        pio -= PIO_EARLY
+                else:
+                    pvs = max(-(-5 * T // 4) + PVS0, t_exp - go)
+                    po = pvs + -(-n // 2) + -(-n // 250) + 4
                 pvo = po + 8 * -(-T // 32) + KPV
-                ws = [hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16))]
+                ws = [hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32))]
+                self.pio = pio
                 t = go
                 self.go, self.pvs, self.po, self.pvo = go, pvs, po, pvo
             if name == 'PV':
@@ -321,8 +344,9 @@ def bench_image(job, s, out, base=60):
     off = base - s['s_j']
     w = s['words']
     arg, jw = job_word(s['nframes'], job.tag)
+    pv_c = s['at']['PV'] + off if 'PV' in s['at'] else s['go'] + job.pio + off      # PPATH: nominal P start (GO + PIO)
     meta = [len(w), job.T, s['j_w'] + off, s['j_e'] + off, jw & 0xFFFFFFFF, jw >> 32, 0, s['pv_first'] + off,
-            s['done_e'] + off, s['go'] + off, s['at']['PV'] + off, ST, s['done_w'] + off, 0, 0, 0]
+            s['done_e'] + off, s['go'] + off, pv_c, ST, s['done_w'] + off, int(PPATH), len(job.p_words), 0]
     img = job.hbm_image()
     meta[6] = len(img)
     sc, pv = job.expected_hex()
@@ -330,12 +354,12 @@ def bench_image(job, s, out, base=60):
     files = {'meta.hex': hx(meta + [0] * (32 - len(meta)), 32),
              'qcyc.hex': hx([c + off for c, _ in w], 32), 'qwd.hex': hx([x for _, x in w], 512),
              'hkey.hex': hx(sorted(img), 64), 'hdat.hex': hx([img[k] for k in sorted(img)], 256),
-             'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H)}
+             'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H), 'pexp.hex': hx(job.p_words, 512)}
     for k, v in files.items():
         (out / k).write_text(v)
     rec = dict(schema='opentallas.s81_dv.svc_bench_image.v1', tb_offset=off, mutant=job.mutant, tag=job.tag,
                j_arg=arg, j_word=f'{jw:09x}', frames={k: v + off for k, v in s['at'].items()},
-               go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'] + off,
+               go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
                st=ST, sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
     (out / 'image.json').write_text(json.dumps(rec, indent=1) + '\n')
@@ -447,7 +471,7 @@ def main(argv=None):
         die = DC.Die(DC.die_tree(DC.DIE_REF))
     except Exception as e:    # noqa: BLE001 -- the link ages fall back to the bind9 values
         print('die model unavailable, bind9 link ages:', e)
-    for mut in (None, 'slot', 'late'):
+    for mut in (None, 'slot', 'pio_early' if PPATH else 'late'):
         job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
