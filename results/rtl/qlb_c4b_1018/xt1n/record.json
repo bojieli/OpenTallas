@@ -1,0 +1,18 @@
+{
+ "lane": "QW-DIEFIX-NFAR (fork of QW-DIEFIX)", "date": "2026-10-19", "branch": "claude/qw-diefix-nfar-1019",
+ "vehicle": "XT1n = qfd_dv_slice2 core as dvs_W5 (sid 0, heads WITH the ea371ad83 corridor retag) -> cw_n0..3 -> near N cluster c16_W5_2 (qfd_c_b16_dv cid 2, far 0) -> bco0..3 -> FAR N cluster c16_W5_3 (cid 3, far 1); rs chain as dv2f16 out/case/die.v (far rs -> near rs_i; slice rs_n = {near rs_o, near rs}); dv2f16 cluster RTL (regional resets tied to the bench reset); 32 tiles ROM_TILE = 16 cid + tile_id kslice; real TP8 rank-0 L0 masks (xt1_prep cid 2 / 3); Verilator 5.050 on ot-epyc5 (build 38 min, 69.7 GB RSS)",
+ "verdict": "PASS: near 64/64 + far 64/64 bit-exact (qkv 8, o 24, gu 8, down 24 level-6 words per cluster; k = kc-1 word per (r, j)) at lead 8 gap 4 and lead 4 gap 2",
+ "far_words_port": "the far cluster's rs words leave on the NEAR cluster's rs_o (rs_i feedthrough), 55 edges after the near cluster's words (d_clu 220 vs 165)",
+ "measured_edges_from_hr_go_at_slice_pins": {
+   "hr_go_to_column_go_cw_n": 16,
+   "near_N_c16_W5_2": {"first_rs": 181, "final_first_last": {"qkv": [237, 244], "o": [189, 228], "gu": [429, 436], "down": [221, 324]}},
+   "far_N_c16_W5_3_at_near_rs_o": {"first_rs": 236, "final_first_last": {"qkv": [292, 299], "o": [244, 283], "gu": [484, 491], "down": [276, 379]}},
+   "round_period": {"o": 16, "down": 48},
+   "note": "dv2f16 cluster RTL (landed cluster, qfd_c_land) is slower than XT1's dv2f14bi cluster (near first_rs 181 vs 142); endpoint = cluster rs pins, excludes rs -> redstn2"
+ },
+ "mutants": {
+   "oldtags (heads without the retag, source transform)": "FAIL far 0/64 (near 64/64: N near is not retagged) -- the N-far retag is required and correct",
+   "romswap (far tiles 48/49 masks swapped)": "FAIL far 0/64 (near 64/64)"
+ },
+ "heads_bench": "tb_qfd_dv_heads station model = die cluster sidx numbering (near s / far 11-s; S logical = s^3 near / 11-s far): fixed heads PASS 397,696 tile-edges; MUT 8, MUT 9, old heads, old model all FAIL (heads/res_*.txt). Note: the tb returns rc 0 on FAIL (pre-existing; verdict is the PASS/FAIL line)."
+}
