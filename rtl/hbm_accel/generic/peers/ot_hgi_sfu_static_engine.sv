@@ -17,8 +17,11 @@
 // Index ports require a separate actual mapped service. The inherited side
 // pins are reserved: KIND1 lanes do not implement scalar-side classes; those
 // opcodes fault and must dispatch through a real full-lane/side engine.
-module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
+module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
+ // HBM-SAFE-K9 (10-19): passed to the operand store (WPIPE bank-write landing stage, GCLK per-group regional roots)
+ parameter integer WPIPE=0, GCLK=0)(
  input wire clk,rst_n,
+ input wire [4:0] clk_grp,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire [1741:0] compiler_control,
  input wire [3:0] scalar_load,scalar_enable,
@@ -59,8 +62,8 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
   .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.ro_v(ro_v),.ro_x(ro_x),
   .fault(lane_fault),.coll(lane_coll));
- ot_hgi_sfu_static_operand_store #(.LWB(LWB)) u_memory(
-  .clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
+ ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK)) u_memory(
+  .clk(clk),.rst_n(rst_n),.clk_grp(clk_grp),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),

@@ -15,9 +15,20 @@ module ot_hgi_sfu_core_split3 #(
  // 772 ps / 19-level operand-store output -> BF16 round -> write_q stage (textbook REFUSE). Static-schedule effect: every
  // drain sector reaches local_wq 1 edge later and its local_w_done is expected 1 edge later; drained sectors (VM output
  // region) are not read back inside the programme, so the compiler calendar is unchanged.
- parameter integer DRAIN_PIPE=1
+ parameter integer DRAIN_PIPE=1,
+ // HBM-SAFE-K9 (10-19, coordinator 0ks, safe-design checklist items 4 + 7; k9 default 1):
+ //  WPIPE=1: the operand store registers every bank-write input once (VM stage meta/data + lane element writes) before
+ //   the groups' write select: cuts VM meta -> bank w_mask_in (~702 ps / 19 lv) and lane -> u_output wcoll_q (~717 ps).
+ //   Static-schedule effect: every operand-store bank write lands 1 edge later (SFU calendar write-landing +1, priced
+ //   in results/rtl/hbm_safe_k9_1019/schedule.md); the canonical lockstep shows no boundary edge moves.
+ //  GCLK=1: the five store groups (4 operand + output, 16 SRAMs each, one floorplan column each) run on their own
+ //   regional roots clk_st[4:0] (same die clock, neighbour-matched entries like clk_lane / clk_map); clk keeps the
+ //   bridge + engine control. Crossings are flop-to-flop and judged per child pair (TT/FF spread <= 80 ps).
+ parameter integer WPIPE=1,
+ parameter integer GCLK=1
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
+ input wire [4:0] clk_st,
  input wire [3:0] clk_lg,rst_lg_n,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire [470:0] io_word,
@@ -39,8 +50,8 @@ module ot_hgi_sfu_core_split3 #(
  wire [7:0] a_vi_re_w,a_vi_re_e,a_ro_v_w,a_ro_v_e,a_kv_we_w,a_kv_we_e;
  wire [191:0] a_vi_addr_w,a_vi_addr_e,a_kv_waddr_w,a_kv_waddr_e;
  wire [255:0] a_ro_x_w,a_ro_x_e,a_kv_wdata_w,a_kv_wdata_e;
- ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE)) u_core(
-  .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
+ ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK)) u_core(
+  .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_st(clk_st),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .io_word(io_word),.compiler_control(compiler_control),
   .local_rq(local_rq),.local_rr(local_rr),.local_wq(local_wq),.local_w_done(local_w_done),

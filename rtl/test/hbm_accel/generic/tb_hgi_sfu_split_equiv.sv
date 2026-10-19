@@ -157,7 +157,14 @@ reg io_cfg_we=0,io_start_v=0;
 `else
  wire eq_clk_pw=clk;
 `endif
- ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+ // HBM-SAFE-K9 (10-19): WPIPE=1 + GCLK=1 (split3 defaults). OT_SFU_CORE3_MUT_GCLK (negative control): store group 2's
+ // regional root clk_st[2] left undriven -> its banks never read / write -> must mismatch.
+`ifdef OT_SFU_CORE3_MUT_GCLK
+ wire [4:0] eq_clk_st={clk,clk,1'b0,clk,clk};
+`else
+ wire [4:0] eq_clk_st={5{clk}};
+`endif
+ ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
   .io_word(s_io),.compiler_control(s_ctl),
   .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2+WQX]),

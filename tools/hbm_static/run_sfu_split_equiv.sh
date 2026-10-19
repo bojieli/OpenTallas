@@ -59,9 +59,11 @@ if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_
 if [ "${CORE3:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv $P/ot_hgi_sfu_core_split3.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT3); fi
 # CORE3 runs split3 with DRAIN_PIPE=1 (SFU-K9 10-18: registered drain interface, local_wq +1 edge); EQ_MUT=nodrainpipe:
 # drain data bypasses that stage while its valids keep it (must fail)
+# HBM-SAFE-K9 (10-19): CORE3 also runs WPIPE=1 (bank-write landing stage) + GCLK=1 (store group roots clk_st[4:0]);
+# EQ_MUT=gclk: clk_st[2] undriven; EQ_MUT=wpskew: write enables bypass the landing stage, address/data take it (both must fail)
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; nodrainpipe) defs+=(-DOT_SFU_BRIDGE_MUT_NODRAINPIPE);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; gclk) defs+=(-DOT_SFU_CORE3_MUT_GCLK);; wpskew) defs+=(-DOT_SFU_STORE_MUT_WPIPE_SKEW);; nodrainpipe) defs+=(-DOT_SFU_BRIDGE_MUT_NODRAINPIPE);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)

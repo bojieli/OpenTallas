@@ -27,9 +27,13 @@ module ot_hgi_sfu_core_split2 #(
  parameter integer LG_PATH=0,
  // DRAIN_PIPE (SFU-K9 10-18): passed to the VM bridge; 1 = registered drain interface (drain -> local_wq +1 edge,
  // local_w_done expected +1 edge). Default 0 keeps k7/k8 bit-identical.
- parameter integer DRAIN_PIPE=0
+ parameter integer DRAIN_PIPE=0,
+ // HBM-SAFE-K9 (10-19): WPIPE / GCLK passed to the operand store (bank-write landing stage; per-group store roots
+ // clk_st[4:0]). Defaults 0 keep k7/k8/k9 bit-identical (clk_st unused).
+ parameter integer WPIPE=0, GCLK=0
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
+ input wire [4:0] clk_st,
  input wire [3:0] clk_lg,rst_lg_n,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire [470:0] io_word,
@@ -126,8 +130,8 @@ module ot_hgi_sfu_core_split2 #(
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
  .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
  .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
- ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
-  .clk(clk),.rst_n(rr[1]),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
+ ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK)) u_engine(
+  .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
