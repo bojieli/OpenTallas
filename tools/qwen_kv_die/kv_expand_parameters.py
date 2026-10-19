@@ -106,7 +106,7 @@ def verify_bound(root, report, sidecar, actual_instances, leaf_sources, original
     required = {}
     defaults = {}
     for module, inst, _params, _connections in actual_instances:
-        if inst in original_instances:
+        if original_instances.get(inst) == module:
             continue
         if module not in sources:
             continue

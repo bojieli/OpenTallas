@@ -231,4 +231,48 @@ class ExpansionParameters(unittest.TestCase):
         with patch.object(E.K,'BINDINGS',configured), patch.object(B.PB,'rtl_index',return_value=(index,{})):
             B.main(args)
 
+    def test_no_origin_artifact_cannot_turn_child_into_legacy_by_rename(self):
+        self.expand()
+        d=self.run/'case_kv/die.v'; d.write_text(d.read_text().replace(' f__u0 ',' renamed '))
+        Path(str(d)+'.preexp').unlink()
+        p=self.run/'expand.json'; report=json.loads(p.read_text())
+        report.pop('parameter_instances'); report['leaves']={}; report.pop('frames',None)
+        p.write_text(json.dumps(report))
+        index={}
+        for mod,file in self.rtl.items():
+            for module in B.PB.parse_modules((self.root/file).read_text(),str(self.root/file)):
+                index[module.name]=module
+        configured=dict(E.K.BINDINGS)
+        for mod,file in self.rtl.items():
+            configured[mod]=dict(module=mod,file=file,ports={'a':['a'],'y':['y']})
+        args=[str(d),'--expanded',str(p),'--out-dir',str(self.root/'bound'),
+              '--diagnostic-parameter-profiles']
+        with patch.object(E,'RTL',{}), patch.object(E.K,'BINDINGS',configured), \
+             patch.object(B.PB,'rtl_index',return_value=(index,{})):
+            with self.assertRaisesRegex(ValueError,'ledger incomplete'):
+                B.main(args)
+
+    def test_retained_name_with_changed_master_cannot_skip_ledger(self):
+        self.expand()
+        d=self.run/'case_kv/die.v'
+        mod='ot_qwen_tp8_pv_slice_t'
+        d.write_text(d.read_text().replace(' keep k',f' {mod} k'))
+        index={}
+        for module,file in self.rtl.items():
+            for entry in B.PB.parse_modules((self.root/file).read_text(),str(self.root/file)):
+                index[entry.name]=entry
+        configured=dict(E.K.BINDINGS)
+        configured[mod]=dict(module=mod,file=self.rtl[mod],ports={'a':['a'],'y':['y']})
+        args=[str(d),'--expanded',str(self.run/'expand.json'),'--out-dir',str(self.root/'bound'),
+              '--diagnostic-parameter-profiles']
+        with patch.object(E.K,'BINDINGS',configured), patch.object(B.PB,'rtl_index',return_value=(index,{})):
+            with self.assertRaisesRegex(ValueError,'ledger incomplete'):
+                B.main(args)
+
+    def test_changed_origin_source_refused(self):
+        self.expand()
+        p=self.run/'case_kv/die.v.preexp'; p.write_text(p.read_text()+'// changed\n')
+        with self.assertRaisesRegex(ValueError,'source witness changed'):
+            self.bind()
+
 if __name__=='__main__': unittest.main(verbosity=2)

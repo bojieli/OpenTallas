@@ -415,7 +415,8 @@ def main(argv=None):
                 r['w'] = 1 if r['bits'] == {None} else max(r['bits']) + 1
             leaf[nm] = dict(view=vd, lef=blk, size=sz, ports=ports)
     views = json.loads((libs / 'views.json').read_text())
-    rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={}, parameter_instances={})
+    rep = dict(schema='opentallas.qwen_kvsys_expand.v1', frames={}, parameter_instances={},
+               preexpand_die_sha256=EP.sha(case / 'die.v'))
     occupied = set(re.findall(r'^\s+\w+(?:\s*#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\S+)\s*\(', dv, re.M))
     new_lines, add_wires, add_place, drop_inst, used_leaf = [], [], [], set(), set()
     inst_re = re.compile(r'^\s+(\w+) (\S+) \((.*)\);\s*$')

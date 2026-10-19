@@ -187,20 +187,21 @@ def main(argv=None):
         _sources = dict(_configured_leaf_sources)
         _reported = _expanded.get('leaves', {})
         _preexpand = Path(a.die_v + '.preexp')
-        if _preexpand.exists():
-            _original_instances = {_i for _m, _i, _p, _c in PB.parse_die(str(_preexpand), a.top)[3]
+        if _preexpand.exists() and _expanded.get('preexpand_die_sha256'):
+            if EP.sha(_preexpand) != _expanded['preexpand_die_sha256']:
+                raise ValueError('expanded pre-expansion source witness changed')
+            _original_instances = {_i: _m for _m, _i, _p, _c in PB.parse_die(str(_preexpand), a.top)[3]
                                    if _m != '__assign__'}
         else:
-            # Expansion always creates parent__child names. Unexpanded legacy
-            # bindings without that delimiter remain compatible; ambiguous
-            # names need the preserved pre-expansion source as their witness.
-            _original_instances = {_i for _m, _i, _p, _c in insts
-                                   if _m in bindings and '__' not in _i}
+            # Names and current binding membership cannot prove an instance
+            # predates expansion. Without source evidence no legacy exemption
+            # applies; parameterless leaves still require no parameter ledger.
+            _original_instances = {}
         # Independently indexed by-name RTL also covers dynamically configured
         # expanded leaf types absent from the static registry. A deleted report
         # binding must not make such a parameterized module disappear.
         for _mst, _inst, _params, _connections in insts:
-            if _mst in _sources or _mst in _reported or _inst in _original_instances:
+            if _mst in _sources or _mst in _reported or _original_instances.get(_inst) == _mst:
                 continue
             _mod = idx.get(_mst)
             if _mod is not None:
