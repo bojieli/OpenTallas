@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_ns_104x60-c1-86625de7d/record/views/qfd_landh0_600_NS_104x60/provenance/qfd_landh0_600_NS_104x60.candidate.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfwd_landh0_600_ns_104x60-h1-3ebbab7a5/record/views/qfd_landh0_600_NS_104x60/provenance/qfd_landh0_600_NS_104x60.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "qfd_landh0_600_NS_104x60 104.088 x 60.456: PG M5 VDD 37 stripes (93% spread, 100% cov) / VSS 37 stripes (93% spread, 100% cov); strap M6; face pins 1210 blocked-above 0 blocked-same 0; clock ck insertion 121 ps; clock ck_s insertion 193 ps; pockets M5 0 (closed)",
+ "summary": "qfd_landh0_600_NS_104x60 104.088 x 60.456: PG M5 VDD 37 stripes (93% spread, 100% cov) / VSS 37 stripes (93% spread, 100% cov); strap M6; face pins 1210 blocked-above 0 blocked-same 0; clock ck insertion 128 ps; clock ck_s insertion 195 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qfd_landh0_600_NS_104x60",
   "W": 104.088,
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 1210,
    "blocked_above": 0,
-   "covered_below": 451,
+   "covered_below": 500,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,12 +47,12 @@
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 121.02,
-    "min_ps": 92.73
+    "max_ps": 127.81,
+    "min_ps": 94.37
    },
    "ck_s": {
-    "max_ps": 193.34,
-    "min_ps": 158.31
+    "max_ps": 195.25,
+    "min_ps": 160.56
    }
   },
   "pockets": {
@@ -61,7 +61,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 598
+    "added": 452
    },
    "count": 0,
    "area_um2": 0,
