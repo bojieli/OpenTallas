@@ -14,7 +14,20 @@
 # (geometric binary split, 6 levels = 64 BUFx24 leaves ~70 sinks each, repeaters on every wire > 80 um, every
 # root -> leaf path padded to one buffer count).  The register mass + the 4 SRAM clk pins keep the CTS tree.
 # No pin, outline or SDC change.
-if {![info exists ::ot_sv_depth]}  { set ::ot_sv_depth 6 }
+# HBM-SMHXS-HOLD 2026-10-19 (REFILL-1330): ONE TREE FOR EVERY SINK (ot_sv_all 1, the default here).
+# Why: the routed hf5bt job smh_xs_ref_p45m-hf5bt-e1b14e06f (boundary-only tree) fixed the pin-flop spread (68.9 TT /
+# 59.4 FF) but ended NEEDS_RTL FF -45.75 (hold ECO rc=9, 9,233 cells, least-bad -0.71).  Classified (cl/path_summary.json,
+# w18_sta_ff.log): ALL failing reg->reg classes cross from the TritonCTS register-mass tree to this boundary tree on
+# ZERO-LOGIC hops of the w / c delay lines (u_leaf.w3b -> o_iw 311 paths -45.75; c3bd -> o_itag/ifirst/ilast/ifp4/u_ctle
+# -33.8..-16.7): launch w3b[156] CLK 255.8 (CTS leaf, 8 levels), capture o_iw[156] CLK 353.6 (svbnd, 11 levels), CRPR 0
+# (no common path) -> 98 ps cross-tree skew at FF against a clk->q + wire data path.  IO class (bk1 -> u_bkd2 -30.4,
+# rl1 -> u_rl2 -26.1) is the pin-flop reference band; reset landing (+15 / +18) and the 4 SRAM clk pins are clean.
+# Fix: no second tree.  TritonCTS is not run; every sink of the clock port net (15,345 registers + 4 SRAM clk pins) goes
+# onto this one geometric tree from the stem beside the clk pin (8 levels = 256 leaves ~60 sinks, repeaters > 80 um,
+# equal buffer count per path), so every hop -- delay line, boundary, macro -- is intra-tree with a shared trunk.
+# ot_sv_all 0 restores the hf5bt boundary-only tree.
+if {![info exists ::ot_sv_all]}    { set ::ot_sv_all 1 }
+if {![info exists ::ot_sv_depth]}  { set ::ot_sv_depth [expr {$::ot_sv_all ? 8 : 6}] }
 if {![info exists ::ot_sv_gap_um]} { set ::ot_sv_gap_um 20 }
 if {![info exists ::ot_sv_rep_um]} { set ::ot_sv_rep_um 80 }
 if {![info exists ::ot_sv_master]} { set ::ot_sv_master BUFx24_ASAP7_75t_R }
@@ -125,7 +138,15 @@ proc ot_sv_bnd_tree {port clkname} {
   set bb [[lindex [$bt getBPins] 0] getBBox]
   lassign [ot_sv_legal [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]] tx ty
   set sinks {}
-  foreach inst [ot_sv_bnd_regs [get_clocks $clkname]] {
+  if {$::ot_sv_all} {
+    # every load of the (pre-CTS, unbuffered) clock port net: register CLK pins and the SRAM clk pins
+    foreach it [$pnet getITerms] {
+      if {![$it isInputSignal]} continue
+      set ib [[$it getInst] getBBox]
+      lappend sinks [list $it [expr {([$ib xMin] + [$ib xMax]) / 2}] [expr {([$ib yMin] + [$ib yMax]) / 2}]]
+    }
+  }
+  foreach inst [expr {$::ot_sv_all ? {} : [ot_sv_bnd_regs [get_clocks $clkname]]}] {
     set ck ""
     foreach it [$inst getITerms] { if {[$it getNet] ne "NULL" && [[$it getNet] getSigType] eq "CLOCK" && [$it isInputSignal]} { set ck $it } }
     if {$ck eq ""} continue
@@ -137,7 +158,7 @@ proc ot_sv_bnd_tree {port clkname} {
   # stem beside the ck pin on the port net
   lassign [ot_sv_buf $tx $ty] b net; [$b findITerm A] connect $pnet
   ot_sv_emit_root $t $net $tx $ty
-  puts "OT_SV_BND $port: $::ot_sv_ns $clkname boundary sinks onto a $::ot_sv_depth-level balanced tree, $::ot_sv_nb buffers\
+  puts "OT_SV_BND $port (all=$::ot_sv_all): $::ot_sv_ns $clkname sinks onto a $::ot_sv_depth-level balanced tree, $::ot_sv_nb buffers\
         ($::ot_sv_master, repeat $::ot_sv_rep_um um, gap $::ot_sv_gap_um um), stem at [expr {$tx / 1000.0}] [expr {$ty / 1000.0}] um"
 }
 
@@ -163,7 +184,13 @@ proc ot_sv_emit {t pnet px py budget} {
 
 rename clock_tree_synthesis ::ot_sv_bnd_cts_orig
 proc clock_tree_synthesis {args} {
-  ::ot_sv_bnd_cts_orig {*}$args
-  estimate_parasitics -placement
+  if {$::ot_sv_all} {
+    puts "OT_SV_BND: one tree for every sink; TritonCTS not run (args $args)"
+  } else {
+    ::ot_sv_bnd_cts_orig {*}$args
+    estimate_parasitics -placement
+  }
   ot_sv_bnd_tree clk core_clk
+  set_propagated_clock [all_clocks]
+  estimate_parasitics -placement
 }
