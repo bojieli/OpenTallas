@@ -1,0 +1,26 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-epyc5       admits   939 GB (avail 771, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 20 disk 1222 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1478828-1792422732 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_LPC split=u_lprc_u_gi.g_reg.r\[0\]$_DFF_P_/QN original_loads=205
+OT_LPC split=u_lprc_u_gi.q$_DFF_P_/QN original_loads=3170
+OT_LPC split=u_lprc_u_go.g_reg.r\[0\]$_DFF_P_/QN original_loads=110
+OT_LPC split=u_lprc_u_go.q$_DFF_P_/QN original_loads=184
+OT_LPC split=u_lprc_u_gi.g_reg.r\[1\]$_DFF_P_/QN original_loads=100
+OT_LPC split=ot_lpr_copy_00005/QN original_loads=35
+OT_LPC_FINAL_EQUIVALENCE PASS same_master_all_signal_inputs=288 copies_and_buffer_paths
+OT_LPC PASS existing_stages_and_copies=131 new_copies=117 maximum_buffer_tree_terminal_load=32 same_master_and_inputs_at_clone=PASS no_added_edges=0
+OT_LCR region=core cells=80345 std_area_um2=9711.519300003105 x=2.16:432.0
+OT_LCR region=hr cells=12698 std_area_um2=1870.9056000001842 x=475.2:775.44
+OT_LCR fixed_or_hard=18005 shared_cells=8513 shared_std_area_um2=759.1806000000475 seam_area_um2=14743.296000000002
+OT_LCR PASS full cones partitioned with real shared channel
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1478828-1792422732): exit 0

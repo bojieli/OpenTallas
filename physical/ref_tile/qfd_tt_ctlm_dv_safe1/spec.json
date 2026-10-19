@@ -565,6 +565,8 @@
  "landed_raw_detach": true,
  "clock_note_ctlmclk": "safe1: after fixed pin anchoring classify full combinational cones by source/sink clock ownership; exclusive core/hr soft cones belong with regional flops, mixed/rootless cones stay in real43.2um center channel. Flop-only full-width regions from failed clk2 are removed. No density relaxation.",
  "pin_hook_after_flops": [
+  "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_reset_copies.tcl",
+  "physical/common_flow/same_edge_reset_copies.tcl",
   "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_cone_regions.tcl"
  ],
  "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/views",

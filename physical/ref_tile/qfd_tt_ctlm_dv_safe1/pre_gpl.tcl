@@ -4,4 +4,6 @@
 source /src/physical/common_flow/pin_reg_split.tcl
 source /src/physical/dsrom_window_source/leaf_iohold.tcl
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
+source /src/physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_reset_copies.tcl
+source /src/physical/common_flow/same_edge_reset_copies.tcl
 source /src/physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_cone_regions.tcl
