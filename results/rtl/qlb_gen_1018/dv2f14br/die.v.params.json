@@ -1,0 +1,20 @@
+{
+ "masters": {
+  "qfd_collective_static_io_production": {
+   "LX0": 11,
+   "LX1": 0,
+   "LX2": 10,
+   "_source": "Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j)"
+  },
+  "qfd_d2d_static": {
+   "TXDP": 151061254,
+   "_source": "QXF-LINK/QLB-GEN: D2D_TXDP_C of rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh (die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 2, 'SC_TX': 0, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 11, 'SK_TXP': 11})"
+  },
+  "qfd_tt_ctlm_dv": {
+   "XPF_TRANSPORT_EDGES": 20,
+   "_source": "QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built (dvw_hr_wi fwd)"
+  }
+ },
+ "netlist": "die.v",
+ "schema": "opentallas.die_params.v1"
+}
