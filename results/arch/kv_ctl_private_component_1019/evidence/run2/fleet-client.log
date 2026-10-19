@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ctl-private-component-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ctl-private-component-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-ctl-private-component-1019
+ot-run: ot-epyc7       admits   994 GB (avail 755, growth 60, headroom 0, waiters 0/0 GB) load 25/96 running 20 disk 6272 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ctl-private-component-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ctl-private-component-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ctl-private-component-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-135843-1792447358 after 0 s
+/srv/opentallas-scratch/claude/kv-ctl-private-component-1019/run2/writer_original.sv: OK
+/srv/opentallas-scratch/claude/kv-ctl-private-component-1019/run2/programme_original.sv: OK
+/srv/opentallas-scratch/claude/kv-ctl-private-component-1019/run2/sram_original.v: OK
+CTLP_SUITE_PASS engine=iverilog original=c5fbbded9
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-135843-1792447358): exit 0

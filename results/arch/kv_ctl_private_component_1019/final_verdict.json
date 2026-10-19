@@ -1,0 +1,25 @@
+{
+  "source": "878ec8b11",
+  "run": "run2",
+  "engine": "Icarus12.0_four_state",
+  "base_settings": [
+    0,
+    1
+  ],
+  "checked_edges_each": 22987,
+  "scenario_count": 18,
+  "positive": "PASS",
+  "mutants": {
+    "late_read": "CAUGHT",
+    "wrong_row": "CAUGHT",
+    "mask_word": "CAUGHT",
+    "invalid_start": "CAUGHT"
+  },
+  "raw_original_collision_preserved": true,
+  "additional_schedule_edges": 0,
+  "production_SU_MU_calendar": null,
+  "adoption": "private only; parent ROOT review required",
+  "physical_storage": "HOLD",
+  "native_copy_forest": "NOT_EMITTED",
+  "selected_5f2_ABI": "MISSING"
+}
