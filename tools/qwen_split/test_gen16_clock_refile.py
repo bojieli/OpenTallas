@@ -58,5 +58,13 @@ m2 = model(); m2['ck_follow'] = {}
 G._regions_from_placement(m2)
 n2 = net_of(m2)
 assert n2[('land', 'ck')] != n2[('dst', 'ck')], 'mutant must reproduce the GAP'
+# scattered lane repeaters (no stacked column) stay in their block region (dv2f16 first GEN: 1,340 one-repeater roots)
+m3 = model()
+for j in range(12):
+    r_ = next(i for i in m3['insts'] if i.name == f'r{j}')
+    r_.x = 200 + 300 * j if j < 6 else 5200 + 300 * (j - 6)
+G._regions_from_placement(m3)
+n3 = net_of(m3)
+assert all(n3[(f'r{j}', 'clk')] == n3[('a', 'ck')] for j in range(6)), n3
 print('GEN16_CLOCK_REFILE PASS: landing->receiver, hop0->sender, co-root, rep columns split <=', G.REP_SEG_MM, 'mm; '
       'no-follow mutant reproduces the GAP')

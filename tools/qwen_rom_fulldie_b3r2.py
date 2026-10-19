@@ -6682,6 +6682,8 @@ def _regions_from_placement(m):
 
 
 REP_SEG_MM = float(os.environ.get('OT_SPLIT_REP_SEG_MM', '1.3'))
+REP_COL_UM = 20.0
+REP_COL_MIN = 4
 
 
 def _gen16_clock_refile(m, regs, by, per):
@@ -6751,13 +6753,18 @@ def _gen16_clock_refile(m, regs, by, per):
         xs, ys = [cx(i) for i, _ in reps], [cy(i) for i, _ in reps]
         if max(max(xs) - min(xs), max(ys) - min(ys)) <= cap:
             continue
-        # columns: single linkage on x (the field columns sit in their reset slots, >= one cluster apart)
-        cols, cur = [], []
+        # columns: repeaters stacked in one reset slot (same x within REP_COL_UM, >= REP_COL_MIN of them); scattered
+        # repeaters along lanes stay in the block region (dv2f16 first GEN: x single linkage made 1,340 one-repeater roots)
+        grp, cur = [], []
         for i, p in sorted(reps, key=lambda e: cx(e[0])):
-            if cur and cx(i) - cx(cur[-1][0]) > 100.0:
-                cols.append(cur); cur = []
+            if cur and cx(i) - cx(cur[-1][0]) > REP_COL_UM:
+                grp.append(cur); cur = []
             cur.append((i, p))
-        cols.append(cur)
+        grp.append(cur)
+        cols = [c for c in grp if len(c) >= REP_COL_MIN]
+        if not cols:
+            continue
+        reps = [e for c in cols for e in c]
         segs = []
         for col in cols:
             col = sorted(col, key=lambda e: cy(e[0]))
