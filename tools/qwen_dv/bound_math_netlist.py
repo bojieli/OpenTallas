@@ -7,7 +7,7 @@ same D at the same edge. Added copies' input loads participate in subsequent
 passes. This is source construction, never mapped timing qualification.
 """
 import argparse,copy,hashlib,json
-from collections import defaultdict
+from collections import defaultdict,Counter
 from pathlib import Path
 
 GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
@@ -16,7 +16,7 @@ GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
 FFS={'$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_',
      '$_SDFF_PN0_','$_SDFF_PP0_','$_SDFF_PN1_','$_SDFF_PP1_'}
 
-def build(raw,top,new):
+def build(raw,top,new,drop=()):
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  nextbit=max(b for c in cells.values() for bs in c['connections'].values() for b in bs if isinstance(b,int))+1
  # Retained output-copy boundaries are real logic, not black-box stand-ins.
@@ -39,7 +39,25 @@ def build(raw,top,new):
     cc=copy.deepcopy(sc);cc['connections']={p:[mapping[b] if isinstance(b,int) else b for b in bs] for p,bs in sc['connections'].items()};cells[n+'/'+sn]=cc
  cells={n:c for n,c in cells.items() if c['type']!='$scopeinfo'}
  assert all(c['type'] in GATES or c['type'] in FFS for c in cells.values()),sorted({c['type'] for c in cells.values() if c['type'] not in GATES and c['type'] not in FFS})
- original=len(cells);added=defaultdict(int)
+ for name in drop:
+  assert name in ports and ports[name]['direction']=='output',name
+  del ports[name]
+ # Specialize actual output consumers before retaining any state. In data-only
+ # lanes this removes the entire otherwise-unobserved valid pipeline.
+ bybit={b:n for n,c in cells.items() for p,bs in c['connections'].items() if c['port_directions'][p]=='output' for b in bs if isinstance(b,int)}
+ todo=[b for p in ports.values() if p['direction']=='output' for b in p['bits']];live=set();seen=set()
+ while todo:
+  b=todo.pop()
+  if b in seen:continue
+  seen.add(b)
+  if b not in bybit:continue
+  n=bybit[b]
+  if n in live:continue
+  live.add(n);todo.extend(b for p,bs in cells[n]['connections'].items() if cells[n]['port_directions'][p]=='input' for b in bs)
+ removed=len(cells)-len(live);cells={n:c for n,c in cells.items() if n in live}
+ unused_inputs=[n for n,p in ports.items() if p['direction']=='input' and not any(b in seen for b in p['bits'])]
+ for n in unused_inputs:del ports[n]
+ original=len(cells);original_types=dict(Counter(c['type'] for c in cells.values()));added=defaultdict(int)
  for iteration in range(100):
   sinks=defaultdict(list);drivers={}
   for n,c in cells.items():
@@ -99,9 +117,9 @@ def build(raw,top,new):
    event='posedge C' if typ.startswith('$_SDFF') else f'posedge C or {edge} R'
    h.append(f"always @({event}) if({test}) Q<=1'b{val};else Q<=D;")
   h.append('endmodule');helpers.append('\n'.join(h))
- return '\n'.join(lines)+'\n',helpers,dict(original_cells=original,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
+ return '\n'.join(lines)+'\n',helpers,dict(original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name);Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output);Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()

@@ -1,0 +1,46 @@
+{
+  "kernel_instances": {
+    "add": 2,
+    "add_nov": 30,
+    "add_base": 2,
+    "add_base_nov": 30,
+    "mul": 1,
+    "mul_nov": 15
+  },
+  "arithmetic_cells_by_type": {
+    "$_SDFF_PN0_": 592,
+    "$_SDFF_PP0_": 2672,
+    "$_DFF_P_": 47664,
+    "$_SDFF_PP1_": 96,
+    "$_SDFF_PN1_": 96,
+    "$_DFF_PN0_": 214,
+    "$_NOT_": 17616,
+    "$_XOR_": 34672,
+    "$_AND_": 99152,
+    "$_OR_": 65840,
+    "$_MUX_": 75392
+  },
+  "arithmetic_cells_total": 344006,
+  "arithmetic_ff_total": 51334,
+  "added_clone_cells_by_type": {
+    "$_DFF_P_": 752,
+    "$_OR_": 256,
+    "$_NOT_": 16
+  },
+  "steady_arithmetic_edges_added": 0,
+  "configuration_setup_edges_added": 2,
+  "configuration_ii": 1,
+  "reset_release_edges_added": 2,
+  "control_reset_leaves": 94,
+  "parallel_math_reset_leaves": 35,
+  "parallel_reset_trees_same_depth": true,
+  "clock_root": "existing station ck; no new clock root or phase claimed",
+  "native_memory_sinks": 42,
+  "native_memory_area_um2": 23201.09568,
+  "mapped_std_area_um2": "PENDING actual mapped/native receipt; generic cell counts are not area",
+  "actual_full_native_all_driver_census": "PENDING final six-kernel source",
+  "TT_setup_FF_hold": "PENDING physical placement/clock/route",
+  "source_sha256": "b5299be4446040607508593a63b1b537d6f25776e77fbe998e78fe8b1bf70648",
+  "consumer_specialization": "Only lo/L8 use local valid mirrors; only lane0 of each group emits global valid; hi/L9 other lanes and scale other lanes contain no unused valid/reset pipelines; oddmode groups implement only3consumedmodebits",
+  "scope": "source construction certificate only; no gate or release adoption"
+}
