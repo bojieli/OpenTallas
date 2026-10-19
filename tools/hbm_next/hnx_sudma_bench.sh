@@ -29,6 +29,11 @@
 #      9768 --partition 4, d4g producers ot_hbm_su_programme_part PIPE 2 (= pslice_q4) vs monolithic, lockstep + golden
 #      (tb_hnx_su_programme_rc = d4g tb, mono at PIPE 2): positive PASS; mutants template / pcoff (as d4g) and rcdrop (image compiled
 #      without rc, golden with rc) -> SU_PROGRAMME_PART FAIL
+#  r   (SUDMA2 10-19) REDUCER / RF ROW CLASS: four d4g qcores (RF replica + reducer, unchanged) behind ot_hnx_su_rowr
+#      + the top's RF relay routes (tb_hnx_su_red_rows, RF_RELAY 8). MUT 0: row-relative m 128 N = 1,2,3,4,6, m 64 N 4,
+#      --absolute N 4 (unrolled d4g image, rc2 = 0 -> same expectations), seed 1 N 4 -> SU_RED_ROWS PASS + EDGES;
+#      ovf (s_red 400 carries out of the scratch: rowr FAULT, must FAIL); MUT 1 dst / 2 export tag / 3 RF read / 4 a,b
+#      stride dropped, N 4 -> SU_RED_ROWS FAIL (witnesses)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -110,6 +115,30 @@ if [ "$ST" = aw ]; then
     for sd in $SDS; do vd=$O/wvec$sd; [ $sd = o ] && vd=$O/ovec0
       ( cd $vd && $d/Vaw$m > $O/aw_m${m}_s$sd.log 2>&1; echo RUN_RC=$? >> $O/aw_m${m}_s$sd.log )
       V "aw_m$m seed$sd: $(grep -h 'ARGMAX_ROWS\|RUN_RC' $O/aw_m${m}_s$sd.log | head -2 | tr '\n' ' ')"; done
+    rm -rf $d ) &
+  done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = r ]; then
+  S=rtl/hbm_accel/generic/adapters/static_su
+  RS=($S/top/ot_hbm_su_static_qcore.sv $S/register_file/ot_hbm_su_static_rf.sv $S/reduction/ot_hbm_su_reduce_static.sv
+   rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv
+   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+   rtl/hbm_next/su/ot_hnx_su_rowr.sv rtl/hbm_next/su/tb/tb_hnx_su_red_rows.sv)
+  rg(){ local c=$1; shift; python3 tools/hbm_next/su_red_rows_compile.py $O/rvec_$c "$@" > $O/rvec_$c.log 2>&1 || V "vector gen $c FAILED"; }
+  for n in 1 2 3 4 6; do rg n$n --n $n; done
+  rg m64_n4 --n 4 --m 64; rg abs_n4 --n 4 --absolute; rg s1_n4 --n 4 --seed 1; rg ovf_n4 --n 4 --s-red 400 --ovf
+  for m in 0 1 2 3 4; do (
+    d=$O/obj_r$m; rm -rf $d
+    verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hnx_su_red_rows -GMUT=$m -Mdir $d -o Vr$m \
+      "${RS[@]}" > $O/build_r$m.log 2>&1 || { sleep 5; verilator --binary --timing -j 1 -Wno-fatal -Wno-lint -Wno-style \
+      --top-module tb_hnx_su_red_rows -GMUT=$m -Mdir $d -o Vr$m "${RS[@]}" > $O/build_r$m.log 2>&1; }
+    if [ $m = 0 ]; then CS="n1 n2 n3 n4 n6 m64_n4 abs_n4 s1_n4 ovf_n4"; else CS=n4; fi
+    for c in $CS; do
+      read -r NE NT NS NB ND < <(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["edges"],d["bench_cycles"],d["expected_scalars"],d["expected_bcast"],d["expected_drains"])' $O/rvec_$c/programme.json)
+      $d/Vr$m +DIR=$O/rvec_$c +NE=$NE +NT=$NT +NS=$NS +NB=$NB +ND=$ND > $O/r_m${m}_$c.log 2>&1; echo RUN_RC=$? >> $O/r_m${m}_$c.log
+      V "r_m$m $c: $(grep -h 'SU_RED_ROWS PASS\|SU_RED_ROWS FAIL\|SU_RED_ROWS_EDGES\|RUN_RC' $O/r_m${m}_$c.log | head -3 | tr '\n' ' ')"
+    done
     rm -rf $d ) &
   done
   wait; V "done"; exit 0
