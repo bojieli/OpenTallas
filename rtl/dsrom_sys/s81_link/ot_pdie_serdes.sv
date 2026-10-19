@@ -33,6 +33,31 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     input  wire [543:0]  pma_rx,
     input  wire          pma_rck
 );
+    wire phy_tx_v;
+    wire [543:0] phy_tx, phy_rx;
+    ot_pdie_serdes_digital #(.EMUT(EMUT), .DMUT(DMUT)) u_digital (
+        .clk(clk), .rst(rst), .tx(tx), .rx(rx), .st(st),
+        .phy_tx_v(phy_tx_v), .phy_tx(phy_tx), .phy_rx(phy_rx), .pma_rck(pma_rck));
+    // These two models contain only the analog PMA latency, never digital FEC or rate matching.
+    ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (
+        .clk(clk), .d_v(phy_tx_v), .d(phy_tx), .q(pma_tx));
+    ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_prx (
+        .clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(phy_rx));
+    assign pma_tck = clk;
+endmodule
+
+// Real digital source boundary. A die PHY abstract may model only u_ptx / u_prx above.
+// This module requires real hardened digital views; the source partition itself is not physical qualification.
+module ot_pdie_serdes_digital #(parameter integer EMUT = 0, parameter integer DMUT = 0) (
+    input wire clk, rst,
+    input wire [511:0] tx,
+    output wire [511:0] rx,
+    output wire [1:0] st,
+    output wire phy_tx_v,
+    output wire [543:0] phy_tx,
+    input wire [543:0] phy_rx,
+    input wire pma_rck
+);
     // ---- resets: one synchroniser per clock domain
     reg [1:0] rs_t, rs_r;
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
@@ -41,11 +66,10 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     // ---- transmit: FEC encoder (ck) -> PMA TX model
     wire e_v; wire [543:0] e_d; wire e_flt;
     ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t), .tx_v(rn_t), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
-    ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
-    assign pma_tck = clk;
+    assign phy_tx_v = e_v;
+    assign phy_tx = e_d;
     // ---- receive: PMA RX model (recovered clock) -> FEC decoder -> rate matcher -> ck
-    wire [543:0] r_d;
-    ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_prx (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(r_d));
+    wire [543:0] r_d = phy_rx;
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
     ot_s81_kp4_dec #(.MUT(DMUT)) u_dec (.clk(pma_rck), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .q_v(q_v), .q_d(q_d),
         .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock), .n_corr(n_corr), .n_unc(n_unc),
