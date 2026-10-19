@@ -4,6 +4,7 @@ set vdu [[ord::get_db_tech] getDbUnitsPerMicron]
 set vi [dict create]
 if {![info exists pvm_stage]} {set pvm_stage pre_dpl}
 set pvm_unlegal 0
+set pvm_fence_unlegal 0
 foreach inst [$vb getInsts] {
  regsub -all {\\} [$inst getName] {} key
  if {[dict exists $vi $key]} {error "PVM_HOP ambiguous exact cell $key"}
@@ -45,11 +46,15 @@ foreach name {pvm_macro_cone} {
  set n 0
  foreach inst [$rg getRegionInsts] {
   set bb [$inst getBBox]
-  if {[$bb xMin]<[$box xMin] || [$bb yMin]<[$box yMin] || [$bb xMax]>[$box xMax] || [$bb yMax]>[$box yMax]} {error "PVM_HOP instance outside actual fence: [$inst getName]"}
+  if {[$bb xMin]<[$box xMin] || [$bb yMin]<[$box yMin] || [$bb xMax]>[$box xMax] || [$bb yMax]>[$box yMax]} {
+   # GPL keeps EXCLUSIVE-region members only approximately inside; DPL legalizes them into the fence. Pre-DPL: count;
+   # the strict fence check reruns on 3_place.odb (post_place_check.tcl).
+   if {$pvm_stage eq "pre_dpl" && [$inst getPlacementStatus] eq "PLACED"} {incr pvm_fence_unlegal} else {error "PVM_HOP instance outside actual fence: [$inst getName]"}
+  }
   incr n
  }
  if {$n==0} {error "PVM_HOP empty required fence $name"}
- puts "PVM_HOP fence $name actual placed members=$n"
+ puts "PVM_HOP fence $name actual placed members=$n unlegalized_outside=$pvm_fence_unlegal (stage $pvm_stage)"
 }
 set ::pvm_vdu $vdu
 proc pvm_hop_bbox {px py bb} {
