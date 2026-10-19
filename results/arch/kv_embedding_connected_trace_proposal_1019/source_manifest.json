@@ -1,0 +1,72 @@
+{
+  "revision": "5f2ce19bc",
+  "die_preexp_sha256": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e",
+  "files": [
+    {
+      "path": "rtl/physical/ot_qwen_host_ctl.sv",
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436",
+      "bytes": 3549
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d",
+      "bytes": 39228
+    },
+    {
+      "path": "rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7",
+      "bytes": 6704
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+      "sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+      "bytes": 45568
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+      "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8",
+      "bytes": 1587
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
+      "sha256": "fb1f5dbfe76a33e302cd35d5c488d72ca9c2e658364384bc2a18d45202f265b4",
+      "bytes": 2552
+    },
+    {
+      "path": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+      "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962",
+      "bytes": 12871
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv",
+      "sha256": "90f9a4ec6dbb0ee2e1d644ac0878566c709ba5a1ec68601a4d250a50fa4f98fe",
+      "bytes": 15623
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv",
+      "sha256": "14d5d335fc805eb6a39850b05d827001dbca31091c3e9e5758b4ee5db7e0d7b8",
+      "bytes": 34821
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+      "sha256": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+      "bytes": 5136
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv",
+      "sha256": "7b857785e3b64469b3d6fa74f72c303960b56c6277344fddf530181cd982b78b",
+      "bytes": 5171
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+      "sha256": "b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c",
+      "bytes": 7406
+    },
+    {
+      "path": "tools/qwen_kv_die/kv_die.py",
+      "sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903",
+      "bytes": 353283
+    }
+  ],
+  "scope": "targeted source extraction; not compile inventory"
+}
