@@ -110,21 +110,22 @@ def safe2_parameter_model():
     width, aw, sb = 553, 9, 8
     slices = math.ceil(width / sb)
     address_groups = math.ceil(slices / 4)
-    per_oldread = 1 + address_groups * aw + width + slices * (aw + 2) + width
+    per_oldread = address_groups * (aw + 1) + width + slices * (aw + 2) + width
     pointer_copies = 4 * (address_groups - 1) * aw
-    relay_copies = 2 * slices
+    relay_copies = 2 * (slices + address_groups)
+    grouped_control_ff = address_groups * (1 + 10 + 1)  # replay ready; FIFO fill/output-valid
     control_ff = 10 + 12  # sequence preclassification + timeout limit/at-limit
-    extra_ff = 2 * per_oldread + pointer_copies + relay_copies + control_ff
+    extra_ff = 2 * per_oldread + pointer_copies + relay_copies + control_ff + grouped_control_ff
     ff_area = .2916  # DFFHQNx1_ASAP7_75t_R TT Liberty area, measured library
     estimate = base['evidence']['std_cell_area_um2'] + extra_ff * ff_area
     return dict(schema='opentallas.s81.collective_lane_safe2_parameters.v1',
         status='PREBUILD_NOT_ADOPTED', base=base,
-        parameters=dict(RXSRAM=1, RXLOCAL=1, EPRX=1, EPTO=1, EPMW=1),
+        parameters=dict(RXSRAM=1, RXLOCAL=1, EPRX=1, EPTO=1, EPMW=1, TXSAFE=1),
         state_inventory=dict(oldread_sb=sb, oldread_slices=slices, oldread_group_slices=4,
             address_groups=address_groups, oldread_ff_per_buffer=per_oldread,
             oldread_buffers=2, pointer_copy_ff=pointer_copies,
             same_depth_reset_relay_ff=relay_copies,
-            sequence_timeout_ff=control_ff, provisional_extra_ff=extra_ff),
+            sequence_timeout_ff=control_ff, grouped_control_ff=grouped_control_ff, provisional_extra_ff=extra_ff),
         area=dict(ff_liberty_area_um2=ff_area,
             provisional_std_cell_area_um2=estimate,
             provisional_band_density=estimate/base['geometry']['std_band_area_um2'],
