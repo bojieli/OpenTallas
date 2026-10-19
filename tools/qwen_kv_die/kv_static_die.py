@@ -71,7 +71,8 @@ CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
 KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
-            ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') + '.sv')
+            ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
+            ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') + '.sv')   # MU-ADOPT-KV 10-19 (kv_static.MU)
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -616,6 +617,8 @@ def tile(die_inst):
             if any(str(dflt.get(k)) != str(v) for k, v in par.items()):
                 raise ValueError(f'kv_static_die: hard child {n} ({I[n]["module"]}) needs non-default parameters {par}')
             par = {}
+        if par.get('MU') == 0:      # MU-ADOPT-KV 10-19: the MU 0 default stays implicit (existing tile text unchanged)
+            par = {k: v for k, v in par.items() if k != 'MU'}
         ps = (' #(' + ', '.join(f'.{k}({v})' for k, v in par.items()) + ')') if par else ''
         body.append(f'    {I[n]["module"]}{ps} u_{loc[n]} (' + ', '.join(cs) + ');')
     # outputs: member output slices read by another tile / an existing die master, plus the die-level exports
@@ -1191,6 +1194,8 @@ def sources():
     if BOOT:
         s.update(BOOT_PC_DEPS)
     s.update(K.EMB_SOURCES)
+    if K.MU:
+        s.update(K.MU_DEPS)
     return sorted(s)
 
 
