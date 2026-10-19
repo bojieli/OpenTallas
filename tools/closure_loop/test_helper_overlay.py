@@ -516,6 +516,73 @@ class HelperOverlay(unittest.TestCase):
             payloads, _src = HO.recover_frozen_payloads(self.root, CL.HELPER_STORE, job['route_overlay_plan'])
             self.assertEqual((payloads[pub], payloads[self.rel]), (fixed, self.new))     # reinstall = executed bytes
 
+    def test_restart_during_publish_refresh_ship_is_safe(self):
+        # DAEMON-FIX2 10-19: the job state is saved BEFORE cl/ changes (write-ahead checkpoint) and the remote unpack is
+        # staged (sidecar last).  A daemon killed while the refresh ships leaves job = new plan, run = old plan; the
+        # restarted daemon re-enters the run from the SAVED state without NEEDS_HUMAN and ends on main's exporter.
+        from contextlib import contextmanager
+        pub = 'tools/view_export_x.py'
+        (self.root / pub).write_bytes(b'# exporter v1\n'); self.git('add', pub); self.git('commit', '-m', 'exporter v1')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        (self.daemon / pub).write_bytes(b'# exporter v1\n')
+        name = 'df2-restart-ship-test'
+        seen = []
+
+        @contextmanager
+        def remote(host, **_kw):                     # the "remote host" is a local sh running SHIP_HELPERS_SH
+            seen.append(CL.load_job(name)['route_overlay_plan']['content_sha256'])
+            if host == 'killed':
+                raise SystemExit('daemon restarted mid-ship')
+            yield ['sh', '-c']
+        receipt = CL.installed_helper_receipt         # verify in process (the patched PUBLISH_ONLY does not reach ssh)
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'PUBLISH_ONLY', (pub,)), patch.object(CL, 'event'), \
+                patch.object(CL, 'is_local', side_effect=lambda h: h == 'local'), \
+                patch.object(CL, 'installed_helper_receipt', lambda h, r, f, **kw: receipt('local', r, f, **kw)), \
+                patch.object(CL, 'transport_command', remote):
+            plan, _ = HO.capture_plan(self.daemon, self.root)
+            CL.save_job({'name': name, 'status': 'READY', 'freeze_helper_overlay': True, 'route_overlay_plan': plan})
+            job = CL.load_job(name)
+            run = Path(self.tmp.name) / 'restart'
+            CL.ship_helpers('ot-x', str(run), job)
+            CL.save_job(job)
+            self.assertEqual(seen, [plan['content_sha256']])
+            self.assertEqual([p.name for p in (run / 'cl').iterdir() if p.name.startswith('.ship')], [])
+            fixed = b'# exporter fix on main\n'
+            (self.root / pub).write_bytes(fixed); self.git('add', pub); self.git('commit', '-m', 'exporter fix')
+            self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+            (self.daemon / pub).write_bytes(fixed)
+            with self.assertRaises(SystemExit):
+                CL.ship_helpers('killed', str(run), CL.load_job(name))       # refresh decided, killed before cl/ moved
+            on_disk = CL.load_job(name)
+            self.assertNotEqual(seen[-1], plan['content_sha256'])           # checkpoint: new plan saved before the ship
+            self.assertEqual(on_disk['route_overlay_plan']['content_sha256'], seen[-1])
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), b'# exporter v1\n')   # cl/ untouched
+            CL.ship_helpers('ot-x', str(run), on_disk)                       # restarted daemon, saved state
+            CL.save_job(on_disk)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            self.assertEqual(HO.verify_installed_plan(run / 'cl', CL.load_job(name)['route_overlay_plan'])['status'],
+                             'verified_original')
+
+    def test_ship_script_interrupted_transfer_leaves_cl_unchanged(self):
+        run = Path(self.tmp.name) / 'cut'
+        (run / 'cl').mkdir(parents=True)
+        (run / 'cl/a.tcl').write_bytes(b'old\n')
+        buf = io.BytesIO()
+        with tarfile.open(fileobj=buf, mode='w') as tf:
+            for n, d in (('a.tcl', b'new\n' * 4000), ('helper_overlay_plan.json', b'{}\n')):
+                ti = tarfile.TarInfo(n); ti.size = len(d); tf.addfile(ti, io.BytesIO(d))
+        cmd = CL.SHIP_HELPERS_SH.format(cl=str(run / 'cl'))
+        r = subprocess.run(['sh', '-c', cmd], input=buf.getvalue()[:9000], capture_output=True)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertEqual((run / 'cl/a.tcl').read_bytes(), b'old\n')
+        self.assertFalse((run / 'cl/helper_overlay_plan.json').exists())
+        r = subprocess.run(['sh', '-c', cmd], input=buf.getvalue(), capture_output=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual((run / 'cl/a.tcl').read_bytes(), b'new\n' * 4000)
+        self.assertEqual(sorted(p.name for p in (run / 'cl').iterdir() if p.name.startswith('.')), [])
+
     def test_installed_run_non_publish_drift_keeps_frozen_bytes(self):
         _, binding = self.gate()
         job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
