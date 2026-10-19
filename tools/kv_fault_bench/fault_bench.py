@@ -4,7 +4,7 @@ import argparse, copy, hashlib, json, re, subprocess
 from pathlib import Path
 
 
-def normalize(plan):
+def normalize(plan, candidate_mode=False):
     sources = plan['sources']
     ops = []
     ids = {s['id'] for s in sources}
@@ -14,7 +14,17 @@ def normalize(plan):
     for n in pending:
         if 'source' in n:
             n.update(a=n.pop('source'), kind='pipe', latency=n.pop('latency_cycles'))
+            n['b'] = n['a']
         n['latency'] = n.get('latency', 1)
+        if candidate_mode:
+            if any(not isinstance(n.get(p),str) for p in ('a','b')):
+                raise ValueError('candidate node requires two named inputs: '+n['id'])
+            if any(n.get(p) in ('0', "1'b0", '1', "1'b1") for p in ('a','b')):
+                raise ValueError('candidate node contains constant: '+n['id'])
+            if n['kind']=='pipe' and n.get('b')!=n.get('a'):
+                raise ValueError('candidate pipe requires duplicate inputs: '+n['id'])
+            if n['kind']=='sticky' and n.get('b')!=n['id']:
+                raise ValueError('candidate sticky requires explicit feedback: '+n['id'])
     known = ids | {n['id'] for n in ops}
     while pending:
         ready = [n for n in pending if all(n[p] in known or (n['kind']=='sticky' and n[p]==n['id']) or n[p] in ('0', "1'b0") for p in ('a','b') if p in n)]
@@ -56,8 +66,8 @@ def path_latencies(sources, ops, sink):
     return paths[sink]
 
 
-def generate(plan, output, mutant='none'):
-    sources, ops, sink = normalize(plan)
+def generate(plan, output, mutant='none', candidate_mode=False):
+    sources, ops, sink = normalize(plan, candidate_mode)
     latencies = path_latencies(sources, ops, sink)
     bound = max(latencies.values())
     quiet = plan.get('retirement_quiet_cycles', bound+2)
@@ -122,7 +132,7 @@ def generate(plan, output, mutant='none'):
         for j in range(n['latency']):
             dest = f'q[{idx[n["id"]]}]' if j==n['latency']-1 else f'p_{ni}_{j}'
             if j<n['latency']-1: wires.append(f'wire {dest};')
-            b = f'q[{idx[n["id"]]}]' if n['kind']=='sticky' else ref(n.get('b')) if n['kind']=='join' else "1'b0"
+            b = f'q[{idx[n["id"]]}]' if n['kind']=='sticky' else ref(n.get('b')) if n['kind']=='join' else prev
             wires.append(f'qkd_astk_fault_join u_{ni}_{j}(.ck(ck),.rst_n(rst_n),.a({prev}),.b({b}),.q({dest}));')
             prev = dest
     text = '''module tb;
@@ -159,25 +169,27 @@ endmodule
     if mutant != 'none':
         text = text.replace('if(q !== expected)', f'if(q[{idx[sink]}] !== expected[{idx[sink]}])')
     (output/'tb.sv').write_text(text)
-    meta = dict(source_count=len(sources),node_count=len(ops),cycles=len(rows),quiet_cycles=quiet,max_leaf_latency=max(latencies.values()),latencies=latencies,mutant=mutant,qualification='logical topology only; fixed-cycle transports do not qualify CDC or physical lanes',plan_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True).encode()).hexdigest())
+    meta = dict(source_count=len(sources),node_count=len(ops),cycles=len(rows),quiet_cycles=quiet,max_leaf_latency=max(latencies.values()),latencies=latencies,mutant=mutant,candidate_mode=candidate_mode,qualification='logical topology only; fixed-cycle transports do not qualify CDC or physical lanes',plan_sha256=hashlib.sha256(json.dumps(plan,sort_keys=True).encode()).hexdigest())
     (output/'manifest.json').write_text(json.dumps(meta,indent=2)+'\n')
     return meta
 
 
 def fixture(n=340):
-    sources=[dict(id=f's{i}',sticky=i>=4,requires_sticky_latch=i<4) for i in range(n)]
+    sources=[dict(id=f's{i}',sticky=4<=i<n-1,requires_sticky_latch=i<4) for i in range(n)]
     transports=[dict(id=f't{i}',source=f'kc{i}' if i<4 else f's{i}',latency_cycles=1+i%5) for i in range(n)]
     nodes=[dict(id=f'kc{i}',a=f's{i}',b=f'kc{i}',kind='sticky',latency=1) for i in range(4)]; level=[f't{i}' for i in range(n)]; k=0
     while len(level)>1:
         nxt=[]
         for i in range(0,len(level),2):
+            if i+1==len(level):
+                nxt.append(level[i]); continue
             name=f'j{k}'; k+=1
-            nodes.append(dict(id=name,a=level[i],b=level[i+1] if i+1<len(level) else '0',kind='join',latency=1)); nxt.append(name)
+            nodes.append(dict(id=name,a=level[i],b=level[i+1],kind='join',latency=1)); nxt.append(name)
         level=nxt
-    nodes.append(dict(id='sink',a=level[0],kind='sticky',latency=1))
+    nodes.append(dict(id='sink',a=level[0],b='sink',kind='sticky',latency=1))
     return dict(sources=sources,transports=transports,nodes=nodes,sink='sink')
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(); p.add_argument('--plan'); p.add_argument('--out',required=True); p.add_argument('--mutant',choices=['none','missingfold','duplicate_wrongbranch'],default='none'); p.add_argument('--fixture',action='store_true'); a=p.parse_args()
+    p=argparse.ArgumentParser(); p.add_argument('--plan'); p.add_argument('--out',required=True); p.add_argument('--mutant',choices=['none','missingfold','duplicate_wrongbranch'],default='none'); p.add_argument('--fixture',action='store_true'); p.add_argument('--candidate-mode',action='store_true'); a=p.parse_args()
     plan=fixture() if a.fixture else json.loads(Path(a.plan).read_text())
-    print(json.dumps(generate(plan,a.out,a.mutant),sort_keys=True))
+    print(json.dumps(generate(plan,a.out,a.mutant,a.candidate_mode),sort_keys=True))
