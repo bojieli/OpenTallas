@@ -1,0 +1,3286 @@
+{
+  "schema": "int8.seven_feedback.source_model.v1",
+  "scope": "Actual7 feedback endpoints/14 transition paths per corner; source-bound native CQ/waves, actual clock early/late, INV6\u2192NAND2\u2192OAI21 propagation, exact inherited output loads and proposed final net loads. All arcs in-range conditional on explicit lower-load qualification; no baseline topN selection.",
+  "corners": {
+    "TT": [
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27137/D",
+        "source": "$auto$ff.cc:337:slice$27137/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36546",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.56715038707804,
+              50.156321533589434
+            ],
+            "load_ff": [
+              109.9,
+              110.1
+            ],
+            "native": {
+              "cell_rise": [
+                90.94577728502045,
+                94.35225665428109
+              ],
+              "cell_fall": [
+                76.75180779248673,
+                79.82622943459546
+              ],
+              "rise_transition": [
+                168.5991783392343,
+                169.8727694820809
+              ],
+              "fall_transition": [
+                131.56699556161965,
+                132.92949638476887
+              ]
+            },
+            "old_delay_ps": 182.90000000000003
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43297",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              131.56699556161965,
+              174.8727694820809
+            ],
+            "load_ff": [
+              0.3877999999999999,
+              0.5878
+            ],
+            "native": {
+              "cell_rise": [
+                40.15597626248082,
+                52.03889798363598
+              ],
+              "cell_fall": [
+                20.70419177452899,
+                26.88784762345708
+              ],
+              "rise_transition": [
+                42.42968484423279,
+                56.32738478299067
+              ],
+              "fall_transition": [
+                27.1774212499539,
+                36.60018826396684
+              ]
+            },
+            "old_delay_ps": 47.90000000000001
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43298",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.1774212499539,
+              61.32738478299067
+            ],
+            "load_ff": [
+              0.7263689999999999,
+              1.309623
+            ],
+            "native": {
+              "cell_rise": [
+                16.970269642101826,
+                30.89616444166159
+              ],
+              "cell_fall": [
+                15.847663789679338,
+                29.83454529620075
+              ],
+              "rise_transition": [
+                18.908472356968836,
+                35.84958271194984
+              ],
+              "fall_transition": [
+                18.106174481013333,
+                37.09759663963201
+              ]
+            },
+            "old_delay_ps": 34.399999999999956
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          113.30366335669507,
+          177.28731907957865
+        ],
+        "final_OAI_wave_ps": [
+          18.106174481013333,
+          37.09759663963201
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.35680563249156,
+        "all_real_clocks": {
+          "source_min": 152.16453158345993,
+          "capture_max": 161.4468426514728
+        },
+        "existing_all_comb_delay_ps": 265.2
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27137/D",
+        "source": "$auto$ff.cc:337:slice$27137/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36546",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.56715038707804,
+              50.156321533589434
+            ],
+            "load_ff": [
+              109.9,
+              110.1
+            ],
+            "native": {
+              "cell_rise": [
+                90.94577728502045,
+                94.35225665428109
+              ],
+              "cell_fall": [
+                76.75180779248673,
+                79.82622943459546
+              ],
+              "rise_transition": [
+                168.5991783392343,
+                169.8727694820809
+              ],
+              "fall_transition": [
+                131.56699556161965,
+                132.92949638476887
+              ]
+            },
+            "old_delay_ps": 116.79999999999997
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43297",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              131.56699556161965,
+              174.8727694820809
+            ],
+            "load_ff": [
+              0.39270000000000005,
+              0.5927
+            ],
+            "native": {
+              "cell_rise": [
+                40.27953697436266,
+                52.17950156397367
+              ],
+              "cell_fall": [
+                20.799660200391795,
+                26.99785235551404
+              ],
+              "rise_transition": [
+                42.58960953133897,
+                56.508660078137176
+              ],
+              "fall_transition": [
+                27.280937340927245,
+                36.7110062452034
+              ]
+            },
+            "old_delay_ps": 136.39999999999998
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43298",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.280937340927245,
+              61.508660078137176
+            ],
+            "load_ff": [
+              0.7263689999999999,
+              1.309623
+            ],
+            "native": {
+              "cell_rise": [
+                16.99814092688197,
+                30.939541323830902
+              ],
+              "cell_fall": [
+                15.868664222912106,
+                29.865517460308524
+              ],
+              "rise_transition": [
+                18.937826752152358,
+                35.89819939132266
+              ],
+              "fall_transition": [
+                18.127442795677176,
+                37.12832267184695
+              ]
+            },
+            "old_delay_ps": 30.899999999999967
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          113.42013221579063,
+          177.47129954208566
+        ],
+        "final_OAI_wave_ps": [
+          18.127442795677176,
+          37.12832267184695
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.4732744915871,
+        "all_real_clocks": {
+          "source_min": 152.16453158345993,
+          "capture_max": 161.4468426514728
+        },
+        "existing_all_comb_delay_ps": 284.0999999999999
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27144/D",
+        "source": "$auto$ff.cc:337:slice$27144/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36553",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.623359271255765,
+              50.23137595467739
+            ],
+            "load_ff": [
+              109.2,
+              109.39999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                90.50068562445311,
+                93.91447299195093
+              ],
+              "cell_fall": [
+                76.38958445980288,
+                79.47093763234537
+              ],
+              "rise_transition": [
+                167.55058517815277,
+                168.832902240996
+              ],
+              "fall_transition": [
+                130.7605443650927,
+                132.13159036116627
+              ]
+            },
+            "old_delay_ps": 188.0
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43290",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              130.7605443650927,
+              173.832902240996
+            ],
+            "load_ff": [
+              0.3699,
+              0.5699
+            ],
+            "native": {
+              "cell_rise": [
+                39.579648517839274,
+                51.39363036905714
+              ],
+              "cell_fall": [
+                20.31653785192779,
+                26.455106215287067
+              ],
+              "rise_transition": [
+                41.71438794021812,
+                55.526075556912794
+              ],
+              "fall_transition": [
+                26.70457268685,
+                36.081790190218484
+              ]
+            },
+            "old_delay_ps": 46.49999999999999
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43291",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              26.70457268685,
+              60.526075556912794
+            ],
+            "load_ff": [
+              0.717369,
+              1.300623
+            ],
+            "native": {
+              "cell_rise": [
+                16.777680111544434,
+                30.616900398631042
+              ],
+              "cell_fall": [
+                15.68114402614361,
+                29.59985475774785
+              ],
+              "rise_transition": [
+                18.671401883556793,
+                35.52991141530575
+              ],
+              "fall_transition": [
+                17.89748716165157,
+                36.81121505937993
+              ]
+            },
+            "old_delay_ps": 34.099999999999966
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.38726633787428,
+          175.9250037596391
+        ],
+        "final_OAI_wave_ps": [
+          17.89748716165157,
+          36.81121505937993
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.893559303661,
+        "all_real_clocks": {
+          "source_min": 145.0978926145449,
+          "capture_max": 152.84287785421645
+        },
+        "existing_all_comb_delay_ps": 268.59999999999997
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27144/D",
+        "source": "$auto$ff.cc:337:slice$27144/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36553",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.623359271255765,
+              50.23137595467739
+            ],
+            "load_ff": [
+              109.2,
+              109.39999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                90.50068562445311,
+                93.91447299195093
+              ],
+              "cell_fall": [
+                76.38958445980288,
+                79.47093763234537
+              ],
+              "rise_transition": [
+                167.55058517815277,
+                168.832902240996
+              ],
+              "fall_transition": [
+                130.7605443650927,
+                132.13159036116627
+              ]
+            },
+            "old_delay_ps": 116.89999999999998
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43290",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              130.7605443650927,
+              173.832902240996
+            ],
+            "load_ff": [
+              0.3748,
+              0.5748000000000001
+            ],
+            "native": {
+              "cell_rise": [
+                39.70286928141993,
+                51.533880353371465
+              ],
+              "cell_fall": [
+                20.41171403695806,
+                26.564815001307757
+              ],
+              "rise_transition": [
+                41.873839312156484,
+                55.70702482930733
+              ],
+              "fall_transition": [
+                26.807944379376394,
+                36.19245359482859
+              ]
+            },
+            "old_delay_ps": 134.40000000000003
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43291",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              26.807944379376394,
+              60.70702482930733
+            ],
+            "load_ff": [
+              0.717369,
+              1.300623
+            ],
+            "native": {
+              "cell_rise": [
+                16.80540822564969,
+                30.660067610125424
+              ],
+              "cell_fall": [
+                15.702031363770043,
+                29.630683526025358
+              ],
+              "rise_transition": [
+                18.70071812012959,
+                35.57835362686772
+              ],
+              "fall_transition": [
+                17.918729329534195,
+                36.84183307860522
+              ]
+            },
+            "old_delay_ps": 30.599999999999977
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.50332986053098,
+          176.10842095544783
+        ],
+        "final_OAI_wave_ps": [
+          17.918729329534195,
+          36.84183307860522
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 288.00962282631764,
+        "all_real_clocks": {
+          "source_min": 145.0978926145449,
+          "capture_max": 152.84287785421645
+        },
+        "existing_all_comb_delay_ps": 281.9
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27151/D",
+        "source": "$auto$ff.cc:337:slice$27151/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38509",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.62411373054408,
+              50.23066674125976
+            ],
+            "load_ff": [
+              109.80000000000001,
+              110.0
+            ],
+            "native": {
+              "cell_rise": [
+                90.9008407113746,
+                94.31396185052705
+              ],
+              "cell_fall": [
+                76.71695643360992,
+                79.79743914468295
+              ],
+              "rise_transition": [
+                168.45492863257238,
+                169.7314180844058
+              ],
+              "fall_transition": [
+                131.45823570105932,
+                132.8238797590684
+              ]
+            },
+            "old_delay_ps": 183.80000000000004
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43243",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              131.45823570105932,
+              174.7314180844058
+            ],
+            "load_ff": [
+              0.3788,
+              0.5788
+            ],
+            "native": {
+              "cell_rise": [
+                39.91209330951413,
+                51.76266589675956
+              ],
+              "cell_fall": [
+                20.52352361702797,
+                26.68152645819987
+              ],
+              "rise_transition": [
+                42.11815163189594,
+                55.975441573476886
+              ],
+              "fall_transition": [
+                26.974483100950362,
+                36.38116861799331
+              ]
+            },
+            "old_delay_ps": 47.10000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43244",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              26.974483100950362,
+              60.975441573476886
+            ],
+            "load_ff": [
+              0.717369,
+              1.300623
+            ],
+            "native": {
+              "cell_rise": [
+                16.850080074991496,
+                30.724101039002306
+              ],
+              "cell_fall": [
+                15.735682263937921,
+                29.676414340514427
+              ],
+              "rise_transition": [
+                18.74794854115561,
+                35.650211891539186
+              ],
+              "fall_transition": [
+                17.95295188501503,
+                36.88725127191772
+              ]
+            },
+            "old_delay_ps": 34.199999999999996
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.97616231457582,
+          176.80072878628891
+        ],
+        "final_OAI_wave_ps": [
+          17.95295188501503,
+          36.88725127191772
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.0647758135663,
+        "all_real_clocks": {
+          "source_min": 152.21877985621745,
+          "capture_max": 161.51362256667085
+        },
+        "existing_all_comb_delay_ps": 265.1000000000001
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27151/D",
+        "source": "$auto$ff.cc:337:slice$27151/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38509",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.62411373054408,
+              50.23066674125976
+            ],
+            "load_ff": [
+              109.7,
+              109.89999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                90.8341961179068,
+                94.24733532745861
+              ],
+              "cell_fall": [
+                76.66243785841563,
+                79.7429814111693
+              ],
+              "rise_transition": [
+                168.30421907971828,
+                169.58165197449642
+              ],
+              "fall_transition": [
+                131.34197046817224,
+                132.70848255906145
+              ]
+            },
+            "old_delay_ps": 116.8
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43243",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              131.34197046817224,
+              174.58165197449642
+            ],
+            "load_ff": [
+              0.38380000000000003,
+              0.5838
+            ],
+            "native": {
+              "cell_rise": [
+                40.019975528453166,
+                51.88698691946291
+              ],
+              "cell_fall": [
+                20.615172194866936,
+                26.78916569085727
+              ],
+              "rise_transition": [
+                42.262183392479415,
+                56.14020424476286
+              ],
+              "fall_transition": [
+                27.06638033481547,
+                36.477806299728044
+              ]
+            },
+            "old_delay_ps": 135.60000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43244",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.06638033481547,
+              61.14020424476286
+            ],
+            "load_ff": [
+              0.717369,
+              1.300623
+            ],
+            "native": {
+              "cell_rise": [
+                16.87473031457153,
+                30.763406779134122
+              ],
+              "cell_fall": [
+                15.754251066515916,
+                29.70448535813523
+              ],
+              "rise_transition": [
+                18.774010618524493,
+                35.69432076290589
+              ],
+              "fall_transition": [
+                17.971836131001552,
+                36.91513039279113
+              ]
+            },
+            "old_delay_ps": 30.700000000000006
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          113.03186111979848,
+          176.89772902605566
+        ],
+        "final_OAI_wave_ps": [
+          17.971836131001552,
+          36.91513039279113
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.12047461878905,
+        "all_real_clocks": {
+          "source_min": 152.21877985621745,
+          "capture_max": 161.51362256667085
+        },
+        "existing_all_comb_delay_ps": 283.1
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27158/D",
+        "source": "$auto$ff.cc:337:slice$27158/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38503",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.51051089847058,
+              50.081675557279674
+            ],
+            "load_ff": [
+              109.7,
+              109.89999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                90.79090301826764,
+                94.19055664526863
+              ],
+              "cell_fall": [
+                76.62321363403831,
+                79.69154057805741
+              ],
+              "rise_transition": [
+                168.29131120753954,
+                169.564755843161
+              ],
+              "fall_transition": [
+                131.32697947863684,
+                132.6888517887952
+              ]
+            },
+            "old_delay_ps": 184.2
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43240",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              131.32697947863684,
+              174.564755843161
+            ],
+            "load_ff": [
+              0.3788,
+              0.5788
+            ],
+            "native": {
+              "cell_rise": [
+                39.89165575459572,
+                51.74146561664005
+              ],
+              "cell_fall": [
+                20.517105633840366,
+                26.676489903857984
+              ],
+              "rise_transition": [
+                42.096677054378226,
+                55.953052829428835
+              ],
+              "fall_transition": [
+                26.959027584505552,
+                36.36292094535215
+              ]
+            },
+            "old_delay_ps": 47.10000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43241",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              26.959027584505552,
+              60.953052829428835
+            ],
+            "load_ff": [
+              0.738269,
+              1.321523
+            ],
+            "native": {
+              "cell_rise": [
+                16.99288955419448,
+                30.922724387128156
+              ],
+              "cell_fall": [
+                15.892292753062952,
+                29.900150112931172
+              ],
+              "rise_transition": [
+                18.98110904979448,
+                35.88798534764442
+              ],
+              "fall_transition": [
+                18.209366352763258,
+                37.23338632751103
+              ]
+            },
+            "old_delay_ps": 34.499999999999986
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          113.03261202094163,
+          176.85474664903683
+        ],
+        "final_OAI_wave_ps": [
+          18.209366352763258,
+          37.23338632751103
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 286.98135449625835,
+        "all_real_clocks": {
+          "source_min": 152.63462776954026,
+          "capture_max": 162.02995954191158
+        },
+        "existing_all_comb_delay_ps": 265.8
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27158/D",
+        "source": "$auto$ff.cc:337:slice$27158/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38503",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.51051089847058,
+              50.081675557279674
+            ],
+            "load_ff": [
+              109.7,
+              109.89999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                90.79090301826764,
+                94.19055664526863
+              ],
+              "cell_fall": [
+                76.62321363403831,
+                79.69154057805741
+              ],
+              "rise_transition": [
+                168.29131120753954,
+                169.564755843161
+              ],
+              "fall_transition": [
+                131.32697947863684,
+                132.6888517887952
+              ]
+            },
+            "old_delay_ps": 116.80000000000003
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43240",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              131.32697947863684,
+              174.564755843161
+            ],
+            "load_ff": [
+              0.38380000000000003,
+              0.5838
+            ],
+            "native": {
+              "cell_rise": [
+                40.017634873407566,
+                51.884831783485225
+              ],
+              "cell_fall": [
+                20.614433643144455,
+                26.788650180826153
+              ],
+              "rise_transition": [
+                42.25972176764376,
+                56.13792908009376
+              ],
+              "fall_transition": [
+                27.064612395825574,
+                36.475953797293144
+              ]
+            },
+            "old_delay_ps": 135.5
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43241",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.064612395825574,
+              61.13792908009376
+            ],
+            "load_ff": [
+              0.738269,
+              1.321523
+            ],
+            "native": {
+              "cell_rise": [
+                17.02144821730413,
+                30.967140790808525
+              ],
+              "cell_fall": [
+                15.913815690316682,
+                29.931855991077942
+              ],
+              "rise_transition": [
+                19.01099548384711,
+                35.93768534797732
+              ],
+              "fall_transition": [
+                18.23102104238503,
+                37.26479398317919
+              ]
+            },
+            "old_delay_ps": 30.999999999999996
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          113.15146296749944,
+          177.04252921956237
+        ],
+        "final_OAI_wave_ps": [
+          18.23102104238503,
+          37.26479398317919
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.10020544281616,
+        "all_real_clocks": {
+          "source_min": 152.63462776954026,
+          "capture_max": 162.02995954191158
+        },
+        "existing_all_comb_delay_ps": 283.3
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27165/D",
+        "source": "$auto$ff.cc:337:slice$27165/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38499",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.62415474997891,
+              50.23062818181194
+            ],
+            "load_ff": [
+              110.4,
+              110.6
+            ],
+            "native": {
+              "cell_rise": [
+                91.30072390374589,
+                94.71370629497957
+              ],
+              "cell_fall": [
+                77.04408204573348,
+                80.12417223460255
+              ],
+              "rise_transition": [
+                169.35919057896476,
+                170.6300104006711
+              ],
+              "fall_transition": [
+                132.15583248233227,
+                133.51625790581994
+              ]
+            },
+            "old_delay_ps": 182.3
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43189",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              132.15583248233227,
+              175.6300104006711
+            ],
+            "load_ff": [
+              0.36,
+              0.552
+            ],
+            "native": {
+              "cell_rise": [
+                39.54569222720258,
+                51.10654756117472
+              ],
+              "cell_fall": [
+                20.190528016863798,
+                26.105844787703404
+              ],
+              "rise_transition": [
+                41.61736954497733,
+                55.10339151685
+              ],
+              "fall_transition": [
+                26.659057334753626,
+                35.872832374469134
+              ]
+            },
+            "old_delay_ps": 45.29999999999999
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43190",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              26.659057334753626,
+              60.10339151685
+            ],
+            "load_ff": [
+              0.729269,
+              1.312523
+            ],
+            "native": {
+              "cell_rise": [
+                16.850454220899238,
+                30.631380435771398
+              ],
+              "cell_fall": [
+                15.764104667825617,
+                29.656858674724525
+              ],
+              "rise_transition": [
+                18.79430972242231,
+                35.55500934053445
+              ],
+              "fall_transition": [
+                18.03578124272325,
+                36.93860481078309
+              ]
+            },
+            "old_delay_ps": 34.199999999999996
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.99871473042289,
+          176.4516342919257
+        ],
+        "final_OAI_wave_ps": [
+          18.03578124272325,
+          36.93860481078309
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.07183835160146,
+        "all_real_clocks": {
+          "source_min": 152.29952082600593,
+          "capture_max": 161.6170398418279
+        },
+        "existing_all_comb_delay_ps": 261.8
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27165/D",
+        "source": "$auto$ff.cc:337:slice$27165/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38499",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.62415474997891,
+              50.23062818181194
+            ],
+            "load_ff": [
+              110.4,
+              110.6
+            ],
+            "native": {
+              "cell_rise": [
+                91.30072390374589,
+                94.71370629497957
+              ],
+              "cell_fall": [
+                77.04408204573348,
+                80.12417223460255
+              ],
+              "rise_transition": [
+                169.35919057896476,
+                170.6300104006711
+              ],
+              "fall_transition": [
+                132.15583248233227,
+                133.51625790581994
+              ]
+            },
+            "old_delay_ps": 116.69999999999999
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43189",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              132.15583248233227,
+              175.6300104006711
+            ],
+            "load_ff": [
+              0.36,
+              0.5569
+            ],
+            "native": {
+              "cell_rise": [
+                39.54569222720258,
+                51.247408633398855
+              ],
+              "cell_fall": [
+                20.190528016863798,
+                26.216065030394333
+              ],
+              "rise_transition": [
+                41.61736954497733,
+                55.28490422477231
+              ],
+              "fall_transition": [
+                26.659057334753626,
+                35.983762919831165
+              ]
+            },
+            "old_delay_ps": 134.10000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43190",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              26.659057334753626,
+              60.28490422477231
+            ],
+            "load_ff": [
+              0.729269,
+              1.312523
+            ],
+            "native": {
+              "cell_rise": [
+                16.850454220899238,
+                30.67485668289813
+              ],
+              "cell_fall": [
+                15.764104667825617,
+                29.687899746951185
+              ],
+              "rise_transition": [
+                18.79430972242231,
+                35.603717822864596
+              ],
+              "fall_transition": [
+                18.03578124272325,
+                36.96938813520589
+              ]
+            },
+            "old_delay_ps": 30.700000000000006
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.99871473042289,
+          176.63597161127657
+        ],
+        "final_OAI_wave_ps": [
+          18.03578124272325,
+          36.96938813520589
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 287.07183835160146,
+        "all_real_clocks": {
+          "source_min": 152.29952082600593,
+          "capture_max": 161.6170398418279
+        },
+        "existing_all_comb_delay_ps": 281.5
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27193/D",
+        "source": "$auto$ff.cc:337:slice$27193/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38495",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.56767057285501,
+              50.155834837611664
+            ],
+            "load_ff": [
+              109.4,
+              109.6
+            ],
+            "native": {
+              "cell_rise": [
+                90.61275196145101,
+                94.0189377816262
+              ],
+              "cell_fall": [
+                76.4793925212872,
+                79.553770091789
+              ],
+              "rise_transition": [
+                167.8456586296327,
+                169.12384283113295
+              ],
+              "fall_transition": [
+                130.98570947229075,
+                132.35240862016906
+              ]
+            },
+            "old_delay_ps": 187.9
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43183",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              130.98570947229075,
+              174.12384283113295
+            ],
+            "load_ff": [
+              0.3877999999999999,
+              0.5878
+            ],
+            "native": {
+              "cell_rise": [
+                40.06501570131172,
+                51.94316297381332
+              ],
+              "cell_fall": [
+                20.67538195993815,
+                26.86482347414436
+              ],
+              "rise_transition": [
+                42.3339551213438,
+                56.226345672571824
+              ],
+              "fall_transition": [
+                27.108783216196322,
+                36.51798459614875
+              ]
+            },
+            "old_delay_ps": 47.90000000000001
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43184",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.108783216196322,
+              61.226345672571824
+            ],
+            "load_ff": [
+              0.702469,
+              1.285723
+            ],
+            "native": {
+              "cell_rise": [
+                16.761466469564354,
+                30.63821742736133
+              ],
+              "cell_fall": [
+                15.631186665597642,
+                29.556717431917946
+              ],
+              "rise_transition": [
+                18.61052059762595,
+                35.54337803113271
+              ],
+              "fall_transition": [
+                17.797586110769725,
+                36.68010736140769
+              ]
+            },
+            "old_delay_ps": 33.999999999999986
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.78596114682298,
+          176.60031818280086
+        ],
+        "final_OAI_wave_ps": [
+          17.797586110769725,
+          36.68010736140769
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 286.7623743381649,
+        "all_real_clocks": {
+          "source_min": 152.8693705512474,
+          "capture_max": 162.31943631895146
+        },
+        "existing_all_comb_delay_ps": 269.8
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27193/D",
+        "source": "$auto$ff.cc:337:slice$27193/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38495",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.56767057285501,
+              50.155834837611664
+            ],
+            "load_ff": [
+              109.30000000000001,
+              109.5
+            ],
+            "native": {
+              "cell_rise": [
+                90.54610724947462,
+                93.95231110144003
+              ],
+              "cell_fall": [
+                76.4248735470834,
+                79.49931182927162
+              ],
+              "rise_transition": [
+                167.6949428895282,
+                168.97406851821464
+              ],
+              "fall_transition": [
+                130.86943854670454,
+                132.23700387282548
+              ]
+            },
+            "old_delay_ps": 116.9
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43183",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              130.86943854670454,
+              173.97406851821464
+            ],
+            "load_ff": [
+              0.39270000000000005,
+              0.5927
+            ],
+            "native": {
+              "cell_rise": [
+                40.17008811048276,
+                52.0643153666188
+              ],
+              "cell_fall": [
+                20.76483496361051,
+                26.969967944902944
+              ],
+              "rise_transition": [
+                42.47432220243886,
+                56.38713286817999
+              ],
+              "fall_transition": [
+                27.19844518132589,
+                36.612229460888805
+              ]
+            },
+            "old_delay_ps": 135.9
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43184",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.19844518132589,
+              61.38713286817999
+            ],
+            "load_ff": [
+              0.702469,
+              1.285723
+            ],
+            "native": {
+              "cell_rise": [
+                16.78534042763505,
+                30.67638109931277
+              ],
+              "cell_fall": [
+                15.64915681554855,
+                29.583982134701024
+              ],
+              "rise_transition": [
+                18.63582192851368,
+                35.58629459161505
+              ],
+              "fall_transition": [
+                17.81592880708361,
+                36.70723619766109
+              ]
+            },
+            "old_delay_ps": 30.399999999999917
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          112.83886532624246,
+          176.6930075673716
+        ],
+        "final_OAI_wave_ps": [
+          17.81592880708361,
+          36.70723619766109
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 286.8152785175843,
+        "all_real_clocks": {
+          "source_min": 152.8693705512474,
+          "capture_max": 162.31943631895146
+        },
+        "existing_all_comb_delay_ps": 283.19999999999993
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27207/D",
+        "source": "$auto$ff.cc:337:slice$27207/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38487",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.56721445666403,
+              50.156261588832805
+            ],
+            "load_ff": [
+              110.30000000000001,
+              110.5
+            ],
+            "native": {
+              "cell_rise": [
+                91.21238055287691,
+                94.61874052749432
+              ],
+              "cell_fall": [
+                76.96990582292361,
+                80.0440417768636
+              ],
+              "rise_transition": [
+                169.2020487653683,
+                170.47185976182692
+              ],
+              "fall_transition": [
+                132.03208788965105,
+                133.391107315874
+              ]
+            },
+            "old_delay_ps": 182.60000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43114",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              132.03208788965105,
+              175.47185976182692
+            ],
+            "load_ff": [
+              0.4146000000000001,
+              0.6146
+            ],
+            "native": {
+              "cell_rise": [
+                40.90562837681094,
+                52.88560916065805
+              ],
+              "cell_fall": [
+                21.250318419133805,
+                27.508856444300857
+              ],
+              "rise_transition": [
+                43.38246216539777,
+                57.40070137364181
+              ],
+              "fall_transition": [
+                27.798964282980705,
+                37.272539181686135
+              ]
+            },
+            "old_delay_ps": 50.100000000000016
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43115",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.798964282980705,
+              62.40070137364181
+            ],
+            "load_ff": [
+              0.762169,
+              1.345423
+            ],
+            "native": {
+              "cell_rise": [
+                17.38568668545006,
+                31.506559729754706
+              ],
+              "cell_fall": [
+                16.243769268639067,
+                30.410494669481633
+              ],
+              "rise_transition": [
+                19.488251474071433,
+                36.557761176288835
+              ],
+              "fall_transition": [
+                18.678383519480246,
+                37.88059212019027
+              ]
+            },
+            "old_delay_ps": 34.800000000000026
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          114.46399351069648,
+          179.0109094179071
+        ],
+        "final_OAI_wave_ps": [
+          18.678383519480246,
+          37.88059212019027
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 288.49356937833124,
+        "all_real_clocks": {
+          "source_min": 152.2981746805832,
+          "capture_max": 161.61526348498143
+        },
+        "existing_all_comb_delay_ps": 267.50000000000006
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27207/D",
+        "source": "$auto$ff.cc:337:slice$27207/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38487",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              41.56721445666403,
+              50.156261588832805
+            ],
+            "load_ff": [
+              110.30000000000001,
+              110.5
+            ],
+            "native": {
+              "cell_rise": [
+                91.21238055287691,
+                94.61874052749432
+              ],
+              "cell_fall": [
+                76.96990582292361,
+                80.0440417768636
+              ],
+              "rise_transition": [
+                169.2020487653683,
+                170.47185976182692
+              ],
+              "fall_transition": [
+                132.03208788965105,
+                133.391107315874
+              ]
+            },
+            "old_delay_ps": 116.70000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43114",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              132.03208788965105,
+              175.47185976182692
+            ],
+            "load_ff": [
+              0.4196,
+              0.6195999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                41.03191079017126,
+                53.02929007366499
+              ],
+              "cell_fall": [
+                21.347907159410916,
+                27.621280151491234
+              ],
+              "rise_transition": [
+                43.54592916025613,
+                57.58586782669321
+              ],
+              "fall_transition": [
+                27.904677923483323,
+                37.38570962680314
+              ]
+            },
+            "old_delay_ps": 138.9
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43115",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              27.904677923483323,
+              62.58586782669321
+            ],
+            "load_ff": [
+              0.762169,
+              1.345423
+            ],
+            "native": {
+              "cell_rise": [
+                17.414542377201123,
+                31.551403626632545
+              ],
+              "cell_fall": [
+                16.26552522357921,
+                30.442488616421194
+              ],
+              "rise_transition": [
+                19.518064591653555,
+                36.60777569314547
+              ],
+              "fall_transition": [
+                18.699986886812106,
+                37.91219242850722
+              ]
+            },
+            "old_delay_ps": 31.800000000000036
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          114.58333820591372,
+          179.19943422779187
+        ],
+        "final_OAI_wave_ps": [
+          18.699986886812106,
+          37.91219242850722
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 288.6129140735485,
+        "all_real_clocks": {
+          "source_min": 152.2981746805832,
+          "capture_max": 161.61526348498143
+        },
+        "existing_all_comb_delay_ps": 287.40000000000003
+      }
+    ],
+    "FF": [
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27137/D",
+        "source": "$auto$ff.cc:337:slice$27137/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36546",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.23143416345203,
+              38.59916655461136
+            ],
+            "load_ff": [
+              110.00000000000001,
+              110.2
+            ],
+            "native": {
+              "cell_rise": [
+                61.87084217383233,
+                64.45285084980154
+              ],
+              "cell_fall": [
+                54.761817069954574,
+                57.13568050939653
+              ],
+              "rise_transition": [
+                118.01290531102805,
+                118.78567862511697
+              ],
+              "fall_transition": [
+                99.56428920629156,
+                100.49777178247906
+              ]
+            },
+            "old_delay_ps": 86.79999999999997
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43297",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.56428920629156,
+              123.78567862511697
+            ],
+            "load_ff": [
+              0.43010000000000004,
+              0.6301
+            ],
+            "native": {
+              "cell_rise": [
+                27.96744738821196,
+                34.69627799522493
+              ],
+              "cell_fall": [
+                12.398474349388936,
+                15.63792933463568
+              ],
+              "rise_transition": [
+                30.284576336977267,
+                38.253472780992794
+              ],
+              "fall_transition": [
+                20.64547216166706,
+                26.40193642129345
+              ]
+            },
+            "old_delay_ps": 11.59999999999999
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43298",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.64547216166706,
+              43.253472780992794
+            ],
+            "load_ff": [
+              0.807804,
+              1.389678
+            ],
+            "native": {
+              "cell_rise": [
+                12.133266090679022,
+                20.96545801922535
+              ],
+              "cell_fall": [
+                11.3333365044629,
+                20.273843095940805
+              ],
+              "rise_transition": [
+                14.195995777065566,
+                25.640635169028975
+              ],
+              "fall_transition": [
+                14.6210615078346,
+                28.007425463884434
+              ]
+            },
+            "old_delay_ps": 21.80000000000002
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.49362792380641,
+          120.11458686425182
+        ],
+        "final_OAI_wave_ps": [
+          14.195995777065566,
+          28.007425463884434
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.4210488700645,
+        "all_real_clocks": {
+          "source_min": 125.13007346987631,
+          "capture_max": 132.51871875058276
+        },
+        "existing_all_comb_delay_ps": 120.19999999999997
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27137/D",
+        "source": "$auto$ff.cc:337:slice$27137/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36546",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.23143416345203,
+              38.59916655461136
+            ],
+            "load_ff": [
+              110.00000000000001,
+              110.2
+            ],
+            "native": {
+              "cell_rise": [
+                61.87084217383233,
+                64.45285084980154
+              ],
+              "cell_fall": [
+                54.761817069954574,
+                57.13568050939653
+              ],
+              "rise_transition": [
+                118.01290531102805,
+                118.78567862511697
+              ],
+              "fall_transition": [
+                99.56428920629156,
+                100.49777178247906
+              ]
+            },
+            "old_delay_ps": 66.40000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43297",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.56428920629156,
+              123.78567862511697
+            ],
+            "load_ff": [
+              0.4354,
+              0.6354
+            ],
+            "native": {
+              "cell_rise": [
+                28.055455600812884,
+                34.79221148008451
+              ],
+              "cell_fall": [
+                12.469212662033128,
+                15.7161017131252
+              ],
+              "rise_transition": [
+                30.402832623935737,
+                38.38099557441838
+              ],
+              "fall_transition": [
+                20.724937060760126,
+                26.484314236821298
+              ]
+            },
+            "old_delay_ps": 87.89999999999998
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43298",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.724937060760126,
+              43.38099557441838
+            ],
+            "load_ff": [
+              0.807804,
+              1.389678
+            ],
+            "native": {
+              "cell_rise": [
+                12.14892578612842,
+                20.98776419720342
+              ],
+              "cell_fall": [
+                11.344282876698205,
+                20.288601221292836
+              ],
+              "rise_transition": [
+                14.214747425833115,
+                25.668707135601984
+              ],
+              "fall_transition": [
+                14.635745203851057,
+                28.0258063848514
+              ]
+            },
+            "old_delay_ps": 18.699999999999996
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.5753126086859,
+          120.23282652708947
+        ],
+        "final_OAI_wave_ps": [
+          14.214747425833115,
+          28.0258063848514
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.50273355494397,
+        "all_real_clocks": {
+          "source_min": 125.13007346987631,
+          "capture_max": 132.51871875058276
+        },
+        "existing_all_comb_delay_ps": 173.0
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27144/D",
+        "source": "$auto$ff.cc:337:slice$27144/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36553",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.27522308428054,
+              38.64923338096574
+            ],
+            "load_ff": [
+              109.30000000000001,
+              109.5
+            ],
+            "native": {
+              "cell_rise": [
+                61.571960617049754,
+                64.15684476885889
+              ],
+              "cell_fall": [
+                54.50039657575178,
+                56.876001344599175
+              ],
+              "rise_transition": [
+                117.28605603351184,
+                118.06391372834194
+              ],
+              "fall_transition": [
+                98.9590878752395,
+                99.89890807189698
+              ]
+            },
+            "old_delay_ps": 87.19999999999999
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43290",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              98.9590878752395,
+              123.06391372834194
+            ],
+            "load_ff": [
+              0.4122,
+              0.6122
+            ],
+            "native": {
+              "cell_rise": [
+                27.59320621113146,
+                34.27152697834589
+              ],
+              "cell_fall": [
+                12.15295818852448,
+                15.357673599535525
+              ],
+              "rise_transition": [
+                29.80709000201977,
+                37.71922931355577
+              ],
+              "fall_transition": [
+                20.311176285056433,
+                26.04183175905292
+              ]
+            },
+            "old_delay_ps": 11.000000000000014
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43291",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.311176285056433,
+              42.71922931355577
+            ],
+            "load_ff": [
+              0.798904,
+              1.3807779999999998
+            ],
+            "native": {
+              "cell_rise": [
+                12.024898632059278,
+                20.81449849175925
+              ],
+              "cell_fall": [
+                11.238601220922225,
+                20.145675039435236
+              ],
+              "rise_transition": [
+                14.049424941874108,
+                25.448335645145526
+              ],
+              "fall_transition": [
+                14.48017055505033,
+                27.821266201359915
+              ]
+            },
+            "old_delay_ps": 21.60000000000001
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          77.89195598519848,
+          119.24287023896403
+        ],
+        "final_OAI_wave_ps": [
+          14.049424941874108,
+          27.821266201359915
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 196.06958923466834,
+        "all_real_clocks": {
+          "source_min": 118.18913950342673,
+          "capture_max": 124.27159351265459
+        },
+        "existing_all_comb_delay_ps": 119.80000000000001
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27144/D",
+        "source": "$auto$ff.cc:337:slice$27144/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$36553",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.27522308428054,
+              38.64923338096574
+            ],
+            "load_ff": [
+              109.30000000000001,
+              109.5
+            ],
+            "native": {
+              "cell_rise": [
+                61.571960617049754,
+                64.15684476885889
+              ],
+              "cell_fall": [
+                54.50039657575178,
+                56.876001344599175
+              ],
+              "rise_transition": [
+                117.28605603351184,
+                118.06391372834194
+              ],
+              "fall_transition": [
+                98.9590878752395,
+                99.89890807189698
+              ]
+            },
+            "old_delay_ps": 66.0
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43290",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              98.9590878752395,
+              123.06391372834194
+            ],
+            "load_ff": [
+              0.4175000000000001,
+              0.6175
+            ],
+            "native": {
+              "cell_rise": [
+                27.681016401016304,
+                34.36722430072879
+              ],
+              "cell_fall": [
+                12.223510751851533,
+                15.43562445284023
+              ],
+              "rise_transition": [
+                29.925114753868876,
+                37.846475977525365
+              ],
+              "fall_transition": [
+                20.39056840133457,
+                26.12412277358048
+              ]
+            },
+            "old_delay_ps": 86.9
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43291",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.39056840133457,
+              42.846475977525365
+            ],
+            "load_ff": [
+              0.798904,
+              1.3807779999999998
+            ],
+            "native": {
+              "cell_rise": [
+                12.040478806608132,
+                20.83669401138604
+              ],
+              "cell_fall": [
+                11.249488630996378,
+                20.160350556875688
+              ],
+              "rise_transition": [
+                14.068126309113019,
+                25.47628826708648
+              ],
+              "fall_transition": [
+                14.494815757416596,
+                27.839584553617062
+              ]
+            },
+            "old_delay_ps": 18.49999999999999
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          77.9733959585997,
+          119.36076308097373
+        ],
+        "final_OAI_wave_ps": [
+          14.068126309113019,
+          27.839584553617062
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 196.15102920806953,
+        "all_real_clocks": {
+          "source_min": 118.18913950342673,
+          "capture_max": 124.27159351265459
+        },
+        "existing_all_comb_delay_ps": 171.4
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27151/D",
+        "source": "$auto$ff.cc:337:slice$27151/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38509",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.27407505255333,
+              38.65012028464129
+            ],
+            "load_ff": [
+              109.80000000000001,
+              110.0
+            ],
+            "native": {
+              "cell_rise": [
+                61.79564068320139,
+                64.38067542403326
+              ],
+              "cell_fall": [
+                54.69651160660401,
+                57.072903718968824
+              ],
+              "rise_transition": [
+                117.80754624974925,
+                118.58226638403266
+              ],
+              "fall_transition": [
+                99.39448590132523,
+                100.3304448386972
+              ]
+            },
+            "old_delay_ps": 86.8
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43243",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.39448590132523,
+              123.58226638403266
+            ],
+            "load_ff": [
+              0.42110000000000003,
+              0.6211
+            ],
+            "native": {
+              "cell_rise": [
+                27.79630038761063,
+                34.50486653727498
+              ],
+              "cell_fall": [
+                12.276411276993693,
+                15.500502207054652
+              ],
+              "rise_transition": [
+                30.06174403072864,
+                38.007609937013314
+              ],
+              "fall_transition": [
+                20.49200365076396,
+                26.238931079493206
+              ]
+            },
+            "old_delay_ps": 11.300000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43244",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.49200365076396,
+              43.007609937013314
+            ],
+            "load_ff": [
+              0.798904,
+              1.3807779999999998
+            ],
+            "native": {
+              "cell_rise": [
+                12.060384799364133,
+                20.86480046108606
+              ],
+              "cell_fall": [
+                11.263398918418904,
+                20.178934338634246
+              ],
+              "rise_transition": [
+                14.092020090252493,
+                25.511685003715197
+              ],
+              "fall_transition": [
+                14.513527183999077,
+                27.86278130030108
+              ]
+            },
+            "old_delay_ps": 21.69999999999999
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.2363218020166,
+          119.7503424223943
+        ],
+        "final_OAI_wave_ps": [
+          14.092020090252493,
+          27.86278130030108
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.1871698479471,
+        "all_real_clocks": {
+          "source_min": 125.18941489077964,
+          "capture_max": 132.5899256801092
+        },
+        "existing_all_comb_delay_ps": 119.79999999999998
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27151/D",
+        "source": "$auto$ff.cc:337:slice$27151/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38509",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.27407505255333,
+              38.65012028464129
+            ],
+            "load_ff": [
+              109.80000000000001,
+              110.0
+            ],
+            "native": {
+              "cell_rise": [
+                61.79564068320139,
+                64.38067542403326
+              ],
+              "cell_fall": [
+                54.69651160660401,
+                57.072903718968824
+              ],
+              "rise_transition": [
+                117.80754624974925,
+                118.58226638403266
+              ],
+              "fall_transition": [
+                99.39448590132523,
+                100.3304448386972
+              ]
+            },
+            "old_delay_ps": 66.30000000000003
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43243",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.39448590132523,
+              123.58226638403266
+            ],
+            "load_ff": [
+              0.4264,
+              0.6264
+            ],
+            "native": {
+              "cell_rise": [
+                27.884253040334322,
+                34.60073346536676
+              ],
+              "cell_fall": [
+                12.347097473348104,
+                15.578612153948367
+              ],
+              "rise_transition": [
+                30.179935355128755,
+                38.13505490993015
+              ],
+              "fall_transition": [
+                20.57144812894602,
+                26.32128443222704
+              ]
+            },
+            "old_delay_ps": 87.39999999999998
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43244",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.57144812894602,
+              43.13505490993015
+            ],
+            "load_ff": [
+              0.798904,
+              1.3807779999999998
+            ],
+            "native": {
+              "cell_rise": [
+                12.07597524958822,
+                20.88703057156178
+              ],
+              "cell_fall": [
+                11.274293509124421,
+                20.19363272729445
+              ],
+              "rise_transition": [
+                14.110733791703423,
+                25.53968118872379
+              ],
+              "fall_transition": [
+                14.528182045393411,
+                27.88112820099351
+              ]
+            },
+            "old_delay_ps": 18.49999999999999
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.31790258907654,
+          119.8684394609618
+        ],
+        "final_OAI_wave_ps": [
+          14.110733791703423,
+          27.88112820099351
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.26875063500702,
+        "all_real_clocks": {
+          "source_min": 125.18941489077964,
+          "capture_max": 132.5899256801092
+        },
+        "existing_all_comb_delay_ps": 172.2
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27158/D",
+        "source": "$auto$ff.cc:337:slice$27158/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38503",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.188014981252152,
+              38.54880745235847
+            ],
+            "load_ff": [
+              109.7,
+              109.89999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                61.72170801503586,
+                64.30169245406464
+              ],
+              "cell_fall": [
+                54.630408516977354,
+                57.00201770689428
+              ],
+              "rise_transition": [
+                117.69660253307227,
+                118.47082504974824
+              ],
+              "fall_transition": [
+                99.29846614729416,
+                100.2336817563502
+              ]
+            },
+            "old_delay_ps": 86.8
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43240",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.29846614729416,
+              123.47082504974824
+            ],
+            "load_ff": [
+              0.42110000000000003,
+              0.6211
+            ],
+            "native": {
+              "cell_rise": [
+                27.784030063918035,
+                34.48924950545541
+              ],
+              "cell_fall": [
+                12.275313455873581,
+                15.497937359284846
+              ],
+              "rise_transition": [
+                30.049292386433173,
+                37.991549597021944
+              ],
+              "fall_transition": [
+                20.481526439132868,
+                26.2262653970916
+              ]
+            },
+            "old_delay_ps": 11.300000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43241",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.481526439132868,
+              42.991549597021944
+            ],
+            "load_ff": [
+              0.819804,
+              1.401678
+            ],
+            "native": {
+              "cell_rise": [
+                12.158436249754248,
+                20.997364306258465
+              ],
+              "cell_fall": [
+                11.37653799981121,
+                20.333124828574473
+              ],
+              "rise_transition": [
+                14.248666256789441,
+                25.683858506780254
+              ],
+              "fall_transition": [
+                14.697517071691632,
+                28.116912341342548
+              ]
+            },
+            "old_delay_ps": 21.899999999999995
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.28225997266215,
+          119.7883062657785
+        ],
+        "final_OAI_wave_ps": [
+          14.248666256789441,
+          28.116912341342548
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.13658678368503,
+        "all_real_clocks": {
+          "source_min": 125.6446479660584,
+          "capture_max": 133.13906974585868
+        },
+        "existing_all_comb_delay_ps": 120.0
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27158/D",
+        "source": "$auto$ff.cc:337:slice$27158/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38503",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.188014981252152,
+              38.54880745235847
+            ],
+            "load_ff": [
+              109.7,
+              109.89999999999999
+            ],
+            "native": {
+              "cell_rise": [
+                61.72170801503586,
+                64.30169245406464
+              ],
+              "cell_fall": [
+                54.630408516977354,
+                57.00201770689428
+              ],
+              "rise_transition": [
+                117.69660253307227,
+                118.47082504974824
+              ],
+              "fall_transition": [
+                99.29846614729416,
+                100.2336817563502
+              ]
+            },
+            "old_delay_ps": 66.09999999999998
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43240",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.29846614729416,
+              123.47082504974824
+            ],
+            "load_ff": [
+              0.4264,
+              0.6264
+            ],
+            "native": {
+              "cell_rise": [
+                27.87195129884485,
+                34.585079969787834
+              ],
+              "cell_fall": [
+                12.345970181698386,
+                15.576013102433986
+              ],
+              "rise_transition": [
+                30.167446976042548,
+                38.118951935231614
+              ],
+              "fall_transition": [
+                20.5609593697726,
+                26.308605347650662
+              ]
+            },
+            "old_delay_ps": 87.39999999999998
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43241",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.5609593697726,
+              43.118951935231614
+            ],
+            "load_ff": [
+              0.819804,
+              1.401678
+            ],
+            "native": {
+              "cell_rise": [
+                12.174177570997276,
+                21.019733595408148
+              ],
+              "cell_fall": [
+                11.387545983743697,
+                20.34793739162365
+              ],
+              "rise_transition": [
+                14.267455022998972,
+                25.711983010344113
+              ],
+              "fall_transition": [
+                14.712228645981266,
+                28.135306635911373
+              ]
+            },
+            "old_delay_ps": 18.80000000000003
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.36392468241944,
+          119.90650601926063
+        ],
+        "final_OAI_wave_ps": [
+          14.267455022998972,
+          28.135306635911373
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.21825149344235,
+        "all_real_clocks": {
+          "source_min": 125.6446479660584,
+          "capture_max": 133.13906974585868
+        },
+        "existing_all_comb_delay_ps": 172.29999999999998
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27165/D",
+        "source": "$auto$ff.cc:337:slice$27165/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38499",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.27397222312633,
+              38.65019972477748
+            ],
+            "load_ff": [
+              110.4,
+              110.6
+            ],
+            "native": {
+              "cell_rise": [
+                62.064488192798585,
+                64.64893894065986
+              ],
+              "cell_fall": [
+                54.93224673319111,
+                57.308879791321566
+              ],
+              "rise_transition": [
+                118.43343324511683,
+                119.20421346913399
+              ],
+              "fall_transition": [
+                99.91709629729351,
+                100.84818660998609
+              ]
+            },
+            "old_delay_ps": 86.9
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43189",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.91709629729351,
+              124.20421346913399
+            ],
+            "load_ff": [
+              0.3942,
+              0.5942000000000001
+            ],
+            "native": {
+              "cell_rise": [
+                27.415815449244295,
+                34.10442146198366
+              ],
+              "cell_fall": [
+                11.922806533447627,
+                15.117402785054752
+              ],
+              "rise_transition": [
+                29.52862357156849,
+                37.44919066640537
+              ],
+              "fall_transition": [
+                20.145491176873016,
+                25.891255717672237
+              ]
+            },
+            "old_delay_ps": 10.199999999999974
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43190",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.145491176873016,
+              42.44919066640537
+            ],
+            "load_ff": [
+              0.810804,
+              1.392678
+            ],
+            "native": {
+              "cell_rise": [
+                12.049014194924583,
+                20.844114505186667
+              ],
+              "cell_fall": [
+                11.280840084275297,
+                20.203089787468976
+              ],
+              "rise_transition": [
+                14.100805389804671,
+                25.488722368686464
+              ],
+              "fall_transition": [
+                14.55532566006731,
+                27.92827489273519
+              ]
+            },
+            "old_delay_ps": 21.70000000000004
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.13589335091403,
+          119.59747490783019
+        ],
+        "final_OAI_wave_ps": [
+          14.100805389804671,
+          27.92827489273519
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.074503183004,
+        "all_real_clocks": {
+          "source_min": 125.27878784461909,
+          "capture_max": 132.7004622604401
+        },
+        "existing_all_comb_delay_ps": 118.80000000000001
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27165/D",
+        "source": "$auto$ff.cc:337:slice$27165/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38499",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.27397222312633,
+              38.65019972477748
+            ],
+            "load_ff": [
+              110.4,
+              110.6
+            ],
+            "native": {
+              "cell_rise": [
+                62.064488192798585,
+                64.64893894065986
+              ],
+              "cell_fall": [
+                54.93224673319111,
+                57.308879791321566
+              ],
+              "rise_transition": [
+                118.43343324511683,
+                119.20421346913399
+              ],
+              "fall_transition": [
+                99.91709629729351,
+                100.84818660998609
+              ]
+            },
+            "old_delay_ps": 66.49999999999997
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43189",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.91709629729351,
+              124.20421346913399
+            ],
+            "load_ff": [
+              0.39959999999999996,
+              0.5996
+            ],
+            "native": {
+              "cell_rise": [
+                27.5056018112224,
+                34.202304541648935
+              ],
+              "cell_fall": [
+                11.994989858423493,
+                15.197180995159218
+              ],
+              "rise_transition": [
+                29.649248631223326,
+                37.57928269253931
+              ],
+              "fall_transition": [
+                20.226498643578694,
+                25.97523911520388
+              ]
+            },
+            "old_delay_ps": 86.6
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43190",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.226498643578694,
+              42.57928269253931
+            ],
+            "load_ff": [
+              0.810804,
+              1.392678
+            ],
+            "native": {
+              "cell_rise": [
+                12.065000292523784,
+                20.866891580729636
+              ],
+              "cell_fall": [
+                11.292015777787359,
+                20.218162703727458
+              ],
+              "rise_transition": [
+                14.119932431008241,
+                25.517380088517317
+              ],
+              "fall_transition": [
+                14.570303008859304,
+                27.947033984758935
+              ]
+            },
+            "old_delay_ps": 18.599999999999966
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.21925236940196,
+          119.71813506303843
+        ],
+        "final_OAI_wave_ps": [
+          14.119932431008241,
+          27.947033984758935
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.1578622014919,
+        "all_real_clocks": {
+          "source_min": 125.27878784461909,
+          "capture_max": 132.7004622604401
+        },
+        "existing_all_comb_delay_ps": 171.69999999999993
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27193/D",
+        "source": "$auto$ff.cc:337:slice$27193/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38495",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.23017946769183,
+              38.600130417703454
+            ],
+            "load_ff": [
+              109.4,
+              109.6
+            ],
+            "native": {
+              "cell_rise": [
+                61.60153156038594,
+                64.1849358847406
+              ],
+              "cell_fall": [
+                54.52566013815914,
+                56.900030707457894
+              ],
+              "rise_transition": [
+                117.38689063699705,
+                118.1637845991613
+              ],
+              "fall_transition": [
+                99.04150957390019,
+                99.98010436835054
+              ]
+            },
+            "old_delay_ps": 87.20000000000002
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43183",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.04150957390019,
+              123.1637845991613
+            ],
+            "load_ff": [
+              0.43010000000000004,
+              0.6301
+            ],
+            "native": {
+              "cell_rise": [
+                27.900351131010677,
+                34.60878221748395
+              ],
+              "cell_fall": [
+                12.39222479515821,
+                15.623292178150148
+              ],
+              "rise_transition": [
+                30.216443721977292,
+                38.163444661790834
+              ],
+              "fall_transition": [
+                20.588322212638076,
+                26.331129071488377
+              ]
+            },
+            "old_delay_ps": 11.600000000000042
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43184",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.588322212638076,
+              43.163444661790834
+            ],
+            "load_ff": [
+              0.7839039999999999,
+              1.365778
+            ],
+            "native": {
+              "cell_rise": [
+                12.007291396655397,
+                20.794688512529778
+              ],
+              "cell_fall": [
+                11.194265099702722,
+                20.084799227446823
+              ],
+              "rise_transition": [
+                14.000436786379472,
+                25.41968274622723
+              ],
+              "fall_transition": [
+                14.39780071076038,
+                27.701113279435706
+              ]
+            },
+            "old_delay_ps": 21.599999999999955
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.11215003302007,
+          119.58840661475432
+        ],
+        "final_OAI_wave_ps": [
+          14.000436786379472,
+          27.701113279435706
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 194.99063508752764,
+        "all_real_clocks": {
+          "source_min": 125.90017967398474,
+          "capture_max": 133.4449361903651
+        },
+        "existing_all_comb_delay_ps": 120.40000000000002
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27193/D",
+        "source": "$auto$ff.cc:337:slice$27193/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38495",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.23017946769183,
+              38.600130417703454
+            ],
+            "load_ff": [
+              109.4,
+              109.6
+            ],
+            "native": {
+              "cell_rise": [
+                61.60153156038594,
+                64.1849358847406
+              ],
+              "cell_fall": [
+                54.52566013815914,
+                56.900030707457894
+              ],
+              "rise_transition": [
+                117.38689063699705,
+                118.1637845991613
+              ],
+              "fall_transition": [
+                99.04150957390019,
+                99.98010436835054
+              ]
+            },
+            "old_delay_ps": 66.00000000000003
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43183",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.04150957390019,
+              123.1637845991613
+            ],
+            "load_ff": [
+              0.4354,
+              0.6354
+            ],
+            "native": {
+              "cell_rise": [
+                27.9881882893898,
+                34.7045122177545
+              ],
+              "cell_fall": [
+                12.462802655478937,
+                15.701273683975106
+              ],
+              "rise_transition": [
+                30.334500006336384,
+                38.290729533893504
+              ],
+              "fall_transition": [
+                20.667724241127125,
+                26.41343209670186
+              ]
+            },
+            "old_delay_ps": 87.60000000000004
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43184",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              20.667724241127125,
+              43.290729533893504
+            ],
+            "load_ff": [
+              0.7839039999999999,
+              1.365778
+            ],
+            "native": {
+              "cell_rise": [
+                12.022763652123809,
+                20.816785567417345
+              ],
+              "cell_fall": [
+                11.20507138195631,
+                20.099393757914758
+              ],
+              "rise_transition": [
+                14.019084683770714,
+                25.447545036124122
+              ],
+              "fall_transition": [
+                14.412405526187753,
+                27.719398747768178
+              ]
+            },
+            "old_delay_ps": 18.399999999999956
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          78.1935341755944,
+          119.70623366991244
+        ],
+        "final_OAI_wave_ps": [
+          14.019084683770714,
+          27.719398747768178
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 195.07201923010197,
+        "all_real_clocks": {
+          "source_min": 125.90017967398474,
+          "capture_max": 133.4449361903651
+        },
+        "existing_all_comb_delay_ps": 172.00000000000003
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27207/D",
+        "source": "$auto$ff.cc:337:slice$27207/QN",
+        "baseline_edge": "rise",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38487",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.231277562598315,
+              38.59928685611223
+            ],
+            "load_ff": [
+              110.4,
+              110.6
+            ],
+            "native": {
+              "cell_rise": [
+                62.05004655265161,
+                64.63171894416314
+              ],
+              "cell_fall": [
+                54.91894568090013,
+                57.293018022878655
+              ],
+              "rise_transition": [
+                118.43017182001222,
+                119.20033335599123
+              ],
+              "fall_transition": [
+                99.91270591862788,
+                100.8429623812003
+              ]
+            },
+            "old_delay_ps": 86.79999999999997
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43114",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.91270591862788,
+              124.20033335599123
+            ],
+            "load_ff": [
+              0.4569000000000001,
+              0.6569
+            ],
+            "native": {
+              "cell_rise": [
+                28.457764126397105,
+                35.24040045359797
+              ],
+              "cell_fall": [
+                12.760875841672789,
+                16.04361910100618
+              ],
+              "rise_transition": [
+                30.928633861161277,
+                38.959134428039285
+              ],
+              "fall_transition": [
+                21.08559525024864,
+                26.865952138035105
+              ]
+            },
+            "old_delay_ps": 12.599999999999987
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43115",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              21.08559525024864,
+              43.959134428039285
+            ],
+            "load_ff": [
+              0.8436039999999999,
+              1.425478
+            ],
+            "native": {
+              "cell_rise": [
+                12.393469522484663,
+                21.32266872868323
+              ],
+              "cell_fall": [
+                11.59172078956832,
+                20.62434664808167
+              ],
+              "rise_transition": [
+                14.57341621914354,
+                26.098728105297937
+              ],
+              "fall_transition": [
+                15.021625178444275,
+                28.54910087915543
+              ]
+            },
+            "old_delay_ps": 22.300000000000015
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          79.27154231214124,
+          121.19478812644434
+        ],
+        "final_OAI_wave_ps": [
+          14.57341621914354,
+          28.54910087915543
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 196.1803138708454,
+        "all_real_clocks": {
+          "source_min": 125.27728904352985,
+          "capture_max": 132.69856100350285
+        },
+        "existing_all_comb_delay_ps": 121.69999999999997
+      },
+      {
+        "endpoint": "$auto$ff.cc:337:slice$27207/D",
+        "source": "$auto$ff.cc:337:slice$27207/QN",
+        "baseline_edge": "fall",
+        "stages": [
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$38487",
+            "master": "INVx6_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              31.231277562598315,
+              38.59928685611223
+            ],
+            "load_ff": [
+              110.30000000000001,
+              110.5
+            ],
+            "native": {
+              "cell_rise": [
+                62.00523221294549,
+                64.58701209456655
+              ],
+              "cell_fall": [
+                54.87965133199665,
+                57.25369301391046
+              ],
+              "rise_transition": [
+                118.32585218810912,
+                119.0966719760903
+              ],
+              "fall_transition": [
+                99.82559769735394,
+                100.75666783087453
+              ]
+            },
+            "old_delay_ps": 66.5
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43114",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "input": "A",
+            "input_wave": [
+              99.82559769735394,
+              124.0966719760903
+            ],
+            "load_ff": [
+              0.46220000000000006,
+              0.6622
+            ],
+            "native": {
+              "cell_rise": [
+                28.53453379432543,
+                35.32167981450826
+              ],
+              "cell_fall": [
+                12.830517832501581,
+                16.11928623224654
+              ],
+              "rise_transition": [
+                31.035468999220633,
+                39.07156918552686
+              ],
+              "fall_transition": [
+                21.15551598541561,
+                26.93650168191551
+              ]
+            },
+            "old_delay_ps": 89.0
+          },
+          {
+            "instance": "$abc$36464$auto$blifparse.cc:397:parse_blif$43115",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "input": "B",
+            "input_wave": [
+              21.15551598541561,
+              44.07156918552686
+            ],
+            "load_ff": [
+              0.8436039999999999,
+              1.425478
+            ],
+            "native": {
+              "cell_rise": [
+                12.407479303203448,
+                21.34255735592745
+              ],
+              "cell_fall": [
+                11.601525804701554,
+                20.637538673660334
+              ],
+              "rise_transition": [
+                14.590032977117145,
+                26.12368683280121
+              ],
+              "fall_transition": [
+                15.034634006394649,
+                28.565387958572792
+              ]
+            },
+            "old_delay_ps": 19.099999999999966
+          }
+        ],
+        "new_feedback_comb_delay_ps": [
+          79.31169496919978,
+          121.25124926500226
+        ],
+        "final_OAI_wave_ps": [
+          14.590032977117145,
+          28.565387958572792
+        ],
+        "new_feedback_hold_absolute_lower_bound_ps": 196.22046652790397,
+        "all_real_clocks": {
+          "source_min": 125.27728904352985,
+          "capture_max": 132.69856100350285
+        },
+        "existing_all_comb_delay_ps": 174.59999999999997
+      }
+    ]
+  }
+}

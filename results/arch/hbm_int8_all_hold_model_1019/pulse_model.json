@@ -1,0 +1,582 @@
+{
+  "schema": "int8.reset.native_pulse.source_model.v1",
+  "claim": "Conditional one-cycle synchronous sampled reset pulse budget; preserve actual source edge calendar. All one-dimensional Liberty pulse tables and conditions retained, no fake second dimension. TT/FF native pulse replay still required. CLK and SETN terminals unchanged.",
+  "corners": {
+    "TT": {
+      "all_native_ASR_pulse_tables": [
+        {
+          "pin": "CLK",
+          "edge": "rise_constraint",
+          "when": "(D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            39.9888,
+            42.2478,
+            42.2478,
+            45.3186,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "CLK",
+          "edge": "fall_constraint",
+          "when": "(D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            28.0762,
+            28.0762,
+            30.5176,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "CLK",
+          "edge": "rise_constraint",
+          "when": "(!D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            32.959,
+            32.959,
+            32.959,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "CLK",
+          "edge": "fall_constraint",
+          "when": "(!D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            30.5176,
+            30.5176,
+            30.5176,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "RESETN",
+          "edge": "fall_constraint",
+          "when": "(CLK * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            25.6348,
+            25.6348,
+            30.5176,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "RESETN",
+          "edge": "fall_constraint",
+          "when": "(!CLK * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            25.6348,
+            25.6348,
+            30.5176,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "SETN",
+          "edge": "fall_constraint",
+          "when": "(CLK * RESETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            37.3054,
+            37.3054,
+            41.0652,
+            47.8363,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "SETN",
+          "edge": "fall_constraint",
+          "when": "(!CLK * RESETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            27.2572,
+            30.2792,
+            33.0353,
+            45.3186,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        }
+      ],
+      "changed_reset_cases": [
+        {
+          "net": "5549",
+          "wave": [
+            21.731436285241593,
+            53.6536194072723
+          ],
+          "chain": [
+            159.40813620215982,
+            259.3197070967805
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 54.033487032675794,
+          "conditional_one_cycle_low_pulse_bound_ps": 643.4214291053793,
+          "conditional_pulse_margin_ps": 589.3879420727035
+        },
+        {
+          "net": "5264",
+          "wave": [
+            49.90800446790753,
+            96.03764349282764
+          ],
+          "chain": [
+            278.95999507197104,
+            373.0004337908913
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 96.7176301028656,
+          "conditional_one_cycle_low_pulse_bound_ps": 649.2925612810798,
+          "conditional_pulse_margin_ps": 552.5749311782142
+        },
+        {
+          "net": "5260",
+          "wave": [
+            46.36362974584075,
+            91.59345979675282
+          ],
+          "chain": [
+            276.9472055162618,
+            370.4302745955909
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 92.24197047576332,
+          "conditional_one_cycle_low_pulse_bound_ps": 649.8499309206709,
+          "conditional_pulse_margin_ps": 557.6079604449076
+        },
+        {
+          "net": "5274",
+          "wave": [
+            47.2278321299827,
+            92.67706073110568
+          ],
+          "chain": [
+            277.43797124319315,
+            371.0569372588924
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 93.33324601373374,
+          "conditional_one_cycle_low_pulse_bound_ps": 649.7140339843007,
+          "conditional_pulse_margin_ps": 556.380787970567
+        },
+        {
+          "net": "2291",
+          "wave": [
+            45.556394888110404,
+            90.58130385619113
+          ],
+          "chain": [
+            276.5420331132788,
+            369.8892453031406
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 91.2226459407526,
+          "conditional_one_cycle_low_pulse_bound_ps": 649.9857878101382,
+          "conditional_pulse_margin_ps": 558.7631418693855
+        },
+        {
+          "net": "5268",
+          "wave": [
+            43.86631909781164,
+            88.46216655247039
+          ],
+          "chain": [
+            275.5290253909693,
+            368.6193170336936
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 89.08849984707827,
+          "conditional_one_cycle_low_pulse_bound_ps": 650.2427083572757,
+          "conditional_pulse_margin_ps": 561.1542085101973
+        },
+        {
+          "net": "5270",
+          "wave": [
+            42.05105512466365,
+            86.1860623252966
+          ],
+          "chain": [
+            274.8276067701723,
+            367.57761032762517
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 86.79627511171552,
+          "conditional_one_cycle_low_pulse_bound_ps": 650.582996442547,
+          "conditional_pulse_margin_ps": 563.7867213308315
+        }
+      ]
+    },
+    "FF": {
+      "all_native_ASR_pulse_tables": [
+        {
+          "pin": "CLK",
+          "edge": "rise_constraint",
+          "when": "(D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            30.5176,
+            30.5176,
+            30.5176,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "CLK",
+          "edge": "fall_constraint",
+          "when": "(D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            20.1416,
+            20.1416,
+            23.1934,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "CLK",
+          "edge": "rise_constraint",
+          "when": "(!D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            25.6348,
+            25.6348,
+            25.6348,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "CLK",
+          "edge": "fall_constraint",
+          "when": "(!D * RESETN * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            20.1416,
+            20.1416,
+            23.1934,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "RESETN",
+          "edge": "fall_constraint",
+          "when": "(CLK * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            20.1416,
+            20.1416,
+            23.1934,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "RESETN",
+          "edge": "fall_constraint",
+          "when": "(!CLK * SETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            20.1416,
+            20.1416,
+            23.1934,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "SETN",
+          "edge": "fall_constraint",
+          "when": "(CLK * RESETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            25.3296,
+            28.0762,
+            30.5176,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        },
+        {
+          "pin": "SETN",
+          "edge": "fall_constraint",
+          "when": "(!CLK * RESETN)",
+          "index_1": [
+            5.0,
+            10.0,
+            20.0,
+            40.0,
+            80.0,
+            160.0,
+            320.0
+          ],
+          "values": [
+            21.9727,
+            21.9727,
+            25.6348,
+            40.2832,
+            80.5664,
+            161.133,
+            321.045
+          ]
+        }
+      ],
+      "changed_reset_cases": [
+        {
+          "net": "5549",
+          "wave": [
+            15.6526840830184,
+            45.66154460553566
+          ],
+          "chain": [
+            116.88506422646194,
+            189.86508703402845
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 45.984828341342855,
+          "conditional_one_cycle_low_pulse_bound_ps": 670.3529771924334,
+          "conditional_pulse_margin_ps": 624.3681488510905
+        },
+        {
+          "net": "5264",
+          "wave": [
+            39.17159100514666,
+            76.92344967771703
+          ],
+          "chain": [
+            203.5707666607766,
+            262.7638283657125
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 77.46806770143527,
+          "conditional_one_cycle_low_pulse_bound_ps": 684.139938295064,
+          "conditional_pulse_margin_ps": 606.6718705936287
+        },
+        {
+          "net": "5260",
+          "wave": [
+            36.515714086808316,
+            73.76519169856923
+          ],
+          "chain": [
+            202.0607095020099,
+            260.96504287391053
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 74.2874492557951,
+          "conditional_one_cycle_low_pulse_bound_ps": 684.4286666280993,
+          "conditional_pulse_margin_ps": 610.1412173723043
+        },
+        {
+          "net": "5274",
+          "wave": [
+            37.16327969281659,
+            74.5352532988436
+          ],
+          "chain": [
+            202.42889197204673,
+            261.4036264262005
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 75.06296289219941,
+          "conditional_one_cycle_low_pulse_bound_ps": 684.3582655458462,
+          "conditional_pulse_margin_ps": 609.2953026536468
+        },
+        {
+          "net": "2291",
+          "wave": [
+            35.910835484958376,
+            73.04589891246472
+          ],
+          "chain": [
+            201.74087102290528,
+            260.58648077688645
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 73.56306387676497,
+          "conditional_one_cycle_low_pulse_bound_ps": 684.4873902460188,
+          "conditional_pulse_margin_ps": 610.9243263692538
+        },
+        {
+          "net": "5268",
+          "wave": [
+            34.64442651809173,
+            71.53993643145324
+          ],
+          "chain": [
+            200.99660424543862,
+            259.69761063558553
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 72.04643918138794,
+          "conditional_one_cycle_low_pulse_bound_ps": 684.631993609853,
+          "conditional_pulse_margin_ps": 612.585554428465
+        },
+        {
+          "net": "5270",
+          "wave": [
+            33.28420830847312,
+            69.92242170048773
+          ],
+          "chain": [
+            200.37298229879246,
+            258.9690518964987
+          ],
+          "native_all_conditional_minimum_low_pulse_max_ps": 70.41747244612719,
+          "conditional_one_cycle_low_pulse_bound_ps": 684.7369304022938,
+          "conditional_pulse_margin_ps": 614.3194579561666
+        }
+      ]
+    }
+  }
+}
