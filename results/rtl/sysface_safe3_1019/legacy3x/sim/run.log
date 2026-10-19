@@ -1,0 +1,11 @@
+EMBAGE rx_last_pin=1500
+EMBAGE face_word_pin=1501
+EMBAGE actual_sram_write=1502
+EMBAGE complete_safe_sample=1503
+EMBAGE fixture_core_start=1503 NOT_PRODUCTION_CONSUMER
+SYS_FACE_PASS MUT=0 MU=1 head contexts 4, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
+- /srv/opentallas-scratch/claude/qw-sysface3-1019/a4/rtl/test/qwen_split/tb_qfd_sys_face_age.sv:293: Verilog $finish
+SYSFACE_SAFE_EQUIV checks250839
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 209us; walltime 6.932 s; speed 30.181 us/s
+- Verilator: cpu 6.415 s on 1 threads; allocated 8 MB

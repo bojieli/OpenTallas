@@ -1,0 +1,59 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-sysface3-1019/a4
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-sysface3-1019/a4
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-sysface3-1019/a4
+ot-run: ot-epyc7       admits   730 GB (avail 612, growth 101, headroom 0, waiters 0/0 GB) load 48/96 running 24 disk 6151 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-sysface3-1019/a4
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-sysface3-1019/a4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-sysface3-1019/a4
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1571104-1792453655 after 1 s
+STEP graph cold3 16:47:36
+STEP graph legacy3 16:47:40
+STEP graph cold 16:47:43
+STEP graph legacy 16:47:47
+DEPTH_CENSUS PASS max 19 over 0 hist [('19', 10), ('18', 5), ('17', 16), ('16', 307), ('15', 155), ('14', 192), ('13', 201), ('12', 84)]
+STEP generate cold3 16:47:50
+{"clock_pins": 4035, "macro_counts": {"ot_rom_4096x72_m8": 3, "ot_sram_1r1w_64x16_m1": 6}, "max_nonclock_load": 13, "multiply_driven": 0, "native_buffers": 0, "original_equations": 12889, "reset_forest_ff": 259, "same_edge_copies": 492, "sequential_correspondence": "PASS", "undriven": 0}
+{"scope": "abstract source only; native census required", "status": "PASS", "roots": 14104, "max": 12, "over32": [], "top20": [{"net": 15229, "driver": ["TOP", "__safe_capture_1"], "terminal_pins": 12}, {"net": 15239, "driver": ["TOP", "__safe_capture_11"], "terminal_pins": 12}, {"net": 15264, "driver": ["TOP", "__safe_capture_12"], "terminal_pins": 12}, {"net": 15289, "driver": ["TOP", "__safe_capture_13"], "terminal_pins": 12}, {"net": 15294, "driver": ["TOP", "__safe_capture_14"], "terminal_pins": 12}, {"net": 15295, "driver": ["TOP", "__safe_capture_15"], "terminal_pins": 12}, {"net": 15297, "driver": ["TOP", "__safe_capture_17"], "terminal_pins": 12}, {"net": 15298, "driver": ["TOP", "__safe_capture_18"], "terminal_pins": 12}, {"net": 15299, "driver": ["TOP", "__safe_capture_19"], "terminal_pins": 12}, {"net": 15230, "driver": ["TOP", "__safe_capture_2"], "terminal_pins": 12}, {"net": 15300, "driver": ["TOP", "__safe_capture_20"], "terminal_pins": 12}, {"net": 15301, "driver": ["TOP", "__safe_capture_21"], "terminal_pins": 12}, {"net": 15302, "driver": ["TOP", "__safe_capture_22"], "terminal_pins": 12}, {"net": 15231, "driver": ["TOP", "__safe_capture_3"], "terminal_pins": 12}, {"net": 15232, "driver": ["TOP", "__safe_capture_4"], "terminal_pins": 12}, {"net": 15233, "driver": ["TOP", "__safe_capture_5"], "terminal_pins": 12}, {"net": 15234, "driver": ["TOP", "__safe_capture_6"], "terminal_pins": 12}, {"net": 15237, "driver": ["TOP", "__safe_capture_9"], "terminal_pins": 12}, {"net": 682, "driver": ["TOP", "d2d_epoch_abort"], "terminal_pins": 12}, {"net": 679, "driver": ["TOP", "emb_rx_v"], "terminal_pins": 12}]}
+STEP roundtrip cold3 16:48:31
+{"boolean_equations": 9605, "emitted_equations": "PASS", "ff_equations": 4026, "macro_instances": 9, "native_buffers": 0, "public_pins": 2812}
+{"status": "PASS", "all_public_bits": 2788, "boundary_ff": 2812, "extra_same_edge_input_ff": 24, "input_cycles": 1, "output_cycles": 1, "reset_assert_release_cycles": 2, "arbitrary_initial_input_copies_converge_edges": 1, "zero_init_assumed": false, "qualification_precondition": "all input families converge before landed reset reaches core; core correspondence separately requires actual reset/first sampling contract", "core_bindings": 113}
+miter outputs 62
+miter outputs 62
+DEPTH_CENSUS PASS max 19 over 0 hist [('19', 10), ('18', 4), ('17', 26), ('16', 204), ('15', 149), ('14', 185), ('13', 201), ('12', 78)]
+STEP generate legacy3 16:48:40
+{"clock_pins": 3428, "macro_counts": {"ot_rom_4096x72_m8": 1, "ot_sram_1r1w_64x16_m1": 6}, "max_nonclock_load": 13, "multiply_driven": 0, "native_buffers": 0, "original_equations": 11019, "reset_forest_ff": 241, "same_edge_copies": 434, "sequential_correspondence": "PASS", "undriven": 0}
+{"scope": "abstract source only; native census required", "status": "PASS", "roots": 12116, "max": 12, "over32": [], "top20": [{"net": 13101, "driver": ["TOP", "__safe_capture_0"], "terminal_pins": 12}, {"net": 13102, "driver": ["TOP", "__safe_capture_1"], "terminal_pins": 12}, {"net": 13111, "driver": ["TOP", "__safe_capture_10"], "terminal_pins": 12}, {"net": 13136, "driver": ["TOP", "__safe_capture_11"], "terminal_pins": 12}, {"net": 13139, "driver": ["TOP", "__safe_capture_12"], "terminal_pins": 12}, {"net": 13141, "driver": ["TOP", "__safe_capture_14"], "terminal_pins": 12}, {"net": 13142, "driver": ["TOP", "__safe_capture_15"], "terminal_pins": 12}, {"net": 13143, "driver": ["TOP", "__safe_capture_16"], "terminal_pins": 12}, {"net": 13144, "driver": ["TOP", "__safe_capture_17"], "terminal_pins": 12}, {"net": 13145, "driver": ["TOP", "__safe_capture_18"], "terminal_pins": 12}, {"net": 13146, "driver": ["TOP", "__safe_capture_19"], "terminal_pins": 12}, {"net": 13103, "driver": ["TOP", "__safe_capture_2"], "terminal_pins": 12}, {"net": 13104, "driver": ["TOP", "__safe_capture_3"], "terminal_pins": 12}, {"net": 13105, "driver": ["TOP", "__safe_capture_4"], "terminal_pins": 12}, {"net": 13106, "driver": ["TOP", "__safe_capture_5"], "terminal_pins": 12}, {"net": 13109, "driver": ["TOP", "__safe_capture_8"], "terminal_pins": 12}, {"net": 680, "driver": ["TOP", "d2d_epoch_abort"], "terminal_pins": 12}, {"net": 677, "driver": ["TOP", "emb_rx_v"], "terminal_pins": 12}, {"net": 590, "driver": ["TOP", "prog_auth_slot"], "terminal_pins": 12}, {"net": 589, "driver": ["TOP", "prog_witness_slot"], "terminal_pins": 12}]}
+STEP roundtrip legacy3 16:49:23
+{"boolean_equations": 8266, "emitted_equations": "PASS", "ff_equations": 3421, "macro_instances": 7, "native_buffers": 0, "public_pins": 2809}
+{"status": "PASS", "all_public_bits": 2788, "boundary_ff": 2809, "extra_same_edge_input_ff": 21, "input_cycles": 1, "output_cycles": 1, "reset_assert_release_cycles": 2, "arbitrary_initial_input_copies_converge_edges": 1, "zero_init_assumed": false, "qualification_precondition": "all input families converge before landed reset reaches core; core correspondence separately requires actual reset/first sampling contract", "core_bindings": 110}
+miter outputs 62
+miter outputs 62
+STEP benches 16:49:33
+SYS_FACE_COLD_PASS MUT0 Tprefix3 Esegment1 init2 AUTH/re-admission row64+scale
+SYSFACE_SAFE_EQUIV checks4807
+SYS_FACE_COLD_PASS MUT0 Tprefix3 Esegment1 init2 AUTH/re-admission row64+scale
+SYSFACE_SAFE_EQUIV checks4807
+SYS_FACE_PASS MUT=0 MU=1 head contexts 4, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
+SYSFACE_SAFE_EQUIV checks250839
+SYS_FACE_PASS MUT=0 MU=1 head contexts 4, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
+SYSFACE_SAFE_EQUIV checks250839
+SYSFACE_SAFE_RESET_PASS phases128 release3 face_reset2
+SYSFACE_SAFE_EQUIV checks3768
+STEP leaf_equiv 16:53:31
+SAFE3_EQUIV_PASS ctx 220 are proven and 0 are unproven
+SAFE3_EQUIV_PASS commit 383 are proven and 0 are unproven
+SAFE3_MUTANT_FAIL_AS_EXPECTED reserved Found 220 unproven $equiv cells (10 groups) in eq_mut_reserved:
+SAFE3_MUTANT_FAIL_AS_EXPECTED late_image Found 220 unproven $equiv cells (10 groups) in eq_mut_late_image:
+SAFE3_MUTANT_FAIL_AS_EXPECTED sticky Found 220 unproven $equiv cells (10 groups) in eq_mut_sticky:
+SAFE3_MUTANT_FAIL_AS_EXPECTED dw_window Found 383 unproven $equiv cells (17 groups) in eq_mut_dw_window:
+SAFE3_EQUIV_ALL_PASS
+STEP mutants 16:53:34
+cold3_mut_copy_d
+[8000] %Fatal: miter.sv:689: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_COPY_FAIL 14473
+cold3_mut_reset_short
+[7000] %Fatal: miter.sv:448: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_RESET_FAIL safe_rst_leaf_0
+cold3_mut_gate_input
+[1911000] %Fatal: miter.sv:765: Assertion failed in tb_qfd_sys_face_cold.u_dut: SYSFACE_SAFE_COPY_FAIL 14755
+SAFE3_MATRIX_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1571104-1792453655): exit 0

@@ -1,0 +1,1672 @@
+
+-- Executing script file `safe3_equiv/mut_reserved.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_host_native_context_tx'.
+Generating RTLIL representation for module `\qfd_host_native_context_rx'.
+Generating RTLIL representation for module `\qkd_program_auth_tx'.
+Generating RTLIL representation for module `\qfd_program_auth_rx'.
+Generating RTLIL representation for module `\qfd_program_witness_tx'.
+Generating RTLIL representation for module `\qkd_program_witness_rx'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_program_pw_observer'.
+Generating RTLIL representation for module `\qkd_program_commit'.
+Generating RTLIL representation for module `\qkd_program_commit_join'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: safe3_equiv/mut_reserved.sv
+Parsing SystemVerilog input from `safe3_equiv/mut_reserved.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_sys_face_context_rx_s3'.
+Generating RTLIL representation for module `\qfd_sys_face_program_commit_s3'.
+Successfully finished Verilog frontend.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 8 switch rules as full_case in process $proc$safe3_equiv/mut_reserved.sv:99$463 in module qfd_sys_face_program_commit_s3.
+Marked 1 switch rules as full_case in process $proc$safe3_equiv/mut_reserved.sv:65$436 in module qfd_sys_face_context_rx_s3.
+Marked 4 switch rules as full_case in process $proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331 in module qkd_program_commit_join.
+Marked 2 switch rules as full_case in process $proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:97$320 in module qkd_program_commit_join.
+Marked 8 switch rules as full_case in process $proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268 in module qkd_program_commit.
+Marked 36 switch rules as full_case in process $proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195 in module qkd_program_pw_observer.
+Marked 4 switch rules as full_case in process $proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180 in module qkd_program_witness_rx.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142 in module qfd_program_witness_tx.
+Marked 3 switch rules as full_case in process $proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120 in module qfd_program_auth_rx.
+Marked 2 switch rules as full_case in process $proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93 in module qkd_program_auth_tx.
+Marked 2 switch rules as full_case in process $proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49 in module qfd_host_native_context_rx.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7 in module qkd_host_native_context_tx.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 21 redundant assignments.
+Promoted 9 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+Found async reset \rst_n in `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+Found async reset \rst_n in `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+Found async reset \rst_n in `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+Found async reset \rst_n in `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+Found async reset \rst_n in `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+Found async reset \rst_n in `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+Found async reset \rst_n in `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+Found async reset \rst_n in `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+Found async reset \rst_n in `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~109 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+     1/12: $0\commit_v[0:0]
+     2/12: $0\authorized_digest[63:0]
+     3/12: $0\footer_cap[0:0]
+     4/12: $0\state[2:0]
+     5/12: $0\commit_digest[63:0]
+     6/12: $0\commit_epoch[15:0]
+     7/12: $0\ready[0:0]
+     8/12: $0\count[10:0]
+     9/12: $0\epoch[15:0]
+    10/12: $0\digest[63:0]
+    11/12: $0\fault[0:0]
+    12/12: $0\installed_fusedcap[0:0]
+Creating decoders for process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+     1/8: $0\host_image_digest[63:0]
+     2/8: $0\host_image_epoch[15:0]
+     3/8: $0\host_fusedcap[0:0]
+     4/8: $0\host_gen[1:0]
+     5/8: $0\host_tag[58:0]
+     6/8: $0\fault[0:0]
+     7/8: $0\host_epoch_valid[0:0]
+     8/8: $0\accepted_v[0:0]
+Creating decoders for process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+     1/12: $0\commit_v[0:0]
+     2/12: $0\seen_empty[1:0]
+     3/12: $0\begin_pending[0:0]
+     4/12: $0\complete[0:0]
+     5/12: $0\armed[0:0]
+     6/12: $0\commit_digest[63:0]
+     7/12: $0\commit_epoch[15:0]
+     8/12: $0\ready[0:0]
+     9/12: $0\epoch[15:0]
+    10/12: $0\digest[63:0]
+    11/12: $0\fault[0:0]
+    12/12: $0\installed_fusedcap[0:0]
+Creating decoders for process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:97$320'.
+     1/2: $2\mismatch[0:0]
+     2/2: $1\mismatch[0:0]
+Creating decoders for process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+     1/12: $0\commit_v[0:0]
+     2/12: $0\authorized_digest[63:0]
+     3/12: $0\footer_cap[0:0]
+     4/12: $0\state[2:0]
+     5/12: $0\commit_digest[63:0]
+     6/12: $0\commit_epoch[15:0]
+     7/12: $0\ready[0:0]
+     8/12: $0\count[10:0]
+     9/12: $0\epoch[15:0]
+    10/12: $0\digest[63:0]
+    11/12: $0\fault[0:0]
+    12/12: $0\installed_fusedcap[0:0]
+Creating decoders for process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+     1/94: $36\full_word[0:0]
+     2/94: $35\full_word[0:0]
+     3/94: $18\consumed_data[63:0]
+     4/94: $18\consumed_addr[9:0]
+     5/94: $34\full_word[0:0]
+     6/94: $18\count[31:0]
+     7/94: $33\full_word[0:0]
+     8/94: $17\consumed_data[63:0]
+     9/94: $17\consumed_addr[9:0]
+    10/94: $32\full_word[0:0]
+    11/94: $17\count[31:0]
+    12/94: $31\full_word[0:0]
+    13/94: $16\consumed_data[63:0]
+    14/94: $16\consumed_addr[9:0]
+    15/94: $30\full_word[0:0]
+    16/94: $16\count[31:0]
+    17/94: $29\full_word[0:0]
+    18/94: $15\consumed_data[63:0]
+    19/94: $15\consumed_addr[9:0]
+    20/94: $28\full_word[0:0]
+    21/94: $15\count[31:0]
+    22/94: $27\full_word[0:0]
+    23/94: $14\consumed_data[63:0]
+    24/94: $14\consumed_addr[9:0]
+    25/94: $26\full_word[0:0]
+    26/94: $14\count[31:0]
+    27/94: $25\full_word[0:0]
+    28/94: $13\consumed_data[63:0]
+    29/94: $13\consumed_addr[9:0]
+    30/94: $24\full_word[0:0]
+    31/94: $13\count[31:0]
+    32/94: $23\full_word[0:0]
+    33/94: $12\consumed_data[63:0]
+    34/94: $12\consumed_addr[9:0]
+    35/94: $22\full_word[0:0]
+    36/94: $12\count[31:0]
+    37/94: $21\full_word[0:0]
+    38/94: $11\consumed_data[63:0]
+    39/94: $11\consumed_addr[9:0]
+    40/94: $20\full_word[0:0]
+    41/94: $11\count[31:0]
+    42/94: $2\s[31:0]
+    43/94: $10\count[31:0]
+    44/94: $19\full_word[0:0]
+    45/94: $10\consumed_data[63:0]
+    46/94: $10\consumed_addr[9:0]
+    47/94: $2\mask[63:0]
+    48/94: $18\full_word[0:0]
+    49/94: $9\consumed_data[63:0]
+    50/94: $9\consumed_addr[9:0]
+    51/94: $17\full_word[0:0]
+    52/94: $9\count[31:0]
+    53/94: $16\full_word[0:0]
+    54/94: $8\consumed_data[63:0]
+    55/94: $8\consumed_addr[9:0]
+    56/94: $15\full_word[0:0]
+    57/94: $8\count[31:0]
+    58/94: $14\full_word[0:0]
+    59/94: $7\consumed_data[63:0]
+    60/94: $7\consumed_addr[9:0]
+    61/94: $13\full_word[0:0]
+    62/94: $7\count[31:0]
+    63/94: $12\full_word[0:0]
+    64/94: $6\consumed_data[63:0]
+    65/94: $6\consumed_addr[9:0]
+    66/94: $11\full_word[0:0]
+    67/94: $6\count[31:0]
+    68/94: $10\full_word[0:0]
+    69/94: $5\consumed_data[63:0]
+    70/94: $5\consumed_addr[9:0]
+    71/94: $9\full_word[0:0]
+    72/94: $5\count[31:0]
+    73/94: $8\full_word[0:0]
+    74/94: $4\consumed_data[63:0]
+    75/94: $4\consumed_addr[9:0]
+    76/94: $7\full_word[0:0]
+    77/94: $4\count[31:0]
+    78/94: $6\full_word[0:0]
+    79/94: $3\consumed_data[63:0]
+    80/94: $3\consumed_addr[9:0]
+    81/94: $5\full_word[0:0]
+    82/94: $3\count[31:0]
+    83/94: $4\full_word[0:0]
+    84/94: $2\consumed_data[63:0]
+    85/94: $2\consumed_addr[9:0]
+    86/94: $3\full_word[0:0]
+    87/94: $2\count[31:0]
+    88/94: $1\s[31:0]
+    89/94: $1\count[31:0]
+    90/94: $2\full_word[0:0]
+    91/94: $1\consumed_data[63:0]
+    92/94: $1\consumed_addr[9:0]
+    93/94: $1\mask[63:0]
+    94/94: $1\full_word[0:0]
+Creating decoders for process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+     1/6: $0\program_commit_v[0:0]
+     2/6: $0\program_installed_valid[0:0]
+     3/6: $0\program_commit_digest[63:0]
+     4/6: $0\program_commit_epoch[15:0]
+     5/6: $0\fault[0:0]
+     6/6: $0\installed_fusedcap[0:0]
+Creating decoders for process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+     1/8: $0\tx_observed_v[0:0]
+     2/8: $0\tx_v[0:0]
+     3/8: $0\epoch[15:0]
+     4/8: $0\cap[0:0]
+     5/8: $0\digest[63:0]
+     6/8: $0\held[0:0]
+     7/8: $0\fault[0:0]
+     8/8: $0\tx_record[547:0]
+Creating decoders for process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+     1/8: $0\auth_v[0:0]
+     2/8: $0\begin_v[0:0]
+     3/8: $0\auth_digest[63:0]
+     4/8: $0\auth_epoch[15:0]
+     5/8: $0\expected_dw[3:0]
+     6/8: $0\expected_pw[10:0]
+     7/8: $0\begin_epoch[15:0]
+     8/8: $0\fault[0:0]
+Creating decoders for process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+     1/12: $0\tx_observed_v[0:0]
+     2/12: $0\tx_v[0:0]
+     3/12: $0\digest[63:0]
+     4/12: $0\nd[3:0]
+     5/12: $0\np[10:0]
+     6/12: $0\ae[15:0]
+     7/12: $0\be[15:0]
+     8/12: $0\begin_sent[0:0]
+     9/12: $0\ap[0:0]
+    10/12: $0\bp[0:0]
+    11/12: $0\fault[0:0]
+    12/12: $0\tx_record[547:0]
+Creating decoders for process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+     1/8: $0\accepted_v[0:0]
+     2/8: $0\host_image_digest[63:0]
+     3/8: $0\host_image_epoch[15:0]
+     4/8: $0\host_fusedcap[0:0]
+     5/8: $0\host_gen[1:0]
+     6/8: $0\host_tag[58:0]
+     7/8: $0\host_epoch_valid[0:0]
+     8/8: $0\fault[0:0]
+Creating decoders for process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+     1/9: $0\tx_observed_v[0:0]
+     2/9: $0\tx_v[0:0]
+     3/9: $0\gen[1:0]
+     4/9: $0\tag[58:0]
+     5/9: $0\epoch_q[15:0]
+     6/9: $0\epoch_valid_q[0:0]
+     7/9: $0\held[0:0]
+     8/9: $0\fault[0:0]
+     9/9: $0\tx_record[547:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_program_commit_join.\i' from process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:97$320'.
+No latch inferred for signal `\qkd_program_commit_join.\mismatch' from process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:97$320'.
+No latch inferred for signal `\qkd_program_pw_observer.\b' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+No latch inferred for signal `\qkd_program_pw_observer.\consumed_addr' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+No latch inferred for signal `\qkd_program_pw_observer.\consumed_data' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+No latch inferred for signal `\qkd_program_pw_observer.\full_word' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+No latch inferred for signal `\qkd_program_pw_observer.\count' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+No latch inferred for signal `\qkd_program_pw_observer.\mask' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+Warning: Latch inferred for signal `\qkd_program_pw_observer.\s [2:0]' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195': $auto$proc_dlatch.cc:543:proc_dlatch$1988
+Warning: Latch inferred for signal `\qkd_program_pw_observer.\s [3]' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195': $auto$proc_dlatch.cc:545:proc_dlatch$1991
+Warning: Latch inferred for signal `\qkd_program_pw_observer.\s [31:4]' from process `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195': $auto$proc_dlatch.cc:543:proc_dlatch$1994
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qfd_sys_face_program_commit_s3.\installed_fusedcap' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$1999' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\fault' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2004' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\digest' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2009' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\commit_v' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2014' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\epoch' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2019' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\count' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2024' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\ready' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2029' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\commit_epoch' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2034' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\commit_digest' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2039' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\state' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2044' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\footer_cap' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2049' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_program_commit_s3.\authorized_digest' using process `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+  created $adff cell `$procdff$2054' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\fault' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2059' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\accepted_v' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2064' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\host_epoch_valid' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2069' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\host_tag' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2074' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\host_gen' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2079' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\host_fusedcap' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2084' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\host_image_epoch' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2089' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_sys_face_context_rx_s3.\host_image_digest' using process `\qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+  created $adff cell `$procdff$2094' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\installed_fusedcap' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2099' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\fault' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2104' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\digest' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2109' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\commit_v' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2114' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\epoch' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2119' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\ready' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2124' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\commit_epoch' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2129' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\commit_digest' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2134' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\armed' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2139' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\complete' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2144' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\begin_pending' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2149' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit_join.\seen_empty' using process `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+  created $adff cell `$procdff$2154' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\installed_fusedcap' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2159' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\fault' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2164' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\digest' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2169' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\commit_v' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2174' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\epoch' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2179' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\count' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2184' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\ready' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2189' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\commit_epoch' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2194' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\commit_digest' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2199' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\state' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2204' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\footer_cap' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2209' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_commit.\authorized_digest' using process `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+  created $adff cell `$procdff$2214' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_witness_rx.\installed_fusedcap' using process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+  created $adff cell `$procdff$2219' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_witness_rx.\fault' using process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+  created $adff cell `$procdff$2224' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_witness_rx.\program_commit_v' using process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+  created $adff cell `$procdff$2229' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_witness_rx.\program_commit_epoch' using process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+  created $adff cell `$procdff$2234' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_witness_rx.\program_commit_digest' using process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+  created $adff cell `$procdff$2239' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_witness_rx.\program_installed_valid' using process `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+  created $adff cell `$procdff$2244' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\tx_v' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2249' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\tx_observed_v' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2254' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\tx_record' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2259' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\fault' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2264' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\held' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2269' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\digest' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2274' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\cap' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2279' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_witness_tx.\epoch' using process `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+  created $adff cell `$procdff$2284' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\fault' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2289' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\begin_v' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2294' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\begin_epoch' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2299' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\expected_pw' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2304' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\expected_dw' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2309' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\auth_v' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2314' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\auth_epoch' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2319' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_program_auth_rx.\auth_digest' using process `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+  created $adff cell `$procdff$2324' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\tx_v' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2329' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\tx_observed_v' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2334' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\tx_record' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2339' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\fault' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2344' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\bp' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2349' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\ap' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2354' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\begin_sent' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2359' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\be' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2364' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\ae' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2369' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\np' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2374' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\nd' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2379' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_program_auth_tx.\digest' using process `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+  created $adff cell `$procdff$2384' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\fault' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2389' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\accepted_v' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2394' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\host_epoch_valid' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2399' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\host_tag' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2404' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\host_gen' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2409' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\host_fusedcap' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2414' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\host_image_epoch' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2419' with positive edge clock and positive level reset.
+Creating register for signal `\qfd_host_native_context_rx.\host_image_digest' using process `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+  created $adff cell `$procdff$2424' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\tx_v' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2429' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\tx_observed_v' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2434' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\tx_record' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2439' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\fault' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2444' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\held' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2449' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\epoch_valid_q' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2454' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\epoch_q' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2459' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\tag' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2464' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_host_native_context_tx.\gen' using process `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+  created $adff cell `$procdff$2469' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 13 empty switches in `\qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+Removing empty process `qfd_sys_face_program_commit_s3.$proc$safe3_equiv/mut_reserved.sv:99$463'.
+Removing empty process `qfd_sys_face_context_rx_s3.$proc$safe3_equiv/mut_reserved.sv:65$436'.
+Found and cleaned up 9 empty switches in `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+Removing empty process `qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:102$331'.
+Found and cleaned up 2 empty switches in `\qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:97$320'.
+Removing empty process `qkd_program_commit_join.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:97$320'.
+Found and cleaned up 13 empty switches in `\qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+Removing empty process `qkd_program_commit.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:52$268'.
+Found and cleaned up 36 empty switches in `\qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+Removing empty process `qkd_program_pw_observer.$proc$rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv:12$195'.
+Found and cleaned up 7 empty switches in `\qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+Removing empty process `qkd_program_witness_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:146$180'.
+Found and cleaned up 4 empty switches in `\qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+Removing empty process `qfd_program_witness_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:123$142'.
+Found and cleaned up 4 empty switches in `\qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+Removing empty process `qfd_program_auth_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:102$120'.
+Found and cleaned up 7 empty switches in `\qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+Removing empty process `qkd_program_auth_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:76$93'.
+Found and cleaned up 9 empty switches in `\qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+Removing empty process `qfd_host_native_context_rx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:49$49'.
+Found and cleaned up 5 empty switches in `\qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+Removing empty process `qkd_host_native_context_tx.$proc$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:17$7'.
+Cleaned up 109 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_sys_face_program_commit_s3.
+<suppressed ~36 debug messages>
+Optimizing module qfd_sys_face_context_rx_s3.
+<suppressed ~17 debug messages>
+Optimizing module qkd_program_commit_join.
+<suppressed ~37 debug messages>
+Optimizing module qkd_program_commit.
+<suppressed ~36 debug messages>
+Optimizing module qkd_program_pw_observer.
+<suppressed ~33 debug messages>
+Optimizing module qkd_program_witness_rx.
+<suppressed ~16 debug messages>
+Optimizing module qfd_program_witness_tx.
+<suppressed ~16 debug messages>
+Optimizing module qfd_program_auth_rx.
+<suppressed ~20 debug messages>
+Optimizing module qkd_program_auth_tx.
+<suppressed ~24 debug messages>
+Optimizing module qfd_host_native_context_rx.
+<suppressed ~21 debug messages>
+Optimizing module qkd_host_native_context_tx.
+<suppressed ~20 debug messages>
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qfd_sys_face_program_commit_s3..
+Finding unused cells or wires in module \qfd_sys_face_context_rx_s3..
+Finding unused cells or wires in module \qkd_program_commit_join..
+Finding unused cells or wires in module \qkd_program_commit..
+Finding unused cells or wires in module \qkd_program_pw_observer..
+Finding unused cells or wires in module \qkd_program_witness_rx..
+Finding unused cells or wires in module \qfd_program_witness_tx..
+Finding unused cells or wires in module \qfd_program_auth_rx..
+Finding unused cells or wires in module \qkd_program_auth_tx..
+Finding unused cells or wires in module \qfd_host_native_context_rx..
+Finding unused cells or wires in module \qkd_host_native_context_tx..
+Removed 116 unused cells and 1023 unused wires.
+<suppressed ~129 debug messages>
+
+6. Executing ASYNC2SYNC pass.
+Replacing qfd_sys_face_program_commit_s3.$procdff$2024 ($adff): ARST=\rst_n, D=$0\count[10:0], Q=\count
+Replacing qfd_sys_face_program_commit_s3.$procdff$2009 ($adff): ARST=\rst_n, D=$0\digest[63:0], Q=\digest
+Replacing qfd_sys_face_program_commit_s3.$procdff$2039 ($adff): ARST=\rst_n, D=$0\commit_digest[63:0], Q=\commit_digest
+Replacing qfd_sys_face_program_commit_s3.$procdff$2019 ($adff): ARST=\rst_n, D=$0\epoch[15:0], Q=\epoch
+Replacing qfd_sys_face_program_commit_s3.$procdff$2004 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qfd_sys_face_program_commit_s3.$procdff$2049 ($adff): ARST=\rst_n, D=$0\footer_cap[0:0], Q=\footer_cap
+Replacing qfd_sys_face_program_commit_s3.$procdff$2034 ($adff): ARST=\rst_n, D=$0\commit_epoch[15:0], Q=\commit_epoch
+Replacing qfd_sys_face_program_commit_s3.$procdff$1999 ($adff): ARST=\rst_n, D=$0\installed_fusedcap[0:0], Q=\installed_fusedcap
+Replacing qfd_sys_face_program_commit_s3.$procdff$2029 ($adff): ARST=\rst_n, D=$0\ready[0:0], Q=\ready
+Replacing qfd_sys_face_program_commit_s3.$procdff$2044 ($adff): ARST=\rst_n, D=$0\state[2:0], Q=\state
+Replacing qfd_sys_face_program_commit_s3.$procdff$2054 ($adff): ARST=\rst_n, D=$0\authorized_digest[63:0], Q=\authorized_digest
+Replacing qfd_sys_face_program_commit_s3.$procdff$2014 ($adff): ARST=\rst_n, D=$0\commit_v[0:0], Q=\commit_v
+Replacing qfd_sys_face_context_rx_s3.$procdff$2064 ($adff): ARST=\rst_n, D=\accept, Q=\accepted_v
+Replacing qfd_sys_face_context_rx_s3.$procdff$2084 ($adff): ARST=\rst_n, D=$0\host_fusedcap[0:0], Q=\host_fusedcap
+Replacing qfd_sys_face_context_rx_s3.$procdff$2069 ($adff): ARST=\rst_n, D=\hev_next, Q=\host_epoch_valid
+Replacing qfd_sys_face_context_rx_s3.$procdff$2059 ($adff): ARST=\rst_n, D=\fault_next, Q=\fault
+Replacing qfd_sys_face_context_rx_s3.$procdff$2079 ($adff): ARST=\rst_n, D=$0\host_gen[1:0], Q=\host_gen
+Replacing qfd_sys_face_context_rx_s3.$procdff$2089 ($adff): ARST=\rst_n, D=$0\host_image_epoch[15:0], Q=\host_image_epoch
+Replacing qfd_sys_face_context_rx_s3.$procdff$2094 ($adff): ARST=\rst_n, D=$0\host_image_digest[63:0], Q=\host_image_digest
+Replacing qfd_sys_face_context_rx_s3.$procdff$2074 ($adff): ARST=\rst_n, D=$0\host_tag[58:0], Q=\host_tag
+Replacing qkd_program_commit_join.$procdff$2109 ($adff): ARST=\rst_n, D=$0\digest[63:0], Q=\digest
+Replacing qkd_program_commit_join.$procdff$2139 ($adff): ARST=\rst_n, D=$0\armed[0:0], Q=\armed
+Replacing qkd_program_commit_join.$procdff$2154 ($adff): ARST=\rst_n, D=$0\seen_empty[1:0], Q=\seen_empty
+Replacing qkd_program_commit_join.$procdff$2104 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qkd_program_commit_join.$procdff$2149 ($adff): ARST=\rst_n, D=$0\begin_pending[0:0], Q=\begin_pending
+Replacing qkd_program_commit_join.$procdff$2144 ($adff): ARST=\rst_n, D=$0\complete[0:0], Q=\complete
+Replacing qkd_program_commit_join.$procdff$2099 ($adff): ARST=\rst_n, D=$0\installed_fusedcap[0:0], Q=\installed_fusedcap
+Replacing qkd_program_commit_join.$procdff$2124 ($adff): ARST=\rst_n, D=$0\ready[0:0], Q=\ready
+Replacing qkd_program_commit_join.$procdff$2114 ($adff): ARST=\rst_n, D=$0\commit_v[0:0], Q=\commit_v
+Replacing qkd_program_commit_join.$procdff$2119 ($adff): ARST=\rst_n, D=$0\epoch[15:0], Q=\epoch
+Replacing qkd_program_commit_join.$procdff$2129 ($adff): ARST=\rst_n, D=$0\commit_epoch[15:0], Q=\commit_epoch
+Replacing qkd_program_commit_join.$procdff$2134 ($adff): ARST=\rst_n, D=$0\commit_digest[63:0], Q=\commit_digest
+Replacing qkd_program_commit.$procdff$2184 ($adff): ARST=\rst_n, D=$0\count[10:0], Q=\count
+Replacing qkd_program_commit.$procdff$2169 ($adff): ARST=\rst_n, D=$0\digest[63:0], Q=\digest
+Replacing qkd_program_commit.$procdff$2199 ($adff): ARST=\rst_n, D=$0\commit_digest[63:0], Q=\commit_digest
+Replacing qkd_program_commit.$procdff$2179 ($adff): ARST=\rst_n, D=$0\epoch[15:0], Q=\epoch
+Replacing qkd_program_commit.$procdff$2164 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qkd_program_commit.$procdff$2209 ($adff): ARST=\rst_n, D=$0\footer_cap[0:0], Q=\footer_cap
+Replacing qkd_program_commit.$procdff$2194 ($adff): ARST=\rst_n, D=$0\commit_epoch[15:0], Q=\commit_epoch
+Replacing qkd_program_commit.$procdff$2159 ($adff): ARST=\rst_n, D=$0\installed_fusedcap[0:0], Q=\installed_fusedcap
+Replacing qkd_program_commit.$procdff$2189 ($adff): ARST=\rst_n, D=$0\ready[0:0], Q=\ready
+Replacing qkd_program_commit.$procdff$2204 ($adff): ARST=\rst_n, D=$0\state[2:0], Q=\state
+Replacing qkd_program_commit.$procdff$2214 ($adff): ARST=\rst_n, D=$0\authorized_digest[63:0], Q=\authorized_digest
+Replacing qkd_program_commit.$procdff$2174 ($adff): ARST=\rst_n, D=$0\commit_v[0:0], Q=\commit_v
+Replacing qkd_program_witness_rx.$procdff$2244 ($adff): ARST=\rst_n, D=$0\program_installed_valid[0:0], Q=\program_installed_valid
+Replacing qkd_program_witness_rx.$procdff$2239 ($adff): ARST=\rst_n, D=$0\program_commit_digest[63:0], Q=\program_commit_digest
+Replacing qkd_program_witness_rx.$procdff$2219 ($adff): ARST=\rst_n, D=$0\installed_fusedcap[0:0], Q=\installed_fusedcap
+Replacing qkd_program_witness_rx.$procdff$2234 ($adff): ARST=\rst_n, D=$0\program_commit_epoch[15:0], Q=\program_commit_epoch
+Replacing qkd_program_witness_rx.$procdff$2229 ($adff): ARST=\rst_n, D=$0\program_commit_v[0:0], Q=\program_commit_v
+Replacing qkd_program_witness_rx.$procdff$2224 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qfd_program_witness_tx.$procdff$2284 ($adff): ARST=\rst_n, D=$0\epoch[15:0], Q=\epoch
+Replacing qfd_program_witness_tx.$procdff$2254 ($adff): ARST=\rst_n, D=$0\tx_observed_v[0:0], Q=\tx_observed_v
+Replacing qfd_program_witness_tx.$procdff$2274 ($adff): ARST=\rst_n, D=$0\digest[63:0], Q=\digest
+Replacing qfd_program_witness_tx.$procdff$2264 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qfd_program_witness_tx.$procdff$2249 ($adff): ARST=\rst_n, D=\send_slot, Q=\tx_v
+Replacing qfd_program_witness_tx.$procdff$2279 ($adff): ARST=\rst_n, D=$0\cap[0:0], Q=\cap
+Replacing qfd_program_witness_tx.$procdff$2259 ($adff): ARST=\rst_n, D=$0\tx_record[547:0], Q=\tx_record
+Replacing qfd_program_witness_tx.$procdff$2269 ($adff): ARST=\rst_n, D=$0\held[0:0], Q=\held
+Replacing qfd_program_auth_rx.$procdff$2324 ($adff): ARST=\rst_n, D=$0\auth_digest[63:0], Q=\auth_digest
+Replacing qfd_program_auth_rx.$procdff$2294 ($adff): ARST=\rst_n, D=$0\begin_v[0:0], Q=\begin_v
+Replacing qfd_program_auth_rx.$procdff$2314 ($adff): ARST=\rst_n, D=$0\auth_v[0:0], Q=\auth_v
+Replacing qfd_program_auth_rx.$procdff$2304 ($adff): ARST=\rst_n, D=$0\expected_pw[10:0], Q=\expected_pw
+Replacing qfd_program_auth_rx.$procdff$2289 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qfd_program_auth_rx.$procdff$2319 ($adff): ARST=\rst_n, D=$0\auth_epoch[15:0], Q=\auth_epoch
+Replacing qfd_program_auth_rx.$procdff$2299 ($adff): ARST=\rst_n, D=$0\begin_epoch[15:0], Q=\begin_epoch
+Replacing qfd_program_auth_rx.$procdff$2309 ($adff): ARST=\rst_n, D=$0\expected_dw[3:0], Q=\expected_dw
+Replacing qkd_program_auth_tx.$procdff$2384 ($adff): ARST=\rst_n, D=$0\digest[63:0], Q=\digest
+Replacing qkd_program_auth_tx.$procdff$2354 ($adff): ARST=\rst_n, D=$0\ap[0:0], Q=\ap
+Replacing qkd_program_auth_tx.$procdff$2339 ($adff): ARST=\rst_n, D=$0\tx_record[547:0], Q=\tx_record
+Replacing qkd_program_auth_tx.$procdff$2369 ($adff): ARST=\rst_n, D=$0\ae[15:0], Q=\ae
+Replacing qkd_program_auth_tx.$procdff$2349 ($adff): ARST=\rst_n, D=$0\bp[0:0], Q=\bp
+Replacing qkd_program_auth_tx.$procdff$2334 ($adff): ARST=\rst_n, D=$0\tx_observed_v[0:0], Q=\tx_observed_v
+Replacing qkd_program_auth_tx.$procdff$2379 ($adff): ARST=\rst_n, D=$0\nd[3:0], Q=\nd
+Replacing qkd_program_auth_tx.$procdff$2364 ($adff): ARST=\rst_n, D=$0\be[15:0], Q=\be
+Replacing qkd_program_auth_tx.$procdff$2329 ($adff): ARST=\rst_n, D=\send_slot, Q=\tx_v
+Replacing qkd_program_auth_tx.$procdff$2359 ($adff): ARST=\rst_n, D=$0\begin_sent[0:0], Q=\begin_sent
+Replacing qkd_program_auth_tx.$procdff$2374 ($adff): ARST=\rst_n, D=$0\np[10:0], Q=\np
+Replacing qkd_program_auth_tx.$procdff$2344 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qfd_host_native_context_rx.$procdff$2424 ($adff): ARST=\rst_n, D=$0\host_image_digest[63:0], Q=\host_image_digest
+Replacing qfd_host_native_context_rx.$procdff$2394 ($adff): ARST=\rst_n, D=$0\accepted_v[0:0], Q=\accepted_v
+Replacing qfd_host_native_context_rx.$procdff$2414 ($adff): ARST=\rst_n, D=$0\host_fusedcap[0:0], Q=\host_fusedcap
+Replacing qfd_host_native_context_rx.$procdff$2404 ($adff): ARST=\rst_n, D=$0\host_tag[58:0], Q=\host_tag
+Replacing qfd_host_native_context_rx.$procdff$2389 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qfd_host_native_context_rx.$procdff$2419 ($adff): ARST=\rst_n, D=$0\host_image_epoch[15:0], Q=\host_image_epoch
+Replacing qfd_host_native_context_rx.$procdff$2399 ($adff): ARST=\rst_n, D=$0\host_epoch_valid[0:0], Q=\host_epoch_valid
+Replacing qfd_host_native_context_rx.$procdff$2409 ($adff): ARST=\rst_n, D=$0\host_gen[1:0], Q=\host_gen
+Replacing qkd_host_native_context_tx.$procdff$2459 ($adff): ARST=\rst_n, D=$0\epoch_q[15:0], Q=\epoch_q
+Replacing qkd_host_native_context_tx.$procdff$2444 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing qkd_host_native_context_tx.$procdff$2434 ($adff): ARST=\rst_n, D=$0\tx_observed_v[0:0], Q=\tx_observed_v
+Replacing qkd_host_native_context_tx.$procdff$2454 ($adff): ARST=\rst_n, D=$0\epoch_valid_q[0:0], Q=\epoch_valid_q
+Replacing qkd_host_native_context_tx.$procdff$2464 ($adff): ARST=\rst_n, D=$0\tag[58:0], Q=\tag
+Replacing qkd_host_native_context_tx.$procdff$2429 ($adff): ARST=\rst_n, D=\send_slot, Q=\tx_v
+Replacing qkd_host_native_context_tx.$procdff$2449 ($adff): ARST=\rst_n, D=$0\held[0:0], Q=\held
+Replacing qkd_host_native_context_tx.$procdff$2469 ($adff): ARST=\rst_n, D=$0\gen[1:0], Q=\gen
+Replacing qkd_host_native_context_tx.$procdff$2439 ($adff): ARST=\rst_n, D=$0\tx_record[547:0], Q=\tx_record
+
+7. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: tag_gold (\rx_record_gold [58:0]), tag_gate (\rx_record_gate [58:0]) -> tag
+Presumably equivalent wires: fault_gold (\fault_gold), fault_gate (\fault_gate) -> fault
+Presumably equivalent wires: host_image_digest_gold (\host_image_digest_gold), host_image_digest_gate (\host_image_digest_gate) -> host_image_digest
+Presumably equivalent wires: host_image_epoch_gold (\host_image_epoch_gold), host_image_epoch_gate (\host_image_epoch_gate) -> host_image_epoch
+Presumably equivalent wires: host_fusedcap_gold (\host_fusedcap_gold), host_fusedcap_gate (\host_fusedcap_gate) -> host_fusedcap
+Presumably equivalent wires: host_gen_gold (\host_gen_gold), host_gen_gate (\host_gen_gate) -> host_gen
+Presumably equivalent wires: host_tag_gold (\host_tag_gold), host_tag_gate (\host_tag_gate) -> host_tag
+Presumably equivalent wires: host_epoch_gold (\host_tag_gold [58:43]), host_epoch_gate (\host_tag_gate [58:43]) -> host_epoch
+Presumably equivalent wires: host_epoch_valid_gold (\host_epoch_valid_gold), host_epoch_valid_gate (\host_epoch_valid_gate) -> host_epoch_valid
+Presumably equivalent wires: accepted_v_gold (\accepted_v_gold), accepted_v_gate (\accepted_v_gate) -> accepted_v
+Presumably equivalent wires: native_active_gold (\native_active_gold), native_active_gate (\native_active_gate) -> native_active
+Presumably equivalent wires: head_position_gold (\head_position_gold), head_position_gate (\head_position_gate) -> head_position
+Presumably equivalent wires: head_token_gold (\head_token_gold), head_token_gate (\head_token_gate) -> head_token
+Presumably equivalent wires: head_stage_gold (\head_stage_gold), head_stage_gate (\head_stage_gate) -> head_stage
+Presumably equivalent wires: head_context_v_gold (\head_context_v_gold), head_context_v_gate (\head_context_v_gate) -> head_context_v
+Presumably equivalent wires: program_digest_gold (\program_digest_gold), program_digest_gate (\program_digest_gate) -> program_digest
+Presumably equivalent wires: program_epoch_gold (\program_epoch_gold), program_epoch_gate (\program_epoch_gate) -> program_epoch
+Presumably equivalent wires: installed_fusedcap_gold (\installed_fusedcap_gold), installed_fusedcap_gate (\installed_fusedcap_gate) -> installed_fusedcap
+Presumably equivalent wires: program_ready_gold (\program_ready_gold), program_ready_gate (\program_ready_gate) -> program_ready
+Presumably equivalent wires: program_begin_v_gold (\program_begin_v_gold), program_begin_v_gate (\program_begin_v_gate) -> program_begin_v
+Presumably equivalent wires: rx_record_gold (\rx_record_gold), rx_record_gate (\rx_record_gate) -> rx_record
+Presumably equivalent wires: rx_v_gold (\rx_v_gold), rx_v_gate (\rx_v_gate) -> rx_v
+Presumably equivalent wires: receive_slot_gold (\receive_slot_gold), receive_slot_gate (\receive_slot_gate) -> receive_slot
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: ck_gold (\ck_gold), ck_gate (\ck_gate) -> ck
+Changing input A of cell $ternary$safe3_equiv/mut_reserved.sv:75$442_gate ($mux): \host_image_digest_gate -> \host_image_digest
+Changing input A of cell $ternary$safe3_equiv/mut_reserved.sv:74$441_gate ($mux): \host_image_epoch_gate -> \host_image_epoch
+Changing input A of cell $ternary$safe3_equiv/mut_reserved.sv:73$440_gate ($mux): \host_fusedcap_gate -> \host_fusedcap
+Changing input A of cell $ternary$safe3_equiv/mut_reserved.sv:72$439_gate ($mux): \host_gen_gate -> \host_gen
+Changing input A of cell $ternary$safe3_equiv/mut_reserved.sv:71$438_gate ($mux): \host_tag_gate -> { \host_epoch \host_tag [42:0] }
+Changing input B of cell $or$safe3_equiv/mut_reserved.sv:63$434_gate ($or): \fault_gate -> \fault
+Changing input A of cell $and$safe3_equiv/mut_reserved.sv:61$421_gate ($and): \host_epoch_valid_gate -> \host_epoch_valid
+Changing input B of cell $ne$safe3_equiv/mut_reserved.sv:58$416_gate ($ne): \host_tag_gate [18:6] -> \host_tag [18:6]
+Changing input B of cell $ne$safe3_equiv/mut_reserved.sv:57$412_gate ($ne): \host_tag_gate [36:19] -> \host_tag [36:19]
+Changing input A of cell $not$safe3_equiv/mut_reserved.sv:57$410_gate ($not): \host_fusedcap_gate -> \host_fusedcap
+Changing input A of cell $not$safe3_equiv/mut_reserved.sv:57$409_gate ($not): \host_epoch_valid_gate -> \host_epoch_valid
+Changing input A of cell $and$safe3_equiv/mut_reserved.sv:54$404_gate ($and): \host_epoch_valid_gate -> \host_epoch_valid
+Changing input B of cell $xor$safe3_equiv/mut_reserved.sv:55$402_gate ($xor): \host_fusedcap_gate -> \host_fusedcap
+Changing input B of cell $ne$safe3_equiv/mut_reserved.sv:55$400_gate ($ne): \host_image_digest_gate -> \host_image_digest
+Changing input B of cell $ne$safe3_equiv/mut_reserved.sv:54$398_gate ($ne): \host_image_epoch_gate -> \host_image_epoch
+Changing input A of cell $not$safe3_equiv/mut_reserved.sv:53$395_gate ($not): \fault_gate -> \fault
+Changing input A of cell $procmux$1927_gold ($mux): \fault_gold -> \fault
+Changing input A of cell $procmux$1925_gold ($mux): \fault_gold -> \fault
+Changing input A of cell $procmux$1914_gold ($mux): \host_epoch_valid_gold -> \host_epoch_valid
+Changing input A of cell $procmux$1912_gold ($mux): \host_tag_gold -> { \host_epoch \host_tag [42:0] }
+Changing input B of cell $procmux$1910_gold ($mux): \host_tag_gold -> { \host_epoch \host_tag [42:0] }
+Changing input A of cell $procmux$1907_gold ($mux): \host_gen_gold -> \host_gen
+Changing input B of cell $procmux$1905_gold ($mux): \host_gen_gold -> \host_gen
+Changing input A of cell $procmux$1902_gold ($mux): \host_fusedcap_gold -> \host_fusedcap
+Changing input B of cell $procmux$1900_gold ($mux): \host_fusedcap_gold -> \host_fusedcap
+Changing input A of cell $procmux$1897_gold ($mux): \host_image_epoch_gold -> \host_image_epoch
+Changing input B of cell $procmux$1895_gold ($mux): \host_image_epoch_gold -> \host_image_epoch
+Changing input A of cell $procmux$1892_gold ($mux): \host_image_digest_gold -> \host_image_digest
+Changing input B of cell $procmux$1890_gold ($mux): \host_image_digest_gold -> \host_image_digest
+Changing input B of cell $ne$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:61$81_gold ($ne): \host_tag_gold [18:6] -> \host_tag [18:6]
+Changing input B of cell $ne$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:61$77_gold ($ne): \host_tag_gold [36:19] -> \host_tag [36:19]
+Changing input A of cell $logic_not$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:61$75_gold ($logic_not): \host_fusedcap_gold -> \host_fusedcap
+Changing input A of cell $logic_not$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:61$74_gold ($logic_not): \host_epoch_valid_gold -> \host_epoch_valid
+Changing input A of cell $logic_and$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:59$69_gold ($logic_and): \host_epoch_valid_gold -> \host_epoch_valid
+Changing input B of cell $ne$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:59$67_gold ($ne): \host_fusedcap_gold -> \host_fusedcap
+Changing input B of cell $ne$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:59$65_gold ($ne): \host_image_digest_gold -> \host_image_digest
+Changing input B of cell $ne$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:59$63_gold ($ne): \host_image_epoch_gold -> \host_image_epoch
+Changing input B of cell $logic_or$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:56$61_gold ($logic_or): \fault_gold -> \fault
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \eq_mut_reserved
+
+8.2. Analyzing design hierarchy..
+Top module:  \eq_mut_reserved
+Removing unused module `\qfd_sys_face_program_commit_s3'.
+Removing unused module `\qfd_sys_face_context_rx_s3'.
+Removing unused module `\qkd_program_commit_join'.
+Removing unused module `\qkd_program_commit'.
+Removing unused module `\qkd_program_pw_observer'.
+Removing unused module `\qkd_program_witness_rx'.
+Removing unused module `\qfd_program_witness_tx'.
+Removing unused module `\qfd_program_auth_rx'.
+Removing unused module `\qkd_program_auth_tx'.
+Removing unused module `\qfd_host_native_context_rx'.
+Removing unused module `\qkd_host_native_context_tx'.
+Removed 11 unused modules.
+
+9. Executing EQUIV_SIMPLE pass.
+Found 220 unproven $equiv cells (10 groups) in eq_mut_reserved:
+  Trying to prove $equiv for \fault:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \tag:
+  Trying to prove $equiv for \tag [0]:ezsat
+ success!
+  Trying to prove $equiv for \tag [1]:ezsat
+ success!
+  Trying to prove $equiv for \tag [2]:ezsat
+ success!
+  Trying to prove $equiv for \tag [3]:ezsat
+ success!
+  Trying to prove $equiv for \tag [4]:ezsat
+ success!
+  Trying to prove $equiv for \tag [5]:ezsat
+ success!
+  Trying to prove $equiv for \tag [6]:ezsat
+ success!
+  Trying to prove $equiv for \tag [7]:ezsat
+ success!
+  Trying to prove $equiv for \tag [8]:ezsat
+ success!
+  Trying to prove $equiv for \tag [9]:ezsat
+ success!
+  Trying to prove $equiv for \tag [10]:ezsat
+ success!
+  Trying to prove $equiv for \tag [11]:ezsat
+ success!
+  Trying to prove $equiv for \tag [12]:ezsat
+ success!
+  Trying to prove $equiv for \tag [13]:ezsat
+ success!
+  Trying to prove $equiv for \tag [14]:ezsat
+ success!
+  Trying to prove $equiv for \tag [15]:ezsat
+ success!
+  Trying to prove $equiv for \tag [16]:ezsat
+ success!
+  Trying to prove $equiv for \tag [17]:ezsat
+ success!
+  Trying to prove $equiv for \tag [18]:ezsat
+ success!
+  Trying to prove $equiv for \tag [19]:ezsat
+ success!
+  Trying to prove $equiv for \tag [20]:ezsat
+ success!
+  Trying to prove $equiv for \tag [21]:ezsat
+ success!
+  Trying to prove $equiv for \tag [22]:ezsat
+ success!
+  Trying to prove $equiv for \tag [23]:ezsat
+ success!
+  Trying to prove $equiv for \tag [24]:ezsat
+ success!
+  Trying to prove $equiv for \tag [25]:ezsat
+ success!
+  Trying to prove $equiv for \tag [26]:ezsat
+ success!
+  Trying to prove $equiv for \tag [27]:ezsat
+ success!
+  Trying to prove $equiv for \tag [28]:ezsat
+ success!
+  Trying to prove $equiv for \tag [29]:ezsat
+ success!
+  Trying to prove $equiv for \tag [30]:ezsat
+ success!
+  Trying to prove $equiv for \tag [31]:ezsat
+ success!
+  Trying to prove $equiv for \tag [32]:ezsat
+ success!
+  Trying to prove $equiv for \tag [33]:ezsat
+ success!
+  Trying to prove $equiv for \tag [34]:ezsat
+ success!
+  Trying to prove $equiv for \tag [35]:ezsat
+ success!
+  Trying to prove $equiv for \tag [36]:ezsat
+ success!
+  Trying to prove $equiv for \tag [37]:ezsat
+ success!
+  Trying to prove $equiv for \tag [38]:ezsat
+ success!
+  Trying to prove $equiv for \tag [39]:ezsat
+ success!
+  Trying to prove $equiv for \tag [40]:ezsat
+ success!
+  Trying to prove $equiv for \tag [41]:ezsat
+ success!
+  Trying to prove $equiv for \tag [42]:ezsat
+ success!
+  Trying to prove $equiv for \tag [43]:ezsat
+ success!
+  Trying to prove $equiv for \tag [44]:ezsat
+ success!
+  Trying to prove $equiv for \tag [45]:ezsat
+ success!
+  Trying to prove $equiv for \tag [46]:ezsat
+ success!
+  Trying to prove $equiv for \tag [47]:ezsat
+ success!
+  Trying to prove $equiv for \tag [48]:ezsat
+ success!
+  Trying to prove $equiv for \tag [49]:ezsat
+ success!
+  Trying to prove $equiv for \tag [50]:ezsat
+ success!
+  Trying to prove $equiv for \tag [51]:ezsat
+ success!
+  Trying to prove $equiv for \tag [52]:ezsat
+ success!
+  Trying to prove $equiv for \tag [53]:ezsat
+ success!
+  Trying to prove $equiv for \tag [54]:ezsat
+ success!
+  Trying to prove $equiv for \tag [55]:ezsat
+ success!
+  Trying to prove $equiv for \tag [56]:ezsat
+ success!
+  Trying to prove $equiv for \tag [57]:ezsat
+ success!
+  Trying to prove $equiv for \tag [58]:ezsat
+ success!
+  Trying to prove $equiv for \accepted_v:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch_valid:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \host_epoch:
+  Trying to prove $equiv for \host_epoch [0]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [1]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [2]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [3]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [4]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [5]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [6]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [7]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [8]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [9]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [10]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [11]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [12]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [13]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [14]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_epoch [15]:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \host_tag:
+  Trying to prove $equiv for \host_tag [0]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [1]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [2]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [3]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [4]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [5]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [6]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [7]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [8]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [9]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [10]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [11]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [12]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [13]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [14]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [15]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [16]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [17]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [18]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [19]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [20]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [21]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [22]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [23]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [24]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [25]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [26]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [27]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [28]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [29]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [30]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [31]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [32]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [33]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [34]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [35]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [36]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [37]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [38]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [39]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [40]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [41]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [42]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [43]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [44]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [45]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [46]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [47]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [48]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [49]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [50]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [51]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [52]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [53]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [54]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [55]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [56]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [57]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_tag [58]:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \host_gen:
+  Trying to prove $equiv for \host_gen [0]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_gen [1]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_fusedcap:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \host_image_epoch:
+  Trying to prove $equiv for \host_image_epoch [0]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [1]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [2]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [3]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [4]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [5]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [6]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [7]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [8]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [9]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [10]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [11]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [12]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [13]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [14]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_epoch [15]:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \host_image_digest:
+  Trying to prove $equiv for \host_image_digest [0]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [1]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [2]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [3]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [4]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [5]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [6]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [7]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [8]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [9]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [10]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [11]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [12]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [13]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [14]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [15]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [16]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [17]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [18]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [19]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [20]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [21]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [22]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [23]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [24]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [25]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [26]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [27]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [28]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [29]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [30]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [31]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [32]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [33]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [34]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [35]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [36]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [37]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [38]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [39]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [40]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [41]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [42]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [43]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [44]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [45]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [46]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [47]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [48]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [49]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [50]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [51]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [52]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [53]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [54]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [55]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [56]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [57]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [58]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [59]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [60]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [61]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [62]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \host_image_digest [63]:ezsat
+ezsat
+ failed.
+Proved 59 previously unproven $equiv cells.
+
+10. Executing EQUIV_INDUCT pass.
+Found 161 unproven $equiv cells in module eq_mut_reserved:
+  Proving existence of base case for step 1. (21199 clauses over 8513 variables)
+  Proving induction step 1. (47037 clauses over 18475 variables)
+  Proof for induction step failed. Trying to prove individual $equiv from workset.
+  Trying to prove $equiv for \host_image_digest [13]: failed.
+  Trying to prove $equiv for \host_image_digest [14]: failed.
+  Trying to prove $equiv for \host_image_digest [55]: failed.
+  Trying to prove $equiv for \host_image_digest [29]: failed.
+  Trying to prove $equiv for \host_image_digest [30]: failed.
+  Trying to prove $equiv for \host_image_digest [27]: failed.
+  Trying to prove $equiv for \host_image_digest [28]: failed.
+  Trying to prove $equiv for \host_image_digest [19]: failed.
+  Trying to prove $equiv for \host_image_digest [20]: failed.
+  Trying to prove $equiv for \host_image_digest [25]: failed.
+  Trying to prove $equiv for \host_image_digest [26]: failed.
+  Trying to prove $equiv for \host_image_digest [23]: failed.
+  Trying to prove $equiv for \host_image_digest [24]: failed.
+  Trying to prove $equiv for \host_image_digest [21]: failed.
+  Trying to prove $equiv for \host_image_digest [22]: failed.
+  Trying to prove $equiv for \host_tag [8]: failed.
+  Trying to prove $equiv for \host_image_digest [61]: failed.
+  Trying to prove $equiv for \host_image_digest [60]: failed.
+  Trying to prove $equiv for \host_epoch [0]: failed.
+  Trying to prove $equiv for \host_epoch [1]: failed.
+  Trying to prove $equiv for \host_image_digest [52]: failed.
+  Trying to prove $equiv for \host_tag [35]: failed.
+  Trying to prove $equiv for \host_tag [9]: failed.
+  Trying to prove $equiv for \host_tag [49]: failed.
+  Trying to prove $equiv for \host_image_digest [7]: failed.
+  Trying to prove $equiv for \host_image_digest [8]: failed.
+  Trying to prove $equiv for \host_tag [50]: failed.
+  Trying to prove $equiv for \host_image_digest [11]: failed.
+  Trying to prove $equiv for \host_image_digest [12]: failed.
+  Trying to prove $equiv for \host_image_digest [15]: failed.
+  Trying to prove $equiv for \host_image_digest [16]: failed.
+  Trying to prove $equiv for \host_image_digest [59]: failed.
+  Trying to prove $equiv for \host_image_digest [58]: failed.
+  Trying to prove $equiv for \host_image_digest [31]: failed.
+  Trying to prove $equiv for \host_image_digest [32]: failed.
+  Trying to prove $equiv for \host_tag [28]: failed.
+  Trying to prove $equiv for \host_tag [42]: failed.
+  Trying to prove $equiv for \host_epoch [4]: failed.
+  Trying to prove $equiv for \host_epoch_valid: failed.
+  Trying to prove $equiv for \accepted_v: failed.
+  Trying to prove $equiv for \host_image_digest [46]: failed.
+  Trying to prove $equiv for \host_tag [2]: failed.
+  Trying to prove $equiv for \host_epoch [15]: failed.
+  Trying to prove $equiv for \host_tag [5]: failed.
+  Trying to prove $equiv for \host_epoch [5]: failed.
+  Trying to prove $equiv for \host_image_digest [57]: failed.
+  Trying to prove $equiv for \host_tag [12]: failed.
+  Trying to prove $equiv for \host_tag [13]: failed.
+  Trying to prove $equiv for \host_tag [19]: failed.
+  Trying to prove $equiv for \host_image_digest [51]: failed.
+  Trying to prove $equiv for \host_image_digest [47]: failed.
+  Trying to prove $equiv for \host_image_digest [56]: failed.
+  Trying to prove $equiv for \host_tag [38]: failed.
+  Trying to prove $equiv for \host_tag [54]: failed.
+  Trying to prove $equiv for \host_image_digest [9]: failed.
+  Trying to prove $equiv for \host_image_digest [10]: failed.
+  Trying to prove $equiv for \host_image_epoch [8]: failed.
+  Trying to prove $equiv for \fault: failed.
+  Trying to prove $equiv for \host_image_digest [0]: failed.
+  Trying to prove $equiv for \host_tag [15]: failed.
+  Trying to prove $equiv for \host_tag [16]: failed.
+  Trying to prove $equiv for \host_tag [17]: failed.
+  Trying to prove $equiv for \host_image_digest [39]: failed.
+  Trying to prove $equiv for \host_image_digest [40]: failed.
+  Trying to prove $equiv for \host_image_digest [37]: failed.
+  Trying to prove $equiv for \host_image_digest [38]: failed.
+  Trying to prove $equiv for \host_image_digest [3]: failed.
+  Trying to prove $equiv for \host_image_digest [4]: failed.
+  Trying to prove $equiv for \host_tag [22]: failed.
+  Trying to prove $equiv for \host_tag [18]: failed.
+  Trying to prove $equiv for \host_tag [47]: failed.
+  Trying to prove $equiv for \host_epoch [14]: failed.
+  Trying to prove $equiv for \host_image_digest [53]: failed.
+  Trying to prove $equiv for \host_tag [45]: failed.
+  Trying to prove $equiv for \host_epoch [10]: failed.
+  Trying to prove $equiv for \host_image_epoch [10]: failed.
+  Trying to prove $equiv for \host_fusedcap: failed.
+  Trying to prove $equiv for \host_gen [0]: failed.
+  Trying to prove $equiv for \host_image_epoch [11]: failed.
+  Trying to prove $equiv for \host_image_digest [5]: failed.
+  Trying to prove $equiv for \host_image_digest [6]: failed.
+  Trying to prove $equiv for \host_tag [10]: failed.
+  Trying to prove $equiv for \host_tag [3]: failed.
+  Trying to prove $equiv for \host_image_epoch [12]: failed.
+  Trying to prove $equiv for \host_image_epoch [3]: failed.
+  Trying to prove $equiv for \host_tag [29]: failed.
+  Trying to prove $equiv for \host_image_epoch [0]: failed.
+  Trying to prove $equiv for \host_tag [0]: failed.
+  Trying to prove $equiv for \host_image_epoch [9]: failed.
+  Trying to prove $equiv for \host_image_epoch [6]: failed.
+  Trying to prove $equiv for \host_tag [37]: failed.
+  Trying to prove $equiv for \host_tag [52]: failed.
+  Trying to prove $equiv for \host_epoch [7]: failed.
+  Trying to prove $equiv for \host_image_digest [44]: failed.
+  Trying to prove $equiv for \host_image_digest [41]: failed.
+  Trying to prove $equiv for \host_image_digest [42]: failed.
+  Trying to prove $equiv for \host_tag [6]: failed.
+  Trying to prove $equiv for \host_tag [7]: failed.
+  Trying to prove $equiv for \host_image_digest [48]: failed.
+  Trying to prove $equiv for \host_tag [14]: failed.
+  Trying to prove $equiv for \host_tag [40]: failed.
+  Trying to prove $equiv for \host_tag [58]: failed.
+  Trying to prove $equiv for \host_epoch [9]: failed.
+  Trying to prove $equiv for \host_image_epoch [14]: failed.
+  Trying to prove $equiv for \host_image_digest [50]: failed.
+  Trying to prove $equiv for \host_image_digest [1]: failed.
+  Trying to prove $equiv for \host_image_digest [2]: failed.
+  Trying to prove $equiv for \host_epoch [3]: failed.
+  Trying to prove $equiv for \host_tag [30]: failed.
+  Trying to prove $equiv for \host_tag [48]: failed.
+  Trying to prove $equiv for \host_tag [33]: failed.
+  Trying to prove $equiv for \host_tag [36]: failed.
+  Trying to prove $equiv for \host_epoch [13]: failed.
+  Trying to prove $equiv for \host_image_epoch [1]: failed.
+  Trying to prove $equiv for \host_tag [55]: failed.
+  Trying to prove $equiv for \host_image_epoch [7]: failed.
+  Trying to prove $equiv for \host_image_digest [45]: failed.
+  Trying to prove $equiv for \host_tag [39]: failed.
+  Trying to prove $equiv for \host_tag [56]: failed.
+  Trying to prove $equiv for \host_tag [25]: failed.
+  Trying to prove $equiv for \host_tag [1]: failed.
+  Trying to prove $equiv for \host_tag [43]: failed.
+  Trying to prove $equiv for \host_epoch [6]: failed.
+  Trying to prove $equiv for \host_image_digest [49]: failed.
+  Trying to prove $equiv for \host_tag [11]: failed.
+  Trying to prove $equiv for \host_tag [53]: failed.
+  Trying to prove $equiv for \host_image_digest [35]: failed.
+  Trying to prove $equiv for \host_image_digest [36]: failed.
+  Trying to prove $equiv for \host_tag [23]: failed.
+  Trying to prove $equiv for \host_image_epoch [13]: failed.
+  Trying to prove $equiv for \host_image_digest [63]: failed.
+  Trying to prove $equiv for \host_image_epoch [15]: failed.
+  Trying to prove $equiv for \host_image_digest [62]: failed.
+  Trying to prove $equiv for \host_image_digest [17]: failed.
+  Trying to prove $equiv for \host_image_digest [18]: failed.
+  Trying to prove $equiv for \host_image_digest [33]: failed.
+  Trying to prove $equiv for \host_image_digest [34]: failed.
+  Trying to prove $equiv for \host_tag [24]: failed.
+  Trying to prove $equiv for \host_tag [27]: failed.
+  Trying to prove $equiv for \host_tag [51]: failed.
+  Trying to prove $equiv for \host_image_epoch [4]: failed.
+  Trying to prove $equiv for \host_gen [1]: failed.
+  Trying to prove $equiv for \host_tag [20]: failed.
+  Trying to prove $equiv for \host_epoch [11]: failed.
+  Trying to prove $equiv for \host_tag [32]: failed.
+  Trying to prove $equiv for \host_tag [21]: failed.
+  Trying to prove $equiv for \host_tag [46]: failed.
+  Trying to prove $equiv for \host_epoch [12]: failed.
+  Trying to prove $equiv for \host_tag [31]: failed.
+  Trying to prove $equiv for \host_image_digest [54]: failed.
+  Trying to prove $equiv for \host_tag [41]: failed.
+  Trying to prove $equiv for \host_epoch [2]: failed.
+  Trying to prove $equiv for \host_tag [26]: failed.
+  Trying to prove $equiv for \host_image_digest [43]: failed.
+  Trying to prove $equiv for \host_tag [34]: failed.
+  Trying to prove $equiv for \host_tag [44]: failed.
+  Trying to prove $equiv for \host_epoch [8]: failed.
+  Trying to prove $equiv for \host_image_epoch [2]: failed.
+  Trying to prove $equiv for \host_image_epoch [5]: failed.
+  Trying to prove $equiv for \host_tag [4]: failed.
+  Trying to prove $equiv for \host_tag [57]: failed.
+Proved 0 previously unproven $equiv cells.
+
+11. Executing EQUIV_STATUS pass.
+Found 220 $equiv cells in eq_mut_reserved:
+  Of those cells 59 are proven and 161 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2879: \accepted_v_gold \accepted_v_gate
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2878: \host_epoch_valid_gold \host_epoch_valid_gate
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2877: \host_epoch_gold [15] \host_epoch_gate [15]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2876: \host_epoch_gold [14] \host_epoch_gate [14]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2875: \host_epoch_gold [13] \host_epoch_gate [13]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2874: \host_epoch_gold [12] \host_epoch_gate [12]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2873: \host_epoch_gold [11] \host_epoch_gate [11]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2872: \host_epoch_gold [10] \host_epoch_gate [10]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2871: \host_epoch_gold [9] \host_epoch_gate [9]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2870: \host_epoch_gold [8] \host_epoch_gate [8]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2869: \host_epoch_gold [7] \host_epoch_gate [7]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2868: \host_epoch_gold [6] \host_epoch_gate [6]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2867: \host_epoch_gold [5] \host_epoch_gate [5]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2866: \host_epoch_gold [4] \host_epoch_gate [4]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2865: \host_epoch_gold [3] \host_epoch_gate [3]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2864: \host_epoch_gold [2] \host_epoch_gate [2]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2863: \host_epoch_gold [1] \host_epoch_gate [1]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2862: \host_epoch_gold [0] \host_epoch_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2861: \host_tag_gold [58] \host_tag_gate [58]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2860: \host_tag_gold [57] \host_tag_gate [57]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2859: \host_tag_gold [56] \host_tag_gate [56]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2858: \host_tag_gold [55] \host_tag_gate [55]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2857: \host_tag_gold [54] \host_tag_gate [54]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2856: \host_tag_gold [53] \host_tag_gate [53]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2855: \host_tag_gold [52] \host_tag_gate [52]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2854: \host_tag_gold [51] \host_tag_gate [51]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2853: \host_tag_gold [50] \host_tag_gate [50]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2852: \host_tag_gold [49] \host_tag_gate [49]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2851: \host_tag_gold [48] \host_tag_gate [48]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2850: \host_tag_gold [47] \host_tag_gate [47]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2849: \host_tag_gold [46] \host_tag_gate [46]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2848: \host_tag_gold [45] \host_tag_gate [45]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2847: \host_tag_gold [44] \host_tag_gate [44]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2846: \host_tag_gold [43] \host_tag_gate [43]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2845: \host_tag_gold [42] \host_tag_gate [42]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2844: \host_tag_gold [41] \host_tag_gate [41]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2843: \host_tag_gold [40] \host_tag_gate [40]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2842: \host_tag_gold [39] \host_tag_gate [39]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2841: \host_tag_gold [38] \host_tag_gate [38]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2840: \host_tag_gold [37] \host_tag_gate [37]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2839: \host_tag_gold [36] \host_tag_gate [36]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2838: \host_tag_gold [35] \host_tag_gate [35]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2837: \host_tag_gold [34] \host_tag_gate [34]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2836: \host_tag_gold [33] \host_tag_gate [33]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2835: \host_tag_gold [32] \host_tag_gate [32]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2834: \host_tag_gold [31] \host_tag_gate [31]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2833: \host_tag_gold [30] \host_tag_gate [30]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2832: \host_tag_gold [29] \host_tag_gate [29]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2831: \host_tag_gold [28] \host_tag_gate [28]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2830: \host_tag_gold [27] \host_tag_gate [27]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2829: \host_tag_gold [26] \host_tag_gate [26]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2828: \host_tag_gold [25] \host_tag_gate [25]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2827: \host_tag_gold [24] \host_tag_gate [24]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2826: \host_tag_gold [23] \host_tag_gate [23]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2825: \host_tag_gold [22] \host_tag_gate [22]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2824: \host_tag_gold [21] \host_tag_gate [21]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2823: \host_tag_gold [20] \host_tag_gate [20]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2822: \host_tag_gold [19] \host_tag_gate [19]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2821: \host_tag_gold [18] \host_tag_gate [18]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2820: \host_tag_gold [17] \host_tag_gate [17]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2819: \host_tag_gold [16] \host_tag_gate [16]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2818: \host_tag_gold [15] \host_tag_gate [15]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2817: \host_tag_gold [14] \host_tag_gate [14]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2816: \host_tag_gold [13] \host_tag_gate [13]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2815: \host_tag_gold [12] \host_tag_gate [12]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2814: \host_tag_gold [11] \host_tag_gate [11]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2813: \host_tag_gold [10] \host_tag_gate [10]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2812: \host_tag_gold [9] \host_tag_gate [9]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2811: \host_tag_gold [8] \host_tag_gate [8]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2810: \host_tag_gold [7] \host_tag_gate [7]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2809: \host_tag_gold [6] \host_tag_gate [6]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2808: \host_tag_gold [5] \host_tag_gate [5]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2807: \host_tag_gold [4] \host_tag_gate [4]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2806: \host_tag_gold [3] \host_tag_gate [3]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2805: \host_tag_gold [2] \host_tag_gate [2]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2804: \host_tag_gold [1] \host_tag_gate [1]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2803: \host_tag_gold [0] \host_tag_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2802: \host_gen_gold [1] \host_gen_gate [1]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2801: \host_gen_gold [0] \host_gen_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2800: \host_fusedcap_gold \host_fusedcap_gate
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2799: \host_image_epoch_gold [15] \host_image_epoch_gate [15]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2798: \host_image_epoch_gold [14] \host_image_epoch_gate [14]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2797: \host_image_epoch_gold [13] \host_image_epoch_gate [13]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2796: \host_image_epoch_gold [12] \host_image_epoch_gate [12]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2795: \host_image_epoch_gold [11] \host_image_epoch_gate [11]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2794: \host_image_epoch_gold [10] \host_image_epoch_gate [10]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2793: \host_image_epoch_gold [9] \host_image_epoch_gate [9]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2792: \host_image_epoch_gold [8] \host_image_epoch_gate [8]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2791: \host_image_epoch_gold [7] \host_image_epoch_gate [7]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2790: \host_image_epoch_gold [6] \host_image_epoch_gate [6]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2789: \host_image_epoch_gold [5] \host_image_epoch_gate [5]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2788: \host_image_epoch_gold [4] \host_image_epoch_gate [4]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2787: \host_image_epoch_gold [3] \host_image_epoch_gate [3]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2786: \host_image_epoch_gold [2] \host_image_epoch_gate [2]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2785: \host_image_epoch_gold [1] \host_image_epoch_gate [1]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2784: \host_image_epoch_gold [0] \host_image_epoch_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2783: \host_image_digest_gold [63] \host_image_digest_gate [63]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2782: \host_image_digest_gold [62] \host_image_digest_gate [62]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2781: \host_image_digest_gold [61] \host_image_digest_gate [61]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2780: \host_image_digest_gold [60] \host_image_digest_gate [60]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2779: \host_image_digest_gold [59] \host_image_digest_gate [59]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2778: \host_image_digest_gold [58] \host_image_digest_gate [58]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2777: \host_image_digest_gold [57] \host_image_digest_gate [57]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2776: \host_image_digest_gold [56] \host_image_digest_gate [56]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2775: \host_image_digest_gold [55] \host_image_digest_gate [55]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2774: \host_image_digest_gold [54] \host_image_digest_gate [54]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2773: \host_image_digest_gold [53] \host_image_digest_gate [53]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2772: \host_image_digest_gold [52] \host_image_digest_gate [52]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2771: \host_image_digest_gold [51] \host_image_digest_gate [51]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2770: \host_image_digest_gold [50] \host_image_digest_gate [50]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2769: \host_image_digest_gold [49] \host_image_digest_gate [49]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2768: \host_image_digest_gold [48] \host_image_digest_gate [48]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2767: \host_image_digest_gold [47] \host_image_digest_gate [47]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2766: \host_image_digest_gold [46] \host_image_digest_gate [46]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2765: \host_image_digest_gold [45] \host_image_digest_gate [45]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2764: \host_image_digest_gold [44] \host_image_digest_gate [44]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2763: \host_image_digest_gold [43] \host_image_digest_gate [43]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2762: \host_image_digest_gold [42] \host_image_digest_gate [42]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2761: \host_image_digest_gold [41] \host_image_digest_gate [41]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2760: \host_image_digest_gold [40] \host_image_digest_gate [40]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2759: \host_image_digest_gold [39] \host_image_digest_gate [39]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2758: \host_image_digest_gold [38] \host_image_digest_gate [38]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2757: \host_image_digest_gold [37] \host_image_digest_gate [37]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2756: \host_image_digest_gold [36] \host_image_digest_gate [36]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2755: \host_image_digest_gold [35] \host_image_digest_gate [35]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2754: \host_image_digest_gold [34] \host_image_digest_gate [34]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2753: \host_image_digest_gold [33] \host_image_digest_gate [33]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2752: \host_image_digest_gold [32] \host_image_digest_gate [32]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2751: \host_image_digest_gold [31] \host_image_digest_gate [31]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2750: \host_image_digest_gold [30] \host_image_digest_gate [30]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2749: \host_image_digest_gold [29] \host_image_digest_gate [29]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2748: \host_image_digest_gold [28] \host_image_digest_gate [28]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2747: \host_image_digest_gold [27] \host_image_digest_gate [27]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2746: \host_image_digest_gold [26] \host_image_digest_gate [26]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2745: \host_image_digest_gold [25] \host_image_digest_gate [25]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2744: \host_image_digest_gold [24] \host_image_digest_gate [24]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2743: \host_image_digest_gold [23] \host_image_digest_gate [23]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2742: \host_image_digest_gold [22] \host_image_digest_gate [22]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2741: \host_image_digest_gold [21] \host_image_digest_gate [21]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2740: \host_image_digest_gold [20] \host_image_digest_gate [20]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2739: \host_image_digest_gold [19] \host_image_digest_gate [19]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2738: \host_image_digest_gold [18] \host_image_digest_gate [18]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2737: \host_image_digest_gold [17] \host_image_digest_gate [17]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2736: \host_image_digest_gold [16] \host_image_digest_gate [16]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2735: \host_image_digest_gold [15] \host_image_digest_gate [15]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2734: \host_image_digest_gold [14] \host_image_digest_gate [14]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2733: \host_image_digest_gold [13] \host_image_digest_gate [13]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2732: \host_image_digest_gold [12] \host_image_digest_gate [12]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2731: \host_image_digest_gold [11] \host_image_digest_gate [11]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2730: \host_image_digest_gold [10] \host_image_digest_gate [10]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2729: \host_image_digest_gold [9] \host_image_digest_gate [9]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2728: \host_image_digest_gold [8] \host_image_digest_gate [8]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2727: \host_image_digest_gold [7] \host_image_digest_gate [7]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2726: \host_image_digest_gold [6] \host_image_digest_gate [6]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2725: \host_image_digest_gold [5] \host_image_digest_gate [5]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2724: \host_image_digest_gold [4] \host_image_digest_gate [4]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2723: \host_image_digest_gold [3] \host_image_digest_gate [3]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2722: \host_image_digest_gold [2] \host_image_digest_gate [2]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2721: \host_image_digest_gold [1] \host_image_digest_gate [1]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2720: \host_image_digest_gold [0] \host_image_digest_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$2719: \fault_gold \fault_gate
+Found a total of 161 unproven $equiv cells.
+ERROR: Found 161 unproven $equiv cells in 'equiv_status -assert'.

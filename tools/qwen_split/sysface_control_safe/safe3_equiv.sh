@@ -25,7 +25,7 @@ prove ctx qfd_host_native_context_rx qfd_sys_face_context_rx_s3 $S3
 prove commit qkd_program_commit qfd_sys_face_program_commit_s3 $S3
 ok=1
 for n in ctx commit; do
- if [ "$(cat $O/$n.rc)" = 0 ] && grep -q "Found 0 unproven" "$O/$n.log"; then echo "SAFE3_EQUIV_PASS $n $(grep -o 'Found [0-9]* \$equiv cells' $O/$n.log | head -1)"; else echo "SAFE3_EQUIV_FAIL $n"; ok=0; fi
+ if [ "$(cat $O/$n.rc)" = 0 ] && grep -q "Equivalence successfully proven" "$O/$n.log"; then echo "SAFE3_EQUIV_PASS $n $(grep -o "[0-9]* are proven and [0-9]* are unproven" $O/$n.log | head -1)"; else echo "SAFE3_EQUIV_FAIL $n"; ok=0; fi
 done
 # causal mutants (each must leave unproven equiv cells)
 mut(){ # name gold gate sed-expr

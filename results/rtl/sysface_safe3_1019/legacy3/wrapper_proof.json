@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "all_public_bits": 2788,
+  "boundary_ff": 2809,
+  "extra_same_edge_input_ff": 21,
+  "input_cycles": 1,
+  "output_cycles": 1,
+  "reset_assert_release_cycles": 2,
+  "arbitrary_initial_input_copies_converge_edges": 1,
+  "zero_init_assumed": false,
+  "qualification_precondition": "all input families converge before landed reset reaches core; core correspondence separately requires actual reset/first sampling contract",
+  "core_bindings": 110
+}

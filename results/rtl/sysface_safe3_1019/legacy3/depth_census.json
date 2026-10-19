@@ -1,0 +1,333 @@
+{
+ "graph": "legacy3/original.json",
+ "top": "qfd_sys_face",
+ "limit": 20,
+ "endpoints": 10140,
+ "max_levels": 19,
+ "histogram": {
+  "19": 10,
+  "18": 4,
+  "17": 26,
+  "16": 204,
+  "15": 149,
+  "14": 185,
+  "13": 201,
+  "12": 78,
+  "11": 63,
+  "10": 366,
+  "9": 103,
+  "8": 101,
+  "7": 68,
+  "6": 146,
+  "5": 183,
+  "4": 774,
+  "3": 342,
+  "2": 233,
+  "1": 266,
+  "0": 6638
+ },
+ "over_limit": 0,
+ "worst": [
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$11088.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21670.D",
+   "start": "tt_program_obs[0]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21671.D",
+   "start": "tt_program_obs[0]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21673.D",
+   "start": "seq_program_obs[0]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21674.D",
+   "start": "seq_program_obs[0]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21677.D",
+   "start": "g_sram_cal.u_cal_t.nxt[1]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21751.D",
+   "start": "g_sram_cal.u_cal_l.nxt[1]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21755.D",
+   "start": "g_sram_cal.u_cal_e.nxt[1]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$21767.D",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 19,
+   "endpoint": "$auto$ff.cc:337:slice$9044.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 18,
+   "endpoint": "$auto$ff.cc:337:slice$11355.D",
+   "start": "ecnt[1]"
+  },
+  {
+   "levels": 18,
+   "endpoint": "$auto$ff.cc:337:slice$13128.D",
+   "start": "seq_program_obs[64]"
+  },
+  {
+   "levels": 18,
+   "endpoint": "$auto$ff.cc:337:slice$13622.D",
+   "start": "tt_program_obs[64]"
+  },
+  {
+   "levels": 18,
+   "endpoint": "$auto$ff.cc:337:slice$8896.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10167.D",
+   "start": "cold_count[1]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10965.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10966.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10967.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10968.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10969.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$10970.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$11311.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$11312.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$11313.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$11314.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$11315.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$11316.E",
+   "start": "g_serial.u_cseq.u_seq.t[7]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13129.D",
+   "start": "seq_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13130.D",
+   "start": "seq_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13131.D",
+   "start": "seq_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13132.D",
+   "start": "seq_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13623.D",
+   "start": "tt_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13624.D",
+   "start": "tt_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13625.D",
+   "start": "tt_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$13626.D",
+   "start": "tt_program_obs[64]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$21675.D",
+   "start": "rx_payload[142]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$21676.D",
+   "start": "rx_payload[142]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$21762.D",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$21763.D",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 17,
+   "endpoint": "$auto$ff.cc:337:slice$9043.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10029.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10030.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10031.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10032.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10033.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10034.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10035.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10036.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10037.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10038.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10039.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10040.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10041.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10042.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10043.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10044.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10045.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10046.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10047.E",
+   "start": "u_record.sink_digest[0]"
+  },
+  {
+   "levels": 16,
+   "endpoint": "$auto$ff.cc:337:slice$10048.E",
+   "start": "u_record.sink_digest[0]"
+  }
+ ],
+ "status": "PASS"
+}
