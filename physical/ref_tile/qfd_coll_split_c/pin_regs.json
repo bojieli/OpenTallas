@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_coll_split_c",
+ "enable": false,
+ "reason": "RTL registers every pin at the face (cmd/in/meta/valid/q_pe/q_xe inputs land in one flop; every output leaves its own flop incl. 168 per-Q token copies and the registered {fault,fault_code} bundle) except cmd_free, the documented combinational diagnostic predictor; flow pin registers would add unpriced cycles"
+}

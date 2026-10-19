@@ -5,7 +5,13 @@
 `define C_SB(m) cmdv[m][63:32]
 `define C_W(m) cmdv[m][31:16]
 `define C_MODE(m) cmdv[m][0]
+`ifdef OT_TP8S_SPLIT
+`define OT_TP8S_QFD_ISS
+`endif
 `ifdef OT_TP8S_QFD
+`define OT_TP8S_QFD_ISS
+`endif
+`ifdef OT_TP8S_QFD_ISS
 `define C_ISS(m) (`C_CMD(m)-1)
 `else
 `define C_ISS(m) `C_CMD(m)
@@ -75,7 +81,22 @@ module tb_coll_tp8_static #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
-`ifdef OT_TP8S_QFD
+`ifdef OT_TP8S_SPLIT
+            qfd_io_collective_split u_die (                         // QW-COLL 10-19 regional split C + 4 Q (B4)
+                .clk(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk),
+                .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
+                .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
+                .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
+                .up_valid(upv[g]), .up_rec(uprec[g*PW +: PW]), .dp_valid(dpv[g]), .dp_rec(dprec[g*PW +: PW]),
+                .ur_valid(urv[g]), .ur_rec(urrec[g*RW +: RW]), .dr_valid(drv[g]), .dr_rec(drrec[g*RW +: RW]),
+                .sx0_valid(sxv[g*3]), .sx1_valid(sxv[g*3 + 1]), .sx2_valid(sxv[g*3 + 2]),
+                .sx0_rec(sxrec[(g*3)*PW +: PW]), .sx1_rec(sxrec[(g*3 + 1)*PW +: PW]), .sx2_rec(sxrec[(g*3 + 2)*PW +: PW]),
+                .sr0_valid(srv[g*3]), .sr1_valid(srv[g*3 + 1]), .sr2_valid(srv[g*3 + 2]),
+                .sr0_rec(srrec[(g*3)*PW +: PW]), .sr1_rec(srrec[(g*3 + 1)*PW +: PW]), .sr2_rec(srrec[(g*3 + 2)*PW +: PW]),
+                .out_valid(ov[g]), .out_data(od[g*FW +: FW]), .out_last(ol[g]), .out_rank(orank[g*3 +: 3]),
+                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]),
+                .up_slot(), .ur_peer_slot(), .sx0_peer_slot(), .sx1_peer_slot(), .sx2_peer_slot(), .cmd_free());
+`elsif OT_TP8S_QFD
             qfd_io_collective_static #(.PR_B4(PR_B4)) u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
                 .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
                 .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
