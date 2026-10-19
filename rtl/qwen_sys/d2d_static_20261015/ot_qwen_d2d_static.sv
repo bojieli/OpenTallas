@@ -115,10 +115,15 @@ module ot_qwen_d2d_static_end #(
     // cal_user_rx) and the end tags each TX slot (tx_user, with tx_slot) and each RX event (rx_user, with rx_slot /
     // rx_event).  Each direction stays ONE playhead: a start while that direction runs is the calendar's sticky fault
     // (collision = fault).  The compiler (tools/qwen_static_schedule/mu_d2d_ovl.py) places every segment in free slots.
-    parameter integer OVL = 0
+    parameter integer OVL = 0,
+    // SAFE-QW-D2D 10-19: NRC = equal-depth reset copies (1 = as built: one net).  NRC 4: rst_n[0] TX calendar,
+    // rst_n[1] control (counters, capture delays, RX expectation, users), rst_n[2] slot link, rst_n[3] RX calendar.  The
+    // caller drives every copy from one ot_rst_pipe stage (same assert / release edges), so behaviour is unchanged and
+    // no copy carries the whole ~300-load reset.
+    parameter integer NRC = 1
 ) (
     input  wire [4:0]       ck,           // [0] control + calendars, [1..4] SRAM bank entries (one logical domain)
-    input  wire             rst_n,
+    input  wire [NRC-1:0]   rst_n,
     input  wire             cfg_tx_we, cfg_rx_we,
     input  wire [5:0]       cfg_addr,     // [5] = segment-1 base register, [4:0] entry (NE 32)
     input  wire [31:0]      cfg_data,
@@ -156,13 +161,14 @@ module ot_qwen_d2d_static_end #(
     output wire             cal_running
 );
     wire halt = epoch_abort | end_fault;
+    wire rst_tc = rst_n[0], rst_cl = rst_n[(NRC > 1) ? 1 : 0], rst_lk = rst_n[(NRC > 2) ? 2 : 0], rst_rc = rst_n[(NRC > 3) ? 3 : 0];
     wire tv, rv; wire [2:0] tp, rp; wire [3:0] tk, rk; wire [4:0] tb, rb; wire tf, rf, trun, rrun;
-    ot_qwen_d2d_cal #(.NE(NE)) u_txcal (.ck(ck[0]), .rst_n(rst_n), .cfg_we(cfg_tx_we), .cfg_addr(cfg_addr),
+    ot_qwen_d2d_cal #(.NE(NE)) u_txcal (.ck(ck[0]), .rst_n(rst_tc), .cfg_we(cfg_tx_we), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .start(cal_start), .start_seg(cal_seg), .halt(halt), .ev_v(tv), .ev_port(tp), .ev_kind(tk), .ev_beat(tb),
         .running(trun), .fault(tf));
     wire rx_start = (OVL != 0) ? cal_start_rx : cal_start;
     wire rx_seg   = (OVL != 0) ? cal_seg_rx : cal_seg;
-    ot_qwen_d2d_cal #(.NE(NE)) u_rxcal (.ck(ck[0]), .rst_n(rst_n), .cfg_we(cfg_rx_we), .cfg_addr(cfg_addr),
+    ot_qwen_d2d_cal #(.NE(NE)) u_rxcal (.ck(ck[0]), .rst_n(rst_rc), .cfg_we(cfg_rx_we), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .start(rx_start), .start_seg(rx_seg), .halt(halt), .ev_v(rv), .ev_port(rp), .ev_kind(rk), .ev_beat(rb),
         .running(rrun), .fault(rf));
     assign cal_running = trun | rrun;
@@ -170,8 +176,8 @@ module ot_qwen_d2d_static_end #(
     // rides the 2-edge expectation pipeline with the event it tags
     reg [1:0] utx, urx, r1u;
     generate if (OVL != 0) begin : g_ovl_user
-        always @(posedge ck[0] or negedge rst_n)
-            if (!rst_n) begin utx <= 2'd0; urx <= 2'd0; end
+        always @(posedge ck[0] or negedge rst_cl)
+            if (!rst_cl) begin utx <= 2'd0; urx <= 2'd0; end
             else begin if (cal_start) utx <= cal_user_tx; if (cal_start_rx) urx <= cal_user_rx; end
         assign tx_user = utx;
     end else begin : g_one_user
@@ -189,8 +195,8 @@ module ot_qwen_d2d_static_end #(
     for (p = 0; p < NT; p = p + 1) begin : g_dly
         localparam integer D = TXD[8*p +: 8];
         reg [D-1:0] sr;
-        always @(posedge ck[0] or negedge rst_n)
-            if (!rst_n) sr <= {D{1'b0}};
+        always @(posedge ck[0] or negedge rst_cl)
+            if (!rst_cl) sr <= {D{1'b0}};
             else sr <= {sr, tx_slot[p] & ~halt};
         always @* fire[p] = sr[D-1];
     end
@@ -221,8 +227,8 @@ module ot_qwen_d2d_static_end #(
     // RX expectation and its 2-edge alignment with the slot link's checked output
     reg [5:0] ecnt;
     reg       r1v, r2v; reg [2:0] r1p, r2p; reg [3:0] r1k; reg [4:0] r1b;
-    always @(posedge ck[0] or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge ck[0] or negedge rst_cl) begin
+        if (!rst_cl) begin
             wcnt <= 0; rcnt <= 0; rslot <= 0; rd_v <= 0; ecnt <= 0; end_fault <= 0;
             r1v <= 0; r2v <= 0; r1p <= 0; r2p <= 0; r1k <= 0; r1b <= 0;
             rx_slot <= 0; rx_kind <= 0; rx_beat <= 0; r1u <= 0; rx_user <= 0;
@@ -243,7 +249,7 @@ module ot_qwen_d2d_static_end #(
     wire lrx_v;
     always @* for (k = 0; k < NR; k = k + 1) rx_event[k] = lrx_v && r2p == k;
     ot_qwen_static_slot_link #(.FW(FW), .CW(CW), .PW(PW)) u_link (
-        .ck(ck), .rst_n(rst_n), .epoch_begin(epoch_begin), .epoch(epoch),
+        .ck(ck), .rst_n(rst_lk), .epoch_begin(epoch_begin), .epoch(epoch),
         .wr_v(wr_v & ~halt), .wr_observed_v(wobs), .wr_slot(wslot), .wr_flit(wsel),
         .rd_v(rd_v), .rd_slot(rslot),
         .rx_expect_v(rv), .rx_expect_slot(ecnt),

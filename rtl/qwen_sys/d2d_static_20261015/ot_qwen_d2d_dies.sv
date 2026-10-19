@@ -86,7 +86,12 @@ endmodule
 // COMPUTE die end (die name qfd_d2d_static; replaces qfd_d2d_rom = credit romlink + LLR, historical)
 // ---------------------------------------------------------------------------------------------------------------------
 module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = {8'd2, 8'd1, 8'd2, 8'd1},
-    parameter integer OVL = 0) (   // MU-D2D-OVL 10-19: 1 = overlapping request / response segments (see ot_qwen_d2d_static_end)
+    parameter integer OVL = 0,     // MU-D2D-OVL 10-19: 1 = overlapping request / response segments (see ot_qwen_d2d_static_end)
+    // SAFE-QW-D2D 10-19 (safe-design item 1/3): RC = 1 gives the end 4 and the STATUS register 2 equal-depth regional
+    // reset copies (8 ot_rst_pipe regions instead of 4: r9j carried 300 / 325 loads on one regional flop).  Same
+    // assert / release edges as RC = 0 (every copy is the same pipe stage); 0 = as built.  Default: on with OVL (the MU
+    // re-close master qfd_d2d_static_ovl), off for the as-built qfd_d2d_static (closed views bind unchanged).
+    parameter integer RC = OVL) (
     input  wire         ck,                              // core D2D clock (PLL core trunk, 1.2 GHz; one CTS root incl. the slot-store SRAMs)
     input  wire         por_n, rst_n,
     input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr, input wire [31:0] cfg_data,
@@ -127,12 +132,24 @@ module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = 
     // Port resets reach only local capture flops. Four regional releases keep
     // the global pin off the end/status/KVN fanout; cold release adds four edges,
     // outside the compiled normal timeline. POR also uses a local capture.
-    wire [3:0] local_rst_n;
+    // RC = 1: [0] recovery, [1] end TX calendar, [2] STATUS held result, [3] KVN, [4] end control, [5] end slot link,
+    // [6] end RX calendar, [7] STATUS TX register
+    localparam integer NREG = (RC != 0) ? 8 : 4;
+    wire [NREG-1:0] local_rst_n;
     wire [0:0] local_por_n;
-    ot_rst_pipe #(.REGIONS(4), .STAGES(2)) u_reset_regions
+    ot_rst_pipe #(.REGIONS(NREG), .STAGES(2)) u_reset_regions
         (.clk(ck), .rst_n_in(rst_n), .rst_n(local_rst_n));
     ot_rst_pipe #(.REGIONS(1), .STAGES(2)) u_por_region
         (.clk(ck), .rst_n_in(por_n), .rst_n(local_por_n));
+    wire [((RC != 0) ? 4 : 1)-1:0] end_rst_n;
+    wire [((RC != 0) ? 2 : 1)-1:0] st_rst_n;
+    generate if (RC != 0) begin : g_rc
+        assign end_rst_n = {local_rst_n[6], local_rst_n[5], local_rst_n[4], local_rst_n[1]};
+        assign st_rst_n  = {local_rst_n[7], local_rst_n[2]};
+    end else begin : g_rc0
+        assign end_rst_n = local_rst_n[1];
+        assign st_rst_n  = local_rst_n[2];
+    end endgenerate
     localparam integer FW = 548;
     wire [3:0] txs, rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
     wire [3:0] tv; wire [4*FW-1:0] tp;
@@ -144,8 +161,8 @@ module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = 
         .fwd_link_rst_n(), .phy_rst_n(own_rst_n), .epoch_begin(eb), .epoch(ep), .link_up(), .links_drained(),
         .link_reset_seen(), .retrained(), .transport_fault(transport_fault), .recovering(rec), .recovery_cycles());
     assign phy_rst_n = own_rst_n & fwd_link_rst_n;
-    ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL)) u_end (
-        .ck({5{ck}}), .rst_n(local_rst_n[1]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+    ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD(TXDP), .MUT(MUT), .OVL(OVL), .NRC((RC != 0) ? 4 : 1)) u_end (
+        .ck({5{ck}}), .rst_n(end_rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .cal_start_rx(cal_start_rx), .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
         .tx_user(tx_user), .rx_user(rx_user),
@@ -169,7 +186,7 @@ module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = 
     assign prog_auth_slot = rxs[1] && rk == 4'd13;
     assign prog_context_slot = rxs[1] && rk == 4'd12;
     // port 2 status/result
-    ot_qwen_d2d_status_tx u_st (.ck(ck), .rst_n(local_rst_n[2] & ~eb), .epoch16(status_epoch16),
+    ot_qwen_d2d_status_tx #(.NRC((RC != 0) ? 2 : 1)) u_st (.ck(ck), .rst_n(st_rst_n & {((RC != 0) ? 2 : 1){~eb}}), .epoch16(status_epoch16),
         .vm_drained(vm_drained), .collective_drained(collective_drained), .collective_busy(collective_busy),
         .crom_fault(crom_fault), .execution_active(execution_active), .admit_ready(admit_ready),
         .result_v(result_v), .result_done(result_done), .result_fault(result_fault), .result_cause(result_cause),

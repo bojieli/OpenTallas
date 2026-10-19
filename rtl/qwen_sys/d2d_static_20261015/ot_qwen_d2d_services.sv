@@ -98,8 +98,12 @@ endmodule
 // TX: one register (codec latency 1). A terminal result is held from its pulse until the next compiled kind-15 slot;
 // a second result before that slot is a schedule fault (the compiler spaces them). Levels are sampled at the slot.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_d2d_status_tx (
-    input  wire         ck, rst_n,
+// SAFE-QW-D2D 10-19: NRC = equal-depth reset copies (1 = as built).  NRC 2: rst_n[0] clears the held result (pend, r),
+// rst_n[1] the TX register (tx_valid, tx_payload, fault); the caller drives every copy from one ot_rst_pipe stage, so
+// assert / release edges are unchanged and each copy carries ~half the 325 reset loads.
+module ot_qwen_d2d_status_tx #(parameter integer NRC = 1) (
+    input  wire         ck,
+    input  wire [NRC-1:0] rst_n,
     input  wire [15:0]  epoch16,
     input  wire         vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready,
     input  wire         result_v, result_done, result_fault,
@@ -118,18 +122,22 @@ module ot_qwen_d2d_status_tx (
     wire [148:0] rin = {result_cycles, result_value, result_token, result_gen, result_tag, result_cause, result_fault, result_done};
     wire [148:0] rsel = result_v ? rin : r;
     wire         psel = pend | result_v;
-    always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin pend <= 0; r <= 0; tx_valid <= 0; tx_payload <= 0; fault <= 0; end
+    wire rst_h = rst_n[0], rst_t = rst_n[NRC - 1];   // held result / TX register (one net when NRC = 1)
+    always @(posedge ck or negedge rst_h) begin
+        if (!rst_h) begin pend <= 0; r <= 0; end
+        else if (tx_slot) pend <= 1'b0;
+        else if (result_v) begin pend <= 1'b1; r <= rin; end
+    end
+    always @(posedge ck or negedge rst_t) begin
+        if (!rst_t) begin tx_valid <= 0; tx_payload <= 0; fault <= 0; end
         else begin
             tx_valid <= tx_slot;
             if (result_v && pend && !tx_slot) fault <= 1'b1;
             if (tx_slot && tx_kind != 4'd15) fault <= 1'b1;
-            if (tx_slot) begin
+            if (tx_slot)
                 tx_payload <= {5'd0, 4'd15, 6'd63, epoch16, 5'd0,
                                356'd0, rsel[148:1], rsel[0], psel,
                                admit_ready, execution_active, crom_fault, collective_busy, collective_drained, vm_drained};
-                pend <= 1'b0;
-            end else if (result_v) begin pend <= 1'b1; r <= rin; end
         end
     end
 endmodule
