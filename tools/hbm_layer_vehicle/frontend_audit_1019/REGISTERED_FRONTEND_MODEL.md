@@ -1,0 +1,62 @@
+# SVG frontend structural audit and candidate stage contract
+
+Status: model only. No canonical issuer, feed, owner, cache, calendar, or landing RTL changes. Root owns router freshness; the parent owns frontend composition. Qualification of the cache and pair does not qualify this frontend.
+
+## Immutable source identities
+
+The full native composition census uses `a7da66a75` with the exact parameters in `group_frontier.json`. It contains the older issuer without a cohort port. Only the qualified cache, four native pairs, and calendar are blackboxed. The retained two descriptor SRAMs remain actual cells. The successful map uses the ORFS Docker RVT TT runner with flattening of module and instance keep hierarchy after ABC, without opt_merge. The first hierarchy attempt failed on an unselected alternative module; only the later successful map is evidence.
+
+The separately mapped adopted issuer/collector snapshots are byte-identical to focused commit `825607a54`, adopted into main `944bbb859`. Issuer SHA256 is `6acb3e9d66d70ceb211c86a317868e10bb15716787fdf9b3815a08b57d407d07`; collector SHA256 is `897e7d4151242059210a545f9a7b4ba62f10485c2563502699f6c6f53988ed26`. Strict GEN2e uses ID_COHORT=1. An accepted run invalidates IDs and increments a 16-bit cohort; IDs require running, no simultaneous run, no previously accepted IDs, and matching layer/cohort. Same-edge run/IDs and missing fresh IDs at the deadline must fault. The `collector_current.json` census preserves source-default XRT2; `collector_l17_current.json` uses actual l17 XRT1. Neither proves the compiled route_act/TOPK launch deadline. The l17 report's 82 edges describe its structural graph, not an 82-cycle publication latency. IDS_LAG200 fixtures do not close this obligation.
+
+## Storage and current physical failures
+
+`source_model.json` inventories runtime arrays: issuer two 4x110 queues (880 bits), feed row/tag metadata 68 bits, descriptor CDC 4x97 (388 bits), four 32x52 owner tables (1664 bits each), and two indexed 8x35 metadata rings (280 bits each, plus output registers). Individual arrays meet the approximately 2-kilobit flop-storage limit. This does not establish legal reset, mux, enable, boundary, or clock implementation.
+
+The original mapped census reports TT standard-cell areas: old issuer 1067.60592 um², current cohort issuer 1084.48956 um², PC owner 981.61308 um², and full frontier 10791.4599 um². These are current implementation measurements, not area estimates for the proposal. The full frontier explicitly excludes qualified child datapath area. Recursive BUF/INV terminal-pin results are recorded separately and supersede direct-only fanout counts. Reset trees must count real async-clear AND D sinks; a BUF or inverted Q is not an independent state copy.
+
+The current reserve_ready→reserve_v and block_ready/cache_owned→start_v paths are combinational. GO/head outputs include comparisons and queue selection. The global response network combines all four owner outputs with eight target banks. Source registers alone do not make these outputs native. Any future design must demonstrate all input pins land on Q before functional use, all output bits trace to Q, bounded collapsed control/data/reset loads, known cell types, and a fixed source-bound clock graph.
+
+## Four owner links: legal topology, not a new arbiter
+
+For baseline `ot_hbm_svc_sm4pc_cdc_rel_sram_id.sv`, line68 constructs reserve_pcs as `{sm_s,2'd3,sm_s,2'd2,sm_s,2'd1,sm_s,2'd0}`. Lines120–121 bind owner p to pc_id `{id_sm,2'(pc)}`. In `ot_hbm_svc_prefetch_overlap_owner_rel_id.sv`, line85 allocates ordinal `{t[8:0],2'b0}+lane`; line68 computes response_ordinal by adding `{7'd0,word_offset,2'b0}`. Thus, provided id_sm settles before reserve and descriptor PC matching succeeds, response_ordinal[p][1:0] equals p for every legal return. Pair j contains stripes j and j+4 and has one legal producer, owner j. Stripe high-bank selection is ordinal[2], not the logical-block response_bank field. Source line148 currently expresses the global matching test.
+
+A future point-to-point face can carry ordinal11+block_bank2+epoch16+data256 =285 payload bits, target ordinal[2], and valid. With a 3-bit fixed-ring phase the modeled envelope is290 bits. A four-slot indexed ring costs1160 bits per link; four links must remain separate physical regions. This is additional state, not free wire. Existing qualified pair accepts two target payloads (570 bits); future adaptation may locally duplicate 285 payload bits with mutually exclusive target-valid, but requires a new source-bound pair/input proof. No change to the qualified leaf is authorized by this model.
+
+Required proof includes all SM/PC identities, all legal ordinals and offsets, count boundaries, tag wrap, back-to-back issue/return, reset while occupied, and the fixed link phase. Wrong low-two lane and wrong target-vs-ordinal[2] mutants must fail even when data happens to match. Wrong ordinal/epoch alignment must fail the output packet check. An id_sm change while work is live is forbidden by the modeled strap contract and must be asserted or explicitly faulted.
+
+## Candidate native issuer/feed contract
+
+Current non-clock issuer input width is380, including265 already-registered descriptor bits. New first-Q landing for the remaining115 bits is a lower-bound register budget, not a legal physical design by itself. Reserve95, start19 and GO86 give200 event output bits; existing registered queue/head fields may be reused only after a mapped Q trace. Status and readiness require their own registered contract. The attention class comes from descriptor mode bit197 (mode[2]); ctx46 carries it, increasing context46→47 and queue width110→111 (+8 queue bits). It must accompany the exact R/C/command d1/d2 envelope. It adds no operation edge if packed with that existing envelope. Descriptor A/P width and reserved bit checks stay unchanged.
+
+For queues, use at most16-bit local data slices and actual replicated local select/enable state, with measured control loads <=32. Seven slices × four slots require28 local predicates per queue for each explicitly replicated control family. Two such families (read and write), two queues, cost112 predicate FFs if all are retained. This is a pricing example, not final mapping. The 220 queue-head bits are additional if existing heads cannot be retained. No reset-as-enable construction may distribute a reset onto all unreset data cells. Runtime data can be unreset with resettable validity and local ownership, provided occupied-reset proof shows no stale packet becomes valid.
+
+Conservative phase contract for a future RTL candidate, relative to the present accepted external run/event edges:
+
+| Event | Candidate change | Required admission condition |
+|---|---:|---|
+| RUN and fresh-ID/status capture | +1 stream edge | Native first Q before use; cohort compared from the captured run generation |
+| RESERVE event | up to +3 stream edges | Input capture + event Q + registered readiness observation; capacity must already be reserved |
+| START event | up to +3 stream edges | Queue-head prefetch + status capture + event Q |
+| GO with unchanged absolute go_at arithmetic | +2 stream edges | One RUN capture edge + one GO output edge; head valid at least two edges before fixed GO |
+
+A registered ready signal alone is incorrect: it can over-admit or repeat a request. The future implementation must reserve a bounded pending slot at admission, or prove static preallocation and exclusive producer capacity. The table prices a proposal; no equivalence to current edge timing has yet been claimed. Changing GO calibration blindly is forbidden because it may advance READ. Parent must mirror any selected event latency in compiler/XC and price earliest-launch and admission inequalities separately.
+
+Current cache READ/retire input capture +2 and current external command +2 are already priced in the parent composition model. Those are independent of this proposed frontend change. Current feed chronology remains calendar→R READ→C command/retire→native command d1/d2; safe cache separately captures READ/retire in two edges. OPEN and metadata paths must be checked from actual source and bench, not inferred from the above proposal.
+
+## Owner implementation alternatives and full edge cost
+
+The existing 1664-bit owner table can legally remain flops if reset/control/mux paths pass. It is not necessary to introduce a memory solely to satisfy storage. A hardened flop path proposal is H0 return capture, H1 local lookup/validation registered output, then a fixed two-edge landing to pair Q at H3. This requires the fused lookup/validate path to meet the actual HBM timing and load bound. A conservative separate lookup Q and validation/output Q reaches pair at H4. These are +3/+4 HBM edges relative to the old direct pair capture at H0, not zero-edge changes. Native issue output needs its own capacity-reservation handshake; Δissue remains an explicit parameter until a producer/receiver proof prevents duplicate issue and over-admission.
+
+The concrete SRAM alternative is the actual `ot_sram_1r1w2c_32x64_m1` generated at e26d92503, not an invented one-clock master. Its native read edge, independent-clock restrictions and collision rules remain binding even if both clock ports use one local PC root. Exact primitive outline31.992×17.304 um gives553.589568 um² each, or2214.358272 um² for four. Root primitive escape/route proof does not qualify this owner or an array family.
+
+Split each entry into immutable47 bits (generation12+epoch16+bank2+permutation1+row_low2+ordinal11+length3) in the 64-bit macro and mutable valid1+seen4 in flops (160 bits/owner). Allocation uses one macro write; return uses one macro read. Forbid allocation/read collision to the same entry through valid/tag ownership and assert it. A captured return is278 bits (valid1+tag17+beat4+data256); a four-slot indexed capture ring is1112 bits, so mutable state+capture ring=1272 bits/owner before controls. Consecutive four-beat responses require seen/valid forwarding across delayed update; one candidate forwarding record costs23 bits (fulltag17+seen4+valid1+updatevalid1), with sufficiency still to prove under wrap/reuse. These costs exclude issue reservation and link rings and may not be omitted from area/storage reports.
+
+SRAM return sequence is H0 native return capture → H1 actual macro read Q and mutable metadata Q → H2 validate context/generation/beat and register response → H4 pair capture through the fixed two-edge link. If timing requires a distinct output stage, H5 is mandatory and priced. Response data delay of three or more edges must use an indexed ring, not a long flop shift. No zero-edge same-tag read is assumed.
+
+Clock roots are explicit: stream frontend, global HBM descriptor/drain, four PC HBM owners, and four corresponding pair HBM link roots. An actual synchronous relation or qualified crossing is required between each pair of roots; no false path or multicycle exception grants functional safety. Reset proof is per root: source/reset equations, real first-stage copies, two registered release edges where claimed, source-bound collapsed raw/first/final sink graph. Existing asynchronous FIFO synchronization and online/reset release edges remain additional stages and cannot be hidden in a uniform whole-tile two-edge claim.
+
+For the source testbench periods stream833.333ps and HBM1024ps, the modeled prefetch inequality is:
+
+`required additional old slack >= Δreserve + Δstart + ceil((Δissue + Δresponse)*1024/833.333) - ΔGO`.
+
+For the conservative examples Δreserve3, Δstart3, ΔGO2 and Δissue2: fused-flop response3 requires11 extra stream edges; SRAM/separate-lookup response4 requires12. These are conditional bounds, not adopted padding. Actual static compiler deadline, variable HBM bound, concurrency, ready reservation and response buffering must close before selecting padding or implementing RTL. The current parent padding19 remains a separate existing composition contract.

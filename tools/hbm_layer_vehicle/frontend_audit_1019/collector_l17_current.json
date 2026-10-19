@@ -1,0 +1,14 @@
+{
+  "top": "ot_hbm_router_ids_static",
+  "params": {
+    "XRT": 1,
+    "GO_DELAY": 1,
+    "CQ_DELAY": 1
+  },
+  "sources": [
+    "tools/hbm_layer_vehicle/frontend_audit_1019/snapshots/ot_hbm_router_ids_static_825607a54.sv"
+  ],
+  "clock_port": "clk",
+  "source_revision": "825607a54 (adopted main944bbb859)",
+  "scope": "Exact adopted collector source with l17_report XRT1 GO_DELAY1 CQ_DELAY1; structural census only, actual route_act deadline remains open"
+}

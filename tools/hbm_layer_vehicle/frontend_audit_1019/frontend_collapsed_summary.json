@@ -1,0 +1,205 @@
+[
+  {
+    "job": "issuer_baseline",
+    "max_data": 415,
+    "max_reset": 303,
+    "over32": 31,
+    "sha": "9e7ae0e1736d3f0f7fa993f6d74672f96c594e3b07910a89c63479da29664d1c",
+    "worst": [
+      {
+        "fanout": 415,
+        "names": [
+          "$abc$25406$auto$dfflibmap.cc:546:dfflibmap$21934"
+        ]
+      },
+      {
+        "fanout": 396,
+        "names": [
+          "$abc$25406$new_n7929"
+        ]
+      },
+      {
+        "fanout": 267,
+        "names": [
+          "$abc$25406$new_n5748"
+        ]
+      },
+      {
+        "fanout": 237,
+        "names": [
+          "$abc$25406$new_n6624"
+        ]
+      },
+      {
+        "fanout": 218,
+        "names": [
+          "$abc$25406$new_n5951"
+        ]
+      }
+    ]
+  },
+  {
+    "job": "pc_owner",
+    "max_data": 162,
+    "max_reset": 1629,
+    "over32": 104,
+    "sha": "8c4f8c2104c22ac0d56dd937f89b77939368e4dab7a6b3cd997b5ac0ed685999",
+    "worst": [
+      {
+        "fanout": 162,
+        "names": [
+          "$abc$32478$new_n3533",
+          "descriptor_v"
+        ]
+      },
+      {
+        "fanout": 92,
+        "names": [
+          "$abc$32478$new_n4398"
+        ]
+      },
+      {
+        "fanout": 92,
+        "names": [
+          "$abc$32478$new_n4448"
+        ]
+      },
+      {
+        "fanout": 92,
+        "names": [
+          "$abc$32478$new_n4457"
+        ]
+      },
+      {
+        "fanout": 92,
+        "names": [
+          "$abc$32478$new_n4466"
+        ]
+      }
+    ]
+  },
+  {
+    "job": "issuer_cohort_current",
+    "max_data": 414,
+    "max_reset": 323,
+    "over32": 33,
+    "sha": "2a875de1943f15318e57567335237ec76a7fc96cb11edade7aa8e50b0d9f5905",
+    "worst": [
+      {
+        "fanout": 414,
+        "names": [
+          "$abc$26482$auto$dfflibmap.cc:546:dfflibmap$23016",
+          "$abc$26482$new_n4679"
+        ]
+      },
+      {
+        "fanout": 396,
+        "names": [
+          "$abc$26482$new_n6925"
+        ]
+      },
+      {
+        "fanout": 264,
+        "names": [
+          "$abc$26482$new_n5619"
+        ]
+      },
+      {
+        "fanout": 252,
+        "names": [
+          "$abc$26482$new_n8423"
+        ]
+      },
+      {
+        "fanout": 218,
+        "names": [
+          "$abc$26482$new_n6186"
+        ]
+      }
+    ]
+  },
+  {
+    "job": "collector_current",
+    "max_data": 94,
+    "max_reset": 127,
+    "over32": 5,
+    "sha": "07e8fe081a28348bf9dab55018ca1864ffced6b9f9840c591aabcca7b5a33b59",
+    "worst": [
+      {
+        "fanout": 94,
+        "names": [
+          "$abc$9910$new_n942",
+          "$abc$9910$auto$dfflibmap.cc:546:dfflibmap$9750"
+        ]
+      },
+      {
+        "fanout": 78,
+        "names": [
+          "$abc$9910$new_n1619"
+        ]
+      },
+      {
+        "fanout": 55,
+        "names": [
+          "$abc$9910$new_n942"
+        ]
+      },
+      {
+        "fanout": 50,
+        "names": [
+          "$abc$9910$new_n1582"
+        ]
+      },
+      {
+        "fanout": 50,
+        "names": [
+          "$abc$9910$new_n1584"
+        ]
+      }
+    ]
+  },
+  {
+    "job": "group_frontier",
+    "max_data": 2352,
+    "max_reset": 6510,
+    "over32": 616,
+    "sha": "04278754a9de54c2c97b93133bb74a125b8f33a81099f4b91a901e35b259cafe",
+    "worst": [
+      {
+        "fanout": 2352,
+        "names": [
+          "$abc$321122$auto$dfflibmap.cc:546:dfflibmap$297463",
+          "$abc$321122$new_n28803"
+        ]
+      },
+      {
+        "fanout": 2352,
+        "names": [
+          "$abc$321122$auto$dfflibmap.cc:546:dfflibmap$297477",
+          "$abc$321122$new_n28807"
+        ]
+      },
+      {
+        "fanout": 2097,
+        "names": [
+          "$abc$321122$auto$dfflibmap.cc:546:dfflibmap$297485",
+          "$abc$321122$new_n28809"
+        ]
+      },
+      {
+        "fanout": 2086,
+        "names": [
+          "$abc$321122$auto$dfflibmap.cc:546:dfflibmap$297469",
+          "$abc$321122$new_n28804"
+        ]
+      },
+      {
+        "fanout": 2072,
+        "names": [
+          "$abc$321122$auto$dfflibmap.cc:546:dfflibmap$297471",
+          "$abc$321122$new_n28805"
+        ]
+      }
+    ]
+  }
+]
