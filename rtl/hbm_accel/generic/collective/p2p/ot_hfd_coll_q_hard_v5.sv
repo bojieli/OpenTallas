@@ -34,7 +34,7 @@
 // ot_hgi_coll_static_program_target #(TARGET 52); the identity strap compares the raw HOST target with 52+qid
 // before the target's own input capture, so the captured target equals 52 exactly when the original TARGET
 // 52+QID instance would have matched.
-module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOKAHEAD=0,ROWS=64,PW=(ROWS>64)?7:6)(
+module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOKAHEAD=0,ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,
  input wire [1:0] qid,
  input wire cfg_v,
@@ -136,7 +136,7 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOK
   else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end
 endmodule
 
-module ot_hgi_coll_fj_q3 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
+module ot_hgi_coll_fj_q3 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
@@ -150,7 +150,7 @@ module ot_hgi_coll_fj_q3 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
   .arg_capture_slot(1'b0),.tkm_start(1'b0),.tkm_del_slot(4'd0),.tkm_dest_v(4'd0));
 endmodule
 
-module ot_hgi_coll_fj_q2 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
+module ot_hgi_coll_fj_q2 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
@@ -164,7 +164,7 @@ module ot_hgi_coll_fj_q2 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
  ot_hgi_coll_fj_core #(.NPT(2),.SOLO(0),.NS(9),.NSL(18),.ROWS(ROWS)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
 endmodule
 // d4f NLINK shapes (SW NLINK 2 = n2s1, SE/NW/NE NLINK 1 = n1s0): same leaves, own hardened shape names.
-module ot_hgi_coll_fj_n2s1 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
+module ot_hgi_coll_fj_n2s1 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
@@ -178,7 +178,7 @@ module ot_hgi_coll_fj_n2s1 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
   .arg_capture_slot(1'b0),.tkm_start(1'b0),.tkm_del_slot(4'd0),.tkm_dest_v(4'd0));
 endmodule
 
-module ot_hgi_coll_fj_n1s0 #(parameter integer ROWS=64,PW=(ROWS>64)?7:6)(
+module ot_hgi_coll_fj_n1s0 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
@@ -211,7 +211,7 @@ endmodule
 // occupancy + program_active) is busy | start_q, so the programme target sees busy on the SAME edge as before the
 // pin stage (no new launch window); busy_d1..d3 / done / uop stream take the core busy, i.e. everything +1.
 // XDIE-HBM4 (10-19): ROWS (default 64 = unchanged) -> static_issuer_v6 #(ROWS); 128 widens start_pc / uop_pc to 7 b.
-module ot_hgi_coll_issuer_m #(parameter integer PIN_REGS=1,parameter integer ROWS=64,parameter integer PW=(ROWS>64)?7:6)(
+module ot_hgi_coll_issuer_m #(parameter integer PIN_REGS=1,parameter integer ROWS=64,parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk_control,input wire rst_n,
  input wire [36:0] cfg,input wire start,input wire [PW-1:0] start_pc,
  output wire busy,done,fault,uop_v,          // raw (programme-target feedback, host_v4 edges)

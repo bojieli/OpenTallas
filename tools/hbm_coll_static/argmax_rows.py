@@ -33,22 +33,62 @@ VB, VS = 0x0400, 0x0020      # VM operand sector base, per-position stride (32 s
 OBASE, DSTRIDE = 0x41000000, 0x40
 PEEL = 15                    # = W - II, W = LEAD + M + 11 = a position's lifetime in edges (48 - 1 at VM_RT 0):
                              # tail rows (offsets 20..34 of a position) = rows 0..14 of the next body pass
-CAP_ROWS = 64                # q3 programme memory (6-bit pc)
+CAP_ROWS = 64                # q3 programme memory rows: 64 (6-bit pc, the closed issuer) | 128 | 256 (--rows)
+PW = 6                       # programme counter bits (ROWS 64 / 128 / 256 -> 6 / 7 / 8)
+START_O = 0                  # ARG start offset: 0; -1 for ot_hgi_coll_argmax_m_tp192 (START_REG=1 registers start +
+                             # cfg_g/gbase/rank one edge: the start row moves one edge earlier so the first lane input
+                             # stays start+2 raw edges, the TP96 alignment; --start-reg)
 
 
 def set_vm_rt(v):
-    """re-derive LEAD / PEEL for a COLL parent VM_RT. Programme rows = PEEL + II + (PEEL + 1) + halt = 2 W - II + 2 =
-    64 + 2 VM_RT: the peeled two-position loop fits the 64-row programme ONLY at VM_RT 0. VM_RT > 0 also stretches a
-    position over K = ceil(W / II) > 2 body passes (VM_RT 74: W 121, K 4, PEEL 89 >= II), so no prologue/epilogue peel
-    of this ISA fits; it needs per-stage row predicates (kernel-only modulo schedule) or a deeper programme memory."""
+    """re-derive LEAD / PEEL for a COLL parent VM_RT. A position's lifetime W = LEAD + M + 11 spans K = ceil(W / II)
+    body passes; the compiler peels a straight-line prologue of PEEL = W - II rows (the cycles in which a modulo body would
+    reference positions < 0) and an epilogue of PEEL + 1 rows (positions >= P), the body enters at row PEEL mod II of
+    iteration PEEL // II. Programme rows = PEEL + II + (PEEL + 1) + halt = 64 + 2 VM_RT (VM_RT 0: 64, the closed issuer;
+    VM_RT 74: 212 -> the 256-row issuer, coordinator HANDOFF 0kj)."""
     global VM_RT, LEAD, PEEL
     VM_RT, LEAD = v, 12 + v
     W = LEAD + M + 11
     PEEL = W - II
     rows = 2 * PEEL + II + 2
-    if PEEL >= II or rows > CAP_ROWS:
+    if rows > CAP_ROWS:
         raise SystemExit(f'ARGMAX_ROWS_COMPILE FAIL capacity VM_RT={v} LEAD={LEAD} lifetime={W} passes={-(-W // II)} '
-                         f'peel={PEEL} rows={rows} > {CAP_ROWS} (needs stage predicates or a deeper programme)')
+                         f'peel={PEEL} rows={rows} > {CAP_ROWS} (--rows 256 = the deeper q3 programme memory)')
+
+
+def set_rows(r):
+    global CAP_ROWS, PW
+    if r not in (64, 128, 256):
+        raise SystemExit(f'ARGMAX_ROWS_COMPILE FAIL rows {r} (64 | 128 | 256)')
+    CAP_ROWS, PW = r, {64: 6, 128: 7, 256: 8}[r]
+
+
+def set_npt(n):
+    global NPT
+    NPT = n
+
+
+def enc_meta(nxt, tgt=0, count=0, lid=63, halt=0):
+    """issuer row metadata (ot_hgi_coll_static_issuer_v6): next[5:0] target[11:6] count[43:12] halt[44] lid[50:45];
+    ROWS 128 adds next[6]/target[6]/lid[6] at [51]/[52]/[53], ROWS 256 next[7]/target[7]/lid[7] at [54]/[55]/[56]."""
+    for x in (nxt, tgt, lid):
+        if not 0 <= x < (1 << PW):
+            raise ValueError(('pc field', x, PW))
+    m = ((lid & 63) << 45) | (halt << 44) | (count << 12) | ((tgt & 63) << 6) | (nxt & 63)
+    if PW >= 7:
+        m |= (((nxt >> 6) & 1) << 51) | (((tgt >> 6) & 1) << 52) | (((lid >> 6) & 1) << 53)
+    if PW >= 8:
+        m |= (((nxt >> 7) & 1) << 54) | (((tgt >> 7) & 1) << 55) | (((lid >> 7) & 1) << 56)
+    return m
+
+
+def dec_meta(m):
+    nxt, tgt, lid = m & 63, (m >> 6) & 63, (m >> 45) & 63
+    if PW >= 7:
+        nxt, tgt, lid = nxt | (((m >> 51) & 1) << 6), tgt | (((m >> 52) & 1) << 6), lid | (((m >> 53) & 1) << 6)
+    if PW >= 8:
+        nxt, tgt, lid = nxt | (((m >> 54) & 1) << 7), tgt | (((m >> 55) & 1) << 7), lid | (((m >> 56) & 1) << 7)
+    return dict(next=nxt, target=tgt, lid=lid, count=(m >> 12) & 0xffffffff, halt=(m >> 44) & 1)
 
 
 def ar_fields(ar):
@@ -69,7 +109,7 @@ def pos_fields(p, o, rank_pub):
     if 0 <= o + 1 < M:                                           # sink: ARG lanes 11..14 <- VM sources 5..8
         d['sink_slot'] = 0xf << (NPT + 8)
         d['sink_select'] = sum((2 + NPT + j) << (4 * (NPT + 8 + j)) for j in range(4))
-    if o == 0:                                                   # start: G 96, gbase 0, publisher rank
+    if o == START_O:                                             # start: G 96, gbase 0, publisher rank
         ar |= 1 << 48
         d.update(tkm_cfg_g=G, tkm_cfg_gbase=0)
     if 1 <= o <= M:
@@ -127,26 +167,28 @@ def compile_program(die, P, mutant=None):
         return out
     words, meta = [], []
     BODY0, END = PEEL, PEEL + II - 1
-    for r in range(PEEL):                                        # prologue: position 0 head, cycles 0..14
-        words.append(pack(fields_at(r, [0], rank_pub)))
-        meta.append((63 << 45) | ((BODY0 + PEEL) if r == PEEL - 1 else r + 1))
+    i0, entry = divmod(PEEL, II)                                 # body entered at row `entry` of iteration i0
+    K = -(-(LEAD + M + 11) // II) + 1                            # positions a body row can reference (filtered)
     steps = dict(iter_vm_step=0 if mutant == 'vm_step' else VS, iter_del_step=DSTRIDE)
-    for r in range(II):                                          # body row r = cycle II i + r, iteration i
-        d = fields_at(r, [0, -1], rank_pub)                      # i = 0 bases (tail of p = -1 for rows 0..14)
-        d.update(steps)
-        pc = BODY0 + r
-        nxt = pc + 1
-        m = (END << 45) | nxt
-        if pc == END:
-            m = (END << 45) | (P << 12) | (BODY0 << 6) | (END + 1)
-        words.append(pack(d))
-        meta.append(m)
-    for r in range(PEEL + 1):                                    # epilogue: position P-1 tail (+1 idle edge)
-        words.append(pack(fields_at(II * P + r, [P - 1], rank_pub)))
-        meta.append((63 << 45) | (len(meta) + 1))
+    if P > i0:
+        for r in range(PEEL):                                    # prologue: cycles 0..PEEL-1 (no position < 0)
+            words.append(pack(fields_at(r, allp, rank_pub)))
+            meta.append(enc_meta(BODY0 + entry if r == PEEL - 1 else r + 1))
+        for r in range(II):                                      # body row r = cycle II (i0 + it) + r, it = iteration
+            d = fields_at(II * i0 + r, range(i0 - K + 1, i0 + 1), rank_pub)
+            d.update(steps)
+            pc = BODY0 + r
+            words.append(pack(d))
+            meta.append(enc_meta(END + 1, BODY0, P - i0, END) if pc == END else enc_meta(pc + 1, lid=END))
+        c0 = II * P                                              # epilogue: cycles II P .. halt-1 (no position >= P)
+    else:
+        c0 = 0                                                   # P <= i0: no steady state, straight-line
+    for c in range(c0, halt):
+        words.append(pack(fields_at(c, allp, rank_pub)))
+        meta.append(enc_meta(len(meta) + 1))
     words.append(pack(fields_at(halt, [], rank_pub)))
-    meta.append((63 << 45) | (1 << 44) | (len(meta) << 6) | len(meta))
-    if len(words) > 64:
+    meta.append(enc_meta(len(meta), len(meta), halt=1))
+    if len(words) > CAP_ROWS:
         raise ValueError('programme capacity')
     # independent unroll against the absolute schedule of all P positions
     if mutant is None:
@@ -159,10 +201,11 @@ def unroll(words, meta, fields, sched, halt):
     def get(w, k):
         f = fields[k]
         return (w >> f['lsb']) & ((1 << f['width']) - 1)
-    pc, counters, c = 0, [0] * 64, 0
+    pc, counters, c = 0, [0] * (1 << PW), 0
     while True:
         m, w = meta[pc], words[pc]
-        it = counters[(m >> 45) & 63]
+        f = dec_meta(m)
+        it = counters[f['lid']]
         exp = sched(c)
         for k in fields:
             if k.startswith('iter_') or k == 'ring':             # ring aliases ar_high / capture_arg / clear
@@ -177,18 +220,18 @@ def unroll(words, meta, fields, sched, halt):
                 v = ((v & ((1 << 40) - 1)) + it * get(w, 'iter_del_step')) & ((1 << 40) - 1)
             if v != exp.get(k, 0):
                 raise AssertionError((c, pc, it, k, hex(v), hex(exp.get(k, 0))))
-        if (m >> 44) & 1:
+        if f['halt']:
             if c != halt:
                 raise AssertionError(('halt', c, halt))
             return
-        count, lid = (m >> 12) & 0xffffffff, (m >> 45) & 63
+        count, lid = f['count'], f['lid']
         if count and counters[lid] < count - 1:
             counters[lid] += 1
-            pc = (m >> 6) & 63
+            pc = f['target']
         else:
             if count:
                 counters[lid] = 0
-            pc = m & 63
+            pc = f['next']
         c += 1
 
 
@@ -198,11 +241,20 @@ def main():
     ap.add_argument('--P', type=int, default=1)
     ap.add_argument('--mutant', choices=('vm_step',))
     ap.add_argument('--vm-rt', type=int, default=0, help='COLL parent VM_RT (extra VM read edges beyond n+10 capture)')
+    ap.add_argument('--rows', type=int, default=64, help='q3 issuer programme rows (ROWS 64 | 128 | 256)')
+    ap.add_argument('--start-reg', action='store_true', help='ARG unit registers start (argmax_m_tp192, d4g SW TP 192)')
+    ap.add_argument('--npt', type=int, default=3, help='parent link ports NPT (v4 q3 / v8x NLINK 3: 3; d4g SW v8x NLINK 2: 2)')
     a = ap.parse_args()
+    set_rows(a.rows)
+    set_npt(a.npt)
+    global START_O
+    START_O = -1 if a.start_reg else 0
     set_vm_rt(a.vm_rt)
     a.out.mkdir(parents=True, exist_ok=True)
     man = dict(schema='hcoll.rows.argmax.v1', P=a.P, mutant=a.mutant, vm_rt=a.vm_rt, G=G, II=II, VB=VB, VS=VS, OBASE=OBASE,
                DSTRIDE=DSTRIDE, layout_sha256=hashlib.sha256(LAYOUT.read_bytes()).hexdigest(), parents={})
+    if a.rows != 64 or a.npt != 3 or a.start_reg:                # default manifest byte-identical
+        man.update(rows=a.rows, npt=a.npt, start_reg=a.start_reg)
     halt_only = (1 << 44)
     for die in range(2):
         words, meta, info = compile_program(die, a.P, a.mutant)
@@ -211,7 +263,7 @@ def main():
         man['parents'][f'd{die}q0'] = info
         # q2 carries no ARGMAX (it faults by ISA): its programme is the native halt row only
         (a.out / f'd{die}q1.rows.hex').write_text(f'{0:0384x}\n')
-        (a.out / f'd{die}q1.meta.hex').write_text(f'{(63 << 45) | halt_only:016x}\n')
+        (a.out / f'd{die}q1.meta.hex').write_text(f'{enc_meta(0) | halt_only:016x}\n')
         man['parents'][f'd{die}q1'] = dict(rows=1, halt_only=True)
     (a.out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
     print(f"ARGMAX_ROWS_COMPILE PASS P={a.P} rows={man['parents']['d0q0']['rows']} II={II} "

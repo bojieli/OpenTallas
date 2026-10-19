@@ -25,7 +25,7 @@ module ot_hgi_coll_static_program_target #(
     // next/target/lid pc MSBs (metadata[63:54]=0); descriptor base<128, limit<=128; the scan covers 128 rows (reserve
     // 130 edges from descriptor capture to launch); mode-0 issuer cfg carries row[6] in cfg[8].
     parameter integer ROWS=64,
-    parameter integer PW=(ROWS>64)?7:6      // derived; never override
+    parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6      // derived; never override
 )(
     input wire clk,rst_n,
     input wire cfg_v,
@@ -79,8 +79,8 @@ module ot_hgi_coll_static_program_target #(
           (f_rep && (f_tg<base || {1'b0,f_tg}>=limit)))) ||
         ({1'b0,check_row}==limit-1'b1 && !f_halt));
     wire [PW-1:0] a_row=addr_q[PW+2:3];
-    wire a_hi_bad=(PW==7)?(addr_q[11:10]!=0):(addr_q[11:9]!=0);
-    localparam [12:0] MSPARE=(PW==7)?13'h1ff8:13'h1fff;   // data[63:51] bits that must be zero
+    wire a_hi_bad=(PW==8)?(addr_q[11]!=0):(PW==7)?(addr_q[11:10]!=0):(addr_q[11:9]!=0);
+    localparam [12:0] MSPARE=(PW==8)?13'h1fc0:(PW==7)?13'h1ff8:13'h1fff;   // data[63:51] bits that must be zero
     wire occupied=program_active || issuer_busy || issuer_start;
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
@@ -108,7 +108,7 @@ module ot_hgi_coll_static_program_target #(
             if(issuer_uop_v && (!configured || issuer_uop_pc<base || {1'b0,issuer_uop_pc}>=limit))fault<=1;
             if(draining)begin
                 if(step<51)begin
-                    if(step%17==0)issuer_cfg<=(PW==7)?{1'b1,4'd0,23'b0,row[PW-1],2'(step/17),row[5:0]}:{1'b1,4'd0,24'b0,2'(step/17),row[5:0]};
+                    if(step%17==0)issuer_cfg<=(PW==8)?{1'b1,4'd0,22'b0,row[PW-1:PW-2],2'(step/17),row[5:0]}:(PW==7)?{1'b1,4'd0,23'b0,row[PW-1],2'(step/17),row[5:0]}:{1'b1,4'd0,24'b0,2'(step/17),row[5:0]};
                     else issuer_cfg<={1'b1,4'd1,assembly[(step/17)*512+(step%17-1)*32+:32] ^ ((MUT_DATA!=0 && step==1)?32'b1:32'b0)};
                 end else if(step==51)issuer_cfg<={1'b1,4'd2,metadata[31:0]};
                 else if(step==52)issuer_cfg<={1'b1,4'd3,metadata[63:32]};
@@ -126,7 +126,8 @@ module ot_hgi_coll_static_program_target #(
                     row<=a_row;seen[addr_q[2:0]]<=1;init_busy<=1;
                     if(addr_q[2:0]==6)begin
                         metadata<=data_q[63:0];
-                        flow[a_row]<=(PW==7)?FW'({data_q[44],|data_q[43:12],data_q[52],data_q[11:6],data_q[51],data_q[5:0]})
+                        flow[a_row]<=(PW==8)?FW'({data_q[44],|data_q[43:12],data_q[55],data_q[52],data_q[11:6],data_q[54],data_q[51],data_q[5:0]})
+                                            :(PW==7)?FW'({data_q[44],|data_q[43:12],data_q[52],data_q[11:6],data_q[51],data_q[5:0]})
                                             :FW'({data_q[44],|data_q[43:12],data_q[11:0]});
                     end
                     else assembly[addr_q[2:0]*256+:256]<=data_q;
