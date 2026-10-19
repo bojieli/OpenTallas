@@ -1,0 +1,18 @@
+{
+  "DFFHQNx1_ASAP7_75t_R": {
+    "ff": [
+      "ff (IQN,IQNN) {\n      clocked_on : \"CLK\";\n      next_state : \"!D\";\n      power_down_function : \"(!VDD) + (VSS)\";\n    }"
+    ],
+    "output_functions": [
+      "function : \"IQN\""
+    ]
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+    "ff": [
+      "ff (IQN,IQNN) {\n      clear : \"!SETN\";\n      clear_preset_var1 : L;\n      clear_preset_var2 : L;\n      clocked_on : \"CLK\";\n      next_state : \"!D\";\n      power_down_function : \"(!VDD) + (VSS)\";\n      preset : \"!RESETN\";\n    }"
+    ],
+    "output_functions": [
+      "function : \"IQN\""
+    ]
+  }
+}
