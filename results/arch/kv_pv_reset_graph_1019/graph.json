@@ -1,0 +1,924 @@
+{
+  "schema": "opentallas.kv_pv_reset_graph.v2",
+  "source_commit": "5f2ce19bc",
+  "generated_run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-5f2ce19bc-gen8v3mub",
+  "generated_stage": "pre-expansion source snapshot; live PREP preserved",
+  "pv": [
+    {
+      "instance": "pvw_0",
+      "master": "qkd_pvw_s",
+      "target_clocks": {
+        "ck_c0": "n_clk_core_c",
+        "ck_c1": "n_clk_core_c",
+        "ck_c2": "n_clk_core_c",
+        "ck_c3": "n_clk_core_c",
+        "ck_c4": "n_clk_core_c",
+        "ck_c5": "n_clk_core_c",
+        "ck_c6": "n_clk_core_c",
+        "ck_c7": "n_clk_core_c",
+        "ck_c8": "n_clk_core_c",
+        "ck_c9": "n_clk_core_c",
+        "ck_c10": "n_clk_core_c",
+        "ck_c11": "n_clk_core_c",
+        "ck_c12": "n_clk_core_c",
+        "ck_c13": "n_clk_core_c",
+        "ck_c14": "n_clk_core_c",
+        "ck_c15": "n_clk_core_c",
+        "ck_c16": "n_clk_core_c",
+        "ck_c17": "n_clk_core_c",
+        "ck_c18": "n_clk_core_c",
+        "ck_c19": "n_clk_core_c",
+        "ck_c20": "n_clk_core_c",
+        "ck_c21": "n_clk_core_c",
+        "ck_c22": "n_clk_core_c",
+        "ck_c23": "n_clk_core_c",
+        "ck_c24": "n_clk_core_c",
+        "ck_c25": "n_clk_core_c",
+        "ck_c26": "n_clk_core_c",
+        "ck_c27": "n_clk_core_c",
+        "ck_c28": "n_clk_core_c",
+        "ck_c29": "n_clk_core_c",
+        "ck_c30": "n_clk_core_c",
+        "ck_c31": "n_clk_core_c",
+        "ck_c32": "n_clk_core_c"
+      },
+      "external_reset": "n_rst_die_t7__m",
+      "region_clock": "n_clk_core_ES",
+      "dly": 22,
+      "source_root": {
+        "instance": "host",
+        "master": "qkd_host_rt",
+        "port": "die_rst_n",
+        "net": "n_rst_die_t0"
+      },
+      "backward_path": [
+        {
+          "instance": "rly_rst_die_t7_55",
+          "master": "qkd_rst_region",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r55",
+            "b": "n_rst_die_t7__m",
+            "dly": "n_rdly_rly_rst_die_t7_55"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_54",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r54",
+            "b": "n_rst_die_t7__r55"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_53",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r53",
+            "b": "n_rst_die_t7__r54"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_52",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r52",
+            "b": "n_rst_die_t7__r53"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_51",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r51",
+            "b": "n_rst_die_t7__r52"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_50",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r50",
+            "b": "n_rst_die_t7__r51"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_49",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r49",
+            "b": "n_rst_die_t7__r50"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_48",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r48",
+            "b": "n_rst_die_t7__r49"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_47",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r47",
+            "b": "n_rst_die_t7__r48"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_46",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r46",
+            "b": "n_rst_die_t7__r47"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_45",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r45",
+            "b": "n_rst_die_t7__r46"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_44",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r44",
+            "b": "n_rst_die_t7__r45"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_43",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r43",
+            "b": "n_rst_die_t7__r44"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_42",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r42",
+            "b": "n_rst_die_t7__r43"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_41",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r41",
+            "b": "n_rst_die_t7__r42"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_40",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r40",
+            "b": "n_rst_die_t7__r41"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_39",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r39",
+            "b": "n_rst_die_t7__r40"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_38",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r38",
+            "b": "n_rst_die_t7__r39"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_37",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r37",
+            "b": "n_rst_die_t7__r38"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_36",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r36",
+            "b": "n_rst_die_t7__r37"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_35",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r35",
+            "b": "n_rst_die_t7__r36"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_34",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r34",
+            "b": "n_rst_die_t7__r35"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_33",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r33",
+            "b": "n_rst_die_t7__r34"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_32",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r32",
+            "b": "n_rst_die_t7__r33"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_31",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r31",
+            "b": "n_rst_die_t7__r32"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_30",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r30",
+            "b": "n_rst_die_t7__r31"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_29",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r29",
+            "b": "n_rst_die_t7__r30"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_28",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r28",
+            "b": "n_rst_die_t7__r29"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_27",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r27",
+            "b": "n_rst_die_t7__r28"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_26",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r26",
+            "b": "n_rst_die_t7__r27"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_25",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r25",
+            "b": "n_rst_die_t7__r26"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_24",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r24",
+            "b": "n_rst_die_t7__r25"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_23",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r23",
+            "b": "n_rst_die_t7__r24"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_22",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r22",
+            "b": "n_rst_die_t7__r23"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_21",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r21",
+            "b": "n_rst_die_t7__r22"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_20",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r20",
+            "b": "n_rst_die_t7__r21"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_19",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r19",
+            "b": "n_rst_die_t7__r20"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_18",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r18",
+            "b": "n_rst_die_t7__r19"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_17",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r17",
+            "b": "n_rst_die_t7__r18"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_16",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r16",
+            "b": "n_rst_die_t7__r17"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_15",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r15",
+            "b": "n_rst_die_t7__r16"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_14",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r14",
+            "b": "n_rst_die_t7__r15"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_13",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r13",
+            "b": "n_rst_die_t7__r14"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_12",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r12",
+            "b": "n_rst_die_t7__r13"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_11",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r11",
+            "b": "n_rst_die_t7__r12"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_10",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r10",
+            "b": "n_rst_die_t7__r11"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_9",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r9",
+            "b": "n_rst_die_t7__r10"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_8",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r8",
+            "b": "n_rst_die_t7__r9"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_7",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r7",
+            "b": "n_rst_die_t7__r8"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_6",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r6",
+            "b": "n_rst_die_t7__r7"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_5",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r5",
+            "b": "n_rst_die_t7__r6"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_4",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r4",
+            "b": "n_rst_die_t7__r5"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_3",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r3",
+            "b": "n_rst_die_t7__r4"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_2",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r2",
+            "b": "n_rst_die_t7__r3"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_1",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t7__r1",
+            "b": "n_rst_die_t7__r2"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t7_0",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_ES",
+            "a": "n_rst_die_t0",
+            "b": "n_rst_die_t7__r1"
+          }
+        }
+      ],
+      "relay_cells_including_region": 56,
+      "plain_relays_before_region": 55
+    },
+    {
+      "instance": "pvw_1",
+      "master": "qkd_pvw_n",
+      "target_clocks": {
+        "ck_c0": "n_clk_core_c",
+        "ck_c1": "n_clk_core_c",
+        "ck_c2": "n_clk_core_c",
+        "ck_c3": "n_clk_core_c",
+        "ck_c4": "n_clk_core_c",
+        "ck_c5": "n_clk_core_c",
+        "ck_c6": "n_clk_core_c",
+        "ck_c7": "n_clk_core_c",
+        "ck_c8": "n_clk_core_c",
+        "ck_c9": "n_clk_core_c",
+        "ck_c10": "n_clk_core_c",
+        "ck_c11": "n_clk_core_c",
+        "ck_c12": "n_clk_core_c",
+        "ck_c13": "n_clk_core_c",
+        "ck_c14": "n_clk_core_c",
+        "ck_c15": "n_clk_core_c",
+        "ck_c16": "n_clk_core_c",
+        "ck_c17": "n_clk_core_c",
+        "ck_c18": "n_clk_core_c",
+        "ck_c19": "n_clk_core_c",
+        "ck_c20": "n_clk_core_c",
+        "ck_c21": "n_clk_core_c",
+        "ck_c22": "n_clk_core_c",
+        "ck_c23": "n_clk_core_c",
+        "ck_c24": "n_clk_core_c",
+        "ck_c25": "n_clk_core_c",
+        "ck_c26": "n_clk_core_c",
+        "ck_c27": "n_clk_core_c",
+        "ck_c28": "n_clk_core_c",
+        "ck_c29": "n_clk_core_c",
+        "ck_c30": "n_clk_core_c",
+        "ck_c31": "n_clk_core_c",
+        "ck_c32": "n_clk_core_c"
+      },
+      "external_reset": "n_rst_die_t9__m",
+      "region_clock": "n_clk_core_EN",
+      "dly": 48,
+      "source_root": {
+        "instance": "host",
+        "master": "qkd_host_rt",
+        "port": "die_rst_n",
+        "net": "n_rst_die_t0"
+      },
+      "backward_path": [
+        {
+          "instance": "rly_rst_die_t9_29",
+          "master": "qkd_rst_region",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r29",
+            "b": "n_rst_die_t9__m",
+            "dly": "n_rdly_rly_rst_die_t9_29"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_28",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r28",
+            "b": "n_rst_die_t9__r29"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_27",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r27",
+            "b": "n_rst_die_t9__r28"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_26",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r26",
+            "b": "n_rst_die_t9__r27"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_25",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r25",
+            "b": "n_rst_die_t9__r26"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_24",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r24",
+            "b": "n_rst_die_t9__r25"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_23",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r23",
+            "b": "n_rst_die_t9__r24"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_22",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r22",
+            "b": "n_rst_die_t9__r23"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_21",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r21",
+            "b": "n_rst_die_t9__r22"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_20",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r20",
+            "b": "n_rst_die_t9__r21"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_19",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r19",
+            "b": "n_rst_die_t9__r20"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_18",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r18",
+            "b": "n_rst_die_t9__r19"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_17",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r17",
+            "b": "n_rst_die_t9__r18"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_16",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r16",
+            "b": "n_rst_die_t9__r17"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_15",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r15",
+            "b": "n_rst_die_t9__r16"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_14",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r14",
+            "b": "n_rst_die_t9__r15"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_13",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r13",
+            "b": "n_rst_die_t9__r14"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_12",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r12",
+            "b": "n_rst_die_t9__r13"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_11",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r11",
+            "b": "n_rst_die_t9__r12"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_10",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r10",
+            "b": "n_rst_die_t9__r11"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_9",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r9",
+            "b": "n_rst_die_t9__r10"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_8",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r8",
+            "b": "n_rst_die_t9__r9"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_7",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r7",
+            "b": "n_rst_die_t9__r8"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_6",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r6",
+            "b": "n_rst_die_t9__r7"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_5",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r5",
+            "b": "n_rst_die_t9__r6"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_4",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r4",
+            "b": "n_rst_die_t9__r5"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_3",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r3",
+            "b": "n_rst_die_t9__r4"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_2",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r2",
+            "b": "n_rst_die_t9__r3"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_1",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t9__r1",
+            "b": "n_rst_die_t9__r2"
+          }
+        },
+        {
+          "instance": "rly_rst_die_t9_0",
+          "master": "qkd_rly_t1",
+          "pins": {
+            "ck": "n_clk_core_EN",
+            "a": "n_rst_die_t0",
+            "b": "n_rst_die_t9__r1"
+          }
+        }
+      ],
+      "relay_cells_including_region": 30,
+      "plain_relays_before_region": 29
+    }
+  ],
+  "source_hashes": {
+    "source/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba",
+    "source/rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv": "fb1f5dbfe76a33e302cd35d5c488d72ca9c2e658364384bc2a18d45202f265b4",
+    "source/rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv": "6413323907a589970013f744dca1f7f3af5859c4739264cd9864b35371801031",
+    "source/rtl/qwen_sys/host_integrated_20261014/qkd_host_control_prompt_observed.sv": "38b86a259ae631f56318587a13cdf235b4908ba925ab4ef599c9ea6dac49599d",
+    "source/rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+    "source/rtl/qwen_sys/ot_qwen_sys_rst_seq.sv": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+    "source/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+    "source/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv": "931d838764e4cbcd77a56368228214357507bd472e00278709669d51b3795095",
+    "source/rtl/qwen_sys/split_20261014/qkd_pvw_die_t_f_ba.sv": "b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad",
+    "source/rtl/qwen_sys/split_20261014/qkd_rst_region.sv": "619bca27a2d97c78d6f955e3f2a963bad19f1f00d8c12b15680ba21669fb5c62",
+    "source/rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv": "cf1ecf2603053f9cb2972ac4638f72df1346b8a8002d0558f903017ac6ba68db",
+    "source/tools/qwen_kv_die/kv_die.py": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903",
+    "source/tools/qwen_kv_die/kv_expand.py": "1fb707656faad07afdf0e4b24b7cee377c0b25d2bfbf3bfaf00f14de503ab012",
+    "source/tools/qwen_kv_die/kv_host_bindings.py": "2dc23ab96994aae6b6d59584943a46ab15c3eb6508f2a413efa3a074545290c5",
+    "die.v": "00a3de7cd445198b147af744e5dd3c00f824a3222767b3fb4c8274392dd8b36e",
+    "kv_flags.env": "d7bb38248b3b846f5758c0e6e464ca8389b609a56434bb5557b8b1c339e82b6f",
+    "selected_source.tgz": "bf381218509ea0303bfeec4dc790833cd7fc8dc9b2d2b3d0754ec09cbaaa9963"
+  },
+  "native_qualified": false,
+  "receipt_issued": false,
+  "production_changed": false,
+  "conditions": {
+    "logical_pll_model": "all five core outputs assigned to one free-running core oscillator while package por_n=1",
+    "startup": "POR asserted to each region; stable dly; continuous target clocks; IGNORE=255 region edges before input accepted",
+    "warm": "region b transitions 1->0 after recognized a_q=0; HOLD=128 region cycles before next release",
+    "actual_required": "At least six valid target leaf clock edges sample rst_n LOW; the original proof already includes the RESET_PIN shell. Do not subtract a shell edge or re-run with modified pulses.",
+    "sufficient_physical": "Clock continuously qualified, max target edge gap Ttarget_max, and stable LOW interval after setup/hold aperture removal strictly exceeds 6*Ttarget_max. Region pulse width and clock continuity must be measured/bounded at actual PV pins.",
+    "unproved": [
+      "package POR pin connectivity and valid assertion width in native integration",
+      "regional-to-centre phase, period, pulse propagation and recovery/removal",
+      "all 33 actual leaf clocks qualified during external reset LOW",
+      "no-stop/PLL-loss restart protocol at target pins",
+      "warm-reset admission quietness and actual full-plane reset completion"
+    ]
+  }
+}
