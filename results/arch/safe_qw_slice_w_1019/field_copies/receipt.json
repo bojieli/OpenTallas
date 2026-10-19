@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.qwen.existing_edge_field_copy_receipt.v1",
+  "status": "PRIVATE_COMPONENT_PASS_NOT_PARENT_OR_NATIVE_QUALIFICATION",
+  "source_commit": "2ef0c9f05",
+  "model_commit": "a9077a137",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1527013-1792431555",
+  "remote": "/srv/opentallas-scratch/claude/safe-qw-field-copies-1019",
+  "tools": {
+    "verilator": "5.050 (generated Vtb__verFiles.dat pins .local/opentallas-tools/verilator-5.050)",
+    "yosys": "0.68 38e001a6f"
+  },
+  "inputs_sha256": {
+    "rtl/common/landed_parent/ot_pl_land.sv": "a9ed286c05de67a04586445f54e1522a508f10813cd0adb502e8e70812aa591f",
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+    "tools/qwen_dv/test_land_field_copies.py": "b2c588e5093cc9e4aa54dbc8462e64356158edd5613d4c7acc5bc78f9272a68f"
+  },
+  "comparison": {
+    "reference": "unchanged ot_pl_land_local_r W1 D4 K2",
+    "candidate": "70 kept copies, three independent selectors24/24/22, same capture edge",
+    "source_period_ps": 1000,
+    "destination_phase_ps": [
+      -80,
+      0,
+      80
+    ],
+    "checks_per_phase": 1400,
+    "reset_assertions": 2,
+    "positive": "ALL_PASS",
+    "wrong_K3": "ALL_THREE_MISMATCH_AS_REQUIRED",
+    "simulation_scope": "functional exact-edge comparison with synthesis epoch assertions disabled; not analog phase/hold proof"
+  },
+  "generic_synthesis": {
+    "FFs": 97,
+    "model_FFs": 97,
+    "copy_output_FFs_retained": 70,
+    "local_selector_groups": 3,
+    "flattened_cells": 166,
+    "driven_nonclock_nets_over32": 0,
+    "register_outputs_over32": 0,
+    "source_reset_rsi_input_loads": 3,
+    "scope": "generic hierarchy-preserved source synthesis, not ABC/native mapped area or CTS"
+  },
+  "parent_obligations": [
+    "No parent integration. Existing chd_q capture-edge copies and exact consumer owner port partitions remain to implement.",
+    "Global LP reset, source field bank loads with all readers and actual predecessor config/control fanout remain unqualified.",
+    "TT/FF/native pin ownership, phase/hold/setup, placement/reach and routing unproven."
+  ]
+}
