@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       admits  1055 GB (avail 821, growth 83, headroom 0, waiters 0/0 GB) load 75/128 running 29 disk 320 GB 
+ot-run: ot-epyc5       admits   639 GB (avail 557, growth 109, headroom 0, waiters 0/0 GB) load 46/128 running 10 disk 1044 GB 
+ot-run: ot-epyc6       admits   284 GB (avail 310, growth 111, headroom 0, waiters 0/0 GB) load 42/128 running 16 disk 6043 GB 
+ot-run: ot-epyc7       admits   455 GB (avail 409, growth 91, headroom 0, waiters 0/0 GB) load 64/96 running 17 disk 6475 GB 
+ot-run: ot-epyc8       admits  1187 GB (avail 925, growth 94, headroom 0, waiters 0/0 GB) load 41/128 running 27 disk 340 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-d2d-start-age-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-d2d-start-age-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1692258-1792428070 after 0 s
+STARTAGE external_start_sample200
+STARTAGE internal_calendar_start_sample201
+D2DEMBAGE calendar_sample=222
+D2DEMBAGE slot_pin_sample=225
+D2DEMBAGE payload_pin_sample=225 payload=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456789abc
+D2DEMBAGE_PASS MUT0 calendar_to_emb_rx_pin3
+- /srv/opentallas-scratch/claude/sysface-d2d-start-age-1019/rtl/test/qwen_split/tb_qfd_d2d_start_age.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 21.385 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+STARTAGE external_start_sample200
+STARTAGE internal_calendar_start_sample201
+D2DEMBAGE calendar_sample=222
+D2DEMBAGE slot_pin_sample=225
+D2DEMBAGE_FAIL MUT1 cal222 out-1 slot225 fault0 abort1 cause08 ep01
+[2400000] %Fatal: tb_qfd_d2d_start_age.sv:92: Assertion failed in tb_d2d_start_age
+%Error: /srv/opentallas-scratch/claude/sysface-d2d-start-age-1019/rtl/test/qwen_split/tb_qfd_d2d_start_age.sv:92: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1692258-1792428070): exit 0

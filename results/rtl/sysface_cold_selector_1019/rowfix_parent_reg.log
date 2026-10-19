@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       admits  1058 GB (avail 822, growth 81, headroom 0, waiters 0/0 GB) load 74/128 running 29 disk 320 GB 
+ot-run: ot-epyc5       admits   637 GB (avail 557, growth 111, headroom 0, waiters 0/0 GB) load 57/128 running 10 disk 1044 GB 
+ot-run: ot-epyc6       admits   281 GB (avail 310, growth 113, headroom 0, waiters 0/0 GB) load 39/128 running 16 disk 6043 GB 
+ot-run: ot-epyc7       admits   447 GB (avail 403, growth 90, headroom 0, waiters 0/0 GB) load 62/96 running 17 disk 6475 GB 
+ot-run: ot-epyc8       admits  1157 GB (avail 920, growth 110, headroom 0, waiters 0/0 GB) load 44/128 running 30 disk 339 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sysface-cold-selector-v3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sysface-cold-selector-v3-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1693002-1792428103 after 0 s
+EMBAGE rx_last_pin=1500
+EMBAGE face_word_pin=1501
+EMBAGE actual_sram_write=1502
+EMBAGE complete_safe_sample=1503
+EMBAGE fixture_core_start=1503 NOT_PRODUCTION_CONSUMER
+SYS_FACE_PASS MUT=0 MU=1 head contexts 4, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact
+- /srv/opentallas-scratch/claude/sysface-cold-selector-v3-1019/rtl/test/qwen_split/tb_qfd_sys_face_age.sv:293: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 209us; walltime 0.339 s; speed 618.013 us/s
+- Verilator: cpu 0.339 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1693002-1792428103): exit 0
