@@ -7,12 +7,13 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
 read_liberty /mv0/qkd_embedding_row_tx_ss.lib
-read_db /work/results/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_i2_5561116d2/base/6_final.odb
+read_db /work/results/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_e1_c84feb9f9/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_i2_5561116d2/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_i2_5561116d2/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_e1_c84feb9f9/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_e1_c84feb9f9/base/6_final.spef
 set_propagated_clock [all_clocks]
-read_sdc /work/w18_extra.sdc
+read_sdc /src/physical/ref_tile/qkd_kvs_emb/signoff.sdc
+read_sdc /src/physical/common_flow/io_ref_routed.sdc
 read_sdc /meas/app0_io_ref_routed.sdc
 puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 
