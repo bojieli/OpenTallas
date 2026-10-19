@@ -176,7 +176,22 @@ module tb_svg_landing_pair_native;
    errors=errors+1;$display("PAIR_COUNTS_FAIL data=%0d warm=%0d windows=%0d reset=%0d latency=%0d/%0d completes=%0d/%0d",data_outputs,warm_outputs,windows,warm_checks,latency_min,latency_max,ref_completes[0],ref_completes[1]);
   end
   // Original duplicate check survives the composed leaf and its separate fault Q.
-  check_nominal=0;send_bank(0,0,1);idle(30);if(!bank_fault[0])begin errors=errors+1;$display("PAIR_DUPLICATE_GUARD_FAIL");end
+  check_nominal=0;round=2;send_bank(0,0,1);idle(30);if(!bank_fault[0])begin errors=errors+1;$display("PAIR_DUPLICATE_GUARD_FAIL");end
+  // Independent ownership/epoch/count/ordinal faults after clean balanced resets.
+  for(k=0;k<4;k=k+1)begin
+   pair_hbm_rst_n=0;pair_rst_n=0;return_rst_n=0;group_valid=0;read_v=0;in_v=0;stop=1;reserve_v=0;
+   idle(5);pair_hbm_rst_n=1;pair_rst_n=1;return_rst_n=1;idle(15);
+   if(k!=0)begin
+    reserve_v=1;reserve_bank=0;reserve_epoch=71;reserve_total=k==2?8:272;
+    idle(1);reserve_v=0;idle(4);
+   end
+   stop=0;
+   @(negedge pair_hbm_clk);while(!in_ready[0])@(negedge pair_hbm_clk);
+   in_data[0+:285]={11'(k==2?J+8:k==3?(J+1)%8:J),2'b0,16'(k==1?72:71),256'h1234};in_v[0]=1;
+   @(negedge pair_hbm_clk);in_v[0]=0;idle(40);
+   if(!bank_fault[0])begin errors=errors+1;$display("PAIR_IDENTITY_GUARD_FAIL case=%0d",k);end
+   else $display("PAIR_IDENTITY_GUARD_PASS case=%0d",k);
+  end
   errors=errors+ref_errors[0]+ref_errors[1];
   $display("SVG_NATIVE_PAIR %s mut=%0d J=%0d errors=%0d payload_groups=%0d masked_warm_groups=%0d windows=%0d independent_valid=%0d latency=%0d/%0d old_miter_errors=%0d/%0d packets=%0d/%0d",errors==0?"PASS":"FAIL",MUT,J,errors,data_outputs,warm_outputs,windows,independent_valid_cases,latency_min,latency_max,ref_errors[0],ref_errors[1],ref_packets[0],ref_packets[1]);
   if(errors)$fatal(1,"native landing pair mismatch");$finish;
