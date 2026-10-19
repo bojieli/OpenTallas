@@ -112,13 +112,18 @@ module qkd_ahub_static_io #(
     // unmeetable-slot fault, and a start on a pending export edge (the next command colliding with the export) faults.
     reg         em_q;
     wire        emit   = em_q;
+    // KV-AHUBDW2 a2e 10-18 (gate a2d: u_io.em_q (397,531) -> W-face fr_rz / fr_epoch export flops -11.1 ps, 16 levels over
+    // ~660 um): em_w is a kept copy of em_q (same D, same reset) that drives only the W-face export (fr_valid, fr_rz,
+    // fr_epoch, prev_ep), so it places beside the fr flops and em_q keeps the local io bookkeeping.  Same edges.
+    (* keep *) reg em_w;
     wire        bad_t  = start && (tgt_n < 19'sd3 || tgt_n > 19'sd65535);
     wire        em_d   = !start && active && !em_q && ($signed({3'b0, 16'(age + 16'd1)}) + 19'sd1 == tgt_q);
     always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; em_q <= 1'b0; end
+        if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; em_q <= 1'b0; em_w <= 1'b0; end
         else begin
-            fr_valid <= emit;
+            fr_valid <= em_w;
             em_q <= em_d;
+            em_w <= em_d;
             if (start) begin active <= !bad_t; age <= 16'd1; published <= 1'b0; xf <= bad_t || em_q; end
             else begin
                 if (active) age <= age_nx[15:0];
@@ -131,7 +136,7 @@ module qkd_ahub_static_io #(
         end
     end
     always @(posedge ck)
-        if (emit) begin
+        if (em_w) begin
             fr_rz    <= (MUT == 2) ? {rz_vector[127:64], rz_vector[31:0], rz_vector[63:32]} : rz_vector;
             fr_epoch <= (MUT == 3) ? prev_ep : rz_epoch;
             prev_ep  <= rz_epoch;
@@ -376,6 +381,9 @@ module qkd_ahub_static_core_la #(
     end
     reg [15:0] age;
     reg first_q;                                        // == (age == 0): edge age 1 this cycle
+    // KV-AHUBDW2 a2e 10-18 (gate a2d: u_core.first_q (396,517) -> W-side rz[1] -5 ps): first_r is a kept copy of first_q
+    // (same D, same reset) selecting only recip_return / return_head, so it places beside the rz registers.  Same edges.
+    (* keep *) reg first_r;
     // ---- decodes: registered look-ahead (dq, from the next edge age) or, on the first cycle, at edge age 1 (d1) ----
     wire [16:0] e_next=(MUT==4)?{1'b0,age}+17'd1:(active && age!=16'hffff)?{1'b0,age}+17'd2:{1'b0,age}+17'd1;
     wire [3:0] n_lm,n_z,n_dn,n_is,o_lm,o_z,o_dn,o_is;wire [7:0] n_sh,o_sh;wire [15:0] n_sk,o_sk;
@@ -399,8 +407,8 @@ module qkd_ahub_static_core_la #(
     wire [3:0] lm_slot=first_q?o_lm:q_lm, z_slot=first_q?o_z:q_z, done_slot=first_q?o_dn:q_dn, issue=first_q?o_is:q_is;
     wire [7:0] slot_h=first_q?o_sh:q_sh;
     wire [15:0] slot_k=first_q?o_sk:q_sk;
-    wire m_issue=first_q?o_mi:q_mi, recip_issue=first_q?o_ri:q_ri, recip_return=first_q?o_rr:q_rr, pub_hit=first_q?o_pb:q_pb;
-    wire [1:0] mh=first_q?o_mh:q_mh, recip_head=first_q?o_rh:q_rh, return_head=first_q?o_th:q_th;
+    wire m_issue=first_q?o_mi:q_mi, recip_issue=first_q?o_ri:q_ri, recip_return=first_r?o_rr:q_rr, pub_hit=first_q?o_pb:q_pb;
+    wire [1:0] mh=first_q?o_mh:q_mh, recip_head=first_q?o_rh:q_rh, return_head=first_r?o_th:q_th;
     wire [5:0] pair_base=first_q?o_pa:q_pa;
     reg [3:0] lm_b,z_b,any_b;
     reg [7:0] hh_b;
@@ -408,10 +416,11 @@ module qkd_ahub_static_core_la #(
     reg [127:0] data_b;
     reg start_b;
     always @(posedge clk or negedge rn[0])
-        if(!rn[0])begin active<=0;age<=0;first_q<=1;epoch<=0;parity<=0;layer<=0;start_b<=0;lm_b<=0;z_b<=0;end
+        if(!rn[0])begin active<=0;age<=0;first_q<=1;first_r<=1;epoch<=0;parity<=0;layer<=0;start_b<=0;lm_b<=0;z_b<=0;end
         else begin
             start_b<=start;lm_b<=lm_slot;z_b<=z_slot;
             first_q<=start || (first_q && !active);
+            first_r<=start || (first_r && !active);
             if(start)begin active<=1;age<=0;epoch<=request_epoch;parity<=active_layer_parity;layer<=active_layer;lm_b<=0;z_b<=0;end
             else if(active && age!=16'hffff)age<=age+1'b1;
         end
