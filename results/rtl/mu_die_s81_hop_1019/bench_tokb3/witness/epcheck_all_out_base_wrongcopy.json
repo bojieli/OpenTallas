@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.epcheck",
+ "replay": "/home/ubuntu/scratch/mu-die-s81/hop/R/R_cut_7_L0_hop012_wrongcopy",
+ "run": "/home/ubuntu/scratch/mu-die-s81/hop/runs/out_base_wrongcopy",
+ "verdict": "FAIL",
+ "scope": "all",
+ "consumer_checks": 564,
+ "run_cycles": 64286,
+ "expect_fail": true,
+ "mutant": "mu-win-ab:1",
+ "insts": [
+  "u_s_7N",
+  "u_s_7S"
+ ],
+ "expected": 564,
+ "observed": 486,
+ "hop_beats_expected": 480,
+ "hop_beats_ok": 480,
+ "tagged_ok": 480,
+ "errors": [
+  "missing beat u_s_7N edge 1301 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1306 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1311 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1311 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1316 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1316 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1321 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1321 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1326 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1326 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1331 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1331 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1336 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1336 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1341 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1341 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1346 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1346 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1351 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1351 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1356 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1356 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 1361 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1361 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1366 (- user 0 tag 0)",
+  "missing beat u_s_7S edge 1371 (- user 0 tag 0)",
+  "missing beat u_s_7N edge 22613 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22618 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22623 (- user 1 tag 0)",
+  "missing beat u_s_7S edge 22623 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22628 (- user 1 tag 0)",
+  "missing beat u_s_7S edge 22628 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22633 (- user 1 tag 0)",
+  "missing beat u_s_7S edge 22633 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22638 (- user 1 tag 0)",
+  "missing beat u_s_7S edge 22638 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22643 (- user 1 tag 0)",
+  "missing beat u_s_7S edge 22643 (- user 1 tag 0)",
+  "missing beat u_s_7N edge 22648 (- user 1 tag 0)",
+  "missing beat u_s_7S edge 22648 (- user 1 tag 0)"
+ ],
+ "n_errors": 79,
+ "mu_faults": [
+  {
+   "edge": 8229,
+   "inst": "u_s_7S",
+   "src": "te"
+  }
+ ],
+ "other_faults": [
+  {
+   "edge": 72,
+   "inst": "u_s_7S",
+   "src": "sl"
+  },
+  {
+   "edge": 74,
+   "inst": "u_s_7S",
+   "src": "ep"
+  },
+  {
+   "edge": 106,
+   "inst": "u_s_7N",
+   "src": "sl"
+  },
+  {
+   "edge": 108,
+   "inst": "u_s_7N",
+   "src": "ep"
+  }
+ ]
+}

@@ -1,0 +1,3 @@
+EPCHECK FAIL 480/480 hop beats exact (480 tagged), 486 beats observed vs 480 expected at u_s_7N,u_s_7S; MU faults 1, other endpoint fault sources [('u_s_7S', 'sl', 72), ('u_s_7S', 'ep', 74), ('u_s_7N', 'sl', 106), ('u_s_7N', 'ep', 108)]; MU endpoint fault te at u_s_7S edge 8229
+EPCHECK_SCOPE hop consumer_checks 480 errors 1 verdict FAIL
+EPCHECK_MUTANT CAUGHT (1 consumer errors)

@@ -1098,9 +1098,12 @@ def epcheck(a):
     ep = (rp.get('mu') or {}).get('ep')
     if not ep:
         raise SystemExit(f'{a.replay}: no endpoint expectation (gen --mu ... --mu-win auto on a cut with an end slice)')
+    scope = getattr(a, 'scope', None) or 'all'
     exp = {}
     for l in (Path(a.replay) / ep['file']).read_text().splitlines():
         c, i, p, k, t, h, u = l.split()
+        if scope == 'hop' and h == '-':
+            continue
         exp[(int(c), i)] = (int(p), int(k), int(t, 16), h, int(u))
     ef = Path(a.run) / 'ep.txt'
     txt = ef.read_text() if ef.exists() else ''
@@ -1115,10 +1118,22 @@ def epcheck(a):
     done = 'DV_SLICE cycles=' in runlog
     errs = []
     ncyc = rp['ncyc']
+    # TOK-B3 (10-19): the run must cover every expected consumer beat (deadline = the beat's compiled edge; a beat the
+    # compiler scheduled past the replay window is an error, not skipped), and a check that compares nothing FAILS
+    m = re.search(r'DV_SLICE cycles=(\d+)', runlog)
+    run_cyc = int(m.group(1)) if m else -1
+    late = [k for k in exp if k[0] > ncyc or k[0] > run_cyc]
+    errs += [f'expected beat {k[1]} edge {k[0]} beyond the run window (ncyc {ncyc}, run cycles {run_cyc}): deadline '
+             f'not observable' for k in sorted(late)]
+    if not [k for k in exp if k[0] <= ncyc]:
+        errs.append(f'ZERO consumer checks: no expected endpoint beat in scope {scope} (a bench that compares nothing '
+                    f'is not evidence)')
     for key in sorted(set(exp) | set(got)):
         if key[0] > ncyc:
             continue
         e, g = exp.get(key), got.get(key)
+        if e is None and scope == 'hop' and not g[2]:
+            continue                    # hop scope: untagged non-hop beats are out of scope (checked in scope all)
         if e is None:
             errs.append(f'unexpected beat {key[1]} edge {key[0]} pair {g[0]} kind {g[1]} tag {g[2]:x}')
         elif g is None:
@@ -1140,8 +1155,10 @@ def epcheck(a):
     hop_exp = [k for k, v in exp.items() if v[3] != '-' and k[0] <= ncyc]
     hop_ok = [k for k in hop_exp if got.get(k) == exp[k][:3]]
     tag_ok = [k for k in hop_ok if exp[k][2]]
+    n_cmp = len([k for k in exp if k[0] <= ncyc])
     doc = dict(schema=SCHEMA + '.epcheck', replay=str(a.replay), run=str(a.run), verdict='PASS' if not errs else 'FAIL',
-               mutant=rp.get('mutant'), insts=ep['insts'], expected=len([k for k in exp if k[0] <= ncyc]),
+               scope=scope, consumer_checks=n_cmp, run_cycles=run_cyc, expect_fail=bool(getattr(a, 'expect_fail', False)),
+               mutant=rp.get('mutant'), insts=ep['insts'], expected=n_cmp,
                observed=len(got), hop_beats_expected=len(hop_exp), hop_beats_ok=len(hop_ok), tagged_ok=len(tag_ok),
                errors=errs[:40], n_errors=len(errs), mu_faults=mu_f, other_faults=other)
     Path(a.out or (Path(a.run) / 'epcheck.json')).write_text(json.dumps(doc, indent=1) + '\n')
@@ -1149,7 +1166,41 @@ def epcheck(a):
           f'{doc["observed"]} beats observed vs {doc["expected"]} expected at {",".join(ep["insts"])}; '
           f'MU faults {len(mu_f)}, other endpoint fault sources {[(f["inst"], f["src"], f["edge"]) for f in other]}'
           + ('' if not errs else '; ' + '; '.join(errs[:5])))
+    print(f'EPCHECK_SCOPE {scope} consumer_checks {n_cmp} errors {len(errs)} verdict {doc["verdict"]}')
+    if getattr(a, 'expect_fail', False):
+        # mutant witness: the mutant must be caught BY THE CONSUMER COMPARISON (beat / tag / MU fault), on a run that
+        # completed and compared a nonzero number of beats -- not by an incomplete or empty run
+        caught = [e for e in errs if not e.startswith(('run incomplete', 'no endpoint probe', 'ZERO consumer'))]
+        ok = bool(caught) and done and n_cmp > 0
+        print(f'EPCHECK_MUTANT {"CAUGHT" if ok else "NOT_CAUGHT"} ({len(caught)} consumer errors)')
+        return 0 if ok else 1
     return 0 if not errs else 1
+
+
+def epx(a):
+    """TOK-B3: numeric consumer-beat gold for the in-simulator endpoint check (dv_slice_tb --ep-check, +EPX=<file>):
+    one line per expected beat '<edge> <probe idx> <pair> <kind> <tag hex> <hop 0/1>', probe idx = position of the
+    instance in --probe (the TB's --ep-probe order).  Gold = the compiler's event schedule (replay ep_expect), never
+    a DUT trace."""
+    rp = json.loads((Path(a.replay) / 'replay.json').read_text())
+    ep = (rp.get('mu') or {}).get('ep')
+    if not ep:
+        raise SystemExit(f'{a.replay}: no endpoint expectation')
+    idx = {p: j for j, p in enumerate(a.probe)}
+    rows = []
+    for l in (Path(a.replay) / ep['file']).read_text().splitlines():
+        c, i, p, k, t, h, u = l.split()
+        if i not in idx:
+            raise SystemExit(f'{a.replay}: expected beat at {i} which is not probed ({a.probe})')
+        if a.scope == 'hop' and h == '-':
+            continue
+        rows.append((int(c), idx[i], int(p), int(k), t, 0 if h == '-' else 1))
+    rows.sort()
+    if not rows:
+        raise SystemExit(f'{a.replay}: zero expected beats in scope {a.scope}')
+    Path(a.out).write_text(''.join(f'{c} {j} {p} {k} {t} {h}\n' for c, j, p, k, t, h in rows))
+    print(f'dv_cut_replay epx: {len(rows)} beats ({sum(r[5] for r in rows)} hop) scope {a.scope} -> {a.out}')
+    return 0
 
 
 def parse_mutant(s):
@@ -1446,6 +1497,15 @@ def main(argv=None):
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)
     g.add_argument('--out')
+    g.add_argument('--scope', choices=('all', 'hop'), default='all', help='all = every compiled end-slice beat; hop = '
+                   'only the lowered stage-hop beats (untagged non-hop beats ignored)')
+    g.add_argument('--expect-fail', action='store_true', help='mutant witness: exit 0 only if the consumer comparison '
+                   'catches it on a complete run with a nonzero check count')
+    g = sp.add_parser('epx')
+    g.add_argument('--replay', required=True)
+    g.add_argument('--probe', action='append', required=True)
+    g.add_argument('--scope', choices=('all', 'hop'), default='all')
+    g.add_argument('--out', required=True)
     g = sp.add_parser('mucheck')
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)
@@ -1456,7 +1516,7 @@ def main(argv=None):
     g.add_argument('--cut', action='append', required=True, help='NAME=REPLAY_DIR:RUN_DIR')
     g.add_argument('--out', required=True)
     a = ap.parse_args(argv)
-    return dict(ages=ages, gen=gen, check=check, compose=compose, mucheck=mucheck, epcheck=epcheck)[a.cmd](a)
+    return dict(ages=ages, gen=gen, check=check, compose=compose, mucheck=mucheck, epcheck=epcheck, epx=epx)[a.cmd](a)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.epcheck",
+ "replay": "/home/ubuntu/scratch/mu-die-s81/hop/R/R_cut_7_L0_hop012_tagdrop",
+ "run": "/home/ubuntu/scratch/mu-die-s81/hop/runs/out_base_tagdrop",
+ "verdict": "FAIL",
+ "scope": "hop",
+ "consumer_checks": 480,
+ "run_cycles": 64286,
+ "expect_fail": true,
+ "mutant": "mu-win-drop:0",
+ "insts": [
+  "u_s_7N",
+  "u_s_7S"
+ ],
+ "expected": 480,
+ "observed": 486,
+ "hop_beats_expected": 480,
+ "hop_beats_ok": 240,
+ "tagged_ok": 240,
+ "errors": [
+  "beat u_s_7N edge 8224 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8227 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8230 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8233 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8236 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8239 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8242 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8245 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8248 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8251 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8254 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8257 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8260 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8263 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8266 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8269 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8272 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8275 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8278 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8281 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8284 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8287 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8290 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8293 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8296 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8299 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8302 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8305 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8308 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8311 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8314 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8317 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8320 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8323 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8326 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8329 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8332 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8335 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8338 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1",
+  "beat u_s_7N edge 8341 (substage_hop0 user 0): got pair 0 kind 2 tag 0, want pair 0 kind 2 tag 1"
+ ],
+ "n_errors": 240,
+ "mu_faults": [],
+ "other_faults": [
+  {
+   "edge": 72,
+   "inst": "u_s_7S",
+   "src": "sl"
+  },
+  {
+   "edge": 74,
+   "inst": "u_s_7S",
+   "src": "ep"
+  },
+  {
+   "edge": 106,
+   "inst": "u_s_7N",
+   "src": "sl"
+  },
+  {
+   "edge": 108,
+   "inst": "u_s_7N",
+   "src": "ep"
+  }
+ ]
+}
