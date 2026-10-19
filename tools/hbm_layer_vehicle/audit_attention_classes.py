@@ -87,6 +87,28 @@ def run(a):
         want=json.loads(Path(a.compat_receipt).read_text())['event_sha256']
         assert got==want, 'default event bytes changed'
         out['default_compatibility']=dict(exact=True,event_sha256=got,receipt=str(a.compat_receipt))
+        plain=P.compile_attention(first_rec)
+        mixed=P.compile_attention(first_rec,mixed_context=True)
+        assert plain['xw']==mixed['xw'] and plain['mem']==mixed['mem'] and plain['ids']==mixed['ids'] and plain['n_end']==mixed['n_end']
+        diffs=0
+        for (t,w),(mt,mw) in zip(plain['ing'],mixed['ing']):
+            assert t==mt and ((w^mw)&~(7<<(41+195)))==0
+            diffs+=w!=mw
+        out['mixed_metadata_only']=dict(exact=True,changed_descriptor_rows=diffs,
+            modes=[b['descriptor_mode'] for b in mixed['blocks']],
+            note='only existing mode195:197 descriptor bits change; literal programme/HBM/XW/timing unchanged')
+        out['native_api_profiles']=[]
+        for ce,ca,de in ((2,0,0),(4,2,2)):
+            native=P.compile_attention(first_rec,native_padding=19,command_extra=ce,calendar_extra=ca,programme_done_extra=de)
+            assert native['mem']==plain['mem']
+            for i,(old,new) in enumerate(zip(plain['blocks'],native['blocks'])):
+                assert new['go_at']-old['go_at']==19+i*ce
+                assert new['first_abs']-old['first_abs']==19+(i+1)*ce
+                assert new['first_read_pin_abs']-old['first_read_pin_abs']==19+i*ce+ca
+                assert new['cal'].cyc==old['cal'].cyc
+            out['native_api_profiles'].append(dict(timing=native['budget']['timing'],
+                go_to_command=7+ce,go_to_read_pin=6+ca,run_edges=native['budget']['run_edges'],
+                status='compiler/API proof only; actual native hardware not selected by this audit'))
     w=lambda mode:(0xa2<<184)|(mode<<181)
     out['legal_mixed_mode_only_split']=analyse([w(0),w(4),w(0)],block_lines=64,calendar_extra=2,command_only_extra=2)
     out['post_mrel_generic_positive']=analyse([w(0),w(0)],descriptor_mode=4,mrel=True)
