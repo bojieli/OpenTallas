@@ -117,6 +117,14 @@ def gen_params(insts, hr_rows, image=IMAGE):
             if sm in masters:
                 out[sm] = dict(MU_NU=nu, _source=src)
         rec['mu'] = dict(nu=nu, opseg=1)
+        # MU-DQ-BOOTCTX 10-19 (coordinator 0kg (1)): the fillers' runtime initial context over the existing kind12 HOST
+        # context record -> qfd_sys_face FILL_CTX 1 (the ctlm OPSEG loader is always in).  Opt-in OT_QWEN_FILL_CTX=1 until
+        # a qfd_sys_face view at FILL_CTX 1 is closed (the closed face view is FILL_CTX 0) and the KV emitter (MU-KV) lands.
+        if os.environ.get('OT_QWEN_FILL_CTX', '0') == '1' and 'qfd_sys_face' in masters:
+            out.setdefault('qfd_sys_face', {}).update(FILL_CTX=1)
+            out['qfd_sys_face']['_source'] = (out['qfd_sys_face'].get('_source', '') + '; ' if out['qfd_sys_face'].get('_source') else '') + \
+                'MU-DQ-BOOTCTX: OT_QWEN_FILL_CTX=1 (kind12 filler context -> ctlm runtime context word)'
+            rec['mu']['fill_ctx'] = 1
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
