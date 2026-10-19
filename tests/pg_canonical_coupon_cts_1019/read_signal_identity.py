@@ -1,7 +1,7 @@
 from pathlib import Path
 import json,sys,collections
 root=Path.cwd();p=root/'output/default/analysis';sys.path.insert(0,str(root/'tools/closure_loop'));import safe_source_contract as S
-old=json.loads((root/'tests/pg_canonical_coupon_1019/evidence_native_v3/raw.json').read_text());new=json.loads((p/'raw.json').read_text());top='ot_pg_canonical_xor16_1019'
+old=json.loads((p/'source_synth/raw.json').read_text());new=json.loads((p/'raw.json').read_text());top='ot_pg_canonical_xor16_1019'
 used={c['type'] for raw in (old,new) for c in raw['modules'][top]['cells'].values() if any(v not in ('POWER','GROUND') for v in c['pin_signal_types'].values())}
 libs=[p/'libs'/n for n in ['asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz','asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz','asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz','asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib','asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz']];native=S.native_cells(libs,used_masters=used)
 def graph(raw):
@@ -43,5 +43,5 @@ def graph(raw):
   clock_drivers.append({'net':net['name'],'drivers':owners,'sinks':sinks,'direct_loads':len(sinks)})
  return core,loads,clock_drivers
 a,b=graph(old),graph(new);assert a[0]==b[0],('state/logic/native function change',set(a[0])^set(b[0]));assert a[1]==b[1],[(k,a[1].get(k),b[1].get(k)) for k in a[1].keys()|b[1].keys() if a[1].get(k)!=b[1].get(k)]
-result={'verdict':'PASS','scope':'Exact native nontransparent cell/master/function identities plus all core input/output source and inversion parity relationships through actual native BUF/INV and ties. This is a netlist structural correspondence, not a formal RTL equivalence proof.','nontransparent_state_and_logic_cells':len(a[0]),'all_core_and_port_relationships':len(a[1]),'source_FF_count':sum(v[1]['role']=='ff' for v in b[0].values()),'new_state_or_changed_nontransparent_functions':0,'clock_net_count':len(b[2]),'maximum_direct_clock_driver_loads':max(t['direct_loads'] for t in b[2]),'all_native_clock_net_drivers':b[2]}
+result={'verdict':'PASS','scope':'Exact native nontransparent cell/master/function identities plus all core input/output source and inversion parity relationships through actual native BUF/INV and ties. Actual frozen-run 1_synth baseline; StageA internal cell numbering differs and is not substituted. This is a netlist structural correspondence, not a formal RTL equivalence proof.','source_synth_odb_sha256':old['source_odb_sha256'],'post_cts_odb_sha256':new['source_odb_sha256'],'nontransparent_state_and_logic_cells':len(a[0]),'all_core_and_port_relationships':len(a[1]),'source_FF_count':sum(v[1]['role']=='ff' for v in b[0].values()),'new_state_or_changed_nontransparent_functions':0,'clock_net_count':len(b[2]),'maximum_direct_clock_driver_loads':max(t['direct_loads'] for t in b[2]),'all_native_clock_net_drivers':b[2]}
 (p/'signal_identity.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k!='all_native_clock_net_drivers'}))
