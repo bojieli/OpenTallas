@@ -376,6 +376,12 @@ class Parent:
         csrc = "\n".join(preprocess((ROOT / f).read_text(errors="replace"), spec.get("defines"))
                          for f in spec.get("child_sources", []))
         self.wires, self.assigns, self.insts = parse_body(self.mod["body"])
+        hard = spec.get("synthesis_hard_instances", [])
+        if not isinstance(hard, list) or any(not isinstance(x, str) for x in hard) or len(set(hard)) != len(hard):
+            raise SystemExit("synthesis_hard_instances must be a list of unique exact instance names")
+        unknown = set(hard) - {ins["inst"] for ins in self.insts}
+        if unknown:
+            raise SystemExit(f"unknown synthesis hard instances: {sorted(unknown)}")
         self.env = {k: v for k, v in self.mod["params"].items()}
         self.env.update({k: str(v) for k, v in (spec.get("params") or {}).items()})
         self.cports, self.cwidth = {}, {}
@@ -763,7 +769,15 @@ class Parent:
                 if self.cports[ins["module"]][pin] == "out":
                     ex = oren(ex)
                 cs.append(f".{pin}({ex})")
-            w(f"    {ins['module']} {ins['params'] + ' ' if ins['params'] else ''}{i} (" + ", ".join(cs) + f");   // region {r}, t = {P['t'].get(i, 0)}")
+            hard = S.get("synthesis_hard_instances", [])
+            if i in hard and ins["params"]:
+                w(f"    {ins['module']}")
+                w("`ifndef SYNTHESIS")
+                w(f"    {ins['params']}")
+                w("`endif")
+                w(f"    {i} (" + ", ".join(cs) + f");   // region {r}, t = {P['t'].get(i, 0)}")
+            else:
+                w(f"    {ins['module']} {ins['params'] + ' ' if ins['params'] else ''}{i} (" + ", ".join(cs) + f");   // region {r}, t = {P['t'].get(i, 0)}")
         w("endmodule")
         return "\n".join(L) + "\n", dict(reset_region=rr, hops=hops, RB=RB)
 
