@@ -24,7 +24,10 @@
 // OT_SFU_CORE_MUT_SKIP_REG (bench negative control) as in ot_hgi_sfu_core_split.
 module ot_hgi_sfu_core_split2 #(
  parameter integer LWB=15,
- parameter integer LG_PATH=0
+ parameter integer LG_PATH=0,
+ // DRAIN_PIPE (SFU-K9 10-18): passed to the VM bridge; 1 = registered drain interface (drain -> local_wq +1 edge,
+ // local_w_done expected +1 edge). Default 0 keeps k7/k8 bit-identical.
+ parameter integer DRAIN_PIPE=0
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [3:0] clk_lg,rst_lg_n,
@@ -116,7 +119,7 @@ module ot_hgi_sfu_core_split2 #(
   else begin {ro_v_e,ro_v_w}<=e_rov;{ro_x_e,ro_x_w}<=e_rox;end
 `endif
  localparam integer LGB=LG_PATH+1;
- ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB)) u_vm(
+ ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB),.DRAIN_PIPE(DRAIN_PIPE)) u_vm(
  .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(b_rq),.local_rr(b_rr),.local_wq(b_wq),.local_w_done(b_wd),

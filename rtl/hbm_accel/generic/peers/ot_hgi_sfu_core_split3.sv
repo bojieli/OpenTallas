@@ -2,7 +2,7 @@
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
 // SFU core k9 (H-SU 2026-10-17, coordinator 0co: square-ish ~1,600 x 1,800 cluster, owner rule "no long-thin blocks").
-// Pure port re-slicing of ot_hgi_sfu_core_split2 (no logic, no registers, no edges): the sixteen lane-direct buses are
+// Port re-slicing of ot_hgi_sfu_core_split2 (no logic of its own; DRAIN_PIPE below adds split2's drain stage): the sixteen lane-direct buses are
 // split into four face groups so each group of four lane leaves (hard child ot_su12_sfu) faces its own block side:
 //   _w = lanes 0-3 (W column)   _n = lanes 4-7 (N row)   _e = lanes 8-11 (E column)   _s = lanes 12-15 (S row).
 // split2's X_w[k*W +: W] (lane k, k=0..7) -> lanes 0-3 on _w, 4-7 on _n; X_e (lanes 8..15) -> 8-11 on _e, 12-15 on _s.
@@ -10,7 +10,12 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sfu_core_split3 #(
  parameter integer LWB=15,
- parameter integer LG_PATH=0
+ parameter integer LG_PATH=0,
+ // DRAIN_PIPE=1 (SFU-K9 10-18, k9 default): split2's VM bridge registers the drain interface once on clk, cutting the
+ // 772 ps / 19-level operand-store output -> BF16 round -> write_q stage (textbook REFUSE). Static-schedule effect: every
+ // drain sector reaches local_wq 1 edge later and its local_w_done is expected 1 edge later; drained sectors (VM output
+ // region) are not read back inside the programme, so the compiler calendar is unchanged.
+ parameter integer DRAIN_PIPE=1
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [3:0] clk_lg,rst_lg_n,
@@ -34,7 +39,7 @@ module ot_hgi_sfu_core_split3 #(
  wire [7:0] a_vi_re_w,a_vi_re_e,a_ro_v_w,a_ro_v_e,a_kv_we_w,a_kv_we_e;
  wire [191:0] a_vi_addr_w,a_vi_addr_e,a_kv_waddr_w,a_kv_waddr_e;
  wire [255:0] a_ro_x_w,a_ro_x_e,a_kv_wdata_w,a_kv_wdata_e;
- ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH)) u_core(
+ ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE)) u_core(
   .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .io_word(io_word),.compiler_control(compiler_control),

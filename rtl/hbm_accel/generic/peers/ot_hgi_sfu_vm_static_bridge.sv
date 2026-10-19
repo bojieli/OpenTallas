@@ -16,7 +16,13 @@
 // request captured n; SRAM/scalar store consumes the response at n+15.
 // The metadata delay crosses exactly those14 response edges alongside data.
 module ot_hgi_sfu_vm_static_bridge #(
- parameter integer LWB=15, READ_RETURN=14, WRITE_RETURN=11
+ parameter integer LWB=15, READ_RETURN=14, WRITE_RETURN=11,
+ // DRAIN_PIPE=1 (SFU-K9 10-18, k9 textbook REFUSE: operand-store output bank word select -> sector rotate -> BF16
+ // round adder -> write_q mux was one ~772 ps / 19-level reg->reg stage): one clk register stage on the whole drain
+ // interface (drain_v/round/vm_sector/result_v/data) before the per-group write logic. Every drain observer moves with
+ // the data, so the drain-> local_wq edge and local_w_done return both come exactly 1 edge later; WRITE_RETURN is
+ // unchanged (it counts from the registered drain). 0 = the previous behaviour (k7/k8/split kits, scheduled engine).
+ parameter integer DRAIN_PIPE=0
 )(
  input wire clk,rst_n,
  // Four related, same-frequency clock roots, one for each physical bank pair.
@@ -48,6 +54,25 @@ module ot_hgi_sfu_vm_static_bridge #(
  output reg fault
 );
  localparam META=2+4+2*LWB+2+6;
+ wire [1:0] dr_v,dr_round,dr_result_v;
+ wire [31:0] dr_sector;
+ wire [511:0] dr_data;
+ if(DRAIN_PIPE!=0)begin:g_drain_pipe
+  reg [1:0] v_q,round_q,result_q;
+  reg [31:0] sector_q;
+  reg [511:0] data_q;
+  always @(posedge clk)begin round_q<=drain_round_bf16;sector_q<=drain_vm_sector;data_q<=drain_data;end
+  always @(posedge clk `OT_SFU_ARST(rst_n))
+   if(!rst_n)begin v_q<=0;result_q<=0;end else begin v_q<=drain_v;result_q<=drain_result_v;end
+`ifdef OT_SFU_BRIDGE_MUT_NODRAINPIPE
+  // bench negative control: data bypasses the drain stage while the valids keep it (sector written 1 edge early)
+  assign {dr_v,dr_round,dr_sector,dr_result_v,dr_data}={v_q,drain_round_bf16,drain_vm_sector,result_q,drain_data};
+`else
+  assign {dr_v,dr_round,dr_sector,dr_result_v,dr_data}={v_q,round_q,sector_q,result_q,data_q};
+`endif
+ end else begin:g_drain_direct
+  assign {dr_v,dr_round,dr_sector,dr_result_v,dr_data}={drain_v,drain_round_bf16,drain_vm_sector,drain_result_v,drain_data};
+ end
  wire [7:0] expect_v,scalar;
  wire [23:0] word_sel;
  wire [3:0] group_fault;
@@ -109,12 +134,12 @@ module ot_hgi_sfu_vm_static_bridge #(
     end
   end
   always @(posedge clk_lg[g])begin
-   drain_sector_q<=drain_vm_sector;drain_round_q<=drain_round_bf16;
+   drain_sector_q<=dr_sector;drain_round_q<=dr_round;
    write_q<=0;
    for(integer s=0;s<2;s=s+1)
     if(drain_expected[s] && drain_sector_q[16*s+1+:2]==g)
      write_q[281*drain_sector_q[16*s]+:281]<=
-      {1'b1,drain_sector_q[16*s+:16],round_sector(drain_data[256*s+:256],drain_round_q[s]),8'hff};
+      {1'b1,drain_sector_q[16*s+:16],round_sector(dr_data[256*s+:256],drain_round_q[s]),8'hff};
   end
   always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))begin
    if(!rst_lg_n[g])begin
@@ -125,7 +150,7 @@ module ot_hgi_sfu_vm_static_bridge #(
     meta[0]<={prefetch_v[2*g+:2],prefetch_group[4*g+:4],prefetch_local_addr[2*LWB*g+:2*LWB],
               prefetch_scalar[2*g+:2],prefetch_word[6*g+:6]};
     for(integer i=1;i<=READ_RETURN;i=i+1)meta[i]<=meta[i-1];
-    drain_expected<=drain_v;
+    drain_expected<=dr_v;
     write_expected[0]<=write_v;
     for(integer i=1;i<=WRITE_RETURN+1;i=i+1)write_expected[i]<=write_expected[i-1];
     for(integer b=0;b<2;b=b+1)begin
@@ -133,7 +158,7 @@ module ot_hgi_sfu_vm_static_bridge #(
      if(expect_v[2*g+b]!=local_rr[(2*g+b)*257+256])fault_q<=1;
      if(write_expected[WRITE_RETURN+1][b]!=local_w_done[2*g+b])fault_q<=1;
     end
-    if(drain_result_v!=drain_expected || write_collision)fault_q<=1;
+    if(dr_result_v!=drain_expected || write_collision)fault_q<=1;
    end
   end
  end

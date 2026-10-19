@@ -139,6 +139,13 @@ reg io_cfg_we=0,io_start_v=0;
  end
  wire [135:0] c_rq;
  wire [2247:0] c_wq;
+`ifdef SFU_CORE_SPLIT3
+ // k9 DRAIN_PIPE=1 (SFU-K9 10-18): the core registers its drain interface once, so local_wq is compared 1 edge later
+ // than the other core outputs and the reference write completions are returned to the core 1 edge later.
+ localparam integer WQX=1;
+`else
+ localparam integer WQX=0;
+`endif
  wire [15:0] c_vire,c_rov,c_kvwe;
  wire [383:0] c_viaddr,c_kvwaddr;
  wire [511:0] c_rox,c_kvwdata;
@@ -150,10 +157,10 @@ reg io_cfg_we=0,io_start_v=0;
 `else
  wire eq_clk_pw=clk;
 `endif
- ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+ ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
   .io_word(s_io),.compiler_control(s_ctl),
-  .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2]),
+  .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2+WQX]),
   .vi_re_w(c_vire[3:0]),.vi_re_n(c_vire[7:4]),.vi_re_e(c_vire[11:8]),.vi_re_s(c_vire[15:12]),
   .vi_addr_w(c_viaddr[95:0]),.vi_addr_n(c_viaddr[191:96]),.vi_addr_e(c_viaddr[287:192]),.vi_addr_s(c_viaddr[383:288]),
   .vi_q_w(vq_d[D-1][127:0]),.vi_q_n(vq_d[D-1][255:128]),.vi_q_e(vq_d[D-1][383:256]),.vi_q_s(vq_d[D-1][511:384]),
@@ -192,7 +199,9 @@ reg io_cfg_we=0,io_start_v=0;
  localparam integer LW=136+2248+16+512;
  wire [LW-1:0] ref_l={`SREF.local_rq,`SREF.local_wq,`SREF.ro_v,`SREF.ro_x};
  wire [LW-1:0] cut_l={c_rq,c_wq,c_rov,c_rox};
- reg [LW-1:0] ref_ld[0:D];
+ reg [LW-1:0] ref_ld[0:D+1];
+ // reference compared against the core: local_wq (bits LW-137 -: 2248) WQX edges later than the other lg outputs
+ wire [LW-1:0] ref_lc={ref_ld[D][LW-1-:136],ref_ld[D+WQX][LW-137-:2248],ref_ld[D][527:0]};
  localparam integer OW=16+384+16+384+512;
  localparam integer SW=1+1+32+1+1+32;
  wire [OW-1:0] ref_o={`SREF.vi_re,`SREF.vi_addr,`SREF.kv_we,`SREF.kv_waddr,`SREF.kv_wdata};
@@ -212,15 +221,15 @@ reg io_cfg_we=0,io_start_v=0;
  always @(posedge clk)eq_up<=rst_n?eq_up+1:0;
  always @(posedge clk)begin
   ref_od[0]<=ref_o;for(integer k=1;k<D;k++)ref_od[k]<=ref_od[k-1];
-  ref_ld[0]<=ref_l;for(integer k=1;k<=D;k++)ref_ld[k]<=ref_ld[k-1];
+  ref_ld[0]<=ref_l;for(integer k=1;k<=D+1;k++)ref_ld[k]<=ref_ld[k-1];
   ref_sd[0]<=ref_s;for(integer k=1;k<DS;k++)ref_sd[k]<=ref_sd[k-1];
  end
- always @(negedge clk)if(eq_up>D+2)begin
+ always @(negedge clk)if(eq_up>D+2+WQX)begin
   eq_edges++;
-  if(|ref_od[D-1]||(|ref_ld[D]))eq_active++;
-  if(cut_o!==ref_od[D-1]||cut_l!==ref_ld[D]||cut_s!==ref_sd[DS-1])begin
+  if(|ref_od[D-1]||(|ref_lc))eq_active++;
+  if(cut_o!==ref_od[D-1]||cut_l!==ref_lc||cut_s!==ref_sd[DS-1])begin
    eq_mism++;
-   if(eq_mism<=4)$display("SFU_SPLIT_EQUIV_MISMATCH edge=%0d out=%0d lg_ro=%0d status=%0d",eq_edges,cut_o!==ref_od[D-1],cut_l!==ref_ld[D],cut_s!==ref_sd[DS-1]);
+   if(eq_mism<=4)$display("SFU_SPLIT_EQUIV_MISMATCH edge=%0d out=%0d lg_ro=%0d status=%0d",eq_edges,cut_o!==ref_od[D-1],cut_l!==ref_lc,cut_s!==ref_sd[DS-1]);
   end
   if(s_sfault||s_cfault)$fatal(1,"SFU_SPLIT_FAULT store=%0d core=%0d",s_sfault,s_cfault);
  end
@@ -322,7 +331,7 @@ reg io_cfg_we=0,io_start_v=0;
   if(observed!=WORDS)$fatal(1,"VM_QSWIGLU_COUNT got=%0d",observed);
   if(eq_mism!=0)$fatal(1,"SFU_SPLIT_EQUIV FAIL mismatching_edges=%0d of %0d",eq_mism,eq_edges);
   if(eq_active<1000)$fatal(1,"SFU_SPLIT_EQUIV coverage too low active_edges=%0d",eq_active);
-  $display("SFU_SPLIT_EQUIV PASS edges=%0d active_output_edges=%0d delay_core=%0d delay_status=%0d lg_path=%0d",eq_edges,eq_active,D,DS,EQ_LG);
+  $display("SFU_SPLIT_EQUIV PASS edges=%0d active_output_edges=%0d delay_core=%0d delay_status=%0d lg_path=%0d wq_extra=%0d",eq_edges,eq_active,D,DS,EQ_LG,WQX);
   $display("PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=%0d exact_VM_committed_words=%0d one_start=1 actual_IO_rows=%0d actual_arithmetic_rows=368 no_manual_prefetch_drain=1 golden=actualcanonicalhgiMachine",WORDS,observed,IO_ROWS);
   $finish;
  end
