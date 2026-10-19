@@ -33,10 +33,11 @@ module tb_sysface_accepted_identity;
  task automatic good(input integer u);
  @(negedge ck);slot=1;rxv=1;record=rec(u);role=1;role_user=2'(u);
  @(negedge ck);check(av&&hv&&!ov,"fresh actual receiver accepts before metadata");
- record=rec(0);role=0; // ordinary user0 restore is explicitly outside the epoch role
+ record=rec(0);record[60:59]=1;role=0; // distinct-generation ordinary user0 restore is explicitly outside the epoch role
  @(negedge ck);check(ov&&mu==u&&me==16'((14'h123<<2)|u),"role-bound user/epoch sample E+2");check(atok==18'(1234+u)&&agen==2,"authenticated selected token/generation");check(!mf&&!rf,"accepted record no fault");
  slot=0;rxv=0;role=0;
  @(negedge ck);check(!ov,"ordinary user0 restore does not seed a pending epoch");
+ check(atok==18'(1234+u)&&agen==2,"selected identity held despite next restore generation1");
  endtask
  task automatic bad(input integer k);
  // Hold an identical accepted tag, then reject its next offer.
