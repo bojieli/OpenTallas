@@ -29,7 +29,7 @@ endmodule
 
 (* keep_hierarchy = "yes" *)
 module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
- input wire clk,rst_n,in_v,input wire [284:0] in_packet,
+ input wire clk,rst_n,in_v,stop,input wire [284:0] in_packet,
  input wire in_target,input wire [1:0] target_reserved,
  output wire [284:0] out_packet,output wire out_target,
  output reg out_v,output reg fault
@@ -48,7 +48,7 @@ module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
  (* keep = "yes" *) reg ctrl_rst;
  always @(posedge clk or negedge first_rst[0])
   if(!first_rst[0])ctrl_rst<=0;else ctrl_rst<=1;
- reg [1:0] wp,rp;reg [3:0] valid;reg input_valid_q;
+ reg [1:0] wp,rp;reg [3:0] valid;reg input_valid_q,stop_q;
  // This duplicate narrow ring follows the exact data slice phase.
  // Validate the selected ring word BEFORE its output FF edge, never external inputs.
  wire lane_ok=selected[275:274]==2'(J); // ordinal is packet[284:274]
@@ -57,11 +57,11 @@ module ot_hbm_owner_pair_link #(parameter integer J=0,MUT=0)(
  assign out_packet=outgoing[284:0];
  assign out_target=(MUT==2)?~outgoing[285]:outgoing[285];
  always @(posedge clk or negedge ctrl_rst)
-  if(!ctrl_rst)begin wp<=0;rp<=3;valid<=0;input_valid_q<=0;out_v<=0;fault<=0;end
+  if(!ctrl_rst)begin wp<=0;rp<=3;valid<=0;input_valid_q<=0;stop_q<=0;out_v<=0;fault<=0;end
   else begin
    wp<=wp+1'b1;rp<=rp+1'b1;
-   input_valid_q<=in_v;valid[wp]<=input_valid_q;
-   out_v<=valid[rp]&&(lane_ok||MUT==1)&&(target_ok||MUT==3)&&reserved_ok&&!fault;
+   input_valid_q<=in_v;stop_q<=stop;valid[wp]<=input_valid_q;
+   out_v<=valid[rp]&&(lane_ok||MUT==1)&&(target_ok||MUT==3)&&reserved_ok&&!fault&&!stop_q;
    if(valid[rp]&&(!lane_ok||!target_ok||!reserved_ok))fault<=1;
    if(MUT==4)out_v<=valid[wp];
   end
@@ -75,7 +75,7 @@ module ot_hbm_svc_four_owner_links #(parameter integer MUT=0)(
 );
  for(genvar j=0;j<4;j=j+1)begin:g_link
   ot_hbm_owner_pair_link #(.J(j),.MUT(MUT)) u_link(
-   .clk(clk[j]),.rst_n(rst_n),.in_v(in_v[j]),.in_packet(in_packet[285*j+:285]),
+   .clk(clk[j]),.rst_n(rst_n),.in_v(in_v[j]),.stop(1'b0),.in_packet(in_packet[285*j+:285]),
    .in_target(in_target[j]),.target_reserved(target_reserved[2*j+:2]),
    .out_v(out_v[j]),.out_target(out_target[j]),.fault(fault[j]),.out_packet(out_packet[285*j+:285]));
  end

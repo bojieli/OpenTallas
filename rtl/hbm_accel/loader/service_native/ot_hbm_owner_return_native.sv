@@ -60,7 +60,7 @@ module ot_hbm_owner_return_native #(parameter integer J=0,MUT=0)(
   end
  always @(posedge clk)packet<={ordinal,metadata[18:17],metadata[34:19],selected[255:0]};
  ot_hbm_owner_pair_link #(.J(J),.MUT(MUT)) point_link(.clk(clk),.rst_n(rst_n),
-  .in_v(packet_v),.in_packet(packet),.in_target(packet_target),.target_reserved(target_reserved),
+  .in_v(packet_v),.stop(fault),.in_packet(packet),.in_target(packet_target),.target_reserved(target_reserved),
   .out_v(pair_v),.out_packet(pair_packet),.out_target(pair_target),.fault(link_fault));
 endmodule
 `default_nettype wire

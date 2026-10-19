@@ -57,7 +57,7 @@ module tb_owner_return;
    if(kind==3)begin @(negedge clk);av=1;at=1;am={12'd0,16'd1,2'd0,1'b0,2'd0,11'(J^1),3'd4};tick();end
    if(kind==4)reserved=0;
    if(kind==1)begin respond(0,1,0);idle();end
-   respond((kind==3)?1:0,(kind==0)?2:1,0);
+   respond((kind==3)?1:0,(kind==0)?2:(kind==3)?0:1,0);
    for(b=0;b<12;b=b+1)begin idle();if(ov)fail("malformed payload escaped");end
    if(!fault)fail("missing causal malformed fault");
   end
