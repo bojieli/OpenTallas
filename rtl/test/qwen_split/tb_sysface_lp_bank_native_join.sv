@@ -7,7 +7,7 @@ module sf_native_probe_land #(parameter W=1,K=2)(input ck,rsi_w,rsi_r,input[W-1:
  ot_pl_land_w #(.W(W),.D(4)) w(.ck(ck),.rsi(rsi_w),.i(i),.bank(bank),.epo(epo),.vld(vld));
  ot_pl_land_r #(.W(W),.D(4),.K(K)) r(.ck(ck),.rsi(rsi_r),.bank(bank),.epo(epo),.vld(vld),.o(o));
 endmodule
-module tb_sysface_lp_bank_native_join #(parameter MUT=0);
+module tb_sysface_lp_bank_native_join #(parameter MUT=0, parameter CAPTURE2=0);
  reg ck=0;always #5 ck=~ck;reg rst_n=0;wire clk=ck;
  reg[17:0]ETOK=65536;reg[511:0]row[0:63];reg[15:0]ESCALE=0;string vectors;
  integer reads=0,outputs=0,scale_reads=0,validations=0;
@@ -71,7 +71,17 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  end
  wire[15:0]epoch_to_arm=(MUT==10)?physical_epoch_out:face_epoch;
  wire validation_start,arm_fault;wire[17:0]validation_token;wire[15:0]validation_epoch;
+ generate if(CAPTURE2==0)begin:old_arm
  qfd_embedding_validation_arm #(.ENABLE(1)) arm(.ck(ck),.rst_n(rst_n),.core_start(es),.core_user(eu),.core_token(et),.registered_epoch(epoch_to_arm),.native_read(e_cre||e_sre),.release_slot(release_row),.validation_start(validation_start),.validation_token(validation_token),.validation_epoch(validation_epoch),.fault(arm_fault));
+ end else begin:preferred_model
+ wire iv,ir;wire[1:0]iu,ig;wire[17:0]it;wire[15:0]ie;
+ wire[71:0]bt={dut.tok_b[3],dut.tok_b[2],dut.tok_b[1],dut.tok_b[0]};
+ wire[63:0]be={ledger.active[3],ledger.active[2],ledger.active[1],ledger.active[0]};
+ // Component cold0 provenance is the immutable reservation, not live host TAG.
+ // Other bank generation/role provenance remains an explicit production blocker.
+ qfd_embedding_identity_capture_model cap(.ck(ck),.rst_n(rst_n),.command_start(es),.command_user(eu),.command_token(et),.bank_tokens(bt),.bank_epochs(be),.bank_generations({6'd0,ledger.resident_generation}),.bank_roles({3'd0,ledger.resident_cold}),.identity_v(iv),.identity_user(iu),.identity_token(it),.identity_epoch(ie),.identity_generation(ig),.identity_role(ir));
+ qfd_embedding_identity_arm2_model arm(.ck(ck),.rst_n(rst_n),.command_start(es),.command_user(eu),.command_token(et),.identity_v(MUT==16?1'b0:iv),.identity_user(MUT==15?(iu^2'd1):iu),.identity_token(MUT==12?(it^18'd1):it),.identity_epoch(MUT==11?(ie^16'd1):ie),.identity_generation(MUT==13?(ig^2'd1):ig),.identity_role(MUT==14?~ir:ir),.row_epoch(re),.row_generation(ledger.resident_generation),.row_role(ledger.resident_cold),.native_read(e_cre||e_sre),.release_slot(release_row),.validation_start(validation_start),.validation_token(validation_token),.validation_epoch(validation_epoch),.fault(arm_fault));
+ end endgenerate
  qfd_embedding_word_provider prov(.ck(ck),.rst_n(rst_n),.word_v(pw_v),.word_data(pw_data),.word_token(ETOK),.word_index(pw_idx),.word_scale(pw_scale),.word_epoch(re),.expected_word_slot(cyc>=1402&&cyc<1467),.expected_token(ledger.resident_token),.expected_word(pw_idx),.expected_scale(pw_scale),.expected_epoch(re),.fill_begin(fetch),.fill_token(mt),.fill_epoch(fe),.core_start(validation_start),.core_token(validation_token),.core_epoch(validation_epoch),.embed_code_re(e_cre),.embed_code_addr(e_caddr),.embed_code_q(e_cq),.embed_scale_re(e_sre),.embed_scale_addr(e_saddr),.embed_scale_q(e_sq),.fault(p_fault));
  function automatic[547:0]rec(input integer user,input integer tok,input integer gen);
  reg[547:0]v;reg[58:0]tag;begin tag={14'h123,2'(user),6'd0,18'(tok),13'd7,6'd0};if(user==0&&tok==ETOK)tag[18:6]=13'd5;v=0;v[542:539]=12;v[538:533]=63;v[532:517]=tag[58:43];v[141:78]=64'h123456789abcdef0;v[77:62]=16'hbeef;v[61]=1;v[60:59]=2'(gen);v[58:0]=tag;return v;end endfunction
@@ -98,7 +108,7 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  if(dut.ctx_ld&&dut.ctx_mask!=0)begin ctx_edges++;check(cyc==1206,"offer-to-actualbank sample must be6");$display("LP_CTX offer1200 bank_sample%0d age%0d",cyc,cyc-1200);end
  if(actual_init)begin init_edges++;check(cyc==1670,"external INIT sample-to-actual bank sample must be4");$display("LP_INIT input_sample1666 bank_sample%0d age%0d",cyc,cyc-1666);end
  if(es)begin consume_edges++;check(cyc==1736&&et==ETOK&&eu==0,"external emb command sample must be70 with aligned token/user");check(re==16'h48c&&ce==16'h48c,"selected cold pending promoted before actual command sample");$display("LP_COMMAND sample%0d input_to_command%0d epoch%h token%0d user%0d",cyc,cyc-1666,ce,et,eu);end
- if(validation_start)begin validations++;check(cyc==1737&&validation_token==ETOK&&(MUT==10||validation_epoch==16'h48c),"actual provider validation at command+1");$display("LP_NATIVE_VALIDATION sample%0d epoch%h",cyc,validation_epoch);end
+ if(validation_start)begin validations++;check(cyc==1737+CAPTURE2&&validation_token==ETOK&&(MUT==10||validation_epoch==16'h48c),"fixed provider validation age");$display("LP_NATIVE_VALIDATION sample%0d epoch%h",cyc,validation_epoch);end
  if(ledger.reserved)check(re==16'h48c&&ledger.resident_token==ETOK&&ledger.resident_generation==2,"immutable reserved identity through native read/output lifetime");
  if(e_cre||e_sre||(dr[519]&&dr[518]))check(ledger.reserved&&prov.store.resident_token==ETOK&&prov.store.resident_epoch==16'h48c,"actual provider identity held through every code/scale read/output");
  if(cyc==1743)check(ledger.pending_valid[0]&&ledger.pending[0]==16'h490&&ledger.active[0]==16'h48c,"actual future pending epoch does not publish over executing row");
@@ -117,6 +127,6 @@ module tb_sysface_lp_bank_native_join #(parameter MUT=0);
  end
  check(reads==64&&scale_reads==1&&outputs==65&&validations==1,"actual native/provider fullrow coverage");
  check(ctx_edges==1&&init_edges==1&&raw_edges==1&&out_edges==1&&consume_edges==1,"all actual boundary observations covered");
- $display("LP_NATIVE_PASS checks%0d CTX6 INITbank4 rawEMB66 outEMB69 command70 validate71 firstcode73 scale137 lastoutput140 functionalclocks_tied productionphase_unbound",checks);$finish;
+ $display("LP_NATIVE_PASS checks%0d CTX6 INITbank4 rawEMB66 outEMB69 command70 validate71 firstcode73 scale137 lastoutput140 functionalclocks_tied productionphase_unbound capture2%0d",checks,CAPTURE2);$finish;
  end
 endmodule
