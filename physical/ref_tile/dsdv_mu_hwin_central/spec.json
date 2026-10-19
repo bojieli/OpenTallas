@@ -19,7 +19,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 6987.47,
+ "std_area_um2": 7140.41,
  "pins": {
   "W": [
    "f_ks",
@@ -879,11 +879,11 @@
  },
  "fill_reason": {
   "lattice_channel_bound": {
-   "why": "Prospective geometry review:84true SRAM banks on43.2lattice, min22.41/24.84channels. Measured regions synthstd6987.47 over core-width384.48 x43.2 centralband =42.07%. Rawfill17.9% is lattice/channel cost. Root sizing/schema approval pending; no physical qualification or parent-fit claim.",
+   "why": "ROOT sizing/schema-only approval 2026-10-19 09:43 PT for HEAD_STAGE source1bc96597e: measured std7140.41um2 plus32063.2macro/84SRAM; full actual core-width384.48x43.2 band248.4..291.6 =43.0%. Origin lattice43.2, minimum channels22.41/24.84. Includes544 RTL head-payload capture bits (constant bits may optimize). Actual placed mass, <=405um hops, native clocks, PG/pin access, visual PNG and parent fit remain unapproved.",
    "lattice_um": 43.2,
    "min_channel_um": 22.41,
-   "std_band_util": 0.42069025889705763,
-   "approved_by": "",
+   "std_band_util": 0.42989822232240554,
+   "approved_by": "codex coordinator",
    "std_band_y_um": [
     248.4,
     291.6

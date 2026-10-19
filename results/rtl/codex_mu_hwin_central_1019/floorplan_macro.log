@@ -1,0 +1,195 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib
+read_db /work/results/asap7/opentallas_dsdv_mu_hwin_asap7_hwin_central_sizing/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_dsdv_mu_hwin_asap7_hwin_central_sizing/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/ref_tile/dsdv_mu_hwin_central/place.tcl
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 86.4 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 129.6 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 172.8 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 216.0 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 302.4 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 345.6 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 43.2 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 86.4 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 172.8 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 216.0 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 259.2 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 43.2 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 86.4 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 129.6 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 216.0 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 259.2 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 302.4 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 345.6 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 86.4 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 129.6 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 172.8 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 216.0 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 345.6 172.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 43.2 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 86.4 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 216.0 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 259.2 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 302.4 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 86.4 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 129.6 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 172.8 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 216.0 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 302.4 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 345.6 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 43.2 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 86.4 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 172.8 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 216.0 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 259.2 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 43.2 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 86.4 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 129.6 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 216.0 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 259.2 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 302.4 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 345.6 388.8 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 86.4 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 129.6 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 172.8 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 216.0 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 345.6 432.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 43.2 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 86.4 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 216.0 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 259.2 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 302.4 475.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 475.2 R0
+REF_TILE place: u_ot_pr_core.u_gap.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 518.4 R0
+REF_TILE place: u_ot_pr_core.u_gap.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 86.4 518.4 R0
+REF_TILE place: u_ot_pr_core.u_retire.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 518.4 R0
+REF_TILE place: u_ot_pr_core.u_retire.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 172.8 518.4 R0
+HWIN_CELL_BAND kept=160 removed=1904 y248.4..291.6
+rtl_macro_placer -max_num_level 2 -halo_width 10.8 -halo_height 10.8 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_dsdv_mu_hwin_asap7_hwin_central_sizing/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.6
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[0\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[0\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[10\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[10\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[11\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[11\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[12\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[12\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[13\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[13\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[14\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[14\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[15\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[15\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[1\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[1\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[2\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[2\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[3\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[3\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[4\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[4\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[5\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[5\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[6\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[6\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[7\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[7\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[8\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[8\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[9\].u_attr.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[2\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.g_event_mem\[9\].u_payload.g_bank\[3\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.u_gap.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.u_gap.g_bank\[1\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.u_retire.g_bank\[0\].u_m.
+[INFO MPL-0062] Found fixed macro u_ot_pr_core.u_retire.g_bank\[1\].u_m.
+[INFO MPL-0017] No unfixed macros.
+[INFO MPL-0013] Skipping macro placement.
+[INFO MPL-0500] Runtime: 0.01s
+Design area 39529 um^2 18% utilization.
+write_db /work/results/asap7/opentallas_dsdv_mu_hwin_asap7_hwin_central_sizing/base/2_2_floorplan_macro.odb
+Elapsed time: 0:01.98[h:]min:sec. CPU time: user 1.78 sys 0.19 (99%). Peak memory: 289608KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            1            282 5247d6b9ca5001ef7a49
