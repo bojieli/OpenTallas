@@ -1,0 +1,71 @@
+{
+  "scope": "Three finite source-bound counterexamples, not an RTL execution",
+  "source_sha256": "8536070ddb594a5b6ae98c3f9ff2d78371cc50ec159ea72d7466142eccd97640",
+  "anchors": {
+    "scan=rr+2'(k);": 102,
+    "pending_user<=pick_user;": 163,
+    "else begin templates[record_index]<=record_word;loaded[record_index]<=1;end": 138,
+    "for(u=0;u<4;u=u+1)if(active[u])begin": 156,
+    "if(cycle[u][0]!=8191)begin for(c=0;c<NC;c=c+1)cycle[u][c]<=cycle[u][c]+1'b1;end": 157
+  },
+  "assumptions": {
+    "ENABLE": 1,
+    "rst_n": 1,
+    "qualified_reset_before_use": false,
+    "canonical_feedback_and_D": "protected in each witness",
+    "copies_share_actual_clock_reset_and_SETN": "required, not physically qualified"
+  },
+  "witnesses": {
+    "rr_pick_consumer": {
+      "canonical_rr": 0,
+      "clone_rr": 1,
+      "preedge_state": {
+        "active": 3,
+        "cache_valid": 0,
+        "pending": 0,
+        "next_group": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "cycle": 0,
+        "sealed": 1,
+        "fault": 0,
+        "loading": 0
+      },
+      "inputs": {
+        "pw_v": 0,
+        "start_v": 0,
+        "retire_v": 0,
+        "observation": 0,
+        "all_copies_authenticated": 1,
+        "fusedcap": 1,
+        "installed_digest": "198f7708b478a667",
+        "installed_epoch": 7
+      },
+      "baseline_pending_user_next": 0,
+      "clone_consumer_pending_user_next": 1,
+      "rr_pair_after_common_D_edge": [
+        1,
+        1
+      ]
+    },
+    "record_index_template_write": {
+      "canonical_record_index": 0,
+      "clone_record_index": 4,
+      "baseline_written_slot": 0,
+      "clone_consumer_written_slot": 4,
+      "common_record_index_D": 1
+    },
+    "active_increment": {
+      "canonical_active1": 0,
+      "clone_active1": 1,
+      "baseline_cycle_next": 9,
+      "clone_consumer_cycle_next": 10,
+      "common_active_D": 0
+    }
+  },
+  "verdict": "HOLD source choice: no proof that chosen clone consumers are invalid until convergence",
+  "limits": "These witnesses reject naive consumer partitions; they do not prove every protected partition impossible. They use arbitrary pre-reset state and do not claim reset-reachable failure."
+}
