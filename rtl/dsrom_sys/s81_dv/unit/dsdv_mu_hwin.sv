@@ -139,6 +139,32 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     wire rhold = (st && |(rp & ss)) || (|(rp & rec_slot));
     wire due = rok && h_rfr && h_rts == tmr;                             // hslot's return edge: the entry retires
     wire radv = due || (!rok && !rhold);
+    localparam integer PTR_CTL=(NSLOT+7)/8;
+    wire [NEV-1:0] event_due;
+    wire [PTR_CTL-1:0] pointer_due,pointer_adv,slot_step,gap_step;
+    wire [2:0] cg_step,crl_write,crm_write;
+    generate if(LOCAL_BOOT!=0) begin:g_control_regions
+        for(genvar ed=0;ed<NEV;ed=ed+1) begin:g_event_due
+            (* keep=1 *) dsdv_mu_retire_due u_due(.valid(rok),.fresh(h_rfr),.retire(h_rts),.now_time(tmr),.due(event_due[ed]));
+        end
+        for(genvar pc=0;pc<PTR_CTL;pc=pc+1) begin:g_pointer
+            (* keep=1 *) dsdv_mu_retire_advance u_retire(.valid(rok),.fresh(h_rfr),.hold_head(rhold),.retire(h_rts),.now_time(tmr),.due(pointer_due[pc]),.advance(pointer_adv[pc]));
+            (* keep=1 *) dsdv_mu_slot_step u_step(.phase(ph),.gap(cg),.armed(armed),.start(st),.bad(hcfg_bad),.slot(slot_step[pc]),.gap_step(gap_step[pc]));
+        end
+        for(genvar cc=0;cc<3;cc=cc+1) begin:g_config
+            wire unused_slot;
+            (* keep=1 *) dsdv_mu_slot_step u_cg(.phase(ph),.gap(cg),.armed(armed),.start(st),.bad(hcfg_bad),.slot(unused_slot),.gap_step(cg_step[cc]));
+            (* keep=1 *) dsdv_mu_boot_enable u_crl(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crl_write[cc]));
+            (* keep=1 *) dsdv_mu_boot_enable u_crm(.count(global_count),.armed(armed),.valid(mc_q[25]),.match(mc_q[24]),.en(crm_write[cc]));
+        end
+    end else begin:g_control_direct
+        assign event_due={NEV{due}};assign pointer_due={PTR_CTL{due}};assign pointer_adv={PTR_CTL{radv}};
+        assign slot_step={PTR_CTL{armed && ph==cg}};
+        assign gap_step={PTR_CTL{(armed && ph==cg) || (st && !armed && !hcfg_bad)}};
+        assign cg_step={3{(armed && ph==cg) || (st && !armed && !hcfg_bad)}};
+        assign crl_write={3{mc_q[25] && idle && mc_q[24]}};assign crm_write=crl_write;
+    end endgenerate
+
     wire [NSLOT-1:0] gxn = (MUT == 5 || |(gx & gm)) ? OH0 : {gx[NSLOT-2:0], 1'b0};   // MUT 5: gap table index stuck at 0
     dsdv_mu_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 3]),
         .we(mc_q[25] && !mc_q[24] && !armed && table_empty && gn != SJ'(NSLOT)),
@@ -427,7 +453,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             (* keep *) reg [SJ-1:0] count_r;
             always @(posedge ck or negedge rr[RBOOT_BASE+ce])
                 if(!rr[RBOOT_BASE+ce]) count_r<=0;
-                else count_r<=count_r+SJ'(rec_event[ce][NC_REC-1])-SJ'(due);
+                else count_r<=count_r+SJ'(rec_event[ce][NC_REC-1])-SJ'(event_due[ce]);
             assign boot_count=7'(count_r);
 `ifdef DSDV_MU_POINTER_ASSERT
             always @(posedge ck) if(rr[RBOOT_BASE+ce])
@@ -526,13 +552,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[ROUT_BASE+C_RG+ob/24]) rc_q[ob]<=0; else rc_q[ob]<=rc_n[ob];
     end
     for(genvar pb=0;pb<NSLOT;pb=pb+1) begin:g_pointer_reset
-        wire step_slot=armed && ph==cg;
-        wire step_gap=step_slot || (st && !armed && !hcfg_bad);
+        wire step_slot=slot_step[pb/8];
+        wire step_gap=gap_step[pb/8];
         wire [NSLOT-1:0] sl_next=rot(sl,lm),rp_next=rot(rp,lm);
         always @(posedge ck or negedge rr[RPTR_BASE+pb/24])
             if(!rr[RPTR_BASE+pb/24]) sl[pb]<=(pb==0); else if(step_slot) sl[pb]<=sl_next[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+SLOT_RG+pb/24]) rp[pb]<=(pb==0); else if(radv) rp[pb]<=rp_next[pb];
+            if(!rr[RPTR_BASE+SLOT_RG+pb/24]) rp[pb]<=(pb==0); else if(pointer_adv[pb/8]) rp[pb]<=rp_next[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+2*SLOT_RG+pb/24])
             if(!rr[RPTR_BASE+2*SLOT_RG+pb/24]) gx[pb]<=(pb==0); else if(step_gap) gx[pb]<=gxn[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+3*SLOT_RG+pb/24])
@@ -541,7 +567,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         always @(posedge ck or negedge rr[RPTR_BASE+4*SLOT_RG+pb/24])
             if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm[pb]<=(pb==NSLOT-1); else lm[pb]<=(lw==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+5*SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+5*SLOT_RG+pb/24]) vld[pb]<=0; else vld[pb]<=(vld[pb] && !(due && rp[pb])) || rec_slot[pb];
+            if(!rr[RPTR_BASE+5*SLOT_RG+pb/24]) vld[pb]<=0; else vld[pb]<=(vld[pb] && !(pointer_due[pb/8] && rp[pb])) || rec_slot[pb];
     end endgenerate
     always @(posedge ck or negedge rr[RPTR_BASE+6*SLOT_RG])
         if(!rr[RPTR_BASE+6*SLOT_RG]) begin slb<=0;rpb<=0;gxb<=0;end
@@ -558,13 +584,15 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     always @(posedge ck or negedge rr[RCTRL_BASE+1])
         if(!rr[RCTRL_BASE+1]) cs<=0;
         else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT) && (gn==0 || mc_q[23:0]<cs)) cs<=mc_q[23:0];
-    always @(posedge ck or negedge rr[RCTRL_BASE+2])
-        if(!rr[RCTRL_BASE+2]) crl<=0; else if(mc_q[25] && idle && mc_q[24]) crl<=mc_q[23:0];
-    always @(posedge ck or negedge rr[RCTRL_BASE+3])
-        if(!rr[RCTRL_BASE+3]) crm<=24'hffffff; else if(mc_q[25] && idle && mc_q[24]) crm<=mc_q[23:0]-24'd1;
-    always @(posedge ck or negedge rr[RCTRL_BASE+4])
-        if(!rr[RCTRL_BASE+4]) cg<=0;
-        else if((armed && ph==cg) || (st && !armed && !hcfg_bad)) cg<=ng;
+    wire [23:0] mc_minus_one=mc_q[23:0]-24'd1;
+    generate for(genvar cb=0;cb<24;cb=cb+1) begin:g_config_words
+        always @(posedge ck or negedge rr[RCTRL_BASE+2])
+            if(!rr[RCTRL_BASE+2]) crl[cb]<=0; else if(crl_write[cb/8]) crl[cb]<=mc_q[cb];
+        always @(posedge ck or negedge rr[RCTRL_BASE+3])
+            if(!rr[RCTRL_BASE+3]) crm[cb]<=1; else if(crm_write[cb/8]) crm[cb]<=mc_minus_one[cb];
+        always @(posedge ck or negedge rr[RCTRL_BASE+4])
+            if(!rr[RCTRL_BASE+4]) cg[cb]<=0; else if(cg_step[cb/8]) cg[cb]<=ng[cb];
+    end endgenerate
     always @(posedge ck or negedge rn)
         if(!rn) begin
             armed<=1'b0;
@@ -648,4 +676,16 @@ endmodule
 // or edge: prevents equivalent boot controls merging into one broad enable.
 (* keep_hierarchy="yes" *) module dsdv_mu_boot_enable(input wire [6:0] count,input wire armed,valid,match,output wire en);
  assign en=(count==0) && !armed && valid && match;
+endmodule
+
+(* keep_hierarchy=1 *) module dsdv_mu_retire_due(input wire valid,fresh,input wire [31:0] retire,now_time,output wire due);
+ assign due=valid && fresh && retire==now_time;
+endmodule
+(* keep_hierarchy=1 *) module dsdv_mu_retire_advance(input wire valid,fresh,hold_head,input wire [31:0] retire,now_time,output wire due,advance);
+ assign due=valid && fresh && retire==now_time;
+ assign advance=due || (!valid && !hold_head);
+endmodule
+(* keep_hierarchy=1 *) module dsdv_mu_slot_step(input wire [23:0] phase,gap,input wire armed,start,bad,output wire slot,gap_step);
+ assign slot=armed && phase==gap;
+ assign gap_step=slot || (start && !armed && !bad);
 endmodule
