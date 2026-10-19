@@ -6,6 +6,12 @@
 // register function as the caller's single synchroniser it replaces (d = 1, async clear from the same source, same
 // clock), so every reset releases on the same edge; no register drives more than one region's resets.
 // Only valid when clk is the free-running clock the source register runs on (OT_BF_TILE_FREECLK).
+// FOREP (S81-C199-FANOUT 2026-10-19, opt-in define OT_BF_FOREP, default off = unchanged): no register drives more
+// than ~32 loads (through BUF/INV).  (1) The slot-wide accumulator read acc[slot] (a 16:1 x 33-bit mux: the slot LSB
+// drove 1,060 loads) becomes an AND-OR over OHK kept copies of the slot's ONE-HOT decode, supplied by the caller on
+// slot_oh and registered on the same edge as slot (the producer decodes it one stage earlier): copy j selects bit
+// slice j of the word.  (2) first_r and the forward selects are held as kept same-edge copies per operand slice:
+// ND copies for the adder operand a, 2*ND for the PD step-0 bundle.  Same values, same edges: zero cycles.
 module ot_v41_chain4_rp #(
     parameter integer ND = 4,
     parameter integer NCH = 16,
@@ -13,11 +19,15 @@ module ot_v41_chain4_rp #(
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8]
 ,
-    parameter integer PD = 0) (
+    parameter integer PD = 0,
+    parameter integer OHK = 2) (
     input  wire                     clk,
     input  wire                     rst_pin,
     input  wire                     v,
     input  wire [$clog2(NCH)-1:0]   slot,
+`ifdef OT_BF_FOREP
+    input  wire [OHK*NCH-1:0]       slot_oh,   // OHK copies of onehot(slot), same edge as slot (copy j at [j*NCH +: NCH])
+`endif
     input  wire                     first,
     input  wire                     last,
     input  wire [31:0]              term,
@@ -44,10 +54,37 @@ module ot_v41_chain4_rp #(
     reg [TW-1:0] tag_r;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) v_r <= 1'b0; else v_r <= v;
+`ifdef OT_BF_FOREP
+    // registered one-hot slot read: copy j of slot_oh selects word slice j (and copy 0 the fault bit)
+    reg [31:0] acc_rd;
+    reg        accf_rd;
+    integer oj, oe;
+    always @* begin
+        acc_rd = 32'd0;
+        for (oj = 0; oj < OHK; oj = oj + 1)
+            for (oe = 0; oe < NCH; oe = oe + 1)
+                if (slot_oh[oj*NCH + oe]) acc_rd = acc_rd | (acc[oe] & (((33'd1 << ((32 * (oj + 1)) / OHK)) - 33'd1) ^
+                                                                        ((33'd1 << ((32 * oj) / OHK)) - 33'd1)));
+        accf_rd = |(slot_oh[NCH-1:0] & accf);
+    end
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && v)
+        for (int j = 0; j < OHK; j++) if (slot_oh[j*NCH +: NCH] != (NCH'(1) << slot))
+            $fatal(1, "FOREP: slot_oh copy %0d %b != onehot(slot %0d)", j, slot_oh[j*NCH +: NCH], slot);
+`endif
+    (* keep *) reg [ND-1:0]   first_a;    // operand a slice g
+    (* keep *) reg [2*ND-1:0] first_e;    // PD step-0 bundle slice
+    always @(posedge clk) begin
+        slot_r <= slot; first_r <= first; last_r <= last; term_r <= term; termf_r <= term_f; tag_r <= tag;
+        acc_r <= acc_rd; accf_r <= accf_rd;
+        first_a <= {ND{first}}; first_e <= {(2*ND){first}};
+    end
+`else
     always @(posedge clk) begin
         slot_r <= slot; first_r <= first; last_r <= last; term_r <= term; termf_r <= term_f; tag_r <= tag;
         acc_r <= acc[slot]; accf_r <= accf[slot];
     end
+`endif
     reg [LAT-1:0] pv;
     reg [SW-1:0] ps [0:LAT-1];
     integer k;
@@ -85,8 +122,20 @@ module ot_v41_chain4_rp #(
         ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_f (.clk(clk), .arst_n(rst_f), .d({fwd6_d, fwd5_d}),
                                                        .q({fwd6[g], fwd5[g]}));
         localparam integer LO = (32 * g) / ND, HI = (32 * (g + 1)) / ND;
+`ifdef OT_BF_FOREP
+        assign a[HI-1:LO] = first_a[g] ? {(HI-LO){1'b0}} : (fwd5[g] ? sum[HI-1:LO] : (fwd6[g] ? sp_val[HI-1:LO] : acc_r[HI-1:LO]));
+`else
         assign a[HI-1:LO] = first_r ? {(HI-LO){1'b0}} : (fwd5[g] ? sum[HI-1:LO] : (fwd6[g] ? sp_val[HI-1:LO] : acc_r[HI-1:LO]));
+`endif
     end
+`ifdef OT_BF_FOREP
+    // the PD step-0 bundle's own forward-select copies (2*ND slices), so a fwd copy no longer feeds both a and o0_ext
+    wire [2*ND-1:0] fwd5e, fwd6e;
+    for (g = 0; g < 2 * ND; g = g + 1) begin : g_fwe
+        ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_f (.clk(clk), .arst_n(rst_f), .d({fwd6_d, fwd5_d}),
+                                                       .q({fwd6e[g], fwd5e[g]}));
+    end
+`endif
     always @(posedge clk) pl <= {pl[LAT-2:0], last_r};
     if (PD != 0) begin : g_pd
         wire [104:0] c5, c6, ca, cz;
@@ -94,6 +143,17 @@ module ot_v41_chain4_rp #(
         ot_v41_fadd_s0 u_s6 (.valid_in(v_r), .a(sp_val), .b(term_r), .o0(c6));
         ot_v41_fadd_s0 u_sa (.valid_in(v_r), .a(acc_r),  .b(term_r), .o0(ca));
         ot_v41_fadd_s0 u_sz (.valid_in(v_r), .a(32'd0),  .b(term_r), .o0(cz));
+`ifdef OT_BF_FOREP
+        for (genvar g2 = 0; g2 < 2 * ND; g2 = g2 + 1) begin : g_ps
+            localparam integer LO = (105 * g2) / (2 * ND), HI = (105 * (g2 + 1)) / (2 * ND);
+`ifdef OT_BF_FOREP_MUT_CHAIN
+            // negative control: slice 1's first copy ignored (a chain's first term adds the stale slot sum)
+            assign o0_ext[HI-1:LO] = (first_e[g2] && g2 != 1) ? cz[HI-1:LO] : (fwd5e[g2] ? c5[HI-1:LO] : (fwd6e[g2] ? c6[HI-1:LO] : ca[HI-1:LO]));
+`else
+            assign o0_ext[HI-1:LO] = first_e[g2] ? cz[HI-1:LO] : (fwd5e[g2] ? c5[HI-1:LO] : (fwd6e[g2] ? c6[HI-1:LO] : ca[HI-1:LO]));
+`endif
+        end
+`else
         for (genvar g2 = 0; g2 < ND; g2 = g2 + 1) begin : g_ps
             localparam integer LO = (105 * g2) / ND, HI = (105 * (g2 + 1)) / ND;
 `ifdef CH_MUTANT_PD
@@ -102,6 +162,7 @@ module ot_v41_chain4_rp #(
             assign o0_ext[HI-1:LO] = first_r ? cz[HI-1:LO] : (fwd5[g2] ? c5[HI-1:LO] : (fwd6[g2] ? c6[HI-1:LO] : ca[HI-1:LO]));
 `endif
         end
+`endif
     end else begin : g_npd
         assign o0_ext = '0;
     end

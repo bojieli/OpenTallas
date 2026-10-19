@@ -64,6 +64,68 @@ module ot_v41_fadd_rp #(
     wire [W1-1:0] i2;
     ot_v41_cut #(.W(W1), .EN(CUT[1])) u_c1 (.clk(clk), .rst_n(rst_n), .d(o1), .q(i2));
 
+`ifdef OT_BF_FOREP
+    // ---------------- step 2: align, coarse (8 * dist[4:3]) ----------------
+    // FOREP (S81-C199-FANOUT 10-19, opt-in OT_BF_FOREP, default off = the `else circuit): the distance leaves u_c1 as
+    // KEPT same-edge copies (same d, same clock, 0 cycles): d2c0 / d2c1 steer the low / high half of the coarse shift,
+    // d2s the sticky / saturation terms and the bundle, d2f (CUT[2] = 0 only) step 3's NF3 fine-shift slices, so no
+    // distance register drives more than ~28 loads (rq census: u_c1 dist bits 36..65 loads).
+    localparam integer NF3 = 5;           // step-3 copies: four 7-bit shift slices + the sticky terms
+    wire        v2, byp2, sub2, sg2; wire [1:0] er2; wire [31:0] code2; wire [7:0] ex2, d2; wire [23:0] big2, sml2;
+    assign {v2, byp2, er2, code2, sub2, sg2, ex2, d2, big2, sml2} = i2;
+    wire [1:0]       d2c0, d2c1;
+    wire [7:0]       d2s;
+    wire [3*NF3-1:0] d2f;
+    if (CUT[1]) begin : g_fr1
+        (* keep *) reg [1:0] r_c0;
+        (* keep *) reg [1:0] r_c1;
+        (* keep *) reg [7:0] r_s;
+        always @(posedge clk) begin
+            r_c0 <= o1[52:51];
+`ifdef OT_BF_FOREP_MUT_ADD
+            r_c1 <= o1[52:51] ^ 2'b01;    // negative control: the high-half coarse-shift copy of dist[3] inverted
+`else
+            r_c1 <= o1[52:51];
+`endif
+            r_s <= o1[55:48];
+        end
+        assign d2c0 = r_c0; assign d2c1 = r_c1; assign d2s = r_s;
+        if (!CUT[2]) begin : g_f3
+            for (genvar j = 0; j < NF3; j = j + 1) begin : g_f
+                (* keep *) reg [2:0] r;
+                always @(posedge clk) r <= o1[50:48];
+                assign d2f[3*j +: 3] = r;
+            end
+        end else begin : g_nf3
+            assign d2f = {NF3{d2s[2:0]}};   // unused: step 3 takes its copies from u_c2
+        end
+    end else begin : g_fw1
+        assign d2c0 = d2[4:3]; assign d2c1 = d2[4:3]; assign d2s = d2; assign d2f = {NF3{d2[2:0]}};
+    end
+    function automatic [28:0] crs2;      // {sticky, coarse-shifted value}
+        input [27:0] val;
+        input [1:0]  s;
+        begin
+            case (s)
+                2'd0: crs2 = {1'b0, val};
+                2'd1: crs2 = {|val[7:0], 8'd0, val[27:8]};
+                2'd2: crs2 = {|val[15:0], 16'd0, val[27:16]};
+                default: crs2 = {|val[23:0], 24'd0, val[27:24]};
+            endcase
+        end
+    endfunction
+    wire [27:0] val2 = {1'b0, sml2, 3'b000};
+    wire [28:0] c2a = crs2(val2, d2c0);
+    wire [28:0] c2b = crs2(val2, d2c1);
+    wire [28:0] c2s = crs2(val2, d2s[4:3]);
+    wire [27:0] sh2 = {c2b[27:14], c2a[13:0]};
+    wire        st2 = c2s[28];
+    wire sat2 = d2s >= 8'd28;
+    localparam integer W2 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 3 + 24 + 28 + 1 + 1 + 1;
+    wire [W2-1:0] o2 = {v2, byp2, sub2, sg2, er2, code2, ex2, d2s[2:0], big2, sh2, st2, sat2, |val2};
+    wire [W2-1:0] i3;
+    ot_v41_cut #(.W(W2), .EN(CUT[2])) u_c2 (.clk(clk), .rst_n(rst_n), .d(o2), .q(i3));
+`else
     // ---------------- step 2: align, coarse (8 * dist[4:3]) ----------------
     wire        v2, byp2, sub2, sg2; wire [1:0] er2; wire [31:0] code2; wire [7:0] ex2, d2; wire [23:0] big2, sml2;
     assign {v2, byp2, er2, code2, sub2, sg2, ex2, d2, big2, sml2} = i2;
@@ -83,7 +145,42 @@ module ot_v41_fadd_rp #(
     wire [W2-1:0] o2 = {v2, byp2, sub2, sg2, er2, code2, ex2, d2[2:0], big2, sh2, st2, sat2, |val2};
     wire [W2-1:0] i3;
     ot_v41_cut #(.W(W2), .EN(CUT[2])) u_c2 (.clk(clk), .rst_n(rst_n), .d(o2), .q(i3));
+`endif
 
+`ifdef OT_BF_FOREP
+    // ---------------- step 3: align, fine (dist[2:0]); jam ----------------
+    // FOREP: NF3 kept copies of dist[2:0] (from u_c2, or from u_c1 when CUT[2] = 0): four 7-bit slices of the fine
+    // shift and the sticky terms each steered by their own copy
+    wire        v3, byp3, sub3, sg3, st3, sat3, any3; wire [1:0] er3; wire [31:0] code3; wire [7:0] ex3;
+    wire [2:0]  d3; wire [23:0] big3; wire [27:0] sh3;
+    assign {v3, byp3, sub3, sg3, er3, code3, ex3, d3, big3, sh3, st3, sat3, any3} = i3;
+    wire [3*NF3-1:0] d3f;
+    if (CUT[2]) begin : g_fr2
+        for (genvar j = 0; j < NF3; j = j + 1) begin : g_f
+            (* keep *) reg [2:0] r;
+            always @(posedge clk) r <= o2[57:55];
+            assign d3f[3*j +: 3] = r;
+        end
+    end else begin : g_fw2
+        assign d3f = d2f;
+    end
+    wire [27:0] f3s0 = sh3 >> d3f[2:0];
+    wire [27:0] f3s1 = sh3 >> d3f[5:3];
+    wire [27:0] f3s2 = sh3 >> d3f[8:6];
+    wire [27:0] f3s3 = sh3 >> d3f[11:9];
+    wire [27:0] f3 = {f3s3[27:21], f3s2[20:14], f3s1[13:7], f3s0[6:0]};
+    reg         fs3;
+    always @* begin
+        fs3 = 1'b0;
+        for (k = 0; k < 7; k = k + 1)
+            if (k < d3f[14:12]) fs3 = fs3 | sh3[k];
+    end
+    wire [27:0] small3 = sat3 ? {27'd0, any3} : {f3[27:1], f3[0] | fs3 | st3};
+    localparam integer W3 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
+    wire [W3-1:0] o3 = {v3, byp3, sub3, sg3, er3, code3, ex3, {1'b0, big3, 3'b000}, small3};
+    wire [W3-1:0] i4;
+    ot_v41_cut #(.W(W3), .EN(CUT[3])) u_c3 (.clk(clk), .rst_n(rst_n), .d(o3), .q(i4));
+`else
     // ---------------- step 3: align, fine (dist[2:0]); jam ----------------
     wire        v3, byp3, sub3, sg3, st3, sat3, any3; wire [1:0] er3; wire [31:0] code3; wire [7:0] ex3;
     wire [2:0]  d3; wire [23:0] big3; wire [27:0] sh3;
@@ -101,6 +198,7 @@ module ot_v41_fadd_rp #(
     wire [W3-1:0] o3 = {v3, byp3, sub3, sg3, er3, code3, ex3, {1'b0, big3, 3'b000}, small3};
     wire [W3-1:0] i4;
     ot_v41_cut #(.W(W3), .EN(CUT[3])) u_c3 (.clk(clk), .rst_n(rst_n), .d(o3), .q(i4));
+`endif
 
     // ---------------- step 4: add and subtract ----------------
     wire        v4, byp4, sub4, sg4; wire [1:0] er4; wire [31:0] code4; wire [7:0] ex4; wire [27:0] big4, sml4;
@@ -114,6 +212,42 @@ module ot_v41_fadd_rp #(
     wire [W4-1:0] i5;
     ot_v41_cut #(.W(W4), .EN(CUT[4])) u_c4 (.clk(clk), .rst_n(rst_n), .d(o4), .q(i5));
 
+`ifdef OT_BF_FOREP
+    // ---------------- step 5: select, carry renormalize, cancel ----------------
+    // FOREP: four kept copies of {sub, sum[27]} from u_c4: three 9-bit result slices and {exponent, zero, sub} each
+    // select with their own copy (rq census: sub 56 / sum[27] 53 loads on one register)
+    wire        v5, byp5, sub5, sg5; wire [1:0] er5; wire [31:0] code5; wire [7:0] ex5; wire [27:0] sum5, dif5;
+    assign {v5, byp5, sub5, sg5, er5, code5, ex5, sum5, dif5} = i5;
+    wire [7:0] c5k;                       // copy j = {sub, sum[27]} at [2*j +: 2]
+    if (CUT[4]) begin : g_fr4
+        for (genvar j = 0; j < 4; j = j + 1) begin : g_f
+            (* keep *) reg [1:0] r;
+            always @(posedge clk) r <= {o4[99], o4[55]};
+            assign c5k[2*j +: 2] = r;
+        end
+    end else begin : g_fw4
+        assign c5k = {4{sub5, sum5[27]}};
+    end
+    function automatic [26:0] sel5;
+        input        sb;
+        input        s27;
+        input [27:0] sm;
+        input [27:0] df;
+        begin
+            sel5 = (!sb && s27) ? {s27, sm[26:2], sm[1] | sm[0]} : (sb ? df[26:0] : sm[26:0]);
+        end
+    endfunction
+    wire [26:0] r5a = sel5(c5k[1], c5k[0], sum5, dif5);
+    wire [26:0] r5b = sel5(c5k[3], c5k[2], sum5, dif5);
+    wire [26:0] r5c = sel5(c5k[5], c5k[4], sum5, dif5);
+    wire        sub5e = c5k[7];
+    wire        cy5e = !c5k[7] && c5k[6];
+    localparam integer W5 = 1 + 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27;
+    wire [W5-1:0] o5 = {v5, byp5, sub5e, sg5, sub5e && (dif5 == 28'd0), er5, code5,
+                        cy5e ? (ex5 + 8'd1) : ex5, {r5c[26:18], r5b[17:9], r5a[8:0]}};
+    wire [W5-1:0] i6;
+    ot_v41_cut #(.W(W5), .EN(CUT[5])) u_c5 (.clk(clk), .rst_n(rst_n), .d(o5), .q(i6));
+`else
     // ---------------- step 5: select, carry renormalize, cancel ----------------
     wire        v5, byp5, sub5, sg5; wire [1:0] er5; wire [31:0] code5; wire [7:0] ex5; wire [27:0] sum5, dif5;
     assign {v5, byp5, sub5, sg5, er5, code5, ex5, sum5, dif5} = i5;
@@ -124,6 +258,7 @@ module ot_v41_fadd_rp #(
                         cy5 ? (ex5 + 8'd1) : ex5, cy5 ? {sum5[27:2], sum5[1] | sum5[0]} : ar5[26:0]};
     wire [W5-1:0] i6;
     ot_v41_cut #(.W(W5), .EN(CUT[5])) u_c5 (.clk(clk), .rst_n(rst_n), .d(o5), .q(i6));
+`endif
 
     // ---------------- step 6: leading zeros, clamped ----------------
     wire        v6, byp6, sub6, sg6, z6; wire [1:0] er6; wire [31:0] code6; wire [7:0] ex6; wire [26:0] val6;
@@ -142,6 +277,31 @@ module ot_v41_fadd_rp #(
     wire [W6-1:0] i7;
     ot_v41_cut #(.W(W6), .EN(CUT[6])) u_c6 (.clk(clk), .rst_n(rst_n), .d(o6), .q(i7));
 
+`ifdef OT_BF_FOREP
+    // ---------------- step 7: normalize ----------------
+    // FOREP: four kept copies of the normalise shift (from u_c6 when CUT[6]): three 9-bit slices of val << sh and the
+    // exponent subtract each take their own copy (rq census: sh7 51..66 loads)
+    wire        v7, byp7, sg7, z7; wire [1:0] er7; wire [31:0] code7; wire [7:0] ex7; wire [26:0] val7;
+    wire [4:0]  sh7;
+    assign {v7, byp7, sg7, z7, er7, code7, ex7, val7, sh7} = i7;
+    wire [19:0] sh7k;
+    if (CUT[6]) begin : g_fr6
+        for (genvar j = 0; j < 4; j = j + 1) begin : g_f
+            (* keep *) reg [4:0] r;
+            always @(posedge clk) r <= o6[4:0];
+            assign sh7k[5*j +: 5] = r;
+        end
+    end else begin : g_fw6
+        assign sh7k = {4{sh7}};
+    end
+    wire [26:0] n7a = val7 << sh7k[4:0];
+    wire [26:0] n7b = val7 << sh7k[9:5];
+    wire [26:0] n7c = val7 << sh7k[14:10];
+    localparam integer W7 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27;
+    wire [W7-1:0] o7 = {v7, byp7, sg7, z7, er7, code7, ex7 - {3'd0, sh7k[19:15]}, {n7c[26:18], n7b[17:9], n7a[8:0]}};
+    wire [W7-1:0] i8;
+    ot_v41_cut #(.W(W7), .EN(CUT[7])) u_c7 (.clk(clk), .rst_n(rst_n), .d(o7), .q(i8));
+`else
     // ---------------- step 7: normalize ----------------
     wire        v7, byp7, sg7, z7; wire [1:0] er7; wire [31:0] code7; wire [7:0] ex7; wire [26:0] val7;
     wire [4:0]  sh7;
@@ -150,6 +310,7 @@ module ot_v41_fadd_rp #(
     wire [W7-1:0] o7 = {v7, byp7, sg7, z7, er7, code7, ex7 - {3'd0, sh7}, val7 << sh7};
     wire [W7-1:0] i8;
     ot_v41_cut #(.W(W7), .EN(CUT[7])) u_c7 (.clk(clk), .rst_n(rst_n), .d(o7), .q(i8));
+`endif
 
     // ---------------- step 8: round increment ----------------
     wire        v8, byp8, sg8, z8; wire [1:0] er8; wire [31:0] code8; wire [7:0] ex8; wire [26:0] val8;
@@ -172,6 +333,60 @@ module ot_v41_fadd_rp #(
 `ifndef SYNTHESIS
     initial if (SPLIT9 && !CUT[8]) $fatal(1, "SPLIT9 needs CUT[8] (the round carry copies sit in the u_c8 stage)");
 `endif
+`ifdef OT_BF_FOREP
+    // FOREP: the round carry leaves u_c8 as five kept copies (four 6-bit mantissa slices + the exponent increment) and
+    // the bypass flag as two (low / high output half), same edge, no added stage (rq census: carry 58, bypass 36)
+    wire [4:0]  cyk;
+    if (CUT[8]) begin : g_cy_copy
+        for (genvar j = 0; j < 5; j = j + 1) begin : g_f
+            (* keep = 1 *) reg r;
+            always @(posedge clk) r <= r8[24];
+            assign cyk[j] = r;
+        end
+    end else begin : g_cy_wire
+        assign cyk = {5{rnd9[24]}};
+    end
+    wire [23:0] man9 = {cyk[0] ? rnd9[24:19] : rnd9[23:18], cyk[1] ? rnd9[18:13] : rnd9[17:12],
+                        cyk[2] ? rnd9[12:7] : rnd9[11:6], cyk[3] ? rnd9[6:1] : rnd9[5:0]};
+    wire [7:0]  exo9 = cyk[4] ? (ex9 + 8'd1) : ex9;
+    wire        over9 = (ex9 >= 8'hff) || (exo9 >= 8'hff);
+    // step 9a -> (SPLIT9 register) -> step 9b
+    wire        va, bypa, sga, za, overa; wire [1:0] era; wire [31:0] codea; wire [7:0] exoa; wire [23:0] mana;
+    if (SPLIT9) begin : g_s9
+        reg v_q; reg byp_q, sg_q, z_q, over_q; reg [1:0] er_q; reg [31:0] code_q; reg [7:0] exo_q; reg [23:0] man_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) v_q <= 1'b0; else v_q <= v9;
+        always @(posedge clk) begin byp_q <= byp9; sg_q <= sg9; z_q <= z9; over_q <= over9; er_q <= er9; code_q <= code9;
+                                    exo_q <= exo9; man_q <= man9; end
+        assign {va, bypa, sga, za, overa, era, codea, exoa, mana} = {v_q, byp_q, sg_q, z_q, over_q, er_q, code_q, exo_q, man_q};
+    end else begin : g_s9w
+        assign {va, bypa, sga, za, overa, era, codea, exoa, mana} = {v9, byp9, sg9, z9, over9, er9, code9, exo9, man9};
+    end
+    wire        subn9 = (exoa == 8'd1) && !mana[23];
+    wire [31:0] enc9 = {sga, subn9 ? 8'd0 : exoa, mana[22:0]};
+    wire        bypl, byph;
+    if (CUT[8] && SPLIT9 == 0) begin : g_fr8
+        (* keep *) reg r_l;
+        (* keep *) reg r_h;
+        always @(posedge clk) begin r_l <= o8[69]; r_h <= o8[69]; end
+        assign bypl = r_l; assign byph = r_h;
+    end else begin : g_fw8
+        assign bypl = bypa; assign byph = bypa;
+    end
+    // output register: next state formed once (bypass applied per half with its own copy), then registered in two
+    // reset halves (identical function)
+    reg [31:0] yn_d; reg [1:0] errn_d;
+    always @* begin
+        if (za) begin
+            yn_d = 32'd0; errn_d = E_NONE;
+        end else if (overa) begin
+            yn_d = 32'd0; errn_d = E_OVERFLOW;
+        end else begin
+            yn_d = (enc9[30:0] == 31'd0) ? 32'd0 : enc9; errn_d = E_NONE;
+        end
+    end
+    wire [31:0] y_d = {byph ? codea[31:16] : yn_d[31:16], bypl ? codea[15:0] : yn_d[15:0]};
+    wire [1:0]  err_d = byph ? era : errn_d;
+`else
     wire [3:0]  cyk;                       // the round carry, one copy per load group
     if (SPLIT9) begin : g_cy_copy
         (* keep = 1 *) reg [3:0] cyq;
@@ -210,6 +425,7 @@ module ot_v41_fadd_rp #(
             y_d = (enc9[30:0] == 31'd0) ? 32'd0 : enc9; err_d = E_NONE;
         end
     end
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin y[15:0] <= 16'd0; valid_out <= 1'b0; end
         else begin y[15:0] <= y_d[15:0]; valid_out <= va; end

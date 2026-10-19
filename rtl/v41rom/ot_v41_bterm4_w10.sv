@@ -30,6 +30,10 @@ module ot_v41_bterm4_w10 #(
     parameter integer WD = 0          // 1 (2026-10-06, PQ q-element routes Z21: p0_wq -> FP4 decode -> pa_sh, -43 ps
                                       // post-GRT): the weight codes are decoded (e2m1 for FP4) BEFORE the P0 register,
                                       // so p0_wq holds the 8-bit E4M3 code of every lane; bit-identical, zero cycles
+`ifdef OT_BF_FOREP
+    , parameter integer OH_HW = 4,    // FOREP: slot field width (top OH_HW bits of the tag)
+    parameter integer OH_K = 2        // FOREP: kept one-hot copies of the slot (otag_oh)
+`endif
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -44,7 +48,24 @@ module ot_v41_bterm4_w10 #(
     output wire [31:0]       y,
     output wire              f,
     output wire [TW-1:0]     otag
+`ifdef OT_BF_FOREP
+    , output wire [(OH_K << OH_HW)-1:0] otag_oh   // copy j bit e (index j*2^OH_HW+e) == (otag[TW-1 -: OH_HW] == e), same cycle
+`endif
 );
+    // FOREP (S81-C199-FANOUT 2026-10-19, opt-in OT_BF_FOREP, default off = unchanged): kept same-edge register copies so no
+    // flop drives > ~32 loads: the FP4 select per 2 bytes (16 copies of p0_fp4), the P2 shift's high bits per term half
+    // (p1_sqb), the P4b sign per 14-bit slice of the magnitude select (p4a_sgc), the P8 subnormal select per ~11 bits of
+    // the packed word (p7_subc), and the tag's last stage per lane plus OH_K kept one-hot slot decodes (otag_oh).  Every
+    // copy loads the same d on the same clock as its original: zero cycles, bit-identical.
+`ifdef OT_BF_FOREP
+    localparam integer NFC = 16;      // p0_fp4 copies (2 bytes each)
+    wire [31:0] fp4_b;                // the FP4 select seen by byte i
+    (* keep *) reg [NFC-1:0] p0_fp4c;
+    always @(posedge clk) p0_fp4c <= {NFC{fp4}};
+    for (genvar gb = 0; gb < 32; gb = gb + 1) begin : g_fb
+        assign fp4_b[gb] = p0_fp4c[(gb * NFC) / 32];
+    end
+`endif
     localparam integer W = 42;
     wire first = 1'b0, last = 1'b0;
     function automatic [7:0] e2m1(input [3:0] c);
@@ -79,6 +100,9 @@ module ot_v41_bterm4_w10 #(
     reg [4:0]         p1_sh [0:31];
     reg signed [11:0] p1_q [0:31];       // P2S: p1_p << sh[1:0]
     reg [2:0]         p1_sq [0:31];      // P2S: sh[4:2]
+`ifdef OT_BF_FOREP
+    (* keep *) reg [3*32-1:0] p1_sqb;    // FOREP: kept copy of p1_sq for the high half of each term
+`endif
     reg [7:0]         xc, wc;
     reg [3:0]         xs, ws, xf, wf;
     reg [7:0]         pm;
@@ -94,7 +118,11 @@ module ot_v41_bterm4_w10 #(
             nan = 1'b0;
             for (i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
+`ifdef OT_BF_FOREP
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (fp4_b[i] ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`else
                 wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`endif
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 xs = {(xc[6:3] != 4'd0), xc[2:0]};
                 ws = {(wc[6:3] != 4'd0), wc[2:0]};
@@ -126,7 +154,11 @@ module ot_v41_bterm4_w10 #(
             nan = 1'b0; nang = 4'd0;
             for (i = 0; i < 32; i = i + 1) begin
                 xc = p0_xq[8*i +: 8];
+`ifdef OT_BF_FOREP
+                wc = (WD != 0) ? p0_wq[8*i +: 8] : (fp4_b[i] ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`else
                 wc = (WD != 0) ? p0_wq[8*i +: 8] : (p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8]);
+`endif
                 nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 nang[i / 8] = nang[i / 8] | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
                 pa_sg[i] <= xc[7] ^ wc[7];
@@ -156,17 +188,33 @@ module ot_v41_bterm4_w10 #(
                 p1_q[i] <= $signed(pa_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm})) <<< pa_sh[i][1:0];
 `endif
                 p1_sq[i] <= pa_sh[i][4:2];
+`ifdef OT_BF_FOREP
+                p1_sqb[3*i +: 3] <= pa_sh[i][4:2];
+`endif
             end
         end
     end
 
     // -- P2: terms (units of 2^-18) and CSA 32 -> CSAM ---------------------------------------
     reg [32*W-1:0] terms;
+`ifdef OT_BF_FOREP
+    reg [W-1:0] t_lo, t_hi;
+    always @(*) begin
+        for (i = 0; i < 32; i = i + 1)
+            if (P2S != 0 && P1S != 0) begin
+                // low half shifted by p1_sq, high half by its kept copy p1_sqb (the same value)
+                t_lo = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+                t_hi = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sqb[3*i +: 3], 2'b00};
+                terms[W*i +: W] = {t_hi[W-1:W/2], t_lo[W/2-1:0]};
+            end else terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
+    end
+`else
     always @(*) begin
         for (i = 0; i < 32; i = i + 1)
             if (P2S != 0 && P1S != 0) terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
             else terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
+`endif
     wire [CSAM*W-1:0] c7;
     ot_v41_csa #(.N(32), .M(CSAM), .W(W)) u_csa1 (.d(terms), .q(c7));
     reg               p2_v, p2_first, p2_last, p2_nan;
@@ -211,6 +259,14 @@ module ot_v41_bterm4_w10 #(
         p4a_nan <= p3_nan; p4a_es <= p3_es;
         p4a_s <= s4a;
     end
+`ifdef OT_BF_FOREP
+    wire [W-2:0] p4_sel;              // the sign seen by magnitude bit k
+    (* keep *) reg [2:0] p4a_sgc;     // FOREP: kept copies of p4a_s[W-1], one per 14-bit slice of the magnitude select
+    always @(posedge clk) p4a_sgc <= {3{s4a[W-1]}};
+    for (genvar gm = 0; gm < W - 1; gm = gm + 1) begin : g_sg
+        assign p4_sel[gm] = p4a_sgc[(gm * 3) / (W - 1)];
+    end
+`endif
     // -- P4b: sign-magnitude (the negation as ~s + 1 with a parallel-prefix increment) ---------------
     wire [W-1:0] ng;                          // -(a + b) = ~s + 1
     wire         cng;
@@ -227,7 +283,11 @@ module ot_v41_bterm4_w10 #(
         //: biased exponent of the leading bit at position 40 is xe + we + 149
         p4_eb <= p4a_es + 12'sd149;
         p4_s <= p4a_s[W-1];
+`ifdef OT_BF_FOREP
+        p4_m <= (p4_sel & ng[W-2:0]) | (~p4_sel & p4a_s[W-2:0]);
+`else
         p4_m <= p4a_s[W-1] ? ng[W-2:0] : p4a_s[W-2:0];
+`endif
     end
 
     // -- P5a: normalise, coarse (32 / 16 / 8) ----------------------------------------------------------
@@ -300,6 +360,14 @@ module ot_v41_bterm4_w10 #(
     reg [31:0]        p7_n;                                 // normal / zero / inf result
     reg [23:0]        p7_t;
     reg               p7_g, p7_st;
+`ifdef OT_BF_FOREP
+    wire [31:0]       p7_subv;            // the subnormal select seen by output bit k
+    (* keep *) reg [2:0] p7_subc;         // FOREP: kept copies of p7_sub, one per ~11 bits of p8_y
+    always @(posedge clk) p7_subc <= {3{!p6_z && (p6_b < 12'sd1)}};
+    for (genvar gs = 0; gs < 32; gs = gs + 1) begin : g_sb
+        assign p7_subv[gs] = p7_subc[(gs * 3) / 32];
+    end
+`endif
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p7_v <= 1'b0;
         else p7_v <= p6_v;
@@ -331,11 +399,33 @@ module ot_v41_bterm4_w10 #(
         p8_first <= p7_first; p8_last <= p7_last;
         p8_f <= p7_nan | p7_ovf;
         //: a subnormal that rounds up to 2^-126 carries into the exponent field
+`ifdef OT_BF_FOREP
+        p8_y <= (p7_subv & {p7_s, 7'd0, tr}) | (~p7_subv & p7_n);
+`else
         p8_y <= p7_sub ? {p7_s, 7'd0, tr} : p7_n;
+`endif
     end
 
     assign ov = p8_v;
     assign y = p8_y;
     assign f = p8_f;
+`ifdef OT_BF_FOREP
+    // the tag line's last stage as a kept register (the two q lanes' identical lines no longer share one last stage) and
+    // OH_K kept one-hot decodes of its slot field, both loaded from the same D-1 stage on the same edge
+    wire [TW-1:0] tag_m;
+    ot_hdc_delay #(.W(TW), .D(10 + (P1S != 0 ? 1 : 0))) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(tag_m));
+    (* keep *) reg [TW-1:0] tag_l;
+    (* keep *) reg [(OH_K << OH_HW)-1:0] tag_oh;
+    integer oj, oe;
+    always @(posedge clk) begin
+        tag_l <= tag_m;
+        for (oj = 0; oj < OH_K; oj = oj + 1)
+            for (oe = 0; oe < (1 << OH_HW); oe = oe + 1)
+                tag_oh[oj * (1 << OH_HW) + oe] <= (tag_m[TW-1 -: OH_HW] == oe);
+    end
+    assign otag = tag_l;
+    assign otag_oh = tag_oh;
+`else
     ot_hdc_delay #(.W(TW), .D(11 + (P1S != 0 ? 1 : 0))) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(otag));
+`endif
 endmodule

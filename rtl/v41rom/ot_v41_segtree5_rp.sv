@@ -34,6 +34,16 @@ module ot_v41_segtree5_rp #(
     localparam integer PW = $clog2(NT);
     localparam integer LW = $clog2(LV + 1);
     localparam integer QW = $clog2(QD);
+    localparam integer NP = (NT + 1) / 2;   // tree pairs (one reset copy each)
+    // FOREP (S81-C199-FANOUT 2026-10-19, opt-in OT_BF_FOREP, default off = unchanged): kept same-edge register copies and
+    // registered one-hot decodes so no flop drives > ~32 loads.  (1) sv: kept copies per consumer slice (e_d 4 x 8 bits,
+    // the tree one-hot halves, the level decodes) -- the original keeps the control.  (2) the event's slot one-hot e_oh /
+    // e_above formed from REGISTERED decodes (tree one-hot of st and of the queue head h_t, level one-hot / above-mask of
+    // st), loaded on the same edges as st / h_t, so st's tree / level bits no longer fan out over the 2 x NH compares.
+    // (3) the same-slot forward compare y == x registered one stage earlier as e == x (xy_eq).  (4) y_v / y_f / y_e: one
+    // kept copy per tree pair for that pair's 2*LV slot terms and per-tree inc/dec (y_v copies reset by the pair's reset
+    // copy, the same register function).  (5) y_fw: 3 kept copies, one per ~11 bits of u_held.  (6) x_oh: a kept copy
+    // x_ohd for the high half of the held-operand read.  Every copy loads the same d on the same clock: zero cycles.
     wire rst_n;
     ot_v41_rst_copy u_rc (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_n));
     // base-node queue
@@ -59,6 +69,25 @@ module ot_v41_segtree5_rp #(
     reg  [PW+LW+1:0] st;     // {tree, level, final, err}
     always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else sv <= sv_a;
     always @(posedge clk) begin sum <= sum_a; err <= err_a; st <= st_a; end
+`ifdef OT_BF_FOREP
+    (* keep *) reg [3:0] sv_d;       // e_d bytes
+    (* keep *) reg [1:0] sv_t;       // e_toh halves
+    (* keep *) reg       sv_l;       // e_t / e_l / e_loh / e_lab
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin sv_d <= '0; sv_t <= '0; sv_l <= 1'b0; end
+        else begin sv_d <= {4{sv_a}}; sv_t <= {2{sv_a}}; sv_l <= sv_a; end
+    // registered decodes of st's tree / level (same edge as st)
+    reg [NT-1:0] st_toh;
+    reg [LV-1:0] st_loh, st_lab;
+    integer di;
+    always @(posedge clk) begin
+        for (di = 0; di < NT; di = di + 1) st_toh[di] <= st_a[PW+LW+1 -: PW] == di;
+        for (di = 0; di < LV; di = di + 1) begin
+            st_loh[di] <= di == st_a[LW+1 -: LW];
+            st_lab[di] <= di > st_a[LW+1 -: LW];
+        end
+    end
+`endif
     // STAGE 1 -- the event considered this cycle: adder result first, else the queue head.  It is registered
     // (x_*) with its held-operand index decoded one-hot and the mask of its tree's levels above it, so the
     // decision stage below is a few AND-OR levels over registers (1.2 GHz at SS).  An event spends one cycle in
@@ -70,14 +99,41 @@ module ot_v41_segtree5_rp #(
     reg h_f, h_e;
     reg [2:0] h_p;
     wire        e_v = sv || qc != 0;
+`ifdef OT_BF_FOREP
+    wire [PW-1:0] e_t = sv_l ? st[PW+LW+1 -: PW] : h_t;
+    wire [LW-1:0] e_l = sv_l ? st[LW+1 -: LW] : {LW{1'b0}};
+`else
     wire [PW-1:0] e_t = sv ? st[PW+LW+1 -: PW] : h_t;
     wire [LW-1:0] e_l = sv ? st[LW+1 -: LW] : {LW{1'b0}};
+`endif
     wire        e_f = sv ? st[1] : h_f;
     wire        e_e = sv ? (st[0] | err != 2'd0) : h_e;
+`ifdef OT_BF_FOREP
+    wire [31:0] e_d = {sv_d[3] ? sum[31:24] : h_v[31:24], sv_d[2] ? sum[23:16] : h_v[23:16],
+                       sv_d[1] ? sum[15:8] : h_v[15:8], sv_d[0] ? sum[7:0] : h_v[7:0]};
+`else
     wire [31:0] e_d = sv ? sum : h_v;
+`endif
     localparam integer NH = NT * LV;
     reg [NH-1:0] e_oh, e_above;
     integer li, ti, hi;
+`ifdef OT_BF_FOREP
+    reg [NT-1:0] h_toh;                    // registered tree one-hot of the queue head (same edge as h_t)
+    reg [NT-1:0] e_toh;
+    reg [LV-1:0] e_loh, e_lab;
+    always @* begin
+        for (ti = 0; ti < NT; ti = ti + 1) e_toh[ti] = sv_t[(ti * 2) / NT] ? st_toh[ti] : h_toh[ti];
+        // a queue node is a base node: level 0, every level above it
+        for (li = 0; li < LV; li = li + 1) begin
+            e_loh[li] = sv_l ? st_loh[li] : (li == 0);
+            e_lab[li] = sv_l ? st_lab[li] : (li > 0);
+        end
+        for (hi = 0; hi < NH; hi = hi + 1) begin
+            e_oh[hi] = e_toh[hi / LV] & e_loh[hi % LV];
+            e_above[hi] = e_toh[hi / LV] & e_lab[hi % LV];
+        end
+    end
+`else
     always @* begin
         e_oh = '0; e_above = '0;
         for (hi = 0; hi < NH; hi = hi + 1) begin
@@ -85,6 +141,7 @@ module ot_v41_segtree5_rp #(
             if (hi / LV == e_t && hi % LV > e_l) e_above[hi] = 1'b1;
         end
     end
+`endif
     reg          x_v, x_f, x_e, x_add;
     reg [PW-1:0] x_t;
     reg [LW-1:0] x_l;
@@ -93,12 +150,24 @@ module ot_v41_segtree5_rp #(
     reg [NT-1:0] x_toh;
     reg [2:0]    x_pos;
     always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
+`ifdef OT_BF_FOREP
+    (* keep *) reg [NH-1:0] x_ohd;       // kept copy of x_oh for the high half of the held read
+    reg xy_eq;                           // (e_t, e_l) == (x_t, x_l): next cycle's (x == y) of the forward
+    always @(posedge clk) begin
+        x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
+        x_oh <= e_oh; x_above <= e_above; x_ohd <= e_oh;
+        x_toh <= e_toh;
+        x_pos <= use_q ? h_p : tpos[e_t];
+        xy_eq <= e_t == x_t && e_l == x_l;
+    end
+`else
     always @(posedge clk) begin
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
         x_oh <= e_oh; x_above <= e_above;
         for (ti = 0; ti < NT; ti = ti + 1) x_toh[ti] <= e_t == ti;
         x_pos <= use_q ? h_p : tpos[e_t];
     end
+`endif
     // STAGE 2a (x1) -- read into group partials (see the header)
     localparam integer IW = $clog2(LAT + 5);
     localparam integer NG = 4;
@@ -116,6 +185,11 @@ module ot_v41_segtree5_rp #(
     reg          y_fw, y_fe;
     reg [31:0]   y_fd;
     reg [IW-1:0] y_infl;
+`ifdef OT_BF_FOREP
+    wire [NP-1:0] y_vg;                         // per tree pair kept copies of y_v (g_yv below)
+    (* keep *) reg [NP-1:0] y_fg, y_eg;         // per tree pair copies of y_f / y_e
+    (* keep *) reg [2:0]    y_fwc;              // copies of y_fw, one per ~11 bits of u_held
+`endif
     // STAGE 2b (x2) -- decide from registers
     wire y_have = |y_hv;
     wire above = |y_ab;
@@ -130,7 +204,11 @@ module ot_v41_segtree5_rp #(
     always @* begin
         u_held = 32'd0;
         for (int g = 0; g < NG; g++) u_held = u_held | y_hd[32*g +: 32];
+`ifdef OT_BF_FOREP
+        for (int b = 0; b < 32; b++) if (y_fwc[(b * 3) / 32]) u_held[b] = y_fd[b];
+`else
         if (y_fw) u_held = y_fd;
+`endif
         u_herr = y_fw ? y_fe : |y_he;
     end
     // segtree3's local forms on the x2 event (have / infl are current here)
@@ -143,18 +221,34 @@ module ot_v41_segtree5_rp #(
             hv_t = |(have[tj*LV +: LV] & y_oh[tj*LV +: LV]);
             ab_t = |(have[tj*LV +: LV] & y_above[tj*LV +: LV]);
             id_t = infl[tj] == (y_add ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
+`ifdef OT_BF_FOREP
+            ea_t = (EARLY != 0) && y_fg[tj / 2] && !hv_t && !ab_t && id_t;
+            tp_t = y_l == LV[LW-1:0] || ea_t;
+            t_inc[tj] = y_vg[tj / 2] && y_toh[tj] && !tp_t && (hv_t || y_fg[tj / 2]);
+            t_dec[tj] = y_vg[tj / 2] && y_toh[tj] && y_add;
+`else
             ea_t = (EARLY != 0) && y_f && !hv_t && !ab_t && id_t;
             tp_t = y_l == LV[LW-1:0] || ea_t;
             t_inc[tj] = y_v && y_toh[tj] && !tp_t && (hv_t || y_f);
             t_dec[tj] = y_v && y_toh[tj] && y_add;
+`endif
         end
         for (tj = 0; tj < NH; tj = tj + 1) begin
+`ifdef OT_BF_FOREP
+`ifdef QP_MUTANT_TREE
+            s_hold[tj] = y_vg[tj / (2 * LV)] && y_oh[tj] && !y_fg[tj / (2 * LV)];   // negative control: ignores the held bit
+`else
+            s_hold[tj] = y_vg[tj / (2 * LV)] && y_oh[tj] && !have[tj] && !y_fg[tj / (2 * LV)];
+`endif
+            s_pair[tj] = y_vg[tj / (2 * LV)] && y_oh[tj] && have[tj];
+`else
 `ifdef QP_MUTANT_TREE
             s_hold[tj] = y_v && y_oh[tj] && !y_f;                         // negative control: ignores the held bit
 `else
             s_hold[tj] = y_v && y_oh[tj] && !have[tj] && !y_f;
 `endif
             s_pair[tj] = y_v && y_oh[tj] && have[tj];
+`endif
         end
     end
     // x1 reads (next state for have / above / infl; held / herr read now, the x2 event's same-slot hold forwarded)
@@ -169,13 +263,20 @@ module ot_v41_segtree5_rp #(
             r_hv[gi / GS] = r_hv[gi / GS] | (have_nx[gi] & x_oh[gi]);
             r_ab[gi / GS] = r_ab[gi / GS] | (have_nx[gi] & x_above[gi]);
             r_he[gi / GS] = r_he[gi / GS] | (herr[gi] & x_oh[gi]);
+`ifdef OT_BF_FOREP
+            if (x_oh[gi])  r_hd[32*(gi / GS) +: 16] = r_hd[32*(gi / GS) +: 16] | held[gi][15:0];
+            if (x_ohd[gi]) r_hd[32*(gi / GS) + 16 +: 16] = r_hd[32*(gi / GS) + 16 +: 16] | held[gi][31:16];
+`else
             if (x_oh[gi]) r_hd[32*(gi / GS) +: 32] = r_hd[32*(gi / GS) +: 32] | held[gi];
+`endif
         end
         for (gi = 0; gi < NT; gi = gi + 1)
             if (x_toh[gi]) r_infl = r_infl | (infl[gi] + (t_inc[gi] ? 1'b1 : 1'b0) - (t_dec[gi] ? 1'b1 : 1'b0));
     end
 `ifdef ST_MUTANT_FW
     wire r_fw = 1'b0;                                                   // negative control: no same-slot forward
+`elsif OT_BF_FOREP
+    wire r_fw = hold && xy_eq;                                          // xy_eq == (y_t == x_t && y_l == x_l)
 `else
     wire r_fw = hold && y_t == x_t && y_l == x_l;
 `endif
@@ -185,6 +286,9 @@ module ot_v41_segtree5_rp #(
         y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos;
         y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= r_infl;
         y_fw <= r_fw; y_fd <= y_d; y_fe <= y_e;
+`ifdef OT_BF_FOREP
+        y_fwc <= {3{r_fw}}; y_fg <= {NP{x_f}}; y_eg <= {NP{x_e}};
+`endif
     end
     // kept copies of the x2 operand for the held writes, one per slot group
     wire [31:0] y_dc [0:NG-1];
@@ -213,7 +317,25 @@ module ot_v41_segtree5_rp #(
         ot_v41_rst_copy u_r (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_t[tp]));
 `endif
     end
+`ifdef OT_BF_FOREP
+    // y_v copies, one per tree pair, reset by that pair's reset copy (the same register function as y_v)
+    for (genvar vp = 0; vp < NP; vp = vp + 1) begin : g_yv
+        (* keep *) reg q;
+        always @(posedge clk or negedge rst_t[vp])
+`ifdef OT_BF_FOREP_MUT_TREE
+            if (!rst_t[vp]) q <= 1'b0; else q <= (vp == 0) ? 1'b0 : x_v;   // negative control: pair 0's copy stuck
+`else
+            if (!rst_t[vp]) q <= 1'b0; else q <= x_v;
+`endif
+        assign y_vg[vp] = q;
+    end
+    wire [NH-1:0] herr_nx;
+    for (genvar hx = 0; hx < NH; hx = hx + 1) begin : g_hx
+        assign herr_nx[hx] = (herr[hx] & ~s_hold[hx]) | (y_eg[hx / (2 * LV)] & s_hold[hx]);
+    end
+`else
     wire [NH-1:0] herr_nx = (herr & ~s_hold) | (y_e ? s_hold : '0);
+`endif
     for (genvar tt = 0; tt < NT; tt = tt + 1) begin : g_tr
         reg [LV-1:0] hv_q, he_q;
         reg [IW-1:0] in_q;
@@ -248,10 +370,16 @@ module ot_v41_segtree5_rp #(
         opos <= y_pos;
         if (qr + (use_q ? 1'b1 : 1'b0) == qw) begin      // the head-to-be is the node arriving now (if any)
             h_v <= in_val; h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos;
+`ifdef OT_BF_FOREP
+            for (ti = 0; ti < NT; ti = ti + 1) h_toh[ti] <= in_tree == ti;
+`endif
         end else begin
             h_v <= qv[qr + (use_q ? 1'b1 : 1'b0)]; h_t <= qt[qr + (use_q ? 1'b1 : 1'b0)];
             h_f <= qf[qr + (use_q ? 1'b1 : 1'b0)]; h_e <= qe[qr + (use_q ? 1'b1 : 1'b0)];
             h_p <= qp[qr + (use_q ? 1'b1 : 1'b0)];
+`ifdef OT_BF_FOREP
+            for (ti = 0; ti < NT; ti = ti + 1) h_toh[ti] <= qt[qr + (use_q ? 1'b1 : 1'b0)] == ti;
+`endif
         end
         for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
         oval <= y_d;

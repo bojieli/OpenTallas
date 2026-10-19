@@ -400,6 +400,19 @@ module ot_v41_bf_col #(
     wire l0_v, l1_v, l0_f, l1_f;
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
+`ifdef OT_BF_FOREP
+    // FOREP (S81-C199-FANOUT 2026-10-19, opt-in, needs RSTPART + TAGREP): no register drives more than ~32 loads (through
+    // BUF/INV).  q lanes hand the chains 2 kept copies of the ONE-HOT slot (registered with otag; the slot LSB drove 1,060
+    // loads); the chains run ND = 4 slices (kept first / forward copies per slice); the pair tag line's `both` bit and
+    // the BF lanes' valid arrive as kept copies per consumer slice.  Same values on the same edges: zero cycles.
+    localparam integer QND = 4;
+    wire [2*NCH-1:0] l0_oh, l1_oh;
+`ifndef SYNTHESIS
+    initial if (BP != 0 || !(FAST != 0 && QPIPE != 0 && QZ != 0)) $fatal(1, "OT_BF_FOREP needs BP = 0, FAST, QPIPE, QZ");
+`endif
+`else
+    localparam integer QND = QZ_NS / 2;
+`endif
     if (FAST != 0 && QPIPE != 0) begin : g_l3
         // FXST (TCG only, bf-arch): FXST pipelined stages on every lane input {valids, tag, word, exponents, x slices}
         // (the capture word leaves the ROM column through registered relays; +FXST cycles, transaction-level exact)
@@ -426,10 +439,26 @@ module ot_v41_bf_col #(
         wire f_v0, f_v1; wire [TW-1:0] f_t; wire [255:0] f_xq0, f_w0q, f_xq1, f_w1q; wire [9:0] f_xe0, f_xe1;
         wire signed [9:0] f_we0, f_we1;
         assign {f_v0, f_v1, f_t, f_xq0, f_xe0, f_w0q, f_we0, f_xq1, f_xe1, f_w1q, f_we1} = fl_o;
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l0 (.clk(gclk_c), .rst_n(rst_ml), .v(f_v0), .fp4(f_t[0]),
-            .xq(f_xq0), .xe(f_xe0), .wq(f_w0q), .we(f_we0), .tag(f_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)) u_l1 (.clk(gclk_c), .rst_n(rst_ml), .v(f_v1), .fp4(1'b1),
-            .xq(f_xq1), .xe(f_xe1), .wq(f_w1q), .we(f_we1), .tag(f_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)
+`ifdef OT_BF_FOREP
+            , .OH_HW(HW), .OH_K(2)
+`endif
+            ) u_l0 (.clk(gclk_c), .rst_n(rst_ml), .v(f_v0), .fp4(f_t[0]),
+            .xq(f_xq0), .xe(f_xe0), .wq(f_w0q), .we(f_we0), .tag(f_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t)
+`ifdef OT_BF_FOREP
+            , .otag_oh(l0_oh)
+`endif
+            );
+        ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0)
+`ifdef OT_BF_FOREP
+            , .OH_HW(HW), .OH_K(2)
+`endif
+            ) u_l1 (.clk(gclk_c), .rst_n(rst_ml), .v(f_v1), .fp4(1'b1),
+            .xq(f_xq1), .xe(f_xe1), .wq(f_w1q), .we(f_we1), .tag(f_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t)
+`ifdef OT_BF_FOREP
+            , .otag_oh(l1_oh)
+`endif
+            );
     end else if (FAST != 0) begin : g_l2
         ot_v41_bterm2_w10 #(.TW(TW)) u_l0 (.clk(gclk_c), .rst_n(rst_m), .v(mi2_v && mi2_t[2]), .fp4(m_fp4),
             .xq(i2_q0), .xe(i2_e0), .wq(w0q), .we(we0), .tag(mi2_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
@@ -514,14 +543,20 @@ module ot_v41_bf_col #(
     wire [TG:0]   ci1_tag = (BP != 0 && fam) ? m_tag : {l1_t[TW-HW-1 -: TG], l1_t[3]};
     if (FAST != 0 && QZ != 0) begin : g_ch3
 `ifdef OT_BF_RSTPART
-    ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci0_v),
+    ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QND), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci0_v),
+`ifdef OT_BF_FOREP
+        .slot_oh(l0_oh),
+`endif
 `else
     ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_n(rst_mc), .v(ci0_v),
 `endif
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
         .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
 `ifdef OT_BF_RSTPART
-    ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci1_v),
+    ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QND), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci1_v),
+`ifdef OT_BF_FOREP
+        .slot_oh(l1_oh),
+`endif
 `else
     ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_n(rst_mc), .v(ci1_v),
 `endif
@@ -583,13 +618,28 @@ module ot_v41_bf_col #(
     end
     ot_hdc_delay #(.W(32), .D(LAT)) u_pp (.clk(gclk_c), .rst_n(rst_mp), .d(one), .q(pr_pass));
     wire [TG+2:0] pr_t;   // {position, tree, final, both, err}
+`ifdef OT_BF_FOREP
+    // the last stage of the pair tag line as an explicit register plus 2 kept copies of `both` (q_val halves)
+    wire [TG+2:0] pr_t1;
+    ot_hdc_delay #(.W(TG + 3), .D(LAT - 1)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
+        .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t1));
+    reg [TG+2:0] pr_tq;
+    (* keep *) reg [1:0] pr_bk;
+    always @(posedge gclk_c) begin pr_tq <= pr_t1; pr_bk <= {2{pr_t1[1]}}; end
+    assign pr_t = pr_tq;
+`else
     ot_hdc_delay #(.W(TG + 3), .D(LAT)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
         .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t));
+`endif
     reg [LAT-1:0] pr_vp;
     always @(posedge gclk_c or negedge rst_mpv)
         if (!rst_mpv) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
     wire        q_v = pr_vp[LAT-1];
+`ifdef OT_BF_FOREP
+    wire [31:0] q_val = {pr_bk[1] ? pr_sum[31:16] : pr_pass[31:16], pr_bk[0] ? pr_sum[15:0] : pr_pass[15:0]};
+`else
     wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
+`endif
     wire        q_err = pr_t[0] | (pr_t[1] && pr_err != 2'd0);
     if (BP == 1) begin : g_bp4
         // chunks 4k+2 + 4k+3 (golden level 1), then (4k + 4k+1) + (4k+2 + 4k+3) (level 2)
@@ -614,6 +664,9 @@ module ot_v41_bf_col #(
 
     // ---------------- optional BF16 lanes -------------------------------------------------------------------
     wire bf_v, bf_err, bf_final;
+`ifdef OT_BF_FOREP
+    wire [2:0] bf_vk;      // kept copies of bf_v: [0] b_val[15:0], [1] b_val[31:16], [2] err / tag / final
+`endif
     wire [31:0] bf_val;
     wire [TG-1:0] bf_tree;
     if (BF16 != 0) begin : g_bf
@@ -627,7 +680,11 @@ module ot_v41_bf_col #(
             .ze_d(b_ze), .v(mi2_v && mi2_bf),
             .w(cap[255:0]), .x(mz_q0), .slot(mi2_t[TW-HW +: $clog2(NCHB)]), .first(mi2_t[5]), .last(mi2_t[4]),
             .tree(mi2_t[TW-HW-1 -: TG]), .final_i(mi2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
-            .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+            .ofinal(bf_final), .oerr(bf_err), .fault(b_fault)
+`ifdef OT_BF_FOREP
+            , .ov_k(bf_vk)
+`endif
+            );
         end else if (FAST != 0 && QBF != 0) begin : g_fq
         // QBF: the BF view lanes (GRADUAL_RNE multiplier repair; QBF >= 2: lanes re-cut, QBF >= 3: + unrolled chunk chains;
         // see ot_v41_bf16_lanes2_rne_prepare.sv RC)
@@ -648,6 +705,9 @@ module ot_v41_bf_col #(
         end
     end else begin : g_nobf
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
+`ifdef OT_BF_FOREP
+        assign bf_vk = 3'b000;
+`endif
         assign bf_err = 1'b0; assign b_fault = 1'b0;
     end
     wire        qq_v = (BP == 1 && fam) ? q4_v : q_v;       // BP 1 BF16 phase: the 4-chunk node (BP 2: the pair's)
@@ -655,12 +715,19 @@ module ot_v41_bf_col #(
     wire        qq_err = (BP == 1 && fam) ? q4_err : q_err;
     wire [TG:0] qq_t = (BP == 1 && fam) ? q4_t : pr_t[TG+2:2];
     wire        b_v = qq_v | bf_v;
+`ifdef OT_BF_FOREP
+    wire [31:0] b_val = {bf_vk[1] ? bf_val[31:16] : qq_val[31:16], bf_vk[0] ? bf_val[15:0] : qq_val[15:0]};
+    wire        b_err = bf_vk[2] ? bf_err : qq_err;
+    wire [TG-1:0] b_tag = bf_vk[2] ? bf_tree : qq_t[TG:1];
+    wire        b_final = bf_vk[2] ? bf_final : qq_t[0];
+`else
     wire [31:0] b_val = bf_v ? bf_val : qq_val;
     wire        b_err = bf_v ? bf_err : qq_err;
     wire [TG-1:0] b_tag = bf_v ? bf_tree : qq_t[TG:1];
     wire [TRW-1:0] b_tree = b_tag[TRW-1:0];
     wire [2:0]     b_pos = b_tag[TG-1 -: 3];
     wire        b_final = bf_v ? bf_final : qq_t[0];
+`endif
 
     // ---------------- segment tree -> partial ---------------------------------------------------------------------
     wire t_v, t_err;

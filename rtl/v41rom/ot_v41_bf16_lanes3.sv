@@ -55,6 +55,9 @@ module ot_v41_bf16_lanes3 #(
     output wire              ofinal,
     output wire              oerr,
     output wire              fault
+`ifdef OT_BF_FOREP
+    , output wire [2:0]      ov_k      // FOREP: 3 kept copies of ov (same edge), one per consumer slice in the column
+`endif
 );
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
@@ -158,6 +161,13 @@ module ot_v41_bf16_lanes3 #(
         always @(posedge lclk) t_lr <= t_p;
 `endif
         wire [TW-1:0] t_l = t_lr;
+`ifdef OT_BF_FOREP
+        // FOREP (S81-C199-FANOUT 2026-10-19; needs TAGREP + RSTPART): two kept copies of the ONE-HOT slot, decoded from
+        // t_p and registered on the same edge as t_lr, drive the chain's accumulator read (word halves) instead of the
+        // binary slot (t_lr slot bits drove 267 loads each)
+        (* keep *) reg [2*NCHB-1:0] t_oh;
+        always @(posedge lclk) t_oh <= {2{NCHB'(1) << t_p[TW-1 -: HW]}};
+`endif
 `else
         wire [TW-1:0] t_l = t_p;
 `endif
@@ -168,6 +178,9 @@ module ot_v41_bf16_lanes3 #(
         end else if (RC != 0) begin : g_c4
 `ifdef OT_BF_RSTPART
         ot_v41_chain4_rp #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_pin(rst_pv[l / 4]), .v(pv[l]),
+`ifdef OT_BF_FOREP
+            .slot_oh(t_oh),
+`endif
 `else
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
 `endif
@@ -217,6 +230,13 @@ module ot_v41_bf16_lanes3 #(
         wire rst_lv = (lv < 2) ? rst_n : rst_nb;
         always @(posedge clk or negedge rst_lv) if (!rst_lv) vp <= '0; else vp <= {vp[LATT-2:0], lvvld[lv]};
         assign lvvld[lv+1] = vp[LATT-1];
+`ifdef OT_BF_FOREP
+        if (lv == 3) begin : g_ovk
+            (* keep *) reg [2:0] vk;
+            always @(posedge clk or negedge rst_lv) if (!rst_lv) vk <= '0; else vk <= {3{vp[LATT-2]}};
+            assign ov_k = vk;
+        end
+`endif
         ot_hdc_delay #(.W(TRW + 1), .D(LATT)) u_t (.clk(clk), .rst_n(rst_lv), .d(lvt[lv]), .q(lvt[lv+1]));
     end endgenerate
     assign ov = lvvld[4];

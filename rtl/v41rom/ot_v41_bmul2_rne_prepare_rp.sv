@@ -122,21 +122,60 @@ module ot_v41_bmul2_rne_prepare_rp #(
         if (!rst_n) s3_v <= 1'b0;
         else s3_v <= j_v;
     end
+`ifdef OT_BF_FOREP
+    // FOREP (S81-C199-FANOUT 10-19, opt-in OT_BF_FOREP, default off = the `else circuit): the product's leading bit
+    // leaves the XS stage-3 register as four KEPT same-edge copies (same d, same clock, 0 cycles): the low / high half
+    // of the normalise select, the bias add, and the RSPLIT shift amount each take their own (rq census: r_pq 35 loads)
+    wire [3:0] pq15k;
+    if (XS != 0) begin : g_fx3
+        for (genvar j = 0; j < 4; j = j + 1) begin : g_f
+            (* keep *) reg r;
+            always @(posedge clk) r <= pq0[15];
+            assign pq15k[j] = r;
+        end
+    end else begin : g_fnx3
+        assign pq15k = {4{pq[15]}};
+    end
+    wire [22:0] s3_fn = {pq15k[1] ? pq[14:4] : pq[13:3], pq15k[0] ? {pq[3:0], 8'd0} : {pq[2:0], 9'd0}};
+    always @(posedge clk) begin
+        s3_s <= j_s; s3_z <= j_z; s3_nf <= j_nf;
+        s3_f <= s3_fn;
+        s3_be <= pq15k[2] ? j_e + 11'sd128 : j_e + 11'sd127;
+    end
+`else
     always @(posedge clk) begin
         s3_s <= j_s; s3_z <= j_z; s3_nf <= j_nf;
         if (pq[15]) begin s3_f <= {pq[14:0], 8'd0}; s3_be <= j_e + 11'sd128; end
         else          begin s3_f <= {pq[13:0], 9'd0}; s3_be <= j_e + 11'sd127; end
     end
+`endif
     // RSPLIT stage 3: the encode's shift amount 1 - s3_be (same 11-bit modular arithmetic) and its range, registered
     wire [4:0] rs_sh;
     wire       rs_inr;
+`ifdef OT_BF_FOREP
+    wire [23:0] rs_k;                     // FOREP: copy j = {inr, sh[4:0]} at [6*j +: 6]
+`endif
     if (RS != 0) begin : g_rs3
         wire signed [10:0] sh = pq[15] ? (-11'sd127 - j_e) : (-11'sd126 - j_e);   // = 1 - (j_e + 128 | 127)
         wire inr = sh >= 11'sd1 && sh <= 11'sd24;
         reg [4:0] r_sh; reg r_inr;
         always @(posedge clk) begin r_inr <= inr; r_sh <= inr ? sh[4:0] : 5'd1; end
         assign rs_sh = r_sh; assign rs_inr = r_inr;
+`ifdef OT_BF_FOREP
+        // FOREP: four kept copies of {inr, sh} (rq census: r_sh 57..61 loads): three 8-bit slices of the retained
+        // shift and the guard / sticky / zero terms each take their own; sh formed from the leading-bit copy pq15k[3]
+        wire signed [10:0] shk = pq15k[3] ? (-11'sd127 - j_e) : (-11'sd126 - j_e);
+        wire inrk = shk >= 11'sd1 && shk <= 11'sd24;
+        for (genvar j = 0; j < 4; j = j + 1) begin : g_f
+            (* keep *) reg [5:0] r;
+            always @(posedge clk) r <= {inrk, inrk ? shk[4:0] : 5'd1};
+            assign rs_k[6*j +: 6] = r;
+        end
+`endif
     end else begin : g_nrs3
+`ifdef OT_BF_FOREP
+        assign rs_k = {4{6'b0_00001}};
+`endif
         assign rs_sh = 5'd1; assign rs_inr = 1'b0;
     end
     // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
@@ -158,6 +197,22 @@ module ot_v41_bmul2_rne_prepare_rp #(
     wire [31:0] k_gy;
     if (RS != 0) begin : g_x4s
         // stage 4a (RSPLIT): shift, guard, sticky, round-up decision and zero test; the increment follows the register
+`ifdef OT_BF_FOREP
+        wire [23:0] ret0 = rs_k[5]  ? (sig24 >> rs_k[4:0])   : 24'd0;
+        wire [23:0] ret1 = rs_k[11] ? (sig24 >> rs_k[10:6])  : 24'd0;
+        wire [23:0] ret2 = rs_k[17] ? (sig24 >> rs_k[16:12]) : 24'd0;
+        wire [23:0] ret = {ret2[23:16], ret1[15:8], ret0[7:0]};
+        wire        inr3 = rs_k[23];
+        wire [4:0]  gi  = rs_k[22:18] - 5'd1;
+        wire        grd = inr3 && sig24[gi];
+        wire [23:0] stk_t;
+        genvar k;
+        for (k = 0; k < 24; k = k + 1) begin : g_stk
+            assign stk_t[k] = inr3 && (k < gi) && sig24[k];
+        end
+        wire inc  = grd && ((|stk_t) || ret[0]);
+        wire zero = !inr3 || (ret == 24'd0 && !inc);
+`else
         wire [4:0]  gi  = rs_sh - 5'd1;
         wire [23:0] ret = rs_inr ? (sig24 >> rs_sh) : 24'd0;
         wire        grd = rs_inr && sig24[gi];
@@ -168,6 +223,7 @@ module ot_v41_bmul2_rne_prepare_rp #(
         end
         wire inc  = grd && ((|stk_t) || ret[0]);
         wire zero = !rs_inr || (ret == 24'd0 && !inc);
+`endif
         reg r_v, r_s, r_z, r_nf; reg signed [10:0] r_be; reg [22:0] r_f, r_sub; reg [23:0] r_ret; reg r_inc, r_zero;
         always @(posedge clk or negedge rst_n) if (!rst_n) r_v <= 1'b0; else r_v <= s3_v;
         always @(posedge clk) begin
