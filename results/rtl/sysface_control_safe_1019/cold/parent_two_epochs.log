@@ -1,0 +1,14 @@
+COLDAGE epoch77 cold_start2077 ADMdone1
+COLDAGE E_start_sample2080 relative3
+COLDAGE INIT_pin_sample2290 relative213
+COLDAGE FILL_pin_sample2290 relativeE210
+COLDAGE epoch2448 cold_start4448 ADMdone1
+COLDAGE E_start_sample4451 relative3
+COLDAGE INIT_pin_sample4661 relative213
+COLDAGE FILL_pin_sample4661 relativeE210
+SYS_FACE_COLD_PASS MUT0 Tprefix3 Esegment1 init2 AUTH/re-admission row64+scale
+- /srv/opentallas-scratch/claude/sysface-control-safe-1019/src/rtl/test/qwen_split/tb_qfd_sys_face_cold.sv:216: Verilog $finish
+SYSFACE_SAFE_EQUIV checks4807
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.041 s; speed 99.048 us/s
+- Verilator: cpu 0.041 s on 1 threads; allocated 8 MB
