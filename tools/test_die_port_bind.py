@@ -121,6 +121,32 @@ class T(unittest.TestCase):
             rc, r = run(one, ['--pad-file', str(pf)])
             self.assertIn('input_tied', r['failing'])             # a pad bit tied HIGH is not padding
 
+    def test_declared_spare_outputs(self):
+        # TOK-S81-GAPS/SVCP: a declared spare output range may stay unread; undeclared bits and open ports still fail
+        die = ("module top (ck, y);\n input ck;\n output [11:0] y;\n wire [15:0] o;\n"
+               " a u (.ck(ck), .i({16{ck}}), .en(ck), .o(o));\n assign_free x ();\nendmodule\n").replace(" assign_free x ();\n", "")
+        die = die.replace("output [11:0] y;\n wire [15:0] o;", "output [11:0] y;\n wire [15:0] o;\n wire [3:0] o_nc;")
+        die = die.replace(".o(o)", ".o({o_nc, y})")
+        rc, r = run(die)
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['unread_net_bits'], 4)
+        with tempfile.TemporaryDirectory() as d:
+            pf = Path(d) / 'pads.json'
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'spare face', 'ports': {'o': [[12, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertEqual(rc, 0, r['summary'])
+            self.assertEqual(r['summary']['spare_out_bits'], 4)
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[13, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertEqual(r['summary']['unread_net_bits'], 1)   # bit 12 is not declared
+            opn = "module top (ck);\n input ck;\n a u (.ck(ck), .i({16{ck}}), .en(ck), .o());\nendmodule\n"
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[0, 15]]}}}}))
+            rc, r = run(opn, ['--pad-file', str(pf)])
+            self.assertEqual(rc, 0, r['summary'])                   # a fully declared open output port is spare
+            pf.write_text(json.dumps({'instances': {'u': {'master': 'a', 'reason': 'x', 'ports': {'o': [[1, 15]]}}}}))
+            rc, r = run(opn, ['--pad-file', str(pf)])
+            self.assertEqual(r['summary']['output_open_ports'], 1)  # partly declared: still OUTPUT_OPEN
+
     def test_params_sidecar(self):
         with tempfile.TemporaryDirectory() as d:
             pj = Path(d) / 'p.json'
