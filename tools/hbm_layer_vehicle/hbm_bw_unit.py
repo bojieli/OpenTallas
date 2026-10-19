@@ -96,6 +96,7 @@ FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv
 def run(a):
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
     defs = (["H9B"] if a.h9b else (["MR","SAFE"] if a.safe else (["MR"] if a.mr else []))) + (["MRKEY0"] if a.mrkey0 else []) + (["GAPS"] if a.gaps else [])
+    defs += ["OT_PC_CFG_MUT_PC"] if a.pc_mut else []
     tag = "_".join(defs) or "base"
     import hashlib
     h = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in FILES)).hexdigest()[:10]
@@ -126,6 +127,8 @@ def run(a):
                    hbm_cycles=int(kv["hbm_cycles"]))
     (work / f"{name}.json").write_text(json.dumps(res, indent=1))
     print(json.dumps({k: res[k] for k in ("pattern", "defines", "rc", "bw", "fault")}))
+    if r.returncode or m is None:
+        raise SystemExit(r.returncode or 1)
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -133,7 +136,7 @@ def main():
     g = sp.add_parser("gen"); g.add_argument("--pattern", required=True); g.add_argument("--out", required=True)
     g.add_argument("--layers", type=int, default=4); g.add_argument("--seed", type=int, default=1)
     r = sp.add_parser("run"); r.add_argument("--work", required=True); r.add_argument("--pattern", required=True)
-    r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
+    r.add_argument("--pc-mut", action="store_true"); r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
     r.add_argument("--gaps", action="store_true"); r.add_argument("--layers", type=int, default=4)
     r.add_argument("--seed", type=int, default=1); r.add_argument("--warm", type=int, default=8)
     a = ap.parse_args()
