@@ -258,9 +258,14 @@ def audit_signal_abstract(text, signal_cap, pg_cap, routed):
 EXACT_LEF_SUFFIX = ".lef.exact"
 
 
-def pin_access_violations(text):
-    """abstract_pin_stub.pin_spacing_violations (the child_lint (i) detector) on a LEF text, or None when the detector
-    is not next to this copy (tools/hier_contract of the same tree)"""
+# exact-shape abstracts of big tiles are huge (hbm_sfu_lg_pair_tap_leaf 216x216 um: 1.13 M RECTs, 47 MB): the finalize
+# step (abstract_pin_stub.process) and the detector are pure python over all rects and did not finish in 13 min there.
+# Above this many RECTs the exact LEF is NOT published or judged whole; only its shapes inside the pin windows are used.
+EXACT_FULL_MAX_RECTS = 200000
+
+
+def _aps():
+    """the abstract_pin_stub module of this tree (tools/hier_contract), or None"""
     import importlib.util
     p = Path(__file__).resolve().parents[2] / "tools/hier_contract/abstract_pin_stub.py"
     try:
@@ -269,7 +274,106 @@ def pin_access_violations(text):
         spec = importlib.util.spec_from_file_location("ot_aps_view_export", p)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        return mod.pin_spacing_violations(text)
+        return mod
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def exact_window_patch(text, exact_lines):
+    """default abstract TEXT with its same-layer OBS replaced by the EXACT shapes inside every signal pin's wide-spacing
+    window (TW3-LGTAP 2026-10-19).  Window = the pin rect widened by the layer's wide-metal spacing across the layer's
+    preferred direction (M5 vertical: +-0.072 in x over the pin's y run; M4 horizontal: +-0.072 in y).  Inside a
+    window the default OBS (closing-bloat merges, e.g. a 189-um M5 edge band over the top-face pin bases) is cut out
+    and the real routed shapes of the exact abstract (EXACT_LINES: an iterable of its lines) are put back, clipped to
+    the window; outside the windows the default abstract is unchanged.  Real metal is never dropped: every exact shape
+    that meets a window stays as OBS (or becomes the pin's own stub in the finalize step).  -> (text, record)"""
+    mod = _aps()
+    U = mod.U
+    iu = mod._iu
+    norm = lambda r: (min(r[0], r[2]), min(r[1], r[3]), max(r[0], r[2]), max(r[1], r[3]))
+    head, obs = mod.split_lef(text)
+    sig, _ = mod.pin_rects(head)
+    BIN = 2 * U  # 2-um x bins
+    wins = {}
+    for rs in sig.values():
+        for r in rs:
+            lay = r[0]
+            if lay not in mod.WIDE_SPACING_UM:
+                continue
+            w = iu(mod.WIDE_SPACING_UM[lay])
+            a, b, c, e = norm(tuple(map(iu, r[1:])))
+            win = (a - w, b, c + w, e) if int(lay[1:]) % 2 else (a, b - w, c, e + w)
+            for k in range(win[0] // BIN, win[2] // BIN + 1):
+                wins.setdefault((lay, k), []).append(win)
+
+    def hits(lay, r):
+        out = set()
+        for k in range(r[0] // BIN, r[2] // BIN + 1):
+            out.update(x for x in wins.get((lay, k), ()) if mod._ov(r, x))
+        return sorted(out)
+
+    rect_re = re.compile(r"\s*" + mod._RECT)
+    lay_re = re.compile(r"\s*LAYER (\S+)")
+    out, cur, cut = [], None, 0
+    for line in obs.split("\n"):
+        m = lay_re.match(line)
+        if m:
+            cur = m.group(1); out.append(line); continue
+        m = rect_re.match(line)
+        if m and cur:
+            r = norm(tuple(map(iu, map(float, m.groups()))))
+            hs = hits(cur, r)
+            if hs:
+                cut += 1
+                ind = re.match(r"\s*", line).group()
+                out += [f"{ind}RECT  {mod._um(a)} {mod._um(b)} {mod._um(c)} {mod._um(e)} ;"
+                        for a, b, c, e in mod.rect_minus(r, hs)]
+                continue
+        out.append(line)
+    add, in_obs, cur = {}, False, None
+    for line in exact_lines:
+        s = line.strip()
+        if not in_obs:
+            in_obs = s == "OBS"
+            continue
+        if s.startswith("END"):
+            break
+        m = lay_re.match(line)
+        if m:
+            cur = m.group(1); continue
+        m = rect_re.match(line)
+        if m and cur in mod.WIDE_SPACING_UM:
+            r = norm(tuple(map(iu, map(float, m.groups()))))
+            for x in hits(cur, r):
+                add.setdefault(cur, set()).add((max(r[0], x[0]), max(r[1], x[1]), min(r[2], x[2]), min(r[3], x[3])))
+    obs = "\n".join(out)
+    k = obs.rstrip().rfind("\n  END")
+    assert k > 0, "no OBS END in the default abstract"
+    blk = "".join(f"\n    LAYER {lay} ;" + "".join(f"\n      RECT  {mod._um(a)} {mod._um(b)} {mod._um(c)} {mod._um(e)} ;"
+                                                for a, b, c, e in sorted(rs)) for lay, rs in sorted(add.items()))
+    obs = obs[:k] + blk + obs[k:]
+    return head + obs, dict(windows=len({w for v in wins.values() for w in v}), default_rects_cut=cut,
+                            exact_rects_added=sum(map(len, add.values())))
+
+
+def pin_access_violations(text):
+    """abstract_pin_stub.pin_spacing_violations (the child_lint (i) detector) on a LEF text, raw AND as published (after
+    the finalize step abstract_pin_stub.process: stub move + 1b band carve + pocket closing), or None when the detector
+    is not next to this copy (tools/hier_contract of the same tree); a pin counts once if either the raw or the
+    processed text blocks it.
+    TW3-LGTAP 2026-10-19 (hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1 LOST_CLOSED): the raw default abstract had 0
+    violations (its 189-um M5 edge band OVERLAPS the top-face pins, which the detector does not count), but the 1b band
+    carve left 0.036-um slivers between the pins, 0.048 from the next pin -> child_lint (i) FAIL on the published LEF and
+    the exact-shape fallback never ran.  Judging the processed text runs the fallback whenever the published LEF fails."""
+    try:
+        mod = _aps()
+        if mod is None:
+            return None
+        bad = mod.pin_spacing_violations(text)
+        if hasattr(mod, "process") and re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", text):
+            seen = {(b[0], b[1]) for b in bad}   # raw OR published: either one failing is a blocked pin
+            bad += [b for b in mod.pin_spacing_violations(mod.process(text)[0]) if (b[0], b[1]) not in seen]
+        return bad
     except Exception:  # noqa: BLE001 - no detector: keep the default abstract
         return None
 
@@ -293,9 +397,27 @@ def choose_abstract(out, name, base, image, mounts=()):
     rec.update(exact_returncode=p.returncode, exact_command=cmd)
     try:
         if p.returncode == 0 and exact.is_file():
-            bad_x = pin_access_violations(exact.read_text(errors="replace"))
+            with exact.open(errors="replace") as f:
+                n_rects = sum(1 for l in f if "RECT" in l)
+            rec["exact_rects"] = n_rects
+            bad_x = pin_access_violations(exact.read_text(errors="replace")) if n_rects <= EXACT_FULL_MAX_RECTS else None
             rec["exact_pin_access_violations"] = None if bad_x is None else len(bad_x)
-            if bad_x is not None and len(bad_x) < len(bad):
+            if bad_x is None or len(bad_x) >= len(bad):
+                # TW3-LGTAP: exact geometry only inside the pin windows, default abstract elsewhere
+                with exact.open(errors="replace") as f:
+                    win_text, wrec = exact_window_patch(lef.read_text(errors="replace"), f)
+                bad_w = pin_access_violations(win_text)
+                rec.update(window_patch=wrec, window_pin_access_violations=None if bad_w is None else len(bad_w))
+                if bad_w is not None and len(bad_w) < len(bad):
+                    default_sha = sha(lef)
+                    tmp = out / f".{name}.lef.windows"
+                    tmp.write_text(win_text)
+                    tmp.replace(lef)  # rename, not an in-place write: the container leaves the LEF root-owned
+                    rec.update(mode="exact_windows", default_sha256=default_sha, exact_sha256=sha(exact),
+                               why=f"default (closing-bloat) abstract leaves {len(bad)} signal pins without DRC-clean "
+                                   f"access (e.g. {', '.join(f'{b[0]} {b[1]} {b[2]:g}' for b in bad[:4])}); exact shapes "
+                                   f"in {wrec['windows']} pin windows leave {len(bad_w)}")
+            elif len(bad_x) < len(bad):
                 rec.update(mode="exact", default_sha256=sha(lef), exact_sha256=sha(exact),
                            why=f"default (closing-bloat) abstract leaves {len(bad)} signal pins without DRC-clean "
                                f"access (e.g. {', '.join(f'{b[0]} {b[1]} {b[2]:g}' for b in bad[:4])}); exact-shape "
@@ -683,7 +805,7 @@ def main():
             scope='clock arc only; actual communicating-pair setup/hold remains a die check'), indent=2) + '\n')
     rec["abstract"] = choose_abstract(out, a.name, base, a.image) if "ss" in a.corners.split(",") else \
         dict(mode="default", why="no SS pass: abstract not written by this export")
-    if rec["abstract"]["mode"] == "exact":
+    if rec["abstract"]["mode"] in ("exact", "exact_windows"):
         print(f"VIEW_EXPORT exact-shape abstract published: {rec['abstract']['why']}")
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
     want = [f"{a.name}.lef"] + [f"{a.name}_{c}.lib" for c in ("ss", "ff", "tt")]
