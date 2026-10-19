@@ -39,7 +39,7 @@ SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp3
        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
        "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
        "rtl/gpu/ot_gpu_stack.sv", "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
-       "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+       "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh_fc_xr2.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
        "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv", "rtl/hbm_accel/sm/static/ot_smh_static_front.sv",
        "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv", "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv",
        "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv", "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_pstore.sv",
@@ -337,6 +337,12 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
     last_consume = beats[-1][0]
     exp = dict(first_line=first_line, last_consume=last_consume, lines=len(lines))
     # ---- results ----
+    # FCX calendar edge (LH-GEN2E-IN 10-19, results/arch/hf5_1018/fcxr2/calendar_edge.json): fc_xr2 in u_rw / u_re + the
+    # tile-row-0 gather landing put every result (and so every BE landing) fcx_edge = 1 cycle later; the compiler adds it
+    # to every result-side latency.  smut "fcx0" = the TIGHT calendar (publish one cycle after the measured last landing)
+    # compiled WITHOUT the edge (negative control, must FAIL); smut "tight" = the same with the edge (must PASS).
+    e = int(lat.get("fcx_edge", 0)) if smut != "fcx0" else 0
+    lat = dict(lat, **{k: lat[k] + e for k in ("qk_first", "qk_land_meas", "qk_land", "pv_node")})
     if qk:
         # QK score calendar from the MEASURED landings (r8, 2026-10-15).  The BE holds ONE DS score register per column
         # (mode 1, scores[0]); every BE control (clear / publish) reaches column c BE_DELAY + 4 x hop(c) after issue,
@@ -360,11 +366,13 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
             clr = last_w + lat["qk_clear"] if prev_pub is None else prev_pub + 1
             if smut == "early":
                 pub = last_w + lat["qk_land_meas"]
+            if smut in ("tight", "fcx0"):
+                pub = last_w + lat["qk_land_meas"] + 1
             if smut == "r7clear":
                 clr = last_w + lat["qk_clear"]
             assert clr < last_w + lat["qk_first"], f"wave {w}: clear {clr} not before first landing {last_w + lat['qk_first']}"
-            assert smut or pub > last_w + lat.get("qk_land_meas", lat["qk_land"]), f"wave {w}: publish {pub} before last landing"
-            if not smut and w + 1 < nw:
+            assert smut not in ("", "tight") or pub > last_w + lat.get("qk_land_meas", lat["qk_land"]), f"wave {w}: publish {pub} before last landing"
+            if smut in ("", "tight") and w + 1 < nw:
                 assert pub < lasts[w + 1] + lat["qk_first"], f"wave {w}: publish {pub} after wave {w + 1} lands"
             cal.set(clr, mode=mode, be_clear=1)
             cal.set(pub, mode=mode, be_publish=1, be_row=8 * w, be_expect=(1 << ncols) - 1)
@@ -388,15 +396,15 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
 
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
-def build(work, probe, dmut):
-    obj = work / f"obj_p{int(probe)}_d{dmut}"
+def build(work, probe, dmut, defines=()):
+    obj = work / (f"obj_p{int(probe)}_d{dmut}" + "".join("_" + d.lower() for d in defines))
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
     cmd = [vl, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
            "-Wno-MULTIDRIVEN", "--unroll-count", "256", "--top-module", "tb_hbm_smh_attn", "-DOT_SMH_HIER", "-DOT_SMH_FC_HIER",
-           f"-GDMUT={dmut}", "--Mdir", str(obj)] + (["-DPROBE"] if probe else []) + [str(ROOT / s) for s in SRC]
+           f"-GDMUT={dmut}", "--Mdir", str(obj)] + (["-DPROBE"] if probe else []) + [f"-D{d}" for d in defines] + [str(ROOT / s) for s in SRC]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (work / f"build_p{int(probe)}_d{dmut}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
@@ -440,7 +448,8 @@ def check(rec, op, exp, out):
 # subcommand on the probe run, results/hbm_sm_attention_1015/elem_r8/qk_landing_calibration.json: the score K beat
 # reaches column c's register at last_w + 63..70 command cycles, control delay 11 + 4 x hop(c)); qk_land = measured
 # max + 8 cycles margin.  pv_node / out: the r7 margin values (PV passes exact with them).
-DEFAULT_LAT = dict(req_lead=8, qk_first=63, qk_land_meas=70, qk_land=78, qk_clear=8, pv_node=160, out=40)
+# fcx_edge: the fc_xr2 calendar edge (+1 on every result-side latency above; 0 only for the OT_SMH_FC_XR1 diagnostic build).
+DEFAULT_LAT = dict(req_lead=8, qk_first=63, qk_land_meas=70, qk_land=78, qk_clear=8, pv_node=160, out=40, fcx_edge=1)
 
 
 def calibrate(probe_dir: str, rec, op, lat):
@@ -488,7 +497,9 @@ def main(argv=None):
     p.add_argument("--lat", default="", help="JSON of implemented latencies (default: margin calendar)")
     p.add_argument("--probe", action="store_true")
     p.add_argument("--dmut", type=int, default=0, help="converter mutant (ot_hbm_sm_kv_line MUT), negative control")
-    p.add_argument("--smut", default="", choices=["", "r7clear", "early"], help="calendar negative control")
+    p.add_argument("--smut", default="", choices=["", "r7clear", "early", "tight", "fcx0"],
+                   help="calendar negative controls (r7clear / early / fcx0) and the tight positive calendar (tight)")
+    p.add_argument("--define", action="append", default=[], help="extra RTL define (e.g. OT_SMH_FCX_MUT_NOALIGN mutant)")
     p.add_argument("--work", required=True)
     p.add_argument("--out", required=True)
     c = sub.add_parser("calibrate", help="measured QK landing window from a --probe run directory")
@@ -519,12 +530,13 @@ def main(argv=None):
     want = a.ops.split(",")
     ops = [o for o in ops if a.ops == "all" or o[0] in want]
     assert ops, "no ops"
-    exe = build(work, a.probe, a.dmut)
+    exe = build(work, a.probe, a.dmut, tuple(a.define))
     results = []
     t0 = time.time()
     for op in ops:
         cal, exp = compile_op(rec, op, lat, op[1] == "pv", smut=a.smut)
-        d = work / f"{a.shape}_{op[0]}_p{int(a.probe)}_d{a.dmut}{('_' + a.smut) if a.smut else ''}"
+        d = work / (f"{a.shape}_{op[0]}_p{int(a.probe)}_d{a.dmut}{('_' + a.smut) if a.smut else ''}"
+                    + "".join("_" + x.lower() for x in a.define))
         d.mkdir(exist_ok=True)
         n = exp["end"] + 4
         cal.write(d, n)
@@ -540,6 +552,7 @@ def main(argv=None):
         results.append(res)
         print(("PASS " if res["pass"] else "FAIL ") + json.dumps({k: v for k, v in res.items() if k != "calendar"}), flush=True)
     summ = dict(shape=a.shape, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut, smut=a.smut,
+                defines=a.define,
                 lat=lat, wall_s=round(time.time() - t0, 1),
                 verdict="PASS" if all(r["pass"] for r in results) else "FAIL")
     Path(a.out).write_text(json.dumps(dict(summary=summ, ops=results), indent=1))

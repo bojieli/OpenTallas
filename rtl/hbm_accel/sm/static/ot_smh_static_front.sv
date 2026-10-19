@@ -78,8 +78,20 @@ wire [817:0] r0a;
         .fo_row0(fi_row0));
     ot_hbm_accel_smh_fc_t #(.ENABLE_INT8(0),.TAGW(TAGW)) u_tw (.clk(clk), .rst_a(rst_n), .li(lt0), .fi(fm[2:0]), .rout(rl[RBW+:RBW]), .r0a(r0a));
     ot_hbm_accel_smh_fc_t #(.ENABLE_INT8(0),.TAGW(TAGW)) u_te (.clk(clk), .rst_a(rst_n), .li(lt1), .fi(fm[8:6]), .rout(rr[RBW+:RBW]), .r0a(r0a_e));
+    // LH-GEN2E-IN 10-19: u_rw / u_re = fc_xr2 (2-stage x-write / PR1-line relay; route smn_fcxr2_ref_fa-r4-637a35abf
+    // CLOSED, native PASS launch 155.8 / capture 100.0, pairs fc_xl->xr2 341.0 / xr2->fc_b 326.5 ps <= 410: receipt
+    // results/arch/hbm_fcx_native_1019).  xo / lo / fo are +1 together, so fc_b stays internally aligned and tile row 1
+    // (rows 2 / 3 + its x write) runs +1 against tile row 0; ot_hbm_accel_smh_attn lands tile row 0's gather lanes one
+    // more cycle (OT_SMH_FCX_EDGE = 1) so the BE tree is aligned again; results / BE controls are +1 in the compiler
+    // calendar (tools/hbm_sm_attention/sm_elem_bench.py fcx_edge; results/arch/hf5_1018/fcxr2/calendar_edge.json).
+    // OT_SMH_FC_XR1 (diagnostic only): the old one-stage fc_xr (native FAIL 409 ps launch; not a release build).
+`ifdef OT_SMH_FC_XR1
     ot_hbm_accel_smh_fc_xr #(.TAGW(TAGW)) u_rw (.clk(clk), .rst_a(rst_n), .xi(xw_w), .xo(xr_w), .li(lb0), .lo(lbr0), .fi(fm[5:3]), .fo(fmr0));
     ot_hbm_accel_smh_fc_xr #(.TAGW(TAGW)) u_re (.clk(clk), .rst_a(rst_n), .xi(xw_e), .xo(xr_e), .li(lb1), .lo(lbr1), .fi(fm[11:9]), .fo(fmr1));
+`else
+    ot_hbm_accel_smh_fc_xr2 #(.TAGW(TAGW)) u_rw (.clk(clk), .rst_a(rst_n), .xi(xw_w), .xo(xr_w), .li(lb0), .lo(lbr0), .fi(fm[5:3]), .fo(fmr0));
+    ot_hbm_accel_smh_fc_xr2 #(.TAGW(TAGW)) u_re (.clk(clk), .rst_a(rst_n), .xi(xw_e), .xo(xr_e), .li(lb1), .lo(lbr1), .fi(fm[11:9]), .fo(fmr1));
+`endif
     ot_hbm_accel_smh_fc_b #(.ENABLE_INT8(0),.TAGW(TAGW)) u_bw (.clk(clk), .rst_a(rst_n), .li(lbr0), .fi(fmr0), .xi(xr_w), .bout(bl[BBW+:BBW]),
         .rout(rl[2*RBW+:RBW]), .r3a(r3a));
     ot_hbm_accel_smh_fc_b #(.ENABLE_INT8(0),.TAGW(TAGW)) u_be (.clk(clk), .rst_a(rst_n), .li(lbr1), .fi(fmr1), .xi(xr_e), .bout(br[BBW+:BBW]),

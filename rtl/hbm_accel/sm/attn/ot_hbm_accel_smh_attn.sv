@@ -79,6 +79,17 @@ module ot_hbm_accel_smh_attn #(
     localparam integer A1B = 11 - lg2g(LBS * 266, XC, XC);
     localparam integer A2B = 11 - lg2g(LSB * 16, LB * 266, XC);
     localparam integer NP  = SUB / RPT;
+    // FCX_EDGE: tile-row-0 gather landing that matches fc_xr2's +1 on tile row 1 (ot_smh_static_front u_rw / u_re).
+    // OT_SMH_FC_XR1 (old one-stage fc_xr, diagnostic) needs none; OT_SMH_FCX_MUT_NOALIGN = bench mutant (fc_xr2 without
+    // the landing: the BE tree combines rows one cycle apart -> wrong sums, must FAIL).
+    localparam integer FCX_EDGE =
+`ifdef OT_SMH_FC_XR1
+        0;
+`elsif OT_SMH_FCX_MUT_NOALIGN
+        0;
+`else
+        1;
+`endif
     initial if (RBW != 818 || BBW != 2069 || QLW != 46) $fatal(1, "ot_hbm_accel_smh_attn: production shape only");
 
     wire [SUB*RBW-1:0] f_rl, f_rr;
@@ -145,6 +156,16 @@ module ot_hbm_accel_smh_attn #(
             end
             if (p == 0) begin : g_g0
                 assign t_gi[T*TGI +: TGI] = {TGI{1'b0}};
+            end else if (FCX_EDGE != 0) begin : g_gx
+                // FCX edge landing (LH-GEN2E-IN 10-19): fc_xr2 runs tile row p >= 1 one cycle later than tile row 0,
+                // so tile row p-1's pass lanes take one landing register here (valid / fault bits reset, data not);
+                // the BE's positional deskew + combine tree then sees all SUB rows of a result in the same cycle.
+                for (j = 0; j < SUB - RPT; j = j + 1) begin : g_gl
+                    ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gxv (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                        .d(t_go[(T-1)*SUB*GLW + j*GLW + GLW - 2 +: 2]), .q(t_gi[T*TGI + j*GLW + GLW - 2 +: 2]));
+                    ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_gxd (.clk(clk), .rst_n(rst_n), .en(1'b1),
+                        .d(t_go[(T-1)*SUB*GLW + j*GLW +: GLW-2]), .q(t_gi[T*TGI + j*GLW +: GLW-2]));
+                end
             end else begin : g_gn
                 assign t_gi[T*TGI +: TGI] = t_go[(T-1)*SUB*GLW +: TGI];
             end
