@@ -1,0 +1,2817 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_vm",
+  "cells": 60283,
+  "issues": [],
+  "register_outputs_over32": [],
+  "driven_nets_over32_count": 42,
+  "highest_fanout_nets": [
+    {
+      "bit": 35800,
+      "loads": 6412,
+      "names": [
+        "ck",
+        "g_c_lane[0].g_s1[0].u_k.ck",
+        "g_c_lane[0].g_s1[1].u_k.ck",
+        "g_c_lane[0].g_s1[2].u_k.ck",
+        "g_c_lane[0].g_s1[3].u_k.ck"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 68288,
+      "loads": 552,
+      "names": [
+        "w16_we"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 63256,
+      "loads": 275,
+      "names": [
+        "g_write_bank[0].take_su"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11203",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63266,
+      "loads": 275,
+      "names": [
+        "g_write_bank[1].take_su"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11216",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68860,
+      "loads": 96,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$46950",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68861,
+      "loads": 96,
+      "names": [
+        "wb_m[0][32]",
+        "wb_m[0][33]",
+        "wb_m[0][34]",
+        "wb_m[0][35]",
+        "wb_m[0][36]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47048",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68862,
+      "loads": 96,
+      "names": [
+        "wb_m[0][64]",
+        "wb_m[0][65]",
+        "wb_m[0][66]",
+        "wb_m[0][67]",
+        "wb_m[0][68]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47146",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68863,
+      "loads": 96,
+      "names": [
+        "wb_m[0][96]",
+        "wb_m[0][97]",
+        "wb_m[0][98]",
+        "wb_m[0][99]",
+        "wb_m[0][100]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47244",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68864,
+      "loads": 96,
+      "names": [
+        "wb_m[0][128]",
+        "wb_m[0][129]",
+        "wb_m[0][130]",
+        "wb_m[0][131]",
+        "wb_m[0][132]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47342",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68865,
+      "loads": 96,
+      "names": [
+        "wb_m[0][160]",
+        "wb_m[0][161]",
+        "wb_m[0][162]",
+        "wb_m[0][163]",
+        "wb_m[0][164]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47440",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68866,
+      "loads": 96,
+      "names": [
+        "wb_m[0][192]",
+        "wb_m[0][193]",
+        "wb_m[0][194]",
+        "wb_m[0][195]",
+        "wb_m[0][196]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47538",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68867,
+      "loads": 96,
+      "names": [
+        "wb_m[0][224]",
+        "wb_m[0][225]",
+        "wb_m[0][226]",
+        "wb_m[0][227]",
+        "wb_m[0][228]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47636",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68868,
+      "loads": 96,
+      "names": [
+        "wb_m[1][0]",
+        "wb_m[1][1]",
+        "wb_m[1][2]",
+        "wb_m[1][3]",
+        "wb_m[1][4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47774",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68869,
+      "loads": 96,
+      "names": [
+        "wb_m[1][32]",
+        "wb_m[1][33]",
+        "wb_m[1][34]",
+        "wb_m[1][35]",
+        "wb_m[1][36]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47882",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68870,
+      "loads": 96,
+      "names": [
+        "wb_m[1][64]",
+        "wb_m[1][65]",
+        "wb_m[1][66]",
+        "wb_m[1][67]",
+        "wb_m[1][68]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$47990",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68871,
+      "loads": 96,
+      "names": [
+        "wb_m[1][96]",
+        "wb_m[1][97]",
+        "wb_m[1][98]",
+        "wb_m[1][99]",
+        "wb_m[1][100]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$48098",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68872,
+      "loads": 96,
+      "names": [
+        "wb_m[1][128]",
+        "wb_m[1][129]",
+        "wb_m[1][130]",
+        "wb_m[1][131]",
+        "wb_m[1][132]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$48206",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68873,
+      "loads": 96,
+      "names": [
+        "wb_m[1][160]",
+        "wb_m[1][161]",
+        "wb_m[1][162]",
+        "wb_m[1][163]",
+        "wb_m[1][164]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$48314",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68874,
+      "loads": 96,
+      "names": [
+        "wb_m[1][192]",
+        "wb_m[1][193]",
+        "wb_m[1][194]",
+        "wb_m[1][195]",
+        "wb_m[1][196]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$48422",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 68875,
+      "loads": 96,
+      "names": [
+        "wb_m[1][224]",
+        "wb_m[1][225]",
+        "wb_m[1][226]",
+        "wb_m[1][227]",
+        "wb_m[1][228]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$48530",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 62878,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[0].hit[7]",
+        "g_write_bank[1].g_slot[0].hit[7]",
+        "g_write_bank[0].g_slot[0].pick[7]",
+        "g_write_bank[1].g_slot[0].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11316",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 62926,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[1].hit[7]",
+        "g_write_bank[1].g_slot[1].hit[7]",
+        "g_write_bank[0].g_slot[1].pick[7]",
+        "g_write_bank[1].g_slot[1].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11963",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 62974,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[2].hit[7]",
+        "g_write_bank[1].g_slot[2].hit[7]",
+        "g_write_bank[0].g_slot[2].pick[7]",
+        "g_write_bank[1].g_slot[2].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$12618",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63022,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[3].hit[7]",
+        "g_write_bank[1].g_slot[3].hit[7]",
+        "g_write_bank[0].g_slot[3].pick[7]",
+        "g_write_bank[1].g_slot[3].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$13273",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63070,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[4].hit[7]",
+        "g_write_bank[1].g_slot[4].hit[7]",
+        "g_write_bank[0].g_slot[4].pick[7]",
+        "g_write_bank[1].g_slot[4].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$13928",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63118,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[5].hit[7]",
+        "g_write_bank[1].g_slot[5].hit[7]",
+        "g_write_bank[0].g_slot[5].pick[7]",
+        "g_write_bank[1].g_slot[5].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14583",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63166,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[6].hit[7]",
+        "g_write_bank[1].g_slot[6].hit[7]",
+        "g_write_bank[0].g_slot[6].pick[7]",
+        "g_write_bank[1].g_slot[6].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$15238",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63214,
+      "loads": 36,
+      "names": [
+        "g_write_bank[0].g_slot[7].hit[7]",
+        "g_write_bank[1].g_slot[7].hit[7]",
+        "g_write_bank[0].g_slot[7].pick[7]",
+        "g_write_bank[1].g_slot[7].pick[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$15893",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 62879,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[0].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11208",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 62927,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[1].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11209",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 62975,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[2].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11210",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63023,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[3].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11211",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63071,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[4].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11212",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63119,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[5].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11213",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63167,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[6].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11214",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63215,
+      "loads": 33,
+      "names": [
+        "g_write_bank[0].g_slot[7].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11215",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63257,
+      "loads": 33,
+      "names": [
+        "g_write_bank[1].g_slot[0].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$11802",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63258,
+      "loads": 33,
+      "names": [
+        "g_write_bank[1].g_slot[1].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$12457",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63259,
+      "loads": 33,
+      "names": [
+        "g_write_bank[1].g_slot[2].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$13112",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 63260,
+      "loads": 33,
+      "names": [
+        "g_write_bank[1].g_slot[3].one_slot"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$13767",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "$auto$ff.cc:337:slice$71973",
+      "pin": "D",
+      "bit": 65,
+      "generic_levels": 20,
+      "names": [
+        "$0\\fault[0:0]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68380,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][32]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68381,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][33]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68382,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][34]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68383,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][35]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68384,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][36]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68385,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][37]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68386,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][38]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68387,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][39]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68388,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][40]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68389,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][41]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68390,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][42]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68391,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][43]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68392,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][44]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68393,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][45]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68394,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][46]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68395,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][47]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68396,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][48]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68397,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][49]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68398,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][50]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68399,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][51]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68400,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][52]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68401,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][53]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68402,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][54]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68403,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][55]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68404,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][56]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68405,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][57]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68406,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][58]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68407,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][59]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "wd_in",
+      "bit": 68408,
+      "generic_levels": 20,
+      "names": [
+        "wb_d[0][60]"
+      ]
+    }
+  ],
+  "all_comb_terminal_influence_registers_over32": [],
+  "all_comb_terminal_influence_inputs_over32": [
+    {
+      "port": "su_we",
+      "bit": 0,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 1,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 2,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 3,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 4,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 5,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 6,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_we",
+      "bit": 7,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_waddr",
+      "bit": 3,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "w16_we",
+      "bit": 0,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "w1_we",
+      "bit": 0,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "w1_addr",
+      "bit": 3,
+      "terminal_pins": 3145,
+      "groups_if_partitioning_terminal_influence_at32": 99
+    },
+    {
+      "port": "su_waddr",
+      "bit": 0,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 1,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 2,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 24,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 25,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 26,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 48,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 49,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 50,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 72,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 73,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 74,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 96,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 97,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 98,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 120,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 121,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 122,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 144,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 145,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 146,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 168,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 169,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_waddr",
+      "bit": 170,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "w1_addr",
+      "bit": 0,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "w1_addr",
+      "bit": 1,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "w1_addr",
+      "bit": 2,
+      "terminal_pins": 3072,
+      "groups_if_partitioning_terminal_influence_at32": 96
+    },
+    {
+      "port": "su_wdata",
+      "bit": 0,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 1,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 2,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 3,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 4,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 5,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 6,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 7,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 8,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 9,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 10,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 11,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 12,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 13,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 14,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 15,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 16,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 17,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 18,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 19,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 20,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 21,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 22,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 23,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 24,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 25,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 26,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 27,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 28,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 29,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 30,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 31,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 32,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 33,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 34,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 35,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 36,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 37,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 38,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 39,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 40,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 41,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 42,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 43,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 44,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 45,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 46,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 47,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 48,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 49,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 50,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 51,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 52,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 53,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 54,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 55,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 56,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 57,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 58,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 59,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 60,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 61,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 62,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 63,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 64,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 65,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 66,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 67,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 68,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 69,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 70,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 71,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 72,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 73,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 74,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 75,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 76,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 77,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 78,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 79,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 80,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 81,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 82,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 83,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 84,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 85,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 86,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 87,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 88,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 89,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 90,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 91,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 92,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 93,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 94,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 95,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 96,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 97,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 98,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 99,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 100,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 101,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 102,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 103,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 104,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 105,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 106,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 107,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 108,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 109,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 110,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 111,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 112,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 113,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 114,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 115,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 116,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 117,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 118,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 119,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 120,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 121,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 122,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 123,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 124,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 125,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 126,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 127,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 128,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 129,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 130,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 131,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 132,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 133,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 134,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 135,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 136,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 137,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 138,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 139,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 140,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 141,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 142,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 143,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 144,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 145,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 146,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 147,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 148,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 149,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 150,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 151,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 152,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 153,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 154,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 155,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 156,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 157,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 158,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 159,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 160,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 161,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 162,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 163,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 164,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 165,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 166,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 167,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 168,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 169,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 170,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 171,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 172,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 173,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 174,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 175,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 176,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 177,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 178,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 179,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 180,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 181,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 182,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 183,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 184,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 185,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 186,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 187,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 188,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 189,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 190,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 191,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 192,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 193,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 194,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 195,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 196,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 197,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 198,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 199,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 200,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 201,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 202,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 203,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 204,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 205,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 206,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 207,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 208,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 209,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 210,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 211,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 212,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 213,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 214,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 215,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 216,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 217,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 218,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 219,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 220,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 221,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 222,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 223,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 224,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 225,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 226,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 227,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 228,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 229,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 230,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 231,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 232,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 233,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 234,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 235,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 236,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 237,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 238,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 239,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 240,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 241,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 242,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 243,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 244,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 245,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 246,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 247,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 248,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 249,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 250,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 251,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 252,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 253,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 254,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "su_wdata",
+      "bit": 255,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 0,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 1,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 2,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 3,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 4,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 5,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 6,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 7,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 8,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 9,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 10,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 11,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 12,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 13,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 14,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 15,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 16,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 17,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 18,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 19,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 20,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 21,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 22,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 23,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 24,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 25,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 26,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 27,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 28,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 29,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 30,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    },
+    {
+      "port": "w1_data",
+      "bit": 31,
+      "terminal_pins": 48,
+      "groups_if_partitioning_terminal_influence_at32": 2
+    }
+  ],
+  "bit_namespace": "Diagnostic flattened alias IDs; locate raw elaborated bits using names/source hash.",
+  "terminal_influence_scope": "Conservative logical influence through ALL combinational gates to sequential/native input pin bits plus each top output bit as one boundary stop. This exceeds buffer-transparent electrical fanout and is not the native rule verdict or a mandatory replica count; early registered decodes can partition it. Parent consumers beyond outputs remain unproven.",
+  "scope": "Generic synthesis before ABC/physical buffers. Primitive levels are not TT ps; native macro clk-to-Q/setup, mapped logic, placement/route and retained replicas require separate proof. Clock/reset boundary loads retained and labeled, not counted as data-fanout failures.",
+  "netlist_sha256": "56292bad3b714f62c4047f78757249fef1f5929891d08c06fa2a000b4ce69310"
+}
