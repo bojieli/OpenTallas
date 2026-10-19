@@ -1,26 +1,26 @@
-COLLQ VM q0 b2 unreserved write cyc177 sector 0092 (exp 1 004a)
-COLLQ VM q0 b3 unreserved write cyc177 sector 0093 (exp 1 004b)
-COLLQ VM q1 b2 unreserved write cyc177 sector 2002 (exp 1 20da)
-COLLQ VM q1 b3 unreserved write cyc177 sector 2003 (exp 1 20db)
-COLLQ VM q2 b2 unreserved write cyc177 sector 40da (exp 1 4002)
-COLLQ VM q2 b3 unreserved write cyc177 sector 40db (exp 1 4003)
-COLLQ VM q3 b2 unreserved write cyc177 sector 604a (exp 1 6092)
-COLLQ VM q3 b3 unreserved write cyc177 sector 604b (exp 1 6093)
-COLLQ VM q0 b6 unreserved write cyc180 sector 0096 (exp 1 004e)
-COLLQ VM q0 b7 unreserved write cyc180 sector 0097 (exp 1 004f)
-COLLQ VM q1 b6 unreserved write cyc180 sector 2006 (exp 1 20de)
-COLLQ VM q1 b7 unreserved write cyc180 sector 2007 (exp 1 20df)
-COLLQ VM q2 b6 unreserved write cyc180 sector 40de (exp 1 4006)
-COLLQ VM q2 b7 unreserved write cyc180 sector 40df (exp 1 4007)
-COLLQ VM q3 b6 unreserved write cyc180 sector 604e (exp 1 6096)
-COLLQ VM q3 b7 unreserved write cyc180 sector 604f (exp 1 6097)
-COLLQ VM q0 b2 unreserved write cyc183 sector 009a (exp 1 0052)
-COLLQ VM q0 b3 unreserved write cyc183 sector 009b (exp 1 0053)
-COLLQ VM q1 b2 unreserved write cyc183 sector 200a (exp 1 20e2)
-COLLQ VM q1 b3 unreserved write cyc183 sector 200b (exp 1 20e3)
+COLLQ VM q0 b2 unreserved write cyc179 sector 0092 (exp 1 004a)
+COLLQ VM q0 b3 unreserved write cyc179 sector 0093 (exp 1 004b)
+COLLQ VM q1 b2 unreserved write cyc179 sector 2002 (exp 1 20da)
+COLLQ VM q1 b3 unreserved write cyc179 sector 2003 (exp 1 20db)
+COLLQ VM q2 b2 unreserved write cyc179 sector 40da (exp 1 4002)
+COLLQ VM q2 b3 unreserved write cyc179 sector 40db (exp 1 4003)
+COLLQ VM q3 b2 unreserved write cyc179 sector 604a (exp 1 6092)
+COLLQ VM q3 b3 unreserved write cyc179 sector 604b (exp 1 6093)
+COLLQ VM q0 b6 unreserved write cyc182 sector 0096 (exp 1 004e)
+COLLQ VM q0 b7 unreserved write cyc182 sector 0097 (exp 1 004f)
+COLLQ VM q1 b6 unreserved write cyc182 sector 2006 (exp 1 20de)
+COLLQ VM q1 b7 unreserved write cyc182 sector 2007 (exp 1 20df)
+COLLQ VM q2 b6 unreserved write cyc182 sector 40de (exp 1 4006)
+COLLQ VM q2 b7 unreserved write cyc182 sector 40df (exp 1 4007)
+COLLQ VM q3 b6 unreserved write cyc182 sector 604e (exp 1 6096)
+COLLQ VM q3 b7 unreserved write cyc182 sector 604f (exp 1 6097)
+COLLQ VM q0 b2 unreserved write cyc185 sector 009a (exp 1 0052)
+COLLQ VM q0 b3 unreserved write cyc185 sector 009b (exp 1 0053)
+COLLQ VM q1 b2 unreserved write cyc185 sector 200a (exp 1 20e2)
+COLLQ VM q1 b3 unreserved write cyc185 sector 200b (exp 1 20e3)
 COLLQ unexpected fault gq1111 ra1111 rb1111 rs0000 ks0000
 COLLQ FAIL errors=973
-- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:278: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.281 s; speed 7.222 us/s
-- Verilator: cpu 0.283 s on 1 threads; alloced 1023 MB
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv:285: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.082 s; speed 24.931 us/s
+- Verilator: cpu 0.082 s on 1 threads; allocated 13 MB
