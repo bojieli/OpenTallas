@@ -47,6 +47,7 @@ def main():
     ap.add_argument("--seed", type=int, default=19)
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
+    assert 1 <= a.n <= 8 and 0 <= a.rgap <= 255, "N 1..8 (NMAX), rgap is an 8-b field"
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(a.seed + 100 * a.n + (0 if a.op == "pre" else 7))

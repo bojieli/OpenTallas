@@ -3,7 +3,7 @@
 # archive of the lane branch) on a fleet host:  tools/hbm_next/hnx_fused_bench.sh OUT STAGE
 #   lint   lint of tb_hnx_fused + ot_hnx_fused_top (catches elaboration errors before the full builds)
 #   m0     KX 4 MUT 0: HC_PRE_NORM and HC_POST, N = 1,2,3,4,6, rgap 0 -> HNX_FUSED PASS each; HNX_FUSED_CYCLES(N)
-#   k2     KX 2 MUT 0: HC_PRE_NORM N 4 at rgap 0 / 64 / 128 / 192 / 256 (the rgap the compiler needs with 2 x slots)
+#   k2     KX 2 MUT 0: HC_PRE_NORM N 4 at rgap 0 (must FAULT: x-slot collision) / 64 / 128 / 192
 #   m1..m6 KX 4 MUT k: HC_PRE_NORM N 4 (m1, m2 also HC_POST N 4) -> HNX_FUSED FAIL (fail witnesses)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
@@ -37,18 +37,20 @@ run(){ # tag op n rgap
   local t=$1 c=$2_n$3_g$4; local od=$O/run_${t}_$c; rm -rf $od; mkdir -p $O/cases
   gen $O/cases/$c $2 $3 $4; cp -r $O/cases/$c $od
   ( cd $od && $O/obj_$t/V$t $(cat plus.txt) > run.log 2>&1; echo RUN_RC=$? >> run.log
-    V "$t $c: $(grep -h 'HNX_FUSED_CYCLES\|HNX_FUSED PASS\|HNX_FUSED FAIL\|MISMATCH' run.log | head -3 | tr '\n' ' ')"
+    V "$t $c: $(grep -h 'HNX_FUSED_CYCLES\|HNX_FUSED PASS\|HNX_FUSED FAIL' run.log | tr '\n' ' ') $(grep -h MISMATCH run.log | head -1)"
     rm -f vmi.mem vme.mem )
 }
 case $ST in
   m0) build m0 "-GKX=4 -GMUT=0"
       for op in pre post; do for n in 1 2 3 4 6; do run m0 $op $n 0 & done; done; wait ;;
   k2) build k2 "-GKX=2 -GMUT=0"
-      for g in 0 64 128 192 256; do run k2 pre 4 $g & done; wait ;;
+      for g in 0 64 128 192; do run k2 pre 4 $g & done; wait ;;
   m[1-6]) k=${ST#m}; build $ST "-GKX=4 -GMUT=$k"
       run $ST pre 4 0 &
       case $k in 1|2) run $ST post 4 0 & ;; esac
       wait ;;
 esac
 rm -rf $O/obj_$ST
+# one summary line per stage (the kit benches match it): PASS / FAIL counts over this stage's cases
+V "$ST SUMMARY pass=$(grep -c " $ST [a-z0-9_]*: .*HNX_FUSED PASS" $O/verdict_$ST.txt) fail=$(grep -c " $ST [a-z0-9_]*: .*HNX_FUSED FAIL" $O/verdict_$ST.txt) noresult=$(grep " $ST [a-z0-9_]*: " $O/verdict_$ST.txt | grep -vc 'HNX_FUSED PASS\|HNX_FUSED FAIL')"
 V "done"
