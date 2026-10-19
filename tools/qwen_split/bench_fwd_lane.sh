@@ -26,6 +26,10 @@ if [[ $mode = *_pipe ]]; then
   mode=${mode%_pipe}
   DEF="$DEF +define+OT_QFD_LAND_READ_PIPE"
 fi
+if [[ $mode = *_gated ]]; then
+  mode=${mode%_gated}
+  DEF="$DEF +define+OT_QFD_LAND_GATED_BANKS"
+fi
 case $mode in
   pass) ;; wsel) DEF="$DEF +define+OT_QFD_LAND_MUT_WSEL" ;; rsel) DEF="$DEF +define+OT_QFD_LAND_MUT_RSEL" ;; sel) DEF="$DEF +define+OT_QFD_LAND_MUT_SEL" ;; naive) DEF="$DEF +define+OT_QFD_LAND_MUT_NAIVE" ;;
   vld) DEF="$DEF +define+OT_QFD_LAND_MUT_VLD" ;; full) DEF="$DEF +define+OT_QFD_LANE_MUT_FULL" ;; hop0inv) DEF="$DEF +define+OT_QFD_LANE_MUT_HOP0INV" ;;
@@ -64,7 +68,9 @@ endmodule
 module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.2, XL = 0.0, DOFF = 2.0,
               parameter integer G = 10, R0 = 12, LADD = 0, KFROM = -1,
               parameter integer HREG = 2, RREG = 2,
-`ifdef OT_QFD_LAND_READ_PIPE
+`ifdef OT_QFD_LAND_GATED_BANKS
+              parameter integer RPIPE = 1
+`elsif OT_QFD_LAND_READ_PIPE
               parameter integer RPIPE = 1
 `else
               parameter integer RPIPE = 0
@@ -75,8 +81,19 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
     reg  [W-1:0] src = 0;
     reg en = 0, rs = 0;
     function automatic [W-1:0] w_of(input integer e); w_of = W'(e * 40503 + (e >>> 3) + 7); endfunction
-    always @(posedge cks) begin src <= w_of(es); en <= (es >= G); end           // the source launches w(e) at edge e
-    always @(posedge ckd) rs <= (ed >= R0);
+    always @(posedge cks) begin src <= w_of(es);
+`ifdef OT_QFD_LAND_GATED_BANKS
+        en <= (es >= G && es < 300) || (es >= G + 320);
+`else
+        en <= (es >= G);
+`endif
+    end           // the source launches w(e) at edge e
+    always @(posedge ckd)
+`ifdef OT_QFD_LAND_GATED_BANKS
+        rs <= (ed >= R0 && ed < 300) || (ed >= R0 + 320);
+`else
+        rs <= (ed >= R0);
+`endif
     // latency L (receiver edges): read 0.25..1.25 T after the ring write of the same word (+ LADD for the window lane)
     real lag; integer L, K;
     wire [W-1:0] d [0:NF];  wire e_ [0:NF];  wire c_ [0:NF];
@@ -104,6 +121,20 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
                                    .k2(kk[2]), .tie_hi(hi), .tie_lo(lo), .b(o), .fault(flt));
       end
     endgenerate
+`ifdef OT_QFD_LAND_GATED_BANKS
+    wire [3:0] observed_w, observed_r;
+    wire observed_we;
+    generate if (NF == 1) begin : g_watch1
+        assign observed_w=g1.u_l.u_land.u_gated.wbank_clk;
+        assign observed_r=g1.u_l.u_land.u_gated.rbank_clk;
+        assign observed_we=g1.u_l.u_land.u_gated.meta_we;
+    end else begin : g_watchn
+        assign observed_w=gn.u_l.u_land.u_gated.wbank_clk;
+        assign observed_r=gn.u_l.u_land.u_gated.rbank_clk;
+        assign observed_we=gn.u_l.u_land.u_gated.meta_we;
+    end endgenerate
+    bank_window_monitor u_window(.w(observed_w),.r(observed_r),.we(observed_we),.rs(rs),.k(kk));
+`endif
     integer td = 0;
     initial begin
         err = 0; chk = 0;
@@ -117,12 +148,31 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
     end
     integer te_;
     reg [W-1:0] ex_;
+    integer epoch_add, first_ready, first_output, warm_set, ready_set;
+    real full_time;
     always @(negedge ckd) begin
         // o after receiver edge ed - 1 (sampled half a period later): w(ed - 1 - L) once that word was written, else 0
         te_ = ed;
         te_ = te_ - 1 - L - RPIPE;
         ex_ = (te_ >= G + HREG) ? w_of(te_) : {W{1'b0}};
+`ifdef OT_QFD_LAND_GATED_BANKS
+        // Independent golden prologue: write of first epoch at source(G+HREG)
+        // plus physical lane travel; four writes fill the ring. First read-root
+        // edge STRICTLY after the fourth write starts two-stage ready release;
+        // then one read-bank edge and one output edge. Boot repeats at+320T,
+        // preserving static modulo8 straps while testing asynchronous abort/restart.
+        epoch_add=(ed-1 > 300)?320:0;
+        full_time=(G+HREG+epoch_add)*T+(NF+1)*T/2.0+lag+3*T;
+        first_ready=$rtoi($floor((full_time-DOFF)/T))+1;
+        ready_set=first_ready+1;
+        warm_set=R0+epoch_add+RREG+((K==0)?8:K);
+        first_output=((ready_set>warm_set)?ready_set:warm_set)+2;
+        if ((ed-1>300 && ed-1<R0+320) || ed-1<first_output)
+            ex_={W{1'b0}};
+        if (ed>0) begin
+`else
         if (ed > R0 + RREG + RPIPE + 10) begin
+`endif
             chk = chk + 1;
             if (o !== ex_) begin
                 err = err + 1;
@@ -132,6 +182,40 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
     end
 endmodule
 
+`ifdef OT_QFD_LAND_GATED_BANKS
+module bank_window_monitor(input wire [3:0] w,r,input wire we,rs,input wire[2:0]k);
+    genvar b;
+    generate for(b=0;b<4;b=b+1) begin:g
+        real last_w=-1.0,last_r=-1.0,age,min_age=1e9,max_age=-1.0,min_hold=1e9;
+        integer checks=0;
+        always @(posedge w[b] or negedge we) begin
+            if(!we) last_w=-1.0;
+            else begin
+                if(last_w>=0 && (($realtime-last_w<39.9999)||($realtime-last_w>40.0001))) begin
+                    $display("FWD_BENCH FAIL nonperiod4 write %m delta=%f",$realtime-last_w);$fatal(1);
+                end
+                last_w=$realtime;
+            end
+        end
+        always @(posedge r[b] or negedge we or negedge rs) begin
+            if(!we||!rs) last_r=-1.0;
+            else begin
+                age=$realtime-last_w;
+                if(last_w<0 || age<2.4999 || age>32.5001 || 40.0-age<7.4999) begin
+                    $display("FWD_BENCH FAIL bankwindow %m K=%0d age=%f hold=%f",k,age,40.0-age);$fatal(1);
+                end
+                if(last_r>=0 && (($realtime-last_r<39.9999)||($realtime-last_r>40.0001))) begin
+                    $display("FWD_BENCH FAIL nonperiod4 read %m delta=%f",$realtime-last_r);$fatal(1);
+                end
+                last_r=$realtime;checks=checks+1;
+                if(age<min_age)min_age=age;if(age>max_age)max_age=age;if(40.0-age<min_hold)min_hold=40.0-age;
+            end
+        end
+        final $display("GATED_BANK_WINDOW %m K=%0d checks=%0d min_age_T=%f max_age_T=%f min_overwrite_gap_T=%f",k,checks,min_age/10.0,max_age/10.0,min_hold/10.0);
+    end endgenerate
+endmodule
+`endif
+
 module tb;
     reg cks = 0, ckd = 0;
     reg [31:0] es = 0, ed = 0;
@@ -139,7 +223,7 @@ module tb;
     initial begin #2.0; forever #5 ckd = ~ckd; end                     // receiver root 2.0 ns after the source root
     always @(posedge cks) es <= es + 1;
     always @(posedge ckd) ed <= ed + 1;
-    integer e [0:9], c [0:9]; wire f [0:9];
+    integer e [0:11], c [0:11]; wire f [0:11];
     lane #(.NF(1),  .CD(0.0), .G(10), .R0(12))               l0 (cks, ckd, es, ed, e[0], c[0], f[0]);
     lane #(.NF(2),  .CD(3.6), .G(10), .R0(12))               l1 (cks, ckd, es, ed, e[1], c[1], f[1]);
     lane #(.NF(5),  .CD(3.6), .G(10), .R0(12), .LADD(2), .KFROM(-1)) l2 (cks, ckd, es, ed, e[2], c[2], f[2]);
@@ -151,13 +235,15 @@ module tb;
     lane #(.NF(27), .CD(4.5), .DD(2.0), .G(12), .R0(11))     l7 (cks, ckd, es, ed, e[7], c[7], f[7]);
     lane #(.NF(1),  .CD(0.0), .G(40), .R0(9))                l8 (cks, ckd, es, ed, e[8], c[8], f[8]);   // n = 1, source releases LATE
     lane #(.NF(1),  .CD(0.0), .G(9),  .R0(45))               l9 (cks, ckd, es, ed, e[9], c[9], f[9]);   // n = 1, receiver releases LATE
+    lane #(.NF(1), .CD(0.0), .G(12), .R0(12)) l10 (cks, ckd, es, ed, e[10], c[10], f[10]);
+    lane #(.NF(1), .CD(0.0), .G(9), .R0(12)) l11 (cks, ckd, es, ed, e[11], c[11], f[11]);
     initial begin
         #0.1; l3.K = l2.K; l3.L = l2.L;                                 // the window lane reuses lane 2's strap
         #6000;
         begin : sum
             integer i, te, tc, tf;
             te = 0; tc = 0; tf = 0;
-            for (i = 0; i < 10; i = i + 1) begin te = te + e[i]; tc = tc + c[i]; tf = tf + (f[i] === 1'b1 ? 1 : 0);
+            for (i = 0; i < 12; i = i + 1) begin te = te + e[i]; tc = tc + c[i]; tf = tf + (f[i] === 1'b1 ? 1 : 0);
                 if (f[i] !== 1'b0) $display("FWD_LANE FAULT lane %0d", i); end
             if (l3.L != l2.L) te = te + 1;
             $display("FWD_BENCH %s %0d errors in %0d checks (faults %0d)", (te || tf || tc < 4000) ? "FAIL" : "PASS", te + tf, tc, tf);
@@ -170,5 +256,5 @@ sed -i "s/_16_EW_65x30/_${W}_EW_65x30/g; s/parameter integer W = 16/parameter in
 verilator --binary --timing -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-COMBDLY -Wno-LATCH -Wno-INITIALDLY --top-module tb $DEF \
   -Mdir "$O/obj" -o tb "$O/tb.sv" "$O/wrappers.sv" rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv > "$O/build.log" 2>&1 || {
   echo BUILD_FAILED; tail -20 "$O/build.log"; exit 2; }
-"$O/obj/tb" | tee "$O/bench.log" | grep -E 'FWD_BENCH|FWD_LANE (NF|FAULT)'
+"$O/obj/tb" | tee "$O/bench.log" | grep -E 'FWD_BENCH|FWD_LANE (NF|FAULT)|GATED_BANK_WINDOW'
 grep -q 'FWD_BENCH PASS' "$O/bench.log"
