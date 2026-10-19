@@ -216,9 +216,9 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HOSTCL",
-  "branch": "claude/kvj-a3-1017",
-  "tag": "r2",
+  "owner": "Claude:KV-HROOT",
+  "branch": "claude/kv-hroot-1018",
+  "tag": "r4",
   "purpose": "HOST root cluster r2 child qkd_hr_core_guard (pre-route gate + route; parent qkd_host_root is CRITICAL)",
   "benches": [
    {
@@ -245,6 +245,10 @@
     "fail_regex": "CLUSTER_GATE FAIL mutant",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_guard.log"
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "regenerated HOST cluster (KV-HOSTCL-REGEN/PL-KVHOST b7178afad on G2b): qkd_hr_core_guard.v ctrl_completion_fault 128 b -> 1 b (flat root narrowed by KVJ-G2b 06c36f404); the closed r2-342580b92 view has the 128-b port and cannot bind into the regenerated cluster"
+  }
  }
 }

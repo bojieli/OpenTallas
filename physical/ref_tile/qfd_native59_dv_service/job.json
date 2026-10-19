@@ -1,9 +1,9 @@
 {
- "name": "qfd_native59_dv_service-n1-COMMIT",
+ "name": "qfd_native59_dv_service-n2-COMMIT",
  "block": "qfd_native59_dv_service",
  "ref_tile": true,
  "owner": "Claude:S-QWCOL",
- "purpose": "dv2f14 W-column die master qfd_native59_dv_service (Q-N59 dd73225e0 RTL as on q-die11b af607c367): flat tile in the dv2f14bn slot, top-down faces/order, ports widened to <=6/um over the full face",
+ "purpose": "dv2f14 W-column die master qfd_native59_dv_service (Q-N59 dd73225e0 RTL as on q-die11b af607c367): flat tile in the dv2f14bn slot, top-down faces/order, ports widened to <=6/um over the full face | n2: Q seat bank as decoded constant-index slices (n1c gate synth smoke timed out at 2700 s on the 8 x 16384-b runtime part-select writes + 512-b read); function unchanged",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
@@ -136,7 +136,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_native59_dv_service/qfd_native59_dv_service-n1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_native59_dv_service/qfd_native59_dv_service-n2-COMMIT"
   }
  ],
  "cycles_added": 0,
