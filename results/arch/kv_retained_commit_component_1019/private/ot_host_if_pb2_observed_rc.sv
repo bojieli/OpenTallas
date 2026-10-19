@@ -331,7 +331,8 @@ module ot_host_if_pb2_observed_rc #(
         dma_bad || mu_fault || ev_ovf || (step_done && eng_fault) ||
         (lifecycle_live && (execution_restart_i || role_fault_i));
     wire admission_ok = !ENABLE_RETAINED_COMMIT || (armed_q && !bad_next && !poison_q && !pending_v);
-    wire issue_fire = i_st == I_GO && admission_ok;
+    wire issue_fire = i_st == I_GO && admission_ok &&
+        (!ENABLE_RETAINED_COMMIT || (ev_n + pending_v < EQD - 2));
     wire certify = ENABLE_RETAINED_COMMIT && cut_now && !bad_next;
     wire cert_generated = step_done ? d_gen : saved_generated;
     wire [NW-1:0] cert_pos = step_done ? d_pos : saved_pos;
@@ -771,7 +772,7 @@ module ot_host_if_pb2_observed_rc #(
                         eng_token <= (sl_pos[eng_slot] < sl_plen[eng_slot]) ? pb_q : sl_tok[eng_slot];
                         i_st <= I_GO;
                     end
-                    I_GO: if (!admission_ok) i_st <= I_IDLE; else begin
+                    I_GO: if (!issue_fire) i_st <= I_IDLE; else begin
                         eng_start <= 1'b1; inflight <= 1'b1; c_steps <= c_steps + 1'b1;
                         rr <= eng_slot + 1'b1;
                         if (MU_OUT != 0) begin                // outstanding: retire below, issue the next slot now
