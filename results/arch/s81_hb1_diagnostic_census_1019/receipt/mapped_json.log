@@ -1,0 +1,13 @@
+
+-- Running command `read_verilog /work/raw.v; write_json /work/mapped.json' --
+
+1. Executing Verilog-2005 frontend: /work/raw.v
+Parsing Verilog input from `/work/raw.v' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_xr3'.
+Successfully finished Verilog frontend.
+
+2. Executing JSON backend.
+
+End of script. Logfile hash: 25690bc1d3, time: 4.42s, user: 4.09s, system: 0.36s, MEM: 517.92 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 93% 2x read_verilog (4 sec), 6% 2x write_json (0 sec), ...

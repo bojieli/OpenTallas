@@ -1,0 +1,32 @@
+{
+  "scope": "PROPOSAL ONLY; exact HB1 source and frozen HB0 mapping recipe helpers; no build launched",
+  "container_requested_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "source_hashes": {
+    "ceaed19c4:rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "ceaed19c4:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3",
+    "7ef9383db5788cbb9428ccc264bb34484071b541:physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+    "7ef9383db5788cbb9428ccc264bb34484071b541:physical/common_flow/ot_pin_regs.tcl": "824052ac4c661520b0b428386e948f55ef750acc79db94ea89ebb790b282c2ec",
+    "7ef9383db5788cbb9428ccc264bb34484071b541:tools/run_abi3_physical.py": "c918bde0204570210e7360e3e76b08405d3b2e8a7d121a60d8a54c7ba1fbcb87",
+    "platform:config.mk": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
+    "platform:lef/asap7_tech_1x_201209.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "platform:lef/asap7sc7p5t_28_R_1x_220121a.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+    "platform:yoSys/cells_latch_R.v": "671d1558a6efd093ec60efd0db6a32286ca873b7bb72d05612427a123e0509dc",
+    "platform:yoSys/cells_clkgate_R.v": "e65a51575b36be6d1ddc330a0df9805ec5737dd987d4e2227fa058018cca00ad",
+    "platform:lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "platform:lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "platform:lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "platform:lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "platform:lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "platform:lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99",
+    "platform:lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "platform:lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3",
+    "platform:lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "platform:lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "platform:lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5",
+    "platform:lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408",
+    "platform:lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27",
+    "platform:lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "platform:lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+  },
+  "runtime_guard": "Verify all hashes and image ID on selected fleet host before starting; fail closed on mismatch. No current-main or frozen-QF workspace input substitution."
+}
