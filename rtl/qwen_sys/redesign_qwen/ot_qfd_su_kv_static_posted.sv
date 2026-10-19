@@ -84,13 +84,13 @@ module ot_qfd_su_kv_static_posted #(
 
  end
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin active<=0;pos<=0;issued<=0;seen<=0;sent<=0;bytes_r<=0;word_v<=0;word_tag<=0;word_data<=0;fault<=0;fault_code<=0;end
+  if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;word_data<=0;fault<=0;fault_code<=0;end
   else if(ENABLE!=0)begin
    if(eb_q)begin
     if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
-    else begin active<=1;pos<=ep_q[12:0];issued<=0;seen<=0;sent<=0;end
+    else begin active<=1;pos<=ep_q[12:0];issued<=0;sent<=0;end
    end else begin
-    seen<=seen_n;sent<=sent_n;bytes_r<=bytes_n;
+    sent<=sent_n;
     if(iv_q)begin
      if(!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q])begin fault<=1;fault_code[5]<=1;end
      else issued[ik_q]<=1;
@@ -105,4 +105,20 @@ module ot_qfd_su_kv_static_posted #(
    end
   end
  end
+ // Epoch-begin broadcast replicated per byte segment (QW-N59 10-19): the 256-seat seen / bytes_r assembly bank took its
+ // clear / hold select from one eb_q flop (synthesis merged it with the service's iss[0]: 4,826 loads > 3,000).  EBC kept
+ // copies of the same register, one per NBYTES/EBC-byte segment; function unchanged (the same cycle and condition).
+ localparam integer EBC=16, NB=NBYTES/EBC;
+ (* keep = "true" *) reg [EBC-1:0] eb_r;
+ always @(posedge clk or negedge rst_n)if(!rst_n)eb_r<=0;else eb_r<={EBC{epoch_begin}};
+ wire eb_clear_ok=!(active||word_v||fault||ep_q>=8192);
+ genvar gs;
+ generate for(gs=0;gs<EBC;gs=gs+1)begin:g_ebseg
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin seen[NB*gs+:NB]<=0;bytes_r[8*NB*gs+:8*NB]<=0;end
+   else if(ENABLE!=0)begin
+    if(eb_r[gs])begin if(eb_clear_ok)seen[NB*gs+:NB]<=0;end
+    else begin seen[NB*gs+:NB]<=seen_n[NB*gs+:NB];bytes_r[8*NB*gs+:8*NB]<=bytes_n[8*NB*gs+:8*NB];end
+   end
+ end endgenerate
 endmodule
