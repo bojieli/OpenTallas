@@ -15,3 +15,11 @@ SAFE checklist before gate:
 8 FIXED: PINPIPE0default, PINPIPE1 adds2dataedges and2resetboot; MU-DIE-S81/compiler notified. No rate credit until priced.
 
 Gate PNG/checklist review required before submit; this is a successor after failed physical/native evidence. No REVIEW.json or submission has been written.
+
+## P1 measured result — NOT ELIGIBLE
+
+Verilator5.050 golden PASS:1280/1280writes,7446/7446arrivals,0bad/missing/fault at W+2/A+1. Both coherence mutants FAIL as intended; committed raw witness logs.
+
+CTS/GRT gate WARN(0FAIL): actual std428.2um2,1174FF;1174actual signal/clock pins geometryPASS; combinedfill39.8%; GRT0overflow. Own boundaryspread TT45.9/FF40.6ps; including hard child insertion fullspan TT59.6/FF79.6ps. Boundary means TT740.6/FF580.7ps must be used by any parent compensation if adopted. No clock uncertainty was relaxed. PNGs inspected: all3hardchildren unchanged at lattice origins,fullwidth southstd band and open seam/sidecorridors,centredsouth clock.
+
+Explicit CTS-native probe FAIL: launch307.47ps,451outputs over220; capture153.87ps,0inputs over190; no combinational pin arcs. The new input pipeline fixes the capture class; inherited legacy output hold pads/repair make every output overbudget. Preserve this failure; no REVIEW/submission or adoption of p1. A registered level1cluster diehold-budget extension vs a separately hardened boundary tile is a ROOT policy choice; do not relabel this physical level1cluster as level2. Current rule explicitly excludes level1clusters.

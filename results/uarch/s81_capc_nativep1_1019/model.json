@@ -78,5 +78,22 @@
   "fit": "All CLOSED child sizes/origins unchanged.73529um2 free vs600estimated new std area; fullwidth43.2um southband;56.16um seam. Sameparent outline; actual synth+CTS/native gate still required.",
   "signoff": "No compensated-clock waiver or data masks; native<=220launch/190capture + TT/FF spread<=80 required after CTS",
   "per_user_token_rate": "Compiler/die scheduler owes +2 capture edges in each dependent capture path; no rate credit until composition",
-  "fill_estimate": 0.3894026223851165
+  "fill_estimate": 0.3894026223851165,
+  "std_area_measured_um2": 428.2,
+  "flops_measured": 1174,
+  "native_cts": {
+    "verdict": "FAIL_NOT_ELIGIBLE",
+    "launch_ps": 307.4697,
+    "launch_over": 451,
+    "capture_ps": 153.8663,
+    "capture_over": 0
+  },
+  "throughput_gate": {
+    "expected_writes": 1280,
+    "actual_exact_writes": 1280,
+    "arrivals": 7446,
+    "edge_shift_writes": 2,
+    "edge_shift_arrivals": 1,
+    "fault": 0
+  }
 }
