@@ -1,0 +1,765 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_stream",
+  "cells": 71203,
+  "issues": [],
+  "register_outputs_over32": [
+    {
+      "bit": 8999,
+      "loads": 65,
+      "names": [
+        "xopen"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$27655",
+        "type": "$_DFFE_PN0P_"
+      },
+      "register_output": true
+    }
+  ],
+  "driven_nets_over32_count": 57,
+  "highest_fanout_nets": [
+    {
+      "bit": 2,
+      "loads": 6454,
+      "names": [
+        "ck"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3,
+      "loads": 2276,
+      "names": [
+        "rst_n"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 49748,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26465.Y[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$727618",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49827,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26477.Y[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728113",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49874,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26489.Y[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728354",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49936,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26501.Y[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728595",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49989,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26513.Y[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728914",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 50059,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26525.Y[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$729152",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49974,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26462.Y[9]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728814",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49921,
+      "loads": 1152,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26486.Y[9]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728573",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14565,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26525.CO[5]",
+        "$auto$alumacc.cc:548:replace_alu$26525.CO[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$729784",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14567,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26513.CO[5]",
+        "$auto$alumacc.cc:548:replace_alu$26513.CO[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$730977",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14569,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26501.CO[5]",
+        "$auto$alumacc.cc:548:replace_alu$26501.CO[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$731698",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14571,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26486.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$26486.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$26486.CO[11]",
+        "$auto$alumacc.cc:548:replace_alu$26486.CO[12]",
+        "$auto$alumacc.cc:548:replace_alu$26486.CO[13]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$732570",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14573,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26489.CO[5]",
+        "$auto$alumacc.cc:548:replace_alu$26489.CO[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$732182",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14575,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26477.CO[5]",
+        "$auto$alumacc.cc:548:replace_alu$26477.CO[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$733169",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14577,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26465.CO[5]",
+        "$auto$alumacc.cc:548:replace_alu$26465.CO[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$734149",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14579,
+      "loads": 1124,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26462.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$26462.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$26462.CO[11]",
+        "$auto$alumacc.cc:548:replace_alu$26462.CO[12]",
+        "$auto$alumacc.cc:548:replace_alu$26462.CO[13]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$734489",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 6950,
+      "loads": 1106,
+      "names": [
+        "$ne$rtl/qwen_dv/qfd_dv_stream.sv:84$3758_Y"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$55553",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 4391,
+      "loads": 1092,
+      "names": [
+        "xw_we[0]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 1126,
+      "loads": 1092,
+      "names": [
+        "pe",
+        "sw_i[1087]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 2214,
+      "loads": 1092,
+      "names": [
+        "pw",
+        "se_i[1087]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4392,
+      "loads": 1090,
+      "names": [
+        "xw_we[1]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4393,
+      "loads": 1090,
+      "names": [
+        "xw_we[2]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4394,
+      "loads": 1090,
+      "names": [
+        "xw_we[3]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4395,
+      "loads": 1090,
+      "names": [
+        "xw_we[4]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4396,
+      "loads": 1090,
+      "names": [
+        "xw_we[5]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4397,
+      "loads": 1090,
+      "names": [
+        "xw_we[6]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4398,
+      "loads": 1090,
+      "names": [
+        "xw_we[7]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 50896,
+      "loads": 1078,
+      "names": [
+        "ie",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:101$3769_Y[1080]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:101$3769_Y[1081]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:101$3769_Y[1082]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:101$3769_Y[1083]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$55624",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 50897,
+      "loads": 1078,
+      "names": [
+        "iw",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:102$3771_Y[1080]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:102$3771_Y[1081]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:102$3771_Y[1082]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream.sv:102$3771_Y[1083]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$55625",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 50900,
+      "loads": 1052,
+      "names": [
+        "te"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$59984",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 50102,
+      "loads": 1051,
+      "names": [
+        "xw"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$61120",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 50106,
+      "loads": 1051,
+      "names": [
+        "xe"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$61114",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 9016,
+      "loads": 1041,
+      "names": [
+        "$0\\emit[0:0]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$55623",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49742,
+      "loads": 594,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26465.Y[4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$727539",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49824,
+      "loads": 594,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26477.Y[4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728112",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49880,
+      "loads": 594,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26489.Y[4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728431",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49933,
+      "loads": 594,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26501.Y[4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728594",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 49986,
+      "loads": 594,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$26513.Y[4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$728913",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "$auto$ff.cc:337:slice$26631",
+      "pin": "D",
+      "bit": 6949,
+      "generic_levels": 60,
+      "names": [
+        "nb[0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26632",
+      "pin": "D",
+      "bit": 6952,
+      "generic_levels": 60,
+      "names": [
+        "nb[1]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26633",
+      "pin": "D",
+      "bit": 6954,
+      "generic_levels": 60,
+      "names": [
+        "nb[2]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26634",
+      "pin": "D",
+      "bit": 6956,
+      "generic_levels": 60,
+      "names": [
+        "nb[3]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26635",
+      "pin": "D",
+      "bit": 6958,
+      "generic_levels": 60,
+      "names": [
+        "nb[4]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26636",
+      "pin": "D",
+      "bit": 6960,
+      "generic_levels": 60,
+      "names": [
+        "nb[5]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26637",
+      "pin": "D",
+      "bit": 6962,
+      "generic_levels": 60,
+      "names": [
+        "nb[6]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26638",
+      "pin": "D",
+      "bit": 6964,
+      "generic_levels": 60,
+      "names": [
+        "nb[7]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26639",
+      "pin": "D",
+      "bit": 6966,
+      "generic_levels": 60,
+      "names": [
+        "nb[8]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26640",
+      "pin": "D",
+      "bit": 6968,
+      "generic_levels": 60,
+      "names": [
+        "nb[9]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26641",
+      "pin": "D",
+      "bit": 6970,
+      "generic_levels": 60,
+      "names": [
+        "nb[10]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26642",
+      "pin": "D",
+      "bit": 6972,
+      "generic_levels": 60,
+      "names": [
+        "nb[11]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26643",
+      "pin": "D",
+      "bit": 6974,
+      "generic_levels": 60,
+      "names": [
+        "nb[12]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26644",
+      "pin": "D",
+      "bit": 6976,
+      "generic_levels": 60,
+      "names": [
+        "nb[13]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26645",
+      "pin": "D",
+      "bit": 6978,
+      "generic_levels": 60,
+      "names": [
+        "nb[14]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26646",
+      "pin": "D",
+      "bit": 6980,
+      "generic_levels": 60,
+      "names": [
+        "nb[15]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26647",
+      "pin": "D",
+      "bit": 6982,
+      "generic_levels": 60,
+      "names": [
+        "nb[16]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26648",
+      "pin": "D",
+      "bit": 6984,
+      "generic_levels": 60,
+      "names": [
+        "nb[17]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26649",
+      "pin": "D",
+      "bit": 6986,
+      "generic_levels": 60,
+      "names": [
+        "nb[18]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26650",
+      "pin": "D",
+      "bit": 6988,
+      "generic_levels": 60,
+      "names": [
+        "nb[19]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26651",
+      "pin": "D",
+      "bit": 6990,
+      "generic_levels": 60,
+      "names": [
+        "nb[20]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26652",
+      "pin": "D",
+      "bit": 6992,
+      "generic_levels": 60,
+      "names": [
+        "nb[21]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26653",
+      "pin": "D",
+      "bit": 6994,
+      "generic_levels": 60,
+      "names": [
+        "nb[22]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26654",
+      "pin": "D",
+      "bit": 6996,
+      "generic_levels": 60,
+      "names": [
+        "nb[23]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26655",
+      "pin": "D",
+      "bit": 6998,
+      "generic_levels": 60,
+      "names": [
+        "nb[24]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26656",
+      "pin": "D",
+      "bit": 7000,
+      "generic_levels": 60,
+      "names": [
+        "nb[25]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26657",
+      "pin": "D",
+      "bit": 7002,
+      "generic_levels": 60,
+      "names": [
+        "nb[26]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26658",
+      "pin": "D",
+      "bit": 7004,
+      "generic_levels": 60,
+      "names": [
+        "nb[27]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26659",
+      "pin": "D",
+      "bit": 7006,
+      "generic_levels": 60,
+      "names": [
+        "nb[28]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$26660",
+      "pin": "D",
+      "bit": 7008,
+      "generic_levels": 60,
+      "names": [
+        "nb[29]"
+      ]
+    }
+  ],
+  "scope": "Generic synthesis before ABC/physical buffers. Primitive levels are not TT ps; native macro clk-to-Q/setup, mapped logic, placement/route and retained replicas require separate proof. Clock/reset boundary loads retained and labeled, not counted as data-fanout failures.",
+  "netlist_sha256": "7e93892b49aeac0e3125094079ea296847979513523ccd10a3326255a253e461"
+}
