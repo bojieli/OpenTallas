@@ -1,0 +1,204 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[INFO ODB-0127] Reading DEF file: /out/floorplan_only.def
+[INFO ODB-0128] Design: qkd_kvs_attn_fl
+[WARNING ODB-0247] skipping undefined pin VDD encountered in FLOORPLAN DEF
+[WARNING ODB-0247] skipping undefined pin VSS encountered in FLOORPLAN DEF
+[INFO ODB-0252]     Updated 3284 pins.
+[INFO ODB-0132]     Created 2 special nets and 0 connections.
+[INFO ODB-0134] Finished DEF file: /out/floorplan_only.def
+PG_IMPORT VDD swires=1
+PG_IMPORT VSS swires=1
+IMPORT_COUNTS cells=34603 ff=6403
+IMPORT_EXACT_COMPONENT_MASTER_PASS
+IMPORT_EXACT_ALL_PIN_NET_PARTITION_PASS checked=90673
+OT_IOFLOP extra capture fin[0] -> c12208 at (2160, 2430) DBU
+OT_IOFLOP extra capture fin[0] -> c27347 at (3240, 2430) DBU
+OT_IOFLOP extra capture fin[0] -> c27348 at (2160, 4320) DBU
+OT_IOFLOP extra capture fin[0] -> c27349 at (2160, 4590) DBU
+OT_IOFLOP extra capture fin[0] -> c27350 at (4590, 2700) DBU
+OT_IOFLOP extra capture fin[0] -> c27351 at (3240, 4320) DBU
+OT_IOFLOP extra capture fin[0] -> c27352 at (2160, 5400) DBU
+OT_IOFLOP extra capture fin[0] -> c27353 at (3240, 4590) DBU
+OT_IOFLOP extra capture fin[0] -> c27354 at (5670, 2700) DBU
+OT_IOFLOP extra capture fin[0] -> c27355 at (2160, 6210) DBU
+OT_IOFLOP extra capture fin[0] -> c27356 at (4320, 4320) DBU
+OT_IOFLOP extra capture fin[0] -> c27357 at (3240, 5400) DBU
+OT_IOFLOP extra capture fin[0] -> c27358 at (4320, 4590) DBU
+OT_IOFLOP extra capture fin[0] -> c27359 at (2160, 7020) DBU
+OT_IOFLOP extra capture fin[0] -> c27360 at (6750, 2700) DBU
+OT_IOFLOP extra capture fin[0] -> c27361 at (4590, 4860) DBU
+OT_IOFLOP extra capture fin[0] -> c27362 at (3240, 6210) DBU
+OT_IOFLOP extra capture fin[0] -> c27363 at (2160, 7290) DBU
+OT_IOFLOP extra capture fin[0] -> c27364 at (2160, 7560) DBU
+OT_IOFLOP extra capture fin[0] -> c27365 at (7776, 2160) DBU
+OT_IOFLOP extra capture fin[0] -> c27366 at (2160, 7830) DBU
+OT_IOFLOP extra capture fin[0] -> c27367 at (4590, 5670) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c12778 at (212760, 190620) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c27994 at (212760, 190890) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30756 at (212760, 190350) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30757 at (212760, 191160) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30758 at (212760, 190080) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30759 at (212760, 191430) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30760 at (212760, 189810) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30761 at (212760, 191700) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30762 at (212760, 189540) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30860 at (211680, 190890) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c30861 at (212760, 191970) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32639 at (212760, 189270) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32640 at (211680, 191160) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32641 at (212760, 192240) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32642 at (212760, 189000) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32652 at (211680, 190080) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32653 at (211680, 191430) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32654 at (212760, 192510) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32667 at (212760, 188730) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32668 at (211680, 189810) DBU
+OT_IOFLOP extra capture i_ctl[34] -> c32671 at (211680, 191700) DBU
+OT_IOFLOP extra capture i_ctl[90] -> c12840 at (212760, 208980) DBU
+OT_IOFLOP extra capture i_ctl[90] -> c31017 at (212760, 208710) DBU
+OT_ANCHOR_PACK: legally packed 2697 owned anchors; maximum Manhattan displacement 5414.0 DBU
+OT_IOFLOP fixed 1440 output-port and 1257 input-port flops at their pins (632 ports not single-flop)
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 213.840 213.840 ) um
+[INFO GPL-0016] Core area:                   44808.422 um^2
+[INFO GPL-0036] Movable instances area:       3257.872 um^2
+[INFO GPL-0037] Total instances area:         4078.084 um^2
+[INFO GPL-0035] Pin density area adjust:        63.449 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             34603
+[INFO GPL-0007] Movable instances:               31906
+[INFO GPL-0008] Fixed instances:                  2697
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  37887
+[INFO GPL-0011] Number of pins:                  90673
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 216.000 216.000 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 213.840 213.840 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 44808.422 um^2
+[INFO GPL-0017] Fixed instances area:          820.212 um^2
+[INFO GPL-0018] Movable instances area:       3321.321 um^2
+[INFO GPL-0019] Utilization:                     7.550 %
+[INFO GPL-0020] Standard cells area:          3321.321 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 31906	Region center = 0
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.104 um^2
+[INFO GPL-0025] Ideal bin area:                  0.208 um^2
+[INFO GPL-0026] Ideal bin count:                215224
+[INFO GPL-0027] Total bin area:              44808.422 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.827 *  0.827 um
+[INFO GPL-0030] Number of bins:                  65536
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9403 |  5.880966e+05 |   +0.00% |  7.61e-13 |      
+       10 |   0.7199 |  3.778097e+05 |  -35.76% |  1.24e-12 |      
+       20 |   0.6700 |  3.294402e+05 |  -12.80% |  2.02e-12 |      
+       30 |   0.6286 |  3.045730e+05 |   -7.55% |  3.29e-12 |      
+       40 |   0.6052 |  2.917244e+05 |   -4.22% |  5.36e-12 |      
+       50 |   0.6014 |  2.802268e+05 |   -3.94% |  8.73e-12 |      
+       60 |   0.5962 |  2.771121e+05 |   -1.11% |  1.42e-11 |      
+       70 |   0.5819 |  2.754644e+05 |   -0.59% |  2.32e-11 |      
+       80 |   0.5735 |  2.730149e+05 |   -0.89% |  3.77e-11 |      
+       90 |   0.5671 |  2.716812e+05 |   -0.49% |  6.15e-11 |      
+      100 |   0.5624 |  2.706809e+05 |   -0.37% |  1.00e-10 |      
+      110 |   0.5572 |  2.699327e+05 |   -0.28% |  1.63e-10 |      
+      120 |   0.5537 |  2.691817e+05 |   -0.28% |  2.66e-10 |      
+      130 |   0.5500 |  2.685186e+05 |   -0.25% |  4.33e-10 |      
+      140 |   0.5487 |  2.679219e+05 |   -0.22% |  7.05e-10 |      
+      150 |   0.5454 |  2.672963e+05 |   -0.23% |  1.15e-09 |      
+      160 |   0.5382 |  2.664793e+05 |   -0.31% |  1.87e-09 |      
+      170 |   0.5374 |  2.659803e+05 |   -0.19% |  3.05e-09 |      
+      180 |   0.5300 |  2.661942e+05 |   +0.08% |  4.96e-09 |      
+      190 |   0.5193 |  2.668034e+05 |   +0.23% |  8.08e-09 |      
+      200 |   0.5050 |  2.674218e+05 |   +0.23% |  1.32e-08 |      
+      210 |   0.4816 |  2.677949e+05 |   +0.14% |  2.14e-08 |      
+      220 |   0.4571 |  2.666634e+05 |   -0.42% |  3.49e-08 |      
+      230 |   0.4252 |  2.651370e+05 |   -0.57% |  5.69e-08 |      
+      240 |   0.3923 |  2.663942e+05 |   +0.47% |  9.27e-08 |      
+      250 |   0.3620 |  2.655996e+05 |   -0.30% |  1.51e-07 |      
+      260 |   0.3281 |  2.635583e+05 |   -0.77% |  2.36e-07 |      
+      270 |   0.2981 |  2.639485e+05 |   +0.15% |  3.48e-07 |      
+      280 |   0.2726 |  2.631852e+05 |   -0.29% |  5.12e-07 |      
+      290 |   0.2514 |  2.611836e+05 |   -0.76% |  7.55e-07 |      
+      300 |   0.2234 |  2.600893e+05 |   -0.42% |  1.11e-06 |      
+      310 |   0.2004 |  2.592691e+05 |   -0.32% |  1.64e-06 |      
+      320 |   0.1820 |  2.579878e+05 |   -0.49% |  2.41e-06 |      
+      330 |   0.1623 |  2.573063e+05 |   -0.26% |  3.55e-06 |      
+      340 |   0.1426 |  2.567550e+05 |   -0.21% |  5.24e-06 |      
+      350 |   0.1237 |  2.564656e+05 |   -0.11% |  7.71e-06 |      
+      360 |   0.1062 |  2.564351e+05 |   -0.01% |  1.14e-05 |      
+      364 |   0.0993 |  2.564203e+05 |          |  1.38e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 364
+[INFO GPL-1002] Placed Cell Area             3321.3210
+[INFO GPL-1003] Available Free Area         43988.2099
+[INFO GPL-1004] Minimum Feasible Density        0.0800 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0839
+[INFO GPL-1008]     - For 80% usage of free space: 0.0944
+[INFO GPL-1009]     - For 50% usage of free space: 0.1510
+[INFO GPL-1014] Final placement area: 3321.32 (+0.00%)
+OT_OFLOP released 2697 output-port flops for DPL
+[INFO DPL-0006] Core area: 44808.42 um^2
+[INFO DPL-0007] Movable instances area: 4078.08 um^2
+[INFO DPL-0008] Fixed instances area within core: 0.00 um^2
+[INFO DPL-0009] Utilization: 9.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 34603 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        327 |        97 |       230
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.50s
+Placement Analysis
+---------------------------------
+total displacement      10520.4 u
+average displacement        0.3 u
+max displacement            2.2 u
+original HPWL          290335.4 u
+legalized HPWL         298604.6 u
+delta HPWL                    3 %
+
+OT_LAYOUT_DUMP /out/layout.json blocks 0 pins 3284 pg 158 fill 0.087
+PLACEMENT_ONLY_FINISHED_NO_CTS_NO_ROUTE_NO_RESIZE
