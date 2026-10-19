@@ -1,0 +1,728 @@
+{
+ "schema": "opentallas.qwen_kv.static_params.v1",
+ "status": "FAIL",
+ "table_digest": "sha256:7df44a9f9f6b323ed8aae589be4d36be0c567432d8455384ff404af301610b55",
+ "table_plan": "kvs14p-fa7fe4ff9-netlist",
+ "params": {
+  "ahub_ages": {
+   "schema": "opentallas.qwen_kv.ahub_ages.v1",
+   "module": "qkd_ahub_static_dw",
+   "file": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+   "relays": {
+    "ks_ahs": 46,
+    "ks_ahfr": 0,
+    "ks_pvfst": 40,
+    "ap_WS": 8,
+    "ap_WN": 8,
+    "ap_ES": 10,
+    "ap_EN": 9,
+    "am_WS": 8,
+    "am_WN": 8,
+    "am_ES": 8,
+    "am_EN": 7
+   },
+   "PV_LEAD": 0,
+   "FR_OFS": -7,
+   "AP_OFS": [
+    -36,
+    -36,
+    -34,
+    -35
+   ],
+   "AP_OFS_hex": "{16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}",
+   "am_lag_edges": {
+    "WS": 55,
+    "WN": 55,
+    "ES": 55,
+    "EN": 54
+   },
+   "stack_start_lag": {
+    "WS": 0,
+    "WN": 0,
+    "ES": 0,
+    "EN": 0
+   },
+   "bench": "tools/qwen_kv_die/ahub_static_dw_bench.sh (results/rtl/qwen_kv_static_ahub_1018)"
+  },
+  "astk_eread": {
+   "WS_0": {
+    "header": 31,
+    "fork": 36,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 22
+   },
+   "WS_1": {
+    "header": 22,
+    "fork": 27,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 22
+   },
+   "WS_2": {
+    "header": 44,
+    "fork": 48,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 21
+   },
+   "WS_3": {
+    "header": 15,
+    "fork": 19,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 21
+   },
+   "WN_0": {
+    "header": 22,
+    "fork": 26,
+    "erl": 7,
+    "pve": 9,
+    "e_after_header": 20
+   },
+   "WN_1": {
+    "header": 32,
+    "fork": 37,
+    "erl": 7,
+    "pve": 9,
+    "e_after_header": 21
+   },
+   "WN_2": {
+    "header": 15,
+    "fork": 19,
+    "erl": 7,
+    "pve": 9,
+    "e_after_header": 20
+   },
+   "WN_3": {
+    "header": 45,
+    "fork": 49,
+    "erl": 7,
+    "pve": 9,
+    "e_after_header": 20
+   },
+   "ES_0": {
+    "header": 35,
+    "fork": 38,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "ES_1": {
+    "header": 26,
+    "fork": 29,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "ES_2": {
+    "header": 45,
+    "fork": 48,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "ES_3": {
+    "header": 17,
+    "fork": 20,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "EN_0": {
+    "header": 26,
+    "fork": 29,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "EN_1": {
+    "header": 36,
+    "fork": 39,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "EN_2": {
+    "header": 18,
+    "fork": 21,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 20
+   },
+   "EN_3": {
+    "header": 44,
+    "fork": 48,
+    "erl": 7,
+    "pve": 10,
+    "e_after_header": 21
+   }
+  },
+  "attn_fault": null,
+  "seq_kvn": {
+   "S_rx": 11,
+   "S_prg": 5,
+   "S_kw": 4,
+   "LAND": 1,
+   "aligned": false,
+   "rule": "S_kw == S_rx + S_prg + LAND (qkd_seq_core_st_s KVN_A0 fixed after the CMD decode)"
+  }
+ },
+ "fails": [
+  {
+   "id": "UNRESOLVED_STAGE",
+   "what": "seqst_kw__f0: no table record"
+  },
+  {
+   "id": "UNRESOLVED_STAGE",
+   "what": "seqst_rx__f0: no table record"
+  },
+  {
+   "id": "UNRESOLVED_STAGE",
+   "what": "af_EN__f0: no table record"
+  },
+  {
+   "id": "SEQ_KVN_TORN",
+   "what": "S_kw 4 != S_rx 11 + S_prg 5 + LAND 1: qkd_seq_core_st_s faults f_arr at the first KVN word",
+   "fix": "re-equalise S.seq_kvn on the post-station netlist (pad skw or shorten prg/rx)"
+  },
+  {
+   "id": "AHUB_OFS_BOUND",
+   "what": "hub AP_OFS [2, 2, 2, 2] FR_OFS 0 (hardened kit tools/ref_tile/specs_kvahubdw/qkd_ahub_sdw.json); the die stage table needs AP_OFS [-36, -36, -34, -35] ({16'hffdd, 16'hffde, 16'hffdc, 16'hffdc}) FR_OFS -7",
+   "fix": "harden the hub kit (and bind the die instance) at the static_params.json values"
+  },
+  {
+   "id": "PLAN_PARAMS_STALE",
+   "what": "32 generator-recorded parameters differ from the post-station die table (consumers must take static_params.json)",
+   "diffs": [
+    {
+     "record": "astk_eread",
+     "param": "EN_0.fork",
+     "plan": 6,
+     "actual": 29
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_0.header",
+     "plan": 3,
+     "actual": 26
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_1.fork",
+     "plan": 6,
+     "actual": 39
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_1.header",
+     "plan": 3,
+     "actual": 36
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_2.fork",
+     "plan": 6,
+     "actual": 21
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_2.header",
+     "plan": 3,
+     "actual": 18
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_3.fork",
+     "plan": 7,
+     "actual": 48
+    },
+    {
+     "record": "astk_eread",
+     "param": "EN_3.header",
+     "plan": 3,
+     "actual": 44
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_0.fork",
+     "plan": 6,
+     "actual": 38
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_0.header",
+     "plan": 3,
+     "actual": 35
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_1.fork",
+     "plan": 6,
+     "actual": 29
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_1.header",
+     "plan": 3,
+     "actual": 26
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_2.fork",
+     "plan": 6,
+     "actual": 48
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_2.header",
+     "plan": 3,
+     "actual": 45
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_3.fork",
+     "plan": 6,
+     "actual": 20
+    },
+    {
+     "record": "astk_eread",
+     "param": "ES_3.header",
+     "plan": 3,
+     "actual": 17
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_0.fork",
+     "plan": 6,
+     "actual": 26
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_0.header",
+     "plan": 2,
+     "actual": 22
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_1.fork",
+     "plan": 7,
+     "actual": 37
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_1.header",
+     "plan": 2,
+     "actual": 32
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_2.fork",
+     "plan": 7,
+     "actual": 19
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_2.header",
+     "plan": 3,
+     "actual": 15
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_3.fork",
+     "plan": 7,
+     "actual": 49
+    },
+    {
+     "record": "astk_eread",
+     "param": "WN_3.header",
+     "plan": 3,
+     "actual": 45
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_0.fork",
+     "plan": 7,
+     "actual": 36
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_0.header",
+     "plan": 2,
+     "actual": 31
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_1.fork",
+     "plan": 7,
+     "actual": 27
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_1.header",
+     "plan": 2,
+     "actual": 22
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_2.fork",
+     "plan": 7,
+     "actual": 48
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_2.header",
+     "plan": 3,
+     "actual": 44
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_3.fork",
+     "plan": 7,
+     "actual": 19
+    },
+    {
+     "record": "astk_eread",
+     "param": "WS_3.header",
+     "plan": 3,
+     "actual": 15
+    }
+   ]
+  }
+ ],
+ "info": [
+  {
+   "id": "STAGES_CHANGED",
+   "buses": 33,
+   "examples": [
+    [
+     "pvh_EN_0",
+     3,
+     26
+    ],
+    [
+     "pvh_EN_0__f0",
+     6,
+     29
+    ],
+    [
+     "pvh_EN_1",
+     3,
+     36
+    ],
+    [
+     "pvh_EN_1__f0",
+     6,
+     39
+    ],
+    [
+     "pvh_EN_2",
+     3,
+     18
+    ],
+    [
+     "pvh_EN_2__f0",
+     6,
+     21
+    ],
+    [
+     "pvh_EN_3",
+     3,
+     44
+    ],
+    [
+     "pvh_EN_3__f0",
+     7,
+     48
+    ],
+    [
+     "pvh_ES_0",
+     3,
+     35
+    ],
+    [
+     "pvh_ES_0__f0",
+     6,
+     38
+    ],
+    [
+     "pvh_ES_1",
+     3,
+     26
+    ],
+    [
+     "pvh_ES_1__f0",
+     6,
+     29
+    ],
+    [
+     "pvh_ES_2",
+     3,
+     45
+    ],
+    [
+     "pvh_ES_2__f0",
+     6,
+     48
+    ],
+    [
+     "pvh_ES_3",
+     3,
+     17
+    ],
+    [
+     "pvh_ES_3__f0",
+     6,
+     20
+    ],
+    [
+     "pvh_WN_0",
+     2,
+     22
+    ],
+    [
+     "pvh_WN_0__f0",
+     6,
+     26
+    ],
+    [
+     "pvh_WN_1",
+     2,
+     32
+    ],
+    [
+     "pvh_WN_1__f0",
+     7,
+     37
+    ],
+    [
+     "pvh_WN_2",
+     3,
+     15
+    ],
+    [
+     "pvh_WN_2__f0",
+     7,
+     19
+    ],
+    [
+     "pvh_WN_3",
+     3,
+     45
+    ],
+    [
+     "pvh_WN_3__f0",
+     7,
+     49
+    ],
+    [
+     "pvh_WS_0",
+     2,
+     31
+    ],
+    [
+     "pvh_WS_0__f0",
+     7,
+     36
+    ],
+    [
+     "pvh_WS_1",
+     2,
+     22
+    ],
+    [
+     "pvh_WS_1__f0",
+     7,
+     27
+    ],
+    [
+     "pvh_WS_2",
+     3,
+     44
+    ],
+    [
+     "pvh_WS_2__f0",
+     7,
+     48
+    ],
+    [
+     "pvh_WS_3",
+     3,
+     15
+    ],
+    [
+     "pvh_WS_3__f0",
+     7,
+     19
+    ],
+    [
+     "seqst_kw",
+     17,
+     4
+    ]
+   ]
+  }
+ ],
+ "dependent_stages": {
+  "af_EN": 14,
+  "af_EN__f0": null,
+  "af_ES": 76,
+  "af_ES__f0": 76,
+  "af_WN": 13,
+  "af_WN__f0": 9,
+  "af_WS": 73,
+  "af_WS__f0": 66,
+  "am_EN": 7,
+  "am_ES": 8,
+  "am_WN": 8,
+  "am_WS": 8,
+  "ap_EN": 9,
+  "ap_ES": 10,
+  "ap_WN": 8,
+  "ap_WS": 8,
+  "hf": 37,
+  "hf__f0": 33,
+  "ks_af_uff": 35,
+  "ks_af_ufp0": 37,
+  "ks_af_ufp1": 1,
+  "ks_afc_EN_1": 4,
+  "ks_afc_EN_2": 4,
+  "ks_afc_EN_3": 4,
+  "ks_afc_EN_4": 4,
+  "ks_afc_EN_5": 4,
+  "ks_afc_EN_6": 4,
+  "ks_afc_EN_7": 4,
+  "ks_afc_ES_1": 4,
+  "ks_afc_ES_2": 4,
+  "ks_afc_ES_3": 4,
+  "ks_afc_ES_4": 4,
+  "ks_afc_ES_5": 4,
+  "ks_afc_ES_6": 4,
+  "ks_afc_ES_7": 4,
+  "ks_afc_WN_1": 5,
+  "ks_afc_WN_2": 4,
+  "ks_afc_WN_3": 4,
+  "ks_afc_WN_4": 4,
+  "ks_afc_WN_5": 4,
+  "ks_afc_WN_6": 4,
+  "ks_afc_WN_7": 4,
+  "ks_afc_WS_1": 4,
+  "ks_afc_WS_2": 4,
+  "ks_afc_WS_3": 4,
+  "ks_afc_WS_4": 4,
+  "ks_afc_WS_5": 4,
+  "ks_afc_WS_6": 4,
+  "ks_afc_WS_7": 4,
+  "ks_afe_EN": 22,
+  "ks_afe_ES": 54,
+  "ks_afe_WN": 12,
+  "ks_afe_WS": 45,
+  "ks_afk_EN_0": 7,
+  "ks_afk_EN_1": 6,
+  "ks_afk_EN_2": 3,
+  "ks_afk_EN_3": 4,
+  "ks_afk_EN_4": 13,
+  "ks_afk_EN_5": 24,
+  "ks_afk_EN_6": 22,
+  "ks_afk_EN_7": 15,
+  "ks_afk_ES_0": 5,
+  "ks_afk_ES_1": 6,
+  "ks_afk_ES_2": 5,
+  "ks_afk_ES_3": 7,
+  "ks_afk_ES_4": 15,
+  "ks_afk_ES_5": 21,
+  "ks_afk_ES_6": 25,
+  "ks_afk_ES_7": 16,
+  "ks_afk_WN_0": 9,
+  "ks_afk_WN_1": 6,
+  "ks_afk_WN_2": 6,
+  "ks_afk_WN_3": 5,
+  "ks_afk_WN_4": 13,
+  "ks_afk_WN_5": 24,
+  "ks_afk_WN_6": 22,
+  "ks_afk_WN_7": 16,
+  "ks_afk_WS_0": 5,
+  "ks_afk_WS_1": 6,
+  "ks_afk_WS_2": 6,
+  "ks_afk_WS_3": 9,
+  "ks_afk_WS_4": 15,
+  "ks_afk_WS_5": 21,
+  "ks_afk_WS_6": 26,
+  "ks_afk_WS_7": 17,
+  "ks_afv_EN_0": 3,
+  "ks_afv_EN_0__f0": 4,
+  "ks_afv_EN_1": 3,
+  "ks_afv_EN_1__f0": 3,
+  "ks_afv_EN_2": 3,
+  "ks_afv_EN_2__f0": 3,
+  "ks_afv_EN_3": 3,
+  "ks_afv_EN_3__f0": 4,
+  "ks_afv_ES_0": 3,
+  "ks_afv_ES_0__f0": 3,
+  "ks_afv_ES_1": 3,
+  "ks_afv_ES_1__f0": 3,
+  "ks_afv_ES_2": 3,
+  "ks_afv_ES_2__f0": 3,
+  "ks_afv_ES_3": 3,
+  "ks_afv_ES_3__f0": 3,
+  "ks_afv_WN_0": 3,
+  "ks_afv_WN_0__f0": 4,
+  "ks_afv_WN_1": 3,
+  "ks_afv_WN_1__f0": 3,
+  "ks_afv_WN_2": 3,
+  "ks_afv_WN_2__f0": 3,
+  "ks_afv_WN_3": 4,
+  "ks_afv_WN_3__f0": 4,
+  "ks_afv_WS_0": 3,
+  "ks_afv_WS_0__f0": 3,
+  "ks_afv_WS_1": 3,
+  "ks_afv_WS_1__f0": 3,
+  "ks_afv_WS_2": 3,
+  "ks_afv_WS_2__f0": 3,
+  "ks_afv_WS_3": 3,
+  "ks_afv_WS_3__f0": 3,
+  "ks_ahfr": 0,
+  "ks_ahs": 46,
+  "ks_prg": 5,
+  "ks_pvfst": 40,
+  "pve_EN": 10,
+  "pve_ES": 10,
+  "pve_WN": 9,
+  "pve_WS": 10,
+  "pvh_EN_0": 26,
+  "pvh_EN_0__f0": 29,
+  "pvh_EN_1": 36,
+  "pvh_EN_1__f0": 39,
+  "pvh_EN_2": 18,
+  "pvh_EN_2__f0": 21,
+  "pvh_EN_3": 44,
+  "pvh_EN_3__f0": 48,
+  "pvh_ES_0": 35,
+  "pvh_ES_0__f0": 38,
+  "pvh_ES_1": 26,
+  "pvh_ES_1__f0": 29,
+  "pvh_ES_2": 45,
+  "pvh_ES_2__f0": 48,
+  "pvh_ES_3": 17,
+  "pvh_ES_3__f0": 20,
+  "pvh_WN_0": 22,
+  "pvh_WN_0__f0": 26,
+  "pvh_WN_1": 32,
+  "pvh_WN_1__f0": 37,
+  "pvh_WN_2": 15,
+  "pvh_WN_2__f0": 19,
+  "pvh_WN_3": 45,
+  "pvh_WN_3__f0": 49,
+  "pvh_WS_0": 31,
+  "pvh_WS_0__f0": 36,
+  "pvh_WS_1": 22,
+  "pvh_WS_1__f0": 27,
+  "pvh_WS_2": 44,
+  "pvh_WS_2__f0": 48,
+  "pvh_WS_3": 15,
+  "pvh_WS_3__f0": 19,
+  "seqst_kw": 4,
+  "seqst_rx": 4
+ },
+ "rule": "parameters recomputed by kv_static_params.py from the die netlist table; never from the plan record"
+}

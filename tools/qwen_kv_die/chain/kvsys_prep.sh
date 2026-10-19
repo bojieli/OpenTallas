@@ -60,10 +60,10 @@ elif [ "${OT_KV_SEQ_STATIC:-0}" = 1 ]; then LPV=physical/ref_tile/${OT_KV_LPRG_K
   # OT_KV_LPRG_PROGRAM (PW1024 + DW8 hex; default the sys_face bench program) / OT_KV_LPRG_EPOCH (default 0x0b0b) on the
   # link compiler's calendar and refuse a committed image (= the hardened view's constants) that differs
   mkdir -p $O/lprg_image
-  python3 tools/qwen_split/d2d_link_calendar.py --out $O/lprg_image/cal --txl 6 --phy 5 --profile program --txd-c 1,1,1,2 --txd-k 1,2,1,1 \
-    --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg > $O/lprg_image/cal.log
-  python3 tools/qwen_static_kv/layer_roots_from_link.py $O/lprg_image/cal $O/lprg_image/lp ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} \
-    --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
+  # HKV-DIE2 10-19: the SAME compile as the committed image = kv_static_programme.py --profile component (production link
+  # calendar: d2d image die stages + compiled token path; the pre-TXDP '--txd-c 1,1,1,2 --txd-k 1,2,1,1' compile is gone)
+  python3 tools/qwen_kv_die/kv_static_programme.py --profile component --out $O/lprg_image/lp \
+    ${OT_KV_LPRG_PROGRAM:+--program $OT_KV_LPRG_PROGRAM} --epoch ${OT_KV_LPRG_EPOCH:-0x0b0b} > $O/lprg_image/roots.log
   if cmp -s $O/lprg_image/lp/layer_programme_image.svh rtl/qwen_sys/static_kv_20261014/layer_programme_image.svh; then echo MATCH > $O/lprg_image/verdict
   else echo MISMATCH > $O/lprg_image/verdict; echo "OT_KV_SEQ_STATIC: committed layer image != installed program's (re-run layer_roots_from_link.py, re-harden lprg)"
     [ "${OT_KV_LPRG_ALLOW_MISMATCH:-0}" = 1 ] || exit 5; fi
@@ -76,6 +76,11 @@ if [ "${OT_KV_V144:-0}" = 1 ]; then
   [ -f $VP/qkd_pv16_vport.lef ] || { echo "v1.4.4: no closed V port view at $VP"; exit 4; }
   BV="$BV --view qkd_pv16_vport=$VP"
 fi
+# HKV-DIE3 10-19 (coordinator: OT_KV_ASTK_EXPAND production, option B; default ON = kv_static_die): the ASTK strip slots
+# reserve the actual 328.32-um two-column envelope (case + lint), and kv_expand places the strip's CLOSED leaves
+# (ctl_s / ep_s / ex_s / zn / rly_296[_fl] / fault_join / er_owner_st) with the other die-placed frames (--astk-static)
+ASTKX=
+if [ "${OT_KV_ASTK_EXPAND:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then H14="$H14 --reserve-native-astk"; V14=$V14,reserve_native_astk; ASTKX=--astk-static; fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1
@@ -101,7 +106,8 @@ if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[
 # (OT_KV_EXPAND = comma list of frame masters, default all that kv_expand.py knows; 'none' keeps the frames)
 EXP=
 if [ "${OT_KV_EXPAND:-all}" != none ]; then
-  python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
+  XO=${OT_KV_EXPAND:-all}; [ -n "$ASTKX" ] && [ "$XO" != all ] && XO=$XO,qkd_astk,qkd_astk_n
+  python3 tools/qwen_kv_die/kv_expand.py --run $O $ASTKX $( [ "$XO" = all ] || echo --only $XO ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
 # KVPLAN 1815 (OT_KV_RST_REGIONAL=1, also read by kv_die.py): every reset / boot fan-out of the flattened die -> a local

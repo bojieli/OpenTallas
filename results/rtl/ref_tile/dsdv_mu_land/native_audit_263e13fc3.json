@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+ "job": "dsdv_mu_land-dsdv_mu_land-263e13fc3",
+ "source": "263e13fc3",
+ "record_commit": "9b80ceb82",
+ "command": "python3 tools/hier_contract/native_pin_audit.py --view physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land --cell dsdv_mu_land --relative-to physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/insertion.json",
+ "view_sha256": {
+  "dsdv_mu_land.lef": "8384c7fc6da26d662b75c09768a6ab2cdcee0d3b996c6db8d61ce8d43422daa3",
+  "dsdv_mu_land_tt.lib": "a32aadfefb867f78d8dc8313a61e746321875ed6fc691b8b3359d54a0e6f9bab",
+  "dsdv_mu_land_ff.lib": "a65c1510dffad1d2ab2196330ebde1d077537aca1d657cb0193f868cff281789",
+  "insertion.json": "17b401304e734442db658c771e24d292e657591c1baa2251a60799820b941889"
+ },
+ "audit": {
+  "cell": "dsdv_mu_land",
+  "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+  "lib_cell": "dsdv_mu_land",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json child_flop boundary mean -> relative C 386.7"
+  ],
+  "R_ps": 386.7,
+  "spread_ps": 32.6,
+  "relative_to": "neighbour physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land/insertion.json boundary mean",
+  "outputs": 1106,
+  "inputs": 1117,
+  "launch_ps": 104.8,
+  "launch_pin": "rd[704]",
+  "capture_ps": 79.1,
+  "capture_pin": "wd[214]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 27.2,
+  "ff_launch_min_ps": 53.5,
+  "ff_hold_need_ps": -13.2,
+  "relative": {
+   "tt": {
+    "clock_pin": "clk",
+    "rel_min_ps": -14.9,
+    "rel_max_ps": 17.7,
+    "mismatch_ps": 17.7,
+    "offset_ps": 0.0,
+    "comp_ps": 386.7
+   },
+   "ff": {
+    "clock_pin": "clk",
+    "rel_min_ps": -13.3,
+    "rel_max_ps": 13.9,
+    "mismatch_ps": 13.9,
+    "offset_ps": 0.0,
+    "comp_ps": 315.5
+   }
+  },
+  "pass": true,
+  "fail_why": ""
+ }
+}
