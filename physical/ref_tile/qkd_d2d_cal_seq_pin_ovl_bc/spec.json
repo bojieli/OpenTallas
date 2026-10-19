@@ -1,0 +1,215 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "top": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_bootcfg.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "cal_start_rx",
+   "cal_seg_rx",
+   "cal_user_tx",
+   "cal_user_rx"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "adm_done",
+   "fault",
+   "bcfg_tx_we",
+   "bcfg_rx_we",
+   "bcfg_addr",
+   "bcfg_data"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload",
+   "epoch_go",
+   "halt"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/io_pins.tcl",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015",
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit RTL pin registers: every functional input (reload, epoch_go, halt, bcfg_*) is captured once at the pin and every output is a tile output register (one stage after the sequencer; the inner anchor runs EP_SKEW-2 so the epoch-anchored outputs keep the pin tile edges). A generic extra stage would shift the compiled calendar."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Codex:KV-DCAL-OVL-CODEX",
+  "branch": "codex/kv-dcal-ovl-1019",
+  "tag": "ovlbc1",
+  "purpose": "KV overlap sequencer with two hard list ROMs and registered single boot/runtime configuration producer. Shared codec2 release image and 4-user start-list frame; preserves bootcfg runtime SEG2/SEG1 switches and sticky fault checks. Exact TX/RX/user outputs at EP_SKEW3; no credits/backpressure.",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv",
+   "tools/qwen_static_kv/run_dcal_ovl_bc.sh",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc",
+   "results/rtl/kv_dcal_ovl_codex_1019",
+   "physical/common_flow/macro_channel_block.tcl"
+  ],
+  "benches": [
+   {
+    "name": "ovl_boot_runtime_fullframe_wrap",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "KDCALOVL_PASS mode0"
+   },
+   {
+    "name": "mut_lost_runtime_cfg",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m1 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "runtime TX SEG1 switch missing",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m1.log"
+   },
+   {
+    "name": "mut_stale_admission_base",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m2 2",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "stale1 early0",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m2.log"
+   },
+   {
+    "name": "mut_reanchor_while_players_run",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m3 3",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "fault dut1 ref1",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m3.log"
+   },
+   {
+    "name": "mut_boot_during_admission",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m4 4",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "run1 stale0 early0",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m4.log"
+   },
+   {
+    "name": "mut_missing_rx_boot_base",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m5 5",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "early1",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m5.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "New variant from KV bootcfg7167b4ab7 and overlap95d11133f: two independently scheduled TX/RX playheads, each one synchronous hard4096x72 ROM plus plain32bit capture; registered boot/runtime cfg merge remains single producer. No indexed list flop arrays. Distinct new master/kit; ordinary bootcfg bc2 untouched.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: all functional control/boot inputs registered; all outputs registered, rst_n two-stage landing plus core release.",
+  "2_reach": "PASS:216x129.6um tile, all direct wires below405um.",
+  "3_fanout": "CHECK SYNTH: no wide datapath; cfg_select40loads matches bootcfg reviewed exception; reset landing tree only leaf~500flops.",
+  "4_depth": "PASS architectural:32bit counter/decode, registered32bit ROM capture, no macro-output mux/logic before capture; gate measures depth.",
+  "5_storage": "PASS: two hard4096x72 ROMs(589824physicalbits; lists~1703x32each); only current and next32bit words live in flops.",
+  "6_floorplan": "REVIEW macro-lattice-bound density exception: each ROM38.016x62.910 at(43.2,43.2)/(129.6,43.2), lattice43.2,5.4um halos,48.384um macro channel and>=20um pin-face core-edge margin. Full bottom stdcell band. Initial129.6square rejected by generator before any synthesis/gate:5.184um channel and3um right-face margin. Safe216x129.6shape aspect1.667; do not squeeze.",
+  "7_clock": "PASS architecture: local root beside bottom logic band, hardROM clock references; io_hold_margin.03; gate must measure TT/FFspread<=80.",
+  "8_schedule": "PASS design intent: EP_SKEW3 at tile boundary, innerEP1 cancels control/output captures; ROM address->ROMq->capture->player prefetch3edges fits4edgeMIN_DT; exact bench+wrap owed."
+ },
+ "slot_change_request": "KV new OVL_DCAL slot216x129.6um includes2hardlistROMs; ordinary21.6x34.56slot remains unchanged. Shared codec2 frame chargedX8, no addedruntime cycle."
+}

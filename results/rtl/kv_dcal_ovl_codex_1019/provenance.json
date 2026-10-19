@@ -1,0 +1,13 @@
+{
+  "base": "origin/main47c0b67c45",
+  "bootcfg_source": "7167b4ab7",
+  "ovl_source": "95d11133f",
+  "shared_release_source": "1a73e1e7a",
+  "sha256": {
+    "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_bootcfg.sv": "c6a633985a9bc8c4471c943df92b0e56d08c26d49c7375f6990e1c9c02291fe1",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv": "90edf747add1b928b083ed025339e71d292431cda3fffc8b9cdc53a3821b192f",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+    "rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv": "3ccf2fe0c1f0a68c8c143df7172ecbaec3816c2d9d93edd1bb7de2423de524ec",
+    "tools/qwen_static_kv/run_dcal_ovl_bc.sh": "b72b4dd324b19cb3e8a94c240e910e16fec815c4610b14d21baa6ab8baa6bd0a"
+  }
+}

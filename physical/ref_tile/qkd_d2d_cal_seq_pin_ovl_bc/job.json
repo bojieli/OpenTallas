@@ -1,0 +1,166 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_ovl_bc-ovlbc1-COMMIT",
+ "block": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "ref_tile": true,
+ "owner": "Codex:KV-DCAL-OVL-CODEX",
+ "purpose": "KV overlap sequencer with two hard list ROMs and registered single boot/runtime configuration producer. Shared codec2 release image and 4-user start-list frame; preserves bootcfg runtime SEG2/SEG1 switches and sticky fault checks. Exact TX/RX/user outputs at EP_SKEW3; no credits/backpressure.",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/kv-dcal-ovl-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv",
+   "tools/qwen_static_kv/run_dcal_ovl_bc.sh",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc",
+   "results/rtl/kv_dcal_ovl_codex_1019",
+   "physical/common_flow/macro_channel_block.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_d2d_cal_seq_pin_ovl_bc #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/qwen_sys/d2d_static_20261015 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_bootcfg.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ovl_boot_runtime_fullframe_wrap",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "KDCALOVL_PASS mode0"
+   },
+   {
+    "name": "mut_lost_runtime_cfg",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m1 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "runtime TX SEG1 switch missing",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m1.log"
+   },
+   {
+    "name": "mut_stale_admission_base",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m2 2",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "stale1 early0",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m2.log"
+   },
+   {
+    "name": "mut_reanchor_while_players_run",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m3 3",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "fault dut1 ref1",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m3.log"
+   },
+   {
+    "name": "mut_boot_during_admission",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m4 4",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "run1 stale0 early0",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m4.log"
+   },
+   {
+    "name": "mut_missing_rx_boot_base",
+    "cmd": "bash tools/qwen_static_kv/run_dcal_ovl_bc.sh {RUN}/ovlbc_m5 5",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "early1",
+    "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m5.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc --out {RUN}/record/views/qkd_d2d_cal_seq_pin_ovl_bc --macro-view physical/asap7_memory_macros/ot_rom_4096x72_m8 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/qkd_d2d_cal_seq_pin_ovl_bc-ovlbc1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "New variant from KV bootcfg7167b4ab7 and overlap95d11133f: two independently scheduled TX/RX playheads, each one synchronous hard4096x72 ROM plus plain32bit capture; registered boot/runtime cfg merge remains single producer. No indexed list flop arrays. Distinct new master/kit; ordinary bootcfg bc2 untouched."
+}

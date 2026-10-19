@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "top": "qkd_d2d_cal_seq_pin_ovl_bc",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  216.0,
+  129.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  213.84,
+  127.44
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "cal_start_rx",
+   "cal_seg_rx",
+   "cal_user_tx",
+   "cal_user_rx"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "adm_done",
+   "fault",
+   "bcfg_tx_we",
+   "bcfg_rx_we",
+   "bcfg_addr",
+   "bcfg_data"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload",
+   "epoch_go",
+   "halt"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "master": "ot_rom_4096x72_m8",
+   "inst": null,
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 38.016,
+   "h": 62.91,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "master": "ot_rom_4096x72_m8",
+   "inst": null,
+   "idx": 0,
+   "x": 129.6,
+   "y": 43.2,
+   "w": 38.016,
+   "h": 62.91,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_bootcfg.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/kit.env",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/clock.sdc",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/signoff.sdc",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pdn.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pre_cts.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/post_cts.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/post_grt.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pre_drt.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pre_fill.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/post_fill.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pre_grt.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/io_pins.tcl",
+  "physical/common_flow/macro_channel_block.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pre_gpl.tcl",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ss.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_ff.lib",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+  "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/place.tcl"
+ ]
+}

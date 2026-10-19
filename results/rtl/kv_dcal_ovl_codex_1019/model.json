@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.kv_dcal_ovl_model.v1",
+  "status": "shared codec2 compiled frame1a73e1e7a ready; presynthesis model",
+  "model_base": "tools/qwen_static_schedule/mu_d2d_ovl.py at95d11133f + shared codec2X8",
+  "objective": "4user F16 static MU D2D frame, distinct TX/RX playheads, no stalls orcredits",
+  "resources": {
+    "list_count": 2,
+    "logical_bits_per_entry": 32,
+    "logical_entries_per_list_expected": 1703,
+    "macro": "ot_rom_4096x72_m8",
+    "physical_bits_per_macro": 294912,
+    "macro_area_um2": 2391.5865599999997,
+    "stdcell_estimate_um2": 600,
+    "tile_area_um2": 27993.6,
+    "macro_halo_um": 5.4
+  },
+  "throughput": {
+    "rom_ports": 2,
+    "bytes_per_port_per_edge": 4,
+    "min_list_interval_edges": 4,
+    "prefetch_address_to_next_edges": 3,
+    "start_events_per_player_max_per_edge": 0.25
+  },
+  "latency": {
+    "epoch_compensation_edges": 3,
+    "inner_epoch_skew_edges": 1,
+    "control_input_capture_edges": 1,
+    "start_output_capture_edges": 1,
+    "extra_runtime_edges_vs_boundary_schedule": 0,
+    "rom_read_edges": 1,
+    "rom_capture_edges": 1
+  },
+  "integration_obligations": [
+    "Same shared codec2 seam/image/list artifact onbothdies",
+    "Import hardROM macrosand physical slot",
+    "One producerofcfg_d2d; bootwrites plusruntimeSEG2/SEG1",
+    "Bindcal_start_rx/cal_seg_rx/cal_user_tx/cal_user_rx independently; no ties",
+    "PriceX8 and generatedframeH (not oldcodec1X7)"
+  ],
+  "shared_frame": {
+    "commit": "1a73e1e7a",
+    "H": 4026800,
+    "starts_per_list": 1702,
+    "words_per_list": 1703,
+    "codec": 2,
+    "TXDP_K": "0x03030416",
+    "TXDP_C": "0x0a010308",
+    "X": 8,
+    "aggregate_tok_s": 13708.2
+  }
+}
