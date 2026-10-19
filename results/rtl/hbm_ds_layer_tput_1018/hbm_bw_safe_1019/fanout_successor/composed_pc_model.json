@@ -66,5 +66,16 @@
     "sram_ports_added": 0,
     "reset": "existing same-edge bank reset_regions[32+g] for g1..3; no new release edge",
     "physical_status": "model only; exact next-state proof and actual D/CLK/reset/fanout census required"
+  },
+  "lookrow_decode_successor": {
+    "base": "2985c904e",
+    "actual_failure": "f84map2lookbanklow2sharedpartialdecode58/56loads; q_n/nonzero partialdecode38",
+    "added_ff": 129,
+    "state": "21 additional5bit same-edge headbank identities for8four-bankregions\u00d73rowwords, reusing3 originals;24 real existing-queue-edge nonempty flags fromq_n_next!=0",
+    "added_data_edges": 0,
+    "source_root_target": "head_d bankbits <=28Dloads; nonempty-next24D; localfourbank8bit mux slices<=32loads",
+    "sram_ports_added": 0,
+    "reset": "24validFF use bank reset_regions[4*g], same release edge; head identities unreset as existing",
+    "status": "modeled before RTL; exact proof and actual mapped census pending"
   }
 }

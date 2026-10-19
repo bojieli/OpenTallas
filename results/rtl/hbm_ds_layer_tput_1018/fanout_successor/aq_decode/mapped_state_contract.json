@@ -1,5 +1,5 @@
 {
-  "source": "a2cb44a57",
+  "source": "2985c904e",
   "production_wq": 64,
   "clock": "clk, positive edge, no new domain",
   "families": {
@@ -21,7 +21,11 @@
     "bank_n_word_local": 448,
     "look_head_bank_local": 10,
     "tail_set_regions": 24,
-    "head_bank_global": 5
+    "head_bank_global": 5,
+    "command_bank_regions": 15,
+    "command_valid_regions": 3,
+    "blk_bank_regions": 15,
+    "blk_valid_regions": 3
   },
   "forbidden_families": [
     "c_oh",
@@ -52,7 +56,11 @@
       "row_word_act_local",
       "ac_v_local",
       "bank_n",
-      "bank_n_word_local"
+      "bank_n_word_local",
+      "command_bank_regions",
+      "command_valid_regions",
+      "blk_bank_regions",
+      "blk_valid_regions"
     ]
   },
   "known_model_limits": "Extra input logic and post-state decode delay unmeasured; standard area and clock resource admission from mapped candidate, not nominal FF estimate.",
