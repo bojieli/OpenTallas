@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run
+ot-run: ot-epyc5       admits   651 GB (avail 512, growth 17, headroom 0, waiters 0/0 GB) load 51/128 running 6 disk 910 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-tok/veh/g7/WSQK/run
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2269867-1792446535 after 0 s
+{
+  "status": "PASS",
+  "inputs": 134,
+  "child_sources": 139,
+  "reuse_files": 402,
+  "failures": []
+}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2269867-1792446535): exit 0

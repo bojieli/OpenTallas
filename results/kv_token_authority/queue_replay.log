@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-authority-adapter-1019
+ot-run: ot-epyc5       admits   648 GB (avail 510, growth 17, headroom 0, waiters 0/0 GB) load 56/128 running 6 disk 910 GB 
+ot-run: ot-epyc6       admits  1251 GB (avail 935, growth 59, headroom 0, waiters 0/0 GB) load 22/128 running 18 disk 5716 GB 
+ot-run: ot-epyc7       admits   993 GB (avail 755, growth 60, headroom 0, waiters 0/0 GB) load 21/96 running 20 disk 6273 GB 
+ot-run: ot-epyc8       admits  1087 GB (avail 862, growth 101, headroom 0, waiters 0/0 GB) load 15/128 running 11 disk 101 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-authority-adapter-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-authority-adapter-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-131125-1792446477 after 0 s
+KVA_ROW_ERR cyc 3 group 0 K request row 64 (epoch 0024 layer 0), window step -1 row -1
+QUEUE_CONTROL_PASS exact block; historical response drains once, no reset clear
+- tb_queue.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 286ns; walltime 0.000 s; speed 3.329 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-131125-1792446477): exit 0
