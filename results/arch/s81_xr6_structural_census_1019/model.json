@@ -1,0 +1,161 @@
+{
+  "source_commit": "7ef9383db5788cbb9428ccc264bb34484071b541",
+  "verdict": "UNSAFE_DIAGNOSTIC_NO_GATE",
+  "source_mutated": false,
+  "baseline": {
+    "odb_sha256": "078ca172072d4158e7ae2e53b07fad9c2756932f211b79534efe7856794532ba",
+    "cells": 95868,
+    "ff": 16789,
+    "drivers": 88098,
+    "max_by_role": {
+      "clock": 680,
+      "comb": 1043,
+      "ff": 270,
+      "input": 8,
+      "tie": 2,
+      "transparent": 680
+    }
+  },
+  "offender_roles": {
+    "comb": 9,
+    "ff": 348
+  },
+  "ff_groups": {
+    "u_ot_pr_core.u.u_rr.rst_n[]$_DFF_PN0_": {
+      "roots": 4,
+      "minimum": 52,
+      "maximum": 270
+    },
+    "u_ot_pr_core.u.ev_c[]$_DFF_PN0_": {
+      "roots": 5,
+      "minimum": 194,
+      "maximum": 197
+    },
+    "u_ot_pr_core.u.erun$_DFF_PN0_": {
+      "roots": 1,
+      "minimum": 115,
+      "maximum": 115
+    },
+    "u_ot_pr_core.u.rwr_c[]$_DFF_PN0_": {
+      "roots": 20,
+      "minimum": 64,
+      "maximum": 94
+    },
+    "u_ot_pr_core.u.rwe_c[]$_DFF_PN0_": {
+      "roots": 160,
+      "minimum": 64,
+      "maximum": 92
+    },
+    "u_ot_pr_core.u.un_c[]$_DFF_PN0_": {
+      "roots": 85,
+      "minimum": 39,
+      "maximum": 70
+    },
+    "u_ot_pr_core.u.tg1_c[]$_DFF_PN0_": {
+      "roots": 2,
+      "minimum": 64,
+      "maximum": 67
+    },
+    "u_ot_pr_core.u.pv[]$_DFF_PN0_": {
+      "roots": 5,
+      "minimum": 66,
+      "maximum": 66
+    },
+    "u_ot_pr_core.u.cis_c[]$_DFF_PN0_": {
+      "roots": 9,
+      "minimum": 51,
+      "maximum": 64
+    },
+    "u_ot_pr_core.u.pkw_c[]$_DFF_PN0_": {
+      "roots": 32,
+      "minimum": 64,
+      "maximum": 64
+    },
+    "u_ot_pr_core.u.lov_c[]$_DFF_PN0_": {
+      "roots": 5,
+      "minimum": 35,
+      "maximum": 37
+    },
+    "u_ot_pr_core.u.eoh[]$_DFFE_PN0P_": {
+      "roots": 15,
+      "minimum": 33,
+      "maximum": 34
+    },
+    "u_ot_pr_core.u.poh[]$_DFFE_PN1P_": {
+      "roots": 1,
+      "minimum": 34,
+      "maximum": 34
+    },
+    "u_ot_pr_core.u.poh[]$_DFFE_PN0P_": {
+      "roots": 4,
+      "minimum": 33,
+      "maximum": 34
+    }
+  },
+  "copy_only_lower_bound": {
+    "extra_ff": 408,
+    "extra_native_cell_area_um2": 154.66464,
+    "extra_clock_sinks": 408,
+    "clock_capacitance_ff": null,
+    "complete_fixed_point": false,
+    "excludes": [
+      "upstream combinational roots",
+      "extra reset/clear fanout",
+      "extra next-state input fanout",
+      "physical reset polarity/contact buffers",
+      "clock-tree and routing costs"
+    ]
+  },
+  "reset_only_proposal": {
+    "implemented": false,
+    "existing_regions": 4,
+    "proposed_regions": 25,
+    "extra_ff": 21,
+    "extra_native_ff_area_um2": 7.960679999999999,
+    "extra_clock_sinks": 21,
+    "release_edges_before": 3,
+    "release_edges_after": 3,
+    "reset_port_loads": 27,
+    "sync_final_D_loads": 25,
+    "functional_per_leaf_bit_target": 32,
+    "whole_mapped_pin_proof": false,
+    "slots": {
+      "input/classify": 2,
+      "lov_c": 2,
+      "rwe_c": 5,
+      "rwr_c": 2,
+      "tg1_c": 1,
+      "unpacker_control": 1,
+      "un_c": 5,
+      "pkw_c": 1,
+      "cis_c": 2,
+      "send_control": 1,
+      "ci_control": 1,
+      "output_collector_fault": 2
+    }
+  },
+  "storage": {
+    "ud_words": 5,
+    "ud_width": 1024,
+    "aggregate_bits": 5120,
+    "per_independent_leaf_bits": 1024,
+    "read_mux": {
+      "selections": 4,
+      "word_width": 256,
+      "dynamic_index": "un_c",
+      "write": "whole independent leaf ud[k] via rwe_c"
+    },
+    "access_collision": "read and write old ud on same posedge; nonblocking OLD semantics",
+    "lifetimes": "new RD may replace after final consumed pair; ub/un/ul guard faults except legal final-pair boundary",
+    "waiver_adopted": false,
+    "safe_storage_verdict": "BLOCKED lifetime/independent-bank justification or macro OLD-read mapped replacement required",
+    "ring_semantics": "four pair chunks of one captured packet, consumed once each; not four generations"
+  },
+  "schedule": {
+    "current_data_edges_added": 0,
+    "reset_proposal_data_edges_added": 0,
+    "whole_successor_data_edges_added": null,
+    "compiler_token_price": null
+  },
+  "next": "source cluster header copies and true decision cones; fixed-point all-driver accounting then unpacker lifetime proof before whole RTL build"
+}
