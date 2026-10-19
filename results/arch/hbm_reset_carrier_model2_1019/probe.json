@@ -1,0 +1,265 @@
+{
+  "point": [
+    12761.158,
+    19794.988
+  ],
+  "hashes": {
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/contract_pre.json": "1e46f68cfdd7271f3e22714d0b205714bbe69259a3a4497be47c2a4aa0442ec4",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/manifest.json": "e2a5d517469ec339e013783d248ddab9c2b2085c6d4ddc6dddfac78442cc66ad",
+    "/srv/opentallas-scratch/claude/hd4g/gen2c/case_a/run.tcl": "99c9859b4fecdc8b395922f3f36c1272d2e76fffe6e04137087669df9cf84957"
+  },
+  "clock_buffers_nearest": [
+    {
+      "name": "dkh_P2",
+      "xy": [
+        11234.7,
+        20124.72
+      ],
+      "distance": 1856.1899999999987
+    },
+    {
+      "name": "dkh_L1",
+      "xy": [
+        11234.7,
+        20124.99
+      ],
+      "distance": 1856.4599999999991
+    },
+    {
+      "name": "dkh_P1",
+      "xy": [
+        11234.7,
+        20125.26
+      ],
+      "distance": 1856.729999999996
+    },
+    {
+      "name": "dkh_L2",
+      "xy": [
+        11244.42,
+        20184.93
+      ],
+      "distance": 1906.6799999999985
+    },
+    {
+      "name": "dkh_B1",
+      "xy": [
+        11244.42,
+        20214.9
+      ],
+      "distance": 1936.6499999999996
+    },
+    {
+      "name": "dkh_B2",
+      "xy": [
+        11244.42,
+        20215.17
+      ],
+      "distance": 1936.9199999999964
+    },
+    {
+      "name": "dkh_L4",
+      "xy": [
+        11385.36,
+        20385.0
+      ],
+      "distance": 1965.8099999999977
+    },
+    {
+      "name": "dkh_L3",
+      "xy": [
+        11244.42,
+        20244.87
+      ],
+      "distance": 1966.6199999999972
+    },
+    {
+      "name": "dkh_R4",
+      "xy": [
+        11244.42,
+        20285.1
+      ],
+      "distance": 2006.8499999999967
+    },
+    {
+      "name": "dkh_R1",
+      "xy": [
+        11385.36,
+        20494.89
+      ],
+      "distance": 2075.699999999997
+    },
+    {
+      "name": "dkh_B3",
+      "xy": [
+        11385.36,
+        20684.97
+      ],
+      "distance": 2265.779999999999
+    },
+    {
+      "name": "dkh_P3",
+      "xy": [
+        11385.36,
+        20744.64
+      ],
+      "distance": 2325.449999999997
+    }
+  ],
+  "clock_buffers_total": 11087,
+  "clock_declarations": {
+    "dkh_L1": "BUFx24_ASAP7_75t_R dkh_L1 (.A(n_dkh_L1_i), .Y(n_dkh_L1_o));",
+    "dkh_L2": "BUFx24_ASAP7_75t_R dkh_L2 (.A(n_dkh_L2_i), .Y(n_dkh_L2_o));",
+    "dkh_L3": "BUFx24_ASAP7_75t_R dkh_L3 (.A(n_dkh_L2_i), .Y(n_dkh_L3_o));",
+    "dkh_B1": "BUFx24_ASAP7_75t_R dkh_B1 (.A(n_dkh_P1), .Y(n_dkh_L2_i));",
+    "dkh_B2": "BUFx24_ASAP7_75t_R dkh_B2 (.A(n_dkh_B2_i), .Y(n_dkh_P1));",
+    "dkh_P1": "BUFx12f_ASAP7_75t_R dkh_P1 (.A(n_dkh_P1), .Y(n_dkh_P2));",
+    "dkh_P2": "BUFx12f_ASAP7_75t_R dkh_P2 (.A(n_dkh_P2), .Y(n_dkh_L1_i));",
+    "dkh_L4": "BUFx24_ASAP7_75t_R dkh_L4 (.A(n_dkh_L4_i), .Y(n_dkh_L4_o));",
+    "dkh_B3": "BUFx24_ASAP7_75t_R dkh_B3 (.A(n_dkh_B3_i), .Y(n_dkh_R1));",
+    "dkh_R1": "BUFx24_ASAP7_75t_R dkh_R1 (.A(n_dkh_R1), .Y(n_dkh_L4_i));",
+    "dkh_R4": "BUFx24_ASAP7_75t_R dkh_R4 (.A(n_dkh_R4), .Y(n_dkh_B2_i));",
+    "dkh_P3": "BUFx12f_ASAP7_75t_R dkh_P3 (.A(n_dkh_R4), .Y(n_dkh_B5_i));"
+  },
+  "local_carrier": {
+    "kind": "hop",
+    "home": [
+      12748.8,
+      19778.8
+    ],
+    "input": [
+      12748.841999999999,
+      19795.084
+    ],
+    "output": [
+      12781.158,
+      19794.987999999998
+    ],
+    "clk": [
+      12748.841999999999,
+      19794.987999999998
+    ]
+  },
+  "local_clock_candidates": [
+    {
+      "name": "dkh_P2",
+      "xy": [
+        11234.7,
+        20124.72
+      ],
+      "distance": 1856.1899999999987,
+      "clk_span": 1843.8740000000016
+    },
+    {
+      "name": "dkh_L1",
+      "xy": [
+        11234.7,
+        20124.99
+      ],
+      "distance": 1856.4599999999991,
+      "clk_span": 1844.144000000002
+    },
+    {
+      "name": "dkh_P1",
+      "xy": [
+        11234.7,
+        20125.26
+      ],
+      "distance": 1856.729999999996,
+      "clk_span": 1844.4139999999989
+    },
+    {
+      "name": "dkh_L2",
+      "xy": [
+        11244.42,
+        20184.93
+      ],
+      "distance": 1906.6799999999985,
+      "clk_span": 1894.3640000000014
+    },
+    {
+      "name": "dkh_B1",
+      "xy": [
+        11244.42,
+        20214.9
+      ],
+      "distance": 1936.6499999999996,
+      "clk_span": 1924.3340000000026
+    },
+    {
+      "name": "dkh_B2",
+      "xy": [
+        11244.42,
+        20215.17
+      ],
+      "distance": 1936.9199999999964,
+      "clk_span": 1924.6039999999994
+    },
+    {
+      "name": "dkh_L4",
+      "xy": [
+        11385.36,
+        20385.0
+      ],
+      "distance": 1965.8099999999977,
+      "clk_span": 1953.4940000000006
+    },
+    {
+      "name": "dkh_L3",
+      "xy": [
+        11244.42,
+        20244.87
+      ],
+      "distance": 1966.6199999999972,
+      "clk_span": 1954.304
+    },
+    {
+      "name": "dkh_R4",
+      "xy": [
+        11244.42,
+        20285.1
+      ],
+      "distance": 2006.8499999999967,
+      "clk_span": 1994.5339999999997
+    },
+    {
+      "name": "dkh_R1",
+      "xy": [
+        11385.36,
+        20494.89
+      ],
+      "distance": 2075.699999999997,
+      "clk_span": 2063.384
+    },
+    {
+      "name": "dkh_B3",
+      "xy": [
+        11385.36,
+        20684.97
+      ],
+      "distance": 2265.779999999999,
+      "clk_span": 2253.4640000000018
+    },
+    {
+      "name": "dkh_P3",
+      "xy": [
+        11385.36,
+        20744.64
+      ],
+      "distance": 2325.449999999997,
+      "clk_span": 2313.134
+    }
+  ],
+  "all_clock_occupancy_checked": false,
+  "source_pll_pin": [
+    11301.011999999999,
+    15487.242
+  ],
+  "raw_por_pin": [
+    11284.116,
+    15487.242
+  ],
+  "direct_clock_distance": 5755.575999999997,
+  "clock_min405spans": 15,
+  "note": "Clock xy is standard-cell origin; native Y contact, fanout, waveform and complete occupancy require source/LEF binding."
+}
