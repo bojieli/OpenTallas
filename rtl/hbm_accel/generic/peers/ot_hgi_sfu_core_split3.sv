@@ -34,7 +34,10 @@ module ot_hgi_sfu_core_split3 #(
  parameter integer WROT=1,
  // LH-SU (10-19, safe-design item 3; k9 default 16): the 16 lane maps' 460-bit pass rings keep one one-hot copy per
  //  16 bits (29 copies x 3 flops per lane) instead of one shared one-hot driving 1,381 loads. Same edges.
- parameter integer PASS_OHREP=16
+ parameter integer PASS_OHREP=16,
+ // LH-K9R (10-19, safe-design items 1 + 3; k9 default 1): registered reset distribution trees with kept copies, <= 32
+ //  mapped loads per copy (see split2 RST_TREE). Reset release: port -> consumers 2 edges + the kit's 2-edge face landing.
+ parameter integer RST_TREE=1
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [4:0] clk_st,
@@ -59,7 +62,7 @@ module ot_hgi_sfu_core_split3 #(
  wire [7:0] a_vi_re_w,a_vi_re_e,a_ro_v_w,a_ro_v_e,a_kv_we_w,a_kv_we_e;
  wire [191:0] a_vi_addr_w,a_vi_addr_e,a_kv_waddr_w,a_kv_waddr_e;
  wire [255:0] a_ro_x_w,a_ro_x_e,a_kv_wdata_w,a_kv_wdata_e;
- ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP)) u_core(
+ ot_hgi_sfu_core_split2 #(.LWB(LWB),.LG_PATH(LG_PATH),.DRAIN_PIPE(DRAIN_PIPE),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP),.RST_TREE(RST_TREE)) u_core(
   .clk(clk),.clk_pw(clk_pw),.clk_pe(clk_pe),.rst_n(rst_n),.clk_st(clk_st),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .io_word(io_word),.compiler_control(compiler_control),

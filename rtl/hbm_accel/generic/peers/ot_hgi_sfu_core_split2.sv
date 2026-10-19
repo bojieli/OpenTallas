@@ -34,7 +34,14 @@ module ot_hgi_sfu_core_split2 #(
  // LH-SU (10-19): WROT passed to the operand store (bank-aligned shared sector rotate). Default 0 = bit-identical.
  parameter integer WROT=0,
  // LH-SU (10-19): lane_map pass-ring one-hot replication passed to the engine. Default 0 = bit-identical.
- parameter integer PASS_OHREP=0
+ parameter integer PASS_OHREP=0,
+ // LH-K9R (10-19, safe-design items 1 + 3): RST_TREE=1 replaces the 4-region ot_rst_relay (rr[0] drove 6,245 mapped loads,
+ //  rr[1] 1,059) and the direct rst_lg_n / rst_map_n / rst_lane_n fan-out (rst_lg_n__ot_rl1[k] 2,989 each) by registered
+ //  two-level distribution trees with KEPT identical copies (rtl/lib/ot_rst_kept_tree.sv), one per reset pin, clocked by
+ //  the consumers' regional root; synthesis spreads the loads <= 32 per copy (spec reset_relay_split). Every reset reaches
+ //  its consumers 2 edges after the core port (the kit's face landing adds 2: port -> consumers 4 edges; old rst_n path
+ //  2 + 3 = 5, old rst_lg/map/lane 2). Default 0 = bit-identical.
+ parameter integer RST_TREE=0
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [4:0] clk_st,
@@ -59,7 +66,61 @@ module ot_hgi_sfu_core_split2 #(
  localparam IOW=8+8+128+16+8*LWB+24+96+4+2+2*LWB+32+2+1;
  initial if(LWB!=15 || IOW!=471)$fatal(1,"SFU IO programme ABI requires LWB15");
  wire [3:0] rr;   // 0 bridge, 1 engine, 2 W pins, 3 E pins
- ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+ wire [3:0] rst_lg_t;
+ wire [15:0] rst_lane_t,rst_map_t;
+ generate if(RST_TREE!=0)begin:g_rt
+  // sizes from the k9s mapped census (textbook hf_report 32): core 7,3xx loads / 384 copies (~19 each), lg 2,989 / 160
+  // (~19), map <= 256 / 8; level A NA = ceil(NB/24). Instance names bracket-free (copy pass addresses every copy bit).
+  wire rt_core_n;
+  ot_rst_kept_tree #(.NA(16),.NB(384)) u_fl_rst_core(.clk(clk),.rst_n_in(rst_n),.rst_n(rt_core_n));
+  assign rr={4{rt_core_n}};
+  ot_rst_kept_tree #(.NA(8),.NB(160)) u_fl_rst_lg0(.clk(clk_lg[0]),.rst_n_in(rst_lg_n[0]),.rst_n(rst_lg_t[0]));
+`ifdef OT_SFU_CORE_MUT_RSTTREE
+  // negative control (bench mutant rsttree): lg path 1's tree output never releases -> its tap never moves
+  assign rst_lg_t[1]=1'b0;
+`else
+  ot_rst_kept_tree #(.NA(8),.NB(160)) u_fl_rst_lg1(.clk(clk_lg[1]),.rst_n_in(rst_lg_n[1]),.rst_n(rst_lg_t[1]));
+`endif
+  ot_rst_kept_tree #(.NA(8),.NB(160)) u_fl_rst_lg2(.clk(clk_lg[2]),.rst_n_in(rst_lg_n[2]),.rst_n(rst_lg_t[2]));
+  ot_rst_kept_tree #(.NA(8),.NB(160)) u_fl_rst_lg3(.clk(clk_lg[3]),.rst_n_in(rst_lg_n[3]),.rst_n(rst_lg_t[3]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map0(.clk(clk_map[0]),.rst_n_in(rst_map_n[0]),.rst_n(rst_map_t[0]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map1(.clk(clk_map[1]),.rst_n_in(rst_map_n[1]),.rst_n(rst_map_t[1]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map2(.clk(clk_map[2]),.rst_n_in(rst_map_n[2]),.rst_n(rst_map_t[2]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map3(.clk(clk_map[3]),.rst_n_in(rst_map_n[3]),.rst_n(rst_map_t[3]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map4(.clk(clk_map[4]),.rst_n_in(rst_map_n[4]),.rst_n(rst_map_t[4]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map5(.clk(clk_map[5]),.rst_n_in(rst_map_n[5]),.rst_n(rst_map_t[5]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map6(.clk(clk_map[6]),.rst_n_in(rst_map_n[6]),.rst_n(rst_map_t[6]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map7(.clk(clk_map[7]),.rst_n_in(rst_map_n[7]),.rst_n(rst_map_t[7]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map8(.clk(clk_map[8]),.rst_n_in(rst_map_n[8]),.rst_n(rst_map_t[8]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map9(.clk(clk_map[9]),.rst_n_in(rst_map_n[9]),.rst_n(rst_map_t[9]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map10(.clk(clk_map[10]),.rst_n_in(rst_map_n[10]),.rst_n(rst_map_t[10]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map11(.clk(clk_map[11]),.rst_n_in(rst_map_n[11]),.rst_n(rst_map_t[11]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map12(.clk(clk_map[12]),.rst_n_in(rst_map_n[12]),.rst_n(rst_map_t[12]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map13(.clk(clk_map[13]),.rst_n_in(rst_map_n[13]),.rst_n(rst_map_t[13]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map14(.clk(clk_map[14]),.rst_n_in(rst_map_n[14]),.rst_n(rst_map_t[14]));
+  ot_rst_kept_tree #(.NA(1),.NB(8)) u_fl_rst_map15(.clk(clk_map[15]),.rst_n_in(rst_map_n[15]),.rst_n(rst_map_t[15]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane0(.clk(clk_lane[0]),.rst_n_in(rst_lane_n[0]),.rst_n(rst_lane_t[0]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane1(.clk(clk_lane[1]),.rst_n_in(rst_lane_n[1]),.rst_n(rst_lane_t[1]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane2(.clk(clk_lane[2]),.rst_n_in(rst_lane_n[2]),.rst_n(rst_lane_t[2]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane3(.clk(clk_lane[3]),.rst_n_in(rst_lane_n[3]),.rst_n(rst_lane_t[3]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane4(.clk(clk_lane[4]),.rst_n_in(rst_lane_n[4]),.rst_n(rst_lane_t[4]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane5(.clk(clk_lane[5]),.rst_n_in(rst_lane_n[5]),.rst_n(rst_lane_t[5]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane6(.clk(clk_lane[6]),.rst_n_in(rst_lane_n[6]),.rst_n(rst_lane_t[6]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane7(.clk(clk_lane[7]),.rst_n_in(rst_lane_n[7]),.rst_n(rst_lane_t[7]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane8(.clk(clk_lane[8]),.rst_n_in(rst_lane_n[8]),.rst_n(rst_lane_t[8]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane9(.clk(clk_lane[9]),.rst_n_in(rst_lane_n[9]),.rst_n(rst_lane_t[9]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane10(.clk(clk_lane[10]),.rst_n_in(rst_lane_n[10]),.rst_n(rst_lane_t[10]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane11(.clk(clk_lane[11]),.rst_n_in(rst_lane_n[11]),.rst_n(rst_lane_t[11]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane12(.clk(clk_lane[12]),.rst_n_in(rst_lane_n[12]),.rst_n(rst_lane_t[12]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane13(.clk(clk_lane[13]),.rst_n_in(rst_lane_n[13]),.rst_n(rst_lane_t[13]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane14(.clk(clk_lane[14]),.rst_n_in(rst_lane_n[14]),.rst_n(rst_lane_t[14]));
+  ot_rst_kept_tree #(.NA(1),.NB(1)) u_fl_rst_lane15(.clk(clk_lane[15]),.rst_n_in(rst_lane_n[15]),.rst_n(rst_lane_t[15]));
+ end else begin:g_rr
+  ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+  assign rst_lg_t=rst_lg_n;
+  assign rst_lane_t=rst_lane_n;
+  assign rst_map_t=rst_map_n;
+ end endgenerate
  reg [470:0] io_r;
  reg [1741:0] ctl_r;
 `ifdef OT_SFU_SYNC_RST
@@ -128,14 +189,14 @@ module ot_hgi_sfu_core_split2 #(
 `endif
  localparam integer LGB=LG_PATH+1;
  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB),.DRAIN_PIPE(DRAIN_PIPE)) u_vm(
- .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
+ .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_t),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(b_rq),.local_rr(b_rr),.local_wq(b_wq),.local_w_done(b_wd),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
  .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
  .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
  ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP)) u_engine(
-  .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
+  .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_t),.rst_map_n(rst_map_t),
   .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
