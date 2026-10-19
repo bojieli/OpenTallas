@@ -54,7 +54,7 @@ DT=$(J $O/cal/d4g/calendar.json "d['predicted']['first_tx_from_instruction0']+3"
 TV=""; [ -x /usr/bin/time ] && TV="/usr/bin/time -v"
 build(){ # tag defines sources...
   local t=$1 def=$2; shift 2; local d=$O/obj_$t; rm -rf $d
-  $TV verilator $def --hierarchical --binary --timing --verilate-jobs 4 --build-jobs 16 -O1 -Wno-fatal -Wno-lint -Wno-style \
+  $TV verilator $def --hierarchical --binary --timing --verilate-jobs 4 --build-jobs ${IDX_BUILD_JOBS:-8} -O1 -Wno-fatal -Wno-lint -Wno-style \
     --top-module tb_hnx_idx_rows -Mdir $d -o V$t "$@" $VLT > $O/build_$t.log 2>&1
   local rc=$?
   if [ ! -x $d/V$t ]; then V "build $t rc=$rc: retry once (PCH race)"; $TV verilator $def --hierarchical --binary --timing \
@@ -72,9 +72,8 @@ run(){ # tag binary-tag caldir want plusargs...
   V "$t [$ok want $want got $verdict rc=$rc]: $(grep -h 'IDX_ROWS_CYCLES\|IDX_HNX_ROWS rows\|TIMELINE\|SCOREBAD\|TXBAD\|EXTRASCORE' $od/run.log | head -5 | tr '\n' ' ')"
 }
 if [ "$ST" = index ]; then
-  build d4g "+define+D4G_DUT" "${D4G[@]}" "${COMMON[@]}" &
-  build hnx "" "${HNX[@]}" "${COMMON[@]}" &
-  wait
+  build hnx "" "${HNX[@]}" "${COMMON[@]}"
+  build d4g "+define+D4G_DUT" "${D4G[@]}" "${COMMON[@]}"
   run d4g_n1 d4g $O/cal/d4g PASS +N=$DL +EXP_KEY=$DK +EXP_TX=$DT &
   run n1_d4gprog hnx $O/cal/d4g PASS +N=$DL +ROWS=1 +EXP_KEY=$DK +EXP_TX=$DT &
   for n in 1 2 3 4; do run n$n hnx $O/cal/frame PASS +N=$FL +ROWS=$n +PITCH=$II +EXP_KEY=$FK +EXP_TX=$FT & done
