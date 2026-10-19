@@ -87,7 +87,7 @@ mtp_doc = jl('results/arch/token_path_20261009/ds_rom_mtp.json')
 tau = mtp_doc['totals']['tau']
 # composition basis without any scan correction (the 1018 composer's uncorrected T = T_token - SCANCHK correction)
 comp = jl('results/arch/token_path_1018/ds_rom.json')['workloads']
-T0 = {wl: comp[wl]['T_token_cycles'] - sum(t['total'] for t in comp[wl]['terms'] if 'scan_stacks_p4l' in t['slot'])
+T0 = {wl: comp[wl]['T_token_cycles'] - sum(t['total'] for t in comp[wl]['terms'] if 'scan_stacks_p4l' in t['slot'] or 'scan_d' in t['slot'])
       for wl in ('ar', 'mtp')}
 
 out = dict(schema='opentallas.s81_scand.v1', lane='S81-SCAND', date='2026-10-18',
