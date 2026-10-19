@@ -14,8 +14,9 @@ signal nets of 120-165 um; the 30 % slew margin at placement / GRT RC did not co
 
 Fix (structural, no waiver): `orfs_vars POST_RESIZE_TCL=physical/common_flow/max_wire_repeat.tcl` runs
 `repair_design -max_wire_length 80` (OT_MAX_WIRE_UM) after the ORFS 3_4 repair, so every signal net is a short driven
-segment (child ETM outputs get a repeater within 80 um of the pin); buffers on hard children are re-placed by
-post_resize_relocate.tcl.  Spec `max_signal_net_um: 100` makes the gate FAIL on any single-driver net > 100 um; the gate
+segment (child ETM outputs get a repeater within 80 um of the pin); repeaters on a hard child are snapped just outside
+its halo (no global re-placement: gate 1 @71a296754 used post_resize_relocate.tcl, whose incremental GPL re-spread all
+cells -> max net 220 um, 45 slew violators after CTS, gate FAIL; the new gate check caught it).  Spec `max_signal_net_um: 100` makes the gate FAIL on any single-driver net > 100 um; the gate
 also FAILs on any max-slew violator after CTS (tools/ref_tile/path_classes.tcl GATE_SLEW / GATE_LONGNET).
 Everything else is the a62 kit byte-for-byte (RTL ot_s81sl_cap_p1 PINPIPE=1, outline 345.6 square, child origins, clock
 spine, hold budget die, io_hold_margin 0.03, signoff.sdc, pins).  Only kit.env EXTRA gains the two orfs_vars.
