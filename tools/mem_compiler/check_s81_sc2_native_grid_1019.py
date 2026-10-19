@@ -158,6 +158,11 @@ def main():
     root = Path(a.root); base = root/'results/rtl/s81_coll_wide_pitch_1019'
     model_path = base/'access_model/model.json'; m = json.loads(model_path.read_text())
     tech = base/'access_model/asap7_tech.lef'
+    prototype_dir=base/'sc2_prototype/generated'
+    prototype_json=prototype_dir/'ot_sram_1r1w_512x128_m4_r2c2_p192_sc2.json'
+    prototype=json.loads(prototype_json.read_text())
+    assert prototype['access_paths']==m['paths']
+    assert prototype['obstruction_rectangles']==m['proposed_obstruction_rectangles']
     assert hashlib.sha256(tech.read_bytes()).hexdigest()=='7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41'
     paths = candidate(m); positive = audit(paths)
     for p in paths:
@@ -177,7 +182,9 @@ def main():
         transforms.append(dict(orientation=orientation, required_origin_mod48_nm=[(-px)%48,(3-py)%48],
                                default_R0_parent_tracks_match_at_43p2_lattice=px==0 and py==3))
     report = dict(status='MODEL_ONLY_HOLD_NATIVE_UNION_AND_PARENT_APPLICABILITY',
-        source_sha256={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [model_path,tech,Path(__file__)]},
+        source_sha256={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [model_path,tech,Path(__file__),prototype_json,
+            prototype_dir/'ot_sram_1r1w_512x128_m4_r2c2_p192_sc2.lef',base/'terminal_protection/audit.json',
+            base/'access_model/pg_source_mapping.json',base/'access_model/platform_rules.txt']},
         units=dict(database_units_per_micron=1000,manufacturing_grid_nm=1),
         long_center_phases_nm=dict(original_M4=12,original_M5=12,candidate_M4=3,candidate_M5=0,pitch=48),
         transform_convention='Origin is lower-left of oriented bounding box. LEF has implicit ORIGIN 0 0; SYMMETRY X Y. Actual DEF transforms must be bound separately.',
