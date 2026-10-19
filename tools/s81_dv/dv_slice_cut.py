@@ -275,6 +275,9 @@ def main(argv=None):
     # instance lines verbatim from die.v (statement text, comments dropped)
     lines = {}
     for ln in text.split('\n'):
+        # die.v declares a few nets on the instance's line ('wire u_rsv_00_rst; INVx2_ASAP7_75t_R rinv_rsv_00 (...)');
+        # the cut declares every net itself, so the leading declaration is dropped
+        ln = re.sub(r'^(\s*)wire\b[^;(]*;\s*', r'\1', ln)
         m = re.match(r'\s*([\w\\]\S*)\s+(?:#\s*\(.*?\)\s*)?([\w\\]\S*)\s*\(', ln)
         if m and m.group(2) in S:
             lines[m.group(2)] = ln.split(');')[0].rstrip() + ');'
