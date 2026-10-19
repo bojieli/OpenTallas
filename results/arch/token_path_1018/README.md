@@ -46,6 +46,10 @@ TOKEN-XDIE (multi-die co-sim) records land; the composition method itself does n
 | HBM d4g, DeepSeek | MTP | 3,258.7 | 3,258.7 | 368,245 | 0.0 | 0.0 | 0.0 | 100.0 |
 | HBM d4g, Qwen (TP8) | AR | 930.9 | 946.2 (-1.61%) | 1,289,008 | 6.9 | 0.0 | 0.1 | 93.0 |
 
+**MU.S81.SCANCHK (10-18):** the DS ROM rows now charge the index scan at p4l's real 1 HBM stack a die (the 10-09
+DAG and the p4l price charged the 10-04 4-stack reader): AR 1,243.0 -> **1,186.4**, MTP 3,806.2 -> **3,454.7**
+(`results/arch/s81_scanchk_1018/`, ledger S81.SCAN_STACKS_P4L proposed).
+
 Qwen ROM MTP is AR-only by owner decision (10-05 AR_MODE). The HBM MTP rows are priced only: the owner parked HBM
 MTP (recorded, not blocking).
 

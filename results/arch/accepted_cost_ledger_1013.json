@@ -1264,6 +1264,59 @@
   },
   {
    "design": "s81",
+   "unit": "S81 index scan at p4l 1 HBM stack a die (L20 full scan 5,937 -> 23,400 cycles; L2/L8/L14 2,951 -> 11,456; re-index L24-36 873 -> 1,656): the composition charged the 10-04 4-stack reader",
+   "group": "S81.SCAN_STACKS_P4L",
+   "measured": 23400.0,
+   "price": 5937.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 3.9414,
+   "e2e_loss_pct": 10.178,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 874976.4,
+     "added_cycles": 46110.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 5.27,
+     "composition_1018": {
+      "T_cycles": 1011488.6,
+      "tok_s": 1186.4,
+      "vs_composed_pct": -4.56
+     }
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1310941.1,
+     "added_cycles": 133425.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 17463.0,
+     "e2e_loss_pct": 10.178,
+     "composition_1018": {
+      "T_cycles": 1444640.8,
+      "tok_s": 3454.7,
+      "vs_composed_pct": -9.24
+     }
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/s81_scanchk_1018/scan_stacks.json (+ results/rtl/dsrom_1m_measured_20261004/reader.json, results/arch/s81_dv_1016/p4l/plan.json)",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "MU.S81.SCANCHK: price basis correction, not a unit miss. Analysis (no new bench): priced = the committed 4-stack reader bench scaled x4 (per-stack reader, per-PC bound); a 1-stack reader run would make it measured. Over the 5 % unit limit on MTP (wavefront pays the L20 stage 5x more): needs an owner decision or option D (spread the full-scan keys over 3 adjacent stages, modelled AR -1.5 % / MTP -2.5 %). tools/token_compose_xdie.py applies this row to the S81 composition until dv_price is re-run with it."
+  },
+  {
+   "design": "s81",
    "unit": "S81.DV_LANDING_HALFCYCLE (p4l DV die: landed die-link crossings 1+E on every linked block input, forwarded half-cycle dsfd_dvrlyh relay hops, host plane hf/ht E28 once per token; added cycles a token, landing was unpriced)",
    "group": "S81.DV_LANDING_HALFCYCLE",
    "measured": 18275.5,
@@ -2618,11 +2671,11 @@
   },
   "s81": {
    "accepted_pct": 2.063,
-   "proposed_pct": 0.871,
-   "accepted_plus_proposed_pct": 2.934,
+   "proposed_pct": 11.049,
+   "accepted_plus_proposed_pct": 13.112,
    "limit_pct": 15.0,
    "accepted_rows": 2,
-   "proposed_rows": 6,
+   "proposed_rows": 7,
    "headroom_pct": 12.937,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,

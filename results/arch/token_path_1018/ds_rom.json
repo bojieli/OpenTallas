@@ -8,33 +8,35 @@
    "available": true,
    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, AR",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 965378.6,
+   "T_token_cycles": 1011488.6,
    "tau": null,
-   "per_accepted_cycles": 965378.6,
-   "tok_s": 1243.0,
+   "per_accepted_cycles": 1011488.6,
+   "tok_s": 1186.4,
    "price_of_record": {
-    "tok_s": 1365.7,
-    "cycles": 878670.3,
-    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar"
+    "tok_s": 1297.6,
+    "cycles": 924780.3,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + MU.S81.SCANCHK 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+    "uncorrected_tok_s": 1365.7,
+    "scan_stacks_correction_cycles": 46110.0
    },
-   "vs_price_pct": -8.98,
-   "T_at_price_cycles": 965378.6,
-   "pct_measured_current_rtl": 10.34,
-   "banner": "10.3% of token cycles measured on current RTL (61.4% on older RTL, 17.9% modelled PHY, 10.4% priced)",
+   "vs_price_pct": -8.57,
+   "T_at_price_cycles": 1011488.6,
+   "pct_measured_current_rtl": 9.87,
+   "banner": "9.9% of token cycles measured on current RTL (58.6% on older RTL, 17.1% modelled PHY, 14.5% priced)",
    "by_grade": {
     "measured-current-RTL": 99813.0,
     "measured-old-RTL": 592268.7,
     "modelled-PHY": 172975.0,
-    "priced": 100321.9
+    "priced": 146431.9
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.1034,
-    "measured-old-RTL": 0.6135,
-    "modelled-PHY": 0.1792,
-    "priced": 0.1039
+    "measured-current-RTL": 0.0987,
+    "measured-old-RTL": 0.5855,
+    "modelled-PHY": 0.171,
+    "priced": 0.1448
    },
    "by_kind": {
-    "layer": 615525.0,
+    "layer": 661635.0,
     "xdie": 323306.0,
     "adjust": 26547.6
    },
@@ -196,10 +198,10 @@
     },
     "L14": {
      "n": 1,
-     "die": 22928.2,
+     "die": 31433.2,
      "xdie": 7054.0,
      "by_grade": {
-      "priced": 1886.2,
+      "priced": 10391.2,
       "measured-old-RTL": 22248.0,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
@@ -229,11 +231,11 @@
     },
     "L2": {
      "n": 1,
-     "die": 21997.0,
+     "die": 30502.0,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 21377.8,
-      "priced": 1959.2,
+      "priced": 10464.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -295,11 +297,11 @@
     },
     "L8": {
      "n": 1,
-     "die": 22010.0,
+     "die": 30515.0,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 21390.8,
-      "priced": 1959.2,
+      "priced": 10464.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -416,11 +418,11 @@
     },
     "L20": {
      "n": 1,
-     "die": 25328.7,
+     "die": 42791.7,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 24700.1,
-      "priced": 1834.6,
+      "priced": 19297.6,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -460,11 +462,11 @@
     },
     "L24": {
      "n": 1,
-     "die": 17454.4,
+     "die": 18237.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16759.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -504,11 +506,11 @@
     },
     "L28": {
      "n": 1,
-     "die": 17486.4,
+     "die": 18269.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -548,11 +550,11 @@
     },
     "L32": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -592,11 +594,11 @@
     },
     "L36": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -3713,6 +3715,134 @@
       "origin": "main (S81-DIE7/PRICE ec38691d6)"
      },
      "note": "hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record that is not a per-node term"
+    },
+    {
+     "slot": "L2.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 8505.0,
+     "grade": "priced",
+     "total": 8505.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L2",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L2",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L8.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 8505.0,
+     "grade": "priced",
+     "total": 8505.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L8",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L8",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L14.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 8505.0,
+     "grade": "priced",
+     "total": 8505.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L14",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L14",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L20.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 17463.0,
+     "grade": "priced",
+     "total": 17463.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L20",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L20",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L24.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L24",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L24",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L28.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L28",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L28",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L32.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L32",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L32",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L36.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L36",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L36",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
     },
     {
      "slot": "embed.xdie.L0.attn.a_allgather",
@@ -19169,33 +19299,35 @@
    "available": true,
    "title": "DeepSeek-V4.1 ROM, S81 array (p4l DV die), 1M context, MTP (DSpark, tau 4.159)",
    "clock_hz": 1200000000.0,
-   "T_token_cycles": 1311215.8,
+   "T_token_cycles": 1444640.8,
    "tau": 4.159,
-   "per_accepted_cycles": 315271.9,
-   "tok_s": 3806.2,
+   "per_accepted_cycles": 347352.9,
+   "tok_s": 3454.7,
    "price_of_record": {
-    "tok_s": 4045.4,
-    "cycles": 1233697.5,
-    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp"
+    "tok_s": 3650.6,
+    "cycles": 1367122.5,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + MU.S81.SCANCHK 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price)",
+    "uncorrected_tok_s": 4045.4,
+    "scan_stacks_correction_cycles": 133425.0
    },
-   "vs_price_pct": -5.91,
-   "T_at_price_cycles": 1311215.8,
-   "pct_measured_current_rtl": 8.12,
-   "banner": "8.1% of token cycles measured on current RTL (68.8% on older RTL, 14.3% modelled PHY, 8.7% priced)",
+   "vs_price_pct": -5.37,
+   "T_at_price_cycles": 1444640.8,
+   "pct_measured_current_rtl": 7.37,
+   "banner": "7.4% of token cycles measured on current RTL (62.5% on older RTL, 13.0% modelled PHY, 17.2% priced)",
    "by_grade": {
     "measured-current-RTL": 106512.0,
     "measured-old-RTL": 902298.8,
     "modelled-PHY": 187823.6,
-    "priced": 114581.4
+    "priced": 248006.4
    },
    "by_grade_share": {
-    "measured-current-RTL": 0.0812,
-    "measured-old-RTL": 0.6881,
-    "modelled-PHY": 0.1432,
-    "priced": 0.0874
+    "measured-current-RTL": 0.0737,
+    "measured-old-RTL": 0.6246,
+    "modelled-PHY": 0.13,
+    "priced": 0.1717
    },
    "by_kind": {
-    "layer": 929953.1,
+    "layer": 1063378.1,
     "xdie": 348337.6,
     "adjust": 32925.1
    },
@@ -21350,11 +21482,11 @@
     },
     "L2": {
      "n": 1,
-     "die": 21997.0,
+     "die": 30502.0,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 21377.8,
-      "priced": 1959.2,
+      "priced": 10464.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21416,11 +21548,11 @@
     },
     "L8": {
      "n": 1,
-     "die": 22010.0,
+     "die": 30515.0,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 21390.8,
-      "priced": 1959.2,
+      "priced": 10464.2,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21482,11 +21614,11 @@
     },
     "L14": {
      "n": 1,
-     "die": 22928.2,
+     "die": 31433.2,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 22248.0,
-      "priced": 1886.2,
+      "priced": 10391.2,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21548,11 +21680,11 @@
     },
     "L20": {
      "n": 1,
-     "die": 25328.7,
+     "die": 42791.7,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 24700.1,
-      "priced": 1834.6,
+      "priced": 19297.6,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21592,11 +21724,11 @@
     },
     "L24": {
      "n": 1,
-     "die": 17454.4,
+     "die": 18237.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16759.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21636,11 +21768,11 @@
     },
     "L28": {
      "n": 1,
-     "die": 17486.4,
+     "die": 18269.4,
      "xdie": 8169.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 2034.5,
+      "priced": 2817.5,
       "measured-current-RTL": 2299.0,
       "modelled-PHY": 4530.0
      }
@@ -21680,11 +21812,11 @@
     },
     "L32": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21724,11 +21856,11 @@
     },
     "L36": {
      "n": 1,
-     "die": 17419.4,
+     "die": 18202.4,
      "xdie": 7054.0,
      "by_grade": {
       "measured-old-RTL": 16791.9,
-      "priced": 1833.5,
+      "priced": 2616.5,
       "measured-current-RTL": 1771.0,
       "modelled-PHY": 4077.0
      }
@@ -21768,13 +21900,13 @@
     },
     "wave": {
      "n": 1,
-     "die": 176183.8,
+     "die": 263498.8,
      "xdie": 5575.0,
      "by_grade": {
       "measured-old-RTL": 176183.8,
+      "priced": 87985.0,
       "measured-current-RTL": 2640.0,
-      "modelled-PHY": 2265.0,
-      "priced": 670.0
+      "modelled-PHY": 2265.0
      }
     },
     "accept": {
@@ -24942,6 +25074,150 @@
       "origin": "main (S81-DIE7/PRICE ec38691d6)"
      },
      "note": "hop-only basis + accepted-cost ledger rows + DAG re-solve: the part of the S81 price of record that is not a per-node term"
+    },
+    {
+     "slot": "L2.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 8505.0,
+     "grade": "priced",
+     "total": 8505.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L2",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L2",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L8.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 8505.0,
+     "grade": "priced",
+     "total": 8505.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L8",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L8",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L14.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 8505.0,
+     "grade": "priced",
+     "total": 8505.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L14",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L14",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L20.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 17463.0,
+     "grade": "priced",
+     "total": 17463.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L20",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L20",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L24.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L24",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L24",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L28.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L28",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L28",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L32.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L32",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L32",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "L36.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 783.0,
+     "grade": "priced",
+     "total": 783.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.idx_score_delta_cycles.L36",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "L36",
+     "note": "index scan at 1 HBM stack a p4l die (composition basis: 4 stacks a rank die)"
+    },
+    {
+     "slot": "wave.scan_stacks_p4l",
+     "kind": "layer",
+     "n": 1,
+     "cycles": 87315.0,
+     "grade": "priced",
+     "total": 87315.0,
+     "source": {
+      "record": "results/arch/s81_scanchk_1018/scan_stacks.json",
+      "pointer": "per_stack_count.1.dag_1009.mtp",
+      "commit": "uncommitted",
+      "origin": "claude/s81-scanchk-1018 (MU.S81.SCANCHK: index scan at p4l's real 1 HBM stack a die)"
+     },
+     "layer": "wave",
+     "note": "MTP wavefront: the L20 scan stage stays the slowest verify stage, +delta per position"
     },
     {
      "slot": "draft.xdie.mtp.0.hop_in",
