@@ -47,7 +47,13 @@ Phase-1 (HBM-NEXT) made two things binding:
 - COLL W face 5.05 b/um at L = 5, which is ≤ 6.
 - File: `physical/hbm_next/die/f4c_t5/`.
 
-**Die case.** The stand-in case runs on the fleet as `case_f4c_t5`; see the lane file for the verdict.
+**Die case (stand-in integration, fleet ot-epyc4, 2026-10-19 ~00:55): GEN_OK.**
+- The case is `case_f4c_t5`. Artefacts are in `case_f4c_t5/`: `layout.png`, `gen_summary.log`, `overreach_case_f4c_t5.log`.
+- Placement: 1,214 instances, 1,058,039 nets, 942 homes, 0 placement problems, 0 excluded.
+- Clock (regional): 66 stream regions, 835 / 4,523 / 9,834 clock buffers (hbm / serial / stream), the same scale as GEN2a.
+- The reset gate gives FAIL_DIAG with no_regional_tree x1,857. This is the same as the d4g GEN2a baseline in diag mode, and the reset forest belongs to the release chain.
+- Overreach on the relay-free case at the 405-um hop: **682,640 nets against 710,093 for d4g GEN2a on the same contract and views (-3.9 %)**. The worst RELAY net is 27.1 mm against 26.1 mm.
+- The first try (`f4c`, older grants) failed: there was no placed pin `pll_hbm` on the ckgen slot (fixed in GEN2 3ca4d2b98, so the 3ca4d2b98 grants are now copied), plus 2 PHY-row overlaps (the PHY-row leaves now keep their d4g PHY offsets).
 
 The sections below record the first pass (f4c, the D2-scaled tile 673.92 x 1,684.8). Their method, cuts and costs carry over to f4c_t5, with these per-plan numbers:
 
