@@ -392,10 +392,12 @@ module ot_s81sl_lep_core #(
     assign li0_r = lir[0]; assign li1_r = lir[1];
     generate if (NL == 4) begin : g_rxb
         assign li2_r = lir[2]; assign li3_r = lir[3];
-        // pair-B receiver-valid pin flops of their own (S face): yosys would otherwise merge them with the W-face rxv
-        // flops (same logic) and one flop would drive pins ~540 um apart (gate textbook.wire_reach, coordinator 10-19)
+        // pair-B receiver-valid pin flops of their own (S face), cleared by reset region 1 (released on the same edge as
+        // region 2 = rnx): with the same clear net yosys opt_merge folded them into the W-face rxv flops ((* keep *) on the
+        // reg does not stop that) and one flop drove rxv[1] and rxvb[*] ~580 um apart (gate textbook.wire_reach 10-19)
+        wire rnb = rr[1];
         (* keep = "true" *) reg [1:0] rxvb_q;
-        always @(posedge clk or negedge rnx) if (!rnx) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
+        always @(posedge clk or negedge rnb) if (!rnb) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
         assign rxvb = rxvb_q;
     end else begin : g_nrxb
         assign li2_r = 1'b0; assign li3_r = 1'b0; assign rxvb = 2'b00;
