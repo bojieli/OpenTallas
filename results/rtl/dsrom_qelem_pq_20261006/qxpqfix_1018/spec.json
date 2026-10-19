@@ -1,5 +1,5 @@
 {
- "name": "dsrom-qelem-qs5f-ob-tc-hm25-cl",
+ "name": "dsrom-qelem-qs5f-ob2-tc-hm25-cl",
  "block": "ot_v41_rom_elem_q_qxpq_w10",
  "owner": "Claude:QXPQ-FIX",
  "purpose": "S81.STA.LEAF.3.5 (coordinator OK STRUCTURE_REPEAT, 10-18): re-route of the CLOSED RSTP q element dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-2bded98f0 with (1) the output pin-flop band (physical/abi3/dsrom_q_outflop_band.tcl: each output port's private g_o2 q_* register + buffers moved onto its pin, re-legalised), so the hold pad the ECO adds sits at the pin, (2) OT_Q_CK_NORTH=1 (clk at the N-face centre = the S81 contract clock_entry N), (3) hold margin 25 ps (route.io_hold_margin >= 0.025 rule). RTL, params, outline 510.84x221.4, macros, other pins unchanged; 0 cycles. Target: native launch 258.9 -> ~150-200 ps.",
@@ -52,7 +52,7 @@
    "peak_ram_gb": 40
   },
   "route": {
-   "cmd": "export OT_NATIVE_Q_H1_INPUT=1; export OT_NATIVE_Q_H1_RST=1; export OT_Q_EF_SOUTH=1; export RSTP=1; export OT_Q_CK_NORTH=1; export OT_Q_PDH=physical/abi3/dsrom_q_outflop_band.tcl; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1r_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL} {RUN}/routes",
+   "cmd": "export OT_HOLD_STOP='cts:10204 grt:0'; export OT_NATIVE_Q_H1_INPUT=1; export OT_NATIVE_Q_H1_RST=1; export OT_Q_EF_SOUTH=1; export RSTP=1; export OT_Q_CK_NORTH=1; export OT_Q_PDH=physical/abi3/dsrom_q_outflop_band.tcl; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1r_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL} {RUN}/routes",
    "ok": "grep -q '^rc=0' {RUN}/routes/jobs/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/jobs/{LABEL}/exit",
    "logs": [
     "{RUN}/routes/jobs/{LABEL}/launch.log"
@@ -176,5 +176,7 @@
    "QS": 5,
    "RSTP": 1
   }
- }
+ },
+ "early_fail": false,
+ "early_fail_reason": "TW3-S81 10-19 03:30: dsrom-qelem-qs5f-ob-tc-hm25-cl-196759197 EARLY_FAIL_HOLD was a FALSE stuckscan verdict. Attempt 1 CTS hold repair stalled near-miss (-11.0 ps, HM 25 margin flood 27k endpoints) -> daemon HOLD-STOP resumed with OT_HOLD_STOP cts:10204; 4_1_cts.odb was absent, so attempt 2 replayed CTS and its capped repair COMPLETED as designed ('OT_HOLD_STOP cap of 10204 buffers reached; continuing to route', FF hold ws -9.64 ps, 46 viol, all internal MAC regs e.g. u_e.g_mac[0].g_l3.u_l0.q1_sg[3], none at the output band) and the run was in 'Report metrics stage 4, cts final' when stuckscan rule (2) judged the intrinsically flat replay as a second stall and killed it. Same RTL/kit/geometry (coordinator-approved 0ja); this resubmit carries the same CTS cap up front (OT_HOLD_STOP cts:10204 grt:0) so the post-route hold ECO (now on RC-CAL calibrated M6/M7 RC, main) repairs the residue."
 }
