@@ -39,14 +39,14 @@
     475.2,
     43.2
    ],
-   "orient": "MY"
+   "orient": "R0"
   }
  ],
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "*u_cal*g_m?0?*u_pm",
+   "inst": "u_gi.u_cal.g_m[0].u_pm",
    "at": [
     43.2,
     43.2
@@ -56,10 +56,10 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "*u_cal*g_m?1?*u_pm",
+   "inst": "u_gi.u_cal.g_m[1].u_pm",
    "at": [
     43.2,
-    120.984
+    121.008
    ],
    "at_exact": true,
    "orient": "R0"
@@ -216,7 +216,11 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "job": {
   "owner": "Claude:HF-4",
@@ -227,7 +231,10 @@
    "rtl/test/qwen_dv",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "physical/ref_tile/qfd_tt_head_static_h16c"
+   "physical/ref_tile/qfd_tt_head_static_h16c",
+   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+   "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a"
   ],
   "benches": [
    {
@@ -420,5 +427,43 @@
   }
  },
  "landed_record": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json",
- "landed_note": "HF-4 10-18: die obligations (record die_obligations): two clock ports ck_core / ck_hr (regional, related, same PLL phase); every output +3 edges vs the flat qfd_tt_ctlm_dv, inputs on time -> the GEN must re-derive XPF_TRANSPORT_EDGES (+3 -> 23 if counted from the flat hr register) and lane ages of cmd/hr/dc/native_cmd; lp MUT 4 (u_hr reset one stage late) is NOT observable (PASS) because h16c re-times its own reset stations and its state starts at program load, waived."
+ "landed_note": "HF-4 10-18: die obligations (record die_obligations): two clock ports ck_core / ck_hr (regional, related, same PLL phase); every output +3 edges vs the flat qfd_tt_ctlm_dv, inputs on time -> the GEN must re-derive XPF_TRANSPORT_EDGES (+3 -> 23 if counted from the flat hr register) and lane ages of cmd/hr/dc/native_cmd; lp MUT 4 (u_hr reset one stage late) is NOT observable (PASS) because h16c re-times its own reset stations and its state starts at program load, waived.",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "hf4c_note": "HF-4c 10-18 (first gen on the CLOSED h16c view qfd_tt_head_static_h16c-h16c-ae6b0c59a): (1) h16c MY is impossible on the asap7 tracks (no MY x origin puts its 245 M5 S-face pins on track; M3 also off except x%0.036 shifts) -> R0 at (475.2,43.2): S face (rom_cmd/rom_ret/ck_head/ck_pm0) stays S, E face (1,088 pins: landing reads + outputs) faces a 41-um E channel next to the N/S output pins x 655-771; (2) upper calendar SRAM 120.984 -> 121.008 (120.984 = 1,585 pins off track; 121.008 = the h16c stack pitch).",
+ "hard_define": "SYNTHESIS",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: lp.py regional reset runs (rst_n -> u_lpr_root 1 flop on ck_core -> u_lpr_core / u_lpr_hr 2 flops per region -> u_lprc_* per child; port net has one sink, reset depth 3 proven by the landed lockstep bench)"
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_gi.u_cal.g_m[0].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_m[1].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  }
+ },
+ "raw_memory_note": "TW2-QCTLM 10-19: gate 20261019-010025 CTS stopped at 'OT_HYBRID: CTS source ck_core must reach only standard-cell clock pins' = the calendar's 2 raw 64x512 SRAMs (lp region ck_core) were undeclared sinks; now exact raw-memory bindings on region root ck_core (tool: claude/root-landed-rawmem-1019 7729b9de4, landed clusters accept raw sinks of a region root)",
+ "fill_reason": {
+  "pin_bound": "width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops"
+ }
 }
