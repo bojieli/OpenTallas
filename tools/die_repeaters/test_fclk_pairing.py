@@ -9,20 +9,26 @@ import pytest
 
 
 @pytest.mark.skipif(not shutil.which('tclsh'), reason='no tclsh')
-@pytest.mark.parametrize('contract,bad_bit,missing,verdict,bits,errors', [
-    (False, False, False, 'FAIL', 3, 0),  # old fallback incorrectly pairs reset
-    (True, False, False, 'PASS', 2, 0),
-    (True, True, False, 'FAIL', 2, 0),   # real zero-stage payload still fails
-    (True, False, True, 'FAIL', 1, 1),   # disconnected payload fails closed
+@pytest.mark.parametrize('contract,bad_bit,missing,constant,verdict,bits,errors,const_bits', [
+    (False, False, False, 0, 'FAIL', 3, 0, 0),  # old fallback incorrectly pairs reset
+    (True, False, False, 0, 'PASS', 2, 0, 0),
+    (True, True, False, 0, 'FAIL', 2, 0, 0),   # real zero-stage payload still fails
+    (True, False, True, 0, 'FAIL', 1, 1, 0),   # disconnected payload fails closed
+    (True, False, False, 1, 'PASS', 1, 0, 1),  # physical tie high
+    (True, False, False, 2, 'PASS', 1, 0, 1),  # physical tie low
+    (True, False, False, 3, 'FAIL', 2, 0, 0),  # wrong output never exempt
 ])
-def test_complete_payload_contract(tmp_path, contract, bad_bit, missing, verdict, bits, errors):
+def test_complete_payload_contract(tmp_path, contract, bad_bit, missing, constant, verdict, bits, errors, const_bits):
     # Mock the tiny ODB interface, retaining the real audit pairing/judgement.
     # Capture has two payload pins plus synchronous reset from another tree.
     script = r'''
 namespace eval ord {proc get_db_block {} {return block}}
 proc block {method args} {
   if {$method eq "getNets"} {return fnet}
-  if {$method eq "findInst"} {return capture}
+  if {$method eq "findInst"} {
+    if {[lindex $args 0] eq "tie"} {return tie}
+    return capture
+  }
 }
 proc fnet {method} {
   if {$method eq "getName"} {return n_fck}
@@ -37,6 +43,11 @@ proc capture {method} {
   if {$method eq "getName"} {return capture}
   if {$method eq "getMaster"} {return master}
   if {$method eq "getITerms"} {return {clock data0 data1 reset}}
+}
+proc tie {method} {return tie_master}
+proc tie_master {method} {
+  if {$::constant == 2} {return TIELOx1_ASAP7_75t_R}
+  return TIEHIx1_ASAP7_75t_R
 }
 proc master {method} {return dsfd_dvrlyh_2_EW}
 proc clockterm {method} {return ck}
@@ -64,13 +75,18 @@ proc ot_die_rep_fclk_fwd {net bufs depth acc_name} {
 rename ot_die_rep_fclk_back unused_back
 proc ot_die_rep_fclk_back {pin bufs} {
   if {$pin eq "reset"} {return {reset_source 0}}
+  if {$pin eq "data1" && $::constant} {
+    if {$::constant == 1} {return {tie 0 H}}
+    if {$::constant == 2} {return {tie 0 L}}
+    return {tie 0 WRONG}
+  }
   if {$pin eq "data1" && $::bad_bit} {return {payload 0}}
   return {payload 2}
 }
 '''
     audit = Path(__file__).with_name('fclk_audit.tcl')
     prefix = tmp_path / 'audit'
-    script = (f'source {{{audit}}}\nset ::missing {int(missing)}\nset ::bad_bit {int(bad_bit)}\n' + script)
+    script = (f'source {{{audit}}}\nset ::missing {int(missing)}\nset ::bad_bit {int(bad_bit)}\nset ::constant {constant}\n' + script)
     if contract:
         script += 'set ::ot_die_rep_fclk_data_ports [dict create dsfd_dvrlyh_2_EW {{i\\[*\\]} 2}]\n'
     script += f'puts "RC [ot_die_rep_fclk_audit {{{prefix}}} {{n_fck}} {{BUF}}]"\n'
@@ -79,6 +95,7 @@ proc ot_die_rep_fclk_back {pin bufs} {
     report = json.loads(prefix.with_suffix('.json').read_text())
     assert report['verdict'] == verdict
     assert report['pairing_errors'] == errors
+    assert report['constant_bits'] == const_bits
     rows = list(csv.DictReader(prefix.with_suffix('.tsv').open(), delimiter='\t'))
     assert int(rows[0]['data_bits']) == bits
     if contract:

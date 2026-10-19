@@ -44,7 +44,7 @@ proc ot_die_rep_fclk_fwd {net bufs depth acc_name} {
   }
 }
 
-# backward from an input iterm: {source_inst_name depth}
+# backward from an input iterm: {source_inst_name depth source_output_mterm_name}
 proc ot_die_rep_fclk_back {iterm bufs} {
   set d 0; set it $iterm
   for {set guard 0} {$guard < 10000} {incr guard} {
@@ -54,7 +54,7 @@ proc ot_die_rep_fclk_back {iterm bufs} {
     foreach x [$net getITerms] { if {[$x getIoType] eq "OUTPUT"} { set drv $x; break } }
     if {$drv eq ""} { return [list {} $d] }
     set di [$drv getInst]
-    if {![ot_die_rep_fclk_is_rep $di $bufs]} { return [list [$di getName] $d] }
+    if {![ot_die_rep_fclk_is_rep $di $bufs]} { return [list [$di getName] $d [[$drv getMTerm] getName]] }
     incr d
     set it {}
     foreach x [$di getITerms] { if {[$x getIoType] eq "INPUT" && [$x getNet] ne "NULL" && ![[$x getNet] isSpecial]} { set it $x; break } }
@@ -89,8 +89,8 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
     foreach g $globs { if {[string match $g $nm]} { lappend nets $n; break } }
   }
   set f [open $prefix.tsv w]
-  puts $f "fclk_net\tfclk_src\tcapture\tfclk_repeaters\tdata_min\tdata_max\tdata_bits\tpairing\tbroadcast\tmismatch\tauxiliary_inputs"
-  set hops 0; set judged 0; set bad 0; set bcast_nets 0; set bcast_hops 0; set fnets 0; set pairing_errors 0; set examples {}
+  puts $f "fclk_net\tfclk_src\tcapture\tfclk_repeaters\tdata_min\tdata_max\tdata_bits\tpairing\tbroadcast\tmismatch\tauxiliary_inputs\tconstant_bits"
+  set hops 0; set judged 0; set bad 0; set bcast_nets 0; set bcast_hops 0; set fnets 0; set pairing_errors 0; set constant_bits 0; set examples {}
   foreach n $nets {
     set drv {}
     foreach x [$n getITerms] { if {[$x getIoType] eq "OUTPUT"} { set drv $x; break } }
@@ -106,7 +106,7 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
     dict for {load v} $acc {
       lassign $v fdepth fmterm
       set li [$blk findInst $load]
-      set same {}; set any {}; set declared {}; set selected 0; set aux 0
+      set same {}; set any {}; set declared {}; set selected 0; set aux 0; set const 0
       set contract {}
       set master [[$li getMaster] getName]
       if {[info exists ot_die_rep_fclk_data_ports] && [dict exists $ot_die_rep_fclk_data_ports $master]} {
@@ -122,8 +122,20 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
           incr selected
         }
         if {[$it getNet] eq "NULL" || [[$it getNet] isSpecial]} continue
-        lassign [ot_die_rep_fclk_back $it $bufs] s d
+        lassign [ot_die_rep_fclk_back $it $bufs] s d source_pin
         if {$s eq ""} continue
+        # Physical constant drivers are accounted payload pins, but have no
+        # switching data launch to match to the forwarded clock. Recognize the
+        # exact native tie cell AND its actual constant output, never a net name
+        # or an undriven "constant" wire. A buffer chain may end at this tie.
+        if {$source_pin ne ""} {
+          set source_inst [$blk findInst $s]
+          set source_master [[$source_inst getMaster] getName]
+          if {($source_master eq "TIEHIx1_ASAP7_75t_R" && $source_pin eq "H") ||
+              ($source_master eq "TIELOx1_ASAP7_75t_R" && $source_pin eq "L")} {
+            incr const; incr constant_bits; continue
+          }
+        }
         lappend declared $d
         if {[dict exists $acc $s]} { set is_bcast 1 }
         if {$s eq $src} { lappend same $d } else { lappend any $d }
@@ -132,13 +144,13 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
         # The producer declares the complete functional data bus. Never prefer a
         # same-source subset here: every data bit must be traced and judged.
         set ds $declared; set how data_port_contract
-        if {$selected != $expected || [llength $ds] != $expected} { incr pairing_errors; set how data_port_contract_ERROR }
+        if {$selected != $expected || [llength $ds] + $const != $expected} { incr pairing_errors; set how data_port_contract_ERROR }
       } elseif {[llength $same]} { set ds $same; set how same_source } elseif {[llength $any]} { set ds $any; set how capture_inputs } else { set ds {}; set how none }
-      lappend rows [list $load $fdepth $ds $how $aux]
+      lappend rows [list $load $fdepth $ds $how $aux $const]
     }
     if {$is_bcast} { incr bcast_nets }
     foreach r $rows {
-      lassign $r load fdepth ds how aux
+      lassign $r load fdepth ds how aux const
       incr hops
       set dmin -1; set dmax -1; set mm 0
       if {[llength $ds]} { set dmin [tcl::mathfunc::min {*}$ds]; set dmax [tcl::mathfunc::max {*}$ds] }
@@ -149,14 +161,14 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
         set mm [expr {abs($fdepth - $dmin) > 1 || abs($fdepth - $dmax) > 1}]
         if {$mm} { incr bad; if {[llength $examples] < 20} { lappend examples "[$n getName] $src->$load fclk=$fdepth data=$dmin..$dmax" } }
       }
-      puts $f "[$n getName]\t$src\t$load\t$fdepth\t$dmin\t$dmax\t[llength $ds]\t$how\t$is_bcast\t$mm\t$aux"
+      puts $f "[$n getName]\t$src\t$load\t$fdepth\t$dmin\t$dmax\t[llength $ds]\t$how\t$is_bcast\t$mm\t$aux\t$const"
     }
   }
   close $f
   set vacuous [expr {$fnets > 0 && $judged == 0}]
   set ex {}; foreach e $examples { lappend ex "\"[string map {\\ \\\\ \" \\\"} $e]\"" }
   set j [open $prefix.json w]
-  puts $j "{\"schema\": \"opentallas.die_repeaters.fclk_audit.v3\", \"rule\": \"DIE-CLOCK: per hop |fclk repeaters - data repeaters| <= 1; pairing complete declared payload when provided (width and trace checked), otherwise capture inputs with same-source preferred; broadcast fclk nets flagged, not judged; fclk present with zero judged hops = vacuous = FAIL\", \"fclk_nets\": $fnets, \"broadcast_fclk_nets\": $bcast_nets, \"hops\": $hops, \"broadcast_hops\": $bcast_hops, \"hops_judged\": $judged, \"mismatch_over_1\": $bad, \"vacuous\": $vacuous, \"pairing_errors\": $pairing_errors, \"verdict\": \"[expr {($bad || $vacuous || $bcast_nets || $pairing_errors) ? {FAIL} : {PASS}}]\", \"examples\": \[[join $ex {, }]\], \"tsv\": \"[file tail $prefix].tsv\"}"
+  puts $j "{\"schema\": \"opentallas.die_repeaters.fclk_audit.v3\", \"rule\": \"DIE-CLOCK: per hop |fclk repeaters - data repeaters| <= 1; pairing complete declared payload when provided (width and trace checked), otherwise capture inputs with same-source preferred; broadcast fclk nets flagged, not judged; fclk present with zero judged hops = vacuous = FAIL\", \"fclk_nets\": $fnets, \"broadcast_fclk_nets\": $bcast_nets, \"hops\": $hops, \"broadcast_hops\": $bcast_hops, \"hops_judged\": $judged, \"mismatch_over_1\": $bad, \"vacuous\": $vacuous, \"pairing_errors\": $pairing_errors, \"constant_bits\": $constant_bits, \"verdict\": \"[expr {($bad || $vacuous || $bcast_nets || $pairing_errors) ? {FAIL} : {PASS}}]\", \"examples\": \[[join $ex {, }]\], \"tsv\": \"[file tail $prefix].tsv\"}"
   close $j
   puts "OT_DIE_REP_FCLK fclk_nets=$fnets broadcast_nets=$bcast_nets hops=$hops judged=$judged mismatch_over_1=$bad pairing_errors=$pairing_errors vacuous=$vacuous"; flush stdout
   return [expr {$bad + $vacuous + $bcast_nets + $pairing_errors}]
