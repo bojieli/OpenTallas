@@ -4090,7 +4090,11 @@
     "st",
     "f_prog"
    ],
-   "decision": "coordinator 0cw+ (4)"
+   "decision": "coordinator 0cw+ (4)",
+   "covered_modules": [
+    "ot_s81_cfg7_seq_bf"
+   ],
+   "provenance_note": "ot_s81_cfg7_seq_bf is u_ld within this closed bfp view; it is not a standalone frame/die leaf."
   },
   {
    "master": "dsfd_cfifo_crs4",
@@ -4137,55 +4141,19 @@
    "decision": "coordinator 0db+ (3); f_prog from cfg7_seq_bfp"
   },
   {
-   "master": "dsfd_bf_col_cl",
-   "ref": "origin/claude/selem-bfcol-2020",
-   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv",
+   "master": "dsfd_bf_col",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
    "view": null,
-   "view_note": "parent dsfd_bf_col gate waits on lane4r (s81_bf_cl_lane4r-r2-7c317a644) + fp views",
+   "view_note": "Actual frame binds ot_v41_bf_col compact199 inside dsfd_bf_col. Native launch/capture repair pending; fallback dsfd_bf_col_cl is not instantiated.",
    "ports_used": [
-    "leaf_ck",
-    "lane_ckl",
-    "lane_cko",
-    "rom_ck0",
-    "rom_ck1",
+    "ci",
+    "qy",
     "ck",
-    "rs"
+    "rs",
+    "r"
    ],
-   "clock_ties": [
-    {
-     "port": "lane_ckl[0]",
-     "to": "leaf_ck[2]"
-    },
-    {
-     "port": "lane_cko[0]",
-     "to": "leaf_ck[2]"
-    },
-    {
-     "port": "lane_ckl[1]",
-     "to": "leaf_ck[3]"
-    },
-    {
-     "port": "lane_cko[1]",
-     "to": "leaf_ck[3]"
-    },
-    {
-     "port": "lane_ckl[2]",
-     "to": "leaf_ck[4]"
-    },
-    {
-     "port": "lane_cko[2]",
-     "to": "leaf_ck[4]"
-    },
-    {
-     "port": "lane_ckl[3]",
-     "to": "leaf_ck[5]"
-    },
-    {
-     "port": "lane_cko[3]",
-     "to": "leaf_ck[5]"
-    }
-   ],
-   "decision": "COORD 10-17 ~16:20 BF: lane band roots leaf_ck[2+g] / lane_ckl[g] / lane_cko[g] all = frame leaf clock 2+g"
+   "decision": "AD-S81-FRAME: preserve actual compact199 frame member; no fallback substitution before proof"
   },
   {
    "master": "ot_v41_rom_elem_q_qxpq_w10",
@@ -6567,5 +6535,54 @@
    "reason": "PHY min_period 900 ps; ctrl_rg2 ckh uses its signed-off hclk domain through the existing async FIFO"
   }
  },
- "land_plan_note_mu": "MU lanes (mu_*, rt_0N) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan"
+ "land_plan_note_mu": "MU lanes (mu_*, rt_0N) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan",
+ "land_views": {
+  "dsfd_dvland_276": {
+   "ref": "codex/closure-record-s81dv_land_276-po2-df5c2d585",
+   "commit": "4e4a509e266ac84a0ac9f77552936342956f7b21",
+   "kit": "physical/ref_tile/s81dv_land_276",
+   "job": "s81dv_land_276-po2-df5c2d585"
+  },
+  "dsfd_dvland_276l": {
+   "ref": "codex/closure-record-s81dv_land_276l-po2-df5c2d585",
+   "commit": "c1f2495df9e5c32462adc0d2a2c0c66d0af76562",
+   "kit": "physical/ref_tile/s81dv_land_276l",
+   "job": "s81dv_land_276l-po2-df5c2d585"
+  },
+  "dsfd_dvland_70": {
+   "ref": "codex/closure-record-s81dv_land_70-po2-df5c2d585",
+   "commit": "e676a75d23d7f728746c3d225dc54c58eab9f00a",
+   "kit": "physical/ref_tile/s81dv_land_70",
+   "job": "s81dv_land_70-po2-df5c2d585"
+  },
+  "dsfd_dvland_562": {
+   "ref": "codex/closure-record-s81dv_land_562-l1-1da4d6aae",
+   "commit": "4c846bd0cd6f86699a00ba20515f59cf73d56bc5",
+   "kit": "physical/ref_tile/s81dv_land_562",
+   "job": "s81dv_land_562-l1-1da4d6aae"
+  },
+  "dsfd_dvland_512": {
+   "ref": "codex/closure-record-s81dv_land_512-g3a-7a9c99ef3",
+   "commit": "3a39b9392249887e59fee98b9f43199a9be24a61",
+   "kit": "physical/ref_tile/s81dv_land_512",
+   "job": "s81dv_land_512-g3a-7a9c99ef3"
+  },
+  "dsfd_dvland_682": {
+   "ref": "codex/closure-record-s81dv_land_682-l1-1da4d6aae",
+   "commit": "ff575a79ee8ef4f584b625c7b1dfd732aec483ce",
+   "kit": "physical/ref_tile/s81dv_land_682",
+   "job": "s81dv_land_682-l1-1da4d6aae"
+  },
+  "dsfd_dvland_pvrd": {
+   "ref": "codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad",
+   "commit": "3b83f2255f8e17caa8eb4ff7e6354214440b817b",
+   "kit": "physical/ref_tile/s81dv_land_pvrd",
+   "job": "s81dv_land_pvrd-p3-b15a4ddad"
+  }
+ },
+ "landing_reset_stages": {
+  "dsfd_dvland_276": 2,
+  "dsfd_dvland_276l": 2,
+  "dsfd_dvland_70": 2
+ }
 }

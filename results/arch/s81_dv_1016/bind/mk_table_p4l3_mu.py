@@ -28,6 +28,20 @@ LEAF = {'a': 'ot_s81sl_lep_mu_a (copy-A endpoint; kit s81sl_lepmua, gate pending
         'h': 'ot_s81sl_lep_mu HOST_EN 1 AB_EN 0 (host-plane MU endpoint of s_7N: parameter-free top + kit OWED)'}
 
 
+# MU-DIE-S81/PO2 (10-19): the closed view each landing master binds (closure-record commit + kit) and its reset landing.
+# po2 views (PO-SUBMIT, kit reset_landing 2 stages) carry landing_reset_stages 2; old views (l1 / g3a / p3) carry no key.
+# dv_bind's strict landing reset check derives RL from each view's source kit and FAILS any disagreement.
+LAND_VIEWS = {   # master: (record branch, commit, RL)
+    'dsfd_dvland_276': ('codex/closure-record-s81dv_land_276-po2-df5c2d585', '4e4a509e266ac84a0ac9f77552936342956f7b21', 2),
+    'dsfd_dvland_276l': ('codex/closure-record-s81dv_land_276l-po2-df5c2d585', 'c1f2495df9e5c32462adc0d2a2c0c66d0af76562', 2),
+    'dsfd_dvland_70': ('codex/closure-record-s81dv_land_70-po2-df5c2d585', 'e676a75d23d7f728746c3d225dc54c58eab9f00a', 2),
+    'dsfd_dvland_562': ('codex/closure-record-s81dv_land_562-l1-1da4d6aae', '4c846bd0cd6f86699a00ba20515f59cf73d56bc5', 0),   # po2 routing
+    'dsfd_dvland_512': ('codex/closure-record-s81dv_land_512-g3a-7a9c99ef3', '3a39b9392249887e59fee98b9f43199a9be24a61', 0),   # po2 routing
+    'dsfd_dvland_682': ('codex/closure-record-s81dv_land_682-l1-1da4d6aae', 'ff575a79ee8ef4f584b625c7b1dfd732aec483ce', 0),
+    'dsfd_dvland_pvrd': ('codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad', '3b83f2255f8e17caa8eb4ff7e6354214440b817b', 0),
+}
+
+
 def lane_add(rule, lane, entries):
     rule['lanes'][lane]['split'] += entries
 
@@ -97,6 +111,9 @@ def build(ab):
     T['note'] = T['note'] + '; MU-S81-2/DIE 10-19: ' + ('MU_EN + AB_EN (s_0S)' if ab else 'MU_EN') + ' variant (bind/mk_table_p4l3_mu.py)'
     T['land_plan_note_mu'] = ('MU lanes (mu_*, rt_0N' + (', lt/lr_lk_WS2/3' if ab else '') + ') are not in landing/p4l3/land_plan.json: '
                               'landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan')
+    T['land_views'] = {m: dict(ref=r, commit=c, kit=f"physical/ref_tile/s81dv_land_{m[len('dsfd_dvland_'):]}",
+                               job=r.split('closure-record-', 1)[1]) for m, (r, c, _) in LAND_VIEWS.items()}
+    T['landing_reset_stages'] = {m: rl for m, (_, _, rl) in LAND_VIEWS.items() if rl}
     return T
 
 
