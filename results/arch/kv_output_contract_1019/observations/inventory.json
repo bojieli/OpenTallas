@@ -1,0 +1,467 @@
+{
+ "status": "NAMED_INTERFACE_INVENTORY_ONLY_NO_WAIVERS",
+ "receipt_sha256": "4c21f2c5413332f27076870b17df82c882128838e06bc717753ab0c2c5c28f4a",
+ "master_count": 68,
+ "summary_open_output_types": 73,
+ "listed_receipt_open_output_types": 70,
+ "named_thermal_telemetry_ports": [],
+ "unresolved_interfaces": [],
+ "source_sha256": {
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v": "0ec87e980393de6942b05e4e1e2d5805223b1c4ad99630e28b272857d739dfd4",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv": "70a431f04f9260f0354d7db127745149d55305951e96c5cd667ff01fb711b7bf",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv": "ba98603800741f246c45a86e2f9ab0f3b6a29b05cbca72dd0720b456d2ff11ed",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qkh_subtiles.sv": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_split/qfd_link_slots.sv": "f191e94531edcf20e02b0fb44e14499cd6d82d82d9645c0616f2c9c86ef043bc",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv": "20c81c81bd91c70decf0c811c7feb99df4492b22cfd023acf8d5ffe39c03025e",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/hdc/nearhbm/qkd_ahub_static_dw.sv": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv": "91c6bf59fd71bdb11a62c78ebed59901c8ca3100135f00928e8954936096cc6a",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv": "4fbd413253eb872ed0c7fef5757c9861526ee5cef779f1cc39aa1171f3a7ab2f",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv": "197468906d50384682c695a399ae755de3a8dc66db32d8f9275382d2f48b1325",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-219049242-mu/port_bind_v2/kv_hard_models.sv": "871d85a23104c45639dca344dd7a1a3de6530b71bfa2492aea661d4ff51e969c",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv": "22669d7ebf45d72f3a3b47e487b3a8e9e737eac041c80fa644f7a9259728c366",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv": "17a3d11dcab01a092b96408b56ac9debc8d9b50c547cf064187731ac23df5f64",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv": "18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv": "88f3155cf321bbf1e16decace84595ce9c64a155f6a1a553317b395bc3c56afd",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv": "b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv": "eb7ffe102ba83365ec1b845fe7ef310912711b43829c49d58f96e22721b02a61",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv": "931d838764e4cbcd77a56368228214357507bd472e00278709669d51b3795095",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv": "2e7b2ea0f7464636b8939030b77c1e863282768f23e0be5d0271c2cd4998fd2f",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv": "11469d4501702bb4d7af5ee86889fdf3ec31901302615da0cf4fca7fe3a349e4",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv": "1a40cdf372693347a66fce51f0cbe77b856af0cc7f4519eea97c2b0ac4916669",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv": "cf1ecf2603053f9cb2972ac4638f72df1346b8a8002d0558f903017ac6ba68db",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv": "ac82a332b6d239f6b2029d86cddfc08919eb78c7a905c43b443ebb24d74b33b7",
+  "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkh_head_stages.sv": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b"
+ },
+ "open_outputs": [
+  {
+   "master": "qkd_ctrl_kc",
+   "port": "kf",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "adm_done",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "cal_ready",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "cfg_addr",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "cfg_data",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "cfg_rx_we",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "cfg_tx_we",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "fault",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "layer",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_cal_seq_pin",
+   "port": "running",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_static",
+   "port": "att_rx_slot",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_static",
+   "port": "kvn_word_index",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_static",
+   "port": "kvn_word_slot",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_d2d_static",
+   "port": "recovery_cycles",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_pc_slice_die",
+   "port": "bgo",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_pc_slice_die",
+   "port": "fo",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "accepted_ranks",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "available",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "coordinator_fault",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "dispatch_valid",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "dispatched",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "engine_result_cr",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "fault_src",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "hc",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "host_admission_open",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "host_deferred",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "ingest_permission",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "irq",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "issued",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "landed",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "local_service_epoch",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "marker",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "marker_v",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "native_pr",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "package_abort",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "participant_pos",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "participant_token",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "participant_trace",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "peer_protocol_fault",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "physical_ack_n",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_auth_digest",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_auth_epoch",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_auth_v",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_authorized_footer64",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_authorized_footer_v",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_consensus",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_expected_dw",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "program_expected_pw",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "record_fault",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "record_tx_v",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "recovery_complete",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "seen",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "service_abort",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "service_diag_raw",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "service_faults",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_host_root_admission",
+   "port": "service_ready",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+   "role": "FUNCTIONAL_SAFETY_OR_CONTROL_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_ctl",
+   "port": "kg",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_grp",
+   "port": "y__tep",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_grp",
+   "port": "y__tok",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_grp_h",
+   "port": "o_dn",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_grp_h",
+   "port": "y__tep",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_grp_h",
+   "port": "y__tok",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc",
+   "port": "pc__completion_v",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc",
+   "port": "pc__completion_we",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc",
+   "port": "pc__er",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc",
+   "port": "pc__ko",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc_h",
+   "port": "pc__completion_v",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc_h",
+   "port": "pc__completion_we",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc_h",
+   "port": "pc__er",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  },
+  {
+   "master": "qkd_kvs_pc_h",
+   "port": "pc__ko",
+   "file": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-219049242-mu/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+   "role": "ROLE_UNRESOLVED_NO_WAIVER"
+  }
+ ],
+ "limits": "Per-master receipt open-output lists are capped and are examples, not complete counts. No standalone named thermal/temperature/telemetry/sensor ports found is not a statement about encoded opaque bundle fields. Existing diagnostics and faults remain functional/unresolved until separately source-qualified."
+}
