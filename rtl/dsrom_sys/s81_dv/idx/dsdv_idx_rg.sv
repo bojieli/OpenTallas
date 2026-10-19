@@ -116,6 +116,15 @@ module dsdv_idx_rg #(
     function automatic [3:0] hj(input [15:0] j);
         hj = j[3:0] ^ j[7:4] ^ j[11:8] ^ j[15:12];
     endfunction
+    // decoded (one-hot AND-OR) selects: no runtime-indexed part-select for synthesis
+    function automatic [31:0] sel8x32(input [255:0] d, input [2:0] i);
+        integer k_; sel8x32 = 32'd0;
+        for (k_ = 0; k_ < 8; k_ = k_ + 1) if (i == 3'(k_)) sel8x32 = sel8x32 | d[32 * k_ +: 32];
+    endfunction
+    function automatic [16:0] sel16x17(input [511:0] d, input [3:0] i);
+        integer k_; sel16x17 = 17'd0;
+        for (k_ = 0; k_ < 16; k_ = k_ + 1) if (i == 4'(k_)) sel16x17 = sel16x17 | d[32 * k_ +: 17];
+    endfunction
 
     // ------------------------------------------------------------------ forward declarations
     reg         wdone_p, wdone;
@@ -372,7 +381,7 @@ module dsdv_idx_rg #(
         g_lo = 4'd0;
         for (c = 15; c >= 0; c = c - 1) if (gm[c]) g_lo = 4'(c);
     end
-    wire [16:0] g_b = lh[32 * g_lo +: 17];
+    wire [16:0] g_b = sel16x17(lh, g_lo);
     wire [15:0] g_j = 16'(g_b >> 1);                 // the position's word
     wire [3:0]  g_x = me ^ hj(g_j);
     wire [3:0]  g_ln = {g_lo[0], g_x[2:0]};          // selector lane: ordinal 8 o + t, o = 16 gw + g_lo
@@ -531,7 +540,7 @@ module dsdv_idx_rg #(
                         scv[q][{s_, bt[0], 3'(e)}] <= 1'b1;
                     end
                 end else begin
-                    scl[q][{s_, cl}] <= rdd[q][32 * (by ^ ((MUT == 3) ? 3'd1 : 3'd0)) +: 32];
+                    scl[q][{s_, cl}] <= sel8x32(rdd[q], by ^ ((MUT == 3) ? 3'd1 : 3'd0));
                     scv[q][{s_, cl}] <= 1'b1;
                 end
             end
