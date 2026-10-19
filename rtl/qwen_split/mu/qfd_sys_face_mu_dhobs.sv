@@ -25,7 +25,8 @@ module qfd_sys_face_mu_dhobs #(
     parameter [64*2-1:0] USER_SEQ = 128'h0,
     parameter [64*6-1:0] STG_SEQ = 384'h9659659659659238a181f79d71b69961759551349140f38d30b289207185103081,
     parameter [63:0]     RES_SEQ = 64'h0000100000000000,
-    parameter integer LAST_STAGE = 37
+    parameter integer LAST_STAGE = 37,
+    parameter integer MUT = 0                      // bench only: the leaf's MUT (2 = stage check dropped)
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -40,7 +41,7 @@ module qfd_sys_face_mu_dhobs #(
     wire [9:0]  op_first, op_cnt;
     wire [3:0]  op_fcode;
     qfd_sys_face_mu_dhuser #(.NU(NU), .NS(NS), .USER_SEQ(USER_SEQ), .STG_SEQ(STG_SEQ), .RES_SEQ(RES_SEQ), .OPSEG(0),
-                             .LAST_STAGE(LAST_STAGE)) u_obs (
+                             .LAST_STAGE(LAST_STAGE), .MUT(MUT)) u_obs (
         .ck(ck), .rst_n(rst_n), .dh_run(seq_dh[43:0]), .dh_user(dh_user), .res_user(res_user), .mu_fault(mu_fault),
         .op_v(op_v), .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt), .op_ff(op_ff),
         .op_fcode(op_fcode));

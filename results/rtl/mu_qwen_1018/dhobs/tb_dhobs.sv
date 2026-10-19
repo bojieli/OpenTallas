@@ -4,15 +4,16 @@
 // periods: h_start pulses at LFSR gaps (0 = back to back), random tok / pos / dh_prog bits, random stage field between
 // h_starts.  PASS: dh_user == 0 and res_user == 0 on every edge (OPSEG: every face start is user 0), mu_fault stays 0.
 // +bad=N: the N-th h_start carries a wrong stage (a face T image off the compiled list): PASS = mu_fault rises on the edge
-// after it (detected) and stays (sticky).
+// after it (detected) and stays (sticky).  -GMUT=2 (leaf stage check dropped) + +bad=N: TB_DHOBS FAIL (the mutant witness).
 module tb_dhobs;
+    parameter integer MUT = 0;
     localparam integer NS = 45;
     reg ck = 1'b0;
     always #1 ck = ~ck;
     reg rst_n = 1'b0;
     reg [186:0] sd = '0;
     wire [1:0] du, ru; wire mf;
-    qfd_sys_face_mu_dhobs dut (.ck(ck), .rst_n(rst_n), .seq_dh(sd), .dh_user(du), .res_user(ru), .mu_fault(mf));
+    qfd_sys_face_mu_dhobs #(.MUT(MUT)) dut (.ck(ck), .rst_n(rst_n), .seq_dh(sd), .dh_user(du), .res_user(ru), .mu_fault(mf));
     function automatic [5:0] stg(input integer k);
         stg = (k < 36) ? 6'(k + 1) : (k < 44) ? 6'd37 : 6'd0;
     endfunction

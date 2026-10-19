@@ -170,6 +170,9 @@ def _dhobs_inst(v, m, M, keep):
     tt_ctlm's N face, dh_user near its middle); OT_SPLIT_DV_DHOBS_XY=x,y overrides.  Fail closed on any overlap."""
     nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
     tt = next((i for i in keep if i.name == 'tt_ctlm'), None)
+    if os.environ.get('OT_SPLIT_DV_DHOBS', '1') == '0':
+        m.setdefault('q3h', {})['dv_dhobs_off'] = 'OT_SPLIT_DV_DHOBS=0: DIAGNOSTIC control only (tt_ctlm.dh_user undriven)'
+        return None
     if nu <= 1 or tt is None:
         return None
     w, h = DHOBS_WH
