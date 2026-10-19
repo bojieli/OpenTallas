@@ -146,7 +146,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_sram_id #(
  assign programme_v=programme_v_q;
  assign programme_observe=programme;
  assign sm_command=programme[82:0];
- ot_hbm_svc_static_sm_packed136 #(.PACKED136(1)) rows(
+ ot_hbm_svc_static_sm_packed136_native8 #(.PACKED136(1)) rows(
   .clk(stream_clk),.rst_n(stream_rst_n),.open_v(cache_open_v),.open_bank(cache_open_bank),.open_epoch(cache_open_epoch),.open_count(cache_open_count),.open_tag_base(cache_open_tag),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),

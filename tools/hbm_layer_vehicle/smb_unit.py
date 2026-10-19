@@ -443,6 +443,7 @@ def build(work: Path, bundle: Path, defines):
     own = [ROOT / p for p in SVG_SRC]
     if "SMB_SRAMFIFO" in defines:
         own += [ROOT / p for p in (
+            "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native8.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv",
             "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram285.sv",
