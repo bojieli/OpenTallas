@@ -23,6 +23,7 @@ elaboration until the compiler assigns the value from the die as built:
         sidecar, with a non-sentinel value; (b) XPF_TRANSPORT_EDGES == 1 + the hr lane cycles re-derived from die.v (+
         fwd_lanes.json E); (c) TXDP == D2D_TXDP_C of the committed image (all four bytes nonzero).
 """
+import os
 import argparse
 import json
 import re
@@ -100,6 +101,22 @@ def gen_params(insts, hr_rows, image=IMAGE):
                               f"({', '.join(f'{b[0]} {b[1]}' for b in [(x['bid'], x['kind']) for x in r['buses']])}); "
                               'Q-DIE14: STAGE_ME 1 = the QLB-PROG deployment image (one image runs every stage)')
         rec['xpf'] = r
+    # MU-DIE-QW 10-19 (owner 0kc: the release die is the multi-user die): OT_QWEN_MU_NU = users (2..4) elaborates the MU
+    # RTL on this die: tt_ctlm NU + OPSEG 1 (MU-QW-B1 option 2: in-cluster op-start leaf, calendar qfd_dv_cmd_cal_mu) and
+    # the slices' per-user LM-head argmax MU_NU (MU-ADOPT-SLICE; the slice2_e / slice2_wh kits are gated at MU_NU 4).
+    # Strides stay the RTL defaults = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE / DV_PIDX_STRIDE / UTAG_LSB.
+    nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
+    if nu > 1:
+        if not 2 <= nu <= 4:
+            raise ValueError(f'OT_QWEN_MU_NU {nu} outside 2..4')
+        src = f'MU-DIE-QW: OT_QWEN_MU_NU={nu} (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)'
+        if TT_MASTER in masters:
+            out[TT_MASTER].update(NU=nu, OPSEG=1)
+            out[TT_MASTER]['_source'] += '; ' + src
+        for sm in ('qfd_dv_slice2_w', 'qfd_dv_slice2_e'):
+            if sm in masters:
+                out[sm] = dict(MU_NU=nu, _source=src)
+        rec['mu'] = dict(nu=nu, opseg=1)
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
