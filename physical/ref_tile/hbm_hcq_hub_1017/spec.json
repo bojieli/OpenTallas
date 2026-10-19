@@ -152,8 +152,8 @@
  "children": [],
  "inter": [],
  "job": {
-  "owner": "Claude:HBM-B-RTL2b",
-  "branch": "claude/hbm-b-rtl2-1017",
+  "owner": "Claude:HBM-KITS-A/RING",
+  "branch": "claude/hbmkits-ring-1018",
   "tag": "ring1",
   "purpose": "HC quarter hub (ring hole): hc_<q> + quarter-engine centre, one master x4 (hce_<q>_hub)",
   "views_to": "physical/ref_tile/hbm_hcq_hub_1017/views",
@@ -230,7 +230,8 @@
     ],
     "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
     "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=1 ",
-    "note": "residual wave word"
+    "note": "residual wave word",
+    "fail_witness": "results/rtl/hbm_hc_ring_1018/hcq_mut1.log"
    }
   ]
  },

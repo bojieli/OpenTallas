@@ -2,12 +2,12 @@
  "name": "hbm_hcq_hub_1017-ring1-COMMIT",
  "block": "ot_hbm_hc_qhub_static",
  "ref_tile": true,
- "owner": "Claude:HBM-B-RTL2b",
+ "owner": "Claude:HBM-KITS-A/RING",
  "purpose": "HC quarter hub (ring hole): hc_<q> + quarter-engine centre, one master x4 (hce_<q>_hub)",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/hbm-b-rtl2-1017",
+  "branch": "claude/hbmkits-ring-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/run_hbm_hc_eng4_ring.sh",
@@ -93,7 +93,8 @@
     ],
     "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
     "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=1 ",
-    "note": "residual wave word"
+    "note": "residual wave word",
+    "fail_witness": "results/rtl/hbm_hc_ring_1018/hcq_mut1.log"
    }
   ],
   "calibrate": {

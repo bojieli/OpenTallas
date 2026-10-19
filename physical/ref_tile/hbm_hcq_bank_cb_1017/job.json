@@ -2,12 +2,12 @@
  "name": "hbm_hcq_bank_cb_1017-ring1-COMMIT",
  "block": "ot_hbm_hc_bankq_static",
  "ref_tile": true,
- "owner": "Claude:HBM-B-RTL2b",
+ "owner": "Claude:HBM-KITS-A/RING",
  "purpose": "HC ring corner bank NE/SW (b3 R0, b7 R180): chain in W / out S, feed from the edge bank on W",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "claude/hbm-b-rtl2-1017",
+  "branch": "claude/hbmkits-ring-1018",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/run_hbm_hc_eng4_ring.sh",
