@@ -142,6 +142,8 @@ module tb_mu_kvctx;
     reg [186:0] ev; reg have; reg [1023:0] evf, lgf; reg flt_l = 0; reg [23:0] sua_l = 0; reg [5:0] cst_l = 0;
     reg [55:0] dc_l = 0; reg opf_l = 0; reg [3:0] lfc_l = 0; reg [1:0] eu_l = 0, su_l = 0;
     reg pair2 = 0, cslot_l = 0;
+    // C8 (MU-DQ-D2DUSER) probe, identical to tb_mu_opseg_dv.sv: native_pos[17:16] = the user of the latest head start
+    reg sg_l = 0; reg [1:0] xu_l = 0; integer cu_bad = 0, cu_n1 = 0, cu_n2 = 0, cu_n3 = 0;
     initial begin
         if (!$value$plusargs("EV=%s", evf)) $fatal(1, "+EV");
         if (!$value$plusargs("LOG=%s", lgf)) $fatal(1, "+LOG");
@@ -164,6 +166,15 @@ module tb_mu_kvctx;
                                        dut.l_first, dut.l_cnt);
             if (dut.u_cal.fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, dut.u_cal.fault_code);
             if ((dut.op_fault && !opf_l) || dut.l_fcode != lfc_l) $fdisplay(lg, "%0d OPF %b %0d", cyc, dut.l_fcode, dut.op_coll);
+            if (dut.st_h) begin
+                xu_l = sg_l ? su_l : 2'd0;
+                if (xu_l == 2'd1) cu_n1 = cu_n1 + 1; if (xu_l == 2'd2) cu_n2 = cu_n2 + 1; if (xu_l == 2'd3) cu_n3 = cu_n3 + 1;
+            end
+            if (nps[17:16] !== ((NU > 1) ? xu_l : 2'd0)) begin
+                cu_bad = cu_bad + 1;
+                if (cu_bad <= 3) $fdisplay(lg, "%0d CTXU_ERR carried %0d want %0d", cyc, nps[17:16], xu_l);
+            end
+            sg_l = dut.c_seg;
             // KV / link / compute-leaf observations (this posedge)
             if (m_tv) $fdisplay(lg, "%0d KTX %0d %h", cyc, m_to, m_tr[58:0]);
             if (r_tv) begin
@@ -205,6 +216,7 @@ module tb_mu_kvctx;
             if (have && ec <= cyc) $fatal(1, "event file not sorted at cycle %0d", ec);
             cyc = cyc + 1;
             if (cyc >= ncyc) begin
+                $fdisplay(lg, "%0d CTXU %0d %0d %0d %0d", cyc, cu_bad, cu_n1, cu_n2, cu_n3);
                 $fdisplay(lg, "%0d KIDN %0d", cyc, kidn);
                 $fdisplay(lg, "%0d KEND %0d %0d %0d %0d", cyc, m_f, r_f, h_f, x_f);
                 if (CAL) $fdisplay(lg, "%0d KCALEND %0d %0d %0d %0d %0d %0d", cyc, cs_f, ks_f, crf, ktf, nk_ctx, nc_ctx);
