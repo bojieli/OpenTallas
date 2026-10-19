@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SRC=['rtl/physical/qcluster/qfd_c_land_safe.sv']
-BENCHSRC=SRC+['rtl/physical/qcluster/qfd_c_land.sv','rtl/test/tb_qfd_c_land_safe.sv','tools/qwen_cluster/bench_land_safe.sh']
+BENCHSRC=SRC+['rtl/physical/qcluster/qfd_c_land.sv','rtl/test/tb_qfd_c_land_safe.sv']
 CHECKS='''1 FIXED: data outputs are register Qs; ring inputs capture directly in slot registers. Read bank inputs are the explicitly landed crossing and terminate at read output flops (same window as parent). Reset r1/r2 per 24-bit slice, no reset on ring data.
 2 PASS: 216 x129.6 outline; every possible local wire <=345.6 um Manhattan, no inter-child wire included in this leaf.
 3 FIXED: kept hierarchy and per-24bit kept sel/r1/r2/warm copies. Select bit <=24 data gates +1 rotation. Confirm mapped keep audit in gate; unverified until synthesis.

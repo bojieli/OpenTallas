@@ -14,7 +14,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_c_land_w258_narrow u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qcluster/qfd_c_land_safe.sv rtl/physical/qcluster/qfd_c_land.sv rtl/test/tb_qfd_c_land_safe.sv tools/qwen_cluster/bench_land_safe.sh && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_c_land_w258_narrow u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qcluster/qfd_c_land_safe.sv rtl/physical/qcluster/qfd_c_land.sv rtl/test/tb_qfd_c_land_safe.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -28,7 +28,10 @@
     "expect": "pass",
     "pass_regex": "SAFE_LAND_EXIT 0",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "sources": [
+     "tools/qwen_cluster/bench_land_safe.sh"
+    ]
    }
   ],
   "calibrate": {

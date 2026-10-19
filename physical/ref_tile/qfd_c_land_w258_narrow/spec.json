@@ -5,8 +5,7 @@
  "sources": [
   "rtl/physical/qcluster/qfd_c_land_safe.sv",
   "rtl/physical/qcluster/qfd_c_land.sv",
-  "rtl/test/tb_qfd_c_land_safe.sv",
-  "tools/qwen_cluster/bench_land_safe.sh"
+  "rtl/test/tb_qfd_c_land_safe.sv"
  ],
  "params": {},
  "clock_port": "ck",
@@ -101,7 +100,10 @@
     "expect": "pass",
     "pass_regex": "SAFE_LAND_EXIT 0",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "sources": [
+     "tools/qwen_cluster/bench_land_safe.sh"
+    ]
    }
   ]
  }
