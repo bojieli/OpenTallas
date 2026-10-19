@@ -27,7 +27,7 @@
 #  p   (SUDMA2 10-19) ROW CODE AS PROGRAMME COLUMN: images ws_ab_n6 / ws_abc_n6 with the 20-b rc in the spare top bits
 #      of column 9 (line 2442 b a quarter: pslice SB 2422 -> 2442, same 10 columns); su_programme_compile --line-bits
 #      9768 --partition 4, d4g producers ot_hbm_su_programme_part PIPE 2 (= pslice_q4) vs monolithic, lockstep + golden
-#      (tb_hbm_su_programme_part, unchanged): positive PASS; mutants template / pcoff (as d4g) and rcdrop (image compiled
+#      (tb_hnx_su_programme_rc = d4g tb, mono at PIPE 2): positive PASS; mutants template / pcoff (as d4g) and rcdrop (image compiled
 #      without rc, golden with rc) -> SU_PROGRAMME_PART FAIL
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
@@ -75,13 +75,13 @@ if [ "$ST" = p ]; then
     cp $P/expected.mem $X/expected.mem
     V "$c compile: $(tail -1 $P/part.log | cut -c1-300)"
     for m in 0 1; do
-      verilator --binary --timing -O1 -j 4 -Wno-fatal -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND --top-module tb_hbm_su_programme_part \
+      verilator --binary --timing -O1 -j 4 -Wno-fatal -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND --top-module tb_hnx_su_programme_rc \
         -I$P -GMUT=$m -GPIPE=2 --Mdir $P/obj$m $PS/ot_hbm_su_programme.sv $PS/ot_hbm_su_programme_root.sv \
-        $PS/ot_hbm_su_programme_part.sv $PS/tb_hbm_su_programme_part.sv $PM > $P/build$m.log 2>&1 || V "$c build $m FAILED"
+        $PS/ot_hbm_su_programme_part.sv rtl/hbm_next/su/tb/tb_hnx_su_programme_rc.sv $PM > $P/build$m.log 2>&1 || V "$c build $m FAILED"
     done
     for r in "0 _ positive $P" "0 +MUT_TEMPLATE template $P" "0 +MUT_PCOFF pcoff $P" "1 _ phase $P" "0 _ rcdrop $X"; do
       set -- $r; a=$2; [ "$a" = _ ] && a=""
-      $P/obj$1/Vtb_hbm_su_programme_part +DIR=$4 $a > $O/p_${c}_$3.log 2>&1; echo RUN_RC=$? >> $O/p_${c}_$3.log
+      $P/obj$1/Vtb_hnx_su_programme_rc +DIR=$4 $a > $O/p_${c}_$3.log 2>&1; echo RUN_RC=$? >> $O/p_${c}_$3.log
       V "p $c $3: $(grep -h 'SU_PROGRAMME_PART PASS\|SU_PROGRAMME_PART FAIL\|RUN_RC' $O/p_${c}_$3.log | head -2 | tr '\n' ' ')"
     done
     rm -rf $P/obj0 $P/obj1 ) &
