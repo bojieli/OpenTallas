@@ -84,7 +84,7 @@ def write_blk(blks, path):
         for row, slot, w in blks:
             f.write("%07x\n" % ((row << 11) | (slot << 8) | w))
 
-FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_safe.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv", "rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv", "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv",
+FILES = ["rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_bw_safe.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_bw_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_safe.sv", "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv", "rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv", "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
          "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_mr.sv",

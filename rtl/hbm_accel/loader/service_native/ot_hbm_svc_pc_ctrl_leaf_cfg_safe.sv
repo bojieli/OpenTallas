@@ -127,7 +127,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     generate if(KRREG!=0)begin:g_krreg
         reg ready_q;
         always @(posedge clk)if(!region_rst_n[3])ready_q<=0;else ready_q<=kr_rdy;
-        ot_hbm_svc_pin_skid2_h9 #(.WIDTH(277)) u_skid(
+        ot_hbm_svc_pin_skid2_bw_safe #(.WIDTH(277)) u_skid(
             .clk(clk),.rst_n(region_rst_n[3]),.in_v(j_v),.in_r(j_rdy),
             .in_data({head_identity[20:4],head_identity[3:0],response_data}),
             .out_v(kr_v),.out_r(ready_q),.out_data({kr_tag,kr_beat,kr_data}));
