@@ -1,0 +1,55 @@
+{
+  "status": "STRUCTURAL_MODEL_PRE_RTL",
+  "source_macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.json",
+  "macro": "ot_sram_1r1w_32x546_m1",
+  "macro_bits": 17472,
+  "macro_width_um": 177.768,
+  "macro_height_um": 81.0,
+  "macro_area_um2": 14399.208,
+  "instances": [
+    {
+      "name": "skew_s",
+      "count": 1,
+      "useful_bits": 7196,
+      "read_per_cycle": 1,
+      "write_per_cycle": 1,
+      "interface_bits": 514
+    },
+    {
+      "name": "skew_n",
+      "count": 1,
+      "useful_bits": 7196,
+      "read_per_cycle": 1,
+      "write_per_cycle": 1,
+      "interface_bits": 514
+    },
+    {
+      "name": "hi_fifo",
+      "count": 1,
+      "useful_bits": 4096,
+      "read_per_cycle": 1,
+      "write_per_cycle": 1,
+      "interface_bits": 512
+    },
+    {
+      "name": "l9_fifo",
+      "count": 1,
+      "useful_bits": 4096,
+      "read_per_cycle": 1,
+      "write_per_cycle": 1,
+      "interface_bits": 512
+    }
+  ],
+  "total_macros": 4,
+  "total_macro_area_um2": 57596.832,
+  "useful_storage_bits": 22584,
+  "removed_storage_flops": 22584,
+  "added_cycles": {
+    "skew": 0,
+    "hi_fifo": 0,
+    "l9_fifo": 0
+  },
+  "method": "Synchronous read lookahead; compare-and-forward read/write collision explicitly rather than relying on macro read-during-write. 1 read and 1 write each cycle, no arbitration/stalls.",
+  "geometry": "All macro origins on43.2 lattice; footprints occupy216x129.6 sites with pin-face channels to be synthesized/placed.",
+  "qualification": "Timing, util, reset fanout, argmax pipelining and parent W/E landing prices require measured synth/benches before kit gate"
+}

@@ -29,7 +29,7 @@ ROOT = B.ROOT
 SRCS2 = [s for s in B.SRCS if not s.endswith(("qfd_dv_slice.sv", "qfd_dv_redstn.sv", "qfd_dv_scalar.sv",
                                                 "tb_qfd_dv.sv"))] + \
     ["rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv",
-     "rtl/test/qwen_dv/tb_qfd_dv2.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/qfd_dv_slice2_faces.sv"]
+     "rtl/test/qwen_dv/tb_qfd_dv2.sv", "rtl/test/qwen_dv/safe_storage/sram_model.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/qfd_dv_slice2_faces.sv"]
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
 # DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
 # qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).
