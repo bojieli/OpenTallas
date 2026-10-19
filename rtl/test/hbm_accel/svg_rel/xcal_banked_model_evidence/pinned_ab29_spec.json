@@ -1,0 +1,218 @@
+{
+ "name": "hsm_xcal_prog_native_1019",
+ "top": "ot_hbm_xcal_prog_native",
+ "params": {
+  "PAW": 11,
+  "PREL": 1
+ },
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_kept_bits.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 241.92,
+  "h": 267.84,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "inst": "u_cal.g_m2.u_program_lo"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    172.8
+   ],
+   "inst": "u_cal.g_m2.u_program_hi"
+  }
+ ],
+ "pins": {
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "start_v",
+   "start_base",
+   "start_limit",
+   "start_loops",
+   "start_ctx",
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "cmd_ext",
+   "kv_desc"
+  ],
+  "S": [
+   "active",
+   "done",
+   "fault"
+  ]
+ },
+ "kind": "tile",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "prototype_only": true,
+ "route": {
+  "io_hold_margin_ns": 0.0,
+  "synth_keep_modules": [
+   "ot_hbm_xcal_kept_bit",
+   "ot_hbm_xcal_kept_rbit",
+   "ot_hbm_xcal_reset_branch"
+  ],
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "review_blockers": [
+  "Routed TT setup/FF hold, parent-relative pin native audit, linked actual roots and independent native macro PG/via access remain adoption gates."
+ ],
+ "std_area_um2": 658.9431,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Native RTL already registers every data input/output; adding automatic collars changes the qualified +2 GO-crossing schedule."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Native two-stage release uses kept same-edge second-stage branch replicas. Mapped max reset fanout28; qualified unchanged release edge."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "reviewed_safe_source": {
+  "source": "84f67a381",
+  "mapped_standard_area_um2": 658.9431,
+  "mapped_max_data_control_fanout": 32,
+  "mapped_max_reset_fanout": 28,
+  "source_review": "Native input/RELOC output Q; preserved16-bit qualifiers and bank selects; same-edge bounded reset branches; two actual1024x256 SRAMs. Normal1edge crossing, no data masks. Parent source/geometry review performed before diagnostic gate."
+ },
+ "fill_reason": {
+  "pin_bound": "Measured658.9431um2cells plus two actual programme macros; minimum nonrotated43.2-lattice placements and20um edge access require >=238.184x265.43um, rounded to241.92x267.84. Total fill about38.6%; this is macro signal/clock/PG perimeter and channel cost, not tile-edge pin saturation or invented cell area."
+ },
+ "job": {
+  "owner": "Codex:HBM-SMB-KITS",
+  "branch": "codex/hbm-smb-kits-1019",
+  "tag": "r1",
+  "purpose": "Native2SRAM programme/RELOC partition after two preserved4SRAM GPL0305 failures. Exact external launch+29 and successive9/12GO calendars proven; bounded mapped control/reset max32/28 with unchanged reset release. Physical diagnostic only; root PNG review and native parent audit before submission/adoption.",
+  "extra_paths": [
+   "rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh",
+   "rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv",
+   "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence",
+   "rtl/test/hbm_accel/svg_rel/xcal_mapped_evidence",
+   "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_partition_t.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_target_native.sv"
+  ],
+  "benches": [
+   {
+    "name": "partition_exact",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/exact 0 0 0 12",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=4 first_delta=29 fault=0",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_early",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/early 0 1 0 12",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=0 .*fault=1",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_multi",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/multi 0 0 1 12",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=8 first_delta=29 fault=0",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_tight",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/tight 0 0 1 9",
+    "expect": "pass",
+    "pass_regex": "XCAL_PARTITION PASS mut=0 errors=0 words=8 first_delta=29 fault=0",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut1",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=1 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut1.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut2",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=2 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut2.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut3",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=3 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut3.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut4",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=4 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut4.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "partition_mut5",
+    "cmd": "bash rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh {RUN}/bench/mut5 5",
+    "expect": "fail",
+    "fail_regex": "XCAL_PARTITION FAIL mut=5 errors=[1-9]",
+    "fail_witness": "rtl/test/hbm_accel/svg_rel/xcal_partition_evidence/mut5.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "children": [],
+ "inter": []
+}

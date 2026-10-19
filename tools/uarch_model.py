@@ -17437,3 +17437,9 @@ def hbm_xcal_partition_model():
     """Opt-in native XC descriptor/programme partition; physical checks remain OPEN."""
     from hbm_layer_vehicle.xcal_partition_model import model
     return model()
+
+
+def hbm_generic_banked_calendar_model(serialized_programmes=1):
+    """Model-only SVG/XC native-bank split and separate cache-command alignment."""
+    from hbm_layer_vehicle.xcal_banked_calendar_model import model
+    return model(serialized_programmes)

@@ -1,0 +1,356 @@
+{
+  "schema": "hbm.generic.banked_calendar.model.v1",
+  "status": "MODEL_ONLY_PARENT_ROOT_REVIEW_REQUIRED",
+  "pinned_failure": {
+    "gate_commit": "ab29e6c2b",
+    "qualified_RTL_unchanged": "84f67a381",
+    "host": "ot-agidock128",
+    "root": "/srv/opentallas-scratch/claude/ref_gate/hsm_xcal_prog_native_1019-20261019-092853",
+    "stage": "GPL before CTS",
+    "elapsed_seconds": 586.96,
+    "error": "GPL-0305",
+    "mapped_depth_ps": 330.1,
+    "mapped_flops": 1683,
+    "original_placement_area_um2": 622.6,
+    "routability_inflation_um2": 1268.4,
+    "inflation_percent": 203.73,
+    "timing_repair_area_um2": 47.86,
+    "final_placement_area_um2": 1997.5,
+    "best_routing_congestion": 1.2465,
+    "core_area_um2": 62612.352,
+    "input_output_face_flops_fixed": [
+      313,
+      175
+    ],
+    "top_level_regions": 1,
+    "new_port_buffers": [
+      314,
+      176
+    ],
+    "timing_repair_buffers": 480,
+    "diagnosis": "Fanout and logical depth passed source census, but all two-bank read/identity/select/RELOC connectivity remained in one global placement region, with488 face-fixed endpoint flops. It is an aggregate graph, not locally hardened bank-output boundaries. Congestion persisted through19 inflation iterations before numerical divergence. These facts support structural bank isolation; they do not identify one uniquely proven offending net."
+  },
+  "macro_pin_audit": {
+    "source": "canonical LEF, first pin rectangle",
+    "size_um": [
+      174.744,
+      70.47
+    ],
+    "W": {
+      "rd_out": 256,
+      "wd_in": 136,
+      "r_addr_in": 10,
+      "w_addr_in": 10,
+      "clock_enables": 3,
+      "PG": 2
+    },
+    "E": {
+      "wd_in": 120,
+      "w_mask_in": 256,
+      "repair_control": 38
+    },
+    "pins_per_um_W_E": [
+      5.917411664538101,
+      5.874840357598979
+    ],
+    "obligation": "Read outputs are W, not E. East wd120 remain live installation signals; wmask256 and repair38 are local constants. Keep these ties/local captures on their true faces."
+  },
+  "redesign": {
+    "shared_provider": "new generic native banked calendar for SVG W135/XW46 and XC W173/XW5, AW11",
+    "sources_not_yet_written": [
+      "generic one-SRAM native bank leaf",
+      "central fixed-schedule select/calendar leaf",
+      "opt-in SVG and XC provider bindings"
+    ],
+    "hard_regions_per_provider": 3,
+    "hard_regions_per_SM": 6,
+    "providers_per_SM": 2,
+    "SM_per_die": 16,
+    "bank_leaf_outline_um": [
+      241.92,
+      138.24
+    ],
+    "bank_macro_origin_um": [
+      43.2,
+      43.2
+    ],
+    "bank_leaf_full_width_std_band_y_um": [
+      2.16,
+      37.8
+    ],
+    "central_leaf_outline_um": [
+      86.4,
+      86.4
+    ],
+    "parent_bbox_um": [
+      241.92,
+      380.16
+    ],
+    "parent_origins_um": {
+      "bank0": [
+        0,
+        0
+      ],
+      "central": [
+        77.76,
+        146.88
+      ],
+      "bank1": [
+        0,
+        241.92
+      ]
+    },
+    "hierarchy": "Real one-SRAM hard leaves and a separate central hard leaf, not cosmetic keep_hierarchy in one flat GPL region. Each leaf exports native registered pins and a source-bound placement region.",
+    "bank_face_plan": "bank0 registered row output N; bank1 output S, each centred over central bus. cfg write-data captures split W136/E120 beside true macro pin faces. Clock beside local FF mass; local tied mask/repair pins on E.",
+    "central_face_plan": "bank0 tuple enters S, bank1 tuple N, native input Q first. Per<=16bit selects/qualifiers and output Q remain local; stage control uses same-edge kept copies.",
+    "parent_registered_hop_um": 8.64,
+    "allocated_bus_face_width_um": 86.4,
+    "max_exported_bank_tuple_bits": 252,
+    "max_tuple_pin_density_per_um": 2.9166666666666665,
+    "required_cut_tracks_per_bank": 252,
+    "actual_cut_capacity_tracks": null,
+    "channel_status": "Actual layer/track and PG obstruction audit OPEN; 252/86.4=2.917pins/um is only a face-pin budget, not a route-capacity proof.",
+    "largest_leaf_diagonal_um": 278.6316277811979,
+    "central_diagonal_um": 122.18805178903543,
+    "summed_leaf_outline_area_um2": 74351.0016,
+    "parent_bbox_area_um2": 91968.3072,
+    "prior_XC_slot_area_um2": 64795.85279999999,
+    "XC_provisional_bbox_delta_um2": 27172.454400000002,
+    "candidate_32_provider_bbox_mm2": 2.9429858304,
+    "slot_status": "Provisional access/lattice envelopes, not granted physical area. Measured per-leaf synthesis area and actual face/channel capacity required before kit generation/gate.",
+    "clock_ports": [
+      "clk_bank0",
+      "clk_bank1",
+      "clk_calendar"
+    ],
+    "clock_contract": "Same-frequency regional actual roots; nominal phase0, native adjacent outputQ->inputQ crossings, normal1edge TT/FF STA, pair-relative spread<=80ps. No multicycle/false data paths or changed period."
+  },
+  "profiles": {
+    "SVG": {
+      "W": 135,
+      "AW": 11,
+      "XW": 46,
+      "request_token_bits": 108,
+      "token_fields": {
+        "PC": 11,
+        "ordinal": 32,
+        "context": 46,
+        "iteration": 16,
+        "last_iteration": 1,
+        "last_word": 1,
+        "valid": 1
+      },
+      "banks": 2,
+      "canonical_SRAM_per_bank": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "bank_cfg_bits_per_edge": 267,
+      "bank_request_bits_per_edge": 108,
+      "bank_output_bits_per_edge": 252,
+      "metadata_ring_slots_per_bank": 4,
+      "metadata_ring_bits_per_bank": 432,
+      "identity_checked_bits": 121,
+      "bank_payload_Q_bits": 270,
+      "central_input_Q_bits": 270,
+      "planning_register_inventory_bits": {
+        "bank_cfg_capture": 534,
+        "bank_read_address_and_valid": 24,
+        "bank_metadata_rings": 864,
+        "bank_payload_output": 270,
+        "bank_word_ok_output": 18,
+        "central_input_tuples": 504,
+        "calendar_output": 233,
+        "R_C_payload": 270,
+        "controller_state_planning_allowance": 200,
+        "kept_select_control_planning_allowance": 128,
+        "reset_root_branch_planning_allowance": 24
+      },
+      "listed_FF_inventory_bits": 3069,
+      "listed_FF_area_um2_using_HQ_only": 894.9204000000001,
+      "configuration_note": "Two native bank configuration data captures cost512bits; do not reuse only one prior256bit capture in the inventory.",
+      "std_area_after_split_um2": null,
+      "area_status": "Unreconciled pre-RTL inventory; no upper/lower or std-area claim. HQ-only cell arithmetic excludes async-cell premium, duplicated decode, buffers and actual mapping. Old-state subtraction and all allowances need source/mapped census."
+    },
+    "XC": {
+      "W": 173,
+      "AW": 11,
+      "XW": 5,
+      "request_token_bits": 67,
+      "token_fields": {
+        "PC": 11,
+        "ordinal": 32,
+        "context": 5,
+        "iteration": 16,
+        "last_iteration": 1,
+        "last_word": 1,
+        "valid": 1
+      },
+      "banks": 2,
+      "canonical_SRAM_per_bank": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "bank_cfg_bits_per_edge": 267,
+      "bank_request_bits_per_edge": 67,
+      "bank_output_bits_per_edge": 251,
+      "metadata_ring_slots_per_bank": 4,
+      "metadata_ring_bits_per_bank": 268,
+      "identity_checked_bits": 83,
+      "bank_payload_Q_bits": 346,
+      "central_input_Q_bits": 346,
+      "planning_register_inventory_bits": {
+        "bank_cfg_capture": 534,
+        "bank_read_address_and_valid": 24,
+        "bank_metadata_rings": 536,
+        "bank_payload_output": 346,
+        "bank_word_ok_output": 22,
+        "central_input_tuples": 502,
+        "calendar_output": 230,
+        "R_C_payload": 346,
+        "controller_state_planning_allowance": 200,
+        "kept_select_control_planning_allowance": 128,
+        "reset_root_branch_planning_allowance": 24
+      },
+      "listed_FF_inventory_bits": 2892,
+      "listed_FF_area_um2_using_HQ_only": 843.3072000000001,
+      "configuration_note": "Two native bank configuration data captures cost512bits; do not reuse only one prior256bit capture in the inventory.",
+      "std_area_after_split_um2": null,
+      "area_status": "Unreconciled pre-RTL inventory; no upper/lower or std-area claim. HQ-only cell arithmetic excludes async-cell premium, duplicated decode, buffers and actual mapping. Old-state subtraction and all allowances need source/mapped census."
+    }
+  },
+  "functional_stages": {
+    "convention": "GO sampled at edgeG; calendar/READ/command pins are distinguished from their consumer capture edges",
+    "baseline": [
+      [
+        0,
+        "GO input capture"
+      ],
+      [
+        1,
+        "controller starts"
+      ],
+      [
+        2,
+        "SRAM samples first read"
+      ],
+      [
+        3,
+        "shared captured word Q"
+      ],
+      [
+        4,
+        "calendar data/valid Q"
+      ],
+      [
+        5,
+        "SVG R pins / XC R"
+      ],
+      [
+        6,
+        "cache READ capture; C pins"
+      ],
+      [
+        7,
+        "SM command/packet capture"
+      ]
+    ],
+    "banked_plus_safe_cache": [
+      [
+        0,
+        "GO capture"
+      ],
+      [
+        1,
+        "controller starts"
+      ],
+      [
+        2,
+        "native bank request pin Q"
+      ],
+      [
+        3,
+        "SRAM samples read"
+      ],
+      [
+        4,
+        "bank payload/word_ok output Q, aligned token"
+      ],
+      [
+        5,
+        "central native input Q for each bank tuple"
+      ],
+      [
+        6,
+        "registered select/valid/calendar output Q"
+      ],
+      [
+        7,
+        "SVG R pins / XC R"
+      ],
+      [
+        8,
+        "cache READ capture; base C pins"
+      ],
+      [
+        9,
+        "safe cache packet intermediate; explicit command alignment1"
+      ],
+      [
+        10,
+        "safe cache packet output; SVG command and XC mirror alignment2 pins"
+      ],
+      [
+        11,
+        "SM command/packet capture"
+      ]
+    ],
+    "bank_validation": "At bank output capture, apply exactly the existing native incoming_ok predicate to macro output and matching read PC; export only W payload bits plus kept per16bit word_ok copies. No new timing headroom is assumed: macro clkQ+identity endpoint still requires measured TT/FF closure.",
+    "metadata": "PC/ordinal/context/iteration/last/valid share the request token and fixed4-slot local ring; align bank tuple with data, including loop wrap and1023->1024. No long unchanged metadata flop chains.",
+    "central_select": "Native Qs capture both bank tuples first. Kept select copies per<=16bits each drive<=32 mux pin loads; local kept word_ok copies gate <=16 payload bits. Missing/wrong valid/phase faults; never stall or reschedule."
+  },
+  "schedule_price": {
+    "baseline_GO_to_SM_command_edges": 7,
+    "banked_calendar_added_edges": 2,
+    "cache_safe_command_only_added_edges": 2,
+    "combined_GO_to_SM_command_edges": 11,
+    "READ_capture_edges_from_GO": {
+      "baseline": 6,
+      "banked": 8
+    },
+    "XC_mirror": "XC uses the same generic banked provider (+2) AND an explicit command-only mirror(+2), aligning all cmd_ext/kv_desc/format edges with SVG. They are causally distinct stages; no double credit.",
+    "sharing_credit": 0,
+    "default_opt_in": "off; old qualified source stays unchanged",
+    "fixed_GO_policy": "Do not advance GO or change absolute compiler calendar without a separate exact compiler result.",
+    "conservative_minimum_GO_gap_added_edges": 2,
+    "why_gap": "Until frontend/tail overlap is explicitly proved, extending calendar data/valid/done by2 extends legal busy/tail by2; existing9-gap witness becomes11. Cache-only alignment adds no further provider busy tail unless source requires it.",
+    "serialised_boundary_count_input": 1,
+    "conservative_added_token_stream_edges": 4,
+    "conservative_added_token_ns_at_1p2GHz": 3.3333333333333335,
+    "continuous_payload_rate": "1 word per stream edge after fill; +2 is per programme boundary, not per word/loop iteration. Production bench must prove it.",
+    "compiler_obligations": [
+      "recompile and resimulate fixed SM consume/output dependencies with GO-to-command11",
+      "READ+2 and command+4; preserve cache bank/epoch/tag ownership through new retirement tail",
+      "pad minimum block/GO spacing+2 until exact overlap proof",
+      "XC context/ordinal/magic-format launch and kv_desc mirror the same+4 command edge",
+      "run generic highprogramme/bank-boundary/loop/context exact benches with fail witnesses before any physical gate"
+    ]
+  },
+  "reset_profile": {
+    "scope": "OBSERVED XC BASELINE ONLY, not a proof for new generic leaves or SVG XW46",
+    "observed_programme_raw_sinks": 8,
+    "observed_first_stage_D_loads": 7,
+    "observed_final_max_loads": 28,
+    "equations": "s0[t+1]=rst_n; s1[t+1]=s0[t]; branch_i[t+1]=s0[t]; s0,s1,branches clear asynchronously from raw rst_n. Raw8=original2+branch6, all final releases at t2.",
+    "owner_profile_limits": {
+      "raw": 12,
+      "first": 24,
+      "final": 30
+    },
+    "generic_obligation": "Repartition every resettable group to<=24 planned bits before mapping. Never reuse old issued16+ctxXW group for SVG:16+46=62 exceeds the bound. New three-root branch graphs require their own raw/first/final load census and exact2edge proof.",
+    "status": "Baseline source matches proposed balanced profile bounds; canonical a9a97ee00/54ceeb3f0/63d26d83c tool/profile review and source-bound proof still required. Old raw2 gate REFUSE is preserved, no bypass or present PASS claim."
+  },
+  "review_gates": [
+    "parent/root accepts generic source partition and independent+2/+2 pricing",
+    "actual per-leaf synthesis/fanout including collapsed reset loads and source-bound balanced reset profile",
+    "native macro PG/via/pin access at true faces and track-cut capacity",
+    "TT setup/FF hold, SS sensitivity and pair-relative actual clock roots",
+    "source-bound exact+mutant production throughput witnesses",
+    "physical slot grant and compiler/calendar recomposition"
+  ],
+  "no_actions": "No qualified RTL/spec modifications and no new gate or submission from this model."
+}
