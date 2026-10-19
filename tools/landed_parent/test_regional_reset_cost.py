@@ -39,6 +39,16 @@ cost_child u0(.clk(clk),.rst_n(rst_n),.clocks({2{clk}}),.resets({2{rst_n}}),.d(i
             assert rtl==oldrtl
             assert p.sdc(plan,'cost_top_lp')==q.sdc(qplan,'cost_top_lp')
             assert record['flops']['reset']==q.record(qplan,'cost_top_lp',oldrt)['flops']['reset']+10
+        if before:
+            # Always exercise a self-contained default spec. Feature-branch
+            # E/W specs are optional and may not exist on canonical main.
+            default={k:v for k,v in s.items() if not k.startswith('regional_child_')}
+            now,old=lp.Parent(default),before.Parent(default)
+            np,op=now.plan(),old.plan();nr,nrt=now.emit(np,'cost_default_lp');orr,ort=old.emit(op,'cost_default_lp')
+            assert nr==orr
+            assert now.sdc(np,'cost_default_lp')==old.sdc(op,'cost_default_lp')
+            assert now.tb(np,'cost_default_lp',nrt)==old.tb(op,'cost_default_lp',ort)
+            assert now.record(np,'cost_default_lp',nrt)==old.record(op,'cost_default_lp',ort)
         for name in (['qfd_dv_slice2_e_lpf','qfd_dv_slice2_w_lpf'] if before else []):
             path=lp.ROOT/'tools/landed_parent/specs'/f'{name}.json'
             if not path.exists():continue
