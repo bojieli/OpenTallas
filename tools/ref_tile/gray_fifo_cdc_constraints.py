@@ -1133,6 +1133,29 @@ def _lint(spec, root):
         cell = net.flops[q]['cell'].lstrip('\\')
         if not cell.startswith('$'):
             record['roles'].setdefault(cell, list(r))
+    # Launch aliases (HKV-HROOT 10-18): an untagged flop of the same cell type with the same D, clock and reset net as a
+    # tagged launch register (pointer src / event esrc / level lsrc) is the same register; ORFS synthesis' opt_merge
+    # may keep either one (qkd_hr_cdc_host r2: ot_async_fifo rd_gray[MSB] folded into rd_bin[MSB], Gray MSB == binary
+    # MSB).  Its names carry the launch role so the SDC binds whichever survives; a signature shared by two different
+    # tagged roles aliases nothing.
+    sig = {}
+    for p, f in net.flops.items():
+        sig.setdefault((f.get('t'), f['d'], f['c'], f['r']), []).append(p)
+    for q, r in sorted(role.items(), key=lambda x: str(x[0])):
+        if r[0] not in ('src', 'esrc', 'lsrc'):
+            continue
+        f = net.flops[q]
+        group = sig[(f.get('t'), f['d'], f['c'], f['r'])]
+        if len({role[x] for x in group if x in role}) != 1:
+            continue
+        for p in group:
+            if p in role:
+                continue
+            cell = net.flops[p]['cell'].lstrip('\\')
+            for k in list(net.names.get(p, [])) + ([cell] if not cell.startswith('$') else []):
+                if k not in record['roles']:
+                    record['roles'][k] = list(r)
+                    record.setdefault('launch_aliases', {})[k] = net.key(q)
     record['counts'] = {k: sum(1 for x in role.values() if x[0] == k)
                         for k in ('src', 'sync1', 'stage', 'mem', 'rstage', 'consumer', 'rst')}
     if dead:
@@ -1433,7 +1456,7 @@ proc ot_gf_gated_fifos {cell} {
     foreach net [get_nets -quiet -of_objects $p] {lappend names [string map {\\ {}} [get_full_name $net]]}
   }
   set out {}
-  foreach n $names {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_gated $n]} {foreach f [dict get $::ot_gf_gated $n] {dict set out $f 1}}}
   return [dict keys $out]
 }
 proc ot_gf_ext_crossing {start pin source target source_domain target_domain sk sf tk tf} {
@@ -1493,18 +1516,27 @@ TCL = r'''
 # synchroniser, a FIFO-valid-gated storage read or an ot_reset_sync input. Each actual mapped crossing must match a
 # tagged pair; no other path receives an exception and no false path or clock group exists.
 set ::ot_gf_seen {}
+proc ot_gf_names {names} {
+  # Recipe-3 pin registers (physical/common_flow/ot_pin_regs.tcl, OT_PIN_REGS=1) wrap the elaborated top as instance
+  # u_ot_pr_core (a reserved name); the generator tagged the unwrapped names, so a wrapped name is also looked up without
+  # that prefix (a name matching two roles is still refused as ambiguous).
+  set out $names
+  foreach n $names {if {[regexp {^u_ot_pr_core[./](.+)$} $n -> inner]} {lappend out $inner}}
+  return $out
+}
 proc ot_gf_role {cell} {
   set full [string map {\\ {}} [get_full_name [get_cells $cell]]]
   set names [list $full]
   if {[regexp {^([^$]+)\$} $full -> base]} {lappend names $base}
   set roles {}
-  foreach n $names {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
+  foreach n [ot_gf_names $names] {if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}}
   if {![dict size $roles]} {
     foreach p [get_pins -quiet -of_objects [get_cells $cell]] {
       if {[get_property $p direction] ne "output"} continue
       foreach net [get_nets -quiet -of_objects $p] {
-        set n [string map {\\ {}} [get_full_name $net]]
-        if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        foreach n [ot_gf_names [list [string map {\\ {}} [get_full_name $net]]]] {
+          if {[dict exists $::ot_gf_roles $n]} {dict set roles [dict get $::ot_gf_roles $n] 1}
+        }
       }
     }
   }
@@ -1520,20 +1552,31 @@ proc ot_gf_launch {start} {
   if {[llength $launch] != 1} {error "OT_GF: missing unique launch register"}
   return $launch
 }
+set ::ot_gf_pending {}
 proc ot_gf_bound {start target bound} {
+  # Constraints are applied here; the finite-path proof runs once all are applied (ot_gf_verify). Interleaving
+  # set_*_delay with find_timing_paths re-searched the whole design per crossing (O(N^2): ~13-50 crossings/min, a
+  # 12.8k-bit storage FIFO leaf ~15 h in synth_odb, HKV-HRADM 10-19).
   set launch [ot_gf_launch $start]
   set_max_delay -ignore_clock_latency $bound -from $launch -to $target
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_GF PATH_DEFERRED [get_full_name $start] -> [get_full_name $target] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_GF: missing finite bounded $kind path [get_full_name $start] -> [get_full_name $target]"
+  lappend ::ot_gf_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+}
+proc ot_gf_verify {} {
+  foreach item $::ot_gf_pending {
+    lassign $item launch target sname tname
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_GF PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_GF: missing finite bounded $kind path $sname -> $tname"
+      }
     }
   }
+  set ::ot_gf_pending {}
 }
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
@@ -1589,11 +1632,41 @@ proc ot_gf_async {pin cells inputs} {
     puts "OT_GF BOUNDED reset $name -> [get_full_name $pin]"
   }
 }
+proc ot_gf_chain_dir {info c} {
+  # (source family, destination family) of chain c: wptr/wonl publish writer -> reader, rptr/ronl reader -> writer.
+  if {[lsearch -exact {wptr wonl} $c] >= 0} {return [list [dict get $info writer] [dict get $info reader]]}
+  return [list [dict get $info reader] [dict get $info writer]]
+}
+proc ot_gf_online_merged {f c live} {
+  # HKV-HRADM3 10-19 (qkd_hr_cdc_host/pc r5, as OT_ASYNC_GRAY's ot_ag_online_merged, HBMA-SVC 10-17): an online flag
+  # chain is constant 1 after its domain reset, then a two-flop synchroniser.  Two FIFOs whose online chains have the
+  # same launch family, capture family and conditioned reset (u_done host->core ronl == u_ing core->host wonl: core
+  # launch, host stages) are bit-identical, and synthesis' opt_merge keeps ONE chain under one FIFO's names.  A missing
+  # online crossing is admitted only when (a) no mapped register of this FIFO's chain is left (src, stage 1 or stage 2:
+  # merged away, not left unaudited) and (b) another FIFO's online chain in the same direction is live and its crossing
+  # was bounded here.  Gray pointers and storage are never admitted this way.
+  if {$c ni {wonl ronl} || [dict exists $live [list $f $c]]} {return 0}
+  set dir [ot_gf_chain_dir [dict get $::ot_gf_fifos $f] $c]
+  dict for {g ginfo} $::ot_gf_fifos {
+    if {$g eq $f} continue
+    foreach gc {wonl ronl} {
+      if {![dict exists [dict get $ginfo chains] $gc] || [ot_gf_chain_dir $ginfo $gc] ne $dir} continue
+      if {[dict exists $live [list $g $gc]] && [dict exists $::ot_gf_seen [list $g src $gc 0]]} {
+        puts "OT_GF MERGED_ONLINE $f $c -> $g $gc ([join $dir { -> }])"
+        return 1
+      }
+    }
+  }
+  return 0
+}
 proc ot_gf_complete {cells} {
+  ot_gf_verify
+  set live {}
   # Every tagged register sits in its tagged family (a tag on a same-family path is refused here).
   dict for {cell domain} $cells {
     lassign [ot_gf_role $cell] k f c i
     if {$k eq "" || $k eq "rst"} continue
+    if {$k in {src sync1 stage}} {dict set live [list $f $c] 1}
     set info [dict get $::ot_gf_fifos $f]
     set w [dict get $info writer]; set r [dict get $info reader]
     set wside [expr {[lsearch -exact {wptr wonl} $c] >= 0}]
@@ -1608,7 +1681,9 @@ proc ot_gf_complete {cells} {
   dict for {f info} $::ot_gf_fifos {
     dict for {c width} [dict get $info chains] {
       for {set i 0} {$i < $width} {incr i} {
-        if {![dict exists $::ot_gf_seen [list $f src $c $i]]} {error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"}
+        if {![dict exists $::ot_gf_seen [list $f src $c $i]] && !($i == 0 && $width == 1 && [ot_gf_online_merged $f $c $live])} {
+          error "OT_GF: missing actual synchronised pointer crossing $f $c bit $i"
+        }
       }
     }
     if {[dict get $info store_read] && ![dict exists $::ot_gf_seen [list $f mem mem 0]]} {error "OT_GF: missing actual storage crossing $f"}

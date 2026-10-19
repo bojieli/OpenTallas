@@ -1,0 +1,8 @@
+Verilator 5.050 2026-07-01 rev v5.050
+VMS_GLUE_TILE_TB SE hfd_hgi_vms_glue_e_t MUT=sid cycles=4000
+MISMATCH cyc 7 cw_out
+MISMATCH cyc 8 cw_out
+MISMATCH cyc 8 ccw_out
+MISMATCH cyc 10 ccw_out
+MISMATCH cyc 12 cw_out
+VMS_GLUE_LT_EQUIV SE FAIL checks=33768 errors=3683

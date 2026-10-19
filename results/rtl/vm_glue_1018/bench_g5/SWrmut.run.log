@@ -1,0 +1,8 @@
+Verilator 5.050 2026-07-01 rev v5.050
+VMS_GLUE_TILE_TB SW hfd_hgi_vms_glue_sw_t MUT=rmut cycles=4000
+MISMATCH cyc 12 ccw_out
+MISMATCH cyc 17 ccw_out
+MISMATCH cyc 37 ccw_out
+MISMATCH cyc 40 cw_out
+MISMATCH cyc 49 cw_out
+VMS_GLUE_LT_EQUIV SW FAIL checks=37520 errors=466

@@ -482,19 +482,38 @@ module ot_vms_hub_lt #(
     wire [3*N*4*256-1:0] g_d;
     wire [2:0] g_bad;
     for(genvar g=0;g<3;g=g+1) begin : rsp_grp
-        localparam integer GL=(g==0)?0:(g==1)?4:6, GH=(g==0)?3:(g==1)?5:7;
+        localparam integer GL=(g==0)?0:(g==1)?4:6, GH=(g==0)?3:(g==1)?5:7, GS=GH-GL+1;
         reg [N*4-1:0] h_q, w1_q, w0_q; reg [N*4*3-1:0] a_q; reg bad_q;
         reg [N*4*256-1:0] d_q;
         reg [N*4-1:0] h_n, w1_n, w0_n; reg [N*4*3-1:0] a_n; reg [N*4*256-1:0] d_n; reg bad_n;
-        always @* begin
-            h_n='0; w1_n='0; w0_n='0; a_n='0; d_n='0; bad_n=0;
+        // g5 (LH-PGVM2 10-19, g4 NW gate: rsp_grp[1].d_q -225..-349 ps = the hit decode broadcast over 256 data bits per
+        // slot from the hub landing br): stage 1 registers, per face group, the group's source data / write flags and the
+        // hit decode as a REGISTERED ONE-HOT per (source, client-slot, 32-b slice) -- kept copies, 32 loads each; stage 2
+        // (h_q / d_q ...) is then an AND-OR of local registers.  Plain registers (no reset): exactly one more pr delay
+        // stage of the contract (bank returns +1 edge, ring returns unchanged).
+        reg [GS*256-1:0] d1; reg [GS-1:0] we1; reg [GS*N*4-1:0] h1; reg bad1;
+        (* keep = "true", dont_touch = "true" *) reg [GS*N*4*8-1:0] hs1;
+        always @(posedge clk) begin
+            bad1<=|src_bad[GH:GL];
             for(integer s=GL;s<=GH;s=s+1) begin
-                bad_n=bad_n|src_bad[s];
-                for(integer ck=0;ck<N*4;ck=ck+1) if(hit[s*N*4+ck]) begin
-                    h_n[ck]=1'b1;
-                    if(rpf[s*264+256]) w1_n[ck]=1'b1; else w0_n[ck]=1'b1;
-                    a_n[ck*3+:3]=a_n[ck*3+:3]+3'd1;
-                    d_n[ck*256+:256]=d_n[ck*256+:256]|rpf[s*264+:256];
+                d1[(s-GL)*256+:256]<=rpf[s*264+:256]; we1[s-GL]<=rpf[s*264+256];
+                for(integer ck=0;ck<N*4;ck=ck+1) begin
+                    h1[(s-GL)*N*4+ck]<=hit[s*N*4+ck];
+                    for(integer j=0;j<8;j=j+1) hs1[((s-GL)*N*4+ck)*8+j]<=hit[s*N*4+ck];
+                end
+            end
+        end
+        always @* begin
+            h_n='0; w1_n='0; w0_n='0; a_n='0; d_n='0; bad_n=bad1;
+            for(integer s=0;s<GS;s=s+1) begin
+                for(integer ck=0;ck<N*4;ck=ck+1) begin
+                    if(h1[s*N*4+ck]) begin
+                        h_n[ck]=1'b1;
+                        if(we1[s]) w1_n[ck]=1'b1; else w0_n[ck]=1'b1;
+                        a_n[ck*3+:3]=a_n[ck*3+:3]+3'd1;
+                    end
+                    for(integer j=0;j<8;j=j+1) if(hs1[(s*N*4+ck)*8+j])
+                        d_n[ck*256+j*32+:32]=d_n[ck*256+j*32+:32]|d1[s*256+j*32+:32];
                 end
             end
         end
@@ -521,9 +540,13 @@ module ot_vms_hub_lt #(
     //      is built beside the face (+1 edge on pq vs the historical hub)
     for(genvar g=0;g<3;g=g+1) begin : req_grp
         localparam integer GL=(g==0)?0:(g==1)?4:6, GH=(g==0)?3:(g==1)?5:7;
-        (* keep = "true", dont_touch = "true" *) reg [N*338-1:0] qr_g;
-        (* keep = "true", dont_touch = "true" *) reg [N*2-1:0] sq_g;
-        always @(posedge clk) begin qr_g<=qr; sq_g<=sq; end
+        // g5 (LH-PGVM2 10-19, g4 E gate: req_grp[1].bank[4].sl[3].sel -93..-184 ps = the select decode from the hub
+        // registers (qr / be / bc / qvalid) straight into the per-slice copies beside the face): the one-hot select is
+        // registered AT THE HUB (sel_h, one per bank and client), then copied per slice one edge later; the request
+        // copies get the matching second stage (qr_g1 -> qr_g).  pq +1 edge (contract: pq_d2).
+        (* keep = "true", dont_touch = "true" *) reg [N*338-1:0] qr_g1, qr_g;
+        (* keep = "true", dont_touch = "true" *) reg [N*2-1:0] sq_g1, sq_g;
+        always @(posedge clk) begin qr_g1<=qr; sq_g1<=sq; qr_g<=qr_g1; sq_g<=sq_g1; end
         for(genvar b=GL;b<=GH;b=b+1) begin : bank
             // g4: REGISTERED ONE-HOT bank select, decoded one edge ahead from the static schedule (bank_enable /
             // bank_client) and qualified with the request it selects (valid, local, bank match); the bank request is an
@@ -534,11 +557,13 @@ module ot_vms_hub_lt #(
                 assign sel_n[c]=be[b] && int'(bc[b*CW+:CW])==c && qvalid[c] &&
                                 ((c==NC)||qr[c*338+324]||(qr[c*338+322+:2]==me)) && qr[c*338+309+:3]==3'(b);
             end
+            (* keep = "true", dont_touch = "true" *) reg [N-1:0] sel_h;   // g5: hub-side registered one-hot
+            always @(posedge clk) sel_h<=sel_n;
             wire [284:0] nx;
             for(genvar j=0;j<8;j=j+1) begin : sl
                 localparam integer LO=j*36, WD=(j==7)?33:36;    // 7 x 36 + 33 = 285
                 (* keep = "true", dont_touch = "true" *) reg [N-1:0] sel;
-                always @(posedge clk) sel<=sel_n;
+                always @(posedge clk) sel<=(MUT==6) ? sel_n : sel_h;   // MUT 6 (bench only): g5 select stage missing
                 reg [WD-1:0] nxs;
                 always @* begin
                     nxs='0;

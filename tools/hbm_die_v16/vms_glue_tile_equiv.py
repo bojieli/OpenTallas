@@ -16,6 +16,7 @@ Mutants (must FAIL):  --mut rmut  tile MUT 1 (ring-stop egress flit bit flipped)
                       --mut sid   (SE / NE) the tile strap gets the OTHER E quadrant's sid
                       --mut g3    tile MUT 4 (hub pq without the g3 face-group edge: the contract's +1 on pq missing)
                       --mut g4    tile MUT 5 (hub -> ring pi and ring -> replay rce without the g4 reach relays: the contract's +1s missing)
+                      --mut g5    tile MUT 6 (hub bank select copies fed by the decode, not the g5 hub-side register: pq select one edge early)
     vms_glue_tile_equiv.py --quadrant SW|NW|SE|NE --out DIR [--mut rmut|land|sid] [--cycles N]
 """
 import argparse, sys
@@ -48,7 +49,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--quadrant', required=True, choices=list(KEY))
     ap.add_argument('--out', required=True, type=Path)
-    ap.add_argument('--mut', choices=('rmut', 'land', 'sid', 'g3', 'g4'))
+    ap.add_argument('--mut', choices=('rmut', 'land', 'sid', 'g3', 'g4', 'g5'))
     ap.add_argument('--cycles', type=int, default=4000)
     a = ap.parse_args(); q = a.quadrant; k = KEY[q]; c = G.M[k]
     if a.mut == 'sid' and q not in SID:
@@ -56,7 +57,7 @@ def main():
     rp = G.ref_ports(k, c); tp = G.ports(k, c)
     ins = [(n, w) for n, d, w in rp if d == 'input' and n not in ('clk', 'rst_n', 'sid')]
     outs = [(n, w) for n, d, w in rp if d == 'output']
-    mut = dict(rmut=1, land=3, g3=4, g4=5).get(a.mut, 0)
+    mut = dict(rmut=1, land=3, g3=4, g4=5, g5=6).get(a.mut, 0)
     T = ['`timescale 1ns/1ps', 'module tb_vms_glue_lt;', '  reg clk = 0; always #0.5 clk = ~clk;', '  reg rst_n;']
     T += [f'  reg {G.w(wd)}{n};' for n, wd in ins]
     T += [f'  wire {G.w(wd)}a_{n}, b_{n};' for n, wd in outs]

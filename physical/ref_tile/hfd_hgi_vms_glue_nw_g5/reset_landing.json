@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "hfd_hgi_vms_glue_nw_t",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n -> rst_l0 -> rst_l1 (plain flops at the face, gen_vms_glue_tiles.py) -> ot_rst_relay (2 sync + 11 regional copies)"
+}

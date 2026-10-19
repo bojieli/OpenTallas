@@ -42,14 +42,20 @@ BANKP = ('xq', 'xq2', 'eg', 'pq', 'pr', 'status', 'xq_done', 'xq2_done', 'flt')
 RING = ('cw_in', 'cw_out', 'ccw_out', 'ccw_in')
 M = dict(
     sw=dict(top='hfd_hgi_vms_glue_sw_t', ring='E', far='W', plan='A', q='SW', inst='hb_vms_SW',
-            bench=[('SW', 'pos'), ('SW', 'rmut'), ('SW', 'land'), ('SW', 'g3'), ('SW', 'g4')]),
+            bench=[('SW', 'pos'), ('SW', 'rmut'), ('SW', 'land'), ('SW', 'g3'), ('SW', 'g4'), ('SW', 'g5')]),
     e=dict(top='hfd_hgi_vms_glue_e_t', ring='W', far='E', plan='A', q='SE (R0, sid 1) / NE (MX, sid 3)', inst='hb_vms_SE, hb_vms_NE',
-           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'rmut'), ('SE', 'land'), ('SE', 'sid'), ('NE', 'sid'), ('SE', 'g3'), ('SE', 'g4')]),
+           bench=[('SE', 'pos'), ('NE', 'pos'), ('SE', 'rmut'), ('SE', 'land'), ('SE', 'sid'), ('NE', 'sid'), ('SE', 'g3'), ('SE', 'g4'), ('SE', 'g5')]),
     nw=dict(top='hfd_hgi_vms_glue_nw_t', ring='E', far='W', plan='B', q='NW', inst='hb_vms_NW',
-            bench=[('NW', 'pos'), ('NW', 'rmut'), ('NW', 'land'), ('NW', 'g3'), ('NW', 'g4')]))
+            bench=[('NW', 'pos'), ('NW', 'rmut'), ('NW', 'land'), ('NW', 'g3'), ('NW', 'g4'), ('NW', 'g5')]))
 FACE = dict(E='right', W='left', N='top', S='bottom')
 TAG = 'VMS_GLUE_LT_EQUIV'
-WIT = 'results/rtl/vm_glue_1018/bench_g4/'
+WIT = 'results/rtl/vm_glue_1018/bench_g5/'
+# g5 (LEAD-HBM/LH-PGVM2 10-19, parallel to the live g4 gates): distinct kit names <kit>_g5; RTL = g4 + hub response stage 1
+# (registered one-hot hit per 32-b slice, NW rsp_grp d_q -225..-349) + hub-side registered bank select (E req_grp sel
+# -93..-184) + kept per-port relay chains (no merged relays: 33 ports were not single-flop, SW b3_pq[4]); kit recipe 4 with
+# the owner-approved die boundary hold budget (FLOW-HOLD 10-16) instead of recipe-2 pin hold pads (g4: ~30k port hold
+# violations at -169..-203 ps stuck at the repair cap).
+GEN = '_g5'
 
 
 def ports(top):
@@ -131,10 +137,11 @@ def spec(k, c):
                f"(no single-cycle wire > ~405 um): bank-side ports pin flop + 2 relays (xq_done + 3, COMMIT_DELAY 13), hub "
                f"client ports pin flop + 2 relays, hub <-> ring-stop relays (pi / ri / cco / rce / faults +1), stop inputs +2 "
                f"with per-half relay copies, 3-level rce tree; registered one-hot schedule selects (bank / tx / replay); 11 "
-               f"reset regions; reset_landing on.")
+               f"reset regions; reset_landing on. g5: hub response stage 1 (bank returns +1: pr +1), hub-side registered "
+               f"bank select (pq +1), kept per-port relay chains, recipe 4 die boundary hold budget.")
     return {
-        'name': f'hfd_hgi_vms_glue_{k}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
-        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': False, 'reason': 'the RTL lands it: rst_n -> rst_l0 -> rst_l1 (plain flops at the face, gen_vms_glue_tiles.py) -> ot_rst_relay (2 sync + 11 regional copies)'}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
+        'name': f'hfd_hgi_vms_glue_{k}{GEN}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
+        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': False, 'reason': 'the RTL lands it: rst_n -> rst_l0 -> rst_l1 (plain flops at the face, gen_vms_glue_tiles.py) -> ot_rst_relay (2 sync + 11 regional copies)'}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 4, 'hold_budget': 'die',
         'clock': 'spine', 'orfs_vars': {'OT_SPINE_LEAF_N': '16'},
         'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 16, 'peak_ram_gb': 64, 'hold_margin_ns': 0.03,
                   'io_hold_margin_ns': 0.03, 'pin_balance': {'group_max': 1}},
@@ -146,21 +153,20 @@ def spec(k, c):
                      'drives cr from flops; both ring stops capture l_in / tx controls and drive l_out / mirror_busy / fault '
                      'from flops; status drives vmstat from a flop; sid lands on flops. A synthesis pin stage would add an '
                      'edge the contract (gen_vms_glue_tiles.py) does not have.'},
-        'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': True, 'outhold': True, 'keep_pin_regs': True,
-        'pin_reg_split': True, 'hold_pad': {'cell': 'HB2xp67_ASAP7_75t_R'},
+        'io_flop_at_pins': {'cols': 4, 'allow_none': True}, 'inhold': False, 'outhold': False, 'keep_pin_regs': True,
         'purpose': purpose,
         'pin_density_per_um': dens,
-        'job': {'owner': 'Claude HBM-SAFE-VMGLUE 1019', 'branch': 'claude/vm-glue-g4-1019', 'tag': 'g4', 'purpose': purpose,
+        'job': {'owner': 'Claude LEAD-HBM/LH-PGVM2 1019', 'branch': 'claude/vm-glue-g5-1019', 'tag': 'g5', 'purpose': purpose,
                 'extra_paths': ['rtl/hbm_accel/generic/vm', 'rtl/lib', 'tools/hbm_die_v16'],
-                'record_to': f'results/rtl/ref_tile/hfd_hgi_vms_glue_{k}', 'benches': benches,
-                'views_to': f'physical/ref_tile/hfd_hgi_vms_glue_{k}/views'},
+                'record_to': f'results/rtl/ref_tile/hfd_hgi_vms_glue_{k}{GEN}', 'benches': benches,
+                'views_to': f'physical/ref_tile/hfd_hgi_vms_glue_{k}{GEN}/views'},
     }
 
 
 def main():
     OUTDIR.mkdir(parents=True, exist_ok=True); ok = True
     for k, c in M.items():
-        s = json.dumps(spec(k, c), indent=1) + '\n'; f = OUTDIR / f'hfd_hgi_vms_glue_{k}.json'
+        s = json.dumps(spec(k, c), indent=1) + '\n'; f = OUTDIR / f'hfd_hgi_vms_glue_{k}{GEN}.json'
         if '--check' in sys.argv:
             ok &= f.exists() and f.read_text() == s
         else:

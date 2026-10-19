@@ -39,7 +39,8 @@ tree (rce +1 vs g3).  Schedule selects are REGISTERED ONE-HOT, decoded a stage a
 select (bank_enable / bank_client, qualified), ring-stop tx select (tx_enable / tx_source), replay select (replay_source);
 a schedule collision stays a fault (status), never an arbitration.  hfd_vms_glue_core_g4_ref states every edge.
 Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 4 hub pq
-without the g3 face-group edge (contract break), 5 hub -> ring pi and ring -> replay rce without the g4 relays (contract break).
+without the g3 face-group edge (contract break), 5 hub -> ring pi and ring -> replay rce without the g4 relays (contract break),
+6 hub bank select copies without the g5 hub-side select register (contract break).
     gen_vms_glue_tiles.py [--check]
 """
 import sys
@@ -133,7 +134,9 @@ def chain(L, src, width, depth, name):
     """plain register chain src -> name_s0 -> ... -> name_s<depth-1>; returns the last stage (src when depth 0)"""
     prev = src
     for i in range(depth):
-        L.append(f'    reg {w(width)}{name}_s{i}; always @(posedge clk) {name}_s{i} <= {prev};')
+        # g5: kept (ot_keep_regs): one chain per port bit -- g4 synthesis merged equal relay bits of different ports
+        # (bk_pq_s0[856] fed b3_pq[1] AND b3_pq[4]: 33 ports not single-flop, SW worst setup on b3_pq[4])
+        L.append(f'    (* keep = "true" *) reg {w(width)}{name}_s{i}; always @(posedge clk) {name}_s{i} <= {prev};')
         prev = f'{name}_s{i}'
     return prev
 
@@ -212,7 +215,7 @@ def tile(k, c):
              '.bk_xq2_done(bk_xq2_done_c)', '.bk_eg(bk_eg_c)', '.bk_pq(bk_pq_c)', '.bk_pr(bk_pr_c)']
     conn += [f'.{n}({n}_c)' for n, _ in OUTS]
     L.append(f'    hfd_vms_glue_core_lt #(.NC({nc}),.COMMIT_DELAY({COMMIT_DELAY}),.UPPER({c["upper"]}),'
-             f'.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : 0)) u_core (\n        '
+             f'.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : (MUT == 5) ? 5 : (MUT == 6) ? 6 : 0)) u_core (\n        '
              + ',\n        '.join(conn) + ');')
     L.append('endmodule')
     return '\n'.join(L) + '\n'
@@ -268,7 +271,8 @@ def ref(k, c):
 REFCORE = """// g4 contract core (HBM-SAFE-VMGLUE 10-19): ot_vms_slice_static_glue wiring (one clock) + the g3 / g4 edges, stated as
 // plain delays around the UNCHANGED historical children: each ring stop sees every input except xq_done 2 edges late (g3
 // landing + g4 band relay) and its rce leaves 2 edges late (3-level lane-OR tree); the hub sees pr / response_enable /
-// response_seq 1 edge late and its pq leaves 1 edge late (g3); g4 hub-island <-> ring-stop reach relays: pi and ri +1
+// response_seq 1 edge late and its pq leaves 1 edge late (g3), g5 one more each (pr 2, pq 2: hub response stage 1 and the
+// hub-side registered bank select); g4 hub-island <-> ring-stop reach relays: pi and ri +1
 // more into the stops, cco +1 into the hub, rce +1 into the replay, ring faults +1 into the status block.
 module hfd_vms_glue_core_g4_ref #(
     parameter integer NC=0,
@@ -319,7 +323,7 @@ module hfd_vms_glue_core_g4_ref #(
     wire ack01,ack10;
     wire [8*285-1:0] pq_h;
     // the g3 / g4 edges
-    reg [8*266-1:0] pr_d; reg [NC:0] re_d; reg [(NC+1)*2-1:0] rs_d; reg [8*285-1:0] pq_d;
+    reg [8*266-1:0] pr_d, pr_e; reg [NC:0] re_d; reg [(NC+1)*2-1:0] rs_d; reg [8*285-1:0] pq_d, pq_e;
     reg [2223:0] cwi_d, ccwi_d, cwi_e, ccwi_e; reg [289:0] pi0_h, pi1_h, pi0_d, pi1_d, pi0_e, pi1_e;
     reg [2207:0] eg_d, eg_e; reg [265:0] ri0_h, ri1_h, ri0_d, ri1_d, ri0_e, ri1_e;
     reg [2:0] wk01_d, wk10_d, wk01_e, wk10_e; reg ack01_d, ack10_d, ack01_e, ack10_e; reg [1:0] txe_d, txe_e;
@@ -328,6 +332,7 @@ module hfd_vms_glue_core_g4_ref #(
     wire [263:0] cco0_s, cco1_s;
     always @(posedge clk) begin
         pr_d<=bk_pr; re_d<=response_enable; rs_d<=response_seq; pq_d<=pq_h;
+        pr_e<=pr_d; pq_e<=pq_d;   // g5: hub response stage 1 (bank returns +1) and hub-side registered bank select (pq +1)
         pi0_h<=pi0; pi1_h<=pi1; ri0_h<=ri0; ri1_h<=ri1;
         cwi_d<=cw_in; ccwi_d<=ccw_in; pi0_d<=pi0_h; pi1_d<=pi1_h; eg_d<=bk_eg; ri0_d<=ri0_h; ri1_d<=ri1_h;
         wk01_d<=wk01; wk10_d<=wk10; ack01_d<=ack01; ack10_d<=ack10; txe_d<=ring_tx_enable; txs_d<=ring_tx_source;
@@ -337,14 +342,14 @@ module hfd_vms_glue_core_g4_ref #(
         rce0_d<=rce0_s; rce1_d<=rce1_s; rce0_e<=rce0_d; rce1_e<=rce1_d; rce0_h<=rce0_e; rce1_h<=rce1_e;
         cco0_h<=cco0_s; cco1_h<=cco1_s; rf_h<=ring_fault;
     end
-    assign bk_pq=pq_d; assign rce0=rce0_h; assign rce1=rce1_h; assign cco0=cco0_h; assign cco1=cco1_h;
+    assign bk_pq=pq_e; assign rce0=rce0_h; assign rce1=rce1_h; assign cco0=cco0_h; assign cco1=cco1_h;
     ot_vms_hub_static #(.NC(NC),.CW(CW)) u_hub(
         .clk(clk),.rst_n(rst_n),.sid(sid),.cq(hcq),.cr(hcr),
         .client_seq(client_seq),.response_enable(re_d),.response_seq(rs_d),
         .bank_enable(bank_enable),.bank_client(bank_client),
         .cw_enable(hub_ring_enable[0]),.cw_client(hub_ring_client[0+:CW]),
         .ccw_enable(hub_ring_enable[1]),.ccw_client(hub_ring_client[CW+:CW]),
-        .pq(pq_h),.pr(pr_d),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
+        .pq(pq_h),.pr(pr_e),.cwi(pi0),.cci(pi1),.cco0(cco0),.cco1(cco1),.status(hub_status));
     ot_vms_rstop_static #(.COMMIT_DELAY(COMMIT_DELAY)) u_cw(
         .clk(clk),.rst_n(rst_n),.sid(sid_e),.dir(1'b0),
         .tx_enable(txe_e[0]),.tx_source(txs_e[0+:3]),

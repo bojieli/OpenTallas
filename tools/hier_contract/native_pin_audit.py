@@ -20,11 +20,27 @@ die_real_census.py, plus the recorded die-case censuses), "cell" when the contra
 (or none: outline differs), "no" otherwise.
 
     native_pin_audit.py [--root REPO] [--jobs N] --out DIR
+    native_pin_audit.py --view DIR [--cell C] --relative-to (PS | tt=PS,ff=PS | NEIGHBOUR_VIEW_DIR | insertion.json)
+
+RELATIVE MODE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017): with --relative-to the reference is the
+parent's compensation C (or the neighbour's boundary mean for a landed link) instead of the view's own R: launch O - C,
+capture S + C, and the boundary match max |pin-flop arrival - C| <= 80 ps at TT and FF.  Every record also reports the
+pin-flop spread at TT and FF; spread > 80 ps at either corner is a FAIL (insertion alone never is).
+
+CASE PINS (QK-FWD 2026-10-18, coordinator 0gs (b)): --case PAT[,PAT...] (fnmatch on the Liberty pin name, e.g.
+k0,k1,k2) names input pins the die holds CONSTANT and declares so with set_case_analysis in the die SDC (strap / ID pins
+driven from tie outputs).  Die STA has no timing check on a case-constant pin, so these pins leave the launch / capture
+metric; they are listed in the record (case_pins, case_pins_raw = their unwaived metric) and never hide a data pin.
+--static-pins is an alias of --case (S81-MISC 10-18 receipts used that name; ONE mechanism, record field case_pins), and
+--case-evidence / --static-evidence records where the die ties the pins (case_evidence).  A pattern that matches no input
+pin of the view is an error (a typo must not silently pass a pin).  DIE OBLIGATION: the die netlist ties these pins and
+the die SDC set_case_analysis-es them; tools/fleet_viz/native_sync.py accepts a case-pin receipt PASS over an own FAIL.
 """
 from __future__ import annotations
 
 import argparse
 import collections
+import fnmatch
 import json
 import multiprocessing as mp
 import os
@@ -115,7 +131,12 @@ def job_status(name: str | None, cache={}) -> str | None:
 
 
 def audit_one(arg):
-    root, cell, view = arg
+    """arg = (root, cell, view[, comp[, case]]): comp = pinreg_audit.compensation() dict (relative mode), case = fnmatch
+    patterns of input pins held constant by die-SDC set_case_analysis (excluded from the launch / capture metric)."""
+    root, cell, view = arg[:3]
+    comp = arg[3] if len(arg) > 3 else None
+    case = tuple(arg[4]) if len(arg) > 4 and arg[4] else ()
+    is_case = lambda n: any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for c in case)
     root = Path(root)
     lib_path = root / view / f"{cell}_tt.lib"
     if not lib_path.exists():
@@ -135,10 +156,19 @@ def audit_one(arg):
     if refs:
         ck = max(refs.values(), key=lambda v: v["bmax"] - v["bmin"])
         rec.update(R_ps=round(ck["rise"], 1), spread_ps=round(ck["bmax"] - ck["bmin"], 1))
+    rel = {}
+    if comp is not None and refs and comp.get("tt") is not None:
+        rel["tt"] = PA.boundary_match(refs, comp["tt"])
+        refs = PA.relative_refs(refs, comp["tt"])
+        rec.update(relative_to=comp.get("src"), ref_src=sorted({v["src"] for v in refs.values()}))
     wl = wc = None
     nl = nc = nout = nin = 0
     comb = []
+    case_raw = {}
     for name, m in PA.pin_metrics(lib, refs).items():
+        if case and m["dir"] == "input" and is_case(name):
+            case_raw[name] = None if m["inp"] is None else round(m["inp"], 1)
+            continue
         if m["comb"] and m["dir"] in ("input", "output"):
             comb.append(name)
         if m["dir"] == "output" and m["out"] is not None:
@@ -154,6 +184,11 @@ def audit_one(arg):
     rec.update(outputs=nout, inputs=nin, launch_ps=round(wl[1], 1) if wl else None, launch_pin=wl[0] if wl else None,
                capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
                comb_pins=len(comb), comb_first=sorted(comb)[:3])
+    if case:
+        miss = [c for c in case if not any(fnmatch.fnmatchcase(n, c) or fnmatch.fnmatchcase(n.split('[')[0], c) for n in case_raw)]
+        if miss:
+            return dict(cell=cell, view=view, error=f"case patterns match no input pin of the view: {miss}")
+        rec.update(case_patterns=list(case), case_pins=sorted(case_raw), case_pins_raw_capture_ps=case_raw)
     # DIE HOLD BUDGET inputs (FLOW-HOLD 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md): at FF, the
     # sender's guaranteed launch (min over outputs of O_min - R) and the receiver's pin hold need (max over inputs of
     # H - R; negative = data may arrive that long before the edge).  Die FF STA reads the same ETM arcs; reported here,
@@ -164,7 +199,14 @@ def audit_one(arg):
     if ff_path.exists():
         try:
             flib = PA.parse_lib(ff_path)
-            fm = PA.pin_metrics(flib, PA.clock_refs(flib, ins, "ff"))
+            frefs = PA.clock_refs(flib, ins, "ff")
+            if frefs:
+                fck = max(frefs.values(), key=lambda v: v["bmax"] - v["bmin"])
+                rec["ff_spread_ps"] = round(fck["bmax"] - fck["bmin"], 1)
+            if comp is not None and frefs and comp.get("ff") is not None:
+                rel["ff"] = PA.boundary_match(frefs, comp["ff"])
+                frefs = PA.relative_refs(frefs, comp["ff"])
+            fm = {n: m for n, m in PA.pin_metrics(flib, frefs).items() if not (case and m["dir"] == "input" and is_case(n))}
             lm = [m["lmin"] for m in fm.values() if m["dir"] == "output" and m["lmin"] is not None]
             hn = [m["hold"] for m in fm.values() if m["dir"] == "input" and m["hold"] is not None]
             rec.update(ff_launch_min_ps=round(min(lm), 1) if lm else None, ff_hold_need_ps=round(max(hn), 1) if hn else None)
@@ -177,6 +219,21 @@ def audit_one(arg):
         why.append(f"capture {wc[1]:.9g} > {CAPTURE_PS:.0f} ({nc} pins)")
     if comb:
         why.append(f"{len(comb)} combinational pins")
+    if "ff_spread_ps" not in rec and isinstance(((ins or {}).get("ff") or {}).get("boundary"), dict):
+        b = ins["ff"]["boundary"]           # no FF Liberty: the measured FF pin-flop range of insertion.json
+        if b.get("min") is not None and b.get("max") is not None:
+            rec["ff_spread_ps"] = round(float(b["max"]) - float(b["min"]), 1)
+    for c, k in (("TT", "spread_ps"), ("FF", "ff_spread_ps")):     # owner 10-17 0dq: pin-flop spread at TT AND FF
+        if (rec.get(k) or 0) > PA.NEIGHBOUR_SKEW_PS and any("insertion.json" in x for x in rec["ref_src"]):
+            why.append(f"{c} pin-flop spread {rec[k]} > {PA.NEIGHBOUR_SKEW_PS:.0f}")
+    if comp is not None:
+        rec["relative"] = rel
+        for c, m in rel.items():
+            if m and m["mismatch_ps"] > PA.NEIGHBOUR_SKEW_PS:
+                why.append(f"{c.upper()} boundary vs neighbour {m['mismatch_ps']} > {PA.NEIGHBOUR_SKEW_PS:.0f} "
+                           f"(pin flops {m['rel_min_ps']}..{m['rel_max_ps']} ps from C {m['comp_ps']:g})")
+        if not rel:
+            why.append("relative mode: no clock reference to compensate against")
     rec["pass"] = not why
     rec["fail_why"] = "; ".join(why)
     return rec
@@ -210,13 +267,57 @@ def die_bindings(root: Path) -> dict:
     return dict(bound=bound, cells=cells, meta=meta)
 
 
+def receipt_path(p, root):
+    """the receipt as a repo-relative path when it lies inside the checkout (closed_stands reads a COMMITTED receipt at
+    the job's commit / origin/main; an absolute local path is not committed evidence)."""
+    try:
+        return str(Path(p).resolve().relative_to(Path(root).resolve()))
+    except ValueError:
+        return str(p)
+
+
+def reroute_reason_for(r, source, hints):
+    """(ROOT-INF1 2026-10-18, INF.1) the CLOSED-STANDS "reroute_reason" for a routed view that FAILS this audit.
+    native_spread when the only miss is the TT / FF pin-flop spread (> 80, owner 0dq), else native_capture (it admits any
+    capture / launch / spread FAIL).  Before this the candidates carried kind pin_register, which closed_stands refuses
+    without a pair_cost_ps > 683.3 -- so a spread-failed closed tile could not be re-routed from the audit's output."""
+    lim = PA.NEIGHBOUR_SKEW_PS
+    spread = any((r.get(k) or 0) > lim for k in ("spread_ps", "ff_spread_ps"))
+    other = bool(r.get("launch_over") or r.get("capture_over") or r.get("comb_pins"))
+    kind = "native_spread" if spread and not other else "native_capture"
+    return dict(kind=kind, source=source, cell=r.get("lib_cell") or r["cell"], launch_ps=r.get("launch_ps"),
+                capture_ps=r.get("capture_ps"), spread_ps=r.get("spread_ps"), ff_spread_ps=r.get("ff_spread_ps"),
+                fix="; ".join(hints) or "re-kit the boundary (pin flops at the pins, balanced boundary clock)")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", default=str(HERE.parents[1]))
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", help="output dir (full audit of every CLOSED view)")
+    ap.add_argument("--view", help="audit this one view dir (relative to --root) and print the record")
+    ap.add_argument("--cell", help="cell of --view (default: the only <cell>_tt.lib in it)")
+    ap.add_argument("--relative-to", help="parent compensation C: ps, tt=PS,ff=PS, a neighbour view dir or its "
+                                          "insertion.json (boundary mean); launch O - C, capture S + C, boundary match")
+    ap.add_argument("--case", "--static-pins", dest="case",
+                    help="comma list of input pin patterns held constant by die-SDC set_case_analysis "
+                         "(strap / ID pins): excluded from the launch / capture metric and listed (alias --static-pins)")
+    ap.add_argument("--case-evidence", "--static-evidence", dest="case_evidence",
+                    help="--view: where the die ties the case pins (bind table / RTL contract); recorded as case_evidence")
     a = ap.parse_args(argv)
     root = Path(a.root).resolve()
+    comp = PA.compensation(a.relative_to) if a.relative_to else None
+    if a.view:
+        vd = root / a.view
+        cell = a.cell or next(p.name[:-7] for p in sorted(vd.glob("*_tt.lib")))
+        case = [c.strip() for c in (a.case or "").split(",") if c.strip()]
+        r = audit_one((str(root), cell, a.view, comp, case))
+        if case and a.case_evidence and not r.get("error"):
+            r["case_evidence"] = a.case_evidence
+        print(json.dumps(r, indent=1))
+        return 0 if r.get("pass") else 1
+    if not a.out:
+        ap.error("--out or --view is required")
     t0 = time.time()
     views = find_views(root)
     head = git(root, "rev-parse", "HEAD").strip()
@@ -229,7 +330,7 @@ def main(argv=None) -> int:
             continue
         keep.append((cell, view, job, "loop" if st == "CLOSED" else ("loop job not in state" if job else "store")))
     with mp.Pool(a.jobs) as pool:
-        recs = pool.map(audit_one, [(str(root), c, v) for c, v, _, _ in keep], chunksize=4)
+        recs = pool.map(audit_one, [(str(root), c, v, comp) for c, v, _, _ in keep], chunksize=4)
     db = die_bindings(root)
     rows = []
     for (cell, view, job, how), r in zip(keep, recs):
@@ -306,11 +407,11 @@ def main(argv=None) -> int:
                 hints.append(f"{r['comb_pins']} combinational pins: register them")
             if (r.get("spread_ps") or 0) > 80:
                 hints.append(f"boundary clock spread {r['spread_ps']} ps > 80: balance the boundary registers / split the root")
+            if (r.get("ff_spread_ps") or 0) > 80:
+                hints.append(f"FF pin-flop spread {r['ff_spread_ps']} ps > 80: balance the boundary registers at FF")
             cands.append(dict(design=d, cell=r["cell"], view=r["view"], job=r.get("job"), launch_ps=r.get("launch_ps"),
                               capture_ps=r.get("capture_ps"), spread_ps=r.get("spread_ps"), r_from=r["ref_src"],
-                              reroute_reason=dict(kind="pin_register", source=f"{out}/{d}.json", cell=r["lib_cell"] or r["cell"],
-                                                  launch_ps=r.get("launch_ps"), capture_ps=r.get("capture_ps"),
-                                                  fix="; ".join(hints))))
+                              reroute_reason=reroute_reason_for(r, receipt_path(out / f"{d}.json", root), hints)))
     (out / "reroute_candidates.json").write_text(json.dumps(dict(schema="opentallas.native_pin_audit.candidates.v1",
                                                                   source=head, candidates=cands), indent=1) + "\n")
     md += ["", "## Re-route candidates (fail AND bound by the die)", "",

@@ -1,0 +1,8 @@
+Verilator 5.050 2026-07-01 rev v5.050
+VMS_GLUE_TILE_TB NW hfd_hgi_vms_glue_nw_t MUT=g4 cycles=4000
+MISMATCH cyc 17 ring_fault
+MISMATCH cyc 18 ring_fault
+MISMATCH cyc 19 ring_fault
+MISMATCH cyc 20 bk_pq
+MISMATCH cyc 20 ring_fault
+VMS_GLUE_LT_EQUIV NW FAIL checks=33768 errors=436
