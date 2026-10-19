@@ -204,10 +204,11 @@ module ot_hbm_static_cfg_collar_idx256 #(
     reg [NPR-1:0] loaded;
     reg armed, run;
     wire [15:0] run_copies;
+    wire run_next_phase;
     generate if(FAN32!=0)begin:g_run_copies
         (* keep *) reg [15:0] rq;
         always @(posedge clk or negedge regional_reset[18])
-            if(!regional_reset[18])rq<=0;else rq<={16{g_distributed_control.n_run}};
+            if(!regional_reset[18])rq<=0;else rq<={16{run_next_phase}};
         assign run_copies=rq;
     end else assign run_copies=0;
     endgenerate
@@ -273,6 +274,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
         assign rec_banked = 0;
     end endgenerate
     generate if(FAN32==0)begin:g_original_control
+    assign run_next_phase=1'b0;
     integer k;
     always @(posedge clk or negedge rst_c_n) begin
         if (!rst_c_n) begin
@@ -355,6 +357,7 @@ module ot_hbm_static_cfg_collar_idx256 #(
         reg [NPR-1:0] n_loaded;
         reg [1-1:0] n_armed;
         reg [1-1:0] n_run;
+        assign run_next_phase=n_run;
         reg [32-1:0] n_cnt;
         reg [RW-1:0] n_rptr;
         reg [8-1:0] n_tail;
