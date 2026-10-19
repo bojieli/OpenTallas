@@ -20,7 +20,7 @@ Consequently the121 internal M1 electrical interfaces and their M1–M3 exclusio
 
 ## Recomputed current matrix and cost
 
-`current_model.py` reconstructs all121 branch lengths and both shared segmented M5 networks from the new actual via centers. M4 branch lengths become .240 µm VDD/.144 µm VSS, formerly .288/.384. Each branch includes actual V1/V2/V3/V4 resistance once, M3 offset and the120 nm M4 width scaling. Each net's current matrix is Z_ij=ρ min(y_i,y_j)[H−max(y_i,y_j)]/H+δ_ij b_i. Separate nodal inversion agrees below1e−12 kΩ. Both ideal N/S feeds are retained on both nets; load enters at each actual M1 center. All interface matrices, cap-parameterized adversarial allocation and south-only sensitivity remain in `current_analysis.json`.
+`current_model.py` reconstructs all121 branch lengths and both shared segmented M5 networks from the new actual via centers. M4 branch lengths become .240 µm VDD/.144 µm VSS, formerly .288/.192. Each branch includes actual V1/V2/V3/V4 resistance once, M3 offset and the120 nm M4 width scaling. Each net's current matrix is Z_ij=ρ min(y_i,y_j)[H−max(y_i,y_j)]/H+δ_ij b_i. Separate nodal inversion agrees below1e−12 kΩ. Both ideal N/S feeds are retained on both nets; load enters at each actual M1 center. All interface matrices, cap-parameterized adversarial allocation and south-only sensitivity remain in `current_analysis.json`.
 
 | Conditional loop loss, V/mA total macro current | Qwen | SC2 |
 | --- | ---: | ---: |
@@ -33,3 +33,7 @@ These are sensitivities, not operating currents, current limits or supply adequa
 No added metal length/area/via count versus5de is required by this translation. Added M5 remains1.017216/2.102400 µm², lower wire plus M5 C8.183679/16.527175 fF conditional. No toggling-signal C·V² charge is assigned to PG. Outlines52.440×21.192/216.840×43.800 µm, state, clocks and cycles are unchanged. Lower exclusion total1.596672/2.794176 µm²; intersection with original bitcore1.596672/2.765280. Conditional core density multipliers1.002943339/1.000538010 remain requirements, not demonstrated fit. SC2's172 nm north attachment apron29.919056 µm² is still charged. R0 only, both origin coordinates0 modulo144 nm;43.2 µm lattice compatibility is arithmetic only, not parent fit.
 
 Run `python3 model.py`, `python3 current_model.py`, `python3 verify.py`, `python3 plot.py`, `python3 plot_ports.py`. These finite analytical checks/plots run locally in seconds, with no EDA or simulation. `SPREAD_PG_MODEL.png`, `EXTERNAL_PG_PORTS.png` and `MODEL_CHECKLIST.md` are for coordinator review before any further engine decision. SHA256.json pins all inputs and outputs. No next engine is authorized by this artifact.
+
+## Additive historical distance erratum
+
+`PG_DISTANCE_ERRATUM.json` records ROOT’s independent coordinate finding. The f34 historical README and original f25 README misstated the old VSS M4 branch as .384 µm. Exact5de via centers give .192 µm in both families; new Spread192 VSS is .144 µm, and VDD changes .288→.240 µm. Original f34/f25 commits remain preserved. Both current-model implementations already derive actual center differences, so numerical matrices, coefficients, geometry and all holds are unchanged. This correction grants no A5/B engine.
