@@ -137,6 +137,10 @@ def layer_block(p, l0=False):
                 for a, b in iv:
                     add(r, a, b)
         t += n
+    for r, iv in p.get("seg_windows", {}).get("layer", {}).items():    # opt-in (MU-ADOPT-TOK): command-plane edges
+        for a, b in iv:                                                # of the RTL layer segment (cmd / done / start)
+            add(r, a, b)
+    w = {r: v for r, v in w.items() if not any(r.startswith(d) for d in p.get("drop_resources", ()))}
     period = p["layer_period"] + extra
     if t > period:
         raise ScheduleError(f"layer programme {t} longer than the layer period {period}")
@@ -151,9 +155,15 @@ def head_blocks(p):
     n = p.get("head_chunks", 1)
     h, e = p["head_cycles"], p["embed_cycles"]
     cuts = [h * i // n for i in range(n + 1)]
-    out = [(f"head.c{i}", dict(windows={"me": [(0, cuts[i + 1] - cuts[i])], "su": [(0, cuts[i + 1] - cuts[i])]},
-                               length=cuts[i + 1] - cuts[i])) for i in range(n)]
-    out.append(("head", dict(windows={"d2d_o": [(0, p["d2d_record"])], "host": [(0, p["host_return"])]}, length=e)))
+    sw, drop = p.get("seg_windows", {}), tuple(p.get("drop_resources", ()))
+
+    def fin(w, kind):                                                  # opt-in extras / drops (MU-ADOPT-TOK)
+        w = dict(w, **{r: list(iv) for r, iv in sw.get(kind, {}).items()})
+        return {r: v for r, v in w.items() if not any(r.startswith(d) for d in drop)}
+    out = [(f"head.c{i}", dict(windows=fin({"me": [(0, cuts[i + 1] - cuts[i])], "su": [(0, cuts[i + 1] - cuts[i])]},
+                                           "head.c"), length=cuts[i + 1] - cuts[i])) for i in range(n)]
+    out.append(("head", dict(windows=fin({"d2d_o": [(0, p["d2d_record"])], "host": [(0, p["host_return"])]}, "head"),
+                             length=e)))
     return out
 
 
