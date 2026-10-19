@@ -1,0 +1,19 @@
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2591222-1792420586 after 0 s
+XDIE_OVL_KIT seam 2,2,2,3,2,2/11,11,9,9,9,9,9 | image TXDP C [8,3,1,10] K [21,4,3,3] | die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}
+XDIE_OVL_KIT compiled {'C': [8, 3, 1, 10], 'K': [21, 4, 3, 3]} image {'C': [8, 3, 1, 10], 'K': [21, 4, 3, 3]}
+pair expect=PASS got=PASS -> OK
+pair_gen_txdp expect=PASS got=PASS -> OK
+pair_l0 expect=PASS got=PASS -> OK
+pair_mut_kseam_rx_torn expect=FAIL got=FAIL -> OK
+pair_mut_phy_bit expect=FAIL got=FAIL -> OK
+pair_mut_result_bit expect=FAIL got=FAIL -> OK
+pair_mut_status_done expect=FAIL got=FAIL -> OK
+pair_mut_txdp_c_off1 expect=FAIL got=FAIL -> OK
+pair_phy9 expect=PASS got=PASS -> OK
+pair_t8192 expect=PASS got=PASS -> OK
+pair_gen_txdp expect=FAIL got=FAIL -> OK
+pair expect=PASS got=PASS -> OK
+pair_gen_txdp expect=PASS got=PASS -> OK
+XDIE_OVL_KIT_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2591222-1792420586): exit 0
