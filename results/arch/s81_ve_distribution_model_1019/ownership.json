@@ -1,0 +1,260 @@
+{
+  "reset_copies": [
+    {
+      "instance": "u_ot_pr_core.add.reset_leaf.sync\\[1\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "copies": 75,
+      "added": 74,
+      "original_max_load": 2320,
+      "fixed_point_max_load": 2370,
+      "xy": [
+        261.101,
+        36.315
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.add.reset_leaf.sync\\[1\\]$_DFF_PN0__677",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "role": "tie",
+      "copies": 3,
+      "added": 2,
+      "original_max_load": 1,
+      "fixed_point_max_load": 75,
+      "xy": [
+        260.6555,
+        36.5635
+      ]
+    },
+    {
+      "instance": "rst_n__ot_rl1$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "copies": 3,
+      "added": 2,
+      "original_max_load": 2,
+      "fixed_point_max_load": 78,
+      "xy": [
+        260.507,
+        35.505
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.reset_leaf.sync\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "role": "ff",
+      "copies": 3,
+      "added": 2,
+      "original_max_load": 1,
+      "fixed_point_max_load": 75,
+      "xy": [
+        260.183,
+        37.125
+      ]
+    }
+  ],
+  "reset_added_ff": 80,
+  "reset_contract": "Each existing synchronizer stage copied at same age, same asynchronous clear source, same D function, all upstream loads in fixed point. Never append ot_rst_relay TREE_STAGES: that would change release age. Actual native/Yosys reset identity and assertion/release/occupied restart remain required.",
+  "output_constant_ports": [
+    "PORT/p_kk[31]",
+    "PORT/p_hh[31]",
+    "PORT/o_y[239]",
+    "PORT/o_y[238]",
+    "PORT/o_y[237]",
+    "PORT/o_y[236]",
+    "PORT/o_y[235]",
+    "PORT/o_y[234]",
+    "PORT/o_y[233]",
+    "PORT/o_y[232]",
+    "PORT/o_y[231]",
+    "PORT/o_y[230]",
+    "PORT/o_y[229]",
+    "PORT/o_y[228]",
+    "PORT/o_y[227]",
+    "PORT/o_y[226]",
+    "PORT/o_y[225]",
+    "PORT/o_y[224]",
+    "PORT/o_y[207]",
+    "PORT/o_y[206]",
+    "PORT/o_y[205]",
+    "PORT/o_y[204]",
+    "PORT/o_y[203]",
+    "PORT/o_y[202]",
+    "PORT/o_y[201]",
+    "PORT/o_y[200]",
+    "PORT/o_y[199]",
+    "PORT/o_y[198]",
+    "PORT/o_y[197]",
+    "PORT/o_y[196]",
+    "PORT/o_y[195]",
+    "PORT/o_y[194]",
+    "PORT/o_y[193]",
+    "PORT/o_y[192]",
+    "PORT/o_y[175]",
+    "PORT/o_y[174]",
+    "PORT/o_y[173]",
+    "PORT/o_y[172]",
+    "PORT/o_y[171]",
+    "PORT/o_y[170]",
+    "PORT/o_y[169]",
+    "PORT/o_y[168]",
+    "PORT/o_y[167]",
+    "PORT/o_y[166]",
+    "PORT/o_y[165]",
+    "PORT/o_y[164]",
+    "PORT/o_y[163]",
+    "PORT/o_y[162]",
+    "PORT/o_y[161]",
+    "PORT/o_y[160]",
+    "PORT/o_y[143]",
+    "PORT/o_y[142]",
+    "PORT/o_y[141]",
+    "PORT/o_y[140]",
+    "PORT/o_y[139]",
+    "PORT/o_y[138]",
+    "PORT/o_y[137]",
+    "PORT/o_y[136]",
+    "PORT/o_y[135]",
+    "PORT/o_y[134]",
+    "PORT/o_y[133]",
+    "PORT/o_y[132]",
+    "PORT/o_y[131]",
+    "PORT/o_y[130]",
+    "PORT/o_y[129]",
+    "PORT/o_y[128]",
+    "PORT/o_y[111]",
+    "PORT/o_y[110]",
+    "PORT/o_y[109]",
+    "PORT/o_y[108]",
+    "PORT/o_y[107]",
+    "PORT/o_y[106]",
+    "PORT/o_y[105]",
+    "PORT/o_y[104]",
+    "PORT/o_y[103]",
+    "PORT/o_y[102]",
+    "PORT/o_y[101]",
+    "PORT/o_y[100]",
+    "PORT/o_y[99]",
+    "PORT/o_y[98]",
+    "PORT/o_y[97]",
+    "PORT/o_y[96]",
+    "PORT/o_y[79]",
+    "PORT/o_y[78]",
+    "PORT/o_y[77]",
+    "PORT/o_y[76]",
+    "PORT/o_y[75]",
+    "PORT/o_y[74]",
+    "PORT/o_y[73]",
+    "PORT/o_y[72]",
+    "PORT/o_y[71]",
+    "PORT/o_y[70]",
+    "PORT/o_y[69]",
+    "PORT/o_y[68]",
+    "PORT/o_y[67]",
+    "PORT/o_y[66]",
+    "PORT/o_y[65]",
+    "PORT/o_y[64]",
+    "PORT/o_y[47]",
+    "PORT/o_y[46]",
+    "PORT/o_y[45]",
+    "PORT/o_y[44]",
+    "PORT/o_y[43]",
+    "PORT/o_y[42]",
+    "PORT/o_y[41]",
+    "PORT/o_y[40]",
+    "PORT/o_y[39]",
+    "PORT/o_y[38]",
+    "PORT/o_y[37]",
+    "PORT/o_y[36]",
+    "PORT/o_y[35]",
+    "PORT/o_y[34]",
+    "PORT/o_y[33]",
+    "PORT/o_y[32]",
+    "PORT/o_y[15]",
+    "PORT/o_y[14]",
+    "PORT/o_y[13]",
+    "PORT/o_y[12]",
+    "PORT/o_y[11]",
+    "PORT/o_y[10]",
+    "PORT/o_y[9]",
+    "PORT/o_y[8]",
+    "PORT/o_y[7]",
+    "PORT/o_y[6]",
+    "PORT/o_y[5]",
+    "PORT/o_y[4]",
+    "PORT/o_y[3]",
+    "PORT/o_y[2]",
+    "PORT/o_y[1]",
+    "PORT/o_y[0]"
+  ],
+  "constant_semantics": "o_y low16 explicitly zero in actual source. p_hh/p_kk sign roots actually TIELO in native graph; squares have sign a31 XOR a31=0; refused nonfinite/overflow emit zero, additions of nonnegative terms preserve nonnegative sign. Exact source/native proof and no-mask mutant remain required for these two.",
+  "constant_pin_register_variant": {
+    "ff": 130,
+    "added_area_um2": 37.908,
+    "clock_fF": {
+      "TT": 61.71568,
+      "FF": 67.8613
+    }
+  },
+  "total_added_ff_with_pin_registers": 1846,
+  "total_added_area_um2_with_pin_registers": 642.2198399999997,
+  "total_added_clock_fF_with_pin_registers": {
+    "TT": 874.8899240000001,
+    "FF": 961.2469679999999
+  },
+  "lower_bound_no_upstream_mutant": {
+    "rejected": true,
+    "unsafe_roots": 46,
+    "examples": [
+      {
+        "driver": "_277880_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_277949_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_278048_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_278216_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_280198_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_280271_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_280347_/Y",
+        "load": 68,
+        "capacity": 64
+      },
+      {
+        "driver": "_280419_/Y",
+        "load": 68,
+        "capacity": 64
+      }
+    ]
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv": "4d40f9963d9c973d1e44bcaa0cc39958c72b28f6c4f638c8e496fa6190bf3a99",
+    "rtl/hdc/ot_hdc_delay_rf.sv": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+    "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  }
+}

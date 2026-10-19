@@ -1,0 +1,377 @@
+{
+  "library_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99",
+    "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+  },
+  "coefficient_by_corner": {
+    "TT": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.37908,
+        "clock_cap_fF": 0.462899,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "clock_cap_fF": 0.474736,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "area_um2": 0.30618,
+        "clock_cap_fF": 0.474859,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+      },
+      "DFFHQNx3_ASAP7_75t_R": {
+        "area_um2": 0.32076,
+        "clock_cap_fF": 0.475262,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+      },
+      "AND2x2_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AND3x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AND3x2_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AND4x1_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "NAND2x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "NAND2x2_ASAP7_75t_R": {
+        "area_um2": 0.1458,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "NOR2x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "NOR2x2_ASAP7_75t_R": {
+        "area_um2": 0.1458,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "NOR3x1_ASAP7_75t_R": {
+        "area_um2": 0.16038,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OR2x2_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OR3x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OR4x1_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OR4x2_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OR5x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "TIEHIx1_ASAP7_75t_R": {
+        "area_um2": 0.04374,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "XNOR2x2_ASAP7_75t_R": {
+        "area_um2": 0.16038,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "XOR2x2_ASAP7_75t_R": {
+        "area_um2": 0.16038,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AO211x2_ASAP7_75t_R": {
+        "area_um2": 0.23328,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AO21x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AO21x2_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AO22x1_ASAP7_75t_R": {
+        "area_um2": 0.13122,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AO31x2_ASAP7_75t_R": {
+        "area_um2": 0.23328,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AO32x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AOI211x1_ASAP7_75t_R": {
+        "area_um2": 0.17496,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "AOI21x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OA211x2_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OA21x2_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OA221x2_ASAP7_75t_R": {
+        "area_um2": 0.23328,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OA31x2_ASAP7_75t_R": {
+        "area_um2": 0.2187,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz"
+      },
+      "OAI21x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz"
+      }
+    },
+    "FF": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.37908,
+        "clock_cap_fF": 0.503152,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "clock_cap_fF": 0.52201,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "area_um2": 0.30618,
+        "clock_cap_fF": 0.521959,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+      },
+      "DFFHQNx3_ASAP7_75t_R": {
+        "area_um2": 0.32076,
+        "clock_cap_fF": 0.522174,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+      },
+      "AND2x2_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "AND3x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "AND3x2_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "AND4x1_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "NAND2x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "NAND2x2_ASAP7_75t_R": {
+        "area_um2": 0.1458,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "NOR2x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "NOR2x2_ASAP7_75t_R": {
+        "area_um2": 0.1458,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "NOR3x1_ASAP7_75t_R": {
+        "area_um2": 0.16038,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "OR2x2_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "OR3x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "OR4x1_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "OR4x2_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "OR5x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "TIEHIx1_ASAP7_75t_R": {
+        "area_um2": 0.04374,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "XNOR2x2_ASAP7_75t_R": {
+        "area_um2": 0.16038,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "XOR2x2_ASAP7_75t_R": {
+        "area_um2": 0.16038,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz"
+      },
+      "AO211x2_ASAP7_75t_R": {
+        "area_um2": 0.23328,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AO21x1_ASAP7_75t_R": {
+        "area_um2": 0.08748,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AO21x2_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AO22x1_ASAP7_75t_R": {
+        "area_um2": 0.13122,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AO31x2_ASAP7_75t_R": {
+        "area_um2": 0.23328,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AO32x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AOI211x1_ASAP7_75t_R": {
+        "area_um2": 0.17496,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "AOI21x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+      },
+      "OA211x2_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+      },
+      "OA21x2_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+      },
+      "OA221x2_ASAP7_75t_R": {
+        "area_um2": 0.23328,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+      },
+      "OA31x2_ASAP7_75t_R": {
+        "area_um2": 0.2187,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+      },
+      "OAI21x1_ASAP7_75t_R": {
+        "area_um2": 0.11664,
+        "clock_cap_fF": null,
+        "library": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz"
+      }
+    }
+  },
+  "added_area_um2_by_corner": {
+    "TT": 604.3118399999997,
+    "FF": 604.3118399999997
+  },
+  "added_clock_cap_fF_by_corner": {
+    "TT": 813.174244,
+    "FF": 893.3856679999999
+  },
+  "added_clock_pins": 1716,
+  "scope": "Exact selected native master scalar areas/clock caps. Does not price CTS buffer/wire, routing or PG overhead; copies are analytical and unsynthesized.",
+  "conditional_cts_base_plus_copies_um2": 41287.31184,
+  "one_square_band_40_to_60pct_side_um": [
+    262.3207700507148,
+    321.2760177791053
+  ],
+  "max_outline_manhattan_um_at_60pct": 524.6415401014297,
+  "universal_reach_405_square_max_std_at_60pct": 24603.75
+}

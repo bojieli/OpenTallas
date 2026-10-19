@@ -1,0 +1,20 @@
+{
+  "outline_um": [
+    345.6,
+    259.2
+  ],
+  "area_um2": 89579.52,
+  "aspect": 1.3333333333333333,
+  "one_full_width_standard_cell_band": true,
+  "macros": 0,
+  "lattice_pitch_um": 43.2,
+  "embedding": "Existing endpoint x unchanged; y multiplied by .75. Every copy co-located with original; sole over405 reset cell and all of its input endpoints moved to center. Zero-area points.",
+  "moved_reset_root": "u_ot_pr_core.add.reset_leaf.sync\\[1\\]$_DFF_PN0_/QN",
+  "endpoint_pairs_over405": [],
+  "max_direct_manhattan_um": 292.448125,
+  "expanded_sink_terms": 555508,
+  "additional_nonclock_input_pin_terms": 4133,
+  "sum_expanded_pin_manhattan_um": 3883381.309499919,
+  "partition_rule": "For each driver output, all destination-copy PIN loads partition into <=32-load sets across its n copies; abstract connectivity only.",
+  "scope": "Constructive point-connectivity witness. Not legal placement: finite cell dimensions, no overlap, kept copy ownership, routed detours, buffers/vias, PG and clock access not checked. No latency or frequency claim follows."
+}

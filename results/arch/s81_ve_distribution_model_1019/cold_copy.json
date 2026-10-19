@@ -1,0 +1,50 @@
+{
+  "rows_tested": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ],
+  "all_initial_write_read_pointer_code_pairs": 12584,
+  "qualified_OLD_checks": 285300,
+  "shared_canonical_next_state": "PASS",
+  "independent_feedback_mutant": {
+    "rows": 2,
+    "write_initial": 0,
+    "read_initial": 1,
+    "edge": 4,
+    "expected": [
+      "input",
+      1
+    ],
+    "actual": [
+      "input",
+      2
+    ],
+    "reason": "Independently advancing unreset replicas retain distinct offsets; write/read ownership split corrupts first qualified data."
+  },
+  "mechanism": "All copies receive identical combinational next-state function of one canonical counter vector. Arbitrary power-up copies converge at edge1. Writes of first required din begin edge2, hence output valid at edgeD=N+2 without a reset or extra edge.",
+  "limitations": "Ring mechanism only. No production source edit or first-use/valid/occupied-reset comparator; mapping must preserve common D and coherent write/read address ownership. No simulation initialization relied upon."
+}
