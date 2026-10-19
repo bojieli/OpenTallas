@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CACHE_NATIVE8 PASS maxlive=8 recycled=10382 cycles=10406 exact_reference_rows=4243 cache_reads=4323 crossbank_cycles=80 packed_source_edges=5376 packed_sectors=18276 bytes_per_record=136 faults=7
+- rtl/test/hbm_accel/svg_rel/tb_cache_native8.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 107us; walltime 0.082 s; speed 1.295 ms/s
+- Verilator: cpu 0.083 s on 1 threads; allocated 7 MB

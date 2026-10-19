@@ -1,0 +1,467 @@
+{
+  "runtime_storage_bits": 2048,
+  "old_storage_bits": 4096,
+  "added_cycles": 0,
+  "ingress_sectors_per_five_edges": 17,
+  "rows_per_five_edges": 4,
+  "gather_bits": 1280,
+  "boundary_bits_per_edge": 1024,
+  "row_bits": 1088,
+  "macro_change": 0,
+  "replicas_per_sm": 1,
+  "replicas_per_die": 16,
+  "physical_status": "OPEN: mux depth, kept control fanout, pin regs, floorplan not measured",
+  "latency": "same row SRAM write/read edges as original; 0 added cycles",
+  "invariant": "survivor and incoming modulo-8 slots disjoint; push wins on recycled slots",
+  "max_live": 8,
+  "cases": [
+    {
+      "count": 1,
+      "cycles": 3,
+      "peak": 8,
+      "recycled": 0,
+      "padding_live": 4
+    },
+    {
+      "count": 2,
+      "cycles": 4,
+      "peak": 8,
+      "recycled": 4,
+      "padding_live": 4
+    },
+    {
+      "count": 3,
+      "cycles": 5,
+      "peak": 8,
+      "recycled": 8,
+      "padding_live": 4
+    },
+    {
+      "count": 4,
+      "cycles": 6,
+      "peak": 8,
+      "recycled": 9,
+      "padding_live": 3
+    },
+    {
+      "count": 5,
+      "cycles": 8,
+      "peak": 8,
+      "recycled": 10,
+      "padding_live": 3
+    },
+    {
+      "count": 6,
+      "cycles": 9,
+      "peak": 8,
+      "recycled": 13,
+      "padding_live": 3
+    },
+    {
+      "count": 7,
+      "cycles": 10,
+      "peak": 8,
+      "recycled": 17,
+      "padding_live": 3
+    },
+    {
+      "count": 8,
+      "cycles": 11,
+      "peak": 8,
+      "recycled": 19,
+      "padding_live": 2
+    },
+    {
+      "count": 9,
+      "cycles": 13,
+      "peak": 8,
+      "recycled": 20,
+      "padding_live": 2
+    },
+    {
+      "count": 10,
+      "cycles": 14,
+      "peak": 8,
+      "recycled": 22,
+      "padding_live": 2
+    },
+    {
+      "count": 11,
+      "cycles": 15,
+      "peak": 8,
+      "recycled": 26,
+      "padding_live": 2
+    },
+    {
+      "count": 12,
+      "cycles": 16,
+      "peak": 8,
+      "recycled": 29,
+      "padding_live": 1
+    },
+    {
+      "count": 13,
+      "cycles": 18,
+      "peak": 8,
+      "recycled": 30,
+      "padding_live": 1
+    },
+    {
+      "count": 14,
+      "cycles": 19,
+      "peak": 8,
+      "recycled": 31,
+      "padding_live": 1
+    },
+    {
+      "count": 15,
+      "cycles": 20,
+      "peak": 8,
+      "recycled": 35,
+      "padding_live": 1
+    },
+    {
+      "count": 16,
+      "cycles": 21,
+      "peak": 8,
+      "recycled": 39,
+      "padding_live": 0
+    },
+    {
+      "count": 17,
+      "cycles": 23,
+      "peak": 8,
+      "recycled": 40,
+      "padding_live": 4
+    },
+    {
+      "count": 18,
+      "cycles": 24,
+      "peak": 8,
+      "recycled": 44,
+      "padding_live": 4
+    },
+    {
+      "count": 19,
+      "cycles": 25,
+      "peak": 8,
+      "recycled": 48,
+      "padding_live": 4
+    },
+    {
+      "count": 20,
+      "cycles": 26,
+      "peak": 8,
+      "recycled": 49,
+      "padding_live": 3
+    },
+    {
+      "count": 21,
+      "cycles": 28,
+      "peak": 8,
+      "recycled": 50,
+      "padding_live": 3
+    },
+    {
+      "count": 22,
+      "cycles": 29,
+      "peak": 8,
+      "recycled": 53,
+      "padding_live": 3
+    },
+    {
+      "count": 23,
+      "cycles": 30,
+      "peak": 8,
+      "recycled": 57,
+      "padding_live": 3
+    },
+    {
+      "count": 24,
+      "cycles": 31,
+      "peak": 8,
+      "recycled": 59,
+      "padding_live": 2
+    },
+    {
+      "count": 25,
+      "cycles": 33,
+      "peak": 8,
+      "recycled": 60,
+      "padding_live": 2
+    },
+    {
+      "count": 26,
+      "cycles": 34,
+      "peak": 8,
+      "recycled": 62,
+      "padding_live": 2
+    },
+    {
+      "count": 27,
+      "cycles": 35,
+      "peak": 8,
+      "recycled": 66,
+      "padding_live": 2
+    },
+    {
+      "count": 28,
+      "cycles": 36,
+      "peak": 8,
+      "recycled": 69,
+      "padding_live": 1
+    },
+    {
+      "count": 29,
+      "cycles": 38,
+      "peak": 8,
+      "recycled": 70,
+      "padding_live": 1
+    },
+    {
+      "count": 30,
+      "cycles": 39,
+      "peak": 8,
+      "recycled": 71,
+      "padding_live": 1
+    },
+    {
+      "count": 31,
+      "cycles": 40,
+      "peak": 8,
+      "recycled": 75,
+      "padding_live": 1
+    },
+    {
+      "count": 32,
+      "cycles": 41,
+      "peak": 8,
+      "recycled": 79,
+      "padding_live": 0
+    },
+    {
+      "count": 33,
+      "cycles": 43,
+      "peak": 8,
+      "recycled": 80,
+      "padding_live": 4
+    },
+    {
+      "count": 34,
+      "cycles": 44,
+      "peak": 8,
+      "recycled": 84,
+      "padding_live": 4
+    },
+    {
+      "count": 35,
+      "cycles": 45,
+      "peak": 8,
+      "recycled": 88,
+      "padding_live": 4
+    },
+    {
+      "count": 36,
+      "cycles": 46,
+      "peak": 8,
+      "recycled": 89,
+      "padding_live": 3
+    },
+    {
+      "count": 37,
+      "cycles": 48,
+      "peak": 8,
+      "recycled": 90,
+      "padding_live": 3
+    },
+    {
+      "count": 38,
+      "cycles": 49,
+      "peak": 8,
+      "recycled": 93,
+      "padding_live": 3
+    },
+    {
+      "count": 39,
+      "cycles": 50,
+      "peak": 8,
+      "recycled": 97,
+      "padding_live": 3
+    },
+    {
+      "count": 40,
+      "cycles": 51,
+      "peak": 8,
+      "recycled": 99,
+      "padding_live": 2
+    },
+    {
+      "count": 41,
+      "cycles": 53,
+      "peak": 8,
+      "recycled": 100,
+      "padding_live": 2
+    },
+    {
+      "count": 42,
+      "cycles": 54,
+      "peak": 8,
+      "recycled": 102,
+      "padding_live": 2
+    },
+    {
+      "count": 43,
+      "cycles": 55,
+      "peak": 8,
+      "recycled": 106,
+      "padding_live": 2
+    },
+    {
+      "count": 44,
+      "cycles": 56,
+      "peak": 8,
+      "recycled": 109,
+      "padding_live": 1
+    },
+    {
+      "count": 45,
+      "cycles": 58,
+      "peak": 8,
+      "recycled": 110,
+      "padding_live": 1
+    },
+    {
+      "count": 46,
+      "cycles": 59,
+      "peak": 8,
+      "recycled": 111,
+      "padding_live": 1
+    },
+    {
+      "count": 47,
+      "cycles": 60,
+      "peak": 8,
+      "recycled": 115,
+      "padding_live": 1
+    },
+    {
+      "count": 48,
+      "cycles": 61,
+      "peak": 8,
+      "recycled": 119,
+      "padding_live": 0
+    },
+    {
+      "count": 49,
+      "cycles": 63,
+      "peak": 8,
+      "recycled": 120,
+      "padding_live": 4
+    },
+    {
+      "count": 50,
+      "cycles": 64,
+      "peak": 8,
+      "recycled": 124,
+      "padding_live": 4
+    },
+    {
+      "count": 51,
+      "cycles": 65,
+      "peak": 8,
+      "recycled": 128,
+      "padding_live": 4
+    },
+    {
+      "count": 52,
+      "cycles": 66,
+      "peak": 8,
+      "recycled": 129,
+      "padding_live": 3
+    },
+    {
+      "count": 53,
+      "cycles": 68,
+      "peak": 8,
+      "recycled": 130,
+      "padding_live": 3
+    },
+    {
+      "count": 54,
+      "cycles": 69,
+      "peak": 8,
+      "recycled": 133,
+      "padding_live": 3
+    },
+    {
+      "count": 55,
+      "cycles": 70,
+      "peak": 8,
+      "recycled": 137,
+      "padding_live": 3
+    },
+    {
+      "count": 56,
+      "cycles": 71,
+      "peak": 8,
+      "recycled": 139,
+      "padding_live": 2
+    },
+    {
+      "count": 57,
+      "cycles": 73,
+      "peak": 8,
+      "recycled": 140,
+      "padding_live": 2
+    },
+    {
+      "count": 58,
+      "cycles": 74,
+      "peak": 8,
+      "recycled": 142,
+      "padding_live": 2
+    },
+    {
+      "count": 59,
+      "cycles": 75,
+      "peak": 8,
+      "recycled": 146,
+      "padding_live": 2
+    },
+    {
+      "count": 60,
+      "cycles": 76,
+      "peak": 8,
+      "recycled": 149,
+      "padding_live": 1
+    },
+    {
+      "count": 61,
+      "cycles": 78,
+      "peak": 8,
+      "recycled": 150,
+      "padding_live": 1
+    },
+    {
+      "count": 62,
+      "cycles": 79,
+      "peak": 8,
+      "recycled": 151,
+      "padding_live": 1
+    },
+    {
+      "count": 63,
+      "cycles": 80,
+      "peak": 8,
+      "recycled": 155,
+      "padding_live": 1
+    },
+    {
+      "count": 64,
+      "cycles": 81,
+      "peak": 8,
+      "recycled": 159,
+      "padding_live": 0
+    }
+  ]
+}
