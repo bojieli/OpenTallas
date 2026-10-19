@@ -1,0 +1,87 @@
+{
+  "kind": "READ_ONLY_SOURCE_CHECKED_ARITHMETIC_NOT_RTL_SIMULATION",
+  "source_artifacts_verified": 34,
+  "checks": [
+    {
+      "name": "TAG59 roundtrip",
+      "result": "PASS",
+      "scope": "source field arithmetic"
+    },
+    {
+      "name": "descriptor client tag is not native TAG",
+      "result": "PASS",
+      "scope": "namespace counterexample, not RTL failure"
+    },
+    {
+      "name": "terminal and request tags differ at stage",
+      "result": "PASS",
+      "scope": "stage transformation required"
+    },
+    {
+      "name": "input token and output next token distinct",
+      "result": "PASS",
+      "scope": "source protocol uses result_token as next token"
+    },
+    {
+      "name": "distinct epoch aliases on TK93",
+      "result": "PASS",
+      "scope": "loss-of-information witness only, not reachable stale result"
+    },
+    {
+      "name": "descriptor generation cannot stand for every step generation",
+      "result": "PASS",
+      "scope": "one descriptor may launch multiple native steps"
+    },
+    {
+      "name": "queued native lineage survives next allocation",
+      "result": "PASS",
+      "scope": "candidate finite metadata contract"
+    },
+    {
+      "name": "wrong epoch rejected",
+      "result": "PASS",
+      "scope": "candidate exact comparator"
+    },
+    {
+      "name": "wrong native generation rejected",
+      "result": "PASS",
+      "scope": "candidate exact comparator"
+    },
+    {
+      "name": "wrong stage rejected",
+      "result": "PASS",
+      "scope": "candidate terminal comparator"
+    },
+    {
+      "name": "descriptor error has no native identity",
+      "result": "PASS",
+      "scope": "distinct flags prevent duplicate-client-tag alias"
+    },
+    {
+      "name": "event storage arithmetic",
+      "result": "PASS",
+      "scope": "functional source sizing, physical SRAM required"
+    }
+  ],
+  "example": {
+    "client_tag16": 66,
+    "request_TAG59": "0x91a00ffff80440",
+    "terminal_TAG59": "0x91a4affff80440",
+    "native_generation2": 1,
+    "terminal_fields": {
+      "epoch": 4660,
+      "stage": 37,
+      "input_token": 131071,
+      "position": 17,
+      "segment": 0
+    }
+  },
+  "ambiguity_witness": {
+    "A_TAG59": "0x4a000980440",
+    "B_TAG59": "0xca000980440",
+    "equal_TK93": "0x16015f910000007b00000058",
+    "reachable_existing_bug": false
+  },
+  "production_H": null,
+  "release_calendar": null
+}

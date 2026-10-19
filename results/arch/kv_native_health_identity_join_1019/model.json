@@ -1,0 +1,99 @@
+{
+  "scope": "READ_ONLY_SOURCE_MODEL_ROOT_REVIEW_REQUIRED",
+  "frozen_revision": "5f2ce19bc",
+  "component_base": "60bb2c145",
+  "selected": {
+    "HOST_MU": 0,
+    "NSLOT": 1,
+    "MODE": 0,
+    "NW": 18,
+    "ND": 8,
+    "PLB": 13
+  },
+  "namespaces": {
+    "descriptor": "clientTAG16 + real slot8 + accepted descriptor lifetime; independent error-owner flag",
+    "native": "TAG59={epoch16,stage6,inputtoken18,pos13,segment6} + generation2",
+    "request_stage": 0,
+    "terminal_stage": 37,
+    "segment": 0,
+    "result_token": "next token, not native inputtoken"
+  },
+  "ownership": {
+    "descriptor_owner_entries": 1,
+    "native_bound_entries": 1,
+    "next_unbound_step_entries": 1,
+    "HC_command_reservations": 4,
+    "native_request_reservation_per_rank": 1,
+    "result_transport_reservations": 1,
+    "ranks": 8,
+    "source_rank_sets": [
+      "cohort accepted_ranks8",
+      "result return8",
+      "cancel release8"
+    ],
+    "keep_until": "matching POST + real report/drain; never rawdone alone",
+    "allocation_boundary": "actual request_valid&&request_ready after request_admission, not sampled request_ready_q",
+    "native_admission_block": "post_pending; generated step requires prior CQ B; prompt non-CQ requires actual step retirement but no CQ"
+  },
+  "metadata": {
+    "native_key_compact_bits": 49,
+    "native_key_full_bits": 61,
+    "active_binding_min_bits": 50,
+    "standalone_pending_association_bits": 63,
+    "event_rows": 16,
+    "original_event_bits": 116,
+    "full_lineage_bits": 62,
+    "owner_record_bits": 1,
+    "new_native_valid_bits": 1,
+    "full_row_bits": 180,
+    "full_indexed_bits": 2880,
+    "component_indexed_bits": 2864,
+    "full_event_extra_bits": 16,
+    "saved_native_valid_extra_bits": 1,
+    "incremental_nonoverlap_lower_bound_bits": 130,
+    "incremental_lower_bound_conditions": "keep all component descriptor/pending fields; reuse existing rank sets; add active50 + pending63 + event16 + cq_saved1; excludes further transport/control/copies",
+    "compact_alternative_row_bits": 168,
+    "compact_alternative_indexed_bits": 2688,
+    "implementation_state_bits": null,
+    "physical_SRAM": "REQUIRED_NOT_QUALIFIED"
+  },
+  "uarch": {
+    "MACs_per_cycle": 0,
+    "new_join_pending_payload_bits": 63,
+    "new_native_ack_payload_bits": 62,
+    "functional_event_port_width_bits": 180,
+    "functional_event_max_writes_per_host_edge": 1,
+    "functional_event_reads": "head asynchronous in current functional source; real SRAM latency/OLD contract unqualified",
+    "bytes_per_event_read_or_write": 22.5,
+    "compute_intensity": "control metadata only",
+    "sustained_accepts_per_cycle": null,
+    "transport_latency_edges": null,
+    "routing_tracks": null,
+    "channel_capacity": null,
+    "copies_fanout": null,
+    "area_um2": null,
+    "floorplan_slot_fit": null,
+    "SU_latency": null,
+    "MU_rate": null,
+    "production_H": null,
+    "release_calendar": null
+  },
+  "physical_safe_checklist": {
+    "pin_registers_and_reset_landing": "OPEN: no emitted implementation or physical grant",
+    "reach_405um": "OPEN: no emitted implementation or physical grant",
+    "all_driver_fanout_32": "OPEN: no emitted implementation or physical grant",
+    "logic_depth": "OPEN: no emitted implementation or physical grant",
+    "SRAM_and_rings": "OPEN: no emitted implementation or physical grant",
+    "macro_local_contact_pitch_and_floorplan": "OPEN: no emitted implementation or physical grant",
+    "matched_clock_TT_FF_spread_and_PG": "OPEN: no emitted implementation or physical grant",
+    "fixed_schedule_price": "OPEN: no emitted implementation or physical grant"
+  },
+  "validation": {
+    "kind": "source_hash/literal_and_small_arithmetic_only",
+    "cases": 12,
+    "RTL_simulations": 0,
+    "synthesis": 0,
+    "physical_runs": 0,
+    "reachable_existing_bug_proven": false
+  }
+}
