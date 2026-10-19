@@ -346,10 +346,23 @@ OPMAP = [
     (r'attn\.(cmp\.wk|idx\.q)$', 'frames (cfg7) + slice xs / cap (compressor / indexer projections)', 'GAP', GAP_XS_ROM),
     (r'attn\.cmp\.(k_norm\..*|norm\..*|k_rope_qdq|row_qdq|pool)$', 'slice vn / vs (compressor norms, QDQ, pool)', 'GAP',
      ('ot_s81sl_vs', 'SU op codes 8..15 (s_d)', 'no compiler encoder for the vs SU op words yet')),
-    (r'attn\.(idx\.(newkey|score|topk_local|topk_merge|topk_final)|cand\..*|gather)$',
-     'bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc', 'GAP',
-     ('dsdv_bk_sel / dsdv_bk_col', 'bk job / HBM index rows', 'no compiler ABI for the bk index-select / collect jobs '
-      '(rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)')),
+    # TOK-S81-GAPS/IDX 10-18: topk_local / topk_final / cand.* are lowered by layer_prog/lower_bk.py (bk_sel job);
+    # what stays here has NO unit on the p4l3 die (bind_p4l3_g8 masters: no index scan, no mix4)
+    (r'attn\.idx\.score$', 'DV index scan (none on the die)', 'GAP',
+     ('bind_p4l3_g8 (no index-score unit)', 'HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s',
+      'no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the '
+      'hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats '
+      '(lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges')),
+    (r'attn\.idx\.newkey$', 'svc_rs HBM index-key append (none on the die)', 'GAP',
+     ('dsdv_svc_rs', 's_j job (index-key row write)', 'no svc job writes the new index key row into the HBM index '
+      'cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op')),
+    (r'attn\.(idx\.topk_merge)$', 'TP4 collective of the local selections (end-slice lep)', 'GAP',
+     ('u_s_4S rstop V receive -> end-slice lep', 'bk_sel egress kind 5 words', 'no path carries the bk_sel IDX words to '
+      'an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81')),
+    (r'attn\.gather$', 'selected-row gather (svc HBM read by index; bk_col frame merge)', 'GAP',
+     ('dsdv_svc_rs / dsdv_bk_col', 'svc row-read job by index list + bk_col frames', 'no svc job reads HBM rows by a '
+      'runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture '
+      'attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)')),
     (r'^eng\.(lead_flit|hash|hbm_read)$', 'svc_rs HBM service (Engram rows) + lep stage hop', 'GAP',
      ('dsdv_svc_rs', 's_j job (Engram row read)', 'svc job ABI for the Engram HBM row read is not documented as a compiler '
       'ABI; Engram table image belongs to the fixtures')),
