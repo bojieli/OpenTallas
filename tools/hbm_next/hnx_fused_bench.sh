@@ -18,7 +18,7 @@ SRC=(rtl/hbm_next/fused/tb/tb_hnx_fused.sv rtl/hbm_next/fused/ot_hnx_fused_eng.s
   rtl/hdc/v41x/ot_dsrom_divc.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv
   rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41/ot_hdc_actquant.sv
   rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/lib/ot_rst_relay.sv)
-VF=(-Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --top-module tb_hnx_fused)
+VF=(tools/hbm_next/hnx_fused.vlt --hierarchical -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --top-module tb_hnx_fused)
 if [ "$ST" = lint ]; then
   verilator --lint-only --timing "${VF[@]}" "${SRC[@]}" > $O/lint.log 2>&1
   V "lint rc=$? errors=$(grep -c '%Error' $O/lint.log)"; grep '%Error' $O/lint.log | head -20 | tee -a "$O/verdict_$ST.txt"
