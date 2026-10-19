@@ -2,6 +2,8 @@
 `default_nettype none
 // HBM-NEXT-ATT4 (2026-10-19): verbatim fork of rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv (claude/hbm-next-1019 @4f894f572), module renamed ot_hnx_att_pv_merge
 // (programme isolation: hnx_ namespace); per-lane use in ot_hnx_att4_slice (one instance set per query lane).
+// STORE (A1 2026-10-19): 0 = the 64x512 stack macro (verbatim), 1 = ot_hnx_att_stack_flop (LV levels + publication word of
+// flops an entry; MUT 5 = its read one entry up).  Nothing else differs.
 // Reusable attention merge leaf. Its inputs are canonical FP32 lane chunk sums
 // from the existing SM arithmetic, with the caller's exact last/tag alignment.
 // No multipliers or accumulator lanes are instantiated here. Every merge uses
@@ -17,7 +19,7 @@
 // Every illegal request (entry not finished, pending write, merge or publication active, port collision) is a sticky
 // fault; nothing waits.  MUT 4 = the fold reads entry b in place of a (b + b: bench negative control).
 module ot_hnx_att_pv_merge #(
-    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0
+    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0, STORE=0
 )(
     input wire clk, rst_n,
     input wire ev,
@@ -77,9 +79,18 @@ module ot_hnx_att_pv_merge #(
     reg         sw_ce;
     reg  [5:0]  sw_a;
     reg  [L*32-1:0] sw_d;
-    ot_sram_1r1w_64x512_m1_r2c2 u_stack (.clk(clk), .r_ce_in(1'b1), .r_addr_in(stack_read_addr), .rd_out(st_rd),
-        .w_ce_in(stack_write_en), .w_addr_in(stack_write_addr), .wd_in(stack_write_data), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    wire stack_fault;
+    generate if (STORE == 0) begin : g_macro
+        ot_sram_1r1w_64x512_m1_r2c2 u_stack (.clk(clk), .r_ce_in(1'b1), .r_addr_in(stack_read_addr), .rd_out(st_rd),
+            .w_ce_in(stack_write_en), .w_addr_in(stack_write_addr), .wd_in(stack_write_data), .w_mask_in({512{1'b1}}),
+            .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        assign stack_fault = 1'b0;
+    end else begin : g_flop
+        // A1 fallback (HBM-NEXT-ATT4 2026-10-19): the stack as LV (+1 publication) words an entry of flops
+        ot_hnx_att_stack_flop #(.LV(LV), .PUB(PUBLISH), .MUT(MUT)) u_stack (.clk(clk), .rst_n(rst_n), .r_ce_in(1'b1),
+            .r_addr_in(stack_read_addr), .rd_out(st_rd), .w_ce_in(stack_write_en), .w_addr_in(stack_write_addr),
+            .wd_in(stack_write_data), .fault(stack_fault));
+    end endgenerate
     // merge adder operands of this turn
     reg  [L*32-1:0] ma, mb;
     reg             mv;
@@ -214,6 +225,6 @@ module ot_hnx_att_pv_merge #(
                 else word_next<=word_next+1;
             end
         end
-    assign fault = m_fault | pub_fault | fold_fault;
+    assign fault = m_fault | pub_fault | fold_fault | stack_fault;
 endmodule
 `default_nettype wire

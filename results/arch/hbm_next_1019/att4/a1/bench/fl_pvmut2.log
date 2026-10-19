@@ -1,0 +1,2 @@
+PASS HNX_ATT4 {"seed": 1019, "sigma": 0.3, "topk": 512, "imut": 0, "pvmut": 2, "kvmut": 0, "variant": "flop", "smut": 0, "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator", "union_lines": 865, "lane_lines": [640, 640, 640, 640], "ops": 4, "passed": 4, "wall_s": 248.5, "pv_span_max": 393, "pv_union_rows_max": 35, "verdict": "PASS", "mutant_detected": false}
+rc=0
