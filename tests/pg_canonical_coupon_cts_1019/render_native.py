@@ -1,11 +1,11 @@
 from pathlib import Path
-import json,sys,hashlib
+import json,sys,hashlib,os
 root=Path.cwd();sys.path.insert(0,str(root/'tools/ref_tile'));from layout_png import Canvas
-p=root/'output/default/analysis';j=json.loads((p/'native_geometry.json').read_text());raw=json.loads((p/'raw.json').read_text());m=raw['modules']['ot_pg_canonical_xor16_1019'];dbu=j['dbu'];assert dbu==1000
+mode=os.environ.get('COUPON_MODE','default');p=root/'output'/mode/'analysis';j=json.loads((p/'native_geometry.json').read_text());raw=json.loads((p/'raw.json').read_text());m=raw['modules']['ot_pg_canonical_xor16_1019'];dbu=j['dbu'];assert dbu==1000
 clocknets={int(k) for k,v in m['net_metadata'].items() if v['signal_type']=='CLOCK'}
 clockcells={n for n,c in m['cells'].items() if any(c['port_directions'][pin]=='output' and any(b in clocknets for b in bs) for pin,bs in c['connections'].items())}
 c=Canvas(1600,1330)
-c.text(50,25,'ACTUAL DEFAULT CTS - DIAGNOSTIC HOLD: 16 OUTPUT SLEW / 202 UNBOUND PG',scale=2)
+c.text(50,25,'ACTUAL '+mode.upper()+' CTS - DIAGNOSTIC HOLD / KNOWN PIN DENSITY AND OUTPUT SLEW FAILURES',scale=2)
 c.text(50,53,'NATIVE ODB '+j['sha256'][:40],scale=2)
 def panel(bounds,rect,zoom=False):
  x0,y0,x1,y1=bounds;left,top,right,bottom=rect

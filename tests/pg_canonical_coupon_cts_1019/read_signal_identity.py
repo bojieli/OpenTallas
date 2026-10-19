@@ -1,6 +1,6 @@
 from pathlib import Path
-import json,sys,collections
-root=Path.cwd();p=root/'output/default/analysis';sys.path.insert(0,str(root/'tools/closure_loop'));import safe_source_contract as S
+import json,sys,collections,os
+root=Path.cwd();p=root/'output'/os.environ.get('COUPON_MODE','default')/'analysis';sys.path.insert(0,str(root/'tools/closure_loop'));import safe_source_contract as S
 old=json.loads((p/'source_synth/raw.json').read_text());new=json.loads((p/'raw.json').read_text());top='ot_pg_canonical_xor16_1019'
 used={c['type'] for raw in (old,new) for c in raw['modules'][top]['cells'].values() if any(v not in ('POWER','GROUND') for v in c['pin_signal_types'].values())}
 libs=[p/'libs'/n for n in ['asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz','asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz','asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz','asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib','asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz']];native=S.native_cells(libs,used_masters=used)

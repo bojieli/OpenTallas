@@ -1,6 +1,6 @@
 from pathlib import Path
-import sys,json,copy,gzip
-root=Path.cwd();out=root/'output/default/analysis'
+import sys,json,copy,gzip,os
+root=Path.cwd();out=root/'output'/os.environ.get('COUPON_MODE','default')/'analysis'
 sys.path.insert(0,str(root/'tools/closure_loop'));import safe_source_contract as S
 raw=json.loads((out/'raw.json').read_text());top='ot_pg_canonical_xor16_1019';mod=raw['modules'][top];physical_only=[]
 for name,c in list(mod['cells'].items()):
