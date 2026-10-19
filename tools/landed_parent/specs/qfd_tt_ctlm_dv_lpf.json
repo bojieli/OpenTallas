@@ -37,14 +37,17 @@
   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
   "rtl/qwen_dv/qfd_dv_hr_pack.sv",
   "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
-  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "rtl/qwen_dv/qfd_mu_context_guard.sv"
  ],
  "params": {
   "XPF_TRANSPORT_EDGES": 20,
   "STAGE_ME": 1,
   "LAST_STAGE": 37,
   "NU": 4,
-  "OPSEG": 1
+  "OPSEG": 1,
+  "CTX_SRC": 1,
+  "FCTX": 1
  },
  "out_dir": "rtl/qwen_dv/lp",
  "record_dir": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
@@ -95,7 +98,9 @@
   "fab": "hr",
   "native_ret": "hr",
   "ss5": "hr",
-  "ag5": "hr"
+  "ag5": "hr",
+  "ctx_x": "hr",
+  "mu_fault": "hr"
  },
  "bench": {
   "cycles": 3000,
