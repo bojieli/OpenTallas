@@ -55,7 +55,8 @@ set regs [dict create capture capture/CLK interior interior/CLK launch launch/CL
     def test_generated_tcl_uses_structural_membership(self):
         t = C.tcl('tt', '6_final.odb', '6_final.sdc', True, 'lane_ckf', raw_source=True)
         self.assertIn(C.BOUNDARY_TCL, t)
-        self.assertNotIn('find_timing_paths', t)
+        self.assertNotIn('find_timing_paths', C.BOUNDARY_TCL)
+        self.assertIn('find_timing_paths -group_path_count 1', t)
 
 if __name__ == '__main__':
     unittest.main()

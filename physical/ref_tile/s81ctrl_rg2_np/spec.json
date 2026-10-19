@@ -1,0 +1,205 @@
+{
+ "name": "s81ctrl_rg2_np",
+ "top": "dsfd_ctrl_rg2",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 531.25,
+  "h": 302.4,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "inst": "g_pc[0].u_pc.u_q.u_mem",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "inst": "g_pc[0].u_pc.u_r.u_mem",
+   "at": [
+    259.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "inst": "g_pc[1].u_pc.u_q.u_mem",
+   "at": [
+    43.2,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "inst": "g_pc[1].u_pc.u_r.u_mem",
+   "at": [
+    259.2,
+    172.8
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "rq",
+   "rd",
+   "clk",
+   "ck_o"
+  ],
+  "S": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "ckh"
+  ],
+  "W": [
+   "rst_n"
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf: two asynchronous roots (clk stream / ckh HBM) through ot_s81ph_afifo_g; every PHY-face pin is a flop at the face (k_rdy registered since S81-SAFE-FIX 10-19)",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at its face in its own clock domain (S81-SAFE-FIX 10-19: rq pin register, rd/rk/wd/status output flops on clk; PHY k_rdy/kr_*/k_wr_done pin flops and k_* output flops on ckh -- k_rdy was the last exception and is now a face flop with kept per-group copies). The flow pin-register hook clocks one domain only; on the ckh PHY face it would put clk flops on hclk pins and add a cycle inside the PHY valid/ready loop."
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "S81-CTRL-SVC 10-19 ODB-0373 root-cause fix: the 8a9/7a5 CTS failures were CloneMove (setup repair) connecting a clone to the dont_touch recipe-2 input-hold pad net ot_inhold_n* (1,243 HB pad + BUFx4f driver pairs; results/rtl/s81_ctrl_safe_1019/protected_driver_failure/move_isolation). Every PHY/stream pin is already a flop at its face in the RTL (own clock domain), anchored by io_flop_at_pins, so the pin hold pads are redundant: inhold/outhold OFF, no protected nets remain; boundary hold is repaired by ordinary resizable buffers at io_hold_margin 0.03 on the short pin->flop nets. Same four real dualclock 16x546 SRAM FIFOs, same 531.25x302.4 PHY-face outline (slot_change_request kept).",
+ "job": {
+  "owner": "Claude:S81-CTRL-SVC",
+  "branch": "claude/s81-ctrl-nopad-1019",
+  "tag": "np",
+  "purpose": "S81 CTRL rg2 four dualclock SRAMs, flop-first pins without protected hold pads (ODB-0373 root-cause fix)",
+  "benches": [
+   {
+    "name": "rg2_exact",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_exact none 1024 1 48 16",
+    "expect": "pass",
+    "pass_regex": "TB_DSFD_CTRL PASS",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_rd",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_rd S81CTRL_MUT_RD 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_pack",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_pack S81PH_MUT_PACK 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg2_mut_krdy",
+    "cmd": "S81CTRL_FIFO_IMPL=sram bash rtl/dsrom_sys/s81_ph/ctrl/run_rg2_bench.sh {RUN}/rg2_mut_krdy S81CTRL_MUT_KRDY 1024 1 48 16",
+    "expect": "fail",
+    "fail_regex": "TB_DSFD_CTRL FAIL",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81ctrl_rg2_sram/views",
+  "record_to": "results/rtl/ref_tile/s81ctrl_rg2_sram",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/chip",
+   "rtl/hdc/v41x",
+   "rtl/hdc/kv",
+   "physical/s81_ctrl_rg2",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "results/rtl/s81_ctrl_safe_1019"
+  ]
+ },
+ "io_tcl": "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_pins.tcl",
+ "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk"
+ },
+ "defines": [
+  "S81CTRL_SRAM_FIFO"
+ ],
+ "slot_change_request": {
+  "reason": "Actual four dualclock SRAM masters require302.4umheight; oldPHYface slot250umheight cannot be retained. No adoption before parent fit.",
+  "old_outline_um": [
+   531.25,
+   250.0
+  ],
+  "new_outline_um": [
+   531.25,
+   302.4
+  ]
+ }
+}
