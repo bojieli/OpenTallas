@@ -116,6 +116,28 @@
    "pass": true
   },
   {
+   "name": "cwk",
+   "op": "attn.cmp.wk",
+   "mat": "indexer.wk",
+   "fmt": "bf16",
+   "field_phase": 71,
+   "nphases": 89,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": null,
+   "words": 1,
+   "fixture_rows": 1,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_cwk.log",
+   "pass": true
+  },
+  {
    "name": "p65_swap",
    "op": "attn.wo_a",
    "mat": "wo_a",
@@ -186,6 +208,30 @@
     0
    ],
    "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p65_desc.log",
+   "pass": false
+  },
+  {
+   "name": "cwk_swap",
+   "op": "attn.cmp.wk",
+   "mat": "indexer.wk",
+   "fmt": "bf16",
+   "field_phase": 71,
+   "nphases": 89,
+   "calendar": "measured_shape",
+   "elem_class": [
+    "bf16",
+    1024
+   ],
+   "mutant": "swap",
+   "words": 1,
+   "fixture_rows": 1,
+   "value_errors": [
+    "MISMATCH edge 408 row 0 lo 0 k 0 got 00000000/0 want be182dc8/0"
+   ],
+   "ret_edge_offsets_vs_plan": [
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_cwk_swap.log",
    "pass": false
   }
  ],
