@@ -85,15 +85,7 @@
   "rtl/qwen_sys/static_kv_20261014/qkd_host_native_quiet.sv",
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
-  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
-  "rtl/lib/ot_rst_relay.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_tp8_coordinator_rr.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_rank_codec_rr.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_collected_rr.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_link_rr.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv",
-  "rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd.sv"
+  "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv"
  ],
  "params": {},
  "clock_port": "ck_core",
@@ -102,8 +94,8 @@
   "host_rst_n"
  ],
  "outline": {
-  "w": 280.8,
-  "h": 280.8
+  "w": 302.4,
+  "h": 302.4
  },
  "macros": [],
  "pins": {
@@ -112,7 +104,8 @@
    "u_rank__u_control__cmd_hc",
    "participant_token",
    "participant_pos",
-   "ck_core",
+   "slice_boot_done",
+   "slice_boot_ok",
    "u_rank__peer_service_epoch",
    "u_rank__u_control__kst8",
    "certificate",
@@ -121,6 +114,7 @@
    "engine_result_tag",
    "native_request_tag",
    "hc",
+   "ck_core",
    "engine_result_value",
    "engine_result_cycles",
    "certificate_prefix",
@@ -133,16 +127,20 @@
    "step_retire_token",
    "program_epoch",
    "token_epoch",
-   "cq_client_tag"
+   "cq_client_tag",
+   "seen"
   ],
   "S": [
    "u_rank__raw_rx_d",
    "u_rank__physical_tx_d",
-   "u_rank__u_control__u_packet__cd",
+   "step_client_tag",
+   "step_retire_client_tag",
    "u_rank__u_control__begin_epoch",
    "u_rank__u_control__boot8",
    "step_retire_slot",
    "step_slot",
+   "u_rank__peer_pending_ack",
+   "u_rank__peer_service_ready",
    "host_rst_n",
    "service_faults",
    "allocated_valid",
@@ -169,6 +167,7 @@
   "E": [
    "u_rank__tx_d",
    "u_rank__u_control__u_packet__ctd",
+   "u_rank__guarded_tk",
    "cancel_release_tag",
    "native_result_tag",
    "native_request_trace",
@@ -232,26 +231,19 @@
    "u_rank__u_control__u_packet__ctc",
    "u_rank__u_control__u_packet__ct",
    "u_rank__tx_cr",
-   "u_rank__tx_v",
-   "slice_boot_ok",
-   "seen",
-   "u_rank__peer_pending_ack",
-   "u_rank__peer_service_ready"
+   "u_rank__tx_v"
   ],
   "W": [
    "u_rank__u_control__tk8",
    "u_rank__program_rx_d",
+   "u_rank__u_control__u_packet__cd",
    "cq_pos",
    "cq_slot",
    "die_id",
-   "package_abort",
-   "slice_boot_done",
-   "u_rank__guarded_tk",
-   "step_client_tag",
-   "step_retire_client_tag"
+   "package_abort"
   ]
  },
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_peer (core family, one ck_core entry): members u_peer, u_peer_codec, u_root_mux, u_coordinator, u_ctrl + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json | r3 (KV-HROOT-PEER 10-18, gate ca25bcce7 FAIL: TT spread 80.6, insertion 472.7 from a NW-corner clock entry, reg->reg -272.8 (step_slot rank-0 RX / last_allocation TX), por_n 5,341 + host_rst_n 3,419 reset loads from the ports, util 17%): (a) every reset pin of the 5 members behind a local ot_rst_relay (tools/qwen_kv_die/host_cluster/gen_peer_rr.py; +3 release uniform); (b) root mux -> qkd_host_peer_root_mux_pl: cycle-exact one-hot TX round robin (no 512-b runtime part-select) + registered rank-0 RX slice (+1 cycle on rank0->coordinator class9 words; bench rtl/test/qwen_host/hr_peer_pl_1018); (c) outline 302.4 -> 280.8 (pin-bound: 6,301 pins, faces 5.5-5.8 /um after moving cd S, guarded_tk/slice_boot_done/step tags W, slice_boot_ok/seen/peer acks E), ck_core at the N-face centre (was the NW corner). | r4 (HKV-PROMPT6 10-19, routed r3-40d82161e NEEDS_RTL TT -174.78 / FF -11.03; routed sign-off STA classified: no reset-pin path among violators): (1) TT u_ctrl.u_m rp -> 4:1x512 head mux q[rp] -> h[511:K]==0 OR trees -> accept -> 744-flop tk8 / kst8 enable (all 400 listed endpoints, -174.8): registered queue head h (+ same-edge write forwarding) with zero flags computed at queue write (qkd_host_ctrl_token_service_packet_collected_pd, gen_peer_pd.py; bit/cycle exact, 0 cycles); (2) FF input pin-reg hold slice_boot_done/guarded_tk/step*_client_tag/cq_pos (-11.0, 150+ ep): route.io_hold_margin_ns 0.03; internal participant_trace -5.9 to route hold repair; (3) main RESET-LANDING: reset_landing 2 stages on por_n/host_rst_n ahead of the member relays (release +2 more ck_core edges, uniform). MU (allocator_mu) NOT carried: not wireable alone (MU-ADOPT-HROOT).",
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_peer (core family, one ck_core entry): members u_peer, u_peer_codec, u_root_mux, u_coordinator, u_ctrl + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json",
  "kind": "tile",
  "recipe": 4,
  "hold_budget": "die",
@@ -270,8 +262,7 @@
    "group_max": 1,
    "h": "M4",
    "v": "M5"
-  },
-  "io_hold_margin_ns": 0.03
+  }
  },
  "pin_regs": {
   "enable": true,
@@ -279,10 +270,10 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:HKV-PROMPT6",
-  "branch": "claude/hkv-peer6-1019",
-  "tag": "r4",
-  "purpose": "HOST root cluster child qkd_hr_core_peer r3: reset relays + root-mux restructure + 280.8 outline, centre clock (parent qkd_host_root is CRITICAL)",
+  "owner": "Claude:KV-HOSTCL",
+  "branch": "claude/kvj-a3-1017",
+  "tag": "r2",
+  "purpose": "HOST root cluster r2 child qkd_hr_core_peer (pre-route gate + route; parent qkd_host_root is CRITICAL)",
   "benches": [
    {
     "name": "cluster_lockstep",
@@ -307,71 +298,7 @@
     "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_peer",
     "fail_regex": "CLUSTER_GATE FAIL mutant",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_peer.log"
-   },
-   {
-    "name": "cluster_peer_rrmutant",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 24,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py rrmutant --out {RUN}/bench/cg_rrmut_peer --define QKD_HR_PE_RR_MUTANT",
-    "fail_regex": "CLUSTER_GATE FAIL rrmutant",
-    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_rrmutant_qkd_hr_core_peer.log"
-   },
-   {
-    "name": "peer_root_mux_pl",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "bash rtl/test/qwen_host/hr_peer_pl_1018/run_hr_peer_pl.sh {RUN}/bench/pl 0",
-    "pass_regex": "HR_PEER_PL .* PASS"
-   },
-   {
-    "name": "peer_root_mux_pl_mutant",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "bash rtl/test/qwen_host/hr_peer_pl_1018/run_hr_peer_pl.sh {RUN}/bench/plm 1",
-    "fail_regex": "HR_PEER_PL .* FAIL",
-    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hr_peer_pl_mutant.log"
-   },
-   {
-    "name": "peer_pd_equiv",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/peer_pd_equiv.sh pass {RUN}/bench/pepd_pass",
-    "pass_regex": "HKV_PEER_PD PASS 4/4",
-    "note": "original qkd_host_ctrl_token_service_packet_collected vs _pd lockstep, 4 configs (service/token on/off x die 0/peer), all outputs every edge"
-   },
-   {
-    "name": "peer_pd_mutant",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/peer_pd_equiv.sh mutant {RUN}/bench/pepd_mut",
-    "fail_regex": "HKV_PEER_PD FAIL mutant [1-4]/4",
-    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/peer_pd_mutant_FAIL_v5050.log",
-    "note": "QKD_HR_PEPD_MUTANT drops the same-edge head forwarding: must FAIL"
    }
   ]
- },
- "reset_landing": {
-  "enable": true,
-  "stages": 2
  }
 }
