@@ -74,7 +74,7 @@ def propose(inv):
         start=tuple(round(v/CELL) for v in first);queue=[];parent={start:None};cost={start:0}
         def output(g):return [g[0]*CELL+21.558,g[1]*CELL+10.812]
         heapq.heappush(queue,(distance(output(start),target),start));goal=None;visited=set()
-        steps=[(d,0) for d in (-4,-1,1,4)]+[(0,d) for d in (-4,-1,1,4)]+[(x,y) for x in (-4,4) for y in (-4,4)]
+        steps=[(d,0) for d in (-16,-12,-8,-4,-1,1,4,8,12,16)]+[(0,d) for d in (-16,-12,-8,-4,-1,1,4,8,12,16)]+[(x,y) for x in (-8,-4,4,8) for y in (-8,-4,4,8)]
         while queue and len(visited)<200000:
             _,g=heapq.heappop(queue)
             if g in visited:continue
@@ -87,7 +87,7 @@ def propose(inv):
                 if value<cost.get(nxt,float('inf')):
                     cost[nxt]=value;parent[nxt]=g
                     heapq.heappush(queue,(value+distance(output(nxt),target),nxt))
-        if goal is None:raise ValueError('no bounded collision-free routing corridor '+a)
+        if goal is None:raise ValueError('no bounded collision-free routing corridor '+str(dict(source=a,xy=points[a],target=target,visited=len(visited))))
         path=[]
         while goal is not None:path.append(goal);goal=parent[goal]
         path.reverse();cursor=0
