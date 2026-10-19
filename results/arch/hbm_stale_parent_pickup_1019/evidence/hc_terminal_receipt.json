@@ -1,0 +1,32 @@
+{
+  "job": "hbm_hc_root_d4g_xr-r1-88f1fa301",
+  "status": "NEEDS_HUMAN",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: hbm_hc_root_d4g_xr_r1_88f1fa301/flow.log: Error: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2 [step do-2_2_floorplan_macro]; resource=False)",
+  "finished_at": "2026-10-19T11:12:24-07:00",
+  "bench_location": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_root_d4g_xr-r1-88f1fa301",
+    "attempt": 1
+  },
+  "crashes": [
+    {
+      "stage": "route",
+      "host": "ot-epyc4",
+      "attempt": 1,
+      "why": "rc=1 ok-check failed;; first error: hbm_hc_root_d4g_xr_r1_88f1fa301/flow.log: Error: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2 [step do-2_2_floorplan_macro]",
+      "resource": false,
+      "tail": " /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.odb\nread_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.sdc\nread_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.sdc\nOT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nsource /src/physical/ref_tile/hbm_hc_root_d4g_xr/place.tcl\nREF_TILE place: u_seq.u_program ot_sram_1r1w_1024x256_m2_r2c2 at 43.2 302.4 R0\nError: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2\n\nElapsed time: 0:28.53[h:]min:sec. CPU time: user 27.52 sys 1.00 (99%). Peak memory: 3072364KB.\nElapsed time: 15:30.33[h:]min:sec. CPU time: user 1015.13 sys 99.90 (119%). Peak memory: 5201968KB.\nElapsed time: 0:06.62[h:]min:sec. CPU time: user 5.98 sys 0.64 (99%). Peak memory: 2057392KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_2_floorplan_macro.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/claude/closure-loop/hbm_hc_root_d4g_xr-r1-88f1fa301/routes/hbm_hc_root_d4g_xr_r1_88f1fa301/physical.json\n",
+      "first_error": "hbm_hc_root_d4g_xr_r1_88f1fa301/flow.log: Error: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2 [step do-2_2_floorplan_macro]"
+    },
+    {
+      "stage": "route",
+      "host": "ot-epyc4",
+      "attempt": 2,
+      "why": "rc=1 ok-check failed;; first error: hbm_hc_root_d4g_xr_r1_88f1fa301/flow.log: Error: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2 [step do-2_2_floorplan_macro]",
+      "resource": false,
+      "tail": " /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.odb\nread_sdc -mode ss /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.sdc\nread_sdc -mode ff /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.sdc\nOT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nsource /src/physical/ref_tile/hbm_hc_root_d4g_xr/place.tcl\nREF_TILE place: u_seq.u_program ot_sram_1r1w_1024x256_m2_r2c2 at 43.2 302.4 R0\nError: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2\n\nElapsed time: 0:40.84[h:]min:sec. CPU time: user 39.43 sys 1.40 (99%). Peak memory: 3070656KB.\nElapsed time: 23:18.40[h:]min:sec. CPU time: user 1522.00 sys 49.85 (112%). Peak memory: 5182912KB.\nElapsed time: 0:08.45[h:]min:sec. CPU time: user 7.72 sys 0.74 (99%). Peak memory: 2060108KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_hbm_hc_root_static_asap7_ref_hbm_hc_root_d4g_xr_r1_88f1fa301/base/2_2_floorplan_macro.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/claude/closure-loop/hbm_hc_root_d4g_xr-r1-88f1fa301/routes/hbm_hc_root_d4g_xr_r1_88f1fa301/physical.json\n",
+      "first_error": "hbm_hc_root_d4g_xr_r1_88f1fa301/flow.log: Error: macro_place.tcl, 6 ref_tile place: expected 1 macros, netlist has 2 [step do-2_2_floorplan_macro]"
+    }
+  ],
+  "scope": "terminal route infrastructure/source macro cardinality failure; no CTS/native/final-route qualification; no automatic retry"
+}

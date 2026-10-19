@@ -1,0 +1,14 @@
+2026-10-19T15:37:29-07:00
+    PID ELAPSED %CPU   RSS COMMAND
+1601712    9768  122 3972360 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.json
+1702814    8887  131 4279896 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/5_1_grt.json
+RUN:hcoll_gq_issue_k1_1019-20261019-112755
+2026-10-19 15:35:53.612354332 -0700 12749 /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k1_1019-20261019-112755/grt.log
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+RUN:hcoll_gq_issue_k2_1019-20261019-112756
+2026-10-19 15:35:31.165620642 -0700 13536 /srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k2_1019-20261019-112756/grt.log
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30

@@ -1,0 +1,165 @@
+{
+  "schema": "opentallas.hbm.stale_parent_readonly_pickup.v1",
+  "scope": "Read-only evidence/source inventory and proposal, no source mutation, build, EDA, gate, retry, adoption or shared-tree edits.",
+  "records": [
+    {
+      "ids": [
+        "H.STA.BLK.1",
+        "H.STA.WIRE.8"
+      ],
+      "state": "TERMINAL_SOURCE_MACRO_CARDINALITY_FAIL",
+      "source": "88f1fa301",
+      "job": "hbm_hc_root_d4g_xr-r1-88f1fa301",
+      "finished_pt": "2026-10-19T11:12:24-07:00",
+      "actual_macro_master": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "actual_synth_count": 2,
+      "source_instances": [
+        "u_seq.u_program",
+        "u_tbl"
+      ],
+      "kit_placed_count": 1,
+      "kit_anonymous_pick": true,
+      "source_semantics": [
+        "event programme SRAM",
+        "bases/scales table SRAM"
+      ],
+      "next": [
+        "Create a distinct source model/kit explicitly listing both exact instances and existing native views, with two-macro area/43.2-lattice placement/full-face access/PG accounted. Do not only change the count assertion.",
+        "Re-derive XRD/XRU and quarter constants from current centre-root compiled landed contract; old 11/11 smoke constants are stale. Preserve behaviour/witnesses or rerun only after source grant.",
+        "Audit reset landing, BUF/INV-transparent all-driver <=32, reach, boundary clocks and all SAFE checklist items before root PNG review or any new gate."
+      ],
+      "qualification": "No CTS/native/final-route timing exists."
+    },
+    {
+      "ids": [
+        "H.STA.BLK.8"
+      ],
+      "state": "SOURCE_QUEUE_OLD_XQ_REVIEW_REQUIRED",
+      "source": "41522666c",
+      "gate_receipt": "71f6eb687",
+      "old_jobs": [
+        "hidx_xq_node_w297-x1-3c0e6821f",
+        "hidx_xq_node_w594-x1-3c0e6821f"
+      ],
+      "old_status": "NEEDS_HUMAN: Icarus bench rc134, corrected harness has Verilator5.050 positive and 4 negative witnesses for both widths. Corrected gates WARN; REVIEW_REQUIRED.",
+      "native_reset_blocker": "Documented old regional limit <=256 is not a <=32 transparent native-driver certificate. Current reset landing and mapped full-driver census unqualified.",
+      "next": [
+        "Source-first audit exact widths297/594 and native reset/control copies, pin reach/full SAFE; do not resubmit stale gate or assume a live successor.",
+        "Root review only after a current qualified source packet."
+      ],
+      "live_successor_claimed": false
+    },
+    {
+      "ids": [
+        "H.STA.BLK.9"
+      ],
+      "state": "LANDED_PARENT_SOURCE_REDESIGN_QUEUE",
+      "parents": [
+        {
+          "name": "tp192",
+          "source": "27ebf80fa",
+          "status_basis": "Last PL-TP192/PL-HBM9 lane record, not a new terminal probe.",
+          "facts": [
+            "1944um square four-root PL-KIT diagnostic with e86 stand-in; not a real child view.",
+            "14 landings; +42 edges/pass, +84 two-pass completion; reset +6.",
+            "Old e86 has mapped control2064 loads; old coarse WARN/GRT0 geometry refused, not qualified."
+          ],
+          "next": "Safe native e86 source/view first; then exact parent source/reset/fanout/landing audit and compiler price. No new diagnostic route."
+        },
+        {
+          "name": "SM rp4lp",
+          "source": "2444d768c",
+          "status_basis": "Latest documented PL-SMT/PL-HBM9, old gate2 not newly collected.",
+          "facts": [
+            "457.92x1598.4um, aspect3.49; 13/18 macros off43.2 lattice.",
+            "Landing read select rc[1]8284 loads, rc[0]4145 in actual old gate.",
+            "Old gate1 GRT overflow51363/M651111, failed virtual-clock hold -957ps; no new qualified reset/clock proof."
+          ],
+          "next": "Structural square-ish or two landed halves; native lattice and face channels; kept <=32 read/control/reset cohorts; full source/latency model before any engine."
+        },
+        {
+          "name": "pslice c5 lp",
+          "source": "1e594281c",
+          "status_basis": "Latest documented PL-PSLICE; old real2 not newly collected.",
+          "facts": [
+            "1900.8x950.4um; h/l/t/b roots; command split l/b/t.",
+            "41 landings changed E=3,D=8, +4 edges/landing, reset +6; old mut4 reset PASS was waived.",
+            "Earlier real1 FAIL child-flop spread; legacy FENCE/read-mux and reset source need current SAFE review."
+          ],
+          "next": "Current reset/transparent fanout and every native crossing source proof; keep explicit source/compiler deltas and require root placement model review. COLL q2/q3 belongs separate16.4 lane."
+        }
+      ]
+    },
+    {
+      "ids": [
+        "H.STA.WIRE"
+      ],
+      "state": "OLD_GEN2B_CHAIN_STOPPED_SUPERSEDED",
+      "facts": [
+        "GEN2b chain stopped00:18, superseded by GEN2c; not RUNNING.",
+        "GEN2c actual GEN_OK11:26 but46 generic-centroid fallbacks and31587 reset no_regional_tree; no physical closure.",
+        "All four GEN2d forests actual exit3; postchains S4_FOREST_PLAN_FAIL14:11:52 and14:26:57. No splice/l12/GEN/S8 successor."
+      ],
+      "next": "Follow H.RST joint-corridor source/phase/PG closure and exact current GEN identity; no forest root-count retry or old wire/GQ duplication."
+    },
+    {
+      "ids": [
+        "H.STA.BLK.3"
+      ],
+      "state": "SEPARATE_GQ_LIVE_PRESERVE",
+      "host": "ot-epyc8",
+      "pids": [
+        1702814,
+        1601712
+      ],
+      "runs": [
+        "hcoll_gq_issue_k1_1019-20261019-112755",
+        "hcoll_gq_issue_k2_1019-20261019-112756"
+      ],
+      "actual_readonly_receipt": "evidence/gq_live_readonly.txt",
+      "scope": "Both native OpenROAD GRT processes exist with fresh logs at pickup. These are not HC/XQ/GEN2b jobs. Preserve; parent owns qualification/collection."
+    }
+  ],
+  "external_references": [
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/HC-XRDU.md",
+      "sha256_at_pickup": "210394c3d20ed7a50572e8f96a6d9a06032759da75d21b43ada444e4493e7aa5"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/HBM-NSFIX.md",
+      "sha256_at_pickup": "f116930312e79d8a9988b6aca07fbe9f38205848ee5a4d44a702a09881be7169"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/PL-TP192.md",
+      "sha256_at_pickup": "adc2f567aca8dc5f4f42ea1f51f70019422ea4451703b786531051126fdca4fe"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/PL-SMT.md",
+      "sha256_at_pickup": "1b5317bc94a6e8b6b84060c3441d76eb7d3f220af3d0ecada233be6356f80b5f"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/PL-PSLICE.md",
+      "sha256_at_pickup": "dfcd112c124f09aef26ec5aa2abfe490eb1d6d0b38ce3d7e06235c24a5121229"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/PL-HBM9.md",
+      "sha256_at_pickup": "782a7084c35d1efe0e913be279bc71ab0f1629e209fae323e919179133e82932"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/SAFE-AUDIT-HBM.md",
+      "sha256_at_pickup": "4d18b369b47cd15d865905b777291d4d273dbc2f27cea55dc06201e533b5fe60"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/LH-GEN2CD.md",
+      "sha256_at_pickup": "bdbc75ae7734b523e4153bc3de9f953b73808460a0a30686479ef70896d6b65a"
+    },
+    {
+      "path": "/home/ubuntu/artifacts/hbm-reset-terminal-carrier-1019/README.md",
+      "sha256_at_pickup": "b4266a506a41ea9aafff2e577782f0dfc11dbf5c7f10c394506041fe3aa6934c"
+    },
+    {
+      "path": "/home/ubuntu/claude-takeover-20261007/lanes/HBM-TERMINAL-COLLECT.md",
+      "sha256_at_pickup": "8c34702b4cc2e40c5fcaf607823d8c2d30b0b4342df108e5ffb9169954f55acd"
+    }
+  ]
+}
