@@ -277,7 +277,10 @@ endmodule
 // ---- inject regions (41-bit word {bad,row36,v4} -> bits [LO +: W])
 // Regions are group-aligned (M = the bits a region owns): {v[g], row group g} for g = 0..3, {bad};
 // unowned bits are masked at the parent, so synthesis drops their flops and their decode cone.
-(* keep_hierarchy = 1 *) module ot_pgs_inj_s_region #(parameter [40:0] M=41'h0,parameter integer MUT=0)(
+// BADG (SAFE2 r6): -1 = flag a row conflict in any group; g = 0..3: only conflicts inside group g (the {bad} region is
+// split into four group instances whose registered flags are ORed: bad = OR_g bad_g, since a conflict is always between
+// two slots of ONE group).  r5 census: the single {bad} region's slot-3 group bit capture drove 38 loads.
+(* keep_hierarchy = 1 *) module ot_pgs_inj_s_region #(parameter [40:0] M=41'h0,parameter integer MUT=0,parameter integer BADG=-1)(
  input wire clk, input wire rst_n, input wire [161:0] ij, input wire [1:0] g_id, input wire b39_on,
  output wire [40:0] b0, output wire [40:0] b1, output wire [40:0] b2);
  reg [40:0] q0, q1, q2;
@@ -298,7 +301,7 @@ endmodule
    on = ijc[160+(k/2)] && !(b39_on && lo[39] && MUT!=9) && a[5:4]==g_id;
    grp = {a[6],a[3]};
    if(on) begin
-    if(v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;
+    if((BADG<0 || grp==2'(BADG)) && v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;
     v[grp]=1'b1; row[9*grp+:9]=a[15:7];
    end
   end
@@ -459,15 +462,17 @@ module ot_hbm_su_static_pg_stream_s_safe2 #(
  assign lg_fault=|tf;
  wire [161:0] ij = {inj_rd, inj_addr};
  localparam [40:0] IM0 = 41'h00000001FF1, IM1 = 41'h000003FE002, IM2 = 41'h0007FC00004, IM3 = 41'h0FF80000008, IM4 = 41'h10000000000;
- wire [40:0] s0 [0:4], s1 [0:4], s2 [0:4];
- for(genvar r=0;r<5;r=r+1)begin:g_ij
+ // regions 0..3 = {v[g], row g}; regions 4..7 = the {bad} flag split per group g = r-4 (all on the {bad} reset terminal)
+ wire [40:0] s0 [0:7], s1 [0:7], s2 [0:7];
+ for(genvar r=0;r<8;r=r+1)begin:g_ij
   localparam [40:0] M = (r==0)?IM0:(r==1)?IM1:(r==2)?IM2:(r==3)?IM3:IM4;
-  ot_pgs_inj_s_region #(.M(M),.MUT(MUT==9?9:0)) u_r(.clk(pg_clk),.rst_n(brt_i[r]),.ij(ij),.g_id(gi[r]),
-   .b39_on(bi[r]),.b0(s0[r]),.b1(s1[r]),.b2(s2[r]));
+  localparam integer RP = (r<4)?r:4;
+  ot_pgs_inj_s_region #(.M(M),.MUT(MUT==9?9:0),.BADG((r<4)?-1:r-4)) u_r(.clk(pg_clk),.rst_n(brt_i[RP]),.ij(ij),
+   .g_id(gi[RP]),.b39_on(bi[RP]),.b0(s0[r]),.b1(s1[r]),.b2(s2[r]));
  end
- assign ijb0 = s0[0] | s0[1] | s0[2] | s0[3] | s0[4];
- assign ijb1 = s1[0] | s1[1] | s1[2] | s1[3] | s1[4];
- assign ijb2 = s2[0] | s2[1] | s2[2] | s2[3] | s2[4];
+ assign ijb0 = s0[0] | s0[1] | s0[2] | s0[3] | s0[4] | s0[5] | s0[6] | s0[7];
+ assign ijb1 = s1[0] | s1[1] | s1[2] | s1[3] | s1[4] | s1[5] | s1[6] | s1[7];
+ assign ijb2 = s2[0] | s2[1] | s2[2] | s2[3] | s2[4] | s2[5] | s2[6] | s2[7];
 endmodule
 
 // ---- tile top (same ports as ot_hbm_su_static_pg_stream_split; kit lands rst_n / bridge_rst_n in ONE face stage)
