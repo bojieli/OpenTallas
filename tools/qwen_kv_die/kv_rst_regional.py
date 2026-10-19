@@ -43,7 +43,14 @@ WIN = 240.0
 KEEP_UM = float(os.environ.get('OT_KV_RST_KEEP_UM', '401'))
 STATION = 'qkd_rlys_1'
 SEAM = os.environ.get('OT_KV_SEAM', '0') == '1'
+PER_TREE = os.environ.get('OT_KV_RST_PER_TREE', '0') == '1'
 CORNERS = ('tt', 'ff', 'ss')
+
+
+def _load_ck(insts, nm):
+    """the core clock tree net of a load instance (its first 'ck*' / 'clk*' port on n_clk_core_*), or None"""
+    return next((c[2] for c in insts[nm][2] if c[0].startswith(('ck', 'clk')) and isinstance(c[2], str)
+                 and c[2].startswith('n_clk_core_')), None)
 
 
 def lef_all(text):
@@ -211,65 +218,84 @@ def main(argv=None):
             continue
         dxy = drv[3]
         rad = max(abs(L[3][0] - dxy[0]) + abs(L[3][1] - dxy[1]) for L in mov)
-        if rad <= KEEP_UM and len(mov) <= CR.FAN:
+        # KV-CLOCK 10-18: with OT_KV_RST_PER_TREE a short net whose loads span core trees is re-planned (one group a tree)
+        multi_tree = PER_TREE and len({_load_ck(insts, L[0]) for L in mov} - {None}) > 1
+        if rad <= KEEP_UM and len(mov) <= CR.FAN and not multi_tree:
             rep['kept_nets'] += 1
             continue
-        xs = [dxy[0]] + [L[3][0] for L in mov]
-        ys = [dxy[1]] + [L[3][1] for L in mov]
         dnm = drv[0]
-        ck = next((c[2] for c in insts[dnm][2] if c[0] == 'ck'), None) or 'n_clk_core_c'
-        if SEAM:
-            # KVPLAN3 0230 (OT_KV_SEAM, DIE-CLOCK kv_rt3: 267 seam pairs = reset stations on n_clk_core_c feeding stack
-            # tiles): the stations run on the core tree most of the loads they feed are on (a load's own 'ck' / 'clk' net)
-            cks_ = defaultdict(int)
+        ck0 = next((c[2] for c in insts[dnm][2] if c[0] == 'ck'), None) or 'n_clk_core_c'
+        # KV-CLOCK 10-18 (OT_KV_RST_PER_TREE=1, landed-regions standard): the loads are split by the core clock tree they
+        # sit on and each group gets its OWN station tree on that tree's clock, so the only crossing of a reset / boot net
+        # is its root hop (driver -> first station of a group).  kvs14b had ~750 reset hops between mismatched trees (one
+        # tree per net on the loads' majority clock: rst_die -> EN head stin pins from ES stations, 235 pins)
+        groups = [(None, mov)]
+        if PER_TREE:
+            by_ck = defaultdict(list)
             for L in mov:
-                lc_ = next((c[2] for c in insts[L[0]][2] if c[0].startswith(('ck', 'clk')) and isinstance(c[2], str)
-                            and c[2].startswith('n_clk_core_')), None)
-                if lc_:
-                    cks_[lc_] += 1
-            if cks_:
-                ck = max(sorted(cks_), key=lambda c_: cks_[c_])
-        net = ref.rsplit('[', 1)[0]
-        base = re.sub(r'[^A-Za-z0-9_]', '_', ref)
-        err = None
-        for win_m in (WIN, 800.0, 2000.0):      # a pocket behind a wide block: widen the free-space window
-            win = (max(0.0, min(xs) - win_m), max(0.0, min(ys) - win_m), min(die_w, max(xs) + win_m), min(die_h, max(ys) + win_m))
-            obs = [r for n, r in rects.items() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
-            obs += [r for r in gst.values() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
-            try:
-                st, assign = CR.plan(f'rrs_{base}', win, obs, [((L[0], L[1], L[2]), L[3]) for L in mov], dxy, lambda pt: ck)
-                err = None
-                break
-            except ValueError as e_:
-                err = e_
-        if err is not None:
-            raise err
-        for s_ in st:
-            wn = f'n_{s_["name"]}'
-            add_wires.append(f'  wire [0:0] {wn};')
-            a_ = pack([ref]) if s_['parent'] is None else f'n_{s_["parent"]}[0]'
-            add_lines.append(f'  {STATION} {s_["name"]} (.ck({ck}), .a({a_}), .b({wn}[0]));')
-            add_place.append(f'ot_mts::place [$_blk findInst {s_["name"]}] {s_["x"]:.3f} {s_["y"]:.3f} R0')
-            gst[s_['name']] = (s_['x'], s_['y'], s_['x'] + CR.STN, s_['y'] + CR.STN)
-        depth = {s_['name']: s_['depth'] for s_ in st}
-        leaf_r = 0.0
-        sxy = {s_['name']: (s_['x'] + CR.STN / 2, s_['y'] + CR.STN / 2) for s_ in st}
-        far_st = {s_['name'] for s_ in st if s_.get('far')}
-        for (nm, ci, i), sname in assign.items():
-            insts[nm][2][ci][1][i] = f'n_{sname}[0]'
-            loc[(nm, ci, i)] = depth[sname]
-            touched.add(nm)
-            L = next(L_ for L_ in mov if (L_[0], L_[1], L_[2]) == (nm, ci, i))
-            dl_ = abs(L[3][0] - sxy[sname][0]) + abs(L[3][1] - sxy[sname][1])
-            if sname in far_st:
-                rep['far_loads'].append(dict(net=ref, load=f'{nm}.{insts[nm][2][ci][0]}', master=L[4], um=round(dl_, 1)))
-            else:
-                leaf_r = max(leaf_r, dl_)
-        rep["nets"][ref] = dict(driver=dnm, ck=ck, loads=len(mov), kept_excluded=len(keep), radius_before_um=round(rad, 1),
-                                stations=len(st), max_depth=max(depth.values()), max_hop_um=max(s_['hop_um'] for s_ in st),
-                                max_leaf_um=round(leaf_r, 1))
-        rep['stations'] += len(st)
-        print(f'{ref}: {len(mov)} loads r {rad:.0f} -> {len(st)} stations depth {max(depth.values())}', file=sys.stderr)
+                by_ck[_load_ck(insts, L[0])].append(L)
+            if len(by_ck) > 1 and None in by_ck:      # clock-less loads ride with the largest clocked group
+                big = max(sorted(k_ for k_ in by_ck if k_), key=lambda k_: len(by_ck[k_]))
+                by_ck[big] += by_ck.pop(None)
+            groups = sorted(by_ck.items(), key=lambda kv_: str(kv_[0]))
+        for gi_, (gck_, mov) in enumerate(groups):
+            ck = ck0
+            xs = [dxy[0]] + [L[3][0] for L in mov]
+            ys = [dxy[1]] + [L[3][1] for L in mov]
+            if gck_:
+                ck = gck_
+            elif SEAM:
+                # KVPLAN3 0230 (OT_KV_SEAM, DIE-CLOCK kv_rt3: 267 seam pairs = reset stations on n_clk_core_c feeding stack
+                # tiles): the stations run on the core tree most of the loads they feed are on (a load's own 'ck' / 'clk' net)
+                cks_ = defaultdict(int)
+                for L in mov:
+                    lc_ = next((c[2] for c in insts[L[0]][2] if c[0].startswith(('ck', 'clk')) and isinstance(c[2], str)
+                                and c[2].startswith('n_clk_core_')), None)
+                    if lc_:
+                        cks_[lc_] += 1
+                if cks_:
+                    ck = max(sorted(cks_), key=lambda c_: cks_[c_])
+            net = ref.rsplit('[', 1)[0]
+            base = re.sub(r'[^A-Za-z0-9_]', '_', ref)
+            err = None
+            for win_m in (WIN, 800.0, 2000.0):      # a pocket behind a wide block: widen the free-space window
+                win = (max(0.0, min(xs) - win_m), max(0.0, min(ys) - win_m), min(die_w, max(xs) + win_m), min(die_h, max(ys) + win_m))
+                obs = [r for n, r in rects.items() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
+                obs += [r for r in gst.values() if r[0] < win[2] and r[2] > win[0] and r[1] < win[3] and r[3] > win[1]]
+                try:
+                    st, assign = CR.plan(f'rrs_{base}' + (f'_g{gi_}' if len(groups) > 1 else ''), win, obs, [((L[0], L[1], L[2]), L[3]) for L in mov], dxy, lambda pt: ck)
+                    err = None
+                    break
+                except ValueError as e_:
+                    err = e_
+            if err is not None:
+                raise err
+            for s_ in st:
+                wn = f'n_{s_["name"]}'
+                add_wires.append(f'  wire [0:0] {wn};')
+                a_ = pack([ref]) if s_['parent'] is None else f'n_{s_["parent"]}[0]'
+                add_lines.append(f'  {STATION} {s_["name"]} (.ck({ck}), .a({a_}), .b({wn}[0]));')
+                add_place.append(f'ot_mts::place [$_blk findInst {s_["name"]}] {s_["x"]:.3f} {s_["y"]:.3f} R0')
+                gst[s_['name']] = (s_['x'], s_['y'], s_['x'] + CR.STN, s_['y'] + CR.STN)
+            depth = {s_['name']: s_['depth'] for s_ in st}
+            leaf_r = 0.0
+            sxy = {s_['name']: (s_['x'] + CR.STN / 2, s_['y'] + CR.STN / 2) for s_ in st}
+            far_st = {s_['name'] for s_ in st if s_.get('far')}
+            for (nm, ci, i), sname in assign.items():
+                insts[nm][2][ci][1][i] = f'n_{sname}[0]'
+                loc[(nm, ci, i)] = depth[sname]
+                touched.add(nm)
+                L = next(L_ for L_ in mov if (L_[0], L_[1], L_[2]) == (nm, ci, i))
+                dl_ = abs(L[3][0] - sxy[sname][0]) + abs(L[3][1] - sxy[sname][1])
+                if sname in far_st:
+                    rep['far_loads'].append(dict(net=ref, load=f'{nm}.{insts[nm][2][ci][0]}', master=L[4], um=round(dl_, 1)))
+                else:
+                    leaf_r = max(leaf_r, dl_)
+            rep["nets"][ref + (f"#g{gi_}" if len(groups) > 1 else "")] = dict(driver=dnm, ck=ck, loads=len(mov), kept_excluded=len(keep), radius_before_um=round(rad, 1),
+                                    stations=len(st), max_depth=max(depth.values()), max_hop_um=max(s_['hop_um'] for s_ in st),
+                                    max_leaf_um=round(leaf_r, 1))
+            rep['stations'] += len(st)
+            print(f'{ref}: {len(mov)} loads r {rad:.0f} -> {len(st)} stations depth {max(depth.values())}', file=sys.stderr)
     if not rep['stations']:
         print('kv_rst_regional: nothing to re-plan')
     for nm in touched:

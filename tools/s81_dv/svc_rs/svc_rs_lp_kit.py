@@ -226,7 +226,9 @@ def kit(TOP, entry, flat, what):
         name=NAME, top=TOP, kind="cluster",
         sources=files, params={"SRAM_MACRO": 1, "MUT": 0},
         defines=["SU_SMU_T", "SVCQ_ENG_FG3", "OT_SVC_RS_HARD"], hard_define="OT_SVC_RS_HARD",
-        orfs_vars={"VERILOG_INCLUDE_DIRS": f"/src/{D}"},
+        # SYNTH_ARGS -noshare (S81-SVCBK 10-18): the @6bc7f0f30 gates sat >7 h in yosys SHARE on the runtime-indexed
+        # part-selects of dsdv_svc_sx / dsdv_svc_att; production practice (hbm_norm_noshare, lane_kh_overlay)
+        orfs_vars={"VERILOG_INCLUDE_DIRS": f"/src/{D}", "SYNTH_ARGS": "-noshare"},
         # ref_tile admits multiple_cts_roots only on leaf tiles (and then no sdc_extra): a landed CLUSTER takes the
         # Q-CLUSTER form (qc_kit.py): clock cts, one TritonCTS tree per region clock port, the lp.py SDC creates ck_<r>
         clock="cts", clock_port="ck_c", clock_ports=["ck_c", "ck_sm"],
@@ -252,7 +254,7 @@ def kit(TOP, entry, flat, what):
                            "sees the SM fault.  Score tree / dn / up_d / P.V / HBM ports unchanged; SM face +3, up_f / hs +6, "
                            + ("host jd / fault / st_rg +6 (hc, q, hw, j, pv 0), " if entry else "") +
                            "reset +3 (compiler record)."),
-        job=dict(owner="Claude:PL-SVC", branch="claude/pl-svc-1018", tag=TOP,
+        job=dict(owner="Claude:PL-SVC", branch="claude/svc-rs-gate-1018", tag=TOP,
                  purpose=f"S81-DV regional service slice {what} as a landed parent (2 regions)",
                  extra_paths=["rtl/dsrom_sys/s81_dv", "rtl/common/landed_parent", "physical/dsdv_svc_rs_lp_pins",
                               "results/arch/s81_dv_1016/svc_rs/lp"],

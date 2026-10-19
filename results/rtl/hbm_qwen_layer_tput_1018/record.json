@@ -1,0 +1,193 @@
+{
+ "schema": "opentallas.token_pass.hbm_qwen_layer_tput.v1",
+ "lane": "TOKEN-PASS-HBMQ",
+ "date": "2026-10-18",
+ "generated_utc": "2026-10-18T14:56:47Z",
+ "design": "Qwen3-8B AR on the generic HBM die d4g GEN2 (16 SM, 2 stacks, TP-8 in package), position 8191",
+ "status": "PROGRAMMES + GOLDEN FIXTURES + PRICE DONE (functional HGI-1 model bit-exact, all mutants fail); RTL layer runs PENDING the TOKEN-PASS-HBMDS die vehicle (not runnable yet: whole-die vehicle at stage 0, programme images enter at the host PMA once loaders exist)",
+ "grade_now": "priced (model) + functional-exact on the HGI-1 simulator; NOT measured on RTL",
+ "key_finding": {
+  "issue": "the d4g Qwen price of record (946.2) is the TP-4 r25 programme under a split transform; no TP-8 programme existed, and a plain TP-8 even split of down_proj changes the golden's rounding",
+  "witness": {
+   "L0": {
+    "L0.o_tree_8_equals_golden": true,
+    "L0.plain_tp8_even_down_differs": {
+     "down_elems_differ": 1899,
+     "x_out_elems_differ": 1077,
+     "of": 4096
+    }
+   },
+   "chain": {
+    "L0.o_tree_8_equals_golden": true,
+    "L0.plain_tp8_even_down_differs": {
+     "down_elems_differ": 1899,
+     "x_out_elems_differ": 1077,
+     "of": 4096
+    },
+    "L1.o_tree_8_equals_golden": true,
+    "L1.plain_tp8_even_down_differs": {
+     "down_elems_differ": 1655,
+     "x_out_elems_differ": 1097,
+     "of": 4096
+    }
+   }
+  },
+  "fix": "D4G8 mapping (tools/hgi_sim/qwen_compiler.py Geometry(tp=8)): o K-split 8 (64 chunks = the golden tree); down = whole TP-4 slice-j partial per output-row half (rank 4r+j) after COLL.ALL_GATHER of SwiGLU outputs, COLL.GROUP_REDUCE_MCAST s 4; bit-identical to qwen_r25 (no numerics change); TP-4 programme byte-identical",
+  "price_effect": "native d4g8 949.7 tok/s vs record 946.2 (+0.37 %): +810.5 cyc/layer ACT gather offset by 1 KV head/die and half the softmax rows"
+ },
+ "price_of_record_per_layer": {
+  "base": {
+   "record": {
+    "tok_s": 946.2,
+    "token_cycles": 1268221.8,
+    "L0": 33497.7,
+    "chained_layer_mean": 33072.0,
+    "head": 77204.5,
+    "stage_cycles": {
+     "L0": 33236.0,
+     "chain": 66308.0,
+     "head": 77362.5
+    }
+   },
+   "d4g8": {
+    "tok_s": 949.7,
+    "token_cycles": 1263599.2,
+    "L0": 33341.8,
+    "chained_layer_mean": 32944.4,
+    "head": 77204.5,
+    "stage_cycles": {
+     "L0": 33111.4,
+     "chain": 66055.7,
+     "head": 77362.5
+    }
+   }
+  },
+  "landed": {
+   "record": {
+    "tok_s": 945.5,
+    "token_cycles": 1269124.0,
+    "L0": 33514.5,
+    "chained_layer_mean": 33097.0,
+    "head": 77214.0,
+    "stage_cycles": {
+     "L0": 33261.0,
+     "chain": 66358.0,
+     "head": 77372.0
+    }
+   },
+   "d4g8": {
+    "tok_s": 948.8,
+    "token_cycles": 1264699.3,
+    "L0": 33368.1,
+    "chained_layer_mean": 32974.8,
+    "head": 77214.0,
+    "stage_cycles": {
+     "L0": 33141.8,
+     "chain": 66116.6,
+     "head": 77372.0
+    }
+   }
+  }
+ },
+ "price_notes": "record = PRICE5 d4g_2ring_qbg reproduced (946.2); landed = HBM-LANDING half-cycle land plan (claude/hland-1018 7753c13f1, 945.5 reproduced). Stage cycles = the stage programme alone (what the vehicle runs; L0 incl. pipeline fill from the doorbell). Compare RTL L0 / chain / head with landed.d4g8 stage_cycles; static_schedule.json gives each record's commit cycle.",
+ "functional_proof": {
+  "L0": {
+   "status": "pass",
+   "host": "ot-pve1",
+   "image_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+   "records": 35,
+   "executed": 35,
+   "checks": 160,
+   "exact": 160,
+   "mutants": {
+    "kv_swap": "FAIL act_all_gather,all_reduce_down+row_scale_down+residual,all_reduce_o+row_scale_o+residual",
+    "qknorm_bf16": "FAIL act_all_gather,all_reduce_down+row_scale_down+residual,all_reduce_o+row_scale_o+residual",
+    "rkj_wrong": "FAIL all_reduce_down+row_scale_down+residual,down",
+    "grm_s8": "FAIL GROUP_REDUCE_MCAST: O does not hold (G / s) sub-group results"
+   },
+   "golden_s": 12.8,
+   "wall_s": 229.2,
+   "log": "proof/proof_L0.log"
+  },
+  "chain": {
+   "status": "pass",
+   "host": "ot-pve1",
+   "image_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+   "records": 37,
+   "executed": 66,
+   "checks": 320,
+   "exact": 320,
+   "mutants": {
+    "kv_swap": "FAIL act_all_gather,all_reduce_down+row_scale_down+residual,all_reduce_o+row_scale_o+residual",
+    "qknorm_bf16": "FAIL act_all_gather,all_reduce_down+row_scale_down+residual,all_reduce_o+row_scale_o+residual",
+    "rkj_wrong": "FAIL all_reduce_down+row_scale_down+residual,down,prenorm",
+    "grm_s8": "FAIL GROUP_REDUCE_MCAST: O does not hold (G / s) sub-group results"
+   },
+   "golden_s": 256.5,
+   "wall_s": 542.4,
+   "log": "proof/proof_chain.log"
+  },
+  "head": {
+   "status": "pass",
+   "host": "ot-pve1",
+   "image_sha256": "a0ce1c154cc2e8b8fed96c4e056315b9a7add357a3c0134528dee62877a4d5d8",
+   "records": 7,
+   "executed": 7,
+   "checks": 9,
+   "exact": 9,
+   "mutants": {
+    "head_swap": "FAIL head+head_scale"
+   },
+   "golden_s": 17.0,
+   "wall_s": 86.3,
+   "log": "proof/proof_head.log"
+  }
+ },
+ "fixtures": {
+  "L0": {
+   "remote": "ot-pve1:/srv/opentallas-scratch/claude/tokpass-hbmq/fix/L0",
+   "manifest": "fixtures/manifest_L0.json",
+   "manifest_sha256": "97433370f230dae5cdf983a717149f04e7261abc0285f43b87cfda74c4d9a22a",
+   "size": "829M"
+  },
+  "chain": {
+   "remote": "ot-pve1:/srv/opentallas-scratch/claude/tokpass-hbmq/fix/chain",
+   "manifest": "fixtures/manifest_chain.json",
+   "manifest_sha256": "d11ec3eb7d4eef01bb3e4ee3a49592e47aabfbd4fbbad5f7f5a28857b12ee84e",
+   "size": "1.1G"
+  },
+  "head": {
+   "remote": "ot-pve1:/srv/opentallas-scratch/claude/tokpass-hbmq/fix/head",
+   "manifest": "fixtures/manifest_head.json",
+   "manifest_sha256": "c923d08c5bef473a60aeb31219dca336291cb293c034d766b398f49843c21e29",
+   "size": "5.3G"
+  }
+ },
+ "fixture_regen": "PYTHONPATH=tools python3 tools/hbm_qwen_layer/qwen_d4g_proof.py --snapshot SNAP --cache IMG --stage {L0,chain,head} --mutants --dump FIX --out OUT (ot-pve1: torch + snapshot; cache ot-pve1:/srv/opentallas-scratch/claude/tokpass-hbmq/img)",
+ "wall_time": {
+  "price_tool_s": 2.5,
+  "proof_L0": "3:50 (golden 12.8 s; 1 base + 4 mutants)",
+  "proof_chain": "9:03 (golden 256.5 s incl. quantising L0/L1)",
+  "proof_head": "1:27",
+  "rss_gb": 6.2,
+  "rtl_build_run": "not run (vehicle pending)"
+ },
+ "needs_from_vehicle": [
+  "1 programme entry: TB writes fixtures/<stage>/program.hgi1 + md_qwen3_8b_d4g.u32 (HGI-1 MD, coll_group_size 8) at the CP programme/config port (TB_IMAGE_LOAD_ONLY acceptable), doorbell token 0, pos 8191; X preloaded from x_in.f32 at VM X (vm_map_words in the manifest)",
+  "2 HBM: DRAM model behind the PHY preloaded from die<k>.hbm_<REGION>_<base>.u8 (HGI-1 byte addresses), mapped to the 16 PCs by the d4g placement pass (W1 rows in R=ceil(m/16) SM blocks, PC-interleaved in the SM's quadrant; D2 tables x4); the vehicle needs that address->PC map as a tool, not only the price model's census",
+  "3 peers: one die = one rank (run rank 0 AND rank 5 = j 1, r 1 to cover the down mapping); the 7 peer dies are off-die: far-end models at the in-package die-link boundary inject the peers' contributions for all_reduce_o (OPART), act_all_gather (ACT slices), all_reduce_down (GROUP_REDUCE_MCAST s4 DPART) and argmax_merge (AMX) from expected.npz (d<k>.* keys) at the static-schedule slots, and check the outgoing payload bits",
+  "4 units/forms beyond the DS set: FUSED.ROW_NORM seg 128 (QK-norm), SU.VOP rope (c_pair, b_half), ATT.QK/PV 4-lane GQA with n_sel POS1, SFU.GLU with a DYN RANK output, SM.MATVEC INT8 fmt 3 with an INDEXED 2-row A (I = VM RKJ table), STREAM 0/1 head path SM->SU->ARGMAX, ARGMAX.LOCAL, COLL ALL_GATHER G8 / GROUP_REDUCE_MCAST s4 / ARGMAX_MERGE, CTL LOOP (2 layers); layer_coverage.py should grade static_schedule.json (keys i/unit/op/orig_op/tag/cls/start/end as priced_layers.py)",
+  "5 assertions: every record commits at static_schedule.json[landed][d4g8][stage][i].end (cycles from the doorbell; fixed latency, no credits); result VM regions bit-equal to expected.npz per family; measured stage cycles vs price_of_record_per_layer.landed.d4g8.stage_cycles",
+  "6 RTL mutants with committed fail witnesses: kv_swap (exchange the K/V planes in die<k>.hbm_KV), rkj_wrong (TABLES rkj words = 3 - j), head_swap (dies 0/1 HEAD files exchanged) -- each is a fixture-file edit, no programme change"
+ ],
+ "pending": "RTL runs of L0 / chain / head under Verilator on the fleet once the HBMDS vehicle runs a DS stage (pending_results.txt)",
+ "mtp": "parked (owner 10-16)",
+ "sources": {
+  "branch": "claude/tokpass-hbmq-1018",
+  "compiler": "tools/hgi_sim/qwen_compiler.py",
+  "proof": "tools/hbm_qwen_layer/qwen_d4g_proof.py",
+  "price": "tools/hbm_qwen_layer/qwen_d4g_price.py",
+  "schedule": "static_schedule.json",
+  "price_json": "price_per_layer.json"
+ }
+}

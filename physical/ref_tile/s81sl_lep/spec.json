@@ -165,14 +165,14 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.0
  },
- "structural_change": "RTL-BUILD-S81 (owner 0dv 10-18): NEW link-port leaf of the end-slice master (dsdv_slice_lepw/_e = ot_s81sl_slice + this leaf + 2 x dsfd_coll_lane): outward ring-port pin flops, per-lane 512-flit SRAM landing FIFOs (2 x 5 ot_sram_1r1w_512x128, as the coll lane's own replay/receive arrays), RX pair re-assembly, fault collector. Fills residual row 1 (lt_lk 8 x 512 undriven). Host plane (coordinator 10-18): seq_host f_host 515 / f_lf 4 / f_ks 53 out, t_host 77 / t_kd 54 in, as typed non-ring link frames (HOST / KS in, THOST / TKD out). Gate 3eb62a102 FAIL (GPL-0305 divergence): macro columns fronted the W/E pin faces (W band 15 um) with a 0.4-um sliver between the columns' halos and W/E pins at 99% face demand (5.9/um). Re-floorplan: 475.2 square (W/E 4.85/um), two 5-SRAM columns centred with a 21.6-um channel, >=31-um W/E std-cell bands, 119-um N/S bands. S81-RTLB3 (10-18, gate b6bf54dea WARNs): core-side lane faces become CREDIT links (lane LCR = 1, as the die's collective lanes): lo0_r / lo1_r land in one pin flop each (credit pulse; was 556 / 558 loads, 6 levels), RX landing DR 8 with registered one-hot slot enables and 16 replicated read pointers, li_r a registered credit pulse; rst_n -> ot_rst_relay 4 regions (was one flop, 1,232 loads), ri data bits unreset. Edges: ro -> lane endpoint +2, lane -> ri +1, reset release +1.",
+ "structural_change": "RTL-BUILD-S81 (owner 0dv 10-18): NEW link-port leaf of the end-slice master (dsdv_slice_lepw/_e = ot_s81sl_slice + this leaf + 2 x dsfd_coll_lane): outward ring-port pin flops, per-lane 512-flit SRAM landing FIFOs (2 x 5 ot_sram_1r1w_512x128, as the coll lane's own replay/receive arrays), RX pair re-assembly, fault collector. Fills residual row 1 (lt_lk 8 x 512 undriven). Host plane (coordinator 10-18): seq_host f_host 515 / f_lf 4 / f_ks 53 out, t_host 77 / t_kd 54 in, as typed non-ring link frames (HOST / KS in, THOST / TKD out). Gate 3eb62a102 FAIL (GPL-0305 divergence): macro columns fronted the W/E pin faces (W band 15 um) with a 0.4-um sliver between the columns' halos and W/E pins at 99% face demand (5.9/um). Re-floorplan: 475.2 square (W/E 4.85/um), two 5-SRAM columns centred with a 21.6-um channel, >=31-um W/E std-cell bands, 119-um N/S bands. S81-RTLB3 (10-18, gate b6bf54dea WARNs): core-side lane faces become CREDIT links (lane LCR = 1, as the die's collective lanes): lo0_r / lo1_r land in one pin flop each (credit pulse; was 556 / 558 loads, 6 levels), RX landing DR 8 with registered one-hot slot enables and 16 replicated read pointers, li_r a registered credit pulse; rst_n -> ot_rst_relay 4 regions (was one flop, 1,232 loads), ri data bits unreset. Edges: ro -> lane endpoint +2, lane -> ri +1, reset release +1. S81-LEPV 10-18: leaf gains HOST_EN (default 1 = this kit, unchanged function); host logic moved into generate blocks; HOST_EN 0 top ot_s81sl_lep_nh = kit s81sl_lepnh (s_0S / s_0N / s_7S). Witnesses re-recorded.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered (RTL-BUILD-S81): ro lands in pin flops (rov/roq), ri / lo_v / lo_d / li_r / rxv / fault leave flops, li handshake + data land in hq / dq flops, sl_f / l*_f land in slq / lfq; recipe pin_regs would add an unpriced stage."
  },
  "job": {
   "owner": "Claude:RTL-BUILD-S81",
-  "branch": "claude/rtl-build-s81-1018-lep",
+  "branch": "claude/s81-lepv-1018",
   "tag": "s81sl_lep",
   "purpose": "RTL-BUILD-S81: end-slice link-port leaf (residual row 1) to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
@@ -183,8 +183,8 @@
    "rtl/dsrom_sys/s81_link",
    "rtl/dsrom_sys/s81_dv/slice",
    "tools/s81_slice",
-   "results/rtl/rtl_build_s81_1018/lep",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "results/rtl/s81_lepv_1018"
   ],
   "benches": [
    {
@@ -209,7 +209,7 @@
     "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_mut_swap swap 1",
     "expect": "fail",
     "fail_regex": "^FAIL lep: mismatches [1-9]",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/lep/witness_swap.log",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_swap.log",
     "threads": 2,
     "peak_ram_gb": 6
    },
@@ -218,7 +218,7 @@
     "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_mut_nopair nopair 1",
     "expect": "fail",
     "fail_regex": "^FAIL lep: mismatches [1-9]",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/lep/witness_nopair.log",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_nopair.log",
     "threads": 2,
     "peak_ram_gb": 6
    },
@@ -227,7 +227,7 @@
     "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lep_mut_noovf noovf 1",
     "expect": "fail",
     "fail_regex": "^FAIL lep: .*overflow_fault 0$",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/lep/witness_noovf.log",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_noovf.log",
     "threads": 2,
     "peak_ram_gb": 6
    },
@@ -244,7 +244,7 @@
     "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/leph_mut_ksoff ksoff 3 lep_host",
     "expect": "fail",
     "fail_regex": "^FAIL lep_host:",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/lep/witness_ksoff.log",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_ksoff.log",
     "threads": 2,
     "peak_ram_gb": 6
    },
@@ -253,7 +253,7 @@
     "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/leph_mut_hdrop hdrop 3 lep_host",
     "expect": "fail",
     "fail_regex": "^FAIL lep_host:",
-    "fail_witness": "results/rtl/rtl_build_s81_1018/lep/witness_hdrop.log",
+    "fail_witness": "results/rtl/s81_lepv_1018/witness_hdrop.log",
     "threads": 2,
     "peak_ram_gb": 6
    }
