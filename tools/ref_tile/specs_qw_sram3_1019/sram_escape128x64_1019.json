@@ -71,10 +71,29 @@
   "tag": "coupon",
   "purpose": "External native-pin escape coupon of the CTL128x64 dual-clock family (QW-COLL Q/C slices, QW-HEAD TLS): 3.81 pins/um W/E, 108 sq on the 43.2 lattice, generated pin regs + reset landing; same method as the CLOSED sram_escape64_1019 coupon (DRC0, spread 17.2/16.1). No CDC claim.",
   "extra_paths": [
-   "rtl/test/sram_pin_access_1019",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1"
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "results/arch/qw_sram3_1019/escape128",
+   "rtl/test/sram_pin_access_1019"
   ],
-  "benches": [],
+  "benches": [
+   {
+    "name": "escape128_behaviour",
+    "cmd": "bash rtl/test/sram_pin_access_1019/run_escape128.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "ESCAPE_COUPON_PASS words=128 bits=64 checks=1968",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "escape128_mask_mutant",
+    "cmd": "bash rtl/test/sram_pin_access_1019/run_escape128.sh {RUN}/bench/mut mut",
+    "expect": "fail",
+    "fail_regex": "ESCAPE_MISMATCH words=128",
+    "fail_witness": "results/arch/qw_sram3_1019/escape128/mut_fail_witness.log",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
   "views_to": "physical/ref_tile/sram_escape128x64_1019/views",
   "record_to": "results/rtl/ref_tile/sram_escape128x64_1019"
  },
