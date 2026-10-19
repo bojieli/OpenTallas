@@ -110,6 +110,10 @@
   "max_sinks": 8,
   "reason": "the RTL lands rs (HBM-RSTROW row reset, coordinator 0jp Proposal A): rs drives the row-reset flop rq (rso = rs + exactly 1 edge) + the registered reset relay ot_rst_relay (2 sync + 5 relay flops, async assert) = 8 sinks inside the 21.6 x 114.48 um strip; a 2-stage kit landing would make every station of a relay row release 3 edges after its upstream instead of 1 (the row head-age condition head + k + S <= D + 1 + k fails on long rows)"
  },
+ "pin_regs": {
+  "enable": false,
+  "reason": "relay = ONE register stage at the pins by definition: i is captured by the stage register and o is launched by it; rso is launched by the row-reset flop; a pin register would add a cycle per hop of the relay row and break the compiled static schedule and the 1-edge row-reset contract (as the closed 136 / 624 relays and the F1 _fc relays)"
+ },
  "structural_change": "HBM-RSTROW rr (2026-10-19, coordinator 0jp Proposal A, HANDOFF ~04:10): NEW master hbfd_rly_1136_WE_rr = hbfd_rly_1136_WE (ot_hbm_rly stage instantiated unchanged, same RS_RELAY: stage release 3 edges after rs) + ONE row-reset flop (rso <= 1 on posedge ck, async clear by rs: release exactly 1 edge after rs), output pin rso on the downstream face E beside o.  Kit derived from the closed base spec hbfd_rly_1136_we (outline 21.6 x 114.48, recipe 1, pin faces, inhold / outhold / pin_reg settings unchanged); route.hold_margin_ns None -> 0.025 (common brief: boundary hold margin >= 0.025); reset_landing opted out (max_sinks 8: the RTL lands rs, the row release must stay 1 edge per station); 0 data cycles.",
  "reroute_reason": {
   "kind": "rtl_change",

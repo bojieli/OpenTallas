@@ -593,6 +593,12 @@ def rr_spec(w: int, flow: str, owner: str, branch: str, base_dir: Path = None) -
                   f"{s['outline']['h']} um strip; a 2-stage kit landing would make every station of a relay row release "
                   f"3 edges after its upstream instead of 1 (the row head-age condition head + k + S <= D + 1 + k fails "
                   f"on long rows)"}
+    # PIN REGS (owner rule 10-15): the closed base kits of 48 / 304 / 1136 predate it (no record); the relay IS the pin
+    # register stage, the opt-out the 136 / 624 bases record
+    s.setdefault("pin_regs", {"enable": False, "reason": (
+        "relay = ONE register stage at the pins by definition: i is captured by the stage register and o is launched by "
+        "it; rso is launched by the row-reset flop; a pin register would add a cycle per hop of the relay row and break "
+        "the compiled static schedule and the 1-edge row-reset contract (as the closed 136 / 624 relays and the F1 _fc relays)")})
     j = s["job"]
     j["owner"], j["branch"], j["tag"] = owner, branch, "rr"
     j["purpose"] = (f"HBM d4g row-reset relay {mst} (coordinator 0jp Proposal A): {master(w, flow)} (same ot_hbm_rly stage, "
