@@ -1,0 +1,113 @@
+{
+  "schema": "static-D2D-channel-PG-track-characterization",
+  "route_proof": false,
+  "literal_raw_pin_density": "FAIL",
+  "db_sha256": "96e72d2b7224806d44e6df98880660c27c6334ebbccd8e03c924f4f970deb979  eclock_control16_sramclk_hold_final_ff.odb",
+  "actual_M4_track_pitch_um": 0.048,
+  "signal_halfwidth_plus_minspacing_um": 0.036,
+  "scope": "Conservative straight-through M4 track filtering against actual expanded PG via enclosures/wires, no data wires. NOT a legal escape capacity or DRC proof; wide-metal/EOL/corner rules and M3/M5 transitions unmodeled. Opposing pins need not cross whole strip, so raw-demand comparisons cannot prove route infeasibility either.",
+  "strips": [
+    {
+      "name": "row0_W",
+      "bounds_um": [
+        0,
+        43.2,
+        43.2,
+        120.98400000000001
+      ],
+      "width_um": 43.2,
+      "raw_M4_tracks": 1621,
+      "raw_face_pin_demand": 793,
+      "actual_PG_wire_blocked": 0,
+      "additional_PG_via_enclosure_blocked": 613,
+      "remaining_conservative_straight_M4_tracks": 1008,
+      "intersecting_PG_shapes": 4624,
+      "qualification": false
+    },
+    {
+      "name": "row0_middle",
+      "bounds_um": [
+        214.488,
+        43.2,
+        259.2,
+        120.98400000000001
+      ],
+      "width_um": 44.712,
+      "raw_M4_tracks": 1621,
+      "raw_face_pin_demand": 1585,
+      "actual_PG_wire_blocked": 0,
+      "additional_PG_via_enclosure_blocked": 613,
+      "remaining_conservative_straight_M4_tracks": 1008,
+      "intersecting_PG_shapes": 4624,
+      "qualification": false
+    },
+    {
+      "name": "row0_E",
+      "bounds_um": [
+        430.488,
+        43.2,
+        475.2,
+        120.98400000000001
+      ],
+      "width_um": 44.712,
+      "raw_M4_tracks": 1621,
+      "raw_face_pin_demand": 792,
+      "actual_PG_wire_blocked": 0,
+      "additional_PG_via_enclosure_blocked": 613,
+      "remaining_conservative_straight_M4_tracks": 1008,
+      "intersecting_PG_shapes": 4624,
+      "qualification": false
+    },
+    {
+      "name": "row1_W",
+      "bounds_um": [
+        0,
+        151.2,
+        43.2,
+        228.98399999999998
+      ],
+      "width_um": 43.2,
+      "raw_M4_tracks": 1621,
+      "raw_face_pin_demand": 793,
+      "actual_PG_wire_blocked": 0,
+      "additional_PG_via_enclosure_blocked": 613,
+      "remaining_conservative_straight_M4_tracks": 1008,
+      "intersecting_PG_shapes": 4624,
+      "qualification": false
+    },
+    {
+      "name": "row1_middle",
+      "bounds_um": [
+        214.488,
+        151.2,
+        259.2,
+        228.98399999999998
+      ],
+      "width_um": 44.712,
+      "raw_M4_tracks": 1621,
+      "raw_face_pin_demand": 1585,
+      "actual_PG_wire_blocked": 0,
+      "additional_PG_via_enclosure_blocked": 613,
+      "remaining_conservative_straight_M4_tracks": 1008,
+      "intersecting_PG_shapes": 4624,
+      "qualification": false
+    },
+    {
+      "name": "row1_E",
+      "bounds_um": [
+        430.488,
+        151.2,
+        475.2,
+        228.98399999999998
+      ],
+      "width_um": 44.712,
+      "raw_M4_tracks": 1621,
+      "raw_face_pin_demand": 792,
+      "actual_PG_wire_blocked": 0,
+      "additional_PG_via_enclosure_blocked": 613,
+      "remaining_conservative_straight_M4_tracks": 1008,
+      "intersecting_PG_shapes": 4624,
+      "qualification": false
+    }
+  ]
+}

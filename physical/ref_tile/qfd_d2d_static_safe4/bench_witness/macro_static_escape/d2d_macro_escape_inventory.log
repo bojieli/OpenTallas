@@ -1,0 +1,30 @@
+ot-run: ot-epyc8       admits  1200 GB (avail 953, growth 113, headroom 0, waiters 0/0 GB) load 44/128 running 35 disk 226 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-953248-1792432438 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# ord::Design::evalTclString(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 3# 0x0000000002886BF5 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 4# 0x0000000000128018 in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+ 5# _PyObject_MakeTpCall in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+ 6# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+ 7# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+ 8# _PyEval_EvalFrameDefault in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+ 9# 0x00000000001C24DF in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+10# PyEval_EvalCode in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+11# 0x000000000020C5FD in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+12# _PyRun_SimpleFileObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+13# _PyRun_AnyFileObject in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+14# Py_RunMain in /lib/x86_64-linux-gnu/libpython3.10.so.1.0
+15# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+16# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+17# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+18# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-953248-1792432438): exit 139

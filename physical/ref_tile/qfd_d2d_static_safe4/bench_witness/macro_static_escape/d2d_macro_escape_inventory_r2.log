@@ -1,0 +1,10 @@
+ot-run: ot-epyc8       admits  1194 GB (avail 949, growth 113, headroom 0, waiters 0/0 GB) load 54/128 running 37 disk 224 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-967702-1792432469 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+ACTUAL_MACRO_ESCAPE_INVENTORY macrocount 4 PGshapes 420748 layers {'M4': 128688, 'M5': 77448, 'M2': 55890, 'M1': 4474, 'M3': 154248} new_route False
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-967702-1792432469): exit 0
