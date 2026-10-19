@@ -66,7 +66,7 @@ AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 # (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
 # so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
 # '--txd-c 1,1,1,2 --txd-k 1,2,1,1' args predate the compiled TXDP and no longer match the image.
-LINK_DIE_STAGES = '2,2,2,2,2,2/11,11,9,9,9,11,11'   # QLB-C4 10-18: SC_TX 2 (dv2f14bq SEAMC tx_record age 2)
+LINK_DIE_STAGES = '2,2,2,3,2,2/11,11,9,9,9,9,9'   # MU-DQ-TXDP 10-19: = d2d_cal_image_production.sh default (MU pair seam: CS_X3S 3, SK_TXV/SK_TXP 9)
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES,
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',

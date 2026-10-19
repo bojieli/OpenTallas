@@ -21,10 +21,13 @@ elaboration until the compiler assigns the value from the die as built:
         fail closed (exit 1): (a) every die master whose RTL traps a sentinel-default parameter (a generate-if whose body
         raises $error / $fatal or instantiates a *NOT_COMPILED* / *__set_* trap module) must get that parameter from the
         sidecar, with a non-sentinel value; (b) XPF_TRANSPORT_EDGES == 1 + the hr lane cycles re-derived from die.v (+
-        fwd_lanes.json E); (c) TXDP == D2D_TXDP_C of the committed image (all four bytes nonzero).
+        fwd_lanes.json E); (c) TXDP == D2D_TXDP_C of the committed image (all four bytes nonzero); (e) MU-DQ-TXDP: TXDP == the compiler's TXD C
+        for THIS die's seam stages re-derived from die.v + fwd_lanes.json (record_bundles.seam_stages), and the image's
+        recorded compute die stages == those stages.
 """
 import os
 import argparse
+import ast
 import json
 import re
 import sys
@@ -228,6 +231,39 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
                 fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != image D2D_TXDP_C {v:#010x}')
         except ValueError as e:
             fails.append(str(e))
+    # (e) MU-DQ-TXDP 10-19 (COORD 0ki): TXDP against THIS die's seam as built.  The compute seam stages are re-derived
+    # from die.v + fwd_lanes.json (record_bundles.seam_stages: tx_slot / rx_record / kv_x3_slot / tx_record / x3_record
+    # lane cycles); the compiler's TXD C (d2d_link_calendar.producer_txd + PINREG_EXT) for those stages must equal the
+    # bound TXDP, and the image must have been compiled for those stages (its RX calendar depends on them).  dv2f18mu
+    # landed kv_x3_slot at E 2 (3 cycles) and bound the CS_X3S 2 image's 0x09010308: the seam co-sim faulted (KVN abort).
+    if tr is not None:
+        import record_bundles as RB
+        import d2d_link_calendar as DLC
+        st, srec, sprob = RB.seam_stages(die_v, lanes)
+        tr['seam'] = srec
+        if sprob:
+            fails.extend(f'TXDP seam: {x}' for x in sprob)
+        else:
+            full = dict(st, **{k: 0 for k in DLC.STAGE_NAMES if k not in st})
+            want = [x + q for x, q in zip(DLC.producer_txd(full)['C'], DLC.PINREG_EXT['C'])]
+            wv = DLC.txdp_word(want)
+            tr.update(seam_txd_c=want, seam_txdp=wv, seam_stages=RB.seam_stages_str(st))
+            got = prm.get(D2D_MASTER, {}).get('TXDP')
+            if got is not None and int(got) != wv:
+                fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != {wv:#010x} = TXD C {want} compiled for THIS die\'s '
+                             f'seam (stages {RB.seam_stages_str(st)}): recompile the pair image with D2D_DIE_STAGES='
+                             f'{RB.seam_stages_str(st)}/<KV seam> tools/qwen_split/d2d_cal_image_production.sh and re-GEN')
+            img = tr.get('die_stages')
+            try:
+                ist = ast.literal_eval(img) if img else None
+            except (ValueError, SyntaxError):
+                ist = None
+            if not isinstance(ist, dict):
+                fails.append(f'TXDP seam: image {tr["image"]} records no die stages (cannot prove it was compiled for this seam)')
+            else:
+                bad = {k: (ist.get(k), v) for k, v in st.items() if ist.get(k) != v}
+                if bad:
+                    fails.append(f'image {tr["image"]} compiled for another compute seam: (image, die) {bad}')
     # (d) the layer compiler's TXD for THIS die (tools/qwen_layerbench/layer_compile.py manifest on this die's table):
     # the image's die stages must be this die's seam ages, else the D2D calendar is compiled for another die
     if compiled and tr is not None:

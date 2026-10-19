@@ -9,9 +9,19 @@
 # C.tx_record at age 2 (dv2f14bq, SC_TX 2 -> TXD C [8,3,1,9]); the token path is compiled_L1 recompiled on the dv2f14bq
 # die-run table (layer_compile.py: attn_kv X 7).  The die GEN sets the masters'
 # TXDP from the D2D_TXDP_C / D2D_TXDP_K lines of the image.  Run from the repository root.
+# MU-DQ-TXDP 10-19 (COORD 0ki): default = the MU RELEASE PAIR seam, proven by the netlisted-seam pair co-sim (MU-DQ-TOK
+# 216852211, xdie_mu_job.sh): compute dv2f18 (record_bundles.py seam-stages on dv2f18mu: tx_slot 2, rx_record 2,
+# kv_x3_slot E 2 -> 3, tx_record 2, x3_record 2) / KV kvs14r-mu (BUNDLE_EQ K.rx_record 11, K.tx_slot 9, K.tx_record 9)
+# -> TXD C [8,3,1,10] (0x0a010308), K [21,4,3,3] (0x03030415).  D2D_C_DIE_V=<compute die.v> takes the compute part from
+# that die as built (record_bundles.py seam-stages, its fwd_lanes.json beside it); D2D_K_STAGES overrides the KV part.
+# The strict bind (die_params.py audit (e)) fails a die whose seam differs from the image's recorded stages.
 set -eu
 OUT=$1
-STAGES=${D2D_DIE_STAGES:-2,2,2,2,2,2/11,11,9,9,9,11,11}
+STAGES=${D2D_DIE_STAGES:-2,2,2,3,2,2/11,11,9,9,9,9,9}
+if [ -n "${D2D_C_DIE_V:-}" ]; then
+  C=$(python3 tools/qwen_split/record_bundles.py seam-stages "$D2D_C_DIE_V")
+  STAGES="$C/${D2D_K_STAGES:-${STAGES#*/}}"
+fi
 TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
