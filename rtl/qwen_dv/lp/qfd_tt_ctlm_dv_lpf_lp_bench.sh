@@ -12,10 +12,10 @@ python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/qfd_tt_ctlm_dv
   && { echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; } || echo "AUDIT-UNLAND FAIL (expected)"
 for m in ${MUTS:-0 1 2 4}; do
   if [ "$SIM" = verilator ]; then
-    ${VERILATOR:-verilator} --binary -j ${VL_JOBS:-8} -I. -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 ${VL_EXTRA:-} --top-module tb_qfd_tt_ctlm_dv_lpf_lp -GMUT=$m  $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \
+    ${VERILATOR:-verilator} --binary -j ${VL_JOBS:-8} -Wno-fatal ${VL_EXTRA:-} --top-module tb_qfd_tt_ctlm_dv_lpf_lp -GMUT=$m  $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \
       && "$OUT/obj$m/Vtb_qfd_tt_ctlm_dv_lpf_lp" > "$OUT/mut$m.log" 2>&1
   else
-    iverilog -g2012 -I. -o "$OUT/sim$m" -s tb_qfd_tt_ctlm_dv_lpf_lp -Ptb_qfd_tt_ctlm_dv_lpf_lp.MUT=$m  $SRCS > "$OUT/build_$m.log" 2>&1 \
+    iverilog -g2012 -o "$OUT/sim$m" -s tb_qfd_tt_ctlm_dv_lpf_lp -Ptb_qfd_tt_ctlm_dv_lpf_lp.MUT=$m  $SRCS > "$OUT/build_$m.log" 2>&1 \
       && vvp -n "$OUT/sim$m" > "$OUT/mut$m.log" 2>&1
   fi
   r=$(grep -o 'LP_LOCKSTEP [A-Z]*' "$OUT/mut$m.log" 2>/dev/null | head -1)

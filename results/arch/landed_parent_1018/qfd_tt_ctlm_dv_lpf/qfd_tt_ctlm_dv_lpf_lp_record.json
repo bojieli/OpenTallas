@@ -406,12 +406,6 @@
   }
  ],
  "pads": [],
- "loose_status": {
-  "nets": [],
-  "lag": [],
-  "sticky_outputs": {},
-  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
- },
  "reset": {
   "port": "rst_n",
   "root_region": "core",
@@ -474,7 +468,6 @@
    "cf": 6
   },
   "reset_release_added_edges": 3,
-  "status_flag_lag_edges": {},
   "schedule": "offsets",
   "ref_params": null,
   "max_added_edges": 6
