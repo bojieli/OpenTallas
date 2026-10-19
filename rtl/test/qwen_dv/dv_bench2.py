@@ -34,13 +34,19 @@ SAFE_RESET = os.environ.get("DV2_SAFE_RESET", "0") == "1"
 SAFE_AMAX_RESET = os.environ.get("DV2_SAFE_AMAX_RESET", "0") == "1"
 if SAFE_AMAX_RESET and not SAFE_RESET:
     raise SystemExit("DV2_SAFE_AMAX_RESET requires DV2_SAFE_RESET")
-RESET_WARM = 8 if SAFE_RESET else 0  # deterministic boot guard, outside steady execution
+SAFE_SCALAR_RESET = os.environ.get("DV2_SAFE_SCALAR_RESET", "0") == "1"
+if SAFE_SCALAR_RESET and not SAFE_AMAX_RESET:
+    raise SystemExit("DV2_SAFE_SCALAR_RESET requires DV2_SAFE_AMAX_RESET")
+RESET_WARM = 16 if SAFE_SCALAR_RESET else 8 if SAFE_RESET else 0  # deterministic boot guard, outside steady execution
 if SAFE_RESET:
     SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_slice2_rsafe.sv").replace("rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv") for s in SRCS2]
     SRCS2.append("rtl/qwen_dv/qfd_dv_reset_tree.sv")
 if SAFE_AMAX_RESET:
     SRCS2 = [s.replace("rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv") for s in SRCS2]
     SRCS2.append("rtl/qwen_dv/qfd_dv_reset_bank.sv")
+if SAFE_SCALAR_RESET:
+    SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_scalar2.sv", "rtl/qwen_dv/qfd_dv_scalar2_rsafe.sv") for s in SRCS2]
+    SRCS2.extend(["rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/common/landed_parent/ot_pl_land.sv"])
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
 # DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
 # qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).
@@ -128,7 +134,7 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
     vtag = "".join(c for c in "_".join(f.lstrip("-+") for f in VFLAGS) if c.isalnum() or c in "_=")
-    obj = work / (f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" + ("_sr1" if SAFE_RESET else "") + ("_ar1" if SAFE_AMAX_RESET else "")) / (vtag or "base")
+    obj = work / (f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" + ("_sr1" if SAFE_RESET else "") + ("_ar1" if SAFE_AMAX_RESET else "") + ("_sc1" if SAFE_SCALAR_RESET else "")) / (vtag or "base")
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():

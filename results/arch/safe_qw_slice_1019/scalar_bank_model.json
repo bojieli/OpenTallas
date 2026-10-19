@@ -1,0 +1,184 @@
+{
+  "scalar_banks": [
+    {
+      "target": "amnb",
+      "bits": 6
+    },
+    {
+      "target": "eps",
+      "bits": 32
+    },
+    {
+      "target": "fuse",
+      "bits": 1
+    },
+    {
+      "target": "kk",
+      "bits": 5
+    },
+    {
+      "target": "nb",
+      "bits": 6
+    },
+    {
+      "target": "rdir",
+      "bits": 1
+    },
+    {
+      "target": "root",
+      "bits": 1
+    },
+    {
+      "target": "rx",
+      "bits": 24
+    },
+    {
+      "target": "ss",
+      "bits": 24
+    },
+    {
+      "target": "am2",
+      "bits": 1
+    },
+    {
+      "target": "am2_u",
+      "bits": 2
+    },
+    {
+      "target": "am2_val",
+      "bits": 32
+    },
+    {
+      "target": "dn_o",
+      "bits": 48
+    },
+    {
+      "target": "up_o",
+      "bits": 48
+    },
+    {
+      "target": "cnt",
+      "bits": 6
+    },
+    {
+      "target": "trig",
+      "bits": 1
+    },
+    {
+      "target": "candidate_count",
+      "bits": 2
+    },
+    {
+      "target": "candidate_mix",
+      "bits": 1
+    },
+    {
+      "target": "candidate_v",
+      "bits": 1
+    },
+    {
+      "target": "mg_u",
+      "bits": 2
+    },
+    {
+      "target": "am_best",
+      "bits": 57
+    },
+    {
+      "target": "amc",
+      "bits": 6
+    },
+    {
+      "target": "di",
+      "bits": 24
+    },
+    {
+      "target": "tk_send",
+      "bits": 1
+    },
+    {
+      "target": "tok_idx",
+      "bits": 24
+    },
+    {
+      "target": "tok_own",
+      "bits": 1
+    },
+    {
+      "target": "tok_user",
+      "bits": 2
+    },
+    {
+      "target": "tok_v",
+      "bits": 1
+    },
+    {
+      "target": "tok_val",
+      "bits": 32
+    },
+    {
+      "target": "ui",
+      "bits": 24
+    },
+    {
+      "target": "w1_we",
+      "bits": 1
+    },
+    {
+      "target": "bc",
+      "bits": 7
+    },
+    {
+      "target": "busy",
+      "bits": 1
+    },
+    {
+      "target": "fault",
+      "bits": 1
+    }
+  ],
+  "ot_hdc_fp32_add_fast": [
+    {
+      "target": "s1_v",
+      "bits": 1
+    },
+    {
+      "target": "s2_v",
+      "bits": 1
+    },
+    {
+      "target": "err",
+      "bits": 2
+    },
+    {
+      "target": "valid_out",
+      "bits": 1
+    },
+    {
+      "target": "y",
+      "bits": 32
+    }
+  ],
+  "ot_hdc_fp32_mul_fast": [
+    {
+      "target": "s1_v",
+      "bits": 1
+    },
+    {
+      "target": "s2_v",
+      "bits": 1
+    },
+    {
+      "target": "err",
+      "bits": 2
+    },
+    {
+      "target": "valid_out",
+      "bits": 1
+    },
+    {
+      "target": "y",
+      "bits": 32
+    }
+  ]
+}
