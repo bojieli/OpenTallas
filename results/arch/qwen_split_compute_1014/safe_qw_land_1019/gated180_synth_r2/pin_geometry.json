@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 370,
+  "pin_rectangles": 370,
+  "pin_track_checked": 370,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/codex-safe-qw-land-1019/gated180_r2_synth/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "632d997c0d8cd091ee8447adb5ffe7bc7082b229f81f7f935041a581f99058b1",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}

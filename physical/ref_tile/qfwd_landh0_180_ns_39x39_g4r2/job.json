@@ -14,7 +14,7 @@
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "tools/qwen_split",
-   "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated"
+   "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated_r2"
   ]
  },
  "stages": {
@@ -45,7 +45,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh sel_gated {RUN}/bench_sel 180",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_sel.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated_r2/w180_sel.log",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
@@ -57,7 +57,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh naive_gated {RUN}/bench_naive 180",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_naive.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated_r2/w180_naive.log",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
@@ -69,7 +69,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh encomb_gated {RUN}/bench_encomb 180",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_encomb.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated_r2/w180_encomb.log",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
@@ -81,7 +81,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh wsel_gated {RUN}/bench_wsel 180",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_wsel.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated_r2/w180_wsel.log",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [
@@ -93,7 +93,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh rsel_gated {RUN}/bench_rsel 180",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated/w180_rsel.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_gated_r2/w180_rsel.log",
     "threads": 2,
     "peak_ram_gb": 8,
     "needs": [

@@ -1,0 +1,73 @@
+FWD_LANE NF=27 CD=4.50 XL=0.00 DOFF=2.00 G=12 R0=11 L=26 K=2
+FWD_LANE NF=8 CD=4.00 XL=0.00 DOFF=2.00 G=10 R0=14 L=8 K=3
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=9 R0=45 L=5 K=0
+FWD_LANE NF=5 CD=4.40 XL=0.00 DOFF=2.00 G=40 R0=9 L=7 K=5
+FWD_LANE NF=5 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=5 CD=3.60 XL=20.00 DOFF=2.00 G=10 R0=12 L=7 K=4
+FWD_LANE NF=2 CD=3.60 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=9 R0=12 L=2 K=6
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=12 R0=12 L=2 K=1
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=9 R0=45 L=2 K=5
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=40 R0=9 L=2 K=0
+FWD_LANE NF=1 CD=0.00 XL=0.00 DOFF=2.00 G=10 R0=12 L=2 K=7
+FWD_LANE FAULT lane 0
+FWD_LANE FAULT lane 1
+FWD_LANE FAULT lane 2
+FWD_LANE FAULT lane 3
+FWD_LANE FAULT lane 4
+FWD_LANE FAULT lane 5
+FWD_LANE FAULT lane 6
+FWD_LANE FAULT lane 7
+FWD_LANE FAULT lane 8
+FWD_LANE FAULT lane 9
+FWD_LANE FAULT lane 10
+FWD_LANE FAULT lane 11
+FWD_BENCH FAIL 12 errors in 7188 checks (faults 12)
+GATED_BANK_WINDOW tb.l6.u_window.g[0] K=3 checks=132 min_age_T=0.900000 max_age_T=0.900000 min_overwrite_gap_T=3.100000 E_case=1 phase_residual_T=-0.100000 first_w_ns=198.000000 first_r_ns=287.000000
+GATED_BANK_WINDOW tb.l6.u_window.g[1] K=3 checks=133 min_age_T=0.900000 max_age_T=0.900000 min_overwrite_gap_T=3.100000 E_case=1 phase_residual_T=-0.100000 first_w_ns=208.000000 first_r_ns=257.000000
+GATED_BANK_WINDOW tb.l6.u_window.g[2] K=3 checks=133 min_age_T=0.900000 max_age_T=0.900000 min_overwrite_gap_T=3.100000 E_case=1 phase_residual_T=-0.100000 first_w_ns=218.000000 first_r_ns=267.000000
+GATED_BANK_WINDOW tb.l6.u_window.g[3] K=3 checks=133 min_age_T=0.900000 max_age_T=0.900000 min_overwrite_gap_T=3.100000 E_case=1 phase_residual_T=-0.100000 first_w_ns=228.000000 first_r_ns=277.000000
+GATED_BANK_WINDOW tb.l5.u_window.g[0] K=0 checks=118 min_age_T=0.440000 max_age_T=0.440000 min_overwrite_gap_T=3.560000 E_case=1 phase_residual_T=-0.560000 first_w_ns=162.600000 first_r_ns=567.000000
+GATED_BANK_WINDOW tb.l5.u_window.g[1] K=0 checks=117 min_age_T=0.440000 max_age_T=0.440000 min_overwrite_gap_T=3.560000 E_case=1 phase_residual_T=-0.560000 first_w_ns=172.600000 first_r_ns=577.000000
+GATED_BANK_WINDOW tb.l5.u_window.g[2] K=0 checks=117 min_age_T=0.440000 max_age_T=0.440000 min_overwrite_gap_T=3.560000 E_case=1 phase_residual_T=-0.560000 first_w_ns=182.600000 first_r_ns=587.000000
+GATED_BANK_WINDOW tb.l5.u_window.g[3] K=0 checks=117 min_age_T=0.440000 max_age_T=0.440000 min_overwrite_gap_T=3.560000 E_case=1 phase_residual_T=-0.560000 first_w_ns=192.600000 first_r_ns=597.000000
+GATED_BANK_WINDOW tb.l4.u_window.g[0] K=5 checks=119 min_age_T=2.440000 max_age_T=2.440000 min_overwrite_gap_T=1.560000 E_case=3 phase_residual_T=-0.560000 first_w_ns=472.600000 first_r_ns=537.000000
+GATED_BANK_WINDOW tb.l4.u_window.g[1] K=5 checks=119 min_age_T=2.440000 max_age_T=2.440000 min_overwrite_gap_T=1.560000 E_case=3 phase_residual_T=-0.560000 first_w_ns=482.600000 first_r_ns=547.000000
+GATED_BANK_WINDOW tb.l4.u_window.g[2] K=5 checks=119 min_age_T=2.440000 max_age_T=2.440000 min_overwrite_gap_T=1.560000 E_case=3 phase_residual_T=-0.560000 first_w_ns=492.600000 first_r_ns=557.000000
+GATED_BANK_WINDOW tb.l4.u_window.g[3] K=5 checks=120 min_age_T=2.440000 max_age_T=2.440000 min_overwrite_gap_T=1.560000 E_case=3 phase_residual_T=-0.560000 first_w_ns=502.600000 first_r_ns=527.000000
+GATED_BANK_WINDOW tb.l2.u_window.g[0] K=4 checks=135 min_age_T=2.760000 max_age_T=2.760000 min_overwrite_gap_T=1.240000 E_case=3 phase_residual_T=-0.240000 first_w_ns=169.400000 first_r_ns=237.000000
+GATED_BANK_WINDOW tb.l2.u_window.g[1] K=4 checks=134 min_age_T=2.760000 max_age_T=2.760000 min_overwrite_gap_T=1.240000 E_case=3 phase_residual_T=-0.240000 first_w_ns=179.400000 first_r_ns=247.000000
+GATED_BANK_WINDOW tb.l2.u_window.g[2] K=4 checks=133 min_age_T=2.760000 max_age_T=2.760000 min_overwrite_gap_T=1.240000 E_case=3 phase_residual_T=-0.240000 first_w_ns=189.400000 first_r_ns=257.000000
+GATED_BANK_WINDOW tb.l2.u_window.g[3] K=4 checks=135 min_age_T=2.760000 max_age_T=2.760000 min_overwrite_gap_T=1.240000 E_case=3 phase_residual_T=-0.240000 first_w_ns=199.400000 first_r_ns=227.000000
+GATED_BANK_WINDOW tb.l3.u_window.g[0] K=4 checks=133 min_age_T=0.760200 max_age_T=0.760200 min_overwrite_gap_T=3.239800 E_case=1 phase_residual_T=-0.239800 first_w_ns=189.398000 first_r_ns=277.000000
+GATED_BANK_WINDOW tb.l3.u_window.g[1] K=4 checks=134 min_age_T=0.760200 max_age_T=0.760200 min_overwrite_gap_T=3.239800 E_case=1 phase_residual_T=-0.239800 first_w_ns=199.398000 first_r_ns=247.000000
+GATED_BANK_WINDOW tb.l3.u_window.g[2] K=4 checks=133 min_age_T=0.760200 max_age_T=0.760200 min_overwrite_gap_T=3.239800 E_case=1 phase_residual_T=-0.239800 first_w_ns=209.398000 first_r_ns=257.000000
+GATED_BANK_WINDOW tb.l3.u_window.g[3] K=4 checks=133 min_age_T=0.760200 max_age_T=0.760200 min_overwrite_gap_T=3.239800 E_case=1 phase_residual_T=-0.239800 first_w_ns=219.398000 first_r_ns=267.000000
+GATED_BANK_WINDOW tb.l1.u_window.g[0] K=7 checks=135 min_age_T=0.340000 max_age_T=0.340000 min_overwrite_gap_T=3.660000 E_case=1 phase_residual_T=-0.660000 first_w_ns=143.600000 first_r_ns=227.000000
+GATED_BANK_WINDOW tb.l1.u_window.g[1] K=7 checks=135 min_age_T=0.340000 max_age_T=0.340000 min_overwrite_gap_T=3.660000 E_case=1 phase_residual_T=-0.660000 first_w_ns=153.600000 first_r_ns=237.000000
+GATED_BANK_WINDOW tb.l1.u_window.g[2] K=7 checks=133 min_age_T=0.340000 max_age_T=0.340000 min_overwrite_gap_T=3.660000 E_case=1 phase_residual_T=-0.660000 first_w_ns=163.600000 first_r_ns=247.000000
+GATED_BANK_WINDOW tb.l1.u_window.g[3] K=7 checks=133 min_age_T=0.340000 max_age_T=0.340000 min_overwrite_gap_T=3.660000 E_case=1 phase_residual_T=-0.660000 first_w_ns=173.600000 first_r_ns=257.000000
+GATED_BANK_WINDOW tb.l11.u_window.g[0] K=6 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=125.000000 first_r_ns=217.000000
+GATED_BANK_WINDOW tb.l11.u_window.g[1] K=6 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=135.000000 first_r_ns=227.000000
+GATED_BANK_WINDOW tb.l11.u_window.g[2] K=6 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=145.000000 first_r_ns=237.000000
+GATED_BANK_WINDOW tb.l11.u_window.g[3] K=6 checks=133 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=155.000000 first_r_ns=247.000000
+GATED_BANK_WINDOW tb.l10.u_window.g[0] K=1 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=155.000000 first_r_ns=207.000000
+GATED_BANK_WINDOW tb.l10.u_window.g[1] K=1 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=165.000000 first_r_ns=217.000000
+GATED_BANK_WINDOW tb.l10.u_window.g[2] K=1 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=175.000000 first_r_ns=227.000000
+GATED_BANK_WINDOW tb.l10.u_window.g[3] K=1 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=185.000000 first_r_ns=237.000000
+GATED_BANK_WINDOW tb.l9.u_window.g[0] K=5 checks=119 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=125.000000 first_r_ns=537.000000
+GATED_BANK_WINDOW tb.l9.u_window.g[1] K=5 checks=119 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=135.000000 first_r_ns=547.000000
+GATED_BANK_WINDOW tb.l9.u_window.g[2] K=5 checks=119 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=145.000000 first_r_ns=557.000000
+GATED_BANK_WINDOW tb.l9.u_window.g[3] K=5 checks=117 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=155.000000 first_r_ns=567.000000
+GATED_BANK_WINDOW tb.l8.u_window.g[0] K=0 checks=121 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=435.000000 first_r_ns=487.000000
+GATED_BANK_WINDOW tb.l8.u_window.g[1] K=0 checks=121 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=445.000000 first_r_ns=497.000000
+GATED_BANK_WINDOW tb.l8.u_window.g[2] K=0 checks=121 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=455.000000 first_r_ns=507.000000
+GATED_BANK_WINDOW tb.l8.u_window.g[3] K=0 checks=121 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=465.000000 first_r_ns=517.000000
+GATED_BANK_WINDOW tb.l0.u_window.g[0] K=7 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=135.000000 first_r_ns=227.000000
+GATED_BANK_WINDOW tb.l0.u_window.g[1] K=7 checks=135 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=145.000000 first_r_ns=237.000000
+GATED_BANK_WINDOW tb.l0.u_window.g[2] K=7 checks=133 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=155.000000 first_r_ns=247.000000
+GATED_BANK_WINDOW tb.l0.u_window.g[3] K=7 checks=133 min_age_T=1.200000 max_age_T=1.200000 min_overwrite_gap_T=2.800000 E_case=1 phase_residual_T=0.200000 first_w_ns=165.000000 first_r_ns=257.000000
+GATED_BANK_WINDOW tb.l7.u_window.g[0] K=2 checks=122 min_age_T=0.500000 max_age_T=0.500000 min_overwrite_gap_T=3.500000 E_case=1 phase_residual_T=-0.500000 first_w_ns=402.000000 first_r_ns=487.000000
+GATED_BANK_WINDOW tb.l7.u_window.g[1] K=2 checks=123 min_age_T=0.500000 max_age_T=0.500000 min_overwrite_gap_T=3.500000 E_case=1 phase_residual_T=-0.500000 first_w_ns=412.000000 first_r_ns=457.000000
+GATED_BANK_WINDOW tb.l7.u_window.g[2] K=2 checks=123 min_age_T=0.500000 max_age_T=0.500000 min_overwrite_gap_T=3.500000 E_case=1 phase_residual_T=-0.500000 first_w_ns=422.000000 first_r_ns=467.000000
+GATED_BANK_WINDOW tb.l7.u_window.g[3] K=2 checks=123 min_age_T=0.500000 max_age_T=0.500000 min_overwrite_gap_T=3.500000 E_case=1 phase_residual_T=-0.500000 first_w_ns=432.000000 first_r_ns=477.000000
