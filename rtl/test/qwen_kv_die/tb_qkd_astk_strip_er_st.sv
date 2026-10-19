@@ -15,6 +15,10 @@
 `ifndef KVD_STMUT
 `define KVD_STMUT 0
 `endif
+// AD-KV-ASTK 2026-10-18: +define+KVD_RL=<k> runs BOTH strips with k-edge chain hops (landed / die-relayed hop latency).
+`ifndef KVD_RL
+`define KVD_RL 1
+`endif
 module tb_qkd_astk_strip_er_st;
  localparam integer EXP_AGE=500, LMAX_AGE=350, Z_AGE=1000, Z_STRIDE=16, N=4;
  function automatic [31:0] score_word(input integer eng,addr,head);
@@ -32,7 +36,7 @@ module tb_qkd_astk_strip_er_st;
  // ---- A: the current composition ------------------------------------------------------------------------------------
  wire [5071:0] si_a;wire [562:0] ap_a;wire af_a;wire [20:0] lt_a;wire [N-1:0] erv_a;wire [11*N-1:0] era_a;wire [64*N-1:0] erd_a;
  wire [15:0] com_a;wire scom_a;
- qkd_astk_native_stack_w4_cal #(.STATIC_SCHEDULE(1),.Z_STRIDE(Z_STRIDE)) ua(.cal(cal),
+ qkd_astk_native_stack_w4_cal #(.RL(`KVD_RL),.STATIC_SCHEDULE(1),.Z_STRIDE(Z_STRIDE)) ua(.cal(cal),
   .ck_c(ck),.ck_z({4{ck}}),.ck_x({32{ck}}),.ck_e({8{ck}}),.ck_r(ck),.rst_n(rst_n),.st(2'd0),
   .aq(aq),.am(am),.ap(ap_a),.af(af_a),.lt(lt_a),.er_v(er_v2),.er_addr(er_a2),.er_rsp_v(erv_a),.er_rsp_addr(era_a),.er_data(erd_a),
   .exp_committed(com_a),.score_committed(scom_a),
@@ -47,7 +51,7 @@ module tb_qkd_astk_strip_er_st;
  generate for(g=0;g<8;g=g+1)begin:g_bus
   assign so_b[413*g+:413]={so[425*g+424],so[425*g+:412]};
  end endgenerate
- qkd_astk_strip_er_st #(.RL(1),.Z_STRIDE(Z_STRIDE),.N(N)) ub(.ck_c(ck),.ck_z({4{ck}}),.ck_x({32{ck}}),.ck_e({8{ck}}),.ck_r(ck),
+ qkd_astk_strip_er_st #(.RL(`KVD_RL),.Z_STRIDE(Z_STRIDE),.N(N)) ub(.ck_c(ck),.ck_z({4{ck}}),.ck_x({32{ck}}),.ck_e({8{ck}}),.ck_r(ck),
   .ck_er(ck),.rst_n(rst_n),.st(2'd0),.aq(aq),.am(am),.cal(cal),.ap(ap_b),.af(af_b),.lt(lt_b),.so(so_b),.si(si_b),
   .read_v(er_v),.read_addr(er_addr),.response_v(erv_b),.response_addr(era_b),.response_data(erd_b),.er_fault(erf_b));
  // ---- lockstep --------------------------------------------------------------------------------------------------------
@@ -145,9 +149,9 @@ module tb_qkd_astk_strip_er_st;
    @(negedge ck);
   end
   if(mism!=0)begin errors=errors+1;$display("FAIL lockstep mismatches=%0d",mism);end
-  if(errors==0)$display("PASS qkd_astk_strip_er_st lockstep vs qkd_astk_native_stack_w4_cal: %0d edges, scores %0d, lmax %0d, Z %0d, e reads %0d, erf %b, mut %0d",
-   cycle,score_checks,lmax_words,z_words,reads,erf_b,`KVD_STMUT);
-  else $display("FAIL qkd_astk_strip_er_st errors=%0d mismatches=%0d mut %0d",errors,mism,`KVD_STMUT);
+  if(errors==0)$display("PASS qkd_astk_strip_er_st lockstep vs qkd_astk_native_stack_w4_cal: %0d edges, scores %0d, lmax %0d, Z %0d, e reads %0d, erf %b, mut %0d, RL %0d",
+   cycle,score_checks,lmax_words,z_words,reads,erf_b,`KVD_STMUT,`KVD_RL);
+  else $display("FAIL qkd_astk_strip_er_st errors=%0d mismatches=%0d mut %0d RL %0d",errors,mism,`KVD_STMUT,`KVD_RL);
   $finish;
  end
 endmodule
