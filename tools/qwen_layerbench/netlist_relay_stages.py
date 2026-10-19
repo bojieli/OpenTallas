@@ -53,6 +53,23 @@ def is_relay(master):
     return bool(RELAY_RE.match(master))
 
 
+def landing_strap(cm):
+    """Decode only this instance's tie outputs; an unused opposite rail may be open."""
+    hi, lo = cm.get('tie_hi'), cm.get('tie_lo')
+    if hi and lo and hi == lo:
+        return None
+    value = 0
+    for index, port in enumerate(('k0', 'k1', 'k2')):
+        net = cm.get(port, '').strip()
+        if not net:
+            return None
+        if hi and net == hi:
+            value |= 1 << index
+        elif not (lo and net == lo):
+            return None
+    return value
+
+
 def rtl_text(path, commit, src_prefixes, local_dirs):
     p = str(path)
     for d in local_dirs:
@@ -211,9 +228,9 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
         relay = is_relay(mst)
         if re.match(r'^(qfd_land|qkd_land)', mst):
             ks = [cm.get(k, '').strip() for k in ('k2', 'k1', 'k0')]
-            hi, lo = cm.get('tie_hi'), cm.get('tie_lo')
-            if hi and lo and hi != lo and all(k in (hi, lo) for k in ks):
-                land_k[name] = sum((1 << (2 - i)) for i, k in enumerate(ks) if k == hi)
+            strap = landing_strap(cm)
+            if strap is not None:
+                land_k[name] = strap
             else:
                 problems.append(f'{name}: landing K strap not tied from tie_hi / tie_lo: {ks}')
         for pn, b in bits.items():

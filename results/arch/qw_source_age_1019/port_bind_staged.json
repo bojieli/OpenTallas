@@ -1,0 +1,5573 @@
+{
+  "schema": "opentallas.die_port_bind.v2",
+  "die_v": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/die.v",
+  "top": null,
+  "verdict": "PASS",
+  "failing": [],
+  "summary": {
+    "masters": 206,
+    "instances": 10329,
+    "unbound_masters": 0,
+    "stub_masters": 0,
+    "ambiguous_masters": 0,
+    "port_not_in_rtl": 0,
+    "width_mismatch": 0,
+    "input_unconnected": 0,
+    "input_tied": 0,
+    "unparsed_connections": 0,
+    "duplicate_port_connections": 0,
+    "undriven_net_bits": 0,
+    "multi_driven_net_bits": 0,
+    "top_assigns": 0,
+    "params_not_in_rtl": 0,
+    "strap_ports": 15,
+    "pad_bits": 0,
+    "unresolved_children": 0,
+    "ambiguous_children": 0,
+    "variant_children": 7
+  },
+  "masters": {
+    "ot_qfd_serdes_112g_x12_phy_s597": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/101_ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+      "kind": "model",
+      "ambiguous_defs": null,
+      "examples": [
+        "io_serdes",
+        "io_serdes_1",
+        "io_serdes_2"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "ot_qfd_ucie_x64_phy": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/102_ot_qfd_ucie_x64_phy_bb.v",
+      "kind": "model",
+      "ambiguous_defs": null,
+      "examples": [
+        "io_ucie"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "ot_qkvd_ucie_x64_phy": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/113_qfd_link_slots.sv",
+      "kind": "model",
+      "ambiguous_defs": null,
+      "examples": [
+        "ucie_kv"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_c_b16_dv": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 48,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/108_qfd_c_b16_dv.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "c16_W0_0",
+        "c16_W0_1",
+        "c16_W0_2"
+      ],
+      "param_sets": {
+        "{}": 48
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [
+        "cid",
+        "far",
+        "rs_i"
+      ],
+      "pad_bits": {},
+      "output_open": [
+        "bco0",
+        "bco1",
+        "bco2",
+        "bco3",
+        "rs_o",
+        "tie_hi",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_ckbump": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/113_qfd_link_slots.sv",
+      "kind": "model",
+      "ambiguous_defs": null,
+      "examples": [
+        "ckb_rom"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_clkrx": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "clk_rx"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_collective_static_io_production": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/107_ot_qfd_collective_static_io_production.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "io_collective"
+      ],
+      "param_sets": {
+        "{\"LS\": 378, \"LX0\": 11, \"LX1\": 0, \"LX2\": 10}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault_code",
+        "transport_abort",
+        "transport_cdc_fault",
+        "transport_fault_cause"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_d2d_static": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/116_ot_qwen_d2d_dies.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "d2d_rom"
+      ],
+      "param_sets": {
+        "{\"TXDP\": 167838472}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "transport_fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_dv_slice2_e": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/109_qfd_dv_slice2_faces.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "dvs_E0",
+        "dvs_E1",
+        "dvs_E2"
+      ],
+      "param_sets": {
+        "{\"MU_NU\": 4}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [
+        "ag_wi",
+        "ard_wi",
+        "arl_wi",
+        "arm_wi",
+        "art_wi",
+        "arv_wi",
+        "dd_wi",
+        "l9_wi",
+        "sc_wi",
+        "st_wi"
+      ],
+      "pad_bits": {},
+      "output_open": [
+        "ccm_eo",
+        "cct_eo",
+        "ccv_eo",
+        "ccw_eo",
+        "cmd_wo",
+        "dr_wo",
+        "hr_wo",
+        "l9_eo",
+        "rd_wo",
+        "re_wo",
+        "rl_wo",
+        "rr_wo",
+        "rv_wo",
+        "sc_wo",
+        "ss_eo",
+        "st_wo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_dv_slice2_w": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/109_qfd_dv_slice2_faces.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "dvs_W0",
+        "dvs_W1",
+        "dvs_W2"
+      ],
+      "param_sets": {
+        "{\"MU_NU\": 4}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [
+        "l9_wi",
+        "sc_wi"
+      ],
+      "pad_bits": {},
+      "output_open": [
+        "ccm_wo",
+        "cct_wo",
+        "ccv_wo",
+        "ccw_wo",
+        "l9_eo",
+        "sc_wo",
+        "ss_wo",
+        "st_wo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_embedding_word_provider": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/112_qfd_embedding_word_provider.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "embed_prov"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_10_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_ag_ag_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_16_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ccw_wo_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_16_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_word_epoch_0",
+        "rly_sf_emb_expected_epoch_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_16_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_host_epoch_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_16_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_fill_epoch_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_18_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_native59_emb_scale_addr_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_18_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_word_token_0",
+        "rly_sf_emb_expected_token_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_18_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_fill_token_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_host_fused_capability_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 8,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_host_epoch_valid_0",
+        "rly_sf_kv_word_slot_0",
+        "rly_sf_complete_slot_0"
+      ],
+      "param_sets": {
+        "{}": 8
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_tx_slot_0",
+        "rly_sf_emb_fill_begin_0",
+        "rly_dvw_rl_wi_0"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_rx_slot_0",
+        "rly_sf_emb_word_v_0",
+        "rly_sf_emb_word_scale_0"
+      ],
+      "param_sets": {
+        "{}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_rx_v_0",
+        "rly_sf_tt_kok_0",
+        "rly_sf_q_slot_0"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_rt_rl_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_tx_v_0",
+        "rly_sf_visibility_slot_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_rt_rv_0",
+        "rly_dv_x0_rt_re_0",
+        "rly_dvw_rv_wi_0"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_1_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_native_fault_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_24_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_native59_emb_code_addr_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_2_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_kv_word_index_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_2_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_host_generation_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_32_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_ar_art_0",
+        "rly_dvw_cct_wo_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_3_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_rt_rr_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_4_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_tx_slot_kind_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_4_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_rx_slot_kind_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_512_NS_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_word_data_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_512_SW_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_ar_ard_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_512_WE_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_rd_wi_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_512_WS_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_rt_rd_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_520_WE_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dv_x0_dr_dr_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_548_SW_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_tx_payload_0",
+        "rly_dv_x0_dd_dd_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_59_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_host_tag_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_5_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_tx_slot_beat_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_5_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_native_rx_slot_beat_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_5_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_q_slot_beat_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_69_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_tt_ctlm_cal_descriptor_obs_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_6_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_word_index_0",
+        "rly_sf_emb_expected_word_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh0_75_ES_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_tt_pw_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_107_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ss_wo_21"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1088_NS_186x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_st_wi_22"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_10_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ag_wo_22"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_116_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_cmd_wi_24"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_16_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_status_epoch16_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_16_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_embed_prov_embed_scale_q_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_16_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_core_epoch_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_187_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_sys_face_seq_dh_1",
+        "rly_dvw_sys_face_seq_dh__fo1_2"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_18_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_token_3"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_18_WN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_ng_tt_native_tok_0__fo1_1",
+        "rly_ng_tt_native_pos_0__fo1_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 8,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_collective_drained_2",
+        "rly_sf_collective_busy_2",
+        "rly_sf_execution_active_3"
+      ],
+      "param_sets": {
+        "{}": 8
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_ES_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_fwd_epoch_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 7,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_tx_we_3",
+        "rly_sf_cfg_rx_we_2",
+        "rly_sf_cal_seg_2"
+      ],
+      "param_sets": {
+        "{}": 7
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_kv_x3_slot_2",
+        "rly_dvw_native59_emb_scale_re_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 7,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_rxv_1",
+        "rly_serdes0_up_1",
+        "rly_lnk_fwd_epoch__fo1_3"
+      ],
+      "param_sets": {
+        "{}": 7
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 8,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_txv_2",
+        "rly_serdes2_rxv_7",
+        "rly_serdes2_up_8"
+      ],
+      "param_sets": {
+        "{}": 8
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cal_start_2",
+        "rly_sf_io_fault_25",
+        "rly_sf_io_shared_fault_26"
+      ],
+      "param_sets": {
+        "{}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_rx_slot_2",
+        "rly_dvw_re_wi_1",
+        "rly_dvw_tt_ctlm_cal_image_ready_1"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_WN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_ng_tt_layer_context_v_0__fo1_1",
+        "rly_sf_tt_control_stores_ready_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_1_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 4,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_txv_9",
+        "rly_sf_prog_rx_v_2",
+        "rly_sf_emb_rx_v_3"
+      ],
+      "param_sets": {
+        "{}": 4
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_hi"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_2_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_x3_generation_1",
+        "rly_sf_result_gen_3"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_32_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_value_3",
+        "rly_sf_result_cycles_3"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_32_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_data_2",
+        "rly_dvw_art_wo_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_3_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_rr_wi_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_453_NE_80x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_hr_wi_25"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_4_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_cause_3"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_512_ES_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_embed_prov_embed_code_q_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_512_SW_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ard_wo_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_520_WS_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dr_wi_26"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_524_EN_92x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_x3_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_548_EN_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dd_wo_25"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_548_EW_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_prog_tx_record_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_548_WE_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_rx_payload_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_548_WS_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_rx_payload__fo1_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_56_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_tt_ctlm_dc_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_597_EW_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_tx_7"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_hi"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_597_NS_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_rx_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_597_SN_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_tx_2",
+        "rly_serdes2_rx_7"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault",
+        "tie_lo"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_59_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_tag_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_59_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_x3_identity_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_6_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_addr_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_6_WN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_ng_tt_command_stage_0__fo1_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_76_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_tt_program_obs_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_landh_76_WN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_tt_ctlm_cal_program_obs_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_native59_dv_service": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/114_qfd_native59_dv_service.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "native59"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "completed"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_107_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ss_wo_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1088_NE_186x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_st_wi_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_10_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ag_wo_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_116_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_cmd_wi_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_16_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_status_epoch16_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_16_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_core_epoch_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_16_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_embed_prov_embed_scale_q_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_187_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_sys_face_seq_dh__fo1_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_187_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_sys_face_seq_dh_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_18_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_ng_tt_native_tok_0__fo1_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_18_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_token_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_18_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_ng_tt_native_pos_0__fo1_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_tx_we_0",
+        "rly_sf_execution_active_0",
+        "rly_sf_prog_tx_observed_v_0"
+      ],
+      "param_sets": {
+        "{}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_v_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 5,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_kv_x3_slot_0",
+        "rly_sf_prog_rx_v_0",
+        "rly_sf_emb_rx_v_0"
+      ],
+      "param_sets": {
+        "{}": 5
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_rxv_0",
+        "rly_serdes0_up_0",
+        "rly_serdes2_txv_0"
+      ],
+      "param_sets": {
+        "{}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_tt_kwd_0",
+        "rly_sf_tt_fab_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_tt_ctlm_cal_image_ready_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 10,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_txv_0",
+        "rly_sf_cfg_rx_we_0",
+        "rly_sf_cal_seg_0"
+      ],
+      "param_sets": {
+        "{}": 10
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 8,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cal_start_0",
+        "rly_sf_vm_drained_0",
+        "rly_sf_collective_drained_0"
+      ],
+      "param_sets": {
+        "{}": 8
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_1_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 9,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_rxv_0",
+        "rly_serdes2_up_0",
+        "rly_ng_tt_layer_context_v_0__fo1_0"
+      ],
+      "param_sets": {
+        "{}": 9
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_2_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_gen_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_2_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_x3_generation_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_32_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_value_0",
+        "rly_sf_result_cycles_0",
+        "rly_dvw_art_wo_0"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_32_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_data_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_3_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_rr_wi_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_453_WE_80x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_hr_wi_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_4_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_cause_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_512_EN_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ard_wo_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_512_WN_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_embed_prov_embed_code_q_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_520_NE_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dr_wi_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_524_SW_92x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_x3_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_548_EN_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_prog_tx_record_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_548_NE_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_rx_payload_0",
+        "rly_lnk_rx_payload__fo1_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_548_SW_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dd_wo_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_56_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_tt_ctlm_dc_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_597_NS_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_rx_0",
+        "rly_serdes2_tx_0"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_597_SN_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_tx_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_597_WE_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_rx_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_59_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_x3_identity_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_59_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_tag_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_6_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_addr_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_6_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_ng_tt_command_stage_0__fo1_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_76_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_tt_ctlm_cal_program_obs_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh0_76_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_tt_program_obs_0"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_107_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ss_wo_19",
+        "rly_dvw_ss_wo_20"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_107_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 17,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ss_wo_1",
+        "rly_dvw_ss_wo_2",
+        "rly_dvw_ss_wo_3"
+      ],
+      "param_sets": {
+        "{}": 17
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_107_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ss_wo_18"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1088_NE_186x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_st_wi_6"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1088_NS_186x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 18,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_st_wi_2",
+        "rly_dvw_st_wi_3",
+        "rly_dvw_st_wi_4"
+      ],
+      "param_sets": {
+        "{}": 18
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1088_WS_186x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_st_wi_1",
+        "rly_dvw_st_wi_7"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_10_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ag_wo_17"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_10_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 18,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ag_wo_1",
+        "rly_dvw_ag_wo_2",
+        "rly_dvw_ag_wo_3"
+      ],
+      "param_sets": {
+        "{}": 18
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_10_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ag_wo_16",
+        "rly_dvw_ag_wo_21"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_116_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_cmd_wi_6"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_116_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 19,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_cmd_wi_2",
+        "rly_dvw_cmd_wi_3",
+        "rly_dvw_cmd_wi_4"
+      ],
+      "param_sets": {
+        "{}": 19
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_116_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_cmd_wi_7"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_116_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_cmd_wi_1",
+        "rly_dvw_cmd_wi_8"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_16_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_status_epoch16_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_187_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_sys_face_seq_dh__fo1_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_18_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_token_1",
+        "rly_sf_result_token_2"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cal_start_1",
+        "rly_sf_io_shared_fault_22"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_ES_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_txv_8"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 12,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_txv_7",
+        "rly_sf_vm_drained_1",
+        "rly_sf_collective_drained_1"
+      ],
+      "param_sets": {
+        "{}": 12
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 7,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_txv_1",
+        "rly_serdes2_txv_2",
+        "rly_serdes2_txv_3"
+      ],
+      "param_sets": {
+        "{}": 7
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_txv_6",
+        "rly_lnk_fwd_epoch_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_SE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_emb_rx_v_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_SN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 90,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_txv_1",
+        "rly_serdes2_rxv_2",
+        "rly_serdes2_rxv_3"
+      ],
+      "param_sets": {
+        "{}": 90
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_tx_we_2",
+        "rly_sf_cfg_rx_we_1",
+        "rly_sf_cal_seg_1"
+      ],
+      "param_sets": {
+        "{}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_WE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 5,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_up_1",
+        "rly_sf_prog_rx_v_1",
+        "rly_sf_emb_rx_v_2"
+      ],
+      "param_sets": {
+        "{}": 5
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_WN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_rxv_1",
+        "rly_serdes2_up_2"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_1_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 5,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_kv_x3_slot_1",
+        "rly_sf_prog_witness_slot_1",
+        "rly_sf_prog_auth_slot_1"
+      ],
+      "param_sets": {
+        "{}": 5
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_2_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_gen_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_2_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_gen_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_32_EN_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_data_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_32_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_value_2",
+        "rly_sf_result_cycles_2"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_32_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_value_1",
+        "rly_sf_result_cycles_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_453_NE_80x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_hr_wi_6"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_453_NS_80x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 21,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_hr_wi_2",
+        "rly_dvw_hr_wi_3",
+        "rly_dvw_hr_wi_4"
+      ],
+      "param_sets": {
+        "{}": 21
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_453_WS_80x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_hr_wi_1",
+        "rly_dvw_hr_wi_7"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_4_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_cause_1",
+        "rly_sf_result_cause_2"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_512_SN_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_ard_wo_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_512_SW_89x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_embed_prov_embed_code_q_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_520_NE_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dr_wi_25"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_520_NS_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 22,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dr_wi_3",
+        "rly_dvw_dr_wi_4",
+        "rly_dvw_dr_wi_5"
+      ],
+      "param_sets": {
+        "{}": 22
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_520_WE_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dr_wi_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_520_WS_91x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dr_wi_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_548_EN_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dd_wo_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_548_EW_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dd_wo_24"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_548_SN_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 21,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_dvw_dd_wo_2",
+        "rly_dvw_dd_wo_3",
+        "rly_dvw_dd_wo_4"
+      ],
+      "param_sets": {
+        "{}": 21
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_548_SW_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_prog_tx_record_1",
+        "rly_dvw_dd_wo_23"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_548_WE_95x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_lnk_rx_payload__fo1_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_597_NS_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 6,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_rx_1",
+        "rly_serdes2_tx_1",
+        "rly_serdes2_tx_2"
+      ],
+      "param_sets": {
+        "{}": 6
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_597_NW_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_tx_6"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_597_SN_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 5,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes0_tx_1",
+        "rly_serdes2_rx_3",
+        "rly_serdes2_rx_4"
+      ],
+      "param_sets": {
+        "{}": 5
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_597_WE_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_rx_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_597_WN_104x60": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_serdes2_rx_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_59_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_result_tag_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyh_6_SW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_sf_cfg_addr_1"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyr0_1_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 4,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_rst_d2d_0",
+        "rly_rst_d2d__fo1_0",
+        "rly_rst_d2d__fo2_0"
+      ],
+      "param_sets": {
+        "{}": 4
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyr_1_NE_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_rst_d2d__fo2_2"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "ck_o"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyr_1_NS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 2,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_rst_d2d_1",
+        "rly_rst_d2d__fo2_1"
+      ],
+      "param_sets": {
+        "{}": 2
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyr_1_NW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 3,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_rst_d2d_2",
+        "rly_rst_d2d__fo1_1",
+        "rly_lnk_fwd_lrst_1"
+      ],
+      "param_sets": {
+        "{}": 3
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "ck_o"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyrl_1_EW_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 4,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/105_qfd_fwd_lane_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_rst_d2d_3",
+        "rly_rst_d2d__fo1_2",
+        "rly_lnk_phy_rst_0"
+      ],
+      "param_sets": {
+        "{}": 4
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rlyrl_1_WS_65x30": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rly_rst_d2d__fo2_3"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rst_rep": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 4429,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/106_qfd_rst_rep_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rstt_rst_d2d__fo1__r3_0",
+        "rstt_rst_d2d__fo1__r3_1",
+        "rstt_rst_d2d__fo1__r3_2"
+      ],
+      "param_sets": {
+        "{}": 4429
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "q1"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rst_rep_p8": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 5243,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/106_qfd_rst_rep_masters.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rstt_rst_d2d__fo1__r3_36",
+        "rstt_rst_d2d__fo1__r3_41",
+        "rstt_rst_seq_58"
+      ],
+      "param_sets": {
+        "{}": 5243
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "q1"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rstseq": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/113_qfd_link_slots.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rstseq_rom"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "rso_s"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_rstsync": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/113_qfd_link_slots.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "rs_bump"
+      ],
+      "param_sets": {
+        "{}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_sigbump": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 5,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/113_qfd_link_slots.sv",
+      "kind": "model",
+      "ambiguous_defs": null,
+      "examples": [
+        "bump_fwd_epoch",
+        "bump_fwd_lrst",
+        "bump_pkg_s0"
+      ],
+      "param_sets": {
+        "{}": 5
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_sys_face": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/115_qfd_sys_face.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "sys_face"
+      ],
+      "param_sets": {
+        "{\"MU\": 1}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "fault"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_sys_face_mu_dhobs": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/111_qfd_sys_face_mu_dhobs.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "mu_dhobs"
+      ],
+      "param_sets": {
+        "{\"NU\": 4}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "mu_fault",
+        "res_user"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    },
+    "qfd_tt_ctlm_dv": {
+      "verdict": "PASS",
+      "fails": [],
+      "instances": 1,
+      "rtl": "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/110_qfd_tt_ctlm_dv.sv",
+      "kind": "real",
+      "ambiguous_defs": null,
+      "examples": [
+        "tt_ctlm"
+      ],
+      "param_sets": {
+        "{\"NU\": 4, \"OPSEG\": 1, \"STAGE_ME\": 1, \"XPF_TRANSPORT_EDGES\": 21}": 1
+      },
+      "die_port_not_in_rtl": [],
+      "input_unconnected": [],
+      "input_tied": [],
+      "straps": [],
+      "pad_bits": {},
+      "output_open": [
+        "cf"
+      ],
+      "width_mismatch": {},
+      "unparsed_conn": [],
+      "duplicate_port": []
+    }
+  },
+  "undriven_nets": {},
+  "undriven_classes": {},
+  "multi_driven_classes": {},
+  "multi_driven_nets": {},
+  "top_assigns": [],
+  "params_not_in_rtl": [],
+  "child_closure": {
+    "modules": 385,
+    "unresolved_children": {},
+    "model_children": {
+      "ot_qkvd_ucie_x64_phy_model": [
+        "ot_qkvd_ucie_x64_phy"
+      ]
+    },
+    "variant_children": {
+      "ot_hdc_fp32_add_lat": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "by": "prefer",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ]
+      },
+      "ot_hdc_fp32_mul_lat": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "by": "prefer",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+        ]
+      },
+      "ot_hdc_qadd": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+        "by": "prefer",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fastfp.sv"
+        ]
+      },
+      "ot_hdc_qmul": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+        "by": "prefer",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fastfp.sv"
+        ]
+      },
+      "ot_hdc_w11_cut": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "by": "prefer",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ]
+      },
+      "ot_qwen_w12_matvec_part": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hdc/ot_qwen_w12_matvec.sv",
+        "by": "prefer",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_qwen_w12_matvec.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_qwen_w12_matvec.sv"
+        ]
+      },
+      "ot_sram_1r1w_128x256_m1_r2c2": {
+        "chosen": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+        "by": "macro_dir",
+        "differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+        ],
+        "iface_differ": [
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+          "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/src/rtl/model/ot_hbm_hc_operand_sram_sim.sv"
+        ]
+      }
+    },
+    "ambiguous_children": {},
+    "elab_traps": {
+      "D2D_TXDP_NOT_COMPILED__set_TXDP_from_the_compiler": [
+        "qfd_d2d_static"
+      ],
+      "OT_VRED_ENTRIES_REQUIRE_SW64_LV7_AW24": [
+        "qfd_dv_su8_entries"
+      ],
+      "QFD_DV_SU_LANE_IS_WR16_AW24_NW18_KVFP8_ML1_RD2_LOFF1": [
+        "qfd_dv_su8_entries"
+      ],
+      "ot_hdc_fp32_add_lat_CUTS_must_match_LAT": [
+        "ot_hdc_fp32_add_lat",
+        "ot_hdc_fp32_add_lat_nr"
+      ],
+      "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT": [
+        "ot_hdc_fp32_mul_lat"
+      ]
+    },
+    "prefer_lists": [],
+    "ref_tile_specs_used": [
+      "physical/ref_tile/coll_fold_slice_rt/spec.json",
+      "physical/ref_tile/ot_coll_fold_slice_m5/spec.json",
+      "physical/ref_tile/ot_qwen_tile_operand/spec.json",
+      "physical/ref_tile/ot_qwen_tile_rpair/spec.json",
+      "physical/ref_tile/ot_qwen_tile_rqr_half/spec.json",
+      "physical/ref_tile/qfd_c_b16_dv_diag/spec.json",
+      "physical/ref_tile/qfd_c_b16_dv_diag16c/spec.json",
+      "physical/ref_tile/qfd_c_b16_dv_diag16ct/spec.json",
+      "physical/ref_tile/qfd_c_b16_dv_diagc/spec.json",
+      "physical/ref_tile/qfd_c_b16_dv_diagct/spec.json",
+      "physical/ref_tile/qfd_c_b16_dv_diagt/spec.json",
+      "physical/ref_tile/qfd_c_stn514/spec.json",
+      "physical/ref_tile/qfd_c_stn516/spec.json",
+      "physical/ref_tile/qfd_c_xstn/spec.json",
+      "physical/ref_tile/qfd_c_xstnw/spec.json",
+      "physical/ref_tile/qfd_coll_bank137/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r1/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r5/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r6/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r7c/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r7d/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r7e/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r7f/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r7g/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r7m/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r8/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r8c/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r8d/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r9a/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r9b/spec.json",
+      "physical/ref_tile/qfd_d2d_static_r9c/spec.json",
+      "physical/ref_tile/qfd_dv_heads_w130/spec.json",
+      "physical/ref_tile/qfd_dv_lane_h/spec.json",
+      "physical/ref_tile/qfd_dv_slice2_w/spec.json",
+      "physical/ref_tile/qfd_dv_slice2_wh/spec.json",
+      "physical/ref_tile/qfd_embedding_word_provider/spec.json",
+      "physical/ref_tile/qfd_io_collective_s1/spec.json",
+      "physical/ref_tile/qfd_io_collective_s2/spec.json",
+      "physical/ref_tile/qfd_io_collective_s3/spec.json",
+      "physical/ref_tile/qfd_io_collective_s4/spec.json",
+      "physical/ref_tile/qfd_native59_dv_service/spec.json",
+      "physical/ref_tile/qfd_rst_rep/spec.json",
+      "physical/ref_tile/qfd_rst_rep_p8/spec.json",
+      "physical/ref_tile/qfd_rstseq/spec.json",
+      "physical/ref_tile/qfd_rstsync/spec.json",
+      "physical/ref_tile/qfd_static_ch546/spec.json",
+      "physical/ref_tile/qfd_su_lane_h/spec.json",
+      "physical/ref_tile/qfd_su_sfu_exp/spec.json",
+      "physical/ref_tile/qfd_su_sfu_rcp/spec.json",
+      "physical/ref_tile/qfd_su_sfu_rsq/spec.json",
+      "physical/ref_tile/qfd_su_vred_region8/spec.json",
+      "physical/ref_tile/qfd_su_vred_tail64/spec.json",
+      "physical/ref_tile/qfd_sys_face/spec.json",
+      "physical/ref_tile/qfd_sys_face_mu_dhobs/spec.json",
+      "physical/ref_tile/qfd_sys_face_mu_dhuser/spec.json",
+      "physical/ref_tile/qfd_tile_nk_h4/spec.json",
+      "physical/ref_tile/qfd_tile_nk_r5/spec.json",
+      "physical/ref_tile/qfd_tile_nk_tp8/spec.json",
+      "physical/ref_tile/qfd_tt_head_static/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_c8/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_f10/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h10p/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h11/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h12/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h13/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h13c2/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h13u/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h14/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h14c/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h14d/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h15/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h15a/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h15b/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h16/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h16b/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_h16c/spec.json",
+      "physical/ref_tile/qfd_tt_head_static_t6/spec.json",
+      "physical/ref_tile/qfd_ucie_gearbox_r10/spec.json",
+      "physical/ref_tile/qfd_ucie_gearbox_r15/spec.json",
+      "physical/ref_tile/qfd_ucie_gearbox_r16/spec.json",
+      "physical/ref_tile/qfd_xs_leaf/spec.json",
+      "physical/ref_tile/qfd_xs_leaf_m6_138/spec.json",
+      "physical/ref_tile/qfd_xs_leaf_m6_138d/spec.json",
+      "physical/ref_tile/qfd_xs_leaf_m6_138e/spec.json",
+      "physical/ref_tile/qfd_xs_leaf_m6_138f/spec.json",
+      "physical/ref_tile/qfd_xs_leaf_w130/spec.json",
+      "physical/ref_tile/qfd_xs_leaf_w130m5/spec.json",
+      "physical/ref_tile/qfwd_landh0_1_en_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh0_1_ew_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh0_1_ne_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh0_1_ns_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh_1_en_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh_1_ew_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh_1_ne_65x30/spec.json",
+      "physical/ref_tile/qfwd_landh_1_ns_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh0_1_en_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh0_1_ew_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh0_1_ns_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh0_1_sw_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh_1_en_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh_1_ew_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyh_1_sn_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyr0_1_ns_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyr_1_ne_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyr_1_ns_65x30/spec.json",
+      "physical/ref_tile/qfwd_rlyrl_1_ew_65x30/spec.json",
+      "physical/ref_tile/qkd_slot_store137/spec.json"
+    ]
+  },
+  "pads_declared": [],
+  "die_sha256": "7b1bdfc5fd26c2e6f17fe6aa5b1d68bd9e2fa05bc3ecf408b9f163eb600bbde7",
+  "straps_declared": [
+    "qfd_c_b16_dv:cid",
+    "qfd_c_b16_dv:far",
+    "qfd_c_b16_dv:rs_i",
+    "qfd_dv_slice2_e:ag_wi",
+    "qfd_dv_slice2_e:ard_wi",
+    "qfd_dv_slice2_e:arl_wi",
+    "qfd_dv_slice2_e:arm_wi",
+    "qfd_dv_slice2_e:art_wi",
+    "qfd_dv_slice2_e:arv_wi",
+    "qfd_dv_slice2_e:dd_wi",
+    "qfd_dv_slice2_e:l9_wi",
+    "qfd_dv_slice2_e:sc_wi",
+    "qfd_dv_slice2_e:st_wi",
+    "qfd_dv_slice2_w:l9_wi",
+    "qfd_dv_slice2_w:sc_wi"
+  ],
+  "params_file": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/die.v.params.json",
+  "rtl_roots": [
+    "rtl",
+    "physical/hbm_generic/argmax18/rtl",
+    "physical/ref_tile/dscoll_lane_w_rt/src/rtl",
+    "physical/ref_tile/dsfd_coll_cbq0_m5/src/rtl",
+    "physical/ref_tile/dsfd_coll_cbq_m5/src/rtl",
+    "physical/ref_tile/dsfd_coll_cbr_m5/src/rtl",
+    "physical/ref_tile/dsfd_coll_ct_rt/src/rtl",
+    "physical/ref_tile/hfd_gath_r25_m5/src/physical/hbm_accel_die_views/stations/rtl",
+    "physical/ref_tile/hfd_gath_r25_m5/src/rtl",
+    "physical/ref_tile/hfd_gath_r9_m5/src/physical/hbm_accel_die_views/stations/rtl",
+    "physical/ref_tile/hfd_gath_r9_m5/src/rtl",
+    "physical/ref_tile/hfd_index_q_b2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_mcast_r6a_m5/src/physical/hbm_accel_die_views/stations/rtl",
+    "physical/ref_tile/hfd_mcast_r6a_m5/src/rtl",
+    "physical/ref_tile/hfd_mcast_r6b_m5/src/physical/hbm_accel_die_views/stations/rtl",
+    "physical/ref_tile/hfd_mcast_r6b_m5/src/rtl",
+    "physical/ref_tile/hfd_stn_r36_m5/src/physical/hbm_accel_die_views/stations/rtl",
+    "physical/ref_tile/hfd_stn_r36_m5/src/rtl",
+    "physical/ref_tile/hfd_svc_se_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_se_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_se_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_se_s7_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_se_s8_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_sw_s0_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_sw_s1_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_sw_s2_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_sw_s3_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/hfd_svc_sw_s4_m5/src/physical/hbm_accel_die_views/svc/rtl",
+    "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl",
+    "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl",
+    "physical/ref_tile/ot_hgi_qw_dec_m5/src/physical/hbm_accel_die_views/quant/rtl",
+    "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl",
+    "physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/rtl",
+    "physical/ref_tile/ot_nhb_pbst_m5/src/rtl",
+    "physical/ref_tile/ot_nhb_zh_m5/src/rtl",
+    "physical/ref_tile/ot_pqc_t_qb_m5/src/physical/s81_pq_hier/pinned/rtl",
+    "physical/ref_tile/ot_pqc_t_ret_m5/src/physical/s81_pq_hier/pinned/rtl",
+    "physical/ref_tile/ot_qkh_ktree_m5/src/rtl",
+    "physical/ref_tile/ot_qkh_lane8_m5/src/rtl",
+    "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl",
+    "physical/ref_tile/qfd_chead_m5/src/rtl",
+    "physical/ref_tile/qfd_cst_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_00_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_06_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_11_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_14_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_16_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_17_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_19_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_20_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_pc_31_m5/src/rtl",
+    "physical/ref_tile/qfd_ctrl_ready_00_m5/src/rtl",
+    "physical/ref_tile/qfd_emb_pcport_m5/src/rtl",
+    "physical/ref_tile/qfd_io_emb_tap_m5/src/rtl",
+    "physical/ref_tile/qfd_kvc_decode_pc_m5/src/rtl",
+    "physical/ref_tile/qfd_lst_v_m5/src/rtl",
+    "physical/ref_tile/qfd_res_slot_m5/src/rtl",
+    "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl",
+    "physical/ref_tile/sfu_lane_ring3_rt/src/rtl",
+    "physical/ref_tile/val_bad_ctile5db/src/rtl",
+    "physical/ref_tile/val_bad_kvw/src/rtl",
+    "physical/ref_tile/val_bad_su9eff/src/rtl",
+    "physical/ref_tile/val_good_cbq0/src/rtl",
+    "physical/ref_tile/val_good_clt6/src/rtl",
+    "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f18dh2/src/physical/asap7_memory_macros",
+    "physical/asap7_memory_macros_v2",
+    "physical/asap7_memory_macros"
+  ],
+  "rtl_files": [
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/000_die_glue.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/103_qfd_link_slots.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/104_ot_qwen_d2d_dies.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/100_ot_qkvd_ucie_x64_phy_model.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/102_ot_qfd_ucie_x64_phy_bb.v",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/101_ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/097_ot_coll_fold_slice.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/098_ot_coll_rst_leaf.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/009_ot_hdc_fp32_add_lat.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/015_ot_hdc_prefix.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/008_ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/003_ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/038_ot_qwen_tile_operand.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/039_ot_qwen_tile_rpair.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/025_ot_qwen_rom_tile_w12.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/006_ot_hdc_delay.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/040_ot_qwen_tile_rqr_half.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/044_qfd_q3h_stn.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/042_qfd_c_b16_dv_fabric.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/041_qfd_c_b16_dv.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/043_qfd_c_stn.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/075_ot_qfd_xslice.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/081_ot_qkvd_d2d_llr.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/082_ot_qwen_crc_parallel.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/083_ot_qwen_static_slot_link.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/084_qkd_native_attention_record.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/074_ot_qwen_d2d_static.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/073_ot_qwen_d2d_services.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/072_ot_qwen_d2d_dies.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/060_qfd_kvn_static_transport.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/029_ot_rst_pipe.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/047_qfd_dv_heads.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/054_qfd_dv_su_lane.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/020_ot_hdc_vstream_lane.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/021_ot_hdc_vstream_lane_t.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/013_ot_hdc_fpu.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/017_ot_hdc_sfu.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/018_ot_hdc_sfu_q.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/011_ot_hdc_fp32_mul_lat.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/012_ot_hdc_fp32_mul_pipe.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/051_qfd_dv_slice2_faces.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/050_qfd_dv_slice2.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/048_qfd_dv_redstn2.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/049_qfd_dv_scalar2.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/055_qfd_dv_vm.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/052_qfd_dv_stream.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/053_qfd_dv_su8_entries.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/019_ot_hdc_vreduce.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/030_ot_hdc_vred_pending_guard.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/046_qfd_dv_amax_mu.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/058_qfd_embedding_word_provider.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/086_qkd_embedding_static_preload_face.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/085_qkd_embedding_static_core_store.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/032_ot_qfd_io_collective_static.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/099_ot_coll_tp8_static.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/063_qfd_native59_dv_service.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/062_qfd_native59_command_context.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/064_qfd_native59_q_export_control.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/066_qfd_native59_static_service.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/065_qfd_native59_record_endpoint.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/079_ot_qfd_su_kv_static_posted.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/080_ot_qwen_rst_rep.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/002_qfd_rst_rep_masters.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/061_qfd_link_slots.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/033_ot_qfd_static_transport.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/028_ot_reset_sync.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/022_ot_hdc_vstream_sfu_t.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/031_ot_hdc_vreduce_entries64.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/067_qfd_sys_face.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/070_ot_qwen_d2d_cal_seq.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/071_ot_qwen_d2d_cal_seq_dies_mu.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/068_qfd_sys_face_record_port.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/069_qkd_context_records.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/078_qkd_program_commit.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/056_qfd_sys_face_mu_dhobs.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/057_qfd_sys_face_mu_dhuser.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/036_ot_qwen_rom_tile_die.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/004_ot_qwen_kv_land_merge.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/014_ot_hdc_matvec.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/023_ot_qwen_me_array_w12.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/027_ot_qwen_w12_matvec.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/026_ot_qwen_w12_arith.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/045_ot_fp32_add_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/010_ot_hdc_fp32_add_lat_nr.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/037_ot_qwen_rom_tile_nk.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/090_ot_qfd_tt_ctlm_split_static.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/089_ot_qfd_tt_ctlm_head_static_rk.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/088_ot_qfd_tt_ctl_static.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/024_ot_qwen_me_spine_h_w12.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/076_ot_qfd_spine_masters.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/034_ot_qfd_tt_ctlm_split.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/077_ot_qfd_split_exact.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/095_ot_qwen_rom_core_ctrl_static.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/005_ot_hdc_cg.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/016_ot_hdc_qwen_int8_embed_decode.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/007_ot_hdc_dyn_ttiles.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/094_ot_qwen_fixed_issue_pw.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/092_ot_qwen_fixed_issue.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/093_ot_qwen_fixed_issue_dense_pw.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/087_ot_qfd_native_cmd_route.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/096_ot_qwen_tp8_rom_relocate.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/091_ot_qfd_tt_ctlm_static_hr.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/035_ot_qfd_ucie_six_five.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/059_qfd_fwd_lane.sv",
+    "/srv/opentallas-scratch/claude/qw-source-age-1019/qw_source_age_1019/source/001_qfd_fwd_lane_masters.sv"
+  ],
+  "defines": [
+    "OT_QFD_UP4_CK_ENTRIES"
+  ]
+}

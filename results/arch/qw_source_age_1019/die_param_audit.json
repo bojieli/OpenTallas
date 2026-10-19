@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.qwen_split.die_param_audit.v1",
+ "die_v": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/die.v",
+ "params": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/die.v.params.json",
+ "lanes": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/fwd_lanes.json",
+ "trapped": {
+  "qfd_d2d_static": {
+   "TXDP": {
+    "default": "32'd0",
+    "condition": "PR != 0 && (TXDP[7:0] == 8'd0 || TXDP[15:8] == 8'd0 || TXDP[23:16] == 8'd0 || TXDP[31:24] == 8'd0)"
+   }
+  },
+  "qfd_tt_ctlm_dv": {
+   "XPF_TRANSPORT_EDGES": {
+    "default": "-1",
+    "condition": "XPF_TRANSPORT_EDGES < 0"
+   }
+  }
+ },
+ "xpf": {
+  "XPF_TRANSPORT_EDGES": 21,
+  "hr_pin_register": 1,
+  "lane_cycles": 20,
+  "buses": [
+   {
+    "bid": "dvw_hr_wi",
+    "kind": "fwd",
+    "n": 26,
+    "E": 19,
+    "K": 6,
+    "lane_cycles": 20
+   }
+  ],
+  "rule": "1 (hr pin register) + lane_groups.lane_cycles(hr bus): fwd E + 1, plain n, direct 0",
+  "sim_lag": {
+   "dvw_hr_wi": 0
+  },
+  "bench_rule": "measure with land_lag_sim.py annotate (LAG = E_sta - 2) + xpf-check: 1 + measured == XPF; the zero-delay netlist aliases when E_sta > D - 1",
+  "sinks": [
+   "dvs_W5.hr_wi"
+  ]
+ },
+ "txdp": {
+  "TXDP": 167838472,
+  "image": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh",
+  "ports": [
+   8,
+   3,
+   1,
+   10
+  ],
+  "die_stages": "{'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}",
+  "seam": {
+   "stages": {
+    "CS_TXS": 2,
+    "CS_RXV": 2,
+    "CS_RXP": 2,
+    "CS_X3S": 3,
+    "SC_TX": 2,
+    "SC_X3": 2
+   },
+   "bundles": {
+    "C.tx_slot": {
+     "cycles": 2,
+     "members": {
+      "lnk_native_tx_slot": 2,
+      "lnk_native_tx_slot_beat": 2,
+      "lnk_native_tx_slot_kind": 2
+     }
+    },
+    "C.rx_record": {
+     "cycles": 2,
+     "members": {
+      "lnk_native_rx_slot": 2,
+      "lnk_native_rx_slot_beat": 2,
+      "lnk_native_rx_slot_kind": 2,
+      "lnk_native_rx_v": 2,
+      "lnk_rx_payload": 2
+     }
+    },
+    "C.tx_record": {
+     "cycles": 2,
+     "members": {
+      "lnk_native_tx_payload": 2,
+      "lnk_native_tx_v": 2
+     }
+    },
+    "C.x3_record": {
+     "cycles": 2,
+     "members": {
+      "lnk_x3": 2,
+      "lnk_x3_generation": 2,
+      "lnk_x3_identity": 2
+     }
+    },
+    "C.x3_slot": {
+     "cycles": 3,
+     "members": {
+      "lnk_kv_x3_slot": 3
+     }
+    }
+   },
+   "source": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/die.v + /srv/opentallas-scratch/claude/mu-die-qw/dv2f18dh2/chain/case_r22k/fwd_lanes.json",
+   "rule": "record_bundles.seam_stages: lane cycles per seam bundle as built (fwd E + 1, plain n, direct 0)"
+  },
+  "seam_txd_c": [
+   8,
+   3,
+   1,
+   10
+  ],
+  "seam_txdp": 167838472,
+  "seam_stages": "2,2,2,3,2,2"
+ },
+ "assigned": {
+  "qfd_collective_static_io_production": {
+   "LS": 378,
+   "LX0": 11,
+   "LX1": 0,
+   "LX2": 10
+  },
+  "qfd_d2d_static": {
+   "TXDP": 167838472
+  },
+  "qfd_dv_slice2_e": {
+   "MU_NU": 4
+  },
+  "qfd_dv_slice2_w": {
+   "MU_NU": 4
+  },
+  "qfd_sys_face": {
+   "MU": 1
+  },
+  "qfd_sys_face_mu_dhobs": {
+   "NU": 4
+  },
+  "qfd_tt_ctlm_dv": {
+   "NU": 4,
+   "OPSEG": 1,
+   "STAGE_ME": 1,
+   "XPF_TRANSPORT_EDGES": 21
+  }
+ },
+ "verdict": "PASS",
+ "fails": []
+}
