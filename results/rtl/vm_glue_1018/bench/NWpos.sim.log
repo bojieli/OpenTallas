@@ -1,0 +1,5 @@
+VMS_HOIST_EQUIV NW PASS checks=33000 errors=0
+- /srv/opentallas-scratch/claude/vmglue2/out/NWpos/tb_vms_hoist.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.083 s; speed 72.266 us/s
+- Verilator: cpu 0.083 s on 1 threads; allocated 10 MB

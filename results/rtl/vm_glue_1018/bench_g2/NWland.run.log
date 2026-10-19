@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+VMS_GLUE_TILE_TB NW hfd_hgi_vms_glue_nw_t MUT=land cycles=4000
+MISMATCH cyc 24 cw_out
+MISMATCH cyc 31 cw_out
+MISMATCH cyc 35 ccw_out
+MISMATCH cyc 57 cw_out
+MISMATCH cyc 60 ccw_out
+VMS_GLUE_LT_EQUIV NW FAIL checks=33768 errors=493
+rc 1

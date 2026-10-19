@@ -1,0 +1,10 @@
+MISMATCH cyc 17 ring_fault
+MISMATCH cyc 18 ring_fault
+MISMATCH cyc 118 bk_pq
+MISMATCH cyc 143 ccw_out
+MISMATCH cyc 148 ccw_out
+VMS_GLUE_LT_EQUIV SE FAIL checks=33768 errors=367
+- /srv/opentallas-scratch/claude/lh-pgvm2-vmg5/bench_a/SEg4/tb_vms_glue_lt.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.043 s; speed 93.590 us/s
+- Verilator: cpu 0.043 s on 1 threads; allocated 8 MB

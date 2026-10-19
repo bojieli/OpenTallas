@@ -1,0 +1,10 @@
+MISMATCH cyc 29 bk_pq
+MISMATCH cyc 30 bk_pq
+MISMATCH cyc 33 bk_pq
+MISMATCH cyc 34 bk_pq
+MISMATCH cyc 41 bk_pq
+VMS_GLUE_LT_EQUIV SW FAIL checks=37520 errors=508
+- /srv/opentallas-scratch/claude/hbm-safe-vmglue/out/SWg3/tb_vms_glue_lt.sv:227: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.036 s; speed 111.252 us/s
+- Verilator: cpu 0.035 s on 1 threads; allocated 8 MB
