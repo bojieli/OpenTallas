@@ -46,8 +46,11 @@
     "clock": "existing clk unchanged",
     "reset": "existing asynchronous input unchanged; no landing added; measured reset-as-enable remains OPEN",
     "max_stage_reach_um": 405,
-    "physical_area": "pending mapped cell census; no slot or route claim",
-    "tracks": "35 data pins each direction, six local storage regions; layout channel fit OPEN"
+    "physical_area": "TT structural D7 194.16186um2; D8 194.7888um2; no placed timing, slot or route claim",
+    "tracks": "35 data pins each direction, six local storage regions; layout channel fit OPEN",
+    "retention": "Six kept slice modules preserve54 actual pointer/counter FFs through ABC and post-map flattening without opt_merge",
+    "measured_control_loads": "direct12/13 forD7/D8; recursive BUF/INV15 both",
+    "measured_reset_loads": "raw119 direct/125 recursive; OPEN and not qualified; no reset landing added"
   },
   "schedule": {
     "delay7": "default exact original output byte/cycle behavior",
@@ -61,5 +64,6 @@
     "full rate wrap and occupied asynchronous reset at each pointer phase",
     "wrongslot MUT1 fails DELAY7 and8",
     "direct/collapsed terminal-pin counts; native boundary/reset/clock qualification not claimed"
-  ]
+  ],
+  "measured_evidence": "rtl/test/hbm_accel/svg_rel/meta_delay8_evidence/results.json"
 }
