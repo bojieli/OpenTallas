@@ -109,6 +109,9 @@ def main(a):
             command('pdngen -failed_via_report {'+str(out/'failed_vias.rpt')+'}')
             d.writeDb(str(out/'generated_pdn.odb'))
             record['generated_odb_sha256']=sha(out/'generated_pdn.odb')
+            (out/'record.json').write_text(json.dumps(record,indent=1)+'\n')
+        if geometry(b)!=reference['cell_geometry_sha256'] or rect(b.getCoreArea())!=reference['actual_core_dbu']:
+            raise ValueError('actual generated PG altered pinned clock/cell geometry or core')
         actual=mesh(b)
         if actual!=reference['planned_core_mesh_from_actual_shapes']:raise ValueError('actual generated mesh differs from planned source-bound blueprint')
         record.update(reference_sha256=sha(a.reference),actual_generated_mesh_sha256=digest(actual),
