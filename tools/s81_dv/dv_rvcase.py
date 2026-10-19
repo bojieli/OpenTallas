@@ -272,6 +272,16 @@ class Placer:
         raise ValueError(f'no legal {w}x{h} placement within {rmax} um of {(x, y)}')
 
 
+def landing_footprint(master, vsize, bits, depth, face):
+    """Use the immutable R0 LEF size; only an unclosed tile is analytical."""
+    if master in vsize:
+        return vsize[master]
+    area = (depth + 1) * bits * 0.29 / 0.45
+    long_ = max(bits * PITCH + 6.0, math.sqrt(area))
+    short = max(area / long_, 12.0)
+    return (long_, short) if face in 'SN' else (short, long_)
+
+
 def reserve_lanes(placer, links):
     """Keep reset stations out of payload/forward-clock bands, including their pin span.
 
@@ -483,16 +493,8 @@ def main():
     land = {r['inst']: r for r in hints['landings']}
     for i, r in sorted(land.items()):
         L = links[r['link']]; b = blocks[r['dst']]
-        nb = r['bits']; flops = (r['D'] + 1) * nb
-        area = flops * 0.29 / 0.45
-        long_ = max(nb * PITCH + 6.0, math.sqrt(area)); short = max(area / long_, 12.0)
         x, y = L['dxy']; f = face_of(b, x, y)
-        if mst_of[i] in vsize:
-            # A CLOSED view has fixed R0 dimensions; the analytical shape below
-            # only sizes a stand-in. Never reserve a smaller/rotated fiction.
-            w_, h_ = vsize[mst_of[i]]
-        else:
-            w_, h_ = (long_, short) if f in 'SN' else (short, long_)
+        w_, h_ = landing_footprint(mst_of[i], vsize, r['bits'], r['D'], f)
         if f in 'SN':
             xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
             pref = [(1, 0), (-1, 0), (0, -1 if f == 'S' else 1)]
