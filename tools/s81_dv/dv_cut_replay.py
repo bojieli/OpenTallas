@@ -459,6 +459,10 @@ def gen(a):
                 if src_ports_of(cut, L) & set(tsrc):
                     continue                            # the lane is fed from the producer cut's trace
                 k = w['cycle_land'] - bage + 1 + a.t0
+                if any(lk.startswith(x) for x in a.equalize):
+                    # TOK-S81-GAPS/GU: --equalize models a die-gap fix (the bundle's lanes land together, as an equal
+                    # station count / per-lane K would make them): the lane is launched at its own age -> DIAGNOSTIC
+                    k = w['cycle_land'] - L['age'] + 1 + a.t0
                 hit = set()
                 for bit, v in lb.items():
                     sb = L['src_bits'][bit] if bit < len(L['src_bits']) else None
@@ -592,12 +596,12 @@ def gen(a):
     for x, n in ((unenc_here, 'unencoded'), (offdie_here, 'offdie'), (internal_here, 'internal')):
         for e in x:
             by_kind[e['kind']][n] += 1
-    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale']) else 'SCHEDULE')
+    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale'] or a.equalize) else 'SCHEDULE')
     ncyc = int(max([c for c, *_ in outs] + [c for c, *_ in ins] + [a.t0]) + 50)
     doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', die_v=str(a.die_v), die_v_sha256=die.sha256,
                prog=str(prog), prog_manifest_sha256=hashlib.sha256((prog / 'manifest.json').read_bytes()).hexdigest()
                if (prog / 'manifest.json').exists() else None, cut=cut.dir, layer=S.get('layer'), t0=a.t0,
-               mutant=a.mutant or None, lane_age=a.lane_age, host_boot=host, verdict_kind=kind, stale=st,
+               mutant=a.mutant or None, lane_age=a.lane_age, equalize=a.equalize, host_boot=host, verdict_kind=kind, stale=st,
                traces=traces, boundary=bnd, in_words=rec_in, out_checks=rec_out, internal_words=internal,
                unencoded=unenc_here, unencoded_total=len(unenc), partial=bool(unenc_here),
                offdie=offdie_here, internal_events=internal_here, by_kind={k: dict(v) for k, v in sorted(by_kind.items())},
@@ -830,6 +834,8 @@ def main(argv=None):
     g.add_argument('--mutant', default='')
     g.add_argument('--lane-age', action='store_true')
     g.add_argument('--allow-stale', action='store_true')
+    g.add_argument('--equalize', action='append', default=[], help='LANE_PREFIX: drive each lane of the bundle at its '
+                   'own age (models a die-gap fix, e.g. G8 residual hf_7N); the verdict becomes DIAGNOSTIC')
     g.add_argument('--host-boot', type=int, default=None, help='bench cycle of the first host boot word (cuts with u_seqhost)')
     g.add_argument('--ks', type=int, default=None)
     g.add_argument('--ks-word', default=f'{(1 << 52) | (37 << 42) | (1000 << 21) | 5000:x}')

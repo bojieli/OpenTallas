@@ -583,7 +583,7 @@ def row_ctl_events(die, prog):
     the internal event records the arrival it rides on.  Returns the number of CTL events added."""
     have = {}
     for e in prog.events:
-        if e['kind'] == 'CTL':
+        if e['kind'] == 'CTL' and e['dir'] == 'in':
             have.setdefault((e['inst'], int(e['payload'].split()[1].rstrip(';'))), []).append(e['cycle'])
     sid_of = {v['sid']: k for k, v in die.slices().items()}
     added, paths = 0, {}
