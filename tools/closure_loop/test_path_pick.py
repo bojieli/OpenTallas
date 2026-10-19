@@ -77,6 +77,20 @@ class PathPickTest(unittest.TestCase):
         j["spec"]["stages"]["route"]["cmd"] = "route only"
         self.assertFalse(cl.overlay_skipped(j))
 
+    def test_overlay_skipped_reads_newest_route_log(self):
+        run = self.td / "run"
+        (run / "cl").mkdir(parents=True)
+        j = dict(host="h", run=str(run), spec=dict(stages=dict(route=dict(
+            cmd="export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC}"))))
+        local = lambda host, cmd, **kw: subprocess.run(["bash", "-c", cmd], capture_output=True, text=True)  # noqa: E731
+        with patch.object(cl, "ssh", side_effect=local):
+            self.assertTrue(cl.overlay_skipped(j))                       # no mark
+            (run / "cl/ttb_corner.txt").write_text("TC 1 smh_config\n")
+            (run / "cl/route.a1.log").write_text("route ok\n")
+            self.assertFalse(cl.overlay_skipped(j))                      # mark, clean log
+            (run / "cl/route.a2.log").write_text("python3: can't open file '/x/tt_overlay.py\\ntools/x': [Errno 2]\n")
+            self.assertTrue(cl.overlay_skipped(j))                       # resumed attempt's overlay failed
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -6341,7 +6341,13 @@ def overlay_skipped(j):
     if "OT_TTB_CORNER_MARK={CL}/ttb_corner.txt" not in cmds or not j.get("host") or not j.get("run"):
         return False
     try:
-        r = ssh(j["host"], f"test -s {j['run']}/cl/ttb_corner.txt && echo MARK || echo NOMARK", timeout=60)
+        # the mark can come from another overlay call in the same command (s81dvbk_sq-q1 route.a2: the resumed route's
+        # overlay failed "can't open file .../tt_overlay.py\ntools/..." while an earlier call had written TC): the
+        # newest route log naming a failed overlay / missing fleet path counts as skipped too
+        r = ssh(j["host"], f"L=$(ls {j['run']}/cl/route.a*.log 2>/dev/null | sort -V | tail -1); "
+                           f"if [ -n \"$L\" ] && grep -q -E \"can.t open file .*tt_overlay|OT_FLOW_MISSING\" \"$L\"; "
+                           f"then echo NOMARK; elif test -s {j['run']}/cl/ttb_corner.txt; then echo MARK; else echo NOMARK; fi",
+                timeout=60)
     except Exception:  # noqa: BLE001
         return False
     return "NOMARK" in (r.stdout or "")
