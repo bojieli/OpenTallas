@@ -96,7 +96,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   // R stage
   rd_r<=0;cmd_r<=0;ret_r<=0;retf_r<=0;
   if(word_v)begin
-   cmd_r<=word[82:0];ret_r<=word[117];retf_r<={word[118],word[134:119]};
+   cmd_r<=word[82:0];ret_r<=word[117];retf_r<={word[134:119],word[118]};
    rd_r[33:0]<=word[116:83];
    if(PREL!=0)begin
     if(word[25])begin
@@ -105,7 +105,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
     end
     if(word[29])cmd_r[39:30]<=word[39:30]+c_tag+c_lofs;
     if(word[83])begin rd_r[1]<=c_bank;rd_r[17:2]<=c_ep;rd_r[23:18]<=word[106:101]+c_lofs[5:0];rd_r[33:24]<=word[116:107]+c_tag+c_lofs;end
-    ret_r<=word[117]&&(!looped||wlast);retf_r<={c_bank,c_ep};
+    ret_r<=word[117]&&(!looped||wlast);retf_r<={c_ep,c_bank};
    end
   end
   // C stage (PREL): the command of the previous R word, plus the format launch of a programme's first word
