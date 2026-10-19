@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.s81.collective_lane_storage_p1.v1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "opt_in": "RXSRAM=1; default0",
+  "evidence": {
+    "source_commit": "b5c03d49e2805754a8f87b58118bd3c3962fd3ac",
+    "helper_commit": "56d070486",
+    "sizing_run": "ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-084805",
+    "chip_area_um2": 64477.87944,
+    "macro_liberty_area_um2": 57120.1845,
+    "std_cell_area_um2": 7357.694940000016,
+    "geometry": "candidate band revision; synthesis measured, placement/CTS unqualified"
+  },
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "storage": {
+    "logical_bits": 4424,
+    "logical_depth": 8,
+    "new_macro": "ot_sram_1r1w_32x128_m1",
+    "banks": 5,
+    "physical_bits": 20480,
+    "unused_bits": 16056,
+    "new_macro_area_um2": 5343.8616,
+    "total_lane_macros": 15,
+    "total_macro_area_um2": 57120.1845,
+    "runtime_flop_array_bits": 0,
+    "unconditional_forward_payload_bits": 1106,
+    "distinct_select_flags": 70
+  },
+  "memory_ports": {
+    "read_bits_per_cycle": 553,
+    "write_bits_per_cycle": 553,
+    "logical_read_bytes_per_cycle": 69.125,
+    "logical_write_bytes_per_cycle": 69.125,
+    "physical_new_bank_read_bytes_per_cycle": 80.0,
+    "physical_new_bank_write_bytes_per_cycle": 80.0,
+    "read_pipeline_edges": 1,
+    "physical_write_registration_edges": 1,
+    "semantics": "next-head continuous read, NEW current-write and previous registered-write forwarding"
+  },
+  "fanout": {
+    "mapped_local_select_max_loads": 32,
+    "mapped_shared_hit_max_loads": 35,
+    "qualification": "measured synthesis; shared hit35 requires timing/reach review, no payload-enable cone"
+  },
+  "boundaries_bits_per_cycle": {
+    "rx": 515,
+    "tx": 512,
+    "core_send": 553,
+    "core_receive": 553
+  },
+  "geometry": {
+    "outline_um": [
+      561.6,
+      561.6
+    ],
+    "std_band_y_um": [
+      216.0,
+      246.24
+    ],
+    "std_band_area_um2": 16852.147200000003,
+    "std_band_density": 0.4366028169988934,
+    "overall_fill": 0.2044356105571384,
+    "macro_origin_x_um": [
+      43.2,
+      259.2,
+      475.2
+    ],
+    "macro_origin_y_um": [
+      43.2,
+      129.6,
+      302.4,
+      388.8,
+      475.2
+    ],
+    "lattice_um": 43.2,
+    "min_macro_channel_um": 41.88,
+    "actual_parent_fit": false,
+    "parent_obligation": "reserve561.6square and prove actual full-face pin escape; no hidden fit"
+  },
+  "routing": {
+    "core_face_signal_bits": 1113,
+    "min_pin_span_at_6_per_um": 185.5,
+    "full_face_usable_um": 557.28,
+    "new_bank_dynamic_signal_pins": 269,
+    "conservative_track_pitch_assumption_um": 0.096,
+    "min_channel_track_capacity_one_layer": 436,
+    "qualification": "sizing bound only; verify actual layer pitch/direction and competing nets in route, no route PASS"
+  },
+  "replication": {
+    "lanes": 8,
+    "new_macros": 40,
+    "total_new_macro_area_um2": 42750.8928,
+    "aggregate_outline_area_um2": 2523156.48,
+    "mux_cost": "two local forward selections per bit; no added runtime arbitration"
+  },
+  "latency": {
+    "added_data_edges": 0,
+    "added_reset_release_edges": 0,
+    "cycle_equivalence_checks": 19994,
+    "accepted_takes": 7113,
+    "qualification": "Verilator5.050 W553/D8 WREG1 WFREE1/2; positive and two forwarding mutants",
+    "single_user_token_delta_ns": 0,
+    "condition": "receiver-only delta; parent relocation, link hops, clock phase and physical latency must be priced separately"
+  },
+  "adoption": "Requires full link positive/mutants, placement/CTS/TT+FF, root PNG review and actual parent fit/escape."
+}
