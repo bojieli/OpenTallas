@@ -16,6 +16,7 @@ import direct_macro_clock_entries
 import async_gray_fifo_constraints
 import cdc_sync_constraints
 import gray_fifo_cdc_constraints
+import single_clock_contract
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -25,6 +26,9 @@ ENTRY_DOMAIN_API_VERSION = 1
 
 def signoff_period(spec):
     """Opt-in leaf signoff period; all existing profiles retain their ABI."""
+    actual = single_clock_contract.validate(spec)
+    if actual is not None:
+        return actual
     route = spec.get('route', {})
     value = route.get('signoff_period_ps', 833.333)
     if 'signoff_period_ps' in route and not native_leaf(spec):
