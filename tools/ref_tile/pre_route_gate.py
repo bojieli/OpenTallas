@@ -1418,6 +1418,10 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         g.add("WARN", "layout_images", "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log")
     parent = is_parent_kit(spec)
     fpd = dumps.get("floorplan")
+    if parent and (spec.get("fill_reason") or {}).get("lattice_channel_bound") is not None and not fpd:
+        g.measured_band_fill = {"valid": False, "errors": ["missing actual floorplan dump"]}
+        g.add("FAIL", "measured_band_fill", "missing actual floorplan dump",
+              "collect source-bound floorplan and placed occupancy evidence")
     if parent and fpd:
         st = fpd.get("stats", {})
         fill = float(st.get("fill") or 0.0)
@@ -1426,6 +1430,18 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         reason = str((spec.get("fill_reason") or {}).get("pin_bound", "")).strip()
         msg = (f"fill {fill:.0%} = (hard macros {st.get('block_area')} + synthesized std cells {st.get('std_area')}) / "
                f"outline {st.get('die_area')} um2; pin demand per face: {dem}")
+        structural = (spec.get("fill_reason") or {}).get("lattice_channel_bound")
+        if structural is not None:
+            measured = RT.measured_band_fill(spec, fpd, dumps.get("placed"))
+            g.measured_band_fill = measured
+            if measured["valid"]:
+                reason = (f"measured lattice/channel band: {measured['band_area_um2']:.3f} um2, "
+                          f"density {measured['band_density']:.2%}, outside approved "
+                          f"{measured['outside_area_um2']:.3f} um2")
+            else:
+                reason = ""  # pin-bound text cannot override an invalid structural claim
+                g.add("FAIL", "measured_band_fill", "; ".join(measured["errors"]),
+                      "fix actual placement/row envelope; preserve this failed receipt")
         if fill < FILL_FAIL and not reason:
             g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "shrink the outline / regroup the macros, or record "
                   "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
@@ -2439,6 +2455,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
            "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
            "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
            "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    if getattr(g, "measured_band_fill", None):
+        out["measured_band_fill"] = g.measured_band_fill
     if getattr(g, "trial_route", None):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
