@@ -326,7 +326,9 @@ module ot_qwen_w12_matvec_part #(
     localparam integer OD = TL * LG;      // split tree
     //: XTX (HIER_HARD only): the leaves see their inputs XTX cycles later, so every S3-referenced valid / tag / split
     //: line that meets the leaves' results is XTX cycles longer (same order, same arithmetic)
-    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX : 0;
+    // REGROOT5 adds a real output landing per hard LSL on its existing
+    // ck_tx entry. The complete tile data/valid path advances one edge.
+    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX + ((REGROOT >= 5) ? 1 : 0) : 0;
     localparam integer XDD = ((PART == 2) ? XD : 0) + XTD;
     localparam integer LV0 = (PART == 2) ? TCUT : 0;   // tree levels LV0+1..LG live here
     localparam integer PRUNE = (SMIN > 0);
@@ -998,7 +1000,15 @@ end endgenerate
                 ot_qwen_tile_lsl
 `endif
                 u_lh (.clk(CHILD_CLOCKS ? ck_lsl[g] : clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
-                    .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
+                    .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(leaf_out), .lfault(lf), .tfault(stf[g]));
+                wire [HIER*32-1:0] leaf_out;
+                if (REGROOT >= 5) begin : g_outland
+                    (* keep *) reg [HIER*32-1:0] q;
+                    always @(posedge ((LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? ck_tx[g] : clk)) q <= leaf_out;
+                    assign top[HIER*32*g +: HIER*32]=q;
+                end else begin : g_direct_out
+                    assign top[HIER*32*g +: HIER*32]=leaf_out;
+                end
             end else begin : g_sf
             ot_qwen_w12_lane_slice #(.G(G), .NPL(HIER), .IL(IL), .MUL_LAT(MUL_LAT), .ACC_LAT(ACC_LAT),
                 .TREE_LAT(TREE_LAT), .LRST(LRST), .ANR(ANR), .TMUT((g == 0) ? TMUT : 0)) u_ls (
