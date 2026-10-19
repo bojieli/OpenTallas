@@ -34,6 +34,11 @@
 #      --absolute N 4 (unrolled d4g image, rc2 = 0 -> same expectations), seed 1 N 4 -> SU_RED_ROWS PASS + EDGES;
 #      ovf (s_red 400 carries out of the scratch: rowr FAULT, must FAIL); MUT 1 dst / 2 export tag / 3 RF read / 4 a,b
 #      stride dropped, N 4 -> SU_RED_ROWS FAIL (witnesses)
+#  f   (SUDMA2 10-19) SFU CHAIN ROW STEP: lockstep of two d4g SFU programme stores r10 (unchanged) -> A row-0 IO image
+#      looped N x + ot_hnx_sfu_rowstep vs B unrolled absolute image (tb_hnx_sfu_rows): MUT 0 seeds 1..3 DP 4 -> SFU_ROWS
+#      PASS + SFU_ROWS_II (row arith-start spacing = P); DP sweep 0..3 (programme restart spacing, outcome only);
+#      BADSTRIDE (s_rd[2:0] != 0 -> row-step FAULT, must FAIL); MUT 1 drain / 2 prefetch stride, 3 early wrap, 4 no
+#      ordinal-0 clear -> SFU_ROWS FAIL (witnesses)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -115,6 +120,28 @@ if [ "$ST" = aw ]; then
     for sd in $SDS; do vd=$O/wvec$sd; [ $sd = o ] && vd=$O/ovec0
       ( cd $vd && $d/Vaw$m > $O/aw_m${m}_s$sd.log 2>&1; echo RUN_RC=$? >> $O/aw_m${m}_s$sd.log )
       V "aw_m$m seed$sd: $(grep -h 'ARGMAX_ROWS\|RUN_RC' $O/aw_m${m}_s$sd.log | head -2 | tr '\n' ' ')"; done
+    rm -rf $d ) &
+  done
+  wait; V "done"; exit 0
+fi
+if [ "$ST" = f ]; then
+  P=rtl/hbm_accel/generic/peers
+  FS=($P/ot_hgi_sfu_programme_store_r7c.sv $P/ot_hgi_sfu_program_stripe_rc.sv $P/ot_hgi_sfu_calendar_paged_rc.sv
+   $P/ot_hgi_sfu_io_calendar_rc.sv $P/ot_hgi_sfu_store_stripe_leaf_r10.sv $P/ot_hgi_sfu_programme_store_r10.sv
+   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+   physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v
+   rtl/hbm_next/su/ot_hnx_sfu_rowstep.sv rtl/hbm_next/su/tb/tb_hnx_sfu_rows.sv)
+  for m in 0 1 2 3 4; do (
+    d=$O/obj_f$m; rm -rf $d
+    verilator --binary -O2 -j 4 -Wno-fatal -Wno-TIMESCALEMOD -Wno-lint -Wno-style --top-module tb_hnx_sfu_rows -GMUT=$m -Mdir $d -o Vf$m \
+      "${FS[@]}" > $O/build_f$m.log 2>&1 || { sleep 5; verilator --binary -O2 -j 1 -Wno-fatal -Wno-TIMESCALEMOD -Wno-lint -Wno-style \
+      --top-module tb_hnx_sfu_rows -GMUT=$m -Mdir $d -o Vf$m "${FS[@]}" > $O/build_f$m.log 2>&1; }
+    if [ $m = 0 ]; then RUNS="s1:+SEED=1 s2:+SEED=2 s3:+SEED=3 dp0:+SEED=1,+DP=0,+EXPECT_FAULT=1 dp1:+SEED=1,+DP=1,+EXPECT_FAULT=1 dp2:+SEED=1,+DP=2,+EXPECT_FAULT=1 dp3:+SEED=1,+DP=3,+EXPECT_FAULT=1 bad:+SEED=1,+BADSTRIDE=1"
+    else RUNS="s1:+SEED=1"; fi
+    for rr in $RUNS; do t=${rr%%:*}; a=${rr#*:}; a=${a//,/ }
+      $d/Vf$m $a > $O/f_m${m}_$t.log 2>&1; echo RUN_RC=$? >> $O/f_m${m}_$t.log
+      V "f_m$m $t: $(grep -h 'SFU_ROWS PASS\|SFU_ROWS FAIL\|SFU_ROWS_II\|SFU_ROWS RESTART\|RUN_RC' $O/f_m${m}_$t.log | head -3 | tr '\n' ' ')"
+    done
     rm -rf $d ) &
   done
   wait; V "done"; exit 0

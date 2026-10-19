@@ -26,7 +26,7 @@ module tb_hnx_su_red_rows;
  reg [511:0] xsm [0:NEMAX-1];
  reg [7:0] drm [0:NEMAX-1];
  reg [127:0] exps [0:NSMAX-1];
- reg [47:0] expb [0:NBMAX-1];
+ reg [79:0] expb [0:NBMAX-1];
  reg [303:0] expd [0:NDMAX-1];
  reg [511:0] line=0; reg [31:0] rcl=0; reg [511:0] xsl=0; reg [7:0] drl=0;
  wire [511:0] rline; wire [3:0] rfault;
@@ -73,8 +73,8 @@ module tb_hnx_su_red_rows;
     es=es+1;
    end
   end
-  while(eb<NB&&expb[eb][47:16]==cyc)begin
-   q=expb[eb][15:8]; k=expb[eb][7:0]; last_ev=cyc;
+  while(eb<NB&&expb[eb][79:48]==cyc)begin
+   q=expb[eb][47:40]; k=expb[eb][39:32]; last_ev=cyc;
    if(bword[q*128+k*32+:32]!==expb[eb][31:0]) fail($sformatf("bcast q%0d class %0d got %h want %h",q,k,bword[q*128+k*32+:32],expb[eb][31:0]));
    eb=eb+1;
   end
