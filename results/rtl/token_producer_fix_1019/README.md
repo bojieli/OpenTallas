@@ -9,7 +9,7 @@ The first programme contains44 command lines and56 configuration writes. `lower_
 Verilator5.050 native component, job `oth-ubuntu-2212937-1792425920` on auto-selected epyc8:
 
 - Compiler-generated configuration exactly matches the native corrected-bank image; legacy default remains byte-identical and an undersized capacity is refused.
-- All44 native command words, indices and fault state PASS; consumer startup=9.
+- All44 native command words, indices and fault state PASS; consumer startup=9. A subsequent native sweep passes all four actual L0 programmes (44/122/46/396 commands,56/457/62/664 writes) with startup9, job `oth-ubuntu-110489-1792426167`. Compiler-generated configuration equals the native-tested corrected image for every programme.
 - Original bank numbering fails at command0, returning allzero despite valid.
 - Original startup=5 assertion fails with measured9.
 

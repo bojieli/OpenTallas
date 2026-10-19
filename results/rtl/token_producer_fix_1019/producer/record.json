@@ -26,5 +26,44 @@
     "compiler.log": "7ea99c510488a1cc3463dabf78675ea367c7a0f4666f7dd5d4dab4e1a8b1081e",
     "patch_first_replay.py": "9c6561f7cab9f994a60aa791c6e391ecc113fe2bea6dc357f5b3709e2d87d964",
     "ot_hbm_su_programme_pslice_c5.sv": "62fd2c9884b4589d8dcc9be3528c46700e7dff92c83b491774ccb02b866f6b73"
-  }
+  },
+  "full_L0_producer_programmes": [
+    {
+      "case": 0,
+      "commands": 44,
+      "writes": 56,
+      "old_index_banks": 1,
+      "physical_index_banks": 4,
+      "status": "PASS",
+      "startup_consumer": 9
+    },
+    {
+      "case": 1,
+      "commands": 122,
+      "writes": 457,
+      "old_index_banks": 1,
+      "physical_index_banks": 4,
+      "status": "PASS",
+      "startup_consumer": 9
+    },
+    {
+      "case": 2,
+      "commands": 46,
+      "writes": 62,
+      "old_index_banks": 1,
+      "physical_index_banks": 4,
+      "status": "PASS",
+      "startup_consumer": 9
+    },
+    {
+      "case": 3,
+      "commands": 396,
+      "writes": 664,
+      "old_index_banks": 1,
+      "physical_index_banks": 4,
+      "status": "PASS",
+      "startup_consumer": 9
+    }
+  ],
+  "all_programmes_job": "oth-ubuntu-110489-1792426167"
 }
