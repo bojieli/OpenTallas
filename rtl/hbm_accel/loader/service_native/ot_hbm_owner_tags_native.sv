@@ -8,13 +8,17 @@ endmodule
 module ot_hbm_owner_tag_entry #(parameter integer J=0,MUT=0)(
  input wire clk,first_rst_n,alloc_v,input wire [16:0] alloc_tag,input wire [2:0] alloc_len,
  input wire return_v,input wire [16:0] return_tag,input wire [3:0] return_beat,input wire stop,
- output reg accepted,output reg live,output reg fault
+ output reg accepted,output reg live,output reg fault,
+ output wire [16:0] alloc_tag_capture,return_tag_capture,output wire [2:0] alloc_len_capture,
+ output wire [3:0] return_beat_capture,output wire alloc_v_capture,return_v_capture
 );
  reg rst_q;always @(posedge clk or negedge first_rst_n)if(!first_rst_n)rst_q<=0;else rst_q<=1;
  (* keep = "yes" *) reg [16:0] at_q,rt_q;
  reg [2:0] al_q;reg [3:0] beat_q;reg av_q,rv_q,stop_q;
  reg [11:0] generation;reg [2:0] length;reg [3:0] seen;
  always @(posedge clk)begin at_q<=alloc_tag;rt_q<=return_tag;al_q<=alloc_len;beat_q<=return_beat;end
+ assign alloc_tag_capture=at_q;assign return_tag_capture=rt_q;assign alloc_len_capture=al_q;
+ assign return_beat_capture=beat_q;assign alloc_v_capture=av_q;assign return_v_capture=rv_q;
  wire alloc_here=av_q&&at_q[4:0]==5'(J);
  wire return_here=rv_q&&rt_q[4:0]==5'(J);
  wire [3:0] mask=(length==4)?4'hf:4'h1;
@@ -40,17 +44,27 @@ endmodule
 module ot_hbm_owner_tags_native #(parameter integer MUT=0)(
  input wire clk,rst_n,alloc_v,input wire [16:0] alloc_tag,input wire [2:0] alloc_len,
  input wire return_v,input wire [16:0] return_tag,input wire [3:0] return_beat,input wire stop,
- output wire [31:0] accepted_entry,live,output reg response_ok,output reg fault
+ output wire [31:0] accepted_entry,live,output reg response_ok,output reg fault,
+ output wire [16:0] alloc_tag_capture,return_tag_capture,output wire [2:0] alloc_len_capture,
+ output wire [3:0] return_beat_capture,output wire alloc_v_capture,return_v_capture
 );
  wire [1:0] first_rst;wire [31:0] entry_fault;
  for(genvar b=0;b<2;b=b+1)begin:g_first
   ot_hbm_owner_tags_first_reset u_first(.clk(clk),.rst_n(rst_n),.q(first_rst[b]));
  end
  for(genvar j=0;j<32;j=j+1)begin:g_entry
+  wire [16:0] at_cap,rt_cap;wire [2:0] len_cap;wire [3:0] beat_cap;wire av_cap,rv_cap;
+  if(j==0)begin:g_expose
+   assign alloc_tag_capture=at_cap;assign return_tag_capture=rt_cap;assign alloc_len_capture=len_cap;
+   assign return_beat_capture=beat_cap;assign alloc_v_capture=av_cap;assign return_v_capture=rv_cap;
+  end
   ot_hbm_owner_tag_entry #(.J(j),.MUT(MUT)) u_entry(.clk(clk),.first_rst_n(first_rst[j/16]),
    .alloc_v(alloc_v),.alloc_tag(alloc_tag),.alloc_len(alloc_len),.return_v(return_v),
    .return_tag(return_tag),.return_beat(return_beat),.stop(stop),
-   .accepted(accepted_entry[j]),.live(live[j]),.fault(entry_fault[j]));
+   .accepted(accepted_entry[j]),.live(live[j]),.fault(entry_fault[j]),
+   .alloc_tag_capture(at_cap),.return_tag_capture(rt_cap),
+   .alloc_len_capture(len_cap),.return_beat_capture(beat_cap),
+   .alloc_v_capture(av_cap),.return_v_capture(rv_cap));
  end
  reg ctrl_rst;always @(posedge clk or negedge first_rst[0])if(!first_rst[0])ctrl_rst<=0;else ctrl_rst<=1;
  always @(posedge clk or negedge ctrl_rst)
