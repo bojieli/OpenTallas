@@ -1,0 +1,21 @@
+{
+  "adoption": "BLOCKED: min/max timing role binding requires ROOT review",
+  "consistency": "PASS signal pins and PG and OBS and reverse-renamed functional/blackbox bytes",
+  "fleet_host": "ot-epyc8",
+  "function": "Verilator 5.050 PASS 4096 checks; three causal mutants rejected",
+  "geometry": "PASS zero enumerated errors; two causal mutants rejected",
+  "liberty_generated": false,
+  "ot_run_exit": 0,
+  "ot_run_terminal": "RAN on ot-epyc8 exit 0",
+  "remote": "/srv/opentallas-scratch/claude/codex-sram-sc2-prototype-1019",
+  "schema": "opentallas.sc2.prototype.execution-receipt.v1",
+  "source_geometry": "PASS 437 paths 870 vias 77 PG rectangles",
+  "source_guard": "SC2_FOREIGN_SOURCE_REJECT_PASS",
+  "source_hashes": {
+    "results/rtl/s81_coll_wide_pitch_1019/sc2_prototype/tb.sv": "c1e0dfe496780feaba4470534f213ca15a93f3b5d852e4265dae1223cdefccd5",
+    "tools/mem_compiler/build_s81_sc2_prototype_1019.py": "4f3ed8ba4cfa09336b702af1f80b40125f0718dcdf250f61999db5167389abfa",
+    "tools/mem_compiler/check_s81_sc2_prototype_1019.py": "b1234b374dd03bf095d531790be35f988285419fd5cf57e8759fa45caf7f03af",
+    "tools/mem_compiler/run_s81_sc2_prototype_1019.py": "be68c9024f49b522984182f6c005727684a5be17516613c9ab83a7b54e2cb213"
+  },
+  "unit": "oth-ubuntu-1700239-1792440506"
+}

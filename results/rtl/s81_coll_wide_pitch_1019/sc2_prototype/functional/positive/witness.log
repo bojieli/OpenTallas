@@ -1,0 +1,5 @@
+SC2_FUNCTION_PASS checks=4096 all_words=512 repair_modes=2 OLD=1 masked=1 disabled_hold=1
+- /srv/opentallas-scratch/claude/codex-sram-sc2-prototype-1019/results/rtl/s81_coll_wide_pitch_1019/sc2_prototype/tb.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 26us; walltime 0.005 s; speed 5.411 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB

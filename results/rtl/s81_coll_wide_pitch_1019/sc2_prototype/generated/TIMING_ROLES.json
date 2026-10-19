@@ -1,0 +1,39 @@
+{
+  "binding": null,
+  "energy": "C*V^2 per complete 0->1->0 cycle, one supply-charge event; read/write charge every nonclock lead one such cycle. Clock lead is separate, added once in read/write_plus_clock_access_energy. Full boundary clock driver also includes original clk pin capacitance; CTS is outside scope.",
+  "ff_max_characterization": {
+    "corner": "ff",
+    "cq": "max_cq_ps_by_load_ff",
+    "setup": "setup_required_upper_ps"
+  },
+  "ff_min_hold": {
+    "added_minimum_lead_delay_ps": 0,
+    "corner": "ff",
+    "cq": "min_cq_ps_lower_bound",
+    "hold": "hold_required_upper_ps",
+    "policy": "No MAX lead or positive slew/load delay added to minimum CQ"
+  },
+  "leakage": "Conservative existing compiler area-proportional density applied to full new outline, including passive access. Unchanged original core-source leakage is separately reported; no leakage benefit claimed.",
+  "load_domain_ff": [
+    0.72,
+    46.08
+  ],
+  "per_pin_capacitance": "timing[corner].clock_pin_cap_ff_by_pin and nonclock_pin_cap_ff_by_pin",
+  "pulse_period": "timing[corner].min_pulse_upper_ps and min_period_upper_ps",
+  "reason": "Current single-library-per-corner writer/readers do not bind separate MIN and MAX CQ roles",
+  "slew_domain_ps": [
+    5,
+    320
+  ],
+  "ss_max_sensitivity": {
+    "corner": "ss",
+    "cq": "max_cq_ps_by_load_ff",
+    "setup": "setup_required_upper_ps"
+  },
+  "status": "BLOCKED_NO_LIBERTY_EMITTED",
+  "tt_max_setup": {
+    "corner": "tt",
+    "cq": "max_cq_ps_by_load_ff",
+    "setup": "setup_required_upper_ps"
+  }
+}

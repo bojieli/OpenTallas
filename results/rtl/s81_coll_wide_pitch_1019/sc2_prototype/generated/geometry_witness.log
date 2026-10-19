@@ -1,0 +1,3 @@
+ACCESS_MODEL_PASS paths=437 connected=437 vias=870 geometry_errors=0
+MUTANT_UNREVERSED_COLUMNS_FAIL ['native_thin_width_PRL_spacing', {'layer': 'M4', 'rect_nm': [0, 960, 21059, 984], 'net': 'r_ce_in', 'role': 'terminal_horizontal'}, {'layer': 'M4', 'rect_nm': [20917, 960, 21384, 984], 'net': 'r_addr_in[0]', 'role': 'source_horizontal'}, 0, 142]
+MUTANT_MISSING_SOURCE_VIA_FAIL r_ce_in
