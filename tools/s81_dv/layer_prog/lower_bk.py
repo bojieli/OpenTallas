@@ -45,6 +45,7 @@ from __future__ import annotations
 import json
 import math
 import re
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -573,6 +574,248 @@ def job_rank_tree(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boot_d
                                      children=ch[d], golden_ok=plans[d]['golden_ok']) for d in sorted(plans)])
 
 
+# ================================================================================================= L20 die: reader tree
+# S81-L20DIE (10-19): the rank tree as the DIE RTL runs it (supersedes the job_rank_tree lane-3 append, which modelled
+# the children's candidates as arriving with their scores although the selector's IDX egress carries none).
+#   * own shard: the 16 regional readers (dsdv_idx_rg) put the WHOLE shard on lane 0 (HDR 16 j0, one BEAT a 16-position
+#     word, part 0 at E + 10 + P w, part 1 + 1); lanes 1..3: HDR + empty last BEAT unless OPEN (spec om).
+#   * children: child i of a die owns lane CHILD_LANES[i] at the parent (om bit set, the reader leaves it open).  The
+#     child's dsdv_idx_tx re-encodes its own selection with the scores its selector ingested (score store) as
+#     HDR(HB = subtree low & ~15, k, lane) + (REBASE + BEAT)* (16-aligned windows) + last, tagged with the PARENT's tag,
+#     and emits it on a reserved slot grid (TX_SM slots, pitch TX_R) from a compiled first slot; the link adds LEG.
+#   * the parent's drain waits for the RESERVED end of every child grid (static: data never moves a compiled edge).
+CHILD_LANES = (2, 3)
+TX_UID, TX_OP = 0x5C, 2
+TX_SM = 1540             # worst-case tx beats: HDR + 512 x (REBASE + 2 BEAT) = 1,537 (+ margin)
+TX_R = 1
+TX_OFF = 5               # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY
+TX_LINK = 3              # tx lo printed at t -> parent bk_sel vi_s ingress edge t + TX_LINK + leg (vmux 2 + pin 1)
+VMUX_LAT = 2             # dsdv_idx_vmux pin -> pin
+TX_CTL_LEAD = 16         # the tx-job CTL enters vi_n this many edges before the drain CTL
+
+
+def reader_beats(keys, b0, n, k, tag, om, e0, p=READER_P, ik=4):
+    """the readers' compiled emission at the bk_sel vi_s pin (dsdv_idx_rg.sv emission): [(edge, beat)]"""
+    j0, j1 = b0 >> 4, (b0 + n - 1) >> 4
+    nw = j1 - j0 + 1
+    out = [(e0, bk_beats(0, hdr_word(16 * j0, k, 0, tag), ik)[0])]
+    for l in (1, 2, 3):
+        if om >> (l - 1) & 1:
+            continue
+        t = e0 + 1 + 3 * (l - 1)
+        out.append((t, bk_beats(l, hdr_word(16 * (j1 + 1), k, l, tag), ik)[0]))
+        for i, b in enumerate(bk_beats(l, beat_word([0] * 16, 0, True, tag), ik)):
+            out.append((t + 1 + i, b))
+    for w in range(nw):
+        lv, seg = 0, [0] * 16
+        for i in range(16):
+            pos = 16 * (j0 + w) + i
+            if b0 <= pos < b0 + n:
+                lv |= 1 << i
+                seg[i] = int(keys[pos - b0])
+        for i, b in enumerate(bk_beats(0, beat_word(seg, lv, w == nw - 1, tag), ik)):
+            out.append((e0 + 10 + p * w + i, b))
+    return out
+
+
+def tx_payload(lane, ptag, k, hb, otag, dly, r, sm):
+    assert 0 <= dly < 1 << 16 and 1 <= r < 8 and 0 < sm < 1 << 12 and hb % 16 == 0
+    return (TX_UID | TX_OP << 8 | 31 << 16 | (lane & 3) << 21 | (ptag & 0xFF) << 23 | (k & 0x3FF) << 31 |
+            (hb & 0xFFFFF) << 41 | (otag & 0xFF) << 61 | dly << 69 | r << 85 | sm << 88)
+
+
+def drain_for(t_last, n_words_max):
+    w0 = t_last + TAIL_BUDGET
+    c_vo = w0 - LW - D_DRAIN
+    return w0, c_vo, c_vo - PIN_TO_PIN
+
+
+def job_rank_tree_rd(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boot_done=True, leg=LEG, mut=None,
+                     mut_die=None):
+    """the static rank tree on the die RTL (reader + vmux + bk_sel + tx); t_q = the edge the query's reader beats start
+    at the root's bk_sel vi_s (E of the root); a die at depth h starts at t_q + h leg (query fan-out over the same
+    links, qf pin -> pin = the link's).  Returns {die: plan}, summary (root selection == fixture topk_local)."""
+    kd = k_dies or shard_k(layer)
+    s = load_op(fx, 'attn.idx.score')
+    q4 = s.size // 4
+    ch = shard_tree(kd)
+    depth = {0: 0}
+    for d in sorted(ch):
+        for c in ch[d]:
+            depth[c] = depth[d] + 1
+    par = {c: (d, i) for d in ch for i, c in enumerate(ch[d])}
+    plans = {}
+
+    def sub_lo(d):
+        sub = subtree(ch, d)
+        return rank * q4 + shard_range(q4, kd, sub[0])[0]
+
+    def run(d):
+        for c in ch[d]:
+            run(c)
+        lo_, m = shard_range(q4, kd, d)
+        b0 = rank * q4 + lo_
+        keys = bf16_key(s[b0:b0 + m])
+        if mut is not None and d == mut_die:
+            keys = mut(keys, b0)
+        tag = tag0 + d
+        om = 0
+        for i, c in enumerate(ch[d]):
+            om |= 1 << (CHILD_LANES[i] - 1)
+        e0 = t_q + depth[d] * leg
+        rb = reader_beats(keys, b0, m, K_MAX, tag, om, e0)
+        pos_l = {0: np.arange(b0, b0 + m)}
+        key_l = {0: keys}
+        t_last = rb[-1][0]
+        arr = []
+        free_from = t_last + 1
+        for i, c in enumerate(ch[d]):
+            pc = plans[c]
+            sel = np.asarray(pc['selection'], dtype=np.int64)
+            ks = np.asarray(pc['sel_keys'], dtype=np.int64)
+            L = CHILD_LANES[i]
+            pos_l[L], key_l[L] = sel, ks
+            # the child's grid: first slot >= its egress window start, and its arrival window after the previous one
+            first = max(pc['window'][0], free_from - TX_LINK - leg)
+            a0 = first + TX_LINK + leg
+            a1 = a0 + TX_SM * TX_R
+            free_from = a1 + 1
+            c_tx = pc['drain']['vi_n_edge'] - TX_CTL_LEAD
+            dly = first - (c_tx + TX_OFF)
+            assert dly >= 1, (d, c, dly)
+            hb = sub_lo(c) // 16 * 16
+            pc['tx'] = dict(lane=L, parent=d, ptag=tag, hb=hb, ctl_vi_n=c_tx, dly=dly, first=first, r=TX_R, sm=TX_SM,
+                            arrive=[a0, a1], payload=tx_payload(L, tag, K_MAX, hb, pc['tag'], dly, TX_R, TX_SM),
+                            words=lane_words_sparse(ks, sel, hb, K_MAX, L, tag))
+            pc['tx']['beat'] = ctl_beat(pc['tx']['payload'])
+            arr.append([a0, a1])
+            t_last = max(t_last, a1)
+        allk = np.concatenate([np.asarray(key_l[l], dtype=np.int64) for l in sorted(key_l)])
+        allp = np.concatenate([np.asarray(pos_l[l], dtype=np.int64) for l in sorted(pos_l)])
+        k = K_MAX
+        sel = topk_lowest_index(allk, allp, k)
+        kmap = dict(zip(allp.tolist(), allk.tolist()))
+        sel_q, key_q = [], []
+        for q in range(4):
+            pq = set(int(x) for x in pos_l.get(q, []))
+            sq = [int(x) for x in sel if int(x) in pq]
+            sel_q.append(sq)
+            key_q.append([kmap[x] for x in sq])
+        words = expected_words(sel_q, key_q, tag, boot_done)
+        n = 2 * (MAX_WORDS + (1 if boot_done else 0))
+        w0, c_vo, c_vi = drain_for(t_last, n)
+        p = drain_payload(0x5B, n, D_DRAIN)
+        egress = []
+        for i, w in enumerate(words):
+            for j, b in enumerate(egress_beats(w)):
+                egress.append((w0 + 2 * i + j, b))
+        sub = subtree(ch, d)
+        a0_ = sub_lo(d)
+        lo_e, m_e = shard_range(q4, kd, sub[-1])
+        a1_ = rank * q4 + lo_e + m_e
+        gold = topk_lowest_index(bf16_key(s[a0_:a1_]), np.arange(a0_, a1_), K_MAX)
+        plans[d] = dict(die=d, tag=tag, om=om, e0=e0, reader=rb, t_last_in=t_last, children=ch[d], child_arrive=arr,
+                        drain=dict(vi_n_edge=c_vi, vo_edge=c_vo, payload=p, n=n, d=D_DRAIN, beat=ctl_beat(p)),
+                        window=(w0, w0 + n - 1), words=words, egress=egress, selection=[int(x) for x in sel],
+                        sel_keys=[kmap[int(x)] for x in sel], sel_per_quarter=[len(x) for x in sel_q],
+                        golden_ok=bool(np.array_equal(np.asarray(sel), gold)), keys=int(m), base=int(b0), depth=depth[d])
+    run(0)
+    loc = load_op(fx, 'attn.idx.topk_local')
+    kr = min(K_MAX, q4)
+    closure = bool(np.array_equal(np.asarray(plans[0]['selection']), np.sort(loc[rank * kr:(rank + 1) * kr])))
+    return plans, dict(k_dies=kd, tree=ch, par=par, closure=closure, root_last_egress=plans[0]['egress'][-1][0],
+                       per_die=[dict(die=d, keys=plans[d]['keys'], e0=plans[d]['e0'], t_last_in=plans[d]['t_last_in'],
+                                     window=plans[d]['window'], last_egress=plans[d]['egress'][-1][0],
+                                     child_arrive=plans[d]['child_arrive'], golden_ok=plans[d]['golden_ok'],
+                                     tx=({k_: v for k_, v in plans[d]['tx'].items() if k_ not in ('words', 'beat', 'payload')}
+                                         if 'tx' in plans[d] else None)) for d in sorted(plans)])
+
+
+def write_tree_bench(fx, out, k_dies, t_q=200, leg=LEG, mutant=None, layer='L20'):
+    """stim.txt '<edge> <die> s|n <hex>' (s = vmux i_s at edge - VMUX_LAT, n = bk_sel vi_n), exp.json, args.txt
+    (plusargs).  Mutants (stimulus only; the expectation stays golden): corrupt = the root's lowest selected own key
+    -> -inf; early_tx = a child's tx grid one slot early relative to its reserved window is NOT a stimulus mutant (tx
+    RTL mutants are build-time: TX_MUT)."""
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    plans, summ = job_rank_tree_rd(fx, k_dies=k_dies, t_q=t_q, leg=leg, layer=layer)
+    sp = plans
+    if mutant == 'corrupt':
+        tgt = [x for x in plans[0]['selection'] if plans[0]['base'] <= x < plans[0]['base'] + plans[0]['keys']][0]
+
+        def m(keys, b0):
+            k2 = keys.copy()
+            k2[tgt - b0] = 0xFF80
+            return k2
+        sp, _ = job_rank_tree_rd(fx, k_dies=k_dies, t_q=t_q, leg=leg, layer=layer, mut=m, mut_die=0)
+    lines = []
+    for d, p in sp.items():
+        for e, b in p['reader']:
+            lines.append((e - VMUX_LAT, d, 's', b))
+        lines.append((p['drain']['vi_n_edge'], d, 'n', p['drain']['beat']))
+        if 'tx' in p:
+            lines.append((p['tx']['ctl_vi_n'], d, 'n', p['tx']['beat']))
+    lines.sort()
+    keys_ = [(e, d, k) for e, d, k, _ in lines]
+    assert len(set(keys_)) == len(keys_), 'two stimulus beats on one port / edge'
+    with open(out / 'stim.txt', 'w') as f:
+        for e, d, k, b in lines:
+            f.write(f'{e} {d} {k} {b:069x}\n')
+    exp = {}
+    for d, p in plans.items():
+        eg = {e: b for e, b in p['egress']}
+        eg[p['drain']['vi_n_edge'] + PIN_TO_PIN] = p['drain']['beat']
+        if 'tx' in p:
+            eg[p['tx']['ctl_vi_n'] + PIN_TO_PIN] = p['tx']['beat']
+        exp[d] = dict(vo={str(e): f'{b:x}' for e, b in sorted(eg.items())},
+                      tx=(dict(beats=[f'{b:x}' for w in p['tx']['words'] for b in bk_beats(p['tx']['lane'], w)],
+                               first=p['tx']['first'], last_slot=p['tx']['first'] + TX_SM * TX_R - 1) if 'tx' in p else None))
+    ncyc = max(max(int(e) for e in exp[d]['vo']) for d in exp) + 300
+    args = [f'+NCYC={ncyc}', f'+LEG={leg}'] + [f'+PAR{c}={pd} +PIN{c}={i}' for c, (pd, i) in summ['par'].items()]
+    (out / 'args.txt').write_text(' '.join(args) + '\n')
+    (out / 'exp.json').write_text(json.dumps(dict(exp=exp, mutant=mutant, summary=summ), indent=0) + '\n')
+    return dict(ncyc=ncyc, closure=summ['closure'], root_last_egress=summ['root_last_egress'],
+                golden=[p['golden_ok'] for p in plans.values()])
+
+
+def check_tree_bench(run_log, out_dir):
+    out_dir = Path(out_dir)
+    X = json.loads((out_dir / 'exp.json').read_text())
+    got_vo, got_tx, faults = defaultdict(dict), defaultdict(list), []
+    for ln in Path(run_log).read_text().split('\n'):
+        m = re.match(r'VO (\d+) (\d+) ([0-9a-f]+)', ln)
+        if m:
+            got_vo[int(m.group(1))][int(m.group(2))] = int(m.group(3), 16)
+        m = re.match(r'TX (\d+) (\d+) ([0-9a-f]+)', ln)
+        if m:
+            got_tx[int(m.group(1))].append((int(m.group(2)), int(m.group(3), 16)))
+        if ln.startswith('FAULT'):
+            faults.append(ln.strip())
+    bad = []
+    for d, ex in X['exp'].items():
+        d = int(d)
+        ev = {int(e): int(v, 16) for e, v in ex['vo'].items()}
+        for e, v in sorted(ev.items()):
+            if got_vo[d].get(e) != v:
+                bad.append(dict(die=d, kind='vo', edge=e, exp=f'{v:x}'[:20], got=f'{got_vo[d].get(e, 0):x}'[:20]))
+        for e, v in sorted(got_vo[d].items()):
+            if e not in ev:
+                bad.append(dict(die=d, kind='vo-extra', edge=e, got=f'{v:x}'[:20]))
+        if ex['tx']:
+            gb = [v for _, v in got_tx[d]]
+            eb = [int(v, 16) for v in ex['tx']['beats']]
+            if gb != eb:
+                i = next((i for i, (a, b) in enumerate(zip(gb, eb)) if a != b), min(len(gb), len(eb)))
+                bad.append(dict(die=d, kind='tx-seq', n_got=len(gb), n_exp=len(eb), first_diff=i))
+            if got_tx[d] and (got_tx[d][0][0] < ex['tx']['first'] or got_tx[d][-1][0] > ex['tx']['last_slot']):
+                bad.append(dict(die=d, kind='tx-window', got=[got_tx[d][0][0], got_tx[d][-1][0]],
+                                exp=[ex['tx']['first'], ex['tx']['last_slot']]))
+        elif got_tx[d]:
+            bad.append(dict(die=d, kind='tx-unexpected', n=len(got_tx[d])))
+    tx_span = {d: [v[0][0], v[-1][0], len(v)] for d, v in got_tx.items()}
+    return dict(pass_=not bad and not faults, mismatches=len(bad), first=bad[:8], faults=faults[:8], tx_span=tx_span)
+
+
 # ================================================================================================= compiler hook
 GAPS = {
     'producer': dict(module='DV die: no index-score unit (u_rsv_* = dsdv_svc_rs has no indexer scan; hub-era dsfd_svc_idx '
@@ -761,10 +1004,28 @@ def main(argv=None):
     g.add_argument('--t0', type=int, default=100)
     g.add_argument('--k-dies', type=int, default=1, help='dies holding a rank\'s keys (record: SHARD_K[layer])')
     g.add_argument('--die', type=int, default=0, help='topk_local: which die of --k-dies')
+    t = sub.add_parser('tree-rd', help='S81-L20DIE: the reader / tx rank-tree compose bench (tb_idx_tree)')
+    t.add_argument('--fixtures', required=True)
+    t.add_argument('--out', required=True)
+    t.add_argument('--k-dies', type=int, default=6)
+    t.add_argument('--t0', type=int, default=200)
+    t.add_argument('--leg', type=int, default=LEG)
+    t.add_argument('--mutant', default=None, choices=(None, 'corrupt'))
+    tc = sub.add_parser('tree-rd-check')
+    tc.add_argument('--run', required=True)
+    tc.add_argument('--dir', required=True)
     c = sub.add_parser('check')
     c.add_argument('--run', required=True)
     c.add_argument('--dir', required=True)
     a = ap.parse_args(argv)
+    if a.cmd == 'tree-rd':
+        print(json.dumps(write_tree_bench(a.fixtures, a.out, a.k_dies, t_q=a.t0, leg=a.leg, mutant=a.mutant)))
+        return
+    if a.cmd == 'tree-rd-check':
+        r = check_tree_bench(a.run, a.dir)
+        (Path(a.dir) / 'check_result.json').write_text(json.dumps(r, indent=1) + '\n')
+        print(('TREE_RD PASS' if r['pass_'] else 'TREE_RD FAIL'), json.dumps(r)[:900])
+        raise SystemExit(0 if r['pass_'] else 1)
     if a.cmd == 'gen':
         if a.job == 'tree':
             # one die of the static rank tree (S81-L20SPLIT); the corrupt mutant drops the die's lowest SELECTED own key
