@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "QK-LANDH548",
+ "generated": "2026-10-18 PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main f88200541 (--view, --case k0,k1,k2)",
+ "note": "CLOSED f2 views FAIL capture on 549 lane data pins (a[*] + ea/en). Cause (offline TT STA of 6_final.odb, /srv/opentallas-scratch/claude/qkl548_sta on ot-agidock128): route hold repair padded every lane input with 8-11 BUFx2 (~200 ps; landh_548_EN a[253] arrives 405 ps after the ckf edge) because physical/qwen_fwd_lane/fwd_lane_clocks.tcl set the lane input min to C+U with no credit for the lane_ckf tree insertion at the ring write flops (L_min 118 ps EN / 142 ps EW). Fix: min = L_min + C + U (the io_ref_skew.sdc OT_BH die budget form).",
+ "records": [
+  {
+   "cell": "qfd_landh_548_EN_99x99",
+   "view": "physical/ref_tile/qfwd_landh_548_en_99x99/views/qfd_landh_548_EN_99x99",
+   "lib_cell": "qfd_landh_548_EN_99x99",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 110.3,
+   "spread_ps": 13.9,
+   "outputs": 549,
+   "inputs": 550,
+   "launch_ps": 95.4,
+   "launch_pin": "b[69]",
+   "capture_ps": 244.9,
+   "capture_pin": "a[253]",
+   "launch_over": 0,
+   "capture_over": 549,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 407.1,
+    "k1": 416.2,
+    "k2": 225.8
+   },
+   "ff_spread_ps": 13.5,
+   "ff_launch_min_ps": 48.8,
+   "ff_hold_need_ps": -21.7,
+   "pass": false,
+   "fail_why": "capture 244.89503 > 190 (549 pins)",
+   "job": "qfwd_landh_548_en_99x99-f2-9ddc1acf2",
+   "view_source": "origin/codex/closure-record-qfwd_landh_548_en_99x99-f2-9ddc1acf2",
+   "mode": "case k0,k1,k2 (die ties the K strap, set_case_analysis dd4396a81); own R per clock (insertion.json clock_measurements: core_clk ck, lane_ckf ckf/ck_s)"
+  },
+  {
+   "cell": "qfd_landh0_548_EW_65x99",
+   "view": "physical/ref_tile/qfwd_landh0_548_ew_65x99/views/qfd_landh0_548_EW_65x99",
+   "lib_cell": "qfd_landh0_548_EW_65x99",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 105.9,
+   "spread_ps": 18.9,
+   "outputs": 549,
+   "inputs": 550,
+   "launch_ps": 116.9,
+   "launch_pin": "fault",
+   "capture_ps": 351.0,
+   "capture_pin": "en",
+   "launch_over": 0,
+   "capture_over": 549,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins": [
+    "k0",
+    "k1",
+    "k2"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k0": 379.7,
+    "k1": 388.1,
+    "k2": 230.5
+   },
+   "ff_spread_ps": 19.0,
+   "ff_launch_min_ps": 45.2,
+   "ff_hold_need_ps": -4.0,
+   "pass": false,
+   "fail_why": "capture 350.96805 > 190 (549 pins)",
+   "job": "qfwd_landh0_548_ew_65x99-f2-9ddc1acf2",
+   "view_source": "origin/codex/closure-record-qfwd_landh0_548_ew_65x99-f2-9ddc1acf2",
+   "mode": "case k0,k1,k2 (die ties the K strap, set_case_analysis dd4396a81); own R per clock (insertion.json clock_measurements: core_clk ck, lane_ckf ckf/ck_s)"
+  }
+ ]
+}

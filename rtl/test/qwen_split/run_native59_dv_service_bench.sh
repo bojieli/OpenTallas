@@ -3,6 +3,7 @@
 # usage: run_native59_dv_service_bench.sh OUTDIR
 #   positive (MUT 0) must print N59DV_PASS; BAD_Q (one Q dd word never sent) must PASS its fault check;
 #   mutants MUT 1 (Q lane packing), 2 (KV lane address), 3 (EMB code word index) must FAIL.
+#   N59_ONLY=<run name> (S-QWCOL 10-18, closure-loop benches): run only that one (positive|bad_q|mut1_q_lane|...).
 set -uo pipefail
 out=${1:?fresh output directory}; mkdir -p "$out"
 R=$(cd "$(dirname "$0")/../../.." && pwd)
@@ -18,6 +19,7 @@ SRC=("$R/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv"
 rc_all=0
 run() { # name expect(pass|fail) -G...
   local n=$1 exp=$2; shift 2
+  [[ -n ${N59_ONLY:-} && $n != "$N59_ONLY" ]] && return
   verilator --cc --exe --build -O2 -Wno-fatal -Wno-lint -Wno-style --top-module tb_qfd_native59_dv_service "$@" \
     -Mdir "$out/$n.obj" "${SRC[@]}" "$R/rtl/test/qwen_split/tb_qfd_native59_dv_service_main.cpp" > "$out/$n.build.log" 2>&1 \
     || { echo "$n BUILD_FAILED"; tail -20 "$out/$n.build.log"; rc_all=1; return; }

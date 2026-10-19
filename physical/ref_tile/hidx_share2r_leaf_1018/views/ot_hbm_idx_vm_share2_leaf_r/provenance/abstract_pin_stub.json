@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hbm_idx_vm_share2_leaf_r.lef",
-    "sha256": "0facca26f0a6b503f0b987a1152ad509770d403e86650145d1fd453af4fb486f"
+    "sha256": "67d7640851ded1037fe562ce9fa3cb88ab3de2232a3d878253b9295f72b5130d"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/hidx_share2r_leaf_1018-r1-984038a3d/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r3-16615707a/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/hidx_share2r_leaf_1018-r1-984038a3d/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hidx_share2r_leaf_1018-r1-984038a3d/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/raw/ot_hbm_idx_vm_share2_leaf_r.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hidx_share2r_leaf_1018-r1-984038a3d/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/ot_hbm_idx_vm_share2_leaf_r.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r3-16615707a/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r3-16615707a/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/raw/ot_hbm_idx_vm_share2_leaf_r.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r3-16615707a/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/ot_hbm_idx_vm_share2_leaf_r.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 62 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 72 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hidx_share2r_leaf_1018-r1-984038a3d/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/ot_hbm_idx_vm_share2_leaf_r.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hidx_share2r_leaf_1018-r3-16615707a/record/views/ot_hbm_idx_vm_share2_leaf_r/provenance/ot_hbm_idx_vm_share2_leaf_r.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hbm_idx_vm_share2_leaf_r 108.0 x 108.0: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 1647 blocked-above 0 blocked-same 0; clock clk insertion 131 ps; pockets M5 0 (closed)",
+    "summary": "ot_hbm_idx_vm_share2_leaf_r 108.0 x 108.0: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 1647 blocked-above 0 blocked-same 0; clock clk insertion 181 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hbm_idx_vm_share2_leaf_r",
       "W": 108.0,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1647,
         "blocked_above": 0,
-        "covered_below": 438,
+        "covered_below": 0,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 131.29,
-          "min_ps": 96.43
+          "max_ps": 181.09,
+          "min_ps": 89.36
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 62
+          "added": 72
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hbm_idx_vm_share2_leaf_r.lef",
-    "sha256": "0219a4813c3c48df87061aaf501d91252ffedad1ccd5949517a3f9e09930b6dd"
+    "sha256": "c554eabe3b0bddc490fb9645ec18f521fab0072c40f24abd79cce31cf04309b1"
   }
 }

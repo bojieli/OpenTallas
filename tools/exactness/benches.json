@@ -363,6 +363,7 @@
    "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle_l3.json",
    "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json",
    "results/rtl/qwen_rom_combined_p0_20261005/linked_expected/expected.json"
-  ]
+  ],
+  "archive": "tools/exactness/fixtures_archive_1018/archive.json: AGIdock /archive copy of the ~16 GB golds (qwen_p8191 + goldens) with per-file sha256 manifests (ROOT-1945 10-18); restore from there before regenerating"
  }
 }

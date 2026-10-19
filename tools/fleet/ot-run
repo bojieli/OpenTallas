@@ -52,7 +52,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["ot-epyc4", "ot-pve1", "ot-agidock128"]
+HOSTS = ["ot-epyc4", "ot-epyc5", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5)
 
 
 def probe(host, d):
@@ -387,6 +387,33 @@ def main():
         first = False
 
 
+REAPER = os.path.expanduser("~/bin/ot-reaper.py")
+REAP_STAMP = "/tmp/ot-run-reap-{host}.stamp"
+REAP_EVERY_S = 1800
+
+
+def trigger_reaper(host, why):
+    """(ROOT-2130 2026-10-18, FLEET-DISK P6) a host refused for low disk starts `ot-reaper.py --host H` once (detached,
+    flock; at most every REAP_EVERY_S per host) instead of only refusing: the cron run is every 30 min and EPYC4 sat at
+    14-16 GB free (refused) with 444 GB of reapable gate bulk."""
+    if not os.path.exists(REAPER):
+        return False
+    stamp = REAP_STAMP.format(host=host)
+    try:
+        if time.time() - os.path.getmtime(stamp) < REAP_EVERY_S:
+            return False
+    except OSError:
+        pass
+    try:
+        open(stamp, "w").write(f"{why}\n")
+        subprocess.Popen(["flock", "-n", f"/tmp/ot-run-reap-{host}.lock", sys.executable, REAPER, "--host", host],
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
+    except OSError:
+        return False
+    return True
+
+
 def place(hosts, d, disk, mem, quiet=False):
     """probe the hosts; return host -> row for every host that qualifies (dir, disk, physical RAM).  No load test."""
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
@@ -398,6 +425,8 @@ def place(hosts, d, disk, mem, quiet=False):
             note = "probe without ncpu"
         if r and not r.get("error") and not physically_capable(r, mem):
             note = "request %d GB exceeds physical RAM after mandatory headroom" % mem
+        if r and not r.get("error") and r["disk_gb"] < disk and trigger_reaper(h, note):
+            note += " (ot-reaper started for this host)"
         if r and not r.get("error"):
             if not quiet:
                 print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "

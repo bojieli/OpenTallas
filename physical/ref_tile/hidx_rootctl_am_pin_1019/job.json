@@ -1,0 +1,220 @@
+{
+ "name": "hidx_rootctl_am_pin_1019-r1-COMMIT",
+ "block": "ot_hbm_idx_rootctl_static_am_pin",
+ "ref_tile": true,
+ "owner": "Claude:VEH-TOPKFIX2",
+ "purpose": "VEH-TOPKFIX2 10-19: die master for the d4g pin-registered VM banks (hfd_vms_bank_native_q0_faces: every bank answer and hub echo +1 edge; defect results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topk_finding.json). = ot_hbm_idx_rootctl_static_am r4 #(.VM_RT(1),.CR_RT(1)): TOPK RT_EXTRA 2 / ACK 14, share_amr owner tap own[8] (+8 x 6 owner flops per leaf pair, +12 TOPK pipeline bits); ports, faces, outline, macros identical to r4. Latency vs r4: INDEX and ARGMAX responses +1 (operand reader n+13, argmax r2 VMX 6), TOPK row +1, ACK +1.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/veh-topkfix-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+   "rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_rootctl_static_am_pin u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am_pin.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_bench",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "^IDX_ROOTCTL_AM_BENCH PASS$",
+    "pass_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/bench_vmx1.log",
+    "min_count_regex": "^EQ AMMUT=0 cycles \\d+ checked \\d+ argmax_resp (\\d+) ",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_eq_mut1",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/eq_mut1 eq 1",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=1 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/eq_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_eq_mut2",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/eq_mut2 eq 2",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=2 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/eq_mut2.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_eq_mut3",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/eq_mut3 eq 3",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=3 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/eq_mut3.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_eq_mut4",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/eq_mut4 eq 4",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=4 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/eq_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_eq_mut6",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/eq_mut6 eq 6",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=6 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/eq_mut6.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_eq_mut7",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/eq_mut7 eq 7",
+    "expect": "fail",
+    "fail_regex": "^EQ AMMUT=7 .* errors [1-9][0-9]* IDX_ROOTCTL_AM FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/eq_mut7.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_topk_mut5",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/topk_mut5 topk 5",
+    "expect": "fail",
+    "fail_regex": "^TOPK AMMUT=5 TOPK VMX=1 .* errors [1-9][0-9]* IDX_AM_TOPK FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/topk_mut5.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "idx_rootctl_am_pin_topk_stale_r3",
+    "cmd": "env VMX=1 bash rtl/test/hbm_idx_static/run_idx_rootctl_am.sh {RUN}/topk_stale topk 0 0",
+    "expect": "fail",
+    "fail_regex": "^TOPK AMMUT=0 TOPK VMX=1 DUT_RT=0 .* errors [1-9][0-9]* IDX_AM_TOPK FAIL",
+    "fail_witness": "results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/am_pin/topk_stale_r3.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_rootctl_am_pin_1019/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_rootctl_am_pin_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_rootctl_am_pin_1019 --out {RUN}/record/views/ot_hbm_idx_rootctl_static_am_pin --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_rootctl_am_pin_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_rootctl_am_pin_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_rootctl_am_pin_1019/hidx_rootctl_am_pin_1019-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "VEH-TOPKFIX2 10-19: die master for the d4g pin-registered VM banks (hfd_vms_bank_native_q0_faces: every bank answer and hub echo +1 edge; defect results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topk_finding.json). = ot_hbm_idx_rootctl_static_am r4 #(.VM_RT(1),.CR_RT(1)): TOPK RT_EXTRA 2 / ACK 14, share_amr owner tap own[8] (+8 x 6 owner flops per leaf pair, +12 TOPK pipeline bits); ports, faces, outline, macros identical to r4. Latency vs r4: INDEX and ARGMAX responses +1 (operand reader n+13, argmax r2 VMX 6), TOPK row +1, ACK +1.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "new master ot_hbm_idx_rootctl_static_am_pin (VM_RT 1 / CR_RT 1) for the faces VM banks; same kit as hidx_rootctl_am_1018 r4 (approved 0hv 10-18 18:40); no closed view of this master exists"
+ }
+}

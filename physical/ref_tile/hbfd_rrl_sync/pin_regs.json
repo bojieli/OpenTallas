@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_rrl_sync",
+ "enable": false,
+ "reason": "Reset-only tile: rst_n_in is asynchronous clear, rst_n already flop-driven. Adding ordinary input/output registers changes immediate asynchronous assertion and fixed 3/1-edge release contract."
+}

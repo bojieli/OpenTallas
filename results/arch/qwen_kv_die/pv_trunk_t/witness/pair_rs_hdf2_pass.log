@@ -1,0 +1,6 @@
+PV_PAIR_RS PASS T=1 beats=32 rserr=0 first_beat_age=273 out_age=223 rs_d=50 rs_mut=0
+PV_PAIR_RS PASS T=100 beats=32 rserr=0 first_beat_age=273 out_age=223 rs_d=50 rs_mut=0
+PV_PAIR_RS PASS T=1000 beats=32 rserr=0 first_beat_age=321 out_age=271 rs_d=50 rs_mut=0
+PV_PAIR_RS PASS T=8192 beats=32 rserr=0 first_beat_age=769 out_age=719 rs_d=50 rs_mut=0
+rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3099405-1792396360): exit 0

@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_cx_rcs_1018-x1-7c296a9ce bench bench_cxport_split_mut4 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_rcs_1018-x1-7c296a9ce log cl/bench_cxport_split_mut4.a1b1.log captured 2026-10-18T20:16:03-07:00
+# fail_regex 'CXPORT_SPLIT FAIL'
+MISMATCH t=9601 ij 0 rc 1 dw 0/0/0 rr 0 sfu 0 fault 0/0
+MISMATCH t=10201 ij 0 rc 1 dw 0/0/0 rr 0 sfu 0 fault 0/0
+MISMATCH t=11401 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+MISMATCH t=12301 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+MISMATCH t=12601 ij 0 rc 0 dw 1/1/1 rr 1 sfu 1 fault 0/0
+CXPORT_SPLIT FAIL legal_phase_faults=0 errors=36082 checks=24183 dw=22440 inj=14866 rc=995 rr=596 fault_edges=16104
+rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv:99: $finish called at 14536800 (1ps)

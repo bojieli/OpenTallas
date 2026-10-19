@@ -24,6 +24,8 @@ import argparse, json, math, re, sys
 from pathlib import Path
 
 FAMS = ('rlyh0', 'rlyh', 'landh0', 'landh')
+# Q-H16C 10-18: the forwarded RESET lanes (ot_qfd_rlane_st / ot_qfd_rlane_land, 1 b) -- width class 1 only
+RST_FAMS = ('rlyr0', 'rlyr', 'rlyrl')
 WCLS = (1, 128, 600)
 GROUP = {'EW': 'H', 'WE': 'H', 'NS': 'V', 'SN': 'V', 'EN': 'HV', 'ES': 'HV', 'WN': 'HV', 'WS': 'HV',
          'NE': 'VH', 'SE': 'VH', 'NW': 'VH', 'SW': 'VH'}
@@ -32,12 +34,15 @@ REP = {'H': 'EW', 'V': 'NS', 'HV': 'EN', 'VH': 'NE'}
 REP_OVERRIDE = {('rlyh', 1, 'V'): 'SN', ('rlyh0', 1, 'VH'): 'SW'}
 GX, GY, SHAVE = 0.432, 2.16, 0.024
 MIRROR = {'R0': {}, 'MX': {'N': 'S', 'S': 'N'}, 'MY': {'E': 'W', 'W': 'E'}, 'R180': {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}}
-IN_PORTS = {'rlyh0': ('a',), 'rlyh': ('a', 'ea'), 'landh0': ('a',), 'landh': ('a', 'ea')}
-OUT_PORTS = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh0': ('b',), 'landh': ('b',)}
+IN_PORTS = {'rlyh0': ('a',), 'rlyh': ('a', 'ea'), 'landh0': ('a',), 'landh': ('a', 'ea'), 'rlyr0': ('a',), 'rlyr': ('a',),
+            'rlyrl': ('a',)}
+OUT_PORTS = {'rlyh0': ('b', 'eb'), 'rlyh': ('b', 'eb'), 'landh0': ('b',), 'landh': ('b',), 'rlyr0': ('b',), 'rlyr': ('b',),
+             'rlyrl': ('b',)}
 AREA = {'rlyh0': ('ck', 'en', 'ck_o'), 'rlyh': ('ckf', 'ck_o'),
         'landh': ('ckf', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
-        'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault')}
-NAME = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh)_(\d+)_([NSEW]{2})_(\d+)x(\d+)$')
+        'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
+        'rlyr0': ('ck', 'ck_o'), 'rlyr': ('ckf', 'ck_o'), 'rlyrl': ('ck',)}
+NAME = re.compile(r'^qfd_(rlyh0|rlyh|landh0|landh|rlyr0|rlyrl|rlyr)_(\d+)_([NSEW]{2})_(\d+)x(\d+)$')
 
 
 def up(x, g):
@@ -83,6 +88,8 @@ def classify(m):
         return None
     fam, W, fc = g.group(1), int(g.group(2)), g.group(3)
     Wc, grp = wclass(W), GROUP[fc]
+    if fam in RST_FAMS and Wc != 1:
+        raise SystemExit(f'{m}: reset lane wider than 1 b: add a reset width class')
     rep = rep_faces(fam, Wc, grp)
     return dict(master=m, family=fam, bits=W, faces=fc, cls=class_name(fam, Wc, grp), class_bits=Wc, group=grp,
                 rep_faces=rep, orient=orient(rep, fc), spare_bits=Wc - W, class_frame=list(frame(Wc, grp)),
@@ -90,7 +97,8 @@ def classify(m):
 
 
 def all_classes():
-    return [class_name(f, w, g) for f in FAMS for w in WCLS for g in ('H', 'V', 'HV', 'VH')]
+    return [class_name(f, w, g) for f in FAMS for w in WCLS for g in ('H', 'V', 'HV', 'VH')] + \
+        [class_name(f, 1, g) for f in RST_FAMS for g in ('H', 'V', 'HV', 'VH')]
 
 
 def class_pins(cn):
