@@ -1,0 +1,43 @@
+{
+ "model": "candidate physical partition; native phase/PG/epochs HOLD",
+ "old_regions": 26,
+ "entries": 331,
+ "capture_ff": 1993,
+ "masters": {
+  "qfd_rst_rep": 206,
+  "qfd_rst_rep_p8": 125
+ },
+ "proposed_groups": 151,
+ "additional_groups": 125,
+ "group_capture_ff_max": 31,
+ "root_capture_l1_max_um": 298.53750000000036,
+ "existing_incident_directed_bits": 372,
+ "all_incident_crossings": 269,
+ "newly_crossed_directed_bits": 178,
+ "new_crossed_nets": 168,
+ "new_crossed_classes": {
+  "reset": 178
+ },
+ "new_crossed_pin_l1_max_um": 233.17850000000362,
+ "crossing_nets_2ff_floor": 336,
+ "new_destinations_2ff_conservative": 356,
+ "storage_four_slot_ff_if_misapplied": 712,
+ "new_routed_wire_um": null,
+ "new_clock_buffers": null,
+ "new_pg_connections": null,
+ "absolute_reset_epoch": null,
+ "su_added_edges": null,
+ "mu_added_edges": null,
+ "total_area_um2": null,
+ "distinct_net_destination_groups": 178,
+ "conditional_plain_ff_landing_area_floor_um2": 103.8096,
+ "conditional_new_reset_release_max_selected_subgraph_edges": 32,
+ "groups_per_old_root_max": 14,
+ "new_crossed_existing_pin_l1_sum_um": 21117.533000000054,
+ "old_selected_ff_area_um2": 581.1588,
+ "partition_fixedpoint_iterations": 3,
+ "group_capture_plus_landing_ff_max": 31,
+ "source_to_subroot_l1_sum_floor_um": 271748.56200000003,
+ "source_to_subroot_l1_max_floor_um": 3160.2300000000023,
+ "source_to_subroot_min405_segments": 742
+}

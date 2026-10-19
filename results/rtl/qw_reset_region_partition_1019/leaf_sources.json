@@ -1,0 +1,32 @@
+[
+  {
+    "master": "qfd_rst_rep",
+    "artifact": "ot-agidock128/result_9.json",
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/qfd_rst_rep-a1-cddafbdcc/routes/qfd_rst_rep_a1_cddafbdcc/work/orfs/results/asap7/opentallas_qfd_rst_rep_asap7_ref_qfd_rst_rep_a1_cddafbdcc/base/6_final.odb",
+    "odb_sha256": "2fb3c45a01ac2c1e8220ad9854db08f09fee4d174f783bdfc7188d885f9744b8",
+    "counts": {
+      "PASS": 260,
+      "UNBOUND": 6
+    },
+    "unbound_cells": 3,
+    "failure_masters": {
+      "BUFx2_ASAP7_75t_R": 6
+    },
+    "verdict": "PG_HOLD"
+  },
+  {
+    "master": "qfd_rst_rep_p8",
+    "artifact": "ot-pve1/result_0.json",
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/qfd_rst_rep_p8-a1-cddafbdcc/routes/qfd_rst_rep_p8_a1_cddafbdcc/work/orfs/results/asap7/opentallas_qfd_rst_rep_p8_asap7_ref_qfd_rst_rep_p8_a1_cddafbdcc/base/6_final.odb",
+    "odb_sha256": "0be37cfaad75b23d2a2d6d82f039fe3cc27d4a048dd0a58229fc00b1cba1765c",
+    "counts": {
+      "PASS": 358,
+      "UNBOUND": 6
+    },
+    "unbound_cells": 3,
+    "failure_masters": {
+      "BUFx2_ASAP7_75t_R": 6
+    },
+    "verdict": "PG_HOLD"
+  }
+]
