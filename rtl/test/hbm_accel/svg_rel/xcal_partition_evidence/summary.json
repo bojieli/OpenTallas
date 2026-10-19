@@ -1,0 +1,76 @@
+{
+  "source_commit": "cb4704ead",
+  "tool": "Verilator5.050",
+  "host": "ot-epyc8",
+  "remote_root": "/srv/opentallas-scratch/claude/hbm-xcal-partition-cb4704-1019",
+  "positive": {
+    "verdict": "PASS",
+    "words": 4,
+    "first_delta_edges": 29,
+    "programme_rows": [
+      1024,
+      1025,
+      1026,
+      1027
+    ],
+    "descriptor_row": 255
+  },
+  "successive_descriptors": {
+    "verdict": "PASS",
+    "rows": [
+      254,
+      255
+    ],
+    "words": 8,
+    "first_delta_edges": 29,
+    "second_delta_edges": 41,
+    "GO": [
+      20,
+      32
+    ]
+  },
+  "unpayable_GO_lead": {
+    "verdict": "PASS",
+    "e_at": 1,
+    "words": 0,
+    "fault": 1
+  },
+  "mutants": {
+    "1": {
+      "verdict": "FAIL",
+      "fail_regex": "XCAL_PARTITION FAIL",
+      "witness": "mut1.log"
+    },
+    "2": {
+      "verdict": "FAIL",
+      "fail_regex": "XCAL_PARTITION FAIL",
+      "witness": "mut2.log"
+    },
+    "3": {
+      "verdict": "FAIL",
+      "fail_regex": "XCAL_PARTITION FAIL",
+      "witness": "mut3.log"
+    },
+    "4": {
+      "verdict": "FAIL",
+      "fail_regex": "XCAL_PARTITION FAIL",
+      "witness": "mut4.log"
+    },
+    "5": {
+      "verdict": "FAIL",
+      "fail_regex": "XCAL_PARTITION FAIL",
+      "witness": "mut5.log"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_partition_t.sv": "6905eeddce68d9cc97557c9725f4778bdaa0eaef8becf67cfbaae8d8b5321467",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_host_native.sv": "1dda248ad0088c337cc614ea34d0cb26711709b52da15a7898a3757db143ced1",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_desc_native.sv": "310368bf9d8a03a42cac690116b3d17cc7f2d56755d38f00c14a7748e721509a",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_prog_native.sv": "c01ad5de9467b0b5d4dbaee6b270ab4ecd98405ef8995ff77fd68d17fb021e3d",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_xcal_calendar_native.sv": "c6d192e302cfd926a553effceb0adc26f6518fbd179a07751568d18d496e7211",
+    "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv": "36b4e94e993c7697f80cf3ad04719e60255221a94ef34cc804e2e81f86a7de94",
+    "rtl/test/hbm_accel/svg_rel/tb_xcal_partition.sv": "1b7f30599b608fb7e4ba1417622fddb7cc9f40d2c9f6ab8e1ac16ac9a02ff805",
+    "rtl/test/hbm_accel/svg_rel/run_xcal_partition.sh": "7ac46939aa7a9090eadd5a02dd19a71d38fdce981501e7800a4a470f6a772190"
+  },
+  "physical_verdict": "NOT_RUN: canonical descriptor density scope, mapped audit and parent geometry/source review required"
+}
