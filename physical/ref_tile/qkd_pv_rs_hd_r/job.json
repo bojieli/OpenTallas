@@ -1,5 +1,5 @@
 {
- "name": "qkd_pv_rs_hd_r-n1-COMMIT",
+ "name": "qkd_pv_rs_hd_r-n1-15fc5dce9",
  "block": "qkd_pv_rs_hd_r",
  "ref_tile": true,
  "owner": "Claude:KV-KITS/NATIVE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/kv-native-1018",
-  "commit": "COMMIT",
+  "commit": "15fc5dce9",
   "extra_paths": [
    "rtl/qwen_sys/split_20261014/test/bench_rtrunk_leaves.sh"
   ]
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_pv_rs_hd_r/qkd_pv_rs_hd_r-n1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_pv_rs_hd_r/qkd_pv_rs_hd_r-n1-15fc5dce9"
   }
  ],
  "cycles_added": 0,
