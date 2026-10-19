@@ -29,6 +29,7 @@ def statement_end(text, start):
         token=ts[i].group()
         if token=='begin':
             i+=1
+            if ts[i].group()==':':i+=2
             while ts[i].group()!='end':i=stmt(i)
             return i+1
         if token=='if':
@@ -89,9 +90,11 @@ def partition(text, module, reset='rst', clock='ck'):
     # Each child receives its own reset branch; flattening cannot reconnect
     # independent children onto a single reset leaf.
     loops=[]
-    for loop in re.finditer(r'\bfor\s*\(\s*(\w+)\s*=\s*0\s*;\s*\1\s*<\s*(\d+)[^)]*\)\s*begin\b',text):
-        stop=text.find('endgenerate',loop.end())
-        if stop>=0:loops.append((loop.start(),stop,loop.group(1),int(loop.group(2))))
+    for loop in re.finditer(r'\bfor\s*\(\s*(?:genvar\s+)?(\w+)\s*=\s*0\s*;\s*\1\s*<\s*([^;]+);[^)]*\)\s*begin\b',text):
+        count=P.ev(loop.group(2),m.env())
+        if count is None:raise ValueError('unknown child generate count: '+loop.group(2))
+        stop=statement_end(text,loop.start())
+        loops.append((loop.start(),stop,loop.group(1),int(count)))
     for a in re.finditer(r'\.(rst_n|rst)\('+reset+r'\)',text):
         scope=[x for x in loops if x[0]<a.start()<x[1]]
         if len(scope)>1:raise ValueError('nested child generate reset needs explicit partition')
