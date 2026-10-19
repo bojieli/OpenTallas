@@ -492,8 +492,8 @@ def main(argv=None):
         rectangles = []
         for cname, c in J['cells'].items():
             cell = cname.lstrip('\\')
-            ct = base_type(c['type'])
-            ct = ALIAS.get(ct, ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
+            original_ct = base_type(c['type'])
+            ct = ALIAS.get(original_ct, original_ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
             if ct not in leaf:
                 raise ValueError(f'{mst}: child {cell} ({ct}) has no closed view (glue is not expanded)')
             used_leaf.add(ct)
@@ -518,11 +518,18 @@ def main(argv=None):
             if cinst in occupied or cinst in child_params:
                 raise ValueError(f'{cinst}: duplicate instance or stale child parameters')
             occupied.add(cinst)
-            literals, profile = EP.preserve(ROOT, base_type(c['type']), c.get('parameters', {}),
+            overrides = c.get('parameters', {})
+            if ct != original_ct:
+                # Same ports do not establish parameter compatibility. This alias
+                # preserves only a parameterless original with no inherited overrides;
+                # other aliases require an explicit compatible parameter mapping.
+                if overrides or EP.integer_defaults((ROOT / RTL[original_ct]).read_text(), original_ct):
+                    raise ValueError(f'{original_ct} -> {ct}: explicit compatible parameter mapping required')
+            literals, profile = EP.preserve(ROOT, ct, overrides,
                                             RTL[ct], L['view'], profiles, a.diagnostic_parameter_profiles)
             if profile is not None:
                 child_params[cinst] = literals
-                rep['parameter_instances'][cinst] = dict(module=base_type(c['type']), literals=literals, profile=profile)
+                rep['parameter_instances'][cinst] = dict(module=ct, literals=literals, profile=profile)
             pc = []
             for p, bits in c['connections'].items():
                 if p not in L['ports']:
