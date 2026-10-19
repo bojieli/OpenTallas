@@ -166,6 +166,18 @@ if [ "${OT_KV_EXPAND:-all}" != none ]; then
   python3 tools/qwen_kv_die/kv_expand.py --run $O $ASTKX $( [ "$XO" = all ] || echo --only $XO ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
+# KV-GEN8 10-19: every ot_mts::place orientation qualified against the closed LEF pin lattice in prep (GEN7 and every
+# kvs14r MU real case since 08:00 died 18 min into PLACE: 'qkd_astk_ep_s MY x has no legal origin' -- the ES/EN ASTK
+# strips are X-mirrored and ep_s has on-track M3 AND M5 pins, which no X mirror can keep).  Same rule as the lane
+# relays (kv_lane_orientation): keep Y sense + frame, drop only the illegal X mirror; every change in
+# case_kv/place_orientations*.json; no legal orientation at all -> exit 8.  OT_KV_PLACE_ORIENT=0 skips (never default).
+kv_orient() {
+  [ "${OT_KV_PLACE_ORIENT:-1}" = 1 ] || return 0
+  python3 tools/qwen_kv_die/kv_place_orient.py --case $O/case_kv --report $O/case_kv/place_orientations_$1.json $2 \
+    >> $O/place_orient.log 2>&1 || { tail -3 $O/place_orient.log; echo "KV_PLACE_ORIENT FAIL ($1): no legal orientation"; exit 8; }
+  tail -1 $O/place_orient.log | cut -c1-400
+}
+if [ "${OT_KV_EXPAND:-all}" != none ]; then kv_orient expand; fi
 # KVPLAN 1815 (OT_KV_RST_REGIONAL=1, also read by kv_die.py): every reset / boot fan-out of the flattened die -> a local
 # registered tree of closed qkd_rlys_1 stations through free space (kv_rst_regional.py; RUN/rst_regional.json)
 if [ "${OT_KV_RST_REGIONAL:-0}" = 1 ]; then
@@ -179,6 +191,7 @@ if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
   python3 tools/qwen_kv_die/kv_rly_std.py --run $O ${OT_KV_RLY_STD_NETLIST_ONLY:+--netlist-only} > $O/rly_std.log
   EXP="--expanded $O/expand.json"
 fi
+[ "${OT_KV_RLY_STD_NETLIST_ONLY:-0}" = 1 ] || kv_orient prefwd
 # KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
 # half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
 # RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
@@ -198,6 +211,7 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
 fi
+[ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
 [ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv > $O/native_phy.log \
   && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --libs $O/libs >> $O/native_phy.log
