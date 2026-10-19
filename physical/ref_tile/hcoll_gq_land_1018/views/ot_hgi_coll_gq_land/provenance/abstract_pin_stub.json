@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hgi_coll_gq_land.lef",
-    "sha256": "2ea9f313ce9389dbf277f1d5bee1d1ef84cfeecf096984fee0259d11b8b98742"
+    "sha256": "2f89b18fc618017ca5e45323a6745ef225398d575f0938b82f44f6d05057a4bb"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e/record/views/ot_hgi_coll_gq_land/provenance/raw/ot_hgi_coll_gq_land.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e/record/views/ot_hgi_coll_gq_land/provenance/ot_hgi_coll_gq_land.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701/record/views/ot_hgi_coll_gq_land/provenance/raw/ot_hgi_coll_gq_land.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701/record/views/ot_hgi_coll_gq_land/provenance/ot_hgi_coll_gq_land.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 1 OBS rects moved into 1 pins: ld_desc[31]; pockets: 907 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 2 OBS rects moved into 1 pins: ld_desc[31]; pockets: 861 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/hcoll_gq_land_1018-r1-b7918441e/record/views/ot_hgi_coll_gq_land/provenance/ot_hgi_coll_gq_land.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_gq_land_1018-n1-537e21701/record/views/ot_hgi_coll_gq_land/provenance/ot_hgi_coll_gq_land.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hgi_coll_gq_land 237.6 x 237.6: PG M5 VDD 44 stripes (98% spread, 100% cov) / VSS 44 stripes (98% spread, 100% cov); strap M6; face pins 3880 blocked-above 0 blocked-same 0; clock clk insertion 375 ps; pockets M5 0 (closed)",
+    "summary": "ot_hgi_coll_gq_land 237.6 x 237.6: PG M5 VDD 44 stripes (98% spread, 100% cov) / VSS 44 stripes (98% spread, 100% cov); strap M6; face pins 3880 blocked-above 0 blocked-same 0; clock clk insertion 388 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hgi_coll_gq_land",
       "W": 237.6,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 3880,
         "blocked_above": 0,
-        "covered_below": 357,
+        "covered_below": 317,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 374.95,
-          "min_ps": 272.38
+          "max_ps": 387.8,
+          "min_ps": 278.16
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 907
+          "added": 861
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hgi_coll_gq_land.lef",
-    "sha256": "82a1ed380f40a1bcfdc9dc8d587ba1f6f4f79c5ef9a83438374d52d8d43da721"
+    "sha256": "66a239808c597e70f0ebd7bfe333aa33a878d28242d98798081108968e7923fe"
   }
 }

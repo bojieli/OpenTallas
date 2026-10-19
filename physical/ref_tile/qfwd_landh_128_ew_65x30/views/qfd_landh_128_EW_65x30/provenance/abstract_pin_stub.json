@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_landh_128_EW_65x30.lef",
-    "sha256": "a452aff62aeb04de297fdcf90e4944feed5271fbff1c23085f8815952a7e52a7"
+    "sha256": "967cac1e7966434a02b0d3fc089d3ba8828aa1e50a9593795090eaf78df02bb3"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-c1-02c9af3ea/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-h1-ac2cae5a0/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-c1-02c9af3ea/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-c1-02c9af3ea/record/views/qfd_landh_128_EW_65x30/provenance/raw/qfd_landh_128_EW_65x30.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-c1-02c9af3ea/record/views/qfd_landh_128_EW_65x30/provenance/qfd_landh_128_EW_65x30.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-h1-ac2cae5a0/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-h1-ac2cae5a0/record/views/qfd_landh_128_EW_65x30/provenance/raw/qfd_landh_128_EW_65x30.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-h1-ac2cae5a0/record/views/qfd_landh_128_EW_65x30/provenance/qfd_landh_128_EW_65x30.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 1 OBS rects moved into 1 pins: a[31]; pockets: 97 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 110 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-c1-02c9af3ea/record/views/qfd_landh_128_EW_65x30/provenance/qfd_landh_128_EW_65x30.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh_128_ew_65x30-h1-ac2cae5a0/record/views/qfd_landh_128_EW_65x30/provenance/qfd_landh_128_EW_65x30.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_landh_128_EW_65x30 64.776 x 30.216: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 266 blocked-above 0 blocked-same 0; clock ck insertion 95 ps; clock ckf insertion 96 ps; pockets M5 0 (closed)",
+    "summary": "qfd_landh_128_EW_65x30 64.776 x 30.216: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 266 blocked-above 0 blocked-same 0; clock ck insertion 91 ps; clock ckf insertion 96 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_landh_128_EW_65x30",
       "W": 64.776,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 266,
         "blocked_above": 0,
-        "covered_below": 10,
+        "covered_below": 45,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 94.8,
-          "min_ps": 60.99
+          "max_ps": 91.27,
+          "min_ps": 59.61
         },
         "ckf": {
-          "max_ps": 96.31,
-          "min_ps": 75.95
+          "max_ps": 96.3,
+          "min_ps": 76.81
         }
       },
       "pockets": {
@@ -91,7 +91,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 97
+          "added": 110
         },
         "count": 0,
         "area_um2": 0,
@@ -101,6 +101,6 @@
   },
   "output": {
     "path": "qfd_landh_128_EW_65x30.lef",
-    "sha256": "e46ba3809769029ba219c17e4aecc0099cb3ca4675535505611febf832c81621"
+    "sha256": "9c2dd5c88e4b83a40256c91c7c1197e1bb8f59cf668bc174542abd8cc17eacae"
   }
 }
