@@ -1,0 +1,317 @@
+{
+  "category_max": {
+    "fire_time": 28,
+    "fire_allow": 28,
+    "g_a1_select_copy[": 32,
+    "g_fire_copy[": 32,
+    "g_gather_hold[": 133
+  },
+  "top": "ot_hgi_coll_gq_issue",
+  "netlist_sha256": "69a25ae4b23c83d2c07a17ed9452b12a2376ed2553185dd64bccd7150ae11474",
+  "strap_roots": 292,
+  "max_strap_fanout": 133,
+  "strap_top": [
+    {
+      "net": "u_ot_pr_core.g_gather_hold[4].u_hold.q[13]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 133,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_gather_hold[2].u_hold.q[10]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 62,
+      "flops": 1,
+      "example": "u_ot_pr_core.pr_s[1][0]$_DFF_P_"
+    },
+    {
+      "net": "u_ot_pr_core.g_gather_hold[2].u_hold.q[11]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 55,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_gather_hold[2].u_hold.q[12]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 44,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[0].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[10].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[11].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[12].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[13].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[14].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[15].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[1].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[2].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[3].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[4].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[5].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[6].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[7].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[8].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_a1_select_copy[9].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_fire_copy[0].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_fire_copy[10].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_fire_copy[11].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_fire_copy[12].u_ff.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 32,
+      "flops": 0,
+      "example": "None"
+    }
+  ],
+  "all_signal_top": [
+    {
+      "net": "u_ot_pr_core.u_aq1.u_scale.u.s2_pp2[31]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 354,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_aq0.u_scale.u.s2_pp2[31]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 351,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.sync_q[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 299,
+      "flops": 293,
+      "example": "u_ot_pr_core.u_rst.rst_n[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.scan_row[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 266,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_184814_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 256,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.program_cfg_we$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 208,
+      "flops": 1,
+      "example": "u_ot_pr_core.u_target.commit[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.fire",
+      "loads": 204,
+      "flops": 1,
+      "example": "u_ot_pr_core.ld_fire$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.install_open$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 194,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 186,
+      "flops": 186,
+      "example": "u_ot_pr_core.active$_DFF_PN0_"
+    },
+    {
+      "net": "_143017_/Y (NOR3x1_ASAP7_75t_R)",
+      "loads": 176,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_120470_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 175,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.rst_n[3]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 150,
+      "flops": 150,
+      "example": "u_ot_pr_core.a1[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_rst.rst_n[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 144,
+      "flops": 144,
+      "example": "u_ot_pr_core.rd_exp[0]$_DFF_PN0_"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.scan_row[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 136,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.g_gather_hold[4].u_hold.q[13]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 133,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_184815_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 128,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_113988_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 124,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_ot_pr_core.u_target.program_start_v$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 124,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_163257_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 118,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_176860_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_177304_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_177526_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_178196_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "_178642_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 117,
+      "flops": 0,
+      "example": "None"
+    }
+  ],
+  "clock_roots": [
+    {
+      "source": [
+        "port",
+        "clk"
+      ],
+      "ff": 21909,
+      "icg": 0,
+      "macro_pins": 8,
+      "example": "_184814_"
+    }
+  ]
+}

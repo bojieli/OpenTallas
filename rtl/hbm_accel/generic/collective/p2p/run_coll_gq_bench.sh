@@ -11,7 +11,7 @@ V=${VERILATOR:-verilator}
 P=rtl/hbm_accel/generic/collective/p2p
 python3 tools/hgi_sim/collq_gather_1018.py check | tee "$OUT/schedule_check.log"
 python3 tools/hgi_sim/collq_gather_1018.py vectors "$OUT/vec" > "$OUT/vec.log"
-LIB=("$P/ot_hgi_coll_gq.sv" "$P/ot_hgi_coll_ring_ag.sv" "$P/ot_hgi_coll_ring_ag_lane.sv" "$P/ot_hgi_coll_ring_b_stop.sv"
+LIB=("$P/ot_hgi_coll_gq.sv" "$P/ot_hgi_coll_gq_target16.sv" "$P/ot_hgi_coll_ring_ag.sv" "$P/ot_hgi_coll_ring_ag_lane.sv" "$P/ot_hgi_coll_ring_b_stop.sv"
      "$P/ot_hgi_coll_pring_static_state_capture.sv" "$P/ot_hgi_coll_pring_static.sv"
      rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
      rtl/lib/ot_rst_relay.sv "$P/ot_hgi_coll_aq13.sv" "$P/ot_hgi_coll_aq_scale13r.sv"

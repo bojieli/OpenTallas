@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_fire2
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_fire2
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_fire2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_fire2
+ot-run: ot-epyc8       admits  1179 GB (avail 926, growth 101, headroom 0, waiters 0/0 GB) load 38/128 running 29 disk 346 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_fire2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/gqfan32-1019/src_fire2
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-4064335-1792427712 after 0 s
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ PASS rows=6 loops=2 vm_words_checked=2644 reads=3104 writes=5288 isa_passthrough=38 gather_edges_F72R2=91
+COLLQ FAULT PASS scenario=1 gq0100 ra0000 rb0000 ks0000 ld0000
+COLLQ FAULT PASS scenario=2 gq1111 ra1111 rb0000 ks0000 ld1111
+COLLQ FAULT PASS scenario=3 gq0000 ra0000 rb0000 ks0010 ld0000
+COLLQ FAULT PASS scenario=4 gq1100 ra0000 rb1110 ks0000 ld1100
+COLLQ FAULTS PASS 4
+COLLQ AQ13 AQ_TREE13_EXACT_PASS blocks1024 elements32768 checks1133 latency13 II1 warmreset
+COLLQ SCALE13R_EQ PASS checks=2097152 subnormal_results=52693
+COLLQ CONTROL_COPY POSITIVE_FAULT_AQ_SCALE PASS
+COLLQ_SCHEDULE_CHECK F<400 R=1,2 plain+qbg links/reads/writes conflicts=0 []
+COLLQ ISA pass-through t18 got 2eedec6e19643c3 exp 2eedec6e19643c3
+COLLQ ISA pass-through t19 got 1ac0b00e6e91c87 exp 1ac0b00e6e91c87
+COLLQ ISA pass-through t20 got 12102a705cad8de exp 12102a705cad8de
+COLLQ ISA pass-through t21 got 091594621a061f9 exp 091594621a061f9
+COLLQ FAIL errors=1190
+COLLQ BENCH FAIL scenario 0
+CONTROL_COPY_POS=0 MUT=1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-4064335-1792427712): exit 0

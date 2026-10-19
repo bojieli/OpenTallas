@@ -1,0 +1,39 @@
+{
+  "status": "COMPONENT_PASS_NOT_PHYSICAL_QUALIFICATION",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv": "f687f6ebd64bcc24a14b85ea5637e232692b1c500821c57aa0d8d2f48601a22e",
+    "rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv": "e202d46c8a42e6ac907b3edef31840884b9a8fed9cb8ce3134dc4a79bfcc0404",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21",
+    "tools/hbm_layer_vehicle/coll_images.py": "9f144858e56b40bad8a555d0b4046490e4851addf3bffe145f75364427d85e21"
+  },
+  "compiler_scope": "coll_images.py source emits exactly one GQ row0 and desc[0,1), lines163/164; not a native producer/die replay claim",
+  "transport_edges": 2,
+  "new_data_edges": 0,
+  "capacity_rows": 16,
+  "public_widths": "canonical PCW8, cfg_addr12,desc_limit13, data256; unchanged",
+  "owner_exception": "Malformed addr>=16/desc_limit>16 fault earlier than canonical generic target, allowed by ROOT approval; original generic/default unchanged",
+  "positive": {
+    "checks": 204,
+    "writes": 24,
+    "launches": 4,
+    "covered": [
+      "rows0..15",
+      "all256payloadbits",
+      "13privateaddress/write banks",
+      "4private launch banks",
+      "reset/reload",
+      "resident descriptor reuse",
+      "fresh generation invalidation"
+    ]
+  },
+  "negative": [
+    "full12b addr16,31,255,256,4095 stickyfault noalias/no launch",
+    "limit17 immediate stickyfault no launch"
+  ],
+  "mutants": {
+    "ADDR": "rejected privateaddresscopy0 mismatch at186ns after malformed guard removed",
+    "LIMIT": "rejected missing immediate fault at157ns",
+    "COPY": "rejected privateaddresscopy0 at106ns"
+  },
+  "physical_status": "BLOCKED: actual mapped fanout and remaining issue/scale controls unresolved; no new CTS gate"
+}

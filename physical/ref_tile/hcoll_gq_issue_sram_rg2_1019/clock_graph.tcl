@@ -12,6 +12,10 @@ proc ot_gq_graph_visit {net depth} {
     set inst [$it getInst]; set master [[$inst getMaster] getName]
     if {[regexp {^(BUF|INV|CKBUF|CKINV)} $master]} {
       dict incr ::ot_gq_bufs $master 1
+      if {[regexp {^(INV|CKINV)} $master] && $::ot_gq_inv_reports < 32} {
+        puts "OT_GQ_CLOCK_INV inst=[$inst getName] master=$master output_stage=[expr {$depth+1}]"
+        incr ::ot_gq_inv_reports
+      }
       foreach out [$inst getITerms] {
         if {[$out isOutputSignal] && [$out getNet] ne "NULL"} {
           ot_gq_graph_visit [$out getNet] [expr {$depth + 1}]
@@ -27,7 +31,7 @@ proc ot_gq_graph_visit {net depth} {
 }
 proc ot_gq_clock_graph {{allow_nonuniform 0}} {
   set block [ord::get_db_block]
-  set ::ot_gq_expected {};set ::ot_gq_reached {};set ::ot_gq_seen {};set ::ot_gq_bufs {}
+  set ::ot_gq_expected {};set ::ot_gq_reached {};set ::ot_gq_seen {};set ::ot_gq_bufs {};set ::ot_gq_inv_reports 0
   set native {}
   foreach p [concat [get_fanout -from [all_inputs -no_clocks] -flat -endpoints_only] [get_fanin -to [all_outputs] -flat -startpoints_only]] {
     if {[catch {set ni [sta::sta_to_db_inst [$p instance]]}]} continue
@@ -64,6 +68,13 @@ proc ot_gq_clock_graph {{allow_nonuniform 0}} {
   set nb 0;dict for {k v} $::ot_gq_bufs {incr nb $v}
   puts "OT_GQ_CLOCK_GRAPH sinks=[llength $all] flops=[llength $ff] macros=[llength $mc] native_io_clocks=[llength $io] stages=$mn..$mx native=[lindex $ios 0]..[lindex $ios end] macro=[lindex $ms 0]..[lindex $ms end] buffers=$nb inventory=$::ot_gq_bufs"
   if {$mn != $mx} {
+    set report_n 0
+    dict for {it depth} $::ot_gq_reached {
+      if {$depth != $mn && $report_n < 32} {
+        puts "OT_GQ_CLOCK_EXTRA_STAGE endpoint=[[$it getInst] getName]/[[$it getMTerm] getName] master=[[[$it getInst] getMaster] getName] stages=$depth"
+        incr report_n
+      }
+    }
     puts OT_GQ_CLOCK_GRAPH_NONUNIFORM
     if {!$allow_nonuniform} {error "OT_GQ_CLOCK_GRAPH unequal actual stage counts $mn/$mx"}
   } else {puts OT_GQ_CLOCK_GRAPH_PASS}

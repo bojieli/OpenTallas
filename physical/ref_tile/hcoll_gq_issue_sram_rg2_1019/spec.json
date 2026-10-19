@@ -14,7 +14,8 @@
   "rtl/hdc/ot_hdc_delay.sv",
   "rtl/hdc/ot_hdc_delay_hc.sv",
   "rtl/hdc/ot_hdc_cg.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -259,9 +260,10 @@
   "h": 345.6
  },
  "defines": [
-  "OT_COLLQ_SRAM"
+  "OT_COLLQ_SRAM",
+  "OT_GQ_FAN32"
  ],
- "structural_change": "After failed r2 route(-98TT/-28FF) and r3 reset gate, r4 fixes reset landing(main reset-only wrapper), replicated selects, and scale stage. Coordinator rejected its >9kb flop-ring per quantiser. SRAM successor replaces BOTH1024b9edge lines with16slot SRAM rings(4x128x256 macros each); read7behind write avoids collisions, then macro-local full-cycle read capture before S9 (SS clk-to-Q455.3ps), macro input negedge lockup. Exact same AQlat13/II1 and schedule. New safe432x345.6geometry, all43.2lattice, >=20um channels, full-face pins<=6/um; area priced in sizing.json before build. Main landing-fault face, registered KQ+2edge share and read-share variants are preserved; only issue module copied from paused r4. SRAM wrong-slot mutant isMUT7, main land-face MUT6 remains. Original SRAM gate now measuredTTsetup-6.329ps with clockspread194TT/169FF: new kit-local equal-actual-stage clock tree and independent nativeIO/allFF/eightmacro clock-graph audit; source/data/cadence unchanged.",
+ "structural_change": "After failed r2 route(-98TT/-28FF) and r3 reset gate, r4 fixes reset landing(main reset-only wrapper), replicated selects, and scale stage. Coordinator rejected its >9kb flop-ring per quantiser. SRAM successor replaces BOTH1024b9edge lines with16slot SRAM rings(4x128x256 macros each); read7behind write avoids collisions, then macro-local full-cycle read capture before S9 (SS clk-to-Q455.3ps), macro input negedge lockup. Exact same AQlat13/II1 and schedule. New safe432x345.6geometry, all43.2lattice, >=20um channels, full-face pins<=6/um; area priced in sizing.json before build. Main landing-fault face, registered KQ+2edge share and read-share variants are preserved; only issue module copied from paused r4. SRAM wrong-slot mutant isMUT7, main land-face MUT6 remains. Original SRAM gate now measuredTTsetup-6.329ps with clockspread194TT/169FF: new kit-local equal-actual-stage clock tree and independent nativeIO/allFF/eightmacro clock-graph audit; source/data/cadence unchanged. ROOT approved GQ-local16rowcapacity: canonicalpublicwidths/+2hostedges; earlierstickyfault forfulladdr>=16/desclimit>16 beforealias/launch; generic target unchanged. Privateprogrammewe/address copies sameedge feed13RFcolumns, localbitmap16/scanner4, targetparallel2edgeresetcopies.",
  "pre_cts_extra": [
   "physical/ref_tile/hcoll_gq_issue_sram_rg2_1019/clock_graph.tcl",
   "physical/ref_tile/hcoll_gq_issue_sram_rg2_1019/bnd_branch.tcl"

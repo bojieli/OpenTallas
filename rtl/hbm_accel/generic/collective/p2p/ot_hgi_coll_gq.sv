@@ -148,15 +148,33 @@ module ot_hgi_coll_gq_issue #(
     endfunction
     // ------------------------------------------------------------------ F20 target + descriptor rows
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
+`ifdef OT_GQ_FAN32
+    wire [12:0] p_bank_we; wire [103:0] p_bank_addr; wire [3:0] p_start_bank;
+    ot_hgi_coll_gq_target16 #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
+        .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank),
+`else
     ot_static_program_target #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
+`endif
         .clk(clk), .clk_cap(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .program_active(active), .program_cfg_we(p_we), .program_cfg_addr(p_wa),
         .program_cfg_data(p_wd), .program_start_v(p_sv), .program_start_base(p_sb), .program_start_limit(p_sl),
         .program_start_loops(p_lp), .configured(configured), .fault(tgt_fault));
     localparam integer DW = 101;
+`ifdef OT_GQ_FAN32
+    wire [DW-1:0] rf [0:15];
+    generate for(genvar c=0;c<13;c=c+1)begin:g_rf_column
+        localparam integer CW=(c==12)?5:8;
+        wire [16*CW-1:0] rows;
+        ot_hgi_coll_gq_rf_column #(.W(CW)) u_col(.clk(clk),.we(p_bank_we[c]),.addr(p_bank_addr[8*c+:4]),.d(p_wd[8*c+:CW]),.rows(rows));
+        for(genvar r=0;r<16;r=r+1)begin:g_row
+            assign rf[r][8*c+:CW]=rows[CW*r+:CW];
+        end
+    end endgenerate
+`else
     reg [DW-1:0] rf [0:15];
     always @(posedge clk) if (p_we && p_wa < 8'd16) rf[p_wa[3:0]] <= p_wd[DW-1:0];
+`endif
     // ------------------------------------------------------------------ calendar
     reg run; reg [3:0] cur, b0; reg [4:0] lim; reg [15:0] tl, per, lps;
     // GQISSUE2 (r2 route TT -32 cur -> ld_desc, -7 cur -> g_f): the row is read through a ONE-HOT AND-OR on a registered
@@ -174,45 +192,123 @@ module ot_hgi_coll_gq_issue #(
                     rc_t[x] = rc_t[x] | (rf[j][x] & cur_ohc[c][j]);
     end
     wire [DW-1:0] rc = rc_t;
+`ifdef OT_GQ_FAN32
+    wire [1:0] fire_allow_bank,fire_time_bank;
+    wire fire_allow=fire_allow_bank[0],fire_time=fire_time_bank[0];
+    generate for(genvar g=0;g<2;g=g+1)begin:g_fire_prefix
+        (* keep="true" *)ot_hgi_coll_gq_fire_prefix u_p(.run(run),.cur(cur),.lim(lim),.tl(tl),.start_time(rc[18:3]),
+            .allow(fire_allow_bank[g]),.at_time(fire_time_bank[g]));
+    end endgenerate
+    wire fire;
+    (* keep = "true" *) ot_hgi_coll_gq_control_and u_main_fire(.a(fire_allow_bank[1]), .b(fire_time_bank[1]), .q(fire));
+    wire [3:0] fire_cur;
+    wire fire_ik, fire_iph;
+    generate for (genvar cc = 0; cc < 4; cc = cc + 1) begin : g_cur_fire
+        (* keep = "true" *) ot_hgi_coll_gq_control_and u_dec(.a(fire_allow_bank[1]), .b(fire_time_bank[1]), .q(fire_cur[cc]));
+    end endgenerate
+    (* keep = "true" *) ot_hgi_coll_gq_control_and u_ik_fire(.a(fire_allow_bank[1]), .b(fire_time_bank[1]), .q(fire_ik));
+    (* keep = "true" *) ot_hgi_coll_gq_control_and u_iph_fire(.a(fire_allow_bank[1]), .b(fire_time_bank[1]), .q(fire_iph));
+`else
     wire fire = run && {1'b0, cur} < lim && tl == rc[18:3];
+`endif
     // gather state (held while busy)
-    reg busy; reg g_qbg, g_r2, g_self; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
-    reg [9:0] g_kn;                                   // ring indices K = ceil(F / R)
+    reg busy;
+`ifdef OT_GQ_FAN32
+    wire g_qbg, g_r2, g_self; wire [9:0] g_f, g_kn; wire [7:0] g_bs; wire [15:0] g_src, g_dst, g_str;
+`else
+    reg g_qbg, g_r2, g_self; reg [9:0] g_f, g_kn; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
+`endif
+    //                                   // ring indices K = ceil(F / R)
     reg iss; reg [9:0] ik; reg [1:0] iph; reg [5:0] drain;
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
     wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] ||
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
     wire ev_in_v = iss && iph != 2'd2;
+`ifdef OT_GQ_FAN32
+    generate for(genvar c=0;c<4;c=c+1)begin:g_cur_state
+        always @(posedge clk or negedge rn)
+            if(!rn)cur_ohc[c]<=16'd1;
+            else if(p_start_bank[c])cur_ohc[c]<=16'd1 << p_sb[3:0];
+            else if(run)begin
+                if(fire_cur[c])cur_ohc[c]<={cur_ohc[c][14:0],cur_ohc[c][15]};
+                if(tl==per-16'd1 && lps>16'd1)cur_ohc[c]<=b0_oh;
+            end
+    end endgenerate
+`endif
+`ifdef OT_GQ_FAN32
+    wire [78:0] gather_d = {rc[0], rc[1], rc[2], rc[28:19], rc[36:29], rc[52:37], rc[68:53], rc[84:69], f_kn};
+    wire [78:0] gather_q;
+    assign {g_qbg, g_r2, g_self, g_f, g_bs, g_src, g_dst, g_str, g_kn} = gather_q;
+    generate for (genvar gh = 0; gh < 5; gh = gh + 1) begin : g_gather_hold
+        localparam integer GW = (gh == 4) ? 15 : 16;
+        ot_hgi_coll_gq_control_hold #(.W(GW)) u_hold(.clk(clk), .a(fire_allow), .b(fire_time),
+            .d(gather_d[16*gh +: GW]), .q(gather_q[16*gh +: GW]));
+    end endgenerate
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin ik <= 10'd0; iph <= 2'd0; end
+        else begin
+            if (fire_ik) ik <= 10'd0; else if (iss && ev_in_v) ik <= ik + 10'd1;
+            if (fire_iph) iph <= 2'd0; else if (iss) iph <= (iph == 2'd2) ? 2'd0 : iph + 2'd1;
+        end
+    end
+`endif
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= 6'd0;
-            cur <= 4'd0; b0 <= 4'd0; cur_oh <= 16'd1; b0_oh <= 16'd1; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= 16'd1; lim <= 5'd0; tl <= 16'd0; per <= 16'd0; lps <= 16'd0; ik <= 10'd0; iph <= 2'd0;
+            cur <= 4'd0; b0 <= 4'd0; cur_oh <= 16'd1; b0_oh <= 16'd1;
+`ifndef OT_GQ_FAN32
+            for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= 16'd1;
+`endif
+             lim <= 5'd0; tl <= 16'd0; per <= 16'd0; lps <= 16'd0;
+`ifndef OT_GQ_FAN32
+            ik <= 10'd0; iph <= 2'd0;
+`endif
         end else begin
             done <= 1'b0;
             active <= run || busy || p_sv;
             if (active && !(run || busy || p_sv)) done <= 1'b1;
             if (p_sv) begin
                 if (run || busy || p_sl > 9'd16 || rf[p_sb[3:0]][100:85] == 16'd0) fault <= 1'b1;
-                run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= 16'd1 << p_sb[3:0]; b0_oh <= 16'd1 << p_sb[3:0]; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= 16'd1 << p_sb[3:0]; lim <= p_sl[4:0]; tl <= 16'd0; lps <= p_lp;
+                run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= 16'd1 << p_sb[3:0]; b0_oh <= 16'd1 << p_sb[3:0];
+`ifndef OT_GQ_FAN32
+                for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= 16'd1 << p_sb[3:0];
+`endif
+                 lim <= p_sl[4:0]; tl <= 16'd0; lps <= p_lp;
                 per <= rf[p_sb[3:0]][100:85];
             end else if (run) begin
-                if (fire) begin cur <= cur + 4'd1; cur_oh <= {cur_oh[14:0], cur_oh[15]}; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= {cur_ohc[c][14:0], cur_ohc[c][15]}; end
+                if (fire) begin cur <= cur + 4'd1; cur_oh <= {cur_oh[14:0], cur_oh[15]};
+`ifndef OT_GQ_FAN32
+                    for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= {cur_ohc[c][14:0], cur_ohc[c][15]};
+`endif
+                end
+
                 if (tl == per - 16'd1) begin
                     if (lps <= 16'd1) run <= 1'b0;
-                    else begin lps <= lps - 16'd1; tl <= 16'd0; cur <= b0; cur_oh <= b0_oh; for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= b0_oh; end
+                    else begin lps <= lps - 16'd1; tl <= 16'd0; cur <= b0; cur_oh <= b0_oh;
+`ifndef OT_GQ_FAN32
+                        for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= b0_oh;
+`endif
+                         end
                     if ({1'b0, cur} + (fire ? 5'd1 : 5'd0) != lim) fault <= 1'b1;   // a row never fired this period
                 end else tl <= tl + 16'd1;
             end
             if (fire) begin
                 if (busy || f_bad) fault <= 1'b1;
-                busy <= 1'b1; iss <= 1'b1; ik <= 10'd0; iph <= 2'd0;
+                busy <= 1'b1; iss <= 1'b1;
+`ifndef OT_GQ_FAN32
+                ik <= 10'd0; iph <= 2'd0;
+`endif
             end else if (iss) begin
                 if (ev_in_v) begin
+`ifndef OT_GQ_FAN32
                     ik <= ik + 10'd1;
+`endif
                     if (ik == g_kn - 10'd1) begin iss <= 1'b0; drain <= 6'(ND - 1); end
                 end
+`ifndef OT_GQ_FAN32
                 iph <= (iph == 2'd2) ? 2'd0 : iph + 2'd1;
+`endif
             end else if (busy) begin
                 if (drain == 6'd0) busy <= 1'b0; else drain <= drain - 6'd1;
             end
@@ -224,17 +320,21 @@ module ot_hgi_coll_gq_issue #(
 `ifdef OT_GQ_FAN32
     wire [15:0] fire_qc;
     generate for (genvar fc = 0; fc < 16; fc = fc + 1) begin : g_fire_copy
-        ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn), .d(fire), .q(fire_qc[fc]));
+        wire fire_local;
+        (* keep = "true" *) ot_hgi_coll_gq_control_and u_dec(.a(fire_allow), .b(fire_time), .q(fire_local));
+        ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn), .d(fire_local), .q(fire_qc[fc]));
     end endgenerate
 `else
     (* keep = "true", dont_touch = "true" *) reg fire_q;   // r4: = ld_fire (own kept copy for the exponent-word clear)
     always @(posedge clk or negedge rn) if (!rn) fire_q <= 1'b0; else fire_q <= fire;
 `endif
     always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69]};
+`ifndef OT_GQ_FAN32
     always @(posedge clk) if (fire) begin
         g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
         g_src <= rc[52:37]; g_dst <= rc[68:53]; g_str <= rc[84:69]; g_kn <= f_kn;
     end
+`endif
     // ------------------------------------------------------------------ event pipeline {v, k}
     // GQISSUE2: the flit flags fv / is_code of each ring are decoded ONCE, on the issue edge, from registered shadows of ik
     // (sfv / scd below) and travel with the entry (ev_f / ev_c); no later stage decodes them from g_f / g_bs / g_r2 again
@@ -275,6 +375,20 @@ module ot_hgi_coll_gq_issue #(
                 reg [9:0] kn; kn = ik + 10'd1;
                 sfv[r] <= fv(kn, r); scd[r] <= is_code(flit_i(kn, r));
             end
+`ifdef OT_GQ_FAN32
+    wire[7:0] qa_r2;
+    ot_hgi_coll_gq_control_hold #(.W(8)) u_qa_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({8{rc[1]}}),.q(qa_r2));
+    generate for(genvar q=0;q<8;q=q+1)begin:g_qa_control
+        localparam integer R=q/4,W=q%4;
+        wire fire_local,ev_local;
+        (* keep="true" *)ot_hgi_coll_gq_control_and u_fire(.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.q(fire_local));
+        (* keep="true" *)ot_hgi_coll_gq_issue_allow u_ev(.iss(iss),.iph(iph),.q(ev_local));
+        wire[10:0] i0=rc[1]?11'(R):(R==0?11'd0:11'h7ff);
+        always @(posedge clk)
+            if(fire_local)qa[q]<=rc[49:37]+13'({i0,2'b00}+W);
+            else if(ev_local)qa[q]<=qa[q]+(qa_r2[q]?13'd8:13'd4);
+    end endgenerate
+`else
     always @(posedge clk)
         if (fire) begin
             for (integer r = 0; r < 2; r = r + 1) begin : nb_q0
@@ -283,6 +397,7 @@ module ot_hgi_coll_gq_issue #(
             end
         end else if (ev_in_v)
             for (integer q = 0; q < 8; q = q + 1) qa[q] <= qa[q] + (g_r2 ? 13'd8 : 13'd4);
+`endif
     // plain-read pre-stage (@S_PR-2 -> request @S_PR-1) and quantiser-feed pre-stage (@S_QCAP-1 -> x @S_QCAP): address /
     // bank one-hots registered one edge ahead (g_src is held for the whole gather, so the result is the same)
     reg [1:0] pr_v; reg [15:0] pr_s [0:1];
@@ -442,7 +557,12 @@ module ot_hgi_coll_gq_issue #(
 `ifdef OT_GQ_FAN32
     wire [15:0] a1_select_c;
     generate for (genvar ac = 0; ac < 16; ac = ac + 1) begin : g_a1_select_copy
-        ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn3), .d(cb[0][290]), .q(a1_select_c[ac]));
+`ifdef OT_GQ_MUT_CTL
+        wire select_d = (ac == 0) ? ~cb[0][290] : cb[0][290];
+`else
+        wire select_d = cb[0][290];
+`endif
+        ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn3), .d(select_d), .q(a1_select_c[ac]));
     end endgenerate
 `endif
     reg [290:0] a1;             // ring-A gather command (ring B timing)
@@ -763,5 +883,41 @@ module ot_hgi_coll_gq_control_ff(input wire clk, rst_n, d, output wire q);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) r <= 1'b0; else r <= d;
     assign q = r;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_control_and(input wire a,b,output wire q);
+    assign q = a && b;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_control_hold #(parameter integer W=16)(input wire clk,a,b,input wire[W-1:0]d,output wire[W-1:0]q);
+    wire load;
+    (* keep = "true" *) ot_hgi_coll_gq_control_and u_load(.a(a), .b(b), .q(load));
+    (* keep = "true", dont_touch = "true" *) reg[W-1:0]r;
+    always @(posedge clk) if (load) r <= d;
+    assign q=r;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_fire_prefix(input wire run,input wire[3:0]cur,input wire[4:0]lim,input wire[15:0]tl,start_time,output wire allow,at_time);
+    assign allow=run&&{1'b0,cur}<lim;
+    assign at_time=tl==start_time;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_issue_allow(input wire iss,input wire[1:0]iph,output wire q);
+    assign q=iss&&iph!=2'd2;
+endmodule
+//16x<=8-bit programme columns; one same-edge target pointer/enable percolumn.
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_rf_column #(parameter integer W=8)(input wire clk,we,input wire[3:0]addr,input wire[W-1:0]d,output wire[16*W-1:0]rows);
+    (* keep="true" *)reg[W-1:0]r[0:15];
+    generate for(genvar a=0;a<16;a=a+1)begin:g_word
+        wire load;
+        (* keep="true" *)ot_hgi_coll_gq_rf_decode #(.A(a))u_load(.we(we),.addr(addr),.q(load));
+        always @(posedge clk)if(load)r[a]<=d;
+        assign rows[W*a+:W]=r[a];
+    end endgenerate
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_rf_decode #(parameter integer A=0)(input wire we,input wire[3:0]addr,output wire q);
+    assign q=we&&addr==4'(A);
 endmodule
 `default_nettype wire

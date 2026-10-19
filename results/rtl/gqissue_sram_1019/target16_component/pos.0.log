@@ -1,0 +1,5 @@
+GQ_TARGET16 PASS checks204 writes24 launches4 cfg_launch_edges2 rows16 resetreload reuse generation
+- rtl/hbm_accel/generic/collective/p2p/tb_gq_target16.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 9.434 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
