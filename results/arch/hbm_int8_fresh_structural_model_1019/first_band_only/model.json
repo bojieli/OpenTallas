@@ -1,0 +1,339 @@
+{
+  "schema": "int8.fresh_source_structural_model.v1",
+  "status": "MODEL_ONLY_CAPACITY_TIMING_HOLD",
+  "source_checkpoint_sha256": "fc6b007164e4e5c2a934052922d40114cc4fc60602423d023aa53fa2a67d2081",
+  "outline_um": [
+    237.6,
+    129.6
+  ],
+  "band_um": [
+    10.8,
+    55.62,
+    216.0,
+    18.36
+  ],
+  "original_rows_preserved": 464,
+  "source_cells": 10623,
+  "replacements": 1078,
+  "additions": 1866,
+  "removed_old_clock": 143,
+  "fresh_clock_buffers": 145,
+  "retained_genuine_open_clock_loads": 110,
+  "all_cells": 12491,
+  "ff": 2782,
+  "area_um2": 1668.41856,
+  "increment_over_original_um2": 270.02160000000003,
+  "band_utilization": 0.4207058823529412,
+  "native_pg_terminals": 24982,
+  "fresh_clock": {
+    "levels": [
+      1,
+      16,
+      128
+    ],
+    "functional_buffers_area_um2": 63.423,
+    "retained_open_load_area_um2": 13.31154,
+    "all_clock_area_um2": 76.73454000000001,
+    "real_sink_count": 2892,
+    "leaf_max_loads": 23,
+    "regional_max_loads": 8,
+    "root_max_loads": 16,
+    "early_late_arrival_ps": null,
+    "TT_spread_ps": null,
+    "FF_spread_ps": null,
+    "native_pin_caps": {
+      "TT": {
+        "all_real_sink_clock_pin_cap_fF": 1513.0765959999999,
+        "max_leaf_pin_cap_fF": 20.083159,
+        "region_eight_buffer_pin_cap_fF": 18.80208,
+        "root_sixteen_buffer_pin_cap_fF": 37.60416,
+        "wire_cap_fF": null,
+        "qualified": false
+      },
+      "FF": {
+        "all_real_sink_clock_pin_cap_fF": 1663.949156,
+        "max_leaf_pin_cap_fF": 22.169031999999998,
+        "region_eight_buffer_pin_cap_fF": 20.8588,
+        "root_sixteen_buffer_pin_cap_fF": 41.7176,
+        "wire_cap_fF": null,
+        "qualified": false
+      }
+    },
+    "qualified": false
+  },
+  "ownership": {
+    "D_hold": 594,
+    "RESETN_hold": 10,
+    "hold_cells": 1812,
+    "reset_split_branches": 12,
+    "new_state": 0,
+    "new_architectural_edges": 0
+  },
+  "geometry": {
+    "kind": "fresh deterministic source-cohort packed boxes; no legalizer/native contact claim",
+    "cohorts": [
+      {
+        "cohort": 0,
+        "cells": 764,
+        "area_um2": 104.15952,
+        "utilization": 0.4202352941176471,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 1,
+        "cells": 784,
+        "area_um2": 104.3199,
+        "utilization": 0.4208823529411765,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 2,
+        "cells": 757,
+        "area_um2": 104.26158000000001,
+        "utilization": 0.4206470588235295,
+        "max_row_fill": 0.49596774193548393
+      },
+      {
+        "cohort": 3,
+        "cells": 793,
+        "area_um2": 104.29074,
+        "utilization": 0.420764705882353,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 4,
+        "cells": 789,
+        "area_um2": 104.27616,
+        "utilization": 0.4207058823529412,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 5,
+        "cells": 782,
+        "area_um2": 104.11578,
+        "utilization": 0.4200588235294118,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 6,
+        "cells": 790,
+        "area_um2": 104.40738,
+        "utilization": 0.4212352941176471,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 7,
+        "cells": 714,
+        "area_um2": 104.20326,
+        "utilization": 0.4204117647058824,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 8,
+        "cells": 825,
+        "area_um2": 104.69898,
+        "utilization": 0.4224117647058824,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 9,
+        "cells": 773,
+        "area_um2": 104.247,
+        "utilization": 0.42058823529411765,
+        "max_row_fill": 0.49193548387096775
+      },
+      {
+        "cohort": 10,
+        "cells": 764,
+        "area_um2": 104.20326,
+        "utilization": 0.4204117647058824,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 11,
+        "cells": 792,
+        "area_um2": 104.18868,
+        "utilization": 0.42035294117647065,
+        "max_row_fill": 0.5040322580645161
+      },
+      {
+        "cohort": 12,
+        "cells": 819,
+        "area_um2": 104.27616,
+        "utilization": 0.4207058823529412,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 13,
+        "cells": 749,
+        "area_um2": 104.27616,
+        "utilization": 0.4207058823529412,
+        "max_row_fill": 0.5120967741935485
+      },
+      {
+        "cohort": 14,
+        "cells": 780,
+        "area_um2": 104.36364,
+        "utilization": 0.4210588235294118,
+        "max_row_fill": 0.48387096774193555
+      },
+      {
+        "cohort": 15,
+        "cells": 816,
+        "area_um2": 104.13036000000001,
+        "utilization": 0.4201176470588236,
+        "max_row_fill": 0.48387096774193555
+      }
+    ],
+    "all_net_center_HPWL_um": 391516.4633064418,
+    "max_net_center_HPWL_um": 275.751,
+    "x_cuts": [
+      {
+        "x_um": 24.3,
+        "demand": 246
+      },
+      {
+        "x_um": 37.8,
+        "demand": 533
+      },
+      {
+        "x_um": 51.3,
+        "demand": 791
+      },
+      {
+        "x_um": 64.8,
+        "demand": 982
+      },
+      {
+        "x_um": 78.3,
+        "demand": 1210
+      },
+      {
+        "x_um": 91.8,
+        "demand": 1393
+      },
+      {
+        "x_um": 105.3,
+        "demand": 1414
+      },
+      {
+        "x_um": 118.8,
+        "demand": 1373
+      },
+      {
+        "x_um": 132.3,
+        "demand": 1404
+      },
+      {
+        "x_um": 145.8,
+        "demand": 1333
+      },
+      {
+        "x_um": 159.3,
+        "demand": 1292
+      },
+      {
+        "x_um": 172.8,
+        "demand": 1145
+      },
+      {
+        "x_um": 186.3,
+        "demand": 921
+      },
+      {
+        "x_um": 199.8,
+        "demand": 615
+      },
+      {
+        "x_um": 213.3,
+        "demand": 363
+      }
+    ],
+    "y_cuts": [
+      {
+        "y_um": 56.7675,
+        "demand": 1170
+      },
+      {
+        "y_um": 57.915,
+        "demand": 1154
+      },
+      {
+        "y_um": 59.0625,
+        "demand": 1152
+      },
+      {
+        "y_um": 60.209999999999994,
+        "demand": 1173
+      },
+      {
+        "y_um": 61.357499999999995,
+        "demand": 1225
+      },
+      {
+        "y_um": 62.504999999999995,
+        "demand": 1126
+      },
+      {
+        "y_um": 63.652499999999996,
+        "demand": 1259
+      },
+      {
+        "y_um": 64.8,
+        "demand": 1217
+      },
+      {
+        "y_um": 65.94749999999999,
+        "demand": 1265
+      },
+      {
+        "y_um": 67.095,
+        "demand": 1161
+      },
+      {
+        "y_um": 68.24249999999999,
+        "demand": 1243
+      },
+      {
+        "y_um": 69.39,
+        "demand": 1218
+      },
+      {
+        "y_um": 70.5375,
+        "demand": 1199
+      },
+      {
+        "y_um": 71.685,
+        "demand": 1083
+      },
+      {
+        "y_um": 72.8325,
+        "demand": 1282
+      }
+    ],
+    "native_track_capacity": {
+      "M2_band_gross_optimistic": 476,
+      "M4_band_gross": 382,
+      "M6_band_gross": 287,
+      "M2_M4_band_gross_optimistic": 858,
+      "M2_M4_M6_band_gross_optimistic": 1145,
+      "M3_band_gross": 6000,
+      "M5_band_gross": 4500,
+      "M7_band_gross": 3375,
+      "note": "Native make_tracks pitches. M2 optimistic seven offset sets; no PG/clock/via/contact obstruction deduction. Full outline exterior belts not allocated."
+    },
+    "PG_track_occupancy": null,
+    "signal_route_cut_verdict": "HOLD_GROSS_CAPACITY_ONLY_NO_PG_CLOCK_TRACK_BINDING"
+  },
+  "obligations": {
+    "source_functions": "same native source and exact identity hold/split mechanism; no new implementation",
+    "all_driver_census": "required fresh complete native graph with BUF/INV transparent <=32",
+    "timing": "fresh complete TT/FF D/async min/max, native waveform/table domain, SS setup required for qualification",
+    "small_load": "292 TT source lower-wire-cap predicates remain OPEN; no distance-cap conversion",
+    "feedback": "all seven boundary-feedback source conditions remain OPEN; IO80fF unchanged",
+    "nativePG": "all24982 PG terms, birth binding, conductor/via/contact/short proof OPEN",
+    "pin_access": "original full-face .192um pin geometry unchanged, actual access/PG interaction OPEN",
+    "clock": "whole fresh tree waveform/cap/actualRC/pulse/spread OPEN, no old253 phase inheritance",
+    "parent": "neighbour/root IO reference and token composition OPEN"
+  }
+}
