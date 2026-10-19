@@ -6,9 +6,18 @@ ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
 ot-run: -> ot-epyc5
+ot-heavy: request 48G is charged 23G (class 'dv_bench#.py:a' measured peak 14.8G, n=1+0 proved); the cap stays 48G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1556627-1792423752 after 0 s
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
 bench2 (a) MUT=0: PASS 24/24
 bench2 (c) MUT=0: PASS 640/640
 bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         183
+  consumer norm / scale (683 rows)             86             86         134
+  QK sum of squares (128)                      16             16         104
+  QK norm (128)                                16             16          64
+  SiLU * up (128)                              16             16         190
 bench2 (g) MUT=0: PASS 5/5
 bench2 (k) MUT=0: PASS 512/512
 bench2 (q) MUT=0: PASS 512/512

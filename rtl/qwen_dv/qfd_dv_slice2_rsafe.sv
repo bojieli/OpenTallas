@@ -2247,7 +2247,7 @@ always @(posedge ck or negedge sr_reset[256])
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
     wire am_emit_empty, am_mu_fault, am_stn_pend;
-    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT >= 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
+    qfd_dv_amax_mu #(.NU(MU_NU), .MUT((AM_MUT >= 6) ? 0 : AM_MUT)) u_amax (.ck(ck), .rst(sr_reset[322]), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]), .stn_pend(am_stn_pend),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(go && kind == 3'd6), .am_clr(cmd_q[4]), .am_emit_cmd(cmd_q[5]),
         .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .am_u(am_u), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
                                                                                 
@@ -2257,7 +2257,7 @@ always @(posedge ck or negedge sr_reset[256])
     wire [1:0]  tw_kind;
     wire [23:0] tw_addr;
     wire [1023:0] tw_data;
-    qfd_dv_stream #(.MUT(MUT)) u_stm (.ck(ck), .rst_n(sr_reset[322]), .sid(sid_q),
+    qfd_dv_stream #(.MUT(MUT)) u_stm (.ck(ck), .rst_n(sr_reset[323]), .sid(sid_q),
         .cfg_v(c_stm), .cfg_dir(cmd_q[5:4]), .cfg_tag(cmd_q[33:6]),
         .sw_i(sw_q), .se_i(se_q), .so_e(st_up_o), .so_w(st_dn_o),
         .xw_we(su_x_we), .xw_addr(vm_waddr), .xw_data(vm_wdata),
@@ -2273,15 +2273,15 @@ always @(posedge ck or negedge sr_reset[256])
     wire hv = hr_q[0];
     generate if (HD_W130 != 0) begin : g_hdw
 `ifdef OT_DV_SLICE_HARD
-        qfd_dv_heads_w130 u_hd (.ck(ck), .rst_n(sr_reset[323]), .sid(sid_q),
+        qfd_dv_heads_w130 u_hd (.ck(ck), .rst_n(sr_reset[324]), .sid(sid_q),
 `else
-        qfd_dv_heads_w130 #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(sr_reset[324]), .sid(sid_q),
+        qfd_dv_heads_w130 #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(sr_reset[325]), .sid(sid_q),
 `endif
             .xpf({hr_q[72:2], hr_q[1] & hv}), .gi({hr_q[451:73], hr_q[452] & hv}),
             .sw_v(xt_v), .sw_a(xt_a), .sw_d(xt_f), .fe_i(xt_bad),
             .n_d(n_d), .s_d(s_d), .fault(hd_fault));
     end else begin : g_hd0
-    qfd_dv_heads #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(sr_reset[325]), .sid(sid_q),
+    qfd_dv_heads #(.HEAD_MUT((MUT == 8) ? 3 : 0)) u_hd (.ck(ck), .rst_n(sr_reset[326]), .sid(sid_q),
         .xpf({hr_q[72:2], hr_q[1] & hv}), .gi({hr_q[451:73], hr_q[452] & hv}),
         .sw_v(xt_v), .sw_a(xt_a), .sw_m({64{1'b1}}), .sw_d(xt_f), .fe_i(xt_bad),
         .n_d(n_d), .s_d(s_d), .fault(hd_fault));
@@ -2310,7 +2310,7 @@ always @(posedge ck or negedge sr_reset[258])
         else if (c_prt) begin ; em_k[0 +: 8] <= 8'((8'd0) >> 0); end
         else begin if (ar_v) ; if (em_v) em_k[0 +: 8] <= 8'((em_k + 8'd1) >> 0); end
     wire vm_fault;
-    qfd_dv_vm #(.MUT(MUT)) u_vm (.ck(ck), .rst_n(sr_reset[326]),
+    qfd_dv_vm #(.MUT(MUT)) u_vm (.ck(ck), .rst_n(sr_reset[327]),
         .a_re(va_re), .b_re(vb_re), .c_re(vc_re), .a_addr(va_addr), .b_addr(vb_addr), .c_addr(vc_addr),
         .a_q(va_q), .b_q(vb_q), .c_q(vc_q),
         .cr_re(cr_re), .cr_addr(cr_addr), .cr_q(cr_q),
@@ -2738,6 +2738,6 @@ always @(posedge ck or negedge sr_reset[316])
     initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, "qfd_dv_slice2: MUT %0d undefined", MUT);                                                    
     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
 
-wire [326:0] sr_reset;
-qfd_dv_reset_tree #(.N(327)) u_safe_reset (.ck(ck),.rst_n(rst),.q(sr_reset));
+wire [327:0] sr_reset;
+qfd_dv_reset_tree #(.N(328)) u_safe_reset (.ck(ck),.rst_n(rst),.q(sr_reset));
 endmodule

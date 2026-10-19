@@ -70,12 +70,12 @@
   "new_bypass_payload_flops": 1024,
   "new_storage_control_flops": 128,
   "reset_tree_allocated_flops": {
-    "core": 338,
+    "core": 339,
     "station": 130,
     "amax": 75
   },
-  "estimated_net_std_flop_change": -22425,
-  "std_flop_change_scope": "Logical storage/reset allocation only; mapped total area, child reset sinks and native-clock timing still require whole-kit synthesis. Existing FIFO pointers remain unchanged; no guessed standard-cell area.",
+  "estimated_net_std_flop_change": -19076,
+  "std_flop_change_scope": "Logical allocation plus recursive Yosys proc/opt scalar delta; excludes native mapping/placement buffering. Scalar baseline includes SAFE_STORAGE argmax pipeline, so63 logical pipeline bits are charged separately. Real mapped area and full native clock timing still pending.",
   "twelve_slice_macro_instances": 540,
   "twelve_slice_macro_area_mm2": 0.2982998016,
   "logical_ports": 5,
@@ -84,5 +84,7 @@
   "physical_port_bits": 576,
   "padded_masked_bits": 30,
   "cfg_setup_added_edges": 2,
-  "cfg_acceptance": "Input config C commits C+2, next data C+3; static early-data fault, no ready/credit. Back-to-back config II1 preserved."
+  "cfg_acceptance": "Input config C commits C+2, next data C+3; static early-data fault, no ready/credit. Back-to-back config II1 preserved.",
+  "scalar_generic_flop_delta_vs_safe_storage": 3285,
+  "scalar_argmax_pipeline_added_logical_bits": 63
 }
