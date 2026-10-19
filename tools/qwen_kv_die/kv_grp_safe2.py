@@ -337,3 +337,70 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# ------------------------------------------------------------------------------------------------ die generator hooks
+# OT_KV_GRP_SAFE2=1 (kv_static_die.py / kv_die.py; default off): the 32 group instances bind the standalone safe tiles of
+# OUT (exactly like OT_KV_GRP_PRIVATE0 binds qkd_kvs_grp_private0.sv), on the DOMSPLIT MU/BOOT_AGES point only.  The
+# generator's own DS group bodies must equal the frozen bodies this file was derived from (refuses otherwise).
+DS_MODULE_SHA256 = {
+    'qkd_kvs_grp': '6720c98aaea9cb0f4f7031891756ce54b7a83968b8560d4274d4aaa8fa9bde3d',
+    'qkd_kvs_grp_h': 'cef8f6ad6ad6d1b4ae94ee8dad1404a5fce9f6a00a2f272993b16b16b45249d4',
+}
+MASTERS = dict(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
+
+
+def apply_tiles(tiles, emit):
+    """port dictionaries of the safe tiles (the Stage 1 private deletion on the DS ports); the bodies are NOT generated
+    here (bindings select OUT), so 'expr' fields of registered outputs are left as the wires-only diagnostic export"""
+    counts = {'grp': 0, 'grp_h': 0}
+    for tile_ in tiles.values():
+        kind = tile_['kind']
+        if kind not in counts:
+            continue
+        name = 'qkd_kvs_' + kind
+        m = re.search(r'\bmodule ' + name + r'\s*\(.*?\bendmodule', emit(tile_, name), re.S)
+        if not m or hashlib.sha256(m.group(0).encode()).hexdigest() != DS_MODULE_SHA256[name]:
+            raise ValueError(f'kv_grp_safe2: generator {name} body differs from the frozen DS body the safe tile derives from')
+        ports = tile_['ports']
+        for port in DELETED:
+            del ports[port]
+        ports['x__est'].update(width=1, scalar=True)
+        ports['y__est__0_1']['expr'] = 'x__est'
+        if kind == 'grp_h':
+            del ports['o_dn']
+            ports['i_ctl']['width'] = 194
+        counts[kind] += 1
+    if counts != {'grp': 28, 'grp_h': 4}:
+        raise ValueError(f'kv_grp_safe2: replica counts changed: {counts}')
+
+
+def parent_connections(text):
+    """die netlist: drop the deleted pins' connections, explicit EST[0:0] / H i_ctl[193:0] slices (producers intact)"""
+    counts = {MASTERS['grp']: 0, MASTERS['grp_h']: 0}
+
+    def change(match):
+        master, instance, raw = match.groups()
+        pairs = re.findall(r'\.(\w+)\(([^()]*)\)', raw)
+        if len(pairs) != len(set(p for p, _ in pairs)):
+            raise ValueError(f'kv_grp_safe2: duplicate named parent port: {instance}')
+        conns = dict(pairs)
+        h = master == MASTERS['grp_h']
+        for port in DELETED + (('o_dn',) if h else ()):
+            conns.pop(port, None)
+        est = re.fullmatch(r'(\w+)(?:\[(?:12|0):0\])?', conns['x__est'])
+        if not est:
+            raise ValueError(f'kv_grp_safe2: expected the full EST producer net: {instance}: {conns["x__est"]}')
+        conns['x__est'] = est[1] + '[0:0]'
+        if h:
+            ctl = re.fullmatch(r'(\w+)(?:\[(?:270|193):0\])?', conns['i_ctl'])
+            if not ctl:
+                raise ValueError(f'kv_grp_safe2: expected the full control producer net: {instance}: {conns["i_ctl"]}')
+            conns['i_ctl'] = ctl[1] + '[193:0]'
+        counts[master] += 1
+        return f'  {master} {instance} (' + ', '.join(f'.{p}({e})' for p, e in conns.items()) + ');'
+
+    result = re.sub(r'^  (qkd_kvs_grp(?:_h)?_s2) (slg_\w+) \((.*)\);$', change, text, flags=re.M)
+    if counts != {MASTERS['grp']: 28, MASTERS['grp_h']: 4}:
+        raise ValueError(f'kv_grp_safe2: parent replica counts changed: {counts}')
+    return result
