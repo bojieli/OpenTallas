@@ -17443,3 +17443,9 @@ def hbm_xcal_partition_model():
     """Opt-in native XC descriptor/programme partition; physical checks remain OPEN."""
     from hbm_layer_vehicle.xcal_partition_model import model
     return model()
+
+
+def hbm_svg_element_sizing_model():
+    """Source-bound landing/local-pair and separate cache element outline proposal."""
+    from hbm_layer_vehicle.svg_element_sizing_model import model
+    return model()
