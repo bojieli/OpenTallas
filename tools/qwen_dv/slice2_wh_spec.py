@@ -40,7 +40,7 @@ RG = "results/rtl/mu_qwen_1018/adopt_slice/runs_gate"
 
 
 def _b(name, case, expect, rx):
-    b = {"name": name, "cmd": f"bash {RG}/run_one.sh {case} {{RUN}}/bench/{name}", "expect": expect, "threads": 16,
+    b = {"name": name, "cmd": f"bash rtl/test/qwen_dv/run_mu_slice_gate.sh {case} {{RUN}}/bench/{name}", "expect": expect, "threads": 16,
          "peak_ram_gb": 64, "needs": ["verilator"]}
     if expect == "pass":
         b["pass_regex"] = rx

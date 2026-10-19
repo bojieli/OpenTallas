@@ -1282,7 +1282,7 @@
   "benches": [
    {
     "name": "faces_m0",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh faces0 {RUN}/bench/faces_m0",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh faces0 {RUN}/bench/faces_m0",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1293,7 +1293,7 @@
    },
    {
     "name": "faces_m11",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh faces11 {RUN}/bench/faces_m11",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh faces11 {RUN}/bench/faces_m11",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1305,7 +1305,7 @@
    },
    {
     "name": "b2_mu4",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2 {RUN}/bench/b2_mu4",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh b2 {RUN}/bench/b2_mu4",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1316,7 +1316,7 @@
    },
    {
     "name": "b2n_am7",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2n7 {RUN}/bench/b2n_am7",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh b2n7 {RUN}/bench/b2n_am7",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,

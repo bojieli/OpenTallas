@@ -1530,7 +1530,7 @@
   "benches": [
    {
     "name": "eq_m0",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh eq0 {RUN}/bench/eq_m0",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh eq0 {RUN}/bench/eq_m0",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1541,7 +1541,7 @@
    },
    {
     "name": "eq_m1",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh eq1 {RUN}/bench/eq_m1",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh eq1 {RUN}/bench/eq_m1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1553,7 +1553,7 @@
    },
    {
     "name": "eq_m3",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh eq3 {RUN}/bench/eq_m3",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh eq3 {RUN}/bench/eq_m3",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1565,7 +1565,7 @@
    },
    {
     "name": "lp_m0",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp0 {RUN}/bench/lp_m0",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh lp0 {RUN}/bench/lp_m0",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1576,7 +1576,7 @@
    },
    {
     "name": "lp_m1",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp1 {RUN}/bench/lp_m1",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh lp1 {RUN}/bench/lp_m1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1588,7 +1588,7 @@
    },
    {
     "name": "lp_m2",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp2 {RUN}/bench/lp_m2",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh lp2 {RUN}/bench/lp_m2",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1600,7 +1600,7 @@
    },
    {
     "name": "lp_m3",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh lp3 {RUN}/bench/lp_m3",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh lp3 {RUN}/bench/lp_m3",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1612,7 +1612,7 @@
    },
    {
     "name": "b2_mu4",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2 {RUN}/bench/b2_mu4",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh b2 {RUN}/bench/b2_mu4",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 64,
@@ -1623,7 +1623,7 @@
    },
    {
     "name": "b2n_am7",
-    "cmd": "bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh b2n7 {RUN}/bench/b2n_am7",
+    "cmd": "bash rtl/test/qwen_dv/run_mu_slice_gate.sh b2n7 {RUN}/bench/b2n_am7",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 64,

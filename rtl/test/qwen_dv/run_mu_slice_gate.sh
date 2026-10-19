@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # MU-SLICE-GATE 10-19: benches of the SLICE-E tree at MU_NU 4 with MU-QW-AMIX (95074c8a3) carried; fleet, Verilator 5.050.
-# Run from the repository root:  bash results/rtl/mu_qwen_1018/adopt_slice/runs_gate/run_one.sh CASE WORK
+# Run from the repository root:  bash rtl/test/qwen_dv/run_mu_slice_gate.sh CASE WORK
 #   eq<M>   lockstep qfd_dv_slice2_e (SU_LT 1, HD_W130 1, MU_NU 4) == re-cut qfd_dv_slice2_e_lpf (MU_NU 4): random / +quiet / +hronly
 #   lp<M>   lockstep re-cut == regenerated landed parent qfd_dv_slice2_e_lpf_lp (MU_NU 4), lp.py MUT M
 #   audit   lp.py region audit (+ unland mutant must FAIL)
