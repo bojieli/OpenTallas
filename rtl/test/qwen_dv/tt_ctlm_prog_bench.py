@@ -133,7 +133,7 @@ def run(a):
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '8', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
                '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}',
-               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
+               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
         (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
         if p.returncode:

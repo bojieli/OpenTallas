@@ -10,6 +10,14 @@
 // Log (+LOG), label = the posedge just taken: "c CMD hex" (cmd register), "c LOC kind base" (EMB / SEG start pulses),
 //   "c ISSUE pc unit" (head fixed issue / END), "c ROM go" (ib go), "c NAT go" (native_cmd go), "c XPF hex" (arm word),
 //   "c CSR" (control stores ready), "c CF bits" on a fault rise, "c STAGE s" (command_stage change).
+// Q-H16C 10-18: +define+TB_HARD (bench --hard 1) probes the hard leaf (HARD_HR 1) instead of the inline head.
+`ifdef TB_HARD
+`define TB_HEAD dut.g_hard_hr.u_hr.u_head
+`define TB_HR   dut.g_hard_hr.u_hr
+`else
+`define TB_HEAD dut.g_soft_hr.u_head
+`define TB_HR   dut.g_soft_hr
+`endif
 module tb_qfd_tt_ctlm_prog (input wire ck);
     // HARD_HR 0 = inline head; 1 = the h16c h17 hard leaf with the running-stage port (Q-H16C 10-18; bench --hard 1)
     parameter integer MUT = 0, XPF_EDGES = 26, STAGE_ME = 1, HARD_HR = 0;
@@ -32,20 +40,20 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
         fd = $fopen(evf, "r"); lg = $fopen(lgf, "w"); cyc = 0;
         r = $fscanf(fd, "%d %d %h\n", ec, ek, ev); have = (r == 3);
     end
-    wire fix_v = dut.g_soft_hr.u_head.fixed_issue | dut.g_soft_hr.u_head.fixed_end;
+    wire fix_v = `TB_HEAD.fixed_issue | `TB_HEAD.fixed_end;
     always @(negedge ck) begin
         if (pre < 4) begin pre = pre + 1; if (pre == 4) rst_n = 1'b1; end
         else begin
             if (cmd != 116'd0) $fdisplay(lg, "%0d CMD %h", cyc, cmd);
             if (dut.c_emb) $fdisplay(lg, "%0d LOC EMB 0", cyc);
             if (dut.c_seg) $fdisplay(lg, "%0d LOC SEG %0d", cyc, dut.c_base);
-            if (fix_v) $fdisplay(lg, "%0d ISSUE %0d %0d", cyc, dut.g_soft_hr.u_head.fixed_pc, dut.g_soft_hr.u_head.fixed_unit);
+            if (fix_v) $fdisplay(lg, "%0d ISSUE %0d %0d", cyc, `TB_HEAD.fixed_pc, `TB_HEAD.fixed_unit);
             if (hr[73]) $fdisplay(lg, "%0d ROM %h", cyc, hr[452:73]);
             if (ncmd[0]) $fdisplay(lg, "%0d NAT %h", cyc, ncmd);
             if (hr[1]) $fdisplay(lg, "%0d XPF %h", cyc, hr[72:1]);
             if (csr && !csr_l) $fdisplay(lg, "%0d CSR", cyc);
             if (cf && !cf_l) $fdisplay(lg, "%0d CF head %b reloc %b cp %b start %b xpf_ld %b xpf_sch %b cal %b", cyc,
-                dut.g_soft_hr.head_fault, dut.g_soft_hr.relocation_sticky, dut.cp_fault, dut.start_fault, dut.xpf_loader_fault,
+                `TB_HR.head_fault, `TB_HR.relocation_sticky, dut.cp_fault, dut.start_fault, dut.xpf_loader_fault,
                 dut.xpf_schedule_fault, dut.c_fault);
             if (cst != cst_l) $fdisplay(lg, "%0d STAGE %0d", cyc, cst);
             csr_l = csr; cf_l = cf; cst_l = cst;
