@@ -1,0 +1,63 @@
+{
+ "scope": "Actual PINPIPE1/MUT0 wrapper and immutable cap core at hard-child boundaries; child internal fanout remains owned by each accepted child source/native proof",
+ "params": {
+  "PINPIPE": 1
+ },
+ "sources": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv": "79aa525581808396118c7dec4362d6234263f7fcad75ce9620112ed58ad40f95",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv": "4caf66d4125734ec0963bded290f5fd38a668a313b9c810deedecf605743cf0c"
+ },
+ "logical_roles": [
+  {
+   "role": "rt_w/rt_e/cfg_d/cfg_v source inputs",
+   "bits": 721,
+   "fanout": 1,
+   "loads": "corresponding input landing D"
+  },
+  {
+   "role": "input landing Q",
+   "bits": 721,
+   "fanout": 1,
+   "loads": "corresponding cap_tr.rt or cap_rt.cfg pin"
+  },
+  {
+   "role": "local reset rst_l1",
+   "bits": 1,
+   "fanout": 14,
+   "loads": "3 hard-child rst_n +10 output valid RESETN +1 fault RESETN"
+  },
+  {
+   "role": "external rst_n",
+   "bits": 1,
+   "fanout": 2,
+   "loads": "rst_l0/rst_l1 RESETN"
+  },
+  {
+   "role": "rst_l0 Q",
+   "bits": 1,
+   "fanout": 1,
+   "loads": "rst_l1 D"
+  },
+  {
+   "role": "cap_rt output bits",
+   "bits": 451,
+   "fanout": 1,
+   "loads": "corresponding output boundary D"
+  },
+  {
+   "role": "cap_tr outputs",
+   "bits": 134,
+   "fanout": 1,
+   "loads": "corresponding cap_rt w/e input"
+  },
+  {
+   "role": "output boundary Q",
+   "bits": 451,
+   "fanout": 1,
+   "loads": "corresponding top output"
+  }
+ ],
+ "maximum_signal_fanout": 14,
+ "signal_over32": [],
+ "clock": "clk is separate clock domain:1177 native sink pins; not counted as a signal driver exception"
+}
