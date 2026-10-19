@@ -97,7 +97,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
    "count": 1,
-   "inst": "calendar.store",
+   "inst": "*calendar.store",
    "clock_entry": {
     "port": "clk_program_mem",
     "pin": "clk",
