@@ -22,7 +22,7 @@ if [ "$MODE" = prep ]; then
       for f in $D/libs/*_${lc}.lib; do echo /work/libs/$(basename $f); done; } > $D/libs_${lc}.glob
   done
   DK="docker run --rm --cpus=4 --memory=${DC_MEM:-48}g -v $D:/work -v $C:/case:ro -w /work $IMG bash -lc"
-  $DK "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -no_init -exit /work/$TL/die_clock/qwen_clkrx_ports.py --odb /case/floorplan.odb --die-v /work/die.v --out /work/floorplan_ck.odb > /work/clkrx_ports.log 2>&1" \
+  $DK "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -no_init -exit /work/$TL/die_clock/qwen_clkrx_ports.py --odb /case/${DC_FLOORPLAN:-floorplan.odb} --die-v /work/die.v --out /work/floorplan_ck.odb > /work/clkrx_ports.log 2>&1" \
     || { say "clk_rx port completion FAIL (clkrx_ports.log)"; exit 1; }
   say "$(grep -h 'QCLK_CLKRX' $D/clkrx_ports.log | tr '\n' ' ' | cut -c1-600)"
   ROOTS=$(grep -o 'qfd_clkrx clk_rx (.*' $D/die.v | grep -o '\.pll_[a-z0-9_]*' | tr -d . | grep -v pll_fwd | sed 's#^#clk_rx/#' | paste -sd,)
