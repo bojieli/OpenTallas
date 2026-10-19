@@ -171,7 +171,8 @@
    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/hbm_next_1019/units/hc/witness"
   ],
   "benches": [
    {
@@ -243,5 +244,9 @@
   ]
  },
  "params": {},
- "structural_change": "HBM-NEXT-UNITS (P=4 next die, not a release gate): hnx fork of hbm_hcq_hub_1017, same outline/pins/macro. Delta = N-row records: hc_q programme word 79 -> 111 b ([94:79] residual row stride, [110:95] result row stride, sectors; 0 = d4g dense form), residual reader row counter (SPR slots a row, row base += stride), result store base + p*stride. No datapath change; the HC_MIX row II is the engine core (25 accumulations x K/2048 = 250 cycles a row, measured)."
+ "structural_change": "HBM-NEXT-UNITS (P=4 next die, not a release gate): hnx fork of hbm_hcq_hub_1017, same outline/pins/macro. Delta = N-row records: hc_q programme word 79 -> 111 b ([94:79] residual row stride, [110:95] result row stride, sectors; 0 = d4g dense form), residual reader row counter (SPR slots a row, row base += stride), result store base + p*stride. No datapath change; the HC_MIX row II is the engine core (25 accumulations x K/2048 = 250 cycles a row, measured).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }
