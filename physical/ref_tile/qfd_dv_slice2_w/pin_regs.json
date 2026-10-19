@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_slice2_w",
+ "enable": false,
+ "reason": "RTL registers every input at its pin (cmd_q, rss_q, rsn_q, nb_q, sw_q, se_q, scd_q, scu_q, chu_q, chd_q, hr_q, agu_q) and every output is flop-driven (cmd_o, hr_o=hr_q, ch_*, l9/st/sc relays, cc_o, st, ag_dn_o); the chain hop latencies (cmd 2, hr/ch 1 edge a hop) are contract (W5_CONTRACT.md): an extra kit pin register would change them"
+}

@@ -1,0 +1,10 @@
+# case lp2 host ot-epyc5 2026-10-19T03:25:37-07:00 commit d3cf669e3a78eb68520be5d61e78d6968d89e0c6 Verilator 5.050 2026-07-01 rev v5.050
+Verilator 5.050 2026-07-01 rev v5.050
+LP_MISMATCH port=cmd_wo cycle=49 flat=4576ab7bd38eea640447d5e1efa56 landed=813873cb9ba0533d491e7613376ee
+LP_MISMATCH port=cmd_wo cycle=50 flat=b9a0700786d86d8bc9174388425de landed=4576ab7bd38eea640447d5e1efa56
+LP_MISMATCH port=cmd_wo cycle=51 flat=65ee767c36be946e1df4a36862401 landed=b9a0700786d86d8bc9174388425de
+LP MUT=2: LP_LOCKSTEP FAIL
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 6.825 MB sources in 101 modules, into 571.625 MB in 516 C++ files needing 0.151 MB
+- Verilator: Walltime 366.932 s (elab=1.028, cvt=146.679, bld=212.351); cpu 164.705 s on 16 threads; allocated 11165.422 MB
+# exit 0

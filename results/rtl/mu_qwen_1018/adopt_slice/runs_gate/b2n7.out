@@ -1,0 +1,5 @@
+# case b2n7 host ot-epyc5 2026-10-19T03:26:49-07:00 commit d3cf669e3a78eb68520be5d61e78d6968d89e0c6 Verilator 5.050 2026-07-01 rev v5.050
+    bench2 (n): MU_NU 4 FACE 0 AM_MUT 7
+bench2 (n) MUT=0: FAIL 1/2
+    mixed: root sc fault 0 (want 1), root port fault 0 (want 0), slice-1 any fault 0 (want 0)
+# exit 1

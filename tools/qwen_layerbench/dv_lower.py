@@ -250,10 +250,10 @@ def cmd_ports(dst, ar_base=0, dd_base=0, ar_en=0, dd_en=0, em_base=0, em_en=0):
 
 def cmd_stn(dst, mode, wsrc, nwords, sbase, sdst, dbase, amax=0, kc=1):
     # kc: k steps per (round, j) of the op's tiles (they stream the running accumulator every k step; qfd_dv_redstn2
-    # keeps only the k = kc - 1 block of every pair: STN [58:51] = kc - 1, QW-DIEFIX 10-19)
+    # keeps only the k = kc - 1 block of every pair: STN [66:59] = kc - 1, QW-DIEFIX 10-19; [52:51] = MU STN user)
     if not 1 <= kc <= 256:
         raise LowerError(f'STN kc {kc} (1..256)')
-    return _cmd(2, [(mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (sdst, 2), (dbase, 24), (amax, 1), (kc - 1, 8)],
+    return _cmd(2, [(mode, 2), (wsrc, 1), (nwords, 8), (sbase, 9), (sdst, 2), (dbase, 24), (amax, 1), (0, 8), (kc - 1, 8)],
                 dst)
 
 

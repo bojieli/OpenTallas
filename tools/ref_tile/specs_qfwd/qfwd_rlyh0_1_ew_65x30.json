@@ -76,11 +76,11 @@
   "note": "die-assigned faces of the Qwen compute die GEN (OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins",
   "owner": "Q-DIE11-RLY"
  },
- "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 1-b forwarded-clock lane frame qfd_rlyh0_1_EW_65x30: hop-0 station (ICG on the source root, rising capture, inverted ck_o) (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_1 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap. QK-FWD 10-18 CLASS MASTER (tools/qwen_split/fwd_lane_classes.py): one hardened master per family / width class (1, 128, 600; widths quantised up, spare inputs tied low by the die) / direction class (H, V, HV, VH; the die places the rep with MX / MY / R180) / frame; replaces the per-GEN-frame masters (147 on dv2f14bn, 164 on dv2f14bg -> 48 classes). | RLYH0-EN 10-19 f1 (QK-LANDEN rule for the multi-frame lanes, ROOT-RST rule): en (hop-0 ICG enable = the source released reset) is registered on the source root ck at the face (one async-clear flop) before the clock gate; the ICG enable and the lane epoch are that flop, never the input port. +1 reset-release edge (K + 1 for every forwarded data lane, lane_groups.HOP0_EN_REG); steady-state lane latency unchanged; io_hold_margin 0.03.",
+ "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 1-b forwarded-clock lane frame qfd_rlyh0_1_EW_65x30: hop-0 station (ICG on the source root, rising capture, inverted ck_o) (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_1 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap. QK-FWD 10-18 CLASS MASTER (tools/qwen_split/fwd_lane_classes.py): one hardened master per family / width class (1, 128, 600; widths quantised up, spare inputs tied low by the die) / direction class (H, V, HV, VH; the die places the rep with MX / MY / R180) / frame; replaces the per-GEN-frame masters (147 on dv2f14bn, 164 on dv2f14bg -> 48 classes).",
  "job": {
-  "owner": "Claude:RLYH0-EN",
-  "branch": "claude/rlyh0-en-1019",
-  "tag": "f1",
+  "owner": "Claude:QK-FWD",
+  "branch": "claude/qk-fwd-1018",
+  "tag": "c1",
   "purpose": "Qwen compute die forwarded half-cycle lane frame qfd_rlyh0_1_EW_65x30 (hop-0 station (ICG on the source root, rising capture, inverted ck_o), 1 b)",
   "benches": [
    {
@@ -102,27 +102,14 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ],
-    "pass_witness": "results/arch/qwen_split_compute_1014/rlyh0_en_1019/bench/w1_pass.log"
+    ]
    },
    {
     "name": "full_mutant",
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh full {RUN}/bench_full 1",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/rlyh0_en_1019/bench/w1_full.log",
-    "threads": 2,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "rlyencomb_mutant",
-    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh rlyencomb {RUN}/bench_rlyencomb 1",
-    "expect": "fail",
-    "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/rlyh0_en_1019/bench/w1_rlyencomb.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/qk_fwd_1018/bench/w1_full.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
@@ -137,12 +124,7 @@
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "tools/qwen_split",
-   "results/arch/qwen_split_compute_1014/rlyh0_en_1019/bench"
+   "results/arch/qwen_split_compute_1014/qk_fwd_1018/bench"
   ]
- },
- "reroute_reason": {
-  "kind": "rtl_change",
-  "cell": "qfd_rlyh0_1_EW_65x30",
-  "fix": "rtl/qwen_split/qfd_fwd_lane.sv ot_qfd_lane_st FIRST=1: en registered on ck before the hop-0 clock gate (RLYH0-EN, mirrors QK-LANDEN); the die calendar straps every forwarded lane with K + 1, so the closed view (en -> ICG combinational; native PASS, en capture 162.8) no longer matches the die. Same outline and pin faces."
  }
 }

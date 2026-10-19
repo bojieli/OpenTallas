@@ -1,0 +1,10 @@
+# case b2 host ot-epyc5 2026-10-19T03:26:49-07:00 commit d3cf669e3a78eb68520be5d61e78d6968d89e0c6 Verilator 5.050 2026-07-01 rev v5.050
+bench2 (f) MUT=0: PASS 3/3
+bench2 (j) MUT=0: PASS 3/3
+    bench2 (m): seed 21 gap 18 vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: PASS 8/8
+    bench2 (n): MU_NU 4 FACE 0 AM_MUT 0
+bench2 (n) MUT=0: PASS 2/2
+    bench2 (o): ovl gap 4 vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4
+bench2 (o) MUT=0: PASS 2/2
+# exit 0

@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -99,6 +100,18 @@ def conv48(w):
     k1 = {1: 1, 2: 2, 3: 3, 4: 3, 5: 4}.get(kind, 0)
     idx = val & 0xFFFFFF if kind == 5 else tag
     return (1 << 95) | (k1 << 92) | (idx << 64) | val
+
+
+VFLAGS: list[str] = []          # S-QSLICE 10-18: --vflags (e.g. -GSU_LT=1 -GHD_W130=1); empty = the original build
+# MU-SLICE-GATE 10-19 (carry of MU-QW-AMIX 95074c8a3 onto the SLICE-E tree): MU_NU follows -GMU_NU=<n> in --vflags
+# (else DV2_MU_NU); this tree's tb_qfd_dv2 has no FACE parameter (master core only: FACE 0); DV2_AM_MUT adds
+# +define+OT_DV_AMAX_MUT=<n> to the build (bench-only qfd_dv_amax_mu / qfd_dv_scalar2 mutants, e.g. 7 = no mixed-merge check).
+MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
+FACE = 0
+AM_MUT = int(os.environ.get("DV2_AM_MUT", "0"))
+XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+         "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+         "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"]
 
 
 def run_sim2(name, ev, work, mut, ncyc, n=2):
@@ -730,7 +743,15 @@ def main():
     ap.add_argument("benches", nargs="*", default=list("abcdefghij"))
     ap.add_argument("--mut", type=int, default=0)
     ap.add_argument("--work", default="/tmp/qdv_bench2v")
+    ap.add_argument("--vflags", default="", help="extra Verilator flags (use a separate --work: objects are cached)")
     a = ap.parse_args()
+    VFLAGS[:] = a.vflags.split()
+    global MU_NU
+    for f in VFLAGS:
+        if f.startswith("-GMU_NU="):
+            MU_NU = int(f.split("=", 1)[1])
+    if AM_MUT:
+        VFLAGS.append(f"+define+OT_DV_AMAX_MUT={AM_MUT}")
     install()
     allpass = True
     for b in a.benches:
