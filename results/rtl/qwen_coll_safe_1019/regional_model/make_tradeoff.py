@@ -59,6 +59,15 @@ ledger['core_cmd_free_boundary'] = dict(
         shared_issuer_source_change='requires coordination; not implemented'),
     clock_warning='10190 soft sinks/large-outline advisory; actual TT/FF pin spread and linked references decide acceptance')
 
+ledger['core_fault_boundary'] = dict(
+    status='MODEL_ONLY_NO_LIVE_RETIMING',
+    current='five sticky fault_code flops; combinational fault reduction',
+    boundary_depth='shallow reduction, independent of six-level cmd_free',
+    optional_capture_if_physical_reach_requires=dict(bundle_bits=6,new_flops=6,diagnostic_edges_added=1,
+        command_payload_cycles_added=0,alignment='capture fault and all5cause bits together',
+        completion_guard='wait last source fault plus all regional return and capture ages'),
+    regional_fault_age='implementation must enumerate every TX/RX abort/cause/PHY loss source/destination age; not zero by assumption')
+
 ledger['shared_32x64_option'] = dict(
     status='UNQUALIFIED_COMPOSITION_OPTION_ONLY',
     macro_source='b65718325',geometry_source='7549fae73',wrapper_source='e0d4d194a',
