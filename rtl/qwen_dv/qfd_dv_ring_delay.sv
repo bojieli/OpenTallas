@@ -28,16 +28,31 @@ module qfd_dv_ring_replicated #(parameter integer W=1,D=7,COPIES=1,ID=0)(
   (* keep_hierarchy="yes" *) qfd_dv_ring_prefix #(.W(W),.D(R),.ID(ID)) u_p(.clk(clk),.d(d),.q(stage[0]));
  end
  for(genvar i=0;i<N;i=i+1) begin:g_stage
-  wire[4*W-1:0] bank;wire[11:0] epo;wire[4*C-1:0] valid;
+  wire[4*W-1:0] bank;wire[4*C-1:0] valid;
+`ifdef OT_ASSERT
+  wire[11:0] epo;  // simulation-only landing epoch checker state (OT_ASSERT); absent from the physical source
+`endif
+`ifndef OT_ASSERT
+  ot_pl_land_phys_chunk_w #(.W(W),.D(4),.CHUNK_BITS(24)) u_w(.ck(clk),.rsi(local_reset),.i(stage[i]),.bank(bank),.vld(valid));
+`else
   ot_pl_land_chunk_w #(.W(W),.D(4),.CHUNK_BITS(24)) u_w(
    .ck(clk),.rsi(local_reset),.i(stage[i]),.bank(bank),.epo(epo),.vld(valid));
+`endif
   if(i<N-1) begin:g_middle
+`ifndef OT_ASSERT
+   ot_pl_land_phys_chunk_r #(.W(W),.D(4),.K(2),.CHUNK_BITS(24),.ID(0)) u_r(.ck(clk),.rsi(local_reset),.bank(bank),.vld(valid),.o(stage[i+1]));
+`else
    ot_pl_land_chunk_r #(.W(W),.D(4),.K(2),.CHUNK_BITS(24)) u_r(
     .ck(clk),.rsi(local_reset),.bank(bank),.epo(epo),.vld(valid),.o(stage[i+1]));
+`endif
   end else begin:g_final
    for(genvar o=0;o<COPIES;o=o+1) begin:g_copy
+`ifndef OT_ASSERT
+    ot_pl_land_phys_chunk_r #(.W(W),.D(4),.K(2),.CHUNK_BITS(24),.ID(o)) u_r(.ck(clk),.rsi(local_reset),.bank(bank),.vld(valid),.o(q[W*o+:W]));
+`else
     ot_pl_land_chunk_r #(.W(W),.D(4),.K(2),.CHUNK_BITS(24)) u_r(
      .ck(clk),.rsi(local_reset),.bank(bank),.epo(epo),.vld(valid),.o(q[W*o+:W]));
+`endif
    end
   end
  end endgenerate

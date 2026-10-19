@@ -20,6 +20,7 @@
                                                                                                                        
                                                                                                                   
                                                                                                                         
+`ifndef OT_STATION_REGIONAL
 module qfd_dv_redstn2 #(
     parameter integer ADD_LAT   = 7,
     parameter integer SKEW      = 14,
@@ -414,6 +415,8 @@ qfd_dv_reset_tree #(.N(124)) u_safe_reset (.ck(ck),.rst_n(rst_n),.q(sr_reset));
 wire[79:0] math_reset;
 qfd_dv_reset_tree #(.N(80)) u_math_reset(.ck(ck),.rst_n(rst_n),.q(math_reset));
 endmodule
+`endif
+
 
                                                                             
                                                                             

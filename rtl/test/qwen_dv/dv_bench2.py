@@ -70,9 +70,20 @@ if SAFE_STATION_CFG:
 if SAFE_STATION_MATH:
     SRCS2 = [s.replace("qfd_dv_redstn2_csafe.sv", "qfd_dv_redstn2_gsafe.sv") for s in SRCS2]
     SRCS2.append("rtl/qwen_dv/qfd_dv_station_math_g.sv")
+    SRCS2.append("rtl/common/landed_parent/ot_pl_land_physical.sv")
     for dep in ["rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/common/landed_parent/ot_pl_land.sv"]:
         if dep not in SRCS2:
             SRCS2.append(dep)
+# QW-SLICE 10-19: DV2_STATION_REGIONAL=1 swaps the station for the 8-region partition (qfd_dv_redstn2_regional.sv,
+# +define+OT_STATION_REGIONAL); DV2_OT_ASSERT=1 builds the simulation-only landing epoch checkers (+define+OT_ASSERT),
+# default = the physical (synthesized) landing source.
+STATION_REGIONAL = os.environ.get("DV2_STATION_REGIONAL", "0") == "1"
+if STATION_REGIONAL and not SAFE_STATION_MATH:
+    raise SystemExit("DV2_STATION_REGIONAL requires DV2_SAFE_STATION_MATH")
+if STATION_REGIONAL:
+    SRCS2.append("rtl/qwen_dv/qfd_dv_redstn2_regional.sv")
+OT_ASSERT = os.environ.get("DV2_OT_ASSERT", "0") == "1"
+DEFINES2 = (["+define+OT_STATION_REGIONAL"] if STATION_REGIONAL else []) + (["+define+OT_ASSERT"] if OT_ASSERT else [])
 if SAFE_STREAM_RESET:
     SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_stream.sv", "rtl/qwen_dv/qfd_dv_stream_rsafe.sv") for s in SRCS2]
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
@@ -162,7 +173,7 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
     vtag = "".join(c for c in "_".join(f.lstrip("-+") for f in VFLAGS) if c.isalnum() or c in "_=")
-    obj = work / (f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" + ("_sr1" if SAFE_RESET else "") + ("_ar1" if SAFE_AMAX_RESET else "") + ("_sc1" if SAFE_SCALAR_RESET else "") + ("_cfg1" if SAFE_CFG else "") + ("_stm1" if SAFE_STREAM_RESET else "") + ("_stcfg1" if SAFE_STATION_CFG else "") + ("_stmath1" if SAFE_STATION_MATH else "") + ("_ns1" if NATIVE_SRAM else "")) / (vtag or "base")
+    obj = work / (f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" + ("_sr1" if SAFE_RESET else "") + ("_ar1" if SAFE_AMAX_RESET else "") + ("_sc1" if SAFE_SCALAR_RESET else "") + ("_cfg1" if SAFE_CFG else "") + ("_stm1" if SAFE_STREAM_RESET else "") + ("_stcfg1" if SAFE_STATION_CFG else "") + ("_stmath1" if SAFE_STATION_MATH else "") + ("_ns1" if NATIVE_SRAM else "") + ("_rg1" if STATION_REGIONAL else "") + ("_oa1" if OT_ASSERT else "")) / (vtag or "base")
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():
@@ -170,6 +181,7 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
                "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", f"-GMU_NU={MU_NU}", f"-GFACE={FACE}"] + \
               ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
+              DEFINES2 + \
               VFLAGS + ["-Mdir", str(obj), str(HERE / "main2.cpp")] + \
               [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
         obj.mkdir(parents=True, exist_ok=True)
