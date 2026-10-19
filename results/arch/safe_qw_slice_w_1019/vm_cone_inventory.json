@@ -1,0 +1,1855 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_vm",
+  "cells": 47796,
+  "issues": [],
+  "register_outputs_over32": [
+    {
+      "bit": 11136,
+      "loads": 512,
+      "names": [
+        "c2_bank"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87358",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7033,
+      "loads": 512,
+      "names": [
+        "t2_bank[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85303",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7037,
+      "loads": 512,
+      "names": [
+        "s2b_bank[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85307",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7030,
+      "loads": 457,
+      "names": [
+        "p2_bank"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85300",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16380,
+      "loads": 256,
+      "names": [
+        "s2_bank[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90042",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16381,
+      "loads": 256,
+      "names": [
+        "s2_bank[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90043",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16382,
+      "loads": 256,
+      "names": [
+        "s2_bank[2]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90044",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7034,
+      "loads": 256,
+      "names": [
+        "t2_bank[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85304",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7038,
+      "loads": 256,
+      "names": [
+        "s2b_bank[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85308",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11161,
+      "loads": 256,
+      "names": [
+        "c2_off[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87383",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11164,
+      "loads": 256,
+      "names": [
+        "c2_off[3]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87386",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11167,
+      "loads": 256,
+      "names": [
+        "c2_off[6]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87389",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11170,
+      "loads": 256,
+      "names": [
+        "c2_off[9]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87392",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11173,
+      "loads": 256,
+      "names": [
+        "c2_off[12]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87395",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11176,
+      "loads": 256,
+      "names": [
+        "c2_off[15]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87398",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11179,
+      "loads": 256,
+      "names": [
+        "c2_off[18]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87401",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11182,
+      "loads": 256,
+      "names": [
+        "c2_off[21]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87404",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16383,
+      "loads": 128,
+      "names": [
+        "s2_off[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90045",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16407,
+      "loads": 128,
+      "names": [
+        "s2_off[24]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90069",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16431,
+      "loads": 128,
+      "names": [
+        "s2_off[48]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90093",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16386,
+      "loads": 128,
+      "names": [
+        "s2_off[3]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90048",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16410,
+      "loads": 128,
+      "names": [
+        "s2_off[27]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90072",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16434,
+      "loads": 128,
+      "names": [
+        "s2_off[51]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90096",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16389,
+      "loads": 128,
+      "names": [
+        "s2_off[6]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90051",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16413,
+      "loads": 128,
+      "names": [
+        "s2_off[30]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90075",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16437,
+      "loads": 128,
+      "names": [
+        "s2_off[54]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90099",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16392,
+      "loads": 128,
+      "names": [
+        "s2_off[9]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90054",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16416,
+      "loads": 128,
+      "names": [
+        "s2_off[33]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90078",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16440,
+      "loads": 128,
+      "names": [
+        "s2_off[57]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90102",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16395,
+      "loads": 128,
+      "names": [
+        "s2_off[12]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90057",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16419,
+      "loads": 128,
+      "names": [
+        "s2_off[36]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90081",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16443,
+      "loads": 128,
+      "names": [
+        "s2_off[60]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90105",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16398,
+      "loads": 128,
+      "names": [
+        "s2_off[15]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90060",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16422,
+      "loads": 128,
+      "names": [
+        "s2_off[39]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90084",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16446,
+      "loads": 128,
+      "names": [
+        "s2_off[63]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90108",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16401,
+      "loads": 128,
+      "names": [
+        "s2_off[18]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90063",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16425,
+      "loads": 128,
+      "names": [
+        "s2_off[42]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90087",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16449,
+      "loads": 128,
+      "names": [
+        "s2_off[66]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90111",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16404,
+      "loads": 128,
+      "names": [
+        "s2_off[21]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90066",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16428,
+      "loads": 128,
+      "names": [
+        "s2_off[45]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90090",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16452,
+      "loads": 128,
+      "names": [
+        "s2_off[69]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90114",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11162,
+      "loads": 128,
+      "names": [
+        "c2_off[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87384",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11165,
+      "loads": 128,
+      "names": [
+        "c2_off[4]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87387",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11168,
+      "loads": 128,
+      "names": [
+        "c2_off[7]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87390",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11171,
+      "loads": 128,
+      "names": [
+        "c2_off[10]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87393",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11174,
+      "loads": 128,
+      "names": [
+        "c2_off[13]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87396",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11177,
+      "loads": 128,
+      "names": [
+        "c2_off[16]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87399",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11180,
+      "loads": 128,
+      "names": [
+        "c2_off[19]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87402",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11183,
+      "loads": 128,
+      "names": [
+        "c2_off[22]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87405",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16384,
+      "loads": 64,
+      "names": [
+        "s2_off[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90046",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16408,
+      "loads": 64,
+      "names": [
+        "s2_off[25]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90070",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16432,
+      "loads": 64,
+      "names": [
+        "s2_off[49]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90094",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16387,
+      "loads": 64,
+      "names": [
+        "s2_off[4]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90049",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16411,
+      "loads": 64,
+      "names": [
+        "s2_off[28]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90073",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16435,
+      "loads": 64,
+      "names": [
+        "s2_off[52]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90097",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16390,
+      "loads": 64,
+      "names": [
+        "s2_off[7]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90052",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16414,
+      "loads": 64,
+      "names": [
+        "s2_off[31]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90076",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16438,
+      "loads": 64,
+      "names": [
+        "s2_off[55]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90100",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16393,
+      "loads": 64,
+      "names": [
+        "s2_off[10]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90055",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16417,
+      "loads": 64,
+      "names": [
+        "s2_off[34]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90079",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16441,
+      "loads": 64,
+      "names": [
+        "s2_off[58]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90103",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16396,
+      "loads": 64,
+      "names": [
+        "s2_off[13]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90058",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16420,
+      "loads": 64,
+      "names": [
+        "s2_off[37]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90082",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16444,
+      "loads": 64,
+      "names": [
+        "s2_off[61]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90106",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16399,
+      "loads": 64,
+      "names": [
+        "s2_off[16]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90061",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16423,
+      "loads": 64,
+      "names": [
+        "s2_off[40]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90085",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16447,
+      "loads": 64,
+      "names": [
+        "s2_off[64]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90109",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16402,
+      "loads": 64,
+      "names": [
+        "s2_off[19]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90064",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16426,
+      "loads": 64,
+      "names": [
+        "s2_off[43]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90088",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16450,
+      "loads": 64,
+      "names": [
+        "s2_off[67]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90112",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16405,
+      "loads": 64,
+      "names": [
+        "s2_off[22]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90067",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16429,
+      "loads": 64,
+      "names": [
+        "s2_off[46]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90091",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16453,
+      "loads": 64,
+      "names": [
+        "s2_off[70]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90115",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11163,
+      "loads": 64,
+      "names": [
+        "c2_off[2]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87385",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11166,
+      "loads": 64,
+      "names": [
+        "c2_off[5]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87388",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11169,
+      "loads": 64,
+      "names": [
+        "c2_off[8]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87391",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11172,
+      "loads": 64,
+      "names": [
+        "c2_off[11]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87394",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11175,
+      "loads": 64,
+      "names": [
+        "c2_off[14]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87397",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11178,
+      "loads": 64,
+      "names": [
+        "c2_off[17]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87400",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11181,
+      "loads": 64,
+      "names": [
+        "c2_off[20]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87403",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 11184,
+      "loads": 64,
+      "names": [
+        "c2_off[23]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87406",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    }
+  ],
+  "driven_nets_over32_count": 198,
+  "highest_fanout_nets": [
+    {
+      "bit": 2,
+      "loads": 5755,
+      "names": [
+        "ck"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3109,
+      "loads": 4782,
+      "names": [
+        "su_waddr[3]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3554,
+      "loads": 552,
+      "names": [
+        "w16_we"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 32479,
+      "loads": 552,
+      "names": [
+        "$auto$rtlil.cc:3271:ReduceOr$29237"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$40215",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 4091,
+      "loads": 551,
+      "names": [
+        "w1_we"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 4095,
+      "loads": 550,
+      "names": [
+        "w1_addr[3]",
+        "$2\\wb_we[1:0][1]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3098,
+      "loads": 530,
+      "names": [
+        "su_we[0]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3099,
+      "loads": 530,
+      "names": [
+        "su_we[1]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3100,
+      "loads": 530,
+      "names": [
+        "su_we[2]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3101,
+      "loads": 530,
+      "names": [
+        "su_we[3]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3102,
+      "loads": 530,
+      "names": [
+        "su_we[4]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3103,
+      "loads": 530,
+      "names": [
+        "su_we[5]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3104,
+      "loads": 530,
+      "names": [
+        "su_we[6]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3105,
+      "loads": 530,
+      "names": [
+        "su_we[7]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 11136,
+      "loads": 512,
+      "names": [
+        "c2_bank"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$87358",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7033,
+      "loads": 512,
+      "names": [
+        "t2_bank[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85303",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7037,
+      "loads": 512,
+      "names": [
+        "s2b_bank[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85307",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7030,
+      "loads": 457,
+      "names": [
+        "p2_bank"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85300",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16461,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29338.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29338.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29338.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29338.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29338.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$245372",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16463,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29335.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29335.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29335.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29335.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29335.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$245681",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16465,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29332.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29332.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29332.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29332.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29332.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$245990",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16467,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29329.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29329.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29329.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29329.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29329.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$246299",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16469,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29326.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29326.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29326.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29326.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29326.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$246608",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16471,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29323.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29323.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29323.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29323.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29323.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$246917",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16473,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29320.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29320.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29320.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29320.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29320.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$247226",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16475,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29317.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29317.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29317.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29317.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29317.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$247535",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16477,
+      "loads": 331,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29314.CO[7]",
+        "$auto$alumacc.cc:548:replace_alu$29314.CO[8]",
+        "$auto$alumacc.cc:548:replace_alu$29314.CO[9]",
+        "$auto$alumacc.cc:548:replace_alu$29314.CO[10]",
+        "$auto$alumacc.cc:548:replace_alu$29314.CO[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$247844",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16497,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29314.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$107512",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16513,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29317.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$124720",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16565,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29320.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$150506",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16571,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29323.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$159168",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16600,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29326.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$167830",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16606,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29329.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$176492",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16635,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29332.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$185154",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16641,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29335.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$193816",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16670,
+      "loads": 264,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$29338.Y[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$202478",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 16380,
+      "loads": 256,
+      "names": [
+        "s2_bank[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90042",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16381,
+      "loads": 256,
+      "names": [
+        "s2_bank[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90043",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 16382,
+      "loads": 256,
+      "names": [
+        "s2_bank[2]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$90044",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 7034,
+      "loads": 256,
+      "names": [
+        "t2_bank[1]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$85304",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    },
+    {
+      "cell": "g_rep[0].g_bank[0].u_m",
+      "pin": "w_mask_in",
+      "bit": 41101,
+      "generic_levels": 70,
+      "names": [
+        "wb_m[0][0]",
+        "wb_m[0][1]",
+        "wb_m[0][2]",
+        "wb_m[0][3]",
+        "wb_m[0][4]"
+      ]
+    }
+  ],
+  "scope": "Generic synthesis before ABC/physical buffers. Primitive levels are not TT ps; native macro clk-to-Q/setup, mapped logic, placement/route and retained replicas require separate proof. Clock/reset boundary loads retained and labeled, not counted as data-fanout failures.",
+  "netlist_sha256": "be90e90059b2f247cb6afc96fbd27860207628b84aea273a1d2cc4835867518f"
+}
