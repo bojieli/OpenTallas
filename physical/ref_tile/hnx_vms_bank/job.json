@@ -1,0 +1,133 @@
+{
+ "name": "hnx_vms_bank-v1-COMMIT",
+ "block": "hnx_vms_bank_q0_faces",
+ "ref_tile": true,
+ "owner": "Claude:HBM-NEXT-UNITS-VM",
+ "purpose": "HBM-NEXT P=4 VM bank, 2^19 words (A0+A1 data macros, 17-bit sector); hnx fork of vm_native_q0_faces_g313c",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hbm-next-units-vm-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_next/vm",
+   "physical/hbm_next/vm",
+   "tools/hbm_next/hnx_vm_bench.sh",
+   "tools/hbm_next/hnx_vm_pins.py",
+   "rtl/hbm_accel/generic/vm/static/faces_q0",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "physical/common_flow/macro_channel_block.tcl",
+   "physical/common_flow/clock_entries.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hnx_vms_bank_q0_faces u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_next/vm/hnx_vms_bank_q0_faces.sv rtl/hbm_next/vm/ot_hnx_vms_bank_q0_core.sv rtl/hbm_next/vm/ot_hnx_vms_bank_q0_body.sv rtl/hbm_next/vm/ot_hnx_vms_ce_counter_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hnx_vm_exact",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "HNX_VM_BENCH PASS"
+   },
+   {
+    "name": "hnx_vm_mut5_a1_select",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm_m5 m5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "TB_HNX_VM FAIL MUT=5",
+    "fail_witness": "results/arch/hbm_next_1019/units/vm/witness/m5.log"
+   },
+   {
+    "name": "hnx_vm_mut6_sector_wrap",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm_m6 m6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "TB_HNX_VM FAIL MUT=6",
+    "fail_witness": "results/arch/hbm_next_1019/units/vm/witness/m6.log"
+   },
+   {
+    "name": "hnx_vm_mut7_a1_check",
+    "cmd": "bash tools/hbm_next/hnx_vm_bench.sh {RUN}/bench/vm_m7 m7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "fail_regex": "TB_HNX_VM FAIL MUT=7",
+    "fail_witness": "results/arch/hbm_next_1019/units/vm/witness/m7.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hnx_vms_bank/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hnx_vms_bank/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hnx_vms_bank --out {RUN}/record/views/hnx_vms_bank_q0_faces --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hnx_vms_bank/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hnx_vms_bank/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hnx_vms_bank/hnx_vms_bank-v1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-NEXT-UNITS-VM (P=4 next die, not a release gate): hnx fork of the d4g SE/NE/SW/NW VM bank master vm_native_q0_faces_g313c (hfd_vms_bank_native_q0_faces, all 32 d4g banks). VM grows 2^18 -> 2^19 words: 4th SRAM u_a1 (A1 = quadrant rows 1024-2047) in the same abutted N-S stack (+90.624 um: outline 270 x 313.2 -> 270 x 403.92), direct clock entry clk_macro3 at its clk pin; check macro B carries the A1 field [167:112]; 3:1 capture mux; 17-bit sector (+1 bit on rq/wq/dq/kq/xq/xq2/eg/pq). Same edges (read n+6, +1 pin), same face clocks/pin registers. Pins: d4g plan with widened buses (N/S d4g slots; W/E re-spread at 7 M4 tracks on the taller faces), tools/hbm_next/hnx_vm_pins.py."
+}
