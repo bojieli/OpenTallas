@@ -1,0 +1,90 @@
+{
+  "status": "SOURCE_MODEL_ONLY_NOT_IMPLEMENTABLE_UNTIL_PREREQUISITES",
+  "protocol_semantics_selected_by_ROOT": {
+    "event": "actual central request_valid && request_ready",
+    "owner": "{TAG59,generation2}",
+    "TAG": "{epoch16,stage6,input_token18,position13,segment6}",
+    "scalar_user_only": true,
+    "RESULT": "scheduler feedback/CQ/POST only; never FILL"
+  },
+  "wire_candidate_NOT_SELECTED": {
+    "requires_owner_source_decision": true,
+    "direction": "compute die C -> KV/system K",
+    "physical_candidate": "existing typed548 port2 with NEW reserved private PREP subtype, not STATUS or RESULT",
+    "outer_header": {
+      "kind": 15,
+      "layer": 63,
+      "beat": 0,
+      "link_epoch16": "existing header epoch, separate from allocation owner epoch"
+    },
+    "data_bits": {
+      "511": "PREP subtype marker=1",
+      "510:62": "zero",
+      "61:1": "allocation owner61",
+      "0": "PREP valid=1"
+    },
+    "ordinary_STATUS_RESULT": "marker=0, d[511:156]=0; original fields d[155:0] unchanged",
+    "calendar": "NEW PREP-only C-TX/K-RX reservation; collision/entry/codec/PHY/epoch/source-root solve absent, no date/bandwidth claim",
+    "sink_rule": "private demux consumes PREP; NEVER present it as ordinary rx_event/rx_slot to status_rx or svc/result consumers",
+    "separate_expected_owner": "actual allocation independently retained and routed within Qwen, not echoed from PREP/header"
+  },
+  "paired_embedding_header_NOT_IMPLEMENTED": {
+    "payload_width": 548,
+    "records": 65,
+    "token": "547:530",
+    "epoch": "47:32",
+    "stage": "74:69",
+    "position": "68:56",
+    "segment": "55:50",
+    "generation": "49:48",
+    "strict_zero": [
+      "529:524",
+      "523:512",
+      "511:75",
+      "31:16"
+    ],
+    "scale": "15:0",
+    "code_words": "unchanged512bit data+token18+word6; inherited full owner requires static unique row lifetime"
+  },
+  "conservative_return_owner_candidate_NOT_SELECTED": {
+    "purpose": "avoid assuming absent all128-PC no-stale identity proof",
+    "extra_owner_bits": 27,
+    "PC_chain": {
+      "780_to": 807,
+      "new_owner_bits": "806:780"
+    },
+    "fan_edge": {
+      "784_to": 811,
+      "new_owner_bits": "810:784"
+    },
+    "return_record": {
+      "298_to": 325,
+      "valid_plus_record": 326
+    },
+    "head_declared_bits": {
+      "old": 900,
+      "candidate": 981
+    },
+    "hop_declared_bits": {
+      "old": 1199,
+      "candidate": 1307
+    },
+    "metadata_named_boundary_floor_bits": 31752,
+    "floor_is_not_total_or_mapped_area": true
+  },
+  "Nprep": null,
+  "Nexpect": null,
+  "N_reason": "fresh PREP and independent expected-owner source routes do not exist. NULL is unresolved, not0; old337+62*(Nprep+Nexpect) does not cover widening/control/return state and must not be added to overlapping floors.",
+  "production": {
+    "PHY_po_pi_per_request_max": null,
+    "C_H_phase": null,
+    "PREP_reservation": null,
+    "expected_E": null,
+    "fixed_compute_prologue": null,
+    "new_route_captures": null,
+    "full_cost": null,
+    "SU_token_latency": null,
+    "MU_curve": null,
+    "native_qualified": false
+  }
+}

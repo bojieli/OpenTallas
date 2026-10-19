@@ -1,0 +1,30 @@
+{
+  "scope": "source_literals_hashes_and_arithmetic_only",
+  "hashes": 6,
+  "prompt_cases": [
+    {
+      "name": "remaining_prompt",
+      "position": 1,
+      "plen": 2,
+      "prompt": 11,
+      "feedback": 13,
+      "input": 11
+    },
+    {
+      "name": "generated",
+      "position": 2,
+      "plen": 2,
+      "prompt": 11,
+      "feedback": 13,
+      "input": 13
+    }
+  ],
+  "request_tag": 61572654825472,
+  "terminal_tag": 66657896103936,
+  "result_next_token": 13,
+  "old_tag_epoch": 7,
+  "next_allocation_epoch": null,
+  "production_dates": null,
+  "simulations": 0,
+  "qualification": false
+}

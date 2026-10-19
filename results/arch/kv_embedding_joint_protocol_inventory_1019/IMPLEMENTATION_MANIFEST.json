@@ -1,0 +1,73 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_EXECUTABLE_COMPILE_FILELIST",
+  "base_authorities": {
+    "KV_frozen": "5f2ce19bc",
+    "native_component": "4ce83c014 / functional a8ddbb4c1",
+    "seed": "7615c0abb+6519b92c5",
+    "controller": "ff2b2fac2",
+    "Qwen_installed": "034832656",
+    "Qwen_original_gen0_contract": "5f1e1ba8f / source0d4c9808f"
+  },
+  "source_changes": [
+    {
+      "authority": "private allocator a8ddbb4c1 / ot_qwen_tp8_token_epoch_allocator_rc.sv:31-33",
+      "delta": "Export actual alloc_fire/alloc_tag/alloc_gen at existing acceptance to two distinct registered owners; preserve accepted raw tuple and descriptor lifetime. No new ready/wait/credit.",
+      "default": "new PRIVATE_PREP_ROW=0 branch, exact original outputs when0"
+    },
+    {
+      "authority": "5f2 ot_qwen_d2d_services.sv and ot_qwen_d2d_dies.sv",
+      "delta": "Only after ROOT wire decision: private PREP codec/demux and port2 PREP reservation handling through core and PR wrappers; separate ordinary pending result/status freshness unchanged; marker and all reserved fields strict.",
+      "default": "original modules/selection preserved"
+    },
+    {
+      "authority": "5f2 kv_die.py and kv_static_die.py; qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "delta": "New paired private constructor option; separate PREP owner distribution to direct join/fill vs fan root. No svc/result OR; preserve HOST/seq/boot status consumers. Exact fulltop route/phase manifest required.",
+      "default": "original generator inputs/source/profile/default unchanged"
+    },
+    {
+      "authority": "5f2 qkd_kv_ctl_half_root_b.sv, qkd_kv_pc_chain_station_b.sv, qkd_static_kv_pc_es_merge_b.sv/merge.sv and path wrappers",
+      "delta": "Conservative return-owner candidate: explicit append27 fan811/chain807, retained player/strap/beat ownership; fullowner matching and source-owned reset/drain/strictservice association, no unnamed padding.",
+      "default": "private family only, no selected native binding"
+    },
+    {
+      "authority": "5f2 return_head/hop, join4_cal/join4/join, row_tx",
+      "delta": "Private325bit returned records/326validface, all actual128PC owner/once-only half/scale coverage; rowtx/header paired27 encoder. Export real fault authority and reject ambiguous mutation; preserve existing actual SRAM/write/read arithmetic and original defaults.",
+      "default": "private modules and constructor selection0"
+    },
+    {
+      "authority": "0d4c qfd_sys_face.sv and GEN0 E routes; 7e515 programme loader root kept distinct",
+      "delta": "Paired private decoder/header owner; independent allocation expected-E/FILL owner source/route; widen actual/expected/FILL landings with exact resets and phases. Expected date from installed E only.",
+      "default": "legacy reserved-zero decoder and E behavior unchanged"
+    },
+    {
+      "authority": "0d4c qfd_embedding_word_provider.sv, preload_face/core_store and qfd_native59_dv_service.sv",
+      "delta": "Private fullowner actual/expected/resident/command/read transaction; explicit actual65th scale/result capture and drain release, no reuse on issuecomplete. No runtime waiter or late old overwrite.",
+      "default": "original native command/port/reserved fields preserved when0"
+    },
+    {
+      "authority": "034832656 installed asset model, source7e515+producer4e718+boundaryfe490",
+      "delta": "Only after source/asset decision: propagate PRIVATE_CALR0 through LPF/GI/slice2/faces, bind actual table_load/stage/user and NEW9bit request transport, exclusive write join and real fault; exact installed PROG/BTAB/CROM/E and physical-mask instances.",
+      "default": "no production programme rewrite or loader activation"
+    }
+  ],
+  "missing_inputs_before_source_grant": [
+    "ROOT wire SOURCE_DECISION for new PREP subtype/port/reservation or alternative channel",
+    "Complete frozen fulltop source/relay definitions, actual routes and native phase/reset binding for new producer/expected paths",
+    "All128 controller service/admittedtraffic/real selected licensedPHY po\u2192pi per-request ordered bound",
+    "Independent expected-owner source capture/route and65read finalconsumption/drain/reset/POST association",
+    "Coherent actual installed PROG/BTAB/CROM/E/descriptor/commit/revoke/physicalmask instances; fd266 input recovered or separate explicit source decision without falseequivalence",
+    "Concrete source control/reset all-driver<=32 copy fixedpoint and state/clock/PG/area/reach inventory",
+    "GEN8 FRAME/bind and actual e1 boundary selection source"
+  ],
+  "future_component_tests": [
+    "actualfirst prompt7,prompt11,feedback13 selection and unrelated next result",
+    "all128PC owner/once-only fullrow returns and SRAM bitexact immutable row data",
+    "private PREP/ordinarySTATUS/realRESULT split, no result fabrication or freshness changes",
+    "independentexpected-owner/header/fill and actual65-read/result lastscale lifetime",
+    "wrong owner/gen/epoch/latestgrant, duplicate/missing/early/late return, wronghalf/scale, resetcrossover, stale same-token row, premature release and full actualfault\u2192futureadmission causal controls",
+    "defaultOFF source hashes and original outputs against frozen source"
+  ],
+  "compile_resource_inventory": null,
+  "fleet_jobs_started": 0,
+  "source_grant_requested": false
+}

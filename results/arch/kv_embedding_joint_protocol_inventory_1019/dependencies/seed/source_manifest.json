@@ -1,0 +1,35 @@
+{
+  "scope": "targeted MODEL extraction, not compile inventory",
+  "files": [
+    {
+      "path": "source/5f2/rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "revision": "5f2ce19bc",
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d"
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "revision": "5f2ce19bc",
+      "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7"
+    },
+    {
+      "path": "source/5f2/rtl/physical/ot_qwen_host_ctl.sv",
+      "revision": "5f2ce19bc",
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436"
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+      "revision": "5f2ce19bc",
+      "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412"
+    },
+    {
+      "path": "source/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+      "revision": "5f2ce19bc",
+      "sha256": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614"
+    },
+    {
+      "path": "source/selected_qkd_kvs_emb.sv",
+      "revision": "5f2ce19bc extracted module",
+      "sha256": "ac6ec1ea5d5ce8cc1b08829e6f06310160ed84ffb696919aa6c59626156f728f"
+    }
+  ]
+}

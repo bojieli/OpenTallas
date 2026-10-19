@@ -1,0 +1,173 @@
+{
+  "qualification": "SOURCE EXTRACTION / CONDITIONAL MODEL, no new simulation",
+  "static_assets": {
+    "manifest_uncompressed_sha256": "c63242abc11b880c741bd7556138529dab331b21579231b7ba9b53c7435cee92",
+    "layers": 36,
+    "slices": 12,
+    "prog_records_per_layer_all_users": 288,
+    "prog_records_per_layer_user0": 72,
+    "btab_records_per_layer": 188,
+    "crom_records_per_layer": 704,
+    "note": "Earlier composition528 CROM is historical pre-broadcast ownership; actual manifest704 includes selected slice duplication. Do not equate72 PROG source records with72 macros.",
+    "valid_record_counts_all36": {
+      "prog_all_users": 10368,
+      "btab": 6768,
+      "crom": 25344
+    },
+    "btab_bases": [
+      0,
+      272,
+      344,
+      416
+    ],
+    "rom_rows_per_layer": 106,
+    "rom_rows_used": 3816,
+    "rom_rows_free": 280,
+    "reads_per_layer_user": 88,
+    "checkpoint_receipt": "PASS all36, exactmanifest hash; inherited receipt not rerun"
+  },
+  "state": {
+    "loader_each": {
+      "roms": 4,
+      "rom_bits": 4358144,
+      "resettable_ff_bits": 43,
+      "unreset_ff_bits": 1058,
+      "total_ff_bits": 1101,
+      "enumeration": {
+        "reset_landing": 2,
+        "p_start_p_other": 2,
+        "p_stage_p_user": 8,
+        "active_cap_v_cap_last": 3,
+        "slot": 7,
+        "base_rom_addr": 24,
+        "owner": 2,
+        "tw_we_done_fault": 3,
+        "tw_data_kind_addr": 1050
+      }
+    },
+    "calendar_port": {
+      "roms": 2,
+      "rom_bits": 2179072,
+      "resettable_ff_bits": 6,
+      "unreset_ff_bits": 557,
+      "total_ff_bits": 563
+    },
+    "one_loader_plus_calendar_total_ff_bits": 1664,
+    "all12_loaders_plus_calendar_ff_bits": 13775,
+    "all12_loaders_plus_calendar_roms": 50,
+    "retained_old_calendar_sram_bits": 65536,
+    "new_mux_per_slice": {
+      "data_and_meta_output_bits": 1051,
+      "minimum_2to1_mux_bits": 1050,
+      "exclusive_write_valid_logic": "unmapped"
+    },
+    "reset_ties_buffers_cts_area": "NULL; exact mapped state differs from source declaration count"
+  },
+  "edges": {
+    "calendar_fetch_delta_vs_legacy": 1,
+    "loader_start_sample": 0,
+    "first_payload": 3,
+    "last_payload": 90,
+    "last_target_write": 91,
+    "first_target_read_bound": 92,
+    "exclusive_port_edges": 93,
+    "caller_range_origin": 0,
+    "caller_command_output": 8,
+    "caller_loader_sample": 9,
+    "caller_first_payload": 12,
+    "caller_last_payload": 99,
+    "caller_last_vm_write": 100,
+    "caller_first_read_bound": 101,
+    "caller_reservation_edges": 103,
+    "all36_oneuser_caller_edges_sum": 3708,
+    "all36_oneuser_port_edges_sum": 3348,
+    "production_token_delta": null,
+    "reason": "Inherited component prices only; new actual transport/parent visibility/reset phases remain unbound."
+  },
+  "graph": [
+    {
+      "edge": "SYSFACE ROMissue\u2192macro\u2192capture\u2192decode",
+      "source_relative_edges": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "actual_absolute_edge": null
+    },
+    {
+      "edge": "TT PW and CALR DH original independent transport\u2192actual capture/commit",
+      "edges": null
+    },
+    {
+      "edge": "accepted complete PW1024/DW8\u2192seal/BOOT plus actual two-sink commit",
+      "edges": null
+    },
+    {
+      "edge": "CALR accepted LOCAL4\u2192request transport\u2192actual loader",
+      "edges": null
+    },
+    {
+      "edge": "loader\u2192real VM PROG/BTAB/CROM",
+      "component_last_write": 91,
+      "production_edge": null
+    },
+    {
+      "edge": "accepted first stage\u2192real hardhead/NH8/eight leaves\u2192REGROOT2 ME",
+      "edges": null
+    },
+    {
+      "edge": "actual input token/epoch\u2192KV row\u2192E reservations\u2192native65 reads",
+      "edges": null
+    }
+  ],
+  "refusals": [
+    "Actual LPF/GEN0 does not select CALR/table loader.",
+    "Emitter refuses selected7e515 dv_lower.py; exact4e718 source root required, not pin weakening.",
+    "Body programme fd2668 input provenance remains distinct from selected cc5; no source recompile here.",
+    "Static manifest is not a head/finalnorm/per-token RoPE image.",
+    "Immutable ROM content hashing/receipt is not accepted dynamic installation.",
+    "BEGIN/receipt first-use under actual independently clocked reset regions unproven.",
+    "Actual L/E/QSLOT dates and new request transport age NULL.",
+    "First-seed PREP_ROW is proposed NEW KV transport; current RESULT describes prior input key plus next token."
+  ],
+  "preserved": {
+    "me_failures": {
+      "PC11": [
+        543,
+        672
+      ],
+      "PC12": [
+        2232,
+        2459
+      ],
+      "PC16": [
+        3883,
+        3625
+      ],
+      "PC20": [
+        4567,
+        4447
+      ]
+    },
+    "source_age_failures": 109,
+    "native_reset_pg": "HOLD",
+    "full_graph_exit": 2
+  },
+  "embedding_controller_dependency": {
+    "commit": "ff2b2fac2",
+    "selected_RETIME": 1,
+    "legal_response": "I < A <= R, exactly one real response; early response held",
+    "same_pc_next_issue": "strictly after R",
+    "player": "I=S+ISS+2; R=S+RET+2; CAP=RET+1; TRN>CAP",
+    "header": "F < all64code/scale writes < H0; exactly65 ordered slot samples",
+    "direct_join_J_vs_delayed_local_fan_S": "separate source events; no common origin",
+    "PHY_maximum_native_C_H_phase_and_actual_E": null,
+    "refused_shortcuts": [
+      "exact er=R as selected contract",
+      "HBM_RL23 response bound",
+      "RAW_WD256 per-request bound",
+      "ctrl_lat92 source date"
+    ]
+  }
+}

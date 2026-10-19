@@ -1,0 +1,50 @@
+{
+  "scope": "READ_ONLY_SELECTED_SOURCE_CONTRACT",
+  "revision": "5f2ce19bc",
+  "prior": [
+    "af18be728",
+    "9450178d6"
+  ],
+  "production_dates": {
+    "first_seed": null,
+    "result_fill": null,
+    "controller_issue": null,
+    "physical_column": null,
+    "physical_return": null,
+    "er_sample": null,
+    "reserved_return": null,
+    "row_complete": null,
+    "header": null,
+    "last_word": null,
+    "final_native_read": null
+  },
+  "parameters": {
+    "MU_pc": 1,
+    "RETIME": 1,
+    "ELASTIC": 1,
+    "RAW_WD": 256,
+    "TQD": 64,
+    "PROFILE": 0,
+    "STATIC_REFRESH": 0,
+    "nominal_raw_shift": 27,
+    "nominal_corrected_shift": 32
+  },
+  "inequalities": [
+    "I < er_sample <= R",
+    "next_same_pc_issue > R",
+    "CAP = RET + 1",
+    "SCAP = SRET + 1",
+    "TRN > CAP",
+    "STRN > SCAP",
+    "FILL < every_row_write",
+    "every_row_write < HEADER"
+  ],
+  "missing": {
+    "M2.NATIVE": "Selected qkd PHY return/service/phase and macro aperture",
+    "M2.TRAFFIC": "Actual accepted controller/PC/player/join boot words and bank/refresh competing reservations",
+    "M3.M4": "Direct/delayed start and full return/reset/first-use ledger",
+    "M1.M5.M6": "Seed/RESULT authority, executable E/link reservations, final native ownership"
+  },
+  "verdict": "HOLD_INPUT_DEPENDENCIES",
+  "jobs": []
+}

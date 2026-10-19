@@ -1,0 +1,830 @@
+{
+  "scope": "Every other packet file; artifact-only SOURCE/MODEL, no engine receipt",
+  "files": [
+    {
+      "path": "COST_LEDGER.json",
+      "bytes": 2859,
+      "sha256": "78726334185df61b2edfd43c88b2c921ea10cff3e3c3188ab42b0b53218d025d"
+    },
+    {
+      "path": "EXTRA_SOURCES.json",
+      "bytes": 3016,
+      "sha256": "245116e3f39183c256b281bac903ddabbcbf5d9e95a26644f7ce8f4075085357"
+    },
+    {
+      "path": "IMPLEMENTATION_MANIFEST.json",
+      "bytes": 5331,
+      "sha256": "2b5313e3da13cd3ea7168e489288e225b13536745291868832d3817ca49c4aab"
+    },
+    {
+      "path": "MODEL_PROPOSAL.json",
+      "bytes": 3124,
+      "sha256": "493460133e9352b00e8ac05d22a405fd9c5ce669370dbed5beb160c819915eb8"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19660,
+      "sha256": "b1486aea839008a511eee019202e95a1e5dc30c471b8695a3df31c4b6297f11e"
+    },
+    {
+      "path": "VALIDATION.json",
+      "bytes": 722,
+      "sha256": "adb80ac91ba493934ff2e4de13ba949ad921a985ceab4d8310e0b3e3076ce363"
+    },
+    {
+      "path": "dependencies/controller/MANIFEST.json",
+      "bytes": 5723,
+      "sha256": "acbcad7bcbcdd58f95804d809dac712e2bdfe075c0c27d79d060df897d4c0d4a"
+    },
+    {
+      "path": "dependencies/controller/README.md",
+      "bytes": 13575,
+      "sha256": "64f8357b93b38c5bb70705dc6c30f36c2da1ae8951b33aee478e89ec3a61f50a"
+    },
+    {
+      "path": "dependencies/controller/contract.json",
+      "bytes": 1320,
+      "sha256": "d0148cc6aeb6dfcce901cf0dbb1202819fa8e07f17d27dea6c7509ec86ef56a9"
+    },
+    {
+      "path": "dependencies/controller/extract.py",
+      "bytes": 2822,
+      "sha256": "b00537f13d166ff7d8643ac872a3e427b3404de60fb08e7bfe47c913c5c81efd"
+    },
+    {
+      "path": "dependencies/controller/selected_phy_connections.txt",
+      "bytes": 10240,
+      "sha256": "21148ea5b8f1f4149c05d3b40db51b030ff4a35e24e9a969f038fb42d96fb0f5"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/lib/ot_async_fifo.sv",
+      "bytes": 10917,
+      "sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/lib/ot_reset_sync.sv",
+      "bytes": 811,
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+      "bytes": 6582,
+      "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+      "bytes": 1984,
+      "sha256": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+      "bytes": 2637,
+      "sha256": "bfd695637f5bc7297b8a995caa1705dcd62f5823b019aa311b90dcb9e02caaf0"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+      "bytes": 3833,
+      "sha256": "ec4a00a9db26c8698770b6cd5c126f66d8302e0013e0861747007842970cea90"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+      "bytes": 951,
+      "sha256": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+      "bytes": 1770,
+      "sha256": "ff824c5232e654f5af107c54416778a79481c30e420d8934801c3800033e61ea"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv",
+      "bytes": 1354,
+      "sha256": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+      "bytes": 7402,
+      "sha256": "88f3155cf321bbf1e16decace84595ce9c64a155f6a1a553317b395bc3c56afd"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv",
+      "bytes": 10050,
+      "sha256": "32d1dda6e0c03103193543fbb0af82cda7b9e7e1f9dcc2daabe43f5a759402bd"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv",
+      "bytes": 7976,
+      "sha256": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv",
+      "bytes": 6306,
+      "sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv",
+      "bytes": 15623,
+      "sha256": "90f9a4ec6dbb0ee2e1d644ac0878566c709ba5a1ec68601a4d250a50fa4f98fe"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+      "bytes": 5136,
+      "sha256": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+      "bytes": 2324,
+      "sha256": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+      "bytes": 40310,
+      "sha256": "ed202e8000388e48b7feda209c38382b5991386bf6d209b5a03ec88dd2abbce4"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv",
+      "bytes": 4438,
+      "sha256": "8c82269c06a3adf622b9664f3ee1095cffd44f8eca9dc069d41441516f1c44ae"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv",
+      "bytes": 73042,
+      "sha256": "f1447f7011da1da58835db48cb2dd7323d6afd0ea58a91b5384d0d3b83a3fccb"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv",
+      "bytes": 34821,
+      "sha256": "14d5d335fc805eb6a39850b05d827001dbca31091c3e9e5758b4ee5db7e0d7b8"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv",
+      "bytes": 21491,
+      "sha256": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv",
+      "bytes": 1723,
+      "sha256": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "bytes": 148618,
+      "sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/tools/qwen_kv_die/kv_die.py",
+      "bytes": 353283,
+      "sha256": "517ada21587fdb68d87f55530a0b80402f3888d4d46f617e60f7949f23f73903"
+    },
+    {
+      "path": "dependencies/controller/source/5f2/tools/qwen_kv_die/kvjc3_pc_chain.py",
+      "bytes": 6240,
+      "sha256": "54cff8410a143550cf4ca69d85936f0002bde5049a7e305ad1eec35db7cd2cdb"
+    },
+    {
+      "path": "dependencies/controller/source_manifest.json",
+      "bytes": 5069,
+      "sha256": "28625ae37eeb583f57e58b1ab922821b6a47b72ded96486ebd9ecf45eed3b010"
+    },
+    {
+      "path": "dependencies/controller/validation.json",
+      "bytes": 182,
+      "sha256": "b8164ffc1634ef49cf57db14406bd075fbbd4180899decfe74e29abb9a471986"
+    },
+    {
+      "path": "dependencies/installed/README.md",
+      "bytes": 8549,
+      "sha256": "71ed540d98ddc770c3f85d7c567186aa1ee326b63344b02b494ee87984f0d1bf"
+    },
+    {
+      "path": "dependencies/installed/extract_check.py",
+      "bytes": 1913,
+      "sha256": "ca6805a4f6884bb5a48c94241fee1136819f822a4cd59ae456554178ea67faa6"
+    },
+    {
+      "path": "dependencies/installed/extraction_check.log",
+      "bytes": 129,
+      "sha256": "118fad9ac6eeb1a40f2c878f8477a214de798a08f17b2af7faa879f362737999"
+    },
+    {
+      "path": "dependencies/installed/full_graph_refusal.log",
+      "bytes": 225,
+      "sha256": "dd9a913212ba371854e1f78363e76849de581a83bb2772f40508214d34bb465a"
+    },
+    {
+      "path": "dependencies/installed/model.json",
+      "bytes": 5493,
+      "sha256": "877ca9c259eb59f89035797876c34cb77aa498c58a2c7e8aafd991864f96e62f"
+    },
+    {
+      "path": "dependencies/installed/private_source_changes.PROPOSAL.json",
+      "bytes": 3251,
+      "sha256": "c267276dfca96583538d2ff6c380cbdc8ebd7f7554ab306ae5bd5afbd40fcaf1"
+    },
+    {
+      "path": "dependencies/installed/producer_recovery.json",
+      "bytes": 4453,
+      "sha256": "37b263f27151f3b25c4ffc36b4b8dab49418ea681b5d10cb2405d5ffb9601d0a"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__results__arch__qwen_tp8_native_dispatch_1014__actual_fused_layer0__die0__program.hex",
+      "bytes": 6425,
+      "sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__c_ctl_prog.py",
+      "bytes": 7913,
+      "sha256": "3d8168308341eb171da1183a4e6dd84f472f4a739d793aac46b5fbab0c5ca538"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__ctlm_image.py",
+      "bytes": 56293,
+      "sha256": "46b5958034ab46ddcef6ad13c9856a64636253aae744a6289eceb589fb0f2bc0"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__dv_layer.py",
+      "bytes": 22791,
+      "sha256": "de3cef93879c3e2703ec977d3048702adcca96701860dd98ee06e9de383f696e"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__dv_layer_fixture.py",
+      "bytes": 15163,
+      "sha256": "e0e7e5dcc55fbed397dd3c353294928476ae1da312b9e97609c43e033142b222"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__dv_lower.py",
+      "bytes": 21881,
+      "sha256": "6703f03fb928907bad952babcf05890c41b5096ea81f81dbab7f4c01a6c800c5"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__dv_lower_mat.py",
+      "bytes": 29156,
+      "sha256": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__dv_lower_vec.py",
+      "bytes": 32417,
+      "sha256": "3f01c9a9a217e7ab53de2dce6320f7e2cb29d86c977d53e67714065ecfc5bfff"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__gen_fixtures.py",
+      "bytes": 9418,
+      "sha256": "74fd5396c54bc6fc2f787ff870e2e750aea1bc005c3b736d5da83aa426578d5c"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__layer_compile.py",
+      "bytes": 27161,
+      "sha256": "8917d05ad07cb5c2897e21a3b1ab45d2d0bf4d3223e36fee36fac2260bb1f118"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__netlist_relay_stages.py",
+      "bytes": 16221,
+      "sha256": "1f4c71348d1be4083e289905b1a8408237a8d0a9ce650be2e15b81c6d6236721"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__qwen_tp8_layer_gold.py",
+      "bytes": 18771,
+      "sha256": "5729c41dc4d1c59690f99a81daecd8ca3ce350ac6597eac58486b0388c7b4102"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__slice_cut.py",
+      "bytes": 22318,
+      "sha256": "557d1c359db59c6bd71f0efbd0bd6feeb8fedded2c09b7c03be2fb275c70a669"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__slice_smoke.py",
+      "bytes": 6446,
+      "sha256": "cdc9ec268e68d9c4a55006351cc70a245ad20f9364cec68ba38ebe6409772554"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__test_dv_layer.py",
+      "bytes": 2170,
+      "sha256": "887ac7e6a719cbb6de7a567989732310230c691962c06b954a82017286456ec8"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__test_dv_lower.py",
+      "bytes": 4870,
+      "sha256": "8ac2394c11fb6fadd947cec015a63a11abaec21036e328d68523fb90c28c2247"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__test_dv_lower_mat.py",
+      "bytes": 3629,
+      "sha256": "bb94688b4b39ca4e601d5f4f0bd44138b1b5d91fa010ae6b8eaac3164aef0bbf"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__test_dv_lower_vec.py",
+      "bytes": 3521,
+      "sha256": "7dd6a35284f6e11aa9e5e855dd4d9d759692f07c56a76807778e8bbc65ba515b"
+    },
+    {
+      "path": "dependencies/installed/source/4e718c0107e99f869c95db0ecedcca8711577dff__tools__qwen_layerbench__test_layer_compile.py",
+      "bytes": 6578,
+      "sha256": "e2c167c371e0ffa444f75817dce05cf874111c7bf454fdfe075f8cb2bcb74ab2"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__README.md",
+      "bytes": 7360,
+      "sha256": "6603678cc6036dfc4220ac1582d0c64b263f4a0cf226471c66d2a6d4f703ca86"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__checkpoint__checkpoint_compare.json",
+      "bytes": 7426,
+      "sha256": "45b20b9801d45ee31c9587a91b6a824d727b688b46a19c47a0dcfabc3753d966"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__model.json",
+      "bytes": 7582,
+      "sha256": "6790d17c75250ed0c6e43b7b2adae0595a1103556b07d87c1544f3b5ef7a1966"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__native__emit.log",
+      "bytes": 1252,
+      "sha256": "2ebc8c30d04288a5044ff3a7face3578fde574668d1d5e2d34fc0563fd21ca44"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__native__sources.sha256",
+      "bytes": 666,
+      "sha256": "30a3d6ccb5eb55e5a11108ce884024535b95ab64ba86d589a0a7977f78a909ed"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__table_manifest.json.gz",
+      "bytes": 1106727,
+      "sha256": "d3b688b3bd408909429ce222023c4a0042f53d0c2f4d084e01960773cb583e8b"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_programme_store_1019__user_relocation_certificate.json.gz",
+      "bytes": 15934,
+      "sha256": "49f336919ee409090c1ddaeaa3098556cfb6a9b56aa5c7e0aa535d3e56994699"
+    },
+    {
+      "path": "dependencies/installed/source/7e5150af5__results__arch__qwen_tp8_native_dispatch_1014__actual_fused_layer0__die0__program.hex",
+      "bytes": 6425,
+      "sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796"
+    },
+    {
+      "path": "dependencies/installed/source/dependency__kv_embedding_controller_contract_ff2b2fac2_README.md",
+      "bytes": 13575,
+      "sha256": "64f8357b93b38c5bb70705dc6c30f36c2da1ae8951b33aee478e89ec3a61f50a"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__ROOT_STORAGE_REVIEW.md",
+      "bytes": 5241,
+      "sha256": "1604ac5fd2e9648bf3f048f76e528473114d0ea52c7669e28ae00b956524548c"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__body.json",
+      "bytes": 58171,
+      "sha256": "f51cb382222c6f9fff9a6a0a742f70667683a63f8eb7be6d6eb3bdb9681b08a6"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__composition.json",
+      "bytes": 59580,
+      "sha256": "481388860be6b08ef0582a35f2327b93cb1d240fd3c089845f63b693cf672102"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__descriptor_cap1.json",
+      "bytes": 10162,
+      "sha256": "1271ecf3f99204e35e07cc7d93a54362241b4a5ffe7358e2bc81cdc083a0c5e1"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__lowerer_sources.json",
+      "bytes": 2023,
+      "sha256": "6a503402a36a611666754a33460f4c98380ad5241f66957fce884d04ec8573fa"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__table_join.sources",
+      "bytes": 1474,
+      "sha256": "7b8101149171864644aba4c9166e072dc8aaaed2e2c32cb4fbc25d100356d029"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__table_windows.json",
+      "bytes": 48717,
+      "sha256": "a45085d54e0211b11e8ca2879418ca8b5f8b87a83f57ce010d6108de04f24f06"
+    },
+    {
+      "path": "dependencies/installed/source/results__arch__qwen_calendar_integration_1019__witness__witness_template_packet__manifest.json",
+      "bytes": 4734,
+      "sha256": "0de94c99a8f78cae9cf23a4eb34daf65d86c65959ed6d44d3d91cd0a09dda496"
+    },
+    {
+      "path": "dependencies/installed/source/rtl__qwen_dv__qfd_dv_calendar_rom.sv",
+      "bytes": 2055,
+      "sha256": "40bcb5c65a08f295ec5be2fe9ad00ab585922e169a1f14870bf149ae2e00dfff"
+    },
+    {
+      "path": "dependencies/installed/source/rtl__qwen_dv__qfd_dv_cmd_cal_mu.sv",
+      "bytes": 32451,
+      "sha256": "846ff155dfc024d1ab74b727d5050278870cb869dca30da211535cc957638414"
+    },
+    {
+      "path": "dependencies/installed/source/rtl__qwen_dv__qfd_dv_table_rom_loader.sv",
+      "bytes": 4235,
+      "sha256": "b3d7fb3b1a1ed3e0fb76d4bd49a73f7394d8ccb7bdb42575df36855bd71de300"
+    },
+    {
+      "path": "dependencies/installed/source/rtl__qwen_dv__qfd_tt_ctlm_dv_lpf.sv",
+      "bytes": 7979,
+      "sha256": "09d4cfb51a08c701abf67a2f4319663de81f890e42ab155dbdb717a46872b68a"
+    },
+    {
+      "path": "dependencies/installed/source/rtl__qwen_dv__qfd_tt_ctlm_dv_lpf_parts.sv",
+      "bytes": 18981,
+      "sha256": "f351caf9db765adf8e19d00f539d92af88fcc269d0fd68532b65c5ba2d02cb0c"
+    },
+    {
+      "path": "dependencies/installed/source/tools__qwen_layerbench__calendar_rom_image.py",
+      "bytes": 2544,
+      "sha256": "6a751cee20d02722668be793cad05a883c4b55a1cead1c16b6f91e1833a50ec4"
+    },
+    {
+      "path": "dependencies/installed/source/tools__qwen_layerbench__emit_table_manifest.py",
+      "bytes": 9279,
+      "sha256": "a7118b4481ddaaeeca6c5080782bc336b6597062a230819cb6fd89b4d756abcb"
+    },
+    {
+      "path": "dependencies/installed/source/tools__qwen_layerbench__model_programme_integration.py",
+      "bytes": 10615,
+      "sha256": "6fed0587cbcbda97468d9abd0b445f55a269a42921da50e1fdb16d687f181500"
+    },
+    {
+      "path": "dependencies/installed/source/tools__qwen_layerbench__programme_store.py",
+      "bytes": 7223,
+      "sha256": "dc7c106ffa145507f8c7699183ba65337797f0dea35d43b0eea617bbc70813f7"
+    },
+    {
+      "path": "dependencies/installed/source/tools__qwen_layerbench__table_load_contract.py",
+      "bytes": 1975,
+      "sha256": "55a03b2309beb19eb2de0654412a49ac93e272299b70a131c1b133e50f341a3d"
+    },
+    {
+      "path": "dependencies/installed/source/tools__qwen_layerbench__table_load_windows.py",
+      "bytes": 2614,
+      "sha256": "8d153b80ab4356524a09f6330d42ef3803db08f41fc8a974351e39debf914aee"
+    },
+    {
+      "path": "dependencies/installed/sources.json",
+      "bytes": 14391,
+      "sha256": "3ef2bc9413f9176de50ba7be050e73a146d13d2c6766cf2eccc92b0fa2b742fa"
+    },
+    {
+      "path": "dependencies/native_join/CURRENT_STATE_COST.md",
+      "bytes": 3227,
+      "sha256": "1e86a8f8d17ce74ca52d9e81d3d8f6d2eb9c2e5d07d8162b440bdfe7d86ad103"
+    },
+    {
+      "path": "dependencies/native_join/FINAL_RECEIPT.json",
+      "bytes": 857,
+      "sha256": "afc1758154599b4e72adf38f6aaa2fbc1fc43709a7fc127fed93efc3dcfd2b7f"
+    },
+    {
+      "path": "dependencies/native_join/README.md",
+      "bytes": 6321,
+      "sha256": "52f24431d696494b22e63da30be131e553520e0acbe3bc47698c8a687bd77e16"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 60940,
+      "sha256": "23b4cf95682a73339423fafc4a8b1e66ce8e0865520e1211b3d9aba431580573"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/ot_qwen_tp8_token_epoch_allocator_rc.sv",
+      "bytes": 5111,
+      "sha256": "7c1e4659c84f73180b14f9eedc623bc1cb2a552f5cd1843b21308d0e44befb39"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_axi_packet_rc.sv",
+      "bytes": 9559,
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_coordinator_services_rc.sv",
+      "bytes": 6797,
+      "sha256": "21ba9443e04d932342e8d14b6da622c733b66afe242dfc8ebcf79adf5d1eea3d"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_ctl_rc.sv",
+      "bytes": 3861,
+      "sha256": "fb784c7550c4dd6c1b23d80cc3409f9192c03324069dcbb7c3b9578521caee90"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_ctl_service_pins_rc.sv",
+      "bytes": 1878,
+      "sha256": "e1e3500ea5a5ae96d69336c67cf4069e3d0ef034041ddd773405cd7f8fd85521"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_hc_station_rc.sv",
+      "bytes": 1740,
+      "sha256": "ba406b7cfcdb0d94f151f5d2a1a341498d5daec527819c19bfb1da11fe3484e3"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_if_pins_observed_rc.sv",
+      "bytes": 23587,
+      "sha256": "a252f945409697bbd84dbf008a5fd06e2f0dcabe0840b3b753b3b84041f2795f"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_lifecycle_collected_rc.sv",
+      "bytes": 10503,
+      "sha256": "0656a8a7061f93ec0f9b59a33cf85687b4b9ee806a553517c7bbd43319fd2600"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_native_owner_join_rc.sv",
+      "bytes": 10991,
+      "sha256": "21b19c6b9be842638c6f26860a131182ec7b0570ace36aa15e024e78097d4a1e"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_native_token_endpoint_cancel_rc.sv",
+      "bytes": 8474,
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_peer_coordinator_codec_rc.sv",
+      "bytes": 10960,
+      "sha256": "e3b258965e16f6db57061bbdd1efd225b1aa86f4aed488a14e9c9592b8551fa4"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_peer_rank_codec_rc.sv",
+      "bytes": 9545,
+      "sha256": "bf0450a0a2acb6adaf665a9c9108ca2de059ce13b3d73e09a35abf45a52e5a73"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/private/qkd_host_tp8_coordinator_rc.sv",
+      "bytes": 10295,
+      "sha256": "97ce0ec2b85452c74879ed97bf2986f54941da6bd782b098ec702c2e13ef6103"
+    },
+    {
+      "path": "dependencies/native_join/source_a8ddbb4c1/sources.f",
+      "bytes": 2924,
+      "sha256": "95d1553cb323590aa5f039eff6e61244ace6a98373d744d2a624c08815332162"
+    },
+    {
+      "path": "dependencies/qwen_contract/README.md",
+      "bytes": 11934,
+      "sha256": "83d912ac4977d851ea6110701607a2d4123805e6783da690f9a6b0982e5714fb"
+    },
+    {
+      "path": "dependencies/qwen_contract/actual_gen0_bindings.json",
+      "bytes": 8606,
+      "sha256": "46aaab31ff0fda61aa5ca7ea79e91652bb62864068d16896b7345e765313c090"
+    },
+    {
+      "path": "dependencies/qwen_contract/actual_gen0_connections.txt",
+      "bytes": 24560,
+      "sha256": "280a7ae07cd840de926c77e55b46defb259f80ec838a3734aac0bc551999d592"
+    },
+    {
+      "path": "dependencies/qwen_contract/analysis.json",
+      "bytes": 1813,
+      "sha256": "347528da3aeaaa83e990e68259b0656c9afde057fb345312a4f686429ebc3efb"
+    },
+    {
+      "path": "dependencies/qwen_contract/extract.py",
+      "bytes": 5972,
+      "sha256": "79ba03662d3e6696fc7f303c0ec062c7bdb0350786ba5e8355ee71132f0eaa26"
+    },
+    {
+      "path": "dependencies/qwen_contract/extraction_check.log",
+      "bytes": 154,
+      "sha256": "642d7aa8627b5f4ab474a6c61bdc236093a8db4ed07d7beec42668a169b13f08"
+    },
+    {
+      "path": "dependencies/qwen_contract/full_graph_refusal.log",
+      "bytes": 154,
+      "sha256": "642d7aa8627b5f4ab474a6c61bdc236093a8db4ed07d7beec42668a169b13f08"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/results/rtl/qwen_layer_tput_1018/compiled_L1/compute_programme/sys_face_events.json",
+      "bytes": 1788,
+      "sha256": "787345b9fc1845e9897f6200eaa5fe0ffd31f08a454ef75911bafb1d8a632d23"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_split/qfd_embedding_word_provider.sv",
+      "bytes": 4852,
+      "sha256": "f27ee51d3d0957f6fb9558efbd0688eace7d7f865aae081fda1a2eb737c931d1"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_split/qfd_native59_command_context.sv",
+      "bytes": 2426,
+      "sha256": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_split/qfd_native59_dv_service.sv",
+      "bytes": 28349,
+      "sha256": "8c40360594c677b1b416ef50dcd9e7658525e5931cae1d91dd8c8e96dc4a28bb"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_split/qfd_native59_q_export_control.sv",
+      "bytes": 647,
+      "sha256": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_split/qfd_native59_static_service.sv",
+      "bytes": 5015,
+      "sha256": "ce25ab965f10576e0c160c519ff005231cc1af6e24052a47c1051f0a7baa5002"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_split/qfd_sys_face.sv",
+      "bytes": 38605,
+      "sha256": "7e355ea683e92c351e26d786b5915c69622d13093c1d8e6c1b31353b73dc7421"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+      "bytes": 6582,
+      "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+      "bytes": 2515,
+      "sha256": "df2b4c6470ecc68a9795de30072b95185c74f977715db932d4854dddc2cd93f9"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv",
+      "bytes": 1813,
+      "sha256": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/test/qwen_split/run_sys_face_bench.sh",
+      "bytes": 5208,
+      "sha256": "40c1e5a9cbb06b0a9e9c44f94cdf251f8fc8ddc8441f7653e7531bfe82812ea4"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/rtl/test/qwen_split/sys_face_bench_events.json",
+      "bytes": 1915,
+      "sha256": "9493f34f851d62f790d86fc50992a15fa37e82412c9f8896f15adb9c35bc3320"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/0d4c9808f/tools/qwen_split/d2d_link_calendar.py",
+      "bytes": 26605,
+      "sha256": "512a30a90e146684ac92146da00bfb7a45f290bf2130b6e16480df9c6999eb6e"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/3c51edcae/rtl/qwen_split/qfd_native59_dv_service.sv",
+      "bytes": 41533,
+      "sha256": "b0921cc157a48cd02803d286e0983bad0c0fef847639d574deef1a3dc8db09ba"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/3c51edcae/rtl/qwen_split/qfd_native59_qseat_sram.sv",
+      "bytes": 2479,
+      "sha256": "b1581c092bb30c2e3b14885ef952f9e4688cd001cffc21cf2d65fa4223473b07"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/77fc3afbc/results/rtl/sysface_physical_proof_1019/README.md",
+      "bytes": 5097,
+      "sha256": "8dc42f4c05f3e4b95adb6216cf784e82bc6fdbb70c70ab466824bb18b9d39ae8"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/77fc3afbc/results/rtl/sysface_physical_proof_1019/receipts/matrix.log.gz",
+      "bytes": 880,
+      "sha256": "a71841ef880703e77f27424c828ef8bc31d3ecd4c240d80d796ed1e785b43d30"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/a29dda274/results/rtl/sysface_lp_bank_native_join_1019/README.md",
+      "bytes": 2858,
+      "sha256": "8483be15d21aee0348e594bce10465103ceb472541b939f77b496824703aaab1"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/a29dda274/results/rtl/sysface_lp_bank_native_join_1019/source_receipt.json",
+      "bytes": 12734,
+      "sha256": "b09a05558436fdbf57e3a6005ec002b71a2738d5d5a1945667822bf138021026"
+    },
+    {
+      "path": "dependencies/qwen_contract/source/a29dda274/rtl/test/qwen_split/tb_sysface_lp_bank_native_join.sv",
+      "bytes": 14603,
+      "sha256": "8c92cf7b6eb5b1410e15d3569522b25bdf986755eccbc77f4d446e9303478c35"
+    },
+    {
+      "path": "dependencies/qwen_contract/sources.json",
+      "bytes": 7245,
+      "sha256": "8b9077eaa5ac28e74e3ded26de1419e8409290aa568f5dd73cf2c114d3e2e095"
+    },
+    {
+      "path": "dependencies/seed/MANIFEST.json",
+      "bytes": 2139,
+      "sha256": "7b78a769644f70412324b59bf97b19a303346529328a87ec2c537b1f9a92c279"
+    },
+    {
+      "path": "dependencies/seed/NEXT.md",
+      "bytes": 340,
+      "sha256": "6b5c4f6761a1462d40ecc7ff2f4b8d11a3d90e12dd2175f3ae24d7d8a91e8f4f"
+    },
+    {
+      "path": "dependencies/seed/README.md",
+      "bytes": 12242,
+      "sha256": "023c58264dfccc405665e40e0d06d2401ec923914954bb75b9e2d70f338b9801"
+    },
+    {
+      "path": "dependencies/seed/model.json",
+      "bytes": 2618,
+      "sha256": "74126c51cfbcdbfb96687002348b87956f6300064ac4c2e5a9ecbfbde7642065"
+    },
+    {
+      "path": "dependencies/seed/source/5f2/rtl/physical/ot_qwen_host_ctl.sv",
+      "bytes": 3549,
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436"
+    },
+    {
+      "path": "dependencies/seed/source/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+      "bytes": 14239,
+      "sha256": "88d7c9f0f441e1827b56b5f0bb7996872073011cabbf52a38e45deac89bbb614"
+    },
+    {
+      "path": "dependencies/seed/source/5f2/rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv",
+      "bytes": 39228,
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d"
+    },
+    {
+      "path": "dependencies/seed/source/5f2/rtl/qwen_sys/host_integrated_20261014/qkd_host_native_token_endpoint_cancel.sv",
+      "bytes": 6704,
+      "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7"
+    },
+    {
+      "path": "dependencies/seed/source/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+      "bytes": 6582,
+      "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412"
+    },
+    {
+      "path": "dependencies/seed/source/selected_qkd_kvs_emb.sv",
+      "bytes": 2350,
+      "sha256": "ac6ec1ea5d5ce8cc1b08829e6f06310160ed84ffb696919aa6c59626156f728f"
+    },
+    {
+      "path": "dependencies/seed/source_manifest.json",
+      "bytes": 1347,
+      "sha256": "a4f71855cf7292700ae8c974a82dc23ab6b9561e88afc624bf743cef93166372"
+    },
+    {
+      "path": "dependencies/seed/validate.py",
+      "bytes": 2241,
+      "sha256": "4eac060258da0e7baecf243250ab918dfd879814335120f6b75c30dd58bf8bdb"
+    },
+    {
+      "path": "dependencies/seed/validation.json",
+      "bytes": 605,
+      "sha256": "bb85475baf5e512616798d8cbffa9fce8c75873738024daaa12eb930f70b21f2"
+    },
+    {
+      "path": "kv_route_extract.md",
+      "bytes": 8283,
+      "sha256": "bdad99cd1f1cd1b63ab79c84085dc8bd3e8306016520f90dbd89a3a6653649f3"
+    },
+    {
+      "path": "qwen_route_extract.md",
+      "bytes": 9135,
+      "sha256": "7beb2d2d4fee529bf8b6553ac2cb5db9555aedd5eabae8169f0083f974bb440c"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
+      "bytes": 3322,
+      "sha256": "2e2c0f603b87cc1304afddf0fa1b3573c1bac91a64615abf8fa0a3aa52123016"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv",
+      "bytes": 4176,
+      "sha256": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+      "bytes": 57647,
+      "sha256": "1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_emb.sv",
+      "bytes": 7439,
+      "sha256": "20aefbf588250017a2136f8fdf69eebd15eb9461ff714e3e2a6659b0ddd3d749"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/static_kv_20261014/qkd_kv_es_fan_root.sv",
+      "bytes": 7403,
+      "sha256": "237988d93585d41479793e112e9e090f15755e742b880314e405861c2193d652"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv",
+      "bytes": 18741,
+      "sha256": "9b4789c7a8b9d0f85641553c03a302be0586dd38607a753fb0c9e5141937040a"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+      "bytes": 17374,
+      "sha256": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv",
+      "bytes": 8997,
+      "sha256": "1a41c793567d851a95533a1b2bd8152975e93e707940faba3eb742ef32eaad65"
+    },
+    {
+      "path": "source_extra/5f2/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+      "bytes": 8617,
+      "sha256": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e"
+    },
+    {
+      "path": "source_extra/5f2/tools/qwen_kv_die/kv_static_die.py",
+      "bytes": 154631,
+      "sha256": "a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 2352,
+      "sha256": "91568156b74137ed5ecfcab1dce377f27252d48dd7c5b06addb50ca31e98dd4a"
+    }
+  ]
+}

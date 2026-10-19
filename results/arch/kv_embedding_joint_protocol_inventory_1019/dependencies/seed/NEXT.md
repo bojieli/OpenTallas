@@ -1,0 +1,1 @@
+MODEL complete; ROOT chooses explicit bootstrap/owner protocol before source. Read README.md and model.json. No RTL, programme, compile or simulation grant. Native owner, M2 and Qwen installed asset owners retain their exact source prerequisites; no terminal RESULT/HC OR/epoch+1 shortcut. Production edge/rate/physical claims remain NULL.

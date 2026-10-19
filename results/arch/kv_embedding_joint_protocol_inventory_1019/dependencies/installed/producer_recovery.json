@@ -1,0 +1,110 @@
+[
+  {
+    "path": "tools/qwen_layerbench/c_ctl_prog.py",
+    "expected": "3d8168308341eb171da1183a4e6dd84f472f4a739d793aac46b5fbab0c5ca538",
+    "actual": "3d8168308341eb171da1183a4e6dd84f472f4a739d793aac46b5fbab0c5ca538",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/ctlm_image.py",
+    "expected": "46b5958034ab46ddcef6ad13c9856a64636253aae744a6289eceb589fb0f2bc0",
+    "actual": "46b5958034ab46ddcef6ad13c9856a64636253aae744a6289eceb589fb0f2bc0",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/dv_layer.py",
+    "expected": "de3cef93879c3e2703ec977d3048702adcca96701860dd98ee06e9de383f696e",
+    "actual": "de3cef93879c3e2703ec977d3048702adcca96701860dd98ee06e9de383f696e",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/dv_layer_fixture.py",
+    "expected": "e0e7e5dcc55fbed397dd3c353294928476ae1da312b9e97609c43e033142b222",
+    "actual": "e0e7e5dcc55fbed397dd3c353294928476ae1da312b9e97609c43e033142b222",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/dv_lower.py",
+    "expected": "6703f03fb928907bad952babcf05890c41b5096ea81f81dbab7f4c01a6c800c5",
+    "actual": "6703f03fb928907bad952babcf05890c41b5096ea81f81dbab7f4c01a6c800c5",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/dv_lower_mat.py",
+    "expected": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd",
+    "actual": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/dv_lower_vec.py",
+    "expected": "3f01c9a9a217e7ab53de2dce6320f7e2cb29d86c977d53e67714065ecfc5bfff",
+    "actual": "3f01c9a9a217e7ab53de2dce6320f7e2cb29d86c977d53e67714065ecfc5bfff",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/gen_fixtures.py",
+    "expected": "74fd5396c54bc6fc2f787ff870e2e750aea1bc005c3b736d5da83aa426578d5c",
+    "actual": "74fd5396c54bc6fc2f787ff870e2e750aea1bc005c3b736d5da83aa426578d5c",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/layer_compile.py",
+    "expected": "8917d05ad07cb5c2897e21a3b1ab45d2d0bf4d3223e36fee36fac2260bb1f118",
+    "actual": "8917d05ad07cb5c2897e21a3b1ab45d2d0bf4d3223e36fee36fac2260bb1f118",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/netlist_relay_stages.py",
+    "expected": "1f4c71348d1be4083e289905b1a8408237a8d0a9ce650be2e15b81c6d6236721",
+    "actual": "1f4c71348d1be4083e289905b1a8408237a8d0a9ce650be2e15b81c6d6236721",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/qwen_tp8_layer_gold.py",
+    "expected": "5729c41dc4d1c59690f99a81daecd8ca3ce350ac6597eac58486b0388c7b4102",
+    "actual": "5729c41dc4d1c59690f99a81daecd8ca3ce350ac6597eac58486b0388c7b4102",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/slice_cut.py",
+    "expected": "557d1c359db59c6bd71f0efbd0bd6feeb8fedded2c09b7c03be2fb275c70a669",
+    "actual": "557d1c359db59c6bd71f0efbd0bd6feeb8fedded2c09b7c03be2fb275c70a669",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/slice_smoke.py",
+    "expected": "cdc9ec268e68d9c4a55006351cc70a245ad20f9364cec68ba38ebe6409772554",
+    "actual": "cdc9ec268e68d9c4a55006351cc70a245ad20f9364cec68ba38ebe6409772554",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/test_dv_layer.py",
+    "expected": "887ac7e6a719cbb6de7a567989732310230c691962c06b954a82017286456ec8",
+    "actual": "887ac7e6a719cbb6de7a567989732310230c691962c06b954a82017286456ec8",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/test_dv_lower.py",
+    "expected": "8ac2394c11fb6fadd947cec015a63a11abaec21036e328d68523fb90c28c2247",
+    "actual": "8ac2394c11fb6fadd947cec015a63a11abaec21036e328d68523fb90c28c2247",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/test_dv_lower_mat.py",
+    "expected": "bb94688b4b39ca4e601d5f4f0bd44138b1b5d91fa010ae6b8eaac3164aef0bbf",
+    "actual": "bb94688b4b39ca4e601d5f4f0bd44138b1b5d91fa010ae6b8eaac3164aef0bbf",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/test_dv_lower_vec.py",
+    "expected": "7dd6a35284f6e11aa9e5e855dd4d9d759692f07c56a76807778e8bbc65ba515b",
+    "actual": "7dd6a35284f6e11aa9e5e855dd4d9d759692f07c56a76807778e8bbc65ba515b",
+    "match": true
+  },
+  {
+    "path": "tools/qwen_layerbench/test_layer_compile.py",
+    "expected": "e2c167c371e0ffa444f75817dce05cf874111c7bf454fdfe075f8cb2bcb74ab2",
+    "actual": "e2c167c371e0ffa444f75817dce05cf874111c7bf454fdfe075f8cb2bcb74ab2",
+    "match": true
+  }
+]

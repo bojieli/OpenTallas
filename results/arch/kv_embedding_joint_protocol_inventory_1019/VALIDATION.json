@@ -1,0 +1,35 @@
+{
+  "verdict": "SOURCE_EXTRACTION_CHECKS_PASS_IMPLEMENTATION_HOLD",
+  "checks": [
+    {
+      "root": "dependencies/seed",
+      "source_hashes": 6,
+      "PASS": true
+    },
+    {
+      "root": "dependencies/controller/source/5f2",
+      "source_hashes": 25,
+      "PASS": true
+    },
+    {
+      "root": "dependencies/installed",
+      "source_hashes": 47,
+      "PASS": true
+    },
+    {
+      "root": "dependencies/qwen_contract",
+      "source_hashes": 19,
+      "PASS": true
+    },
+    {
+      "root": ".",
+      "source_hashes": 10,
+      "PASS": true
+    }
+  ],
+  "source_hash_count": 107,
+  "named_candidate_metadata_floor": 31752,
+  "engines_started": 0,
+  "production_dates": "NULL",
+  "qualification": false
+}

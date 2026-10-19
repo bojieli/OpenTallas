@@ -1,0 +1,97 @@
+{
+  "meaning": "Candidate declared metadata additions under preserve-existing-registers model; not source implementation, mapped cells, total or minimal physical cost",
+  "rows": [
+    {
+      "item": "fan root tok/ep pin and h output widened27",
+      "instances": 1,
+      "captures_each": 2,
+      "bits": 54
+    },
+    {
+      "item": "four fan stack d outputs widened27",
+      "instances": 4,
+      "captures_each": 1,
+      "bits": 108
+    },
+    {
+      "item": "PC chain c,retainedtok/ep,emboutput widened27",
+      "instances": 128,
+      "captures_each": 3,
+      "bits": 10368
+    },
+    {
+      "item": "strap pending owner and beat owner widened27",
+      "instances": 128,
+      "captures_each": 2,
+      "bits": 6912
+    },
+    {
+      "item": "return head record_q,retained,output widened27",
+      "instances": 4,
+      "captures_each": 3,
+      "bits": 324
+    },
+    {
+      "item": "return hop record_q,retained,up_q,output widened27",
+      "instances": 124,
+      "captures_each": 4,
+      "bits": 13392
+    },
+    {
+      "item": "hroot return relay RW width widened27",
+      "instances": 4,
+      "captures_each": 1,
+      "bits": 108
+    },
+    {
+      "item": "join4 fourpinowner + innerlow + wordoutput widened27",
+      "instances": 1,
+      "captures_each": 6,
+      "bits": 162
+    },
+    {
+      "item": "rowtx retainedowner and headeroutput widened27",
+      "instances": 1,
+      "captures_each": 2,
+      "bits": 54
+    },
+    {
+      "item": "Qwen actual/expected output+landing,rowlatch,preload,resident,FILL output+landing+face floors",
+      "instances": 1,
+      "captures_each": 10,
+      "bits": 270
+    }
+  ],
+  "named_boundary_floor": 31752,
+  "excluded": [
+    "NEW actual allocation outputs and PREP codec pending/output/RX/regional relay faces",
+    "all unknown intermediate PREP/expected route storage",
+    "additional fullowner native CMD/read/lastscale/result and allocationPOST lifetime",
+    "extra fault/valid/reset state and kept control copies",
+    "widened controller issue identity if controller association cannot prove in-order admitted ownership",
+    "return relay implementation storage beyond listed named cuts",
+    "fanout fixed point for old and new data/comb/tie/reset/macro drivers",
+    "four-slot ring SRAM controls/ports and any long transport required",
+    "clock/PG contacts/macro abstracts/physical timing/area/reach"
+  ],
+  "old_floor337": "overlaps some rows; never sum blindly",
+  "all_driver_source_violations": [
+    {
+      "cone": "join4valid",
+      "source_bitloads_lowerbound": 298
+    },
+    {
+      "cone": "returntransferselect",
+      "source_bitloads_lowerbound": 298
+    },
+    {
+      "cone": "rowtxslot",
+      "source_bitloads_lowerbound": 548
+    },
+    {
+      "cone": "rowtxrst_q",
+      "source_bitloads_lowerbound": 75
+    }
+  ],
+  "physical_cost": null
+}
