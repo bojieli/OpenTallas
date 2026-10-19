@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_rrl_cpad6",
+ "enable": false,
+ "reason": "Reset-only tile (as the closed hbfd_rrl_sync/hop): rst_n_in is the asynchronous clear of every flop and rst_n is flop-driven; the tile IS the 2-stage registered face landing. A flow pin register would add a release edge the die schedule does not price and delay assertion."
+}
