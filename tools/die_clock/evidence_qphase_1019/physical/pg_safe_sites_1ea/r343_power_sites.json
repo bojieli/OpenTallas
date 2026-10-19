@@ -1,0 +1,221 @@
+{
+ "schema": "opentallas.qwen.clock_power_site_model.v1",
+ "actual_m8_pitch_um": 8.64,
+ "actual_m8_edge_width_um": {
+  "VDD": [
+   4.08,
+   0.48
+  ],
+  "VSS": [
+   8.4,
+   0.48
+  ]
+ },
+ "actual_m9_stripes": {
+  "VDD": 3490,
+  "VSS": 3490
+ },
+ "actual_master_pg_bboxes_um": {
+  "BUFx24_ASAP7_75t_R": {
+   "R0": {
+    "VDD": [
+     0.0,
+     0.261,
+     1.62,
+     0.279
+    ],
+    "VSS": [
+     0.0,
+     -0.009,
+     1.62,
+     0.009
+    ]
+   },
+   "MX": {
+    "VDD": [
+     0.0,
+     -0.009,
+     1.62,
+     0.009
+    ],
+    "VSS": [
+     0.0,
+     0.261,
+     1.62,
+     0.279
+    ]
+   }
+  },
+  "BUFx12f_ASAP7_75t_R": {
+   "R0": {
+    "VDD": [
+     0.0,
+     0.261,
+     0.972,
+     0.279
+    ],
+    "VSS": [
+     0.0,
+     -0.009,
+     0.972,
+     0.009
+    ]
+   },
+   "MX": {
+    "VDD": [
+     0.0,
+     -0.009,
+     0.972,
+     0.009
+    ],
+    "VSS": [
+     0.0,
+     0.261,
+     0.972,
+     0.279
+    ]
+   }
+  }
+ },
+ "macro_halo_um": 1.08,
+ "opposite_m8_clear_um": 0.6,
+ "row_half_um": 12.0,
+ "m9_contact_margin_um": 0.3,
+ "model_only": true,
+ "power_qualified": false,
+ "timing_qualified": false,
+ "production_admitted": false,
+ "sample_32_rows": [
+  {
+   "y_um": 0.0,
+   "accepted": false
+  },
+  {
+   "y_um": 0.27,
+   "accepted": false
+  },
+  {
+   "y_um": 0.54,
+   "accepted": false
+  },
+  {
+   "y_um": 0.81,
+   "accepted": false
+  },
+  {
+   "y_um": 1.08,
+   "accepted": true
+  },
+  {
+   "y_um": 1.35,
+   "accepted": true
+  },
+  {
+   "y_um": 1.62,
+   "accepted": true
+  },
+  {
+   "y_um": 1.89,
+   "accepted": true
+  },
+  {
+   "y_um": 2.16,
+   "accepted": true
+  },
+  {
+   "y_um": 2.43,
+   "accepted": true
+  },
+  {
+   "y_um": 2.7,
+   "accepted": true
+  },
+  {
+   "y_um": 2.97,
+   "accepted": true
+  },
+  {
+   "y_um": 3.24,
+   "accepted": true
+  },
+  {
+   "y_um": 3.51,
+   "accepted": false
+  },
+  {
+   "y_um": 3.78,
+   "accepted": false
+  },
+  {
+   "y_um": 4.05,
+   "accepted": false
+  },
+  {
+   "y_um": 4.32,
+   "accepted": false
+  },
+  {
+   "y_um": 4.59,
+   "accepted": false
+  },
+  {
+   "y_um": 4.86,
+   "accepted": false
+  },
+  {
+   "y_um": 5.13,
+   "accepted": true
+  },
+  {
+   "y_um": 5.4,
+   "accepted": true
+  },
+  {
+   "y_um": 5.67,
+   "accepted": true
+  },
+  {
+   "y_um": 5.94,
+   "accepted": true
+  },
+  {
+   "y_um": 6.21,
+   "accepted": true
+  },
+  {
+   "y_um": 6.48,
+   "accepted": true
+  },
+  {
+   "y_um": 6.75,
+   "accepted": true
+  },
+  {
+   "y_um": 7.02,
+   "accepted": true
+  },
+  {
+   "y_um": 7.29,
+   "accepted": true
+  },
+  {
+   "y_um": 7.56,
+   "accepted": false
+  },
+  {
+   "y_um": 7.83,
+   "accepted": false
+  },
+  {
+   "y_um": 8.1,
+   "accepted": false
+  },
+  {
+   "y_um": 8.37,
+   "accepted": false
+  }
+ ],
+ "existing_clock_cells": 43,
+ "rejected_existing_sites": 0,
+ "rejected_examples": []
+}

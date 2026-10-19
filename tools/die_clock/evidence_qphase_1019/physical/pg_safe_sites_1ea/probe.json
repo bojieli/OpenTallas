@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.qwen.fixed_clock_row_preflight_controls.v1",
+ "controls": [
+  {
+   "clock": "dc_coll_L1",
+   "expected_accept": true,
+   "actual_accept": true,
+   "error": null,
+   "coordinates_unchanged": true,
+   "result": "{dc_coll_L1 {{740340 7420140} R0}} {{7420140 R0 728352 745416 54}} {{740340 7420140 741960 7420410}}"
+  },
+  {
+   "clock": "dc_coll_L2",
+   "expected_accept": false,
+   "actual_accept": false,
+   "error": "OT_CLOCK_ROWS: unsafe actual M8 phase dc_coll_L2/VSS",
+   "coordinates_unchanged": true,
+   "result": null
+  }
+ ],
+ "default_off": true,
+ "rows_created": false,
+ "power_qualified": false,
+ "timing_qualified": false,
+ "production_admitted": false
+}

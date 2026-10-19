@@ -1,0 +1,21 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+17:44:07 read_db /work/floorplan_ck.odb
+17:44:11 obstacles 10334 std cell sites taken 6252
+17:44:33 actual PG-safe clock site policy {"schema": "opentallas.qwen.clock_power_site_model.v1", "actual_m8_pitch_um": 8.64, "actual_m8_edge_width_um": {"VDD": [4.08, 0.48], "VSS": [8.4, 0.48]}, "actual_m9_stripes": {"VDD": 3490, "VSS": 3490}, "actual_master_pg_bboxes_um": {"BUFx24_ASAP7_75t_R": {"R0": {"VDD": [0.0, 0.261, 1.62, 0.279], "VSS": [0.0, -0.009, 1.62, 0.009]}, "MX": {"VDD": [0.0, -0.009, 1.62, 0.009], "VSS": [0.0, 0.261, 1.62, 0.279]}}, "BUFx12f_ASAP7_75t_R": {"R0": {"VDD": [0.0, 0.261, 0.972, 0.279], "VSS": [0.0, -0.009, 0.972, 0.009]}, "MX": {"VDD": [0.0, -0.009, 0.972, 0.009], "VSS": [0.0, 0.261, 0.972, 0.279]}}}, "macro_halo_um": 1.08, "opposite_m8_clear_um": 0.6, "row_half_um": 12.0, "m9_contact_margin_um": 0.3, "model_only": true, "power_qualified": false, "timing_qualified": false, "production_admitted": false}
+17:44:44 tree r343 sinks 29 {"top": "dc_r343_B13", "model_insertion_ps": 393.0, "leaves": 14, "buffers": 42, "pads": 12}
+17:44:44 root buffer dc_root_r343 drives 1 tree inputs of clk_rx/pll_r343[0]
+17:44:44 instantiated 43 cells
+17:44:45 DIE_CLOCK_GEOMETRY_DONE 43 cells; no STA/admission
