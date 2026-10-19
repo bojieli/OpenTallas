@@ -21,6 +21,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 3
+set ::ot_ce_landed_raw [dict create {ot_qfd_tt_ctlm_static_hr/ck_pm0} {ref ck_head tol 50 record results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a/signoff.sdc} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {ref ck_head tol 50 record results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a/signoff.sdc}]
 set ::ot_ce_refs [dict create {ot_qfd_tt_ctlm_static_hr/ck_head} {tt {271.5 303.1 346.6} ff {219.7 248.2 288.5} ss {357.9 394.3 445.0}} {ot_qfd_tt_ctlm_static_hr/ck_pm0} {tt {15.2 15.2 15.2} ff {16.2 16.2 16.2} ss {14.5 14.5 14.5}} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {tt {14.6 14.6 14.6} ff {15.7 15.7 15.7} ss {13.9 13.9 13.9}}]
 set ::ot_ce_counts [dict create {ot_qfd_tt_ctlm_static_hr} 1]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{pw} {dh} {kok} {kwd} {fab} {native_ret} {ss5} {ag5} {rst_n}} outputs {}} {hr} {clock ot_io_hr io_budget_ps 166.667 inputs {} outputs {{program_obs} {control_stores_ready} {layer_context_v} {native_tok} {native_pos} {command_stage} {cal_program_obs} {cal_descriptor_obs} {cal_image_ready} {dc} {native_cmd} {hr} {cmd} {emb_start} {emb_token} {cf}}}]
@@ -442,7 +443,7 @@ proc ot_ce_apply {} {
   # constraints/netlist change until rows are complete. Query the same bounded
   # boundary population once per apply/current corner, never across calls.
   set boundary_cells {}; set boundary_cells_ready 0
-  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]
+  set ot_ce_landed_hits 0; set ::ot_ce_landed_owner [dict create]; set ot_ce_landed_eff [dict create]
   # Each glue root owns a real CTS tree. Measure every propagated standard-cell
   # clock sink in the current scene; never substitute a declared/common phase.
   foreach name $::ot_ce_cts_roots {
@@ -458,6 +459,7 @@ proc ot_ce_apply {} {
         # landed cluster: a hard child on its region root, judged at its flops (entry wire + routed child insertion)
         set key "$master/[get_property $pin lib_pin_name]"
         if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }
+        if {[dict exists $::ot_ce_landed_raw $key]} { error "OT_LANDED: raw child clock pin [get_full_name $pin] reached as a register (record says no ETM arcs)" }
         set cname [get_full_name $cell]
         if {[dict exists $::ot_ce_landed_owner $cname] && [dict get $::ot_ce_landed_owner $cname] ne [dict get $::ot_ce_source_domains $name]} {
           error "OT_LANDED: hard child $cname clock pins on different region roots"
@@ -468,6 +470,7 @@ proc ot_ce_apply {} {
         puts "OT_LANDED CHILD_SINK $corner $name [get_full_name $pin] wire=$arrival R=$cmean min=[expr {$arrival + $clo}] max=[expr {$arrival + $chi}]"
         set arrival [expr {$arrival + $cmean}]
         incr ot_ce_landed_hits
+        dict set ot_ce_landed_eff "$cname/[get_property $pin lib_pin_name]" [list [get_full_name $clock] $name $arrival]
       }
       lappend arrivals $arrival
       dict set measured [get_full_name $pin] $arrival
@@ -510,6 +513,33 @@ proc ot_ce_apply {} {
     lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
     dict set seen $name 1
     puts "OT_HYBRID CTS_MEASURE $corner $name sinks=[llength $pins] reference_scope=$scope boundary_sinks=[llength $boundary] min=$lo mean=$mean max=$hi all_mean=$tree_mean"
+  }
+  # HF-4d raw SRAM clock entries of hard children: co-timed with their CTS-root pin per the leaf closed record
+  set ot_ce_raw_fail {}
+  set ot_ce_raw_diag [expr {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts && (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)}]
+  foreach cell [get_cells -quiet -hierarchical *] {
+    set master [get_property $cell ref_name]
+    if {![dict exists $::ot_ce_counts $master]} continue
+    set cname [get_full_name $cell]
+    foreach pin [get_pins -quiet -of_objects $cell] {
+      set key "$master/[get_property $pin lib_pin_name]"
+      if {![dict exists $::ot_ce_landed_raw $key]} continue
+      set refpin [dict get $::ot_ce_landed_raw $key ref]; set tol [dict get $::ot_ce_landed_raw $key tol]
+      if {![dict exists $ot_ce_landed_eff "$cname/$refpin"]} {
+        error "OT_LANDED: raw child clock pin [get_full_name $pin]: its co-timed pin $cname/$refpin was not reached from a region root"
+      }
+      lassign [dict get $ot_ce_landed_eff "$cname/$refpin"] rclock rname reff
+      set wire [ot_ce_clock_wire $pin [get_clocks $rclock]]
+      lassign [dict get $::ot_ce_refs $key $corner] rlo rmean rhi
+      set eff [expr {$wire + $rmean}]; set skew [expr {$eff - $reff}]
+      set verdict [expr {$ot_ce_raw_diag ? "PRE_CTS" : (abs($skew) <= $tol ? "PASS" : "FAIL")}]
+      puts "OT_LANDED RAW_PIN $corner $rname [get_full_name $pin] wire=$wire R=$rmean eff=$eff co_timed=$cname/$refpin eff_ref=$reff skew=[format %.1f $skew] tol=$tol $verdict"
+      if {$verdict eq "FAIL"} { lappend ot_ce_raw_fail "[get_full_name $pin] [format %.1f $skew] ps" }
+      incr ot_ce_landed_hits
+    }
+  }
+  if {[llength $ot_ce_raw_fail]} {
+    error "OT_LANDED: raw child clock pin arrival vs its co-timed CTS-root pin beyond the leaf sign-off tolerance at $corner: [join $ot_ce_raw_fail {, }]"
   }
   if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins} { error "OT_LANDED: $ot_ce_landed_hits of $::ot_ce_landed_child_pins bound hard-child clock pins reached from the region roots" }
   if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }

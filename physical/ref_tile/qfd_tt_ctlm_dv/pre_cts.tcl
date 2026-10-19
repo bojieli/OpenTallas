@@ -2,6 +2,8 @@
 set ::ot_ce_cts_roots {ck_core ck_hr}
 set ::ot_ce_landed_cluster 1
 source /src/physical/common_flow/clock_entries.tcl
+set ::ot_lrt_targets [dict create {ot_qfd_tt_ctlm_static_hr/ck_pm0} {ref ck_head tt 287.9 ff 232 ss 379.8} {ot_qfd_tt_ctlm_static_hr/ck_pm1} {ref ck_head tt 288.5 ff 232.5 ss 380.4}]
+source /src/physical/common_flow/landed_raw_tap.tcl
 source /src/physical/qwen_die_masters/repair_budget.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
 proc clock_tree_synthesis {args} {
