@@ -149,6 +149,11 @@ not price:
 |32x128_m1, legacy dense|5 credit|20480|4424 (553x8)|one clk each|199/198;9.572/9.524 perum over20.79um|
 |32x64 dualclock exact e26|10 proposed gearbox|20480|2380 (595x4)|wclk+rclk each|103/103;5.952 each over17.304um|
 
+The table's raw column means addressable bits. The actual512x128 model has
+130 physical rows x520 bit-interleaved columns including repair spares:
+67,600 bits per bank,676,000 across ten,20,640 additional paid spare bits.
+These repair contacts and area cannot be removed by tying their controls.
+
 Both existing families FAIL the6/um full-face contact rule. Their active
 contact spans are even shorter:512x128 W0.780..21.708;32x128 W0.780..19.788.
 PG contact counts are also preserved separately (512x128 S38/N39;32x128

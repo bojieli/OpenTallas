@@ -27,7 +27,9 @@ for rev,base,n,bw,bd,lw,ld in specs:
          'signal_clock_contacts_per_face':dict(contacts),'pg_contacts_per_face':dict(pg),
          'signal_contact_density_per_um':{f:c/(h if f in ('W','E') else w) for f,c in contacts.items()},
          'active_contact_spans_um':{f:[min(v),max(v)] for f,v in spans.items()},
-         'raw_bits':n*bw*bd,'logical_width':lw,'logical_depth':ld,
+         'raw_addressable_bits':n*bw*bd,
+         'physical_array_bits_including_spares':n*130*520 if bw==128 and bd==512 else n*bw*bd,
+         'logical_width':lw,'logical_depth':ld,
          'logical_bits':lw*ld if n!=10 or bw!=128 else 2*lw*ld,
          'clock_ports':re.findall(r'  PIN (\S+)\n\s+DIRECTION INPUT ;\n\s+USE CLOCK',t),
          'actual_array_escape_qualified':False}
