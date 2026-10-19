@@ -16,7 +16,10 @@
 //   +u0=<user> (default 3) +sb0=<SB> (default 0x1000): the latency user's id and compressed-row region base.
 //   +dir2=<case> +u1=<user> +sb1=<SB>: a SECOND job (user u1, its own vectors, its owned rows pre-written at sb1 in the
 //   same HBM image before job 0) runs after job 0 is checked; each job is checked vs its own golden (SVCRS job=<n> line;
-//   SVCRS_MU = both).  +trace prints every output event (root beats, SE rows, P.V words, PC requests) with its cycle
+//   SVCRS_MU = both). +start2 fixes the second launch (default 8192), never completion-driven.
+//   +static_io=1 fixes command issue and external HBM response delay for exact shift comparisons.
+//   This is a two-job component isolation gate, not full-shape native token qualification.
+//   +trace prints every output event (root beats, SE rows, P.V words, PC requests) with its cycle
 //   (SVCRS_TR <job> <cyc> ...): job 0 must be cycle-identical to the single-user run.  Mutants (+mumut=, job 1 only):
 //   1 = WIN_LOAD SB = sb0 (user 0's compressed rows), 2 = WIN_LOAD user = u0 (user 0's window ring).
 // Checks (PASS = all zero):
@@ -42,9 +45,10 @@
 `else
 `define RS_ENT_MOD dsdv_svc_rs_entry
 `define RS_SL_MOD dsdv_svc_rs
-`define RS_PRM #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST))
+`define RS_PRM #(.MUT(`MUT), .DIE_ID(DIE), .ST(ST), .SRAM_MACRO(SRAM_MACRO))
 `endif
 module tb_dsdv_svc_rs;
+    parameter bit SRAM_MACRO = 0;
     parameter integer DIE = 0;
     parameter integer ST = 0;
     parameter integer MAXCYC = 400000;
@@ -59,6 +63,7 @@ module tb_dsdv_svc_rs;
 `endif
 `include "dsdv_svc_rs_roles.svh"
     localparam integer H = 16, D = 512, NHBM = 32768, WB = 30'h100, SB = 30'h1000, WFIRST = 1000, WUSER = 3;
+    integer static_io = 0, start2 = 8192; bit j0_checked = 0;
     integer cur_user = WUSER, u1 = 4, cur_sb = SB, sb1 = SB + 30'h9000, cur_job = 0, mumut = 0, trace = 0;
     integer u0 = WUSER, sb0 = SB; reg [7:0] cur_tag = 8'h5a; reg [1023:0] dir2; bit mu = 0;
     reg ck = 0; always #0.5 ck = ~ck;
@@ -103,6 +108,12 @@ module tb_dsdv_svc_rs;
         if ($value$plusargs("u1=%d", u1)) ; if ($value$plusargs("sb1=%h", sb1)) ;
         if ($value$plusargs("mumut=%d", mumut)) ; if ($value$plusargs("trace=%d", trace)) ;
         mu = $value$plusargs("dir2=%s", dir2);
+        if ($value$plusargs("static_io=%d", static_io)) ;
+        if ($value$plusargs("tag0=%h", cur_tag)) ;
+        if ($value$plusargs("start2=%d", start2)) ;
+        if (mu && (u0 == u1 || start2 <= 40 || start2 >= MAXCYC - 40))
+            $fatal(1, "MU invalid distinct users or fixed start2");
+        $display("SVCRS_CONFIG sram_macro=%0d static_io=%0d start2=%0d", SRAM_MACRO, static_io, start2);
         // MU: the second user's owned rows go into the same HBM image first (no $urandom: job 0 sees the same sequence)
         if (mu) begin load_vec(dir2); preload(sb1); img.delete(); end
         load_vec(dir);
@@ -311,7 +322,7 @@ module tb_dsdv_svc_rs;
         integer hh;
         hwx[0] <= 0; hwx[1] <= 0;
         for (hh = 0; hh < 2; hh = hh + 1) begin h_cred[hh] = h_cred[hh] + hcx[hh][0]; h_ack = h_ack + hcx[hh][8:1]; end
-        if (rst && cyc > 30 && ($urandom % 4) == 0) begin
+        if (rst && cyc > 30 && (static_io != 0 ? (cyc % 4 == 0) : (($urandom % 4) == 0))) begin
             if (h_sent < NHW) begin
                 hh = (pcmap(h_adr[h_sent][29:0]) >= 5'd16) ? 1 : 0;
                 if (h_cred[hh] > 0) begin
@@ -345,7 +356,7 @@ module tb_dsdv_svc_rs;
         for (pc = 0; pc < 32; pc = pc + 1) begin
             sd = pc / 2; pp = pc % 2;
             if (rq[sd][341*pp]) begin
-                pq_t[pc][(pq_h[pc] + pq_n[pc]) % PQ] = cyc + lat + ($urandom % 16);
+                pq_t[pc][(pq_h[pc] + pq_n[pc]) % PQ] = cyc + lat + (static_io != 0 ? 0 : ($urandom % 16));
                 pq_w[pc][(pq_h[pc] + pq_n[pc]) % PQ] = rq[sd][341*pp +: 341];
                 pq_n[pc] = pq_n[pc] + 1;
                 if (pq_n[pc] > 8) cred_err = cred_err + 1;
@@ -394,7 +405,7 @@ module tb_dsdv_svc_rs;
         q_v <= 0;
         if (rst && cyc > q_cyc && qi < nq) begin
             if (qi < nq_go) begin
-                if (($urandom % 8) != 0) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; if (qi == nq_go) t_pre = cyc; end
+                if (static_io != 0 || ($urandom % 8) != 0) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; if (qi == nq_go) t_pre = cyc; end
             end else if (qi == nq_go) begin
                 if (cyc >= t_pre + GODLY) begin q_v <= 1; q_d <= qw[qi]; qi = qi + 1; go_cyc = cyc; end
             end else if (cyc >= go_cyc + pvs_c) begin
@@ -467,7 +478,7 @@ module tb_dsdv_svc_rs;
                 end
             end
         end
-        if ((n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
+        if ((!j0_checked && n_done_x[0] > 0 && n_done_x[1] > 0 && cyc > end_cyc + 300) || cyc >= MAXCYC) begin
             integer bad_se, bad_pv, bad_w, nown, st_bad; reg [15:0] fl; reg [31:0] fc0; bit jpass;
             bad_se = 0; bad_pv = 0; bad_w = 0; nown = 0; fl = 0; fc0 = 0;
             for (s = 0; s < 16; s = s + 1) begin
@@ -498,17 +509,25 @@ module tb_dsdv_svc_rs;
                     !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 && h_err == 0 && cred_err == 0 && st_bad == 0 && cyc < MAXCYC;
             if (mu) $display("SVCRS_JOB job=%0d user=%0d sb=%08x wb=%08x mumut=%0d T=%0d sc_checked=%0d sc_errors=%0d se_errors=%0d pv_checked=%0d pv_errors=%0d slice_faults=%04x verdict=%s",
                 cur_job, cur_user, cur_sb, WB, mumut, T, sc_chk, sc_err, se_err, pv_chk, pv_err, fl, jpass ? "PASS" : "FAIL");
-            if (mu && cur_job == 0 && cyc < MAXCYC) begin j0_pass = jpass; next_job(); end
+            if (mu && cur_job == 0 && cyc < MAXCYC) begin j0_pass = jpass; j0_checked = 1; end
             else begin
                 if (mu) $display("SVCRS_MU users=%0d,%0d job0=%s job1=%s verdict=%s", u0, u1, j0_pass ? "PASS" : "FAIL",
                     (cur_job == 1 && jpass) ? "PASS" : "FAIL", (j0_pass && cur_job == 1 && jpass) ? "PASS" : "FAIL");
                 $finish;
             end
         end
+        // Fixed compiled launch: completion is checked but cannot move this boundary.
+        if (mu && cur_job == 0 && cyc == start2) begin
+            if (!j0_checked || !j0_pass) $fatal(1, "MU job0 missed fixed boundary");
+            for (k = 0; k < 32; k = k + 1)
+                if (pq_n[k] != 0 || pq_b[k] != 0) $fatal(1, "MU HBM not drained at fixed boundary");
+            next_job();
+        end
     end
     // MU-S81/SVC: the second job (user u1, vectors dir2, owned rows at sb1): reload the golden, reset the checkers, re-arm
     task automatic next_job();
         img.delete(); load_vec(dir2);
+        j0_checked = 0;
         cur_job = 1; cur_user = u1; cur_sb = sb1; cur_tag = 8'h5b;
         qi = 0; nq = 0; nq_go = 0; nq_pv = 0; nframes = 0; last_hdr = 0; t_pre = -1;
         rt_beats = 0; sc_err = 0; sc_chk = 0; ord_err = 0; se_err = 0; se_chk = 0; pv_err = 0; pv_chk = 0;
@@ -516,7 +535,7 @@ module tb_dsdv_svc_rs;
         n_done_x[0] = 0; n_done_x[1] = 0; pv_first = -1; pv_last = -1; pv_gap = 0; pv_other = 0; pv_n = 0;
         for (i = 0; i < 16; i = i + 1) begin se_rows[i] = 0; pv_words[i] = 0; wrows[i] = 0; end
         build_frames();
-        j_cyc = cyc + 8; q_cyc = cyc + 40;
+        j_cyc = start2 + 8; q_cyc = start2 + 40;
     endtask
     // +trace: every output event with its cycle (job 0 of a MU run must equal the single-user run line for line)
     always @(posedge ck) if (trace != 0) begin
