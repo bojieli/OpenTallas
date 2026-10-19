@@ -2,7 +2,7 @@
 def model():
     return dict(schema="opentallas.hbm-svg-regional-return.v1", opt_in_default=False,
       shape=dict(banks=8,pairs=4,pair_banks=[[j,j+4] for j in range(4)],payload_bits=256,
-        pair_region_um=[224.64,362.88],region_grid=[2,2],cache_root_regions=1),
+        pair_region_um=[432.0,259.2],region_grid=[2,2],cache_root_regions=1),
       clocks=dict(source_roots=4,forwarded_return_roots=4,cache_roots=1,physical_stream_trees=9,logical_stream_domains=5,
         roots_per_landing_pair=["HBM", "pair_stream", "forwarded_cache_phase"],frequency_relation="same fixed frequency, matched phase; separate physical roots",
         reset="two registered release stages/root, balanced common assertion and release",
@@ -29,7 +29,7 @@ def model():
           pair_to_return_hold_launch_after_capture=[20,25,30,35],
           return_to_cache_setup=[824,819,814,809],return_to_cache_hold_launch_after_capture=[10,15,20,25],
           same_root_setup=834,same_root_hold_launch_after_capture=0),
-        clock_rule="capture phase <= launch phase for every cross-root data path; aligned phase uses next-edge setup; no four-slot multicycle borrowing")),
+        clock_rule="capture phase <= launch phase for every cross-root data path; aligned phase uses next-edge setup; no four-slot multicycle borrowing"),
       cache_metadata=dict(storage="actual four-slot ring",bits_per_word=4,storage_bits=16,
         latency_edges=3,fields="ordinal3 + valid1; selector control has at most two register stages"),
       functional_register_bits=dict(per_pair_native=768,cache_rotator=3072,
