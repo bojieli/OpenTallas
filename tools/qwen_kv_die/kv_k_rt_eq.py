@@ -112,3 +112,52 @@ def equalize_vport_sides(K, m):
                           'tools/qwen_kv_die/kv_k_rt_eq.py equalize_vport_sides)')
     m['vport_side_eq'].update(natural=nat, RT={n_[2:]: v['RT'] for n_, v in nat.items()})
     return m
+
+
+# KV-PVFST 10-19 (MU-DIE-KV fail class: static schedule PVFIN_START_ALIGN = -1): qkd_pv_fin_s takes its start word on
+# ks_pvfst (kvs_attn.pvfst -> pvfin.fs, 65 b) and the pair result trunks on ks_pvp<p> (pvw_p.pr -> pvfin.p<p>); its slot
+# ages assume the start lands exactly when the pair streams do:  D(ks_pvfst) - PV_LEAD - D(ks_pvp_p) == 0
+# (kv_static_params.schedule pvfin_start_align, PV_LEAD = max D(ks_pvst) to pvw_0 / pvw_1).  Not boot-programmable
+# (KV-BOOTAGE): the generator pads the start word up to the stream -- pads = max(0, -min_p align_p) core-clock relay
+# stations on ks_pvfst at its sink end (kv_bundle_eq machinery: the launch pin's clock trunk, every hop within reach,
+# legal free frames; kv_fwd_lanes / kv_lane_stations then give them their lane roles like every other pad).  A start word
+# that is LATER than the streams (align > 0) is not padded here (it would pad the 534-b pvp trunks): it stays a recorded
+# PVFIN_START_ALIGN FAIL.  Every consumer of D(ks_pvfst) (F_DLY, the hub's FR_OFS, the boot-age image) reads the padded
+# relay_stages / the post-station netlist table, never a constant.
+def pvfin_align_on():
+    return os.environ.get('OT_KV_PVFIN_ALIGN', '1') == '1'
+
+
+def pvfin_pads(paths):
+    """{path key: age} (kv_static_params.plan_paths / table_paths) -> (pads on ks_pvfst, align per pair before)"""
+    import kv_static_params as KSP
+    al = KSP.schedule(paths)['attn']['pvfin_start_align']
+    if None in al:
+        return None, al
+    return max(0, -min(al)), al
+
+
+def equalize_pvfin_start(K, m):
+    import kv_static_params as KSP
+    by = {i.name: i for i in m['insts']}
+    if not all(x in by for x in ('kvs_attn', 'pvfin', 'pvw_0', 'pvw_1')):
+        return m
+    pads, before = pvfin_pads(KSP.plan_paths(m))
+    if pads is None:
+        raise ValueError(f'kv_pvfin_align: unresolved pvfin start path (align {before}): fail closed')
+    rec = dict(before=before, pads=pads)
+
+    def plan_fn(name, stages, walk):
+        (mem, q), = stages.items()
+        rec['pvfst_walk'] = q
+        return {mem: pads}
+    if pads:
+        m = BEQ.equalize(K, m, bundles={'PV.fin_start': [('kvs_attn', 'pvfst', 'pvfin')]}, plan_fn=plan_fn,
+                         record_key='pvfin_align',
+                         rule='pvfin start aligned: D(ks_pvfst) - PV_LEAD == D(ks_pvp_p); the start word padded at its '
+                              'sink end (tools/qwen_kv_die/kv_k_rt_eq.py equalize_pvfin_start)')
+    else:
+        m['pvfin_align'] = dict(bundles={}, added=[])
+    after = KSP.schedule(KSP.plan_paths(m))['attn']['pvfin_start_align']
+    m['pvfin_align'].update(before=before, pads=pads, after=after, pvfst_walk=rec.get('pvfst_walk'))
+    return m

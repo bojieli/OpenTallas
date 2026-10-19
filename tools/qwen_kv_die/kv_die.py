@@ -1672,6 +1672,11 @@ def build(*args, **kwargs):
         r_ = m['vport_side_eq']
         print(f"kv die VPORT_SIDE_EQ: RT {sorted(set(r_['RT'].values()))} (tile {KSD.tile_ages()['VPORT_RT']}), "
               f"{len(r_['added'])} pad relays", file=sys.stderr)
+    if KSD.ON and KSD.PVFIN and kv_k_rt_eq.pvfin_align_on() and kwargs.get('split', len(args) > 7 and args[7]):
+        m = kv_k_rt_eq.equalize_pvfin_start(sys.modules[__name__], m)     # KV-PVFST: pvfin start word on the PV streams
+        r_ = m.get('pvfin_align') or {}
+        print(f"kv die PVFIN_ALIGN: align {r_.get('before')} -> {r_.get('after')}, {r_.get('pads', 0)} pad relays on ks_pvfst",
+              file=sys.stderr)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '

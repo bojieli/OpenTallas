@@ -78,6 +78,28 @@ def test_pvfin_start_misaligned_fails():
     assert got == ['PVFIN_START_ALIGN']
 
 
+def test_pvfst_pad_aligns_pvfin_start():
+    """KV-PVFST: the generator pads ks_pvfst by -min(align) (kv_k_rt_eq.pvfin_pads); the padded die derives align 0"""
+    import kv_k_rt_eq as KRT
+    p = paths(pvfst=8, fin=11)                 # the MU-DIE-KV GEN shape: start word one edge early
+    n, before = KRT.pvfin_pads(p)
+    assert (n, before) == (1, [-1, -1])
+    p['pvfst'] += n                            # what equalize_pvfin_start adds to relay_stages['ks_pvfst']
+    assert KSP.schedule(p)['attn']['pvfin_start_align'] == [0, 0]
+    assert 'PVFIN_START_ALIGN' not in ids(p)
+    # the KVR-DERIVE base numbers: PV_LEAD 37 (pair 0), pvp 4, pvfst 40 -> one pad, align 0; F_DLY follows (1 + 4 + fin)
+    q = paths(pvst_0=37, pvst_1=0, pvp_0=4, pvp_1=4, pvfst=40, fin=45)
+    n, before = KRT.pvfin_pads(q)
+    assert (n, before) == (1, [-1, -1])
+    q['pvfst'] += n
+    s = KSP.schedule(q)['attn']
+    assert s['pvfin_start_align'] == [0, 0] and s['F_DLY'] == 1 + 4 + 45
+    # mutant: no pad -> FAIL; a late start word (align > 0) is never padded on pvfst (recorded FAIL)
+    assert 'PVFIN_START_ALIGN' in ids(paths(pvfst=8, fin=11))
+    assert KRT.pvfin_pads(paths(pvfst=10, fin=9)) == (0, [1, 1])
+    assert KRT.pvfin_pads(paths(pvp_0=None))[0] is None
+
+
 def test_f_dly_fails():
     assert ids(paths(fin=11)) == ['F_DLY']
 
