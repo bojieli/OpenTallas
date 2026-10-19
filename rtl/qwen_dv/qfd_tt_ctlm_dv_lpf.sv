@@ -32,8 +32,8 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter integer PIDX_STRIDE = 128,         // = DV_PIDX_STRIDE
     parameter integer UTAG_LSB = 6,              // = DV_UTAG_LSB
     parameter integer OPSEG = 0,                 // MU-QW-DIE 10-19: 1 = op-start leaf + boot context (Qwen ROM 4 users)
-    parameter string  OPSEG_VIAMAP = "",
-    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
+    parameter OPSEG_VIAMAP = ""       ,
+    parameter OPSEG_INST = "qfd_tt_ctlm_opseg"         
 ) (
     input  wire          ck,
     input  wire          rst_n,

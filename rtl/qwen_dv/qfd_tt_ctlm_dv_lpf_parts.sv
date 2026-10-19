@@ -28,8 +28,8 @@ module qfd_tt_ctlm_dv_gi #(
     parameter integer PIDX_STRIDE = 128,
     parameter integer UTAG_LSB = 6,
     parameter integer OPSEG = 0,
-    parameter string  OPSEG_VIAMAP = "",
-    parameter string  OPSEG_INST = "qfd_tt_ctlm_opseg"
+    parameter OPSEG_VIAMAP = ""       ,
+    parameter OPSEG_INST = "qfd_tt_ctlm_opseg"         
 ) (
     input  wire          ck,
     input  wire          rst_n,
