@@ -147,6 +147,7 @@ module qfd_tt_ctlm_dv #(
     parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
     parameter integer OPSEG = 0,
     parameter integer OPSEG_EXPANDED = 0,
+    parameter integer OPSEG_PINREG = 0,
     parameter OPSEG_VIAMAP1 = "", OPSEG_VIAMAP2 = "",
     parameter OPSEG_INST1 = "qfd_tt_ctlm_opseg_b1", OPSEG_INST2 = "qfd_tt_ctlm_opseg_b2",
     parameter string  OPSEG_VIAMAP = "",
@@ -228,7 +229,7 @@ module qfd_tt_ctlm_dv #(
     wire        l_v, l_ff; wire [1:0] l_u2; wire [5:0] l_stage; wire [9:0] l_first, l_cnt; wire [3:0] l_fcode;
     wire        l_fault;
     generate if (OPS != 0) begin : g_op
-        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .EXPANDED(OPSEG_EXPANDED), .VIAMAP1(OPSEG_VIAMAP1), .VIAMAP2(OPSEG_VIAMAP2), .INSTANCE1(OPSEG_INST1), .INSTANCE2(OPSEG_INST2), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP),
+        qfd_sys_face_mu_dhuser #(.NU(NU), .OPSEG(1), .EXPANDED(OPSEG_EXPANDED), .PINREG(OPSEG_PINREG), .VIAMAP1(OPSEG_VIAMAP1), .VIAMAP2(OPSEG_VIAMAP2), .INSTANCE1(OPSEG_INST1), .INSTANCE2(OPSEG_INST2), .LAST_STAGE(LAST_STAGE), .VIAMAP(OPSEG_VIAMAP),
             .INSTANCE(OPSEG_INST), .MUT((MUT >= 24 && MUT <= 26) ? MUT - 20 : 0)) u_leaf (.ck(ck), .rst_n(rst_n),
             .dh_run(dh_q[43:0]), .dh_user(), .res_user(), .mu_fault(l_fault), .op_v(l_v), .op_user(l_u2),
             .op_stage(l_stage), .op_first(l_first), .op_cnt(l_cnt), .op_ff(l_ff), .op_fcode(l_fcode));

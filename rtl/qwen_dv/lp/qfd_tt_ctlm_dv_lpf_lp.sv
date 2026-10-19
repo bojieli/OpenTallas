@@ -18,6 +18,7 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     parameter integer INIT_U0 = 0, INIT_FIRST = -1, INIT_CNT = 0,
     parameter integer OPSEG = 0,
     parameter integer OPSEG_EXPANDED = 0,
+    parameter integer OPSEG_PINREG = 0,
     parameter OPSEG_VIAMAP1 = "", OPSEG_VIAMAP2 = "",
     parameter OPSEG_INST1 = "qfd_tt_ctlm_opseg_b1", OPSEG_INST2 = "qfd_tt_ctlm_opseg_b2",                 
     parameter OPSEG_VIAMAP = ""       ,
@@ -222,7 +223,7 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     wire lpr_c_u_thru;  ot_pl_pad #(.W(1), .N(6)) u_lprc_u_thru (.ck(ck_hr), .d(lpr_hr), .q(lpr_c_u_thru));   // t(u_thru) = 6
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
-        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST)) u_gi (.ck(ck_core), .rst_n(lpr_c_u_gi), .dh(dh__l_core), .dh_user(dh_user__l_core), .ctx_x(ctx_x__l_core), .init_u0(init_u0__l_core), .mu_fault(mu_fault__l_core), .ss5(ss5__l_core), .ag5(ag5__l_core), .fab(fab__l_core), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs), .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start), .s_stage(s_stage), .st(st), .hu(hu), .fctx(fctx), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows), .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));   // region core, t = 3
+        .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_PINREG(OPSEG_PINREG), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST)) u_gi (.ck(ck_core), .rst_n(lpr_c_u_gi), .dh(dh__l_core), .dh_user(dh_user__l_core), .ctx_x(ctx_x__l_core), .init_u0(init_u0__l_core), .mu_fault(mu_fault__l_core), .ss5(ss5__l_core), .ag5(ag5__l_core), .fab(fab__l_core), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs), .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start), .s_stage(s_stage), .st(st), .hu(hu), .fctx(fctx), .su_obs_o(su_obs), .su_acc_o(su_acc), .x_oprog(x_oprog), .x_orows(x_orows), .x_oidle(x_oidle), .rom_ret_v(rom_ret_v), .dcs(dcs));   // region core, t = 3
     ot_qfd_tt_ctlm_static_hr
 `ifndef SYNTHESIS
     #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0))
