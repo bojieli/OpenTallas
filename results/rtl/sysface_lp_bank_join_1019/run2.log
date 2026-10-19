@@ -1,0 +1,6 @@
+LP_CTX offer1200 bank_sample1206 age6
+LP_INIT input_sample1666 bank_sample1670 age4
+LP_GI_EMB publication1732 age66
+[17585000] %Fatal: tb_sysface_lp_bank_join.sv:40: Assertion failed in tb_sysface_lp_bank_join.check: LP_BANK_FAIL MUT2 cycle1734 output LP EMB publication age69
+%Error: /srv/opentallas-scratch/claude/sysface-lp-bank-join-r2-1019/rtl/test/qwen_split/tb_sysface_lp_bank_join.sv:40: Verilog $stop
+Aborting...

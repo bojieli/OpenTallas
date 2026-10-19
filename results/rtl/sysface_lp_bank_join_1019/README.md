@@ -1,0 +1,7 @@
+Actual LP bank/publication component join
+
+Source-pinned actual host receiver and qualified accepted identity feed real generated-LP input landings D4/K2 and the actual three-ROM GI. The user0 pending row model promotes only on registered selected INIT bank load; filler publication uses the actual ctx_ld bank mask. Actual output landings carry embedding start/token/user back from core to HR. Functional regional clocks are tied, with exact generated reset endpoint depths; this is a component path cut excluding HR/ME arithmetic and the native provider.
+
+The1907check positive passes, and four causal mutants fail. Sampled accepted offer1200 reaches actual fillerbank1206 (+6). External INIT input sample1666 reaches selected user0bank1670 (+4), rawGI embedding publication1732 (+66), externalLP embedding publication1735 (+69), and provider command sample1736 (+70). User0 token777/user0/epoch048c match and pending promotion precedes consumption. The output LP adds three edges beyond the earlier rawGI-only estimate.
+
+Publication uses init_u0_q && d_start && d_stage0 && s_user0. Generic s_start also covers filler c_seg and is insufficient. Filler mask is {ctx_mask,0}; no feedback/wait/load acknowledgment selects a slot. Existing public programme fixture is not the fresh CALR10/typed-companion assembly; those new source profiles require their own joined witness. All production absolute samples/FIRST and physical phase remain unbound.

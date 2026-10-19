@@ -1,0 +1,5 @@
+LP_CTX offer1200 bank_sample1206 age6
+LP_INIT input_sample1666 bank_sample1670 age4
+[16945000] %Fatal: tb_sysface_lp_bank_join.sv:40: Assertion failed in tb_sysface_lp_bank_join.check: LP_BANK_FAIL MUT4 cycle1670 receiver/observer/ledger/GI remain fault-free
+%Error: /srv/opentallas-scratch/claude/sysface-lp-bank-join-r2-1019/rtl/test/qwen_split/tb_sysface_lp_bank_join.sv:40: Verilog $stop
+Aborting...

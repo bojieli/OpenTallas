@@ -1,0 +1,33 @@
+{
+  "source": "7abc51ffe",
+  "status": "PASS scoped component",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-3288192-1792432908",
+  "remote": "/srv/opentallas-scratch/claude/sysface-lp-bank-join-r2-1019/out",
+  "checks": 1907,
+  "mutants": {
+    "1": "bypass context LP",
+    "2": "wrong output landing age",
+    "3": "misaligned unlanded INIT",
+    "4": "wrong bank publication mask"
+  },
+  "edge_ledger": {
+    "definitions": "input/command/bank = synchronous sample; publication = post-edge output value",
+    "accepted_offer_to_actual_bank_sample": 6,
+    "external_INIT_sample_to_actual_user0_bank_sample": 4,
+    "external_INIT_sample_to_raw_GI_EMB_publication": 66,
+    "external_INIT_sample_to_external_LP_EMB_publication": 69,
+    "external_INIT_sample_to_provider_command_sample": 70
+  },
+  "INIT_publication_predicate": "dut.init_u0_q && dut.d_start && dut.d_stage == 0 && dut.s_user == 0",
+  "filler_publication_predicate": "dut.ctx_ld && dut.ctx_mask != 0, ledger mask={ctx_mask,0}",
+  "generated_LP_source_sha256": "3c89201569155f1c83a5202a033030e596b3f0b28650bc2e5c1ebf36c50ae3c4",
+  "generated_LP_source_commit": "9ca1bc85c generated emb_identity/lp; tracked rtl/qwen_dv/lp wrapper is stale and was not used",
+  "scope": [
+    "Actual receiver and qualified identity candidate, real D4/K2 input/output LP primitives and exact three-ROM GI source c11f8ddb0",
+    "Same source/destination reset-depth bindings; functional regional clocks tied",
+    "Head/ME/nativeprovider excluded; release1850 diagnostic only",
+    "Old public programme fixture, not new CALR10 typed-companion assembly",
+    "No production phase/FIRST/cap1-SYSFACE/ABI/physical timing adoption"
+  ]
+}

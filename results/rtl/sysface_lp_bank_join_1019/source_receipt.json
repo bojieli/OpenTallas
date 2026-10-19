@@ -1,0 +1,28 @@
+{
+  "ctlm_source": "c11f8ddb0",
+  "probe_source": "7abc51ffe",
+  "source_sha256": {
+    "results/rtl/mu_qwen_1018/admission/F16_P2/dw.hex": "5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/context_binding.json": "a416b8a914aac4a7f8ea2e9711b87609b5c6201017d862ac90733968d8a8be78",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg.viamap.hex": "f5fb45d27cc8b7adea76f03fb2d0ae601799b44897e7a09bcea0b38a0bf4b091",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b1.viamap.hex": "02ff216763db7c5a6ae9dbbe49c11e0edc95b52963a8d856324c9b42f698ea6f",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b2.viamap.hex": "ba07f5d4d5b7b4c7633efc66bf0ac295e70b95124db1ba4028f5bc4fb0a064a2",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/pw.hex": "84bba13453c3547be994e66ee3488468c0b82e8d2a8d840cd327e473a0a20216",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/paired_frame.json.gz": "faae381db705e4fb8976972e143037e8f1d89a5e0761c65b84f6fa9c5bc3e614",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/expected.txt": "0292762eeadb18820c938af08cea74381ff78e78966f37e72523f5a1fcc3e369",
+    "results/rtl/mu_qwen_1018/admission/F16_P2/admission.json": "d8fd9760444a38cbdf174eb2b39078aa5be22279a8eee5a908d3d2c007cbb886",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv": "754c9b8c0cf2cfb5ae36e9d3d12f8d19c933d99076c0393cc7e02afa58ca5364",
+    "rtl/qwen_dv/qfd_mu_context_guard.sv": "c10920e0fc918c6c100b1b9d93fe7b48473cbe8173091af75d4b5b35d12bf1ea",
+    "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv": "94d0f34c29260687db22b252b38a3e7df3710c394c1570501d5b0a24c379b402",
+    "rtl/common/landed_parent/ot_pl_land.sv": "ff7fc347796bec2d1cfd0c9bbc32661d26347fb576347fcb34acb2bdd17d7055",
+    "rtl/test/qwen_split/run_sysface_lp_bank_join.sh": "deaf9d4799c1aa01afb7cf8d899aa541d84c001a4756cb5f1e6a84dac0403c0e",
+    "rtl/test/qwen_split/tb_sysface_lp_bank_join.sv": "aeb172d90fed1458987f972c4d89cf7f942fb871943340e1203448616dbe5cd4",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv": "94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f",
+    "rtl/qwen_sys/mu_embedding_20261019/qfd_mu_embedding_cold_epoch_model.sv": "15a5bd582962622ee371731df9bb483e0bba0a127bf61433e7382e545e901985",
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_identity.sv": "8771ccc949e277702753a296f8704ae22fd9e075a9f81cf60dc42fdf598ef75a",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv": "938747fafef027b58ebf9c04e8a5a23b565f0d05291573c46324cb57df5a25dc"
+  }
+}
