@@ -19,6 +19,11 @@
 //     (CTS probe launch 286).  carry_write / rx_slot are split per ring direction (carry_write0/rx_slot0 = cw at the NW
 //     corner beside cw_i's kind bits, carry_write1/rx_slot1 = ccw at the NE corner) -- n1 capture 254 was rx_slot on
 //     the S face -> carry flop on the N face.  Same values, same edges as n1 (port split only; the stop _n is unchanged).
+//   r5 (10-18): acc_rr (lane rr read data) is pin-flopped (acc_rr_q): r4 probe capture acc_rr 201 ps = acc_rr pin -> 4 mux
+//     levels of the closed core -> rr_d.  The rr-read group (state_read_rr, state_rr_tag) gets LEAD 2 like the tx-read group:
+//     its pin flop drives the lanes one edge early (cmd_read_rr_o/cmd_rr_tag_o from the raw pin), acc_rr_q re-aligns the data,
+//     so rr_d is unchanged in value and edge.  Legality: no acc write of the rr tag at the lane read edge (rr_local-3) ->
+//     fault check hz_rr.  carry_write0's ring-bit inputs: rx_slot0 moves to the W face beside cw_i[278:273] (kit only).
 //   * av (add lanes' valid_out) is pin-flopped; its check moves one edge later; fault is an output flop (+1 edge);
 //   * rst_n drives only ot_rst_relay (release +3 edges); rn_o resets the add lanes with the same release.
 // Ring ports cw_i/ccw_i/cw_o/ccw_o, lp_data, rr_*, ag_* keep their v1 absolute timing (hop = 2 edges).
@@ -26,7 +31,7 @@
 module ot_hgi_coll_ring_ag_ctln #(
     parameter integer NT=8, LAT=8, AG=1,
     parameter integer MUT_TAG=0, MUT_TTL=0, MUT_SRC=0,
-    parameter integer MUT_TXLEAD=0, MUT_CW=0, MUT_HZ=0
+    parameter integer MUT_TXLEAD=0, MUT_CW=0, MUT_HZ=0, MUT_RRLEAD=0
 )(
     input wire clk, rst_n,
     input wire [1:0] qid,
@@ -84,7 +89,9 @@ module ot_hgi_coll_ring_ag_ctln #(
     // ---- pin flops (pure; no reset: every one is qualified downstream by the reset control state) ----
     (* keep = "true" *) reg [1:0] qid_q;
     (* keep = "true" *) reg lp_we_q; (* keep = "true" *) reg [2:0] lp_tag_q;
-    (* keep = "true" *) reg rd_add_q, rd_rr_q; (* keep = "true" *) reg [2:0] add_tag_rq, rr_tag_rq;
+    (* keep = "true" *) reg rd_add_q; (* keep = "true" *) reg [2:0] add_tag_rq;
+    (* keep = "true" *) reg rd_rr_l; (* keep = "true" *) reg [2:0] rr_tag_l;                                 // rr lane frame (lead 2)
+    reg rd_rr_q; reg [2:0] rr_tag_rq;                                                                          // core frame
     (* keep = "true" *) reg [1:0] add_src_rq; (* keep = "true" *) reg add_rhs_rq;
     (* keep = "true" *) reg rd_tx_l; (* keep = "true" *) reg [2:0] tx_tag_l; (* keep = "true" *) reg tx_acc_l; // lane frame (lead 2)
     reg rd_tx_q; reg [2:0] tx_tag_rq; reg tx_acc_rq;                                                            // core frame
@@ -95,11 +102,13 @@ module ot_hgi_coll_ring_ag_ctln #(
     (* keep = "true" *) reg [1:0] rx_q; (* keep = "true" *) reg [3:0] kind_q, src_q; (* keep = "true" *) reg [5:0] rxtag_q;
     (* keep = "true" *) reg rrl_q; (* keep = "true" *) reg [2:0] rrlt_q;
     (* keep = "true" *) reg [255:0] st_q;
+    (* keep = "true" *) reg [255:0] acc_rr_q;
     (* keep = "true" *) reg [7:0] av_q;
     always @(posedge clk) begin
         qid_q<=qid;
         lp_we_q<=lp_we;lp_tag_q<=lp_tag;
-        rd_add_q<=state_read_add;rd_rr_q<=state_read_rr;add_tag_rq<=state_add_tag;rr_tag_rq<=state_rr_tag;
+        rd_add_q<=state_read_add;add_tag_rq<=state_add_tag;
+        rd_rr_l<=state_read_rr;rr_tag_l<=state_rr_tag;rd_rr_q<=rd_rr_l;rr_tag_rq<=rr_tag_l;
         add_src_rq<=state_add_src;add_rhs_rq<=state_add_rhs_acc;
         rd_tx_l<=state_read_tx;tx_tag_l<=state_tx_tag;tx_acc_l<=state_tx_acc;
         rd_tx_q<=rd_tx_l;tx_tag_rq<=tx_tag_l;tx_acc_rq<=tx_acc_l;
@@ -108,10 +117,13 @@ module ot_hgi_coll_ring_ag_ctln #(
         rx_q<={rx_slot1,rx_slot0};kind_q<=rx_kind;src_q<=rx_src;rxtag_q<=rx_tag;
         rrl_q<=rr_local;rrlt_q<=rr_local_tag;
         st_q<=state_tx;
+        acc_rr_q<=acc_rr;
         av_q<=av;
         // dedicated output copies: lane commands (lane frame), ring pin words, carry write (one edge ahead)
         cmd_lp_we_o<=lp_we;cmd_lp_tag_o<=lp_tag;
-        cmd_read_add_o<=state_read_add;cmd_read_rr_o<=state_read_rr;cmd_add_tag_o<=state_add_tag;cmd_rr_tag_o<=state_rr_tag;
+        cmd_read_add_o<=state_read_add;cmd_add_tag_o<=state_add_tag;
+        if(MUT_RRLEAD!=0)begin cmd_read_rr_o<=rd_rr_l;cmd_rr_tag_o<=rr_tag_l;end
+        else begin cmd_read_rr_o<=state_read_rr;cmd_rr_tag_o<=state_rr_tag;end
         cmd_add_src_o<=state_add_src;cmd_rhs_acc_o<=state_add_rhs_acc;
         if(MUT_TXLEAD!=0)begin cmd_read_tx_o<=rd_tx_l;cmd_tx_tag_o<=tx_tag_l;cmd_tx_acc_o<=tx_acc_l;end
         else begin cmd_read_tx_o<=state_read_tx;cmd_tx_tag_o<=state_tx_tag;cmd_tx_acc_o<=state_tx_acc;end
@@ -150,26 +162,27 @@ module ot_hgi_coll_ring_ag_ctln #(
         .tx_gather(gath_q),.tx_ttl(ttl_q),.rx_slot(rx_q),.rx_kind(kind_q),.rx_src(src_q),.rx_tag(rxtag_q),
         .rr_local(rrl_q),.rr_local_tag(rrlt_q),
         .pin0_q(p0_unused),.pin1_q(p1_unused),.carry_write(cw_unused),.acc_we(aw_unused),.acc_tag(at_unused),
-        .state_tx(st_q),.acc_rr(acc_rr),.av({8{aw_unused}}),
+        .state_tx(st_q),.acc_rr(acc_rr_q),.av({8{aw_unused}}),
         .rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.ag_v(ag_v),.ag_src(ag_src),.ag_tag(ag_tag),.ag_d(ag_d),.fault(core_fault));
     // ---- boundary checks moved here (fault only; never gate or repair timing) ----
     reg aw_d;
-    wire hz = MUT_HZ==0 && rd_tx_l && (tx_acc_l ? (acc_we && acc_tag==tx_tag_l) : (lp_we_q && lp_tag_q==tx_tag_l));
+    wire hz = MUT_HZ!=1 && rd_tx_l && (tx_acc_l ? (acc_we && acc_tag==tx_tag_l) : (lp_we_q && lp_tag_q==tx_tag_l));
+    wire hz_rr = MUT_HZ!=2 && rd_rr_l && acc_we && acc_tag==rr_tag_l;   // r5: acc write of the rr tag at the lane read edge
     always @(posedge clk or negedge rn[1]) begin
         if(!rn[1])begin fault<=0;aw_d<=0;end
         else begin
             aw_d<=acc_we;
-            if(core_fault || hz || av_q!={8{aw_d}})fault<=1;
+            if(core_fault || hz || hz_rr || av_q!={8{aw_d}})fault<=1;
         end
     end
 endmodule
 
 // Ring stop on the native control root: wires only around ctln + the 8 CLOSED state-capture lanes + 8 add lanes.
-// Port list = ot_hgi_coll_ring_ag; timing per the header (commands lead 1, tx-read group lead 2, rest unchanged).
+// Port list = ot_hgi_coll_ring_ag; timing per the header (commands lead 1, tx-read and rr-read groups lead 2, rest unchanged).
 module ot_hgi_coll_ring_ag_n #(
     parameter integer NT=8, LAT=8, SPLIT_CLOCKS=0, AG=1,
     parameter integer MUT_CARRY=0, MUT_TAG=0, MUT_TTL=0, MUT_SRC=0,
-    parameter integer MUT_TXLEAD=0, MUT_CW=0, MUT_HZ=0
+    parameter integer MUT_TXLEAD=0, MUT_CW=0, MUT_HZ=0, MUT_RRLEAD=0
 )(
     input wire clk, rst_n, clk_ctl,
     input wire [7:0] clk_state, clk_add,
@@ -213,7 +226,7 @@ module ot_hgi_coll_ring_ag_n #(
     wire c_lp_we,c_rd_add,c_rd_tx,c_rd_rr,c_rhs,c_txacc,c_add_v,rn;
     wire [2:0] c_lp_tag,c_add_tag,c_tx_tag,c_rr_tag;wire [1:0] c_add_src;
     ot_hgi_coll_ring_ag_ctln #(.NT(NT),.LAT(LAT),.AG(AG),.MUT_TAG(MUT_TAG),.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC),
-        .MUT_TXLEAD(MUT_TXLEAD),.MUT_CW(MUT_CW),.MUT_HZ(MUT_HZ)) u_ctl(
+        .MUT_TXLEAD(MUT_TXLEAD),.MUT_CW(MUT_CW),.MUT_HZ(MUT_HZ),.MUT_RRLEAD(MUT_RRLEAD)) u_ctl(
         .clk(SPLIT_CLOCKS?clk_ctl:clk),.rst_n(rst_n),.qid(qid),.cw_i(cw_i),.ccw_i(ccw_i),.cw_o(cw_o),.ccw_o(ccw_o),
         .lp_we(lp_we),.lp_tag(lp_tag),
         .state_read_add(state_read_add),.state_read_tx(state_read_tx),.state_read_rr(state_read_rr),

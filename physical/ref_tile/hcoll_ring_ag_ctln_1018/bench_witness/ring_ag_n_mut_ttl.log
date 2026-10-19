@@ -1,5 +1,6 @@
-# fail witness (ELEM-GAPS/HBMN1 r2 2026-10-18): stdout+stderr of the job.json bench cmd for ring_ag_n_mut_ttl, run on ot-epyc5 from the r2 worktree content (keep_hierarchy ring copies, split carry_write/rx_slot)
 RING_AG_N LOCK PASS seed=1 edges=6000 fault_edges=5999 v1_first_fault=0
+RING_AG_N RR PASS rr_publishes=596 edges=6000
+RING_AG_N RR HZ PASS native_fault_edge=53
 RING_AG unexpected fault cycle9 maskf
 RING_AG unexpected fault cycle10 maskf
 RING_AG unexpected fault cycle11 maskf

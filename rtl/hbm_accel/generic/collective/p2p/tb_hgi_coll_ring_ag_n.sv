@@ -14,7 +14,7 @@
 // bit-exact, with its source and tag, at exactly the compiled edge; no fault may rise.
 // +fault=N runs a reservation-violating trace (must fault). Mutant parameters must FAIL.
 module tb_hgi_coll_ring_ag_n;
-    parameter integer MUT_TTL=0,MUT_SRC=0,MUT_TAG=0,AG=1,MUT_TXLEAD=0,MUT_CW=0,MUT_HZ=0;
+    parameter integer MUT_TTL=0,MUT_SRC=0,MUT_TAG=0,AG=1,MUT_TXLEAD=0,MUT_CW=0,MUT_HZ=0,MUT_RRLEAD=0;
     localparam integer NC=1400,READ_LEAD=2;
     reg clk=0,rst_n=0;always #0.5 clk=~clk;
     typedef struct packed {
@@ -32,7 +32,7 @@ module tb_hgi_coll_ring_ag_n;
     function automatic integer prevq(input integer q);case(q)0:prevq=2;1:prevq=0;3:prevq=1;default:prevq=3;endcase endfunction
     for(genvar q=0;q<4;q=q+1)begin:g_q
         wire rr_v;wire [2:0] rr_tag;wire [255:0] rr_d;
-        ot_hgi_coll_ring_ag_n #(.SPLIT_CLOCKS(1),.AG(AG),.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC),.MUT_TAG(MUT_TAG),.MUT_TXLEAD(MUT_TXLEAD),.MUT_CW(MUT_CW),.MUT_HZ(MUT_HZ)) dut(
+        ot_hgi_coll_ring_ag_n #(.SPLIT_CLOCKS(1),.AG(AG),.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC),.MUT_TAG(MUT_TAG),.MUT_TXLEAD(MUT_TXLEAD),.MUT_CW(MUT_CW),.MUT_HZ(MUT_HZ),.MUT_RRLEAD(MUT_RRLEAD)) dut(
             .clk(clk),.rst_n(rst_n),.clk_ctl(clk),.clk_state({8{clk}}),.clk_add({8{clk}}),.qid(2'(q)),
             .cw_i(co[prevq(q)]),.ccw_i(no[nextq(q)]),.cw_o(co[q]),.ccw_o(no[q]),
             .lp_we(cmd1[q].lp_we),.lp_tag(cmd1[q].lp_tag),.lp_data(cmd[q].lp_data),

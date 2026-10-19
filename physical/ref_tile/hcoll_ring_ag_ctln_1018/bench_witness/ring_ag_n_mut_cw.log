@@ -1,8 +1,9 @@
-# fail witness (ELEM-GAPS/HBMN1 r2 2026-10-18): stdout+stderr of the job.json bench cmd for ring_ag_n_mut_cw, run on ot-epyc5 from the r2 worktree content (keep_hierarchy ring copies, split carry_write/rx_slot)
-RING_AG_N LOCK mismatch t=44 cw 0 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=45 cw 1 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=46 cw 1 ccw 0 rr 1/1 ag 00/00
-RING_AG_N LOCK mismatch t=47 cw 1 ccw 0 rr 1/1 ag 00/00
-RING_AG_N LOCK mismatch t=48 cw 1 ccw 0 rr 1/1 ag 00/00
-RING_AG_N LOCK mismatch t=49 cw 1 ccw 0 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=42 cw 1 ccw 0 rr 0/0 ag 10/10
+RING_AG_N LOCK mismatch t=67 cw 0 ccw 0 rr 1/1 ag 10/10
+RING_AG_N LOCK mismatch t=69 cw 0 ccw 0 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=70 cw 0 ccw 0 rr 1/1 ag 01/01
+RING_AG_N LOCK mismatch t=71 cw 0 ccw 0 rr 1/1 ag 11/11
+RING_AG_N LOCK mismatch t=86 cw 1 ccw 0 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=87 cw 0 ccw 1 rr 1/1 ag 10/10
+RING_AG_N LOCK mismatch t=88 cw 1 ccw 0 rr 0/0 ag 01/01
 RING_AG_N MUTANT cw FAILED

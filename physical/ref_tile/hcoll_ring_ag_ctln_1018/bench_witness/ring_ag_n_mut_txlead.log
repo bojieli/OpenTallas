@@ -1,8 +1,9 @@
-# fail witness (ELEM-GAPS/HBMN1 r2 2026-10-18): stdout+stderr of the job.json bench cmd for ring_ag_n_mut_txlead, run on ot-epyc5 from the r2 worktree content (keep_hierarchy ring copies, split carry_write/rx_slot)
-RING_AG_N LOCK mismatch t=10 cw 1 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=35 cw 1 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=41 cw 1 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=44 cw 0 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=55 cw 1 ccw 1 rr 0/0 ag 00/00
-RING_AG_N LOCK mismatch t=56 cw 1 ccw 0 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=26 cw 0 ccw 1 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=29 cw 1 ccw 1 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=39 cw 0 ccw 1 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=42 cw 1 ccw 0 rr 0/0 ag 10/10
+RING_AG_N LOCK mismatch t=43 cw 1 ccw 0 rr 0/0 ag 10/10
+RING_AG_N LOCK mismatch t=53 cw 0 ccw 1 rr 1/1 ag 01/01
+RING_AG_N LOCK mismatch t=58 cw 0 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=60 cw 1 ccw 0 rr 0/0 ag 00/00
 RING_AG_N MUTANT txlead FAILED

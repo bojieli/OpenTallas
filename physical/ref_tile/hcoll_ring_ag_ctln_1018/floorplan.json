@@ -31,6 +31,7 @@
  "pins": {
   "W": [
    "cw_i",
+   "rx_slot0",
    "ccw_o"
   ],
   "E": [
@@ -39,7 +40,6 @@
   ],
   "N": [
    "carry_write0",
-   "rx_slot0",
    "pin0_q",
    "state_tx",
    "acc_we",

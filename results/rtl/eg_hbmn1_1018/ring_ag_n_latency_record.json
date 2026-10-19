@@ -14,7 +14,7 @@
  ],
  "compiler_changes": [
   {
-   "ports": "lp_we, lp_tag, state_read_add, state_read_rr, state_add_tag, state_add_src, state_add_rhs_acc, state_rr_tag, add_v, add_tag, add_src, add_rhs_acc, tx_inject, tx_forward, tx_tag, tx_dst, tx_result, tx_acc, tx_gather, tx_ttl, rx_slot, rx_kind, rx_src, rx_tag, rr_local, rr_local_tag",
+   "ports": "lp_we, lp_tag, state_read_add, state_add_tag, state_add_src, state_add_rhs_acc, add_v, add_tag, add_src, add_rhs_acc, tx_inject, tx_forward, tx_tag, tx_dst, tx_result, tx_acc, tx_gather, tx_ttl, rx_slot, rx_kind, rx_src, rx_tag, rr_local, rr_local_tag",
    "edges": -1,
    "rule": "issue every command ONE edge before its v1 effect edge (lead 1); equivalently, issuer->effect latency +1 edge if the issuer cannot lead"
   },
@@ -22,6 +22,16 @@
    "ports": "state_read_tx, state_tx_tag, state_tx_acc",
    "edges": -2,
    "rule": "issue the tx-read group TWO edges before its v1 edge (= inject-4); the state lanes read at inject-3 (v1: inject-2)"
+  },
+  {
+   "ports": "state_read_rr, state_rr_tag",
+   "edges": -2,
+   "rule": "r5: issue the rr-read group TWO edges before its v1 edge (= rr_local-4); the state lanes read acc at rr_local-3 (v1: rr_local-2); acc_rr is pin-flopped in the ctl (acc_rr_q), rr_d/rr_tag/rr_v values and edges unchanged"
+  },
+  {
+   "rule": "r5 legality: the rr tag's acc must be stable from rr_local-3: acc write (add issue + LAT) of the rr tag != rr_local-3 (= state_read_rr(v1) - 1), else fault (hz_rr)",
+   "edges": 1,
+   "cost": "+1 edge on the add -> rr read chain only (add issue -> state_read_rr(v1) >= LAT+2, was LAT+1); pipelined, no throughput change"
   },
   {
    "rule": "legality: the tx tag's lane state must be stable from inject-3: local tx: lp write of the tag <= inject-4 (lp-write -> inject >= 4 edges, v1: 3); acc tx: acc write (add issue + LAT) of the tag != inject-3",
@@ -44,7 +54,8 @@
   "bench": "rtl/hbm_accel/generic/collective/p2p/run_ring_ag_n_bench.sh",
   "lockstep": "tb_hgi_coll_ring_ag_n_lock.sv: native stop vs v1 stop, dense random traffic on every port, 3 seeds x 6000 edges: every functional output equal at every edge, fault_native(t) == fault_v1(t-1)",
   "ring": "tb_hgi_coll_ring_ag_n.sv: 4 native stops, all-gather F=224/112 MODE 0/1 bit-exact at the compiled edges; 8 fault traces x 2 modes (incl. new trace 8: lp write at the lane read edge)",
-  "mutants": "txlead, cw, hz, ttl, src, tag all REJECTED"
+  "mutants": "txlead, cw, hz, rrlead, hzrr, ttl, src, tag all REJECTED (r5)"
  },
- "r2_port_split": "r2 (10-18): ctln ports rx_slot[1:0] -> rx_slot0 (cw) / rx_slot1 (ccw) and carry_write[1:0] -> carry_write0 / carry_write1 (N-face corners); same values and edges as n1, stop ot_hgi_coll_ring_ag_n ports unchanged. pin0_q/pin1_q copies are keep_hierarchy leaves ot_hgi_coll_ring_cp_ff (no edge change)."
+ "r2_port_split": "r2 (10-18): ctln ports rx_slot[1:0] -> rx_slot0 (cw) / rx_slot1 (ccw) and carry_write[1:0] -> carry_write0 / carry_write1 (N-face corners); same values and edges as n1, stop ot_hgi_coll_ring_ag_n ports unchanged. pin0_q/pin1_q copies are keep_hierarchy leaves ot_hgi_coll_ring_cp_ff (no edge change).",
+ "r5": "r5 (10-18): acc_rr pin flops + rr-read group lead 2 (above); rx_slot0 pin on the W face (port placement only, no edge change). Bench: lockstep 3 seeds + directed rr reduce program (+rr=1, 596 rr publishes equal, no fault) + rr hazard (+rr=2, native faults, v1 legal); 8 mutants (txlead cw hz rrlead hzrr ttl src tag) rejected, Verilator 5.050."
 }

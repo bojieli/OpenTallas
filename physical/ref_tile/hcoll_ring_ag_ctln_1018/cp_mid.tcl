@@ -8,6 +8,9 @@
 # the N corner; r2 capture cw_i[274] 228).
 # r4: rr_d / carry_write sit at 0.35 of the way from the input pin (r3 probe: capture acc_rr ~200 / cw_i[274] 206 with
 # 4 logic levels on the capture side, launch rr_d <= 163): the logic side gets the shorter wire.
+# r5: acc_rr is pin-flopped in RTL (acc_rr_q), so u_core.rr_d is a plain S-face output flop again (no rr class); rx_slot0
+# moved to the W face beside cw_i[278:273]; carry_write0/1 sit at 0.1 from cw_i/ccw_i[274] (r4 probe capture cw_i[273]
+# 211: 3 compare levels + ~24 um; the flop -> carry pin wire is a pure-Q launch).
 # Placement only, 0 cycles.
 set cm_blk [ord::get_db_block]
 set cm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -20,7 +23,7 @@ proc cm_center {bt} {
   set bb [$bt getBBox]
   return [list [expr {([$bb xMin] + [$bb xMax]) / 2.0}] [expr {([$bb yMin] + [$bb yMax]) / 2.0}]]
 }
-set cm_n 0; set cm_cls [dict create cp 0 rr 0 cw 0]
+set cm_n 0; set cm_cls [dict create cp 0 cw 0]
 set cm_fh [open $::env(RESULTS_DIR)/ot_cp_mid.txt w]
 foreach inst [$cm_blk getInsts] {
   set nm [$inst getName]
@@ -28,10 +31,8 @@ foreach inst [$cm_blk getInsts] {
   if {[regexp {g_cp\\?\[([0-9]+)\\?\][./]u_p([01])[./]} $nm -> b side]} {
     set cls cp; set wt 0.5
     if {$side eq "0"} { set ip "cw_i\[$b\]"; set op "pin0_q\[$b\]" } else { set ip "ccw_i\[$b\]"; set op "pin1_q\[$b\]" }
-  } elseif {[regexp {^u_core[./]rr_d\\?\[([0-9]+)\\?\]} $nm -> b]} {
-    set cls rr; set wt 0.35; set ip "acc_rr\[$b\]"; set op "rr_d\[$b\]"
   } elseif {[regexp {^carry_write([01])($|[^0-9])} $nm -> d]} {
-    set cls cw; set wt 0.35; set ip [expr {$d eq "0" ? "cw_i\[274\]" : "ccw_i\[274\]"}]; set op "carry_write$d"
+    set cls cw; set wt 0.1; set ip [expr {$d eq "0" ? "cw_i\[274\]" : "ccw_i\[274\]"}]; set op "carry_write$d"
   } else { continue }
   set bi [$cm_blk findBTerm $ip]; set bo [$cm_blk findBTerm $op]
   if {$bi eq "NULL" || $bo eq "NULL"} { error "CP_MID: missing port $ip / $op for $nm" }
@@ -55,6 +56,6 @@ foreach inst [$cm_blk getInsts] {
 }
 close $cm_fh
 puts "CP_MID fixed $cm_n flops at their pin midpoints ($cm_cls)"
-if {[dict get $cm_cls cp] != 560 || [dict get $cm_cls rr] != 256 || [dict get $cm_cls cw] != 2} {
-  error "CP_MID: expected cp 560 / rr 256 / cw 2 flops, found $cm_cls (netlist renamed / merged?)"
+if {[dict get $cm_cls cp] != 560 || [dict get $cm_cls cw] != 2} {
+  error "CP_MID: expected cp 560 / cw 2 flops, found $cm_cls (netlist renamed / merged?)"
 }
