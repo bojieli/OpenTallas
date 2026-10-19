@@ -1,13 +1,13 @@
 {
- "name": "qkd_ahub_sdw-a3-COMMIT",
+ "name": "qkd_ahub_sdw-a4-COMMIT",
  "block": "qkd_ahub_static_dw",
  "ref_tile": true,
- "owner": "Claude:KV-AHUBDW 10-18",
- "purpose": "KV-AHUBDW: harden the KV die static attention hub qkd_ahub_static_dw (cluster: 4 Z trees + reciprocal leaf + core logic) to the die slot",
+ "owner": "Claude:HKV-AHUB4 10-19",
+ "purpose": "HKV-AHUB4: harden the KV die static attention hub qkd_ahub_static_dw at the die binding Z_IN_STRIDE 4 (cluster: 4 Z trees + reciprocal leaf + core logic)",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/kv-ahubdw-1018",
+  "branch": "claude/kv-ahub4-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hdc",
@@ -17,14 +17,15 @@
    "tools/qwen_kv_die",
    "results/rtl/qwen_kv_ahubdw_1018",
    "physical/ref_tile/ot_nhb_zh_m5",
-   "physical/ref_tile/qkh_recip_ref"
+   "physical/ref_tile/qkh_recip_ref",
+   "results/rtl/qwen_kv_ahub4_1019"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ahub_static_dw u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/nearhbm/qkd_ahub_static_dw.sv rtl/hdc/nearhbm/ot_qkd_ahub_static_cal_gen.sv rtl/hdc/nearhbm/ot_qkd_ahub_core.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_pipe.sv rtl/hdc/nearhbm/ot_nhb_tiles_bb.v rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ahub_static_dw #(.Z_IN_STRIDE(4)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/nearhbm/qkd_ahub_static_dw.sv rtl/hdc/nearhbm/ot_qkd_ahub_static_cal_gen.sv rtl/hdc/nearhbm/ot_qkd_ahub_core.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_pipe.sv rtl/hdc/nearhbm/ot_nhb_tiles_bb.v rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -33,20 +34,20 @@
     ]
    },
    {
-    "name": "ahub_dw_m0",
-    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_bench.sh {RUN}/bench/m0 0",
+    "name": "ahub_dw_s4_m0",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m0 0",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 6,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^AHUB_DW PASS mut=0 passes=4",
-    "pass_witness": "results/rtl/qwen_kv_ahubdw_1018/mut0.log"
+    "pass_regex": "^AHUB_DW PASS mut=0 passes=7 Z_IN_STRIDE=4 zwords=680",
+    "pass_witness": "results/rtl/qwen_kv_ahub4_1019/mut0.log"
    },
    {
-    "name": "ahub_dw_mut1",
-    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_bench.sh {RUN}/bench/m1 1",
+    "name": "ahub_dw_s4_m1",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m1 1",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 6,
@@ -55,11 +56,11 @@
     ],
     "pass_regex": "^AHUB_DW PASS",
     "fail_regex": "^AHUB_DW FAIL mut=1 errors=",
-    "fail_witness": "results/rtl/qwen_kv_ahubdw_1018/mut1.log"
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut1.log"
    },
    {
-    "name": "ahub_dw_mut2",
-    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_bench.sh {RUN}/bench/m2 2",
+    "name": "ahub_dw_s4_m2",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m2 2",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 6,
@@ -68,11 +69,11 @@
     ],
     "pass_regex": "^AHUB_DW PASS",
     "fail_regex": "^AHUB_DW FAIL mut=2 errors=",
-    "fail_witness": "results/rtl/qwen_kv_ahubdw_1018/mut2.log"
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut2.log"
    },
    {
-    "name": "ahub_dw_mut3",
-    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_bench.sh {RUN}/bench/m3 3",
+    "name": "ahub_dw_s4_m3",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m3 3",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 6,
@@ -81,11 +82,11 @@
     ],
     "pass_regex": "^AHUB_DW PASS",
     "fail_regex": "^AHUB_DW FAIL mut=3 errors=",
-    "fail_witness": "results/rtl/qwen_kv_ahubdw_1018/mut3.log"
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut3.log"
    },
    {
-    "name": "ahub_dw_mut4",
-    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_bench.sh {RUN}/bench/m4 4",
+    "name": "ahub_dw_s4_m4",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m4 4",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 6,
@@ -94,7 +95,46 @@
     ],
     "pass_regex": "^AHUB_DW PASS",
     "fail_regex": "^AHUB_DW FAIL mut=4 errors=",
-    "fail_witness": "results/rtl/qwen_kv_ahubdw_1018/mut4.log"
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut4.log"
+   },
+   {
+    "name": "ahub_dw_s4_m5",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m5 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=5 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut5.log"
+   },
+   {
+    "name": "ahub_dw_s4_m6",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m6 6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=6 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut6.log"
+   },
+   {
+    "name": "ahub_dw_s4_m7",
+    "cmd": "bash tools/qwen_kv_die/ahub_static_dw_s4_bench.sh {RUN}/bench/m7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=7 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/mut7.log"
    }
   ],
   "calibrate": {
@@ -148,7 +188,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ahub_sdw/qkd_ahub_sdw-a2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ahub_sdw/qkd_ahub_sdw-a4-COMMIT"
   }
  ],
  "cycles_added": 1,
@@ -157,6 +197,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "NEW kit (KV-AHUBDW 10-18): the KV die hub element qkd_ahub_static_dw (static six-root hub) as a cluster of 5 CLOSED children (4 ot_nhb_zh m5 views, ot_qkh_recip_leaf np1 view) + flat core / io logic; the closed qkd_ahub_core belongs to the legacy hub and is not used.  RTL pin rules in 02f980add (flop-first pins, ot_rst_pipe regional resets). || KV-AHUBDW2 10-18 (a1 EARLY_FAIL_SETUP -412 ps, classified: core logic depth + cross-cluster wire, NOT child insertion -- macro class +178 ps, spine leaf spread 29 ps): (1) u_io export decided one edge ahead (em_q from latched tgt_q; was cal_r_q -> PV_START+R adder -> compare -> 145 W-face enables, 289 endpoints); (2) qkd_ahub_static_core_la: every calendar decode registered one edge ahead (u_dn) with an edge-age-1 decode for the first cycle (u_d1), nblk(T) registered from the held command T (u_io T_p/T_h) (age -> rz/rc_x/zh_p/zh_iv/ma_x, T -> hh_b/k_b/z_b); (3) zh_err registered at the Z tree outputs (child zerr -> fault -273 ps); (4) am valid without the u_io.start term (start -> E-face am flops -109 ps; a start on an am edge now faults).",
- "reroute_reason": "rtl_change: route a2 (qkd_ahub_sdw-a2-b698f22ab) NEEDS_RTL TT -55.19 / FF +3.4 / DRC 0: 22 ep u_core.RECIP_ISSUE_AGE -> u_d1 head subtract -> first_q mux -> 32 x 4:1 zroot select -> rc_x (-55.2, 10 lv) and nblk_q -> u_dn Z window (Z_IN_AGE + 16 nblk add + compare, 17 lv, ~310 um) -> q_sk (-26.5); a3 decodes every window from one subtraction (d = edge_age - START vs constants / nblk) and registers the 2-bit wide-mux heads (mh, recip_head, return_head) on every edge, loaded from cal on start; no latency change (KV static schedule unchanged), bench PASS + mut1-4 FAIL"
+ "structural_change": "NEW kit (KV-AHUBDW 10-18): the KV die hub element qkd_ahub_static_dw (static six-root hub) as a cluster of 5 CLOSED children (4 ot_nhb_zh m5 views, ot_qkh_recip_leaf np1 view) + flat core / io logic; the closed qkd_ahub_core belongs to the legacy hub and is not used.  RTL pin rules in 02f980add (flop-first pins, ot_rst_pipe regional resets). || KV-AHUBDW2 10-18 (a1 EARLY_FAIL_SETUP -412 ps, classified: core logic depth + cross-cluster wire, NOT child insertion -- macro class +178 ps, spine leaf spread 29 ps): (1) u_io export decided one edge ahead (em_q from latched tgt_q; was cal_r_q -> PV_START+R adder -> compare -> 145 W-face enables, 289 endpoints); (2) qkd_ahub_static_core_la: every calendar decode registered one edge ahead (u_dn) with an edge-age-1 decode for the first cycle (u_d1), nblk(T) registered from the held command T (u_io T_p/T_h) (age -> rz/rc_x/zh_p/zh_iv/ma_x, T -> hh_b/k_b/z_b); (3) zh_err registered at the Z tree outputs (child zerr -> fault -273 ps); (4) am valid without the u_io.start term (start -> E-face am flops -109 ps; a start on an am edge now faults). || HKV-AHUB4 10-19 (a4): hardened at the KV DIE binding Z_IN_STRIDE = 4 (kv_static_die ASTK_Z_STRIDE = the CLOSED qkd_astk_ctl_s Z stride; claude/hkv-die-1019 e070e47a2 binds ONLY this parameter, AP_OFS / FR_OFS stay RTL defaults). The a3 kit (qkd_ahub_sdw-a3-dad8bea8e) is the RTL default stride 16 = a reference, NOT the die binding. RTL byte-identical to a3 (04e81f626): at stride 4 the Z window divide / modulo are 2-bit shifts / masks (the guard Z_IN_STRIDE < 4 passes; slot_h = d[1:0], slot_k = d[5:2], k <= 15 since nblk <= 16)."
 }

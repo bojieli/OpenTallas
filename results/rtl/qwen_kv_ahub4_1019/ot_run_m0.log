@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits  -152 GB (avail 244, growth 350, headroom 0, waiters 3/560 GB) load 174/128 running 38 disk 550 GB 
+ot-run: ot-epyc5       skipped: no /home/ubuntu/scratch/hkv-ahub4/src
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/hkv-ahub4/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/hkv-ahub4/src
+ot-run: -> ot-epyc4 (will queue: admits -152 GB < 6 GB)
+ot-heavy: waiting for memory on regular-crane: need 0.7 x 6 = 4 GB, admissible -150 GB: available 244 GB, growth charged 349 GB (x0.5), young 74 GB, floor 57 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-4015737-1792394015 after 181 s
+Verilator 5.050 2026-07-01 rev v5.050
+AHUB_DW PASS mut=0 passes=7 Z_IN_STRIDE=4 zwords=680 fr=1/1/1/1/1/1/1 beats=32/32/32/32/32/32/32 am=28 FR_OFS=0 AP_OFS=0002000200020002
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4015737-1792394015): exit 0
+rc=0
