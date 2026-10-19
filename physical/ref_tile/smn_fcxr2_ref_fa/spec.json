@@ -72,14 +72,15 @@
   "pd": 0.35,
   "threads": 16,
   "peak_ram_gb": 64,
-  "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "hold_margin_ns": 0.065,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:HF-5a",
   "branch": "claude/hf5a-1018",
-  "tag": "r2",
-  "purpose": "HF-5a: native-view fix of the front_c x-write / PR1-line relay. Routed native audit of fc_xr (record 1e78e63ef, smn_fcxr_ref_fa-r2-c1dfe3d51): launch 409 ps on 2,642 xo/lo pins (budget 220) because the ONE register stage sits at the input faces (DEF: u_xd y 141-149 of 151, u_ld at li) and every output wire crosses the 151 um tile. fc_xr2 = same ports / exact pin plan / outline / recipe 2, one more stage: A at xi/li/fi faces, B at xo/lo/fo faces (reg->reg across the tile). +1 cycle on xo, lo, fo equally (fc_b xi stays aligned with li/fi); front_c calendar edge recorded in lanes/HF-5.md (HF-5a). HH-2 10-19: r1 793270d4b EARLY_FAIL_CONGESTION GRT-0116 = S face (xo, 10.5 pins/um on M5 only) y 0-3 um: 2,642 FIRM BUF+HB2+BUF output stacks (3.21 um, 100% row fill) under the 26-column stage-B flop band; M3 V overflow 1,746 / total 2,795, all 746 hot gcells at y<15 um. The stage-B flops are now at the face (fc_xr had them at the far N face, so S held only the stacks). OT_OUTHOLD_FREE=1: hold pad stays one dont_touch HB2 per pin, only its location is free (m5a/m5b class).",
+  "tag": "r3",
+  "purpose": "HF-5a: native-view fix of the front_c x-write / PR1-line relay. Routed native audit of fc_xr (record 1e78e63ef, smn_fcxr_ref_fa-r2-c1dfe3d51): launch 409 ps on 2,642 xo/lo pins (budget 220) because the ONE register stage sits at the input faces (DEF: u_xd y 141-149 of 151, u_ld at li) and every output wire crosses the 151 um tile. fc_xr2 = same ports / exact pin plan / outline / recipe 2, one more stage: A at xi/li/fi faces, B at xo/lo/fo faces (reg->reg across the tile). +1 cycle on xo, lo, fo equally (fc_b xi stays aligned with li/fi); front_c calendar edge recorded in lanes/HF-5.md (HF-5a). HH-2 10-19: r1 793270d4b EARLY_FAIL_CONGESTION GRT-0116 = S face (xo, 10.5 pins/um on M5 only) y 0-3 um: 2,642 FIRM BUF+HB2+BUF output stacks (3.21 um, 100% row fill) under the 26-column stage-B flop band; M3 V overflow 1,746 / total 2,795, all 746 hot gcells at y<15 um. The stage-B flops are now at the face (fc_xr had them at the far N face, so S held only the stacks). OT_OUTHOLD_FREE=1: hold pad stays one dont_touch HB2 per pin, only its location is free (m5a/m5b class). HH-10 10-19: r2 dd7fca4ca NEEDS_RTL TT +261.98 / FF -4.46 (hold ECO missed, -8.54). Classified FF hold: ALL 9 violators internal reg->reg u_xad -> u_xbd (stage A -> stage B, 97 paths < 0 ps class, worst -4.46); IO input->reg +19.64, output +39.42 (OUTHOLD_FREE did NOT strip the output pads). Cause: A->B data min 83 ps at FF vs 56 ps capture-later leaf skew (leaf_130 behind a 53 ps / 167 ps-slew clock wire at the S band); GRT repair reached +30.00 (margin 30) and sign-off lost 34.5 ps (> the 22 ps KITS figure), with NO route hold buffer left on the worst path. Fix: core reg->reg repair margin 30 -> 65 ps (route.hold_margin_ns 0.065; reg->reg setup +484 TT, so the pads are free), boundary kept at route.io_hold_margin_ns 0.03 (>= 0.025 rule; IO passed at +19.6/+39.4). Same RTL/pins/outline/SDC.",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
   ],
@@ -117,7 +118,7 @@
   "cycles_added": 1,
   "reroute_reason": {
    "kind": "rtl_change",
-   "why": "the element fc_xr has a CLOSED view (smn_fcxr_ref_fa-r2-c1dfe3d51, record 1e78e63ef) whose routed native audit FAILS launch 409 > 220 ps on 2,642 xo/lo pins (results/arch/hf5_1018/native/native_3_audit.json): structural, one register stage across the 151 um tile; this job routes the NEW 2-stage master ot_hbm_accel_smh_fc_xr2 (+1 cycle, pin flop at each face), same pin plan / outline / recipe",
+   "why": "the element fc_xr has a CLOSED view (smn_fcxr_ref_fa-r2-c1dfe3d51, record 1e78e63ef) whose routed native audit FAILS launch 409 > 220 ps on 2,642 xo/lo pins (results/arch/hf5_1018/native/native_3_audit.json): structural, one register stage across the 151 um tile; this job routes the NEW 2-stage master ot_hbm_accel_smh_fc_xr2 (+1 cycle, pin flop at each face), same pin plan / outline / recipe HH-10: r3 re-route of r2 smn_fcxr2_ref_fa-r2-dd7fca4ca (NEEDS_RTL FF -4.46, internal A->B reg->reg hold, route reg->reg hold margin 30 -> 65 ps).",
    "source": "results/arch/hf5_1018/native/native_3_audit.json",
    "rtl_boundary": {
     "top": "ot_hbm_accel_smh_fc_xr2",
