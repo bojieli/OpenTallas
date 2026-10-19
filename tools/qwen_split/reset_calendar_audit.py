@@ -11,6 +11,10 @@ import json
 import re
 from pathlib import Path
 
+# QK-LANDEN 10-19: a one-frame lane's landing (qfd_landh0, no stations) registers en on ck_s before its clock gate, so
+# its write epoch is the source release G + 1 (tools/qwen_split/lane_groups.py HOP0_EN_REG; the same value).
+HOP0_EN_REG = 1
+
 
 def audit(netlist, lanes, roots):
     instances = {}
@@ -52,6 +56,8 @@ def audit(netlist, lanes, roots):
         _, source = instances[first]
         _, sink = instances[row['landing']]
         g, r0 = release(source['en']), release(sink['rs'])
+        if not row.get('stations'):
+            g += HOP0_EN_REG          # landh0: en registered on ck_s before the gate (QK-LANDEN): write epoch G + 1
         k = (int(row['E']) + g - r0) % 8
         rows.append(dict(bid=row['bid'], landing=row['landing'], E=row['E'], E_sta=row['E_sta'],
                          n=row['n'], G=g, R0=r0, calendar=g-r0, K_before=row['K'], K=k,
@@ -116,6 +122,8 @@ def finalize_model(model, root_release=None):
             continue
         first = (row.get('stations') or [row['landing']])[0]
         gr, g = trace((first, 'en'))
+        if not row.get('stations'):
+            g += HOP0_EN_REG          # landh0: en registered on ck_s before the gate (QK-LANDEN): write epoch G + 1
         rr, r0 = trace((row['landing'], 'rs'))
         if gr != rr:
             raise ValueError(f"{row['bid']}: undeclared reset-root relationship {gr} vs {rr}; "
@@ -131,7 +139,8 @@ def finalize_model(model, root_release=None):
             if pins:
                 buses.append((f"ftk_{row['bid']}_{pol}", 'constant', 1, [(name, f'tie_{pol}')] + pins))
         row.update(K=k, cal=g-r0, G_reset_tree=g, R0_reset_tree=r0,
-                   reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8')
+                   reset_calendar_root=gr, K_basis='post-reset-tree: (total E + G - R0) mod 8'
+                   + ('' if row.get('stations') else ' with G + 1 (landh0 en registered, QK-LANDEN)'))
     model['buses'] = buses
     if proposals:
         model['fwd_lanes']['reset_calendar_finalized'] = True

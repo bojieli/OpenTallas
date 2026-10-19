@@ -1,0 +1,176 @@
+{
+ "schema": "opentallas.s81_link.serdes_column_plan.v1",
+ "lane": "TW-S81/SERDES 2026-10-19",
+ "element": "ot_pdie_serdes (S81 8 inst lk_WS0/WS1/WN0/WN1/ES0/ES1/EN0/EN1; HBM 5 inst follow the same master)",
+ "decision": "results/arch/s81_dv_1016/p4l_lkcol/lk_slot_decision.json @ origin/claude/die-s81-lead-1019 (a-col: 260-wide column grown ALONG the die edge, digital KP4 stack beside the link attach points, 250x2250 analog further along the edge, children re-pinned N/S, kp4_dec 2x2 parent level retired)",
+ "why_not_2x2": "s81lk_kp4_dec p2 gate (claude/s81-kp4dec-1019 @04130b879, log /home/ubuntu/scratch/kp4dec1019/submit_kp4_dec_p2.log) FAILED the clock rule with ONE spine over the 622x540 2x2: child-pair boundary-flop difference TT 83.5 / FF 87.2 ps > 80 -> per landed-regions-standard-1018 the children get their own regions with LANDED seams",
+ "frame": "parent R0 = 'digital top' slot (lk_WS0, lk_WN0); 'digital bottom' slots use MX; E-side slots (x 31708.5) use MY / R180. E face = die-interior face with the link attach points (tx, rx, st, clk, rst); W face = die edge (pma pads)",
+ "outline_um": {
+  "w": 259.2,
+  "h": 3596.4,
+  "core_margin": 2.16
+ },
+ "slot_change_request": {
+  "decided_h": 3360.0,
+  "needed_h": 3596.4,
+  "delta_um": 236.4,
+  "why": "the six closed digital children stacked N-S are 216 + 146.88 + 194.4 + 233.28 + 95.04 + 216 = 1101.6 um TALL before any seam: the decision's 1110 um came from AREA (234,717 um2 / 248.4 um + 17%), but in a 259.2-wide column every child takes its full height (no two fit side by side: widths 216..248.4). With 5.4-um halos, landing rows (D4 rings, 2,176..2,236 flops a seam) and the 43.2-um y lattice the digital stack needs 1344 um above the 2250.216-um analog.",
+  "where": "the edge column x<260 is empty below/above every pair (lk_slot_decision.json reason 3): lk_WS0/ES0 grow 236.4 further DOWN (y 3939.52), lk_WS1/ES1 further UP (to 11232.32), lk_WN0/EN0 DOWN (15391.68), lk_WN1/EN1 UP (22684.48); attach points stay in the digital part beside the frames. DIE-S81-LEAD to confirm against the die outline / reticle and the edge-column contents"
+ },
+ "placements": [
+  {
+   "inst": "u_prx",
+   "master": "ot_s81_pma_rxm (NEW analog abstract, clock pma_rck: pads pma_rx/pma_rck on W, q[543:0] on N toward dsyn's W channel)",
+   "x": 4.536,
+   "y": 2.16,
+   "w": 124.92,
+   "h": 2250.216,
+   "orient": "R0",
+   "kind": "analog abstract (modeled)"
+  },
+  {
+   "inst": "u_ptx",
+   "master": "ot_s81_pma_txm (NEW analog abstract, clock ck = forwarded TX lane clock: d_v/d[543:0] on N under the TX lane drop, pads pma_tx/pma_tck on W/S)",
+   "x": 129.6,
+   "y": 2.16,
+   "w": 124.92,
+   "h": 2250.216,
+   "orient": "R0",
+   "kind": "analog abstract (modeled)"
+  },
+  {
+   "inst": "u_syn",
+   "kit": "s81lk_kp4_dsyn",
+   "x": 25.92,
+   "y": 2289.6,
+   "w": 216.0,
+   "h": 216.0,
+   "orient": "R0",
+   "pins": "UNCHANGED: p_d W (from PMA via the 18.4-um W channel), x_q N (4.32-118.8 -> ddly w_d), k_* E (via the E channel / M7 over ddly to dchn S), clk/rst S"
+  },
+  {
+   "inst": "u_dly",
+   "kit": "s81lk_kp4_ddly",
+   "x": 5.4,
+   "y": 2548.8,
+   "w": 237.6,
+   "h": 146.88,
+   "orient": "R0",
+   "pins": "RE-PIN: w_d S 24.84-139.32 (= dsyn x_q straight above), r_d S -> N 127.44-233.28 (to dout over the dchn E channel), rst_n/clk S 151.2/155.52"
+  },
+  {
+   "inst": "u_chn",
+   "kit": "s81lk_kp4_dchn",
+   "x": 5.4,
+   "y": 2721.6,
+   "w": 216.0,
+   "h": 194.4,
+   "orient": "R0",
+   "pins": "RE-PIN: k_* W -> S 64.8-191.16 (from dsyn E), n_corr/n_unc S -> W, rst_n/clk S 43.2/47.52, cw_q/apply/o_* N unchanged (to dout S); 37.8-um E channel carries ddly r_d -> dout d_q"
+  },
+  {
+   "inst": "u_out",
+   "kit": "s81lk_kp4_dout",
+   "x": 5.4,
+   "y": 2959.2,
+   "w": 248.4,
+   "h": 233.28,
+   "orient": "R0",
+   "pins": "RE-PIN: cw/apply/o_* S 4.32-124.2 (from dchn N), d_q W -> S 131.76-244.08 (from ddly N via the E channel), rst_n/clk S 125.28/127.44, q_* E -> N (to u_rm)"
+  },
+  {
+   "inst": "u_rm",
+   "kit": "s81lk_rate_match",
+   "x": 183.6,
+   "y": 3240.0,
+   "w": 69.12,
+   "h": 95.04,
+   "orient": "R0",
+   "pins": "UNCHANGED: w_* / wclk W (from dout N, rck region out), r_d / rclk E (rx port, clk region tx)"
+  },
+  {
+   "inst": "u_enc",
+   "kit": "s81lk_kp4_enc",
+   "x": 21.6,
+   "y": 3369.6,
+   "w": 216.0,
+   "h": 216.0,
+   "orient": "R0",
+   "pins": "UNCHANGED: tx E (attach), p_d W (-> TX lane down the column to u_pma), clk/rst N"
+  }
+ ],
+ "clock_regions": {
+  "rck (recovered clock, pma_rck from u_pma)": {
+   "r_syn": [
+    "u_syn",
+    "rs_r reset sync",
+    "rx PMA capture"
+   ],
+   "r_dly": [
+    "u_dly"
+   ],
+   "r_chn": [
+    "u_chn"
+   ],
+   "r_out": [
+    "u_out",
+    "u_rm write side (wclk)",
+    "unc_r"
+   ],
+   "distribution": "forwarded rck spine up the column from the u_pma rck pin, one small tree per region, NO inter-region balancing (the seams are landed)"
+  },
+  "clk (core clock, E-face port beside u_enc)": {
+   "r_tx": [
+    "u_enc",
+    "u_rm read side (rclk)",
+    "rs_t reset sync",
+    "lock/unc status syncs + st_q"
+   ],
+   "tx_lane": "u_enc p_d (544 + v) -> u_pma: ~1117 um down the column on M7 over the children = 3 hops at reach 405: 2 forwarded half-cycle relay rows (gap rows chn/out y~2938 and syn/dly y~2527) + the PMA capture; the PMA TX clock is the forwarded clock (pma_tck = forwarded clk)"
+  },
+  "async": "rck <-> clk only through u_rm (gray FIFO, closed tile) and the 2-flop lock / fault syncs (as ot_pdie_serdes RTL)"
+ },
+ "landed_crossings_rck": [
+  {
+   "from": "u_syn.x_q",
+   "to": "u_dly.w_d",
+   "bits": 544,
+   "cut": "gap y 2505.6-2548.8 (both rings in the gap; bank 2,176 wires cross a 30-um row, not a channel)"
+  },
+  {
+   "from": "u_syn.k_*",
+   "to": "u_chn.k_*",
+   "bits": 320,
+   "cut": "write ring in the syn/dly gap, bank (1,280) over ddly on M7 / E channel, read ring in the dly/chn gap"
+  },
+  {
+   "from": "u_dly.r_d",
+   "to": "u_out.d_q",
+   "bits": 544,
+   "cut": "write ring in the dly/chn gap, bank up the 37.8-um dchn E channel + M7, read ring in the chn/out gap"
+  },
+  {
+   "from": "u_chn.cw_q/apply/o_unc/o_ne/fs",
+   "to": "u_out",
+   "bits": 559,
+   "cut": "both rings in the chn/out gap"
+  }
+ ],
+ "schedule": "words syn->dly->out and corrections syn->chn->out each cross TWO landings (+E+1 = 3 edges each) -> DD / DC unchanged; rx latency +6 cycles (as the Codex SERDES-NATIVE landed kp4_dec model: q 68 -> 74); tx latency +2 (relay rows). Static schedule, no backpressure; landing D 4 / E 2 (LANDING-CONTRACT).",
+ "child_reroutes": [
+  "s81lk_kp4_ddly",
+  "s81lk_kp4_dchn",
+  "s81lk_kp4_dout"
+ ],
+ "children_unchanged": [
+  "s81lk_kp4_dsyn",
+  "s81lk_kp4_enc",
+  "s81lk_rate_match"
+ ],
+ "lattice": "y positions on the 43.2-um lattice; x is NOT on the lattice in a 259.2-wide column (only x 0 / 43.2 exist and the 248.4-wide dout needs x 5.4): x chosen for the routing channels (W 18.4 um usable for p_d beside dsyn, E 11.7, 37.8 um E of dchn for r_d)",
+ "open": [
+  "u_prx / u_ptx abstracts (LEF/lib/bb via tools/chip_assembly/macros.py MacroSpec: one clock each -- a single 250-wide PMA abstract cannot carry two clocks in that generator)",
+  "parent RTL: ot_pdie_serdes_digital split (codex/serdes-native-1019 bac60261f) + glue split per domain (lp.py needs a wires-only rck parent: reset sync / status into small soft children) + lp.py spec (regions r_syn/r_dly/r_chn/r_out) + tx relay rows",
+  "parent kit + gate after the three child re-routes close (child views with N/S pins)"
+ ]
+}

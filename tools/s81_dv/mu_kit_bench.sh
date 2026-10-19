@@ -3,7 +3,8 @@
 #   mu_kit_bench.sh OUTDIR lepmu  MUT SEED   tb_s81sl_lep_mu: die P = ot_s81sl_lep_mu_ab (kit s81sl_lepmu, AB_EN 1),
 #                                            dies A / B = ot_s81sl_lep_mu + dsdv_mu_land NB 80 NS 1 SRAM 1 (kit
 #                                            dsdv_mu_land), RP -> RA single-user reference (ot_s81sl_lep_nh).
-#                                            MUT none | TAGDROP | WRONGCOPY (ot_s81sl_lep_core) | LANDOVR (dsdv_mu_land)
+#                                            MUT none | TAGDROP | WRONGCOPY | LANDCUT (ot_s81sl_lep_core) | LANDOVR (dsdv_mu_land)
+#                                            (dies A / B = ot_s81sl_lep_mu_a, kit s81sl_lepmua)
 #   mu_kit_bench.sh OUTDIR hslot  MUT NS [COLLIDE]   tb_dsdv_mu_hslot (kit dsdv_mu_hslot): NS users / slots, MUT 0|1|2,
 #                                            COLLIDE 1 = a start into an occupied slot (must fault)
 # Prints the testbench verdict lines and a last line BENCH_PASS / BENCH_FAIL <what>; exit 0 only on BENCH_PASS.

@@ -145,13 +145,17 @@ module ot_s81sl_slice #(
 );
     assign ck_line = {16{clk}}; assign ck_v = {2{clk}}; assign ck_xc = {16{clk}}; assign ck_rt = {8{clk}};
     // ---------------------------------------------------------------- beat leaves
-    wire [4:0] c_v_x, c_v_l, sw_v_x, sw_v_l, lo_v_l, lo_v_x, p_v_l, p_v_x, rb_v_x, rb_v_l;
-    wire [799:0] c_d_x, c_d_l; wire [49:0] sw_a_x, sw_a_l; wire [39:0] sw_m_x, sw_m_l; wire [1279:0] sw_d_x, sw_d_l;
-    wire [1279:0] lo_d_l, lo_d_x; wire [159:0] p_d_l, p_d_x, rb_d_x, rb_d_l;
+    wire [4:0] c_v_x, c_v_l, sw_v_x, sw_v_l, lo_v_l, lo_v_x, p_v_l, p_v_x, rb_v_l;
+    wire [799:0] c_d_l;
+    // XR3 (10-18): xr drives ONE copy of c_d / rb_* / g_* (was 5 equal pin copies); the glue fans it out here into the 5
+    // leaf relays (u_dn, same depth DL), so every leaf still sees the same bits on the same edge.
+    wire [159:0] c_d_x; wire rb_v_x; wire [31:0] rb_d_x; wire gv_x; wire [1:0] gc_x; wire [31:0] gd_x;
+    wire [49:0] sw_a_x, sw_a_l; wire [39:0] sw_m_x, sw_m_l; wire [1279:0] sw_d_x, sw_d_l;
+    wire [1279:0] lo_d_l, lo_d_x; wire [159:0] p_d_l, p_d_x, rb_d_l;
     wire [9:0] cw_v_x, cw_v_l; wire [119:0] cw_a_x, cw_a_l; wire [319:0] cw_d_x, cw_d_l;
     wire [4:0] xfv_l, xfv_x, xfs_l, xfs_x; wire [5*276-1:0] xf_l, xf_x;
     wire [4:0] f_lf;
-    wire [4:0] ev_l, ev_x, gv_x, gv_l; wire [9:0] ec_l, ec_x, gc_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_x, gd_l;
+    wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
         ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
@@ -164,9 +168,9 @@ module ot_s81sl_slice #(
             .g_v(gv_l[k]), .g_c(gc_l[2 * k +: 2]), .g_d(gd_l[32 * k +: 32]), .fault(f_lf[k]));
         // leaf <-> centre glue: equal depth for every leaf
         ot_s81sl_rly #(.W(1 + 160 + 1 + 10 + 8 + 256 + 2 + 24 + 64 + 1 + 32 + 1 + 2 + 32), .D(DL)) u_dn (.clk(clk),
-            .d({c_v_x[k], c_d_x[160 * k +: 160], sw_v_x[k], sw_a_x[10 * k +: 10], sw_m_x[8 * k +: 8], sw_d_x[256 * k +: 256],
-                cw_v_x[2 * k +: 2], cw_a_x[24 * k +: 24], cw_d_x[64 * k +: 64], rb_v_x[k], rb_d_x[32 * k +: 32],
-                gv_x[k], gc_x[2 * k +: 2], gd_x[32 * k +: 32]}),
+            .d({c_v_x[k], c_d_x, sw_v_x[k], sw_a_x[10 * k +: 10], sw_m_x[8 * k +: 8], sw_d_x[256 * k +: 256],
+                cw_v_x[2 * k +: 2], cw_a_x[24 * k +: 24], cw_d_x[64 * k +: 64], rb_v_x, rb_d_x,
+                gv_x, gc_x, gd_x}),
             .q({c_v_l[k], c_d_l[160 * k +: 160], sw_v_l[k], sw_a_l[10 * k +: 10], sw_m_l[8 * k +: 8], sw_d_l[256 * k +: 256],
                 cw_v_l[2 * k +: 2], cw_a_l[24 * k +: 24], cw_d_l[64 * k +: 64], rb_v_l[k], rb_d_l[32 * k +: 32],
                 gv_l[k], gc_l[2 * k +: 2], gd_l[32 * k +: 32]}));

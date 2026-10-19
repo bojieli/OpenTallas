@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=443970 cycles=3000 warm=40
+- rtl/dsrom_sys/s81_dv/slice/landed/c1x/tb_ot_s81sl_slice_c1x_lp.sv:221: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 90.764 s; speed 33.053 ns/s
+- Verilator: cpu 75.008 s on 1 threads; allocated 228 MB

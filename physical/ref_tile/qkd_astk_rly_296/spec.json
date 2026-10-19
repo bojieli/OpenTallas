@@ -1,9 +1,12 @@
 {
  "name": "qkd_astk_rly_296",
- "top": "qkd_astk_rly_296",
+ "top": "qkd_astk_rly_296_fl",
  "kind": "tile",
  "sources": [
-  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv"
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/lib/face_land/qkd_astk_rly_296_fl.sv"
  ],
  "params": {},
  "clock_port": "ck",
@@ -49,10 +52,10 @@
   "io_hold_margin_ns": 0.0
  },
  "job": {
-  "owner": "Codex:HKV-DIE",
-  "branch": "codex/kv-astk-expand-1019",
-  "tag": "r1",
-  "purpose": "Actual resettable ASTK leaf; one core edge. Native pin and TT/FF gates required before die binding.",
+  "owner": "Claude:HKV-RSTCAP",
+  "branch": "claude/kv-rstcap-1019",
+  "tag": "fl1",
+  "purpose": "HKV-RSTCAP: native capture re-route of closed qkd_astk_rly_296 with the shared face landing stage (qkd_astk_rly_296_fl)",
   "benches": [
    {
     "name": "relay_exact",
@@ -75,6 +78,31 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "face_land_m0",
+    "cmd": "python3 tools/ref_tile/face_land.py bench --spec physical/ref_tile/qkd_astk_rly_296/spec.json --out {RUN}/bench/fl_m0 --mut 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^FACE_LAND PASS top=qkd_astk_rly_296_fl mut=0 .* errors=0",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "face_land_m1",
+    "cmd": "python3 tools/ref_tile/face_land.py bench --spec physical/ref_tile/qkd_astk_rly_296/spec.json --out {RUN}/bench/fl_m1 --mut 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^FACE_LAND PASS top=qkd_astk_rly_296_fl ",
+    "fail_regex": "^FACE_LAND FAIL top=qkd_astk_rly_296_fl mut=1 ",
+    "fail_witness": "results/arch/qwen_kv_die/rstcap_1019/qkd_astk_rly_296_fl_m1.log"
    }
   ],
   "views_to": "physical/ref_tile/qkd_astk_rly_296/views",
@@ -87,5 +115,21 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "hold_budget": "die"
+ "hold_budget": "die",
+ "face_land": {
+  "core": "qkd_astk_rly_296",
+  "core_src": "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+  "reset_ports": [
+   "rst_n"
+  ],
+  "land": {},
+  "reason": "closed r1 native capture rst_n 277.4 ps > 190 (the reset pin is the async clear of all 296 relay flops)"
+ },
+ "structural_change": "; HKV-RSTCAP fl1 10-19: closed r1 native capture rst_n 277.4 ps > 190 (the reset pin is the async clear of all 296 relay flops). Shared face landing standard (tools/ref_tile/face_land.py, spec face_land): top qkd_astk_rly_296_fl = generated wrapper, rst_n drives only ot_rst_relay (async assert, release +3 edges, zero steady-state cycles); core RTL unchanged. Die: rebind qkd_astk_rly_296 -> qkd_astk_rly_296_fl, startup waits +3 edges (lanes/HKV-RSTCAP.md).",
+ "reroute_reason": {
+  "kind": "native_capture",
+  "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
+  "cell": "qkd_astk_rly_296",
+  "fix": "input side: rst_n lands in ot_rst_relay (2 sync + 1 kept relay flop) so the pin has 3 flop sinks instead of the tile-wide async clear; same outline / pin faces, core RTL unchanged"
+ }
 }

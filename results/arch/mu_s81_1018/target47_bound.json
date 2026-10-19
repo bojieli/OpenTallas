@@ -1,8 +1,15 @@
 {
  "schema": "opentallas.s81_dv.mu_47_bound.v1",
- "owner_target_users": 47,
+ "coordinator_decision": {
+  "date": "2026-10-19",
+  "target_users": 46,
+  "text": "S81 multi-user AR target = 46 users (the proven collision-free calendar), not 47. No third copy of the four full-scan groups (S002/S011/S020/S029, ~+40 dies) for one user. 47 is recorded only if the twelve non-duplicated FFN-pair stages measure >= 1.4% faster in RTL (occupancy 20,754 -> <= 20,468 cycles); until then 47 is a hypothetical opportunity, not a target.",
+  "composition": "46 x 1,224.1 = 56,309 tok/s aggregate AR (results/arch/token_path_1018/index.json multi_user.ds_rom.ar)"
+ },
+ "owner_target_users": 46,
+ "superseded_target_users": 47,
  "owner_target_dies": 520,
- "target_preserved": true,
+ "target_preserved": false,
  "source_model": {
   "path": "results/arch/s81_balance_1018/compute.py",
   "sha256": "03e4360293e0dcec1a3f84413e8a92086723c91c8381fba0a1a7e89fcece99d9"

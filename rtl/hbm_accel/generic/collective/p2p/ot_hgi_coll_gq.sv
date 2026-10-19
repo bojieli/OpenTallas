@@ -513,9 +513,14 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
     end
     // the publish lanes are evaluated with the entry one stage past the capture (le[S_KQ+2h-2] = issue stage 30+2h, the
     // entry whose publish was captured on the previous edge); both register into kq.
+    // sticky fault flop beside the landing logic, then a FACE register at the E fault pin (NATIVE-SWEEP 10-18: the
+    // routed view hcoll_gq_land_1018-r1-b7918441e launched fault at O-R 228.0 > 220 ps from the interior flop). +1 edge
+    // on the fault report only (sticky, off the token path; no data / VM edge moves). MUT 6 (bench): the face register
+    // never forwards.
+    reg flt_r;
     always @(posedge clk or negedge rn)
-        if (!rn) begin vm_kq <= '0; fault <= 1'b0; end
-        else begin vm_kq <= kq_n; if (kq_bad || pub_bad) fault <= 1'b1; end
+        if (!rn) begin vm_kq <= '0; flt_r <= 1'b0; fault <= 1'b0; end
+        else begin vm_kq <= kq_n; if (kq_bad || pub_bad) flt_r <= 1'b1; fault <= flt_r && MUT != 6; end
 endmodule
 // The gather master as placed per quadrant: issue leaf (F20 target, calendar, VM reads, quantisers, payload, ring-A merge
 // register, ring-B commands) + landing leaf (publish capture, VM writes). Wires only.
