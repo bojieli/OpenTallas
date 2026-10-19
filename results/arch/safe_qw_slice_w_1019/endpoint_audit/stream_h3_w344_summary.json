@@ -17,42 +17,56 @@
       "source_phase": null,
       "sink_root": "source",
       "sink_phase": 1,
-      "endpoint_rows": 344
+      "pin_role": "data_enable",
+      "endpoint_pin_rows": 344
     },
     {
       "source_root": "INPUT:rsi",
       "source_phase": null,
       "sink_root": "source",
       "sink_phase": 1,
-      "endpoint_rows": 1
+      "pin_role": "data_enable",
+      "endpoint_pin_rows": 1
     },
     {
       "source_root": "source",
       "source_phase": 0,
       "sink_root": "destination",
       "sink_phase": 0,
-      "endpoint_rows": 344
+      "pin_role": "data_enable",
+      "endpoint_pin_rows": 344
+    },
+    {
+      "source_root": "source",
+      "source_phase": 0,
+      "sink_root": "destination",
+      "sink_phase": 0,
+      "pin_role": "reset_set",
+      "endpoint_pin_rows": 344
     },
     {
       "source_root": "source",
       "source_phase": 0,
       "sink_root": "source",
       "sink_phase": 1,
-      "endpoint_rows": 344
+      "pin_role": "data_enable",
+      "endpoint_pin_rows": 344
     },
     {
       "source_root": "source",
       "source_phase": 1,
       "sink_root": "destination",
       "sink_phase": 0,
-      "endpoint_rows": 1
+      "pin_role": "data_enable",
+      "endpoint_pin_rows": 1
     },
     {
       "source_root": "source",
       "source_phase": 1,
       "sink_root": "source",
       "sink_phase": 0,
-      "endpoint_rows": 1721
+      "pin_role": "data_enable",
+      "endpoint_pin_rows": 1721
     }
   ],
   "provenance": {
