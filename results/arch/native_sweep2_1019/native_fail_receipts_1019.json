@@ -1,0 +1,340 @@
+{
+ "schema": "opentallas.native-sweep2.receipt.v1",
+ "lane": "NATIVE-SWEEP2",
+ "time": "2026-10-19T00:55-07:00",
+ "tool": "tools/hier_contract/native_pin_audit.py (origin/main) on origin/main views",
+ "rows": {
+  "ot_hbm_idx_vm_share2_leaf_r": {
+   "closed_job": "hidx_share2r_leaf_1018-r3-16615707a (main 8960ed57a)",
+   "mode": "own",
+   "verdict": "FAIL",
+   "fail_why": "capture 215.11152 > 190 (4 pins)",
+   "audit": {
+    "cell": "ot_hbm_idx_vm_share2_leaf_r",
+    "view": "/tmp/ns2_root/physical/ref_tile/hidx_share2r_leaf_1018/views/ot_hbm_idx_vm_share2_leaf_r",
+    "lib_cell": "ot_hbm_idx_vm_share2_leaf_r",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 143.6,
+    "spread_ps": 73.0,
+    "outputs": 1063,
+    "inputs": 583,
+    "launch_ps": 111.6,
+    "launch_pin": "b_rr0[67]",
+    "capture_ps": 215.1,
+    "capture_pin": "b_rq[33]",
+    "launch_over": 0,
+    "capture_over": 4,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 70.2,
+    "ff_launch_min_ps": 49.4,
+    "ff_hold_need_ps": -40.3,
+    "pass": false,
+    "fail_why": "capture 215.11152 > 190 (4 pins)"
+   }
+  },
+  "qkd_pv_rs_hd_f": {
+   "closed_job": "qkd_pv_rs_hd_f-f1-44ac716d6 (main dd422bb74)",
+   "mode": "own",
+   "verdict": "FAIL",
+   "fail_why": "capture 253.05934 > 190 (38 pins)",
+   "audit": {
+    "cell": "qkd_pv_rs_hd_f",
+    "view": "/tmp/ns2_root/physical/ref_tile/qkd_pv_rs_hd_f/views/qkd_pv_rs_hd_f",
+    "lib_cell": "qkd_pv_rs_hd_f",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 111.1,
+    "spread_ps": 11.1,
+    "outputs": 534,
+    "inputs": 1110,
+    "launch_ps": 179.4,
+    "launch_pin": "o_data[309]",
+    "capture_ps": 253.1,
+    "capture_pin": "a1v[19]",
+    "launch_over": 0,
+    "capture_over": 38,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 11.3,
+    "ff_launch_min_ps": 108.1,
+    "ff_hold_need_ps": -53.0,
+    "pass": false,
+    "fail_why": "capture 253.05934 > 190 (38 pins)"
+   }
+  },
+  "ot_hbm_su_static_cxport_dl_q": {
+   "closed_job": "hbm_su_cx_dlq_1018-x1-68deb77b7",
+   "mode": "own",
+   "verdict": "FAIL",
+   "fail_why": "capture 393.31605 > 190 (1065 pins)",
+   "audit": {
+    "cell": "ot_hbm_su_static_cxport_dl_q",
+    "view": "/tmp/ns2_root/physical/ref_tile/hbm_su_cx_dlq_1018/views/ot_hbm_su_static_cxport_dl_q",
+    "lib_cell": "ot_hbm_su_static_cxport_dl_q",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 164.6,
+    "spread_ps": 56.7,
+    "outputs": 1045,
+    "inputs": 1066,
+    "launch_ps": 186.9,
+    "launch_pin": "dw_d[349]",
+    "capture_ps": 393.3,
+    "capture_pin": "v0[5]",
+    "launch_over": 0,
+    "capture_over": 1065,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 54.7,
+    "ff_launch_min_ps": 98.0,
+    "ff_hold_need_ps": 9.6,
+    "pass": false,
+    "fail_why": "capture 393.31605 > 190 (1065 pins)"
+   }
+  },
+  "ot_hbm_su_static_cxport_dl_q@rel_dl_s": {
+   "closed_job": "hbm_su_cx_dlq_1018-x1-68deb77b7",
+   "mode": "relative to dl_s view (abutted pair)",
+   "verdict": "FAIL",
+   "fail_why": "capture 403.31605 > 190 (1065 pins)",
+   "audit": {
+    "cell": "ot_hbm_su_static_cxport_dl_q",
+    "view": "/tmp/ns2_root/physical/ref_tile/hbm_su_cx_dlq_1018/views/ot_hbm_su_static_cxport_dl_q",
+    "lib_cell": "ot_hbm_su_static_cxport_dl_q",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean -> relative C 174.6"
+    ],
+    "R_ps": 164.6,
+    "spread_ps": 56.7,
+    "relative_to": "neighbour /tmp/ns2_root/physical/ref_tile/hbm_su_cx_dls_1018/views/ot_hbm_su_static_cxport_dl_s/insertion.json boundary mean",
+    "outputs": 1045,
+    "inputs": 1066,
+    "launch_ps": 176.9,
+    "launch_pin": "dw_d[349]",
+    "capture_ps": 403.3,
+    "capture_pin": "v0[5]",
+    "launch_over": 0,
+    "capture_over": 1065,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 54.7,
+    "ff_launch_min_ps": 91.2,
+    "ff_hold_need_ps": 2.8,
+    "relative": {
+     "tt": {
+      "clock_pin": "clk_q",
+      "rel_min_ps": -32.0,
+      "rel_max_ps": 24.7,
+      "mismatch_ps": 32.0,
+      "offset_ps": -10.0,
+      "comp_ps": 174.6
+     },
+     "ff": {
+      "clock_pin": "clk_q",
+      "rel_min_ps": -28.7,
+      "rel_max_ps": 26.0,
+      "mismatch_ps": 28.7,
+      "offset_ps": -6.8,
+      "comp_ps": 145.0
+     }
+    },
+    "pass": false,
+    "fail_why": "capture 403.31605 > 190 (1065 pins)"
+   }
+  },
+  "ot_hbm_su_static_cxport_dl_s@rel_dl_q": {
+   "closed_job": "hbm_su_cx_dls_1018-x1-434efd622",
+   "mode": "relative to dl_q view",
+   "verdict": "FAIL",
+   "fail_why": "capture 298.88798 > 190 (99 pins)",
+   "audit": {
+    "cell": "ot_hbm_su_static_cxport_dl_s",
+    "view": "/tmp/ns2_root/physical/ref_tile/hbm_su_cx_dls_1018/views/ot_hbm_su_static_cxport_dl_s",
+    "lib_cell": "ot_hbm_su_static_cxport_dl_s",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean -> relative C 164.6"
+    ],
+    "R_ps": 174.6,
+    "spread_ps": 17.1,
+    "relative_to": "neighbour /tmp/ns2_root/physical/ref_tile/hbm_su_cx_dlq_1018/views/ot_hbm_su_static_cxport_dl_q/insertion.json boundary mean",
+    "outputs": 1065,
+    "inputs": 555,
+    "launch_ps": 124.2,
+    "launch_pin": "b0[479]",
+    "capture_ps": 298.9,
+    "capture_pin": "del_obase[25]",
+    "launch_over": 0,
+    "capture_over": 99,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 16.9,
+    "ff_launch_min_ps": 68.2,
+    "ff_hold_need_ps": -11.9,
+    "relative": {
+     "tt": {
+      "clock_pin": "clk_s",
+      "rel_min_ps": 0.0,
+      "rel_max_ps": 17.1,
+      "mismatch_ps": 17.1,
+      "offset_ps": 10.0,
+      "comp_ps": 164.6
+     },
+     "ff": {
+      "clock_pin": "clk_s",
+      "rel_min_ps": -3.0,
+      "rel_max_ps": 13.9,
+      "mismatch_ps": 13.9,
+      "offset_ps": 6.8,
+      "comp_ps": 138.2
+     }
+    },
+    "pass": false,
+    "fail_why": "capture 298.88798 > 190 (99 pins)"
+   }
+  },
+  "ot_hbm_su_static_cxport_rc_q@rel_rc_s": {
+   "closed_job": "hbm_su_cx_rcq_1018-x1-1bfbf1c90",
+   "mode": "relative to rc_s view",
+   "verdict": "FAIL",
+   "fail_why": "launch 224.71616 > 220 (1 pins); capture 470.33604 > 190 (254 pins)",
+   "audit": {
+    "cell": "ot_hbm_su_static_cxport_rc_q",
+    "view": "/tmp/ns2_root/physical/ref_tile/hbm_su_cx_rcq_1018/views/ot_hbm_su_static_cxport_rc_q",
+    "lib_cell": "ot_hbm_su_static_cxport_rc_q",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean -> relative C 294.6"
+    ],
+    "R_ps": 320.9,
+    "spread_ps": 26.3,
+    "relative_to": "neighbour /tmp/ns2_root/physical/ref_tile/hbm_su_cx_rcs_1018/views/ot_hbm_su_static_cxport_rc_s/insertion.json boundary mean",
+    "outputs": 817,
+    "inputs": 1647,
+    "launch_ps": 224.7,
+    "launch_pin": "fault",
+    "capture_ps": 470.3,
+    "capture_pin": "red_sel[1]",
+    "launch_over": 1,
+    "capture_over": 254,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 23.9,
+    "ff_launch_min_ps": 69.4,
+    "ff_hold_need_ps": -5.3,
+    "relative": {
+     "tt": {
+      "clock_pin": "clk_q",
+      "rel_min_ps": 12.2,
+      "rel_max_ps": 38.5,
+      "mismatch_ps": 38.5,
+      "offset_ps": 26.3,
+      "comp_ps": 294.6
+     },
+     "ff": {
+      "clock_pin": "clk_q",
+      "rel_min_ps": 7.3,
+      "rel_max_ps": 31.2,
+      "mismatch_ps": 31.2,
+      "offset_ps": 20.2,
+      "comp_ps": 242.0
+     }
+    },
+    "pass": false,
+    "fail_why": "launch 224.71616 > 220 (1 pins); capture 470.33604 > 190 (254 pins)"
+   }
+  },
+  "ot_hbm_su_static_cxport_rc_s@rel_rc_q": {
+   "closed_job": "hbm_su_cx_rcs_1018-x1-7c296a9ce",
+   "mode": "relative to rc_q view",
+   "verdict": "FAIL",
+   "fail_why": "launch 317.52444 > 220 (230 pins); capture 527.42138 > 190 (1093 pins)",
+   "audit": {
+    "cell": "ot_hbm_su_static_cxport_rc_s",
+    "view": "/tmp/ns2_root/physical/ref_tile/hbm_su_cx_rcs_1018/views/ot_hbm_su_static_cxport_rc_s",
+    "lib_cell": "ot_hbm_su_static_cxport_rc_s",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean -> relative C 320.9"
+    ],
+    "R_ps": 294.6,
+    "spread_ps": 43.5,
+    "relative_to": "neighbour /tmp/ns2_root/physical/ref_tile/hbm_su_cx_rcq_1018/views/ot_hbm_su_static_cxport_rc_q/insertion.json boundary mean",
+    "outputs": 1854,
+    "inputs": 1311,
+    "launch_ps": 317.5,
+    "launch_pin": "rc_d[185]",
+    "capture_ps": 527.4,
+    "capture_pin": "rr_v",
+    "launch_over": 230,
+    "capture_over": 1093,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 41.4,
+    "ff_launch_min_ps": 46.7,
+    "ff_hold_need_ps": -39.2,
+    "relative": {
+     "tt": {
+      "clock_pin": "clk_s",
+      "rel_min_ps": -40.4,
+      "rel_max_ps": 3.1,
+      "mismatch_ps": 40.4,
+      "offset_ps": -26.3,
+      "comp_ps": 320.9
+     },
+     "ff": {
+      "clock_pin": "clk_s",
+      "rel_min_ps": -34.1,
+      "rel_max_ps": 7.3,
+      "mismatch_ps": 34.1,
+      "offset_ps": -20.2,
+      "comp_ps": 262.2
+     }
+    },
+    "pass": false,
+    "fail_why": "launch 317.52444 > 220 (230 pins); capture 527.42138 > 190 (1093 pins)"
+   }
+  },
+  "qkd_static_ectla_kiss": {
+   "closed_job": "qkd_static_ectla_k4-rt80-2a3a97cb2",
+   "mode": "own",
+   "verdict": "FAIL",
+   "fail_why": "capture 200.97518 > 190 (1 pins)",
+   "audit": {
+    "cell": "qkd_static_ectla_kiss",
+    "view": "/tmp/ns2_root/physical/ref_tile/qkd_static_ectla_k4/views/qkd_static_ectla_kiss",
+    "lib_cell": "qkd_static_ectla_kiss",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json child_flop boundary mean"
+    ],
+    "R_ps": 301.2,
+    "spread_ps": 39.2,
+    "outputs": 1574,
+    "inputs": 1106,
+    "launch_ps": 101.0,
+    "launch_pin": "t1_row[480]",
+    "capture_ps": 201.0,
+    "capture_pin": "rsp_v",
+    "launch_over": 0,
+    "capture_over": 1,
+    "comb_pins": 0,
+    "comb_first": [],
+    "ff_spread_ps": 32.4,
+    "ff_launch_min_ps": 43.2,
+    "ff_hold_need_ps": -6.3,
+    "pass": false,
+    "fail_why": "capture 200.97518 > 190 (1 pins)"
+   }
+  }
+ }
+}
