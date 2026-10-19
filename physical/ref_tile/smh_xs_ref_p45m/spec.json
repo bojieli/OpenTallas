@@ -185,5 +185,17 @@
  "pin_regs": {
   "enable": false,
   "reason": "HF-5b: the RTL registers every pin already: inputs land in u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 (behind ot_hdly) and the leaf's strap / reset pin flops, outputs are the leaf's operand (i) stage registers (o_*_e: kept copy u_ctle under OT_SMH_XSE); flow pin registers would add a cycle on every link"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "closed_job": "smh_xs_ref_p45m-r3-29a3f8638",
+  "source": "results/arch/hf5_1018/native/native_3_audit.json",
+  "cell": "ot_hbm_accel_smh_xs",
+  "spread_ps": 106.4,
+  "ff_spread_ps": 101.9,
+  "capture_ps": 221.4,
+  "launch_ps": 254.5,
+  "why": "closed r3 routed native audit FAIL (committed receipt results/arch/hf5_1018/native/native_3_audit.json, record smh_xs_ref_p45m-r3-29a3f8638): TT/FF pin-flop spread 106.4/101.9 > 80 (clock rule 0dq), capture 221.4 > 190 (98 pins), launch 254.5 > 220 (4 pins); the view cannot bind into the die. RTL change 81d8cf4b9 (ot_hbm_accel_smh.sv: OT_SMH_XSE E-face control copy as its own kept register; verified by CLOSED_STANDS); the kit also puts o_iw/o_ix on the N face (closed LEF had them on N/W/S/E), so native_spread (same faces) does not apply.",
+  "fix": "hf5bt: boundary registers on their own balanced 6-level clock tree (bnd_branch.tcl) + E-face control copy + o_iw/o_ix on N; gate spread 68.9/59.4; same outline/macros; 0 cycles; coordinator REVIEW approved geometry db32c47e (0jw)"
  }
 }
