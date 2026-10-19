@@ -1,0 +1,195 @@
+{
+ "layer": "L0",
+ "mutant": null,
+ "counts": {
+  "stim_n": 828,
+  "stim_s": 827,
+  "exp_n": 15,
+  "exp_s": 15,
+  "exp_c": 3
+ },
+ "host_words": 84,
+ "calendar": [
+  {
+   "issue": 193,
+   "eng": 2,
+   "arg": 128,
+   "what": "L0.attn.hc.fn: gunit HC job which 0 set 0 row 1000"
+  },
+  {
+   "issue": 9377,
+   "eng": 2,
+   "arg": 129,
+   "what": "L0.ffn.hc.fn: gunit HC job which 1 set 0 row 1008"
+  },
+  {
+   "issue": 11235,
+   "eng": 2,
+   "arg": 2,
+   "what": "L0.ffn.top6: gunit router job set 0 ne 384 row 1016"
+  },
+  {
+   "issue": 11224,
+   "eng": 14,
+   "arg": 0,
+   "what": "KIT"
+  },
+  {
+   "issue": 11244,
+   "eng": 15,
+   "arg": 0,
+   "what": "END"
+  }
+ ],
+ "end_age": 11244,
+ "lowered": {
+  "attn.hc.fn": {
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "attn.hc.sumsq": {
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "attn.hc.rsqrt": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "attn.hc.pre_post": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "attn.hc.sinkhorn": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.hc.fn": {
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.hc.sumsq": {
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.hc.rsqrt": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.hc.pre_post": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.hc.sinkhorn": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "slice HP send (kind 7) at the hp_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.top6": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "allgathered sqrt(softplus) scores as SC beats (vs RA + xr SC relay) at the sc_plan edges"
+   ],
+   "note": "the gunit emits the 6 ids in id order (top6_order); the rank order is not materialised (consumers use id order)"
+  },
+  "ffn.top6_order": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "allgathered sqrt(softplus) scores as SC beats (vs RA + xr SC relay) at the sc_plan edges"
+   ],
+   "note": null
+  },
+  "ffn.weights": {
+   "status": "LOWERED",
+   "gap": null,
+   "deps": [
+    "allgathered sqrt(softplus) scores as SC beats (vs RA + xr SC relay) at the sc_plan edges"
+   ],
+   "note": null
+  }
+ },
+ "fixtures": "/home/ubuntu/scratch/layerbench-s81/fixtures/L0",
+ "fixture_sha256": {
+  "io/h_in.bin": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931",
+  "weights/hc_attn_fn.bin": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+  "ops/attn.hc.fn.bin": "88fa1c4bd6c1e5a619c8df49970299304d7dddc400d18eaaf49b4e3c838ca40e",
+  "ops/attn.hc.sumsq.bin": "95f9083e6cc9053099ac892dec8c307d14ce75a14c87db1c79b26b8495716394",
+  "ops/attn.hc.pre_post.bin": "cbe37e4d4d75a44d9f100723a477208d6d73c68fb997db4a885de06bbfd79a59",
+  "ops/attn.hc.sinkhorn.bin": "fe64dc59d832714c84030f69988630fda9140088240552e6285d4105f2b04743",
+  "ops/attn.hc.rsqrt.bin": "cb42257960f41c60a587a289655ec2929a6519ecbd98b84dec9519265050147c",
+  "ops/attn.hc_post.bin": "d3e65a07a6c4397959f3a4eb457ad92ee7ac0938ebb4674173480ff367d943dd",
+  "weights/hc_ffn_fn.bin": "9b835d9c8b7454eafdda442beb239d1a2679f9d22ccfe5ada851308df89e6ce2",
+  "ops/ffn.hc.fn.bin": "2d90b6e5b840b3dcc5485997f3921026637db9273b193be59353030c4f4fa03f",
+  "ops/ffn.hc.sumsq.bin": "ff893f5e17f398595a0238dc3baca15d5e5fdedf6a8d74a9534e9400393791d9",
+  "ops/ffn.hc.pre_post.bin": "f33ae8deff4e1e8c1fecd44bcb3535f66f7e70b2750a008fddbcbcf13bbf5294",
+  "ops/ffn.hc.sinkhorn.bin": "8955de4637262bd09fa04e393e04b4c8175ee7f839926e2fde7ab1d261bc3d70",
+  "ops/ffn.hc.rsqrt.bin": "45c5d2f78cafd36821069c670bb957fd3b53e37fd2cbd7864f15fb9ba2916ab8",
+  "ops/ffn.softplus_sqrt.bin": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+  "ops/ffn.top6_order.bin": "c5de9e3002073b6bf6bc99c0500b871ca9ee71fa9271fdc83496a219953e57bc",
+  "ops/ffn.top6.bin": "01cda72e3db78eee84faafa85ea0f9e93db01fd6dcaf0b8a5255cc500f84d46b",
+  "ops/ffn.weights.bin": "0a8cf3117c82deebe9f197224312d9269bfd6d7a715e58dcfe762638a0421853"
+ },
+ "die_v_sha256": "86ee2921ea1587bfcc31487995d0bbf2a616ae6a62a1c801b8dd899aa15595b5",
+ "age_contract_candidate": {
+  "delta_vs_saved_HOP": 217,
+  "N": 976,
+  "S": 974,
+  "status": "hypothesis pending actual port-capture witness; compiler unchanged"
+ }
+}

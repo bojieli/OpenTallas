@@ -24,23 +24,18 @@ module dsdv_gunit_l3 #(
     output wire [275:0]  vo_s,  input wire [275:0] vi_s
 );
     localparam integer V = 276, K = 6;
-    // S81-NATIVE3 (10-17, NATIVE-2 audit: rst_n 447.5 ps capture): rst_n drives only a local reset relay (2 sync + 1 tree
-    // stage per region, release +3 edges): rung pass / operand capture / su_rw / weight output each reset from their copy.
-    wire [3:0] rsv;
-    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
-    wire rs_p = rsv[0], rs_i = rsv[1], rs_w = rsv[2], rs_o = rsv[3];
-    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rs_p), .d(rn_i), .q(vo_s));
-    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rs_p), .d(vi_s), .q(rn_o));
+    dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rst_n), .d(rn_i), .q(vo_s));
+    dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rst_n), .d(vi_s), .q(rn_o));
     reg st_q, v_q, l_q; reg [511:0] x_q; reg [31:0] sc_q; reg [9:0] row_q, row_c; reg [4:0] lm_q, lm_c; reg [15:0] sm_q, sm_c; reg [3:0] sid_q;
-    always @(posedge clk or negedge rs_i)
-        if (!rs_i) begin st_q <= 1'b0; v_q <= 1'b0; end else begin st_q <= rw_st; v_q <= rw_v; end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin st_q <= 1'b0; v_q <= 1'b0; end else begin st_q <= rw_st; v_q <= rw_v; end
     always @(posedge clk) begin
         l_q <= rw_l; x_q <= rw_x; sc_q <= rw_scale; sid_q <= sid_i;
         row_c <= rw_row; lm_c <= rw_lm; sm_c <= rw_sm;
         if (st_q) begin row_q <= row_c; lm_q <= lm_c; sm_q <= sm_c; end
     end
     wire o_v; wire [511:0] o_d; wire [15:0] o_m; wire f_rw;
-    ot_s81_su_rw #(.MUT(MUT == 4 ? 4 : 0), .KMAX(8)) u_rw (.clk(clk), .rst_n(rs_w), .start(st_q), .k_i(K[3:0]),
+    ot_s81_su_rw #(.MUT(MUT == 4 ? 4 : 0), .KMAX(8)) u_rw (.clk(clk), .rst_n(rst_n), .start(st_q), .k_i(K[3:0]),
         .scale_i(sc_q), .off_i(4'd0), .i_v(v_q), .i_x(x_q), .i_last(l_q), .o_v(o_v), .o_d(o_d), .o_m(o_m), .fault(f_rw));
     function automatic [V-1:0] ctl(input [9:0] a, input [3:0] m, input [127:0] d, input [15:0] sm, input [4:0] lm,
                                    input [3:0] s);
@@ -52,8 +47,8 @@ module dsdv_gunit_l3 #(
         end
     endfunction
     reg e2, e3; reg [191:0] wq;
-    always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin e2 <= 1'b0; e3 <= 1'b0; w_v <= 1'b0; fault <= 1'b0; end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin e2 <= 1'b0; e3 <= 1'b0; w_v <= 1'b0; fault <= 1'b0; end
         else begin
             e2 <= o_v; e3 <= e2; w_v <= e2 || e3;
             if (f_rw) fault <= 1'b1;

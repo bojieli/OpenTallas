@@ -42,6 +42,14 @@ module tb_gu_layer;
     reg [1023:0] dir;
     integer nhs, nsn, nss, nen, nes, nec, tend, measure, hsp = 0, cyc = 0, t_ks = -1, launch0 = -1, base = -1;
     integer pn = 0, ps = 0, qn = 0, qs = 0, qc = 0, errs = 0, job = 0, nroot = 0, nr = 0;
+    integer age_n = -1, age_s = -1, hc_row0 = 1000, hc_row1 = 1008;
+    integer age_last_n = -1, age_last_s = -1, age_last_cw = -1;
+    initial begin
+        if (!$value$plusargs("HC_AGE_N=%d", age_n)) age_n = -1;
+        if (!$value$plusargs("HC_AGE_S=%d", age_s)) age_s = -1;
+        if (!$value$plusargs("HC_ROW0=%d", hc_row0)) hc_row0 = 1000;
+        if (!$value$plusargs("HC_ROW1=%d", hc_row1)) hc_row1 = 1008;
+    end
     initial begin
         if (!$value$plusargs("dir=%s", dir)) $fatal(1, "+dir required");
         if (!$value$plusargs("nhs=%d", nhs)) $fatal(1, "+nhs");
@@ -81,6 +89,37 @@ module tb_gu_layer;
     // ---------------------------------------------------------------- monitor (posedge cyc: the values the gunit / its
     // neighbours capture on this edge)
     always @(posedge ck) if (rst_n) begin
+        // Actual port-capture edges, independent of planned expected timestamps.
+        if (vi_n[0] && vi_n[4:1] == 4'd7) begin
+            age_last_n = cyc - base;
+            if (measure && vi_n[44:40] == 5'd23)
+                $display("GU_AGE_HP N edge=%0d acc=%0d source=%0d", cyc-base, vi_n[44:40], vi_n[12:9]);
+        end
+        if (vi_s[0] && vi_s[4:1] == 4'd7) begin
+            age_last_s = cyc - base;
+            if (measure && vi_s[44:40] == 5'd23)
+                $display("GU_AGE_HP S edge=%0d acc=%0d source=%0d", cyc-base, vi_s[44:40], vi_s[12:9]);
+        end
+        if (g_cw_v && g_cw_a[9:8] == 2'b10 && g_cw_a[0]) begin
+            age_last_cw = cyc - base;
+            $display("GU_AGE_ISSUE edge=%0d which=%0d row=%0d", cyc-base, g_cw_d[41], g_cw_d[30:21]);
+        end
+        if (vo_n[0] && vo_n[60:57] == 4'hf &&
+            (vo_n[56:47] == hc_row0 || vo_n[56:47] == hc_row1)) begin
+            $display("GU_AGE_RESULT N edge=%0d row=%0d last_hp_n=%0d last_hp_s=%0d issue=%0d age_from_n=%0d", cyc-base, vo_n[56:47], age_last_n, age_last_s, age_last_cw, cyc-base-age_last_n);
+            if (age_n >= 0 && cyc-base-age_last_n != age_n) begin
+                errs = errs + 1;
+                $display("GU_AGE_CONTRACT_FAIL N measured=%0d expected=%0d", cyc-base-age_last_n, age_n);
+            end
+        end
+        if (vo_s[0] && vo_s[60:57] == 4'hf &&
+            (vo_s[56:47] == hc_row0 || vo_s[56:47] == hc_row1)) begin
+            $display("GU_AGE_RESULT S edge=%0d row=%0d last_hp_n=%0d last_hp_s=%0d issue=%0d age_from_n=%0d", cyc-base, vo_s[56:47], age_last_n, age_last_s, age_last_cw, cyc-base-age_last_n);
+            if (age_s >= 0 && cyc-base-age_last_n != age_s) begin
+                errs = errs + 1;
+                $display("GU_AGE_CONTRACT_FAIL S measured=%0d expected=%0d", cyc-base-age_last_n, age_s);
+            end
+        end
         if (vo_n[0]) begin
             if (measure) $display("GU OUT N %0d %h", cyc - base, vo_n);
             if (qn < nen && EN[qn][307:276] == cyc - base && EN[qn][275:0] == vo_n) qn = qn + 1;

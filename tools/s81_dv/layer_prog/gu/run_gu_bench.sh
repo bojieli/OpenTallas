@@ -20,7 +20,7 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/hdc/ot_hdc_prefix.sv $R/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv $R/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv
    $R/rtl/hdc/v41x/ot_dsrom_su_f12.sv $R/rtl/hdc/v41x/ot_dsrom_su_add6.sv $R/rtl/hdc/v41x/ot_dsrom_divc.sv $R/rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv
    $R/rtl/hdc/v41/ot_hdc_select_tree.sv $R/rtl/hdc/v41x/ot_dsrom_su_bias_select.sv $R/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
-   $R/rtl/hdc/v41/ot_hdc_fdiv.sv $R/rtl/hdc/v41/ot_hdc_sinkhorn.sv $R/rtl/hdc/v41/ot_hdc_sk_arith.sv $R/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
+   $R/rtl/hdc/v41/ot_hdc_fdiv.sv $R/rtl/hdc/v41/ot_hdc_sinkhorn_p.sv $R/rtl/hdc/v41/ot_hdc_sk_arith.sv $R/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv
    $R/rtl/hdc/ot_hdc_cg.sv $U/dsdv_gunit_pass.sv $U/dsdv_gunit_tail.sv $U/dsdv_gunit_l0.sv $U/dsdv_gunit_l1.sv $U/dsdv_gunit_l2.sv
    $U/dsdv_gunit_l3.sv $U/dsdv_gunit_l4.sv $U/dsdv_gunit_l5.sv $U/dsdv_gunit_l0r.sv $U/dsdv_gunit_l4r.sv $U/dsdv_gunit_l5f.sv
    $U/dsdv_gunit.sv"
