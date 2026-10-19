@@ -5,3 +5,4 @@ form (hub DRLY 2, U relay XRLY 1) -- rtl/test/run_hbm_hc_root_uring.sh, ot-epyc5
   hcroot_qd1     QDRLY 1 (root not told about the hub relay): HC_ENG_FAULT ps=1 (rc 1)
   hcroot_raw165  RAW0 165 (ring-form compiler constant): HC_ENG_FAULT core=1 (rc 1)
 <name>.log = driver output (fail_witness / pass evidence); <name>_run.log = simulator log.
+  r2 2026-10-18 (decoded RTL ffa402dda, Verilator 5.050 on ot-epyc4): all four driver logs byte-identical to the above.
