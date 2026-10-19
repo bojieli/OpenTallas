@@ -220,7 +220,7 @@ module qfd_tt_ctlm_dv #(
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     // MUT 1..3 -> the calendar's MUT; MUT 16 (bench only, NU > 1) -> the calendar's UFOLD-off mutant
-    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21) ? MUT : (MUT == 30) ? 4 : (MUT == 31) ? 5 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
+    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21 || MUT == 33) ? MUT : (MUT == 30) ? 4 : (MUT == 31) ? 5 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
         .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (
         .ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),

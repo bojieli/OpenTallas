@@ -24,6 +24,7 @@ Checks (PASS needs all):
   C6 busy4 sets fault_code[0];  C7 coll4 sets fault_code[1].
 Mutants (--mut, each must FAIL): 4 TLOAD payload halves swapped, 5 TLOAD word one edge late (C1 lockstep / C8), 11 relocation/tag from the wrong user, 12 per-user base dropped, 13 old one-in-flight
 rule, 14 start-while-busy not faulted, 15 a start freezes every playhead (the single calendar's global gating).
+33 (MU-DQ-CALPIPE2) the precomputed next head on a pop takes FIFO slot rp instead of rp + 1.
 """
 import argparse, json, os, re, subprocess, sys
 from pathlib import Path
@@ -277,7 +278,29 @@ def main():
     fc = lambda r: r['end'][1] if r['end'] else '000000'
     if fc(res['busy4'])[-1] != '1': fails.append(f"C6 busy4 restart not faulted (fault_code {fc(res['busy4'])})")
     if fc(res['coll4'])[-2] != '1': fails.append(f"C7 coll4 collision not faulted (fault_code {fc(res['coll4'])})")
-    summ = dict(mut=m, verdict='PASS' if not fails else 'FAIL', fails=fails, C_issue_offset=C,
+    # C9 SRAM ring: one command/edge, both four-entry row boundaries, ring
+    # wrap and partial final row. Reload between scenarios to exercise initial
+    # pending-write forwarding too. Run each NU4 playhead independently so a
+    # deliberate shared-port collision cannot hide a storage error.
+    old_seg = SEGS[1]
+    dense = [(8 + i, su(1 + i)) for i in range(23)]
+    SEGS[1] = dense
+    dense_count = 0
+    for nu, exe in ((1, e1), (4, e4)):
+        for user in range(nu):
+            ds = run(work, exe, f'dense_nu{nu}_u{user}', load_events(c0) + [start(s0, user, 1)], s0 + 100)
+            actual = sorted(e for e in ds['ev'] if e[0] >= s0)
+            expected = sorted(expected_user_events(dense, user, s0, C))
+            if ds['faults'] or actual != expected or (nu == 1 and ds['mism'] != 0):
+                fails.append(f'C9 SRAM dense nu{nu} u{user}: faults={ds["faults"]}, '
+                             f'missing={len(set(expected)-set(actual))}, extra={len(set(actual)-set(expected))}, '
+                             f'lockstep={ds["mism"]}')
+            dense_count += len(actual)
+    dense_busy = run(work, e1, 'dense_busy', load_events(c0) + [start(s0, 0, 1), start(s0 + 11, 0, 1)], s0 + 100)
+    if dense_busy['mism'] != 0:
+        fails.append(f'C9 SRAM refused-start lockstep={dense_busy["mism"]}')
+    SEGS[1] = old_seg
+    summ = dict(dense_events=dense_count, mut=m, verdict='PASS' if not fails else 'FAIL', fails=fails, C_issue_offset=C,
                 lock=dict(mismatches=res['lock']['mism'], faults=res['lock']['faults']),
                 solo1_events=len(u0(res['solo1'])), mu4_events=len(got), mu4_done_per_user=per_user,
                 landed_words=nland, busy4_fault_code=fc(res['busy4']), coll4_fault_code=fc(res['coll4']),
