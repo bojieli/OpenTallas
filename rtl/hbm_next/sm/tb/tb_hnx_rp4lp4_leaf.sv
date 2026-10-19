@@ -22,7 +22,12 @@ module tb_hnx_rp4lp4_leaf;
     reg [817:0] rl1;
     reg [2068:0] bk1;
     wire [49:0] g;
+`ifdef HNX_XS4
+    // lever (a): the leaf on the shared P-lane x store hnx_xs4
+    hnx_rp4lp4_lfx #(.P(P), .LSKEW(LSKEW), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .st(st), .rl1(rl1), .bk1(bk1), .g(g));
+`else
     hnx_rp4lp4_lf #(.P(P), .LSKEW(LSKEW), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .st(st), .rl1(rl1), .bk1(bk1), .g(g));
+`endif
 
     // ---- spec model of the lane fan-out (independent of the DUT RTL)
     wire m_sel = bk1[2068] && (bk1[2060:2048] == 13'd0);
