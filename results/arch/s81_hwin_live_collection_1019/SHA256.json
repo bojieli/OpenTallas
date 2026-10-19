@@ -1,11 +1,15 @@
 {
   "README.md": {
-    "sha256": "2ef76873cada4da0bb6780ddd319a24e3867cd248953da1038cc47ab1f1a638d",
-    "bytes": 2449
+    "sha256": "eb81b67580cccc946d5c05dd9c6676ce6fd351c3ae9860def2dcd09b055e37d0",
+    "bytes": 2808
   },
   "collect.py": {
     "sha256": "ff2ce89662bd15f54679c99e34af8eb84522697d1f391ab21b3cfdd552ed6c84",
     "bytes": 3704
+  },
+  "collect_final.py": {
+    "sha256": "aade3c7ee0bcaad6cd9e848b46e5190ab93c3b99440b1e754dfacda158048517",
+    "bytes": 2473
   },
   "collect_traces.py": {
     "sha256": "ca150d9ed89b033de67a388a780b88c5bfcf0f3b580b5ed20e1e7f339b0da267",
@@ -66,6 +70,10 @@
   "observations/2026-10-19T23_00_21.822265+00_00.json": {
     "sha256": "c0a697fe35c06605ab53cd000426286d8cf3be6d71946efed609e0bc5555db42",
     "bytes": 4818
+  },
+  "original_controller_record.json": {
+    "sha256": "091ad06063e2c89c2d6036ba7bbe5aa8266952c7d97183b90de9b5a51cd00287",
+    "bytes": 3071
   },
   "projection_traces/equiv_original_seed1.log": {
     "sha256": "a06ac6d4eabd0c321413bfe63363872783079ea91e4fa94299db6215afeae242",

@@ -38,7 +38,13 @@ Collect another read-only observation with:
 python3 results/arch/s81_hwin_live_collection_1019/collect.py
 ```
 
-When the job finishes, collect its actual `OT_RUN_EXIT`, final causal logs and
+The original controller session 6284 was marked failed/exit -1 at
+22:34:29 UTC when its worker ended, although the remote source harness
+continued. `original_controller_record.json` preserves that exact task-scoped
+record. Its outer `OT_RUN_EXIT` stream is unavailable; this is a controller
+collection limit, not a remote source-test failure. No terminal exit is inferred.
+
+When the remote job finishes, collect its final causal logs and
 all remaining phases before changing the overall verdict. Preserve a real
 failure and obtain ROOT disposition. Root separately owns the private source
 package choice, complete mapped retention/cost, macro/PG/clock and physical
