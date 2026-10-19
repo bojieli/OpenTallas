@@ -80,7 +80,13 @@ module ot_smh_calendar_banked_central #(parameter integer W=135,AW=11,XW=46,MUT=
  always @(posedge clk)begin if(accept_copy[0])pc<=sb;if(run_copy[0])pc<=end_word?base:pc+1'b1;end
  always @(posedge clk)if(accept_copy[1])base<=sb;
  always @(posedge clk)if(accept_copy[2])limit<=sl;
- always @(posedge clk)begin if(accept_copy[3])loops_left<=sn;if(run_copy[1]&&end_word&&loops_left!=1)loops_left<=loops_left-1'b1;end
+ // Distinct same-edge running copies keep each decrement enable local to8bits.
+ wire[15:0]loops_dec=loops_left-1'b1;
+ always @(posedge clk)begin
+  if(accept_copy[3])loops_left<=sn;
+  if(run_copy[1]&&end_word&&loops_left!=1)loops_left[7:0]<=loops_dec[7:0];
+  if(run_copy[5]&&end_word&&loops_left!=1)loops_left[15:8]<=loops_dec[15:8];
+ end
  always @(posedge clk)begin if(accept_copy[4])issued[15:0]<=0;if(run_copy[2])issued[15:0]<=issued_inc[15:0];end
  always @(posedge clk)begin if(accept_copy[5])issued[31:16]<=0;if(run_copy[3])issued[31:16]<=issued_inc[31:16];end
  always @(posedge clk)begin if(accept_copy[6])iter_r<=0;if(run_copy[4]&&end_word&&loops_left!=1)iter_r<=iter_r+1'b1;end
