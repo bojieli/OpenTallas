@@ -27,7 +27,7 @@
     {
       "consumer": "u_c.u_stm.xw_data/xw_addr",
       "source": "u_su.vm_wdata/vm_waddr",
-      "regional_path": "qfd_dv_su8_landed g_lane.g_tile_ld.u_result.ot_pl_stream_land output o_vq/o_dq, ck_dst=clk; actual source read receiver u_r. The primitive/hierarchy endpoint must be resolved from exact mapped regional profile, not inferred from this source string.",
+      "regional_path": "qfd_dv_su8_landed g_lane.g_tile_dv.u_result.ot_pl_stream_land output o_vq/o_dq, ck_dst=clk; actual source read receiver u_r. The primitive/hierarchy endpoint must be resolved from exact mapped regional profile, not inferred from this source string.",
       "profile_scope": "R4 production receipt uses sameclock SU_LT1/HD_W130 vehicle; regional ML5/HOPS graph is independently unqualified."
     },
     {
