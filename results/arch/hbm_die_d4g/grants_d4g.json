@@ -16788,9 +16788,9 @@
   },
   {
    "name": "calendar_SW",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_SW",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
@@ -16818,7 +16818,7 @@
    "pins": [],
    "planning_group": "vmh_SW",
    "qualified": false,
-   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers. | CODEX selected wrapper identity; geometry unchanged; no new native/view qualification.",
    "home_rule": "H-DIE-V790 10-16: against vmh_SW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
@@ -16830,9 +16830,9 @@
   },
   {
    "name": "calendar_SE",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_SE",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
@@ -16860,7 +16860,7 @@
    "pins": [],
    "planning_group": "vmh_SE",
    "qualified": false,
-   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers. | CODEX selected wrapper identity; geometry unchanged; no new native/view qualification.",
    "home_rule": "H-DIE-V790 10-16: against vmh_SE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
@@ -16872,9 +16872,9 @@
   },
   {
    "name": "calendar_NW",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_NW",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
@@ -16902,7 +16902,7 @@
    "pins": [],
    "planning_group": "vmh_NW",
    "qualified": false,
-   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers. | CODEX selected wrapper identity; geometry unchanged; no new native/view qualification.",
    "home_rule": "H-DIE-V790 10-16: against vmh_NW W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
@@ -16914,9 +16914,9 @@
   },
   {
    "name": "calendar_NE",
-   "cell": "hfd_hgi_vm_calendar",
+   "cell": "hfd_hgi_vm_calendar_f20",
    "instance": "calendar_NE",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "source_prerequisite": "53ece5c68",
    "kind": "tile",
    "parent": "die",
@@ -16944,7 +16944,7 @@
    "pins": [],
    "planning_group": "vmh_NE",
    "qualified": false,
-   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers.",
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers. | CODEX selected wrapper identity; geometry unchanged; no new native/view qualification.",
    "home_rule": "H-DIE-V790 10-16: against vmh_NE W face across a 21.6-um channel, clear of plan blocks, hub face pin windows and RF footprints; E (hub) face toward the hub",
    "calendar_geometry_2009": {
     "actual_lef": "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef",
@@ -19935,9 +19935,9 @@
   },
   {
    "name": "fs_SW",
-   "cell": "ot_hbm_fault_leaf",
+   "cell": "ot_hbm_fault_leaf_n8_s0",
    "instance": "fs_SW",
-   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv",
    "params": {},
    "kind": "tile",
    "parent": "die",
@@ -19954,7 +19954,8 @@
    "clock_period_ps": 833.333,
    "layer_cap": "M5",
    "grant": "H-DIE-R8 fault-tree leaf slot",
-   "home_rule": "E of sfault_SW (run6 placement; checked free of every run6 instance with a 2 um halo)"
+   "home_rule": "E of sfault_SW (run6 placement; checked free of every run6 instance with a 2 um halo)",
+   "notes": "| CODEX selected wrapper identity; geometry unchanged; no new native/view qualification."
   },
   {
    "name": "fr_SW",
@@ -20303,9 +20304,9 @@
   },
   {
    "name": "fs_NW",
-   "cell": "ot_hbm_fault_leaf",
+   "cell": "ot_hbm_fault_leaf_n8_s0",
    "instance": "fs_NW",
-   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv",
    "params": {},
    "kind": "tile",
    "parent": "die",
@@ -20322,7 +20323,8 @@
    "clock_period_ps": 833.333,
    "layer_cap": "M5",
    "grant": "H-DIE-R8 fault-tree leaf slot",
-   "home_rule": "E of sfault_NW (run6 placement; checked free of every run6 instance with a 2 um halo)"
+   "home_rule": "E of sfault_NW (run6 placement; checked free of every run6 instance with a 2 um halo)",
+   "notes": "| CODEX selected wrapper identity; geometry unchanged; no new native/view qualification."
   },
   {
    "name": "fr_NW",
