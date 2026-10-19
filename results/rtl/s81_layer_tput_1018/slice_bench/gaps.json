@@ -13,10 +13,11 @@
    "evidence": [
     "runs/idle: 17 of the 25 landings in the 3S cut fault from cycle 37 (all K>=4; the 8 with K<=3 stay clean)",
     "runs/lane_debug: ld_xrW_3S_l0 (K5): wc = rc+1 from rs release, fault at warm; a word at the source register edge 100 leaves the landing at 105 (plan age 10); r_f_3L01 (K2) is clean",
-    "runs/replay_L0_s3S: the CTL beats reach u_s_3S and are forwarded exactly (payload, hops 4->3) but land at u_s_2S 10 edges early (130 vs plan 140: two K>=4 landings x ~5 edges)"
+    "runs/replay_L0_s3S: the CTL beats reach u_s_3S and are forwarded exactly (payload, hops 4->3) but land at u_s_2S 10 edges early (130 vs plan 140: two K>=4 landings x ~5 edges)",
+    "runs/g1_3S_idle PASS (build 37 min / 47.6 GB RSS, 62.9 cyc/s); runs/g1_3S_replay FAIL 8/32 = only lane xrW_2S_l0 (E4, age 9) lands at 139/179/199.. vs the bundle check at age 10 (l3 E5): G8; runs/g1_3S_replay_hops FAIL (witness); runs/g1_3S_replay_shift1 PASSES only because the l0 tear is exactly -1 (not a valid witness until G8 is fixed)"
    ],
-   "note": "zero-delay RTL and silicon behave alike here: without the gate the integer flight time never reaches the epoch. Not worked around in the bench.",
-   "status": "FIXED in the generator (S81-LBGAP/G1, branch claude/s81-lbgap-g1-1018); lane bench PASS, cut_3S re-run pending",
+   "note": "zero-delay RTL and silicon behave alike here: without the gate the integer flight time never reaches the epoch. Not worked around in the bench. 10-18 18:10: dv_slice_replay injected every replayed beat one edge early (bench convention: a word driven at bench cycle k = register launch at edge k-1, as mk_io / the lane bench); fixed (+1). The first 3S replay (118 -> 138, 2 early) was that tool bug + G8.",
+   "status": "FIXED and measured on cut_3S (615 inst, bind9_g1, Verilator 5.050, ot-epyc4 10-18): runs/g1_3S_idle 2000 cyc TB_DV_SLICE PASS, land_fault 0 on every landing (was 17/25 faulting); L0 CTL replay forwards every beat exactly and on the lane ages, residual 1-cycle miss on xrW_2S_l0 = G8 (bundle lanes with unequal E), not G1",
    "resolution": {
     "side_wrong": "die netlist (dv_bind.py), not the compiler: the compiler age ceil(N/2) + E + 1 per landed lane is what the fixed RTL delivers (lane bench PASS at TT and FF flight); the 10-edge offset was two K>=D landings aliasing their 4-slot ring (word read from a slot already overwritten), plus no flight time in zero-delay RTL",
     "generator": "every LANDED lane gets a hop-0 clock gate ICGx4_ASAP7_75t_R fwd_<lane> (CLK = source root or the slice ck_line, ENA = released reset); gate calendar R0 = G + (N mod 2) per lane (G = first gated source edge, R0 = first landing read edge, N relay stations), realised with dsfd_rly_1 calendar stations on whichever side would release early (619 stations, 224 gates on p4l); K = E unchanged, no tile changes; SE strap",
@@ -106,6 +107,20 @@
     "cut_3S/kit.json prefer_conflicts, snapshot_differs"
    ],
    "note": ""
+  },
+  {
+   "id": "G8",
+   "owner": "S81-DIE7 DIE sub-lane (dv_bind.py landing K) + landing plan (land_plan.json K)",
+   "severity": "tears multi-lane beats on 31 of 125 landed bundles (every rstop/xr line + frame bundle with unequal lane E)",
+   "module": "dsfd_dvland_* .k strap per lane (results/arch/s81_dv_1016/landing/p4l/land_plan.json K = E per lane; dv_bind k_ = E)",
+   "port": "ld_<bundle>_l<i>.k",
+   "missing": "the compiler line model (dv_layer_compile / dv_slice_replay) and the RTL consumer (ot_s81sl_rstop takes the 4 x 276-bit beat of ri_e / ri_w in ONE cycle, no per-lane re-alignment) need every lane of a bundle to land at the same age; the land plan sets K = E per lane, so lanes of one bundle with different E (e.g. xrW_2S l0..l2 E4, l3 E5; x_f_0L00 l3 E5 vs l0..l2 E4; jw_E 11/12) land 1+ cycles apart",
+   "evidence": [
+    "runs/g1_3S_replay: xrW_2S_l0 (E4, age 9) lands the forwarded beat at 139, the bundle (l3 E5, age 10) at 140: the beat is torn",
+    "land_plan.json p4l: 31 of 125 multi-lane bundles have unequal E"
+   ],
+   "note": "fix: per bundle K_l = E_l + (max_bundle age - age_l) (age = ceil(N/2) + E + 1; equal N per bundle -> K = max E), re-check the landing window [K-D+1, K-1] at TT and FF per lane (long D8 tile where it does not fit), keep the gate calendar (it depends on N, not K); then dv_slice_replay g1_3S_replay must PASS 32/32 and shift1 FAIL",
+   "status": "OPEN"
   }
  ]
 }
