@@ -1,0 +1,48 @@
+{
+  "contract_type": "COMPONENT",
+  "production_eligible": false,
+  "selected_shape": {
+    "MODE": 0,
+    "HOST_MU": 0,
+    "NSLOT": 1,
+    "ENG_CTX": 1,
+    "NW": 18,
+    "PLB": 13,
+    "EVQ": 4,
+    "FMT": 1
+  },
+  "fixture_parameters": {
+    "ENABLE_RETAINED_COMMIT": 1,
+    "COMPONENT_FIXTURE": 1,
+    "HEALTH_CUTOFF_EDGES": 12,
+    "STEP_RESPONSE_DEADLINE_EDGES": 8
+  },
+  "production_calendar": {
+    "H": null,
+    "response_deadline": null,
+    "producer_coverage": null,
+    "regional_phases": null
+  },
+  "engine_producer": "scheduler_bench independent deterministic pin-level engine, conditional COMPONENT producer",
+  "health_producer": "scheduler_bench scheduled exact identity/cutoff, conditional COMPONENT producer",
+  "owner_drained_producer": "conditional component only; native KV/VM/collective/host/MSI external obligations not qualified",
+  "recovery": "fail-stop until raw POR",
+  "physical_storage": "HOLD: original116-bit event plus62-bit lineage x16=2848 indexed bits requires actual SRAM integration",
+  "added_declared_state_bits_NW18_H12_EVQ4": {
+    "global_owner_mirror": 124,
+    "pending_snapshot_including_age_stat_cycles": 179,
+    "cq_immutable_snapshot": 243,
+    "offer_response_diagnostics": 8,
+    "event_lineage": 992,
+    "sum": 1546
+  },
+  "source_sha256": "56faafee7f299dd0fa9a226b1e6d732cc239460469364aae5ea1b550f38359b2",
+  "limitations": [
+    "Selected scalar SU only; MU4 elaboration refused",
+    "Actual runtime PLL loss witness absent; between-stopped-edge pulse unsupported",
+    "No root binding or packet/PHY transport reset closure",
+    "No cache poison distribution or production drain receipt",
+    "Poisoned context retained until raw POR; after one fault report remaining immutable queue entries retained, never posted as success",
+    "Full-fleet physical/source fanout, clock/reset, macro and static-calendar cost remains open"
+  ]
+}
