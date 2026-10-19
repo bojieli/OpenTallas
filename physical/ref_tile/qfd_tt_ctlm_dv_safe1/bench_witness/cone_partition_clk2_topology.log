@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-epyc5       admits   830 GB (avail 694, growth 113, headroom 0, waiters 0/0 GB) load 41/128 running 17 disk 1277 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-ctlm-cones
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1388246-1792422078 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_LCR region=core cells=80092 std_area_um2=9620.423460003089 x=2.16:432.0
+OT_LCR region=hr cells=12663 std_area_um2=1866.8377800001856 x=475.2:775.44
+OT_LCR fixed_or_hard=18005 shared_cells=8513 shared_std_area_um2=759.1806000000475 seam_area_um2=14743.296000000002
+OT_LCR PASS full cones partitioned with real shared channel
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1388246-1792422078): exit 0

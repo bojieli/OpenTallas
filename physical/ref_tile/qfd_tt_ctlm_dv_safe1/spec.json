@@ -1,0 +1,553 @@
+{
+ "name": "qfd_tt_ctlm_dv_safe1",
+ "top": "qfd_tt_ctlm_dv_lpf_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "params": {
+  "XPF_TRANSPORT_EDGES": 20,
+  "STAGE_ME": 1,
+  "LAST_STAGE": 37,
+  "MUT": 0,
+  "NU": 4,
+  "OPSEG": 1
+ },
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 777.6,
+  "h": 432.0,
+  "exact": true
+ },
+ "slot_change_request": "777.6x345.6 -> 777.6x432: 6 SRAMs in two columns/three rows with >=43.2um column channels and >=51.8um row channels; full N/S bands, independent43.2um shared combinational/landing channel; ROM moved east above h16c. Model/synthesis area and die price validation pending.",
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr",
+   "count": 1,
+   "inst": "u_hr",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_m[0].u_pm",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_m[1].u_pm",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[0].u_fifo",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[1].u_fifo",
+   "at": [
+    259.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[2].u_fifo",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[3].u_fifo",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "E": [
+   "emb_start",
+   "emb_token"
+  ],
+  "N": [
+   "ck_core",
+   "rst_n",
+   "native_ret",
+   "native_cmd",
+   "command_stage",
+   "layer_context_v",
+   "native_pos",
+   "native_tok",
+   "cal_descriptor_obs",
+   "cal_image_ready",
+   "cal_program_obs",
+   "control_stores_ready",
+   "dc",
+   "cf",
+   "dh_user",
+   "dh",
+   "fab",
+   "kok",
+   "kwd",
+   "program_obs",
+   "pw"
+  ],
+  "S": [
+   "tl",
+   "ck_hr",
+   "ag5",
+   "cmd",
+   "hr",
+   "ss5"
+  ]
+ },
+ "pin_ranges": {
+  "ck_core": [
+   194.4,
+   194.65
+  ],
+  "emb_start": [
+   410.413,
+   410.663
+  ],
+  "emb_token": [
+   411.163,
+   414.163
+  ],
+  "ck_hr": [
+   655.017,
+   655.267
+  ],
+  "rst_n": [
+   420.271,
+   420.521
+  ],
+  "tl": [
+   43.2,
+   410.4
+  ],
+  "native_ret": [
+   462.479,
+   501.255
+  ],
+  "native_cmd": [
+   501.755,
+   656.86
+  ],
+  "ag5": [
+   655.767,
+   657.433
+  ],
+  "cmd": [
+   657.933,
+   677.267
+  ],
+  "dh_user": [
+   662.0,
+   662.5
+  ],
+  "command_stage": [
+   665.517,
+   666.517
+  ],
+  "layer_context_v": [
+   667.017,
+   667.267
+  ],
+  "native_pos": [
+   667.767,
+   670.767
+  ],
+  "native_tok": [
+   671.267,
+   674.267
+  ],
+  "cal_descriptor_obs": [
+   674.767,
+   686.267
+  ],
+  "hr": [
+   677.767,
+   753.267
+  ],
+  "cal_image_ready": [
+   686.767,
+   687.017
+  ],
+  "cal_program_obs": [
+   687.517,
+   700.183
+  ],
+  "control_stores_ready": [
+   700.683,
+   700.933
+  ],
+  "dc": [
+   701.433,
+   710.767
+  ],
+  "cf": [
+   711.267,
+   711.517
+  ],
+  "dh": [
+   712.017,
+   743.183
+  ],
+  "fab": [
+   743.683,
+   743.933
+  ],
+  "kok": [
+   744.433,
+   744.683
+  ],
+  "kwd": [
+   745.183,
+   745.433
+  ],
+  "program_obs": [
+   745.933,
+   758.6
+  ],
+  "ss5": [
+   753.767,
+   771.6
+  ],
+  "pw": [
+   759.1,
+   771.6
+  ]
+ },
+ "pg_layer": "M7",
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "job": {
+  "owner": "Claude:MU-DQ-CTLMCLK",
+  "branch": "claude/mu-dq-ctlmclk-1019",
+  "tag": "clk2",
+  "purpose": "Qwen TT control cluster qfd_tt_ctlm_dv, MU release die (claude/mu-die-qw2-1019 base): landed parent qfd_tt_ctlm_dv_lpf_lp, COORD 0ke clock fix: (a) h16c ck_pm0/1 detached for CTS and re-driven from the ck_head net + record tap, (b) ck_hr port on the S face beside h16c ck_head, ck_core region = u_gi only (every input lands from hr; tl straight from core, COORD 0kg): 21 landings / 4,178 landing flops (was 8,943).",
+  "extra_paths": [
+   "rtl/test/qwen_dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/qfd_tt_head_static_h16c",
+   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+   "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/mu_qwen_1018/b1/rom"
+  ],
+  "benches": [
+   {
+    "name": "ctlm_abi_m0",
+    "cmd": "CTLM_ONLY=abi0 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_ABI_PASS MUT=0"
+   },
+   {
+    "name": "ctlm_abi_m4",
+    "cmd": "CTLM_ONLY=abi4 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=4",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m4.log"
+   },
+   {
+    "name": "ctlm_abi_m5",
+    "cmd": "CTLM_ONLY=abi5 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=5",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m5.log"
+   },
+   {
+    "name": "ctlm_abi_m6",
+    "cmd": "CTLM_ONLY=abi6 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=6",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m6.log"
+   },
+   {
+    "name": "ctlm_abi_m7",
+    "cmd": "CTLM_ONLY=abi7 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=7",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m7.log"
+   },
+   {
+    "name": "ctlm_abi_m8",
+    "cmd": "CTLM_ONLY=abi8 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=8",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m8.log"
+   },
+   {
+    "name": "ctlm_cal_m0",
+    "cmd": "CTLM_ONLY=cal0 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_CAL MUT=0 NSL=0: PASS"
+   },
+   {
+    "name": "ctlm_cal_m1",
+    "cmd": "CTLM_ONLY=cal1 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=1 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_cal_m1.log"
+   },
+   {
+    "name": "ctlm_cal_m2",
+    "cmd": "CTLM_ONLY=cal2 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=2 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_cal_m2.log"
+   },
+   {
+    "name": "ctlm_cal_m3",
+    "cmd": "CTLM_ONLY=cal3 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=3 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_cal_m3.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/views",
+  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv",
+  "benched_by": "rtl/test/qwen_dv/tt_ctlm_prog_bench.py --hard 1 --landed 1 (compiled image: dut CTLM_PROG PASS 123/123 + LANDED_LOCKSTEP PASS 24912 compares; LMUT 1/2 FAIL); lp bench rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh (audit PASS, unland FAIL, MUT 0 PASS, MUT 1/2 FAIL); eq tb_qfd_tt_ctlm_dv_lpf_eq (DMUT 0 PASS, 5/6 FAIL). Witnesses physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/landed/"
+ },
+ "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports).",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_core",
+  "ck_hr"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "tl"
+   ]
+  },
+  "hr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hr"
+   ],
+   "inputs": [
+    "pw",
+    "dh",
+    "dh_user",
+    "kok",
+    "kwd",
+    "fab",
+    "native_ret",
+    "ss5",
+    "ag5"
+   ],
+   "outputs": [
+    "program_obs",
+    "control_stores_ready",
+    "layer_context_v",
+    "native_tok",
+    "native_pos",
+    "command_stage",
+    "cal_program_obs",
+    "cal_descriptor_obs",
+    "cal_image_ready",
+    "dc",
+    "native_cmd",
+    "hr",
+    "cmd",
+    "emb_start",
+    "emb_token",
+    "cf"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json",
+ "landed_note": "HF-4 10-18: die obligations (record die_obligations): two clock ports ck_core / ck_hr (regional, related, same PLL phase); every output +3 edges vs the flat qfd_tt_ctlm_dv, inputs on time -> the GEN must re-derive XPF_TRANSPORT_EDGES (+3 -> 23 if counted from the flat hr register) and lane ages of cmd/hr/dc/native_cmd; lp MUT 4 (u_hr reset one stage late) is NOT observable (PASS) because h16c re-times its own reset stations and its state starts at program load, waived. SUPERSEDED offsets by MU-DQ-CTLMCLK (see clock_note_ctlmclk / record compiler).",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "hf4c_note": "HF-4c 10-18 (first gen on the CLOSED h16c view qfd_tt_head_static_h16c-h16c-ae6b0c59a): (1) h16c MY is impossible on the asap7 tracks (no MY x origin puts its 245 M5 S-face pins on track; M3 also off except x%0.036 shifts) -> R0 at (475.2,43.2): S face (rom_cmd/rom_ret/ck_head/ck_pm0) stays S, E face (1,088 pins: landing reads + outputs) faces a 41-um E channel next to the N/S output pins x 655-771; (2) upper calendar SRAM 120.984 -> 121.008 (120.984 = 1,585 pins off track; 121.008 = the h16c stack pitch).",
+ "hard_define": "SYNTHESIS",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: lp.py regional reset runs (rst_n -> u_lpr_root 1 flop on ck_core -> u_lpr_core / u_lpr_hr 2 flops per region -> u_lprc_* per child; port net has one sink, reset depth 3 proven by the landed lockstep bench)"
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_64x512_m1_r2c2",
+  "ot_rom_4096x72_m8"
+ ],
+ "soft_root_macro_bindings": {
+  "u_gi.u_cal.g_m[0].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_m[1].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.u_rom": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  }
+ },
+ "raw_memory_note": "TW2-QCTLM 10-19: gate 20261019-010025 CTS stopped at 'OT_HYBRID: CTS source ck_core must reach only standard-cell clock pins' = the calendar's 2 raw 64x512 SRAMs (lp region ck_core) were undeclared sinks; now exact raw-memory bindings on region root ck_core (tool: claude/root-landed-rawmem-1019 7729b9de4, landed clusters accept raw sinks of a region root)",
+ "fill_reason": {
+  "pin_bound": "width 777.6 is the die slot: N face (native59/sys_face, 1066 pins over 574 um) and S face (W5, 766 pins over 588 um) pin x positions are kept to abut the die neighbours (74-76% of each face); height 345.6 = the hard h16c child (222.48 at y 43.2) plus the N-face pin-flop band (21 columns, recipe-2 hold stages) and its escape over the child on the 43.2 lattice; one lattice step less (302.4) leaves 36.7 um for 1066 N pins + their flops. Measured fill 34.1% pre-MU; MU NU4 (claude/mu-adopt-ctlm-1019) adds ~3.7k core flops"
+ },
+ "mu_note": "MU-DQ-CTLMKIT 10-19: (1) leaf ROM u_gi.g_op.u_leaf.g_op.u_rom (38.0 x 62.9) at (43.2, 259.2) R0 on the 43.2 lattice, core region, above the calendar SRAM stack (43.2..198.8; 60.4 um channel, pins on its W face like the SRAMs, facing the calendar glue strip), raw-memory sink of ck_core like the SRAMs; (2) tl[1087:0] (one TLOAD table word, else 0) on the S face x 432.0-655.3 (4.9 pins/um) left of cmd (the die's W5 st_wi beside cmd_wi), landed core->hr like cmd; (3) dh_user[1:0] on the N face x 662.0 (gap between native_cmd and command_stage); die GEN ties it 0 (OPSEG mode). Die obligation: re-place tl / dh_user pins with the die top-down pin assignment.",
+ "landed_raw_detach": true,
+ "clock_note_ctlmclk": "safe1: after fixed pin anchoring classify full combinational cones by source/sink clock ownership; exclusive core/hr soft cones belong with regional flops, mixed/rootless cones stay in real43.2um center channel. Flop-only full-width regions from failed clk2 are removed. No density relaxation.",
+ "pin_hook_after_flops": [
+  "physical/ref_tile/qfd_tt_ctlm_dv_safe1/lp_cone_regions.tcl"
+ ],
+ "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe1/views",
+ "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe1",
+ "structural_recut_status": "DRAFT: awaits unified CALPIPE FIFO SRAM + ctx_x + hu RTL and updated synthesis area/physical ownership proof before gate. Does not inherit clk2 readiness."
+}
