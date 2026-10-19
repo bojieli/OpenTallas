@@ -37,11 +37,11 @@
    ]
   }
  },
- "D": 4,
+ "D": 8,
  "E": 3,
  "K": 3,
  "added_edges_per_landing": 4,
- "window": "(3 - 4) T + t_hold < dL < 3 T - t_cq - t_setup at TT and FF",
+ "window": "(3 - 8) T + t_hold < dL < 3 T - t_cq - t_setup at TT and FF",
  "landings": [
   {
    "name": "0",
@@ -59,7 +59,7 @@
    "ring": "u_lpl_0_w (ck_h)",
    "read": "u_lpl_0_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_0_w.* -to u_lpl_0_r.*"
   },
   {
    "name": "1",
@@ -77,7 +77,7 @@
    "ring": "u_lpl_1_w (ck_h)",
    "read": "u_lpl_1_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_1_w.* -to u_lpl_1_r.*"
   },
   {
    "name": "2",
@@ -95,7 +95,7 @@
    "ring": "u_lpl_2_w (ck_h)",
    "read": "u_lpl_2_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_2_w.* -to u_lpl_2_r.*"
   },
   {
    "name": "3",
@@ -113,7 +113,7 @@
    "ring": "u_lpl_3_w (ck_h)",
    "read": "u_lpl_3_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_3_w.* -to u_lpl_3_r.*"
   },
   {
    "name": "4",
@@ -131,7 +131,7 @@
    "ring": "u_lpl_4_w (ck_h)",
    "read": "u_lpl_4_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_4_w.* -to u_lpl_4_r.*"
   },
   {
    "name": "5",
@@ -149,7 +149,7 @@
    "ring": "u_lpl_5_w (ck_h)",
    "read": "u_lpl_5_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_5_w.* -to u_lpl_5_r.*"
   },
   {
    "name": "6",
@@ -167,7 +167,7 @@
    "ring": "u_lpl_6_w (ck_h)",
    "read": "u_lpl_6_r (ck_b)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_6_w.* -to u_lpl_6_r.*"
   },
   {
    "name": "7",
@@ -186,7 +186,7 @@
    "ring": "u_lpl_7_w (ck_h)",
    "read": "u_lpl_7_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_7_w.* -to u_lpl_7_r.*"
   },
   {
    "name": "8",
@@ -205,7 +205,7 @@
    "ring": "u_lpl_8_w (ck_h)",
    "read": "u_lpl_8_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_8_w.* -to u_lpl_8_r.*"
   },
   {
    "name": "9",
@@ -224,7 +224,7 @@
    "ring": "u_lpl_9_w (ck_h)",
    "read": "u_lpl_9_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_9_w.* -to u_lpl_9_r.*"
   },
   {
    "name": "10",
@@ -243,7 +243,7 @@
    "ring": "u_lpl_10_w (ck_h)",
    "read": "u_lpl_10_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_10_w.* -to u_lpl_10_r.*"
   },
   {
    "name": "11",
@@ -262,7 +262,7 @@
    "ring": "u_lpl_11_w (ck_h)",
    "read": "u_lpl_11_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_11_w.* -to u_lpl_11_r.*"
   },
   {
    "name": "12",
@@ -281,7 +281,7 @@
    "ring": "u_lpl_12_w (ck_h)",
    "read": "u_lpl_12_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_12_w.* -to u_lpl_12_r.*"
   },
   {
    "name": "13",
@@ -300,7 +300,7 @@
    "ring": "u_lpl_13_w (ck_h)",
    "read": "u_lpl_13_r (ck_l)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_13_w.* -to u_lpl_13_r.*"
   },
   {
    "name": "14",
@@ -321,7 +321,7 @@
    "ring": "u_lpl_14_w (ck_h)",
    "read": "u_lpl_14_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_14_w.* -to u_lpl_14_r.*"
   },
   {
    "name": "15",
@@ -342,7 +342,7 @@
    "ring": "u_lpl_15_w (ck_h)",
    "read": "u_lpl_15_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_15_w.* -to u_lpl_15_r.*"
   },
   {
    "name": "16",
@@ -363,7 +363,7 @@
    "ring": "u_lpl_16_w (ck_h)",
    "read": "u_lpl_16_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_16_w.* -to u_lpl_16_r.*"
   },
   {
    "name": "17",
@@ -384,7 +384,7 @@
    "ring": "u_lpl_17_w (ck_h)",
    "read": "u_lpl_17_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_17_w.* -to u_lpl_17_r.*"
   },
   {
    "name": "18",
@@ -405,7 +405,7 @@
    "ring": "u_lpl_18_w (ck_h)",
    "read": "u_lpl_18_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_18_w.* -to u_lpl_18_r.*"
   },
   {
    "name": "19",
@@ -426,7 +426,7 @@
    "ring": "u_lpl_19_w (ck_h)",
    "read": "u_lpl_19_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_19_w.* -to u_lpl_19_r.*"
   },
   {
    "name": "20",
@@ -447,15 +447,15 @@
    "ring": "u_lpl_20_w (ck_h)",
    "read": "u_lpl_20_r (ck_t)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_20_w.* -to u_lpl_20_r.*"
   },
   {
    "name": "21",
-   "net": "ft0",
+   "net": "ft4",
    "src_region": "b",
    "dst_region": "h",
    "src_nodes": [
-    "u_c0"
+    "u_c4"
    ],
    "width": 1,
    "readers": [
@@ -464,7 +464,7 @@
    "ring": "u_lpl_21_w (ck_b)",
    "read": "u_lpl_21_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_21_w.* -to u_lpl_21_r.*"
   },
   {
    "name": "22",
@@ -481,27 +481,10 @@
    "ring": "u_lpl_22_w (ck_t)",
    "read": "u_lpl_22_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_22_w.* -to u_lpl_22_r.*"
   },
   {
    "name": "23",
-   "net": "ft3",
-   "src_region": "l",
-   "dst_region": "h",
-   "src_nodes": [
-    "u_c3"
-   ],
-   "width": 1,
-   "readers": [
-    "u_h.l_fault"
-   ],
-   "ring": "u_lpl_23_w (ck_l)",
-   "read": "u_lpl_23_r (ck_h)",
-   "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
-  },
-  {
-   "name": "24",
    "net": "ft9",
    "src_region": "t",
    "dst_region": "h",
@@ -512,30 +495,13 @@
    "readers": [
     "u_h.l_fault"
    ],
-   "ring": "u_lpl_24_w (ck_t)",
-   "read": "u_lpl_24_r (ck_h)",
+   "ring": "u_lpl_23_w (ck_t)",
+   "read": "u_lpl_23_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_24_w.* -to u_lpl_24_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_23_w.* -to u_lpl_23_r.*"
   },
   {
-   "name": "25",
-   "net": "ft4",
-   "src_region": "b",
-   "dst_region": "h",
-   "src_nodes": [
-    "u_c4"
-   ],
-   "width": 1,
-   "readers": [
-    "u_h.l_fault"
-   ],
-   "ring": "u_lpl_25_w (ck_b)",
-   "read": "u_lpl_25_r (ck_h)",
-   "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_25_w.* -to u_lpl_25_r.*"
-  },
-  {
-   "name": "26",
+   "name": "24",
    "net": "ft2",
    "src_region": "l",
    "dst_region": "h",
@@ -546,18 +512,52 @@
    "readers": [
     "u_h.l_fault"
    ],
+   "ring": "u_lpl_24_w (ck_l)",
+   "read": "u_lpl_24_r (ck_h)",
+   "added_edges": 4,
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_24_w.* -to u_lpl_24_r.*"
+  },
+  {
+   "name": "25",
+   "net": "ft3",
+   "src_region": "l",
+   "dst_region": "h",
+   "src_nodes": [
+    "u_c3"
+   ],
+   "width": 1,
+   "readers": [
+    "u_h.l_fault"
+   ],
+   "ring": "u_lpl_25_w (ck_l)",
+   "read": "u_lpl_25_r (ck_h)",
+   "added_edges": 4,
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_25_w.* -to u_lpl_25_r.*"
+  },
+  {
+   "name": "26",
+   "net": "ft1",
+   "src_region": "l",
+   "dst_region": "h",
+   "src_nodes": [
+    "u_c1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_h.l_fault"
+   ],
    "ring": "u_lpl_26_w (ck_l)",
    "read": "u_lpl_26_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_26_w.* -to u_lpl_26_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_26_w.* -to u_lpl_26_r.*"
   },
   {
    "name": "27",
-   "net": "ft6",
+   "net": "ft7",
    "src_region": "t",
    "dst_region": "h",
    "src_nodes": [
-    "u_c6"
+    "u_c7"
    ],
    "width": 1,
    "readers": [
@@ -566,7 +566,7 @@
    "ring": "u_lpl_27_w (ck_t)",
    "read": "u_lpl_27_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_27_w.* -to u_lpl_27_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_27_w.* -to u_lpl_27_r.*"
   },
   {
    "name": "28",
@@ -583,61 +583,44 @@
    "ring": "u_lpl_28_w (ck_t)",
    "read": "u_lpl_28_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_28_w.* -to u_lpl_28_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_28_w.* -to u_lpl_28_r.*"
   },
   {
    "name": "29",
-   "net": "ft1",
-   "src_region": "l",
-   "dst_region": "h",
-   "src_nodes": [
-    "u_c1"
-   ],
-   "width": 1,
-   "readers": [
-    "u_h.l_fault"
-   ],
-   "ring": "u_lpl_29_w (ck_l)",
-   "read": "u_lpl_29_r (ck_h)",
-   "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_29_w.* -to u_lpl_29_r.*"
-  },
-  {
-   "name": "30",
-   "net": "ft7",
+   "net": "ft6",
    "src_region": "t",
    "dst_region": "h",
    "src_nodes": [
-    "u_c7"
+    "u_c6"
    ],
    "width": 1,
    "readers": [
     "u_h.l_fault"
    ],
-   "ring": "u_lpl_30_w (ck_t)",
-   "read": "u_lpl_30_r (ck_h)",
+   "ring": "u_lpl_29_w (ck_t)",
+   "read": "u_lpl_29_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_30_w.* -to u_lpl_30_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_29_w.* -to u_lpl_29_r.*"
   },
   {
-   "name": "31",
-   "net": "vl3",
-   "src_region": "l",
+   "name": "30",
+   "net": "ft0",
+   "src_region": "b",
    "dst_region": "h",
    "src_nodes": [
-    "u_c3"
+    "u_c0"
    ],
    "width": 1,
    "readers": [
-    "u_h.l_valid"
+    "u_h.l_fault"
    ],
-   "ring": "u_lpl_31_w (ck_l)",
-   "read": "u_lpl_31_r (ck_h)",
+   "ring": "u_lpl_30_w (ck_b)",
+   "read": "u_lpl_30_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_31_w.* -to u_lpl_31_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_30_w.* -to u_lpl_30_r.*"
   },
   {
-   "name": "32",
+   "name": "31",
    "net": "vl0",
    "src_region": "b",
    "dst_region": "h",
@@ -648,30 +631,30 @@
    "readers": [
     "u_h.l_valid"
    ],
-   "ring": "u_lpl_32_w (ck_b)",
-   "read": "u_lpl_32_r (ck_h)",
+   "ring": "u_lpl_31_w (ck_b)",
+   "read": "u_lpl_31_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_32_w.* -to u_lpl_32_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_31_w.* -to u_lpl_31_r.*"
   },
   {
-   "name": "33",
-   "net": "vl6",
+   "name": "32",
+   "net": "vl8",
    "src_region": "t",
    "dst_region": "h",
    "src_nodes": [
-    "u_c6"
+    "u_c8"
    ],
    "width": 1,
    "readers": [
     "u_h.l_valid"
    ],
-   "ring": "u_lpl_33_w (ck_t)",
-   "read": "u_lpl_33_r (ck_h)",
+   "ring": "u_lpl_32_w (ck_t)",
+   "read": "u_lpl_32_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_33_w.* -to u_lpl_33_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_32_w.* -to u_lpl_32_r.*"
   },
   {
-   "name": "34",
+   "name": "33",
    "net": "vl7",
    "src_region": "t",
    "dst_region": "h",
@@ -682,10 +665,27 @@
    "readers": [
     "u_h.l_valid"
    ],
+   "ring": "u_lpl_33_w (ck_t)",
+   "read": "u_lpl_33_r (ck_h)",
+   "added_edges": 4,
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_33_w.* -to u_lpl_33_r.*"
+  },
+  {
+   "name": "34",
+   "net": "vl9",
+   "src_region": "t",
+   "dst_region": "h",
+   "src_nodes": [
+    "u_c9"
+   ],
+   "width": 1,
+   "readers": [
+    "u_h.l_valid"
+   ],
    "ring": "u_lpl_34_w (ck_t)",
    "read": "u_lpl_34_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_34_w.* -to u_lpl_34_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_34_w.* -to u_lpl_34_r.*"
   },
   {
    "name": "35",
@@ -702,44 +702,10 @@
    "ring": "u_lpl_35_w (ck_t)",
    "read": "u_lpl_35_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_35_w.* -to u_lpl_35_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_35_w.* -to u_lpl_35_r.*"
   },
   {
    "name": "36",
-   "net": "vl8",
-   "src_region": "t",
-   "dst_region": "h",
-   "src_nodes": [
-    "u_c8"
-   ],
-   "width": 1,
-   "readers": [
-    "u_h.l_valid"
-   ],
-   "ring": "u_lpl_36_w (ck_t)",
-   "read": "u_lpl_36_r (ck_h)",
-   "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_36_w.* -to u_lpl_36_r.*"
-  },
-  {
-   "name": "37",
-   "net": "vl9",
-   "src_region": "t",
-   "dst_region": "h",
-   "src_nodes": [
-    "u_c9"
-   ],
-   "width": 1,
-   "readers": [
-    "u_h.l_valid"
-   ],
-   "ring": "u_lpl_37_w (ck_t)",
-   "read": "u_lpl_37_r (ck_h)",
-   "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_37_w.* -to u_lpl_37_r.*"
-  },
-  {
-   "name": "38",
    "net": "vl4",
    "src_region": "b",
    "dst_region": "h",
@@ -750,30 +716,47 @@
    "readers": [
     "u_h.l_valid"
    ],
-   "ring": "u_lpl_38_w (ck_b)",
-   "read": "u_lpl_38_r (ck_h)",
+   "ring": "u_lpl_36_w (ck_b)",
+   "read": "u_lpl_36_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_38_w.* -to u_lpl_38_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_36_w.* -to u_lpl_36_r.*"
   },
   {
-   "name": "39",
-   "net": "vl1",
-   "src_region": "l",
+   "name": "37",
+   "net": "vl6",
+   "src_region": "t",
    "dst_region": "h",
    "src_nodes": [
-    "u_c1"
+    "u_c6"
    ],
    "width": 1,
    "readers": [
     "u_h.l_valid"
    ],
-   "ring": "u_lpl_39_w (ck_l)",
-   "read": "u_lpl_39_r (ck_h)",
+   "ring": "u_lpl_37_w (ck_t)",
+   "read": "u_lpl_37_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_39_w.* -to u_lpl_39_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_37_w.* -to u_lpl_37_r.*"
   },
   {
-   "name": "40",
+   "name": "38",
+   "net": "vl3",
+   "src_region": "l",
+   "dst_region": "h",
+   "src_nodes": [
+    "u_c3"
+   ],
+   "width": 1,
+   "readers": [
+    "u_h.l_valid"
+   ],
+   "ring": "u_lpl_38_w (ck_l)",
+   "read": "u_lpl_38_r (ck_h)",
+   "added_edges": 4,
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_38_w.* -to u_lpl_38_r.*"
+  },
+  {
+   "name": "39",
    "net": "vl2",
    "src_region": "l",
    "dst_region": "h",
@@ -784,10 +767,27 @@
    "readers": [
     "u_h.l_valid"
    ],
+   "ring": "u_lpl_39_w (ck_l)",
+   "read": "u_lpl_39_r (ck_h)",
+   "added_edges": 4,
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_39_w.* -to u_lpl_39_r.*"
+  },
+  {
+   "name": "40",
+   "net": "vl1",
+   "src_region": "l",
+   "dst_region": "h",
+   "src_nodes": [
+    "u_c1"
+   ],
+   "width": 1,
+   "readers": [
+    "u_h.l_valid"
+   ],
    "ring": "u_lpl_40_w (ck_l)",
    "read": "u_lpl_40_r (ck_h)",
    "added_edges": 4,
-   "sdc": "set_multicycle_path -setup 3 / -hold 3 -from u_lpl_40_w.* -to u_lpl_40_r.*"
+   "sdc": "set_multicycle_path -setup 3 / -hold 7 -from u_lpl_40_w.* -to u_lpl_40_r.*"
   }
  ],
  "pads": [],
@@ -804,7 +804,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 5073,
+  "landing": 8951,
   "pads": 0,
   "reset": 61
  },

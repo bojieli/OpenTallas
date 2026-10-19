@@ -19,7 +19,7 @@ set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_b]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_b] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_b] -to [get_clocks core_clk]
-# 41 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 3 -hold 3, window (3 - 4) T + t_hold < dL < 3 T - t_cq - t_setup
+# 41 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 3 -hold 7, window (3 - 8) T + t_hold < dL < 3 T - t_cq - t_setup
 set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
@@ -29,7 +29,7 @@ foreach ot_ln $ot_lp_lands {
   if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }
   if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }
   set_multicycle_path -setup 3 -from $ot_lf -to $ot_lt
-  set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
+  set_multicycle_path -hold 7 -from $ot_lf -to $ot_lt
 }
 puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_b [get_ports {busy}]

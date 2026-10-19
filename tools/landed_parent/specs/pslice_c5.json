@@ -99,7 +99,7 @@
    "why": "status return: the head configures every leaf (cfg landed +3 into each leaf region) and ORs their sticky faults / checks their valid lockstep; that is a cross-region loop, so the status inputs are landed back and read at one common lag (all leaves alike: no false lockstep fault)"
   }
  ],
- "D": 4,
+ "D": 8,
  "E": 3,
  "bench": {
   "cycles": 20000,
@@ -118,5 +118,5 @@
   }
  },
  "floorplan": "tools/landed_parent/specs/pslice_c5_kit.py (1900.8 x 950.4: bottom row R0 L c1 c2 c3 + S c0 c4, central channel y 496.8..648 with the head at the W end, top row MX S c5..c9; regions h / l / t / b)",
- "why_E": "10-18 PL-KIT re-plan: E = K = 3 (+4 edges per landing, was +3): the write rings are fenced beside the head at the W end of the channel, so the ring -> read hop carries the whole run (up to ~1.7 mm to the E ends of the t and b regions, ~1.1-1.4 ns/mm repeated); 3 T leaves ~2.4 ns. Owner 10-18: landing latency cost accepted."
+ "why_E": "10-18 PL-KIT re-plan: E = K = 3 (+4 edges per landing, was +3): the write rings are fenced beside the head at the W end of the channel, so the ring -> read hop carries the whole run (up to ~1.7 mm to the E ends of the t and b regions, ~0.85-1.2 ns/mm repeated); 3 T leaves ~2.4 ns. Owner 10-18: landing latency cost accepted. D = 8 ring slots: ot_pl_land needs D a power of two and K in 1..D-1 (the K+1 = 4 read mutant needs D > 4); hold multicycle D-1 = 7."
 }

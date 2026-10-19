@@ -172,15 +172,15 @@ def main():
              expect="pass", pass_regex="MUT 0: LP_LOCKSTEP PASS", threads=8, peak_ram_gb=24, needs=["verilator"]),
         dict(name="lp_mut1_bypass", cmd=f"ONLY=1 SIM=verilator bash {LDIR}/ot_hbm_su_programme_pslice_c5_lp_bench.sh {{RUN}}/bench/lp1",
              expect="fail", fail_regex="MUT 1: LP_LOCKSTEP FAIL", threads=8, peak_ram_gb=24, needs=["verilator"],
-             fail_witness="results/arch/landed_parent_1018/pslice_c5/bench/bench_summary.log"),
+             fail_witness="results/arch/landed_parent_1018/pslice_c5/bench_v5050/bench_summary.log"),
         dict(name="lp_mut2_read_k1", cmd=f"ONLY=2 SIM=verilator bash {LDIR}/ot_hbm_su_programme_pslice_c5_lp_bench.sh {{RUN}}/bench/lp2",
              expect="fail", fail_regex="MUT 2: LP_LOCKSTEP FAIL", threads=8, peak_ram_gb=24, needs=["verilator"],
-             fail_witness="results/arch/landed_parent_1018/pslice_c5/bench/bench_summary.log"),
+             fail_witness="results/arch/landed_parent_1018/pslice_c5/bench_v5050/bench_summary.log"),
         dict(name="flat_eq_mut0", cmd=f"ONLY=0 LP_ROOT=. bash {LDIR}/pslice_c5_flat_eq_bench.sh {{RUN}}/bench/eq0",
              expect="pass", pass_regex="EQ MUT 0: FLAT_EQ PASS", threads=8, peak_ram_gb=24, needs=["verilator"]),
         dict(name="flat_eq_mut1_phase", cmd=f"ONLY=1 LP_ROOT=. bash {LDIR}/pslice_c5_flat_eq_bench.sh {{RUN}}/bench/eq1",
              expect="fail", fail_regex="EQ MUT 1: FLAT_EQ FAIL", threads=8, peak_ram_gb=24, needs=["verilator"],
-             fail_witness="results/arch/landed_parent_1018/pslice_c5/bench/bench_summary.log"),
+             fail_witness="results/arch/landed_parent_1018/pslice_c5/bench_v5050/bench_summary.log"),
     ]
     spec = dict(
         name=NAME, top="ot_hbm_su_programme_pslice_c5_lp", kind="cluster",
@@ -227,7 +227,7 @@ def main():
                     lp_spec="tools/landed_parent/specs/pslice_c5.json"),
         structural_change="PL-PSLICE (PARENTS-LANDED 10-18, landed-regions-standard-1018): pslice_c5 (head + 7 S + 3 L leaves, "
                           "r5 per-column split) as a LANDED parent: 4 clock regions h / l / t / b, each its own CTS root "
-                          "(PL-KIT form); all 41 cross-region nets landed (D 4, E = K = 3, +4 edges; 5,073 landing flops, 0 "
+                          "(PL-KIT form); all 41 cross-region nets landed (D 8, E = K = 3, +4 edges; 8,951 landing flops, 0 "
                           "pads), landing halves fenced beside source / reader; 1-bit regional reset runs (depth 6). The head's "
                           "status inputs (l_fault / l_valid) are read 8 edges after its own time (lp.py lag_pins). Compiler: "
                           "leaves +4 edges, reset release +6, leaf faults reach the fault port +4 later relative to "

@@ -616,7 +616,7 @@ proc ot_ce_apply {} {
   puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
 }
 ot_ce_apply
-# ---- PL-KIT landed cluster (results/arch/landed_parent_1018/pslice_c5/ot_hbm_su_programme_pslice_c5_lp_record.json): 41 landings, multicycle -setup 3 -hold 3
+# ---- PL-KIT landed cluster (results/arch/landed_parent_1018/pslice_c5/ot_hbm_su_programme_pslice_c5_lp_record.json): 41 landings, multicycle -setup 3 -hold 7
 set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
@@ -626,7 +626,7 @@ foreach ot_ln $ot_lp_lands {
   if {[llength $ot_lt] == 0} { set ot_lt [get_cells -quiet u_lpl_${ot_ln}_r/*] }
   if {[llength $ot_lf] == 0 || [llength $ot_lt] == 0} { incr ot_lp_miss; continue }
   set_multicycle_path -setup 3 -from $ot_lf -to $ot_lt
-  set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
+  set_multicycle_path -hold 7 -from $ot_lf -to $ot_lt
 }
 puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
 
