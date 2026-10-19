@@ -1,0 +1,28 @@
+{
+ "cell": "ot_hbm_su_static_cxport_ij_s",
+ "view": "physical/ref_tile/hbm_su_cx_ijs_1018/views/ot_hbm_su_static_cxport_ij_s",
+ "lib_cell": "ot_hbm_su_static_cxport_ij_s",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 256.1,
+ "spread_ps": 59.9,
+ "outputs": 1089,
+ "inputs": 2175,
+ "launch_ps": 182.3,
+ "launch_pin": "jb0[30]",
+ "capture_ps": 415.9,
+ "capture_pin": "inj_addr[80]",
+ "launch_over": 0,
+ "capture_over": 667,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 55.7,
+ "ff_launch_min_ps": 61.7,
+ "ff_hold_need_ps": 7.1,
+ "pass": false,
+ "fail_why": "capture 415.92768 > 190 (667 pins)",
+ "job": "hbm_su_cx_ijs_1018-x1-4ba37c0fe",
+ "by": "TW2-NATIVE 2026-10-19"
+}
