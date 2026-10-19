@@ -602,13 +602,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         if(!rr[RCTRL_BASE+1]) cs<=0;
         else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT) && (gn==0 || mc_q[23:0]<cs)) cs<=mc_q[23:0];
     wire [23:0] mc_minus_one=mc_q[23:0]-24'd1;
-    generate for(genvar cb=0;cb<24;cb=cb+1) begin:g_config_words
+    generate for(genvar cfg_bit=0;cfg_bit<24;cfg_bit=cfg_bit+1) begin:g_config_words
         always @(posedge ck or negedge rr[RCTRL_BASE+2])
-            if(!rr[RCTRL_BASE+2]) crl[cb]<=0; else if(crl_write[cb/8]) crl[cb]<=mc_q[cb];
+            if(!rr[RCTRL_BASE+2]) crl[cfg_bit]<=0; else if(crl_write[cfg_bit/8]) crl[cfg_bit]<=mc_q[cfg_bit];
         always @(posedge ck or negedge rr[RCTRL_BASE+3])
-            if(!rr[RCTRL_BASE+3]) crm[cb]<=1; else if(crm_write[cb/8]) crm[cb]<=mc_minus_one[cb];
+            if(!rr[RCTRL_BASE+3]) crm[cfg_bit]<=1; else if(crm_write[cfg_bit/8]) crm[cfg_bit]<=mc_minus_one[cfg_bit];
         always @(posedge ck or negedge rr[RCTRL_BASE+4])
-            if(!rr[RCTRL_BASE+4]) cg[cb]<=0; else if(cg_step[cb/8]) cg[cb]<=ng[cb];
+            if(!rr[RCTRL_BASE+4]) cg[cfg_bit]<=0; else if(cg_step[cfg_bit/8]) cg[cfg_bit]<=ng[cfg_bit];
     end endgenerate
     always @(posedge ck or negedge rn)
         if(!rn) begin
