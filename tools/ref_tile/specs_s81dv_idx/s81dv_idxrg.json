@@ -80,7 +80,66 @@
    "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
    "results/rtl/s81_idxrd_1018"
   ],
-  "benches": [],
+  "benches": [
+   {
+    "name": "idxrd_base",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} base '-GMUT=0 -GSRAM_MACRO=1' 6 'pass_small|+N=4096 +T0=400' 'pass_l2|+N=43691 +B=7 +T0=400' 'pass_l20|+N=87382 +B=13 +T0=400' 'pass_g2048|+GATHER=1 +N=2048 +PMAX=262144 +T0=2500' 'pass_p3|+N=4096 +P=3' 'fail_late|+N=4096 +T0=60'",
+    "expect": "pass",
+    "pass_regex": "^IDXRD_CAMPAIGN PASS$",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "idxrd_mut1",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} m1 '-GMUT=1 -GSRAM_MACRO=1' 1 'pass_m1|+N=4096 +T0=400'",
+    "expect": "fail",
+    "fail_regex": "^IDXRD_CASE BAD m1/pass_m1: TB_IDXRD FAIL ",
+    "fail_witness": "results/rtl/s81_idxrd_1018/witness/mut1_fail.log",
+    "note": "MUT 1: lane hash off by one",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "idxrd_mut2",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} m2 '-GMUT=2 -GSRAM_MACRO=1' 1 'pass_m2|+N=4096 +T0=400'",
+    "expect": "fail",
+    "fail_regex": "^IDXRD_CASE BAD m2/pass_m2: TB_IDXRD FAIL ",
+    "fail_witness": "results/rtl/s81_idxrd_1018/witness/mut2_fail.log",
+    "note": "MUT 2: rk always returned to the slice",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "idxrd_mut3",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} m3 '-GMUT=3 -GSRAM_MACRO=1' 1 'pass_m3|+N=4096 +T0=400'",
+    "expect": "fail",
+    "fail_regex": "^IDXRD_CASE BAD m3/pass_m3: TB_IDXRD FAIL ",
+    "fail_witness": "results/rtl/s81_idxrd_1018/witness/mut3_fail.log",
+    "note": "MUT 3: scale sector of the neighbouring cell",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "idxrd_mut4",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} m4 '-GMUT=4 -GSRAM_MACRO=1' 1 'pass_m4|+N=4096 +T0=400'",
+    "expect": "fail",
+    "fail_regex": "^IDXRD_CASE BAD m4/pass_m4: TB_IDXRD FAIL ",
+    "fail_witness": "results/rtl/s81_idxrd_1018/witness/mut4_fail.log",
+    "note": "MUT 4: region 0 part-1 beat one cycle late",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "idxrd_mut5",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/idxrd_campaign.sh {RUN} m5 '-GMUT=5 -GSRAM_MACRO=1' 1 'pass_m5|+N=4096 +T0=400'",
+    "expect": "fail",
+    "fail_regex": "^IDXRD_CASE BAD m5/pass_m5: TB_IDXRD FAIL ",
+    "fail_witness": "results/rtl/s81_idxrd_1018/witness/mut5_fail.log",
+    "note": "MUT 5: slice response swallowed",
+    "threads": 16,
+    "peak_ram_gb": 48
+   }
+  ],
   "views_to": "physical/ref_tile/s81dv_idxrg/views",
   "record_to": "results/rtl/ref_tile/s81dv_idxrg"
  },

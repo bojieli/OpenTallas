@@ -68,8 +68,8 @@ module dsdv_idx_rg #(
     parameter bit SRAM_MACRO = 0,
     parameter integer DQ = 8,           // controller request buffer entries a PC (dsfd_ctrl_rg2 DQ)
     parameter integer LG = 8,           // landing slots a PC (16 key cells each)
-    parameter integer IQD = 128,        // key items in flight (item queue)
-    parameter integer SQD = 32,         // scores between the engine and the word assembler
+    parameter integer IQD = 256,        // key items in flight (item queue) = the HBM request lead: >= (HBM latency ~240 + engine ~51 + jitter) x 0.5 key/cycle
+    parameter integer SQD = 64,         // keys in the engine (<= ~51 at 1 key/cycle) + scores waiting for the assembler
     parameter integer LFD = 256,        // candidate-list words held (gather; 256 with SRAM_MACRO = 2 macros)
     parameter integer RQD = 16          // read jobs queued a PC (scan: a 16-key group; gather: one key)
 ) (
