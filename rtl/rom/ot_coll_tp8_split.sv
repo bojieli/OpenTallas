@@ -602,7 +602,17 @@ endmodule
 // Port-compatible with qfd_io_collective_static (B4) except the clock entries: one local root per hardened leaf
 // (clk = C, clk_q0..3 = Q). The die drives every entry from its regional
 // clock with the neighbour-matched boundary (C <-> each Q register hop, TT and FF <= 80 ps).
-module qfd_io_collective_split #(parameter integer LU = `OT_QFDS_LU, parameter integer LS = `OT_QFDS_LS) (
+`ifdef OT_QFDS_LU
+`define OT_CSP_LU `OT_QFDS_LU
+`else
+`define OT_CSP_LU 66
+`endif
+`ifdef OT_QFDS_LS
+`define OT_CSP_LS `OT_QFDS_LS
+`else
+`define OT_CSP_LS 391
+`endif
+module qfd_io_collective_split #(parameter integer LU = `OT_CSP_LU, parameter integer LS = `OT_CSP_LS) (
     input  wire          clk,
     input  wire          clk_q0, clk_q1, clk_q2, clk_q3,
     input  wire          rst_n,
