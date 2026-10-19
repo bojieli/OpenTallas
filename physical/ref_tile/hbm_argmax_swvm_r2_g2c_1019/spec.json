@@ -1,247 +1,251 @@
 {
- "name": "hbm_argmax_swvm_r2_g2c_1019",
- "top": "ot_hbm_argmax_static_sw_vm_r2",
- "kind": "tile",
- "sources": [
-  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
-  "rtl/lib/ot_rst_relay.sv",
-  "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
-  "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
-  "rtl/gpu/ot_gpu_fadd.sv",
-  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-  "rtl/hdc/ot_hdc_fastfp.sv",
-  "rtl/hdc/ot_hdc_prefix.sv",
-  "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
- ],
- "clock_port": "clk",
- "reset_ports": [
-  "rst_n"
- ],
- "params": {
-  "TP": 192,
-  "VMX": 77,
-  "ACK": 52
- },
- "pins": {
-  "W": [
-   "vm_rq",
-   "vm_rr"
+  "name": "hbm_argmax_swvm_r2_g2c_1019",
+  "top": "ot_hbm_argmax_static_sw_vm_r2",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+    "rtl/gpu/ot_gpu_fadd.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
   ],
-  "E": [
-   "cq",
-   "cq_seq",
-   "cr"
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
   ],
-  "N": [
-   "die_id",
-   "go",
-   "mode",
-   "imm_a",
-   "a_mirror",
-   "a_base",
-   "n",
-   "o_base",
-   "o_is",
-   "busy",
-   "done",
-   "fault",
-   "nan_flag"
-  ],
-  "S": [
-   "rst_n",
-   "clk"
-  ]
- },
- "layer_cap": "M5",
- "recipe": 4,
- "route": {
-  "pd": 0.5,
-  "period_ps": 833.333,
-  "threads": 8,
-  "peak_ram_gb": 16,
-  "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.0
- },
- "outline": {
-  "w": 118.8,
-  "h": 118.8,
-  "exact": true
- },
- "macros": [],
- "children": [],
- "inter": [],
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
- "inhold": false,
- "outhold": false,
- "keep_pin_regs": true,
- "pin_reg_split": false,
- "hold_budget": "die",
- "pin_regs": {
-  "enable": false,
-  "reason": "r2 RTL registers every input at the pin (command, vm_rr, cr) and every output is a flop; the added edges are in the r2 timeline (go +1, VM capture +5 incl. the share merge chain, ACK 13)."
- },
- "job": {
-  "owner": "Claude:HBM-BANKLAT-IDX",
-  "branch": "claude/hbm-banklat-idx-1019",
-  "tag": "g2c",
-  "purpose": "d4g GEN2c ARGMAX r2 at VMX 77 / ACK 52 (HBM-BANKLAT-IDX): path bench through the root share at VM_RT 65 + 4/3 lanes vs the current argmax path, TIES 0/1/2; mutants (as-built VMX 5, VMX 76, ACK 51) FAIL.",
-  "extra_paths": [
-   "rtl/test/hbm_idx_static/run_banklat_idx.sh",
-   "rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv",
-   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk_lat.sv",
-   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path_lat.sv",
-   "rtl/test/hbm_idx_static/run_vm_query_n12.sh",
-   "rtl/test/hbm_idx_static/tb_vm_query_n12.sv",
-   "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
-   "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
-   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
-   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
-   "rtl/hdc/ot_hdc_delay_rf.sv",
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
-   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
-   "rtl/hdc/ot_hdc_fpu.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-   "rtl/proto/ot_fp32_add_rne_pipe.sv",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
-   "tools/hbm_idx_static_query_vectors.py",
-   "tools/hdc_golden_v41.py",
-   "tools/hdc_golden.py",
-   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
-   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
-   "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
-   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
-   "rtl/lib/ot_rst_relay.sv",
-   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
-   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
-   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
-   "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
-   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
-   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
-   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
-   "rtl/gpu/ot_gpu_fadd.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-   "results/arch/hbm_banklat_1019/idx_budget.json",
-   "tools/hbm_die_v16/d4g_idx_lat_budget.py"
-  ],
-  "benches": [
-   {
-    "name": "am_g2c_t0",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am0 am0",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "pass_regex": "^CASE am0 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
-    "pass_witness": "results/rtl/hbm_banklat_1019/idx/am0.log"
-   },
-   {
-    "name": "am_g2c_t1",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am1 am1",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "pass_regex": "^CASE am1 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
-    "pass_witness": "results/rtl/hbm_banklat_1019/idx/am1.log"
-   },
-   {
-    "name": "am_g2c_t2",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am2 am2",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "pass_regex": "^CASE am2 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
-    "pass_witness": "results/rtl/hbm_banklat_1019/idx/am2.log"
-   },
-   {
-    "name": "am_g2c_vmx5",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_vmx5 am_vmx5",
-    "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "fail_regex": "^CASE am_vmx5 .*ARGMAX_LAT CTL_M=65 VMX_P=5 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL",
-    "fail_witness": "results/rtl/hbm_banklat_1019/idx/am_vmx5.log"
-   },
-   {
-    "name": "am_g2c_vmx76",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_vmx76 am_vmx76",
-    "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "fail_regex": "^CASE am_vmx76 .*ARGMAX_LAT CTL_M=65 VMX_P=76 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL",
-    "fail_witness": "results/rtl/hbm_banklat_1019/idx/am_vmx76.log"
-   },
-   {
-    "name": "am_g2c_ack51",
-    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_ack51 am_ack51",
-    "expect": "fail",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "iverilog"
-    ],
-    "fail_regex": "^CASE am_ack51 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=51 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL",
-    "fail_witness": "results/rtl/hbm_banklat_1019/idx/am_ack51.log"
-   }
-  ],
-  "record_to": "results/rtl/ref_tile/hbm_argmax_swvm_r2_g2c_1019",
-  "views_to": "physical/ref_tile/hbm_argmax_swvm_r2_g2c_1019/views",
-  "reroute_reason": {
-   "kind": "rtl_change",
-   "vs": "hbm_argmax_swvm_r2_1017-r3-3ba44f68e",
-   "why": "params VMX 5 -> 77, ACK 13 -> 52 (d4g GEN2c budget, HBM-BANKLAT-IDX); same outline/faces"
+  "params": {
+    "TP": 192,
+    "VMX": 77,
+    "ACK": 52
   },
-  "structural_change": "argmax successor r2 (HBM-TILES-B 10-17) after the hbm_argmax_swvm gate (HBM-C): rst_n 2,137 loads -> ot_rst_relay 3 regions; 258 input->reg endpoints >3 lv -> input pin registers on every input; vm_rr 2,056 b -> 264 b {lane valid8, data256}: the 8:1 sector select moved into the IDX VM share bank-pair leaves (ot_hbm_idx_vm_share_static_am, equal-latency 4-hop OR chain). Fits the r6 slot 118.8 sq: W 400 pins (3.4/um), E 614 (5.2/um), N ~103, S clk/rst. Bench run_argmax_r2.sh vs ot_hbm_argmax_static_sw_vm: same requests/writes/events in order at constant offsets (rq +1, writes +6, events +7), MUT1-3 FAIL. | r3 (HBM-NATIVE 10-17): busy port = dedicated (* keep *) export flop busy_x loaded with the same next state as the FSM flop busy_i (0 cycles); native audit busy launch 222.4 > 220. Lockstep tb_argmax_r2_busy_export vs the closed e4dc0b651 RTL, every output every edge; mutant rejected."
- },
- "pin_ranges": {
-  "rst_n": [
-   53.4,
-   55.4
-  ],
-  "clk": [
-   58.9,
-   59.9
-  ]
- },
- "std_area_um2": 6300,
- "structural_change": "HBM-BANKLAT-IDX 10-19: hb_argmax at the d4g GEN2c BUDGET = ot_hbm_argmax_static_sw_vm_r2 #(TP 192, VMX 77, ACK 52) (GEN2c budget results/arch/hbm_banklat_1019/idx_budget.json (tools/hbm_die_v16/d4g_idx_lat_budget.py: faces bank pin 1 + die lanes, NO_E landings at worst E 8)): VMX 77 = 5 + root share VM_RT 65 + argmax<->ctl lanes 4+3, ACK 52 = 13 + faces pin 1 + cq 19 + cr 19 (worst-E landing on each). RTL unchanged (params existed); VM read pipeline 14 -> 86 x 12 b, ack pipeline 14 -> 53 x 3 b. Outline/faces identical to the CLOSED r3.",
- "reroute_reason": {
-  "kind": "rtl_change",
-  "vs": "hbm_argmax_swvm_r2_1017-r3-3ba44f68e",
-  "why": "params VMX 5 -> 77, ACK 13 -> 52 (d4g GEN2c budget, HBM-BANKLAT-IDX); same outline/faces"
- },
- "reset_landing": {
-  "enable": true,
-  "stages": 2
- }
+  "pins": {
+    "W": [
+      "vm_rq",
+      "vm_rr"
+    ],
+    "E": [
+      "cq",
+      "cq_seq",
+      "cr"
+    ],
+    "N": [
+      "die_id",
+      "go",
+      "mode",
+      "imm_a",
+      "a_mirror",
+      "a_base",
+      "n",
+      "o_base",
+      "o_is",
+      "busy",
+      "done",
+      "fault",
+      "nan_flag"
+    ],
+    "S": [
+      "rst_n",
+      "clk"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 4,
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "io_hold_margin_ns": 0.0
+  },
+  "outline": {
+    "w": 118.8,
+    "h": 118.8,
+    "exact": true
+  },
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": false,
+  "outhold": false,
+  "keep_pin_regs": true,
+  "pin_reg_split": false,
+  "hold_budget": "die",
+  "pin_regs": {
+    "enable": false,
+    "reason": "r2 RTL registers every input at the pin (command, vm_rr, cr) and every output is a flop; the added edges are in the r2 timeline (go +1, VM capture +5 incl. the share merge chain, ACK 13)."
+  },
+  "job": {
+    "owner": "Claude:LEAD2-HBM/L2H-IDX",
+    "branch": "claude/l2h-idx-pg-argmax-1019",
+    "tag": "pg1",
+    "purpose": "d4g GEN2c ARGMAX r2 at VMX 77 / ACK 52 (HBM-BANKLAT-IDX): path bench through the root share at VM_RT 65 + 4/3 lanes vs the current argmax path, TIES 0/1/2; mutants (as-built VMX 5, VMX 76, ACK 51) FAIL.",
+    "extra_paths": [
+      "rtl/test/hbm_idx_static/run_banklat_idx.sh",
+      "rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv",
+      "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk_lat.sv",
+      "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path_lat.sv",
+      "rtl/test/hbm_idx_static/run_vm_query_n12.sh",
+      "rtl/test/hbm_idx_static/tb_vm_query_n12.sv",
+      "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
+      "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
+      "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+      "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+      "rtl/hdc/ot_hdc_delay_rf.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "tools/hbm_idx_static_query_vectors.py",
+      "tools/hdc_golden_v41.py",
+      "tools/hdc_golden.py",
+      "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
+      "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+      "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
+      "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+      "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "results/arch/hbm_banklat_1019/idx_budget.json",
+      "tools/hbm_die_v16/d4g_idx_lat_budget.py"
+    ],
+    "benches": [
+      {
+        "name": "am_g2c_t0",
+        "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am0 am0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^CASE am0 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
+        "pass_witness": "results/rtl/hbm_banklat_1019/idx/am0.log"
+      },
+      {
+        "name": "am_g2c_t1",
+        "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am1 am1",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^CASE am1 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
+        "pass_witness": "results/rtl/hbm_banklat_1019/idx/am1.log"
+      },
+      {
+        "name": "am_g2c_t2",
+        "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am2 am2",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^CASE am2 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors 0 IDX_AM_PATH_LAT PASS",
+        "pass_witness": "results/rtl/hbm_banklat_1019/idx/am2.log"
+      },
+      {
+        "name": "am_g2c_vmx5",
+        "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_vmx5 am_vmx5",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^CASE am_vmx5 .*ARGMAX_LAT CTL_M=65 VMX_P=5 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL",
+        "fail_witness": "results/rtl/hbm_banklat_1019/idx/am_vmx5.log"
+      },
+      {
+        "name": "am_g2c_vmx76",
+        "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_vmx76 am_vmx76",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^CASE am_vmx76 .*ARGMAX_LAT CTL_M=65 VMX_P=76 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL",
+        "fail_witness": "results/rtl/hbm_banklat_1019/idx/am_vmx76.log"
+      },
+      {
+        "name": "am_g2c_ack51",
+        "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_ack51 am_ack51",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^CASE am_ack51 .*ARGMAX_LAT CTL_M=65 VMX_P=77 ACK_P=51 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL",
+        "fail_witness": "results/rtl/hbm_banklat_1019/idx/am_ack51.log"
+      }
+    ],
+    "record_to": "results/rtl/ref_tile/hbm_argmax_swvm_r2_g2c_1019",
+    "views_to": "physical/ref_tile/hbm_argmax_swvm_r2_g2c_1019/views",
+    "reroute_reason": {
+      "kind": "flow_failure",
+      "failed_job": "hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33",
+      "failure": "PG_HOLD unbound PG terms; daemon PG final-connect fix (runtime 8cbc); closure revoked NOT BINDABLE by LEAD2-HBM/L2H-IDX, timing history retained",
+      "why": "PG_HOLD unbound PG terms; daemon PG final-connect fix",
+      "vs": "hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33"
+    },
+    "structural_change": "argmax successor r2 (HBM-TILES-B 10-17) after the hbm_argmax_swvm gate (HBM-C): rst_n 2,137 loads -> ot_rst_relay 3 regions; 258 input->reg endpoints >3 lv -> input pin registers on every input; vm_rr 2,056 b -> 264 b {lane valid8, data256}: the 8:1 sector select moved into the IDX VM share bank-pair leaves (ot_hbm_idx_vm_share_static_am, equal-latency 4-hop OR chain). Fits the r6 slot 118.8 sq: W 400 pins (3.4/um), E 614 (5.2/um), N ~103, S clk/rst. Bench run_argmax_r2.sh vs ot_hbm_argmax_static_sw_vm: same requests/writes/events in order at constant offsets (rq +1, writes +6, events +7), MUT1-3 FAIL. | r3 (HBM-NATIVE 10-17): busy port = dedicated (* keep *) export flop busy_x loaded with the same next state as the FSM flop busy_i (0 cycles); native audit busy launch 222.4 > 220. Lockstep tb_argmax_r2_busy_export vs the closed e4dc0b651 RTL, every output every edge; mutant rejected."
+  },
+  "pin_ranges": {
+    "rst_n": [
+      53.4,
+      55.4
+    ],
+    "clk": [
+      58.9,
+      59.9
+    ]
+  },
+  "std_area_um2": 6300,
+  "structural_change": "HBM-BANKLAT-IDX 10-19: hb_argmax at the d4g GEN2c BUDGET = ot_hbm_argmax_static_sw_vm_r2 #(TP 192, VMX 77, ACK 52) (GEN2c budget results/arch/hbm_banklat_1019/idx_budget.json (tools/hbm_die_v16/d4g_idx_lat_budget.py: faces bank pin 1 + die lanes, NO_E landings at worst E 8)): VMX 77 = 5 + root share VM_RT 65 + argmax<->ctl lanes 4+3, ACK 52 = 13 + faces pin 1 + cq 19 + cr 19 (worst-E landing on each). RTL unchanged (params existed); VM read pipeline 14 -> 86 x 12 b, ack pipeline 14 -> 53 x 3 b. Outline/faces identical to the CLOSED r3.",
+  "reroute_reason": {
+    "kind": "flow_failure",
+    "failed_job": "hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33",
+    "failure": "PG_HOLD unbound PG terms; daemon PG final-connect fix (runtime 8cbc); closure revoked NOT BINDABLE by LEAD2-HBM/L2H-IDX, timing history retained",
+    "why": "PG_HOLD unbound PG terms; daemon PG final-connect fix",
+    "vs": "hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33"
+  },
+  "reset_landing": {
+    "enable": true,
+    "stages": 2
+  }
 }
