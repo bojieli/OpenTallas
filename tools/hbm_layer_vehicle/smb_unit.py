@@ -49,7 +49,7 @@ IL, C8, FMT_LEAD = 8, 8, MV.FMT_LEAD
 PAW, PSTORE, ATT_RESERVED = 11, 2048, 1019        # 2,048-word store; HBM-ATTGAP resident QK+PV (KV8) = 1,019 words
 TBL = 256                                         # issuer descriptor table rows (DD 256)
 NID, IDW, NEXP = 6, 9, 384                        # router broadcast: top-6 slots of 9-bit ids (DS V4.1: 384 routed experts)
-BSCALE = int(os.environ.get('SMB_BSCALE', 1))       # 8 = one block per DRAM row index (slot 0, the as-built layout)
+BSCALE = int(os.environ.get('SMB_BSCALE', 8))       # 8 = one block per DRAM row index (slot 0, the as-built layout)
 BLK_MAX = 1 << 18                                 # 18-bit block address = DRAM row index [17:3] + sub-row slot [2:0]
 SVG_TGT, XC_TGT = 64, 192
 LANDING = 4
@@ -59,8 +59,11 @@ MAGIC_ROW, MAGIC_DESC = 0xC7A1, 0x5D15
 LAT_GO, OFF = 7, 3
 X_GAP, OP_GAP, DRAIN = 16, 256, 1200
 FIRST_GO = int(os.environ.get('SMB_FIRST_GO', 520))             # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
-PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 11), ('SMB_PACE_DEN', 8), ('SMB_PACE_ADD', 8)))
+PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 170), ('SMB_PACE_DEN', 64), ('SMB_PACE_ADD', 4)))
 # >= 1.375 edges / 136-B line (immutable HBM price) + 8; env overrides for calibration probes
+FETCH = int(os.environ.get('SMB_FETCH', 170))       # measured HBM boundary: one 64-line block per ~160 edges (distinct rows)
+EXP_FIRST = int(os.environ.get('SMB_EXP_FIRST', 260))  # ids -> first routed block resident + copied
+IDS_LAG = int(os.environ.get('SMB_IDS_LAG', 200))     # router gate last command -> top-k ids broadcast
 BUSY = 6                  # calendar done -> issuer go_busy clear -> next go
 
 
@@ -315,6 +318,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         rc = FIRST_GO
         prev_go, prev_len, prev_lines = None, 0, 0
         cur_abs = last_cmd_abs
+        ids_rc, n_after = None, 0
         for r in recs:
             nx = len(r["xw"]) * MV.NBEAT
             x0 = max(cur_abs + 32, desc_install_t + 2 * len(descs) + 4)
@@ -334,6 +338,13 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                     lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
                 if bi == 0:
                     lo = max(lo, x_end + X_GAP - rc0 - LAT_GO - P, cur_abs + OP_GAP - rc0 - LAT_GO - P)
+                # C2: the reserve pipeline is in order; from the first routed descriptor on, every block is fetched only
+                # after the router broadcast: resident >= ids + EXP_FIRST + n x FETCH (HBM boundary, measured)
+                if kd["exp"] and (r["slot"] is not None or n_after):
+                    if ids_rc is None:
+                        ids_rc = lo - EXP_FIRST - 1                    # no router record in this kind: ids just in time
+                    lo = max(lo, ids_rc + EXP_FIRST + n_after * FETCH)
+                    n_after += 1
                 b["go_at"] = lo
                 b["first_cmd_abs"] = rc0 + lo + LAT_GO + P
                 b["landing"] = b["desc_i"] % LANDING
@@ -345,6 +356,8 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 cur_abs = rc0 + lo + LAT_GO + b["nwords"] - 1
             op["first_cmd_abs"] = r["blocks"][0]["first_cmd_abs"]
             op["last_cmd_abs"] = cur_abs
+            if r["rec"]["tag"].startswith("router") and kd["exp"]:
+                ids_rc = cur_abs - rc0 + IDS_LAG                # router result -> top-k -> broadcast (modelled lag)
             ops_out.append(op)
         kd["rc_end"] = prev_go + prev_len + BUSY
         last_cmd_abs = cur_abs
@@ -352,7 +365,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         # router ids (C2): the broadcast arrives a fixed time before the first routed block's go (compiler slot)
         if kd["exp"]:
             first_exp = min(b["go_at"] for r in recs if r["slot"] is not None for b in r["blocks"])
-            ids_at = rc0 + first_exp - (400 if mut != "late_ids" else -40)
+            ids_at = rc0 + (ids_rc if mut != "late_ids" else first_exp + 40)
             ids = 0
             for s, e in kd["exp"].items():
                 ids |= e << (IDW * s)
