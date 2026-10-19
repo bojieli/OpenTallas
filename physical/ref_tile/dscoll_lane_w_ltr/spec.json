@@ -155,13 +155,14 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:HF-3",
   "branch": "claude/hf3-coll-lane-1018",
   "tag": "ltr",
-  "purpose": "HF-3 (HANDOFF 0id, HARD-REVIEW row 3): dsfd_coll_lane_w lt RTL (GFMT 1, EPPIPE 2, LCR 1, CH_BOARD 700; ch_b strap) on the 10-13 CLOSED cxea3 geometry (dscoll_lane_w_cxea-cxea3-a011f9e61 TT +24.34 / FF +17.42 / DRC 0): 6.0 um M5 no-entry strip inside both vertical SRAM edges (physical/dscoll_cx/sram_edge_strip.tcl, pre_grt/post_drt) + macro halo 5.4 um, which the lt kit dropped (halo 2.16, no strip = rth/cxea DRC 21 geometry). Outline 432 x 336.96, 10 SRAM macro origins and faces identical to cxea3/lt; N-face ck/rs/chb pinned at the cxea3 position (ck x 154.8) so E mirrors it exactly. Clock = lt spine (CTS gate 6b4725cef spread 164.7/150.1 FAIL without it). No RTL change vs lt 9356760de.",
+  "purpose": "HF-3 (HANDOFF 0id, HARD-REVIEW row 3): dsfd_coll_lane_w lt RTL (GFMT 1, EPPIPE 2, LCR 1, CH_BOARD 700; ch_b strap) on the 10-13 CLOSED cxea3 geometry (dscoll_lane_w_cxea-cxea3-a011f9e61 TT +24.34 / FF +17.42 / DRC 0): 6.0 um M5 no-entry strip inside both vertical SRAM edges (physical/dscoll_cx/sram_edge_strip.tcl, pre_grt/post_drt) + macro halo 5.4 um, which the lt kit dropped (halo 2.16, no strip = rth/cxea DRC 21 geometry). Outline 432 x 336.96, 10 SRAM macro origins and faces identical to cxea3/lt; N-face ck/rs/chb pinned at the cxea3 position (ck x 154.8) so E mirrors it exactly. Clock = lt spine (CTS gate 6b4725cef spread 164.7/150.1 FAIL without it). No RTL change vs lt 9356760de. HF-3b: tf[0] forwarded-clock output excluded from the core_clk data IO hold check (physical/dscoll_cx/tf_fwdclk_out.sdc; lt W route FF -88.94 = the single path ck[0]->tf[0], every data class >= +8.86), route.io_hold_margin_ns 0.03.",
   "views_to": "physical/ref_tile/dscoll_lane_w_ltr/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_w_ltr",
   "benches": [
@@ -238,5 +239,8 @@
    159.48,
    161.64
   ]
- }
+ },
+ "sdc_extra": [
+  "physical/dscoll_cx/tf_fwdclk_out.sdc"
+ ]
 }
