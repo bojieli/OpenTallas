@@ -4157,11 +4157,11 @@
  "safe_design_checklist": {
   "1_pins": "PASS: pin_regs on, literal async reset roles only; two-stage reset_landing; gate elaborated port_latency recorded.",
   "2_reach": "PASS geometric bound:302.4x259.2 outline diagonal398.3um<405; actualregisteredpaths measured atgate.",
-  "3_fanout": "FIXED: identical KEPT reset copies; order36copies/7982loads/max222, guard18copies/4062loads/max226; each<=256 at synthesis pass. Critical data fanout remains inherited.",
+  "3_fanout": "R2 structural candidate:16issuePCcopies/shared2banks, RAWflags16muxbits, localonehot control. R1 mapped18453FF only7outputs33; resetfirst12max24/final288max30. R2mappedrequired<=32alloutputs.",
   "4_depth": "PASS analytical: metadata decode/headcontrol remain registered stages; newSRAM SSclktoq352.187ps (TT269.741/FF217.521) then existing outputregister mux, no additional arithmetic; ~600psstage target pendingmeasuredgate. No arbitrationcycle introduced.",
   "5_storage": "FIXED: two285/290x8 payloadFIFOs become6 real32x128_p192 SRAMmacro slices; perFIFO metadata72/80bits and one-word RAW forwarding register stay below2kb. Logicalcapacity8andcycleedges proven separately; legacyflop branch defaultoffinthiskit.",
-  "6_floorplan": "FIXED:302.4x259.2um,6 macros51.408x39.96 atx43.2/129.6/216,y43.2/129.6; pinfaces4.980/4.955pins/um, macroboundarygaps>=34.992um, innergaps34.992/46.44um,24.84umtofullwidthstdcellband y194.4..259.2 (19,595.52um2). Macro/channelbound outline forces lowglobalutil; stdband mustmeasure~40-60%, no squeezed macrochannels. TopN1165/302.4=3.853,E1036/259.2=3.997.",
-  "7_clock": "PASS design: oneck_core for6 SRAMs+stdcellband, unchanged registeredboundaries/resetlanding2and36KEPTresetcopies;io_holdmargin0.03. NewCTSspreadTT/FF<=80 required; historicalr5clock isunqualified fornewgeometry.",
+  "6_floorplan": "CANDIDATE302.4x267.84,6actualSRAMsameorigins; measuredR1std12634.9. Northbandy190.08..265.68 modelonly,macroclearance20.52/coreedge2.16; actualstdfences/placement/density/reach andROOTlowutilapproval pending.",
+  "7_clock": "Unqualified:18459actualR1clockloads one root; balanced2stage reset/root12/first24/final30 structuralproofPASS; pinflopspread/realTTFFCTS stillowed.",
   "8_schedule": "PASS measured behavioral: realp192SRAM vs immutableflopbaseline3seedsx200000cycles,916resets,137853mapemits/237459dispatchsends,zerooutputmismatches. BothFIFOs reachedall8logicalentries ineachseed. RAW-bypass andprefetch-head mutantsfailall3seeds. Addedfunctionalboot/runtimecycles0, pendingphysicalclosure."
  },
  "defines": [
@@ -4169,6 +4169,13 @@
   "OT_HOST_ORDER_S2_DEFAULT=1"
  ],
  "fill_reason": {
-  "pin_bound": "Six true SRAMmacros repinned at.192um keep W199/39.96=4.980,E198/39.96=4.955pins/um. Threecolumns at43.2/129.6/216 with>=34.992umhorizontalchannels and43.2umtileedge; tworows at43.2/129.6 with46.44umverticalchannel require302.4umwidth. Macroend169.56+24.84umclearance+64.8umfullwidthstdcellband requires259.2umheight. 11700um2estimatedstd/19595.52um2band=59.7%; globalfill31% is geometric macro-pin/channel constraint, not unpricedemptyarea. Actualsyntharea andstd/IOregisterdistribution required atgate; footprint+162.5%, extra cycles0 afterproof."
+  "lattice_channel_bound": {
+   "why": "Six actual legal SRAMs at43.2 lattice; measured floorplan std12634.9um2. Candidate fullwidth northband y190.08..265.68 has20.52um macro clearance,2.16um coreedge; 56.07% measured precursor density,900um2reserve gives60.06% (needs new16copy synthesis). Actual placement/fence/clock/reach/rootapproval pending; no inherited pinbound claim.",
+   "std_band_y_um": [
+    190.08,
+    265.68
+   ],
+   "approved_by": ""
+  }
  }
 }
