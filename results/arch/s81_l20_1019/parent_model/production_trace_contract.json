@@ -1,0 +1,344 @@
+{
+  "k3": {
+    "summary": {
+      "k_dies": 3,
+      "tree": {
+        "0": [
+          1,
+          2
+        ],
+        "1": [],
+        "2": []
+      },
+      "par": {
+        "1": [
+          0,
+          0
+        ],
+        "2": [
+          0,
+          1
+        ]
+      },
+      "closure": true,
+      "root_last_egress": 22607,
+      "per_die": [
+        {
+          "die": 0,
+          "keys": 87382,
+          "e0": 200,
+          "t_last_in": 21896,
+          "window": [
+            22536,
+            22611
+          ],
+          "last_egress": 22607,
+          "child_arrive": [
+            [
+              18695,
+              20295
+            ],
+            [
+              20296,
+              21896
+            ]
+          ],
+          "golden_ok": true,
+          "tx": null
+        },
+        {
+          "die": 1,
+          "keys": 87382,
+          "e0": 929,
+          "t_last_in": 17323,
+          "window": [
+            17963,
+            18038
+          ],
+          "last_egress": 18036,
+          "child_arrive": [],
+          "golden_ok": true,
+          "tx": {
+            "lane": 2,
+            "parent": 0,
+            "ptag": 48,
+            "hb": 87376,
+            "ctl_vi_n": 17937,
+            "dly": 21,
+            "first": 17963,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              18695,
+              20295
+            ]
+          }
+        },
+        {
+          "die": 2,
+          "keys": 87380,
+          "e0": 929,
+          "t_last_in": 17323,
+          "window": [
+            17963,
+            18038
+          ],
+          "last_egress": 18036,
+          "child_arrive": [],
+          "golden_ok": true,
+          "tx": {
+            "lane": 3,
+            "parent": 0,
+            "ptag": 48,
+            "hb": 174752,
+            "ctl_vi_n": 17937,
+            "dly": 1622,
+            "first": 19564,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              20296,
+              21896
+            ]
+          }
+        }
+      ]
+    },
+    "sha256": {
+      "exp.json": "feb423b07d8af373ca2408d0aa083370d1a56a2a13bcbf94c8054bf4a2b8c9a2",
+      "stim.txt": "9d76d227fbec57340b3942473b946af0ea6713eab7d67fb9efa5f4ebfd61a8ec",
+      "args.txt": "2e9d45c4f603b24320050c5ae37bbb4d47355ea6cf3d344833474d16fc53343b"
+    },
+    "args": "+NCYC=22907 +LEG=729 +PAR1=0 +PIN1=0 +PAR2=0 +PIN2=1\n"
+  },
+  "k6": {
+    "summary": {
+      "k_dies": 6,
+      "tree": {
+        "0": [
+          1,
+          3
+        ],
+        "1": [
+          2
+        ],
+        "2": [],
+        "3": [
+          4,
+          5
+        ],
+        "4": [],
+        "5": []
+      },
+      "par": {
+        "1": [
+          0,
+          0
+        ],
+        "3": [
+          0,
+          1
+        ],
+        "2": [
+          1,
+          0
+        ],
+        "4": [
+          3,
+          0
+        ],
+        "5": [
+          3,
+          1
+        ]
+      },
+      "closure": true,
+      "root_last_egress": 18116,
+      "per_die": [
+        {
+          "die": 0,
+          "keys": 43691,
+          "e0": 200,
+          "t_last_in": 17407,
+          "window": [
+            18047,
+            18122
+          ],
+          "last_egress": 18116,
+          "child_arrive": [
+            [
+              14206,
+              15806
+            ],
+            [
+              15807,
+              17407
+            ]
+          ],
+          "golden_ok": true,
+          "tx": null
+        },
+        {
+          "die": 1,
+          "keys": 43691,
+          "e0": 929,
+          "t_last_in": 12834,
+          "window": [
+            13474,
+            13549
+          ],
+          "last_egress": 13547,
+          "child_arrive": [
+            [
+              11234,
+              12834
+            ]
+          ],
+          "golden_ok": true,
+          "tx": {
+            "lane": 2,
+            "parent": 0,
+            "ptag": 48,
+            "hb": 43680,
+            "ctl_vi_n": 13448,
+            "dly": 21,
+            "first": 13474,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              14206,
+              15806
+            ]
+          }
+        },
+        {
+          "die": 2,
+          "keys": 43691,
+          "e0": 1658,
+          "t_last_in": 9862,
+          "window": [
+            10502,
+            10577
+          ],
+          "last_egress": 10575,
+          "child_arrive": [],
+          "golden_ok": true,
+          "tx": {
+            "lane": 2,
+            "parent": 1,
+            "ptag": 49,
+            "hb": 87376,
+            "ctl_vi_n": 10476,
+            "dly": 21,
+            "first": 10502,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              11234,
+              12834
+            ]
+          }
+        },
+        {
+          "die": 3,
+          "keys": 43691,
+          "e0": 929,
+          "t_last_in": 14435,
+          "window": [
+            15075,
+            15150
+          ],
+          "last_egress": 15146,
+          "child_arrive": [
+            [
+              11234,
+              12834
+            ],
+            [
+              12835,
+              14435
+            ]
+          ],
+          "golden_ok": true,
+          "tx": {
+            "lane": 3,
+            "parent": 0,
+            "ptag": 48,
+            "hb": 131072,
+            "ctl_vi_n": 15049,
+            "dly": 21,
+            "first": 15075,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              15807,
+              17407
+            ]
+          }
+        },
+        {
+          "die": 4,
+          "keys": 43691,
+          "e0": 1658,
+          "t_last_in": 9862,
+          "window": [
+            10502,
+            10577
+          ],
+          "last_egress": 10575,
+          "child_arrive": [],
+          "golden_ok": true,
+          "tx": {
+            "lane": 2,
+            "parent": 3,
+            "ptag": 51,
+            "hb": 174752,
+            "ctl_vi_n": 10476,
+            "dly": 21,
+            "first": 10502,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              11234,
+              12834
+            ]
+          }
+        },
+        {
+          "die": 5,
+          "keys": 43689,
+          "e0": 1658,
+          "t_last_in": 9859,
+          "window": [
+            10499,
+            10574
+          ],
+          "last_egress": 10572,
+          "child_arrive": [],
+          "golden_ok": true,
+          "tx": {
+            "lane": 3,
+            "parent": 3,
+            "ptag": 51,
+            "hb": 218448,
+            "ctl_vi_n": 10473,
+            "dly": 1625,
+            "first": 12103,
+            "r": 1,
+            "sm": 1600,
+            "arrive": [
+              12835,
+              14435
+            ]
+          }
+        }
+      ]
+    },
+    "sha256": {
+      "exp.json": "6f30e17a2d9d4269372f0566a53e32a06ab8503c9a816552efcff2bea783582d",
+      "stim.txt": "5b9b7008ff293341c0e4412712e808b94c00c1da3f54b2bdc8b84dc23e2f658a",
+      "args.txt": "df44d0d0d02f8dcb13c0afe73c25d8e0dbe7487d1910d0b464aac33fdc077a3f"
+    },
+    "args": "+NCYC=18416 +LEG=729 +PAR1=0 +PIN1=0 +PAR3=0 +PIN3=1 +PAR2=1 +PIN2=0 +PAR4=3 +PIN4=0 +PAR5=3 +PIN5=1\n"
+  }
+}

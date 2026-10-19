@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_rd
+ot-run: ot-epyc5       admits   993 GB (avail 792, growth 97, headroom 0, waiters 0/0 GB) load 68/128 running 15 disk 872 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_rd
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_rd
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_rd
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_rd
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_rd
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2003003-1792435704 after 0 s
+IDXRD_CASE OK om0/pass_open0: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1277 end_to_last 1212 nerr 0 qerr 0 slice_err 0 | maxrss_kb=257912 wall=1:16.84
+IDXRD_CASE OK om0/pass_open6: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1277 end_to_last 1212 nerr 0 qerr 0 slice_err 0 | maxrss_kb=258860 wall=1:18.31
+IDXRD_CASE OK om0/pass_open7: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1277 end_to_last 1212 nerr 0 qerr 0 slice_err 0 | maxrss_kb=258744 wall=1:16.35
+IDXRD_CASE OK om0/pass_open4_b13: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 2000 keys 2000 words 126 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 884 end_to_last 819 nerr 0 qerr 0 slice_err 0 | maxrss_kb=258840 wall=1:05.73
+IDXRD_CAMPAIGN PASS
+IDXRD_CASE OK om6/fail_mut6_open6: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 6 sram 1 ckh 900 hdr_to_last 1277 end_to_last 1212 nerr 4 qerr 0 slice_err 0 | maxrss_kb=258312 wall=1:19.07
+IDXRD_CASE OK om6/pass_mut6_open0: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 6 sram 1 ckh 900 hdr_to_last 1277 end_to_last 1212 nerr 0 qerr 0 slice_err 0 | maxrss_kb=258264 wall=1:18.73
+IDXRD_CAMPAIGN PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2003003-1792435704): exit 0

@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-epyc5       admits   663 GB (avail 577, growth 113, headroom 0, waiters 0/0 GB) load 75/128 running 17 disk 923 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2090972-1792436861 after 0 s
+TREE_RD FAIL {"pass_": false, "mismatches": 74, "first": [{"die": 1, "kind": "tx-seq", "n_got": 1431, "n_exp": 1431, "first_diff": 1}, {"die": 2, "kind": "tx-seq", "n_got": 1424, "n_exp": 1424, "first_diff": 2}, {"die": 0, "kind": "vo", "edge": 22538, "exp": "1343012ee0124c011180", "got": "717006c500658004f400"}, {"die": 0, "kind": "vo", "edge": 22539, "exp": "33000000000000000000", "got": "33000000000000000000"}, {"die": 0, "kind": "vo", "edge": 22540, "exp": "34d50332702f0c02e230", "got": "da800d4500a4c00a2600"}, {"die": 0, "kind": "vo", "edge": 22541, "exp": "33000000000000000000", "got": "33000000000000000000"}, {"die": 0, "kind": "vo", "edge": 22542, "exp": "58af057a805796053340", "got": "167b015a8014d8014a20"}, {"die": 0, "kind": "vo", "edge": 22543, "exp": "33000000000000000000", "got": "33000000000000000000"}], "faults": [], "tx_span": {"1": [17963, 19406, 1431], "2": [19564, 20987, 1424]}}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2090972-1792436861): exit 1
