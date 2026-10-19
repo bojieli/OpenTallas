@@ -1,0 +1,24 @@
+{
+ "trials": 20000,
+ "kinds": {
+  "aligned": 100,
+  "stagger": 100,
+  "random": 19800
+ },
+ "nl": 3,
+ "lv": 3,
+ "seed": 1019,
+ "nodes": 149715,
+ "faults": 0,
+ "fault_examples": [],
+ "worst_node_latency_turns": 6,
+ "worst_node_latency_cycles": 48,
+ "worst_case": {
+  "trial": 0,
+  "kind": "aligned",
+  "lane": 2,
+  "event_turn": 32,
+  "out_turn": 38
+ },
+ "illegal_record_faults": true
+}
