@@ -32,7 +32,7 @@ def evaluate(n,env,seen=None):
  if not d or d[0]<0:raise ValueError('unexpected free input '+g.net_name[n])
  ci=d[0];typ,name,pins=g.cells[ci]
  if a['kind'][ci]=='ff':raise ValueError('unexpected state '+name)
- v={k:evaluate(ns[0],env,seen)for k,ns in pins.items()if a['pin_dir'][ci].get(k)=='input'}
+ v={k:evaluate(ns[0],env,seen)for k,ns in pins.items()if a['pin_dir'][ci].get(k)=='in'}
  vals=list(v.values());key=typ.split('_')[0]
  if key.startswith('INV'):return not vals[0]
  if key.startswith(('BUF','HB')):return vals[0]
@@ -73,6 +73,7 @@ def predicate(name,operands,fn):
    truth.append(dict(inputs=[int(v)for v in bits],actual=int(got),expected=int(want)))
    if got!=want:raise ValueError('actual mapped truth mismatch '+str(bits))
   loads=T.bufinv_fanout(g,a,rn,clks)[0]
+  if typ not in areas:raise ValueError('missing actual mapped library area '+typ)
   if loads>32:raise ValueError('predicate actual loads '+str(loads))
   rows.append(dict(source_net=name,actual_driver=cn,library=typ,pins={k:[g.net_name[q]for q in ns]for k,ns in pins.items()},output_inversions=pol,actual_nonbuffer_loads=loads,library_area_um2_rounded=areas.get(typ),operands=operands,truth=truth))
  except Exception as e:errors.append(name+': '+str(e))
