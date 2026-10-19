@@ -16,6 +16,8 @@
 //    reads the four grand-successors (CT.target, CT.next, CN.target, CN.next) from the four copies every edge; the
 //    loop decision (flops only) selects which two words become the new CT/CN. The only path through a macro is
 //    macro Q -> 2:1 (decision) -> macro address of the next read (no SRAM -> logic -> SRAM chain).
+//  * the loop decision of the current row is a register (take_q), computed one edge ahead for both successors, so the
+//    lookahead address mux select is a flop (gate 10-19: reg -> macro address +3.6 ps with a comb decision).
 //  * loop counters by loop id: NL (32) x 32-b counters L1[lid] = loops+1 (1 kb), replacing the 256 per-row copies.
 //    The decision is one compare of two flops (lp1 < count  <=>  v6 has && loops < count-1).
 //  * row-valid bits stay flops (5 x 256 b, single-bit 256:1 reads from the pc register).
@@ -23,7 +25,8 @@
 //    grand-successors (3 edges) into C/CT/CN shadow registers (PR_*), and re-primes after any metadata write or
 //    start_pc change. start copies PR_* into C/CT/CN, so the first fetch edge has everything in registers.
 // Programme constraints (v6 had: start never on the edge after a metadata write):
-//  (a) start_pc stable and no metadata write (cfg mode 2/3) during the 4 edges before start. The COLL programme
+//  (a) start_pc stable and no programme write (cfg modes 1/2/3) during the 4 edges before start (programme words land
+//      one edge later than v6: the mode-1 fragment path is registered, gate 10-19 assemble D +4.7 ps). The COLL programme
 //      target at ROWS 256 sets issuer_start_pc at descriptor accept (>= ROWS+2 edges before launch) and drains 53 edges
 //      after the last metadata write, so the F20 protocol always meets it. A start that violates it FAULTS (no launch).
 //  (b) loop ids < NL (cfg mode 3 with lid >= NL faults and writes nothing). The compilers map their loop ids densely
@@ -75,6 +78,7 @@ module ot_hgi_coll_static_issuer_v7 #(
     reg [7:0] write_row;
     reg [511:0] write_data;
     reg fetching,fetch_v,v1,h0,h1;
+    reg fr_v,fr_last;reg [3:0] fr_i;reg [31:0] fr_d;reg [1:0] fr_bank;reg [7:0] fr_row;   // registered mode-1 fragment
     reg [7:0] fetch_pc,pc1;
     reg [31:0] it0,it1;
     for(genvar b=0;b<3;b=b+1)begin:g_mem
@@ -98,7 +102,12 @@ module ot_hgi_coll_static_issuer_v7 #(
 `else
     localparam integer MRL=MUT_RELOAD;
 `endif
-    wire take=r_has(rc) && ((MRL!=0) ? (lp1<=r_cnt(rc)) : (lp1<r_cnt(rc))) && MUT_BRANCH==0;
+    // the decision of the CURRENT row is a register (take_q), computed one edge earlier for both successors
+    function automatic dec(input [RW-1:0] r,input [31:0] lp);
+        dec=r_has(r) && ((MRL!=0) ? (lp<=r_cnt(r)) : (lp<r_cnt(r))) && MUT_BRANCH==0;
+    endfunction
+    reg take_q;
+    wire take=take_q;
     wire [31:0] nlp=take ? lp1+32'd1 : 32'd1;                     // L1[lid(C)] after this visit (when has)
     wire advance=fetching && !r_halt(rc);
     wire upd=advance && r_has(rc) && MUT_BRANCH==0;
@@ -155,12 +164,14 @@ module ot_hgi_coll_static_issuer_v7 #(
         end
         if(start && !(busy || cfg[36] || fragment!=0) && ready)begin
             for(integer i=0;i<NL;i=i+1)L1[i]<=32'd1;
-            rc<=pr_c;rt<=pr_t;rn<=pr_n;lp1<=32'd1;
+            rc<=pr_c;rt<=pr_t;rn<=pr_n;lp1<=32'd1;take_q<=dec(pr_c,32'd1);
         end
+        if(fr_v && !fr_last)assemble[fr_i*32+:32]<=fr_d;
         if(advance)begin
             if(upd)L1[r_lid(rc)]<=nlp;
             rc<=take ? rt : rn;
             lp1<=take ? l_t : l_n;
+            take_q<=take ? dec(rt,l_t) : dec(rn,l_n);
             rt<=f_rec(nt_w);rn<=f_rec(nn_w);
         end
     end
@@ -168,11 +179,16 @@ module ot_hgi_coll_static_issuer_v7 #(
     always @(posedge clk_control or negedge rst_n)begin
         if(!rst_n)begin
             busy<=0;done<=0;fault<=0;fetching<=0;fetch_v<=0;v1<=0;uop_v<=0;
-            h0<=0;h1<=0;cfg_selected<=0;fragment<=0;write_v<=0;ph<=2'd0;
+            h0<=0;h1<=0;cfg_selected<=0;fragment<=0;write_v<=0;ph<=2'd0;fr_v<=0;
             meta_lo_valid<=0;meta_hi_valid<=0;iteration<=0;uop_pc<=0;
             for(integer b=0;b<3;b=b+1)word_valid[b]<=0;
         end else begin
-            done<=0;write_v<=0;fetch_v<=0;
+            done<=0;write_v<=0;fetch_v<=0;fr_v<=0;
+            if(fr_v && fr_last)begin
+                write_v[fr_bank]<=1;write_row<=fr_row;
+                write_data<={fr_d,assemble[479:0]};
+                word_valid[fr_bank][fr_row]<=1;
+            end
             v1<=fetch_v;uop_v<=v1;
             pc1<=fetch_pc;uop_pc<=pc1;it1<=it0;iteration<=it1;h1<=h0;
             if(v1 && h1)begin busy<=0;done<=1;end
@@ -208,12 +224,9 @@ module ot_hgi_coll_static_issuer_v7 #(
                     4'd1:begin
                         if(!cfg_selected || cfg_bank==3)fault<=1;
                         else begin
-                            assemble[fragment*32+:32]<=cfg[31:0];fragment<=fragment+1'b1;
-                            if(fragment==15)begin
-                                write_v[cfg_bank]<=1;write_row<=cfg_row;
-                                write_data<={cfg[31:0],assemble[479:0]};
-                                word_valid[cfg_bank][cfg_row]<=1;
-                            end
+                            // registered fragment: lands in assemble (or, the 16th, as the bank write) one edge later
+                            fragment<=fragment+1'b1;fr_v<=1;fr_i<=fragment;fr_d<=cfg[31:0];fr_last<=fragment==15;
+                            fr_bank<=cfg_bank;fr_row<=cfg_row;
                         end
                     end
                     4'd2:begin

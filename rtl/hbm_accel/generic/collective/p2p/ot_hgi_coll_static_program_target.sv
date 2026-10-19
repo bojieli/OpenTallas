@@ -106,6 +106,18 @@ module ot_hgi_coll_static_program_target #(
             .wd_in(64'(fwd)),.w_mask_in({64{1'b1}}),.rd_out(rd),
             .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(12'b0));
         assign f_sram=rd[FW-1:0];
+        // segment frames 0..5: the accept decision (256:1 loaded[] select + every fault term) is REGISTERED and the 256-b
+        // segment lands in assembly one edge later from its own copy (seg_d), so the deep accept cone drives 4 flops, not
+        // the 1,536 assembly enables (gate 10-19: assembly D +1.2 ps). Invisible: the first assembly read is drain step 1,
+        // two edges after the accept of the last frame.
+        wire sacc=cv && target_q==TARGET && addr_q[2:0]<6 && !(occupied || lv || draining || checking || fault || dv ||
+            a_hi_bad || loaded[a_row] || (seen!=0 && row!=a_row) || seen[addr_q[2:0]]);
+        reg seg_v;reg [2:0] seg_i;reg [255:0] seg_d;
+        always @(posedge clk or negedge rst_n)if(!rst_n)seg_v<=1'b0;else seg_v<=sacc;
+        always @(posedge clk)begin
+            if(sacc)begin seg_i<=addr_q[2:0];seg_d<=data_q;end
+            if(seg_v)assembly[seg_i*256+:256]<=seg_d;
+        end
     end else begin:g_fflop
         assign f_sram={FW{1'b0}};
     end endgenerate
@@ -157,7 +169,7 @@ module ot_hgi_coll_static_program_target #(
                                             :(PW==7)?FW'({data_q[44],|data_q[43:12],data_q[52],data_q[11:6],data_q[51],data_q[5:0]})
                                             :FW'({data_q[44],|data_q[43:12],data_q[11:0]});
                     end
-                    else assembly[addr_q[2:0]*256+:256]<=data_q;
+                    else if(ROWS<=128)assembly[addr_q[2:0]*256+:256]<=data_q;
                     if((seen | (7'b1<<addr_q[2:0]))==7'h7f)begin draining<=1;step<=0;end
                 end
             end

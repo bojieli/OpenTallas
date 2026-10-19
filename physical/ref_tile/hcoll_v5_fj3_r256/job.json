@@ -52,7 +52,7 @@
     "name": "argmax_v8x_sw_mut_lastale",
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_v8x_argmax.sh {RUN}/bench/am_lastale lastale",
     "expect": "fail",
-    "fail_regex": "ARGMAX_V8X lastale GATE FAIL|mutant lastale rejected",
+    "fail_regex": "P6: mutant lastale rejected",
     "threads": 16,
     "peak_ram_gb": 32,
     "needs": [

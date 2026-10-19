@@ -1,13 +1,13 @@
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_pos
-ot-run: ot-epyc5       admits   454 GB (avail 431, growth 113, headroom 0, waiters 0/0 GB) load 82/128 running 25 disk 1362 GB 
-ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_pos
-ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_pos
-ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_pos
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_pos
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_pos
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_pos
+ot-run: ot-epyc5       admits   867 GB (avail 720, growth 113, headroom 0, waiters 0/0 GB) load 71/128 running 19 disk 1289 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_pos
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_pos
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_pos
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_pos
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_pos
 ot-run: -> ot-epyc5
 ot-heavy: request 12G is charged 9G (class 'run_issuer_v#_miter.sh:pos' measured peak 1.0G, n=1+0 proved); the cap stays 12G
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1163337-1792418356 after 0 s
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1314200-1792420310 after 0 s
 ISSUER_V7_MITER PASS seed3 progs600 checks1474510 launches1800 iter_nonzero111039 max_iter2410 halts2051 hi_row_uops334365 faulted_progs463
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1163337-1792418356): exit 0
-REMOTE_RC mit_pos 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1314200-1792420310): exit 0
+REMOTE_RC mit2_pos 0

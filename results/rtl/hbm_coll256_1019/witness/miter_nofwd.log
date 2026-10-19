@@ -1,12 +1,12 @@
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_nofwd
-ot-run: ot-epyc5       admits   454 GB (avail 431, growth 113, headroom 0, waiters 0/0 GB) load 84/128 running 25 disk 1361 GB 
-ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_nofwd
-ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_nofwd
-ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_nofwd
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_nofwd
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_nofwd
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_nofwd
+ot-run: ot-epyc5       admits   867 GB (avail 720, growth 113, headroom 0, waiters 0/0 GB) load 71/128 running 19 disk 1289 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_nofwd
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_nofwd
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_nofwd
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_nofwd
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/mit2_nofwd
 ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1163653-1792418360 after 0 s
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1314645-1792420310 after 0 s
 MISMATCH t=9870000 busy 0/0 done 1/1 fault 0/0 uop_v 1/1 it 1/0 pc 17/17 uop_eq 1
 MISMATCH t=9880000 busy 0/0 done 0/0 fault 0/0 uop_v 0/0 it 1/0 pc 17/17 uop_eq 1
 MISMATCH t=9890000 busy 0/0 done 0/0 fault 0/0 uop_v 0/0 it 1/0 pc 17/17 uop_eq 1
@@ -14,5 +14,5 @@ MISMATCH t=9900000 busy 0/0 done 0/0 fault 0/0 uop_v 0/0 it 1/0 pc 17/17 uop_eq 
 MISMATCH t=9910000 busy 0/0 done 0/0 fault 0/0 uop_v 0/0 it 1/0 pc 17/17 uop_eq 1
 ISSUER_V7_MITER FAIL mismatches122246 checks750487
 ISSUER_V7_MUTANT_REJECTED nofwd
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1163653-1792418360): exit 1
-REMOTE_RC mit_nofwd 1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1314645-1792420310): exit 1
+REMOTE_RC mit2_nofwd 1

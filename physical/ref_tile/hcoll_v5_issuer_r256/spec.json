@@ -13,7 +13,7 @@
  ],
  "outline": {
   "w": 372.6,
-  "h": 345.6
+  "h": 324.0
  },
  "pins": {
   "W": [
@@ -110,7 +110,7 @@
    "inst": "u_issuer.g_meta[0].u_sram",
    "at": [
     43.2,
-    172.8
+    129.6
    ],
    "at_exact": true
   },
@@ -120,7 +120,7 @@
    "inst": "u_issuer.g_meta[1].u_sram",
    "at": [
     43.2,
-    190.656
+    147.456
    ],
    "at_exact": true
   },
@@ -130,7 +130,7 @@
    "inst": "u_issuer.g_meta[2].u_sram",
    "at": [
     43.2,
-    208.512
+    165.312
    ],
    "at_exact": true
   },
@@ -140,7 +140,7 @@
    "inst": "u_issuer.g_meta[3].u_sram",
    "at": [
     43.2,
-    226.368
+    183.168
    ],
    "at_exact": true
   }
@@ -247,7 +247,7 @@
     "name": "argmax_v8x_sw_mut_pcwrap",
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_v8x_argmax.sh {RUN}/bench/am_pcwrap pcwrap",
     "expect": "fail",
-    "fail_regex": "ARGMAX_V8X pcwrap GATE FAIL|mutant pcwrap rejected",
+    "fail_regex": "P6: mutant pcwrap rejected",
     "threads": 16,
     "peak_ram_gb": 32,
     "needs": [
@@ -259,7 +259,7 @@
   "views_to": "physical/ref_tile/hcoll_v5_issuer_r256/views",
   "record_to": "results/rtl/ref_tile/hcoll_v5_issuer_r256"
  },
- "floorplan_note": "HBM-COLL256-KITS 10-19 (coordinator 0ky; SAFE-DESIGN): 256-row issuer leaf ot_hgi_coll_issuer_m256 (v7 core). Data: 3 banks x 2 x ot_sram_1r1w_256x256 (lo/hi 256 b) = 6 SRAMs in ONE abutted N-S stack (origin (172.8,43.2) on the 43.2 lattice, pitch 41.088), pin faces W toward the std-cell band, 27 um E margin (> 20 um macro_edge). Metadata lookahead: 4 x ot_sram_1rw_256x64 as ONE abutted N-S column (origin (43.2,172.8), pitch 17.856) inside the band, inputs W / outputs E: 43.2 um W channel, 63 um E channel shared with the data-stack pin face (control logic + bank data registers). W face = uop_d1 1,536 b over 345.6 um (4.4/um), N control, S protocol taps; one connected std-cell band (W of the stack, around the metadata column, N and S strips).",
+ "floorplan_note": "HBM-COLL256-KITS 10-19 (coordinator 0ky; SAFE-DESIGN): 256-row issuer leaf ot_hgi_coll_issuer_m256 (v7 core). Data: 3 banks x 2 x ot_sram_1r1w_256x256 (lo/hi 256 b) = 6 SRAMs in ONE abutted N-S stack (origin (172.8,43.2) on the 43.2 lattice, pitch 41.088), pin faces W toward the std-cell band, 27 um E margin (> 20 um macro_edge). Metadata lookahead: 4 x ot_sram_1rw_256x64 as ONE abutted N-S column (origin (43.2,129.6), pitch 17.856) inside the band, inputs W / outputs E: 43.2 um W channel, 63 um E channel shared with the data-stack pin face (control logic + bank data registers). W face = uop_d1 1,536 b over 324 um (4.7/um), N control, S protocol taps; one connected std-cell band (W of the stack, around the metadata column, N and S strips). Gate 1 (10-19 07:28, 372.6 x 345.6): clock_rule FAIL TT/FF pin-flop spread 94.6/82.4 (N/S pins spread over the full 373-um faces, far E of the register band) -> r2: N/S control/tap pins confined to the band columns (pin_ranges 5.4-167.4 um), clk_control at the band centre (83-90 um), outline 324 tall; RTL: take_q / registered fragment writes (reg->macro +3.6, assemble +4.7 ps).",
  "inter": [],
  "io_flop_at_pins": {
   "cols": 4,
@@ -276,5 +276,75 @@
   "enable": true,
   "stages": 2
  },
- "params": {}
+ "params": {},
+ "pin_ranges": {
+  "clk_control": [
+   83.0,
+   90.0
+  ],
+  "rst_n": [
+   5.4,
+   167.4
+  ],
+  "cfg": [
+   5.4,
+   167.4
+  ],
+  "start": [
+   5.4,
+   167.4
+  ],
+  "start_pc": [
+   5.4,
+   167.4
+  ],
+  "busy": [
+   5.4,
+   167.4
+  ],
+  "done": [
+   5.4,
+   167.4
+  ],
+  "fault": [
+   5.4,
+   167.4
+  ],
+  "uop_v": [
+   5.4,
+   167.4
+  ],
+  "uop_pc": [
+   5.4,
+   167.4
+  ],
+  "busy_d3": [
+   5.4,
+   167.4
+  ],
+  "done_d3": [
+   5.4,
+   167.4
+  ],
+  "start_d3": [
+   5.4,
+   167.4
+  ],
+  "tap_iteration": [
+   5.4,
+   167.4
+  ],
+  "tap_steps": [
+   5.4,
+   167.4
+  ],
+  "busy_d2": [
+   5.4,
+   167.4
+  ],
+  "start_d2": [
+   5.4,
+   167.4
+  ]
+ }
 }

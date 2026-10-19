@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/am3_sw_vmstep
+ot-run: ot-epyc5       admits   766 GB (avail 649, growth 113, headroom 0, waiters 2/64 GB) load 63/128 running 20 disk 1287 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/am3_sw_vmstep
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/am3_sw_vmstep
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/am3_sw_vmstep
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/am3_sw_vmstep
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/am3_sw_vmstep
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1324322-1792420368 after 1 s
+MODE vmstep NLINK 2 TP 192 VM_RT 74 ROWS 256 expect fail
+ARGMAX_ROWS_COMPILE PASS P=6 rows=212 II=32 last_delivery_instr=281 halt=282
+ARGMAX_V8X config NLINK2 TP192 VM_RT74 VMLAT74 ROWS256 PW8 P6 NR212
+ARGMAX_V8X host drain 55+1 edges a row
+ARG_MISMATCH pos3 cyc14071 got id2038 want id3009 hdr got1ff000000 want1ff000000
+ARG_MISMATCH pos4 cyc14103 got id2038 want id4040 hdr got1ff000000 want1ff000000
+ARG_MISMATCH pos5 cyc14135 got id2038 want id5047 hdr got1ff000000 want1ff000000
+ARGMAX_ROWS_MEASURE P6 VM_RT74 ROWS256 NR212 launch_to_first_vm_rq12 launch_to_last_delivery292 done293 positions6/6 data_err3 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS FAIL P6 delivered6 data3 addr0 stray0 done_count1 fault_first-1
+P6: mutant vmstep rejected (expected FAIL)
+ARGMAX_V8X vmstep GATE PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1324322-1792420368): exit 0
+REMOTE_RC am3_sw_vmstep 0

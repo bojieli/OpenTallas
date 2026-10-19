@@ -5,7 +5,7 @@
 // random next/target inside the set, loop ids from a small shared set or the row's own id (r mod 32), counts
 // 0/1/2/3/small/0x80000000/0xffffffff, halts, missing banks / metadata (fetch faults), restarts without reset (loops
 // cleared by start), stray metadata writes and starts while busy (faults). Every port compared every edge.
-// The v7 programme constraints are honoured: loop ids < 32; start_pc stable and no metadata write during the 4 edges
+// The v7 programme constraints are honoured: loop ids < 32; start_pc stable and no programme write during the 4 edges
 // before a start (start_pc is changed only right after a launch, as the programme target sets it at descriptor accept).
 // +SEED=n +PROGS=n. Mutants (one per build): -DMUT_RELOAD (DUT loop decision off by one), +define+OT_COLL_ISS7_MUT_NOFWD,
 // +define+OT_COLL_ISS7_MUT_SWAP, +define+OT_COLL_ISS_MUT_PCWRAP (ref is built from the same defines but only v7 has the
@@ -36,7 +36,7 @@ module tb_hgi_coll_static_issuer_v7_miter;
  end
  integer quiet=0;   // edges since the last metadata write / start_pc change
  task automatic tick;begin @(posedge clk);#1;quiet=quiet+1;end endtask
- task automatic send(input [3:0] op,input [31:0] data);begin cfg={1'b1,op,data};tick;if(op==2||op==3)quiet=0;cfg=0;end endtask
+ task automatic send(input [3:0] op,input [31:0] data);begin cfg={1'b1,op,data};tick;if(op==1||op==2||op==3)quiet=0;cfg=0;end endtask
  task automatic set_spc(input [7:0] v);begin if(v!=start_pc)quiet=0;start_pc=v;end endtask
  function automatic [31:0] rcount(input integer k);
   case(k%9)
