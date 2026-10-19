@@ -1,0 +1,136 @@
+{
+ "name": "hidx_link_g4p-g4p-COMMIT",
+ "block": "ot_hbm_idx_topk_link_static_p",
+ "ref_tile": true,
+ "owner": "Claude HBM-IDXPIPE 1018",
+ "purpose": "HBM-IDXPIPE 10-18: pipelined successor of idx_link (ot_hbm_idx_topk_link_static_p): historical 1-edge pack/carry/8-bank write (42 levels, 4,096-b runtime part-select, ~7k-load selects; hidx_link_pr never gateable) -> S1 8-lane group compaction + pair merge, S2 quad merge, S3 half merge, S4 loop (10-b total adder) + rotate into the 64-slot record ring, S5 registered bank-write formation with ring register W for partial flits; control delay line keeps the input timeline; every output exactly +5 edges (calendar --link-pipe 5, frame +5 edges). d4g slot 650x500; ONE clock root clk for every flop and the 8 SRAMs (clk_mem kept, unloaded). Banks 0-3 stack W (MY, core pins facing the centre), 4-7 stack E (R0), 264-um centre channel + S/N bands; S selected_line, N tx+controls, E clock. Benches run_link_pipe.sh: +5 miter vs the historical die master + gold records + fault path; MUT1-4 FAIL (V5.050).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-idxpipe-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/rtl/hbm_idx_static/link_pipe_1018"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_topk_link_static_p u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "link_pipe_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "pass_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m0.log"
+   },
+   {
+    "name": "link_pipe_mut1_halves",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m1.log"
+   },
+   {
+    "name": "link_pipe_mut2_seq",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m2.log"
+   },
+   {
+    "name": "link_pipe_mut3_carry",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m3.log"
+   },
+   {
+    "name": "link_pipe_mut4_latency",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_link_g4p/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_link_g4p/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_link_g4p --out {RUN}/record/views/ot_hbm_idx_topk_link_static_p --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_link_g4p/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_link_g4p/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_link_g4p/hidx_link_g4p-g4p-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

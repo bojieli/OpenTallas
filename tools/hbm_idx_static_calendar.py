@@ -13,13 +13,22 @@ register every data input and output at the pin (+1 edge each; the VM round trip
 fields so that every tile CORE sees exactly the relative timeline it had before (same exact arithmetic, same
 internal fixed latencies); the shift of tile X is D_X = the summed pin edges on the path from the calendar to X's
 core minus X's own input edge. '--pins none' compiles the historical unregistered timeline (bench mutant).
+
+PIPELINED TOPK LINK (HBM-IDXPIPE 2026-10-18): the die link is ot_hbm_idx_topk_link_static_p (5-stage pack/rotate/
+write pipeline, rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv). It takes the historical input timeline
+unchanged (its fixed control delay line re-aligns clear/flush/emit internally) and delivers EVERY output (tx_v/tx,
+fault, selected_count) exactly link_core_out = 5 edges later. The compiler keeps every field edge, adds 5 to the
+predicted first TX edge and the scan->TX latency, and lengthens the frame tail by 5 so the last TX beat lands inside
+the frame. '--pins none' and --link-pipe 0 compile for the historical link (OT_IDX_HIST_LINK parents).
 """
 import argparse, json
 from pathlib import Path
 
 PIN_TABLES = {
-    'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=1, sel_out=1, link_in=1, link_out=1),
-    'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0),
+    'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=1, sel_out=1, link_in=1, link_out=1,
+                       link_core_out=5),
+    'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0,
+                 link_core_out=0),
 }
 FIELDS = dict(weight=(31, 1), query=(30, 1), head=(29, 1), beat=(28, 1), index=(20, 8), op=(16, 4), ps=(14, 2),
               addr=(6, 8), flush=(5, 1), link=(4, 1), group=(0, 4))
@@ -42,8 +51,10 @@ def shifts(pin, chain=0):
     return {t: v - base for t, v in cal.items()}, core
 
 
-def compile_program(pins='registered', gap=100, score_chain=0):
-    pin = PIN_TABLES[pins]
+def compile_program(pins='registered', gap=100, score_chain=0, link_pipe=None):
+    pin = dict(PIN_TABLES[pins])
+    if link_pipe is not None:
+        pin['link_core_out'] = link_pipe
     sh, core = shifts(pin, score_chain)
     events = []          # (historical edge, tile, field values)
     t = [0]
@@ -104,6 +115,7 @@ def compile_program(pins='registered', gap=100, score_chain=0):
         wait(7)
     wait(4)
     hist_len = t[0]
+    tail = pin['link_core_out']           # pipelined link: last TX beat lands link_core_out edges later
 
     words = {}
     owner = {}
@@ -115,7 +127,7 @@ def compile_program(pins='registered', gap=100, score_chain=0):
                 raise SystemExit(f'field collision at edge {n}: {k} {w[k]}/{owner[(n, k)]} vs {v}/{tile}')
             w[k] = v
             owner[(n, k)] = tile
-    length = max(hist_len + max(sh.values()), max(words) + 1)
+    length = max(hist_len + max(sh.values()) + tail, max(words) + 1)
     assert length <= 2048, length
     prog = []
     for n in range(length):
@@ -129,10 +141,10 @@ def compile_program(pins='registered', gap=100, score_chain=0):
     emit0 = marks['first_emit_historical'] + sh['link']
     pred = dict(
         first_emit_instruction=emit0,
-        first_tx_from_instruction0=emit0 + pin['link_in'] + 2 + pin['link_out'],   # link core: emit -> read -> tx
+        first_tx_from_instruction0=emit0 + pin['link_in'] + 2 + pin['link_core_out'] + pin['link_out'],   # link core: emit -> read -> tx
         scan_start_instruction=marks['scan_start'] + sh['sel'],
         first_key_instruction=marks['first_key'] + sh['s'],
-        added_edges_scan_to_tx=sh['link'] + pin['link_in'] + pin['link_out'] - sh['sel'],
+        added_edges_scan_to_tx=sh['link'] + pin['link_in'] + pin['link_core_out'] + pin['link_out'] - sh['sel'],
         added_edges_frame=length - hist_len,
     )
     meta = dict(length=length, historical_length=hist_len, pins=pins, pin_table=pin, score_chain=score_chain, calendar_shift=sh,
@@ -149,10 +161,13 @@ def main():
     ap.add_argument('--gap', type=int, default=100)
     ap.add_argument('--score-chain', type=int, default=0,
                     help='IDX-SCORE chained cluster: scorer outputs this many edges later (ot_hbm_idx_score_cluster: 4)')
+    ap.add_argument('--link-pipe', type=int, default=None,
+                    help='link core output latency (default: the pin table: registered 5 = ot_hbm_idx_topk_link_static_p, '
+                         'none 0); 0 = the historical ot_hbm_idx_topk_link_static (OT_IDX_HIST_LINK)')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    p, meta = compile_program(a.pins, a.gap, a.score_chain)
+    p, meta = compile_program(a.pins, a.gap, a.score_chain, a.link_pipe)
     rows = [sum((p[i + j] if i + j < len(p) else 0) << (32 * j) for j in range(8)) for i in range(0, len(p), 8)]
     meta['rows'] = len(rows)
     (out / 'calendar.hex').write_text(''.join(f'{r:064x}\n' for r in rows))

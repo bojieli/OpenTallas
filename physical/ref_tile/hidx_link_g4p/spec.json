@@ -1,0 +1,285 @@
+{
+ "name": "hidx_link_g4p",
+ "top": "ot_hbm_idx_topk_link_static_p",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clear",
+   "ingest_v",
+   "flush",
+   "emit_v",
+   "emit_group",
+   "rank",
+   "gbase",
+   "tx_v",
+   "tx",
+   "fault",
+   "selected_count"
+  ],
+  "S": [
+   "selected_line"
+  ],
+  "E": [
+   "clk",
+   "clk_mem",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clear": [
+   10.0,
+   10.2
+  ],
+  "ingest_v": [
+   10.2,
+   10.4
+  ],
+  "flush": [
+   10.4,
+   10.6
+  ],
+  "emit_v": [
+   10.6,
+   10.8
+  ],
+  "emit_group": [
+   10.8,
+   11.4
+  ],
+  "rank": [
+   11.4,
+   12.6
+  ],
+  "gbase": [
+   12.6,
+   13.8
+  ],
+  "tx_v": [
+   14.0,
+   14.6
+  ],
+  "tx": [
+   15.0,
+   636.0
+  ],
+  "fault": [
+   636.5,
+   636.8
+  ],
+  "selected_count": [
+   637.0,
+   640.0
+  ],
+  "selected_line": [
+   10.0,
+   640.0
+  ],
+  "clk": [
+   445.0,
+   445.2
+  ],
+  "clk_mem": [
+   445.2,
+   446.4
+  ],
+  "rst_n": [
+   446.4,
+   446.6
+  ]
+ },
+ "outline": {
+  "w": 650.0,
+  "h": 500.0,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[0].mem",
+   "at": [
+    23.76,
+    108.0
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[1].mem",
+   "at": [
+    23.76,
+    185.808
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[2].mem",
+   "at": [
+    23.76,
+    263.616
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[3].mem",
+   "at": [
+    23.76,
+    341.424
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[4].mem",
+   "at": [
+    454.896,
+    108.0
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[5].mem",
+   "at": [
+    454.896,
+    185.808
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[6].mem",
+   "at": [
+    454.896,
+    263.616
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "core.gm[7].mem",
+   "at": [
+    454.896,
+    341.424
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "clock": "cts",
+ "hold_budget": "die",
+ "slot_change_request": "HBM-IDXPIPE 10-18: d4g slot idx_link 650x500 (grants_d4g.json, FACES_ONLY) is kept; faces change from the v15 contract (all data W, clock E) to: S selected_line (faces idx_sel, which sits directly S of idx_link), N tx/tx_v/fault/selected_count + the 7 control inputs, E clk/clk_mem/rst_n at y~445 (above bank stack B). W face is the secondary (wd 266..287 + tie) face of bank stack A and carries no port. H-D4G re-plans the idx_link faces (N toward the collective/TKM path) when binding ot_hbm_idx_topk_link_static_p.",
+ "job": {
+  "owner": "Claude HBM-IDXPIPE 1018",
+  "branch": "claude/hbm-idxpipe-1018",
+  "tag": "g4p",
+  "purpose": "HBM-IDXPIPE 10-18: pipelined successor of idx_link (ot_hbm_idx_topk_link_static_p): historical 1-edge pack/carry/8-bank write (42 levels, 4,096-b runtime part-select, ~7k-load selects; hidx_link_pr never gateable) -> S1 8-lane group compaction + pair merge, S2 quad merge, S3 half merge, S4 loop (10-b total adder) + rotate into the 64-slot record ring, S5 registered bank-write formation with ring register W for partial flits; control delay line keeps the input timeline; every output exactly +5 edges (calendar --link-pipe 5, frame +5 edges). d4g slot 650x500; ONE clock root clk for every flop and the 8 SRAMs (clk_mem kept, unloaded). Banks 0-3 stack W (MY, core pins facing the centre), 4-7 stack E (R0), 264-um centre channel + S/N bands; S selected_line, N tx+controls, E clock. Benches run_link_pipe.sh: +5 miter vs the historical die master + gold records + fault path; MUT1-4 FAIL (V5.050).",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/rtl/hbm_idx_static/link_pipe_1018"
+  ],
+  "benches": [
+   {
+    "name": "link_pipe_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "pass_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m0.log"
+   },
+   {
+    "name": "link_pipe_mut1_halves",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m1.log"
+   },
+   {
+    "name": "link_pipe_mut2_seq",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m2.log"
+   },
+   {
+    "name": "link_pipe_mut3_carry",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m3.log"
+   },
+   {
+    "name": "link_pipe_mut4_latency",
+    "cmd": "bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/hbm_idx_static/link_pipe_1018/m4.log"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

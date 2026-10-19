@@ -17,7 +17,7 @@ Q=rtl/hbm_accel/index/quad_1017
 src=(rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv
  rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv
  rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/hbm_accel/index/ot_hbm_idx_score_static.sv rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv
- rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv
+ rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv
  rtl/hbm_accel/index/ot_hbm_idx_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv
  rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv
  $Q/ot_hbm_idx_score_quarter_static.sv $Q/ot_hbm_idx_xq_node_static.sv $Q/ot_hbm_idx_qctl_static.sv $Q/ot_hbm_idx_rootctl_static.sv $Q/ot_hbm_idx_client_static_quad.sv
