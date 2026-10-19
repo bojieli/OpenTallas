@@ -15,7 +15,7 @@
     "cfg_state_bits_added": 337,
     "onehot_selection_bits_added": 128,
     "counter_bits_added": 448,
-    "total_estimated_added_state_bits": 913,
+    "total_estimated_added_state_bits": 937,
     "held_record_bits": 2048,
     "held_operand_bits": 1536,
     "successful_install_added_edges": 0,
@@ -25,5 +25,23 @@
     "note": "14payloadbanks overlap record bits35..255; reset-localcopies additionally sized after exactmain-control fieldownership; estimate is lowerbound until final resetplan"
   },
   "retention": "canonical physical/common_flow/ot_keep_regs.tcl marks FF drivers of keep wires beforeopt_merge and per-bit techmap; actual mapped copies/fanout must be counted",
-  "qualification": "modelbeforebuild; no CTS until full differentialrecord/operand/programme proof and actualfanout/depth/area/IOcensus"
+  "qualification": "modelbeforebuild; no CTS until full differentialrecord/operand/programme proof and actualfanout/depth/area/IOcensus",
+  "reset_plan": {
+    "existing": "plain stage1 rc[0] -> existing rc[1], assertion/release2edges",
+    "successor": "24 kept parallel plain stage2 Qs sampleexactexistingstage1;16payload+1addr+7core/combinationalresetgroups",
+    "added_state_bits": 24,
+    "data_edges_added": 0,
+    "groups": {
+      "pin_status": "existing rc1",
+      "core_outputs": 7,
+      "core_installcontrol": 12,
+      "counter": 32,
+      "pointer_tail": 20,
+      "hwm_need_page": 27,
+      "cntnextcomb": "32maskloads; separateleaf",
+      "rptrnextcomb": "4maskloads; separateleaf"
+    },
+    "stage1_load_budget": 26,
+    "qualification": "FAN32only; exactdefaultsource path retained; fullreset/reinstall differential and actualmappedrootcensus required"
+  }
 }
