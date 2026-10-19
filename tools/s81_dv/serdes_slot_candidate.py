@@ -14,7 +14,10 @@ from pathlib import Path
 import dv_plan as D
 
 
-def candidate(original):
+APPROVED_RESERVE_WE_UM = 256.55     # ROOT/Codex coordinator 10-19 08:47 + 08:54 (DECISIONS_FOR_CLAUDE): opt-in candidate only
+
+
+def candidate(original, reserve_we=None):
     p=copy.deepcopy(original)
     width,height=518.4,3844.8
     old_width=p['facts']['die_um'][0]
@@ -75,6 +78,13 @@ def candidate(original):
         changed_station_ages=changed,block_overlaps=overlaps,lane_band_um=sum(bands.values()),relay_overlap_count=sum(relays.values()),
         old_reticle_margin_um=original['facts']['reticle_margin_um'],new_reticle_margin_um=p['facts']['reticle_margin_um'],
         margin_policy_um=D.RETICLE_MARGIN,margin_policy_pass=min(p['facts']['reticle_margin_um'])>=D.RETICLE_MARGIN,
+        declared_reserve_we_um=reserve_we,
+        declared_reserve_pass=(reserve_we is not None and reserve_we<=APPROVED_RESERVE_WE_UM+1e-9
+                               and p['facts']['reticle_margin_um'][0]>=reserve_we-1e-6 and p['facts']['die_um'][0]<=D.RETICLE_W
+                               and p['facts']['die_um'][1]<=D.RETICLE_H-2*D.RETICLE_MARGIN),
+        declared_reserve_basis=(None if reserve_we is None else
+            'explicit opt-in W/E planning reserve approved 10-19 08:54 (default 500 kept, N/S 500); no internal PDN/seal/PHY/edge '
+            'keepout removed; scribe/seal/PDN fit and final bind/reach/GRT/TT+FF still owed'),
         native_children_and_parent_clock='OWED: actual per-root TT/FF, reset/status and <=405um internal timed transport',
         coll_storage_successor=dict(status='prospective_not_qualified',required_um=[561.6,561.6],std_um2=7357.69494,macros=15))
     sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'fleet_viz'))
@@ -93,8 +103,14 @@ def candidate(original):
     return p,proof
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--plan',required=True);ap.add_argument('--out',required=True);a=ap.parse_args()
-    src=Path(a.plan);p,proof=candidate(json.loads(src.read_text()));out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+    ap=argparse.ArgumentParser();ap.add_argument('--plan',required=True);ap.add_argument('--out',required=True)
+    ap.add_argument('--reticle-reserve-um',type=float,default=None,help='explicit opt-in W/E reserve (approved candidate <= 256.55)')
+    a=ap.parse_args()
+    if a.reticle_reserve_um is not None and a.reticle_reserve_um<APPROVED_RESERVE_WE_UM-1e-9:
+        raise SystemExit(f'reserve {a.reticle_reserve_um} below the approved {APPROVED_RESERVE_WE_UM}')
+    src=Path(a.plan);p,proof=candidate(json.loads(src.read_text()),a.reticle_reserve_um);out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
+    if a.reticle_reserve_um is not None and not proof['declared_reserve_pass']:
+        raise SystemExit(f'declared reserve FAIL {proof["new_reticle_margin_um"]}')
     proof['source_plan_sha256']=hashlib.sha256(src.read_bytes()).hexdigest()
     (out/'plan.json').write_text(json.dumps(p,indent=1)+'\n');(out/'geometry.json').write_text(json.dumps(proof,indent=2)+'\n')
     print(json.dumps(proof,indent=2))

@@ -200,8 +200,12 @@ def main():
         if a.region:
             raise SystemExit('dv_diecase: --bind real is a full-die netlist (no --region)')
         import dv_bind
-        rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts,
+        emit_only = bool(__import__('os').environ.get('OT_BIND_EMIT_ONLY'))   # S81-DIEPLACE obstacle pass: netlist, no verdict
+        rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts, run_bind=not emit_only,
                            land_plan=Path(a.land_plan) if a.land_plan else None)
+        if emit_only:
+            print('dv_diecase: OT_BIND_EMIT_ONLY -- netlist for the obstacle pass only, NO strict bind verdict')
+            return
         print(json.dumps({k: v for k, v in rec.items() if k in ('relay_masters', 'clock_forward_cells', 'reset', 'port_bind_rc')}, indent=1))
         # A caller must never launch physical work after a failed strict bind.
         # emit() keeps its failure record; propagate that verdict to the shell.

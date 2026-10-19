@@ -232,9 +232,11 @@ class Placer:
     def __init__(self, W, H):
         self.W, self.H = W, H
         self.buck = collections.defaultdict(list)
+        self.rects = []
 
     def add(self, r):
         x0, y0, x1, y1 = r
+        self.rects.append(tuple(r))
         for i in range(int(x0 // self.B), int(x1 // self.B) + 1):
             for j in range(int(y0 // self.B), int(y1 // self.B) + 1):
                 self.buck[(i, j)].append(r)
@@ -305,6 +307,38 @@ class Placer:
                 self.add(r)
                 return r[0], r[1], abs(dx) + abs(dy)
         raise ValueError(f'no legal {w}x{h} placement within {rmax} um of {(x, y)}')
+
+
+def legal_reset_census(loc, touch, hints, reach=405.0):
+    """S81-DIEPLACE: every reset connection re-measured on the PLACED bodies.  Driver = R0 dsfd_rly_1 .o pin.
+    Reset-cell loads: exact .i and .rs pins.  Block loads: the top-down reset pin point.  Other loads (relay stations,
+    landings, hop-0 ICGs, active-high inverters): body centre + half-perimeter/2 (an upper bound on any pin)."""
+    import reset_legal as RL
+    def is_rcell(i):
+        return i.startswith('st_rs') or i.startswith('rst_root')
+    worst, n, fail, by = [], 0, 0, collections.Counter()
+    pins = hints.get('block_rst_pin', {})
+    for drv in [i for i in loc if is_rcell(i)]:
+        net = {'rst_root0': 'rst_sync0', 'rst_root1': 'rst_sync1'}.get(drv, drv[3:])
+        x0, y0 = loc[drv][0], loc[drv][1]
+        for ld in touch.get(net, ()):
+            if ld == drv:
+                continue
+            v = loc[ld]
+            if is_rcell(ld):
+                um, kind = RL.hop_um((x0, y0), (v[0], v[1])), 'reset_cell'
+            elif ld.startswith('u_') and ld[2:] in pins:
+                um, kind = RL.sink_um((x0, y0), tuple(pins[ld[2:]])), 'block_pin'
+            else:
+                um = RL.sink_um((x0, y0), (v[0] + v[2] / 2, v[1] + v[3] / 2)) + (v[2] + v[3]) / 2
+                kind = 'body_bound'
+            n += 1; by[kind] += 1
+            if um > reach:
+                fail += 1
+            worst.append((round(um, 3), drv, ld, kind))
+    worst.sort(reverse=True)
+    return dict(scope='PLACED_BODY_RESET_REACH_NOT_ROUTED', reach_um=reach, connections=n, by_kind=dict(by), fail=fail,
+                max_um=worst[0][0] if worst else 0, worst=worst[:40])
 
 
 def landing_footprint(master, vsize, bits, depth, face):
@@ -423,6 +457,8 @@ def main():
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
+    ap.add_argument('--dump-obstacles', type=Path, default=None,
+                    help='S81-DIEPLACE: write the reset-body obstacle set (after blocks, relays, landings, lane bands) and stop')
     a = ap.parse_args()
     out = a.out
     for d in ('views/sta', 'out', 'sta', 'dcc/tools/hbm_die_v15'):
@@ -543,14 +579,36 @@ def main():
     # Landings are allocated first (their endpoint attachment is intentional).
     # Reset stations then avoid every lane, not only the sparse relay bodies.
     reserve_lanes(placer, links)
-    for p in hints['reset_place']:
+    if a.dump_obstacles:
+        # S81-DIEPLACE: every rectangle a reset body must avoid (dv_bind OT_RESET_LEGAL input), plus the placed bodies of
+        # relay stations / landings (their reset pins are tree sinks)
+        bod = {i: [round(v[0], 3), round(v[1], 3), round(v[0] + v[2], 3), round(v[1] + v[3], 3)] for i, v in loc.items()
+               if not i.startswith('u_')}
+        a.dump_obstacles.write_text(json.dumps(dict(schema='opentallas.s81_dv.reset_obstacles.v1', die_um=[W, H],
+            reset_size=[rw, rh], reset_master=T.get('reset_master'), rects=[[round(c, 3) for c in r] for r in placer.rects],
+            bodies=bod, landing_far=far), indent=0))
+        print(f'dv_rvcase: obstacles {len(placer.rects)} rects, {len(bod)} bodies -> {a.dump_obstacles}')
+        return
+    legal = bool(hints.get('reset_legal'))
+    if legal:
+        # S81-DIEPLACE legal mode: dv_bind already chose mutually legal R0 slots against these exact obstacles; place each
+        # body AT its slot (no spiral, no radius) -- any conflict is a FAIL, never a silent move
+        for p in hints['reset_place']:
+            i = p['inst']; x, y = p['ll']
+            px_, py_, dd = placer.put(x, y, rw, rh, step=1.0, rmax=0.0, max_distance=0.0)
+            loc[i] = (px_, py_, rw, rh, 'FIRM')
+        for k, i in enumerate(('rst_root0', 'rst_root1')):
+            x, y = hints['reset_root_ll'][k]
+            px_, py_, dd = placer.put(x, y, rw, rh, step=1.0, rmax=0.0, max_distance=0.0)
+            loc[i] = (px_, py_, rw, rh, 'FIRM')
+    for p in ([] if legal else hints['reset_place']):
         i = p['inst']; x, y = p['xy']
         px_, py_, dd = placer.put(x - rw / 2, y - rh / 2, rw, rh, step=4.0, rmax=1200.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM'); moved['reset'] += dd is not None and dd > 0
         if dd is None or dd > 100:
             far.append((i, dd))
     rx, ry = hints['reset_root_xy']
-    for k, i in enumerate(('rst_root0', 'rst_root1')):
+    for k, i in enumerate(() if legal else ('rst_root0', 'rst_root1')):
         px_, py_, dd = placer.put(rx - rw / 2 + k * (rw + 1), max(ry, 2.0), rw, rh, step=4.0, rmax=1200.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM')
     for mst, i, _, _ in insts:
@@ -569,6 +627,13 @@ def main():
     if missing:
         raise SystemExit(f'dv_rvcase: no position for {len(missing)} instances, e.g. {missing[:5]}')
     centre = {i: (v[0] + v[2] / 2, v[1] + v[3] / 2) for i, v in loc.items()}
+    reset_census = None
+    if legal:
+        reset_census = legal_reset_census(loc, touch, hints)
+        (out / 'reset_reach.json').write_text(json.dumps(reset_census, indent=1))
+        print('dv_rvcase: legal reset census', json.dumps({k: v for k, v in reset_census.items() if k != 'worst'}), flush=True)
+        if reset_census['fail']:
+            raise SystemExit(f"dv_rvcase: legal reset reach FAIL on placed bodies: {reset_census['worst'][:5]}")
 
     # ------------------------------------------------------------------ stand-in abstracts + libs
     census = collections.Counter(); scell = {}

@@ -361,7 +361,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         for s in m.get('straps', []):
             straps.append([mod, s])
     # ------------------------------------------------------------------ reset tree
-    rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'))
+    if os.environ.get('OT_RESET_LEGAL'):
+        # S81-DIEPLACE opt-in: legal R0 slots + exact pin reach + capped fanout + physically delivered calendar releases
+        rst = reset_tree_legal(plan, reg, chains_pts, os.environ['OT_RESET_LEGAL'], master=T.get('reset_master'))
+    else:
+        rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'))
     early = {m.get('master') for m in T.get('frame_members', []) if m.get('reset')}
     fw = set(T.get('frame_wrapper', {}).get('masters', []))
     # MU endpoint sticky faults share the die status boundary with land_fault.
@@ -563,7 +567,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     land_rl_tab = T.get('landing_reset_stages', {})
     lsrc = {l['i'].replace('-', '_'): l for l in plan['links']}
     rdep = rst['depth']
-    gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
+    gcal, gate_en, land_rs, cal_place, legal_cal = {}, {}, {}, [], {}
     rmst = T.get('reset_master') or RST_RLY['EW']
 
     def cal_tap(leaf, ckr, nd, xy, why):
@@ -587,7 +591,31 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         rl_ = int(land_rl_tab.get(lm_, 0))
         ds_, dr_ = rdep[sleaf], rdep[rleaf] + rl_
         h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
-        if dr_ - ds_ > h_:
+        if rst.get('legal'):
+            # S81-DIEPLACE legal mode: the same release edges as the calendar below, each DELIVERED at its physical sink
+            # (hop-0 ICG enable beside the source pin, rs of the PLACED landing body) by a station of exactly that release
+            # depth within reach, else by calendar-chain stations on legal slots (reset_legal.deliver)
+            # invariant of the calendar below: E_land + RL - E_gate = N mod 2, E_gate >= source release, E_land >= receiver
+            # release; both are raised (never lowered) to the earliest release physically present at their sink point
+            gxy = tuple(l_['e'][0][2:4])
+            ltgt, lslack = rst['body_target'](f'ld_{nm}', l_['e'][1][2:4])
+            mg, ml = rst['min_release'](gxy, 12.0), rst['min_release'](ltgt, lslack)
+            if mg is None or ml is None:
+                raise ValueError(f'reset_tree_legal: landing {nm} gate/landing sink unreachable ({mg}, {ml})')
+            gE0 = max(ds_, dr_ - h_, mg, ml + rl_ - h_)
+            for gE in range(gE0, gE0 + 9):          # a crowded sink: a later uniform release (both ends) may be deliverable
+                lE = gE + h_ - rl_
+                snap_ = rst['snapshot']()
+                try:
+                    gate_en[nm] = rst['deliver'](gE, gxy, 12.0, f'gate {nm}')
+                    land_rs[nm] = rst['deliver'](lE, ltgt, lslack, f'landing {nm}')
+                    break
+                except ValueError:
+                    rst['restore'](snap_)
+            else:
+                raise ValueError(f'reset_tree_legal: landing {nm}: no deliverable release pair from E_gate {gE0} (+8)')
+            legal_cal[nm] = dict(gate_E=gE, land_E=lE, shift_vs_leaf_calendar=gE - (ds_ + max(dr_ - ds_ - h_, 0)))
+        elif dr_ - ds_ > h_:
             gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
             land_rs[nm] = rleaf
         elif dr_ - ds_ < h_:
@@ -624,6 +652,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                               K_source=(pr.get('K_source') or 'land_plan E (gate calendar R0 = G + N mod 2)') if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
                               calendar_G_minus_R0=-h_, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
                               land_rs=land_rs[nm], release_src=ds_, release_dst=dr_, land_reset_stages=rl_,
+                              **({'legal_calendar': legal_cal[nm]} if nm in legal_cal else {}),
                               calendar_stations=dict(side='source' if dr_ - ds_ > h_ else ('receiver' if dr_ - ds_ < h_ else None),
                                                      n=abs(dr_ - ds_ - h_))))
     for lm in sorted({r['master'] for r in land_rows}):
@@ -695,6 +724,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                      f'.rs({rst["station_leaf"][(nm, k)]}));')
             nst[rly_master(b, d, T.get('relay_prefix', 'dsfd_dvrly'))] += 1
             prev = wn
+    if rst.get('finalize'):
+        rst['finalize']()
+        sh_ = [c['shift_vs_leaf_calendar'] for c in legal_cal.values()]
+        rst['summary']['calendar_release_shift'] = dict(links=len(sh_), shifted=sum(1 for x in sh_ if x), max=max(sh_, default=0),
+            note='one-time reset-release latency (edges after rst_n) only; every K / lane age / G-R0 relation unchanged')
     v += rst['verilog']
     v.append('endmodule')
     (out / 'die.v').write_text('\n'.join(v) + '\n')
@@ -774,6 +808,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # pin points (top-down pin assignment); landings / relays / forward cells are placed from the plan by dv_rvcase
     (out / 'place_hints.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.place_hints.v1', reset_place=rst['place'] + cal_place, reset_root_xy=rst['summary']['root_xy'],
+        **({'reset_legal': True, 'reset_root_ll': rst['root_ll']} if rst.get('legal') else {}),
         block_rst_pin={b: [round(x, 3), round(y, 3)] for b, (x, y) in rst['block_pin'].items()},
         landings=[dict(inst=f'ld_{r["link"]}', link=r['link'], dst=r['inst'], master=r['master'], bits=r['bits'], D=r['D'])
                   for r in land_rows]), indent=1))
@@ -1111,3 +1146,177 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
                 block_leaf={b: nm_(s) for b, s in block_srv.items()},
                 block_parent={b: (name[par[s]] if s is not None and par[s] is not None else 'rst_sync1') for b, s in block_srv.items()},
                 block_pin=block_pin, summary=summary, place=place)
+
+
+def reset_tree_legal(plan, reg, chains_pts, obst_path, master=None):
+    """S81-DIEPLACE (10-19) opt-in OT_RESET_LEGAL=<dv_rvcase --dump-obstacles json>: the regional reset tree on
+    physically legal R0 slots with exact pin reach, <= CHILD_CAP children and <= SINK_CAP sinks per station
+    (tools/s81_dv/reset_legal.py).  Same interface as reset_tree plus deliver(E, xy, slack, tag) -> net (a node whose
+    release edge is E and whose output reaches xy, through calendar-chain stations when no such node is in reach) and
+    finalize() -> verilog / place / summary once the landing calendar has asked for every release it needs."""
+    import reset_legal as RL
+    rr = {d: master for d in RST_RLY} if master else RST_RLY
+    W, H = plan['facts']['die_um']
+    blocks = plan['blocks']
+    obst = RL.load_obstacles(obst_path)
+    bodies = obst.get('bodies', {})
+    t = RL.LegalTree(W, H, obst)
+    root = t.build((W / 2, 0.0))
+    # root synchroniser: two dedicated slots beside the root station, neither on any tree path
+    rs0 = rs1 = None
+    for k in sorted(t.near_slots(t.S[root], RL.REACH), key=lambda k: (RL.man(t.S[k], t.S[root]), k)):
+        if k in t.used or t.kids[k]:            # a BFS leaf: re-using it cuts no tree path
+            continue
+        if rs0 is None:
+            rs0 = k
+        elif RL.hop_um(t.S[rs0], t.S[k]) <= RL.REACH and RL.hop_um(t.S[k], t.S[root]) <= RL.REACH:
+            rs1 = k
+            break
+    if rs0 is None or rs1 is None:
+        raise ValueError('reset_tree_legal: no legal root synchroniser slots')
+    t.moved |= {rs0, rs1}
+    for k in (rs0, rs1):
+        if t.par.get(k) is not None:
+            t.kids[t.par[k]] -= 1
+    cen = [(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, reg[b['name']]) for b in blocks]
+
+    def creg(k):
+        x, y = t.S[k]
+        return min(cen, key=lambda q: abs(q[0] - x) + abs(q[1] - y))[2]
+    name = {}
+
+    def nm_of(k):
+        if k not in name:
+            name[k] = f'rsg_c{k}' if k in t.moved else f'rs_q{k}'
+        return name[k]
+
+    def body_target(inst, xy):
+        r = bodies.get(inst)
+        if not r:
+            return tuple(xy), 0.0
+        return ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2), ((r[2] - r[0]) + (r[3] - r[1])) / 2
+
+    def serve_slack(xy, slack):
+        best = None
+        for k in t.near_slots(xy, RL.REACH):
+            if k in t.par and t.loads[k] < RL.SINK_CAP and RL.sink_um(t.S[k], xy) + slack <= RL.REACH and t.clean(k):
+                key = (t.dep[k], RL.sink_um(t.S[k], xy), k)
+                if best is None or key < best:
+                    best = key
+        return best
+    errors = []
+    station_srv = {}
+    for nm, pts in chains_pts.items():
+        for k, xy in enumerate(pts):
+            tgt, slack = body_target(f'st_{nm}_{k}', xy)
+            b_ = serve_slack(tgt, slack)
+            if b_ is None:
+                errors.append(dict(kind='sink_unreachable', pin=f'{nm}[{k}].rs'))
+                station_srv[(nm, k)] = None
+                continue
+            t.loads[b_[2]] += 1; t.mark(b_[2]); station_srv[(nm, k)] = b_[2]
+
+    def buried(x, y, own):
+        return any(b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5
+                   for b in blocks)
+    block_srv, block_pin = {}, {}
+    for b in blocks:
+        cands = [(b['x'] + b['w'] / 2, b['y'])]
+        for f in range(1, 40):
+            q = f / 40.0
+            cands += [(b['x'] + b['w'] * q, b['y']), (b['x'] + b['w'] * q, b['y'] + b['h']),
+                      (b['x'], b['y'] + b['h'] * q), (b['x'] + b['w'], b['y'] + b['h'] * q)]
+        best = None
+        for j_, xy in enumerate(cands):
+            if buried(xy[0], xy[1], b['name']):
+                continue
+            s = serve_slack(xy, 10.0)            # 10 um: the active-high inverter beside the pin (rinv_)
+            if s is None:
+                continue
+            key = (0 if j_ == 0 else 1, s[0], s[1])
+            if best is None or key < best[0]:
+                best = (key, xy, s[2])
+        if best is None:
+            errors.append(dict(kind='sink_unreachable', pin=f"{b['name']}.rst"))
+            block_pin[b['name']] = cands[0]; block_srv[b['name']] = None
+            continue
+        _, xy, s = best
+        t.loads[s] += 1; t.mark(s)
+        block_pin[b['name']] = xy; block_srv[b['name']] = s
+    if errors:
+        raise ValueError(f'reset_tree_legal: {len(errors)} unserved sinks: {errors[:8]}')
+    rdepth = {}
+
+    def rd(k):
+        return t.dep[k] + 2
+    delivered = []
+
+    def deliver(E, xy, slack, tag):
+        k = t.deliver_slack(E - 2, xy, slack, tag)
+        delivered.append(dict(tag=tag, E=E, node=nm_of(k), um=round(RL.sink_um(t.S[k], xy) + slack, 3)))
+        return nm_of(k)
+    out = dict(depth=rdepth, station_leaf={}, block_leaf={}, block_parent={}, block_pin=block_pin, verilog=[], place=[],
+               summary={}, deliver=deliver, body_target=body_target, legal=True)
+
+    def finalize():
+        chk = t.check()
+        if chk['n_over_reach'] or chk['max_children'] > RL.CHILD_CAP or chk['max_sink_loads'] > RL.SINK_CAP:
+            raise ValueError(f'reset_tree_legal: final check FAIL {chk}')
+        for k in t.used:
+            rdepth.setdefault(nm_of(k), rd(k))
+        h01 = RL.hop_um(t.S[rs0], t.S[rs1]); h1r = RL.hop_um(t.S[rs1], t.S[root])
+        if max(h01, h1r) > RL.REACH:
+            raise ValueError(f'reset_tree_legal: root synchroniser hops {h01} / {h1r} > {RL.REACH}')
+        v = out['verilog']
+        v += ['  // ---- regional synchronous-release reset relay tree, S81-DIEPLACE legal mode (tools/s81_dv/reset_legal.py):',
+              f'  //      R0 dsfd_rly_1 bodies on legal slots, every hop .o -> .i/.rs <= {RL.REACH} um, <= {RL.CHILD_CAP} children,',
+              f'  //      <= {RL.SINK_CAP} sinks per station; rsg_c* = calendar-chain stations (one release edge each)',
+              '  wire rst_sync0, rst_sync1;',
+              f'  {rr["EW"]} rst_root0 (.ck(ck_{creg(rs0)}), .rs(rst_n), .i(rst_n), .o(rst_sync0));',
+              f'  {rr["EW"]} rst_root1 (.ck(ck_{creg(rs1)}), .rs(rst_sync0), .i(rst_sync0), .o(rst_sync1));']
+        place = out['place']
+        for k in sorted(t.used, key=lambda k: (t.dep[k], k)):
+            p = t.par[k] if k != root else None
+            up = 'rst_sync1' if p is None else nm_of(p)
+            v.append(f'  wire {nm_of(k)};')
+            v.append(f'  {rr["WE"]} st_{nm_of(k)} (.ck(ck_{creg(k)}), .rs({up}), .i({up}), .o({nm_of(k)}));')
+            place.append(dict(inst=f'st_{nm_of(k)}', master=rr['WE'], orient='R0', xy=[round(t.S[k][0] + t.size[0] / 2, 3), round(t.S[k][1] + t.size[1] / 2, 3)],
+                              ll=[t.S[k][0], t.S[k][1]], kind='calendar_chain' if k in t.moved else 'street', legal=True))
+        out['root_ll'] = [list(t.S[rs0]), list(t.S[rs1])]
+        depths = [rd(k) for k in t.used]
+        out['summary'].update(dict(mode='LEGAL_SLOTS_EXACT_PIN_REACH', obstacles=str(obst_path), slots=chk['slots'],
+            bfs_reached=chk['bfs_reached'], stations=len(t.used) + 2, calendar_chain_stations=len([k for k in t.used if k in t.moved]),
+            chains=chk['chains'], max_children=chk['max_children'], max_sink_loads=chk['max_sink_loads'], max_hop_um=chk['max_hop_um'],
+            root_hops_um=[round(h01, 3), round(h1r, 3)], max_release_depth=max(depths), min_release_depth=min(depths),
+            root_xy=[t.S[root][0] + t.size[0] / 2, t.S[root][1] + t.size[1] / 2],
+            block_release_depth={b: rd(s) + 1 for b, s in block_srv.items()}, delivered=len(delivered),
+            delivered_max_um=max((d['um'] for d in delivered), default=0),
+            reach_gate=dict(reach_um=RL.REACH, errors=0, reach_gate='PASS', metric='exact R0 pin .o->.i/.rs; sinks body-centre + half-perimeter/2')))
+        return out
+    for k in list(t.used):
+        rdepth[nm_of(k)] = rd(k)
+    rdepth['rst_sync1'] = 1
+    out['station_leaf'] = {kk: nm_of(s) for kk, s in station_srv.items()}
+    out['block_leaf'] = {b: nm_of(s) for b, s in block_srv.items()}
+    out['block_parent'] = {b: (nm_of(t.par[s]) if t.par[s] is not None and s != root else 'rst_sync1') for b, s in block_srv.items()}
+    out['summary']['root_xy'] = [t.S[root][0] + t.size[0] / 2, t.S[root][1] + t.size[1] / 2]
+
+    def _depth_hook(E, xy, slack, tag):
+        n = deliver(E, xy, slack, tag)
+        rdepth[n] = E
+        return n
+    out['deliver'] = _depth_hook
+    def snapshot():           # shallow copies: every value is immutable (ints, tuples, strings)
+        return (dict(t.par), dict(t.dep), collections.Counter(t.kids), collections.Counter(t.loads), set(t.used), set(t.moved),
+                dict(t.chain_cache), t.chains, dict(rdepth), len(delivered), dict(name))
+
+    def restore(sn):
+        t.par, t.dep, t.kids, t.loads, t.used, t.moved, t.chain_cache, t.chains = sn[:8]
+        for d_, s_ in ((rdepth, sn[8]), (name, sn[10])):
+            d_.clear(); d_.update(s_)
+        del delivered[sn[9]:]
+    out['snapshot'], out['restore'] = snapshot, restore
+    out['min_release'] = lambda xy, slack: (None if t.min_dep(xy, slack) is None else t.min_dep(xy, slack) + 2)
+    out['finalize'] = finalize
+    out['tree'] = t
+    return out

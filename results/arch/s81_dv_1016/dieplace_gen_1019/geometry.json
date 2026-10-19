@@ -1,0 +1,67 @@
+{
+  "scope": "DIAGNOSTIC_NOT_FIT_OR_CLOCK_CLOSURE",
+  "slots": 8,
+  "slot_um": [
+    518.4,
+    3844.8
+  ],
+  "min_data_face_band_clearance_um": 3.9239999999990687,
+  "array_shift_x_um": 259.2,
+  "die_width_add_um": 518.4,
+  "max_hop_um": 404.89999999999964,
+  "over_405": 0,
+  "changed_station_ages": [],
+  "block_overlaps": [],
+  "lane_band_um": 0,
+  "relay_overlap_count": 0,
+  "old_reticle_margin_um": [
+    515.7,
+    500.0
+  ],
+  "new_reticle_margin_um": [
+    256.55,
+    500.0
+  ],
+  "margin_policy_um": 500.0,
+  "margin_policy_pass": false,
+  "declared_reserve_we_um": 256.55,
+  "declared_reserve_pass": true,
+  "declared_reserve_basis": "explicit opt-in W/E planning reserve approved 10-19 08:54 (default 500 kept, N/S 500); no internal PDN/seal/PHY/edge keepout removed; scribe/seal/PDN fit and final bind/reach/GRT/TT+FF still owed",
+  "native_children_and_parent_clock": "OWED: actual per-root TT/FF, reset/status and <=405um internal timed transport",
+  "coll_storage_successor": {
+    "status": "prospective_not_qualified",
+    "required_um": [
+      561.6,
+      561.6
+    ],
+    "std_um2": 7357.69494,
+    "macros": 15
+  },
+  "global_routing_metrics": {
+    "worst_cut": {
+      "before": 0.5663,
+      "after": 0.5663
+    },
+    "over_reach_bits": {
+      "before": 0,
+      "after": 0
+    },
+    "relays": {
+      "before": 3182,
+      "after": 3182
+    },
+    "relay_bit_stages": {
+      "before": 864100,
+      "after": 864100
+    },
+    "sum_bit_um_hops": {
+      "before": 400345130,
+      "after": 400352055
+    },
+    "cut_windows_over_limit": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  "source_plan_sha256": "cfdf2378e7644efeeea92a0d193085b9e1a3c40c6debffb9c53adf31ff748e53"
+}
