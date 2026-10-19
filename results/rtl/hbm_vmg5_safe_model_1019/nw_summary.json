@@ -1,0 +1,437 @@
+{
+ "top": "hfd_hgi_vms_glue_nw_t",
+ "mapped_source": "/srv/opentallas-scratch/claude/ref_gate/hfd_hgi_vms_glue_nw_g5-20261019-121352/routes/gate/work/orfs/1_2_yosys.raw.v",
+ "mapped_sha256": "6944073e350c663dd5434ef8d864f9edef2e5680d0499b104c233cda96f9cc5e",
+ "dump_sha256": "1ce9a1e20d131b33ec39dc3b495c51f77fdf374cbde1ad9744410e049df6ac96",
+ "cells": 216094,
+ "kinds": {
+  "buf": 94128,
+  "comb": 28079,
+  "tie": 2,
+  "ff": 93885
+ },
+ "roots": 130954,
+ "roots_gt32": 743,
+ "roots_gt32_by_kind": {
+  "tie": 2,
+  "ff": 616,
+  "comb": 125
+ },
+ "max_by_kind": {
+  "input": 1,
+  "ff": 272,
+  "comb": 264,
+  "macro": 0,
+  "tie": 1165
+ },
+ "top_roots": [
+  {
+   "net": "_124537_",
+   "driver": "_239623_/H (TIEHIx1_ASAP7_75t_R)",
+   "kind": "tie",
+   "loads": 1165,
+   "sink_roles": {
+    "ff:SETN": 1153,
+    "ff:RESETN": 8,
+    "ff:D": 4
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_124538_",
+   "driver": "_239624_/L (TIELOx1_ASAP7_75t_R)",
+   "kind": "tie",
+   "loads": 620,
+   "sink_roles": {
+    "ff:D": 570
+   },
+   "output_ports": [
+    "b0_pq[2]",
+    "b0_pq[3]",
+    "b0_pq[4]",
+    "b0_pq[5]",
+    "b0_pq[6]",
+    "b0_pq[7]",
+    "b1_pq[2]",
+    "b1_pq[3]",
+    "b1_pq[4]",
+    "b1_pq[5]",
+    "b1_pq[6]",
+    "b1_pq[7]",
+    "b2_pq[2]",
+    "b2_pq[3]",
+    "b2_pq[4]",
+    "b2_pq[5]",
+    "b2_pq[6]",
+    "b2_pq[7]",
+    "b3_pq[2]",
+    "b3_pq[3]",
+    "b3_pq[4]",
+    "b3_pq[5]",
+    "b3_pq[6]",
+    "b3_pq[7]",
+    "b4_pq[2]",
+    "b4_pq[3]",
+    "b4_pq[4]",
+    "b4_pq[5]",
+    "b4_pq[6]",
+    "b4_pq[7]",
+    "b5_pq[2]",
+    "b5_pq[3]",
+    "b5_pq[4]",
+    "b5_pq[5]",
+    "b5_pq[6]",
+    "b5_pq[7]",
+    "b6_pq[2]",
+    "b6_pq[3]",
+    "b6_pq[4]",
+    "b6_pq[5]",
+    "b6_pq[6]",
+    "b6_pq[7]",
+    "b7_pq[2]",
+    "b7_pq[3]",
+    "b7_pq[4]",
+    "b7_pq[5]",
+    "b7_pq[6]",
+    "b7_pq[7]",
+    "hub_status[1]",
+    "vmstat[17]"
+   ]
+  },
+  {
+   "net": "_093872_",
+   "driver": "u_core.u_hub.re$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 272,
+   "sink_roles": {
+    "comb:B": 266,
+    "ff:D": 1,
+    "comb:C": 4,
+    "comb:B1": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_108233_",
+   "driver": "_132893_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:A": 3,
+    "comb:B": 2,
+    "comb:C": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_108235_",
+   "driver": "_132895_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:C": 2,
+    "comb:D": 1,
+    "comb:B1": 2,
+    "comb:A": 1,
+    "comb:B": 2
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_108768_",
+   "driver": "_134466_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:A": 3,
+    "comb:C": 1,
+    "comb:B": 2
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_108770_",
+   "driver": "_134468_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A": 1,
+    "comb:A2": 256,
+    "comb:B1": 2,
+    "comb:B": 2,
+    "comb:C": 2,
+    "comb:D": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_108800_",
+   "driver": "_134509_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 257,
+    "comb:B": 2,
+    "comb:A": 4,
+    "comb:C": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_108801_",
+   "driver": "_134510_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 257,
+    "comb:B": 3,
+    "comb:C": 2,
+    "comb:A": 1,
+    "comb:D": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_107324_",
+   "driver": "_130632_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 263,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:A": 3,
+    "comb:B": 2
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_107327_",
+   "driver": "_130635_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 263,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:B": 2,
+    "comb:C": 2,
+    "comb:A": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_117054_",
+   "driver": "_184320_/Y (OR3x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 256,
+   "sink_roles": {
+    "comb:A2": 256
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_118154_",
+   "driver": "_185668_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 256,
+   "sink_roles": {
+    "comb:A2": 256
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_119254_",
+   "driver": "_187016_/Y (OR3x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 256,
+   "sink_roles": {
+    "comb:A2": 256
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_120354_",
+   "driver": "_188364_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 256,
+   "sink_roles": {
+    "comb:A2": 256
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_093940_",
+   "driver": "u_rst.rst_n[10]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 204,
+   "sink_roles": {
+    "ff:RESETN": 204
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_093938_",
+   "driver": "u_rst.rst_n[8]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 204,
+   "sink_roles": {
+    "ff:RESETN": 204
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_093937_",
+   "driver": "u_rst.rst_n[7]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 196,
+   "sink_roles": {
+    "ff:RESETN": 196
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_093939_",
+   "driver": "u_rst.rst_n[9]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 196,
+   "sink_roles": {
+    "ff:RESETN": 196
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000239_",
+   "driver": "u_core.u_hub.writes[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 182,
+   "sink_roles": {
+    "comb:A1": 172,
+    "comb:A": 10
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000163_",
+   "driver": "u_core.u_hub.writes[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 173,
+   "sink_roles": {
+    "comb:A1": 162,
+    "comb:A": 11
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000153_",
+   "driver": "u_core.u_cw.cptr[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 135,
+   "sink_roles": {
+    "comb:A2": 62,
+    "comb:B": 61,
+    "comb:A": 8,
+    "comb:B2": 1,
+    "comb:C": 3
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000152_",
+   "driver": "u_core.u_ccw.cptr[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 128,
+   "sink_roles": {
+    "comb:A2": 59,
+    "comb:B": 66,
+    "comb:A1": 2,
+    "comb:A": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000240_",
+   "driver": "u_core.u_hub.writes[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 109,
+   "sink_roles": {
+    "comb:A1": 98,
+    "comb:A": 11
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_093930_",
+   "driver": "u_rst.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 107,
+   "sink_roles": {
+    "ff:RESETN": 107
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000198_",
+   "driver": "u_core.u_hub.writes[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 96,
+   "sink_roles": {
+    "comb:A1": 85,
+    "comb:A": 10,
+    "comb:B": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_030342_",
+   "driver": "u_core.u_cw.cptr[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 77,
+   "sink_roles": {
+    "comb:C": 48,
+    "comb:B": 12,
+    "comb:A1": 15,
+    "comb:A": 1,
+    "comb:B2": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_044690_",
+   "driver": "u_core.u_ccw.cptr[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 66,
+   "sink_roles": {
+    "comb:A1": 13,
+    "comb:C": 47,
+    "comb:A": 6
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_009036_",
+   "driver": "u_core.u_hub.rseq[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 63,
+   "sink_roles": {
+    "comb:A": 14,
+    "comb:A2": 20,
+    "comb:B": 21,
+    "comb:A1": 7,
+    "comb:C": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_093931_",
+   "driver": "u_rst.rst_n[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 59,
+   "sink_roles": {
+    "ff:RESETN": 59
+   },
+   "output_ports": []
+  }
+ ],
+ "unknown_masters": [],
+ "scope": "mapped graph; no placement reach or physical clock qualification"
+}

@@ -1,0 +1,426 @@
+{
+ "top": "hfd_hgi_vms_glue_sw_t",
+ "mapped_source": "/srv/opentallas-scratch/claude/ref_gate/hfd_hgi_vms_glue_sw_g5-20261019-121352/routes/gate/work/orfs/1_2_yosys.raw.v",
+ "mapped_sha256": "b536bea74d28a74d1ab9a9e40acb675f3c3bf5ec091e2cf999a10ea37adb1bb6",
+ "dump_sha256": "9118abf6673c5f11fb1a18509acd0ef27275f0596b981d35a3f5340ace840fb8",
+ "cells": 276652,
+ "kinds": {
+  "buf": 115123,
+  "comb": 49217,
+  "ff": 112310,
+  "tie": 2
+ },
+ "roots": 171205,
+ "roots_gt32": 971,
+ "roots_gt32_by_kind": {
+  "tie": 2,
+  "ff": 809,
+  "comb": 160
+ },
+ "max_by_kind": {
+  "input": 1,
+  "ff": 840,
+  "comb": 282,
+  "macro": 0,
+  "tie": 1485
+ },
+ "top_roots": [
+  {
+   "net": "_166113_",
+   "driver": "_322867_/H (TIEHIx1_ASAP7_75t_R)",
+   "kind": "tie",
+   "loads": 1485,
+   "sink_roles": {
+    "ff:SETN": 1474,
+    "ff:RESETN": 8,
+    "ff:D": 3
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000179_",
+   "driver": "u_core.u_hub.cs[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 840,
+   "sink_roles": {
+    "comb:B": 277,
+    "comb:C": 271,
+    "comb:A2": 281,
+    "comb:A": 8,
+    "comb:A1": 3
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000013_",
+   "driver": "u_core.u_hub.ccs[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 575,
+   "sink_roles": {
+    "comb:A": 287,
+    "comb:A1": 269,
+    "comb:B": 8,
+    "comb:C": 5,
+    "comb:A2": 6
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_000012_",
+   "driver": "u_core.u_hub.cs[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 563,
+   "sink_roles": {
+    "comb:C": 281,
+    "comb:A": 278,
+    "comb:A1": 4
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_112340_",
+   "driver": "u_rst.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 298,
+   "sink_roles": {
+    "ff:RESETN": 298
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_135197_",
+   "driver": "_191469_/Y (AND2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 282,
+   "sink_roles": {
+    "comb:B": 280,
+    "ff:D": 1,
+    "comb:A2": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_135227_",
+   "driver": "_191499_/Y (AND2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 281,
+   "sink_roles": {
+    "comb:B": 279,
+    "comb:A2": 1,
+    "ff:D": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_018248_",
+   "driver": "u_core.u_hub.re[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 280,
+   "sink_roles": {
+    "comb:B": 273,
+    "comb:C": 5,
+    "ff:D": 1,
+    "comb:A1": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_018247_",
+   "driver": "u_core.u_hub.re[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 279,
+   "sink_roles": {
+    "comb:B": 273,
+    "comb:A1": 1,
+    "ff:D": 1,
+    "comb:C": 4
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_112261_",
+   "driver": "u_core.u_hub.re[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "kind": "ff",
+   "loads": 272,
+   "sink_roles": {
+    "comb:B": 266,
+    "ff:D": 1,
+    "comb:C": 5
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128263_",
+   "driver": "_173965_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 266,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:B": 3,
+    "comb:A1": 1,
+    "comb:C": 1,
+    "comb:A": 2,
+    "comb:D": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128264_",
+   "driver": "_173966_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 266,
+   "sink_roles": {
+    "comb:A2": 257,
+    "comb:A": 1,
+    "comb:B1": 2,
+    "comb:D": 1,
+    "comb:C": 3,
+    "comb:B": 1,
+    "comb:E": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128292_",
+   "driver": "_173996_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 265,
+   "sink_roles": {
+    "comb:A2": 257,
+    "comb:A": 5,
+    "comb:B": 3
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128293_",
+   "driver": "_173997_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 265,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:B": 3,
+    "comb:C": 2,
+    "comb:A": 1,
+    "comb:C1": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_127796_",
+   "driver": "_173451_/Y (OR2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:A": 4,
+    "comb:C": 1,
+    "comb:B": 2,
+    "comb:D": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_127802_",
+   "driver": "_173457_/Y (OR2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:A": 1,
+    "comb:B": 3,
+    "comb:D": 1,
+    "comb:C": 2,
+    "comb:E": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128167_",
+   "driver": "_173863_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 257,
+    "comb:A": 3,
+    "comb:C": 1,
+    "comb:B": 3
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128169_",
+   "driver": "_173865_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 264,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:B": 2,
+    "comb:C": 2,
+    "comb:D": 1,
+    "comb:A": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128322_",
+   "driver": "_174060_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 263,
+   "sink_roles": {
+    "comb:A2": 257,
+    "comb:B": 3,
+    "comb:A": 2,
+    "comb:A1": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128326_",
+   "driver": "_174064_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 263,
+   "sink_roles": {
+    "comb:A2": 259,
+    "comb:C": 2,
+    "comb:A": 1,
+    "comb:B": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128391_",
+   "driver": "_174133_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 263,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:A": 3,
+    "comb:B": 2
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128392_",
+   "driver": "_174134_/Y (OR5x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 263,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:C": 2,
+    "comb:B1": 2,
+    "comb:B": 2,
+    "comb:A": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128233_",
+   "driver": "_173933_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 262,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:A": 2,
+    "comb:C": 1,
+    "comb:B": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128360_",
+   "driver": "_174100_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 262,
+   "sink_roles": {
+    "comb:A2": 258,
+    "comb:A": 2,
+    "comb:B": 1,
+    "comb:C": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_127871_",
+   "driver": "_173530_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 261,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:C": 1,
+    "comb:B": 2,
+    "comb:A": 2
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_127874_",
+   "driver": "_173533_/Y (OR2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 260,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:D": 1,
+    "comb:A": 1,
+    "comb:B": 1,
+    "comb:C": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128199_",
+   "driver": "_173897_/Y (NAND2x1_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 260,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:B": 2,
+    "comb:A": 2
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128201_",
+   "driver": "_173899_/Y (OR2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 260,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:C": 2,
+    "comb:B": 1,
+    "comb:A": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128234_",
+   "driver": "_173934_/Y (OR2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 260,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:D": 1,
+    "comb:B": 1,
+    "comb:A": 1,
+    "comb:C": 1
+   },
+   "output_ports": []
+  },
+  {
+   "net": "_128362_",
+   "driver": "_174102_/Y (OR2x2_ASAP7_75t_R)",
+   "kind": "comb",
+   "loads": 260,
+   "sink_roles": {
+    "comb:A2": 256,
+    "comb:D": 1,
+    "comb:A": 1,
+    "comb:C": 1,
+    "comb:B": 1
+   },
+   "output_ports": []
+  }
+ ],
+ "unknown_masters": [],
+ "scope": "mapped graph; no placement reach or physical clock qualification"
+}
