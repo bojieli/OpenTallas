@@ -23,7 +23,7 @@ these runs do not establish all missing operator lowering or whole-token executi
 
 Fleet run: /srv/opentallas-scratch/claude/codex-s81-xr2-line-timing-1019/run.sh.
 Reused object: /srv/opentallas-scratch/claude/mu-die-s81-tok/out_cut_3S_idle/obj/sim.
-Full matrix, reservation collision counts, and measured schedule cost follow in the receipt.
+Full matrix, reservation collision counts, and schedule cost are recorded in receipt.json and pricing.json.
 
 Independent reservation checks: all four layers have zero SU collisions and zero
 MU collisions (L0: 46 users on A; L2/L14/L20: 23 users each on A and B).
@@ -31,4 +31,6 @@ Compared with LINECOL baseline, final encoded event +1 edge per layer; calendar
 end and RA issue unchanged. Existing RTL is unchanged: this corrects a previously
 underpriced physical stage. pricing.json charges the +1 against each layer's
 priced critical path conservatively. All lowered/GAP counts remain unchanged.
-Simulator matrix and shifted-input mutant still pending at this receipt stage.
+Simulator matrix completed: L0/L2/L14/L20 all sim PASS / trace0. The inputshift CTL mutant fails with167 trace mismatches; committed check.log is the fail witness.
+
+Current main XR source SHA matches this qualified source. Integrate only the focused compiler/replay/helper changes; this branch inherits historical TOK binder ancestry and must not replace the GEN binder.
