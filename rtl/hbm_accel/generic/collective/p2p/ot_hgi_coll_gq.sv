@@ -542,24 +542,60 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0)(
 endmodule
 
 // COLL write-port static owner split (kq of one bank pair): A = the COLL v6 writer, B = the gather master. Same idea
-// as ot_hbm_idx_vm_share2_static on the read side: the compiler books each bank/edge for at most one writer; the
-// write passes combinationally (the bank's kq pin flop samples it on the edge it expects: ZERO added latency); a
-// double booking faults and writes neither. MUT 1 (bench): no collision check, a double booking passes A.
+// as ot_hbm_idx_vm_share2_static on the read side: the compiler books each bank/edge for at most one writer; a double
+// booking faults and writes neither. No arbitration, ready or credit: the select is the valid bit of the one booked word.
+// HBM-NSFIX/KQS 10-18: REGISTERED FACES (was a combinational port-to-port feed-through, which cannot close as a hardened
+// tile -- cf. hidx_rootctl_am r2 EARLY_FAIL_SETUP from comb share faces). Both writer faces land in pin flops, the
+// owner select is an AND-OR of those registers, the vm_kq face leaves output flops:
+//   KQ_SHARE_EDGES = 2: a word the writer presents at edge C (formerly sampled by the bank kq pin flop at C) now
+//   leaves vm_kq after edge C+1 and is sampled by the bank at C+2. Same +2 for writer A and writer B, so the relative
+//   booking (and the static conflict proof) is unchanged; every COLL kq calendar reservation moves 2 words later.
+//   fault (sticky, diagnostic only) is evaluated from the pin flops: rises after edge C+1 (was C) for a double
+//   booking presented at C.
+// RESET: rst_n drives only ot_rst_relay; only the 4 valid flops (+2 out) and fault are reset (data flops are gated by
+// the valid flops, so an unreset data word never reaches vm_kq as valid).
+// Bench mutants (tb_hgi_coll_kq_share2): 1 no collision check (a double booking passes A, no fault); 2 latency 3
+// (extra output stage); 3 latency 1 (no output flop); 4 owner swap (A-booked edge writes B's word and vice versa);
+// 5 double booking writes neither but never faults.
 module ot_hgi_coll_kq_share2_leaf #(parameter integer MUT = 0)(
     input  wire clk, rst_n,
     input  wire [561:0] a_kq, b_kq,
-    output reg  [561:0] vm_kq,
+    output wire [561:0] vm_kq,
     output reg  fault
 );
-    always @* for (integer k = 0; k < 2; k = k + 1) begin : nb_14
-        reg [1:0] v; v = {b_kq[281*k+280], a_kq[281*k+280]};
-        vm_kq[281*k +: 281] = (v == 2'b01 || (MUT == 1 && v[0])) ? a_kq[281*k +: 281] : (v == 2'b10) ? b_kq[281*k +: 281] : 281'd0;
+    wire rst_c;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rst_c));
+    wire [1:0] dbl;
+    for (genvar k = 0; k < 2; k = k + 1) begin : g_b
+        reg [279:0] a_d, b_d; reg a_v, b_v;                       // writer pin flops
+        always @(posedge clk) begin a_d <= a_kq[281*k +: 280]; b_d <= b_kq[281*k +: 280]; end
+        always @(posedge clk or negedge rst_c)
+            if (!rst_c) begin a_v <= 1'b0; b_v <= 1'b0; end
+            else begin a_v <= a_kq[281*k+280]; b_v <= b_kq[281*k+280]; end
+        wire pa = (a_v & ~b_v) | (MUT == 1 && a_v);
+        wire pb = b_v & ~a_v & !(MUT == 1 && a_v);
+        wire [279:0] s_d = ({280{pa}} & (MUT == 4 ? b_d : a_d)) | ({280{pb}} & (MUT == 4 ? a_d : b_d));
+        wire s_v = pa | pb;
+        assign dbl[k] = a_v & b_v;
+        reg [279:0] o_d; reg o_v;                                 // vm_kq output flops
+        if (MUT == 3) begin : g_l1
+            always @* begin o_d = s_d; o_v = s_v; end
+        end else if (MUT == 2) begin : g_l3
+            reg [279:0] x_d; reg x_v;
+            always @(posedge clk) begin x_d <= s_d; o_d <= x_d; end
+            always @(posedge clk or negedge rst_c) if (!rst_c) begin x_v <= 1'b0; o_v <= 1'b0; end else begin x_v <= s_v; o_v <= x_v; end
+        end else begin : g_l2
+            always @(posedge clk) o_d <= s_d;
+            always @(posedge clk or negedge rst_c) if (!rst_c) o_v <= 1'b0; else o_v <= s_v;
+        end
+        assign vm_kq[281*k +: 281] = {o_v, o_d};
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) fault <= 1'b0;
-        else for (integer k = 0; k < 2; k = k + 1) if (a_kq[281*k+280] && b_kq[281*k+280] && MUT == 0) fault <= 1'b1;
+    always @(posedge clk or negedge rst_c)
+        if (!rst_c) fault <= 1'b0;
+        else if (|dbl && MUT != 1 && MUT != 5) fault <= 1'b1;
 endmodule
 
+// Soft parent: one leaf per bank pair (pair p = banks 2p, 2p+1 = vm_kq[562p +: 562]), each on its own clk_pair[p].
 module ot_hgi_coll_kq_share2 #(parameter integer MUT = 0)(
     input  wire [3:0] clk_pair, input wire rst_n,
     input  wire [2247:0] a_kq, b_kq,

@@ -7,9 +7,10 @@ The two-ring x all-gather of d4g plan (b) on the canonical static schedule the m
   ring-A inject edge c(k) = IE(k) + 29; arrivals c + 2h (h = 1..3), src = PREV^h(q) on CW, NEXT^h(q) on CCW.
 VM reservations the quadrant calendar must make (bank sample edges, COLL read group / COLL kq write group):
   QBG code flit i: reads src + 4 i + w (w 0..3) at IE + 1;  plain flit i: read src + i at IE + 16
-  publish of (src s, flit i) arriving at hop h: write dst + s*stride + i at IE + 32 + 2h
-  self-land (QBG / self_land=1): write dst + q*stride + i at IE + 27
-Gather span (fire -> last bank write) = 1 + 3 ((K-1) >> 1) + ((K-1) & 1) + 38 edges, K = ceil(F / R).
+  publish of (src s, flit i) arriving at hop h: write dst + s*stride + i at IE + 34 + 2h
+  self-land (QBG / self_land=1): write dst + q*stride + i at IE + 29
+  (both include KQ_SHARE_EDGES = 2 of the registered kq share hcollks_<q>, HBM-NSFIX/KQS 10-18; master pins at 32+2h / 27)
+Gather span (fire -> last bank write) = 1 + 3 ((K-1) >> 1) + ((K-1) & 1) + 40 edges, K = ceil(F / R).
 
   python3 tools/hgi_sim/collq_gather_1018.py check            # conflict proof (links, banks) for F < 400, R 1/2
   python3 tools/hgi_sim/collq_gather_1018.py vectors OUTDIR   # QBG golden vectors for the RTL bench
@@ -26,14 +27,16 @@ PREV = {v: k for k, v in NEXT.items()}
 ISSUE_TO_INJECT = 29
 STAGES = {
     "qbg_read_sample": 1, "plain_read_sample": 16, "rr_capture_qbg": 8, "rr_capture_plain": 23,
-    "quantiser_s0": 10, "quantiser_out": 22, "payload_P": 24, "self_land_sample": 27,
+    "quantiser_s0": 10, "quantiser_out": 22, "payload_P": 24, "self_land_sample": 29, "self_land_kq_pin": 27,
     "ringB_cmd_reg": {"lp": 24, "state_read": 25, "inject": 27, "rx_fwd": "27+2h"},
     "ringA_cmd_reg": {"lp": 25, "state_read": 26, "inject": 28, "rx_fwd": "28+2h"},
     "ring_edge": {"lp": 26, "state_read": 27, "inject": 29, "arrival": "29+2h"},
-    "publish_capture": "30+2h", "kq_reg": "31+2h", "publish_write_sample": "32+2h",
+    "publish_capture": "30+2h", "kq_reg": "31+2h", "publish_kq_pin": "32+2h", "publish_write_sample": "34+2h",
+    "kq_share_edges": 2,
 }
 FIRE_FROM_LAUNCH = 3          # launch_v sampled at L -> fire edge L + 3 + l*period + t_start
 ISA_RING_A_EXTRA_EDGES = 2    # every ISA ring-A command and rc_d: +2 edges vs the v5 parent
+KQ_SHARE_EDGES = 2            # HBM-NSFIX/KQS 10-18: registered kq share (writer pin flops + vm_kq flops), A and B alike
 
 
 def src_of(q, d, h):
@@ -56,7 +59,7 @@ def issue_rel(k):
 
 def span(F, R):
     K = (F + R - 1) // R
-    return issue_rel(K - 1) + 38
+    return issue_rel(K - 1) + 38 + KQ_SHARE_EDGES
 
 
 def schedule(q, F, R, qbg, self_land, src, dst, stride, Bs=0):
@@ -75,10 +78,10 @@ def schedule(q, F, R, qbg, self_land, src, dst, stride, Bs=0):
         for h in (1, 2, 3):
             s = src_of(q, k & 1, h)
             a = dst + s * stride + i
-            writes.append((ie + 32 + 2 * h, a % 8, a, (s, i)))
+            writes.append((ie + 32 + KQ_SHARE_EDGES + 2 * h, a % 8, a, (s, i)))
         if self_land or qbg:
             a = dst + q * stride + i
-            writes.append((ie + 27, a % 8, a, (q, i)))
+            writes.append((ie + 27 + KQ_SHARE_EDGES, a % 8, a, (q, i)))
     return reads, writes
 
 
@@ -207,7 +210,7 @@ def main():
         doc = {"schema": "opentallas.hbm_d4g.collq_schedule.v1", "lane": "HBM-COLLQ", "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
                "rule": __doc__.split("\n\n")[1], "stages_after_issue": STAGES, "fire_from_launch": FIRE_FROM_LAUNCH,
                "issue_to_inject": ISSUE_TO_INJECT, "isa_ring_a_extra_edges": ISA_RING_A_EXTRA_EDGES,
-               "span_formula": "1 + 3((K-1)>>1) + ((K-1)&1) + 38, K = ceil(F/R)", "shapes_DS": shapes,
+               "span_formula": "1 + 3((K-1)>>1) + ((K-1)&1) + 40, K = ceil(F/R)", "shapes_DS": shapes,
                "conflict_check": "check(): 0 link / read-bank / write-bank conflicts for F < 400, R 1 and 2, plain and QBG"}
         Path(sys.argv[2]).write_text(json.dumps(doc, indent=1))
         print(json.dumps(shapes))
