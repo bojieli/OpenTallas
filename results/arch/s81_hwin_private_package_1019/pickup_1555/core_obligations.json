@@ -1,0 +1,823 @@
+{
+  "scope": "Source-owned case receipt census, campaign terminal remains mandatory; expected causal/config failures preserved.",
+  "completed": 59,
+  "expected": 136,
+  "rows": [
+    {
+      "path": "core02/default/default_ns2/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/default/default_ns2/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/default/default_ns2/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/default/default_ns47/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/default/default_ns47/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/default/default_ns47/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/ns2_ev1/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/ns2_ev1/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/ns2_ev1/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/ns47/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/ns47/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/ns47/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/original_assert_repro/run_seed1.log",
+      "expected_regex": "event boot count differs event0",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/initial/guarded_assert_corruption/run_seed1.log",
+      "expected_regex": "event boot count differs event0",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/width2/run_seed1.log",
+      "expected_regex": "^EC_MEM PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/width2/run_seed19.log",
+      "expected_regex": "^EC_MEM PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/width2/run_seed313.log",
+      "expected_regex": "^EC_MEM PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/width32/run_seed1.log",
+      "expected_regex": "^EC_MEM PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/width32/run_seed19.log",
+      "expected_regex": "^EC_MEM PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/width32/run_seed313.log",
+      "expected_regex": "^EC_MEM PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/mechanism_mut1/run_seed1.log",
+      "expected_regex": "EC_MEM IDENTITY",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/mechanism_mut2/run_seed1.log",
+      "expected_regex": "EC_MEM IDENTITY",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/mechanism_mut3/run_seed1.log",
+      "expected_regex": "EC_MEM IDENTITY",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/wrapper/mechanism_mut4/run_seed1.log",
+      "expected_regex": "EC_MEM IDENTITY",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/base/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/base/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/base/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/fast_cfg/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/fast_cfg/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/fast_cfg/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/min_d/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/min_d/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/min_d/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/headcompare/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/headcompare/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/headcompare/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/s256_ns2/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/s256_ns2/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/s256_ns2/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/s256_ns47/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/s256_ns47/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/s256_ns47/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badd/run_seed1.log",
+      "expected_regex": "^MUWIN BADD PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badd/run_seed19.log",
+      "expected_regex": "^MUWIN BADD PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badd/run_seed313.log",
+      "expected_regex": "^MUWIN BADD PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badd_high/run_seed1.log",
+      "expected_regex": "^MUWIN BADD_HIGH PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badd_high/run_seed19.log",
+      "expected_regex": "^MUWIN BADD_HIGH PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badd_high/run_seed313.log",
+      "expected_regex": "^MUWIN BADD_HIGH PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/collision/run_seed1.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/collision/run_seed19.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/collision/run_seed313.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badrt/run_seed1.log",
+      "expected_regex": "^MUWIN BADRT PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badrt/run_seed19.log",
+      "expected_regex": "^MUWIN BADRT PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/badrt/run_seed313.log",
+      "expected_regex": "^MUWIN BADRT PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/ns2_collision/run_seed1.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/ns2_collision/run_seed19.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/ns2_collision/run_seed313.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/old_mut3/run_seed1.log",
+      "expected_regex": "^MUWIN FAIL",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/old_mut4/run_seed1.log",
+      "expected_regex": "^MUWIN FAIL",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/ns2_illegal_original/run_seed1.log",
+      "expected_regex": "^MUWIN FAIL errs 59$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/ns2_illegal_original/run_seed19.log",
+      "expected_regex": "^MUWIN FAIL errs 59$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/matrix/ns2_illegal_original/run_seed313.log",
+      "expected_regex": "^MUWIN FAIL errs 59$",
+      "status": "EXPECTED_RECEIPT",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns47/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns47/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns47/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase2.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase2.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase2.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase3.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase3.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase3.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase4.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase4.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase4.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase5.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase5.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase5.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase6.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase6.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase6.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase7.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase7.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase7.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase8.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase8.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase8.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase90.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase90.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase90.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed1_phase93.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed19_phase93.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/stress/reset_ns2/run_seed313_phase93.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/long_d_positive/run_seed1.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/long_d_positive/run_seed19.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/long_d_positive/run_seed313.log",
+      "expected_regex": "^MUWIN PASS$",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/wrong_wrap/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/timestamp_shift/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/delayed_retirement/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/calendar_mutants/reset_validity/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed1.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed19.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed313.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/idle_reconfig/run_seed1.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/idle_reconfig/run_seed19.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/idle_reconfig/run_seed313.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/armed_reconfig/run_seed1.log",
+      "expected_regex": "^MUWIN ARMED_RECONFIG PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/armed_reconfig/run_seed19.log",
+      "expected_regex": "^MUWIN ARMED_RECONFIG PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/armed_reconfig/run_seed313.log",
+      "expected_regex": "^MUWIN ARMED_RECONFIG PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/already_late/run_seed1.log",
+      "expected_regex": "^MUWIN LATE_SOURCEFAULT PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/already_late/run_seed19.log",
+      "expected_regex": "^MUWIN LATE_SOURCEFAULT PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/already_late/run_seed313.log",
+      "expected_regex": "^MUWIN LATE_SOURCEFAULT PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed1_stage2.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed19_stage2.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed313_stage2.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed1_stage3.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed19_stage3.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed313_stage3.log",
+      "expected_regex": "^MUWIN PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed1_stage4.log",
+      "expected_regex": "^MUWIN RELEASE_FAULT PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed19_stage4.log",
+      "expected_regex": "^MUWIN RELEASE_FAULT PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/boot_faults/release_stage1/run_seed313_stage4.log",
+      "expected_regex": "^MUWIN RELEASE_FAULT PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/distinct_attributes/run_seed1.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/distinct_attributes/run_seed19.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/distinct_attributes/run_seed313.log",
+      "expected_regex": "^MUWIN COLLISION PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/cross_generation_winner/run_seed1.log",
+      "expected_regex": "^MUWIN CROSS_COLLISION PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/cross_generation_winner/run_seed19.log",
+      "expected_regex": "^MUWIN CROSS_COLLISION PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/cross_generation_winner/run_seed313.log",
+      "expected_regex": "^MUWIN CROSS_COLLISION PASS",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/actual_no_early_read/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/actual_mechanism_mut2/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/actual_mechanism_mut3/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    },
+    {
+      "path": "core02/winner_and_mechanism/actual_mechanism_mut4/run_seed1.log",
+      "expected_regex": "EARLY_MITER",
+      "status": "MISSING_OR_LIVE",
+      "unexpected_failure": false
+    }
+  ]
+}
