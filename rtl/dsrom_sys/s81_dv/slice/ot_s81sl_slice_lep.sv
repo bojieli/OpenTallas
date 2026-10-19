@@ -397,10 +397,12 @@ module ot_s81sl_lep_core #(
     assign li0_r = lir[0]; assign li1_r = lir[1];
     generate if (NL == 4) begin : g_rxb
         assign li2_r = lir[2]; assign li3_r = lir[3];
-        // pair-B receiver-valid pin flops of their own (S face): yosys would otherwise merge them with the W-face rxv
-        // flops (same logic) and one flop would drive pins ~540 um apart (gate textbook.wire_reach, coordinator 10-19)
+        // pair-B receiver-valid pin flops of their own (S face), cleared by reset region 1 (released on the same edge as
+        // region 2 = rnx): with the same clear net yosys opt_merge folded them into the W-face rxv flops ((* keep *) on the
+        // reg does not stop that) and one flop drove rxv[1] and rxvb[*] ~580 um apart (gate textbook.wire_reach 10-19)
+        wire rnb = rr[1];
         (* keep = "true" *) reg [1:0] rxvb_q;
-        always @(posedge clk or negedge rnx) if (!rnx) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
+        always @(posedge clk or negedge rnb) if (!rnb) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
         assign rxvb = rxvb_q;
     end else begin : g_nrxb
         assign li2_r = 1'b0; assign li3_r = 1'b0; assign rxvb = 2'b00;
@@ -464,7 +466,16 @@ module ot_s81sl_lep_core #(
     // rid: one AO222 per bit, {sA, sB, sM} duplicated per column group (keep) so each select net drives ~70 bits
     localparam integer OREP = 16, OW = (1103 + OREP - 1) / OREP;
     wire [1103:1] nrid;
-    wire [1103:0] sbA = strip(bA), sbB = strip(bB), sbM = strip(mrd);
+    // strip only TAGGED beats (XB / XQ ring beat with the tag bit, SPEC (a)): any other beat is delivered bit-exact.
+    // Lane-0 kind is pre-decoded per FIFO row (rhk[0] / rhk[2]); the tag bit is a show-ahead flop; the replay word a pin flop.
+    wire tA = rhk[0] && bA[TG];
+    wire tB = (NL == 4) ? (rhk[NL - 2] && bB[TG]) : 1'b0;
+    wire tM = tagd(mrd);
+`ifdef OT_S81SL_LEP_MUT_STRIPALL
+    wire [1103:0] sbA = strip(bA), sbB = strip(bB), sbM = strip(mrd);   // MUTANT: strips every beat (pre-fix behaviour)
+`else
+    wire [1103:0] sbA = tA ? strip(bA) : bA, sbB = tB ? strip(bB) : bB, sbM = tM ? strip(mrd) : mrd;
+`endif
     for (c = 0; c < OREP; c = c + 1) begin : g_o
         localparam integer LO = 1 + c * OW, HI = (1 + (c + 1) * OW > 1104) ? 1104 : 1 + (c + 1) * OW;
         if (LO < 1104) begin : g_on

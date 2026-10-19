@@ -231,7 +231,11 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         k = 0;
         while (k < 40) begin
             @(negedge clk); p_ro = 0; rp_ro = 0;
-            if (($urandom % 100) < 50) begin bt = xb(0); p_ro = bt; rp_ro = bt; eqa[na] = bt; eta[na] = 0; na = na + 1; k = k + 1; end
+            if (($urandom % 100) < 50) begin
+                bt = xb(0);
+                if (k % 2 == 1) begin bt[3:1] = 3'd3; bt[1103:1045] = {$urandom, $urandom}; end  // non-XB/XQ ring beat using the high bits: must pass bit-exact
+                p_ro = bt; rp_ro = bt; eqa[na] = bt; eta[na] = 0; na = na + 1; k = k + 1;
+            end
         end
         @(negedge clk); p_ro = 0; rp_ro = 0;
         T0 = cyc + 200;

@@ -1,9 +1,8 @@
-ot-run: ot-epyc4       admits   -26 GB (avail 281, growth 299, headroom 0, waiters 1/288 GB) load 98/128 running 40 disk 532 GB 
-ot-run: -> ot-epyc4 (will queue: admits -26 GB < 16 GB)
-ot-heavy: waiting for memory on regular-crane: need 0.7 x 16 = 11 GB, admissible -27 GB: available 279 GB, growth charged 298 GB (x0.5), young 224 GB, floor 57 GB
-ot-heavy: admitted on regular-crane as oth-ubuntu-2050844-1792409348 after 141 s
+ot-run: ot-epyc4       admits   366 GB (avail 399, growth 143, headroom 0, waiters 0/0 GB) load 56/128 running 22 disk 549 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2427075-1792415199 after 0 s
 Verilator 5.050 2026-07-01 rev v5.050
 LEP_MU_STATS A recv 440/280 B recv 240/240 mismatches 960 | latency user identity 0 (A 440 beats, ref 120) | main faults 0110011 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 400/240 landed 0/160
 FAIL lep_mu: recv A 440/280 B 240/240 mismatches 960 identity 0 main faults 0110011 F1 1 F2 1 F3 1 return P 400/240 L 0/160
 BENCH_FAIL lepmu MUT=TAGDROP seed 1
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2050844-1792409348): exit 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2427075-1792415199): exit 1

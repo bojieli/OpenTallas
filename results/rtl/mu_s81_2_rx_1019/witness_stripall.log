@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   543 GB (avail 494, growth 113, headroom 0, waiters 0/0 GB) load 187/128 running 39 disk 457 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2590816-1792416563 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LEP_MU_STATS A recv 280/280 B recv 240/240 mismatches 20 | latency user identity 0 (A 120 beats, ref 120) | main faults 0000000 | F1 full-slot 1 F2 empty-replay 1 F3 ab-user0 1 | return P ri 240/240 landed 160/160
+FAIL lep_mu: recv A 280/280 B 240/240 mismatches 20 identity 0 main faults 0000000 F1 1 F2 1 F3 1 return P 240/240 L 160/160
+BENCH_FAIL lepmu MUT=STRIPALL seed 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2590816-1792416563): exit 1
