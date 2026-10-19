@@ -2478,6 +2478,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
     arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL, RT.ASSIGNED_PIN_EXACT_TCL,
           getattr(RT, "M6_PIN_ACCESS_TCL", "physical/common_flow/m6_pin_access.tcl")])
     sp = json.loads((dst / kit / "spec.json").read_text())
+    if sp.get("registered_cluster_candidate"):
+        # gen_job ships the receipt and its hashed evidence; reproduce that closure during submit replay.
+        candidate_job = json.loads((dst / kit / "job.json").read_text())
+        arch(candidate_job.get("source", {}).get("extra_paths", []))
     # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
     arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
          + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
