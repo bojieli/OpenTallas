@@ -47,18 +47,29 @@ def main():
     ref = json.loads(REF.read_text())
     # Fail before generating another user if the original full gold is absent
     # or changed. Verification includes all layer/head/history digests.
-    run([a.python, ROOT / 'tools/exactness/fixtures.py', 'verify', '--gold',
-         a.canonical_gold, '--ref', REF, '--out', a.out / 'canonical_verify.json'])
+    # fixtures.py verify compares every numeric digest AND the oracle source
+    # hashes with the 10-04 GPU reference. The canonical 10-18 CPU gold runs a
+    # later oracle source (3 of 9 files differ), so a verify FAIL whose only
+    # mismatch is that provenance key is accepted; any numeric/head/identity
+    # mismatch still fails closed. New users must then run the canonical gold's
+    # own oracle source, not the reference's.
+    vrc = subprocess.run([str(x) for x in (a.python, ROOT / 'tools/exactness/fixtures.py', 'verify', '--gold',
+                          a.canonical_gold, '--ref', REF, '--out', a.out / 'canonical_verify.json')]).returncode
+    vrec = json.loads((a.out / 'canonical_verify.json').read_text())
+    numeric_bad = [m for m in vrec['first_mismatches'] if not m.startswith('oracle.json oracle_source_sha256')]
+    if vrec['mismatches'] > len(vrec['first_mismatches']) or numeric_bad or (vrc and not vrec['mismatches']):
+        raise SystemExit(f'canonical gold does not reproduce the reference digests: {numeric_bad[:5]}')
+    canon = json.loads((a.canonical_gold / 'oracle.json').read_text())
     oracle = a.oracle_root / 'tools/qwen_hbmacc_position_oracle_gpu.py'
-    for rel, expected in ref['oracle_source_sha256'].items():
+    for rel, expected in canon['oracle_source_sha256'].items():
         if sha(a.oracle_root / rel) != expected:
-            raise SystemExit(f'oracle source mismatch: {rel}')
+            raise SystemExit(f'oracle source differs from the canonical gold source: {rel}')
     tokens_path = a.fx / 'inputs/prompt_tokens_8192.txt'
     embedding = a.fx / 'inputs/prompt_embedding.npz'
     prep = a.fx / 'prep/tp4'
     for path, expected in ((tokens_path, ref['tokens_sha256']),
                            (embedding, ref['embedding_npz_sha256']),
-                           (prep / 'prep.json', ref['prep_sha256'])):
+                           (prep / 'prep.json', canon['prep_sha256'])):
         if sha(path) != expected:
             raise SystemExit(f'canonical input mismatch: {path}')
     # The JSON identity alone does not establish that the large weight payloads
@@ -116,6 +127,11 @@ def main():
     manifest = dict(schema='opentallas.qwen.shared-prefix-gold4.v1',
                     claim='diagnostic shared-real-prefix independent-request ISA golds; no RTL verdict',
                     reference_sha256=sha(REF), generator_sha256=sha(__file__),
+                    canonical_verify=dict(verdict=vrec['verdict'], checked=vrec['checked'],
+                                          mismatches=vrec['first_mismatches'],
+                                          accepted='numeric digests match; only oracle-source provenance differs'
+                                          if vrec['mismatches'] else 'full match'),
+                    canonical_oracle_source_sha256=canon['oracle_source_sha256'],
                     common_prefix_tokens=8191,
                     common_prefix_sha256=hashlib.sha256(
                         ('\n'.join(map(str, tokens[:-1])) + '\n').encode()).hexdigest(),
@@ -148,7 +164,7 @@ def main():
             raise SystemExit('oracle shape mismatch')
         if rec['tokens_sha256'] != user['tokens_sha256']:
             raise SystemExit('oracle user token identity mismatch')
-        if rec['oracle_source_sha256'] != ref['oracle_source_sha256']:
+        if rec['oracle_source_sha256'] != canon['oracle_source_sha256']:
             raise SystemExit('oracle arithmetic provenance mismatch')
         if rec['kv_history_sha256'] != history_hashes:
             raise SystemExit('oracle history identity mismatch')

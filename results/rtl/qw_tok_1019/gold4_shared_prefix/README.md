@@ -42,3 +42,19 @@ receipt at commit `26b514ed1`; this establishes fixture ordering only.
 Production FIRST/phase, per-user token identity, actual ME/XPF final-read
 retirement, late/missing/zero-identity mutants, independent physical context
 storage, and numerical RTL replay remain separate release requirements.
+
+## 10-19 QW-TOK3 provenance fix (before first run)
+
+The canonical 10-18 CPU gold runs source 8a01e4a5a, whose oracle files
+`qwen_hbmacc_position_oracle_gpu.py`, `hdc_qwen_fullshape_isa_w12.py` and
+`qwen_o4_layer0_oracle_w12.py` differ from the 10-04 GPU reference's recorded
+`oracle_source_sha256`, and whose re-prepped `prep.json` (timestamped) differs
+from the reference `prep_sha256`. The original driver would therefore have
+refused the canonical gold even when every numeric digest matched. The driver
+now: (1) accepts a `fixtures.py verify` FAIL only when every mismatch is the
+`oracle.json oracle_source_sha256` provenance key (all layer-x, K/V, head,
+logit, token, embedding and shape checks must match); (2) requires the oracle
+root and every new user's oracle to use the canonical gold's own recorded
+source hashes; (3) checks `prep.json` against the canonical gold's record, and
+still checks all 148 checkpoint payload NPZ hashes. The verify record and the
+accepted provenance difference are written into MANIFEST.json.
