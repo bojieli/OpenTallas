@@ -1,0 +1,86 @@
+{
+  "source_revision": "a7da66a75",
+  "router_owner": "root freshness owner; exact adopted newer source not confirmed; no source mix",
+  "scope": "issuer + reserve/open/reloc/CDC/PC-owner metadata; qualified cache/pair/programme boundaries blackboxed explicitly",
+  "excluded": {
+    "safe_row_cache": {
+      "instances": 1,
+      "macros": 5
+    },
+    "native_landing_pair": {
+      "instances": 4,
+      "macros": 16
+    },
+    "programme_calendar": {
+      "instances": 1,
+      "macros": 2
+    }
+  },
+  "retained_macros": {
+    "descriptor_128x256": 2
+  },
+  "runtime_storage": {
+    "issuer_queues": {
+      "entries_each": 4,
+      "bits_per_entry": 110,
+      "queues": 2,
+      "total_bits": 880
+    },
+    "feed_rows_tag": {
+      "banks": 4,
+      "rows_bits": 7,
+      "tag_bits": 10,
+      "total_bits": 68
+    },
+    "descriptor_cdc_fifo": {
+      "depth": 4,
+      "width": 97,
+      "total_bits": 388
+    },
+    "pc_owner": {
+      "entries": 32,
+      "fields": {
+        "valid": 1,
+        "generation": 12,
+        "epoch": 16,
+        "bank": 2,
+        "permutation": 1,
+        "row_low": 2,
+        "ordinal": 11,
+        "length": 3,
+        "seen": 4
+      },
+      "bits_per_entry": 52,
+      "total_bits_each": 1664,
+      "replicas": 4
+    },
+    "metadata_delay7": {
+      "ring_slots": 8,
+      "payload_bits": 35,
+      "total_runtime_bits_each": 280,
+      "instances": 2
+    }
+  },
+  "current_stages": {
+    "issuer": "SRAMread -> A(fields/ID wait) -> P(products) -> S(block relocation) -> combin ready-gated reserve; start and GO combinational",
+    "feed_open": "start -> openQ1 -> native_landing delay2 -> metadata indexed delay7 -> safe cache capture2",
+    "read_command": "calendar -> R1 READ -> C2 command/retire -> external command2; safe cache READ/retire capture2",
+    "cdc": "variable HBM prefetch then static4/4/4/4/1 drain; qualified pair adds7 and native landing2"
+  },
+  "physical_status": "OPEN: this audit identifies old soft glue not covered by qualified child receipts",
+  "mapped_plan": "ORFS Docker RVT TT833.333ps ABC; 16GB/2threads admitted each; exact genericrunner, no gate",
+  "boundary_blackboxes": {
+    "ot_hbm_svc_static_sm_packed136_native_safe": {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native_safe.sv",
+      "source_sha256": "14a8482745e48507123de72a42f54c22b12b3cb3a7994a0fc1a3a8ebba51b3e1"
+    },
+    "ot_smh_calendar_static_x": {
+      "path": "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+      "source_sha256": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40"
+    },
+    "ot_hbm_svg_landing_pair_native": {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv",
+      "source_sha256": "264db6256f201af07269f555faf063881c151b60e40f5bf793c6d3948b7a6e20"
+    }
+  }
+}

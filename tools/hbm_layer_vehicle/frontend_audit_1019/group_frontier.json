@@ -1,0 +1,59 @@
+{
+  "top": "ot_hbm_svc_sm_group_rel_sram_id",
+  "params": {
+    "NATIVE_CACHE_SAFE": 1,
+    "ATTENTION": 0,
+    "NATIVE_RETURN": 1,
+    "RETURN_MUT": 0,
+    "NATIVE_LANDING": 1,
+    "FIFOMUT": 0,
+    "LBANKS": 4,
+    "NID": 6,
+    "IDW": 9,
+    "PAW": 11,
+    "PREL": 1,
+    "DD": 256,
+    "DAW": 8,
+    "IMUT": 0
+  },
+  "sources": [
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_sram_id.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_sram_id.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_sram_id.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_return_regional.sv",
+    "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+    "tools/hbm_layer_vehicle/frontend_audit_1019/qualified_boundaries_bb.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_ports": [
+    "stream_clk",
+    "hbm_clk",
+    "return_pair_clk",
+    "return_local_clk",
+    "return_pair_hbm_clk",
+    "stream_bank_clk",
+    "hbm_fifo_clk",
+    "hbm_pc_clk"
+  ],
+  "intentional_boundary_blackboxes": {
+    "ot_hbm_svc_static_sm_packed136_native_safe": {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_native_safe.sv",
+      "source_sha256": "14a8482745e48507123de72a42f54c22b12b3cb3a7994a0fc1a3a8ebba51b3e1"
+    },
+    "ot_smh_calendar_static_x": {
+      "path": "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+      "source_sha256": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40"
+    },
+    "ot_hbm_svg_landing_pair_native": {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svg_landing_pair_native.sv",
+      "source_sha256": "264db6256f201af07269f555faf063881c151b60e40f5bf793c6d3948b7a6e20"
+    }
+  },
+  "source_revision": "a7da66a75",
+  "audit_scope": "Read-only structural census; no engine RTL modified; no gate"
+}

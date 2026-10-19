@@ -1,0 +1,19 @@
+{
+  "top": "ot_hbm_svc_sm_issuer_rel",
+  "params": {
+    "LBANKS": 4,
+    "NID": 6,
+    "IDW": 9,
+    "PAW": 11,
+    "DD": 256,
+    "DAW": 8,
+    "MUT": 0
+  },
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "source_revision": "a7da66a75",
+  "audit_scope": "Read-only structural census; no engine RTL modified; no gate"
+}

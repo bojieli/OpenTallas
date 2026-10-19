@@ -1,0 +1,13 @@
+{
+  "top": "ot_hbm_svc_prefetch_overlap_owner_rel_id",
+  "params": {
+    "OWNER_AW": 5,
+    "LB": 2
+  },
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv"
+  ],
+  "clock_port": "clk",
+  "source_revision": "a7da66a75",
+  "audit_scope": "Read-only structural census; no engine RTL modified; no gate"
+}
