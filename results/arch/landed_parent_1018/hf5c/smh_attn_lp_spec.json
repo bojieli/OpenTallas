@@ -1,0 +1,272 @@
+{
+ "top": "ot_hbm_accel_smh_attn_flat",
+ "top_lp": "ot_hbm_accel_smh_attn_flat_lp",
+ "sources": [
+  "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_front.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_pstore.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_desc_static.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_tile.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+  "rtl/lib/ot_hdly.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/sm/attn/flat/ot_hbm_sm_attn_front_split.sv"
+ ],
+ "defines": [
+  "OT_SMH_HIER",
+  "OT_SMH_FC_HIER"
+ ],
+ "defines_note": "as tools/hbm_sm_attention/sm_elem_bench.py (the golden SM attention bench of ot_hbm_accel_smh_attn)",
+ "out_dir": "rtl/hbm_accel/sm/attn/flat/lp",
+ "record_dir": "results/arch/landed_parent_1018/hf5c",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n",
+  "rst_a"
+ ],
+ "regions": [
+  {
+   "name": "f",
+   "centre": [
+    0,
+    0
+   ],
+   "insts": [
+    "u_fl",
+    "u_fr",
+    "u_bc"
+   ],
+   "why": "front launch + front result + be_cmd glue (SM north-centre, between columns 3 and 4)"
+  },
+  {
+   "name": "t00",
+   "centre": [
+    -1610,
+    -1000
+   ],
+   "insts": [
+    "u_t00"
+   ],
+   "why": "attn tile column 0 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t01",
+   "centre": [
+    -1610,
+    -2700
+   ],
+   "insts": [
+    "u_t01",
+    "u_be0"
+   ],
+   "why": "attn tile column 0 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t10",
+   "centre": [
+    -1150,
+    -1000
+   ],
+   "insts": [
+    "u_t10"
+   ],
+   "why": "attn tile column 1 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t11",
+   "centre": [
+    -1150,
+    -2700
+   ],
+   "insts": [
+    "u_t11",
+    "u_be1"
+   ],
+   "why": "attn tile column 1 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t20",
+   "centre": [
+    -690,
+    -1000
+   ],
+   "insts": [
+    "u_t20"
+   ],
+   "why": "attn tile column 2 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t21",
+   "centre": [
+    -690,
+    -2700
+   ],
+   "insts": [
+    "u_t21",
+    "u_be2"
+   ],
+   "why": "attn tile column 2 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t30",
+   "centre": [
+    -230,
+    -1000
+   ],
+   "insts": [
+    "u_t30"
+   ],
+   "why": "attn tile column 3 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t31",
+   "centre": [
+    -230,
+    -2700
+   ],
+   "insts": [
+    "u_t31",
+    "u_be3"
+   ],
+   "why": "attn tile column 3 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t40",
+   "centre": [
+    230,
+    -1000
+   ],
+   "insts": [
+    "u_t40"
+   ],
+   "why": "attn tile column 4 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t41",
+   "centre": [
+    230,
+    -2700
+   ],
+   "insts": [
+    "u_t41",
+    "u_be4"
+   ],
+   "why": "attn tile column 4 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t50",
+   "centre": [
+    690,
+    -1000
+   ],
+   "insts": [
+    "u_t50"
+   ],
+   "why": "attn tile column 5 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t51",
+   "centre": [
+    690,
+    -2700
+   ],
+   "insts": [
+    "u_t51",
+    "u_be5"
+   ],
+   "why": "attn tile column 5 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t60",
+   "centre": [
+    1150,
+    -1000
+   ],
+   "insts": [
+    "u_t60"
+   ],
+   "why": "attn tile column 6 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t61",
+   "centre": [
+    1150,
+    -2700
+   ],
+   "insts": [
+    "u_t61",
+    "u_be6"
+   ],
+   "why": "attn tile column 6 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  },
+  {
+   "name": "t70",
+   "centre": [
+    1610,
+    -1000
+   ],
+   "insts": [
+    "u_t70"
+   ],
+   "why": "attn tile column 7 row-pair 0 (tile ~458 x 1598 um)"
+  },
+  {
+   "name": "t71",
+   "centre": [
+    1610,
+    -2700
+   ],
+   "insts": [
+    "u_t71",
+    "u_be7"
+   ],
+   "why": "attn tile column 7 row-pair 1 + its column BE (gout of this tile -> BE stays in-region)"
+  }
+ ],
+ "D": 4,
+ "E": 2,
+ "bench": {
+  "cycles": 6000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "quiet_reset": true,
+  "warm": 1500,
+  "warm_note": "as PL-SMT rp4: tcl/bdc accumulators (no-reset data cuts) take power-up / pre-epoch values until a protocol i_first; landed children see them t(child) edges later, so random stimulus needs a flush window before the compare"
+ },
+ "why": "HF-5c 10-18: HBM SM attention cluster ot_hbm_accel_smh_attn (x16 on d4g) as a LANDED PARENT: 17 regions = front + one per attn tile (each ~1.6 mm tall); BE with its column's row-pair-1 tile. Front split into launch/result nodes so the q return chain is not a loop."
+}
