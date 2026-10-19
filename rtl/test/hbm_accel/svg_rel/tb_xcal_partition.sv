@@ -13,6 +13,11 @@ module tb_xcal_partition;
  always @(posedge clk)begin
   edges=edges+1;if(launch_v)launch_edge=edges;
   #1;if(done)done_seen=done_seen+1;
+  if(MUT!=3)begin
+   if(dut.u_host.u_desc.reset_branch!=={7{dut.u_host.u_desc.reset_landing[1]}})errors=errors+1;
+   if(dut.u_prog.u_cal.reset_branch!=={6{dut.u_prog.reset_landing[1]}})errors=errors+1;
+   if(dut.u_host.u_tgt.reset_branch!=={5{dut.u_host.reset_landing[1]}})errors=errors+1;
+  end
   if(cmd_ext!==0 && rst_n && launch_edge>0)begin
    if(first_edge<0)first_edge=edges;
    if(cmd_ext!==109'(17+(seen%4))||kv_desc!==64'(64+(seen%4)))errors=errors+1;

@@ -85,7 +85,8 @@
     "io_hold_margin_ns": 0.03,
     "synth_keep_modules": [
       "ot_hbm_xcal_kept_bit",
-      "ot_hbm_xcal_kept_rbit"
+      "ot_hbm_xcal_kept_rbit",
+      "ot_hbm_xcal_reset_branch"
     ]
   },
   "review_blockers": [
