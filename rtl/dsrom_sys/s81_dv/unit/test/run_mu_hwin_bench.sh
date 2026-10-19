@@ -10,9 +10,10 @@ verilator --version | tee "$O/verilator_version.txt"
 U=$R/rtl/dsrom_sys/s81_dv/unit; F="$R/rtl/lib/ot_rst_relay.sv $R/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v $U/dsdv_mu_hslot.sv $U/dsdv_mu_mem.sv $R/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v $U/dsdv_mu_hwin.sv $U/test/tb_dsdv_mu_hwin.sv"
 bad=0
 run() { n=$1; shift
-  verilator --binary --timing +define+DSDV_MU_POINTER_ASSERT -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_dsdv_mu_hwin "$@" $F \
+  verilator --binary --timing +define+DSDV_MU_POINTER_ASSERT +define+HEAD_COMPARE -j "${OT_THREADS:-8}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_dsdv_mu_hwin "$@" $F \
     --Mdir "$O/obj_$n" -o tb > "$O/build_$n.log" 2>&1 || { echo "BUILD_FAIL $n"; bad=1; return; }
   "$O/obj_$n/tb" > "$O/run_$n.log" 2>&1; grep -E '^MUWIN' "$O/run_$n.log" | sed "s/^/[$n] /"; }
+run min_d +define+MIN_D=1; grep -q '^MUWIN PASS' "$O/run_min_d.log" || bad=1
 run base;  grep -q '^MUWIN PASS' "$O/run_base.log" || bad=1
 run collision +define+COLLIDE_EVENTS=1; grep -q '^MUWIN COLLISION PASS' "$O/run_collision.log" || bad=1
 run badrt +define+BADRT=1; grep -q 'BADRT PASS (fault raised)' "$O/run_badrt.log" || bad=1

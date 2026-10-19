@@ -33,6 +33,9 @@ module tb_dsdv_mu_hwin;
     integer DK [0:NE-1], KD [0:NE-1], EP [0:NE-1];        // D / kind / endpoint per event
     integer cfg_e; initial begin
       for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) begin DK[cfg_e]=20+13*cfg_e; KD[cfg_e]=(cfg_e%3==2); EP[cfg_e]=cfg_e%4; end
+`ifdef MIN_D
+      for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) DK[cfg_e]=NS+2+13*cfg_e;
+`endif
 `ifdef COLLIDE_EVENTS
       DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
 `endif
@@ -48,6 +51,18 @@ module tb_dsdv_mu_hwin;
         .f_kd({ku[31], 53'd0}), .f_mc(f_mc), .t_ku(ku), .t_mf(hmf));
     dsdv_mu_hwin #(.NSLOT(NS), .NEV(NEV), .NEP(4), .NRT(2), .MUT(WMUT), .HEAD_STAGE(1)) dut (.ck(ck), .rst_n(rst_n), .f_ks(f_ks),
         .f_mc(f_mc), .f_mw(f_mw), .mu_c(mu_c), .mu_rc(mu_rc), .mu_rt(mu_rt), .t_wf(wf));
+`ifdef HEAD_COMPARE
+    wire [4*34-1:0] ref_c; wire [4*11-1:0] ref_rc; wire [1:0] ref_wf;
+    integer head_compares=0;
+    dsdv_mu_hwin #(.NSLOT(NS),.NEV(NEV),.NEP(4),.NRT(2),.MUT(WMUT),.HEAD_STAGE(0)) ref_direct
+        (.ck(ck),.rst_n(rst_n),.f_ks(f_ks),.f_mc(f_mc),.f_mw(f_mw),.mu_c(ref_c),.mu_rc(ref_rc),.mu_rt(mu_rt),.t_wf(ref_wf));
+    always @(negedge ck) if(rst_n) begin
+        if({mu_c,mu_rc,wf} !== {ref_c,ref_rc,ref_wf})
+            $fatal(1,"HEAD_STAGE edge mismatch cycle%0d staged=%h direct=%h",cyc,{mu_c,mu_rc,wf},{ref_c,ref_rc,ref_wf});
+        head_compares=head_compares+1;
+    end
+    final $display("HEAD_STAGE_EQUIV comparisons %0d",head_compares);
+`endif
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;

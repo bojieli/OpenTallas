@@ -330,6 +330,12 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         (* keep *) reg [SI-1:0] lw_r;
         (* keep *) reg [NSLOT-1:0] lm_r;
         (* keep *) reg arm_r;
+        // Decode at the existing input landing edge, independently per event.
+        // Sharing mc_valid/type AND empty-table produced a 400-load boot enable.
+        (* keep *) reg cfg_gap_r,cfg_rl_r;
+        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+6])
+            if(!rr[COPY_RBASE+7*ce+6]) begin cfg_gap_r<=1'b0;cfg_rl_r<=1'b0;end
+            else begin cfg_gap_r<=f_mc[25] && !f_mc[24];cfg_rl_r<=f_mc[25] && f_mc[24];end
         assign ts_event[ce]=ts_r; assign tm_event[ce]=time_r;
         assign rl_event[ce]=rl_r; assign lw_event[ce]=lw_r;
         assign lm_event[ce]=lm_r; assign idle_event[ce]=!arm_r && !(|vld);
@@ -339,10 +345,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+7*ce+1]) time_r<=32'd1; else time_r<=tm2;
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+2])
             if(!rr[COPY_RBASE+7*ce+2]) rl_r<=24'd0;
-            else if(mc_q[25] && idle_event[ce] && mc_q[24]) rl_r<=mc_q[23:0];
+            else if(cfg_rl_r && idle_event[ce]) rl_r<=mc_q[23:0];
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+3])
             if(!rr[COPY_RBASE+7*ce+3]) lw_r<=SI'(NSLOT-1);
-            else if(mc_q[25] && idle_event[ce] && !mc_q[24] && gn!=SJ'(NSLOT))
+            else if(cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT))
                 lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+4])
             if(!rr[COPY_RBASE+7*ce+4]) lm_r<={1'b1,{(NSLOT-1){1'b0}}};
