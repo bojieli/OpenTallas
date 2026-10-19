@@ -1,0 +1,24 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+ENCODER ['addBTerm', 'addITerm', 'addPoint', 'addRect', 'addTechVia', 'addVia', 'append', 'begin', 'clear', 'clearColor', 'clearViaColor', 'end', 'newPath', 'newPathExt', 'newPathShort', 'newPathVirtualWire', 'setColor', 'setViaColor', 'thisown']
+DOC newPath None
+DOC addPoint None
+DOC addRect None
+DOC addTechVia None
+DOC begin None
+DOC end None
+LAYERMETHODS ['MEOL', 'addOrthSpacingTableEntry', 'addTwoWidthsIndexEntry', 'addTwoWidthsSpacingTableEntry', 'addV55SpacingTableEntry', 'addV55WidthEntry', 'findTwSpacing', 'findV55Spacing', 'getDirection', 'getMaxWidth', 'getMinWidth', 'getOrthSpacingTable', 'getProtrusionFromWidth', 'getProtrusionWidth', 'getSpacing', 'getTechLayerArraySpacingRules', 'getTechLayerCornerSpacingRules', 'getTechLayerCutSpacingRules', 'getTechLayerCutSpacingTableDefRules', 'getTechLayerCutSpacingTableOrthRules', 'getTechLayerEolExtensionRules', 'getTechLayerEolKeepOutRules', 'getTechLayerForbiddenSpacingRules', 'getTechLayerMaxSpacingRules', 'getTechLayerSpacingEolRules', 'getTechLayerSpacingTablePrlRules', 'getTechLayerVoltageSpacings', 'getTechLayerWidthTableRules', 'getTechLayerWrongDirSpacingRules', 'getTwoWidthsSpacingTable', 'getTwoWidthsSpacingTableEntry', 'getTwoWidthsSpacingTableHasPRL', 'getTwoWidthsSpacingTableNumWidths', 'getTwoWidthsSpacingTablePRL', 'getTwoWidthsSpacingTableWidth', 'getV54SpacingRules', 'getV55SpacingTable', 'getV55SpacingWidthsAndLengths', 'getWidth', 'getWrongWayMinWidth', 'getWrongWayWidth', 'hasMaxWidth', 'hasOrthSpacingTable', 'hasTwoWidthsSpacingRules', 'hasV55SpacingRules', 'initTwoWidths', 'initV55SpacingTable', 'initV55WidthIndex', 'isRectOnly', 'isRectOnlyExceptNonCorePins', 'isRightWayOnGridOnly', 'isRightWayOnGridOnlyCheckMask', 'setDirection', 'setMaxWidth', 'setMinWidth', 'setRectOnly', 'setRectOnlyExceptNonCorePins', 'setRightWayOnGridOnly', 'setRightWayOnGridOnlyCheckMask', 'setSpacing', 'setWidth', 'setWrongWayMinWidth', 'setWrongWayWidth']
+TECHMETHODS ['checkLayer', 'findLayer', 'findRoutingLayer', 'firstBacksideRoutingLayer', 'firstFrontsideRoutingLayer', 'getLayerCount', 'getLayers', 'getManufacturingGrid', 'getRoutingLayerCount', 'hasManufacturingGrid', 'setManufacturingGrid']
+ot-run: ot-epyc4       admits  1137 GB (avail 852, growth 49, headroom 0, waiters 0/0 GB) load 48/128 running 17 disk 412 GB 
+ot-run: ot-epyc5       admits   221 GB (avail 211, growth 16, headroom 0, waiters 0/0 GB) load 61/128 running 7 disk 562 GB 
+ot-run: ot-epyc6       admits  1232 GB (avail 928, growth 66, headroom 0, waiters 0/0 GB) load 27/128 running 21 disk 559 GB 
+ot-run: ot-epyc7       admits   925 GB (avail 727, growth 79, headroom 0, waiters 0/0 GB) load 32/96 running 22 disk 502 GB 
+ot-run: ot-epyc8       admits  1334 GB (avail 990, growth 30, headroom 0, waiters 0/0 GB) load 13/128 running 8 disk 565 GB 
+ot-run: ot-pve1        admits   139 GB (avail 109, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1215 GB 
+ot-run: ot-agidock128  admits    91 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 9/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1938341-1792444823 after 0 s
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1938341-1792444823): exit 0

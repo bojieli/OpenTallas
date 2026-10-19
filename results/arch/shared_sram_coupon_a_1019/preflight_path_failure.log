@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1136 GB (avail 852, growth 49, headroom 0, waiters 0/0 GB) load 48/128 running 17 disk 412 GB 
+ot-run: ot-epyc5       admits   220 GB (avail 211, growth 16, headroom 0, waiters 0/0 GB) load 58/128 running 7 disk 562 GB 
+ot-run: ot-epyc6       admits  1232 GB (avail 928, growth 66, headroom 0, waiters 0/0 GB) load 27/128 running 21 disk 559 GB 
+ot-run: ot-epyc7       admits   924 GB (avail 726, growth 79, headroom 0, waiters 0/0 GB) load 32/96 running 22 disk 502 GB 
+ot-run: ot-epyc8       admits  1334 GB (avail 990, growth 28, headroom 0, waiters 0/0 GB) load 13/128 running 8 disk 565 GB 
+ot-run: ot-pve1        admits   139 GB (avail 109, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1215 GB 
+ot-run: ot-agidock128  admits    91 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 9/64 running 8 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1938096-1792444813 after 0 s
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "openroad": executable file not found in $PATH
+
+Run 'docker run --help' for more information
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1938096-1792444813): exit 127

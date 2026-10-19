@@ -1,0 +1,4416 @@
+{
+  "status": "STAGE_A_INPUT_ONLY_NO_NATIVE_VERDICT",
+  "outline_nm": [
+    10000,
+    10000
+  ],
+  "dbu_per_um": 1000,
+  "manufacturing_grid_nm": 1,
+  "cases": [
+    {
+      "name": "qwen_wclk_source",
+      "family": "qwen",
+      "pin": "wclk",
+      "kind": "source",
+      "face": "W",
+      "pin_kind": "clock",
+      "source_anchor_nm": [
+        10236,
+        780
+      ],
+      "source_crop_nm": [
+        9736,
+        280,
+        10736,
+        1280
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "wclk",
+          "rect_nm": [
+            472,
+            951,
+            984,
+            975
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            0,
+            759,
+            10248,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wclk",
+          "rect_nm": [
+            960,
+            960,
+            984,
+            984
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            768,
+            10248,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rclk",
+          "rect_nm": [
+            472,
+            1047,
+            984,
+            1071
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            265,
+            855,
+            10248,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rclk",
+          "rect_nm": [
+            960,
+            1056,
+            984,
+            1080
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            864,
+            10248,
+            888
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            472,
+            1143,
+            984,
+            1167
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            361,
+            951,
+            10248,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            960,
+            1152,
+            984,
+            1176
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            960,
+            10248,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            472,
+            1239,
+            984,
+            1263
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            10248,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            960,
+            1248,
+            984,
+            1272
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1056,
+            10248,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            472,
+            1335,
+            984,
+            1359
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            10248,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            960,
+            1344,
+            984,
+            1368
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1152,
+            10248,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            472,
+            1431,
+            984,
+            1455
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            10248,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            960,
+            1440,
+            984,
+            1464
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1248,
+            10248,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            1260,
+            576,
+            1472,
+            672
+          ],
+          "source_rect_nm": [
+            10524,
+            384,
+            41916,
+            480
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            1260,
+            1344,
+            1472,
+            1440
+          ],
+          "source_rect_nm": [
+            10524,
+            1152,
+            41916,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            1260,
+            960,
+            1472,
+            1056
+          ],
+          "source_rect_nm": [
+            10524,
+            768,
+            41916,
+            864
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -9264,
+        192
+      ],
+      "anchor_nm": [
+        972,
+        972
+      ],
+      "score_roi_nm": [
+        772,
+        772,
+        1172,
+        1172
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "qwen_r_ce_in_source",
+      "family": "qwen",
+      "pin": "r_ce_in",
+      "kind": "source",
+      "face": "W",
+      "pin_kind": "control",
+      "source_anchor_nm": [
+        10236,
+        972
+      ],
+      "source_crop_nm": [
+        9736,
+        472,
+        10736,
+        1472
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "wclk",
+          "rect_nm": [
+            2392,
+            759,
+            2904,
+            783
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            0,
+            759,
+            10248,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wclk",
+          "rect_nm": [
+            2880,
+            768,
+            2904,
+            792
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            768,
+            10248,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rclk",
+          "rect_nm": [
+            2392,
+            855,
+            2904,
+            879
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            265,
+            855,
+            10248,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rclk",
+          "rect_nm": [
+            2880,
+            864,
+            2904,
+            888
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            864,
+            10248,
+            888
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            2392,
+            951,
+            2904,
+            975
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            361,
+            951,
+            10248,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            2880,
+            960,
+            2904,
+            984
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            960,
+            10248,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            2392,
+            1047,
+            2904,
+            1071
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            10248,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            2880,
+            1056,
+            2904,
+            1080
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1056,
+            10248,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            2392,
+            1143,
+            2904,
+            1167
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            10248,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            2880,
+            1152,
+            2904,
+            1176
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1152,
+            10248,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            2392,
+            1239,
+            2904,
+            1263
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            10248,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            2880,
+            1248,
+            2904,
+            1272
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1248,
+            10248,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            2392,
+            1335,
+            2904,
+            1359
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            745,
+            1335,
+            10248,
+            1359
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            2880,
+            1344,
+            2904,
+            1368
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1344,
+            10248,
+            1368
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            2392,
+            1431,
+            2904,
+            1455
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            841,
+            1431,
+            10248,
+            1455
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            2880,
+            1440,
+            2904,
+            1464
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1440,
+            10248,
+            1464
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            3180,
+            472,
+            3392,
+            480
+          ],
+          "source_rect_nm": [
+            10524,
+            384,
+            41916,
+            480
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            3180,
+            1152,
+            3392,
+            1248
+          ],
+          "source_rect_nm": [
+            10524,
+            1152,
+            41916,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            3180,
+            768,
+            3392,
+            864
+          ],
+          "source_rect_nm": [
+            10524,
+            768,
+            41916,
+            864
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -7344,
+        0
+      ],
+      "anchor_nm": [
+        2892,
+        972
+      ],
+      "score_roi_nm": [
+        2692,
+        772,
+        3092,
+        1172
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "qwen_rd_out[0]_source",
+      "family": "qwen",
+      "pin": "rd_out[0]",
+      "kind": "source",
+      "face": "W",
+      "pin_kind": "data_out",
+      "source_anchor_nm": [
+        10236,
+        1548
+      ],
+      "source_crop_nm": [
+        9736,
+        1048,
+        10736,
+        2048
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            4312,
+            472,
+            4824,
+            495
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            10248,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            4800,
+            480,
+            4824,
+            504
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1056,
+            10248,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            4312,
+            567,
+            4824,
+            591
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            10248,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            4800,
+            576,
+            4824,
+            600
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1152,
+            10248,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            4312,
+            663,
+            4824,
+            687
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            10248,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            4800,
+            672,
+            4824,
+            696
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1248,
+            10248,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            4312,
+            759,
+            4824,
+            783
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            745,
+            1335,
+            10248,
+            1359
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            4800,
+            768,
+            4824,
+            792
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1344,
+            10248,
+            1368
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            4312,
+            855,
+            4824,
+            879
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            841,
+            1431,
+            10248,
+            1455
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            4800,
+            864,
+            4824,
+            888
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1440,
+            10248,
+            1464
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[0]",
+          "rect_nm": [
+            4312,
+            951,
+            4824,
+            975
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            937,
+            1527,
+            10248,
+            1551
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[0]",
+          "rect_nm": [
+            4800,
+            960,
+            4824,
+            984
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1536,
+            10248,
+            1560
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[1]",
+          "rect_nm": [
+            4312,
+            1047,
+            4824,
+            1071
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1033,
+            1623,
+            10248,
+            1647
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[1]",
+          "rect_nm": [
+            4800,
+            1056,
+            4824,
+            1080
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1632,
+            10248,
+            1656
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[2]",
+          "rect_nm": [
+            4312,
+            1143,
+            4824,
+            1167
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1129,
+            1719,
+            10248,
+            1743
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[2]",
+          "rect_nm": [
+            4800,
+            1152,
+            4824,
+            1176
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1728,
+            10248,
+            1752
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[3]",
+          "rect_nm": [
+            4312,
+            1239,
+            4824,
+            1263
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1225,
+            1815,
+            10248,
+            1839
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[3]",
+          "rect_nm": [
+            4800,
+            1248,
+            4824,
+            1272
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1824,
+            10248,
+            1848
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[4]",
+          "rect_nm": [
+            4312,
+            1335,
+            4824,
+            1359
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1321,
+            1911,
+            10248,
+            1935
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[4]",
+          "rect_nm": [
+            4800,
+            1344,
+            4824,
+            1368
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            1920,
+            10248,
+            1944
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[5]",
+          "rect_nm": [
+            4312,
+            1431,
+            4824,
+            1455
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1417,
+            2007,
+            10248,
+            2031
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[5]",
+          "rect_nm": [
+            4800,
+            1440,
+            4824,
+            1464
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            10224,
+            2016,
+            10248,
+            2040
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            5100,
+            576,
+            5312,
+            672
+          ],
+          "source_rect_nm": [
+            10524,
+            1152,
+            41916,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            5100,
+            1344,
+            5312,
+            1440
+          ],
+          "source_rect_nm": [
+            10524,
+            1920,
+            41916,
+            2016
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            5100,
+            960,
+            5312,
+            1056
+          ],
+          "source_rect_nm": [
+            10524,
+            1536,
+            41916,
+            1632
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -5424,
+        -576
+      ],
+      "anchor_nm": [
+        4812,
+        972
+      ],
+      "score_roi_nm": [
+        4612,
+        772,
+        5012,
+        1172
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "qwen_wd_in[25]_source",
+      "family": "qwen",
+      "pin": "wd_in[25]",
+      "kind": "source",
+      "face": "E",
+      "pin_kind": "control",
+      "source_anchor_nm": [
+        42204,
+        780
+      ],
+      "source_crop_nm": [
+        41704,
+        280,
+        42704,
+        1280
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "wd_in[25]",
+          "rect_nm": [
+            6720,
+            951,
+            7232,
+            975
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            42192,
+            759,
+            52440,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[25]",
+          "rect_nm": [
+            6720,
+            960,
+            6744,
+            984
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            42192,
+            768,
+            42216,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[26]",
+          "rect_nm": [
+            6720,
+            1047,
+            7232,
+            1071
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            42192,
+            855,
+            52151,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[26]",
+          "rect_nm": [
+            6720,
+            1056,
+            6744,
+            1080
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            42192,
+            864,
+            42216,
+            888
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[27]",
+          "rect_nm": [
+            6720,
+            1143,
+            7232,
+            1167
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            42192,
+            951,
+            52055,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[27]",
+          "rect_nm": [
+            6720,
+            1152,
+            6744,
+            1176
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            42192,
+            960,
+            42216,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[28]",
+          "rect_nm": [
+            6720,
+            1239,
+            7232,
+            1263
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            42192,
+            1047,
+            51959,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[28]",
+          "rect_nm": [
+            6720,
+            1248,
+            6744,
+            1272
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            42192,
+            1056,
+            42216,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[29]",
+          "rect_nm": [
+            6720,
+            1335,
+            7232,
+            1359
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            42192,
+            1143,
+            51863,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[29]",
+          "rect_nm": [
+            6720,
+            1344,
+            6744,
+            1368
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            42192,
+            1152,
+            42216,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[30]",
+          "rect_nm": [
+            6720,
+            1431,
+            7232,
+            1455
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            42192,
+            1239,
+            51767,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[30]",
+          "rect_nm": [
+            6720,
+            1440,
+            6744,
+            1464
+          ],
+          "role": "UNCHANGED_original_contact",
+          "source_rect_nm": [
+            42192,
+            1248,
+            42216,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            6232,
+            576,
+            6444,
+            672
+          ],
+          "source_rect_nm": [
+            10524,
+            384,
+            41916,
+            480
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            6232,
+            1344,
+            6444,
+            1440
+          ],
+          "source_rect_nm": [
+            10524,
+            1152,
+            41916,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            6232,
+            960,
+            6444,
+            1056
+          ],
+          "source_rect_nm": [
+            10524,
+            768,
+            41916,
+            864
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -35472,
+        192
+      ],
+      "anchor_nm": [
+        6732,
+        972
+      ],
+      "score_roi_nm": [
+        6532,
+        772,
+        6932,
+        1172
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "qwen_r_ce_in_vias",
+      "family": "qwen",
+      "pin": "r_ce_in",
+      "kind": "vias",
+      "face": "W",
+      "pin_kind": "control",
+      "source_anchor_nm": [
+        384,
+        963
+      ],
+      "source_crop_nm": [
+        -116,
+        463,
+        884,
+        1463
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "wclk",
+          "rect_nm": [
+            8304,
+            759,
+            9188,
+            783
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            0,
+            759,
+            10248,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rclk",
+          "rect_nm": [
+            8569,
+            855,
+            9188,
+            879
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            265,
+            855,
+            10248,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rclk",
+          "rect_nm": [
+            8304,
+            951,
+            8615,
+            975
+          ],
+          "role": "terminal_horizontal",
+          "source_rect_nm": [
+            0,
+            951,
+            311,
+            975
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "rclk",
+          "rect_nm": [
+            8580,
+            844,
+            8604,
+            986
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            276,
+            844,
+            300,
+            986
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            8665,
+            951,
+            9188,
+            975
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            361,
+            951,
+            10248,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            8304,
+            1143,
+            8711,
+            1167
+          ],
+          "role": "terminal_horizontal",
+          "source_rect_nm": [
+            0,
+            1143,
+            407,
+            1167
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_ce_in",
+          "rect_nm": [
+            8676,
+            940,
+            8700,
+            1178
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            372,
+            940,
+            396,
+            1178
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            8761,
+            1047,
+            9188,
+            1071
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            10248,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            8304,
+            1335,
+            8807,
+            1359
+          ],
+          "role": "terminal_horizontal",
+          "source_rect_nm": [
+            0,
+            1335,
+            503,
+            1359
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            8772,
+            1036,
+            8796,
+            1370
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            468,
+            1036,
+            492,
+            1370
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            8857,
+            1143,
+            9188,
+            1167
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            10248,
+            1167
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            8868,
+            1132,
+            8892,
+            1463
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            564,
+            1132,
+            588,
+            1562
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            8953,
+            1239,
+            9188,
+            1263
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            10248,
+            1263
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            8964,
+            1228,
+            8988,
+            1463
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            660,
+            1228,
+            684,
+            1754
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            9049,
+            1335,
+            9188,
+            1359
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            745,
+            1335,
+            10248,
+            1359
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            9060,
+            1324,
+            9084,
+            1463
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            756,
+            1324,
+            780,
+            1946
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            9145,
+            1431,
+            9188,
+            1455
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            841,
+            1431,
+            10248,
+            1455
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            9156,
+            1420,
+            9180,
+            1463
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            852,
+            1420,
+            876,
+            2138
+          ]
+        }
+      ],
+      "vias": [
+        {
+          "center_nm": [
+            8592,
+            867
+          ],
+          "cut_rect_nm": [
+            8580,
+            855,
+            8604,
+            879
+          ],
+          "m4_rect_nm": [
+            8569,
+            855,
+            8615,
+            879
+          ],
+          "m5_rect_nm": [
+            8580,
+            844,
+            8604,
+            890
+          ],
+          "name": "VIA45",
+          "net": "rclk"
+        },
+        {
+          "center_nm": [
+            8592,
+            963
+          ],
+          "cut_rect_nm": [
+            8580,
+            951,
+            8604,
+            975
+          ],
+          "m4_rect_nm": [
+            8569,
+            951,
+            8615,
+            975
+          ],
+          "m5_rect_nm": [
+            8580,
+            940,
+            8604,
+            986
+          ],
+          "name": "VIA45",
+          "net": "rclk"
+        },
+        {
+          "center_nm": [
+            8688,
+            963
+          ],
+          "cut_rect_nm": [
+            8676,
+            951,
+            8700,
+            975
+          ],
+          "m4_rect_nm": [
+            8665,
+            951,
+            8711,
+            975
+          ],
+          "m5_rect_nm": [
+            8676,
+            940,
+            8700,
+            986
+          ],
+          "name": "VIA45",
+          "net": "r_ce_in"
+        },
+        {
+          "center_nm": [
+            8688,
+            1155
+          ],
+          "cut_rect_nm": [
+            8676,
+            1143,
+            8700,
+            1167
+          ],
+          "m4_rect_nm": [
+            8665,
+            1143,
+            8711,
+            1167
+          ],
+          "m5_rect_nm": [
+            8676,
+            1132,
+            8700,
+            1178
+          ],
+          "name": "VIA45",
+          "net": "r_ce_in"
+        },
+        {
+          "center_nm": [
+            8784,
+            1059
+          ],
+          "cut_rect_nm": [
+            8772,
+            1047,
+            8796,
+            1071
+          ],
+          "m4_rect_nm": [
+            8761,
+            1047,
+            8807,
+            1071
+          ],
+          "m5_rect_nm": [
+            8772,
+            1036,
+            8796,
+            1082
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[0]"
+        },
+        {
+          "center_nm": [
+            8784,
+            1347
+          ],
+          "cut_rect_nm": [
+            8772,
+            1335,
+            8796,
+            1359
+          ],
+          "m4_rect_nm": [
+            8761,
+            1335,
+            8807,
+            1359
+          ],
+          "m5_rect_nm": [
+            8772,
+            1324,
+            8796,
+            1370
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[0]"
+        },
+        {
+          "center_nm": [
+            8880,
+            1155
+          ],
+          "cut_rect_nm": [
+            8868,
+            1143,
+            8892,
+            1167
+          ],
+          "m4_rect_nm": [
+            8857,
+            1143,
+            8903,
+            1167
+          ],
+          "m5_rect_nm": [
+            8868,
+            1132,
+            8892,
+            1178
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[1]"
+        },
+        {
+          "center_nm": [
+            8976,
+            1251
+          ],
+          "cut_rect_nm": [
+            8964,
+            1239,
+            8988,
+            1263
+          ],
+          "m4_rect_nm": [
+            8953,
+            1239,
+            8999,
+            1263
+          ],
+          "m5_rect_nm": [
+            8964,
+            1228,
+            8988,
+            1274
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[2]"
+        },
+        {
+          "center_nm": [
+            9072,
+            1347
+          ],
+          "cut_rect_nm": [
+            9060,
+            1335,
+            9084,
+            1359
+          ],
+          "m4_rect_nm": [
+            9049,
+            1335,
+            9095,
+            1359
+          ],
+          "m5_rect_nm": [
+            9060,
+            1324,
+            9084,
+            1370
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[3]"
+        },
+        {
+          "center_nm": [
+            9168,
+            1443
+          ],
+          "cut_rect_nm": [
+            9156,
+            1431,
+            9180,
+            1455
+          ],
+          "m4_rect_nm": [
+            9145,
+            1431,
+            9191,
+            1455
+          ],
+          "m5_rect_nm": [
+            9156,
+            1420,
+            9180,
+            1466
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[4]"
+        }
+      ],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        8304,
+        0
+      ],
+      "anchor_nm": [
+        8688,
+        963
+      ],
+      "score_roi_nm": [
+        8488,
+        763,
+        8888,
+        1163
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "name": "sc2_clk_source",
+      "family": "sc2",
+      "pin": "clk",
+      "kind": "source",
+      "face": "W",
+      "pin_kind": "clock",
+      "source_anchor_nm": [
+        21372,
+        780
+      ],
+      "source_crop_nm": [
+        20872,
+        280,
+        21872,
+        1280
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "clk",
+          "rect_nm": [
+            472,
+            2871,
+            984,
+            2895
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            0,
+            759,
+            21384,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            960,
+            2880,
+            984,
+            2904
+          ],
+          "role": "source_pad",
+          "net": "clk",
+          "source_rect_nm": [
+            21360,
+            768,
+            21384,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            472,
+            2967,
+            984,
+            2991
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            265,
+            855,
+            21384,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            960,
+            2976,
+            984,
+            3000
+          ],
+          "role": "source_pad",
+          "net": "r_ce_in",
+          "source_rect_nm": [
+            21360,
+            864,
+            21384,
+            888
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            472,
+            3063,
+            984,
+            3087
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            361,
+            951,
+            21384,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            960,
+            3072,
+            984,
+            3096
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[0]",
+          "source_rect_nm": [
+            21360,
+            960,
+            21384,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            472,
+            3159,
+            984,
+            3183
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            21384,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            960,
+            3168,
+            984,
+            3192
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[1]",
+          "source_rect_nm": [
+            21360,
+            1056,
+            21384,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            472,
+            3255,
+            984,
+            3279
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            21384,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            960,
+            3264,
+            984,
+            3288
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[2]",
+          "source_rect_nm": [
+            21360,
+            1152,
+            21384,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            472,
+            3351,
+            984,
+            3375
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            21384,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            960,
+            3360,
+            984,
+            3384
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[3]",
+          "source_rect_nm": [
+            21360,
+            1248,
+            21384,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            1260,
+            2496,
+            1472,
+            2592
+          ],
+          "source_rect_nm": [
+            21660,
+            384,
+            195180,
+            480
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            1260,
+            3264,
+            1472,
+            3360
+          ],
+          "source_rect_nm": [
+            21660,
+            1152,
+            195180,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            1260,
+            2880,
+            1472,
+            2976
+          ],
+          "source_rect_nm": [
+            21660,
+            768,
+            195180,
+            864
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -20400,
+        2112
+      ],
+      "anchor_nm": [
+        972,
+        2892
+      ],
+      "score_roi_nm": [
+        772,
+        2692,
+        1172,
+        3092
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "sc2_r_ce_in_source",
+      "family": "sc2",
+      "pin": "r_ce_in",
+      "kind": "source",
+      "face": "W",
+      "pin_kind": "control",
+      "source_anchor_nm": [
+        21372,
+        876
+      ],
+      "source_crop_nm": [
+        20872,
+        376,
+        21872,
+        1376
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "clk",
+          "rect_nm": [
+            2392,
+            2775,
+            2904,
+            2799
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            0,
+            759,
+            21384,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            2784,
+            2904,
+            2808
+          ],
+          "role": "source_pad",
+          "net": "clk",
+          "source_rect_nm": [
+            21360,
+            768,
+            21384,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            2392,
+            2871,
+            2904,
+            2895
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            265,
+            855,
+            21384,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            2880,
+            2904,
+            2904
+          ],
+          "role": "source_pad",
+          "net": "r_ce_in",
+          "source_rect_nm": [
+            21360,
+            864,
+            21384,
+            888
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            2392,
+            2967,
+            2904,
+            2991
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            361,
+            951,
+            21384,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            2976,
+            2904,
+            3000
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[0]",
+          "source_rect_nm": [
+            21360,
+            960,
+            21384,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            2392,
+            3063,
+            2904,
+            3087
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            21384,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            3072,
+            2904,
+            3096
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[1]",
+          "source_rect_nm": [
+            21360,
+            1056,
+            21384,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            2392,
+            3159,
+            2904,
+            3183
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            21384,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            3168,
+            2904,
+            3192
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[2]",
+          "source_rect_nm": [
+            21360,
+            1152,
+            21384,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            2392,
+            3255,
+            2904,
+            3279
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            21384,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            3264,
+            2904,
+            3288
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[3]",
+          "source_rect_nm": [
+            21360,
+            1248,
+            21384,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            2392,
+            3351,
+            2904,
+            3375
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            745,
+            1335,
+            21384,
+            1359
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            2880,
+            3360,
+            2904,
+            3384
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[4]",
+          "source_rect_nm": [
+            21360,
+            1344,
+            21384,
+            1368
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            3180,
+            2400,
+            3392,
+            2496
+          ],
+          "source_rect_nm": [
+            21660,
+            384,
+            195180,
+            480
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            3180,
+            3168,
+            3392,
+            3264
+          ],
+          "source_rect_nm": [
+            21660,
+            1152,
+            195180,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            3180,
+            2784,
+            3392,
+            2880
+          ],
+          "source_rect_nm": [
+            21660,
+            768,
+            195180,
+            864
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -18480,
+        2016
+      ],
+      "anchor_nm": [
+        2892,
+        2892
+      ],
+      "score_roi_nm": [
+        2692,
+        2692,
+        3092,
+        3092
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "sc2_rd_out[0]_source",
+      "family": "sc2",
+      "pin": "rd_out[0]",
+      "kind": "source",
+      "face": "W",
+      "pin_kind": "data_out",
+      "source_anchor_nm": [
+        21372,
+        1836
+      ],
+      "source_crop_nm": [
+        20872,
+        1336,
+        21872,
+        2336
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            4312,
+            2392,
+            4824,
+            2415
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            745,
+            1335,
+            21384,
+            1359
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2400,
+            4824,
+            2424
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[4]",
+          "source_rect_nm": [
+            21360,
+            1344,
+            21384,
+            1368
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[5]",
+          "rect_nm": [
+            4312,
+            2487,
+            4824,
+            2511
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            841,
+            1431,
+            21384,
+            1455
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2496,
+            4824,
+            2520
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[5]",
+          "source_rect_nm": [
+            21360,
+            1440,
+            21384,
+            1464
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[6]",
+          "rect_nm": [
+            4312,
+            2583,
+            4824,
+            2607
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            937,
+            1527,
+            21384,
+            1551
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2592,
+            4824,
+            2616
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[6]",
+          "source_rect_nm": [
+            21360,
+            1536,
+            21384,
+            1560
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[7]",
+          "rect_nm": [
+            4312,
+            2679,
+            4824,
+            2703
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1033,
+            1623,
+            21384,
+            1647
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2688,
+            4824,
+            2712
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[7]",
+          "source_rect_nm": [
+            21360,
+            1632,
+            21384,
+            1656
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[8]",
+          "rect_nm": [
+            4312,
+            2775,
+            4824,
+            2799
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1129,
+            1719,
+            21384,
+            1743
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2784,
+            4824,
+            2808
+          ],
+          "role": "source_pad",
+          "net": "r_addr_in[8]",
+          "source_rect_nm": [
+            21360,
+            1728,
+            21384,
+            1752
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[0]",
+          "rect_nm": [
+            4312,
+            2871,
+            4824,
+            2895
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1225,
+            1815,
+            21384,
+            1839
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2880,
+            4824,
+            2904
+          ],
+          "role": "source_pad",
+          "net": "rd_out[0]",
+          "source_rect_nm": [
+            21360,
+            1824,
+            21384,
+            1848
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[1]",
+          "rect_nm": [
+            4312,
+            2967,
+            4824,
+            2991
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1321,
+            1911,
+            21384,
+            1935
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            2976,
+            4824,
+            3000
+          ],
+          "role": "source_pad",
+          "net": "rd_out[1]",
+          "source_rect_nm": [
+            21360,
+            1920,
+            21384,
+            1944
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[2]",
+          "rect_nm": [
+            4312,
+            3063,
+            4824,
+            3087
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1417,
+            2007,
+            21384,
+            2031
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            3072,
+            4824,
+            3096
+          ],
+          "role": "source_pad",
+          "net": "rd_out[2]",
+          "source_rect_nm": [
+            21360,
+            2016,
+            21384,
+            2040
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[3]",
+          "rect_nm": [
+            4312,
+            3159,
+            4824,
+            3183
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1513,
+            2103,
+            21384,
+            2127
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            3168,
+            4824,
+            3192
+          ],
+          "role": "source_pad",
+          "net": "rd_out[3]",
+          "source_rect_nm": [
+            21360,
+            2112,
+            21384,
+            2136
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[4]",
+          "rect_nm": [
+            4312,
+            3255,
+            4824,
+            3279
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1609,
+            2199,
+            21384,
+            2223
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            3264,
+            4824,
+            3288
+          ],
+          "role": "source_pad",
+          "net": "rd_out[4]",
+          "source_rect_nm": [
+            21360,
+            2208,
+            21384,
+            2232
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "rd_out[5]",
+          "rect_nm": [
+            4312,
+            3351,
+            4824,
+            3375
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            1705,
+            2295,
+            21384,
+            2319
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            4800,
+            3360,
+            4824,
+            3384
+          ],
+          "role": "source_pad",
+          "net": "rd_out[5]",
+          "source_rect_nm": [
+            21360,
+            2304,
+            21384,
+            2328
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            5100,
+            2976,
+            5312,
+            3072
+          ],
+          "source_rect_nm": [
+            21660,
+            1920,
+            195180,
+            2016
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            5100,
+            2592,
+            5312,
+            2688
+          ],
+          "source_rect_nm": [
+            21660,
+            1536,
+            195180,
+            1632
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            5100,
+            3360,
+            5312,
+            3392
+          ],
+          "source_rect_nm": [
+            21660,
+            2304,
+            195180,
+            2400
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -16560,
+        1056
+      ],
+      "anchor_nm": [
+        4812,
+        2892
+      ],
+      "score_roi_nm": [
+        4612,
+        2692,
+        5012,
+        3092
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "sc2_wd_in[70]_source",
+      "family": "sc2",
+      "pin": "wd_in[70]",
+      "kind": "source",
+      "face": "E",
+      "pin_kind": "data_in",
+      "source_anchor_nm": [
+        195468,
+        780
+      ],
+      "source_crop_nm": [
+        194968,
+        280,
+        195968,
+        1280
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "wd_in[70]",
+          "rect_nm": [
+            6720,
+            2871,
+            7232,
+            2895
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            195456,
+            759,
+            216840,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            6720,
+            2880,
+            6744,
+            2904
+          ],
+          "role": "source_pad",
+          "net": "wd_in[70]",
+          "source_rect_nm": [
+            195456,
+            768,
+            195480,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[71]",
+          "rect_nm": [
+            6720,
+            2967,
+            7232,
+            2991
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            195456,
+            855,
+            216551,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            6720,
+            2976,
+            6744,
+            3000
+          ],
+          "role": "source_pad",
+          "net": "wd_in[71]",
+          "source_rect_nm": [
+            195456,
+            864,
+            195480,
+            888
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[72]",
+          "rect_nm": [
+            6720,
+            3063,
+            7232,
+            3087
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            195456,
+            951,
+            216455,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            6720,
+            3072,
+            6744,
+            3096
+          ],
+          "role": "source_pad",
+          "net": "wd_in[72]",
+          "source_rect_nm": [
+            195456,
+            960,
+            195480,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[73]",
+          "rect_nm": [
+            6720,
+            3159,
+            7232,
+            3183
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            195456,
+            1047,
+            216359,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            6720,
+            3168,
+            6744,
+            3192
+          ],
+          "role": "source_pad",
+          "net": "wd_in[73]",
+          "source_rect_nm": [
+            195456,
+            1056,
+            195480,
+            1080
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[74]",
+          "rect_nm": [
+            6720,
+            3255,
+            7232,
+            3279
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            195456,
+            1143,
+            216263,
+            1167
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            6720,
+            3264,
+            6744,
+            3288
+          ],
+          "role": "source_pad",
+          "net": "wd_in[74]",
+          "source_rect_nm": [
+            195456,
+            1152,
+            195480,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "wd_in[75]",
+          "rect_nm": [
+            6720,
+            3351,
+            7232,
+            3375
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            195456,
+            1239,
+            216167,
+            1263
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            6720,
+            3360,
+            6744,
+            3384
+          ],
+          "role": "source_pad",
+          "net": "wd_in[75]",
+          "source_rect_nm": [
+            195456,
+            1248,
+            195480,
+            1272
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            6232,
+            2496,
+            6444,
+            2592
+          ],
+          "source_rect_nm": [
+            21660,
+            384,
+            195180,
+            480
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VDD",
+          "rect_nm": [
+            6232,
+            3264,
+            6444,
+            3360
+          ],
+          "source_rect_nm": [
+            21660,
+            1152,
+            195180,
+            1248
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "VSS",
+          "rect_nm": [
+            6232,
+            2880,
+            6444,
+            2976
+          ],
+          "source_rect_nm": [
+            21660,
+            768,
+            195180,
+            864
+          ]
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        -188736,
+        2112
+      ],
+      "anchor_nm": [
+        6732,
+        2892
+      ],
+      "score_roi_nm": [
+        6532,
+        2692,
+        6932,
+        3092
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "sc2_r_ce_in_vias",
+      "family": "sc2",
+      "pin": "r_ce_in",
+      "kind": "vias",
+      "face": "W",
+      "pin_kind": "control",
+      "source_anchor_nm": [
+        288,
+        867
+      ],
+      "source_crop_nm": [
+        -212,
+        367,
+        788,
+        1367
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "clk",
+          "rect_nm": [
+            8400,
+            2775,
+            9188,
+            2799
+          ],
+          "role": "horizontal_zero_jog",
+          "source_rect_nm": [
+            0,
+            759,
+            21384,
+            783
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            8400,
+            2784,
+            8424,
+            2808
+          ],
+          "role": "terminal_pad",
+          "net": "clk",
+          "source_rect_nm": [
+            0,
+            768,
+            24,
+            792
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            8665,
+            2871,
+            9188,
+            2895
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            265,
+            855,
+            21384,
+            879
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_ce_in",
+          "rect_nm": [
+            8400,
+            2967,
+            8711,
+            2991
+          ],
+          "role": "terminal_horizontal",
+          "source_rect_nm": [
+            0,
+            951,
+            311,
+            975
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_ce_in",
+          "rect_nm": [
+            8676,
+            2860,
+            8700,
+            3002
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            276,
+            844,
+            300,
+            986
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            8400,
+            2976,
+            8424,
+            3000
+          ],
+          "role": "terminal_pad",
+          "net": "r_ce_in",
+          "source_rect_nm": [
+            0,
+            960,
+            24,
+            984
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            8761,
+            2967,
+            9188,
+            2991
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            361,
+            951,
+            21384,
+            975
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            8400,
+            3159,
+            8807,
+            3183
+          ],
+          "role": "terminal_horizontal",
+          "source_rect_nm": [
+            0,
+            1143,
+            407,
+            1167
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[0]",
+          "rect_nm": [
+            8772,
+            2956,
+            8796,
+            3194
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            372,
+            940,
+            396,
+            1178
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            8400,
+            3168,
+            8424,
+            3192
+          ],
+          "role": "terminal_pad",
+          "net": "r_addr_in[0]",
+          "source_rect_nm": [
+            0,
+            1152,
+            24,
+            1176
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            8857,
+            3063,
+            9188,
+            3087
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            457,
+            1047,
+            21384,
+            1071
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            8400,
+            3351,
+            8903,
+            3375
+          ],
+          "role": "terminal_horizontal",
+          "source_rect_nm": [
+            0,
+            1335,
+            503,
+            1359
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[1]",
+          "rect_nm": [
+            8868,
+            3052,
+            8892,
+            3383
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            468,
+            1036,
+            492,
+            1370
+          ]
+        },
+        {
+          "layer": "M4",
+          "rect_nm": [
+            8400,
+            3360,
+            8424,
+            3383
+          ],
+          "role": "terminal_pad",
+          "net": "r_addr_in[1]",
+          "source_rect_nm": [
+            0,
+            1344,
+            24,
+            1368
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            8953,
+            3159,
+            9188,
+            3183
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            553,
+            1143,
+            21384,
+            1167
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[2]",
+          "rect_nm": [
+            8964,
+            3148,
+            8988,
+            3383
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            564,
+            1132,
+            588,
+            1562
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            9049,
+            3255,
+            9188,
+            3279
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            649,
+            1239,
+            21384,
+            1263
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[3]",
+          "rect_nm": [
+            9060,
+            3244,
+            9084,
+            3383
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            660,
+            1228,
+            684,
+            1754
+          ]
+        },
+        {
+          "layer": "M4",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            9145,
+            3351,
+            9188,
+            3375
+          ],
+          "role": "source_horizontal",
+          "source_rect_nm": [
+            745,
+            1335,
+            21384,
+            1359
+          ]
+        },
+        {
+          "layer": "M5",
+          "net": "r_addr_in[4]",
+          "rect_nm": [
+            9156,
+            3340,
+            9180,
+            3383
+          ],
+          "role": "vertical_column",
+          "source_rect_nm": [
+            756,
+            1324,
+            780,
+            1946
+          ]
+        }
+      ],
+      "vias": [
+        {
+          "center_nm": [
+            8688,
+            2883
+          ],
+          "cut_rect_nm": [
+            8676,
+            2871,
+            8700,
+            2895
+          ],
+          "m4_rect_nm": [
+            8665,
+            2871,
+            8711,
+            2895
+          ],
+          "m5_rect_nm": [
+            8676,
+            2860,
+            8700,
+            2906
+          ],
+          "name": "VIA45",
+          "net": "r_ce_in"
+        },
+        {
+          "center_nm": [
+            8688,
+            2979
+          ],
+          "cut_rect_nm": [
+            8676,
+            2967,
+            8700,
+            2991
+          ],
+          "m4_rect_nm": [
+            8665,
+            2967,
+            8711,
+            2991
+          ],
+          "m5_rect_nm": [
+            8676,
+            2956,
+            8700,
+            3002
+          ],
+          "name": "VIA45",
+          "net": "r_ce_in"
+        },
+        {
+          "center_nm": [
+            8784,
+            2979
+          ],
+          "cut_rect_nm": [
+            8772,
+            2967,
+            8796,
+            2991
+          ],
+          "m4_rect_nm": [
+            8761,
+            2967,
+            8807,
+            2991
+          ],
+          "m5_rect_nm": [
+            8772,
+            2956,
+            8796,
+            3002
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[0]"
+        },
+        {
+          "center_nm": [
+            8784,
+            3171
+          ],
+          "cut_rect_nm": [
+            8772,
+            3159,
+            8796,
+            3183
+          ],
+          "m4_rect_nm": [
+            8761,
+            3159,
+            8807,
+            3183
+          ],
+          "m5_rect_nm": [
+            8772,
+            3148,
+            8796,
+            3194
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[0]"
+        },
+        {
+          "center_nm": [
+            8880,
+            3075
+          ],
+          "cut_rect_nm": [
+            8868,
+            3063,
+            8892,
+            3087
+          ],
+          "m4_rect_nm": [
+            8857,
+            3063,
+            8903,
+            3087
+          ],
+          "m5_rect_nm": [
+            8868,
+            3052,
+            8892,
+            3098
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[1]"
+        },
+        {
+          "center_nm": [
+            8880,
+            3363
+          ],
+          "cut_rect_nm": [
+            8868,
+            3351,
+            8892,
+            3375
+          ],
+          "m4_rect_nm": [
+            8857,
+            3351,
+            8903,
+            3375
+          ],
+          "m5_rect_nm": [
+            8868,
+            3340,
+            8892,
+            3386
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[1]"
+        },
+        {
+          "center_nm": [
+            8976,
+            3171
+          ],
+          "cut_rect_nm": [
+            8964,
+            3159,
+            8988,
+            3183
+          ],
+          "m4_rect_nm": [
+            8953,
+            3159,
+            8999,
+            3183
+          ],
+          "m5_rect_nm": [
+            8964,
+            3148,
+            8988,
+            3194
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[2]"
+        },
+        {
+          "center_nm": [
+            9072,
+            3267
+          ],
+          "cut_rect_nm": [
+            9060,
+            3255,
+            9084,
+            3279
+          ],
+          "m4_rect_nm": [
+            9049,
+            3255,
+            9095,
+            3279
+          ],
+          "m5_rect_nm": [
+            9060,
+            3244,
+            9084,
+            3290
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[3]"
+        },
+        {
+          "center_nm": [
+            9168,
+            3363
+          ],
+          "cut_rect_nm": [
+            9156,
+            3351,
+            9180,
+            3375
+          ],
+          "m4_rect_nm": [
+            9145,
+            3351,
+            9191,
+            3375
+          ],
+          "m5_rect_nm": [
+            9156,
+            3340,
+            9180,
+            3386
+          ],
+          "name": "VIA45",
+          "net": "r_addr_in[4]"
+        }
+      ],
+      "wire_status": "ROUTED",
+      "expected": "original native verdict; RECTONLY prediction conditional on visibility",
+      "translation_nm": [
+        8400,
+        2016
+      ],
+      "anchor_nm": [
+        8688,
+        2883
+      ],
+      "score_roi_nm": [
+        8488,
+        2683,
+        8888,
+        3083
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ]
+    },
+    {
+      "name": "aligned_rectangle",
+      "family": "control",
+      "pin": "control",
+      "kind": "aligned_rectangle",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            744,
+            4836,
+            1032,
+            4860
+          ],
+          "role": "aligned_rectangle"
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "no inner-ROI RECTONLY",
+      "translation_nm": [
+        1008,
+        4848
+      ],
+      "anchor_nm": [
+        1008,
+        4848
+      ],
+      "score_roi_nm": [
+        808,
+        4648,
+        1208,
+        5048
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "name": "exact_9nm_step",
+      "family": "control",
+      "pin": "control",
+      "kind": "exact_9nm_step",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            2664,
+            4827,
+            2952,
+            4851
+          ],
+          "role": "exact_9nm_step"
+        },
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            2928,
+            4836,
+            2952,
+            4860
+          ],
+          "role": "exact_9nm_step"
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "visible RECTONLY prediction",
+      "translation_nm": [
+        2928,
+        4848
+      ],
+      "anchor_nm": [
+        2928,
+        4848
+      ],
+      "score_roi_nm": [
+        2728,
+        4648,
+        3128,
+        5048
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "all_fixed_9nm_step",
+      "family": "control",
+      "pin": "control",
+      "kind": "all_fixed_9nm_step",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            4584,
+            4827,
+            4872,
+            4851
+          ],
+          "role": "all_fixed_9nm_step"
+        },
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            4848,
+            4836,
+            4872,
+            4860
+          ],
+          "role": "all_fixed_9nm_step"
+        }
+      ],
+      "vias": [],
+      "wire_status": "FIXED",
+      "expected": "visibility negative; suppression possible; never qualification",
+      "translation_nm": [
+        4848,
+        4848
+      ],
+      "anchor_nm": [
+        4848,
+        4848
+      ],
+      "score_roi_nm": [
+        4648,
+        4648,
+        5048,
+        5048
+      ],
+      "independent_geometry_components": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "spacing_23nm",
+      "family": "control",
+      "pin": "control",
+      "kind": "spacing_23nm",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            6624,
+            4836,
+            6912,
+            4860
+          ],
+          "role": "spacing_23nm"
+        },
+        {
+          "layer": "M4",
+          "net": "b",
+          "rect_nm": [
+            6624,
+            4883,
+            6912,
+            4907
+          ],
+          "role": "spacing_23nm"
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "native spacing marker required",
+      "translation_nm": [
+        6768,
+        4848
+      ],
+      "anchor_nm": [
+        6768,
+        4848
+      ],
+      "score_roi_nm": [
+        6568,
+        4648,
+        6968,
+        5048
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "name": "disconnected_contact",
+      "family": "control",
+      "pin": "control",
+      "kind": "disconnected_contact",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            8424,
+            4836,
+            8678,
+            4860
+          ],
+          "role": "disconnected_contact"
+        },
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            8688,
+            4836,
+            8712,
+            4860
+          ],
+          "role": "disconnected_contact"
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "independent graph disconnected required; DRC silence is insufficient",
+      "translation_nm": [
+        8688,
+        4848
+      ],
+      "anchor_nm": [
+        8688,
+        4848
+      ],
+      "score_roi_nm": [
+        8488,
+        4648,
+        8888,
+        5048
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "name": "old_track_phase",
+      "family": "control",
+      "pin": "control",
+      "kind": "old_track_phase",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            744,
+            6768,
+            1272,
+            6792
+          ],
+          "role": "old_track_phase"
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "track-center coverage probe only; integer manufacturing grid",
+      "translation_nm": [
+        1008,
+        6768
+      ],
+      "anchor_nm": [
+        1008,
+        6768
+      ],
+      "score_roi_nm": [
+        808,
+        6568,
+        1208,
+        6968
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "name": "width_33nm",
+      "family": "control",
+      "pin": "control",
+      "kind": "width_33nm",
+      "source_anchor_nm": [
+        0,
+        0
+      ],
+      "shapes": [
+        {
+          "layer": "M4",
+          "net": "a",
+          "rect_nm": [
+            2664,
+            6756,
+            3192,
+            6789
+          ],
+          "role": "width_33nm"
+        }
+      ],
+      "vias": [],
+      "wire_status": "ROUTED",
+      "expected": "width-table coverage probe, not expected native fail",
+      "translation_nm": [
+        2928,
+        6768
+      ],
+      "anchor_nm": [
+        2928,
+        6768
+      ],
+      "score_roi_nm": [
+        2728,
+        6568,
+        3128,
+        6968
+      ],
+      "independent_geometry_components": [
+        [
+          0
+        ]
+      ]
+    }
+  ],
+  "source_notes": [
+    "No east read output exists; actual rd_out[0] W and first E pin separately retained.",
+    "All source, same-net and cross-net rectangles intersecting +/-500nm crop retained, complete native vias retained.",
+    "Only inner +/-200nm ROI scored; full native markers also preserved.",
+    "Fixed is diagnostic visibility control, never macro qualification.",
+    "Sub-grid control unsupported: integer DBU equals manufacturing grid.",
+    "No B/C access, routing, PG, or production geometry generated."
+  ]
+}
