@@ -534,6 +534,67 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 "multi-root kit without hard children: unchanged" if ok else
                 "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
             continue
+        if n == "child_pin_access":
+            # ROOT-RULETAG 10-19: b7918e979 (KV-ECTL5) added child_lint (i) pin access (a hard-child pin with a same-layer
+            # OBS rect closer than the wide-metal spacing FAILs) and the matching ref_tile gen refusal.  The pre-route gate
+            # runs child_lint only on spec "children", so a gate is unchanged when the kit has no hard children or none of
+            # its child view LEFs has such a pin (the detector itself, abstract_pin_stub.pin_spacing_violations, decides).
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            base = Path(root or Path(__file__).resolve().parents[2])
+            try:
+                sp = json.loads((base / "physical" / "ref_tile" / str(kit) / "spec.json").read_text())
+                views = [str(c["view"]) for c in (sp.get("children") or [])]
+                import importlib.util
+                spec_ = importlib.util.spec_from_file_location(
+                    "ot_aps_ruletag", base / "tools" / "hier_contract" / "abstract_pin_stub.py")
+                aps = importlib.util.module_from_spec(spec_)
+                spec_.loader.exec_module(aps)
+                bad = {}
+                for v in views:
+                    name = Path(v.rstrip("/")).name
+                    t = (base / v / f"{name}.lef").read_text(errors="replace")
+                    if re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", t):
+                        k = len(aps.pin_spacing_violations(t))
+                        if k:
+                            bad[name] = k
+            except Exception as ex:  # noqa: BLE001 -- unreadable spec / view / detector: strict
+                rows.append(dict(requires=n, ok=False, text=f"child_pin_access: cannot judge ({type(ex).__name__}): re-gate"))
+                continue
+            rows.append(dict(requires=n, ok=not bad, children=len(views), violations=bad,
+                             text="child_pin_access: " + (
+                                 "no hard children: the gate runs no child_lint, verdict unchanged" if not views else
+                                 f"{len(views)} hard-child view(s), 0 pin-access violations: child_lint (i) passes"
+                                 if not bad else f"hard-child pin-access violations {dict(list(bad.items())[:3])}: re-gate")))
+            continue
+        if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract"):
+            # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
+            # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                if not isinstance(sp, dict):
+                    raise ValueError("spec is not an object")
+            except (OSError, ValueError, TypeError):
+                rows.append(dict(requires=n, ok=False, text=f"{n}: kit spec unreadable (re-gate)"))
+                continue
+            if n == "rc_cal_spine_hold":
+                hit = sp.get("kind") == "cluster" and sp.get("clock", "spine") == "spine"
+                rows.append(dict(requires=n, ok=not hit, text="rc_cal_spine_hold: " + (
+                    "spine cluster: gate CTS hold repair ran with the calibrated RC, re-gate" if hit else
+                    "no spine: gate CTS never applied the calibrated hold RC, verdict unchanged")))
+            elif n == "single_clock_contract":
+                hit = bool(sp.get("single_clock_contract"))
+                rows.append(dict(requires=n, ok=not hit, text="single_clock_contract: " + (
+                    "kit carries single_clock_contract: ot_single_clock_check now runs in MM sync, re-gate" if hit else
+                    "no single_clock_contract: ot_single_clock_check is never defined, verdict unchanged")))
+            else:
+                hit = bool((sp.get("reset_landing") or {}).get("first_copies")) if isinstance(sp.get("reset_landing"),
+                                                                                             dict) else False
+                rows.append(dict(requires=n, ok=not hit, text="balanced_reset_profile: " + (
+                    "kit declares reset_landing.first_copies: the balanced proof applies, re-gate" if hit else
+                    "no reset_landing.first_copies: textbook_lint checks unchanged")))
+            continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")

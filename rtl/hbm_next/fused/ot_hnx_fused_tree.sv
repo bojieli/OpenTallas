@@ -30,9 +30,9 @@
 //     2 edges a node).  Lanes are NOT padded to lockstep: lane L sees every hub command D(L) edges later, i.e. lane L's
 //     whole calendar (VM accesses included) is offset by its fixed D(L) (handed to CMTP as a per-bank offset).
 //   * Up: each node pads its EARLIER child (strap pad_b / pad_k, fixed per instance by the die binder) by the
-//     difference of the two children's ROUND TRIPS, so both children's messages of one block meet on one edge.  Then
-//     chunk sums are added (one registered FP32 add, ot_dsrom_qadd LA 6, a = lower lanes) and scalars / fin / flt
-//     pass in one register.  Sibling subtrees have equal depth, so one pad aligns chunk sums, scalars and fins.
+//     difference of the two children's ROUND TRIPS, so both children's messages of one block meet on one edge (the
+//     aligned pair is registered).  Then chunk sums are added (one registered FP32 add, ot_dsrom_qadd LA 6, a = lower
+//     lanes) and scalars / fin / flt pass in one register.  Up latency a node: scalar 4 + pad, chunk LA + 3 + pad.  Sibling subtrees have equal depth, so one pad aligns chunk sums, scalars and fins.
 //   * Every misalignment is a FAULT (fl bit): a chunk sum on one side only, two scalars on one edge, a chunk/scalar
 //     output collision, an adder flag.
 // Pad storage: up to 32 edges x 271 b = 8.7 kb -> SRAM (1R1W 128x256 data ring + 1R1W 32x64 control ring), with a
@@ -101,11 +101,17 @@ module ot_hnx_fused_tnode #(parameter integer LA = 6, parameter integer UW = 271
         if (!rl[0]) begin iac <= '0; ibc <= '0; end else begin iac <= ua[270:256]; ibc <= ub[270:256]; end
     always @(posedge clk) begin iad <= ua[255:0]; ibd <= ub[255:0]; end
     // ---- alignment pad on the earlier child (static strap select)
+    // straps are die ties (case-analysed); registered once here so no tile-input net fans out into the muxes
+    reg [5:0] pk_q; reg pb_q;
+    always @(posedge clk) begin pk_q <= pad_k; pb_q <= pad_b; end
     wire [14:0] pc; wire [255:0] pd;
-    ot_hnx_fused_pad #(.WC(15)) u_pad (.clk(clk), .rst_n(rl[1]), .k(pad_k), .dc(pad_b ? ibc : iac),
-        .dd(pad_b ? ibd : iad), .qc(pc), .qd(pd));
-    wire [14:0] ac = pad_b ? iac : pc, bc = pad_b ? pc : ibc;
-    wire [255:0] ad = pad_b ? iad : pd, bd = pad_b ? pd : ibd;
+    ot_hnx_fused_pad #(.WC(15)) u_pad (.clk(clk), .rst_n(rl[1]), .k(pk_q), .dc(pb_q ? ibc : iac),
+        .dd(pb_q ? ibd : iad), .qc(pc), .qd(pd));
+    // aligned pair, registered (the SRAM read -> select path ends here; +1 edge on both sides of every node)
+    reg [14:0] ac, bc; reg [255:0] ad, bd;
+    always @(posedge clk or negedge rl[1])
+        if (!rl[1]) begin ac <= '0; bc <= '0; end else begin ac <= pb_q ? iac : pc; bc <= pb_q ? pc : ibc; end
+    always @(posedge clk) begin ad <= pb_q ? iad : pd; bd <= pb_q ? pd : ibd; end
     wire ach = ac[14] && ac[13], bch = bc[14] && bc[13], asc = ac[14] && !ac[13], bsc = bc[14] && !bc[13];
     // ---- chunk sums: one registered FP32 add in the golden order (a = lower lanes = even chunk)
     wire cgo = ach && bch;
@@ -312,8 +318,9 @@ module ot_hnx_fused_hub #(
     reg [2:0] st; reg post; reg [3:0] nm1; reg [5:0] nsc, scs; reg [7:0] wt; reg sfault;
     reg [15:0] cs_r; reg [1:0] cj; reg [15:0] rsc_s;
     reg [3:0] wrow; reg [2:0] wb; reg [15:0] tg; reg [15:0] tw_next; reg [15:0] per; reg [4:0] gofs;
-    reg [3:0] hr; reg dec;
-    assign busy = (st != S_IDLE);
+    reg [3:0] hr; reg dec; reg busy_q;
+    assign busy = busy_q;                                        // registered output (1 edge after the state)
+    always @(posedge clk or negedge rs) if (!rs) busy_q <= 1'b0; else busy_q <= (st != S_IDLE);
     wire [2:0] nbt = post ? 3'd5 : 3'd1;                         // WGT beats a row
     assign wsx = post ? 6'(3 * wrow + wb / 2) : 6'(wrow);       // scalar sector of beat wb of row wrow
     wire beat_wg = (st == S_WG) && wrow <= nm1 && wrow < 4'd2;
@@ -472,8 +479,8 @@ module ot_hnx_fused_tree_top #(
                  + ((q <= 1) ? pad_on(rtq(0), rtq(1), q % 2) : pad_on(rtq(2), rtq(3), q % 2))
                  + pad_on(mx(rtq(0), rtq(1)), mx(rtq(2), rtq(3)), (q <= 1) ? 0 : 1);
             // hub cv -> pipe 1 -> 5 nodes x 2 -> links -> lane dv_q 1 -> rq_v 1 -> RR + 1 -> up_v 1
-            // -> links -> 5 nodes x 3 + pads -> root bus
-            lane_rt = 1 + 10 + links + 1 + 1 + RR + 1 + 1 + links + 15 + pads;
+            // -> links -> 5 nodes x (pin 1 + align 1 + scalar 1 + out 1) + pads -> root bus
+            lane_rt = 1 + 10 + links + 1 + 1 + RR + 1 + 1 + links + 20 + pads;
         end
     endfunction
     function automatic integer lane_rtc(input integer q, input integer i);   // chunk path: + (LA - 1) a node

@@ -1,0 +1,1226 @@
+{
+ "schema": "opentallas.hbm_next_1019.fused_phase_check.v1",
+ "generated_utc": "2026-10-19T19:09:04Z",
+ "rule": "HBM-NEXT FUSED bank-phase image check (LH-P3UNITS/FUSHUB 2026-10-19; DECISION LEAD-HBM/LH-P3UNITS: the compiler\nallocator bank-aligns FUSED HC_PRE_NORM operands, ph = 0, so the die's fixed neighbour-hop csum tree is exactly the\ngolden chunk8 reduction order; no runtime reorder).\n\nEvery FUSED.HC_PRE_NORM / FUSED.HC_POST record of an HGI-1R image must satisfy what the RTL hub\n(ot_hnx_fused_hub job_ok, rtl/hbm_next/fused/ot_hnx_fused_tree.sv) accepts; otherwise the record FAULTs on the die:\n\n  F1 space    A, O (and B) in VM; C in VM.  HC_PRE_NORM's gain B is read by the lanes from VM (an HBM gain needs a\n              DMA.LOAD to VM first).\n  F2 lane-local  word addresses of A / B / O sector aligned (x 8) and at ONE bank phase ph = addr[7:3]; row strides\n              rs_A / rs_B / rs_O multiples of 256 words (a row stays on its lane's bank); C and rs_C multiples of 8.\n  F3 PHASE    HC_PRE_NORM: ph = 0 (A, B, O at word addresses = 0 mod 256).  The 32 chunk sums of a block meet in the\n              fixed tree pair (lane 2c, 2c + 1) -> groups -> quadrants -> hub; chunk u is lane (u + ph) mod 32, so only\n              ph = 0 is the golden pairing.  HC_POST has no cross-lane reduction: ph is free (F2 still binds).\n  F4 gain     HC_PRE_NORM: rs_B = 0 (one gain vector broadcast to every row).\n\n    PYTHONPATH=tools python3 tools/hbm_next/fused_phase_check.py --img X.hgi1r [--img ...] [--dir D (every *.hgi1r)]\n    PYTHONPATH=tools python3 tools/hbm_next/fused_phase_check.py --selftest     (synthetic records; mutants must FAIL)\nExit 0 only when every FUSED record passes (and, with --selftest, every mutant fails).\n",
+ "isa_version": "HGI-1R 1.1 (draft for the P = 4 next die, 2026-10-19: rtab 19 b, hsh, IDX.KVUNION, ATT plan mode)",
+ "images": {
+  "ar/ar_L0.hgi1r": {
+   "image": "ar/ar_L0.hgi1r",
+   "sha256": "00be433e8981cd056ba3a6c67e8c321f604aa54633ce137a4f2f303fe6c0852a",
+   "records": 91,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 9,
+   "by_rule": {
+    "F1": 2,
+    "F2": 5,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 4000,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 8, 'B': 0, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 4000,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41028 / rs_C 0 not sector aligned"
+    },
+    {
+     "offset": 4144,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 4144,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 4144,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 10944,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41092 / rs_C 0 not sector aligned"
+    }
+   ]
+  },
+  "ar/ar_L1.hgi1r": {
+   "image": "ar/ar_L1.hgi1r",
+   "sha256": "d7893e887626c1fd1a4b3724b89f7b00bc490dcb41bb653df6f17e84cb043eb7",
+   "records": 154,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 9,
+   "by_rule": {
+    "F1": 2,
+    "F2": 5,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 7152,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 7152,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 7152,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 11152,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 8, 'B': 0, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 11152,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41028 / rs_C 0 not sector aligned"
+    },
+    {
+     "offset": 11296,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 11296,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 11296,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 18096,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41092 / rs_C 0 not sector aligned"
+    }
+   ]
+  },
+  "ar/ar_L14.hgi1r": {
+   "image": "ar/ar_L14.hgi1r",
+   "sha256": "51eb660c970c192ce2a13d06ae9544d29861937942d81ea2ee6fff2e42748b74",
+   "records": 193,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 9,
+   "by_rule": {
+    "F1": 2,
+    "F2": 5,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 7712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 7712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 7712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 12960,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 8, 'B': 0, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 12960,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41028 / rs_C 0 not sector aligned"
+    },
+    {
+     "offset": 13104,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 13104,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 13104,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 19744,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41092 / rs_C 0 not sector aligned"
+    }
+   ]
+  },
+  "ar/ar_L2.hgi1r": {
+   "image": "ar/ar_L2.hgi1r",
+   "sha256": "5e156bb70ac94f09a6a231d4cf64451c1e19df1a605e034aa764fe5d1c6e281f",
+   "records": 130,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 9,
+   "by_rule": {
+    "F1": 2,
+    "F2": 5,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 80,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 80,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 80,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 5808,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 8, 'B': 0, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5808,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41028 / rs_C 0 not sector aligned"
+    },
+    {
+     "offset": 5952,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 5952,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5952,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 12592,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41092 / rs_C 0 not sector aligned"
+    }
+   ]
+  },
+  "ar/ar_L3.hgi1r": {
+   "image": "ar/ar_L3.hgi1r",
+   "sha256": "4bc38a72b47b289800176d8d79309dd217ad4d17431cc2b288c08846fed5da91",
+   "records": 91,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 9,
+   "by_rule": {
+    "F1": 2,
+    "F2": 5,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 4064,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 8, 'B': 0, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 4064,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41028 / rs_C 0 not sector aligned"
+    },
+    {
+     "offset": 4208,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 4208,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 4208,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 11008,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 41092 / rs_C 0 not sector aligned"
+    }
+   ]
+  },
+  "mtp/mtp_L0.hgi1r": {
+   "image": "mtp/mtp_L0.hgi1r",
+   "sha256": "72f04e20274813facb2f93292c7c545ef86d4e7a79feee130861d613328423a8",
+   "records": 85,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 5536,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5536,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 350260 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 5712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 5712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 11808,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 11808,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 276532 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mtp/mtp_L1.hgi1r": {
+   "image": "mtp/mtp_L1.hgi1r",
+   "sha256": "41f85a3f52a5265527b7e558891fc23d5aea2032b2832ae2aed7aad36f9cffaf",
+   "records": 148,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 9168,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 9168,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 9168,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 14704,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 28, 'B': 28, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 14704,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 122932 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 14880,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 14880,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 24} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 14880,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 24} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 20976,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 14, 'B': 14, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 20976,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 125332 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mtp/mtp_L14.hgi1r": {
+   "image": "mtp/mtp_L14.hgi1r",
+   "sha256": "578696cf537be34db9244bf008143b454fe582b9b980845ce9a42b28fdd42a70",
+   "records": 187,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 9920,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 9920,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 9920,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 17024,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 17024,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 350260 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 17200,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 17200,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 17200,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 23072,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 23072,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 345604 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mtp/mtp_L2.hgi1r": {
+   "image": "mtp/mtp_L2.hgi1r",
+   "sha256": "cd0c92c3372ae9c67243ae9198e29d8df4757f17df3f595757e0d465f69e8cef",
+   "records": 124,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 112,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 112,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 112,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 7856,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 7856,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 350644 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 8032,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 8032,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 8032,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 13904,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 13904,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 345604 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mtp/mtp_L3.hgi1r": {
+   "image": "mtp/mtp_L3.hgi1r",
+   "sha256": "9078fc81b476450a36aa8a612e2d840b3342627cc864146b88ff4515e8409b48",
+   "records": 85,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 5664,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5664,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 350260 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 5840,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 5840,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 6} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5840,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 6} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 11936,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 6, 'B': 6, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 11936,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 276532 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mu/mu_L0.hgi1r": {
+   "image": "mu/mu_L0.hgi1r",
+   "sha256": "684381d1e168d8a8d9bab299fa181b33a10b4eb72b20e232eb40d62c1ba238f0",
+   "records": 85,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 5536,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5536,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 233508 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 5712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 5712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5712,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 11808,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 11808,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 184356 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mu/mu_L1.hgi1r": {
+   "image": "mu/mu_L1.hgi1r",
+   "sha256": "adab6c7555076c1ead542c1cfad80d6130b9afb9f4487723f2bfb088cd8c17fb",
+   "records": 148,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 9168,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 9168,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 9168,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 14704,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 16, 'B': 16, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 14704,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 135204 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 14880,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 14880,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 14880,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 20976,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 16, 'B': 16, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 20976,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 83524 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mu/mu_L14.hgi1r": {
+   "image": "mu/mu_L14.hgi1r",
+   "sha256": "3169c683b846be3e83df5bef1d2b0090ee7fe88eafaf7d84d21ef4410abb3804",
+   "records": 187,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 9920,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 9920,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 9920,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 17024,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 17024,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 233508 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 17200,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 17200,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 17200,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 23072,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 23072,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 230404 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mu/mu_L2.hgi1r": {
+   "image": "mu/mu_L2.hgi1r",
+   "sha256": "bbe28a48a4bb21c0345fc4580d1db2236ccff344c72c0e3a0f98179113247c1a",
+   "records": 124,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 112,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 112,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 112,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 7856,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 7856,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 233892 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 8032,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 8032,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 8032,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 13904,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 13904,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 230404 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mu/mu_L3.hgi1r": {
+   "image": "mu/mu_L3.hgi1r",
+   "sha256": "3b912aa9ee7d4515f68f87583c62ccf23fe9bac0e473b850f6f3cd1952ec1467",
+   "records": 85,
+   "fused": 4,
+   "PASS": false,
+   "n_violations": 10,
+   "by_rule": {
+    "F1": 2,
+    "F2": 6,
+    "F3": 2,
+    "F4": 0
+   },
+   "violations": [
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 0,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 5664,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5664,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 233508 / rs_C 24 not sector aligned"
+    },
+    {
+     "offset": 5840,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F1",
+     "msg": "B in HBM, not VM"
+    },
+    {
+     "offset": 5840,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 0, 'O': 4} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 5840,
+     "op": "FUSED.HC_PRE_NORM",
+     "rule": "F3",
+     "msg": "HC_PRE_NORM bank phase {'O': 4} != 0 (fixed csum tree = golden order only at ph = 0)"
+    },
+    {
+     "offset": 11936,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "bank phases differ {'A': 4, 'B': 4, 'O': 0} (lane-local rule: one phase)"
+    },
+    {
+     "offset": 11936,
+     "op": "FUSED.HC_POST",
+     "rule": "F2",
+     "msg": "C word 184356 / rs_C 24 not sector aligned"
+    }
+   ]
+  },
+  "mu/mu_prologue.hgi1r": {
+   "image": "mu/mu_prologue.hgi1r",
+   "sha256": "7b4c1cb1d02c16afe11fdc6bd8ea1e6cc916398c81cbe59525c9173349eada81",
+   "records": 1,
+   "fused": 0,
+   "PASS": true,
+   "n_violations": 0,
+   "by_rule": {
+    "F1": 0,
+    "F2": 0,
+    "F3": 0,
+    "F4": 0
+   },
+   "violations": []
+  }
+ },
+ "selftest": {
+  "PASS": true,
+  "cases": {
+   "pre_ph0": {
+    "expect": "PASS",
+    "got": "PASS",
+    "rules": [],
+    "ok": true
+   },
+   "post_ph0": {
+    "expect": "PASS",
+    "got": "PASS",
+    "rules": [],
+    "ok": true
+   },
+   "post_ph5": {
+    "expect": "PASS",
+    "got": "PASS",
+    "rules": [],
+    "ok": true
+   },
+   "pre_ph3": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F3"
+    ],
+    "ok": true
+   },
+   "pre_ph1": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F3"
+    ],
+    "ok": true
+   },
+   "pre_gain_hbm": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F1"
+    ],
+    "ok": true
+   },
+   "pre_o_phase": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F2",
+     "F3"
+    ],
+    "ok": true
+   },
+   "post_o_phase": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F2"
+    ],
+    "ok": true
+   },
+   "post_c_unaligned": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F2"
+    ],
+    "ok": true
+   },
+   "pre_rsA_8": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F2"
+    ],
+    "ok": true
+   },
+   "pre_rsB_nonzero": {
+    "expect": "FAIL",
+    "got": "FAIL",
+    "rules": [
+     "F4"
+    ],
+    "ok": true
+   }
+  }
+ },
+ "PASS": false,
+ "sources_sha256": {
+  "tools/hbm_next/fused_phase_check.py": "b4c8ba61cd60c72cb09f1cd87f95d9adc2d3ce7ad0b488c36df543a5b2be0c38",
+  "tools/hbm_next/isa_rows.py": "fa35f171a60111d3c9af8822f3b7b0f9da2a8e94ef836983f9a69b558ac43fa3"
+ }
+}
