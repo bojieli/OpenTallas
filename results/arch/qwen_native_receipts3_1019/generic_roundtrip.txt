@@ -1,0 +1,16 @@
+Mon Oct 19 20:33:36 UTC 2026
+    PID     ELAPSED %CPU   RSS COMMAND
+3282231    02:35:27 84.0 1139196 yosys -Q -s cold/roundtrip.ys
+/srv/opentallas-scratch/claude/sysface-boolean-copies-r2-1019
+Used module:     $paramod$9e8ccd0513c5cd56b6216a55ac11aaa836fbc8bd\sysface_safe_ff
+Used module:     $paramod$bdb723eb08a0ddd835c821b23d0e9f68c922e971\sysface_safe_ff
+Used module:     $paramod$a17d9ba7560b84248bcd5887e5ac9cc9c25fee63\sysface_safe_ff
+Used module:     $paramod$5414640e4d3d8bb210a176f505c4961f14f06a7b\sysface_safe_ff
+Used module:     $paramod$b802bfc203520fff29c71d6cc17ff0a1ea02fc8c\sysface_safe_ff
+Used module:     $paramod$0d074cddf263452bb8834f2cd6909edbd765293d\sysface_safe_ff
+Used module:     $paramod$54af81bc76284252e6b6f2285ba70f076dbaa594\sysface_safe_ff
+Used module:     $paramod$a1e609f143f249127ec18cdec06d01908433e799\sysface_safe_ff
+Used module:     $paramod$6a28d7b13138fc6b0fb14098c973d206cb49a1bc\sysface_safe_ff
+Removed 0 unused modules.
+
+5.25. Printing statistics.

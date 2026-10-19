@@ -1,0 +1,6 @@
+2026-10-19T20:33:14.553660+00:00
+    PID     ELAPSED COMMAND
+ 452733    02:01:07 timeout 6h python3 tools/ref_tile/pre_route_gate.py physical/ref_tile/qfd_native59_dv_service_safe3 --commit 005f4ae7a --remote auto --cts --mem 48 --json /home/ubuntu/scratch/qw-n59s3/gate_safe3.json
+ 452734    02:01:07 timeout 6h python3 tools/ref_tile/pre_route_gate.py physical/ref_tile/qfd_native59_dv_service_safe3b --commit 005f4ae7a --remote auto --cts --mem 48 --json /home/ubuntu/scratch/qw-n59s3/gate_safe3b.json
+ 587360    01:49:27 python3 -u tools/ref_tile/pre_route_gate.py physical/ref_tile/qfd_sys_face_bc2l --remote auto --cts --synth-cap 14400
+1087840    01:35:37 timeout 6h python3 tools/ref_tile/pre_route_gate.py physical/ref_tile/qfd_native59_dv_service_safe3c --commit 3c51edcae --remote auto --cts --mem 48 --json /home/ubuntu/scratch/qw-n59s3/gate_safe3c.json
