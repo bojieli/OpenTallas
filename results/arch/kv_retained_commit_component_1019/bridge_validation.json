@@ -1,0 +1,65 @@
+{
+  "scope": "actual bridge component simulation only",
+  "verdict": "PASS",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-126813-1792445717",
+  "ot_run_exit": 0,
+  "request": {
+    "mem_gb": 32,
+    "threads": 8,
+    "disk_gb": 5,
+    "host_pinned": false
+  },
+  "run_dir": "/srv/opentallas-scratch/claude/bridge-rc-component-1019",
+  "Verilator": "5.050",
+  "positive_edges": 205,
+  "default_original_output_miter_edges": 2000,
+  "original_output_ports_compared": 22,
+  "mutants": [
+    {
+      "RC_MUT": 1,
+      "failure": "ACCEPTED_DMA_STUCK",
+      "first_original_output_divergence_edge": 24,
+      "assertion_edge": 48,
+      "positive_trace": "bridge_evidence/bridge_trace_0.tsv",
+      "mutant_trace": "bridge_evidence/bridge_trace_1.tsv",
+      "witness": "bridge_evidence/witness_1.log"
+    },
+    {
+      "RC_MUT": 2,
+      "failure": "CSR_ERROR_ID",
+      "first_original_output_divergence_edge": 38,
+      "assertion_edge": 41,
+      "positive_trace": "bridge_evidence/bridge_trace_0.tsv",
+      "mutant_trace": "bridge_evidence/bridge_trace_2.tsv",
+      "witness": "bridge_evidence/witness_2.log"
+    },
+    {
+      "RC_MUT": 3,
+      "failure": "POST_POISON_CSR_MUTATION",
+      "first_original_output_divergence_edge": 37,
+      "assertion_edge": 41,
+      "positive_trace": "bridge_evidence/bridge_trace_0.tsv",
+      "mutant_trace": "bridge_evidence/bridge_trace_3.tsv",
+      "witness": "bridge_evidence/witness_3.log"
+    },
+    {
+      "RC_MUT": 4,
+      "failure": "OFFER_STABILITY",
+      "first_original_output_divergence_edge": 63,
+      "assertion_edge": 67,
+      "positive_trace": "bridge_evidence/bridge_trace_0.tsv",
+      "mutant_trace": "bridge_evidence/bridge_trace_4.tsv",
+      "witness": "bridge_evidence/witness_4.log"
+    }
+  ],
+  "source_sha256": {
+    "private/qkd_host_axi_packet_rc.sv": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1",
+    "bridge_original.sv": "0c05ae5b59d242b4a99c937e47683224fe4e25d802b6543b8717e3d677c60767",
+    "bridge_tb.sv": "56996b6187f94e4b68e718daebf34385ce4cb0ba727f6d4da562646663e286b7",
+    "bridge_default_tb.sv": "783b25e31b96144c76a38b470b52021987e69403d14e434ad1e5c61d04fb046a",
+    "bridge_run.sh": "cd5d99f701e98aeaa5a8317dbc70963a6358c27d309c742a31c292290aa5c175"
+  },
+  "physical_verdict": "UNQUALIFIED",
+  "production_binding": false
+}
