@@ -1,0 +1,83 @@
+{
+  "status": "COMPONENT_PASS_NOT_GUNIT_SAFE_OR_ADMITTED",
+  "source_commit_consumed": "ab6ce3934",
+  "consumed_sha256": {
+    "rtl/hdc/v41/ot_hdc_sinkhorn_p.sv": "2e3d361156b8f047e35e09e7e0a6fb9d5c40681ec062f7bef107b53f27d72cc1",
+    "rtl/hdc/v41/ot_hdc_skp_predecode.sv": "f96c63145c8925ab948244c6c2d5b7fe3bc656a0a4fb70d6a9f51118c8d209be",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "tools/s81_dv/gunit_q4/tb_q4.sv": "58235af90554408a42e9b813170398b61f536e7e9e940cb5acbc06fe9778bb0c",
+    "tools/s81_dv/gunit_q4/reset_candidate.sv": "fed49517b3dd77fe855f7b4e3d81eb1a28c15cdae5989efc8648a8811eaeb3c3",
+    "tools/s81_dv/gunit_q4/tb_reset.sv": "a1d3d3cdf801ad287daed9108099731544857353f4681d1e04f1680f19cfba95"
+  },
+  "default_legacy_quotient_final_bytes_preserved": true,
+  "base_table_and_read_write_select_bytes_preserved": true,
+  "table_region_sha256": "6bbd6bd826f856478a725e2b11803ca77864c5c68183f31887d0db4cccf14367",
+  "source_predicate_ff": 144,
+  "logical_predicate_ff": 96,
+  "useful_duplicate_ff": 48,
+  "model_predicate_physical_ff_reserve": 192,
+  "component": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1561769-1792433363",
+    "verilator": "5.050",
+    "jobs": 201,
+    "normal": 129,
+    "fault": 72,
+    "reset_cancel_recoveries": 8,
+    "baseline_age": 602,
+    "candidate_age": 642,
+    "delta_edges": 40,
+    "age_negative_expectations": [
+      602,
+      641,
+      643
+    ],
+    "predicate_mutant": "actual Q4 low predicate inverted; numerical mismatch case0"
+  },
+  "reset_component": {
+    "host": "ot-epyc6",
+    "unit": "oth-ubuntu-2489337-1792433507",
+    "pulses": 6,
+    "clock_stopped_cases": 3,
+    "coincident_case": 1,
+    "noncoincident_release_edges": 3,
+    "raw_async_pin_loads": 2,
+    "sync0_pin_loads": 13,
+    "sync1_pin_loads": 12,
+    "adopted_by_GUNIT": false,
+    "native_assertion_minpulse_recovery": "UNPROVED"
+  },
+  "useful_copy_original_findings_closed": 0,
+  "remaining_original_findings": 1874,
+  "remaining_original_findings_by_exact_model_family": {
+    "sinkhorn.zq": 28,
+    "flattened_boolean": 410,
+    "sinkhorn.g_zm": 16,
+    "sinkhorn.denominator": 189,
+    "sinkhorn.quotient": 65,
+    "sinkhorn.row_add_normalize": 9,
+    "sinkhorn.x_m": 96,
+    "multiplier": 10,
+    "other.u_tail.age": 6,
+    "sinkhorn.seed": 81,
+    "other.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r": 2,
+    "other.ln": 1,
+    "other.c_on": 1,
+    "sinkhorn.ph": 1,
+    "other.u_tail.sl": 1,
+    "other.u_tail.u_add.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r": 5,
+    "reset": 1,
+    "sinkhorn.predecode": 952
+  },
+  "whole_copy_model_sha256": "e242ceba5c478c9ef5530aedd4e701d3320f61b7f3734b46e8fea3e0928118b8",
+  "Q4_integration": {
+    "l5_to_tail_parameter_and_SLAT_source_updated": true,
+    "full_GUNIT_or_HOP_built": false,
+    "candidate_hop_n": 1015,
+    "candidate_hop_s": 1013,
+    "candidate_calendar_admitted": false
+  },
+  "storage": "BLOCKED unchanged 3072-bit runtime table; no SRAM migration/collision assumption",
+  "physical": "NOT RUN; no CTS, route, native, area or slot-fit qualification"
+}

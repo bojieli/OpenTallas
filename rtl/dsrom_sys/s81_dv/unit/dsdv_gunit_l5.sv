@@ -26,10 +26,14 @@
 `ifndef OT_S81_GUNIT_CONTROL_SAFE
 `define OT_S81_GUNIT_CONTROL_SAFE 0
 `endif
+`ifndef OT_S81_GUNIT_Q4
+`define OT_S81_GUNIT_Q4 0
+`endif
 module dsdv_gunit_l5 #(
     parameter integer MUT = 0,
     parameter integer PIN_COPY = `OT_S81_GUNIT_PIN_COPY,
-    parameter integer CONTROL_SAFE = `OT_S81_GUNIT_CONTROL_SAFE
+    parameter integer CONTROL_SAFE = `OT_S81_GUNIT_CONTROL_SAFE,
+    parameter integer Q4 = `OT_S81_GUNIT_Q4
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -104,7 +108,7 @@ module dsdv_gunit_l5 #(
     always @(posedge clk or negedge rq[1])
         if (!rq[1]) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_v; qd_v <= yd_v; end
     always @(posedge clk) begin qe_y <= ye_y; qe_f <= ye_f; qd_y <= yd_y; qd_f <= yd_f; end
-    dsdv_gunit_tail #(.PIN_COPY(PIN_COPY), .CONTROL_SAFE(CONTROL_SAFE), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .launch_pre(launch_pre), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail #(.PIN_COPY(PIN_COPY), .CONTROL_SAFE(CONTROL_SAFE), .Q4(Q4), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .launch_pre(launch_pre), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_v), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_v), .xd_y(qd_y), .xd_f(qd_f));

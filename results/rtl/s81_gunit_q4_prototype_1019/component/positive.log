@@ -1,0 +1,5 @@
+Q4 PASS cases=201 normal=129 fault=72 resets=8 old_age=602 candidate_age=642 delta=40 source_predicate_ff=144
+- tools/s81_dv/gunit_q4/tb_q4.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 136us; walltime 8.593 s; speed 15.839 us/s
+- Verilator: cpu 8.593 s on 1 threads; allocated 11 MB

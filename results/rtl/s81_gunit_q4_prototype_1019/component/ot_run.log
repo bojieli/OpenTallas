@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-q4-prototype-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-q4-prototype-1019
+ot-run: ot-epyc6       admits   801 GB (avail 674, growth 113, headroom 0, waiters 0/0 GB) load 30/128 running 11 disk 5993 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-q4-prototype-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-q4-prototype-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-gunit-q4-prototype-1019
+ot-run: ot-agidock128  admits   112 GB (avail 91, growth 13, headroom 0, waiters 0/0 GB) load 7/64 running 6 disk 264 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1561769-1792433363 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+Q4 PASS cases=201 normal=129 fault=72 resets=8 old_age=602 candidate_age=642 delta=40 source_predicate_ff=144
+[608000] %Fatal: tb_q4.sv:65: Assertion failed in tb_q4.check_job: Q4 FAIL missing expected age=602
+[647000] %Fatal: tb_q4.sv:65: Assertion failed in tb_q4.check_job: Q4 FAIL missing expected age=641
+[648000] %Fatal: tb_q4.sv:61: Assertion failed in tb_q4.check_job: Q4 FAIL candidate age got=642 expected=643
+[648000] %Fatal: tb_q4.sv:62: Assertion failed in tb_q4.check_job: Q4 FAIL numerical case=0 class=0 baseline_fault=0 candidate_fault=1
+Q4_COMPONENT_TERMINAL PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1561769-1792433363): exit 0

@@ -41,7 +41,8 @@ module dsdv_gunit_tail #(
     parameter integer MUT_PRE = 0,
     parameter integer MUT_SK = 0,
     parameter integer PIN_COPY = 0,
-    parameter integer CONTROL_SAFE = 0
+    parameter integer CONTROL_SAFE = 0,
+    parameter integer Q4 = 0
 ) (
     input  wire          clk, rst_n,
     input  wire          launch,
@@ -61,7 +62,7 @@ module dsdv_gunit_tail #(
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;
     localparam integer P5 = P4 + 24 + LEe, P6 = P5 + 8 + LAe, P7 = P6 + 8 + LDe;
     localparam integer EREADY = P7 + 8 + ((LMe > LAe) ? LMe : LAe);
-    localparam integer SLAT = 17 + (2 * ITERS - 1) * 15;   // ot_hdc_sinkhorn_p LAT (D0 17, DS 15): 602 for ITERS 20
+    localparam integer SLAT = 17 + (Q4 != 0) + (2 * ITERS - 1) * (15 + (Q4 != 0));   // ot_hdc_sinkhorn_p LAT (D0 17, DS 15): 602 for ITERS 20
     localparam integer CAP = SLAT + 1;
     localparam integer L = EREADY + CAP + 3;
     // ---------------------------------------------------------------- calendar
@@ -138,7 +139,7 @@ module dsdv_gunit_tail #(
     genvar gj;
     generate for (gj = 0; gj < 16; gj = gj + 1) begin : g_se assign se[32 * gj +: 32] = t[gj + 8]; end endgenerate
     reg sl;
-    ot_hdc_sinkhorn_p #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .CONTROL_SAFE(CONTROL_SAFE)) u_sinkh (.clk(clk), .rst_n(rst_n), .in_valid(sl), .in_ready(sr),
+    ot_hdc_sinkhorn_p #(.ITERS(ITERS), .EPS(HC_EPS), .MUT(MUT_SK), .CONTROL_SAFE(CONTROL_SAFE), .Q4(Q4)) u_sinkh (.clk(clk), .rst_n(rst_n), .in_valid(sl), .in_ready(sr),
         .in_e(se), .out_valid(sv), .y(sy), .fault(sf), .busy(sbusy));
     // ---------------------------------------------------------------- control, fixed latency
     reg armed, captured, capture_q, flt; reg [9:0] sage;
