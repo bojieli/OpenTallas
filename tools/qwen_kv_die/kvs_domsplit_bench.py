@@ -96,7 +96,8 @@ def mutate(t, txt, mut):
                         return '\n'.join(lines), f'swapped i_grp_h{sa} <-> {sb}'
         if mut == 5 and pk:
             i, m = pk[-1]
-            lines[i] = lines[i].replace('= i_grp_h[', '= i_grp[', 1)
+            w_ = int(m.group(4)) - int(m.group(5)) + 1
+            lines[i] = lines[i].replace(f'= i_grp_h[{m.group(4)}:{m.group(5)}]', f'= i_grp[{w_ - 1}:0]', 1)
             return '\n'.join(lines), f'hck field read from the ck word ({m.group(4)}:{m.group(5)})'
     raise SystemExit(f'kvs_domsplit_bench: mutant {mut} found no site in {t}')
 
