@@ -1119,7 +1119,8 @@ class Parent:
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
             **({} if not (self.chunk_bits or self.direct_timing) else dict(
                 landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
-                                            no_data_multicycle=not self.mcp, reset_lead=self.reset_lead,
+                                            **({"no_data_multicycle": True} if not self.mcp else {}),
+                                            **({"reset_lead": True} if self.reset_lead else {}),
                                             compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
                                             overwrite_gap_min_T=1.25))),
             **({} if not self.regional_bindings else dict(
