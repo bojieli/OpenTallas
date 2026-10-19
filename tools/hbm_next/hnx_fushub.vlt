@@ -1,0 +1,5 @@
+`verilator_config
+// LH-P3UNITS/FUSHUB: build the 32 identical lanes and the 28 + 3 identical tree nodes ONCE (hierarchical blocks);
+// flattened, every lane costs ~1.5 GB of Verilator memory (hnx_fused.vlt).
+hier_block -module "ot_hnx_fused_lane"
+hier_block -module "ot_hnx_fused_tnode"
