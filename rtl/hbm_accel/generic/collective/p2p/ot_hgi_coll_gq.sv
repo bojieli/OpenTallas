@@ -450,47 +450,77 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
     reg [1:0] pav_q, pbv_q; reg [3:0] pas_q, pbs_q; reg [5:0] pat_q, pbt_q; reg [511:0] pad_q, pbd_q;
     always @(posedge clk or negedge rn) if (!rn) begin pav_q <= 2'd0; pbv_q <= 2'd0; end else begin pav_q <= pa_v; pbv_q <= pb_v; end
     always @(posedge clk) begin pas_q <= pa_src; pbs_q <= pb_src; pat_q <= pa_tag; pbt_q <= pb_tag; pad_q <= pa_d; pbd_q <= pb_d; end
-    reg [2247:0] kq_n; reg [7:0] kq_hit; reg kq_bad, pub_bad;
-    wire [9:0] ks = le_k[24];
-    always @* begin : nb_11
-        reg [3:0] lane_exp; reg [15:0] s; reg [9:0] k; reg [10:0] i; reg [1:0] sq;
-        kq_n = '0; kq_hit = 8'd0; kq_bad = 1'b0; pub_bad = 1'b0; lane_exp = 4'd0;
-        for (integer h = 1; h <= 3; h = h + 1) begin
-            k = le_k[S_KQ + 2*h - 2];
-            if (le_v[S_KQ + 2*h - 2])
-                for (integer r = 0; r < 2; r = r + 1) if (fv(k, r)) begin : nb_12
-                    reg v; reg [1:0] gs; reg [2:0] gt; reg [255:0] gd;
-                    i = flit_i(k, r); sq = srcq(q_id, k[0], h);
-                    lane_exp[r*2 + k[0]] = 1'b1;
-                    v = r ? pbv_q[k[0]] : pav_q[k[0]];
-                    gs = r ? (k[0] ? pbs_q[3:2] : pbs_q[1:0]) : (k[0] ? pas_q[3:2] : pas_q[1:0]);
-                    gt = r ? (k[0] ? pbt_q[5:3] : pbt_q[2:0]) : (k[0] ? pat_q[5:3] : pat_q[2:0]);
-                    gd = r ? (k[0] ? pbd_q[511:256] : pbd_q[255:0]) : (k[0] ? pad_q[511:256] : pad_q[255:0]);
-                    if (!v || gs != sq || gt != k[2:0]) pub_bad = 1'b1;
-                    s = sec_add(g_dst, 13'(g_str * sq) + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0));
-                    if (kq_hit[s[2:0]]) kq_bad = 1'b1;
-                    kq_hit[s[2:0]] = 1'b1;
-                    for (integer b = 0; b < 8; b = b + 1) if (s[2:0] == 3'(b)) kq_n[b*281 +: 281] = {1'b1, s, gd, 8'hff};
+    // Landing address pre-stage (HBM-COLLQ3 10-18: the CTS gate measured -323.9 ps on q_id -> sector add -> bank
+    // decode -> 8-way bank mux -> vm_kq; 17 levels). Everything that is a function of the descriptor, q_id and the
+    // entry's k is computed one edge EARLY from le[j-1] (the shift register holds the same entry there one edge before)
+    // and registered per lane: enable, bank one-hot, sector, source quadrant, d. The landing edge keeps only the
+    // capture compare, the bank-collision OR and an AND-OR bank select. vm_kq timing is unchanged (same edge).
+    // Sector bases g_dst + g_str * q are registered from the held descriptor (gathers never overlap; the first use is
+    // >= 23 edges after the descriptor fires).
+    reg [15:0] base_q [0:3];
+    always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) base_q[q] <= sec_add(g_dst, 13'(g_str * q));
+    // lanes 0..5 = publish (h - 1) * 2 + r, lanes 6..7 = self-land r
+    reg [7:0] ln_en; reg [7:0] ln_bk [0:7]; reg [15:0] ln_s [0:7]; reg [1:0] ln_sq [0:5]; reg [5:0] ln_d;
+    always @(posedge clk or negedge rn)
+        if (!rn) ln_en <= 8'd0;
+        else begin : nb_pre
+            reg [9:0] k; reg [10:0] i; reg [1:0] sq; reg [15:0] s;
+            for (integer h = 1; h <= 3; h = h + 1)
+                for (integer r = 0; r < 2; r = r + 1) begin
+                    k = le_k[S_KQ + 2*h - 3]; i = flit_i(k, r); sq = srcq(q_id, k[0], h);
+                    s = {base_q[sq][15:13], base_q[sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)};
+                    ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv(k, r);
+                    ln_bk[(h-1)*2 + r] <= 8'd1 << s[2:0]; ln_s[(h-1)*2 + r] <= s;
+                    ln_sq[(h-1)*2 + r] <= sq; ln_d[(h-1)*2 + r] <= k[0];
                 end
-        end
-        if ({pbv_q, pav_q} & ~lane_exp) pub_bad = 1'b1;        // unexpected publish
-        // self-land of the local flits: captured payload (stage 25), entry le[24]; own segment = qid
-        if (g_self && MUT != 4)
-            for (integer r = 0; r < 2; r = r + 1) begin : nb_sl
-                i = flit_i(ks, r);
-                if (le_v[24] && fv(ks, r) && pl_v[r]) begin
-                    s = sec_add(g_dst, 13'(g_str * q_id) + 13'(i));
-                    if (kq_hit[s[2:0]]) kq_bad = 1'b1;
-                    kq_hit[s[2:0]] = 1'b1;
-                    for (integer b = 0; b < 8; b = b + 1) if (s[2:0] == 3'(b)) kq_n[b*281 +: 281] = {1'b1, s, pl_d[r*256 +: 256], 8'hff};
-                end
+            for (integer r = 0; r < 2; r = r + 1) begin
+                k = le_k[23]; i = flit_i(k, r);
+                s = {base_q[q_id][15:13], base_q[q_id][12:0] + 13'(i)};
+                ln_en[6 + r] <= g_self && MUT != 4 && le_v[23] && fv(k, r);
+                ln_bk[6 + r] <= 8'd1 << s[2:0]; ln_s[6 + r] <= s;
             end
+        end
+    reg [2247:0] kq_n; reg kq_bad, pub_bad;
+    always @* begin : nb_11
+        reg [3:0] lane_exp; reg [7:0] act; reg [7:0] seen; reg [255:0] gd [0:7];
+        reg v; reg [1:0] gs; reg [2:0] gt; reg [9:0] kk; integer l;
+        kq_n = '0; kq_bad = 1'b0; pub_bad = 1'b0; lane_exp = 4'd0; seen = 8'd0; act = 8'd0; v = 1'b0; gs = 2'd0; gt = 3'd0;
+        for (integer m = 0; m < 8; m = m + 1) gd[m] = '0;
+        for (integer h = 1; h <= 3; h = h + 1)
+            for (integer r = 0; r < 2; r = r + 1) begin
+                l = (h-1)*2 + r;
+                kk = le_k[S_KQ + 2*h - 2];
+                act[l] = ln_en[l];
+                if (ln_en[l]) begin
+                    lane_exp[r*2 + ln_d[l]] = 1'b1;
+                    v = r ? pbv_q[ln_d[l]] : pav_q[ln_d[l]];
+                    gs = r ? (ln_d[l] ? pbs_q[3:2] : pbs_q[1:0]) : (ln_d[l] ? pas_q[3:2] : pas_q[1:0]);
+                    gt = r ? (ln_d[l] ? pbt_q[5:3] : pbt_q[2:0]) : (ln_d[l] ? pat_q[5:3] : pat_q[2:0]);
+                    if (!v || gs != ln_sq[l] || gt != kk[2:0]) pub_bad = 1'b1;
+                end
+                gd[l] = r ? (ln_d[l] ? pbd_q[511:256] : pbd_q[255:0]) : (ln_d[l] ? pad_q[511:256] : pad_q[255:0]);
+            end
+        if ({pbv_q, pav_q} & ~lane_exp) pub_bad = 1'b1;        // unexpected publish
+        for (integer r = 0; r < 2; r = r + 1) begin act[6 + r] = ln_en[6 + r] && pl_v[r]; gd[6 + r] = pl_d[r*256 +: 256]; end
+        // two writes to one bank in one edge: fault; the last lane (original order) wins the bank
+        for (integer m = 0; m < 8; m = m + 1) if (act[m]) begin
+            if (seen & ln_bk[m]) kq_bad = 1'b1;
+            seen = seen | ln_bk[m];
+        end
+        for (integer b = 0; b < 8; b = b + 1)
+            for (integer m = 0; m < 8; m = m + 1)
+                if (act[m] && ln_bk[m][b]) kq_n[b*281 +: 281] = {1'b1, ln_s[m], gd[m], 8'hff};
     end
     // the publish lanes are evaluated with the entry one stage past the capture (le[S_KQ+2h-2] = issue stage 30+2h, the
     // entry whose publish was captured on the previous edge); both register into kq.
+    // sticky fault flop beside the landing logic, then a FACE register at the E fault pin (NATIVE-SWEEP 10-18: the
+    // routed view hcoll_gq_land_1018-r1-b7918441e launched fault at O-R 228.0 > 220 ps from the interior flop). +1 edge
+    // on the fault report only (sticky, off the token path; no data / VM edge moves). MUT 6 (bench): the face register
+    // never forwards.
+    reg flt_r;
     always @(posedge clk or negedge rn)
-        if (!rn) begin vm_kq <= '0; fault <= 1'b0; end
-        else begin vm_kq <= kq_n; if (kq_bad || pub_bad) fault <= 1'b1; end
+        if (!rn) begin vm_kq <= '0; flt_r <= 1'b0; fault <= 1'b0; end
+        else begin vm_kq <= kq_n; if (kq_bad || pub_bad) flt_r <= 1'b1; fault <= flt_r && MUT != 6; end
 endmodule
 // The gather master as placed per quadrant: issue leaf (F20 target, calendar, VM reads, quantisers, payload, ring-A merge
 // register, ring-B commands) + landing leaf (publish capture, VM writes). Wires only.
