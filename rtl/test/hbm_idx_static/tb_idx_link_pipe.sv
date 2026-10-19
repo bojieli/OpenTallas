@@ -9,6 +9,7 @@ module tb_idx_link_pipe;
  parameter integer MUT=0;
  parameter integer SAFE_RING=0;
  parameter integer SAFE_CARRY=0;
+ parameter integer EMIT_GAP=7;
  localparam integer LAT=5;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,clear=0,ingest_v=0,flush=0,emit_v=0;
@@ -69,7 +70,7 @@ module tb_idx_link_pipe;
    ingest_v=0;selected_line=0;flush=1;@(negedge clk);flush=0;
    if(frame!=5)repeat(3)@(negedge clk);
    if(frame!=6)for(integer g=0;g<16;g=g+1)begin
-    emit_v=1;emit_group=4'(g);@(negedge clk);emit_v=0;repeat(7)@(negedge clk);
+    emit_v=1;emit_group=4'(g);@(negedge clk);emit_v=0;repeat(EMIT_GAP)@(negedge clk);
    end
    repeat(12)@(negedge clk);
    if(frame<6&&(issued!=512||records!=512||flits!=64||af||bf||bc!=512))errors++;
