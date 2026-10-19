@@ -75,6 +75,19 @@ def git_show(ref, path):
     return subprocess.run(['git', '-C', os.environ.get('OT_GIT_DIR', str(ROOT)), 'show', f'{ref}:{path}'], capture_output=True, check=True).stdout
 
 
+def bundle_age_unequal(land_rows):
+    """S81-LBGAP/G8: multi-lane bundles (<stem>_l<i> into one receiver) whose lanes land at different ages
+    ceil(N/2) + K + 1 -- the receiver consumes the bundle beat in one cycle, so these tear it"""
+    import re as _re
+    g = collections.defaultdict(list)
+    for r in land_rows:
+        m = _re.fullmatch(r'(.+)_l(\d+)', r['link'])
+        if m:
+            g[(m.group(1), r['inst'])].append(r)
+    return [dict(bundle=k[0], dst=k[1], lanes={r['link']: dict(N=r['stages'], E=r['E'], K=r['K'], age=r['age']) for r in v})
+            for k, v in sorted(g.items()) if len({r['age'] for r in v}) > 1]
+
+
 def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, extra_rtl=(), land_plan=None):
     """plan: loaded plan; sdir[(link_nm, k)] = station direction; chains_pts[link_nm] = station points (die coords).
     land_plan: S81-LAND pilot land_plan.json (per link E) -> landing K straps (else the table's land_plan, else K 1)."""
@@ -481,7 +494,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         kw_ = 6 if long_ else 3
         if e_ is not None and e_ > (2 ** kw_ - 1):
             raise SystemExit(f'dv_bind: landing {nm} E {e_} > K range {2 ** kw_ - 1} of its tile (land plan {lp})')
-        k_ = max(e_ or 1, 1)
+        # S81-LBGAP/G8 (10-18): the land plan's K, not E -- lanes <stem>_l<i> of one bundle (one receiver beat, e.g. the
+        # rstop 4 x 276 line) read at K = E + (bundle age - lane age) so every lane lands at ONE age ceil(N/2) + K + 1
+        # (dv_land_pilot.py agebundle re-checks the window at K); K = E outside the equalised bundles
+        k_ = max(int(pr['K']) if pr.get('K') is not None else (e_ or 1), 1)
+        if e_ is not None and k_ < e_:
+            raise SystemExit(f'dv_bind: landing {nm} K {k_} < E {e_} (land plan {lp})')
+        if k_ > (2 ** kw_ - 1):
+            raise SystemExit(f'dv_bind: landing {nm} K {k_} > K range {2 ** kw_ - 1} of its tile (land plan {lp})')
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
@@ -491,7 +511,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             if [lm, sp] not in straps:
                 straps.append([lm, sp])
         land_rows.append(dict(link=nm, inst=n, master=lm, bits=b, stages=st, E=e_, K=k_, D=8 if long_ else 4,
-                              K_source='land_plan E (gate calendar R0 = G + N mod 2)' if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
+                              age=math.ceil(st / 2) + k_ + 1, bundle=pr.get('bundle'),
+                              K_source=(pr.get('K_source') or 'land_plan E (gate calendar R0 = G + N mod 2)') if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
                               calendar_G_minus_R0=-h_, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
                               land_rs=land_rs[nm], release_src=ds_, release_dst=dr_,
                               calendar_stations=dict(side='source' if dr_ - ds_ > h_ else ('receiver' if dr_ - ds_ < h_ else None),
@@ -600,7 +621,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
                              by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
-                             calendar_needs=[r for r in land_rows if r['calendar_stations']['n']], rows=land_rows))
+                             calendar_needs=[r for r in land_rows if r['calendar_stations']['n']],
+                             bundle_age_unequal=bundle_age_unequal(land_rows), rows=land_rows))
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]
