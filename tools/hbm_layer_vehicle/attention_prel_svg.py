@@ -42,6 +42,11 @@ def compile_attention(rec, sm=0, mut=''):
                     rd = ((tag + 1) % len(lines), tag)
             svg.append(S.svg_word(cmd & ((1 << 83) - 1), rd, retire=c == exp['end']))
             xc.append((cmd >> 83) | (cal.kvd.get(c, 0) << 109))
+        if mut == 'read_early':
+            mask = ((1 << 34) - 1) << 83
+            old = svg[:]
+            svg = [(w & ~mask) | ((old[i + 1] & mask) if i + 1 < len(old) else 0)
+                   for i, w in enumerate(old)]
         pb, pl = store.add(svg, xc)
         blocks.append(dict(op=op, cal=cal, exp=exp, first=first, lines=lines, prog=(pb, pl), words=len(svg)))
     if len(blocks) > S.TBL:
@@ -145,5 +150,5 @@ if __name__ == '__main__':
     p.add_argument('--kv', required=True); p.add_argument('--layer', type=int, default=2)
     p.add_argument('--sm', type=int, default=0); p.add_argument('--work', required=True)
     p.add_argument('--name', default='attention'); p.add_argument('--exe'); p.add_argument('--out', default='attention.json')
-    p.add_argument('--mut', default='', choices=['','wrong_row'])
+    p.add_argument('--mut', default='', choices=['','wrong_row','read_early'])
     run(p.parse_args())
