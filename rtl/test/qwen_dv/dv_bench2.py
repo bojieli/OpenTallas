@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -28,7 +29,7 @@ ROOT = B.ROOT
 SRCS2 = [s for s in B.SRCS if not s.endswith(("qfd_dv_slice.sv", "qfd_dv_redstn.sv", "qfd_dv_scalar.sv",
                                                 "tb_qfd_dv.sv"))] + \
     ["rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv",
-     "rtl/test/qwen_dv/tb_qfd_dv2.sv"]
+     "rtl/test/qwen_dv/tb_qfd_dv2.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv"]
 P_RET_AR, P_RET_DD, P_SWI2 = 1001, 1040, 41      # pre-translation codes (TB ports 1 / 40 / 41)
 SK = 14
 
@@ -429,6 +430,116 @@ def bench_j(work, mut, seed=11):
     return ok, 3, errs
 
 
+def cmd_stn_u(mode, wsrc, nwords, sbase, dst, dbase, amax=0, user=0):
+    """STN with the MU-QWEN R4 user field cmd[52:51]."""
+    return B.cmd_stn(mode, wsrc, nwords, sbase, dst, dbase, amax=amax) | ((user & 3) << 51)
+
+
+def cmd_amax_u(clear=0, emit=0, user=0):
+    """AMAX with the MU-QWEN R4 user field cmd[9:8]."""
+    return cmd_amax2(clear=clear, emit=emit) | ((user & 3) << 8)
+
+
+def bench_m(work, mut, seed=21, rounds=2, nu=4, nch=4):
+    """MU-ADOPT-SLICE (MU-QWEN R4 on the slice / face RTL): 4 users' LM heads as row chunks interleaved op by op on a
+    2-slice chain, as the static calendar runs them.  Per round every user u has 2 x nch x 128 rows (slice sl rows
+    sl*512 + c*128 ..); its op sequence is a random interleave of all users' (u, c) chunk ops (chunk order permuted);
+    AMAX clear of u just before u's first chunk, AMAX emit of u at a random later point (often after another user's
+    STN, so the emit must select the AMAX command's user); ties of the top value inside a slice across chunks, at a
+    chunk boundary and across slices (the lowest index must win).  STN ops are spaced DV2_GAP edges after the last
+    data word (default 18: the next STN issues while the previous op's last results are still in the compare tree, so
+    the user must travel down the tree).  Check: per emit, the root token, the ring broadcast and slice 1's token
+    equal the golden single-shot argmax of that user's rows (np.argmax: lowest index of the maximum); no fault.
+    At MU_NU 1 (no per-user state) the heads collide and the bench must FAIL."""
+    rng = np.random.default_rng(seed)
+    gap = int(os.environ.get("DV2_GAP", "18"))
+    ev = B.Ev()
+    R = 2 * 512
+    exp = []
+    ev.at(B.P_CMD + 0, B.cmd_root(1, 0, 0, amnb=2), t=ev.t)
+    ev.at(B.P_CMD + 1, B.cmd_root(0, 0, 0), t=ev.t + 1)
+    ev.step(8)
+    ntie = 0
+    for rnd in range(rounds):
+        vals = {}
+        for u in range(nu):
+            v = (rng.standard_normal(R) * 4.0).astype(F)
+            v[v == 0] = F(1.0)
+            top = F(np.max(np.abs(v)) * 2 + 1)
+            kind = (rnd * nu + u) % 4
+            if kind == 0:      # chunk boundary inside slice 0 + a later chunk
+                rows = [127, 128, 300 + int(rng.integers(0, 100))]
+            elif kind == 1:    # across slices (slice 1 lower chunk vs slice 0 higher chunk)
+                rows = [512 + int(rng.integers(0, 128)), 3 * 128 + int(rng.integers(0, 128))]
+            elif kind == 2:    # chunk boundary inside slice 1 + slice 0's last chunk
+                rows = [512 + 255, 512 + 256, 383]
+            else:              # no tie, random position
+                rows = [int(rng.integers(0, R))]
+            for r in rows:
+                v[r] = top
+            ntie += len(rows) > 1
+            vals[u] = v
+        ops = [(u, c) for u in range(nu) for c in range(nch)]
+        rng.shuffle(ops)
+        first = {u: min(i for i, o in enumerate(ops) if o[0] == u) for u in range(nu)}
+        last = {u: max(i for i, o in enumerate(ops) if o[0] == u) for u in range(nu)}
+        emit_at = {u: int(rng.integers(last[u], len(ops))) for u in range(nu)}   # emit after op index emit_at[u]
+        done_t = {}
+        last_emit = -100
+        pend = []
+        for i, (u, c) in enumerate(ops):
+            if i == first[u]:
+                for sl in (0, 1):
+                    ev.at(B.P_CMD + sl, cmd_amax_u(clear=1, user=u), t=ev.t + sl)
+                ev.step(3)
+            for sl in (0, 1):
+                ev.at(B.P_CMD + sl, cmd_stn_u(0, 1, 8, 0, 0, sl * 512 + c * 128, amax=1, user=u), t=ev.t + sl)
+            ev.step(4 + SK)
+            for k in range(8):
+                for sl in (0, 1):
+                    base = sl * 512 + c * 128 + 16 * k
+                    pair2(ev, sl, vals[u][base:base + 16], np.zeros(16, dtype=F), None, None, ev.t)
+                ev.step()
+            if i == last[u]:
+                done_t[u] = ev.t
+            ev.step(gap)
+            for w in sorted(x for x in range(nu) if emit_at[x] == i):
+                pend.append(w)
+            # an emit waits until its user's last results merged (40 edges after the data) and the root finished the
+            # previous user's token (30 edges); meanwhile the next ops run
+            while pend and ev.t >= done_t[pend[0]] + 40 and ev.t >= last_emit + 30:
+                w = pend.pop(0)
+                ev.at(B.P_CMD + 1, cmd_amax_u(emit=1, user=w)); ev.at(B.P_CMD + 0, cmd_amax_u(emit=1, user=w), t=ev.t + 3)
+                exp.append((rnd, w, int(np.argmax(G.mul(G.add(vals[w], F(0)), F(1.0))))))
+                last_emit = ev.t
+                ev.step(6)
+        while pend:
+            w = pend.pop(0)
+            ev.step(max(0, done_t[w] + 40 - ev.t, last_emit + 30 - ev.t))
+            ev.at(B.P_CMD + 1, cmd_amax_u(emit=1, user=w)); ev.at(B.P_CMD + 0, cmd_amax_u(emit=1, user=w), t=ev.t + 3)
+            exp.append((rnd, w, int(np.argmax(G.mul(G.add(vals[w], F(0)), F(1.0))))))
+            last_emit = ev.t
+            ev.step(6)
+        ev.step(40)
+    log = run_sim2(f"m_g{gap}_s{seed}", ev, work, mut, ev.t + 20)
+    errs = status_ok2(log)
+    tok = [w & 0xFFFFFF for _, w in log.get("S0TOK", [])]
+    ring = [(w >> 64) & 0xFFFFFF for _, w in log.get("S0SC", []) if (w >> 92) & 7 == 4]
+    tok1 = [w & 0xFFFFFF for _, w in log.get("S1TOK", [])]
+    ok = 0
+    for i, (rnd, w, g) in enumerate(exp):
+        got = [lst[i] if i < len(lst) else None for lst in (tok, ring, tok1)]
+        if all(x == g for x in got):
+            ok += 1
+        else:
+            errs.append(f"round {rnd} user {w}: root token / broadcast / slice-1 token {got}, golden argmax {g}")
+    if len(tok) != len(exp):
+        errs.append(f"{len(tok)} root tokens for {len(exp)} emits")
+    print(f"    bench2 (m): seed {seed} gap {gap} vflags {' '.join(VFLAGS)}: {len(exp)} emits, "
+          f"{ntie} tie heads, end cycle {ev.t}")
+    return ok, len(exp), errs
+
+
 def install():
     B.Ev = Ev2
     B.load_vm = load_vm2
@@ -437,7 +548,7 @@ def install():
 
 
 BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
-           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j}
+           "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m}
 
 
 def main():

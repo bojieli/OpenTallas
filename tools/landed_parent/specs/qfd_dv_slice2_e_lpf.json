@@ -6,6 +6,7 @@
  ],
  "child_sources": [
   "rtl/qwen_dv/qfd_dv_slice2_lpf_parts.sv",
+  "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
   "rtl/qwen_dv/qfd_dv_redstn2.sv",
   "rtl/qwen_dv/qfd_dv_scalar2.sv",
   "rtl/qwen_dv/qfd_dv_vm.sv",
@@ -36,7 +37,8 @@
  "defines": [],
  "params": {
   "SU_TLS": 1,
-  "SU_LT": 1
+  "SU_LT": 1,
+  "MU_NU": 4
  },
  "out_dir": "rtl/qwen_dv/lp",
  "record_dir": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf",
