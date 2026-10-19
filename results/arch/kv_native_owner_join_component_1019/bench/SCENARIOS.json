@@ -1,0 +1,111 @@
+{
+  "kind": "source_scenario_inventory_not_runtime_evidence",
+  "cases": [
+    {
+      "case": 0,
+      "scenario": "healthy four-step wide identity/epoch0/gen-wrap",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 1,
+      "scenario": "independent AW acceptance stall",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 2,
+      "scenario": "independent W acceptance stall",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 3,
+      "scenario": "old CQ B plus real next unbound step, no second native allocation",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 4,
+      "scenario": "health failure with real raw cleanup and accepted drain",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 5,
+      "scenario": "actual package-unready cause, typed NO_NATIVE, no allocation/POST",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 6,
+      "scenario": "separate watchdog512 allocated-undelivered cancellation; exact window required",
+      "watchdog": 512,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 7,
+      "scenario": "duplicate-client busy/bad-op errors and separate active-owner failure",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 8,
+      "scenario": "separate watchdog512 delivered cancellation with delayed public drain",
+      "watchdog": 512,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 10,
+      "scenario": "real certificate event epoch corruption into private join",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 11,
+      "scenario": "real certificate event native generation corruption",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 12,
+      "scenario": "real certificate event terminal-stage corruption",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 13,
+      "scenario": "real certificate event input/next token substitution",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "case": 14,
+      "scenario": "genuine finite rank7 opcode4 ready/valid transport stall",
+      "watchdog": 4194304,
+      "status": "SOURCE_READY_NOT_QUALIFIED"
+    }
+  ],
+  "causal_controls": [
+    "epoch",
+    "generation",
+    "stage",
+    "input_next",
+    "client_substitution",
+    "latest_pending",
+    "rank_masks",
+    "early_post",
+    "raw_cleanup",
+    "pin_aw_before",
+    "pin_w_before",
+    "bridge_duplicate",
+    "false_retire_marker",
+    "false_cq_marker"
+  ],
+  "control_verdict": "NOT_RUN",
+  "authority": "Only actual committed baseline/mutant logs may change these verdicts. Parent owns immutable source/result cohorts. Earlier failures are preserved.",
+  "production_H": null,
+  "production_calendar": null,
+  "physical_SRAM": "HOLD",
+  "clock_scope": "common-clock functional fixture only"
+}
