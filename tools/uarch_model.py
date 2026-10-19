@@ -17413,3 +17413,9 @@ def hbm_svg_landing_macro_model():
     """HBM-SMB-KITS native landing/FIFO sizing, before new RTL or gate."""
     from hbm_layer_vehicle.svg_landing_model import model
     return model()
+
+
+def hbm_svg_landing_boundary_model():
+    """Opt-in native pin landing: full-rate reserved ring and priced edges."""
+    from hbm_layer_vehicle.svg_landing_boundary_model import model
+    return model()

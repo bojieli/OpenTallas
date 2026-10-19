@@ -1,0 +1,30 @@
+{
+  "source_revision": "72be5e25a",
+  "tool": "Verilator 5.050",
+  "host": "ot-epyc7",
+  "production_LBANKS": 4,
+  "pass_result": {
+    "payload_readbacks": 408,
+    "completions": 12,
+    "accepted_packets": 413,
+    "reset_episodes": 3,
+    "pin_sustained_windows": 12,
+    "core_sustained_windows": 12,
+    "sectors_per_window": 16,
+    "HBM_edges_per_window": 16,
+    "contiguous_peak": 23
+  },
+  "mutants": [
+    {
+      "id": 1,
+      "fail_regex": "ADMISSION_FAIL|RESERVATION_INVARIANT_FAIL",
+      "witness": "mutant1_fail.log"
+    },
+    {
+      "id": 2,
+      "fail_regex": "EVENT_FAIL",
+      "witness": "mutant2_fail.log"
+    }
+  ],
+  "physical_qualification": false
+}

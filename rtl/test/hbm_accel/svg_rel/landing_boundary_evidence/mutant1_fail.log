@@ -1,0 +1,28 @@
+SOURCE_REVISION=72be5e25a
+Verilator 5.050 2026-07-01 rev v5.050
+ADMISSION_FAIL used=3
+RESERVATION_INVARIANT_FAIL used=0 outstanding=4
+ADMISSION_FAIL used=0
+RESERVATION_INVARIANT_FAIL used=0 outstanding=4
+ADMISSION_FAIL used=0
+RESERVATION_INVARIANT_FAIL used=0 outstanding=4
+ADMISSION_FAIL used=0
+PIN_SUSTAIN window=1 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=2 sectors=16 HBM_edges=22
+CORE_SUSTAIN window=1 sectors=16 HBM_edges=65
+PIN_SUSTAIN window=3 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=4 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=5 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=6 sectors=16 HBM_edges=20
+CORE_SUSTAIN window=2 sectors=16 HBM_edges=41
+PIN_SUSTAIN window=7 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=8 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=9 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=10 sectors=16 HBM_edges=20
+CORE_SUSTAIN window=3 sectors=16 HBM_edges=61
+PIN_SUSTAIN window=11 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=12 sectors=16 HBM_edges=24
+SVG_BOUNDARY FAIL mut=1 errors=4050 tx=413 reads=408 completes=0 stalls=120 max_burst=12
+[1224312] %Fatal: tb_svg_landing_boundary.sv:103: Assertion failed in tb_svg_landing_boundary: boundary mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_boundary.sv:103: Verilog $stop
+Aborting...

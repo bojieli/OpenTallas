@@ -1,0 +1,12 @@
+SOURCE_REVISION=72be5e25a
+Verilator 5.050 2026-07-01 rev v5.050
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+[10000000] %Fatal: tb_svg_landing_boundary.sv:105: Assertion failed in tb_svg_landing_boundary: BOUNDARY_TIMEOUT
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_boundary.sv:105: Verilog $stop
+Aborting...
