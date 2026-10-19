@@ -1,0 +1,18 @@
+ot-run: die-level command (DIE_RE): --priority die
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-epyc7       admits  1081 GB (avail 826, growth 69, headroom 0, waiters 0/0 GB) load 31/96 running 19 disk 6435 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3260422-1792432135 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag/reset_isolated_relocate.py", line 17, in <module>
+    try:x,y,move=placer.put(old[0],old[1],17.28,17.28,step=4,rmax=405,max_distance=405,exact_edges=True,origin_grid=(.048,.048,0,0))
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-s81-dieplace/placement_diag/dv_rvcase.py", line 307, in put
+    raise ValueError(f'no legal {w}x{h} placement within {rmax} um of {(x, y)}')
+ValueError: no legal 17.28x17.28 placement within 405 um of (15534.288, 3015.36)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3260422-1792432135): exit 1
