@@ -1,0 +1,88 @@
+{
+ "verdict": "PASS",
+ "validation": "generated bindings only; full strict port bind pending",
+ "endpoint_fault_sources": {
+  "s_0S": 0,
+  "s_0N": 1,
+  "s_7S": 2,
+  "s_7N": 3
+ },
+ "landing_reset_check": {
+  "verdict": "PASS",
+  "mismatch": [],
+  "unresolved": [],
+  "unused_keys": [],
+  "rows": [
+   {
+    "master": "dsfd_dvland_276",
+    "view_ref": "4e4a509e266ac84a0ac9f77552936342956f7b21",
+    "kit": "physical/ref_tile/s81dv_land_276",
+    "rl": 2,
+    "job": "s81dv_land_276-po2-df5c2d585",
+    "source": "df5c2d5858f7ae95f4050b39450bc70a5ea942f0",
+    "error": null,
+    "table": 2
+   },
+   {
+    "master": "dsfd_dvland_276l",
+    "view_ref": "c1f2495df9e5c32462adc0d2a2c0c66d0af76562",
+    "kit": "physical/ref_tile/s81dv_land_276l",
+    "rl": 2,
+    "job": "s81dv_land_276l-po2-df5c2d585",
+    "source": "df5c2d5858f7ae95f4050b39450bc70a5ea942f0",
+    "error": null,
+    "table": 2
+   },
+   {
+    "master": "dsfd_dvland_512",
+    "view_ref": "306a99997b1bfc28ebc33ea7948003a6a62e1860",
+    "kit": "physical/ref_tile/s81dv_land_512",
+    "rl": 2,
+    "job": "s81dv_land_512-po2-df5c2d585",
+    "source": "df5c2d5858f7ae95f4050b39450bc70a5ea942f0",
+    "error": null,
+    "table": 2
+   },
+   {
+    "master": "dsfd_dvland_562",
+    "view_ref": "23d9cbb8cfecf6303a8b3afe1e51d5127640faa6",
+    "kit": "physical/ref_tile/s81dv_land_562",
+    "rl": 2,
+    "job": "s81dv_land_562-po2-df5c2d585",
+    "source": "df5c2d5858f7ae95f4050b39450bc70a5ea942f0",
+    "error": null,
+    "table": 2
+   },
+   {
+    "master": "dsfd_dvland_682",
+    "view_ref": "ff575a79ee8ef4f584b625c7b1dfd732aec483ce",
+    "kit": "physical/ref_tile/s81dv_land_682",
+    "rl": 0,
+    "job": "s81dv_land_682-l1-1da4d6aae",
+    "source": "1da4d6aae3e457096f81ee5087373413715e7125",
+    "error": null,
+    "table": 0
+   },
+   {
+    "master": "dsfd_dvland_70",
+    "view_ref": "e676a75d23d7f728746c3d225dc54c58eab9f00a",
+    "kit": "physical/ref_tile/s81dv_land_70",
+    "rl": 2,
+    "job": "s81dv_land_70-po2-df5c2d585",
+    "source": "df5c2d5858f7ae95f4050b39450bc70a5ea942f0",
+    "error": null,
+    "table": 2
+   },
+   {
+    "master": "dsfd_dvland_pvrd",
+    "view_ref": "3b83f2255f8e17caa8eb4ff7e6354214440b817b",
+    "kit": "physical/ref_tile/s81dv_land_pvrd",
+    "rl": 0,
+    "job": "s81dv_land_pvrd-p3-b15a4ddad",
+    "source": "b15a4ddad16deac91c7e6e3842b12e2706a89f78",
+    "error": null,
+    "table": 0
+   }
+  ]
+ }
+}
