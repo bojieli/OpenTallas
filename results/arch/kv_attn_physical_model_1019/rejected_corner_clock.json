@@ -1,0 +1,66 @@
+{
+  "source_sha256": "e91d4b55230eca2a525932871ff2ef9fe6f47abbb95c70e51233300d4df625ce",
+  "cells": 35089,
+  "FF": 6040,
+  "hard_macros": 0,
+  "cell_area_um2": 4023.248940000001,
+  "row_capacity_um2": 9144.575999999997,
+  "row_utilization": 0.4399601403061227,
+  "outline_um": [
+    216,
+    216
+  ],
+  "active_band_um": [
+    2.16,
+    86.4,
+    213.84,
+    129.6
+  ],
+  "face_counts": {
+    "W": 998,
+    "E": 659,
+    "N": 1080,
+    "S": 547
+  },
+  "minimum_face_pin_center_spacing_um": {
+    "W": 0.19199999999997885,
+    "E": 0.19199999999997885,
+    "N": 0.19199999999997885,
+    "S": 0.19199999999997885
+  },
+  "ck_xy": [
+    216.012,
+    215.958
+  ],
+  "FF_centroid": [
+    115.5847380794702,
+    106.67396026490066
+  ],
+  "clock_to_FF_centroid_Manhattan_um": 209.71130165562914,
+  "max_single_net_manhattan": {
+    "net": "d2d__att_tx_kind[0]",
+    "driver": [
+      null,
+      "d2d__att_tx_kind[0]"
+    ],
+    "load": [
+      "c14700",
+      "D"
+    ],
+    "manhattan_um": 294.67499999999995
+  },
+  "nets_over405": [],
+  "max_stage_sum_manhattan_um": 298.56700000000006,
+  "max_stage_nets": [
+    "d2d__rx_payload[336]",
+    "n18870",
+    "n18871",
+    "n18872"
+  ],
+  "unresolved_comb_nodes": 0,
+  "placement_status": {
+    "PLACED": 35089
+  },
+  "qualified_timing": false,
+  "qualified_route": false
+}
