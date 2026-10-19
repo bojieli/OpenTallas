@@ -39,7 +39,30 @@ module tb_dsdv_mu_hwin_early_capture;
 64,
 `endif
 ROUNDS=4, T0=1000+32*NS;
-    localparam integer RL = NS * S - S / 2 - 3;
+    function automatic integer calendar_gap(input integer slot_index);
+`ifdef NONUNIFORM_GAPS
+        calendar_gap=S+3*((slot_index%3)-1);
+`else
+        calendar_gap=S;
+`endif
+    endfunction
+    function automatic integer calendar_offset(input integer round_index,slot_index);
+        integer cg_index,total,prefix;
+        begin
+            total=0;prefix=0;
+            for(cg_index=0;cg_index<NS;cg_index=cg_index+1) begin
+               total=total+calendar_gap(cg_index);
+               if(cg_index<slot_index)prefix=prefix+calendar_gap(cg_index);
+            end
+            calendar_offset=round_index*total+prefix;
+        end
+    endfunction
+`ifdef SHORT_RL
+    // Actual source limits: maxD<=RL-2, RL>nw, RL-1<calendar period.
+    localparam integer RL = NS+2+13*(NEV-1)+2;
+`else
+    localparam integer RL = calendar_offset(1,0)-S/2-3;
+`endif
     localparam integer NE = NEV;
     integer DK [0:NE-1], KD [0:NE-1], EP [0:NE-1];        // D / kind / endpoint per event
     integer cfg_e; initial begin
@@ -242,7 +265,12 @@ ROUNDS=4, T0=1000+32*NS;
     integer r, u, q, j, traffic_t0=T0, reset_phase=0;
     initial begin
         repeat (4) @(posedge ck); #0.1; rst_n = 1; repeat (4) @(posedge ck); #0.1;
-        cfg({1'b1, 1'b0, 24'(S)}); cfg({1'b1, 1'b1, 24'(RL)});
+`ifdef NONUNIFORM_GAPS
+        for(q=0;q<NS;q=q+1) cfg({1'b1,1'b0,24'(calendar_gap(q))});
+`else
+        cfg({1'b1, 1'b0, 24'(S)});
+`endif
+        cfg({1'b1, 1'b1, 24'(RL)});
         for (q = 0; q < NE; q = q + 1) begin
             wcfg({1'b1, 1'b0, 1'b0, 2'd0, 10'd0, 2'(EP[q]), 1'(KD[q]), 3'd0, 5'(q)});
             wcfg({1'b1, 1'b0, 1'b0, 2'd1, 21'(DK[q])});
@@ -276,7 +304,7 @@ ROUNDS=4, T0=1000+32*NS;
         while (cyc < traffic_t0) begin @(posedge ck); #0.1; end
         for (r = 0; r < ROUNDS; r = r + 1)
             for (u = 0; u < NU; u = u + 1) begin
-                while (cyc < traffic_t0 + (r * NS + u) * S) begin @(posedge ck); #0.1; end
+                while (cyc < traffic_t0 + calendar_offset(r,u)) begin @(posedge ck); #0.1; end
                 f_ks = {1'b1, 10'(u), 21'd0, 21'(r)};
                 stc[nst] = cyc; stu[nst] = u; stp[nst] = r; nst = nst + 1;
                 // RX tag of an outstanding start (the previous user), on both returning end slices

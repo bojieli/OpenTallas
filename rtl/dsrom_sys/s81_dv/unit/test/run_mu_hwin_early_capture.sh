@@ -177,5 +177,11 @@ PYBIND
   grep -q "EARLY_X" "$O/four_state/run_mutant_$mutant.log"
  done
  ;;
+sweep)
+ for ns in $(seq "${SWEEP_LOW:-2}" "${SWEEP_HIGH:-47}"); do
+  run uniform_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256
+  run nonuniform_short_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL
+ done
+ ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac
