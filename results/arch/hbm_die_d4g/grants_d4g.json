@@ -17802,16 +17802,16 @@
   },
   {
    "name": "hc_SW",
-   "cell": "ot_hbm_hc_q_static",
+   "cell": "ot_hbm_hc_qhub_static",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 432.0,
-    "h": 432.0
+    "w": 734.4,
+    "h": 734.4
    },
    "origin": {
-    "x": 7834.968,
-    "y": 10391.76,
+    "x": 8424.0,
+    "y": 12722.4,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17828,13 +17828,15 @@
     "out_delay_frac": 0.2
    },
    "version": 1,
-   "grant": "v790_plan_block_1016",
-   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
    "plan_block": "hc_SW",
    "qualified": false,
-   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
+   "notes": "HC-RINGPLAN 10-19: HC quarter hub (hc_<q> + quarter-engine centre) in the CENTRE cell of the SW ring block; faces W b0 (+ chain exit s_i), N lg_rr + b1-3, E lg_wq/lg_rq + b4, S F20/result/root + b5-7 (mk_ring_kits.py). External hub links leave the ring OVER the bank tiles (die layers above the bank signal_max_layer M5) -- the kits abut, there is no inter-tile channel.",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "KIT_FACES",
+   "kit": "physical/ref_tile/hbm_hcq_hub_1017",
+   "ring_block": "hcr_SW"
   },
   {
    "name": "sfus_SE",
@@ -17878,16 +17880,16 @@
   },
   {
    "name": "hc_SE",
-   "cell": "ot_hbm_hc_q_static",
+   "cell": "ot_hbm_hc_qhub_static",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 432.0,
-    "h": 432.0
+    "w": 734.4,
+    "h": 734.4
    },
    "origin": {
-    "x": 11932.92,
-    "y": 10551.6,
+    "x": 11059.2,
+    "y": 12722.4,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17904,13 +17906,15 @@
     "out_delay_frac": 0.2
    },
    "version": 1,
-   "grant": "v790_plan_block_1016",
-   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
    "plan_block": "hc_SE",
    "qualified": false,
-   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
+   "notes": "HC-RINGPLAN 10-19: HC quarter hub (hc_<q> + quarter-engine centre) in the CENTRE cell of the SE ring block; faces W b0 (+ chain exit s_i), N lg_rr + b1-3, E lg_wq/lg_rq + b4, S F20/result/root + b5-7 (mk_ring_kits.py). External hub links leave the ring OVER the bank tiles (die layers above the bank signal_max_layer M5) -- the kits abut, there is no inter-tile channel.",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "KIT_FACES",
+   "kit": "physical/ref_tile/hbm_hcq_hub_1017",
+   "ring_block": "hcr_SE"
   },
   {
    "name": "sfus_NW",
@@ -17954,16 +17958,16 @@
   },
   {
    "name": "hc_NW",
-   "cell": "ot_hbm_hc_q_static",
+   "cell": "ot_hbm_hc_qhub_static",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 432.0,
-    "h": 432.0
+    "w": 734.4,
+    "h": 734.4
    },
    "origin": {
-    "x": 8024.184,
-    "y": 20841.84,
+    "x": 8424.0,
+    "y": 18057.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -17980,13 +17984,15 @@
     "out_delay_frac": 0.2
    },
    "version": 1,
-   "grant": "v790_plan_block_1016",
-   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
    "plan_block": "hc_NW",
    "qualified": false,
-   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
+   "notes": "HC-RINGPLAN 10-19: HC quarter hub (hc_<q> + quarter-engine centre) in the CENTRE cell of the NW ring block; faces W b0 (+ chain exit s_i), N lg_rr + b1-3, E lg_wq/lg_rq + b4, S F20/result/root + b5-7 (mk_ring_kits.py). External hub links leave the ring OVER the bank tiles (die layers above the bank signal_max_layer M5) -- the kits abut, there is no inter-tile channel.",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "KIT_FACES",
+   "kit": "physical/ref_tile/hbm_hcq_hub_1017",
+   "ring_block": "hcr_NW"
   },
   {
    "name": "sfus_NE",
@@ -18030,16 +18036,16 @@
   },
   {
    "name": "hc_NE",
-   "cell": "ot_hbm_hc_q_static",
+   "cell": "ot_hbm_hc_qhub_static",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 432.0,
-    "h": 432.0
+    "w": 734.4,
+    "h": 734.4
    },
    "origin": {
-    "x": 11932.92,
-    "y": 20789.784,
+    "x": 11059.2,
+    "y": 18057.6,
     "orient": "R0"
    },
    "clock_entry": {
@@ -18056,13 +18062,15 @@
     "out_delay_frac": 0.2
    },
    "version": 1,
-   "grant": "v790_plan_block_1016",
-   "rtl_owner": "HC owner (H-NETLIST hc): quadrant HC client at the band inner end",
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
    "plan_block": "hc_NE",
    "qualified": false,
-   "notes": "HC_Q:ot_hbm_hc_q_static quadrant HC client (pin-limited 432 x 432 candidate, synth pending); candidate outline, pins FACES_ONLY",
+   "notes": "HC-RINGPLAN 10-19: HC quarter hub (hc_<q> + quarter-engine centre) in the CENTRE cell of the NE ring block; faces W b0 (+ chain exit s_i), N lg_rr + b1-3, E lg_wq/lg_rq + b4, S F20/result/root + b5-7 (mk_ring_kits.py). External hub links leave the ring OVER the bank tiles (die layers above the bank signal_max_layer M5) -- the kits abut, there is no inter-tile channel.",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "KIT_FACES",
+   "kit": "physical/ref_tile/hbm_hcq_hub_1017",
+   "ring_block": "hcr_NE"
   },
   {
    "name": "hc_eng_tgt",
@@ -20448,14 +20456,15 @@
    },
    "origin": {
     "x": 7427.376,
-    "y": 17096.616,
+    "y": 16908.912,
     "orient": "R0"
    },
    "clock_domain": "stream",
    "clock_period_ps": 833.333,
    "layer_cap": "M5",
    "grant": "H-DIE-R8 fault-tree leaf slot",
-   "home_rule": "E of hb_coll_NW (run6 placement; checked free of every run6 instance with a 2 um halo)"
+   "home_rule": "E of hb_coll_NW (run6 placement; checked free of every run6 instance with a 2 um halo)",
+   "notes": " | HC-RINGPLAN 10-19: slid S along the coll_NW E face to clear the NW HC ring block (d4g_gen2d_hcring_1019)"
   },
   {
    "name": "vmh_SW",
@@ -21072,7 +21081,7 @@
    },
    "origin": {
     "x": 7427.376,
-    "y": 17143.704,
+    "y": 16956.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -21095,7 +21104,7 @@
    "kit": null,
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_NW at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py) | HC-RINGPLAN 10-19: slid S along the coll_NW E face to clear the NW HC ring block (d4g_gen2d_hcring_1019)"
   },
   {
    "name": "collgi_NE",
@@ -21316,6 +21325,1158 @@
    "grant": "gen2_hostep_0gd",
    "pins": [],
    "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "hcb_SW0",
+   "cell": "ot_hbm_hc_bankq0_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 7689.6,
+    "y": 12722.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_b0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 0 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_b0_1017 R0 -- needs DRLY 2 at its GEN2d re-kit (HBM-HCRING)"
+  },
+  {
+   "name": "hcb_SW1",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 7689.6,
+    "y": 13456.8,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 1 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R0"
+  },
+  {
+   "name": "hcb_SW2",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 8424.0,
+    "y": 13456.8,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "S",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 2 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R0"
+  },
+  {
+   "name": "hcb_SW3",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 9158.4,
+    "y": 13456.8,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 3 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R0"
+  },
+  {
+   "name": "hcb_SW4",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 9158.4,
+    "y": 12722.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 4 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e0_1017 R0"
+  },
+  {
+   "name": "hcb_SW5",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 9158.4,
+    "y": 11988.0,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 5 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R180"
+  },
+  {
+   "name": "hcb_SW6",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 8424.0,
+    "y": 11988.0,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 6 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R180"
+  },
+  {
+   "name": "hcb_SW7",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 7689.6,
+    "y": 11988.0,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 7 of SW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R180"
+  },
+  {
+   "name": "hcb_SE0",
+   "cell": "ot_hbm_hc_bankq0_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 10324.8,
+    "y": 12722.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_b0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 0 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_b0_1017 R0 -- needs DRLY 2 at its GEN2d re-kit (HBM-HCRING)"
+  },
+  {
+   "name": "hcb_SE1",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 10324.8,
+    "y": 13456.8,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 1 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R0"
+  },
+  {
+   "name": "hcb_SE2",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11059.2,
+    "y": 13456.8,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "S",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 2 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R0"
+  },
+  {
+   "name": "hcb_SE3",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11793.6,
+    "y": 13456.8,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 3 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R0"
+  },
+  {
+   "name": "hcb_SE4",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11793.6,
+    "y": 12722.4,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 4 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e0_1017 R0"
+  },
+  {
+   "name": "hcb_SE5",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11793.6,
+    "y": 11988.0,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 5 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R180"
+  },
+  {
+   "name": "hcb_SE6",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11059.2,
+    "y": 11988.0,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 6 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R180"
+  },
+  {
+   "name": "hcb_SE7",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 10324.8,
+    "y": 11988.0,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_SE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 7 of SE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R180"
+  },
+  {
+   "name": "hcb_NW0",
+   "cell": "ot_hbm_hc_bankq0_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 7689.6,
+    "y": 18057.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_b0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 0 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_b0_1017 R0 -- needs DRLY 2 at its GEN2d re-kit (HBM-HCRING)"
+  },
+  {
+   "name": "hcb_NW1",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 7689.6,
+    "y": 18792.0,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 1 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R0"
+  },
+  {
+   "name": "hcb_NW2",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 8424.0,
+    "y": 18792.0,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "S",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 2 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R0"
+  },
+  {
+   "name": "hcb_NW3",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 9158.4,
+    "y": 18792.0,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 3 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R0"
+  },
+  {
+   "name": "hcb_NW4",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 9158.4,
+    "y": 18057.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 4 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e0_1017 R0"
+  },
+  {
+   "name": "hcb_NW5",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 9158.4,
+    "y": 17323.2,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 5 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R180"
+  },
+  {
+   "name": "hcb_NW6",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 8424.0,
+    "y": 17323.2,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 6 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R180"
+  },
+  {
+   "name": "hcb_NW7",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 7689.6,
+    "y": 17323.2,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NW",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 7 of NW (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R180"
+  },
+  {
+   "name": "hcb_NE0",
+   "cell": "ot_hbm_hc_bankq0_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 10324.8,
+    "y": 18057.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_b0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 0 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_b0_1017 R0 -- needs DRLY 2 at its GEN2d re-kit (HBM-HCRING)"
+  },
+  {
+   "name": "hcb_NE1",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 10324.8,
+    "y": 18792.0,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 1 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R0"
+  },
+  {
+   "name": "hcb_NE2",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11059.2,
+    "y": 18792.0,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "S",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 2 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R0"
+  },
+  {
+   "name": "hcb_NE3",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11793.6,
+    "y": 18792.0,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 3 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R0"
+  },
+  {
+   "name": "hcb_NE4",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11793.6,
+    "y": 18057.6,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e0_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 4 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e0_1017 R0"
+  },
+  {
+   "name": "hcb_NE5",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11793.6,
+    "y": 17323.2,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_ca_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 5 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_ca_1017 R180"
+  },
+  {
+   "name": "hcb_NE6",
+   "cell": "ot_hbm_hc_bankq_ft_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 11059.2,
+    "y": 17323.2,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_e2_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 6 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_e2_1017 R180"
+  },
+  {
+   "name": "hcb_NE7",
+   "cell": "ot_hbm_hc_bankq_static",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 734.4,
+    "h": 734.4
+   },
+   "origin": {
+    "x": 10324.8,
+    "y": 17323.2,
+    "orient": "R180"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "E",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "d4g_gen2d_hcring_1019",
+   "rtl_owner": "HBM-HCRING / HBM-B-RTL2b",
+   "kit": "physical/ref_tile/hbm_hcq_bank_cb_1017",
+   "pins": [],
+   "pin_status": "KIT_FACES",
+   "ring_block": "hcr_NE",
+   "notes": "HC-RINGPLAN 10-19: HC ring bank 7 of NE (b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; b7 abuts b0, no die relay); kit hbm_hcq_bank_cb_1017 R180"
   }
  ],
  "sub_layouts": {
