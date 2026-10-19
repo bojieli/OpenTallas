@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019
+ot-run: ot-epyc6       admits   814 GB (avail 683, growth 113, headroom 0, waiters 0/0 GB) load 26/128 running 15 disk 6019 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-coll-safe2-param-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-316600-1792431231 after 0 s
+LOCAL_HIT_COMPARE_INSTANCES 6 ['u.g_lcri.g_sram_rx.u_ski.u_head.g_hit[0].g_local.u_current', 'u.g_lcri.g_sram_rx.u_ski.u_head.g_hit[0].g_local.u_previous', 'u.g_lcri.g_sram_rx.u_ski.u_head.g_hit[1].g_local.u_current', 'u.g_lcri.g_sram_rx.u_ski.u_head.g_hit[1].g_local.u_previous', 'u.g_lcri.g_sram_rx.u_ski.u_head.g_hit[2].g_local.u_current', 'u.g_lcri.g_sram_rx.u_ski.u_head.g_hit[2].g_local.u_previous']
+textbook_lint: WARN dsfd_coll_lane_w_safe2 cells 66,676 flops 16,827 depth 635.1 ps util None reach None um (1.6 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[]}
+textbook_lint: INFO clock_roots max_root_sinks=16842 root=port:ck[0] rule=PASS: 16,842 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,842 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+textbook_lint: WARN clock_domain: clock root port ck[0]: 16,827 flops > 15,000 on one root (+0 ICGs, 15 macro clock pins; e.g. u.flt[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+textbook_lint: WARN high_fanout: net u.u_gb.g_f1.sh[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 2,382 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net u.u_gb.g_f1.sh[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 1,191 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _095782_/Y (AND3x1_ASAP7_75t_R): 1,190 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN high_fanout: net _064611_/Y (NAND2x1_ASAP7_75t_R): 1,108 loads (1 flops, e.g. u.g_lcro.u_sko.l_valid$_DFF_PN0_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN logic_depth: reg->reg stage u.u_ep.snd[1]$_DFF_PN0_ -> u.u_ep.g_rb_safe.g_address[0].ready_r$_DFF_PN1_/D: ~635 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage
+textbook_lint: WARN clock_guidance: clock root port:ck[0]: 16,842 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,842 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-316600-1792431231): exit 0
