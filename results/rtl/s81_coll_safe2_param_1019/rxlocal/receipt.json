@@ -1,0 +1,32 @@
+{
+  "opt_in": "LOCAL_HIT=1; default0 preserves legacy behavior",
+  "verilator": "5.050",
+  "equivalence": {
+    "checks": 19994,
+    "takes": 7113,
+    "status": "PASS",
+    "scope": "W553 D8 WFREE1/2 reset overflow drain/refill randomized"
+  },
+  "mutants": {
+    "disable_current_forward": 1766,
+    "disable_previous_forward": 1862
+  },
+  "canonical_map": {
+    "helper_sha256": "1a6cc5e865aeb9c2405b2e0373a26e7d60a1837f38c7c79d40b0530c14bacada",
+    "keep_modules": [
+      "ot_sram_showahead_hit5"
+    ],
+    "compare_instances": 6,
+    "group_D_load_max": 16,
+    "critical_net_max_loads": 32,
+    "input_max_loads": 11,
+    "flags_survived": 70,
+    "flops": 1180,
+    "macros": 5,
+    "std_area_um2": 641.141,
+    "stopped_at": "floorplan",
+    "physical_status": "NOT_MET, characterization only; no routed/CTS qualification"
+  },
+  "reset_scope": "standalone helper rst_n[0] drives3 FFs, others2; expects same-depth landed caller reset vector. Full caller reset proof still owed before gate",
+  "admission": "helper mapped/behavior qualification only; no full tile SAFE/clock/fit claim"
+}
