@@ -81,7 +81,7 @@ class Gate(unittest.TestCase):
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
                                                   "pin_register", "native_launch", "native_capture",
-                                                  "native_spread", "flow_failure"))
+                                                  "native_spread", "flow_failure", "pin_order"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -372,6 +372,47 @@ class Gate(unittest.TestCase):
         self.assertEqual(r["verdict"], "REFUSE")
 
     # ---------------------------------------------------------------- param_change
+    def test_pin_order(self):
+        # (REFILL-0400/PO-LINK 10-19) closed view chunk-scrambled on an abutted joint -> same RTL / outline / faces
+        # re-kitted with route.pin_balance, citing the committed audit hand-off
+        ho = "results/arch/abutted_joints_1019/handoff_t.md"
+        bal = "export OT_PIN_GROUP_MAX=1\nexport OT_PIN_BALANCE_H='M4'\nexport OT_PIN_BALANCE_V='M3 M5'\n"
+        self.r.put("fffffffff", pv="M7", rl="M2 M7")                       # same kit as the closed one + balance
+        self.r.c["fffffffff"]["physical/ref_tile/t/kit.env"] += bal
+        self.r.c["fffffffff"][ho] = "| 1 | 5 | 512 | t [CLOSED] (R0, E) | ot_t own bit order scrambled on o |"
+        ok = {"kind": "pin_order", "source": ho, "fix": "route.pin_balance + disjoint per-port pin_ranges (ascending)"}
+        r = self.run_(spec(commit="fffffffff", reroute_reason=ok))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "pin_order"), r["message"])
+        for k in ("source", "fix"):
+            self.assertEqual(self.run_(spec(commit="fffffffff", reroute_reason={a: b for a, b in ok.items() if a != k}))
+                             ["verdict"], "REFUSE", k)
+        self.assertEqual(self.run_(spec(commit="fffffffff", reroute_reason=dict(ok, source="/tmp/x.md")))["verdict"],
+                         "REFUSE")                                          # not committed evidence
+        r = self.run_(spec(commit="fffffffff", block="ot_tt", reroute_reason=ok),
+                      [hist(spec=spec("t-v1-aaaaaaaaa", "aaaaaaaaa", block="ot_tt"))])
+        self.assertEqual(r["verdict"], "REFUSE")                            # the audit does not name ot_tt
+        self.assertIn("does not name", r["message"])
+        self.r.c["bbbbbbbbb"][ho] = self.r.c["fffffffff"][ho]
+        r = self.run_(spec(reroute_reason=ok))                              # no ordered layout in the new kit
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("no ordered bit layout", r["message"])
+        self.r.c["aaaaaaaaa"]["physical/ref_tile/t/kit.env"] += bal
+        r = self.run_(spec(commit="fffffffff", reroute_reason=ok))          # the closed kit was ordered already
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("already had", r["message"])
+        self.r.c["aaaaaaaaa"]["physical/ref_tile/t/kit.env"] = self.r.c["aaaaaaaaa"]["physical/ref_tile/t/kit.env"].replace(bal, "")
+        self.r.put("ggggggggg", fw=34.56)
+        self.r.c["ggggggggg"]["physical/ref_tile/t/kit.env"] += bal
+        self.r.c["ggggggggg"][ho] = self.r.c["fffffffff"][ho]
+        r = self.run_(spec(commit="ggggggggg", reroute_reason=ok))          # outline moved: slot_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("FW", r["message"])
+        self.r.c["ccccccccc"]["physical/ref_tile/t/kit.env"] += bal
+        self.r.c["ccccccccc"][ho] = self.r.c["fffffffff"][ho]
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok))          # RTL changed: rtl_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("rtl_change", r["message"])
+
     def test_param_change(self):
         rr = {"kind": "param_change", "params": {"W": "512 -> 1024"}}
         r = self.run_(spec(reroute_reason=rr))                                      # same PARAMS in both kits
