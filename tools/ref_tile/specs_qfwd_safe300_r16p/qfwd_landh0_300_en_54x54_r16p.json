@@ -1,0 +1,197 @@
+{
+ "name": "qfwd_landh0_300_en_54x54_r16p",
+ "top": "qfd_landh0_300_EN_54x54",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_fwd_lane.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/qwen_fwd_lane/qfd_safe_land300_r16_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 54.408,
+  "h": 53.976,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "a"
+  ],
+  "N": [
+   "b"
+  ],
+  "W": [
+   "ck_s",
+   "en",
+   "ck",
+   "rs",
+   "k0",
+   "k1",
+   "k2",
+   "tie_hi",
+   "tie_lo",
+   "fault"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [
+  "*"
+ ],
+ "refglob": "*u_land.rc*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "forwarded_clock": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays): a lane frame is one flip-flop per bit between its pins (station) or the ring + its registered output (landing); a flow pin register would add a stage the die calendar does not price"
+ },
+ "sdc_extra": [
+  "physical/qwen_fwd_lane/safe_land_clocks.tcl"
+ ],
+ "boundary_tcl": [
+  "physical/qwen_fwd_lane/safe_land_clocks.tcl"
+ ],
+ "route": {
+  "pd": 0.45,
+  "threads": 2,
+  "peak_ram_gb": 6,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "synth_keep_modules": []
+ },
+ "assigned_pin_source": {
+  "file": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/pins/qfd_landh0_300_EN_54x54.json",
+  "note": "die-assigned faces of the Qwen compute die GEN (OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins",
+  "owner": "Q-DIE11-RLY"
+ },
+ "structural_change": "SAFE300r16 structural redesign: local per16bit slot-valid and onehot controls, perregion writeepoch and receiverreset release; +1writeboot,+2readboot =>Ksafe=Klegacy-1mod8; no steadystate addedcapture. Ring1200bits pluscontrols andoutputs<2kb. QuarterT directcrossingconstraints,no masks. Assertion epoch/valid crosses into plain receiverflops before compare; faultobservability+1cycle, datasteadycaptureunchanged.",
+ "job": {
+  "owner": "Codex:SAFE-QW-LAND",
+  "branch": "codex/safe-qw-land-1019",
+  "tag": "s300c",
+  "purpose": "SAFE-QW-LAND300 localized16bit slots and epoch; directly timed crossing",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_landh0_300_EN_54x54 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator -DOT_QFD_LAND_SAFE_REG --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv physical/qwen_fwd_lane/qfd_safe_land300_r16_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fwd_lane_exact",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh pass {RUN}/bench_p 300",
+    "expect": "pass",
+    "pass_regex": "FWD_BENCH PASS 0 errors in [0-9]+ checks",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "sel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh sel {RUN}/bench_sel 300",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_final/w300_sel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "naive_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh naive {RUN}/bench_naive 300",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_final/w300_naive.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "encomb_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh encomb {RUN}/bench_encomb 300",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_final/w300_encomb.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh wsel {RUN}/bench_wsel 300",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_final/w300_wsel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh rsel {RUN}/bench_rsel 300",
+    "expect": "fail",
+    "fail_regex": "FWD_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_final/w300_rsel.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfwd_landh0_300_en_54x54_r16p/views",
+  "record_to": "results/rtl/ref_tile/qfwd_landh0_300_en_54x54_r16p",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "rtl/qwen_split/qfd_fwd_lane.sv",
+   "rtl/hdc",
+   "tools/qwen_split",
+   "results/arch/qwen_split_compute_1014/safe_qw_land_1019/bench_final"
+  ]
+ },
+ "defines": [
+  "OT_QFD_LAND_SAFE_REG"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "SafeRTL owns two-stage receiverreset rs0shared/rs1perregion and registered writeepochs; Ksafe=Klegacy-1mod8. No duplicate wrapper."
+ },
+ "fill_reason": {
+  "pin_bound": "301data/epoch pins perface require>=50.2um at<=6pins/um;54um outline leaves margin. Synthesizedbase~1kum2;CTS/pin/repeatercells raise utilization."
+ }
+}

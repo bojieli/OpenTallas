@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_landh_300_EW_54x54",
+ "enable": false,
+ "reason": "SafeRTL owns two-stage receiverreset rs0shared/rs1perregion and registered writeepochs; Ksafe=Klegacy-1mod8. No duplicate wrapper."
+}
