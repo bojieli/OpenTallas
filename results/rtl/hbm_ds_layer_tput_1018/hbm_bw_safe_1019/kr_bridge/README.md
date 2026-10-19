@@ -1,0 +1,5 @@
+# Native H9b KR to legacy same-edge consumer
+
+Source32477647e adds an opt-in compatibility bridge. H9b/SAFE controller consumes output using the previous edge's ready; legacy sm4pc_cdc_id uses same-edge arbitration. The bridge captures only valid && prior-ready into three277-bit entries (831payload bits perPC), with ready while occupancy<2 reserving one in-flight grant. The output uses conventional same-edge ready/valid. Added latency is one HBM edge; full-rate II1 remains possible. Four PCs cost3324payload bits plus pointer/count/control flops. Reset clears occupancy and prior grant; no stale payload is valid after occupied reset.
+
+Component positive proves256 exact ordered tag/beat/data words after reset, II1 during continuous ready, max occupancy3 during stall, and reset with three resident entries. Mutant replaces prior-ready with current-ready and must fail KR_BRIDGE_DATA_MISMATCH. This bridge is outside the hardened PC controller tile and must be included in the opt-in SM service capacity/physical budget. Production full66-op88-edge retry uses this bridge; the unbridged failure is preserved separately.
