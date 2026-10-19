@@ -55,6 +55,8 @@ module ot_hbm_xcal_target_native #(
     localparam integer PIN_CTRL_BITS = 3 + NA + NF;
     localparam integer PIN_RESET_BRANCHES = (PIN_CTRL_BITS + 23) / 24;
     wire rst_base_n, rst_limit_n, rst_arg_n, rst_control_n;
+    wire [PIN_RESET_BRANCHES+3:0] reset_branch;
+    assign reset_branch[3:0] = {rst_control_n, rst_arg_n, rst_limit_n, rst_base_n};
     (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_base
         (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_base_n));
     (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_limit
@@ -74,6 +76,7 @@ module ot_hbm_xcal_target_native #(
         localparam integer LO = p * 24;
         localparam integer WIDTH = (PIN_CTRL_BITS - LO > 24) ? 24 : PIN_CTRL_BITS - LO;
         wire rst_pin_n;
+        assign reset_branch[4+p] = rst_pin_n;
         (* keep_hierarchy = 1 *) ot_hbm_xcal_reset_branch u_reset_pin
             (.clk(clk), .rst_n(rst_raw_n), .phase0(reset_phase0), .q(rst_pin_n));
         always @(posedge clk or negedge rst_pin_n)
