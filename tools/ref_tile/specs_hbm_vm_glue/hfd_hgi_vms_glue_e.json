@@ -18,8 +18,8 @@
   "rst_n"
  ],
  "reset_landing": {
-  "enable": true,
-  "stages": 2
+  "enable": false,
+  "reason": "the RTL lands it: rst_n -> rst_l0 -> rst_l1 (plain flops at the face, gen_vms_glue_tiles.py) -> ot_rst_relay (2 sync + 11 regional copies)"
  },
  "pins": {
   "W": [

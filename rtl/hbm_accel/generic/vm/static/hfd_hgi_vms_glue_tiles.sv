@@ -163,9 +163,12 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges
+    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),
+    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port
+    reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
     wire [10:0] rr;
-    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -482,9 +485,12 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges
+    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),
+    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port
+    reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
     wire [10:0] rr;
-    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -803,9 +809,12 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges
+    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),
+    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port
+    reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
     wire [10:0] rr;
-    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};

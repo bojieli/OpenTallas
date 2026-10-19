@@ -23,7 +23,7 @@ from bank k's face.  g2:
   boundary    every port lands on / leaves from a flop (bank-side ports through the tile's own landing / relay stage).
   g4          (HBM-SAFE-VMGLUE 10-19, SAFE-DESIGN checklist) same outline / pin plan; RTL reach stages (gen_vms_glue_tiles.py
               DB / DD / DC) so no single-cycle wire > ~405 um, registered one-hot schedule selects, 11 reset regions
-              (+ lower / upper lane-band halves of each ring stop); reset_landing on (tools from main).
+              (+ lower / upper lane-band halves of each ring stop); RTL reset landing rst_l0 -> rst_l1 (tools from main).
     vms_glue_kit_specs.py [--check]
 """
 import json, re, sys
@@ -134,7 +134,7 @@ def spec(k, c):
                f"reset regions; reset_landing on.")
     return {
         'name': f'hfd_hgi_vms_glue_{k}', 'top': c['top'], 'kind': 'tile', 'sources': SRC,
-        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': True, 'stages': 2}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
+        'clock_port': 'clk', 'reset_ports': ['rst_n'], 'reset_landing': {'enable': False, 'reason': 'the RTL lands it: rst_n -> rst_l0 -> rst_l1 (plain flops at the face, gen_vms_glue_tiles.py) -> ot_rst_relay (2 sync + 11 regional copies)'}, 'pins': faces, 'layer_cap': 'M5', 'recipe': 2,
         'clock': 'spine', 'orfs_vars': {'OT_SPINE_LEAF_N': '16'},
         'route': {'pd': 0.5, 'period_ps': 833.333, 'threads': 16, 'peak_ram_gb': 64, 'hold_margin_ns': 0.03,
                   'io_hold_margin_ns': 0.03, 'pin_balance': {'group_max': 1}},

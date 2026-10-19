@@ -132,8 +132,10 @@ module hfd_hgi_vms_glue_sw_t_ref (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    wire rr;  // the same release: 2 sync + 1 relay stage after the port
-    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    wire rr;  // the same reset timing: 2-stage landing, then 2 sync + 1 relay stage
+    reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
+    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
     // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
     wire [2207:0] bk_xq_g;
     reg [2207:0] bk_xq_d_s0; always @(posedge clk) bk_xq_d_s0 <= bk_xq_g;
@@ -308,8 +310,10 @@ module hfd_hgi_vms_glue_e_t_ref (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    wire rr;  // the same release: 2 sync + 1 relay stage after the port
-    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    wire rr;  // the same reset timing: 2-stage landing, then 2 sync + 1 relay stage
+    reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
+    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
     // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
     wire [2207:0] bk_xq_g;
     reg [2207:0] bk_xq_d_s0; always @(posedge clk) bk_xq_d_s0 <= bk_xq_g;
@@ -479,8 +483,10 @@ module hfd_hgi_vms_glue_nw_t_ref (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    wire rr;  // the same release: 2 sync + 1 relay stage after the port
-    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    wire rr;  // the same reset timing: 2-stage landing, then 2 sync + 1 relay stage
+    reg rst_l0, rst_l1;
+    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end
+    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));
     // contract: bank-side inputs consumed 3 edges later (xq_done / xq2_done 4), bank-side outputs 3 edges later; hub-side client inputs / outputs (+ sid strap) 3 edges each way
     wire [2207:0] bk_xq_g;
     reg [2207:0] bk_xq_d_s0; always @(posedge clk) bk_xq_d_s0 <= bk_xq_g;

@@ -224,6 +224,9 @@ module ot_vms_rstop_lt #(
         ph<=(own && kind==2'd0) ? {1'b1,h_d[8:0]} : 10'd0;
         ph2<=ph;
     end
+    // rce valid gate as kept copies per 36-b slice (<= ~36 loads each)
+    (* keep = "true", dont_touch = "true" *) reg [7:0] ph2v;
+    always @(posedge clk) ph2v<={8{ph[9]}};
     // half h: OR of its pairs + the highest pair with a valid lane (the historical bank pick: the last valid pair wins)
     reg [274:0] hl_n [0:1]; reg [3:0] hb_n [0:1];   // hb = {any, pair[1:0], lane-in-pair}
     always @* begin
@@ -240,7 +243,8 @@ module ot_vms_rstop_lt #(
     wire pick1=hb[1][3] && (!hb[0][3] || hb[1][2:1]>hb[0][2:1]);
     wire [2:0] bnk=pick1 ? hb[1][2:0] : (hb[0][3] ? hb[0][2:0] : 3'd0);
     wire [274:0] lor=hl[0]|hl[1];
-    always @(posedge clk) rce<=ph2[9] ? {ph2,bnk,lor[274:264],lor[7:0],lor[263:8]} : 288'd0;
+    wire [287:0] rce_n={ph2,bnk,lor[274:264],lor[7:0],lor[263:8]};
+    always @(posedge clk) for(integer j=0;j<8;j=j+1) rce[j*36+:36]<=ph2v[j] ? rce_n[j*36+:36] : 36'd0;
     reg [15:0] lo_h;
     assign l_out[2223:2208]=lo_h;
     always @(posedge clk) lo_h<=fh;
@@ -554,6 +558,20 @@ module ot_vms_hub_lt #(
             assign pq_payload[b*285+:285]={1'b0,pp}; assign pq_valid[b]=pv;
         end
     end
+    // g4: response slot select = REGISTERED ONE-HOT of the static schedule's response_seq (decoded a stage ahead from the
+    // g3 landing re_a / rseq_a), kept per (client, slot, 32-b slice); the returned data is an AND-OR, no 4:1 slot mux
+    (* keep = "true", dont_touch = "true" *) reg [N*4*8-1:0] rsel;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) rsel<='0;
+        else for(integer c=0;c<N;c=c+1) for(integer k=0;k<4;k=k+1) for(integer j=0;j<8;j=j+1)
+            rsel[(c*4+k)*8+j]<=re_a[c] && rseq_a[c*2+:2]==2'(k);
+    reg [N*256-1:0] rdat;
+    always @* begin
+        rdat='0;
+        for(integer c=0;c<N;c=c+1) for(integer k=0;k<4;k=k+1) for(integer j=0;j<8;j=j+1)
+            if(rsel[(c*4+k)*8+j] && !writes[c][k])
+                rdat[c*256+j*32+:32]=rdat[c*256+j*32+:32]|response_data[c][k][j*32+:32]|ret_f[(c*4+k)*256+j*32+:32];
+    end
     always @* begin : route
         integer c,k,b;
         reg [337:0] q;
@@ -609,8 +627,7 @@ module ot_vms_hub_lt #(
             if(re[c]) begin
                 k=int'(rseq[c*2+:2]);
                 if(!active[c][k]||{1'b0,seen[c][k]}+{1'b0,arr_f[(c*4+k)*3+:3]}!={1'b0,expected[c][k]}) fault[0]=1;
-                cr_next[c*274+:274]={1'b1,tags[c][k],writes[c][k],
-                    writes[c][k]?256'd0:(response_data[c][k]|ret_f[(c*4+k)*256+:256])};
+                cr_next[c*274+:274]={1'b1,tags[c][k],writes[c][k],rdat[c*256+:256]};
             end
         end
     end

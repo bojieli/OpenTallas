@@ -159,9 +159,12 @@ def client_outs(c):
 def tile(k, c):
     p = ports(k, c); nc = c['nc']
     L = [f'module hfd_hgi_vms_glue_{k}_t #(parameter integer MUT=0) (', decl(p), ');']
-    L.append('    // regional reset: the port drives only the relay (2 sync + 11 region copies); release +3 edges')
+    L.append('    // reset landing (SAFE-DESIGN item 1): the port lands in 2 plain registered stages at its face (rst_l0 -> rst_l1),')
+    L.append('    // then the regional relay (2 sync + 11 region copies): assertion +2 edges, release +5 edges after the port')
+    L.append('    reg rst_l0, rst_l1;')
+    L.append('    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end')
     L.append('    wire [10:0] rr;')
-    L.append('    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));')
+    L.append('    ot_rst_relay #(.REGIONS(11),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));')
     L.append('    // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]')
     for n, d in RINGB:
         L.append(f'    wire [2223:0] {n};')
@@ -218,8 +221,10 @@ def tile(k, c):
 def ref(k, c):
     p = ref_ports(k, c); nc = c['nc']
     L = [f'module hfd_hgi_vms_glue_{k}_t_ref (', decl(p), ');']
-    L.append('    wire rr;  // the same release: 2 sync + 1 relay stage after the port')
-    L.append('    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));')
+    L.append('    wire rr;  // the same reset timing: 2-stage landing, then 2 sync + 1 relay stage')
+    L.append('    reg rst_l0, rst_l1;')
+    L.append('    always @(posedge clk) begin rst_l0 <= rst_n; rst_l1 <= rst_l0; end')
+    L.append('    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_l1),.rst_n(rr));')
     L.append(f'    // contract: bank-side inputs consumed {DB} edges later (xq_done / xq2_done {DD}), bank-side outputs {DB} edges later;'
              f' hub-side client inputs / outputs (+ sid strap) {DC} edges each way')
     for n, d, wd, f in bankp(c):

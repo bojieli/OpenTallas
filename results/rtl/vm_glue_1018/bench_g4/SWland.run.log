@@ -5,15 +5,15 @@ MISMATCH cyc 17 ccw_out
 MISMATCH cyc 37 ccw_out
 MISMATCH cyc 40 cw_out
 MISMATCH cyc 49 cw_out
-VMS_GLUE_LT_EQUIV SW FAIL checks=37520 errors=525
+VMS_GLUE_LT_EQUIV SW FAIL checks=37520 errors=520
 rc=1
 ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-safe-vmglue/src
-ot-run: ot-epyc5       admits   490 GB (avail 456, growth 113, headroom 0, waiters 0/0 GB) load 129/128 running 39 disk 1368 GB 
+ot-run: ot-epyc5       admits   629 GB (avail 553, growth 113, headroom 0, waiters 0/0 GB) load 96/128 running 26 disk 1362 GB 
 ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-safe-vmglue/src
 ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-safe-vmglue/src
 ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-safe-vmglue/src
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-safe-vmglue/src
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-safe-vmglue/src
 ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1029467-1792417393 after 2 s
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1029467-1792417393): exit 1
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1156231-1792418257 after 1 s
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1156231-1792418257): exit 1
