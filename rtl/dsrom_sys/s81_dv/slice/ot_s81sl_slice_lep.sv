@@ -174,7 +174,9 @@ module ot_s81sl_lep_core #(
     localparam integer TX_RSTBASE=4+NRX_MEMRST+NRX_OUTRST;
     localparam integer FRAME_RSTBASE=TX_RSTBASE+NTX_MEMRST;
     localparam integer HOST_RSTBASE=FRAME_RSTBASE+NFRAME_RST;
-    localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST;
+    localparam integer CTRL_RSTBASE=HOST_RSTBASE+NHOST_RST;
+    localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+7:0;
+    localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
     wire [3+NRX_RST:0] rr;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
@@ -204,16 +206,19 @@ module ot_s81sl_lep_core #(
     always @(posedge clk) begin thq <= t_host; tkq <= t_kd; end
     reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; reg [11:0] st_l;
     wire ev_h = thq[64] || thq[76:65] != st_l, ev_k = tkq[53];
+    wire status_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+2]:rn;
+    always @(posedge clk or negedge status_reset)
+        if(!status_reset) st_l<=0; else if(ev_h) st_l<=thq[76:65];
     assign h_event=ev_h;assign k_event=ev_k;
     assign hp_go = !rov && ph_v; assign kp_go = !rov && !ph_v && pk_v;
     assign herr = he; assign ph_d = pd; assign pk_d = kd;
     always @(posedge clk or negedge rn)
-        if (!rn) begin ph_v <= 1'b0; pk_v <= 1'b0; he <= 1'b0; st_l <= 12'd0; end
+        if (!rn) begin ph_v <= 1'b0; pk_v <= 1'b0; he <= 1'b0; end
         else begin
             if (hp_go) ph_v <= 1'b0;
             if (kp_go) pk_v <= 1'b0;
             if (ev_h) begin
-                ph_v <= 1'b1; st_l <= thq[76:65];
+                ph_v <= 1'b1;
 `ifdef OT_S81SL_LEP_MUT_HDROP
                 pd <= thq;                                             // MUTANT: a pending t_v word is overwritten
 `else
@@ -232,7 +237,10 @@ module ot_s81sl_lep_core #(
     wire wopen, wab; wire [32:0] wtag; wire terr;       // window open, pair B, {pos, user, land, 1}
     generate if (MU_EN != 0) begin : g_mtx
     reg [33:0] mcq; reg [NBW-1:0] wn; reg w_ab, te; reg [32:0] w_t;
-    always @(posedge clk or negedge rn) if (!rn) mcq <= 34'd0; else mcq <= mu_c;   // command pin flop
+    for(genvar mb=0;mb<34;mb=mb+1) begin:g_command_reset
+        wire command_reset=(RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+mb/24]:rn;
+        always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mu_c[mb];
+    end
     wire mcv = mcq[0];
     wire [9:0] mcu = mcq[12:3];
     wire ab_ok = (AB_EN != 0) && mcu != 10'd0;           // the latency user (0) is always on copy A
@@ -435,6 +443,7 @@ module ot_s81sl_lep_core #(
     wire rpb = relp[1] && !relp[0];                    // the released pair is B
     genvar c;
     generate for (t = 0; t < NL; t = t + 1) begin : g_rx
+        wire rx_state_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+t]:rnx;
         reg [H:0] mem [0:DR-1];
         reg [AR-1:0] wp, rp; reg [AR:0] n; reg vq, nz, cr, f; reg [DR-1:0] we; reg [H:0] dq;
         wire pop = relp[t / 2] && nz;
@@ -445,8 +454,8 @@ module ot_s81sl_lep_core #(
         wire [AR:0] n_nx = n + (AR+1)'(wr) - (AR+1)'(pop);
         assign rnex[t]=n_nx!=0;
         integer k;
-        always @(posedge clk or negedge rnx)
-            if (!rnx) begin wp <= 0; rp <= 0; n <= 0; vq <= 1'b0; nz <= 1'b0; cr <= 1'b0; f <= 1'b0; we <= DR'(1); end
+        always @(posedge clk or negedge rx_state_reset)
+            if (!rx_state_reset) begin wp <= 0; rp <= 0; n <= 0; vq <= 1'b0; nz <= 1'b0; cr <= 1'b0; f <= 1'b0; we <= DR'(1); end
             else begin
                 vq <= li_v[t];
                 cr <= pop;
@@ -465,7 +474,7 @@ module ot_s81sl_lep_core #(
             localparam integer LO = c * SW, HI = ((c + 1) * SW > H + 1) ? H + 1 : (c + 1) * SW;
             if (LO < H + 1) begin : g_on
                 (* keep = "true" *) reg [AR-1:0] rpc;
-                always @(posedge clk or negedge rnx) if (!rnx) rpc <= 0; else rpc <= rp_nx;
+                always @(posedge clk or negedge rx_state_reset) if (!rx_state_reset) rpc <= 0; else rpc <= rp_nx;
                 wire [H:0] row = mem[rpc];
                 assign rhd[t * (H + 1) + LO +: HI - LO] = row[HI-1:LO];
             end
@@ -520,7 +529,7 @@ module ot_s81sl_lep_core #(
                     (* keep = "true" *) reg [AR-1:0] rpc;
                     wire [AR-1:0] rpn = pop ? ((rpc == AR'(DR - 1)) ? '0 : rpc + 1'b1) : rpc;
                     reg [HI-LO-1:0] hd;
-                    always @(posedge clk or negedge rnx) if (!rnx) rpc <= 0; else rpc <= rpn;
+                    always @(posedge clk or negedge rx_state_reset) if (!rx_state_reset) rpc <= 0; else rpc <= rpn;
                     wire [H:0] row = mem[rpn];
                     always @(posedge clk)
 `ifdef OT_S81SL_LEP_MUT_STALEHD
@@ -648,7 +657,7 @@ module ot_s81sl_lep_core #(
     wire [CG*6-1:0] control_local;
     if(RX_SRAM!=0) begin:g_control_groups
         for(genvar cg=0;cg<CG;cg=cg+1) begin:g_group
-            ot_s81sl_lep_rx_control u_ctrl(.ne({{(4-NL){1'b0}},rnex}),.ring({{(4-NL){1'b0}},rringx}),
+            (* keep=1 *) ot_s81sl_lep_rx_control u_ctrl(.ne({{(4-NL){1'b0}},rnex}),.ring({{(4-NL){1'b0}},rringx}),
                 .hk({{(4-NL){1'b0}},rhkx}),.tag({{(4-NL){1'b0}},rtagx}),
                 .mv(ml_rv),.mt({ml_rd[TG],ml_rd[3:0]}),.sel(control_local[cg*6+:6]));
         end
@@ -696,7 +705,15 @@ module ot_s81sl_lep_core #(
             mwv <= rr_land;
             if (rr_dlv && mrv) mcol <= 1'b1;            // replay against a cut-through beat
         end
-    assign mu_rt = riv ? rtq : 32'd0; assign ml_wv = mwv; assign ml_wd = mwd; assign mcol_w = mcol;
+    if(RX_SRAM!=0) begin:g_return_valid
+        for(genvar rv=0;rv<4;rv=rv+1) begin:g_slice
+            (* keep *) reg valid_r;
+            always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+3+rv])
+                if(!rr[CTRL_RSTBASE+NL+3+rv]) valid_r<=0; else valid_r<=rr_dlv || mrv;
+            assign mu_rt[8*rv+:8]=valid_r?rtq[8*rv+:8]:8'd0;
+        end
+    end else begin:g_return_legacy assign mu_rt=riv?rtq:32'd0;end
+    assign ml_wv = mwv; assign ml_wd = mwd; assign mcol_w = mcol;
     end endgenerate
     always @(posedge clk or negedge rnx)
         if (!rnx) perr <= 1'b0;
