@@ -1,0 +1,6 @@
+# case b2k14 host ot-epyc5 2026-10-19T04:05:35-07:00 commit 4180abc1311810cde8f6f11e720525ec114d9ae3 Verilator 5.050 2026-07-01 rev v5.050
+bench2 (k) MUT=14: FAIL 128/512
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    L8 kc3 scaled: 128/128 mismatches, first [0] got 0x4035a8e7 exp 0xc0a68dd6
+    L7 gate/up kc2: 256/256 mismatches, first [0] got 0xbf7d9b88 exp 0x4217096f
+# exit 1

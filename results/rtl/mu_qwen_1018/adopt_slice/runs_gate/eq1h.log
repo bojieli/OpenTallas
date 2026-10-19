@@ -35,13 +35,13 @@ LPF_NZ cw_n0 2969
 LPF_NZ cw_n1 2969
 LPF_NZ cw_n2 2969
 LPF_NZ cw_n3 2969
-LPF_NZ cw_s0 2969
-LPF_NZ cw_s1 2969
-LPF_NZ cw_s2 2969
-LPF_NZ cw_s3 2969
+LPF_NZ cw_s0 2981
+LPF_NZ cw_s1 2981
+LPF_NZ cw_s2 2981
+LPF_NZ cw_s3 2981
 LPF_FAULT_CYCLES heads=2968 any=2968
 LPF_EQ FAIL quiet=0 hronly=1 mismatches=5936 of 98373
 - rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv:196: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 12.649 s; speed 237.166 ns/s
-- Verilator: cpu 12.638 s on 1 threads; allocated 54 MB
+- Verilator: $finish at 3us; walltime 11.297 s; speed 265.566 ns/s
+- Verilator: cpu 11.296 s on 1 threads; allocated 54 MB
