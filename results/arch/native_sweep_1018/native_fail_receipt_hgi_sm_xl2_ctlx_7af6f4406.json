@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "lane": "NATIVE-SWEEP/NS-XL2",
+ "generated": "2026-10-18 19:00 PT",
+ "tool": "tools/hier_contract/native_pin_audit.py @ origin/main 28de0dfae (--view, own R)",
+ "note": "FAIL receipt for the closed d4g x-load ctl view (bound 4x on xl_<q>_ctl); cited by the native_launch reroute of the HBMN1-ctlx n2 fix (claude/eg-hbmn1-ctlx-1018). Not a PASS: does not flip native_sync.",
+ "records": [
+  {
+   "cell": "ot_hgi_sm_xload_cl2_ctlx",
+   "view": "physical/ref_tile/hgi_sm_xl2_ctlx/views/ot_hgi_sm_xload_cl2_ctlx",
+   "lib_cell": "ot_hgi_sm_xload_cl2_ctlx",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean",
+    "lib midrange"
+   ],
+   "R_ps": 437.3,
+   "spread_ps": 79.8,
+   "outputs": 3359,
+   "inputs": 2389,
+   "launch_ps": 403.3,
+   "launch_pin": "l_d_o[240]",
+   "capture_ps": 455.7,
+   "capture_pin": "rst_n",
+   "launch_over": 580,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_spread_ps": 74.6,
+   "ff_launch_min_ps": 42.7,
+   "ff_hold_need_ps": -11.6,
+   "pass": false,
+   "fail_why": "launch 403.34246 > 220 (580 pins); capture 455.71567 > 190 (1 pins)",
+   "job": "hgi_sm_xl2_ctlx-q1-7af6f4406",
+   "mode": "own R (no relative reference)"
+  }
+ ]
+}
