@@ -39,6 +39,21 @@
 // Mutants (bench negative controls): MUT 1 = the event bypass is dropped for operand B (a held event is read stale);
 // MUT 2 = a result is written into lane l^1's ring; MUT 3 = the ripple reads the stack one level too high;
 // MUT 4 = the flush's first add drops S[k0] (B = +0).
+// STEP 3 (2026-10-19, timing): PRE-DECODED TURN.  The step-2 gate missed by -398 ps on the operand register (ph -> 32-entry
+// descriptor read -> step decode -> sel -> 12-way 512-b operand mux, 16 levels, select fanout ~7k).  Everything the turn
+// of residue ph+1 needs is known one cycle early: entry (l, ph+1) is written only at its own head turn (7 cycles ago),
+// the returning chain is rp_*[ALAT-1], and the events enter through one input register (ev/sum/tag/pub -> *_q, +1 edge,
+// fixed, as the spvm pin registers: it only rotates which residue a slot owns).  So the whole decode (descriptors, step,
+// turn, next state, faults) runs in the cycle BEFORE the head turn and is registered; the head cycle holds only the
+// one-hot operand AND-OR (12 ring heads + returning result + 4 event words) and the head write mux.  The wide selects are
+// registered as (* keep *) copies, one set per 32-b word (= per adder, fanout 32); the reset lands in kept per-region
+// copies (one a adder + control).  Function = the step-2 merge with its inputs one cycle later: bit-identical nodes,
+// pv_* and pub_* one edge later.  MUT 5 = the publication reads lane pub_lane ^ 1 (publish-path negative control).
+// STEP 4 (2026-10-19, timing): LANDED DECODE INPUTS.  The step-3 --cts gate missed SS setup by -167..-211 ps @770 on
+// g_madd ka_hw/kb_hw; the worst path started at the wrapper's N-face pin register (ev_q of ot_hnx_att4_spvm) with ~250 ps
+// of buffered wire in front of the ~500 ps decode.  Every input now passes one more register (ev_q / tag_q land beside
+// the decode; sum / pub_* take the same stage): pure uniform retiming, bit-identical nodes, pv_* and pub_* one more edge
+// later (the compiler counts it, as the pin registers).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hnx_att4_smerge #(
     parameter integer NL      = 4,
@@ -73,11 +88,38 @@ module ot_hnx_att4_smerge #(
         $fatal(1, "ot_hnx_att4_smerge: L 16, ALAT 7 (one ring turn), 1 <= LV <= 7, 1 <= NL <= 4, TAGW >= 6");
     localparam integer W  = L * 32;
     localparam integer NE = 8 * NL;
+    localparam integer NW = NL * LV;                      // ring head words
     localparam [1:0] IDLE = 2'd0, RIP = 2'd1, FL = 2'd2;
     localparam [2:0] TOP = 3'(LV - 1);
 
-    reg [2:0] ph;                                        // residue whose entries are at the ring heads
-    always @(posedge clk or negedge rst_n) if (!rst_n) ph <= 3'd0; else ph <= ph + 3'd1;
+    // ---------------- reset landing: kept control copies (the adders take their own copy in g_madd) ----------------
+    (* keep *) reg rst_c;
+    (* keep *) reg rst_e;
+    always @(posedge clk) begin rst_c <= rst_n; rst_e <= rst_n; end
+
+    // ---------------- input registers (STEP 4: +2 edges, uniform) -------------------------------------------------------
+    // Stage 1 = LANDING registers: the decode reads ev / tag only from ev_q / tag_q, which the placer puts beside the
+    // decode (their D is the tile pin register across the outline, a wire-only cycle), so no pin wire sits in front of
+    // the decode logic.  The data / publication inputs take the same stage (sum_l, *_l) so every input is delayed
+    // uniformly: it only rotates which residue a slot owns (as the pin registers do); stage 2 (sum_q, ps_q, ...) is the
+    // step-3 input register the head stage reads one cycle after the decode.
+    reg [NL-1:0]      ev_q;
+    reg [NL*TAGW-1:0] tag_q;
+    reg [NL*W-1:0]    sum_l, sum_q;
+    reg               ps_l, ps_q;
+    reg [1:0]         pl_l, pl_q;
+    reg [2:0]         pslot_l, pslot_q;
+    always @(posedge clk or negedge rst_c)
+        if (!rst_c) begin ev_q <= {NL{1'b0}}; ps_l <= 1'b0; ps_q <= 1'b0; end
+        else begin ev_q <= ev; ps_l <= pub_start; ps_q <= ps_l; end
+    always @(posedge clk) begin
+        tag_q <= tag_d; sum_l <= sum; sum_q <= sum_l;
+        pl_l <= pub_lane; pl_q <= pl_l; pslot_l <= pub_slot; pslot_q <= pslot_l;
+    end
+
+    reg [2:0] ph;                                        // residue whose entries are at the ring heads (head stage)
+    always @(posedge clk or negedge rst_c) if (!rst_c) ph <= 3'd0; else ph <= ph + 3'd1;
+    wire [2:0] phn = ph + 3'd1;                          // residue decoded this cycle (its head turn is the next cycle)
 
     // ---------------- per-entry control (indexed {lane, residue}) ----------------
     reg [1:0]      e_md  [0:NE-1];
@@ -99,11 +141,14 @@ module ot_hnx_att4_smerge #(
     wire           ret_v = rp_v[ALAT];
     wire [1:0]     ret_l = rp_l[ALAT];
     wire [2:0]     ret_t = rp_t[ALAT];
+    wire           nret_v = rp_v[ALAT-1];                // the result that returns at the NEXT head turn
+    wire [1:0]     nret_l = rp_l[ALAT-1];
+    wire [2:0]     nret_t = rp_t[ALAT-1];
     wire [W-1:0]   my;
 
     // ---------------- lane rings: LV levels x 8 stages x 512 b; head = stage 0 ----------------
-    wire [NL*LV*W-1:0] hw;                               // head words
-    reg  [NL*LV*W-1:0] hn;                               // head next (into stage 7)
+    wire [NW*W-1:0] hw;                                  // head words
+    wire [NW*W-1:0] hn;                                  // head next (into stage 7)
     genvar gl, gq;
     generate for (gl = 0; gl < NL; gl = gl + 1) begin : g_lane
         for (gq = 0; gq < LV; gq = gq + 1) begin : g_lv
@@ -126,7 +171,7 @@ module ot_hnx_att4_smerge #(
         end
     endfunction
 
-    // ---------------- this turn: events, descriptors, steps ----------------
+    // ================= DECODE STAGE (cycle before the head turn of residue phn): raw inputs, entries (l, phn) =========
     reg [2:0]      ew   [0:NL-1];                        // level the event writes
     reg [LV:0]     cc   [0:NL-1];
     reg [1:0]      d_md [0:NL-1];
@@ -135,7 +180,6 @@ module ot_hnx_att4_smerge #(
     reg [LV-1:0]   d_fb [0:NL-1];
     reg [LV:0]     d_n  [0:NL-1];
     reg [TAGW-1:0] d_tag[0:NL-1];
-    // step of lane l if chosen, and its post-step descriptor
     reg [2:0]      s_a [0:NL-1], s_b [0:NL-1], s_t [0:NL-1];
     reg            s_bz[0:NL-1], s_fin[0:NL-1];
     reg [1:0]      p_md[0:NL-1];
@@ -149,15 +193,20 @@ module ot_hnx_att4_smerge #(
     reg [2:0]      k0, k1;
     reg            lastr, pone, first, lastc;
     reg [4:0]      ix;
-    integer l, q;
+    // one-hot selects of the head cycle: operand A / B = ring head word m | returning result | lane l's event word
+    reg [NW-1:0]   da_hw, db_hw, dw_ev, dw_rt;
+    reg            da_my, db_my;
+    reg [NL-1:0]   da_ev, db_ev;
+    reg [NL-1:0]   d_flt, d_nvc;
+    integer l, q, m;
     always @(*) begin
         for (l = 0; l < NL; l = l + 1) begin
-            ix = {l[1:0], ph};
-            first = tag_d[l*TAGW + TAGW-2]; lastc = tag_d[l*TAGW + TAGW-3];
+            ix = {l[1:0], phn};
+            first = tag_q[l*TAGW + TAGW-2]; lastc = tag_q[l*TAGW + TAGW-3];
             cc[l] = first ? {(LV+1){1'b0}} : e_n[ix];
             ew[l] = cc[l][0] ? tones(cc[l]) : 3'd0;
-            if (ev[l]) begin
-                d_n[l] = cc[l] + 1'b1; d_tag[l] = tag_d[l*TAGW +: TAGW];
+            if (ev_q[l]) begin
+                d_n[l] = cc[l] + 1'b1; d_tag[l] = tag_q[l*TAGW +: TAGW];
                 d_rk[l] = 3'd0; d_rj[l] = ew[l]; d_fin[l] = lastc; d_ff[l] = 1'b1;
                 d_fb[l] = d_n[l][LV-1:0];
                 d_md[l] = cc[l][0] ? RIP : (lastc ? FL : IDLE);
@@ -165,6 +214,10 @@ module ot_hnx_att4_smerge #(
                 d_n[l] = e_n[ix]; d_tag[l] = e_tag[ix]; d_rk[l] = e_rk[ix]; d_rj[l] = e_rj[ix];
                 d_fin[l] = e_fin[ix]; d_ff[l] = e_ff[ix]; d_fb[l] = e_fb[ix]; d_md[l] = e_md[ix];
             end
+            // collisions of an arriving event (sticky fault at the head turn)
+            d_flt[l] = ev_q[l] && ((e_md[ix] != IDLE) || (nret_v && nret_l == l[1:0] && nret_t == ew[l]) ||
+                                 (cc[l] >= (1 << (LV - 1))));
+            d_nvc[l] = ev_q[l] && first;
             cand[l] = (d_md[l] != IDLE);
             // step
             s_a[l] = 3'd0; s_b[l] = 3'd0; s_t[l] = TOP; s_bz[l] = 1'b0; s_fin[l] = 1'b0;
@@ -201,87 +254,127 @@ module ot_hnx_att4_smerge #(
         iss = |cand;
         sel = 2'd0;
         for (l = NL - 1; l >= 0; l = l - 1) if (cand[l]) sel = l[1:0];
-        if (ret_v && cand[ret_l]) sel = ret_l;
-        // head writes: the event's word, else the returning result's word
+        if (nret_v && cand[nret_l]) sel = nret_l;
+        // operand selects with the step-2 priority: event word > returning result > ring head word; B = +0 if s_bz
+        da_hw = {NW{1'b0}}; db_hw = {NW{1'b0}}; da_my = 1'b0; db_my = 1'b0; da_ev = {NL{1'b0}}; db_ev = {NL{1'b0}};
+        if (ev_q[sel] && ew[sel] == s_a[sel]) da_ev[sel] = 1'b1;
+        else if (nret_v && nret_l == sel && nret_t == s_a[sel]) da_my = 1'b1;
+        else for (m = 0; m < NW; m = m + 1) if (m == sel * LV + s_a[sel]) da_hw[m] = 1'b1;
+        if (s_bz[sel]) begin end
+        else if (MUT != 1 && ev_q[sel] && ew[sel] == s_b[sel]) db_ev[sel] = 1'b1;
+        else if (nret_v && nret_l == sel && nret_t == s_b[sel]) db_my = 1'b1;
+        else for (m = 0; m < NW; m = m + 1) if (m == sel * LV + s_b[sel]) db_hw[m] = 1'b1;
+        // head writes: the event's word, else the returning result's word, else the head word circulates
         for (l = 0; l < NL; l = l + 1)
             for (q = 0; q < LV; q = q + 1) begin
-                if (ev[l] && ew[l] == q[2:0]) hn[(l*LV+q)*W +: W] = sum[l*W +: W];
-                else if (ret_v && (((MUT == 2) ? (ret_l ^ 2'd1) : ret_l) == l[1:0]) && ret_t == q[2:0]) hn[(l*LV+q)*W +: W] = my;
-                else hn[(l*LV+q)*W +: W] = hw[(l*LV+q)*W +: W];
+                dw_ev[l*LV+q] = ev_q[l] && ew[l] == q[2:0];
+                dw_rt[l*LV+q] = !dw_ev[l*LV+q] && nret_v && (((MUT == 2) ? (nret_l ^ 2'd1) : nret_l) == l[1:0]) &&
+                                nret_t == q[2:0];
             end
     end
 
-    // operand read of the chosen lane with bypass (event word arriving now, result returning now)
-    reg [W-1:0] op_a, op_b;
-    integer m;
-    always @(*) begin
-        op_a = {W{1'b0}}; op_b = {W{1'b0}};
-        for (m = 0; m < NL * LV; m = m + 1) begin
-            if (m == sel * LV + s_a[sel]) op_a = hw[m*W +: W];
-            if (m == sel * LV + s_b[sel]) op_b = hw[m*W +: W];
+    // ---------------- decode registers ----------------
+    reg [1:0]      x_md  [0:NL-1];
+    reg [2:0]      x_rk  [0:NL-1], x_rj [0:NL-1];
+    reg            x_fin [0:NL-1], x_ff [0:NL-1];
+    reg [LV-1:0]   x_fb  [0:NL-1];
+    reg [LV:0]     x_n   [0:NL-1];
+    reg [TAGW-1:0] x_tag [0:NL-1];
+    reg            x_iss, x_sf;
+    reg [1:0]      x_sel;
+    reg [2:0]      x_st;
+    reg [TAGW-1:0] x_stag;
+    reg [NL-1:0]   x_flt, x_nvc;
+    integer l3;
+    always @(posedge clk or negedge rst_e)
+        if (!rst_e) begin
+            x_iss <= 1'b0; x_flt <= {NL{1'b0}}; x_nvc <= {NL{1'b0}};
+            for (l3 = 0; l3 < NL; l3 = l3 + 1) x_md[l3] <= IDLE;
+        end else begin
+            x_iss <= iss; x_flt <= d_flt; x_nvc <= d_nvc;
+            for (l3 = 0; l3 < NL; l3 = l3 + 1) x_md[l3] <= (iss && sel == l3[1:0]) ? p_md[l3] : d_md[l3];
         end
-        if (ret_v && ret_l == sel && ret_t == s_a[sel]) op_a = my;
-        if (ret_v && ret_l == sel && ret_t == s_b[sel]) op_b = my;
-        if (ev[sel] && ew[sel] == s_a[sel]) op_a = sum[sel*W +: W];
-        if (MUT != 1 && ev[sel] && ew[sel] == s_b[sel]) op_b = sum[sel*W +: W];
-        if (s_bz[sel]) op_b = {W{1'b0}};
+    always @(posedge clk) begin
+        x_sel <= sel; x_st <= s_t[sel]; x_sf <= s_fin[sel]; x_stag <= d_tag[sel];
+        for (l3 = 0; l3 < NL; l3 = l3 + 1) begin
+            x_n[l3] <= d_n[l3]; x_rj[l3] <= d_rj[l3]; x_fin[l3] <= d_fin[l3]; x_tag[l3] <= d_tag[l3];
+            if (iss && sel == l3[1:0]) begin x_rk[l3] <= p_rk[l3]; x_fb[l3] <= p_fb[l3]; x_ff[l3] <= p_ff[l3]; end
+            else begin x_rk[l3] <= d_rk[l3]; x_fb[l3] <= d_fb[l3]; x_ff[l3] <= d_ff[l3]; end
+        end
     end
 
-    // ---------------- the shared adder: operand register + 16 x ot_gpu_fadd LAT 7 ----------------
+    // ================= HEAD STAGE: per 32-b word g (= adder g), kept select copies, one-hot AND-OR only ==============
     reg          ov;
     reg  [W-1:0] oa, ob;
     wire [L-1:0] mf;
-    always @(posedge clk or negedge rst_n) if (!rst_n) ov <= 1'b0; else ov <= iss;
-    always @(posedge clk) begin oa <= op_a; ob <= op_b; end
-    genvar ga;
+    always @(posedge clk or negedge rst_c) if (!rst_c) ov <= 1'b0; else ov <= x_iss;
+    genvar ga, gw;
     generate for (ga = 0; ga < L; ga = ga + 1) begin : g_madd
-        ot_gpu_fadd #(.LAT(ALAT)) u_m (.clk(clk), .rst_n(rst_n), .v(ov), .a(oa[32*ga +: 32]), .b(ob[32*ga +: 32]),
+        (* keep *) reg [NW-1:0] ka_hw, kb_hw, kw_ev, kw_rt;
+        (* keep *) reg          ka_my, kb_my;
+        (* keep *) reg [NL-1:0] ka_ev, kb_ev;
+        (* keep *) reg          rst_m;
+        always @(posedge clk) begin
+            ka_hw <= da_hw; kb_hw <= db_hw; kw_ev <= dw_ev; kw_rt <= dw_rt;
+            ka_my <= da_my; kb_my <= db_my; ka_ev <= da_ev; kb_ev <= db_ev; rst_m <= rst_n;
+        end
+        reg [31:0] a_w, b_w;
+        integer j;
+        always @(*) begin
+            a_w = ka_my ? my[32*ga +: 32] : 32'd0;
+            b_w = kb_my ? my[32*ga +: 32] : 32'd0;
+            for (j = 0; j < NW; j = j + 1) begin
+                a_w = a_w | ({32{ka_hw[j]}} & hw[j*W + 32*ga +: 32]);
+                b_w = b_w | ({32{kb_hw[j]}} & hw[j*W + 32*ga +: 32]);
+            end
+            for (j = 0; j < NL; j = j + 1) begin
+                a_w = a_w | ({32{ka_ev[j]}} & sum_q[j*W + 32*ga +: 32]);
+                b_w = b_w | ({32{kb_ev[j]}} & sum_q[j*W + 32*ga +: 32]);
+            end
+        end
+        always @(posedge clk) begin oa[32*ga +: 32] <= a_w; ob[32*ga +: 32] <= b_w; end
+        for (gw = 0; gw < NW; gw = gw + 1) begin : g_hn
+            assign hn[gw*W + 32*ga +: 32] = kw_ev[gw] ? sum_q[(gw/LV)*W + 32*ga +: 32] :
+                                            kw_rt[gw] ? my[32*ga +: 32] : hw[gw*W + 32*ga +: 32];
+        end
+        ot_gpu_fadd #(.LAT(ALAT)) u_m (.clk(clk), .rst_n(rst_m), .v(ov), .a(oa[32*ga +: 32]), .b(ob[32*ga +: 32]),
                                        .y(my[32*ga +: 32]), .fault(mf[ga]));
     end endgenerate
 
-    // ---------------- state update, return, faults ----------------
+    // ---------------- state update (entries (l, ph)), return, faults ----------------
     integer k, l2;
     reg [4:0] ix2, ix3;
     reg m_fault;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_e) begin
+        if (!rst_e) begin
             rp_v <= {(ALAT+1){1'b0}}; m_fault <= 1'b0; pv_v <= 1'b0; node_valid <= {NE{1'b0}};
             for (k = 0; k < NE; k = k + 1) begin
                 e_md[k] <= IDLE; e_rk[k] <= 3'd0; e_rj[k] <= 3'd0; e_fin[k] <= 1'b0; e_ff[k] <= 1'b0;
                 e_fb[k] <= {LV{1'b0}}; e_n[k] <= {(LV+1){1'b0}};
             end
         end else begin
-            rp_v <= {rp_v[ALAT-1:0], iss};
+            rp_v <= {rp_v[ALAT-1:0], x_iss};
             pv_v <= ret_v && rp_f[ALAT];
             if (ret_v && rp_f[ALAT]) node_valid[{ret_l, ph}] <= 1'b1;
-            if (|mf) m_fault <= 1'b1;
+            if ((|mf) || (|x_flt)) m_fault <= 1'b1;
             for (l2 = 0; l2 < NL; l2 = l2 + 1) begin
                 ix2 = {l2[1:0], ph};
-                if (ev[l2]) begin
-                    if (e_md[ix2] != IDLE) m_fault <= 1'b1;                                 // unissued step left
-                    if (ret_v && ret_l == l2[1:0] && ret_t == ew[l2]) m_fault <= 1'b1;      // word still in flight
-                    if (cc[l2] >= (1 << (LV - 1))) m_fault <= 1'b1;                         // run longer than the stack
-                    if (tag_d[l2*TAGW + TAGW-2]) node_valid[ix2] <= 1'b0;
-                end
-                e_n[ix2] <= d_n[l2]; e_rj[ix2] <= d_rj[l2]; e_fin[ix2] <= d_fin[l2];
-                if (iss && sel == l2[1:0]) begin
-                    e_md[ix2] <= p_md[l2]; e_rk[ix2] <= p_rk[l2]; e_fb[ix2] <= p_fb[l2]; e_ff[ix2] <= p_ff[l2];
-                end else begin
-                    e_md[ix2] <= d_md[l2]; e_rk[ix2] <= d_rk[l2]; e_fb[ix2] <= d_fb[l2]; e_ff[ix2] <= d_ff[l2];
-                end
+                if (x_nvc[l2]) node_valid[ix2] <= 1'b0;
+                e_n[ix2] <= x_n[l2]; e_rj[ix2] <= x_rj[l2]; e_fin[ix2] <= x_fin[l2];
+                e_md[ix2] <= x_md[l2]; e_rk[ix2] <= x_rk[l2]; e_fb[ix2] <= x_fb[l2]; e_ff[ix2] <= x_ff[l2];
             end
         end
     end
     always @(posedge clk) begin
-        for (l2 = 0; l2 < NL; l2 = l2 + 1) begin ix3 = {l2[1:0], ph}; e_tag[ix3] <= d_tag[l2]; end
-        rp_l[0] <= sel; rp_t[0] <= s_t[sel]; rp_f[0] <= s_fin[sel]; rp_tag[0] <= d_tag[sel];
+        for (l2 = 0; l2 < NL; l2 = l2 + 1) begin ix3 = {l2[1:0], ph}; e_tag[ix3] <= x_tag[l2]; end
+        rp_l[0] <= x_sel; rp_t[0] <= x_st; rp_f[0] <= x_sf; rp_tag[0] <= x_stag;
         for (k = 1; k <= ALAT; k = k + 1) begin
             rp_l[k] <= rp_l[k-1]; rp_t[k] <= rp_t[k-1]; rp_f[k] <= rp_f[k-1]; rp_tag[k] <= rp_tag[k-1];
         end
         if (ret_v && rp_f[ALAT]) begin pv_y <= my; pv_tag <= rp_tag[ALAT]; pv_lane <= ret_l; end
     end
 
-    // ---------------- publication (PUBLISH = 1): node = level LV-1 of entry (pub_lane, ph) ----------------
+    // ---------------- publication (PUBLISH = 1): node = level LV-1 of entry (pl_q, ph), request through the input reg ----
     reg pub_fault;
     generate if (PUBLISH != 0) begin : g_pub
         reg [W-1:0] pr_q, pub_buffer;
@@ -291,20 +384,21 @@ module ot_hnx_att4_smerge #(
         reg [TAGW-1:0] tag0, tag1;
         reg [3:0] word_next;
         reg [4:0] pix;
+        wire [1:0] rl = (MUT == 5) ? (pl_q ^ 2'd1) : pl_q;
         integer pl;
         always @(posedge clk)
-            for (pl = 0; pl < NL; pl = pl + 1) if (pub_lane == pl[1:0]) pr_q <= hw[(pl*LV + LV-1)*W +: W];
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin
+            for (pl = 0; pl < NL; pl = pl + 1) if (rl == pl[1:0]) pr_q <= hw[(pl*LV + LV-1)*W +: W];
+        always @(posedge clk or negedge rst_c)
+            if (!rst_c) begin
                 pub_d0 <= 1'b0; pub_d1 <= 1'b0; pub_active <= 1'b0; pub_fault <= 1'b0; pub_v <= 1'b0; word_next <= 4'd0;
             end else begin
-                pub_d0 <= pub_start; pub_d1 <= pub_d0;
+                pub_d0 <= ps_q; pub_d1 <= pub_d0;
                 pub_v <= pub_d1 || pub_active;
-                if (pub_start) begin
-                    pix = {pub_lane, ph};
-                    slot0 <= pub_slot; lane0 <= pub_lane; tag0 <= e_tag[pix];
-                    if (!node_valid[pix] || e_tag[pix][2:0] != pub_slot || (ret_v && ret_l == pub_lane && ret_t == TOP) ||
-                        pub_d0 || pub_d1 || (pub_active && word_next != 4'd14) || pub_lane >= NL)
+                if (ps_q) begin
+                    pix = {pl_q, ph};
+                    slot0 <= pslot_q; lane0 <= pl_q; tag0 <= e_tag[pix];
+                    if (!node_valid[pix] || e_tag[pix][2:0] != pslot_q || (ret_v && ret_l == pl_q && ret_t == TOP) ||
+                        pub_d0 || pub_d1 || (pub_active && word_next != 4'd14) || pl_q >= NL)
                         pub_fault <= 1'b1;
                 end
                 if (pub_d0) begin pub_buffer <= pr_q; slot1 <= slot0; lane1 <= lane0; tag1 <= tag0; end
@@ -318,9 +412,9 @@ module ot_hnx_att4_smerge #(
                 end
             end
     end else begin : g_nopub
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin pub_fault <= 1'b0; pub_v <= 1'b0; end
-            else begin pub_fault <= pub_fault | pub_start; pub_v <= 1'b0; end
+        always @(posedge clk or negedge rst_c)
+            if (!rst_c) begin pub_fault <= 1'b0; pub_v <= 1'b0; end
+            else begin pub_fault <= pub_fault | ps_q; pub_v <= 1'b0; end
         always @(posedge clk) begin
             pub_data <= 32'd0; pub_word <= 4'd0; pub_out_slot <= 3'd0; pub_out_lane <= 2'd0; pub_tag <= {TAGW{1'b0}};
         end

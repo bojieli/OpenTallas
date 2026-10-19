@@ -113,7 +113,8 @@ endmodule
 // d4g leafh's own XREL operand stations (xb_* / xf_*: one register on every operand bit between the x store and the
 // lane's columns = the per-lane registered fan-out of the shared weight word) -> block-dot column + BF16 column (CLOSED
 // views) -> G1 -> slot-major publish.  Per lane exactly the d4g leafh datapath; cycle timing = hnx_rp4lp4_lf.
-// MUT: 1 = x-store lane alias (hnx_xs4 MUT 1), 2 = lane-select ignored, 3 = publish slot error.
+// MUT: 1 = x-store lane alias (hnx_xs4 MUT 1), 2 = lane-select ignored, 3 = publish slot error, 4 = W-face BF16 weight
+// copy sign bits inverted (hnx_xs4 MUT 4: proves the W-face lanes read the W copy).
 module hnx_rp4lp4_lfx #(parameter integer P = 4, parameter integer LSKEW = 8, parameter integer MUT = 0,
                         parameter integer TAGW = 16, parameter integer LBS = 2, parameter integer LSB = 16) (
     input  wire clk, input wire rst_n, input wire [25:0] st, input wire [817:0] rl1,
@@ -139,12 +140,21 @@ module hnx_rp4lp4_lfx #(parameter integer P = 4, parameter integer LSKEW = 8, pa
     always @(posedge clk) rr <= {(1+4*P){rst_n}};
     wire iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e;
     wire [TAGW-1:0] itag, itag_e;
-    wire [LBS*266+LSB*16-1:0] iw;
-    wire [P*(LBS*266+LSB*16)-1:0] ix;
-    hnx_xs4 #(.P(P), .MUT(MUT == 1 ? 1 : 0)) u_xs (.clk(clk), .rst_a(rr[0]), .xs_a1(st[8:0]), .xs_g1(st[13:9]),
+    // x store faces (10-19 face split): N = block-dot operands, W = BF16 lanes 0..PW-1, E = BF16 lanes PW..P-1
+    localparam integer PW = (P + 1) / 2, PEW = (P - PW) > 0 ? (P - PW) : 1;
+    wire iv_fw, ifirst_w, ilast_w;
+    wire [TAGW-1:0] itag_w;
+    wire [LBS*266-1:0] iwb;
+    wire [P*LBS*266-1:0] ixb;
+    wire [LSB*16-1:0] iwf_e, iwf_w;
+    wire [PEW*LSB*16-1:0] ixf_e;
+    wire [PW*LSB*16-1:0] ixf_w;
+    hnx_xs4 #(.P(P), .MUT((MUT == 1 || MUT == 4) ? MUT : 0)) u_xs (.clk(clk), .rst_a(rr[0]), .xs_a1(st[8:0]), .xs_g1(st[13:9]),
         .xs_a2(st[20:14]), .xs_g2(st[25:21]), .rl1(rq), .bk1({bv, bd}), .ohl1(bd[2060:2048]), .wl(wl),
-        .o_iv_b(iv_b), .o_iv_f(iv_f), .o_ifirst(ifirst), .o_ilast(ilast), .o_ifp4(ifp4), .o_itag(itag), .o_iw(iw), .o_ix(ix),
-        .o_ifirst_e(ifirst_e), .o_ilast_e(ilast_e), .o_itag_e(itag_e));
+        .o_iv_b(iv_b), .o_iv_f(iv_f), .o_ifirst(ifirst), .o_ilast(ilast), .o_ifp4(ifp4), .o_itag(itag), .o_iwb(iwb), .o_ixb(ixb),
+        .o_iwf_e(iwf_e), .o_ixf_e(ixf_e), .o_iwf_w(iwf_w), .o_ixf_w(ixf_w),
+        .o_ifirst_e(ifirst_e), .o_ilast_e(ilast_e), .o_itag_e(itag_e),
+        .o_iv_fw(iv_fw), .o_ifirst_w(ifirst_w), .o_ilast_w(ilast_w), .o_itag_w(itag_w));
     wire [P*50-1:0] g_p;
     genvar p;
     generate for (p = 0; p < P; p = p + 1) begin : g_ln
@@ -155,12 +165,17 @@ module hnx_rp4lp4_lfx #(parameter integer P = 4, parameter integer LSKEW = 8, pa
         reg [LBS*266-1:0] xb_w, xb_x;
         reg [LSB*16-1:0] xf_w, xf_x;
         always @(`OT_RP4_AR(clk, r_x)) if (!r_x) xb_v <= 0; else xb_v <= iv_b;
-        always @(`OT_RP4_AR(clk, r_x)) if (!r_x) xf_v <= 0; else xf_v <= iv_f;
+        // BF16 operands from the x store face of this lane's side (W lanes < PW, E lanes >= PW)
+        wire sv_f = (p < PW) ? iv_fw : iv_f, sfirst = (p < PW) ? ifirst_w : ifirst_e, slast = (p < PW) ? ilast_w : ilast_e;
+        wire [TAGW-1:0] stag = (p < PW) ? itag_w : itag_e;
+        wire [LSB*16-1:0] swf = (p < PW) ? iwf_w : iwf_e;
+        wire [LSB*16-1:0] sxf = (p < PW) ? ixf_w[((p < PW) ? p : 0)*LSB*16 +: LSB*16] : ixf_e[((p < PW) ? 0 : p - PW)*LSB*16 +: LSB*16];
+        always @(`OT_RP4_AR(clk, r_x)) if (!r_x) xf_v <= 0; else xf_v <= sv_f;
         always @(posedge clk) begin
             xb_first <= ifirst; xb_last <= ilast; xb_fp4 <= ifp4; xb_tag <= itag;
-            xb_w <= iw[0 +: LBS*266]; xb_x <= ix[p*(LBS*266+LSB*16) +: LBS*266];
-            xf_first <= ifirst_e; xf_last <= ilast_e; xf_tag <= itag_e;
-            xf_w <= iw[LBS*266 +: LSB*16]; xf_x <= ix[p*(LBS*266+LSB*16) + LBS*266 +: LSB*16];
+            xb_w <= iwb; xb_x <= ixb[p*LBS*266 +: LBS*266];
+            xf_first <= sfirst; xf_last <= slast; xf_tag <= stag;
+            xf_w <= swf; xf_x <= sxf;
         end
         wire bov, bfault, fov, ffault;
         wire [31:0] by, fy;

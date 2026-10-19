@@ -1,0 +1,18 @@
+2026-10-19T02:48:59-07:00 start host=regular-crane bundle=f6d6de957
+2026-10-19T03:20:29-07:00 build m3 rc=0 bin=ok
+2026-10-19T03:20:52-07:00 m3 pre_n4_g0: MISMATCH word 163840: got be110000 exp bf630000 MISMATCH word 163841: got 3e5a0000 exp 3f4d0000 MISMATCH word 163842: got 3f2a0000 exp 3f3d0000 
+2026-10-19T03:20:53-07:00 done
+verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050
+--- run_m3_pre_n4_g0/run.log
+MISMATCH word 163840: got be110000 exp bf630000
+MISMATCH word 163841: got 3e5a0000 exp 3f4d0000
+MISMATCH word 163842: got 3f2a0000 exp 3f3d0000
+MISMATCH word 163843: got 40000000 exp 3ed00000
+MISMATCH word 163844: got 3fa80000 exp bfc00000
+HNX_FUSED_CYCLES op=pre N=4 rgap=0 KX=4 MUT=3 cycles=648 done=1 fault=0 reads=10884 writes=2560
+HNX_FUSED FAIL op=pre N=4 mism=15349 fault=0 done=1 bankerr=0 writes=2560 expect_sectors=2560
+- rtl/hbm_next/fused/tb/tb_hnx_fused.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 23.178 s; speed 61.482 ns/s
+- Verilator: cpu 23.165 s on 1 threads; allocated 313 MB
+RUN_RC=0

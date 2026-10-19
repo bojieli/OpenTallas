@@ -1,0 +1,108 @@
+# FUSED HC_PRE_NORM / HC_POST N-row engine (HBM-NEXT-UNITS-FUSED, 2026-10-19)
+
+**Verdict: PASS.** The engine is bit-exact for N = 1, 2, 3, 4 and 6, for both ops. All 6 mutants FAIL, and their fail witnesses are committed.
+
+**Measured row II (Verilator 5.050, fleet):**
+
+| Op | Measured II per added row | CMTP price (isa_rows.py) | Ratio |
+|---|---|---|---|
+| FUSED.HC_PRE_NORM | **81** | 197 (credited P6 LL engine) | 0.41x |
+| FUSED.HC_POST | **103** | 100 (priced) | 1.03x |
+
+This is next-release work at P = 4, not a release gate. Branch `claude/hbm-next-units-fused-1019`. It uses only hnx names and edits no d4g/GEN2 file.
+
+## Why a new engine (not a fork)
+
+The d4g GEN2 die has **no FUSED HC datapath**:
+
+- layer_coverage maps HC_PRE_NORM / HC_POST onto the static HC masters, but those masters implement HC.HC_MIX only.
+- The die contract lists the producer as open gaps G-HC / G-HC-ENG.
+
+The P6 RTL that the price of 197 comes from (8fe5d18bd, `ot_hgi_hc_eng_ll`) is a credited engine (credits, ready, request/grant, FIFOs), so it is illegal on the static die.
+
+`rtl/hbm_next/fused/ot_hnx_fused_eng.sv` keeps the LL engine's arithmetic exactly: the same primitives in the same golden order. It replaces the control with a static calendar:
+
+- Every VM read is issued on a counter-fixed edge.
+- Every response is checked against its fixed return edge (RR + 1).
+- Any collision is a FAULT: x-slot reuse, heap node overwrite, sweep overlap, a scalar read inside the data calendar, or an unsolicited response.
+
+There is no "N = 1 = d4g" reference, because d4g has no such unit. N = 1 is checked against the same golden as every N: `tools/hdc_golden_v41`, R-ARITH chunk8.
+
+## Structure
+
+- **`ot_hnx_fused_lane`, x32, one per VM bank.** Lane-local: it reads and writes only its own bank.
+  - Per record: JOB (ROWX fields nm1, rgap, rs_A/rs_B/rs_O in sectors), scalar sector reads, per-row WGT beats into 2 row-tagged coefficient slots, then GO.
+  - PRE: the gain is read once and held across rows. Each row then does 4 NM h-reads, the mix into x slot p mod KX, the squares, and the chunk chain. Row p's r scales its x slot, giving y = bf16(w * (x * r)).
+  - POST: per sector, 5 reads, then a 4-row sweep.
+- **`ot_hnx_fused_top`:** job decode, the scalar prologue, relayed command/r buses, the golden csum tree with lanes in lockstep, and a row-pipelined padded heap. A node is cleared on consume, and a write to a full node is a FAULT. Then / D, + eps, rsqrt.
+
+## Measured cycles (KX = 4, rgap 0; `m0/verdict_m0.txt`, bundle f6d6de957, ot-epyc5)
+
+| N | 1 | 2 | 3 | 4 | 6 | II per added row |
+|---|---|---|---|---|---|---|
+| HC_PRE_NORM | 404 | 486 | 567 | 648 | 810 | 81 (= 4 NM + 1, NM = 20 at D 5,120) |
+| HC_POST | 196 | 304 | 407 | 510 | 716 | 103 (= 5 NM + 3) |
+
+- **Cost model for CMTP:** c(N) = c1 + (N - 1)(II + rgap).
+  - PRE: c1 = 404, II = 81.
+  - POST: c1 = 196, II = 103. The N 1 -> 2 step is 108.
+
+### KX = 2 (`k2/k2.log`), HC_PRE_NORM at N = 4
+
+| rgap | Result | Cycles | II |
+|---|---|---|---|
+| 0 | **FAULT** | | |
+| 64 | PASS | 840 | 145 |
+| 128 | PASS | 1,032 | |
+| 192 | PASS | 1,224 | |
+| 256 | FAULT | | |
+
+- rgap 0 FAULTs because the x-slot collision check fires, as intended: the slot is reused before its scale.
+- rgap 256 is a bench artefact. rgap is 8 bits (HGI-1R `rgap` 15:8), so 256 wraps to 0. The vector generator should refuse values above 255.
+- **Design point: KX = 4 at rgap 0.**
+
+## Mutants (all FAIL; witnesses in `witness/m1..m6.log`)
+
+| Mutant | Mechanism | Result |
+|---|---|---|
+| m1 | every row uses coefficient slot 0 | pre mism 10,183, post 40,878 |
+| m2 | rs_A ignored | pre 15,343, post 61,337 |
+| m3 | every row uses x slot 0 | 15,349 |
+| m4 | heap not cleared on consume | fault=1, mism 15,816 |
+| m5 | gain not held across rows | 20,480 |
+| m6 | row 0's r for every row | 15,360 |
+
+## Build note
+
+32 flat lanes OOM at about 1.5 GB per lane. The bench is built with `--hierarchical` (`tools/hbm_next/hnx_fused.vlt` hier_block on the lane). That takes about 35 minutes and up to 60 GB on the fleet.
+
+## Kit (new hardened tile)
+
+`physical/ref_tile/hnx_fused_lane_1019` is the lane, replicated x32 and hardened once.
+
+- Outline 259.2 x 259.2 um, which is a **guess**. The remote gate prints the synthesized area, and gen should then re-size the outline from `std_area_um2`.
+- Faces: N = command/up/r; S = VM bank (rq/rr/wq).
+- io_hold_margin 0.03; reset landing 2 stages; pin_regs off (every port is a pin flop in the RTL).
+- Benches: m0 (`m0 SUMMARY pass=10 fail=0 noresult=0`) plus m1..m6 with committed witnesses.
+- **Remote CTS gate 10-19 03:04 (ot-epyc7): FAIL `synth_smoke`.** ORFS yosys did not finish within 2,700 s; it looped in OPT_SHARE / OPT_DFF passes. Log: `gate1_synth_stall.log`. This is a structural finding, not a flow glitch.
+- **Cause:** the lane keeps the KX x NM x 256 b x store `xb[slot*NM + m]` (80 x 256 = 20,480 b) and the 20 x 256 b gain buffer `gb[m]` as runtime-indexed flop arrays. Each is read through an 80:1 or 20:1 x 256-b mux and written at a runtime index. That is the yosys SHARE-stall class, and it would also give a poor tile even if synthesis finished.
+- **Fix (next agent, RTL):**
+  - Move `xb` into one 1R1W SRAM macro (`physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_*`, 80 of 128 rows). The access pattern is 1 write a cycle (mix) and 1 read a cycle (scale), which fits a 1R1W macro.
+  - Keep `gb` in flops, but read it through a registered address (or use a second 1R1W 32x256 macro).
+  - Absorb the macro read latency into the scale pipeline (`xo` / `wm_d` delay +L). This is a fixed retime, so the row II is unchanged.
+  - Re-run m0 + m1..m6 (the witnesses must be re-made if the logs change), then re-gate `hnx_fused_lane_1019` with `macros` in the spec.
+
+## Files
+
+- RTL: `rtl/hbm_next/fused/ot_hnx_fused_eng.sv`
+- Bench: `rtl/hbm_next/fused/tb/tb_hnx_fused.sv`
+- Vectors: `tools/hbm_next/hnx_fused_vec.py`
+- Fleet script: `tools/hbm_next/hnx_fused_bench.sh` (stages lint / m0 / k2 / m1..m6, plus a SUMMARY line)
+- Verilator config: `tools/hbm_next/hnx_fused.vlt`
+
+## Next
+
+1. Do the xb -> SRAM macro fix above, re-bench, then re-gate `hnx_fused_lane_1019` (`--remote auto --cts`). Take the outline from the gate's `std_area_um2` plus the macro, then submit_exact. This tile is not on the critical list.
+2. Kit the top (`ot_hnx_fused_top`: csum tree, heap, divc, rsqrt) as a cluster parent with 32 lane children. The DIE lane has to place the 32 lanes beside their VM banks.
+3. CMTP: flip FUSED.HC_PRE_NORM to 81 MEASURED (c1 404) and FUSED.HC_POST to 103 MEASURED (c1 196), with the KX = 4 rgap 0 rule. For KX = 2, the compiler needs rgap >= 64 (the minimum between 1 and 64 is not measured).
+4. The ROWX decode from the HGI-1R record word into the lane JOB (nm1, rgap, rs_A/rs_B/rs_O in sectors = words / 8) sits in the top's job decode. Check it against `tools/hbm_next/isa_rows.py` when CMTP's binary emitter lands.

@@ -254,3 +254,68 @@ Chain `physical/hbm_next/die/hnx_p4_chain.sh` (the GEN2 S4..S8 form, forked by c
   - It shows 16 problems (svg_<q><i>.fault: no contract bits), the same 16 as GEN2.
   - NO_E 1,451: there are no per-link E/K for the hnx regions; the d4g land plan is used as given (GEN2 is NO_E 964 too).
 - Splice / bind / lockstep / GEN / GRT: see the lane file + pending_results (running at the time of writing).
+
+## STEP 3 (10-19 ~03:00-03:40, fresh DIE agent): SM4 lever (a) shape, ATT4 A1 reserve, VM 2^19 -> lever table on f4c_t7
+
+**New basis f4c_t7** = f4c_t6c + VM 2^19 words (6 x 1024x256 per bank, bank +151.2 um, covers CMTP's 481.7k Engram need; 0 mm², as f4c_t6e) + ATT4 A1 reserve (shared PV merge tile hnx_rp4a4_spvm, +5.9 mm² outline per die; modelled as ONE lattice row +43.2 um per SM tile = +7.3 mm² of SM column area ≥ 5.9). Same evaluator and arguments as t6c (`--hc quad --grp-side 259.2 --coll-d 4500 --coll-l5`; `f4c_t6c_chk` reproduces 693.09 / 0.484 / 0.490 / 0.669 M exactly).
+
+| plan | tile (um) | die | mm² | reticle | cut v / h | bit-mm | stages_bw | SM_HBM | longest |
+|---|---|---|---:|---|---|---:|---:|---:|---:|
+| **f4c_t7 (P=4 base + A1 + VM 2^19)** | 630.72 x 1,857.6 | 23.89 x 29.36 | **701.35** | fits | 0.484 / 0.435 | 0.667 M | 6.01 | 5.25 | 10.2 mm |
+| t7_La: (a) re-shaped to the frame width, no A1 | 673.92 x 2,160 (1.456 mm², hard fill 0.519) | 25.27 x 31.77 | 803.07 | fits | 0.576 / 0.416 | 0.720 M | 6.40 | 5.88 | 12.1 mm |
+| **t7_LaA: (a) re-shaped + A1** | 673.92 x 2,203.2 (= the largest legal tile) | 25.27 x 32.12 | **811.81** | fits (0.38 mm margin) | 0.576 / 0.392 | 0.721 M | 6.43 | 5.88 | 12.3 mm |
+| **t7_Lp3a: P3+(a) + A1** | 630.72 x 2,203.2 | 23.89 x 32.12 | **767.41** | fits | 0.484 / 0.366 | 0.679 M | 6.09 | 5.25 | 11.6 mm |
+| t7_Lab: (a)+(b) + A1 (CMTP: fails MTP, rejected) | 630.72 x 2,030.4 | 23.89 x 30.74 | 734.38 | fits | 0.484 / 0.451 | 0.673 M | 6.07 | 5.25 | 10.9 mm |
+
+**SM4 lever (a) tile `hnx_rp4lp4x` (claude/hbm-next-sm4-1019@62db69520): 1,080 x 1,339.2 = 1.446 mm², hard fill 0.523.**
+- As drawn it does NOT fit the frame. A column is 4 tiles across: 4 x 1,080 + 108 = 4.43 mm per column, so the 8-column SM row is 35.4 mm, over the 25.5-mm usable width.
+- Transposed (1,339.2 wide) it is worse: the row is 43.7 mm.
+- A 2 x 8 column (2 tiles across, 8 high) makes the row 18.1 mm wide, but the column is 8 x 1,339.2 + 561.6 = 11.28 mm tall, against 9.37 mm for the 4 x 4 column at 673.92 x 2,203.2. The die then needs ~2 x 1.9 mm more height = ~36 mm, over the 32.5-mm usable height. It FAILS.
+- Re-shaped at the frame width (673.92 wide), the same area needs 2,145.6 tall, so 2,160 on the lattice: 1.456 mm² at hard fill 0.519 (≥ 0.51). This is **803.1 mm²** without A1 and **811.8 mm²** with A1, inside the reticle.
+- SM4 estimated ~770 mm² on f4c_t5. That figure is the linear estimate, and it under-counts: tile height grows the column 4 x Δth and pushes the band, as in step 2.
+- **Geometric feasibility of the re-shape is NOT shown.** SM4's leaf is 985 x 457.92: the face-split xs4 (501.12 x 289.44) has its 4 BF16 lane stacks (198.72 x 216 each) beside it, W and E.
+  - At 673.92 wide, the lane stacks cannot sit beside the xs4 (4 x 198.72 = 795 > 674). They must go above or below it, and the xs4 W/E face-split pins then face away from them.
+  - Rough count: 2 such leaves + the 259.2 middle band need ~2,200-2,400 um of height. So (a) lands at the largest legal tile (2,203.2, 811.8 mm²) at best, or over the ~2,246 cap.
+  - SM4 must re-pack and re-pin to prove it.
+
+**Verdict for the OWNER decision (P3+(a) vs (a)), on f4c_t7 (A1 + VM 2^19 included):**
+- **P3+(a) = 767.4 mm²** (was 759.2 without A1). It fits the reticle at cut 0.484, inside the rule.
+- **(a) = 811.8 mm²**, at best, and only if SM4 re-packs the leaf to 673.92 wide. Its cut is 0.576, inside the rule but near the 0.60 limit, and SM_HBM is 5.88 stations.
+- (a) costs +44 mm² (+5.8 %) over P3+(a). CMTP gives the same AR/MTP/4-user targets as met by both (P3+(a): MTP 3,389.9 / 4-user 4,220; (a): 3,500.1 / 4,423.1). Per mm², P3+(a) stays ahead: MTP 4.42/mm² vs 4.31/mm².
+- DIE supports PROG's recommendation of P3+(a).
+- Both options are over the 752 budget once A1 is counted: P3+(a) by 15.4 mm², (a) by 59.8 mm². The P=4 base t7 is 701.35.
+
+## STEP 4 (10-19 ~03:35-04:00, fresh DIE agent): IDXN + measured VM 2^19 + FUSED lanes -> lever table on f4c_t8
+
+**New basis f4c_t8** = f4c_t7 with three measured or published unit areas placed as plan blocks (`plan_p4.py --vm-dh 90.72 --idxn --fused 259.2`, the other arguments as t7; `f4c_t7_chk` reproduces t7 exactly: 701.35 / 0.484 / 0.435 / 0.667 M):
+- **VM 2^19 measured** (UNITS-VM 03:35, tile `hnx_vms_bank` 270 x 403.92 um, 4 SRAMs): bank +90.72 um, not the +151.2 um modelled in t7. The bank row gets 60.5 um shorter. Die area is still 0 mm²: the band height is set by the quadrant HC column (SFU core + HC ring quarter).
+- **IDXN** (UNITS-IDXN, 0.82 mm² cell+macro, outlines at fill 0.7):
+  - The 2 key replay buffers (0.486 mm² -> 0.69 mm²) are split half a buffer per quadrant scorer. Each `idxq_<q>` grows 560 x 300 -> 560 x 610.
+  - The 3 selectors + issuer (0.338 mm² -> 0.48 mm²) go in a new block `idx_nsel` (805 x 600) beside `idx_sel` in the centre strip.
+  - Both fit in existing slack (the quadrant core column and the strip): 0 mm².
+- **FUSED** (UNITS-FUSED `hnx_fused_lane_1019`, x32, S face = its VM bank):
+  - The kit outline 259.2 x 259.2 is the README's **guess**. Its area is pending the lane gate's `std_area_um2`. 32 lanes = 2.15 mm².
+  - Each SU group's 2 lanes sit at the foot of the SFU/HC client column, on the inner corner of the bank pair. The SFU group and HC client move up by 558 um.
+  - Two placements were rejected:
+    - Row A beside the bank pair, side by side: the quadrant overruns the centre channel by 70-390 um.
+    - Stacked in row A: this collides with the quantiser on the N quadrants.
+  - 0 mm². The cost is wire: bit-mm +0.021 M and stages_bw +0.13, from the longer SU-group links.
+- The region map puts the `fus_*` lanes in their bank pair's SU-group region, so all 76 regions stay <= 4 mm.
+
+| plan | tile (um) | die | mm² | cut v / h | bit-mm | stages_bw | SM_HBM | longest |
+|---|---|---|---:|---|---:|---:|---:|---:|
+| **f4c_t8 (P=4 base + A1 + VM 2^19 meas + IDXN + FUSED)** | 630.72 x 1,857.6 | 23.89 x 29.36 | **701.35** | 0.484 / 0.419 | 0.688 M | 6.14 | 5.25 | 10.2 mm |
+| **t8_LaA: (a) re-shaped + A1** | 673.92 x 2,203.2 | 25.27 x 32.12 | **811.81** | **0.585** / 0.490 | 0.742 M | 6.54 | 5.88 | 12.3 mm |
+| **t8_Lp3a: P3+(a) + A1** | 630.72 x 2,203.2 | 23.89 x 32.12 | **767.41** | 0.484 / 0.458 | 0.699 M | 6.22 | 5.25 | 11.6 mm |
+| t8_Lab: (a)+(b) + A1 (CMTP-rejected) | 630.72 x 2,030.4 | 23.89 x 30.74 | 734.38 | 0.484 / 0.419 | 0.693 M | 6.17 | 5.25 | 10.9 mm |
+
+**Verdict:**
+- The three unit areas change no die mm²: placed area +1.7 mm², density 0.765 -> 0.768.
+- They do change the (a) cut. (a) re-shaped goes 0.576 -> **0.585**, 0.015 under the 0.60 limit, so any further band growth on (a) fails the cut. P3+(a) holds at 0.484.
+- The lever stands: **P3+(a) 767.4 mm² vs (a) 811.8 mm² (+44.4, +5.8 %; the (a) re-pack to 674 wide is still unproven)**. DIE still supports P3+(a).
+- The FUSED guess is the open risk. If the lane gate needs the x store in a macro or a larger outline, it may run past the remaining ~1.7 mm of SFU/HC-column slack (the lane pair could also move above the HC client). That would grow the band, so re-run t8 with the measured side.
+
+**Case inputs ready (step 4):** `physical/hbm_next/die/f4c_t7/` and `f4c_t8/` hold grants, region map, pin plan and `hnx_rp4lp4_pins.tcl` from `hnx_case_inputs.py` / `pin_plan_p4.py`. They are staged with the plan dirs into the fleet case src (`ot-epyc4:/srv/opentallas-scratch/claude/hnx/die_p4/src`).
+- The `fus_*` and `idx_nsel` blocks have no GEN2 slot or contract instance yet. In the case they appear as plan or region blocks only, until UNITS publishes those tiles.
+- `cxdl_<q>4` (L=5) also still needs the UNITS-COLL contract entry.
+- The next case runs `bash hnx_case.sh f4c_t8` on the fleet, then `TAG=f4c_t8 bash hnx_p4_chain.sh`. It starts once the t5 chain ends, because the chain's `$B/hnx_*` intermediates and `$A` logs are not tag-keyed.

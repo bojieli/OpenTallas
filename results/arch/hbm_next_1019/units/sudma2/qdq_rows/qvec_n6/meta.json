@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.hbm_next.qdq_rows.v1",
+ "n": 6,
+ "e": 512,
+ "op": "QDQ_FP8",
+ "block": 32,
+ "beats": 96,
+ "price_row": 16,
+ "price_c1": 24,
+ "cost_total": 104,
+ "mut_stride": false,
+ "rows": [
+  {
+   "row": 0,
+   "a_base": 51776,
+   "o_base": 55872,
+   "beats": 16,
+   "cost": 24
+  },
+  {
+   "row": 1,
+   "a_base": 52288,
+   "o_base": 56384,
+   "beats": 16,
+   "cost": 16
+  },
+  {
+   "row": 2,
+   "a_base": 52800,
+   "o_base": 56896,
+   "beats": 16,
+   "cost": 16
+  },
+  {
+   "row": 3,
+   "a_base": 53312,
+   "o_base": 57408,
+   "beats": 16,
+   "cost": 16
+  },
+  {
+   "row": 4,
+   "a_base": 53824,
+   "o_base": 57920,
+   "beats": 16,
+   "cost": 16
+  },
+  {
+   "row": 5,
+   "a_base": 54336,
+   "o_base": 58432,
+   "beats": 16,
+   "cost": 16
+  }
+ ],
+ "golden": "hdc_golden_v41 qdq_fp8"
+}

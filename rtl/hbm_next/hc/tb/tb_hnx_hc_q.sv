@@ -17,7 +17,8 @@
 // strides in sectors (0 = the d4g dense form; RNPOS 2, SPR 320, strides 0 reproduce the d4g bench exactly).  Waves are
 // checked against row r = w / (SPR/4) at RBASE + r*stride + (w % (SPR/4))*32; stores at SBASE + p*sstride + j.
 // MUT 7 = residual reader ignores the row stride, 8 = result store ignores the row stride (both must FAIL with
-// strides set).
+// strides set).  MUT 9 (HUBFIX 10-19) = the E face copy of the beat-control register is a relay one edge late (must FAIL:
+// every face copy is checked against the original register on every edge).
 module tb_hnx_hc_q;
     parameter integer MUT=0;
     parameter integer XWB=4;
@@ -25,7 +26,7 @@ module tb_hnx_hc_q;
     parameter integer RNPOS=4;
     parameter integer RSTRIDE=1024;
     parameter integer SSTRIDE=64;
-    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:(MUT==8)?7:0;
+    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:(MUT==8)?7:(MUT==9)?8:0;
     localparam integer WPR=SPR/4, RST_E=(RSTRIDE==0)?SPR*8:RSTRIDE, SST_E=(SSTRIDE==0)?3:SSTRIDE;
     localparam integer VM_RD=15, VM_WR=12;
     reg clk=0,rst_n=0;
@@ -56,12 +57,13 @@ module tb_hnx_hc_q;
     reg result_v=0;
     reg [2:0] result_position=0;
     reg [767:0] result=0;
-    ot_hnx_hc_q #(.MUT(DUT_MUT),.XW_BEATS(XWB),.SPR(SPR)) dut(
+    wire [3:0] xvf; wire [7:0] xbf;   // HUBFIX: per-face copies of the beat-control register (hub tile faces W, N, E, S)
+    ot_hnx_hc_q #(.MUT(DUT_MUT),.XW_BEATS(XWB),.SPR(SPR),.XFC(1)) dut(
         .clk(clk),.rst_n(rst_n),.tgt(8'd108),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .configured(t_conf),
         .lg_rq(c_rq),.lg_wq(c_wq),.lg_rr(c_rr),.lg_w_done(c_wd),
-        .x_wave_v(xv_l),.x_wave_word(xword_l),.x_wave(xwave_l),.x_wave_beat(xbeat),.residual_done(rdone),
+        .x_wave_v(xv_l),.x_wave_word(xword_l),.x_wave(xwave_l),.x_wave_beat(xbeat),.x_wave_vf(xvf),.x_wave_beatf(xbf),.residual_done(rdone),
         .gathered_mix_v(gv),.gathered_mix_row(grow),.gathered_mix_pos(gpos),.gathered_mix_data(gdata),.gather_done(gdone),
         .result_v(result_v),.result_position(result_position),.result(result),
         .program_active(prog_active),.program_done(prog_done),.fault(dut_fault));
@@ -147,11 +149,17 @@ module tb_hnx_hc_q;
         for(integer s=0;s<32768;s=s+1)if(!(s>=SBASE&&(s-SBASE)%SST_E<3&&(s-SBASE)/SST_E<4)&&vm[s]!==snap[s])begin errors=errors+1;if(errors<5)$display("stray write sector %0d",s);end
         if(waves!=RNPOS*WPR)begin errors=errors+1;$display("waves %0d expected %0d",waves,RNPOS*WPR);end
         if(mixes!=GNPOS*24)begin errors=errors+1;$display("mixes %0d expected %0d",mixes,GNPOS*24);end
+        if(fc_bad!=0)begin errors=errors+1;$display("face copies: %0d mismatching edges",fc_bad);end
         if(dut_fault||rx_fault||(|bank_fault))begin errors=errors+1;$display("fault dut=%0d rx=%0d bank=%b",dut_fault,rx_fault,bank_fault);end
         if(errors==0)$display("TB_HNX_HC_Q PASS MUT=%0d XWB=%0d SPR=%0d RNPOS=%0d RSTRIDE=%0d SSTRIDE=%0d waves=%0d mixes=%0d stores=12",MUT,XWB,SPR,RNPOS,RSTRIDE,SSTRIDE,waves,mixes);
         else $display("TB_HNX_HC_Q FAIL MUT=%0d XWB=%0d errors=%0d",MUT,XWB,errors);
         $finish;
     end
+    // HUBFIX 10-19: every face copy must equal the original beat-control register on every edge (no added cycle)
+    integer fc_bad=0;
+    always @(posedge clk)if(rst_n)for(integer f=0;f<4;f=f+1)
+        if(xvf[f]!==xv_l||(xv_l&&xbf[2*f+:2]!==xbeat))begin
+            fc_bad=fc_bad+1;if(fc_bad<5)$display("face copy %0d mismatch t=%0d v=%b/%b beat=%0d/%0d",f,tcyc,xvf[f],xv_l,xbf[2*f+:2],xbeat);end
     always @(posedge clk)begin
         if(xv)begin
             waves<=waves+1;

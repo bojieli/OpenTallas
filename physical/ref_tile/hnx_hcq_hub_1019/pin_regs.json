@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hnx_hc_qhub",
  "enable": false,
- "reason": "ot_hnx_hc_qhub = ot_hnx_hc_q (every pin registered in RTL, see the d4g kit hbm_hcq_hub_1017) + ot_hnx_hc_qcen (descriptor/event/beat-control/s_i/wfault pin flops; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_* leave hc_q's x_wave output register directly; a kit flop stage would shift the compiled schedule"
+ "reason": "ot_hnx_hc_qhub = ot_hnx_hc_q (every pin registered in RTL, see the d4g kit hbm_hcq_hub_1017) + ot_hnx_hc_qcen (descriptor/event/beat-control/s_i/wfault pin flops; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register directly and xb_v*/xb_beat* leave a per-face copy of its beat-control register (ot_hnx_hc_xbrep, HUBFIX 10-19); a kit flop stage would shift the compiled schedule"
 }

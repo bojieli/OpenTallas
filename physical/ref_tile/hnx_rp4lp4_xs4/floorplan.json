@@ -31,16 +31,18 @@
  "pins": {
   "N": [
    "clk",
-   "o_ifirst",
-   "o_ifp4",
-   "o_ilast",
-   "o_itag",
-   "o_iv_b",
    "rst_a",
    "xs_a1",
    "xs_a2",
    "xs_g1",
-   "xs_g2"
+   "xs_g2",
+   "o_iv_b",
+   "o_ifirst",
+   "o_ilast",
+   "o_ifp4",
+   "o_itag",
+   "o_iwb",
+   "o_ixb"
   ],
   "S": [
    "bk1",
@@ -49,14 +51,20 @@
    "wl"
   ],
   "E": [
+   "o_iv_f",
    "o_ifirst_e",
    "o_ilast_e",
    "o_itag_e",
-   "o_iv_f"
+   "o_iwf_e",
+   "o_ixf_e"
   ],
-  "ANY": [
-   "o_iw",
-   "o_ix"
+  "W": [
+   "o_iv_fw",
+   "o_ifirst_w",
+   "o_ilast_w",
+   "o_itag_w",
+   "o_iwf_w",
+   "o_ixf_w"
   ]
  },
  "clock_port": "clk",

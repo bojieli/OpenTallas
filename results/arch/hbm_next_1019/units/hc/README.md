@@ -119,3 +119,24 @@ The core already takes `cmd_npos` up to PMAX 8, and `tb_hnx_hc_eng4` shows the t
 **Verdict:** no further HC tile needs an hnx re-gate. The die binds the d4g HC root/bank/tail views unchanged. Only the hub view changes.
 
 **If the VM grows to 2^19 (`units/vm/README.md`),** the hc_q residual/result base fields widen by one sector bit. That is a hub-only delta, to fold into the next hub revision.
+
+## HUBFIX 10-19: hub wire reach (closure job hnx_hcq_hub_1019-n1-c8a284b41, FLOORPLAN_MARGIN)
+
+`textbook_lint` route.a1 refused the hub with `wire_reach` 3 stages > 500 um:
+- `u_q.residual.x_wave_beat[1]`: 608 um (pins `xb_beat_n[1]` / `xb_beat_e[1]`);
+- `u_q.residual.x_wave_beat[0]`: 549 um (`xb_beat_n[0]` / `xb_beat_e[0]`);
+- `u_q.residual.x_wave_v`: 530 um (`xb_v_n` / `xb_v_e`).
+
+**Cause: NOT the N-row stride counters.** `ot_hnx_hc_qhub` drives the bank beat control (v + beat) on all four faces (W bank 0, N bank 2, E bank 4, S bank 6) from ONE register in the residual reader. On the 734.4 um tile, one flop is at least 530-608 um from one of its face pins. The d4g hub `hbm_hcq_hub_1017` has the same RTL (same `assign xb_v_n = xv; ...`), pins and outline. The d4g hub will hit the same refusal when it is routed with the current lint.
+
+**Fix (structural, zero cycles):** `ot_hnx_hc_xbrep` (not parameterised) adds four per-face copies of the beat-control register. Each copy loads on the same edge from the same next-state (`nx_v`, `nx_en`, `nx_beat`) as the original. The original register now feeds only the centre.
+- The kit keeps the copies by name (`route.synth_keep_modules`), so `opt_merge` cannot fold them back together.
+- Schedule unchanged: per-record latency delta 0, row II still 250 cycles/added row.
+- `ot_hnx_hc_q` / `residual_vm` param XFC (0 = wires of the original, so the d4g form is unchanged); the hub sets XFC 1.
+
+**Benches (fleet, Verilator 5.050, @83a25d2e9).** `tb_hnx_hc_q` now checks every face copy against the original register on every edge:
+- q_n4s PASS, q_d4g PASS;
+- MUT 7 and MUT 8 FAIL;
+- MUT 9 FAIL: the E copy is loaded one edge late, as a relay stage would be, and 321 edges mismatch (`witness/q_m9.log`).
+
+`tb_hnx_hc_eng4` sources are unchanged: the ring benches do not include hc_q. The committed e0 N=1..8 results stand, and the closure job reruns ring_rows.

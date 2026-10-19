@@ -5,6 +5,7 @@
 //   ot_hnx_hc_q     the quadrant's static HC LG client (programme SRAM, residual / gathered / result VM traffic)
 //   ot_hnx_hc_qcen  the quarter engine centre (control-only x_wave rx, ingest sequencer, descriptor relay,
 //                          6-level partial-sum subtree, regional reset to the 8 bank tiles)
+// HUBFIX 10-19: the bank beat control (xb_v / xb_beat per face) leaves a per-face copy of hc_q's beat-control register.
 // The x_wave link hc_<q> -> engine is now inside the tile: hc_<q>'s 2,048-b beat output register drives the 8 bank
 // beat slices (256 b each, + v/beat) and the centre's beat control directly (same edges as the separate tiles:
 // hc_<q> output flop -> receiver pin flop).  Bank slices: W face bank 0; N face bank 2 + corners 1, 3 (fed through
@@ -52,12 +53,14 @@ module ot_hnx_hc_qhub #(
     output wire [255:0]   xb_d0, xb_d1, xb_d2, xb_d3, xb_d4, xb_d5, xb_d6, xb_d7
 );
     wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb;
+    wire [3:0] xvf; wire [7:0] xbf;   // HUBFIX 10-19: per-face copies of the beat-control register (W, N, E, S)
     assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
-    ot_hnx_hc_q #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .DONE_LAT(DONE_LAT), .XW_BEATS(4)) u_q (
+    ot_hnx_hc_q #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .XFC(1)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .configured(configured), .lg_rq(lg_rq), .lg_wq(lg_wq), .lg_rr(lg_rr), .lg_w_done(lg_w_done),
-        .x_wave_v(xv), .x_wave_word(xw), .x_wave(xd), .x_wave_beat(xbt), .residual_done(residual_done),
+        .x_wave_v(xv), .x_wave_word(xw), .x_wave(xd), .x_wave_beat(xbt), .x_wave_vf(xvf), .x_wave_beatf(xbf),
+        .residual_done(residual_done),
         .gathered_mix_v(gathered_mix_v), .gathered_mix_row(gathered_mix_row), .gathered_mix_pos(gathered_mix_pos),
         .gathered_mix_data(gathered_mix_data), .gather_done(gather_done), .result_v(result_v),
         .result_position(result_position), .result(result), .program_active(program_active),
@@ -68,8 +71,11 @@ module ot_hnx_hc_qhub #(
         .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
         .wc_w(wc_w), .wc_n(wc_n), .wc_e(wc_e), .wc_s(wc_s), .ps_v(ps_v), .ps(ps), .ps_f(ps_f), .fault(eng_fault));
-    assign xb_v = xv; assign xb_v_n = xv; assign xb_v_e = xv; assign xb_v_s = xv;
-    assign xb_beat = xbt; assign xb_beat_n = xbt; assign xb_beat_e = xbt; assign xb_beat_s = xbt;
+    // HUBFIX 10-19 (closure job hnx_hcq_hub_1019-n1-c8a284b41 FLOORPLAN_MARGIN wire_reach): ONE beat-control register
+    // fanned to four faces sat 530-608 um from a face pin.  Each face now has its own copy (ot_hnx_hc_xbrep, loaded on the
+    // same edge from the same next-state: zero added cycles); the original register feeds the centre only.
+    assign xb_v   = xvf[0];      assign xb_v_n   = xvf[1];      assign xb_v_e   = xvf[2];      assign xb_v_s   = xvf[3];
+    assign xb_beat = xbf[1:0];   assign xb_beat_n = xbf[3:2];   assign xb_beat_e = xbf[5:4];   assign xb_beat_s = xbf[7:6];
     wire [8*256-1:0] xs;
     for (genvar k = 0; k < 8; k = k + 1) begin : g_xs
         for (genvar i = 0; i < 8; i = i + 1) begin : g_i

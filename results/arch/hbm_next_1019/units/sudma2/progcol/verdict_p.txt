@@ -1,0 +1,14 @@
+2026-10-19T01:58:41-07:00 start host=regular-crane bundle=0ce18a1a7
+2026-10-19T01:58:43-07:00 ws_ab_n6 compile: }
+2026-10-19T01:58:44-07:00 ws_abc_n6 compile: }
+2026-10-19T01:59:47-07:00 p ws_ab_n6 positive: SU_PROGRAMME_PART PASS edges=296 active=592 checked=613 parts=4 depth=2 pipe=2 lead=2 macros=52 mono_macros=49 RUN_RC=0 
+2026-10-19T01:59:47-07:00 p ws_ab_n6 template: [51626000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=256 active=592 of 592 checked=613 RUN_RC=1 
+2026-10-19T01:59:48-07:00 p ws_ab_n6 pcoff: [51626000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=578 active=592 of 592 checked=613 RUN_RC=1 
+2026-10-19T01:59:48-07:00 p ws_ab_n6 phase: [51626000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=578 active=592 of 592 checked=613 RUN_RC=1 
+2026-10-19T01:59:50-07:00 p ws_ab_n6 rcdrop: [51626000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=1184 active=592 of 592 checked=613 RUN_RC=1 
+2026-10-19T02:00:04-07:00 p ws_abc_n6 positive: SU_PROGRAMME_PART PASS edges=464 active=928 checked=949 parts=4 depth=2 pipe=2 lead=2 macros=64 mono_macros=60 RUN_RC=0 
+2026-10-19T02:00:05-07:00 p ws_abc_n6 template: [74196000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=592 active=928 of 928 checked=949 RUN_RC=1 
+2026-10-19T02:00:05-07:00 p ws_abc_n6 pcoff: [74196000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=878 active=928 of 928 checked=949 RUN_RC=1 
+2026-10-19T02:00:06-07:00 p ws_abc_n6 phase: [74196000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=878 active=928 of 928 checked=949 RUN_RC=1 
+2026-10-19T02:00:07-07:00 p ws_abc_n6 rcdrop: [74196000] %Fatal: tb_hnx_su_programme_rc.sv:80: Assertion failed in tb_hnx_su_programme_rc: SU_PROGRAMME_PART FAIL mismatches=1856 active=928 of 928 checked=949 RUN_RC=1 
+2026-10-19T02:00:07-07:00 done

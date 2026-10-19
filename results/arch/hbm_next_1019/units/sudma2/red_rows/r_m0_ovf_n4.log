@@ -1,0 +1,16 @@
+SU_RED_ROWS ERROR cyc=413 rowr fault 1110
+SU_RED_ROWS ERROR cyc=414 rowr fault 1110
+SU_RED_ROWS ERROR cyc=415 rowr fault 1110
+SU_RED_ROWS ERROR cyc=416 rowr fault 1110
+SU_RED_ROWS ERROR cyc=417 rowr fault 1110
+SU_RED_ROWS ERROR cyc=418 rowr fault 1110
+SU_RED_ROWS ERROR cyc=419 rowr fault 1110
+SU_RED_ROWS ERROR cyc=420 rowr fault 1110
+SU_RED_ROWS ERROR cyc=421 rowr fault 1110
+SU_RED_ROWS ERROR cyc=422 rowr fault 1110
+SU_RED_ROWS ERROR cyc=423 rowr fault 1111
+SU_RED_ROWS ERROR cyc=424 rowr fault 1111
+[7540000] %Fatal: tb_hnx_su_red_rows.sv:111: Assertion failed in tb_hnx_su_red_rows.unnamedblk2: SU_RED_ROWS FAIL errors=335 scalars=20 MUT=0
+%Error: rtl/hbm_next/su/tb/tb_hnx_su_red_rows.sv:111: Verilog $stop
+Aborting...
+RUN_RC=1
