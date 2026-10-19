@@ -29,24 +29,30 @@ Bindings are `ot_hbm_svc_sm8_landing_bank_sram285`,
 
 ## Pair element and source clock mapping
 
-Proposed pair outline is432x259.2um, aspect1.667, with origins:
+Reduced pair geometry candidate is380.16x198.72um, aspect1.913, with origins:
 
 | Macro | Bank | Origin (um) | Proposed orientation |
 |---|---|---:|---|
 | Landing | j | 43.2,43.2 | R0 |
 | FIFO | j | 259.2,43.2 | R0 |
-| Landing | j+4 | 43.2,172.8 | MX |
-| FIFO | j+4 | 259.2,172.8 | MX |
+| Landing | j+4 | 43.2,129.6 | MX |
+| FIFO | j+4 | 259.2,129.6 | MX |
 
 All origins are on the43.2um lattice. Left access is43.2um, the inter-column
-channel43.176um, and right access75.816um. One full-width, connected cell/routing
-band lies between y86.424 and172.8, height86.376um. Pin-register collars must
+channel43.176um, right access23.976um and top access25.896um. All outer
+clearances are >=20um. One full-width, connected cell/routing band lies between
+y86.424 and129.6, height43.176um. Pin-register collars must
 remain connected to this band; no separate power/cell islands are proposed.
-The macro-only fill is20.16%; **this is not a utilization claim**. Synthesis
+The macro-only fill is29.886%; **this is not a utilization claim**. Synthesis
 cell area is unavailable. Choose actual full-width placement-band height as
-`cell_area/(0.5*432)` inside the available band, then verify40-60% utilization;
-change the outline if measured area or native face access requires it. A final
-synthesis-derived outline and pin-register face locations remain OPEN.
+`cell_area/(0.5*380.16)` inside the available band, then verify40-60% utilization;
+change the outline if measured area or native face access requires it. The full
+available band holds6565.515..9848.273um2 of cells at40..60% utilization. Actual
+cell area is not measured yet: the candidate is not declared the smallest SAFE
+outline. A final synthesis-derived outline and native face locations remain
+OPEN. The earlier432x259.2 envelope had no measured pin/control/root constraint
+requiring its padding and is retired. This candidate reduces allocated area
+32.53% (111974.4 to75545.3952um2) while preserving macro/inter-column geometry.
 
 Existing CDC source uses `stream_bank_clk[g/4]` and `hbm_fifo_clk[g/4]`.
 That mapping puts banks j and j+4 on different old roots and is unsuitable for
@@ -73,8 +79,9 @@ and261 registered return signals =273 outputs; total937pins. The two internal
 needs261 tracks,12.528um at0.048um pitch on a single layer, or43.5um face length
 at6pins/um. Put return Q/select mass at the cache-facing edge; split HBM inputs
 across other full faces, with local input captures. No exact final pin placement
-or <=405um wire claim is made. The432um outline requires an explicit local-net
-reach audit; it does not authorize end-to-end432um single-cycle wires.
+or <=405um wire claim is made. The available cell-band diagonal is382.604um, below405um, and centre-fed roots
+have a shorter span. Actual pin-to-register, macro and cross-child nets still
+require the local-net reach audit; geometric fit alone is not closure.
 
 ## Cache rotator and remaining macro children
 
