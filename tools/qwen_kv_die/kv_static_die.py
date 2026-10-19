@@ -168,6 +168,15 @@ AFAULT_D = [('ufs_WS', ('astk_WS', 'af')), ('ufs_WN', ('astk_WN', 'af')), ('ufs_
             ('ufs_EN', ('astk_EN', 'af')), ('ufh', ('ahub', 'hf')), ('ufp0', ('pvw_0', 'pf')), ('ufp1', ('pvw_1', 'pf')),
             ('uff', ('pvfin', 'ff'))]
 AFAULT_C = [f'ufk_{st}' for st in ('WS', 'WN', 'ES', 'EN')]
+# KV-DCAL 10-19 (OT_KV_DCAL_FLT=1, needs OT_KV_DCAL_BC=1 + OT_KV_DCAL_BC4=1 + AFAULT; default off): the KV calendar
+# sequencer's sticky fault (qkd_d2d_cal_seq_pin_bc4 `fault` = sequencer | COL | RUN | STALE | EARLY, registered, cleared only
+# by the tile reset) becomes afr lane d[8] `ufd` on its own relayed kv_oneway bus ks_af_ufd (dcal flt -> kvs_attn ufd):
+# afr ND 9, attn_face NF 11, folded into service_fault like every other unit fault (continuous sticky OR, no gating at
+# cutoff).  Its latency is priced by record()['attn_fault'] (leaf 'dcal.flt').  STATUS contract owner: KV-RETIRE.
+DCAL_FLT = (AFAULT and DCAL_BC and os.environ.get('OT_KV_DCAL_BC4', '0') == '1'
+            and os.environ.get('OT_KV_DCAL_FLT', '0') == '1')
+if DCAL_FLT:
+    AFAULT_D = AFAULT_D + [('ufd', ('dcal', 'flt'))]
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 # KV-INTEG/AHUB 10-18 (RTL-BUILD-KV M2 + P6; OT_KV_AHUB_STATIC, default ON with PVFIN): the die hub `ahub` (master
@@ -487,6 +496,8 @@ def _afault_join(g):
     add('afr', AFAULT_ROOT, dict(ND=len(AFAULT_D), NC=len(AFAULT_C), MUT=0))
     face = by['attn_face']
     nf = face['parameters']['NF']
+    if DCAL_FLT and nf == len(AFAULT_D) - 1 + len(AFAULT_C) // 2:     # KV-DCAL: + the calendar sequencer's fault lane
+        nf = face['parameters']['NF'] = nf + 1
     if nf != len(AFAULT_D) + len(AFAULT_C) // 2 or face['inputs'].get('unit_fault', 0) is not None:
         raise ValueError(f'kv_static_die AFAULT: attn_face NF {nf} / unit_fault already bound')
     face['inputs']['unit_fault'] = [dict(instance='afr', port='unit_fault', lo=0, width=nf)]
