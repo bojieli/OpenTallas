@@ -27,9 +27,28 @@ class RuleCommitClasses(PreciseGateBinding):
             self.stack.append(p)
         return c
 
-    def check(self, tile=('qfd_tt_head',), clock=GOOD):
+    def check(self, tile=('qfd_tt_head',), clock=GOOD, gate=None):
         b = json.loads(json.dumps(self.binding))
-        return SB.validate(b, self.root, self.daemon, self.tip, clock=clock, tile=list(tile)) + (b,)
+        return SB.validate(b, self.root, self.daemon, self.tip, clock=clock, tile=list(tile), gate=gate) + (b,)
+
+    def test_trial_grt_every_kit_keeps_older_gates(self):
+        """ROOT-0330-GRT 10-18: 'Gate-Rule: tightening requires=trial_grt' (the trial GRT now runs for every kit).  A
+        gate result that predates it (no trial_route record) stays valid; a newer gate that ran the trial is judged by
+        its overflow; without the gate result the strict refusal stands."""
+        self.change(b'TRIAL_EVERY_KIT = 1\n',
+                    message='gate: trial GRT for every kit\n\nGate-Rule: tightening requires=trial_grt rule=trial-grt-every-kit')
+        old_gate = {'clock': GOOD, 'verdict': 'PASS', 'items': []}
+        ok, why, b = self.check(gate=old_gate)
+        self.assertTrue(ok, why)
+        req = b['relaxing_rule_allowlist']['requirements']
+        self.assertEqual([r['requires'] for r in req], ['trial_grt'])
+        self.assertTrue(req[0]['predates'])
+        ok, why, _ = self.check(gate=dict(old_gate, trial_route={'overflow': 0}))
+        self.assertTrue(ok, why)
+        ok, why, _ = self.check(gate=dict(old_gate, trial_route={'overflow': 7}))
+        self.assertFalse(ok)
+        self.assertIn('trial GRT overflow 7', why)
+        self.assertFalse(self.check(gate=None)[0])
 
     def test_registry_neutral_keeps_gate_without_clock(self):
         c = self.change(b'UTIL_DENSITY = 0.65\n', entry=dict(kind='neutral', rule='util', what='WARN-only'))
