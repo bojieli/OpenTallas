@@ -5,7 +5,8 @@
 //   reduction: rs = the reference morton pair-tree FP32 sum of the 16 K-slices (gold.hex, numpy float32 RNE) at the
 //   compiled edge, no fault; bco carries go at its compiled edge;
 //   DV feedthrough: a distinct 514-b word per op on rs_i (plus idle words between) appears on rs_o exactly QC_LAT_FT
-//   edges later, every cycle compared.  The four quadrant roots are driven by one bench clock (functional bench; the
+//   edges later, every cycle compared (Q-CLUSTER-LANDALL: from the cycle every landing is warm, QC_LAT_WARM edges after
+//   the rst_n release at cycle 40; the first op goes after that too).  The four quadrant roots are driven by one bench clock (functional bench; the
 //   neighbour skew is the clock gate's job).  +FAR=0/1.  MUT 1..5 must FAIL.
 module tb #(parameter integer MUT = 0);
     `include "qcluster_lat.svh"
@@ -26,7 +27,7 @@ module tb #(parameter integer MUT = 0);
     reg [513:0] rsi_hist [0:1023];
     initial begin
         if ($test$plusargs("FAR")) far = 1'b1;
-        for (o = 0; o < NOPS; o = o + 1) t_go[o] = 90 + 48 * o;
+        for (o = 0; o < NOPS; o = o + 1) t_go[o] = ((52 + QC_LAT_WARM > 90) ? 52 + QC_LAT_WARM : 90) + 48 * o;
         for (c = 0; c < 4; c = c + 1) begin bcw[c] = 516'd0; bseen[c] = 0; end
         rsi = 514'd0;
         $readmemh("gold.hex", gold);
@@ -93,7 +94,22 @@ module tb #(parameter integer MUT = 0);
         .ck_c3r1(ck),
         .ck_c3r2(ck),
         .ck_c3r3(ck),
-        .rst_n(rst_n),
+        .rst_c0r0(rst_n),
+        .rst_c0r1(rst_n),
+        .rst_c0r2(rst_n),
+        .rst_c0r3(rst_n),
+        .rst_c1r0(rst_n),
+        .rst_c1r1(rst_n),
+        .rst_c1r2(rst_n),
+        .rst_c1r3(rst_n),
+        .rst_c2r0(rst_n),
+        .rst_c2r1(rst_n),
+        .rst_c2r2(rst_n),
+        .rst_c2r3(rst_n),
+        .rst_c3r0(rst_n),
+        .rst_c3r1(rst_n),
+        .rst_c3r2(rst_n),
+        .rst_c3r3(rst_n),
         .far(far),
         .bc0(bcw[0]),
         .bc1(bcw[1]),
@@ -217,7 +233,7 @@ module tb #(parameter integer MUT = 0);
     tb_q3h_tile_face #(.C(3), .R(3), .K(15), .HOST(1), .TLD(TLD), .LAT(Q3H_LAT_TAP3), .NOPS(NOPS)) u_f_3_3 (.ck(ck), .rst_n(trst_3_3), .tap(tap_3_3), .t_out(t_out_3_3), .n_a(n_a_3_3), .n_b(n_b_3_3), .n_y(n_y_3_3));
     wire [3:0] bgo = {bco3[0], bco2[0], bco1[0], bco0[0]};
     always @(negedge ck) begin
-        if (cyc > QC_LAT_FT + 2 && cyc < 1000) begin
+        if (cyc > QC_LAT_FT + 2 + (QC_LAT_WARM > 0 ? 40 + QC_LAT_WARM : 0) && cyc < 1000) begin
             fseen = fseen + 1;
             if (rso !== rsi_hist[(cyc - QC_LAT_FT) % 1024]) begin
                 if (errors < 20) $display("FAIL rs_o at cycle %0d: %h expected %h", cyc, rso, rsi_hist[(cyc - QC_LAT_FT) % 1024]);

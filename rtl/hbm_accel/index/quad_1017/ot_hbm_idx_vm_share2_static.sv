@@ -16,7 +16,16 @@
 // REG 0 (default) is this file's original zero-latency body, byte-for-byte behaviour (kept for the COLL read split
 // hcollrs_<q>: hb_coll v8x and hcollgi capture at a FIXED n+8 inside closed/submitted tiles -- see the SHARE2 log).
 // ot_hbm_idx_vm_share2_static_r = this parent at REG 1 under its own name (die master for hb_idx__nwsh).
-module ot_hbm_idx_vm_share2_leaf #(parameter integer MUT = 0)(
+// BANK_RT (HBM-BANKLAT-COLL 2026-10-19, d4g bank latency class): the bank round trip seen at this share's bank face, in
+// edges from the bank-face request edge to the bank answer: own tap own[BANK_RT] (REG 0) / own[BANK_RT+1] (REG 1, the
+// vm_rq flop). Default 6 = ot_vms_bank_static n+6 with zero die stages (byte-identical to the original). With the faces
+// bank (pin flop +1) and the die lanes between this share and its banks: BANK_RT = 6 + 1 + lane(rq) + lane(rr), EQUAL over
+// the 8 banks (scalar: the die pads the short banks' REQUEST lanes, 17 b/bank, never the 257-b response lanes; every
+// client of a share reads several banks in one edge and needs their answers together). The client faces then capture
+// at n+8 + (BANK_RT-6) (REG 0) / n+10 + (BANK_RT-6) (REG 1): each client's own VM_RT/RL/VM_RT_EXTRA adds BANK_RT-6.
+// Static only: the owner pipeline is a delay line of the bookings, no ready/credit.  LAT rule: tools/hbm_die_v16/
+// d4g_bank_latency.py RULES (BANK_RT ref 6 at round trip 6) + SHARE_PORTS (client excess BANK_RT-6).
+module ot_hbm_idx_vm_share2_leaf #(parameter integer MUT = 0, parameter integer BANK_RT = 6)(
     input  wire          clk, rst_n,
     input  wire [33:0]   a_rq, b_rq,
     output reg  [33:0]   vm_rq,
@@ -24,8 +33,8 @@ module ot_hbm_idx_vm_share2_leaf #(parameter integer MUT = 0)(
     output wire [513:0]  a_rr, b_rr,
     output reg           fault
 );
-    reg [3:0] own [0:6];                    // per bank b: {b, a} at [2b +: 2]
-    wire [3:0] o = own[(MUT == 1) ? 5 : 6];
+    reg [3:0] own [0:BANK_RT];              // per bank b: {b, a} at [2b +: 2]
+    wire [3:0] o = own[(MUT == 1) ? BANK_RT - 1 : BANK_RT];
     reg [3:0] issue; reg [1:0] v;
     always @* begin
         vm_rq = 34'd0; issue = 4'd0; v = 2'd0;
@@ -36,10 +45,10 @@ module ot_hbm_idx_vm_share2_leaf #(parameter integer MUT = 0)(
         end
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fault <= 1'b0; for (integer d = 0; d < 7; d = d + 1) own[d] <= 4'd0; end
+        if (!rst_n) begin fault <= 1'b0; for (integer d = 0; d <= BANK_RT; d = d + 1) own[d] <= 4'd0; end
         else begin
             own[0] <= issue;                    // sampled on the bank's own sampling edge n+1
-            for (integer d = 1; d < 7; d = d + 1) own[d] <= own[d-1];
+            for (integer d = 1; d <= BANK_RT; d = d + 1) own[d] <= own[d-1];
             for (integer k = 0; k < 2; k = k + 1)
                 if (a_rq[17*k+16] && b_rq[17*k+16]) fault <= 1'b1;
         end
@@ -65,7 +74,7 @@ endmodule
 // response flop edge n+9. MUT (bench only): 1 owner tap one edge short (own[6]); 2 double booking passes the A request;
 // 3 owner select swapped (A steered by B's owner and vice versa); 4 request flop bypassed (vm_rq straight from the port,
 // self-consistent owner tap own[6]: round trip n+9, latency off by one); 5 double booking does not fault.
-module ot_hbm_idx_vm_share2_leaf_r #(parameter integer MUT = 0)(
+module ot_hbm_idx_vm_share2_leaf_r #(parameter integer MUT = 0, parameter integer BANK_RT = 6)(
     input  wire          clk, rst_n,
     input  wire [33:0]   a_rq, b_rq,
     output wire [33:0]   vm_rq,
@@ -99,19 +108,20 @@ module ot_hbm_idx_vm_share2_leaf_r #(parameter integer MUT = 0)(
     reg rst_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
     reg [33:0] rq_q;                        // vm_rq output flops (reset: idle on the bank face out of reset)
-    reg [3:0]  own [0:7];                   // per bank b: {b, a} at [2b +: 2]; own[0] = booking of the vm_rq flop edge
+    localparam integer OT = BANK_RT + 1;    // owner tap at the response flop edge (default 7)
+    reg [3:0]  own [0:OT];                  // per bank b: {b, a} at [2b +: 2]; own[0] = booking of the vm_rq flop edge
     reg        dbl_q;                       // double booking seen at the pins (flop), fault sticky one edge later
     always @(posedge clk or negedge rst_q)
-        if (!rst_q) begin rq_q <= 34'd0; dbl_q <= 1'b0; fault <= 1'b0; for (integer d = 0; d < 8; d = d + 1) own[d] <= 4'd0; end
+        if (!rst_q) begin rq_q <= 34'd0; dbl_q <= 1'b0; fault <= 1'b0; for (integer d = 0; d <= OT; d = d + 1) own[d] <= 4'd0; end
         else begin
             rq_q <= rq_d;
             own[0] <= issue;
-            for (integer d = 1; d < 8; d = d + 1) own[d] <= own[d-1];
+            for (integer d = 1; d <= OT; d = d + 1) own[d] <= own[d-1];
             dbl_q <= (a_rq[16] && b_rq[16]) || (a_rq[33] && b_rq[33]);
             if (MUT != 5 && dbl_q) fault <= 1'b1;
         end
     assign vm_rq = (MUT == 4) ? rq_d : rq_q;
-    wire [3:0] o = own[(MUT == 1 || MUT == 4) ? 6 : 7];
+    wire [3:0] o = own[(MUT == 1 || MUT == 4) ? OT - 1 : OT];
     // per-face response flops: data reset-free; valid (bit 256 of each bank) = vm_rr valid AND owner, folded in front of
     // the flop, reset (idle out of reset as r1's AND with the reset owner pipeline)
     always @(posedge clk)
@@ -127,7 +137,7 @@ module ot_hbm_idx_vm_share2_leaf_r #(parameter integer MUT = 0)(
         end
 endmodule
 
-module ot_hbm_idx_vm_share2_static #(parameter integer MUT = 0, parameter integer REG = 0)(
+module ot_hbm_idx_vm_share2_static #(parameter integer MUT = 0, parameter integer REG = 0, parameter integer BANK_RT = 6)(
     input  wire [3:0]    clk_pair,
     input  wire          rst_n,
     input  wire [135:0]  a_rq, b_rq,
@@ -139,13 +149,13 @@ module ot_hbm_idx_vm_share2_static #(parameter integer MUT = 0, parameter intege
     wire [3:0] f;
     for (genvar p = 0; p < 4; p = p + 1) begin : g_pair
         if (REG != 0) begin : g_r
-            ot_hbm_idx_vm_share2_leaf_r #(.MUT(MUT)) leaf(.clk(clk_pair[p]), .rst_n(rst_n),
+            ot_hbm_idx_vm_share2_leaf_r #(.MUT(MUT), .BANK_RT(BANK_RT)) leaf(.clk(clk_pair[p]), .rst_n(rst_n),
                 .a_rq(a_rq[34*p +: 34]), .b_rq(b_rq[34*p +: 34]), .vm_rq(vm_rq[34*p +: 34]),
                 .vm_rr0(vm_rr[514*p +: 257]), .vm_rr1(vm_rr[514*p+257 +: 257]),
                 .a_rr0(a_rr[514*p +: 257]), .a_rr1(a_rr[514*p+257 +: 257]),
                 .b_rr0(b_rr[514*p +: 257]), .b_rr1(b_rr[514*p+257 +: 257]), .fault(f[p]));
         end else begin : g_c
-            ot_hbm_idx_vm_share2_leaf #(.MUT(MUT)) leaf(.clk(clk_pair[p]), .rst_n(rst_n),
+            ot_hbm_idx_vm_share2_leaf #(.MUT(MUT), .BANK_RT(BANK_RT)) leaf(.clk(clk_pair[p]), .rst_n(rst_n),
                 .a_rq(a_rq[34*p +: 34]), .b_rq(b_rq[34*p +: 34]), .vm_rq(vm_rq[34*p +: 34]), .vm_rr(vm_rr[514*p +: 514]),
                 .a_rr(a_rr[514*p +: 514]), .b_rr(b_rr[514*p +: 514]), .fault(f[p]));
         end
@@ -154,7 +164,7 @@ module ot_hbm_idx_vm_share2_static #(parameter integer MUT = 0, parameter intege
 endmodule
 
 // Die master for hb_idx__nwsh (REG 1 under its own name; port-identical to ot_hbm_idx_vm_share2_static).
-module ot_hbm_idx_vm_share2_static_r #(parameter integer MUT = 0)(
+module ot_hbm_idx_vm_share2_static_r #(parameter integer MUT = 0, parameter integer BANK_RT = 6)(
     input  wire [3:0]    clk_pair,
     input  wire          rst_n,
     input  wire [135:0]  a_rq, b_rq,
@@ -163,7 +173,7 @@ module ot_hbm_idx_vm_share2_static_r #(parameter integer MUT = 0)(
     output wire [2055:0] a_rr, b_rr,
     output wire          fault
 );
-    ot_hbm_idx_vm_share2_static #(.MUT(MUT), .REG(1)) u(.clk_pair(clk_pair), .rst_n(rst_n), .a_rq(a_rq), .b_rq(b_rq),
+    ot_hbm_idx_vm_share2_static #(.MUT(MUT), .REG(1), .BANK_RT(BANK_RT)) u(.clk_pair(clk_pair), .rst_n(rst_n), .a_rq(a_rq), .b_rq(b_rq),
         .vm_rq(vm_rq), .vm_rr(vm_rr), .a_rr(a_rr), .b_rr(b_rr), .fault(fault));
 endmodule
 `default_nettype wire

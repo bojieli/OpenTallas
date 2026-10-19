@@ -1,0 +1,14 @@
+IDX256_PASS cases=9 identity_edges=2280 writes=1026 launches=4 legacy_aliases=2 MUT=0
+- rtl/test/hbm_collar_idx256/tb_idx256.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 45us; walltime 0.003 s; speed 14.699 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
+[33426000] %Fatal: tb_idx256.sv:26: Assertion failed in tb_idx256: IDX256_FAIL aliased write addr256 MUT9
+%Error: rtl/test/hbm_collar_idx256/tb_idx256.sv:26: Verilog $stop
+Aborting...
+[33607000] %Fatal: tb_idx256.sv:65: Assertion failed in tb_idx256: IDX256_FAIL missing page rejection MUT10
+%Error: rtl/test/hbm_collar_idx256/tb_idx256.sv:65: Verilog $stop
+Aborting...
+[33767000] %Fatal: tb_idx256.sv:72: Assertion failed in tb_idx256.unnamedblk5: IDX256_FAIL missing need rejection MUT11 k0
+%Error: rtl/test/hbm_collar_idx256/tb_idx256.sv:72: Verilog $stop
+Aborting...

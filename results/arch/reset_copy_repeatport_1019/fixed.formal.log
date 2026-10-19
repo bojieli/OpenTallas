@@ -1,0 +1,94 @@
+
+-- Executing script file `fixed.formal.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: original.il
+Renaming module \top to \gold.
+
+2. Executing RTLIL frontend.
+Input filename: fixed.il
+Replacing existing module \buf2.
+Renaming module \top to \gate.
+
+3. Executing Verilog-2005 frontend: miter.sv
+Parsing Verilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \gate
+Used module:         \buf2
+Used module:     \gold
+
+4.2. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \gate
+Used module:         \buf2
+Used module:     \gold
+Removed 0 unused modules.
+Mapping positional arguments of cell miter.b (gate).
+Mapping positional arguments of cell miter.a (gold).
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module gate.
+Deleting now unused module gold.
+Deleting now unused module buf2.
+<suppressed ~8 debug messages>
+
+6. Executing ASYNC2SYNC pass.
+Replacing miter.$flatten\b.$auto$ff.cc:337:slice$83 ($_DFF_PN0_): ARST=\b.rst_n, D=1'1, Q=\b.rr__ot_rlv [2]
+Replacing miter.$flatten\b.$auto$ff.cc:337:slice$82 ($_DFF_PN0_): ARST=\b.rst_n, D=1'1, Q=\b.rr__ot_rlv [1]
+Replacing miter.$flatten\a.$auto$ff.cc:337:slice$83 ($_DFF_PN0_): ARST=\a.rst_n, D=1'1, Q=\a.rr__ot_rlv [2]
+Replacing miter.$flatten\a.$auto$ff.cc:337:slice$82 ($_DFF_PN0_): ARST=\a.rst_n, D=1'1, Q=\a.rr__ot_rlv [1]
+Replacing miter.$flatten\b.$auto$ff.cc:337:slice$81 ($_DFF_PN0_): ARST=\b.rst_n, D=1'1, Q=\b.rr__ot_rlv [0]
+Replacing miter.$flatten\a.$auto$ff.cc:337:slice$81 ($_DFF_PN0_): ARST=\a.rst_n, D=1'1, Q=\a.rr__ot_rlv [0]
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~1 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 21 cells to SAT database.
+Final init constraint equation: { $auto$async2sync.cc:253:execute$100 $auto$async2sync.cc:253:execute$102 $auto$async2sync.cc:253:execute$104 $auto$async2sync.cc:253:execute$106 $auto$async2sync.cc:253:execute$108 $auto$async2sync.cc:253:execute$110 } = 6'000000
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 21 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 21 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 21 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+Solving problem with 316 variables and 827 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+

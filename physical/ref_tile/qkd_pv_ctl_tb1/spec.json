@@ -1,0 +1,168 @@
+{
+ "name": "qkd_pv_ctl_tb1",
+ "top": "ot_qwen_tp8_pv_wide_ctl_tb",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv"
+ ],
+ "params": {
+  "FIRST_INPUT_AGE": 127,
+  "RESET_PIN": 1,
+  "MUT": 0,
+  "TRUNK_D": 54,
+  "FLAG_D": 58
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "in_valid",
+   "in_t",
+   "in_epoch"
+  ],
+  "E": [
+   "req_valid",
+   "req_t",
+   "cfg_fia"
+  ],
+  "N": [
+   "cmd",
+   "col_valid",
+   "col_fault"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "pair_id",
+   "start",
+   "context_len",
+   "epoch",
+   "out_epoch",
+   "fault",
+   "busy",
+   "out_age"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "purpose": "KVPLAN 1815 (Q-KV 10-16): the PV16 pair control tile for the trunked pair successor qkd_pvw_die_t (tools/qwen_kv_die/pv_trunk_gen.py): identical to ot_qwen_tp8_pv_wide_ctl (a72) except TRUNK_D=54 / FLAG_D=58 (the column-flag check slot moves by 112 edges, out_age by 54; wage 6 -> 8 b). Same outline / pins / layer cap as a72.",
+ "job": {
+  "owner": "Claude:KV-BOOTAGE",
+  "branch": "claude/kv-bootage-1019",
+  "tag": "b1",
+  "purpose": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): boot-programmable pair FIRST_INPUT_AGE. ot_qwen_tp8_pv_wide_ctl_tb = ot_qwen_tp8_pv_wide_ctl_t with FIRST_INPUT_AGE from cfg_fia (sealed die cfg, pre-boot image target 10; no handshake): every FIRSTI constant is a registered constant from the pinned word (k_*), bound 127 (die-derived 107-108 vs the hard 95). +8 pins (cfg_fia, E face). Same outline 43.2 x 43.2. Edge-for-edge = ctl_t #(FIRST_INPUT_AGE a) (lockstep bench, results/rtl/kv_bootage_1019). KVPLAN3 0230 10-17: same tile as qkd_pv_ctl_t_d54f58 (outline 43.2x43.",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_tp8_pv_wide_ctl_tb #(.FIRST_INPUT_AGE(127), .RESET_PIN(1), .MUT(0), .TRUNK_D(54), .FLAG_D(58)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pvctl_a95",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/pvctl_a95 pvctl 0 A=95",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_PVCTL PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "pvctl_a108",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/pvctl_a108 pvctl 0 A=108",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_PVCTL PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "pvctl_mut_slot",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/pvctl_mut_slot pvctl 1 A=108",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_PVCTL PASS",
+    "fail_regex": "^KVBA_PVCTL FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_pvctl_1_A_108_.log"
+   },
+   {
+    "name": "pvctl_mut_range",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/pvctl_mut_range pvctl 2 A=108",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_PVCTL PASS",
+    "fail_regex": "^KVBA_PVCTL FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_pvctl_2_A_108_.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/kv_bootage_bench.sh",
+   "rtl/test/kv_bootage_1019",
+   "results/rtl/kv_bootage_1019"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv_ctl_tb1/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv_ctl_tb1",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "KV-BOOTAGE: boot-programmable FIRST_INPUT_AGE (cfg_fia pin); the d54f58a95 view hard-codes 95 while the die derives 107-108"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every data port at the module boundary (ot_qwen_tp8_pv_col: pv/pe/cmd -> v_r/e_r/c_r, y/y_valid/fault are flops; ot_qwen_tp8_pv_wide_ctl: every input *_r, every output a flop; only the constant pair_id strap is unregistered) and the bench-measured static calendar includes those stages (P = 22 + NQ + 113, results/arch/qwen_attention_rate_1015/receipt.json, 53/53 exact); a flow-inserted second stage would add 1 cycle the compiler calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2)."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): boot-programmable pair FIRST_INPUT_AGE. ot_qwen_tp8_pv_wide_ctl_tb = ot_qwen_tp8_pv_wide_ctl_t with FIRST_INPUT_AGE from cfg_fia (sealed die cfg, pre-boot image target 10; no handshake): every FIRSTI constant is a registered constant from the pinned word (k_*), bound 127 (die-derived 107-108 vs the hard 95). +8 pins (cfg_fia, E face). Same outline 43.2 x 43.2. Edge-for-edge = ctl_t #(FIRST_INPUT_AGE a) (lockstep bench, results/rtl/kv_bootage_1019). KVPLAN3 0230 10-17: same tile as qkd_pv_ctl_t_d54f58 (outline 43.2x43.2, M5, RTL pin flops) at FIRST_INPUT_AGE 95: the kvs13l geometry (DW 950.4, PV_T pair, header/request to the control tile through the hub channel) needs WP + O = 77..81 die relay edges per V port (pvin 12.9 mm / 38 stages + pvrq 14.1 mm / 38 on the far ports), so every port is equalised to PV_W 82 -> RL = 4+82+0+8 = 94, FIRST_INPUT_AGE = RL+1 = 95. Parameter-only change of the calendar constant; 0 cycles added in the tile.",
+ "notes": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

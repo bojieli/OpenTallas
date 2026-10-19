@@ -1,0 +1,223 @@
+{
+ "main_reference": "6213f9e9eaf47b61ee9ef409de94f5b154f3f170",
+ "fixture_commit": "fe63ce4ea",
+ "sources": [
+  {
+   "path": "rtl/lib/ot_async_fifo.sv",
+   "tested_sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+   "main_sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/lib/ot_reset_sync.sv",
+   "tested_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+   "main_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/lib/ot_rst_relay.sv",
+   "tested_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "main_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/link/ot_link_afifo.sv",
+   "tested_sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+   "main_sha256": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+   "tested_sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+   "main_sha256": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+   "tested_sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+   "main_sha256": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+   "tested_sha256": "8fb2b3e063449aa6c786969290a0b7e641a1c96517b00a0f10f0e1cb860e1c36",
+   "main_sha256": "8fb2b3e063449aa6c786969290a0b7e641a1c96517b00a0f10f0e1cb860e1c36",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+   "tested_sha256": "c58533f03f5b40ad63e5dfc8b7adac39fc1c09a98c108bd8c822810ca0aef7ec",
+   "main_sha256": "c58533f03f5b40ad63e5dfc8b7adac39fc1c09a98c108bd8c822810ca0aef7ec",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "physical/rom_host_ingest/rtl/dsfd_host.sv",
+   "tested_sha256": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+   "main_sha256": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+   "tested_sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+   "main_sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+   "tested_sha256": "c078b238e71223a64131168472d01db428858f87d8c93c66a267eccb253cd295",
+   "main_sha256": "c078b238e71223a64131168472d01db428858f87d8c93c66a267eccb253cd295",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+   "tested_sha256": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+   "main_sha256": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
+   "tested_sha256": "dfc0885b3d155df7ec4713b10acbd7059828eb9cc392e1ffa649aad351208ebc",
+   "main_sha256": "dfc0885b3d155df7ec4713b10acbd7059828eb9cc392e1ffa649aad351208ebc",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv",
+   "tested_sha256": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+   "main_sha256": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+   "tested_sha256": "a6dbff49469a01100bc5c55840c4f8e9489bb7068d0565afa477fbfffed8f822",
+   "main_sha256": "a6dbff49469a01100bc5c55840c4f8e9489bb7068d0565afa477fbfffed8f822",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
+   "tested_sha256": "86b6d71dc7aead9ae646626bde4fa77d304356f1c54e2179d0135890862f72db",
+   "main_sha256": "86b6d71dc7aead9ae646626bde4fa77d304356f1c54e2179d0135890862f72db",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+   "tested_sha256": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce",
+   "main_sha256": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "tested_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+   "main_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+   "tested_sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+   "main_sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "tested_sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+   "main_sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv",
+   "tested_sha256": "f873e75f22462d16fc8fbd9b6c22f07a35db5e0f86c42b11dcd893e5a95a66ba",
+   "main_sha256": "f873e75f22462d16fc8fbd9b6c22f07a35db5e0f86c42b11dcd893e5a95a66ba",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv",
+   "tested_sha256": "50a9c9f695b7933df8d21c16f42531b1a7c8839c1da8a97d8052effa14364710",
+   "main_sha256": "50a9c9f695b7933df8d21c16f42531b1a7c8839c1da8a97d8052effa14364710",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv",
+   "tested_sha256": "566a6cde5dedc8af1aa7f6be28e2a598f72f52a10e8400b3392c1fbf86baf512",
+   "main_sha256": "566a6cde5dedc8af1aa7f6be28e2a598f72f52a10e8400b3392c1fbf86baf512",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/test/check_seq_host_mu.py",
+   "tested_sha256": "8d564adfc0487c218c0137736009f6bcf30736f9681569999b609f09e6e9c2f4",
+   "main_sha256": "8d564adfc0487c218c0137736009f6bcf30736f9681569999b609f09e6e9c2f4",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/test/seq_host_mu_cases.py",
+   "tested_sha256": "c26781f35d7a7ad5856a217e34f4de292f99affa3293f066a107c740c153c595",
+   "main_sha256": "c26781f35d7a7ad5856a217e34f4de292f99affa3293f066a107c740c153c595",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "results/rtl/s81_mu_1018/prog_L0_mu/prog/host_boot.memh",
+   "tested_sha256": "913a36d6048d7f402fba598a0b56d5608f08668a2a3f6c9cb342e285c12aaf9e",
+   "main_sha256": "590dd00bfea47b0ecddabfe3a2fb4eacab0687743a1f25310c41fd4b0551798c",
+   "matches_current_main": false,
+   "exists_main": true
+  },
+  {
+   "path": "results/arch/mu_s81_1018/calendar_ar.json",
+   "tested_sha256": "55387791efa2b83b861f571c579d14d3a4c7d7b5b362f00b64e2d8169e21e450",
+   "main_sha256": "55387791efa2b83b861f571c579d14d3a4c7d7b5b362f00b64e2d8169e21e450",
+   "matches_current_main": true,
+   "exists_main": true
+  },
+  {
+   "path": "results/arch/mu_s81_1018/calendar_mtp.json",
+   "tested_sha256": "50971e43149595cfb5c64a7ab19a6f9b251a1e751efcb324849c3c6b0142ed0b",
+   "main_sha256": "50971e43149595cfb5c64a7ab19a6f9b251a1e751efcb324849c3c6b0142ed0b",
+   "matches_current_main": true,
+   "exists_main": true
+  }
+ ],
+ "ar": {
+  "starts": 92,
+  "users": 46,
+  "events": 1444,
+  "pass": true
+ },
+ "mtp": {
+  "starts": 22,
+  "users": 11,
+  "events": 350,
+  "pass": true
+ },
+ "user0_identical": true,
+ "zero_latency_vs_plain": true,
+ "all_five_fault_cases_pass": true,
+ "mutants_1_2_5_detected": true,
+ "changed_leaf_mux_wall_clean": true,
+ "mu_host_gate": "PASS",
+ "terminal": "FAIL",
+ "sole_terminal_blocker": "run_mu_hwin broad LEP/DIE lint requires absent current-main rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep_mu.sv; no broad unsafe import or removed test",
+ "native_parent_fit": "OPEN; functional receipt does not supply parent clock compensation or physical fit"
+}

@@ -13875,7 +13875,10 @@
     "O_source": "token-path DAG solve: critical -> O 0; off the critical path (slack 0.0) -> O = E",
     "pointer": "collectives.stage_hop.E_meas"
    }
-  ]
+  ],
+  "active": false,
+  "superseded_by": "results/rtl/xdie_s81_1019/record.json",
+  "selection_note": "Historical link component measurements retained; canonical refreshed S81 link record owns the same slots. Full token and MU latency equality remain unqualified."
  },
  "lane": "TOKEN-XDIE-S81",
  "date": "2026-10-18",

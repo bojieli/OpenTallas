@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_cal_seq_pin_bc-bc2-569419a7d bench bench_mut3_boot_sequencer_collision host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc-bc2-569419a7d log cl/bench_mut3_boot_sequencer_collision.a1b1.log captured 2026-10-19T08:05:08-07:00
+# fail_regex 'col 1 run 0 stale 0 early 0'
+Verilator 5.050 2026-07-01 rev v5.050
+target11: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh SEG2 TX 9 RX 10
+BAD tile fault: col 1 run 0 stale 0 early 0 seq 0
+FAIL kv_dcal_bootcfg mut3 errors1
+[2583310000] %Fatal: tb_kv_dcal_bootcfg.sv:157: Assertion failed in tb_kv_dcal_bootcfg
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut3: BAD tile fault: col 1 run 0 stale 0 early 0 seq 0
