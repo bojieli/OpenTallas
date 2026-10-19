@@ -168,6 +168,7 @@ def main(argv=None):
     ap.add_argument('--expanded', help='RUN/expand.json (kv_expand.py): die-placed closed leaves, bound by name')
     ap.add_argument('--out-dir', required=True)
     ap.add_argument('--top')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Permit source-only expanded profiles; unqualified')
     a = ap.parse_args(argv)
     K._set_geometry(True)
     out = Path(a.out_dir)
@@ -175,8 +176,20 @@ def main(argv=None):
     nets, tin, tout, insts = PB.parse_die(a.die_v, a.top)
     # KVJ-G2 (kv_die OT_KV_STATIC_DIE): per-instance parameters the plan priced (ECTL kiss RESPONSE_LAT), a sidecar of die.v
     _pj = Path(a.die_v + '.params.json')
+    _ip = json.loads(_pj.read_text()) if _pj.exists() else {}
+    if a.expanded:
+        import kv_expand_parameters as EP
+        _expanded = json.loads(Path(a.expanded).read_text())
+        _actual_masters = {_i: _m for _m, _i, _p, _c in insts}
+        for _i, _row in _expanded.get('parameter_instances', {}).items():
+            if _actual_masters.get(_i) != _row['module']:
+                raise ValueError(f'{_i}: expanded parameter instance/master missing or changed')
+        EP.verify_bound(ROOT, _expanded, _ip, a.diagnostic_parameter_profiles)
     if _pj.exists():
-        _ip = json.loads(_pj.read_text())
+        for _mst, _inst, _params, _cm in insts:
+            for _key, _value in _ip.get(_inst, {}).items():
+                if _key in (_params or {}) and str(_params[_key]) != str(_value):
+                    raise ValueError(f'{_inst}.{_key}: conflicting inline/sidecar parameters')
         insts = [(mst_, inst_, dict(params_ or {}, **{k_: str(v_) for k_, v_ in _ip.get(inst_, {}).items()}), cm_)
                  if mst_ != '__assign__' else (mst_, inst_, params_, cm_) for mst_, inst_, params_, cm_ in insts]
     top = a.top or re.search(r'^\s*module\s+(\w+)', Path(a.die_v).read_text(), re.M).group(1)
@@ -351,6 +364,10 @@ def main(argv=None):
     for n, c in const_nets.items():
         by[const_class(n)[0]] += c
     rec['constant_nets_by_class'] = dict(by)
+    if a.expanded:
+        rec['expanded_parameter_qualification'] = {i: row['profile']['native_qualified']
+            for i, row in _expanded.get('parameter_instances', {}).items()}
+        rec['diagnostic_parameter_profiles'] = bool(a.diagnostic_parameter_profiles)
     (out / 'bound_netlist.json').write_text(json.dumps(rec, indent=1) + '\n')
     bad = {k: v for k, v in rep.items() if v['how'] == 'unbound' or v['unassigned_bits']}
     print(f'kv_bound_netlist: {len(rows)} instances, {len(rep)} masters, {sum(1 for v in rep.values() if v["how"] == "bound")} '
