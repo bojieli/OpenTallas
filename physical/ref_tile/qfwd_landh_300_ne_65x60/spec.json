@@ -176,7 +176,7 @@
   "OT_QFD_LAND_SAFE_REG"
  ],
  "reset_landing": {
-  "enable": true,
-  "stages": 2
+  "enable": false,
+  "reason": "Safe RTL owns two-stage rs0/rs1 at central bookkeeping and each kept24bit region; Ksafe=Klegacy-2mod8, no extra wrapper."
  }
 }

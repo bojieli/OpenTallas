@@ -59,7 +59,7 @@ endmodule
 // source release edge G, receiver release edge R0, extra clock lag XL on the last hop
 module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.2, XL = 0.0, DOFF = 2.0,
               parameter integer G = 10, R0 = 12, LADD = 0, KFROM = -1,
-              parameter integer HREG = 1) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
+              parameter integer HREG = 1, RREG = 2) (       // hop-0 en registered on the source root (+1 edge): landh0 AND rlyh0
     input wire cks, input wire ckd, input wire [31:0] es, input wire [31:0] ed, output integer err, output integer chk, output wire flt);
     localparam real T = 10.0;
     reg  [W-1:0] src = 0;
@@ -101,7 +101,7 @@ module lane #(parameter integer W = 16, NF = 5, parameter real CD = 3.6, DD = 1.
         // forwarded hops (+ XL)
         lag = (NF - 1) * CD + XL;
         L = $rtoi($ceil(((NF + 1) * T / 2.0 + lag - DOFF) / T + 0.25)) + LADD;
-        K = ((L - 1 - (R0 - (G + HREG))) % 8 + 8) % 8;
+        K = ((L - 1 - ((R0 + RREG) - (G + HREG))) % 8 + 8) % 8;
         if (KFROM >= 0) K = KFROM;
         $display("FWD_LANE NF=%0d CD=%0.2f XL=%0.2f DOFF=%0.2f G=%0d R0=%0d L=%0d K=%0d", NF, CD, XL, DOFF, G, R0, L, K);
     end

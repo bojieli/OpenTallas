@@ -109,12 +109,19 @@ endmodule
 // Ring cells are a fixed four-slot buffer, with constant slot addresses; no indexed flop memory.
 (* keep_hierarchy = "yes" *)
 module ot_qfd_land_region #(parameter integer W = 24) (
-    input wire wck, we, ck, rs, warm,
+    input wire wck, we, ck, rs, warm_next,
     input wire [W-1:0] i,
     input wire [3:0] read_seed, read_next,
     input wire [3:0] vld,
     output reg [W-1:0] o
 );
+    // Kept region reset copies: two registered release stages, asynchronous assert.
+    (* keep = "true", dont_touch = "true" *) reg rs0, rs1, warm_q;
+    always @(posedge ck or negedge rs)
+        if (!rs) begin rs0 <= 1'b0; rs1 <= 1'b0; end
+        else begin rs0 <= 1'b1; rs1 <= rs0; end
+    always @(posedge ck or negedge rs1)
+        if (!rs1) warm_q <= 1'b0; else warm_q <= warm_next;
     (* keep = "true", dont_touch = "true" *) reg [3:0] ws_q;
     wire [3:0] ws = {ws_q[3:1], ~ws_q[0]};
     (* keep = "true", dont_touch = "true" *) reg [3:0] rdsel;
@@ -129,9 +136,9 @@ module ot_qfd_land_region #(parameter integer W = 24) (
     // subsequent clocks load rc+1-K, so the OLD select reads exactly rc-K on this edge.
     always @(posedge ck)
 `ifdef OT_QFD_LAND_MUT_RSEL
-        rdsel <= rs ? {read_next[2:0],read_next[3]} : read_seed;
+        rdsel <= rs1 ? {read_next[2:0],read_next[3]} : read_seed;
 `else
-        rdsel <= rs ? read_next : read_seed;
+        rdsel <= rs1 ? read_next : read_seed;
 `endif
     reg [W-1:0] b0, b1, b2, b3;
     always @(posedge wck) begin
@@ -140,7 +147,7 @@ module ot_qfd_land_region #(parameter integer W = 24) (
         if (ws[2]) b2 <= i;
         if (ws[3]) b3 <= i;
     end
-    wire [3:0] use_slot = rdsel & vld & {4{warm}};
+    wire [3:0] use_slot = rdsel & vld & {4{warm_q}};
     always @(posedge ck)
         o <= ({W{use_slot[0]}} & b0) | ({W{use_slot[1]}} & b1)
            | ({W{use_slot[2]}} & b2) | ({W{use_slot[3]}} & b3);
@@ -163,6 +170,12 @@ module ot_qfd_land #(
     output reg  [W-1:0] o,
     output reg          fault
 );
+    // Receiver reset epoch is exactly two root edges later than the raw rs input.
+    // Compiler strap: K_safe = K_legacy - 2 (mod8); steady-state capture edges unchanged.
+    (* keep = "true", dont_touch = "true" *) reg rs0, rs1;
+    always @(posedge ck or negedge rs)
+        if (!rs) begin rs0 <= 1'b0; rs1 <= 1'b0; end
+        else begin rs0 <= 1'b1; rs1 <= rs0; end
     wire wck, we;                 // ring write clock / write-side epoch
     generate if (FIRST != 0) begin : g_hop0
         // QK-LANDEN 10-19 (coordinator, Q.STA.LAND600.3 option (b); the ROOT-RST rule: reset-derived inputs are registered
@@ -201,13 +214,14 @@ module ot_qfd_land #(
         localparam integer LO = c * REGION_BITS;
         localparam integer N = (W - LO < REGION_BITS) ? W - LO : REGION_BITS;
         ot_qfd_land_region #(.W(N)) u_region (
-            .wck(wck), .we(we), .ck(ck), .rs(rs), .warm(warm), .i(i[LO +: N]),
+            .wck(wck), .we(we), .ck(ck), .rs(rs), .warm_next(warm_next), .i(i[LO +: N]),
             .read_seed(read_seed), .read_next(read_next), .vld(vld), .o(ring_o[LO +: N]));
     end endgenerate
     reg [AW:0]  epo  [0:D-1];
     wire [D-1:0] vld;
     reg [AW:0]  wc, rc;
     reg         warm;
+    wire warm_next = warm || (rc == k_q - 1'b1);
     // ------------------------------------------------------------------ write side (wck), cleared by the lane epoch
     always @(posedge wck or negedge we)
         if (!we) wc <= {(AW + 1){1'b0}};
@@ -232,8 +246,8 @@ module ot_qfd_land #(
     wire [AW:0] exp_ = rc - k_q;
 `endif
     wire [AW-1:0] rs_ = exp_[AW-1:0];
-    always @(posedge ck or negedge rs)
-        if (!rs) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; fault <= 1'b0; end
+    always @(posedge ck or negedge rs1)
+        if (!rs1) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; fault <= 1'b0; end
         else begin
             rc <= rc + 1'b1;
             if (rc == k_q - 1'b1) warm <= 1'b1;
