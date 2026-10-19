@@ -17,7 +17,13 @@ from attention_mode_contract import analyse
 from hbm_svc_packed136_image import sector_address
 
 
-def compile_attention(rec, sm=0, mut='', mixed_context=False):
+def compile_attention(rec, sm=0, mut='', mixed_context=False, *, native_padding=0,
+                      command_extra=0, calendar_extra=0, programme_done_extra=0):
+    assert S.LAT_GO == 7, 'read-admission reference must remain7'
+    assert native_padding >= 0 and calendar_extra in (0,2)
+    assert command_extra - calendar_extra in (0,2)
+    assert programme_done_extra == calendar_extra
+    busy_extra = programme_done_extra + command_extra - calendar_extra
     ops, nrun = A.plan_d4g(rec, sub=8)
     ops = [o for o in ops if o[5] == sm]
     store = S.Store(0)
@@ -72,14 +78,20 @@ def compile_attention(rec, sm=0, mut='', mixed_context=False):
     arm = dt + 2 * len(blocks) + 8
     launch, rc0 = arm + 2, arm + 2 + S.OFF
     previous_end = rc0
+    previous_go, previous_words = None, 0
     for i, b in enumerate(blocks):
-        first = max(rc0 + S.FIRST_GO + 8, previous_end + 256)
+        first = max(rc0 + S.FIRST_GO + 8 + native_padding, previous_end + 256)
+        if previous_go is not None:
+            first = max(first, rc0 + previous_go + previous_words + S.BUSY + busy_extra + S.LAT_GO,
+                        rc0 + previous_go + S.FETCH + native_padding + S.LAT_GO)
         # External x-loader completes before this op's first command.
         if b['cal'].xw:
             first = max(first, previous_end + max(b['cal'].xw) + 32)
         offset = first - b['first']
-        b.update(offset=offset, go_at=first - rc0 - S.LAT_GO, first_abs=first,
-                 end_abs=offset + b['exp']['end'], descriptor=i)
+        b.update(offset=offset, go_at=first - rc0 - S.LAT_GO, first_abs=first + command_extra,
+                 end_abs=offset + b['exp']['end'] + command_extra, descriptor=i,
+                 first_read_pin_abs=offset + b['exp']['first_line'] - 1 + calendar_extra)
+        previous_go, previous_words = b['go_at'], b['words']
         previous_end = b['end_abs']
         xw.extend((offset + c, w) for c, w in b['cal'].xw.items())
         d = S.desc_row(i, row_base=i * 8, landing=i % 4, epoch=i + 1, rows=len(b['lines']),
@@ -102,7 +114,10 @@ def compile_attention(rec, sm=0, mut='', mixed_context=False):
     assert len(set(t for t, _ in ing)) == len(ing)
     assert len(set(t for t, _ in xw)) == len(xw)
     return dict(ing=ing, xw=xw, ids=[], mem=mem, n_end=previous_end + 128,
-                blocks=blocks, budget=dict(model=model(len({r for o in ops if o[1] == 'qk' for r in o[3]}), kv4=bool(ops[0][2])),
+                blocks=blocks, budget=dict(timing=dict(read_admission_calibration=7,
+                native_padding=native_padding, command_extra=command_extra, calendar_extra=calendar_extra,
+                programme_done_extra=programme_done_extra, residual_completion_tail=command_extra-calendar_extra,
+                physical_source_binding='caller must bind actual native hardware flags; software arguments alone do not select RTL'),model=model(len({r for o in ops if o[1] == 'qk' for r in o[3]}), kv4=bool(ops[0][2])),
                 descriptors=len(blocks), distinct_programmes=len(store.progs), resident_words=store.top,
                 available_words=S.PSTORE, attention_reserved_legacy=S.ATT_RESERVED,
                 fits_legacy_attention_reservation=store.top <= S.ATT_RESERVED,
