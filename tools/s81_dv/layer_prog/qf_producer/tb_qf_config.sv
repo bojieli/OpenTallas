@@ -2,7 +2,7 @@
 // Bounded production configuration producer: real CTL->XR->DL4->VP SRAM
 // ->RDOUT->DL4->XR HB1 B->actual SVC job gate. No direct q injection.
 // Direct local q wire scopes this component; parent q route remains unproved.
-module tb_qf_config;
+module tb_qf_config #(parameter integer UNIFORM=0);
  reg clk=0; always #0.4165 clk=~clk;
  reg rst=0; reg ev=0; reg[1103:0] eb=0;
  wire [4:0] cv,swv;wire[159:0] cd;
@@ -27,7 +27,10 @@ module tb_qf_config;
  .lo_v(lvl),.lo_d(ldl),.x_rv(1'b0),.x_ra(10'd0),.x_wv(1'b0),.x_wa(10'd0),
  .x_wm(8'd0),.x_wd(256'd0),.hq_v(1'b0),.hq_d(256'd0),.fault(vf));
  reg[32:0] jc=0;wire[1:0] jd;wire[514:0] cq;
- wire[511:0] data=bo[563:52];
+ wire[511:0] data;
+ genvar qi;generate for(qi=0;qi<32;qi=qi+1)begin:g_compact_wire
+  assign data[16*qi+:16]=UNIFORM?bo[52+32*qi+16+:16]:bo[52+16*qi+:16];
+ end endgenerate
  reg[514:0] qp=0;
  integer mut=0;
  // This is exactly the existing entry q pin capture, followed by its u_job.
@@ -63,15 +66,15 @@ module tb_qf_config;
  if(lv)$display("STAGE xr_lo_pin=%0d",cyc);
  if(bo[0])begin
  $display("SOURCE cyc=%0d index=%0d data=%0128h",cyc,n,bo[563:52]);
- if(n>=3 || bo[563:52]!==gold[n])begin errors++;$display("CONFIG_SOURCE_MISMATCH");end
- if(n<3 && cyc!=((n==2)?212:112+2*n))begin errors++;$display("SOURCE_AGE_MISMATCH got=%0d",cyc);end
+ if(n>=3 || data!==gold[n])begin errors++;$display("CONFIG_SOURCE_MISMATCH");end
+ if(n<3 && cyc!=((n==2)?(212+2*UNIFORM):(112+2*UNIFORM+(2+2*UNIFORM)*n)))begin errors++;$display("SOURCE_AGE_MISMATCH got=%0d",cyc);end
  n++;
  end
  if(cq[0])begin
  if(first<0)first=cyc;
  $display("CONSUMER cyc=%0d data=%0128h",cyc,cq[512:1]);
  if(nc>=3 || cq[512:1]!==gold[nc])begin errors++;$display("CONSUMER_CORRUPT_WORD");end
- if(nc<3 && cyc!=((nc==2)?213:113+((mut==7)?nc:2*nc)))begin errors++;$display("CONSUMER_AGE_MISMATCH original_ii1=%0d",mut==7);end
+ if(nc<3 && cyc!=((nc==2)?(213+2*UNIFORM):(113+2*UNIFORM+((mut==7)?nc:(2+2*UNIFORM)*nc))))begin errors++;$display("CONSUMER_AGE_MISMATCH original_ii1=%0d",mut==7);end
  nc++;
  end
  if(cyc>20 && (xf || vf || jd[1]))begin errors++;$display("ACTUAL_SOURCE_CONSUMER_FAULT cyc=%0d xr=%b vp=%b job=%b",cyc,xf,vf,jd);end

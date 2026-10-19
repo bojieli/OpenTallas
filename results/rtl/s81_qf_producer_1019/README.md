@@ -91,3 +91,110 @@ ports/rows, and compose clock/reset/fault/edge ages into the original compiler.
 Then the smallest real wq_b-return→capture→QR→SEND→actual attention consumer
 must pass original gold and deadlines plus causal payload/owner/age mutants.
 Original strict 1324-failure evidence and the QF_PRODUCER_GAP remain unchanged.
+
+## Selected-source replay and priced compaction follow-up
+
+The historical selected MU3 source `ceaed19c4` does not contain this current
+layer compiler. Its VP/VS differ from main58fc in unrelated POST/NORMR and
+runtime SwiGLU-weight support. `selected_source/` preserves exact historical
+VP/VS bytes. The bounded header proof was replayed with that exact VP and the
+current compiler, explicitly separately pinned; XR/CAP/job are unchanged.
+`out_selected_cea` (ep4 unit3611360-1792440343) passes the same24 headers and
+seven negatives at identical measured edges. This is still a minimum component,
+not a claim that the historical GEN embeds the newer compiler/functional fixes.
+
+`model_compaction.py` extracts the original VS `bf16` and CAP `fmt_d` functions
+verbatim into a formal miter. Fleet Yosys SAT proves, for all2^32 source bit
+patterns including NaN/Inf/subnormals/ties, equality to the pinned original
+`hdc_golden.to_bf16` arithmetic and zero lower16 output bits. The selected VS
+function and main VS function are byte-identical. A raw-truncation negative
+produces a counterexample. Thus a proposed compacting source may select the
+upper16 bits only after these genuine producer writes; it may not silently
+truncate arbitrary FP32. This isolates the rounding boundary; the actual
+whole projection/QR write→SRAM read path still needs a composed proof.
+
+`uniform_model_final/` contains that source ledger, proofs and the
+explicit candidate cost. In-XR mode:64 eight-bit select groups, four mode-data
+copies and four enable copies (72 FF),512 three-NAND data muxes,512 zero-format
+ANDs,64 shared select inverters and72 enable muxes. Actual TT cells charge
+221.84928um² per entry, two-entry443.69856um², +34.180992fF clock per entry.
+Four resettable enable copies are additional reset loads; other mode state is
+unreset and requires proof that every SEND config precedes all valid payload
+after cold/warm reset. New select load bound25 is modeled, not a native census.
+Output remains the original pin register; no added pipeline edge or SRAM.
+This is a priced cell network, not a bound on routed/sized/clock-tree area.
+
+The alternative standalone packer needs640 new data FF plus control and
+header/bypass logic, at least186.624um² in data FF alone, and adds2 edges.
+Both choices consume four FP32 row pairs per compact512 word, hence II4.
+The two original headers remain raw and consume two pairs each;256 compact
+payload words consume1024 pairs. Those1028 source-lo edges yield an output
+span of at least1027 edges, +769 over258, ignoring all mode-switch, gather and
+start/control overhead. Current config/lo exclusion also needs at least three
+mode-switch bubbles. An all-compact258-word diagnostic span1029 is recorded
+separately and is not the favorable mixed-format bound. No finite full mixed
+calendar is implemented or admitted, and none of these partial counts is an
+exact end-to-end token delta. The unchanged source schedule still fails.
+
+The upper512-zero rule belongs only to a new genuine compact32-BF16 packet
+after format/mode/pair-count and original gold prove every occupied value
+preserved. It is not an unread-payload exemption for existing generic SEND
+packets. ROOT is reviewing this model before any compaction hardware is built.
+
+## Preferred uniform static wire profile (model and component proof only)
+
+A simpler profile needs **zero new data/control FF, gates, reset/clock loads,
+or pins**: keep the complete existing XR1024-bit B payload and NP4. At the
+existing q binding, wire source `bo[52+32*i+16 +:16]` to target q-data
+`[16*i +:16]`, for i0..31. No output register is bypassed or added. Each
+selected source bit still has one consumer. All32 FP32 source words contribute
+their already-rounded BF16 payload, including meaningful data from the upper
+512 B-payload bits. The16 zero low bits of each real producer word are format
+redundancy proven at the actual producer rounding boundary, not tied outputs
+or a blanket unused-payload waiver.
+
+Every actual configured512-bit header is stored as32 real SRAM words
+`{header[16*i+:16],16'b0}`. The same static wire permutation reconstructs all
+512 original bits, so original type/tag/user/length/position and payload
+interpretation remain unchanged. Header storage becomes24 existing128-bit
+rows480..503 (3072bits); it is not a new FF array or macro. This still needs
+production reservation because of shared final-FFN scratch lifetime.
+
+`out_uniform_cea` is a paired **model prototype**, not a production GEN edit:
+exact historical selected VP, untouched XR/SRAM/DL4/job RTL, expanded genuine
+configured headers, and the proposed constant wiring only in the bench.
+Verilator5.050 ep4 unit3620710-1792440701 passes24 headers/eight tags and all
+seven causal negatives. B words are at114/118 and qualified consumer115/119,
+with original header512 gold unchanged. No final runtime Q payload was
+injected. The formal uniform-header proof covers all2^512 header bit patterns;
+using the existing contiguous lower512 binding instead produces a counterexample.
+
+An exact new production source/profile fingerprint and q-binding representation
+are mandatory before any implementation/adoption. Existing bindings remain
+untouched. Inherited registered pins, clock/reset behavior and macro area are
+unchanged by the proposed wire permutation; actual gather geometry and native
+route/contact/electrical results are not qualified by this statement.
+
+All258 Q-header/payload words now use the same four-pair representation, giving
+the valid uniform lower bound1029 edges versus258, +771, with no format-mode
+switches. The mixed in-XR alternative's data-only bound1027 requires at least
+three config/lo-exclusion bubbles, so is not better before further constraints.
+None meets the original unchanged one-word-per-edge schedule. New calendar
+admission and the full runtime producer path remain open.
+
+The other bounded alternative compacts at the SVC receiver into the already
+prototyped QMEM8 native banks (`4cf0651b8`), with no new data buffer or macro.
+Each raw512 word is16 FP32 values →256 BF16 bits: half0 writes banks0..3,
+half1 banks4..7, and `q_have` advances only on a matched completed head. Actual
+query stripe addressing changes from tile=`f_idx[3:0]`, head=
+`{f_hdr[448],f_idx[6:4]}` to tile=`f_idx[4:1]`, head=
+`{f_hdr[448],f_idx[7:5]}`, phase=`f_idx[0]`. The job gate currently counts
+physical q words, so a proposed raw version requires type1 length256 instead
+of128, and an explicit new profile/controller; merely changing bank enables
+would silently corrupt addressing/counts. GO with incomplete query, missing or
+mismatched first half, active read/write collisions, unsupported lengths and
+identity all need fault and reset/lifetime proofs. Native OLD read and engine
+read address remain unchanged only once both halves are valid. Its514 raw
+words at II2 span at least1027 edges, +769; source phase, all control/identity
+state, native fanout and full area remain unpriced. This is less simple than
+the uniform wire profile and is not implemented.

@@ -23,7 +23,8 @@ def header(typ, tag, spec, pos, user):
 
 
 def compile_headers(tag, *, sid=6, leaf=0, wb=256, sb=4096, user=3,
-                    pos=777, window=128, stack=0, po=395, pvo=482, pio=285):
+                    pos=777, window=128, stack=0, po=395, pvo=482, pio=285,
+                    uniform=False):
     """Existing target5 row writes -> target0 RDOUT -> target4 SEND-B.
 
     Caller must reserve rows480..491 and the actual CTL/VP ports. Configuration
@@ -40,10 +41,12 @@ def compile_headers(tag, *, sid=6, leaf=0, wb=256, sb=4096, user=3,
     ]
     ctl = []
     for i, (name, word) in enumerate(values):
-        row = 480 + 4*i
-        for k in range(4):
-            body = row+k | 15 << 10 | ((word >> (128*k)) & (2**128-1)) << 14
-            ctl.append(dict(cycle=32+4*i+k, target=5, body=body,
+        stride=8 if uniform else 4
+        stored=sum(((word>>(16*j))&65535)<<(32*j+16) for j in range(32)) if uniform else word
+        row = 480 + stride*i
+        for k in range(stride):
+            body = row+k | 15 << 10 | ((stored >> (128*k)) & (2**128-1)) << 14
+            ctl.append(dict(cycle=32+stride*i+k, target=5, body=body,
                             payload=_payload(1 << sid, 5, 1 << leaf, body), kind='config_row'))
         # First two configuration headers deliberately share one continuous
         # four-pair RDOUT. Real SEND-B emits them two edges apart, not one.
@@ -52,14 +55,16 @@ def compile_headers(tag, *, sid=6, leaf=0, wb=256, sb=4096, user=3,
         # Separate each command from all writes and neighbouring lo streams.
         t = 90 + i*50
         for cycle, target, body, kind in [
-            (t, 4, send_cfg('B', 4, 0, 1 << sid, leaf, row, 2), 'send_b'),
-            (t+2, 0, _vp(6, a0=row, n=4 if i == 0 else 2), 'rdout'),
+            (t, 4, send_cfg('B', 4, 0, 1 << sid, leaf, row, stride//2), 'send_b'),
+            (t+2, 0, _vp(6, a0=row, n=stride if i == 0 else stride//2), 'rdout'),
         ]:
             ctl.append(dict(cycle=cycle,target=target,body=body,
                             payload=_payload(1 << sid,target,1 << leaf,body),kind=kind))
     return dict(schema='opentallas.s81.qf_config_source.v1', enabled_by_default=False,
                 tag=tag,sid=sid,leaf=leaf,register_delta=0,macro_delta=0,
-                reserved_existing_sram_bits=1536, reserved_rows=[480,491],
+                uniform_wire_profile=uniform,
+                reserved_existing_sram_bits=3072 if uniform else 1536,
+                reserved_rows=[480,503 if uniform else 491],
                 ctls=sorted(ctl,key=lambda x:x['cycle']),
                 frames=[dict(name=n,word=f'{w:0128x}') for n,w in values],
                 runtime_payloads_lowered=False,production_calendar_admitted=False)
@@ -137,10 +142,11 @@ def model():
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',required=True)
+    ap.add_argument('--uniform',action='store_true')
     a=ap.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
     plans=[]
     for tag in (0, 1, 53, 127, 128, 213, 254, 255):
-        p=compile_headers(tag);plans.append(p)
+        p=compile_headers(tag,uniform=a.uniform);plans.append(p)
         (out/f'ctl_{tag}.hex').write_text(''.join(f'{c["cycle"]:08x} {c["payload"]:046x}\n' for c in p['ctls']))
         (out/f'gold_{tag}.hex').write_text(''.join(x['word']+'\n' for x in p['frames']))
     (out/'plans.json').write_text(json.dumps(plans,indent=2)+'\n')
