@@ -1,0 +1,6 @@
+KVWB_RING PASS n=512 ring=256 vm_stride=1024 die master vp4_banks K=2; first command -> last WB beat: R1@s5/1mv=36 R2@s5/1mv=44 R3@s5/1mv=52 R4@s5/1mv=60 R6@s5/1mv=76 R6@s200/1mv=76 R6@s253/2mv=104 R4@s255/2mv=88 R1@s255/1mv=36
+- rtl/hbm_next/dma/tb/tb_hnx_dma_kvwb_ring.sv:127: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 56us; walltime 0.035 s; speed 1.590 ms/s
+- Verilator: cpu 0.035 s on 1 threads; allocated 9 MB
+RUN_RC=0
