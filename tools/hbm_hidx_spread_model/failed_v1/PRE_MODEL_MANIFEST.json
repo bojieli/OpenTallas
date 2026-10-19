@@ -1,0 +1,22 @@
+{
+  "scope": "SOURCE MODEL ONLY, no OpenROAD/ODB mutation/placement/CTS/route",
+  "parent_diagnostic": "c74808561",
+  "reference_checkpoint": "70042afe82ff76fc2657f45fb6c2a89f91eed2993add8e9dc89f2fc612fc88a6",
+  "inputs": {
+    "input/cells.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+    "input/loaded_caps.json.gz": "7caf230df64dcfc5903dc5a043ff7a17e0729c4bdaa23a824991736f10853054",
+    "input/metal.json.gz": "e8490719ad4dd8016d82bcab00db952d4ae5e9b8ea0d57b96e6220dad2ec880a",
+    "input/native_clock_cell.json": "39d166230811a9fe5239aed89027519b97cfb16cd3629d2d9ffb156e64307614",
+    "input/native_pin_geometry.json.gz": "87197c57d9e9e1865825d183fd44996ee435f11cf5553ee0aecff1fb8ab6803f",
+    "input/positions.json": "dc6546e7a74dee88d24882664a2994ebbf440193bc749723c2729b79b4f7b8ac",
+    "input/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+    "kit/model.py": "f2ce083c2f915358fecbf917e630db92ef64369c6f175fbef3c75b53f1b564bd",
+    "kit/run.sh": "ef9ffa410369f09e6ba2e6b74dcad18b0627c03b684f96b5e6c5ab44e60a6af1"
+  },
+  "resource": {
+    "memory_gb": 16,
+    "threads": 2,
+    "basis": "Same2.117Mshape native conductor read-only proof completed16GB; model additionally small11145cell/pin ledgers, no build/PNR engine. All hosts memory-admitted."
+  },
+  "created_utc": "2026-10-19T22:11:39.019303+00:00"
+}
