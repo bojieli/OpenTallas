@@ -1,0 +1,33 @@
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-frame-reschedule-1019/bench_h9_k2/vec_plan/f_e4e_0.viamap.hex:0: $readmem file not found
+FAULT edge 323 status 11 lx 0
+FAULT edge 324 status 11 lx 0
+FAULT edge 325 status 11 lx 0
+FAULT edge 326 status 11 lx 0
+RET 358 08e2ee6b010000089
+RET 359 18fd2c19610004089
+RET 365 089fef2d810008409
+RET 366 08ec8ed741000c409
+RET 370 18ed287d610010049
+RET 371 08cdae34410014209
+RET 372 08ee951e010010449
+RET 373 18f09ab7210014449
+RET 379 08dbd821010008049
+RET 380 08f03d9e21000c049
+RET 388 08e36266610008609
+RET 389 08f2c44941000c609
+END edges=3063 ret_words=12 xo_checked=3061 fault=4 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 8.839 s; speed 347.141 ns/s
+- Verilator: cpu 8.839 s on 1 threads; allocated 54 MB
