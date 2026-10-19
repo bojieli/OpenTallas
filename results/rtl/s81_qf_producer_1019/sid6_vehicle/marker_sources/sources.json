@@ -1,0 +1,31 @@
+{
+  "real_source_records": [
+    {
+      "source_ref": "ceaed19c4",
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+      "sha256": "4564c83259a32bca2fb8006892fa75e83ce06a20a51b5b1b6f0b4165cba121c0"
+    },
+    {
+      "source_ref": "ceaed19c4",
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+      "sha256": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc"
+    },
+    {
+      "source_ref": "ceaed19c4",
+      "path": "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+      "sha256": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d"
+    },
+    {
+      "source_ref": "ceaed19c4",
+      "path": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+      "sha256": "d88411c7d04ed7dea33be877a2a72fd925f7ed4d9da04b4adf5aef38f3af5562"
+    },
+    {
+      "source_ref": "ceaed19c4",
+      "path": "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+      "sha256": "a8e2fd363c543e69e1fda36c6bd4658f285c51bf7ffec447d231ecc3e2e27e75"
+    }
+  ],
+  "icg": "existing dv_rtl_kit CELL_MODELS functional ICGx4; not native timing",
+  "native_phase": null
+}
