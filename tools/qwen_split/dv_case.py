@@ -691,14 +691,6 @@ def apply_dv(v, m):
     for n in sorted(names):
         if n.startswith('c16_') and n not in fed:
             m['ties'].append((n, 'rs_i', 514, 0))
-    # MU-DIE-QW 10-19 (rule c, OPSEG mode): qfd_tt_ctlm_dv.dh_user (MU-ADOPT-CTLM) names the user of a dh stage start
-    # for NU > 1 WITHOUT OPSEG.  The release MU die runs OPSEG 1 (MU-QW-B1 option 2, coordinator B1): the closed
-    # qfd_sys_face's T calendar carries the latency user's starts only, so every dh start is user 0 and the filler op
-    # starts come from the in-cluster leaf u_leaf; the face has no seq_dh_user producer.  Tie it 0 (manifest entry).
-    _tm = next((M[i.master] for i in keep if i.name == 'tt_ctlm'), None)
-    if _tm is not None and 'dh_user' in _tm.ports and \
-            ('tt_ctlm', 'dh_user') not in {tuple(e) for b in out for e in b[3]}:
-        m['ties'].append(('tt_ctlm', 'dh_user', _tm.ports['dh_user'][1], 0))
     m['ties'][:] = [t for t in m['ties'] if t[0] in names]
     conn = {tuple(e) for b in out for e in b[3]}
     for bid, cl, bits, kept, gone in partial:
