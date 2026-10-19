@@ -14,6 +14,7 @@ LAYERS += ['l5_host_ep.py']  # H-D4G5/HOSTEP 10-18 (0gd): host_cp endpoint -> hf
 LAYERS += ['l5b_cij4.py']  # H-D4G GEN2 10-18 (0gl): cij in all 4 quadrants (IDX tx 4-sink fork tree) + SET 2 VM tile slots
 LAYERS += ['l6_collq.py']  # H-D4G GEN2 10-18: COLL gather master (HBM-COLLQ) + ring B stops (HBM-RTL4), from the committed binding records
 LAYERS += ['l7_wire.py']  # HBM-WIRE 10-18: functional check (d4g_functional_bind.py) + cxij SE/NW/NE inject slot behind cij + gap sync
+LAYERS += ['l8_idx_n12.py']  # HBM-CHAIN3 10-18 (0hk): uniform n+12 IDX operand reader + 1/1 VM-face die relays on every quadrant
 ap = argparse.ArgumentParser(); ap.add_argument('inp'); ap.add_argument('out'); ap.add_argument('--report-dir', required=True)
 a = ap.parse_args()
 R = Path(a.report_dir); R.mkdir(parents=True, exist_ok=True)
