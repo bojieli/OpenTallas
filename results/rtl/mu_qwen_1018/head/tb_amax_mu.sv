@@ -25,14 +25,14 @@ module tb_amax_mu;
     wire a1_v, a1_e, r1_v, r1_e, a4_v, a4_e, f1, f4;
     wire [23:0] a1_i, r1_i, a4_i;
     wire [31:0] a1_d, r1_d, a4_d;
-    qfd_dv_amax_mu #(.NU(1)) u_one (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(stn_amax_bit), .stn_user(stn_user),
+    qfd_dv_amax_mu #(.NU(1)) u_one (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(stn_amax_bit), .stn_user(stn_user), .stn_pend(1'b0),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(c_am), .am_clr(am_clr), .am_emit_cmd(am_emit_cmd), .am_user(am_user),
         .am_v(a1_v), .am_idx(a1_i), .am_val(a1_d), .emit_empty(a1_e), .mu_fault(f1));
     wire [115:0] cmd_q = {65'd0, stn_amax_bit, 44'd0, am_emit_cmd, am_clr, 4'd0};
     amax_today_ref u_ref (.ck(ck), .rst(rst), .c_stn(c_stn), .cmd_q(cmd_q), .go(c_stn | c_am),
         .kind(c_am ? 3'd6 : 3'd2), .r_v(r_v), .r_addr(r_addr), .r_d(r_d),
         .am_v(r1_v), .am_idx(r1_i), .am_val(r1_d), .emit_empty(r1_e));
-    qfd_dv_amax_mu #(.NU(NU), .MUT(MUT)) u_mu (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(stn_amax_bit), .stn_user(stn_user),
+    qfd_dv_amax_mu #(.NU(NU), .MUT(MUT)) u_mu (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(stn_amax_bit), .stn_user(stn_user), .stn_pend(1'b0),
         .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(c_am), .am_clr(am_clr), .am_emit_cmd(am_emit_cmd), .am_user(am_user),
         .am_v(a4_v), .am_idx(a4_i), .am_val(a4_d), .emit_empty(a4_e), .mu_fault(f4));
 

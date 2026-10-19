@@ -11,9 +11,15 @@
 // TOK both ways; every slice passes broadcast words on in their direction and taps RB into its VM.  One word per
 // direction per edge (static schedule; a pass and an own word on one edge in one direction is a sticky fault).
 // MUT 1 / 6 / 7: as qfd_dv_scalar (sequential fold / level-1 pairing / argmax ties to the higher index).
+// MU_NU > 1 (MU-ADOPT-SLICE2 10-19, MU-QWEN R4): one token per user is merged back to back, so the root's argmax merge
+//   restarts after each token (am_best / amc cleared on the token edge; the TOK broadcast takes the latched tok_idx)
+//   instead of only at a ROOT cfg (a ROOT cfg per user token would also clear the PSUM slots of other users' reductions
+//   in flight).  MU_NU 1: today, statement for statement.  MU_MUT 1 (bench only): no restart (the pre-fix behaviour).
 // =====================================================================================================================
 module qfd_dv_scalar2 #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer MU_NU = 1,
+    parameter integer MU_MUT = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -75,7 +81,7 @@ module qfd_dv_scalar2 #(
                            am_v ? {1'b1, K_AMI, 12'd0, 8'd0, am_idx} : {1'b1, K_AMV, 12'd0, am2_val};
     wire        own_bc = rb_v || rr_v || tk_send;
     wire [47:0] own_bc_w = rb_v ? {1'b1, K_RB, 12'd0, rb_val} : rr_v ? {1'b1, K_RB, 12'd0, rr_y} :
-                           {1'b1, K_TOK, 12'd0, 8'd0, am_best[55:32]};
+                           {1'b1, K_TOK, 12'd0, 8'd0, (MU_NU > 1) ? tok_idx : am_best[55:32]};
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin am2 <= 1'b0; am2_val <= 32'd0; end
         else begin am2 <= am_v && !root; am2_val <= am_val; end
@@ -193,7 +199,8 @@ module qfd_dv_scalar2 #(
             else if (d_amv || u_amv || o_am) begin
                 am_best <= m3;
                 if (amc_n == amnb && amnb != 6'd0) begin amc <= 6'd0; tk_send <= 1'b1; tok_v <= 1'b1; tok_idx <= m3[55:32];
-                                                          tok_own <= 1'b1; tok_val <= m3[31:0]; end
+                                                          tok_own <= 1'b1; tok_val <= m3[31:0];
+                                                          if (MU_NU > 1 && MU_MUT != 1) am_best <= 57'd0; end
                 else amc <= amc_n;
             end
             // a non-root slice records the broadcast token as it passes
