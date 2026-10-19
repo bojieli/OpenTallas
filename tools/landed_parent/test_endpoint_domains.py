@@ -97,7 +97,7 @@ def main():
     r=audit(x,'top',roots)
     assert any(c['sink']=='top/nested/capture' and c['source_root']=='INPUT:d' for c in r['crossings'])
     x['modules']['wire_child']['ports']['other']={'direction':'input','bits':[2]}
-    m['cells']['wire']['connections']['other']=[4]
+    m['cells']['wire']['connections']['other']=[5]
     try:audit(x,'top',roots)
     except ValueError as e:assert 'aliased child inputs' in str(e)
     else:raise AssertionError('conflicting child inputs accepted through output alias')
