@@ -400,24 +400,38 @@ def expand(rec: RC.Rec, rx: RowX | None, vm=None, L: int = 0):
     return out
 
 
-def check_rows_independent(rec: RC.Rec, rx: RowX | None, vm=None, L=0, written=("O", "R", "D")):
+def written_operands(rec: RC.Rec):
+    """operands a record WRITES: O and R; D only where an IDX op writes it (IDX.UNION count, IDX.KVUNION lane map,
+    IDX.INDEX cand_en candidate table) -- everywhere else D is a read (SU / SM / ATT operand)"""
+    w = ("O", "R")
+    if rec.unit == "IDX" and (rec.op in ("UNION", "KVUNION") or (rec.op == "INDEX" and (rec.param >> 12) & 1)):
+        w += ("D",)
+    return w
+
+
+def check_rows_independent(rec: RC.Rec, rx: RowX | None, vm=None, L=0, written=None):
     """Compile-time rule: no row reads a VM word an EARLIER row of the same record writes (rows may overlap in
-    hardware).  VM intervals only (HBM order is the unit's own posted-write rule).  Returns the first conflict or None."""
+    hardware).  VM intervals only (HBM order is the unit's own posted-write rule).  Read extents as the engine reads
+    them: SU b_half B / D at i >> 1 (ceil(n / 2) words; 10-19: before, the full n and D-as-written made adjacent RoPE
+    table rows look dependent).  Returns the first conflict or None."""
     if rx is None:
         return None
+    written = written_operands(rec) if written is None else written
+    half = rec.unit == "SU" and getattr(rec, "sut", None) is not None and rec.sut.get("b_half")
     ex = expand(rec, rx, vm, L)
 
-    def span(d):
+    def span(d, k=None):
         if d.space != "VM":
             return None
         ist = 0 if d.ibcast else (d.istride or 1)
+        n = (d.n + 1) // 2 if half and k in ("B", "D") and not (0 < d.n_sel < 63) else d.n
         lo = d.base
-        hi = d.base + (d.m - 1) * d.stride + (d.n - 1) * ist
+        hi = d.base + (d.m - 1) * d.stride + (n - 1) * ist
         return (min(lo, hi), max(lo, hi))
     wr = []
     for i, (_, r) in enumerate(ex):
         for k, d in r.desc.items():
-            s = span(d)
+            s = span(d, k)
             if s is None:
                 continue
             if k not in written:

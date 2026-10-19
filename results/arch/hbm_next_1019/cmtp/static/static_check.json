@@ -639,7 +639,7 @@
       "peak_words": 303664,
       "peak_at": 51414.4,
       "copies": 30,
-      "live_in_const_words": 7858,
+      "live_in_const_words": 5126,
       "self_overwritten_read_words": {
        "COLL.ALL_GATHER": 459702
       },
@@ -1320,12 +1320,14 @@
      "x_loads": 443,
      "m1_cycles": 30565.0,
      "rpl_saved": 28420.2,
-     "att_single_records": 0
+     "att_single_records": 0,
+     "meas": {}
     },
     "att_rows_records": 80,
     "fused_pre_measured_ii_records": 81,
     "idx_index_per_user_records": 0,
-    "att_lanes": 4
+    "att_lanes": 4,
+    "meas_post": {}
    }
   },
   "mu": {
@@ -1961,10 +1963,10 @@
      },
      "records": 185,
      "vm": {
-      "peak_words": 184012,
-      "peak_at": 42727.9,
+      "peak_words": 187838,
+      "peak_at": 9104.4,
       "copies": 16,
-      "live_in_const_words": 7858,
+      "live_in_const_words": 5126,
       "self_overwritten_read_words": {
        "COLL.ALL_GATHER": 278820
       },
@@ -2645,12 +2647,14 @@
      "x_loads": 443,
      "m1_cycles": 17767.9,
      "rpl_saved": -11.4,
-     "att_single_records": 0
+     "att_single_records": 0,
+     "meas": {}
     },
     "att_rows_records": 80,
     "fused_pre_measured_ii_records": 81,
     "idx_index_per_user_records": 8,
-    "att_lanes": 4
+    "att_lanes": 4,
+    "meas_post": {}
    }
   },
   "ar": {
@@ -3289,7 +3293,7 @@
       "peak_words": 45678,
       "peak_at": 4267.9,
       "copies": 1,
-      "live_in_const_words": 2732,
+      "live_in_const_words": 0,
       "self_overwritten_read_words": {
        "COLL.ALL_GATHER": 32841
       },
@@ -3969,9 +3973,9 @@
  },
  "sources_sha256": {
   "tools/hbm_next/static_check.py": "49ec67d1effcb578d3e560f3c7e5ce06f85852c758d6702ae8514daf2f492e40",
-  "tools/hbm_next/plane_compiler.py": "9f5c8f57edcf8826ba005f115f2cade0a6ef574c266d54e1b0348a971e1287b4",
-  "tools/hbm_next/isa_rows.py": "4fa9374900a20b1c6889c74493bbf96add53a94e5a43c6c5a3861a240c1ea7cc",
-  "tools/hgi_sim/timing.py": "b53ac4b726e0de68bd4a8c81f675a3ddabe7bf03170228debd5fcfc6839b0826",
+  "tools/hbm_next/plane_compiler.py": "711576142f9c7ad33fc10aeedcc5698c8cb2f213786c5d0ebe74b44cc031fab2",
+  "tools/hbm_next/isa_rows.py": "9b549f7df5b72e91846302e576d6d8f8547f4c5d34893dcd0193745454f31277",
+  "tools/hgi_sim/timing.py": "6690caa113e1bb7f5435c001a6a12ca5b0ebe15ad8867376903939a3b096a7b3",
   "tools/hgi_sim/ds_mtp_verify.py": "35613f56f3f93633e3c5381d2bc3b8c3123734678b038914240078a3c1dff400"
  }
 }

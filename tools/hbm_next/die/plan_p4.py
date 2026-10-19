@@ -103,7 +103,7 @@ def sm_row(P0, W, smw, smh, north, H):
     return out, top
 
 
-def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, vm_dh=0.0, fused=0.0, idxn=False):
+def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, vm_dh=0.0, fused=0.0, idxn=False, fused_h=None):
     """F4-C quadrant band (W-quadrant S frame, x from the die W edge): row A = 8 VM banks on the SM row inner face,
     row B = 4 SU groups (SU slot + HC client + SFU group (+ quant)) over the 4 SMs, quadrant core at the inner end."""
     out = {}
@@ -126,12 +126,14 @@ def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, 
         out[f'su_{q}{g}'] = R(x, rowB, suw, suh)
         cx = x + suw + 40.0
         fy = rowB
+        fh_ = fused_h or fused                 # lane outline fused (W) x fused_h (H); square when fused_h is not given
         if fused:                              # UNITS-FUSED hnx_fused_lane_1019 (x32 = one per VM bank, S face = its bank): the group's
             for k in range(2):                 # 2 lanes at the foot of the SFU/HC client column, next to the bank pair's inner corner
-                out[f'fus_{q}{2 * g + k}'] = R(cx, rowB + k * (fused + 20.0), fused, fused)
-            fy = rowB + 2 * (fused + 20.0) + 40.0
+                out[f'fus_{q}{2 * g + k}'] = R(cx, rowB + k * (fh_ + 20.0), fused, fh_)
+            fy = rowB + 2 * (fh_ + 20.0) + 40.0
         fw, fh = (side, side) if side else dims(f'sfu_{q}{g}'); out[f'sfu_{q}{g}'] = R(cx, fy, fw, fh)
         hw, hh = (side, side) if side else dims(f'hc_{q}{g}'); out[f'hc_{q}{g}'] = R(cx, fy + fh + 60.0, hw, hh)
+        hw = max(hw, fused)                    # the column is as wide as its widest block (FUSED lanes may be wider than 259.2)
         if f'quant_{q}{g}' in P0:              # quantiser in the bank row, beside its bank pair (QUANT_VM)
             qw, qh = dims(f'quant_{q}{g}'); out[f'quant_{q}{g}'] = R(x + 2 * vw + 60.0, BY, qw, qh)
         x = cx + max(hw, fw) + ga
@@ -155,7 +157,7 @@ def quadrant_core_c(P0, q, BY, W, vmh='inner', side=None, hc='quad', vm_dw=0.0, 
     return out, right, top
 
 
-def strip_c(P0, ys, W, sh, coll_d, idxn=False):
+def strip_c(P0, ys, W, sh, coll_d, idxn=False, fused_hub=0.0):
     """centre strip: SerDes pairs at the die edges; per side, from the centre line outward (greedy, no overlap, each
     item as close as possible to its preferred centre x): the SFU programme stores (over their SFU cores at the
     quadrant core), the COLL engine pair (S over N, stacked; preferred centre CX -/+ coll_d, swept: COLL_VM from the
@@ -191,7 +193,8 @@ def strip_c(P0, ys, W, sh, coll_d, idxn=False):
                                            'idx_nsel': R(x0, cy(1000), nw, nh)})
     idxc = (300, lambda x0: {'idx_ctl': R(x0, cy(708), 300, 260), 'idx_op': R(x0, cy(708) + 300, 216, 108), 'idx_q': R(x0, cy(708) + 448, 260, 260)})
     sides = {
-        -1: [(0.6e3, sfus('SW')), (1.7e3, sfus('NW')), (coll_d, coll_pair('SW', 'NW')), (3.0e3, idxw)],
+        -1: [(0.6e3, sfus('SW')), (1.7e3, sfus('NW')), (coll_d, coll_pair('SW', 'NW')), (3.0e3, idxw)]
+            + ([(0.0, one('fus_hub', fused_hub, fused_hub))] if fused_hub else []),
         +1: [(0.6e3, sfus('SE')), (1.7e3, sfus('NE')), (coll_d, coll_pair('SE', 'NE')), (3.5e3, one('tkm_SW', 3000, 1400)),
              (5.5e3, idxc), (6.5e3, one('host_cp', 1300, 700))]}
     for sg, items in sides.items():
@@ -205,18 +208,18 @@ def strip_c(P0, ys, W, sh, coll_d, idxn=False):
     return out
 
 
-def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_dh=0.0, fused=0.0, idxn=False):
+def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_dh=0.0, fused=0.0, idxn=False, fused_h=None, fused_hub=0.0):
     smw, smh = sm_dims(tw, th)
     W = round(2 * (EDGE + 4 * smw + sum(GAPS) + CH / 2), 2)
     BY = 2056.0 + smh + 200.0
     tops = []
     cores = {}
     for q in ('SW', 'NW'):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh, fused, idxn)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh, fused, idxn, fused_h)
         assert right <= W / 2 - CH / 2 + 1e-6, (q, 'core overruns centre channel', right, W / 2 - CH / 2)
         cores[q] = c; tops.append(top)
     for q, src in (('SE', 'SW'), ('NE', 'NW')):
-        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh, fused, idxn)
+        c, right, top = quadrant_core_c(P0, q, BY, W, vmh, side, hc, vm_dw, vm_dh, fused, idxn, fused_h)
         cores[q] = {n: S.mirror_x(r, W) for n, r in c.items()}; tops.append(top)
     ys = max(tops) + 100.0
     SH = 1800.0
@@ -228,7 +231,7 @@ def plan_f4c(P0, tw, th, vmh, coll_d=500.0, side=None, hc='quad', vm_dw=0.0, vm_
         P.update(cores[q])
     for q in ('NW', 'NE'):
         P.update({k: S.mirror_y(r, H) for k, r in cores[q].items()})
-    P.update(strip_c(P0, ys, W, SH, coll_d, idxn))
+    P.update(strip_c(P0, ys, W, SH, coll_d, idxn, fused_hub))
     if hc == 'one':
         # the ONE split HC engine (GEN2 binds ot_hbm_hc_root_static + 4 qhub + 32 bank tiles, 5,223 x 1,953 um at the S-E PHY
         # corner): the S-E corner between idxs_SE and the die E edge, up to 40 um under the SM row
@@ -259,6 +262,13 @@ def plan_f4w(P0, tw, th):
 
 
 def graph_for(P, coll_x, hc='quad', coll_l5=False):
+    G = _graph_for(P, coll_x, hc, coll_l5)
+    if 'fus_hub' in P:
+        fused_graph(G, P)
+    return G
+
+
+def _graph_for(P, coll_x, hc='quad', coll_l5=False):
     G = json.loads((FRAME / 'd4g_phy.compact.graph.json').read_text())
     for n, v in G['nodes'].items():
         if n in P:
@@ -286,6 +296,36 @@ def graph_for(P, coll_x, hc='quad', coll_l5=False):
                 l['provenance'] = l.get('provenance', '') + f' | HBM-NEXT-DIE: x{coll_x:g} COLL payload reserve (P=4)'
     G['structural'] = list(G.get('structural', [])) + ['HBM-NEXT-DIE 10-19: P=4 SM column stand-in; COLL x%g' % coll_x]
     return G
+
+
+# UNITS-FUSED ot_hnx_fused_lane ports (rtl/hbm_next/fused/ot_hnx_fused_eng.sv): VM bank rq 17 + rr 257 + wq 273 = 547 b (S face);
+# top side dn 140 + r 33 (down) + up 268 = 441 b (N face).  COORD 10-19 0kl: lane beside its bank, the csum is a TREE over
+# neighbour hops (no star into the hub), the top's own logic (job decode, scalar prologue, heap, divc, rsqrt) in a small hub tile.
+FUSED_VM_BITS, FUSED_TREE_BITS = 547, 441
+
+
+def fused_graph(G, P):
+    """FUSED nodes + links: lane <-> own bank; per quadrant the tree (lane pair -> group node; groups g1->g0, g2->g3 (neighbour
+    columns), g0 -> g3 (quadrant node = the innermost group, lane 6)); quadrant node -> fus_hub (centre strip)."""
+    for n, r in P.items():
+        if n.startswith('fus_'):
+            G['nodes'][n] = dict(id=n, kind='FUSED', quadrant=n[4:6] if n != 'fus_hub' else None, w=r['w'], h=r['h'],
+                                 area_mm2=round(r['w'] * r['h'] / 1e6, 4), area_src='measured' if n != 'fus_hub' else 'reserve', fixed=False,
+                                 provenance='HBM-NEXT-UNITS-FUSED(-SRAM) lane n3: 852,881 cells ~104k um2 std + 2 x 128x256 SRAM'
+                                 if n != 'fus_hub' else 'HBM-NEXT-DIE 10-19: ot_hnx_fused_top hub reserve (job decode, prologue, heap, divc, rsqrt)')
+    def link(s, d, cls, bits, why):
+        G['links'].append(dict(id=f'{s}>{d}:{cls}', src=s, dst=d, cls=cls, bits=bits, bytes_per_token={'qwen': 0.0, 'ds': 0.0},
+                               criticality=0.05, rule=None, fixed_return=False, provenance=why))
+    for q in ('SW', 'NW', 'SE', 'NE'):
+        for i in range(8):
+            link(f'fus_{q}{i}', f'vmb_{q}{i}', 'FUSED_VM', FUSED_VM_BITS, 'lane <-> own VM bank rq/rr/wq')
+        for g in range(4):
+            link(f'fus_{q}{2 * g + 1}', f'fus_{q}{2 * g}', 'FUSED_TREE', FUSED_TREE_BITS, 'tree level 1 (lane pair, stacked)')
+        link(f'fus_{q}2', f'fus_{q}0', 'FUSED_TREE', FUSED_TREE_BITS, 'tree level 2 (g1 -> g0, neighbour columns)')
+        link(f'fus_{q}4', f'fus_{q}6', 'FUSED_TREE', FUSED_TREE_BITS, 'tree level 2 (g2 -> g3, neighbour columns)')
+        link(f'fus_{q}0', f'fus_{q}6', 'FUSED_TREE', FUSED_TREE_BITS, 'tree level 3 (quadrant node = innermost group)')
+        if 'fus_hub' in P:
+            link(f'fus_{q}6', 'fus_hub', 'FUSED_TREE', FUSED_TREE_BITS, 'quadrant node -> hub (level 4/5 + command broadcast)')
 
 
 def checks(P, W, H):
@@ -342,7 +382,7 @@ def flow_png(path, P, G, W, H, ev, tag):
     ax.add_patch(Rectangle((0, 0), W / 1000, H / 1000, fill=False, ec='k', lw=1.0))
     ax.add_patch(Rectangle(((W - RETICLE[0]) / 2000, (H - RETICLE[1]) / 2000), RETICLE[0] / 1000, RETICLE[1] / 1000, fill=False, ec='#888888', lw=0.6, ls=':'))
     ax.set_xlim(-0.8, 34.0); ax.set_ylim(-0.5, 33.5); ax.set_aspect('equal'); ax.tick_params(labelsize=5)
-    ax.set_title(f"HBM-NEXT P=4 {tag} flows: {W/1000:.2f} x {H/1000:.2f} mm; bit-mm {ev['sum_bits_mm']/1e6:.3f} M; stages_bw {ev['stages_bw']}; "
+    ax.set_title(f"HBM-NEXT {tag} flows: {W/1000:.2f} x {H/1000:.2f} mm; bit-mm {ev['sum_bits_mm']/1e6:.3f} M; stages_bw {ev['stages_bw']}; "
                  f"cut {ev['cut_phy_unmasked']['worst_v']['ratio']}/{ev['cut_phy_unmasked']['worst_h']['ratio']} (dotted = 26 x 33 reticle)", fontsize=5.5)
     fig.tight_layout(); fig.savefig(path); plt.close(fig)
 
@@ -366,6 +406,9 @@ def main():
     ap.add_argument('--vm-dw', type=float, default=0.0, help='VM bank growth: um added to every vmb_* width (412k words = 5 macros: 118.8)')
     ap.add_argument('--fused', type=float, default=0.0, help='UNITS-FUSED hnx_fused_lane_1019 square side (um), x32 = 2 per bank pair in row A '
                     '(README outline 259.2 = a guess until the gate prints std_area_um2)')
+    ap.add_argument('--fused-h', type=float, default=None, help='FUSED lane height (um) when not square (lane = --fused x --fused-h)')
+    ap.add_argument('--fused-hub', type=float, default=0.0, help='FUSED hub tile (ot_hnx_fused_top own logic) square side in the centre strip; '
+                    'also adds the FUSED graph (lane<->bank, neighbour-hop tree, hub)')
     ap.add_argument('--idxn', action='store_true', help='UNITS-IDXN N-row adder: key buffers at the quadrant scorers + selectors at idx_sel')
     a = ap.parse_args()
     P0 = json.loads((FRAME / 'd4g_phy.compact.P.json').read_text())
@@ -380,7 +423,7 @@ def main():
         elif t == 'f4w':
             P, W, H = plan_f4w(P0, a.tile_w, a.tile_h)
         elif t == 'f4c':
-            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side, a.hc, a.vm_dw, a.vm_dh, a.fused, a.idxn)
+            P, W, H = plan_f4c(P0, a.tile_w, a.tile_h, a.vmh, a.coll_d, a.grp_side, a.hc, a.vm_dw, a.vm_dh, a.fused, a.idxn, a.fused_h, a.fused_hub)
         tag = t + a.suffix
         ov, outside, ret = checks(P, W, H)
         G = graph_for(P, a.coll_x if t != 'd4g' else 1.0, a.hc if t == 'f4c' else 'quad', a.coll_l5 and t != 'd4g')
@@ -394,7 +437,7 @@ def main():
                         stages_bw=ev['stages_bw'], per_class=ev['per_class'], longest_class_um=ev['by_class_longest_um'],
                         relay_flops=ev['graph_relay_flops'], overlaps=len(ov), overlap_pairs=ov[:10], outside=outside, reticle=ret,
                         sm_hbm_offset_um=sm_hbm_offsets(P), vmh=a.vmh if t == 'f4c' else None, grp_side=a.grp_side if t == 'f4c' else None, coll_d=a.coll_d if t == 'f4c' else None, coll_x=a.coll_x if t != 'd4g' else 1.0,
-                        hc=a.hc if t == 'f4c' else None, coll_l5=a.coll_l5, vm_dw=a.vm_dw if t == 'f4c' else None, vm_dh=a.vm_dh if t == 'f4c' else None, fused=a.fused if t == 'f4c' else None, idxn=a.idxn if t == 'f4c' else None,
+                        hc=a.hc if t == 'f4c' else None, coll_l5=a.coll_l5, vm_dw=a.vm_dw if t == 'f4c' else None, vm_dh=a.vm_dh if t == 'f4c' else None, fused=a.fused if t == 'f4c' else None, fused_h=a.fused_h if t == 'f4c' else None, fused_hub=a.fused_hub if t == 'f4c' else None, idxn=a.idxn if t == 'f4c' else None,
                         hce_um=[P['hce_SE']['w'], P['hce_SE']['h']] if 'hce_SE' in P else None)
         r = res[tag]
         print(tag, f"{W/1000:.2f}x{H/1000:.2f}={r['die_mm2']} cut {cut['worst_v']['ratio']}/{cut['worst_h']['ratio']} bitmm {ev['sum_bits_mm']/1e6:.3f}M "
@@ -406,7 +449,7 @@ def main():
             import matplotlib.pyplot as plt
             import plan_study_draw_1017 as Dr
             fig, ax = plt.subplots(figsize=(6.6, 8.4), dpi=240)
-            Dr.draw(ax, P, G, W, H, f"HBM-NEXT P=4 {tag}: {W/1000:.2f} x {H/1000:.2f} mm = {r['die_mm2']} mm2; cut {cut['worst_v']['ratio']}/{cut['worst_h']['ratio']}; "
+            Dr.draw(ax, P, G, W, H, f"HBM-NEXT {tag}: {W/1000:.2f} x {H/1000:.2f} mm = {r['die_mm2']} mm2; cut {cut['worst_v']['ratio']}/{cut['worst_h']['ratio']}; "
                     f"bit-mm {ev['sum_bits_mm']/1e6:.2f} M; stages_bw {ev['stages_bw']}", Dr.quad_boxes(P, W, S.QS))
             ax.title.set_fontsize(6)
             ax.set_xlim(-0.5, 26.5); ax.set_ylim(-0.5, 33.5)

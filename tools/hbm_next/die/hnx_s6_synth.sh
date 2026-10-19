@@ -28,5 +28,7 @@ python3 $W/tools/hbm_die_v15/v16_fetch.py --views $V --remote-root $B --commit $
 MISS=""; for c in "$@"; do [ -f $V/synth/$c/meta.json ] || MISS="$MISS $c"; done
 [ -n "$MISS" ] && { echo "S6S_SYNTH_MISSING$MISS (no stubs)"; exit 16; }
 ssh ot-epyc4 "mkdir -p $B/hnx_vplan/synth" && rsync -a $V/synth/ ot-epyc4:$B/hnx_vplan/synth/ || { echo S6S_UPLOAD_FAIL; exit 17; }
-echo "S6S_DONE $(date -Is) -> chain FROM=S6"
+echo "S6S_DONE $(date -Is)"
+# called from hnx_p4_chain.sh S6 (NOCHAIN=1): return; by hand: rerun the chain FROM=S6
+[ -n "$NOCHAIN" ] && exit 0
 cd $W/physical/hbm_next/die && FROM=S6 bash hnx_p4_chain.sh
