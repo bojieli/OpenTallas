@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.svg-meta-indexed-delay.v1",
+  "status": "model before RTL; bounded functional alignment helper, no physical gate",
+  "composition_model_commit": "dad9fdb99",
+  "baseline_sha256": "12bdb4dc9e86e1a04b3ef0ef738e6c46c1d3d518edaea437b0946504a756f5be",
+  "parameters": {
+    "W": 35,
+    "MUT": 0,
+    "DELAY": [
+      7,
+      8
+    ],
+    "default_DELAY": 7
+  },
+  "edge_equations": {
+    "write": "edge n writes old slots[wp], increments wp modulo8",
+    "read": "output at edge n reads OLD slots[rp] before same-edge writes",
+    "reset": "wp0; rp=(9-DELAY)mod8; warm0; output0; slots unreset",
+    "warm": "3-bit saturating7; output enabled when old warm>=DELAY-1",
+    "contract": "For release edge1 carrying input I1: first output is I1 on edge DELAY; subsequent input In appears at edge n+DELAY-1"
+  },
+  "storage": {
+    "slots": 8,
+    "payload_bits": 35,
+    "runtime_slot_bits": 280,
+    "output_ff_bits": 35,
+    "slice_bits_max": 6,
+    "slices": 6,
+    "pointer_bits_per_slice": 9,
+    "pointer_ff_bits": 54,
+    "prior_pointer_ff_bits": 27,
+    "additional_pointer_ff_bits": 27,
+    "total_data_and_pointer_ff_bits": 369
+  },
+  "ports": {
+    "data_bytes_per_cycle": 4.375,
+    "input_bits_per_cycle": 35,
+    "output_bits_per_cycle": 35,
+    "throughput": "one metadata word per edge; no stalls/backpressure"
+  },
+  "structure": {
+    "indexed_ring": true,
+    "shift_chain": false,
+    "read_selector_budget": "per binary rp bit <=4 mux pins per slice bit:4*6=24 plus local increment/control; actual mapped direct/BUF-INV collapsed measured separately",
+    "write": "per-slice6bits indexed8slot writes; no shared cross-slice pointer root",
+    "clock": "existing clk unchanged",
+    "reset": "existing asynchronous input unchanged; no landing added; measured reset-as-enable remains OPEN",
+    "max_stage_reach_um": 405,
+    "physical_area": "pending mapped cell census; no slot or route claim",
+    "tracks": "35 data pins each direction, six local storage regions; layout channel fit OPEN"
+  },
+  "schedule": {
+    "delay7": "default exact original output byte/cycle behavior",
+    "delay8": "ROOT-approved extra1 stream capture for leaf7to8",
+    "cold_admission": "unchanged; zeros until first DELAY capture; no extra release edges",
+    "feed_producer_compiler": "parent owned; no edits in this lane"
+  },
+  "required_proof": [
+    "DELAY7 versus frozen original cycle miter",
+    "DELAY8 versus independent history scoreboard",
+    "full rate wrap and occupied asynchronous reset at each pointer phase",
+    "wrongslot MUT1 fails DELAY7 and8",
+    "direct/collapsed terminal-pin counts; native boundary/reset/clock qualification not claimed"
+  ]
+}
