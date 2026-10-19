@@ -1,0 +1,8 @@
+Verilator 5.050 2026-07-01 rev v5.050
+ERR return at 586 tag {user 0 pos 0} != start {user 0 pos 500}
+ERR return at 650 tag {user 0 pos 0} != start {user 1 pos 511}
+ERR return at 714 tag {user 0 pos 0} != start {user 2 pos 522}
+ERR return at 778 tag {user 0 pos 0} != start {user 3 pos 533}
+ERR return at 842 tag {user 0 pos 0} != start {user 4 pos 544}
+MUHSLOT COLLIDE NS 8 FAIL (no fault) t_mf 0100
+BENCH_FAIL hslot MUT=2 NS 8 COLLIDE 1
