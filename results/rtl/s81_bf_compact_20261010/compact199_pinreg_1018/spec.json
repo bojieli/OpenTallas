@@ -7,7 +7,7 @@
   "peak_ram_gb": 60,
   "source": {
     "branch": "codex/s81-compact199-pinreg-1018",
-    "commit": "HEAD",
+    "commit": "ac310b17682ccb9b8821e40e2929c359d3bca043",
     "extra_paths": [
       "results/uarch/s81_bf_compact_hierarchy_20261010.json",
       "results/uarch/s81_bf_compact_hierarchy_tall_20261010.json",
@@ -77,7 +77,7 @@
   },
   "structural_change": "Dedicated boundary register placement on all four faces, including PQ south output band and east input capture band.",
   "reroute_reason": {
-    "kind": "native_launch",
+    "kind": "pin_register",
     "closed_job": "bfh_compact199_col_kreg_a1200_05a8d46ee-cl",
     "source": "results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/native_failure.json",
     "cell": "ot_v41_bf_col",
