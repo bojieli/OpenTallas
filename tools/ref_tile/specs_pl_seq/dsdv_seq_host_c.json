@@ -13,7 +13,7 @@
  ],
  "outline": {
   "w": 345.6,
-  "h": 604.8,
+  "h": 648.0,
   "exact": true
  },
  "children": [
@@ -43,7 +43,7 @@
    "inst": "*u_l2",
    "at": [
     43.2,
-    345.6
+    388.8
    ],
    "orient": "R0"
   }
@@ -192,16 +192,11 @@
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03
  },
- "recipe": 4,
- "hold_budget": "die",
- "inhold": false,
- "outhold": false,
- "io_flop_at_pins": false,
  "pin_regs": {
   "enable": false,
   "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
  },
- "structural_change": "PL-SEQ option B (PARENTS-LANDED decision 10-18 06:22) + S81-GUSEQ 10-18: dsdv_seq_host_c = wires-only compact core {u_l0 dsdv_sh_lk (S), u_l1 dsdv_sh_sq, u_l2 dsdv_sh_vc (N)}, ONE clock region ck (no landings: < 0.6 mm, the L1<->L2 calendar loop and L0 status fold stay in-region). Children pin-abutted on the 43.2 lattice at x 43.2: lk (43.2,43.2) 254.88x151.2 | 21.6 | sq (43.2,216.0) 254.88x120.96 | 8.64 | vc (43.2,345.6) 226.8x213.84; outline 345.6 x 604.8. Parent pins = the leaf face pins straight out: S = lk S (rung vi_s/vo_s + E-half host/status), W = lk W (host), E = lk E (W-half, ks/kd, job) + ck/rst_n at mid-stack beside sq, N = vc N (rung vi_n/vo_n + cw + straps). lk RL 1 (S81-SHLK2): rung 5 edges each way in-parent + k die-lane dvrlyh stages. DIAGNOSTIC: lk and sq are stand-ins from their --cts gate odbs (lk outline-grow regate for 9de9eb2d6, sq exact regate @2fa5f8e9c); vc = CLOSED view (ce989b78c).",
+ "structural_change": "PL-SEQ option B (PARENTS-LANDED decision 10-18 06:22) + S81-GUSEQ 10-18: dsdv_seq_host_c = wires-only compact core {u_l0 dsdv_sh_lk (S), u_l1 dsdv_sh_sq, u_l2 dsdv_sh_vc (N)}, ONE clock region ck (no landings: < 0.6 mm, the L1<->L2 calendar loop and L0 status fold stay in-region). Children pin-abutted on the 43.2 lattice at x 43.2: lk (43.2,43.2) 254.88x151.2 | 21.6 | sq (43.2,216.0) 254.88x120.96 | 51.84 | vc (43.2,388.8) 226.8x213.84 (the 43.2 lattice + the 20-um channel rule leave no closer vc origin); outline 345.6 x 648.0. Parent pins = the leaf face pins straight out: S = lk S (rung vi_s/vo_s + E-half host/status), W = lk W (host), E = lk E (W-half, ks/kd, job) + ck/rst_n at mid-stack beside sq, N = vc N (rung vi_n/vo_n + cw + straps). lk RL 1 (S81-SHLK2): rung 5 edges each way in-parent + k die-lane dvrlyh stages. DIAGNOSTIC: lk and sq are stand-ins from their --cts gate odbs (lk outline-grow regate for 9de9eb2d6, sq exact regate @2fa5f8e9c); vc = CLOSED view (ce989b78c).",
  "job": {
   "owner": "Claude:S81-GUSEQ",
   "branch": "claude/s81-guseq-seqhost-1018",
@@ -237,6 +232,5 @@
     "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
    }
   ]
- },
- "cluster_level": 1
+ }
 }
