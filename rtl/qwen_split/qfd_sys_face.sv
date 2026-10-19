@@ -80,6 +80,8 @@
 // =====================================================================================================================
 module qfd_sys_face #(
     parameter integer MUT = 0,
+    parameter integer OVL = 0,                 // separate TX/RX compiled start lists (MU-D2D-OVL)
+    parameter OVL_ROM_DIR = "",
     parameter integer MU = 0,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
@@ -95,6 +97,10 @@ module qfd_sys_face #(
     output wire [31:0]   cfg_data,
     output wire          cal_start,
     output wire          cal_seg,
+    output wire          cal_start_rx,
+    output wire          cal_seg_rx,
+    output wire [1:0]    cal_user_tx,
+    output wire [1:0]    cal_user_rx,
     input  wire          fwd_epoch,            // forwarded epoch strobe (package bump from the KV die): the run anchor
     input  wire [547:0]  rx_payload,
     input  wire          prog_rx_v,
@@ -378,10 +384,26 @@ module qfd_sys_face #(
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
     // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
     wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
+    generate if (OVL) begin : g_ovl
+        qfd_d2d_cal_seq_ovl #(.ROM_DIR(OVL_ROM_DIR)) u_cseq (
+            .ck(ck), .rst_n(rst_loop), .reload(fwd_epoch && !fe_q && aborted),
+            .epoch_go(fwd_epoch), .halt(halt), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we),
+            .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg),
+            .cal_start_rx(cal_start_rx), .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
+            .cal_ready(cal_ready), .running(cs_running), .adm_done(cs_adm_done), .fault(cs_fault));
+        // Admission is the only pre-adm_done start. The OVL start lists carry users and segments independently
+        // of the T-calendar layer marker; their cycle checks are in the compiled-list/end bench.
+        assign cs_layer = cs_adm_done ? 6'd0 : 6'h3f;
+    end else begin : g_serial
     qfd_d2d_cal_seq #(.GO_OFS(GO_OFS), .START_ADJ(START_ADJ)) u_cseq (.ck(ck), .rst_n(rst_loop),
         .reload(fwd_epoch && !fe_q && aborted), .tok_go(t_go), .epoch_go(fwd_epoch), .halt(halt),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .cal_start(cal_start), .cal_seg(cal_seg), .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .adm_done(cs_adm_done), .tok_start(), .fault(cs_fault));
+        assign cal_start_rx = cal_start;
+        assign cal_seg_rx = cal_seg;
+        assign cal_user_tx = 2'd0;
+        assign cal_user_rx = 2'd0;
+    end endgenerate
     // bench mutant 1: T events one edge late
     reg t_ev_d; reg [2:0] t_p_d; reg [3:0] t_k_d; reg [4:0] t_b_d;
     always @(posedge ck) begin t_ev_d <= t_ev; t_p_d <= t_p; t_k_d <= t_k; t_b_d <= t_b; end
@@ -547,7 +569,7 @@ module qfd_sys_face #(
             end
             if (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
                 (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
-                cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp) || (cal_adm && t_running_q))
+                (!OVL && (cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp))) || (cal_adm && t_running_q))
                 cal_fault <= 1'b1;
             tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;
         end
