@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       admits  1171 GB (avail 877, growth 54, headroom 0, waiters 0/0 GB) load 40/128 running 15 disk 535 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/own-pglg/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/own-pglg/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/own-pglg/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-36176-1792386388 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LOCKSTEP MISMATCH P1 t=33001 fault 1/0 lg_fault 0/0
+LOCKSTEP MISMATCH P1 t=33901 fault 1/0 lg_fault 0/0
+LOCKSTEP MISMATCH P1 t=81001 fault 1/1 lg_fault 1/1
+LOCKSTEP MISMATCH P1 t=81601 fault 1/1 lg_fault 1/1
+LOCKSTEP MISMATCH P1 t=82201 fault 1/1 lg_fault 1/1
+CLASS CHECK FAIL: wrong-class strap fault dut0/ref0 0/0
+PGSLICE_LG_STRAP FAIL errors=4532 class_ok=0 checks=9600
+- rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_lg_strap.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 27.615 s; speed 108.637 ns/s
+- Verilator: cpu 27.613 s on 1 threads; allocated 142 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-36176-1792386388): exit 0

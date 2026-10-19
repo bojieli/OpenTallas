@@ -1,0 +1,16 @@
+tb_hbm_su_pgslice_rg r2 (HH-14 10-19, branch claude/tw-hbm-pglg-1019 @4a91027b0 bench; RTL unchanged since e7ea9096c), Verilator 5.050,
+tools/hbm_static/su_pgslice_rg_vl_run.sh OUT MUT EDGES on ot-epyc4/5 (ot-run --mem 56, 2 instances: ref pgslice_lg + DUT rg).
+r1 base FAIL stream=1086 = BENCH bug (write half of the LG tap calendar not re-timed with the +16 stream VM write). Fixed in the tb.
+  m0   EDGES 1200 PASS checks=29952 resets=2 data_edges=2386 vm_writes=1789 (serial/fault/stream/vm_write/lg_fault errors 0)
+  m1   fill early            FAIL errors=1520 (serial 1056, write 464)      fail regex: ^PGSLICE_RG FAIL
+  m2   drain group flip      FAIL errors=938  (write 938)
+  m20  outer relay missing   FAIL errors=936  (serial 760, write 176)
+  m21  drain line short      FAIL errors=1500 (write 1500)
+  m101 lp landing 0 bypassed FAIL errors=626  (serial 574, write 52)
+  m103 lp pad 0 short        FAIL errors=588  (serial 538, write 50)
+r3 (TW-HBM-PGLG 10-19 ~03:00, pg_stream IJ_REG 1 = inject decode registered on pg_clk with written-slot bypass, 0 edges), Verilator 5.050 ot-epyc5:
+  m0   EDGES 1200 PASS checks=29952 data_edges=2377 vm_writes=1789 (m0/bench.log replaced; r2 PASS log in git history 8db52396a)
+  m8   EDGES 1200 inject slot read one slot late (stream tile) FAIL errors=4460   fail regex: ^PGSLICE_RG FAIL
+  m1/m2/m20/m21/m101/m103 witnesses are glue/lp mutants (RTL there unchanged since r2)
+r4 (TW-HBM-PGLG 10-19, per-region identity straps pos_r0..3 + lp.py regen + pg_stream IJ_REG 1), Verilator 5.050 ot-epyc5, ALL witnesses replaced:
+  m0 EDGES 1200 PASS checks=29952 | m8 1200 FAIL 4460 | m1 300 FAIL 1382 | m2 FAIL 922 | m20 FAIL 924 | m21 FAIL 1502 | m101 FAIL 586 | m103 FAIL 594
