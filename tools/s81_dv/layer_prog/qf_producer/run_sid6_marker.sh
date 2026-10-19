@@ -3,7 +3,7 @@ set -euo pipefail
 out=$1
 if [ -e "$out" ];then echo "REFUSE_EXISTING_RUN_DIR $out" >&2;exit 2;fi
 mkdir "$out"
-src=(marker_sources/ot_s81_rly.sv marker_sources/dsfd_rly_masters_dv276.sv marker_sources/dsfd_rly_masters_dvh.sv marker_sources/ot_s81_land.sv marker_sources/dsfd_dvland.sv marker_sources/cells_used.v tb_sid6_return_marker.sv)
+src=(marker_sources/ot_s81_rly.sv marker_sources/dsfd_rly_masters_dv276.sv marker_sources/dsfd_rly_masters_dvh.sv marker_sources/ot_s81_land.sv marker_sources/dsfd_dvland.sv marker_sources/cells_used.v marker_sources/ot_s81sl_rly.selected.sv tb_sid6_return_marker.sv)
 sha256sum "${src[@]}" > "$out/sources.sha256"
 v="$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator"
 "$v" --version > "$out/verilator.version"

@@ -27,5 +27,12 @@
     }
   ],
   "icg": "existing dv_rtl_kit CELL_MODELS functional ICGx4; not native timing",
-  "native_phase": null
+  "native_phase": null,
+  "return_entry_relay": {
+    "parent_source": "ceaed19c4:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "parent_sha256": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+    "module_sha256": "4565ea7007ab1381ece8e50e4722a5eb8de8dbfd90b60bdae4d7765014a3ed2a",
+    "verbatim_extraction": true,
+    "D": 6
+  }
 }

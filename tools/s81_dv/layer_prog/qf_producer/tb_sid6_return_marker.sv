@@ -16,6 +16,10 @@ module tb_sid6_return_marker;
  dsfd_dvrlyh_70_NS s20(.ck(gck),.rs(rs),.i(src),.o(ns0),.ck_o(nsck0));
  dsfd_dvrlyh_70_NS s21(.ck(nsck0),.rs(rs),.i(ns0),.o(ns1),.ck_o(nsck1));
  dsfd_dvland_70 l2(.ck_f(nsck1),.i(ns1),.ck(ck),.rs(rs),.k(3'd2),.o(two),.fault(f2));
+ wire [69:0] cap0,cap1,cap2;
+ ot_s81sl_rly #(.W(70),.D(6)) r0(.clk(ck),.d(src),.q(cap0));
+ ot_s81sl_rly #(.W(70),.D(6)) r1(.clk(ck),.d(one),.q(cap1));
+ ot_s81sl_rly #(.W(70),.D(6)) r2(.clk(ck),.d(two),.q(cap2));
  integer ages[0:2];integer cnt[0:2];integer prev[0:2];integer j,id,age; reg[69:0] w;
  initial begin
   void'($value$plusargs("MUT=%d",mut));
@@ -33,11 +37,11 @@ module tb_sid6_return_marker;
   #1;
   if(n>=32 && n<64)begin
    for(j=0;j<3;j++)begin
-    case(j)0:w=src;1:w=one;2:w=two;endcase
+    case(j)0:w=cap0;1:w=cap1;2:w=cap2;endcase
     id=int'(w[34:3]);age=n+1-id;
     if(w!==mark(id))$fatal(1,"SID6_MARKER_FAIL word lane%0d n%0d",j,n);
     if(ages[j]<0)ages[j]=age;
-    if(age!=(j==0?1:j==1?4:5))$fatal(1,"SID6_MARKER_FAIL baseline_age lane%0d observed%0d",j,age);
+    if(age!=(j==0?7:j==1?10:11))$fatal(1,"SID6_MARKER_FAIL baseline_age lane%0d observed%0d",j,age);
     if(age!=ages[j] || (cnt[j]>0 && id!=prev[j]+1))$fatal(1,"SID6_MARKER_FAIL age lane%0d n%0d",j,n);
     prev[j]=id;cnt[j]++;
    end
