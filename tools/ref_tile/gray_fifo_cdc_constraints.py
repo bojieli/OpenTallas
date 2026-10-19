@@ -1057,7 +1057,9 @@ ASYNC_GUARD = '    if {[dict exists $async_pins [get_full_name $pin]]} continue'
 
 
 def extend(body, spec, root):
-    record = lint(spec, root)
+    # kit generation binds a receipt-cached lint (lint_receipt.py): never re-elaborated on localhost per gen/gate/submit
+    import lint_receipt
+    record = lint_receipt.record(POLICY, lint, GrayFifoError, spec, root, _yosys())
     if body.count(S.CROSSING) != 1 or body.count(S.MARKER) != 1 or body.count(ASYNC_GUARD) != 1:
         raise GrayFifoError('reviewed_gray_fifos multi-root crossing gate changed; revalidate extension')
     body = body.replace(S.CROSSING, '          ot_gf_crossing $start $pin $source $cell $source_domain $expected\n'
