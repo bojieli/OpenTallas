@@ -14,8 +14,10 @@ rows = []
 for label, delta in [('current',0),('A_unqualified_E2_target',8),('B_gated_final_capture_model',12)]:
     lu, ls = 53+delta, 378+delta
     spans = {}
-    for name, mode, n in [('AR256',0,256),('ARGMAX1',1,1)]:
-        prog = schedule([mode],[n],lu,ls,shared_ucie=True)
+    for name, modes, words in [('AR256',[0],[256]),('ARGMAX1',[1],[1]),
+                               ('AR256x2',[0,0],[256,256]),
+                               ('AR256x2_ARGMAX1',[0,0,1],[256,256,1])]:
+        prog = schedule(modes,words,lu,ls,shared_ucie=True)
         spans[name] = max(p['last_out'] for p in prog)-prog[0]['first_slot']+1
         (BASE/(label+'_'+name+'_program.json')).write_text(json.dumps(prog,indent=2)+'\n')
     rows.append(dict(variant=label,LU=lu,LS=ls,spans=spans,

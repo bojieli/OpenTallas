@@ -6,6 +6,7 @@ Evidence:
 - ring/: sixteen depths (0..378), 4096 edges and repeated reset, golden shift equivalence; early-ring mutant caught.
 - r3/: SAFE S1 L378, phase0/1, 240 words per face; six behavioral mutants caught (early RX, CDC, PHY, bank, ring, unlanded).
 - phy_up/: normal legacy fault edge28 versus captured SAFE fault edge29, reset/epoch recovery; missing-fault mutant caught.
+- hard1_steady/: current source phase0 consecutive2x256 (4096outputs) and2x256+argmax (4160outputs) PASS, exactspans1537/1545, faults0/noP/Roverlap. Independent phase1 blocker remains.
 - hard1/: exact fixed five physical wrappers bound into all eight production parents, guarded dv2f18dh2 profile; AR2048+argmax64 outputs PASS phase0, no faults. This proves wrapper binding semantics, not physical closure.
 - integration/: eight production parents, all five actual face profiles, six/five gearbox at 50% duty and actual dv2f18dh2 forwarded lanes. AR256=2048 outputs, argmax1=64 outputs, bit exact and fault-free. Source/executable hashes are recorded.
 - dv2f18dh2_coll_lane_latency.json: immutable live-run latency fixture. Live die run untouched.
