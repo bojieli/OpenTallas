@@ -168,7 +168,8 @@ def main(argv=None):
     ap.add_argument('--expanded', help='RUN/expand.json (kv_expand.py): die-placed closed leaves, bound by name')
     ap.add_argument('--out-dir', required=True)
     ap.add_argument('--top')
-    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Permit source-only expanded profiles; unqualified')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Permit source-only expanded profiles; unqualified',
+                    default=__import__('os').environ.get('OT_KV_PARAM_DIAG', '0') == '1')
     a = ap.parse_args(argv)
     K._set_geometry(True)
     out = Path(a.out_dir)

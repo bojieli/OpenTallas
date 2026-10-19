@@ -68,6 +68,11 @@ def preserve(root, module, overrides, rtl, view, profiles, diagnostic=False):
     if not defaults and not overrides:
         return {}, None
     profile = profiles.get(module)
+    if not isinstance(profile, dict) and diagnostic:
+        # KV-GEN8 10-19 (OT_KV_PARAM_DIAG=1, DIAGNOSTIC only): no reviewed profile exists yet for this leaf.  Preserve
+        # the exact evaluated parameters on the exact selected view/RTL identity, NEVER native-qualified; the chain
+        # stamps NOT_A_DIE_RESULT.  Strict runs still refuse here.
+        profile = dict(parameters=values, identity=artifact_identity(root, view, rtl), diagnostic_autoprofile=True)
     if not isinstance(profile, dict):
         raise ValueError(f'{module}: missing selected parameter profile')
     identity = artifact_identity(root, view, rtl)
