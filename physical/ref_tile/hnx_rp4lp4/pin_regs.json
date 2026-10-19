@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hnx_rp4lp4_flat_lp",
+ "enable": false,
+ "reason": "As rp4lp: actual RTL pin capture / launch registers (rin / bin pin flops in hnx_rp4l_pinrow / pinbeat, rout / bout launched by the hard row_e / beat_e cells, gin / gout by the gather registers, xs_* through the five-stage straps); TWO regional roots (ck_n, ck_s, lp.py landed regions), every n->s data net landed (bin_l 2,069 b, leaf-0 gather 50 b, pass-through gather 100 b). Inside each leaf every lane takes the row bundle and the x-write beat through its own kept register copy (+1)."
+}
