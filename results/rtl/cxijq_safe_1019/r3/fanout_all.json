@@ -1,0 +1,932 @@
+{
+ "modules": {
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000000": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000001": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000010": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000011": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000100": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000101": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000110": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000111": {
+   "cells": 249,
+   "ff": 85,
+   "max_loads": 85,
+   "paramod_children": 0
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+   "cells": 38329,
+   "ff": 6302,
+   "max_loads": 6310,
+   "paramod_children": 8
+  }
+ },
+ "over32": [
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000000",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000001",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000010",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000011",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000100",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000101",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000110",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "$paramod\\ot_hbm_cxijq_sel_copy\\COPY_ID=s32'00000000000000000000000000000111",
+   "bit": 2,
+   "loads": 85,
+   "driver": null,
+   "names": [
+    "clk"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 2,
+   "loads": 6310,
+   "driver": null,
+   "names": [
+    "clk_q"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 3,
+   "loads": 86,
+   "driver": null,
+   "names": [
+    "rst_q_n"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6216,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43338",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6220,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43337",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6237,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43336",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6254,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43335",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6271,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43334",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6288,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43333",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6305,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43332",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6322,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43331",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6339,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43330",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6356,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43329",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6373,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43328",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6390,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43327",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6407,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43326",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6424,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43325",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6441,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43324",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6458,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43323",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6475,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43322",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6492,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43321",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6509,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43320",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6526,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43319",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6543,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43318",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6560,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43317",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6577,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43316",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6594,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43315",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6611,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43314",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6628,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43313",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6645,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43312",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6662,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43311",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6679,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43310",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6696,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43309",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6824,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43372",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6841,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43369",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6858,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43368",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6875,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43371",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6893,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43367",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6910,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43370",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6927,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43366",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6944,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43365",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 6961,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43364",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7056,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43363",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7054,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43362",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7052,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43361",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7050,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43360",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7048,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43359",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7046,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43358",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7044,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43357",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7042,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43356",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7040,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43355",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7038,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43354",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7036,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43353",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7034,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43352",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7032,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43351",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7030,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43350",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7028,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43349",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7026,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43348",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7024,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43347",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7022,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43346",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7020,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43345",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7018,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43344",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7016,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43343",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7014,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43342",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7012,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43341",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7010,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43340",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7008,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43339",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "bit": 7067,
+   "loads": 33,
+   "driver": [
+    "$auto$ff.cc:337:slice$43373",
+    "$_DFF_PN1_"
+   ],
+   "names": [
+    "rp"
+   ]
+  }
+ ],
+ "sel_copies": 8,
+ "onehot_ff_total": 680
+}

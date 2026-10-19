@@ -214,7 +214,7 @@ module ot_hbm_su_static_cxport_ij_s #(
  always @* inj_d = idl[K];
 endmodule
 
-module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8)(
+module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8, SAFE_GATHER=0)(
  input wire clk_q, rst_q_n,
  input wire [31:0] jb0, jb1,
  input wire [1023:0] inj_q0, inj_q1, inj_q2, inj_q3,   // slice G port-5 data (hub inj_q[1024G +: 1024])
@@ -225,38 +225,98 @@ module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8)(
  wire [4*1024-1:0] inj_q = {inj_q3, inj_q2, inj_q1, inj_q0};
  // rp: serial edge n reads jb bank (n+1) mod 2 (n = 0 reads the unwritten bank 1, as the hub reads slot 3) and writes
  // ob bank n mod 2; R kept copies (ob write enable 2,048 / R loads each). MUT 4: off by one event.
- (* keep = "true" *) reg [R-1:0] rp;
+ // SAFE_GATHER: 64 ob bank-select copies (32 enables + self each) plus one more kept copy
+ // (bit RN) that only drives the 32-bit jb read mux, so no rp bit exceeds ~33 loads.
+ localparam integer RN=SAFE_GATHER?64:R, RPW=SAFE_GATHER?RN+1:RN, RJ=SAFE_GATHER?RN:0;
+ (* keep="true" *) reg [RPW-1:0] rp;
  always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) rp <= (MUT==4) ? {R{1'b0}} : {R{1'b1}}; else rp <= ~rp;
- wire [31:0] ijd = rp[0] ? jb1 : jb0;
+  if(!rst_q_n) rp <= (MUT==4) ? {RPW{1'b0}} : {RPW{1'b1}}; else rp <= ~rp;
+ wire [31:0] ijd = rp[RJ] ? jb1 : jb0;
  wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
  wire ibad = |{iv[3] && (|ijd[31:29]), iv[2] && (|ijd[28:26]), iv[1] && (|ijd[25:23]), iv[0] && (|ijd[22:20])};
- reg [3:0] ipv [0:3+SD]; reg [15:0] ipgb [0:3+SD];
- always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ipv[t]<=4'd0; end
-  else begin ipv[0]<=iv; for(integer t=1;t<=3+SD;t=t+1) ipv[t]<=ipv[t-1]; end
- always @(posedge clk_q) begin ipgb[0]<={ig,ib}; for(integer t=1;t<=3+SD;t=t+1) ipgb[t]<=ipgb[t-1]; end
+ wire [3:0] ctl_v; wire [15:0] ctl_gb;
+ generate if(SAFE_GATHER) begin:g_ctl_ring
+  // Circular 20b control ring, D=4+SD words, one-hot write/read selects (no pointer
+  // adders, no runtime-indexed read mux tree). The read select runs one slot ahead of
+  // the old combinational read (entry written D-3 edges ago) because every gather copy
+  // REGISTERS its own control word (u_sel.ctl_r): the copy's registered control equals
+  // the old ctl_v/ctl_gb at the same edge, so the calendar is unchanged (0 added edges).
+  localparam integer D=4+SD;
+  reg [19:0] mem[0:D-1];
+  (* keep="true" *) reg [D-1:0] wsel, rsel;
+  reg [2:0] warm;  // saturating; old gate warm>=D-2 at edge n == warm>=D-3 at edge n-1
+  always @(posedge clk_q or negedge rst_q_n)
+   if(!rst_q_n) begin
+    wsel <= {{(D-1){1'b0}},1'b1};
+    // read slot = write slot + 3 (mod D); MUT 5: one slot later (old ra+1)
+    rsel <= {{(D-1){1'b0}},1'b1} << ((MUT==5) ? 4%D : 3);
+    warm <= 3'd0;
+   end else begin
+    wsel <= {wsel[D-2:0],wsel[D-1]};
+    rsel <= {rsel[D-2:0],rsel[D-1]};
+    if(warm!=3'd7) warm <= warm+3'd1;
+   end
+  for(genvar w=0;w<D;w=w+1) begin:g_w
+   always @(posedge clk_q) if(wsel[w]) mem[w] <= {iv,ig,ib};
+  end
+  reg [19:0] rd;
+  always @* begin rd=20'd0; for(integer w=0;w<D;w=w+1) rd = rd | (mem[w] & {20{rsel[w]}}); end
+  wire warm_ok = (warm >= D-3);
+  assign ctl_v = warm_ok ? rd[19:16] : 4'd0;   // pre-register: each bit drives 8 copy registers
+  assign ctl_gb = rd[15:0];
+ end else begin:g_ctl_legacy
+  reg [3:0] ipv[0:3+SD]; reg [15:0] ipgb[0:3+SD];
+  always @(posedge clk_q or negedge rst_q_n)
+   if(!rst_q_n) begin for(integer t=0;t<=3+SD;t=t+1) ipv[t]<=0; end
+   else begin ipv[0]<=iv; for(integer t=1;t<=3+SD;t=t+1) ipv[t]<=ipv[t-1]; end
+  always @(posedge clk_q) begin ipgb[0]<={ig,ib}; for(integer t=1;t<=3+SD;t=t+1) ipgb[t]<=ipgb[t-1]; end
+  assign ctl_v=(MUT==1)?ipv[1+SD]:ipv[2+SD];
+  assign ctl_gb=(MUT==1)?ipgb[1+SD]:ipgb[2+SD];
+ end endgenerate
  function automatic [63:0] ohdec(input [3:0] v, input [15:0] gb);
   integer kk; begin ohdec=64'd0;
    for(kk=0;kk<4;kk=kk+1) if(v[kk]) ohdec[16*kk + 4*gb[8+2*kk+:2] + gb[2*kk+:2]] = 1'b1; end
  endfunction
- reg [63:0] ioh;
- always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) ioh<=64'd0;
-  else ioh <= (MUT==1) ? ohdec(ipv[1+SD], ipgb[1+SD]) : ohdec(ipv[2+SD], ipgb[2+SD]);
- reg [4*1024-1:0] iq;
- always @(posedge clk_q) iq <= inj_q;
- wire [4*1024-1:0] isrc = (MUT==1) ? inj_q : iq;
- reg [1023:0] iword; integer k;
- always @* begin
-  iword = 1024'd0;
-  for(k=0;k<4;k=k+1)
-   for(integer j=0;j<16;j=j+1) iword[256*k+:256] = iword[256*k+:256] | (isrc[256*j+:256] & {256{ioh[16*k+j]}});
- end
- for(genvar r=0;r<R;r=r+1) begin : g_ob
+ wire [1023:0] iword;
+ generate if(SAFE_GATHER) begin:g_safe_gather
+  // Decode one existing edge earlier; stage one gathers four local sources,
+  // stage two gathers four registered partials. No calendar edge added.
+  for(genvar ch=0;ch<8;ch=ch+1) begin:g_chunk
+   wire [63:0] oh;
+   (* keep_hierarchy="yes" *) ot_hbm_cxijq_sel_copy #(.COPY_ID(ch)) u_sel(
+    .clk(clk_q),.rst_n(rst_q_n),.ctl({ctl_v,ctl_gb}),.q(oh));
+   for(genvar k=0;k<4;k=k+1) begin:g_dst
+    wire [31:0] part[0:3];
+    for(genvar g=0;g<4;g=g+1) begin:g_src
+     reg [31:0] pq;
+     always @(posedge clk_q) pq <=
+      (inj_q[256*(4*g)+32*ch+:32]&{32{oh[16*k+4*g]}}) |
+      (inj_q[256*(4*g+1)+32*ch+:32]&{32{oh[16*k+4*g+1]}}) |
+      (inj_q[256*(4*g+2)+32*ch+:32]&{32{oh[16*k+4*g+2]}}) |
+      (inj_q[256*(4*g+3)+32*ch+:32]&{32{oh[16*k+4*g+3]}});
+     assign part[g]=pq;
+    end
+    assign iword[256*k+32*ch+:32]=part[0]|part[1]|part[2]|((MUT==6)?32'd0:part[3]);
+   end
+  end
+ end else begin:g_legacy_gather
+  reg [63:0] ioh;
+  always @(posedge clk_q or negedge rst_q_n)
+   if(!rst_q_n)ioh<=0; else ioh<=ohdec(ctl_v,ctl_gb);
+  reg [4095:0] iq; always @(posedge clk_q)iq<=inj_q;
+  wire [4095:0] isrc=(MUT==1)?inj_q:iq;
+  reg [1023:0] iw;
+  always @* begin
+   iw=0;
+   for(integer k=0;k<4;k=k+1)for(integer j=0;j<16;j=j+1)
+    iw[256*k+:256]=iw[256*k+:256]|(isrc[256*j+:256]&{256{ioh[16*k+j]}});
+  end
+  assign iword=iw;
+ end endgenerate
+ for(genvar r=0;r<RN;r=r+1) begin : g_ob
   always @(posedge clk_q)
-   if(rp[r]) ob0[(1024/R)*r +: (1024/R)] <= iword[(1024/R)*r +: (1024/R)];
-   else      ob1[(1024/R)*r +: (1024/R)] <= iword[(1024/R)*r +: (1024/R)];
+   if(rp[r]) ob0[(1024/RN)*r +: (1024/RN)] <= iword[(1024/RN)*r +: (1024/RN)];
+   else      ob1[(1024/RN)*r +: (1024/RN)] <= iword[(1024/RN)*r +: (1024/RN)];
  end
  reg sf_q;
  always @(posedge clk_q or negedge rst_q_n) if(!rst_q_n) sf_q<=1'b0; else sf_q<=sfault_s||ins_coll;
@@ -479,3 +539,24 @@ module ot_hbm_su_static_cxport_split #(
  assign fault = (|f_dl) | f_ij | f_rc;
 endmodule
 `default_nettype wire
+
+// Separate paramod per data region: preserving net aliases alone does not stop
+// opt_merge from combining identical onehot flops (first census caught 256 loads).
+(* keep_hierarchy="yes" *) module ot_hbm_cxijq_sel_copy #(parameter integer COPY_ID=0)(
+ input wire clk,rst_n,input wire[19:0]ctl,output reg[63:0]q);
+ // LH-SU 10-19: each copy registers its own 20b control word (one load per ring read bit
+ // per copy) and decodes it locally with equality compares (no shared index adder:
+ // the r2 census showed the shared ohdec at 63-131 loads per net).
+ (* keep="true" *) reg[3:0] reset_copy;
+ always @(posedge clk or negedge rst_n)if(!rst_n)reset_copy<=0;else reset_copy<=4'hf;
+ (* keep="true" *) reg[19:0] ctl_r;
+ always @(posedge clk) ctl_r<=ctl;
+ for(genvar k=0;k<4;k=k+1)begin:g_k
+  for(genvar a=0;a<4;a=a+1)begin:g_a
+   for(genvar b=0;b<4;b=b+1)begin:g_b
+    always @(posedge clk) q[16*k+4*a+b] <= reset_copy[k] & ctl_r[16+k] &
+     (ctl_r[8+2*k+:2]==a) & (ctl_r[2*k+:2]==b);
+   end
+  end
+ end
+endmodule

@@ -1,0 +1,16 @@
+# CXIJQ structural successor (2026-10-19)
+Production source: old rw-136f736ca, ot_hbm_su_static_cxport_ij_q, SD=0, four instances/die. New SAFE_GATHER defaults OFF. Component SD=2 is a depth sensitivity.
+
+Same 4096b/serial-edge input and 1024b/serial-edge gather throughput; unchanged two alternating1024b seam banks, same ports and latency. Existing iq capture becomes sixteen256b partial captures (4096FF unchanged); next existing bank-write edge ORs four partials. No arithmetic reordering; exact bitselection OR preserved. 512kept onehot flops replace64 (448extraFF/instance);64bank-selectcopies replace8 (56extraFF). Control >=3stage delay becomes circular20b ring (4+SD words), validity warmup explicit. No credits/stalls.
+
+Old failing actual TT path ioh[13] to ob0[99] is -73.23ps, 77 violatingD pins; input333.51/output213.68 pass. FF25.2 and DRC0 pass. Immutable failed artifacts are in failed/. SS -360.37 remains sensitivity only.
+
+Logical fanout budget: onehot per32b chunk, bankselect32loads/copy, sourcebit4destinations. Reset-copy bank32flops, each16control flops; residual reset fanout on rp/ring/fault requires mapped/native census and structural reset regionalization before a gate. Generic synthesis job records the actual surviving copies and fanout; it is not timing/area qualification.
+
+Outline/pins: preserve actual216x388.8 production slot as candidate only. 6150signalbits require >=1025um full-face perimeter at6/um; oldW~2048/388.8=5.27, E~2114/388.8=5.44, S/N~1024/216=4.74. Pin footprint forces low standard-cell fill; no40% claim or automatic waiver. Proposed E-face ob0/ob1 interleaving removes old~182um bank-copy separation, but ij_s reciprocal pins and die seam source must be regenerated together. No pin plan approval claimed. Every single-cycle reach must be<=405um (diagonal extent can exceed); physical partition proof outstanding.
+
+Checklist: registered pins retained; reset landing2 exists in prior kit, new reset-copy census OPEN; data fanout designed<=32, mappedOPEN; logic staged4way/4way, STAOPEN; delay ring fixed, no >2kb indexedflopstorage; no macros here; truthful pin-bound geometry proposal only; nativeTTFFclockOPEN; static calendar zeroextraedges proven component. Gate blocked until these open checks resolve. No REVIEW/submit.
+
+HIDX companion: r3 TT-.62/FF-47.62 DRC0. Actual worst FF grp_d8→grp_d12, 23wd_r→SRAM endpoints -41.53, s4_r→wd_r12paths-41.09, wr→wd_r79paths-36.39. This requires actual long-delay ring/localSRAM clock structure, not an outputmargin adjustment. Production g4p slot/macroface/reach audit still open. No duplicate hidx successor launched.
+
+First generic Yosys census failed the intended fanout proof: kept aliases collapsed eight onehot copies into64FF, each256loads. This failed census fanout.json/source.sha256 is preserved, and is NOT the current source. R2 puts each 64bit onehot copy in a separate kept-hierarchy COPY_ID paramod; rerun census+positive/mutant matrix is live under codex-cxijq-safe-r2-1019. Collect complete module hierarchy (not only top) to prove all512survive and each<=32loads. Current source has no approved kit. Reset root may still exceed32loads; fix before gate. Bench witnesses under bench/ are r1 source functional evidence only; current r2 witnesses pending.

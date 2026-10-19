@@ -1,0 +1,7 @@
+MISMATCH age=17
+MISMATCH age=18
+MISMATCH age=19
+CXIJQ_SAFE FAIL checks=13365 errors=8843 SD=0 MUT=6
+[14929000] %Fatal: tb_hbm_cxijq_safe.sv:24: Assertion failed in tb_hbm_cxijq_safe: CXIJQ_SAFE FAIL
+%Error: rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_cxijq_safe.sv:24: Verilog $stop
+Aborting...

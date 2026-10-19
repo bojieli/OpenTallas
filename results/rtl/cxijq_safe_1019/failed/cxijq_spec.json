@@ -1,0 +1,208 @@
+{
+ "name": "hbm_su_cx_ijq_1018w",
+ "top": "ot_hbm_su_static_cxport_ij_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_q",
+ "reset_ports": [
+  "rst_q_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 388.8,
+  "exact": true
+ },
+ "std_area_um2": 4000,
+ "layer_cap": "M5",
+ "recipe": 4,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "inj_q0",
+   "inj_q1"
+  ],
+  "S": [
+   "inj_q2"
+  ],
+  "N": [
+   "inj_q3",
+   "clk_q",
+   "rst_q_n",
+   "fault"
+  ],
+  "E": [
+   "jb0",
+   "jb1",
+   "sfault_s",
+   "ins_coll",
+   "ob0",
+   "ob1"
+  ]
+ },
+ "pin_ranges": {
+  "inj_q0": [
+   4.0,
+   193.8
+  ],
+  "inj_q1": [
+   195.0,
+   384.8
+  ],
+  "inj_q2": [
+   4.0,
+   212.0
+  ],
+  "inj_q3": [
+   4.0,
+   208.999
+  ],
+  "clk_q": [
+   209.599,
+   209.999
+  ],
+  "rst_q_n": [
+   210.599,
+   211.0
+  ],
+  "fault": [
+   211.6,
+   212.0
+  ],
+  "jb0": [
+   4.0,
+   9.668
+  ],
+  "jb1": [
+   10.868,
+   16.536
+  ],
+  "sfault_s": [
+   17.736,
+   18.09
+  ],
+  "ins_coll": [
+   19.29,
+   19.645
+  ],
+  "ob0": [
+   20.845,
+   202.222
+  ],
+  "ob1": [
+   203.422,
+   384.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "sink_clustering": false
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 8,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is registered in RTL (inputs land in pin registers / banks, every output is a register); a wrapper stage would move the fixed 3:4 seam calendar edges."
+ },
+ "structural_change": "CX-IJ 10-18: the two-root ij leaf carries two 3:4 crossings inside one leaf (ijd_slot clk_s -> ipv / ipgb / ibad clk_q, and io_slot clk_q -> idl clk_s, 3 x 1,024 b), the defect that failed routes hbm_su_cx_dl_1017-s2-761317600 (TT -166.7 / FF -95.1) and hbm_su_cx_rc_1017-s2-761317600 (TT -173.4 / FF -77.9): related-clock STA times a 3:4 crossing at the VCO tick (setup 277.8 ps, coincident-edge hold) less the 150 / 100 distinct-entry reserve. Fix (dl/rc split, S81 x34 _s/_t precedent): one root per half; the crossings become 2-bank seams (static calendar windows >= 3 quanta for setup and rewrite-after-read), die-level 3:4 seam arcs. Lockstep vs the hub on Verilator 5.050 PASS QID 2 and QID 0 (checks=24183); mutants 1/2/3/4 FAIL. ij_q (serial, x1 per quarter): E seam to ij_s 2,114 b (5.6/um); the four slices port-5 data 4,096 b on W (inj_q0/1, 5.4/um), S (inj_q2, 4.9/um) and N (inj_q3, 4.9/um, clock/reset/fault at the NE end beside the ob seam banks). HH-1 10-18 regate: 388.8 x 388.8 -> 216 x 388.8 (gate 388.8^2: pin flops ring a 389 um square, TT / FF pin-flop spread 97.2 / 92.7 ps > 80, util 2.7%); the ring now spans 216 x 389 um. Variant u: unclustered TritonCTS H-tree over the pin-band sinks (qkd_d2d_static 10-15 precedent: sparse pin-band tile, unclustered tree 442..508 ps). RE-PLAN TW2-CXIJ 10-19 (route hbm_su_cx_ijq_1018-x1-ac1057e3b + gates ijq/ijq_u: trial GRT needed 5/30 extra congestion iterations, total wire 1,549 mm in 216x388.8, M3 45%/M2 33% vs M4/M5 10%/9%): the wire is the 16->4 chunk gather itself (each of 4,096 inj bits feeds the 4 output quarters 45 um apart on E, each iword bit feeds ob0[i] and ob1[i] 182 um apart), and placement packed it into ONE diagonal band (the ob0/ob1 midpoints, ~0.5 bin density) plus a 4-column E pin-flop band at density >= 1.0 (2,048 ob flops at 5.4 pins/um). Fix: unclustered CTS (u: TT/FF spread 33.1/33.3), E/W pin-flop bands 8 columns deep (half the density), gather band spread by routability-driven global placement (GPL_ROUTABILITY_DRIVEN on, pd 0.50; ports, faces, outline, RTL and the 324x388.8 pair unchanged).",
+ "job": {
+  "owner": "Claude:TW2-CXIJ",
+  "branch": "claude/hbm-cxij-1018",
+  "tag": "rw",
+  "purpose": "HBM die d4g cxport one-root half: ot_hbm_su_static_cxport_ij_q (re-plan w: congestion; submit only one passing variant)",
+  "record_to": "results/rtl/ref_tile/hbm_su_cx_ijq_1018w",
+  "views_to": "physical/ref_tile/hbm_su_cx_ijq_1018w/views",
+  "auto_merge": false,
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "what": "congestion re-plan of the first ij_q route hbm_su_cx_ijq_1018-x1-ac1057e3b, which went EARLY_FAIL_DRC 10-19 06:15 (DRT stuck at 168 violations, best 137, after 41 iterations; no closed ij_q view; same RTL/ports/faces/outline). DRT report rpt-40: all 143 markers in ONE interior 28x37 um window (x 116-144, y 152-189) = the dense diagonal gather band (M2 EOL/short 74, M3 spacing/short 44, M4 23; none at pin faces or corners); its trial GRT needed 5/30 extra iterations, M3 45%/M2 33% vs M4/M5 10%/9%",
+   "why": "the 16->4 chunk gather was packed into one ~0.55-density band at the ob0/ob1 midpoints. Fix: routability-driven global placement spreads the band to ~0.3 bin density (gate w: trial GRT overflow 0, 1 extra iteration vs 5), unclustered CTS (TT/FF pin-flop spread 33.9/33.2 ps), 8-column pin-flop bands. Base change retained: one-root split of the two-root leaf hbm_su_cx_ij_1017 (CX-IJ 10-18; 3:4 crossings become 2-bank seams)"
+  },
+  "extra_paths": [
+   "tools/hbm_static/su_cxport_split_vl_run.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv"
+  ],
+  "benches": [
+   {
+    "name": "cxport_split_lockstep",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/pos 2 0 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q2_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_lockstep_q0",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/q0 0 1 0 0",
+    "expect": "pass",
+    "pass_regex": "CXPORT_SPLIT PASS",
+    "pass_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_q0_pos.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "cxport_split_mut1",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut1 2 0 1 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cxport_split_mut4",
+    "cmd": "bash tools/hbm_static/su_cxport_split_vl_run.sh {RUN}/bench/mut4 2 0 4 1",
+    "expect": "fail",
+    "fail_regex": "CXPORT_SPLIT FAIL",
+    "fail_witness": "results/rtl/hbm_cxij_1018/cxport_split3_vl_mut4.log",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
