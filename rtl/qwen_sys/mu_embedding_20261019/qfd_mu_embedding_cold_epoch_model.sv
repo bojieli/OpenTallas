@@ -45,11 +45,15 @@ module qfd_mu_embedding_cold_epoch_model #(parameter ENABLE=0, parameter NU=4, p
     if(COLD_PENDING)begin
      if(accepted_user==0)begin
       if(!accepted_cold_role || reserved_pending)fault<=1;
-      pending0_token<=accepted_token;pending0_generation<=accepted_generation;
-      pending0_cold_role<=accepted_cold_role;
+      if(!pending_valid[0]&&!reserved_pending&&accepted_cold_role)begin
+       pending0_token<=accepted_token;pending0_generation<=accepted_generation;
+       pending0_cold_role<=accepted_cold_role;
+      end
      end else if(accepted_cold_role)fault<=1;
     end
-    pending[accepted_user]<=accepted_epoch;pending_valid[accepted_user]<=1;
+    if(!COLD_PENDING||accepted_user!=0||(!pending_valid[0]&&!reserved_pending&&accepted_cold_role))begin
+     pending[accepted_user]<=accepted_epoch;pending_valid[accepted_user]<=1;
+    end
    end
    if(publish_slot)begin
     if((publish_mask & ~USERS)!=0)fault<=1;
@@ -67,6 +71,7 @@ module qfd_mu_embedding_cold_epoch_model #(parameter ENABLE=0, parameter NU=4, p
    if(COLD_PENDING&&init_publication&&(!publish_slot||!publish_mask[0]))fault<=1;
    if(fetch_slot)begin
     if(fetch_user>=NU || reserved || consume_slot || release_slot)fault<=1;
+    if(!COLD_PENDING||!reserved)begin
     if(cold_fetch)begin
      if(fetch_user!=0 || !pending_valid[0] || !pending0_cold_role ||
         fetch_token!=pending0_token || fetch_generation!=pending0_generation ||
@@ -78,6 +83,7 @@ module qfd_mu_embedding_cold_epoch_model #(parameter ENABLE=0, parameter NU=4, p
      resident_epoch<=active[fetch_user];reserved_pending<=0;resident_cold<=0;
     end
     resident_user<=fetch_user;reserved<=1;consumed<=0;
+    end
    end
    if(consume_slot)begin
     if(consume_user>=NU || !reserved || consumed || consume_user!=resident_user || !active_valid[consume_user] || active[consume_user]!=resident_epoch || release_slot)fault<=1;
