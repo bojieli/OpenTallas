@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_ectl3_kiss_st-e5-188da89ab bench bench_ectl_c_st_q_mutant_die host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_ectl3_kiss_st-e5-188da89ab log cl/bench_ectl_c_st_q_mutant_die.a1b1.log captured 2026-10-19T02:08:05-07:00
+# fail_regex '^FAIL qkd_ectl3_kiss_st'
+MISMATCH edge=85 so=1 nb0=1 vd0=1 t0=0 t1=0 lt0=1 e=1 req=1 f=1
+MISMATCH edge=86 so=1 nb0=1 vd0=1 t0=0 t1=0 lt0=1 e=1 req=1 f=1
+MISMATCH edge=87 so=1 nb0=1 vd0=1 t0=0 t1=0 lt0=1 e=1 req=1 f=1
+MISMATCH edge=88 so=1 nb0=1 vd0=1 t0=0 t1=0 lt0=1 e=1 req=1 f=1
+MISMATCH edge=89 so=1 nb0=1 vd0=1 t0=0 t1=0 lt0=1 e=1 req=1 f=1
+FAIL qkd_ectl3_kiss_st mismatches=8496 kreq=2672 kdone=3989 q=544 mut 2
