@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_landh0_600_EN_104x106.lef",
-    "sha256": "683f6f2a62607c956435d0a8ea62e71f855a373b9238bb8816f712ce5d6016df"
+    "sha256": "a1243df646c04937d6a2ae151144c3aa88604d21e7c23ef4e18d31b207b19c5a"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-c1-86625de7d/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-e1-282be4e43/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-c1-86625de7d/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-c1-86625de7d/record/views/qfd_landh0_600_EN_104x106/provenance/raw/qfd_landh0_600_EN_104x106.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-c1-86625de7d/record/views/qfd_landh0_600_EN_104x106/provenance/qfd_landh0_600_EN_104x106.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-e1-282be4e43/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-e1-282be4e43/record/views/qfd_landh0_600_EN_104x106/provenance/raw/qfd_landh0_600_EN_104x106.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-e1-282be4e43/record/views/qfd_landh0_600_EN_104x106/provenance/qfd_landh0_600_EN_104x106.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 574 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 898 OBS rects moved into 898 pins: a[0], a[100], a[101], a[102], a[103], a[104], a[105], a[106], a[107], a[108], a[109], a[10]; pockets: 367 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-c1-86625de7d/record/views/qfd_landh0_600_EN_104x106/provenance/qfd_landh0_600_EN_104x106.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_landh0_600_en_104x106-e1-282be4e43/record/views/qfd_landh0_600_EN_104x106/provenance/qfd_landh0_600_EN_104x106.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_landh0_600_EN_104x106 104.088 x 105.816: PG M5 VDD 37 stripes (93% spread, 100% cov) / VSS 37 stripes (93% spread, 100% cov); strap M6; face pins 1210 blocked-above 0 blocked-same 0; clock ck insertion 141 ps; clock ck_s insertion 194 ps; pockets M5 0 (closed)",
+    "summary": "qfd_landh0_600_EN_104x106 104.088 x 105.816: PG M5 VDD 37 stripes (93% spread, 100% cov) / VSS 37 stripes (93% spread, 100% cov); strap M6; face pins 1210 blocked-above 0 blocked-same 0; clock ck insertion 131 ps; clock ck_s insertion 201 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_landh0_600_EN_104x106",
       "W": 104.088,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1210,
         "blocked_above": 0,
-        "covered_below": 137,
+        "covered_below": 444,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 140.56,
-          "min_ps": 96.44
+          "max_ps": 131.45,
+          "min_ps": 97.54
         },
         "ck_s": {
-          "max_ps": 193.9,
-          "min_ps": 161.38
+          "max_ps": 201.49,
+          "min_ps": 169.93
         }
       },
       "pockets": {
@@ -91,16 +91,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 574
+          "added": 367
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qfd_landh0_600_EN_104x106.lef",
-    "sha256": "98717fa7f9b0a3db13571f994cd330018da6b5fba2f19c3fa6bdff4e70db9ae5"
+    "sha256": "da48045578d2614a37cd06fb6509ecd1c0a88735ac80e166181b95150e6e427a"
   }
 }
