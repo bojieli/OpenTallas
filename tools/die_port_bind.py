@@ -671,7 +671,8 @@ def validate_derived_pad_contracts(doc, die_v, mparams=None, idx=None, root=ROOT
     additionally bind the exact die and source bytes; external parameter changes
     require re-derivation into the inline, hashed bound netlist.
     """
-    names = ('source_contract', 'static_head_unused_contract', 'pvw_padding_contract')
+    names = ('source_contract', 'static_head_unused_contract', 'pvw_padding_contract', 'relay_zero_tail_contract',
+             'pvw_residual_contract', 'misc_unused_contract', 'open_tail_contract', 'landing_tie_contract')
     present = [name for name in names if name in doc]
     if not present:
         return
@@ -706,7 +707,7 @@ def validate_derived_pad_contracts(doc, die_v, mparams=None, idx=None, root=ROOT
     # copy. Check the actual selected relay and its pinned descendants too.
     _, _, _, insts = parse_die(str(die_v))
     relay_masters = {m for m, *_ in insts
-                     if re.fullmatch(r'qkd_(?:rlys|rlysh0?|landsh0?)_\d+', m)}
+                     if re.fullmatch(r'qkd_(?:rlys|rlysh0?|landsh0?)_\d+|qkd_astk_rly_\d+_fl', m)}
     expected = {}
     for rel, sha in sources.items():
         if Path(rel).suffix not in ('.sv', '.v'):
