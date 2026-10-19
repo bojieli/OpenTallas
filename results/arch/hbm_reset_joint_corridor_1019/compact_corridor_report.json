@@ -1,0 +1,60 @@
+{
+ "status": "FREE_CHANNEL_MODEL_ONLY",
+ "grid_pitch_um": 10.8,
+ "native_body_um": [
+  8.64,
+  0.54
+ ],
+ "new_channel_halo_um_each_side": 1.152,
+ "inflated_half_um": [
+  5.472,
+  1.422
+ ],
+ "grid_dimensions": [
+  1871,
+  2942
+ ],
+ "grid_nodes": 5504482,
+ "free_nodes": 1600160,
+ "components": 4584,
+ "largest_components_cells": [
+  593765,
+  452698,
+  160629,
+  133464,
+  35749,
+  20472,
+  20354,
+  17026,
+  16245,
+  12473,
+  9926,
+  9466,
+  7549,
+  5293,
+  4576,
+  4422,
+  4136,
+  4028,
+  4003,
+  3236
+ ],
+ "source_candidates": 690,
+ "source_choice": [
+  34.326,
+  2678446,
+  230
+ ],
+ "source_component_size": 593765,
+ "reachable_sinks": 160,
+ "unreachable_sinks": 650,
+ "no_free_home_sinks": 0,
+ "bfs_visited": 593765,
+ "union_candidate_grid_homes": 10879,
+ "max_free_channel_path_um": 21481.2,
+ "wire_overfly_graph_evaluated": false,
+ "continuous_geometry_infeasibility_claim": false,
+ "actual_PG_via_track_occupancy": null,
+ "actual_TT_FF_phase": null,
+ "topology_compression_and_native_copy_census": "OPEN"
+}

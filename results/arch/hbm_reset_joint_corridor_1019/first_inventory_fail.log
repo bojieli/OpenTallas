@@ -1,0 +1,39 @@
+ot-run: ot-epyc4       admits  1123 GB (avail 843, growth 50, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 400 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-539564-1792447101 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019/inventory.py", line 27, in <module>
+    assert len(sinks)==810,len(sinks)
+           ^^^^^^^^^^^^^^^
+AssertionError: 3793
+Command exited with non-zero status 1
+	Command being timed: "python3 inventory.py"
+	User time (seconds): 2.15
+	System time (seconds): 0.24
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.39
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 611984
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 223515
+	Voluntary context switches: 1
+	Involuntary context switches: 5
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-539564-1792447101): exit 1

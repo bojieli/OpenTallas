@@ -1,0 +1,59 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 37/128 running 15 disk 414 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-552822-1792447648 after 0 s
+{
+  "status": "COMPRESSED_COMPLETE_NATIVE_SOURCE_MODEL_PHYSICAL_HOLD",
+  "homes": 2263,
+  "edges": 2262,
+  "sink_count": 810,
+  "leaf_pairs": 494,
+  "max_trunk_or_leaf_loads": 19,
+  "max_clock_loads": 6,
+  "native_FF": 5514,
+  "native_INV": 5514,
+  "native_BUF": 2263,
+  "native_TIEHI": 2263,
+  "native_area_um2": 3024.3148200000005,
+  "native_PG_bindings": 31108,
+  "max_recorded_routed_polyline_um": 399.6000000000022,
+  "max_registered_reset_wire_contact_bound_um": 402.6000000000022,
+  "max_native_clock_wire_contact_bound_um": 400.28600000000216,
+  "maximum_stage_depth": 179,
+  "conditional_max_release_edges": 362,
+  "actual_TT_FF_phase": null,
+  "actual_minCQ": null,
+  "actual_PG_OBS_tracks_legalrows": null,
+  "continuous_free_channel_claim": false,
+  "model_homes_exact_reserved_rectangle_check": "PASS_CONSERVATIVE_8p64_BODY_PLUS_HALO",
+  "actual_wire_layer_access": "OPEN_ALL_SEGMENTS"
+}
+	Command being timed: "python3 compress_topology.py"
+	User time (seconds): 0.35
+	System time (seconds): 0.02
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.37
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 75572
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 23948
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 5512
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-552822-1792447648): exit 0

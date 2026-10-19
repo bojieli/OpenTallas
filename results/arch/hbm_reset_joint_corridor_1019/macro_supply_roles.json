@@ -1,0 +1,1297 @@
+{
+ "ot_hbm3e_phy_rc_e8p5": {
+  "VDD": {
+   "xy": [
+    4250.016,
+    1.02
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    4250.016,
+    2.2199999999999998
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+  "VDD": {
+   "xy": [
+    148.452,
+    77.76
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    148.26,
+    77.76
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_svc_sm_group_id": {},
+ "hfd_hgi_vm_calendar_f20": {
+  "VDD": {
+   "xy": [
+    234.852,
+    58.32
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    234.66,
+    58.32
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_coll_ring_b_stop": {},
+ "ot_hgi_coll_gq_issue": {},
+ "ot_hgi_coll_gq_land": {
+  "VDD": {
+   "xy": [
+    234.852,
+    118.80000000000001
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    234.66,
+    118.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_coll_kq_share2": {},
+ "ot_hbm_idx_vm_share2_static": {},
+ "hfd_ep_static": {
+  "VDD": {
+   "xy": [
+    429.252,
+    185.76000000000002
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    429.06,
+    185.76
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_fault_leaf__pv4": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_fault_leaf__pv5": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_fault_leaf__pv3": {},
+ "ot_hbm_fault_leaf__pv1": {},
+ "ot_hbm_fault_leaf__pv0": {},
+ "ot_hbm_fault_leaf__pv2": {},
+ "ot_hbm_fault_leaf_n8_s0": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_argmax_static_sw_vm_r2": {
+  "VDD": {
+   "xy": [
+    116.05199999999999,
+    59.4
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    115.86,
+    59.4
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hfd_ckgen": {
+  "VDD": {
+   "xy": [
+    256.96,
+    110.16000000000001
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    262.36,
+    110.16000000000001
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_dma_back_static_vp4_banks_cp": {},
+ "ot_hbm_hc_qhub_static": {},
+ "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+  "VDD": {
+   "xy": [
+    213.252,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    213.06,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_hc_root_static": {},
+ "ot_pdie_ucie": {},
+ "ot_hbm_host_cp_rxs": {},
+ "ot_hbm_idx_rootctl_static_am": {
+  "VDD": {
+   "xy": [
+    472.452,
+    129.6
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    472.26,
+    129.6
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_idx_topk_link_static": {},
+ "ot_hbm_idx_selector_static": {},
+ "ot_pdie_serdes": {},
+ "ot_hbm_su_programme_pslice_c5": {},
+ "ot_hbm_pc_refresh_cfg": {
+  "VDD": {
+   "xy": [
+    45.852000000000004,
+    25.92
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    45.66,
+    25.92
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_sfu_lg_pair_tap_leaf": {
+  "VDD": {
+   "xy": [
+    213.252,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    213.06,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_sfu_core_split3": {},
+ "ot_hgi_sfu_programme_store_r10": {},
+ "ot_hbm_su_static_sfustore_hw": {
+  "VDD": {
+   "xy": [
+    558.8520000000001,
+    138.24
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    558.6600000000001,
+    138.24
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_accel_smh_attn": {},
+ "ot_hbm_su_static_pgslice_lg__pv3": {},
+ "ot_hbm_su_static_pgslice_lg__pv7": {},
+ "ot_hbm_su_static_pgslice_lg__pv11": {},
+ "ot_hbm_su_static_pgslice_lg__pv15": {},
+ "ot_hbm_su_static_pgslice_lg__pv2": {},
+ "ot_hbm_su_static_pgslice_lg__pv6": {},
+ "ot_hbm_su_static_pgslice_lg__pv10": {},
+ "ot_hbm_su_static_pgslice_lg__pv14": {},
+ "ot_hbm_su_static_pgslice_lg__pv1": {},
+ "ot_hbm_su_static_pgslice_lg__pv5": {},
+ "ot_hbm_su_static_pgslice_lg__pv9": {},
+ "ot_hbm_su_static_pgslice_lg__pv13": {},
+ "ot_hbm_su_static_pgslice_lg__pv0": {},
+ "ot_hbm_su_static_pgslice_lg__pv4": {},
+ "ot_hbm_su_static_pgslice_lg__pv8": {},
+ "ot_hbm_su_static_pgslice_lg__pv12": {},
+ "ot_hbm_su_programme_root_h5": {},
+ "ot_hgi_coll_tkm_m_tp192": {},
+ "ot_vms_status4_static": {
+  "VDD": {
+   "xy": [
+    13.452,
+    9.72
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    13.26,
+    9.72
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hfd_vms_wq2_merge": {
+  "VDD": {
+   "xy": [
+    56.652,
+    29.700000000000003
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    56.46,
+    29.7
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_svc_wb_kport_q": {},
+ "ot_hgi_sm_xload_cl2_bdring": {
+  "VDD": {
+   "xy": [
+    83.652,
+    151.20000000000002
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    83.46000000000001,
+    151.2
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_sm_xload_cl2_bfqg": {
+  "VDD": {
+   "xy": [
+    299.652,
+    149.04
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    299.46,
+    149.04
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_sm_xload_xq_pegress": {
+  "VSS": {
+   "xy": [
+    364.26,
+    184.68
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  },
+  "VDD": {
+   "xy": [
+    364.452,
+    184.68
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  }
+ },
+ "hfd_hgi_vms_glue_sw_t": {},
+ "hfd_hgi_vms_glue_nw_t": {},
+ "ot_hfd_coll_q3_hard_v8x": {},
+ "ot_hfd_coll_q2_hard_v8g": {},
+ "ot_hbm_svc_vm_kshare_splitstrap": {},
+ "ot_hbm_svc_sm_xcal_t": {
+  "VDD": {
+   "xy": [
+    218.652,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    218.46,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_coll_inj_idx_join_rg": {
+  "VDD": {
+   "xy": [
+    213.252,
+    216.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    213.06,
+    216.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_qcore": {},
+ "ot_hbm_svc_stack_fault": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hfd_vms_bank_native_q0_faces": {
+  "VDD": {
+   "xy": [
+    135.0,
+    306.944
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    135.0,
+    306.56
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_sm_vm_wr_q_t_lanes4": {
+  "VDD": {
+   "xy": [
+    137.652,
+    194.4
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    137.46,
+    194.4
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_svc_vmdel_lane_n": {
+  "VDD": {
+   "xy": [
+    251.052,
+    54.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    250.86,
+    54.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_stree_leaf": {
+  "VDD": {
+   "xy": [
+    40.452,
+    21.6
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    40.260000000000005,
+    21.6
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_coll_inj_copy": {
+  "VDD": {
+   "xy": [
+    32.352000000000004,
+    17.28
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    32.16,
+    17.28
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_static_cfg_collar__pv2": {},
+ "ot_hbm_static_cfg_collar__pv0": {
+  "VDD": {
+   "xy": [
+    45.852000000000004,
+    25.92
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    45.66,
+    25.92
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_static_cfg_collar__pv1": {
+  "VDD": {
+   "xy": [
+    45.852000000000004,
+    25.92
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    45.66,
+    25.92
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_static_cmd_target": {
+  "VDD": {
+   "xy": [
+    56.652,
+    30.240000000000002
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    56.46,
+    30.240000000000002
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_cxport_ij__pv3": {},
+ "ot_hbm_su_static_cxport_ij__pv2": {},
+ "ot_hbm_su_static_cxport_ij__pv1": {},
+ "ot_hbm_su_static_cxport_ij__pv0": {},
+ "ot_hbm_fault_leaf__pv6": {},
+ "ot_hbm_idx_vm_query_static_n12": {
+  "VDD": {
+   "xy": [
+    213.252,
+    54.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    213.06,
+    54.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_idx_query_static": {
+  "VDD": {
+   "xy": [
+    164.652,
+    82.08
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    164.46,
+    82.08
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_idx_qctl_static": {},
+ "ot_hbm_idx_score_quarter_static": {},
+ "ot_hbm_idx_xq_node_static__pv0": {
+  "VDD": {
+   "xy": [
+    126.852,
+    64.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    126.66,
+    64.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_qdq_host_split": {},
+ "hfd_hgi_vms_static_NE_glue": {},
+ "hfd_hgi_vms_static_SE_glue": {},
+ "ot_hbm_hc_bankq0_static": {},
+ "ot_hbm_hc_bankq_static": {},
+ "ot_hbm_hc_bankq_ft_static": {},
+ "ot_hbm_host_cfg_leaf_ne2": {
+  "VDD": {
+   "xy": [
+    62.052,
+    34.559999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    61.86,
+    34.56
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_host_cfg_leaf_nw": {
+  "VDD": {
+   "xy": [
+    62.052,
+    34.559999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    61.86,
+    34.56
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_host_cfg_leaf_sw": {
+  "VDD": {
+   "xy": [
+    62.052,
+    34.559999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    61.86,
+    34.56
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_host_static_ingress": {
+  "VDD": {
+   "xy": [
+    213.252,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    213.06,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_status_join_fa": {},
+ "ot_hbm_su_stree_root": {
+  "VDD": {
+   "xy": [
+    40.452,
+    21.6
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    40.260000000000005,
+    21.6
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_bridge_release_s": {
+  "VDD": {
+   "xy": [
+    10.751999999999999,
+    6.4799999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    10.559999999999999,
+    6.48
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_svc_wbw_copy": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_xp_aq_tree13_fmt": {
+  "VDD": {
+   "xy": [
+    180.852,
+    54.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    180.66,
+    54.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hgi_sm_xload_cl2_ctlx": {
+  "VDD": {
+   "xy": [
+    386.052,
+    194.4
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    385.86,
+    194.4
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_land_624_SN": {},
+ "hbfd_land_624_WE": {},
+ "hbfd_land_624_EW": {},
+ "hbfd_land_624_NS": {},
+ "hbfd_land_136_WE": {},
+ "hbfd_land_136_EW": {},
+ "hbfd_land_136_NS": {},
+ "hbfd_lh0_136_SN": {},
+ "hbfd_lh_136_WE": {},
+ "hbfd_lh_136_EW": {},
+ "hbfd_lh_136_SN": {},
+ "hbfd_lh_136_EW_f2": {},
+ "hbfd_lh_136_NS": {},
+ "hbfd_lh_136_WE_f2": {},
+ "hbfd_rly_136_WE": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_land_136_SN": {},
+ "hbfd_land0_136_SN": {},
+ "hbfd_land0_136_NS": {},
+ "hbfd_rly_624_SN": {
+  "VDD": {
+   "xy": [
+    62.052,
+    11.88
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    61.86,
+    11.88
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_624_NS": {
+  "VDD": {
+   "xy": [
+    62.052,
+    11.88
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    61.86,
+    11.88
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_lh0_136_NS": {},
+ "hbfd_lh_136_SN_f3": {},
+ "hbfd_lh0_136_EW": {},
+ "hbfd_lh0_136_WE": {},
+ "hbfd_lh_136_NS_f2": {},
+ "hbfd_lh_136_SN_f2": {},
+ "hbfd_rly_624_WE": {
+  "VDD": {
+   "xy": [
+    18.852,
+    32.4
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    32.4
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_624_EW": {
+  "VDD": {
+   "xy": [
+    18.852,
+    32.4
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    32.4
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_lh0_624_WE": {},
+ "hbfd_lh_624_WE": {},
+ "hbfd_lh_624_SN": {},
+ "hbfd_lh_624_NS": {},
+ "hbfd_lh0_624_SN": {},
+ "hbfd_lh0_624_EW": {},
+ "hbfd_lh_624_EW": {},
+ "hbfd_lh0_624_NS": {},
+ "hbfd_lh_136_NS_f3": {},
+ "hbfd_lh_136_WE_f3": {},
+ "hbfd_lh_136_EW_f3": {},
+ "hbfd_land0_136_EW": {},
+ "hbfd_land0_136_WE": {},
+ "hbfd_rly_48_EW": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_48_WE": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_48_SN": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_48_NS": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_lh0_48_EW": {},
+ "hbfd_lh_48_EW": {},
+ "hbfd_land_48_EW": {},
+ "hbfd_lh0_48_SN": {},
+ "hbfd_lh_48_SN": {},
+ "hbfd_lh0_48_NS": {},
+ "hbfd_land_48_NS": {},
+ "hbfd_land_48_SN": {},
+ "hbfd_lh_48_NS": {},
+ "hbfd_lh0_48_WE": {},
+ "hbfd_lh_48_WE": {},
+ "hbfd_land_48_WE": {},
+ "hbfd_lh0_136_NS_f3": {},
+ "hbfd_rly_136_NS": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_136_EW": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_136_SN": {
+  "VDD": {
+   "xy": [
+    18.852,
+    10.8
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    10.8
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_host_cfg_leaf_se2": {
+  "VDD": {
+   "xy": [
+    62.052,
+    34.559999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    61.86,
+    34.56
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_idx_xq_node_static__pv1": {
+  "VDD": {
+   "xy": [
+    256.452,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    256.26,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_cxport_rc_s": {
+  "VDD": {
+   "xy": [
+    170.052,
+    216.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    169.86,
+    216.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_cxport_rc_q": {
+  "VDD": {
+   "xy": [
+    170.052,
+    216.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    169.86,
+    216.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_cxport_dl_q": {
+  "VDD": {
+   "xy": [
+    105.252,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    105.06,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_cxport_dl_s__pv0": {},
+ "ot_hbm_su_static_cxport_dl_s__pv3": {},
+ "ot_hbm_su_static_cxport_dl_s__pv11": {},
+ "ot_hbm_su_static_cxport_dl_s__pv15": {},
+ "ot_hbm_su_static_cxport_dl_s__pv2": {
+  "VDD": {
+   "xy": [
+    105.252,
+    108.0
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    105.06,
+    108.0
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "ot_hbm_su_static_cxport_dl_s__pv10": {},
+ "ot_hbm_su_static_cxport_dl_s__pv14": {},
+ "ot_hbm_su_static_cxport_dl_s__pv1": {},
+ "ot_hbm_su_static_cxport_dl_s__pv9": {},
+ "ot_hbm_su_static_cxport_dl_s__pv13": {},
+ "ot_hbm_su_static_cxport_dl_s__pv8": {},
+ "ot_hbm_su_static_cxport_dl_s__pv12": {},
+ "ot_hbm_su_static_cxport_dl_s__pv7": {},
+ "ot_hbm_su_static_cxport_dl_s__pv6": {},
+ "ot_hbm_su_static_cxport_dl_s__pv5": {},
+ "ot_hbm_su_static_cxport_dl_s__pv4": {},
+ "hbfd_rly_1136_WE": {
+  "VDD": {
+   "xy": [
+    18.852,
+    57.239999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    57.24
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_304_WE": {
+  "VDD": {
+   "xy": [
+    18.852,
+    17.28
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    17.28
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_1136_EW": {
+  "VDD": {
+   "xy": [
+    18.852,
+    57.239999999999995
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    57.24
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ },
+ "hbfd_rly_304_EW": {
+  "VDD": {
+   "xy": [
+    18.852,
+    17.28
+   ],
+   "use": "POWER",
+   "direction": "INOUT"
+  },
+  "VSS": {
+   "xy": [
+    18.66,
+    17.28
+   ],
+   "use": "GROUND",
+   "direction": "INOUT"
+  }
+ }
+}

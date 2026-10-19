@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_MODEL_INDEPENDENT_CENSUS_PASS_PHYSICAL_HOLD",
+  "owned_sinks": 810,
+  "max_reset_all_driver_loads_including_tie": 19,
+  "max_clock_loads": 6,
+  "max_polyline_um": 399.6000000000022,
+  "native_counts": {
+    "FF": 5514,
+    "INV": 5514,
+    "BUF": 2263,
+    "TIE": 2263
+  },
+  "controls": {
+    "omitted_sink_causes_mismatch": true,
+    "fanout33_refused": true,
+    "span406_refused": true,
+    "missing_parent_refused": true,
+    "absent_TT_FF_blocks_fixed_age": true,
+    "old_clock_output_name_refused": true
+  },
+  "behavioural_release_proof": "NOT_RUN",
+  "full_original_plus_new_native_census": "OPEN"
+}

@@ -1,0 +1,23 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "title":"Future new joint-corridor failure snapshot; never recovered old state",
+ "type":"object",
+ "required":["schema","run_id","source_commit","input_sha256","native_master_sha256","command","resource_admission","source_binding","sink_bindings","pre_candidate","pre_restore","failure","clock_cells","PG_inventory","channel_inventory","branch_ownership","phase_contract","compiler_ages"],
+ "properties":{
+  "schema":{"const":"opentallas.hbm.joint_corridor.snapshot.v1"},
+  "run_id":{"type":"string"},"source_commit":{"type":"string"},
+  "input_sha256":{"type":"object"},"native_master_sha256":{"type":"object"},
+  "command":{"type":"array"},"resource_admission":{"type":"object"},
+  "source_binding":{"type":"object","required":["instance","master","port","net","physical_contact","source_equation"]},
+  "sink_bindings":{"type":"array","items":{"type":"object","required":["instance","master","port","bit","physical_contact","domain","branch_owner"]}},
+  "pre_candidate":{"type":"object","required":["grid_bytes_path","grid_sha256","reservations_path","reservations_sha256","hosts_used","candidate_id"]},
+  "pre_restore":{"type":"object","required":["grid_bytes_path","grid_sha256","reservations_path","reservations_sha256","hosts_used","candidate_id"]},
+  "failure":{"type":"object","required":["code","source","target","obstacle_ids","layer_ids","constraint","measured_value","bound"]},
+  "clock_cells":{"type":"array"},
+  "PG_inventory":{"type":"object","required":["native_MTerm_roles","all_terminal_bindings","contact_rectangles","conductors","vias","supply_components","wrong_domain","unbound"]},
+  "channel_inventory":{"type":"object","required":["track_coordinates","layer_roles","native_OBS","occupied_tracks","reserved_tracks","signal_nets","supply_roles","access_vias"]},
+  "branch_ownership":{"type":"object"},
+  "phase_contract":{"type":"object","required":["actual_TT","actual_FF","clock_edges","reset_assertion","minimum_pulse","stopped_clock","reassertion","setup_uncertainty","hold_uncertainty"]},
+  "compiler_ages":{"type":"object","required":["source_reference","per_sink_release_edge","row_parent_depth_lag","maximum_domain_age","token_start_dependency"]}
+ }
+}

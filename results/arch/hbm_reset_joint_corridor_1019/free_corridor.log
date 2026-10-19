@@ -1,0 +1,87 @@
+ot-run: ot-epyc4       admits  1119 GB (avail 840, growth 50, headroom 0, waiters 0/0 GB) load 47/128 running 15 disk 414 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-545887-1792447296 after 0 s
+{
+  "status": "FREE_CHANNEL_MODEL_ONLY",
+  "grid_pitch_um": 10.8,
+  "native_body_um": 32.4,
+  "new_channel_halo_um_each_side": 1.152,
+  "inflated_half_um": 17.352,
+  "grid_dimensions": [
+    1871,
+    2942
+  ],
+  "grid_nodes": 5504482,
+  "free_nodes": 1220765,
+  "components": 1600,
+  "largest_components_cells": [
+    368005,
+    260893,
+    135088,
+    112018,
+    38699,
+    32710,
+    19252,
+    15865,
+    13615,
+    12778,
+    11650,
+    10622,
+    10492,
+    9888,
+    9259,
+    8752,
+    8011,
+    6374,
+    5544,
+    5449
+  ],
+  "source_candidates": 297,
+  "source_choice": [
+    106.074,
+    2687793,
+    859
+  ],
+  "source_component_size": 129,
+  "reachable_sinks": 0,
+  "unreachable_sinks": 810,
+  "no_free_home_sinks": 125,
+  "bfs_visited": 0,
+  "union_candidate_grid_homes": 1,
+  "max_free_channel_path_um": 0.0,
+  "wire_overfly_graph_evaluated": false,
+  "continuous_geometry_infeasibility_claim": false,
+  "actual_PG_via_track_occupancy": null,
+  "actual_TT_FF_phase": null,
+  "topology_compression_and_native_copy_census": "OPEN"
+}
+	Command being timed: "python3 free_corridor.py"
+	User time (seconds): 6.35
+	System time (seconds): 0.09
+	Percent of CPU this job got: 485%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.32
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 258272
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 64722
+	Voluntary context switches: 260
+	Involuntary context switches: 9
+	Swaps: 0
+	File system inputs: 7240
+	File system outputs: 912
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-545887-1792447296): exit 0

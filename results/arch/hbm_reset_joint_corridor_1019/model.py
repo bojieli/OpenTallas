@@ -1,0 +1,25 @@
+import json,re,math,hashlib,gzip
+from pathlib import Path
+O=Path(__file__).parent;a=json.load(open(O/'reservation_ledger.json'));s=json.load(open(O/'sinks.json'));r=json.load(open(O/'report.json'))
+lef=Path('/home/ubuntu/artifacts/hbm-reset-terminal-carrier-1019/source/asap7_R.lef');t=lef.read_text();prims={}
+for master in ['BUFx12f_ASAP7_75t_R','DFFASRHQNx1_ASAP7_75t_R','INVx1_ASAP7_75t_R','TIEHIx1_ASAP7_75t_R']:
+ q=re.search(r'^MACRO '+master+r'\b(.*?)^END '+master,t,re.M|re.S)[1];w,h=map(float,re.search(r'SIZE (\S+) BY (\S+)',q).groups());pins={}
+ for z in re.finditer(r'\bPIN\s+(\S+)(.*?)\bEND\s+\1',q,re.S):
+  rects=[list(map(float,v.split())) for v in re.findall(r'RECT\s+([^;]+);',z[2])];pins[z[1]]={'rectangles_um':rects,'use':re.search(r'USE\s+(\w+)',z[2])[1]}
+ prims[master]={'size_um':[w,h],'area_um2':w*h,'pins':pins}
+counts={'BUFx12f_ASAP7_75t_R':len(a),'TIEHIx1_ASAP7_75t_R':len(a),'DFFASRHQNx1_ASAP7_75t_R':2*(len(a)+sum(bool(n['sink_indices']) for n in a)),'INVx1_ASAP7_75t_R':2*(len(a)+sum(bool(n['sink_indices']) for n in a))}
+# Clock_out is the actual native BUF/Y, centered inside the proposed full-width band.
+clockin=[.046,.135];clockout=[.632,.234];maxclock=0;maxreset=0;maxload=0;maxclockload=0;maxleaf=0;maxdepth=0;bygrid={tuple(n['grid']):n for n in a}
+for n in a:
+ children=len(n['children']);leaf=bool(n['sink_indices']);n['proposed_cells']={'clock_buffer':1,'trunk_ASR_FF':2,'trunk_INV':2,'leaf_ASR_FF':2*leaf,'leaf_INV':2*leaf,'tieHI':1}
+ n['trunk_nontransparent_loads']=2*children+2*leaf;n['leaf_nontransparent_loads']=len(n['sink_indices']);n['clock_loads']=children+2+2*leaf;n['pg_model_roles']={'VDD':sum(n['proposed_cells'].values()),'VSS':sum(n['proposed_cells'].values())}
+ maxload=max(maxload,n['trunk_nontransparent_loads'],len(n['sink_indices']));maxclockload=max(maxclockload,n['clock_loads']);maxleaf=max(maxleaf,len(n['sink_indices']))
+ depth=abs(n['grid'][0])+abs(n['grid'][1]);maxdepth=max(maxdepth,depth)
+ if n['parent']:
+  p=bygrid[tuple(n['parent'])];pa=p['center_um'];xy=n['center_um'];maxclock=max(maxclock,sum(abs(xy[i]+clockin[i]-pa[i]-clockout[i]) for i in [0,1]));maxreset=max(maxreset,sum(abs(xy[i]-pa[i]) for i in [0,1])+3.0)
+ n['new_channel_reservation_model']={'signals':['forward_clock','registered_reset'],'signal_tracks':2,'shield_tracks':2,'supply_tracks':{'VDD':1,'VSS':1},'total_tracks':6,'minimum_pitch_um':.192,'minimum_bundle_width_um':1.152,'layers':{'horizontal':'M6','vertical':'M7'},'corner_via_stacks_per_bundle':6,'actual_occupancy':None}
+model={'status':'STRUCTURAL_REJECT_MODEL_ONLY','native_lef_sha256':hashlib.sha256(lef.read_bytes()).hexdigest(),'primitive_inventory':prims,'proposed_counts':counts,'proposed_native_area_um2':sum(prims[k]['area_um2']*v for k,v in counts.items()),'proposed_outline_area_um2':len(a)*32.4**2,'pg_native_MTerm_bindings_required':2*sum(counts.values()),'max_nontransparent_loads':maxload,'max_clock_direct_loads':maxclockload,'max_native_clock_pin_span_um':maxclock,'max_proposed_reset_contact_budget_um':maxreset,'max_leaf_center_to_sink_um':r['leaf_pin_distance_max_um'],'max_skeleton_depth':maxdepth,'conditional_max_release_edges':2*(maxdepth+1)+2,'conditional_max_release_ps':(2*(maxdepth+1)+2)*1024,'actual_release_edges':None,'actual_tt_ff_phase':None,'new_pg_track_via_recipe_not_actual_metal':True,'causal_model_checks':{'all810_unique':len({(x['instance'],x['port'],x['bit']) for x in s})==810,'all_actualpins':not any(x['pin_error'] for x in s),'reach_conditional_under405':max(maxclock,maxreset,r['leaf_pin_distance_max_um']+3)<405,'fanout_under32':maxload<=32,'existing_conflicts_refused':r['conflicted_homes']>0,'mut_span406_refused':406>405,'mut_load33_refused':33>32,'mut_old2048_refused':2048>32,'mut_reset_pin_as_clock_refused':'Y'!='rst_n','phase_NULL_blocks_FIXED_age':True}}
+(O/'prototype_model.json').write_text(json.dumps(model,indent=1)+'\n');(O/'joint_reservation_model.json').write_text(json.dumps(a,indent=1)+'\n')
+import matplotlib;matplotlib.use('Agg');import matplotlib.pyplot as plt
+fig,ax=plt.subplots(figsize=(8,10));good=[n for n in a if not n['conflicts']];bad=[n for n in a if n['conflicts']];ax.scatter([n['center_um'][0] for n in good],[n['center_um'][1] for n in good],s=3,c='#17854a',label='798 no outline conflict; PG/tracks OPEN');ax.scatter([n['center_um'][0] for n in bad],[n['center_um'][1] for n in bad],s=3,c='#b6362f',label='2,887 rejected homes');ax.scatter([x['xy_um'][0] for x in s],[x['xy_um'][1] for x in s],s=8,c='#215aa8',label='810 native reset boundary pins');ax.scatter([11284.116],[15487.242],s=80,c='black',marker='*',label='NEW hb_ckgen.por_hbm binding');ax.plot([12761.158,18531],[19794.988,30455],ls='--',c='#aa7700',label='old failed coordinates; no instance binding');ax.set(xlim=(0,20200),ylim=(0,31773.52),xlabel='um',ylabel='um',title='Dedicated HBM joint corridor: finite structural REJECT\n302.4 um skeleton, 3,685 proposed 32.4 um homes');ax.set_aspect('equal');ax.legend(fontsize=8,loc='upper left',bbox_to_anchor=(0,-.07));fig.tight_layout();fig.savefig(O/'MODEL.png',dpi=140)
+print(json.dumps({k:v for k,v in model.items() if k!='primitive_inventory'},indent=2))

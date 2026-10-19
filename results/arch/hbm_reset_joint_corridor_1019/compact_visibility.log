@@ -1,0 +1,50 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 414 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-549346-1792447470 after 0 s
+{
+  "status": "CONDITIONAL_WIRE_OVERFLY_VISIBILITY_MODEL_NO_NATIVE_ROUTING_CLAIM",
+  "components": 4584,
+  "potential_component_edges": 8253,
+  "source_component": 230,
+  "source_reachable_components": 4228,
+  "reachable_sinks": 791,
+  "unreachable_sinks": 19,
+  "required_component_bridges": 213,
+  "max_bridge_center_um": 345.6,
+  "all_bridge_native_contact_upper_under405": true,
+  "native_layer_OBS_clear": null,
+  "actual_PG_channel_clear": null,
+  "legal_std_rows_exist": null,
+  "min_CQ_phase_electrical": null,
+  "free_channel_path_compression_and_fanout_copies": "REQUIRED_BEFORE_PROTOTYPE"
+}
+	Command being timed: "python3 compact_visibility.py"
+	User time (seconds): 0.20
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.22
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 61552
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8569
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 304
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-549346-1792447470): exit 0

@@ -1,0 +1,112 @@
+ot-run: ot-epyc4       admits  1114 GB (avail 836, growth 56, headroom 0, waiters 0/0 GB) load 40/128 running 16 disk 414 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-joint-corridor-1019
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-544091-1792447211 after 1 s
+{
+  "status": "FINITE_CANDIDATE_REJECTED_NO_ENGINE",
+  "die_um": [
+    20200.0,
+    31773.52
+  ],
+  "sinks": 810,
+  "pin_errors": 0,
+  "placed_outlines": 57211,
+  "clock_cells": 76233,
+  "clock_master_counts": {
+    "BUFx24_ASAP7_75t_R": 60464,
+    "BUFx12f_ASAP7_75t_R": 15769
+  },
+  "source": {
+    "instance": "hb_ckgen",
+    "port": "por_hbm",
+    "xy_um": [
+      11284.116,
+      15487.242
+    ],
+    "new_binding": true,
+    "old_failed_predecessor": null
+  },
+  "grid_origin_um": [
+    11275.2,
+    15465.6
+  ],
+  "grid_step_um": 302.4,
+  "homes": 3685,
+  "conflicted_homes": 2887,
+  "edges": 3684,
+  "pg_track_via_occupancy": null,
+  "actual_tt_ff_phase": null,
+  "native_clock_out_master": null,
+  "leaf_pin_distance_max_um": 295.72400000000016,
+  "inputs": {
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/manifest.json": "e2a5d517469ec339e013783d248ddab9c2b2085c6d4ddc6dddfac78442cc66ad",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/contract_pre.json": "1e46f68cfdd7271f3e22714d0b205714bbe69259a3a4497be47c2a4aa0442ec4",
+    "/srv/opentallas-scratch/claude/hd4g/gen2c/case_a/run.tcl": "99c9859b4fecdc8b395922f3f36c1272d2e76fffe6e04137087669df9cf84957",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/ot_hbm3e_phy_rc_e8p5.lef": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/ot_hbm_svc_stack_fault.lef": "7887066c9368cdeb48020170940955ddccba1762e28892dcdda425fd58e03163",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/ot_hbm_svc_sm_group_id.lef": "7e7c6fe45d6f39a64861009799b91b5ceed8be71696d63e1e2d0de9f34103db3",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/ot_hbm_svc_vm_kshare_splitstrap.lef": "7957333b970f7bb3038a090d2e245dd34b75a9eb184f3e889156df0ad17c6ebb",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/ot_hbm_svc_wb_kport_q.lef": "d43ee63c0f8268afcbd4e13b411c7813615f20d606963b94340b17c152b129ac",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/ot_hbm_pc_refresh_cfg.lef": "6987beff1766477e54ee7e1ff26e01caa5d4f339f16baf97277e1ba2e1e35794",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_624_SN.lef": "be013c493a82d0bd7ce666329e8b14cae193b98fcff3631406e6760b94b07900",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_624_EW.lef": "5fa8c978506294408139c7cbeb5700242e3202a427eeac2729939f97abb6a348",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_624_EW.lef": "b36b67ddda6d2f5316a3543db10145556b6676a9d1c0b158d80b5259de3fa663",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_624_EW.lef": "e0b7e128f9294d2fd4cd179b99d1ee0064bba211103006a2bdd3783544796acd",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_624_SN.lef": "90e39279c816cc32f7c246e4741186fd3fbc552733393e48aff4bf99dd63e6a4",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_624_NS.lef": "db66c4270ba7ff6a515c37d699efeb5d075483095691f199061b317f64eb4f1b",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_136_WE.lef": "bc45f85976d5971a96f27c622ea0100a8511f4981cb80017f646c1e81d963ba4",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_136_SN.lef": "f4d7c4ed743b7bf057b362550f9aebabd97952a47f2c5a6606e2d2b3d98b9f33",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_136_WE.lef": "4a62539511f3618cbee4da6a227f8aa246ff9a4fd5b1ec667e09cfd2ef46e63a",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_136_NS.lef": "f519e83cd9285e2052da2f625e783ae90424e8359fb8a105bcee2c8f7fa09030",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_624_WE.lef": "9cf335ed0891e3fca0d089cfdbc2584801dbcf49507c6638a555c7c11e59e087",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_136_EW.lef": "18acb5f74bb55d691ea7a8d9691a6f47e1f81cd3aaf23feb13f6a78f4130a7a3",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_624_WE.lef": "cc78c838dd52206936c0fa4b4fb087cdc4642b984517bb32487e7739af7e67e7",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_624_NS.lef": "a15a5611fac2d58acc3a3a989f22e1596ec02dfddb602e690283eefd515e1d79",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_624_SN.lef": "1d121f5b3abcb7dc3a279c306e6138c697c777f8d5a33bcf86009dfd1e29de69",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_136_EW.lef": "15ed75ef67e867de1852906940612461207f3185be46c134609c4273baf6c2ef",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_624_NS.lef": "ffb362d963402b6b46b7aa2c80d65de01d1c36b7f304c2c5d7acd6075ee4175a",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_624_WE.lef": "10921a2b44f67f2b11d402ed86a97ba10a908b1e3c0434020e42801f351b96f8",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_48_SN.lef": "e2f801ce3bde35b7f2dad5c199830eec6cc7eec1245bdc796524958d30db34b6",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_48_EW.lef": "5e7600a4fb05923c428e2110bf81cb3a225789df9ff4cbcd671512b6d29af875",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_48_EW.lef": "c7949258b235ea291f35963e0ac8bee646fa184a25a2d39a05a0af16d7bda85a",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_48_SN.lef": "59eb0ac07918a869c419aa663da2cd47594d5e9f4ae837ee5ef6580196da0edf",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_48_NS.lef": "8f6bd1b1bf964db30ec1fbe5e5a96591fdabcf392841bb60702ea39dd2f7f146",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_48_NS.lef": "d8e79c17a1b22be097877b642544fa5cb8133d87ff3bcee8d65b375f4bd30b15",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_48_EW.lef": "87e8247aecbb01b80a81f425aed78fce6e7e5858cf247888c3db3ee5c278720a",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_rly_48_WE.lef": "84a7fb8e0d6d67001284859d6f135b0784bbf99d28dd0de9a555511b40eb8c72",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_lh0_48_WE.lef": "4804e636d19467cf74e90a03917a8503203c6fd99b09b5b8bcb666e977720123",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_48_WE.lef": "6c5b86dbad5fa26e349a13a755523aaa9295f7a356f14b7d32a4dd11a0041d10",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hbfd_land_48_SN.lef": "f1fda8647e2beef399304b31452a1866c053e4184e20442c7e4d0b28c5f4b842",
+    "/srv/opentallas-scratch/claude/hd4g/gen2c/case_a/die.v": "536cf78130805726c132eecbf88c98bb60142ab1cb36e582a8c62086439aebae",
+    "/srv/opentallas-scratch/claude/hd4g/gen2d/forest_codex9d5a2c350/views/hfd_ckgen.lef": "fe79f3735922965d7b5bff102232abf7e3c8a42cebf2bb22dd13552f8686eca6"
+  }
+}
+	Command being timed: "python3 inventory.py"
+	User time (seconds): 12.16
+	System time (seconds): 0.70
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:12.88
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1333552
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 506505
+	Voluntary context switches: 75
+	Involuntary context switches: 30
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 93024
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-544091-1792447211): exit 0
