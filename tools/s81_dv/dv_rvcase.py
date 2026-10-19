@@ -314,7 +314,7 @@ def main():
         elif mst.startswith('dsfd_dvland_'):
             cps = ['ck_f', 'ck']
         elif mst.endswith('_ASAP7_75t_R') and nm.startswith('fwd_'):
-            cps = ['A', 'Y']
+            cps = ['A', 'Y', 'CLK', 'GCLK']     # BUFx8 forward / ICGx4 hop-0 lane clock gate (S81-LBGAP/G1)
         else:
             tm = T['masters'].get(mod2master.get(mst, ''), {})
             cps = [tm.get('clk')] + [cp['port'] for cp in tm.get('clk_peer', [])]
@@ -550,7 +550,7 @@ def main():
         else:
             continue
         link_pins[nm] = pins
-        sdc.append(f'set_multicycle_path -setup {r["E"]} -to {pins}')
+        sdc.append(f'set_multicycle_path -setup {r.get("K") or r["E"]} -to {pins}')   # S81-LBGAP/G8: the landing reads at K
         sdc.append(f'set_multicycle_path -hold {r["D"] - 1} -to {pins}')
     # NS-CASE 10-18 (ROOT-2115): the strict bind's declared STRAP ports (port_bind.json masters[].straps: landing k,
     # pvrd k/nw/rb, col_h* lk) carry die constants; the die STA case-analyses them bit by bit with the netlist's own
@@ -591,12 +591,17 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
 set_wire_rc -signal -layer M6
-create_clock -name clk -period {T_PS} [get_ports ck_*]
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
 puts "OT_SPECIAL_TOP_NETS $nsp"
-{repair}set_routing_layers -signal M2-M7 -clock M5-M9
+# S81-DIE8 10-18: the die repeater step runs BEFORE create_clock.  With the region roots declared as clocks, STA
+# propagates them through the hop-0 forward cell (BUFx8 / G1 ICGx4) and repair_design silently skips every hop-0
+# forwarded-clock net even though repeat_nets un-skips it (case_p4l_rv: all 140 hop-0 fclk nets 0 repeaters,
+# 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
+# (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
+{repair}create_clock -name clk -period {T_PS} [get_ports ck_*]
+set_routing_layers -signal M2-M7 -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M7 0.20
@@ -751,7 +756,7 @@ def klass(ep):
     inst = ep.split('/')[0]
     if inst.startswith('ld_'):
         return ('landing', cls.get(inst[3:], '?'))
-    if re.match(r'st_rs(l)?_|rst_root', inst):
+    if re.match(r'st_rs(l|g)?_|rst_root', inst):     # rsg_: hop-0 gate calendar stations (S81-LBGAP/G1)
         return ('reset', 'station')
     m = re.match(r'st_(.+)_(\d+)$', inst)
     if m:
