@@ -13,6 +13,7 @@ results=[]
 for case in ['positive','HEAD','ACT','REFRESH']:
  obj=out/('obj_'+case)
  cmd=[v,'--binary','--timing','-Wno-fatal','--top-module','tb','-j','8','--Mdir',str(obj)]
+ cmd+=['-GWQ='+os.environ.get('BW_AQ_WQ','32')]
  if case!='positive':cmd+=['+define+BW_AQ_MUT_'+case]
  with (out/(case+'_build.log')).open('w') as f:
   subprocess.run(cmd+[str(w/x) for x in files],stdout=f,stderr=subprocess.STDOUT,check=True)

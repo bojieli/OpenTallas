@@ -24,12 +24,15 @@
   "routing": "head row each bit <= four banks; command flags each serve eight banks; mapped non-buffer fanout must be <=32 before CTS",
   "qualification": "23,968-edge exact replay plus HEAD/ACT/REFRESH mutants; full66op154GO parent integration before gate",
   "queue_count_local_copies": 4,
-  "queue_count_delta_ff": 24,
+  "queue_count_delta_ff": "4*($clog2(WQ)+1):24 at32,28 at64",
   "act_valid_local_delta_ff": 8,
   "timer_successor": {
     "delta_ff": 0,
     "delta_edges": 0,
     "architecture": "Unconditional width-preserving saturating decrement datapaths with priority reload mux; remove duplicated reload and DFFE enable dependence on local bank commands.",
     "qualification": "Exact trace and three mutants, then actual mapped all-driver loads; no source-level fanout claim."
-  }
+  },
+  "delta_ff_default_wq32": 156,
+  "delta_ff_production_wq64": 160,
+  "production_wq": 64
 }
