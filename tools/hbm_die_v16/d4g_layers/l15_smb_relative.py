@@ -194,12 +194,13 @@ def apply(contract, root=ROOT):
                 rep['unresolved_ids'].append(dict(instance=svg, port=p, width=width,
                     missing_bits=sorted(set(range(width)) - driven), owner='HBM-ROUTER-IDS l17'))
     gapid = 'G-SMB-ROUTER-IDS'
-    c['gaps'] = [x for x in c.get('gaps', []) if x.get('id') != gapid]
     if rep['unresolved_ids']:
+        c['gaps'] = [x for x in c.get('gaps', []) if x.get('id') != gapid]
         c['gaps'].append(dict(id=gapid, owner='HBM-ROUTER-IDS l17',
             missing_rtl='actual MoE TOPK VM result collector/broadcast, layer/cohort freshness; no host/oracle/ties',
             affects=[[x['instance'], x['port'], x['width']] for x in rep['unresolved_ids']]))
-    rep['release_ready'] = not rep['unresolved_ids']
+    rep['router_inputs_connected'] = not rep['unresolved_ids']
+    rep['release_ready'] = False  # Native SVG/XC hardening, routed broadcast and final regenerated bind remain open.
     rep['router_status'] = 'BLOCKED_IDS_PRODUCER' if rep['unresolved_ids'] else 'CONNECTED_NEEDS_LIFETIME_BENCH'
     return c, rep
 
