@@ -31,8 +31,5 @@
     172.8
   ],
   "gross_group_allocation_total_um2": 261273.6,
-  "native_group_layout": "3x3 origins at43.2+86.4*x and43.2+43.2*y inside allocated302.4x172.8; pinface20um halo after all bodies, group entry reach<=405um; PG/via/pin-access and actual clock proof owed",
-  "native_clock_sinks": 45,
-  "independent_exposed_roots": 0,
-  "clock_plan": "One core CTS root;45real macro clk pin arrivals+soft boundary co-time and last unbuffered reach require actual TT/FF proof. No9-clockvectorinterface exists."
+  "native_group_layout": "3x3 origins at43.2+86.4*x and43.2+43.2*y inside allocated302.4x172.8; pinface20um halo after all bodies, group entry reach<=405um; PG/via/pin-access and actual clock proof owed"
 }
