@@ -140,7 +140,10 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_local<=0;else if(qpush)tail_set_local<=wr_bank[4:2];
   reg [2:0] tail_set;                                   // bank-set of the newest pushed entry
   // ---- bank / group state ---------------------------------------------------------------
-  reg [31:0] open, refreshed, blk;
+  reg [31:0] open, refreshed;
+  (* keep="true",dont_touch="true" *) reg [4:0] blk_bank;
+  (* keep="true",dont_touch="true" *) reg blk_valid;
+  wire [31:0] blk=blk_valid?(32'b1<<blk_bank):32'b0;
   reg [RW_ROW-1:0] orow [0:31];
   reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
   reg [3:0] rtw_c, wtr_c; reg phase;
@@ -403,7 +406,7 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       q_n <= 0; q_rp <= 0;q_rp_plus1<=1;q_rp_plus2<=2; tail_set <= 0;
-      refreshed <= 0; blk <= 0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
+      refreshed <= 0; blk_valid <= 0;blk_bank<=0; rrds_c <= 0; noact_c <= 0; ref_pend <= 0; rb <= 0; fault_r <= 0;
       rtw_c <= 0; wtr_c <= 0; phase <= 0; rkey <= 127; pin <= 0; ep <= 0; skip <= 0; sact <= 0; c_v <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_row <= 0;
       for (integer f = 0; f < 4; f = f + 1) fawq[f] <= 0;
 
@@ -425,9 +428,9 @@ module ot_hbm_r14_aq_pc_safe #(
       if (ref_c == RW'(LEAD)) begin
         if (ep) begin ref_pend <= 1; ep <= 0; end                               // a pending pull-in becomes this slot
         else if (pin != 0 && (bkey >= 7'd32 || ref_choice_protected)) begin pin <= pin - 1'b1; skip <= 1; end   // paid ahead: skip
-        else begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; rkey <= bkey; end
-      end else if (ep_start) begin ep <= 1; rb <= bsel; blk <= 32'b1 << bsel; rkey <= bkey; end
-      else if (ep && |(blk & open)) begin ep <= 0; blk <= 0; end
+        else begin ref_pend <= 1; rb <= bsel; blk_bank<=bsel;blk_valid<=1'b1; rkey <= bkey; end
+      end else if (ep_start) begin ep <= 1; rb <= bsel; blk_bank<=bsel;blk_valid<=1'b1; rkey <= bkey; end
+      else if (ep && |(blk & open)) begin ep <= 0; blk_valid<=0; end
       if (ref_due) skip <= 0;
       if (ref_due && !skip && (!row_fire || c_op != REFPB || |(blk & open) || |(blk & ~aok_z))) fault_r <= 1;
       if (row_fire) case (c_op)
@@ -440,7 +443,7 @@ module ot_hbm_r14_aq_pc_safe #(
         end
         PRE: begin end
         REFPB: begin
-          noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
+          noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk_valid<=0;
           if (ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
           refreshed <= (&(refreshed | (32'b1 << rb))) ? 32'b0 : (refreshed | (32'b1 << rb));
         end

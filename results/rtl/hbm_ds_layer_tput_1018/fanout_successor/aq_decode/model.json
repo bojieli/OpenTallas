@@ -33,7 +33,7 @@
     "qualification": "Exact trace and three mutants, then actual mapped all-driver loads; no source-level fanout claim."
   },
   "delta_ff_default_wq32": 156,
-  "delta_ff_production_wq64": 162,
+  "delta_ff_production_wq64": 136,
   "production_wq": 64,
   "head_followup": {
     "prefetch_identity_ff_added": "2*(2*$clog2(WQ)+1):26 at64",
@@ -42,5 +42,12 @@
     "net_ff_delta_at64": 2,
     "latency_delta": 0,
     "architecture": "Separate row/read and bank/column head domains have independent existing-edge prefetch identity and occupancy state. Replace32 head bank one-hot flops with5 registered bank identity bits and local decode. Bank-count enqueues derive from retained regional queue count."
+  },
+  "refresh_block_encoding": {
+    "before_ff": 32,
+    "after_ff": 6,
+    "delta_ff": -26,
+    "latency_delta": 0,
+    "architecture": "Replace held 32-bit one-hot refresh block with retained5-bit bank identity and valid, decoded locally. Original refresh reservation/clear priorities retained. Decode logic moves after state; physical delay requires mapping/native proof."
   }
 }
