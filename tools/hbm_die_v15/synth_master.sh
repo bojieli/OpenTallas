@@ -21,6 +21,17 @@ import json,sys
 d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
 for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
     d['files'].insert(0, f)
+# A preferred scoped closure can already be in the indexed list AND EXTRA.
+# Read each physical source once; do not suppress distinct files defining conflicting modules.
+from pathlib import Path
+seen = set()
+unique = []
+for f in d['files']:
+    key = str(Path(f).resolve())
+    if key not in seen:
+        seen.add(key)
+        unique.append(f)
+d['files'] = unique
 ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 if len(sys.argv) > 12 and sys.argv[12]:   # WTOP: a parameter wrapper (in EXTRA) instantiating TOP with any SV parameter
     top = sys.argv[12]; prm = '-'          # value (arrays, wide hex); the filelist still walks from the real TOP
