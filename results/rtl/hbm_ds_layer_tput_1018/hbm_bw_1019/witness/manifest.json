@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.hbm_bw_mutants.v1",
+  "source": "9e8fcf77e",
+  "mutants": [
+    {
+      "define": "HBM_MR,IMUT=2",
+      "fail_witness": "imut2.log",
+      "fail_regex": "R [0-9]+",
+      "measured_failure": "12 of23 matvec ops differ from golden; json bw_imut2.json verdictFAIL while all39go slots exact. Compare exact payloads; R trace is raw witness, not a standalone pass/fail regexp."
+    },
+    {
+      "define": "HBM_MR",
+      "input_mutant": "late_ids",
+      "fail_witness": "late.log",
+      "fail_regex": "FAULT svg cycle 9093 issuer 1"
+    }
+  ],
+  "production_full_failure": "full_fail.log: issuer late-go cycle14290 after one completed run,24of66 ops pass"
+}
