@@ -17,9 +17,30 @@ def evidence_paths(spec, root):
     if not entry:
         return []
     receipt = json.loads((Path(root) / entry['path']).read_text())
-    return sorted({entry['path'], 'tools/hier_contract/pinreg_audit.py',
+    return sorted({entry['path'], 'tools/hier_contract/pinreg_audit.py', 'tools/die_port_bind.py',
                    *(x['path'] for x in receipt['sources']),
                    *(receipt[k]['path'] for k in ('gate', 'gate_spec', 'insertion', 'tt_lib', 'ff_lib', 'tt_probe', 'ff_probe', 'native_binding'))})
+
+
+def source_ports(spec, root):
+    """Conservative unpreprocessed top census: ambiguous/conditional headers refuse."""
+    loader = importlib.util.spec_from_file_location('_registered_port_bind', Path(root) / 'tools/die_port_bind.py')
+    binder = importlib.util.module_from_spec(loader)
+    loader.loader.exec_module(binder)
+    tops = [m for path in spec['sources'] for m in binder.parse_modules((Path(root) / path).read_text(), path)
+            if m.name == spec['top']]
+    if len(tops) != 1 or tops[0].port_parse_errors or not tops[0].ports:
+        raise ValueError('registered cluster candidate: source top ports must be unambiguous')
+    return set(tops[0].ports)
+
+
+def remove_supply_pins(pins, lib, data_ports):
+    """Only source-absent, arc-free physical rails can leave the data census."""
+    for rail in ('VDD', 'VSS'):
+        if rail in pins and not lib['pins'][rail]['arcs']:
+            if rail in data_ports:
+                raise ValueError('registered cluster candidate: unconstrained source data port named ' + rail)
+            del pins[rail]
 
 
 def check(spec, root):
@@ -114,6 +135,7 @@ def check(spec, root):
         need(actual.get(corner, {}).get('boundary') == measurements[0][corner]['boundary'] and
              actual.get(corner, {}).get('child_flop', {}).get('refs') == measurements[0][corner]['child_flop']['refs'],
              'STA insertion differs from gate')
+    data_ports = source_ports(spec, root)
     census = {}
     for corner in ('tt', 'ff'):
         lib = audit.parse_lib(artifact(receipt.get(corner + '_lib')))
@@ -123,9 +145,7 @@ def check(spec, root):
              'native model lacks measured clock reference')
         pins = audit.pin_metrics(lib, refs)
         # OpenSTA ETM writes physical supply pins as arc-free inputs. No user exclusion is permitted.
-        for rail in ('VDD', 'VSS'):
-            if rail in pins and not lib['pins'][rail]['arcs']:
-                del pins[rail]
+        remove_supply_pins(pins, lib, data_ports)
         need(pins and not any(p['comb'] or p['dir'] not in ('input', 'output') for p in pins.values()), 'combinational or unknown boundary')
         need(all(p['out'] is not None and p['lmin'] is not None if p['dir'] == 'output' else
                  p['inp'] is not None and p['hold'] is not None for p in pins.values()), 'unregistered or unconstrained boundary')

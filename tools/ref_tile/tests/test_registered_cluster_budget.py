@@ -84,6 +84,15 @@ class RegisteredCluster(unittest.TestCase):
         self.altered_receipt(lambda r:r.pop('tt_lib'))
         self.altered_receipt(lambda r:r.pop('ff_lib'))
         self.altered_receipt(lambda r:r.pop('insertion'))
+        with tempfile.NamedTemporaryFile(dir=RECEIPT.parent, suffix='.sv') as source:
+            source.write(b'module bad(input VDD, input clk, output logic q); always @(posedge clk) q<=VDD; endmodule')
+            source.flush()
+            ports=B.source_ports(dict(top='bad',sources=[str(Path(source.name).relative_to(ROOT))]),ROOT)
+            self.assertIn('VDD',ports)
+            with self.assertRaisesRegex(ValueError,'unconstrained source data port'):
+                B.remove_supply_pins({'VDD':{}},{'pins':{'VDD':{'arcs':[]}}},ports)
+        self.assertNotIn('VDD', B.source_ports(self.spec, ROOT))
+        self.assertNotIn('VSS', B.source_ports(self.spec, ROOT))
         self.altered_lib(lambda t:re.sub(r'(timing_type\s*:\s*)rising_edge', r'\1combinational', t, count=1))
         self.altered_lib(lambda t:re.sub(r'(cell_rise\s*\([^)]*\)\s*\{[^{}]*?values\()\"[^\"]*\"', lambda m:m.group(1)+'"-1000"', t))
     def test_05_clock_root_or_child_reference_refuses(self):
