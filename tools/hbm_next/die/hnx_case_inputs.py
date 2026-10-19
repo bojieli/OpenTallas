@@ -179,6 +179,9 @@ def region_of(n):
     m = re.match(r'^(vmb)_(SW|SE|NW|NE)(\d)$', n)
     if m:
         return f'grp_{m.group(2)}{int(m.group(3)) // 2}'
+    m = re.match(r'^fus_(SW|SE|NW|NE)(\d)$', n)        # UNITS-FUSED lane: one per VM bank, in its bank pair's SU group
+    if m:
+        return f'grp_{m.group(1)}{int(m.group(2)) // 2}'
     m = re.match(r'^(su|sfu|hc|quant)_(SW|SE|NW|NE)(\d)$', n)
     if m:
         return f'grp_{m.group(2)}{m.group(3)}'
