@@ -1,0 +1,317 @@
+{
+  "schema": "opentallas.qwen.all36-checkpoint-table-compare.v1",
+  "verdict": "PASS",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "torch_version": "2.14.1+cpu",
+  "manifest_sha256": "c63242abc11b880c741bd7556138529dab331b21579231b7ba9b53c7435cee92",
+  "layers": [
+    {
+      "layer": 0,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 1,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 2,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 3,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 4,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 5,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 6,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 7,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00001-of-00005.safetensors",
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 8,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 9,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 10,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 11,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 12,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 13,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 14,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 15,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 16,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 17,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00002-of-00005.safetensors",
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 18,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 19,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 20,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 21,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 22,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 23,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 24,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 25,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 26,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 27,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00003-of-00005.safetensors",
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 28,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 29,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 30,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 31,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 32,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 33,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 34,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "layer": 35,
+      "slices": 12,
+      "checkpoint_shards": [
+        "model-00004-of-00005.safetensors"
+      ],
+      "verdict": "PASS"
+    }
+  ],
+  "checkpoint_hashes": {
+    "config.json": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+    "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+    "model-00002-of-00005.safetensors": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+    "model-00003-of-00005.safetensors": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+    "model-00004-of-00005.safetensors": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+    "model-00005-of-00005.safetensors": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff",
+    "model.safetensors.index.json": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc"
+  },
+  "source_sha256": {
+    "hdc_qwen_int8_image_w12.py": "33d5e4a7359c793d605c6864c156d21f7edd3286187721c9e949d155ffbe8db3",
+    "hdc_qwen_layer0_rom_w12.py": "d6fb45e5418660d185de027a3fd432d2ffa5983a02770ca342b515b88f31e77b",
+    "dv_lower.py": "6703f03fb928907bad952babcf05890c41b5096ea81f81dbab7f4c01a6c800c5",
+    "dv_lower_mat.py": "c35eb8c15aa15c00af8a3e97b28740c11797a1cf049c4ede3317b45923ed81bd",
+    "dv_lower_vec.py": "3f01c9a9a217e7ab53de2dce6320f7e2cb29d86c977d53e67714065ecfc5bfff"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "qualification": "MODEL ONLY; no source applied; public/default unchanged",
+  "source_roots": {
+    "controller_loader": "7e5150af5",
+    "body_producer": "4e718c0107e99f869c95db0ecedcca8711577dff",
+    "global_boundary": "fe49023bd"
+  },
+  "changes": [
+    {
+      "file": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv",
+      "change": "Add PRIVATE_CALR=0, forward to u_gi; expose bundled table_load/stage/user across same explicit private hierarchy; do not select in GEN0."
+    },
+    {
+      "file": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+      "change": "Add PRIVATE_CALR=0 to qfd_tt_ctlm_dv_gi; set u_cal.CALENDAR_ROM/TABLE_ROM to PRIVATE_CALR; bind currently omitted table_load/table_stage/table_user outputs. Preserve OPSEG/CTX_DW, NU4/UVM4096/PIDX128/UTAG6/STAGE_ME1 and DW mask0. Do not infer four requests."
+    },
+    {
+      "file": "rtl/qwen_dv/qfd_dv_slice2.sv",
+      "change": "Private branch instantiates actual qfd_dv_table_rom_loader #(SLICE, BTAB_COMPACT=1); start/stage/user are a single registered transport bundle sourced by accepted CALR LOCAL4. Rename stream tw_* to stream_tw_*. Wire loader other_table_write=stream_tw_we. At VM join select loader tw bundle iff loader_we, otherwise original stream bundle; simultaneous writes fault and suppress ambiguous write. OR loader/collision fault into actual slice fault. Preserve original branch at default0."
+    },
+    {
+      "file": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+      "change": "Forward private option and explicit loader request bundle through selected wrapper; current wrappers have no such ports. Native transport/reset/first use must be modeled before wiring a remote CALR request."
+    },
+    {
+      "file": "PRIVATE/min_component.manifest.json (NEW, not installed)",
+      "change": "Pin exact component source list, one context user0, one real NH8/eight leaves and one REGROOT2 ME; no full array or independent-user assumption. Pin SYSFACE PW/DW image, 2 calendar masks, 4 masks per participating slice, descriptor, all original transport/reset epochs, real static table-load windows and every producer asset."
+    },
+    {
+      "file": "PRIVATE/installed_assets.json (NEW, not installed)",
+      "change": "Select c63242\u2026 table manifest/certificate/checkpoint receipt as static decode asset authority. Preserve 400PW/25ISA cc5 and1009 descriptor separately; body source fd2668 not silently relabeled. Require exact physical-mask hashes and actual install/commit receipts; immutable table/calendar ROMs have no runtime writable install."
+    }
+  ],
+  "not_added": [
+    "runtime waits",
+    "credits",
+    "dynamic queue",
+    "synthetic E calendar",
+    "new token epoch arithmetic",
+    "public selector",
+    "date/profile edits"
+  ],
+  "new_transport": {
+    "request_bits": 9,
+    "fields": "valid1+stage6+user2",
+    "implementation": null,
+    "native_edge_cost": null,
+    "reason": "Clocked CALR-to-slice request path is absent. Cannot attach combinational cross-region source or infer age from existing lane name."
+  },
+  "acceptance": "One static reserved load is exclusive of every existing stream table write and every live consumer of the overwritten user bank. No busy/done waiter moves events; contention or missing source causes REFUSE."
+}
