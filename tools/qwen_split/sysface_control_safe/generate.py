@@ -20,6 +20,14 @@ PROFILES = {
     'legacy': dict(MU=1, SRAM_CAL=1, OVL=0, CTX_ACCEPTED=0,
                    COLD_PREFIX=0, COLD_START_OFS=0, OVL_FIRST_OFS=1176, OVL_AW=11),
 }
+# QW-SYSFACE3 10-19: SAFE3 source (balanced fault/enable cones, zero added edges) on the same two profiles.
+PROFILES['cold3']=dict(PROFILES['cold'],SAFE3=1)
+PROFILES['legacy3']=dict(PROFILES['legacy'],SAFE3=1)
+# QW-SYSFACE3: emit kept copies as instances of ONE module per primitive KIND (no per-instance ID parameter).
+# bc2/bc2c/bc2l: 16.5k unique ID paramods made every Yosys opt pass ~10 min (bc2/bc2c synth 2700 s timeouts, bc2l
+# 1 h 55 min synth). User-module instances are never merged by opt_merge (no -share_all), keep_hierarchy keeps
+# them unflattened, and check_emitted.py still proves every instance pin-for-pin, so copies survive with 13 types.
+PER_KIND = True
 
 def digest(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -227,14 +235,14 @@ def emit(m, top, original, manifest, receipt):
         out.append('// '+name.replace('\n',' '))
         if typ in FF:
             args={p:con.get(p,"1'b0") for p in ['C','D','E','R','Q']}
-            out.append('(* keep=1 *) sysface_safe_ff #(.ID('+str(i)+'),.KIND('+str(ftypes.index(typ))+')) f'+str(i)+'('+','.join('.'+p+'('+v+')' for p,v in args.items())+');')
+            out.append('(* keep=1 *) sysface_safe_ff #('+('' if PER_KIND else '.ID('+str(i)+'),')+'.KIND('+str(ftypes.index(typ))+')) f'+str(i)+'('+','.join('.'+p+'('+v+')' for p,v in args.items())+');')
         elif typ in GATES:
             a=con['A']; b=con.get('B'); y=con['Y']
             expr={'$_AND_':lambda:a+'&'+b,'$_OR_':lambda:a+'|'+b,'$_XOR_':lambda:a+'^'+b,
                   '$_NOT_':lambda:'~'+a,'$_MUX_':lambda:con['S']+'?'+b+':'+a}[typ]()
             if receipt.get('useful_cones'):
                 kind=sorted(GATES).index(typ)
-                out.append('(* keep=1 *) sysface_safe_gate #(.ID('+str(i)+'),.KIND('+str(kind)+')) g'+str(i)+'(.A('+a+'),.B('+con.get('B',"1'b0")+'),.S('+con.get('S',"1'b0")+'),.Y('+y+'));')
+                out.append('(* keep=1 *) sysface_safe_gate #('+('' if PER_KIND else '.ID('+str(i)+'),')+'.KIND('+str(kind)+')) g'+str(i)+'(.A('+a+'),.B('+con.get('B',"1'b0")+'),.S('+con.get('S',"1'b0")+'),.Y('+y+'));')
             else:out.append('assign '+y+' = '+expr+';')
         elif typ==BUF:
             out.append('(* keep=1 *) '+BUF+' b'+str(i)+'(.A('+con['A']+'),.Y('+con['Y']+'));')

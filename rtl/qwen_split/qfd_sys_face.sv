@@ -88,6 +88,7 @@ module qfd_sys_face #(
     parameter integer CTX_ACCEPTED = 0,        // opt-in actual accepted MU observer, +1 output edge
     parameter integer OVL = 0,                 // separate TX/RX compiled start lists (MU-D2D-OVL)
     parameter OVL_ROM_DIR = "",
+    parameter integer SAFE3 = 0,               // QW-SYSFACE3 10-19: 1 = balanced fault/enable cones (zero added edges, see below)
     parameter integer MU = 0,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
@@ -349,7 +350,7 @@ module qfd_sys_face #(
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
     wire        rp_tx_v;
     reg         t_running_q;
-    qfd_sys_face_record_port u_record (
+    qfd_sys_face_record_port #(.SAFE3(SAFE3)) u_record (
         .ck(ck), .rst_rn(rst_rec), .auth_slot(prog_auth_slot), .context_slot(prog_context_slot), .witness_slot(prog_witness_slot),
         .rx_v(prog_rx_v), .rx_record(rx_payload), .execution_active(l_run),
         .program_obs2({seq_program_obs, tt_program_obs}), .descriptor_obs(seq_descriptor_obs),
@@ -485,7 +486,17 @@ module qfd_sys_face #(
     reg [31:0] cold_count;reg cold_wait;
     initial if(COLD_PREFIX && (!MU || !OVL || COLD_START_OFS<1))
       $error("cold prefix requires MU/OVL and a bound positive manifest offset");
-    assign cold_t_go=COLD_PREFIX && cold_wait && cold_count==32'd1 && !halt;
+    // SAFE3: cold_last == (cold_wait && cold_count==1), kept as its own register (next-state form below) so the
+    // 32-bit compare leaves the cold_t_go -> T player start_seg -> first-word fault cone (23 generic levels in bc2l)
+    reg cold_last;
+    wire cold_one=SAFE3 ? cold_last : (cold_count==32'd1);
+    assign cold_t_go=COLD_PREFIX && cold_wait && cold_one && !halt;
+    always @(posedge ck or negedge rst_loop)
+      if(!rst_loop)cold_last<=1'b0;
+      else if(halt)cold_last<=1'b0;
+      else if(COLD_PREFIX && fwd_epoch && !fe_q)cold_last<=(COLD_START_OFS==1);
+      else if(cold_wait)cold_last<=(cold_count==32'd2);
+      else cold_last<=1'b0;
     always @(posedge ck or negedge rst_loop)
       if(!rst_loop)begin cold_count<=0;cold_wait<=0;cold_active<=0;cold_fault<=0;end
       else begin
@@ -495,7 +506,7 @@ module qfd_sys_face #(
           if(cold_active || t_running_q)cold_fault<=1;
         end else if(cold_wait)begin
           cold_count<=cold_count-1'b1;
-          if(cold_count==1)begin
+          if(cold_one)begin
             cold_wait<=0;cold_active<=1;
             if(!boot_done || !cal_ready || !rp_program_ready || prog_busy || t_run)cold_fault<=1;
           end
@@ -605,6 +616,10 @@ module qfd_sys_face #(
     // the sequencer's per-epoch ADMISSION start (layer 63, D2D_ADM_OFS after fwd_epoch) is not a T-calendar event;
     // every token / layer start must still coincide with the T image
     wire cal_adm = cal_start && cs_layer == 6'h3f, cal_tok = cal_start && cs_layer != 6'h3f;
+    // SAFE3: the same 14 causes as one balanced reduction (the serial || chain was 23 generic levels from l_p)
+    wire cal_fault_any = |{t_bad, l_bad, e_bad, lev_clash, ev_res && !seq_dc[50], t_cf, l_cf, e_cf,
+                           ev_lay && l_run, ev_tok && e_run, t_go && !boot_done, cs_fault,
+                           !OVL && (cal_tok != cal_exp || (cal_tok && cal_seg != seg_exp)), cal_adm && t_running_q};
     always @(posedge ck or negedge rst_st) begin
         if (!rst_st) begin
             status_epoch16 <= 16'd0; vm_drained <= 1'b0; collective_drained <= 1'b0; collective_busy <= 1'b0; crom_fault <= 1'b0;
@@ -626,9 +641,10 @@ module qfd_sys_face #(
                 result_tag <= host_tag; result_gen <= host_generation; result_token <= seq_dc[49:32];
                 result_value <= seq_dc[31:0]; result_cycles <= tcyc;
             end
-            if (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
+            if (SAFE3 ? cal_fault_any :
+                (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
                 (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
-                (!OVL && (cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp))) || (cal_adm && t_running_q))
+                (!OVL && (cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp))) || (cal_adm && t_running_q)))
                 cal_fault <= 1'b1;
             tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;
         end
@@ -639,6 +655,7 @@ module qfd_sys_face #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault | accepted_ctx_fault | cold_fault;
+    assign face_fault = SAFE3 ? |{boot_fault, prog_fault, cal_fault, emb_fault, prov_fault_q, rp_fault, armed_fault, go_fault, mu_hc_fault, accepted_ctx_fault, cold_fault}
+                              : boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault | accepted_ctx_fault | cold_fault;
     assign fault = face_fault;
 endmodule

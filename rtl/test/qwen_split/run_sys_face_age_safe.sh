@@ -64,11 +64,12 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$V" --version > "$OUT/verilator.txt";grep -q 5.050 "$OUT/verilator.txt"
 "$V" --binary --timing -j 4 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -I"$OUT" -I"$R/rtl/qwen_sys/d2d_static_20261015" --top-module tb_qfd_sys_face_age -GMU=1 -GSRAM_CAL=${SRAM_CAL:-0} -GIMG=\"$OUT/img\" --Mdir "$OUT/obj" \
  "$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sram.sv" "$R/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v" \
- "$R/legacy/miter/reference.sv" "$R/legacy/miter/miter.sv" "$R/legacy/generated/parent.sv" "$R/legacy/miter/buffer_model.sv" "$R/rtl/qwen_split/qfd_embedding_word_provider.sv" \
+ "$R/${SAFE_DIR:-legacy}/miter/reference.sv" "$R/${SAFE_DIR:-legacy}/miter/miter.sv" "$R/${SAFE_DIR:-legacy}/generated/parent.sv" "$R/${SAFE_DIR:-legacy}/miter/buffer_model.sv" "$R/rtl/qwen_split/qfd_embedding_word_provider.sv" \
  "$R/rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv" \
  "$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv" \
  "$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv" "$R/rtl/qwen_sys/d2d_static_20261015/$DSEQ" \
  "$R/rtl/qwen_split/qfd_sys_face_record_port.sv" \
+ "$R/rtl/qwen_split/qfd_sys_face_safe3.sv" \
  "$R/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv" \
  "$R/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv" \
  "$R/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv" \

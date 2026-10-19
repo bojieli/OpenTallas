@@ -59,7 +59,7 @@ def check(expected,compiled,source,top='qfd_sys_face_control_safe'):
                 actual=m['cells']['g'+str(i)]; sub=modules[actual['type']]
                 assert actual['connections']=={p:wanted.get(p,['0']) for p in ['A','B','S','Y']}, 'kept gate pin changed: '+name
                 # Exhaust the actual re-read primitive network for every 0/1 assignment.
-                pins={p:bb[0] for p,bb in sub['ports'].items()}
+                pins={p:(pp['bits'] if isinstance(pp,dict) else pp)[0] for p,pp in sub['ports'].items()}
                 for values in itertools.product([0,1],repeat=3):
                     env={pins[p]:v for p,v in zip(['A','B','S'],values)}
                     env.update({'0':0,'1':1,'x':'x','z':'x'})

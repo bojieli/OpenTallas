@@ -16,6 +16,7 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
  "$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv" "$R/rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl.sv" \
  "$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv" "$R/rtl/qwen_sys/d2d_static_20261015/$DSEQ" \
  "$R/rtl/qwen_split/qfd_sys_face_record_port.sv" \
+ "$R/rtl/qwen_split/qfd_sys_face_safe3.sv" \
  "$R/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv" \
  "$R/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv" \
  "$R/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv" \

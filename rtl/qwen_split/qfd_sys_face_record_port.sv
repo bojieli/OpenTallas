@@ -6,7 +6,9 @@
 //   rst_rn[0] auth RX + TT descriptor-obs delay + slot fault   rst_rn[1] TT receipt (sink 0)   rst_rn[2] SU receipt (sink 1)
 //   rst_rn[3] commit join                                       rst_rn[4] host context RX      rst_rn[5] witness TX
 // All six are released on the same edge (qfd_sys_face ot_rst_relay), so the reset release is bit-identical.
-module qfd_sys_face_record_port(
+// SAFE3 (QW-SYSFACE3 10-19, default 0 = unchanged): the context RX and both receipts use the balanced / bit-field
+// leaves of qfd_sys_face_safe3.sv (zero added edges, two-state identical) and slot_fault uses logical inequality.
+module qfd_sys_face_record_port #(parameter integer SAFE3=0)(
  input wire ck,input wire[5:0]rst_rn,input wire auth_slot,context_slot,witness_slot,
  input wire rx_v,input wire[547:0]rx_record,
  input wire execution_active,
@@ -35,6 +37,15 @@ module qfd_sys_face_record_port(
  for(genvar sink=0;sink<2;sink=sink+1)begin:g_actual_sink
  wire[75:0]pw=program_obs2[76*sink+:76];
  wire[68:0]dw=(sink==0)?tt_descriptor_obs:descriptor_obs;
+ if(SAFE3)begin:g_s3
+ qfd_sys_face_program_commit_s3 u_receipt(.ck(ck),.rst_n(rst_rn[1+sink]),.execution_active(execution_active),.control_stores_ready(cfg_image_ready[sink]),
+ .begin_v(begin_v),.begin_epoch(begin_epoch),.expected_pw(expected_pw),.expected_dw(expected_dw),
+ .auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
+ .pw_v(pw[75]),.pw_full_word(pw[74]),.pw_addr(pw[73:64]),.pw_data(pw[63:0]),
+ .dw_v(dw[68]),.dw_full_word(dw[67]),.dw_addr(dw[66:64]),.dw_data(dw[63:0]),
+ .commit_v(),.ready(sink_ready[sink]),.fault(sink_fault[sink]),.installed_fusedcap(sink_fusedcap[sink]),
+ .commit_epoch(sink_epoch[16*sink+:16]),.commit_digest(sink_digest[64*sink+:64]));
+ end else begin:g_s0
  qkd_program_commit u_receipt(.ck(ck),.rst_n(rst_rn[1+sink]),.execution_active(execution_active),.control_stores_ready(cfg_image_ready[sink]),
  .begin_v(begin_v),.begin_epoch(begin_epoch),.expected_pw(expected_pw),.expected_dw(expected_dw),
  .auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
@@ -43,10 +54,11 @@ module qfd_sys_face_record_port(
  .commit_v(),.ready(sink_ready[sink]),.fault(sink_fault[sink]),.installed_fusedcap(sink_fusedcap[sink]),
  .commit_epoch(sink_epoch[16*sink+:16]),.commit_digest(sink_digest[64*sink+:64]));
  end
+ end
  wire context_cap;wire[15:0]context_image_epoch;wire[63:0]context_image_digest;
  always @(posedge ck or negedge rst_rn[0])
  if(!rst_rn[0])slot_fault<=0;
- else if((auth_slot&&context_slot)||(rx_v!==(auth_slot|context_slot)))slot_fault<=1;
+ else if((auth_slot&&context_slot)||(SAFE3?(rx_v!=(auth_slot|context_slot)):(rx_v!==(auth_slot|context_slot))))slot_fault<=1;
  qfd_program_auth_rx u_auth(.ck(ck),.rst_n(rst_rn[0]),.receive_slot(auth_slot),.rx_v(rx_v&&auth_slot),.rx_record(rx_record),
  .begin_v(begin_v),.begin_epoch(begin_epoch),.expected_pw(expected_pw),.expected_dw(expected_dw),
  .auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),.fault(af));
@@ -56,11 +68,19 @@ module qfd_sys_face_record_port(
  .sink_fusedcap(sink_fusedcap),.sink_epoch(sink_epoch),.sink_digest(sink_digest),
  .commit_v(commit_v),.ready(program_ready),.fault(jf),.installed_fusedcap(installed_fusedcap),
  .commit_epoch(program_epoch),.commit_digest(program_digest));
+ generate if(SAFE3)begin:g_ctx_s3
+ qfd_sys_face_context_rx_s3 u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
+ .program_begin_v(begin_v),.program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_epoch(program_epoch),.program_digest(program_digest),
+ .head_context_v(head_context_v),.head_stage(head_stage),.head_token(head_token),.head_position(head_position),.native_active(execution_active),
+ .accepted_v(host_accept_v),.host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_gen),
+ .host_fusedcap(context_cap),.host_image_epoch(context_image_epoch),.host_image_digest(context_image_digest),.fault(cf));
+ end else begin:g_ctx_s0
  qfd_host_native_context_rx u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
  .program_begin_v(begin_v),.program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_epoch(program_epoch),.program_digest(program_digest),
  .head_context_v(head_context_v),.head_stage(head_stage),.head_token(head_token),.head_position(head_position),.native_active(execution_active),
  .accepted_v(host_accept_v),.host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_gen),
  .host_fusedcap(context_cap),.host_image_epoch(context_image_epoch),.host_image_digest(context_image_digest),.fault(cf));
+ end endgenerate
  qfd_program_witness_tx u_witness(.ck(ck),.rst_n(rst_rn[5]),.send_slot(witness_slot),.commit_v(commit_v),
  .program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_fault(jf|af|slot_fault),
  .program_epoch(program_epoch),.program_digest(program_digest),.tx_v(tx_v),.tx_observed_v(tx_observed_v),.tx_record(tx_record),.fault(wf));

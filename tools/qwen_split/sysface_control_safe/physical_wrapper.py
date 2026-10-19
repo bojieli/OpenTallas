@@ -7,7 +7,7 @@ def wrapper(top,core,r,reference=False):
     index=100000
     def ff(d,q):
         nonlocal index
-        lines.append('(* keep=1 *) sysface_safe_ff #(.ID('+str(index)+'),.KIND('+str(kind)+')) boundary_'+str(index)+'(.C(ck),.D('+d+'),.E(1\'b0),.R(1\'b0),.Q('+q+'));');index+=1
+        lines.append('(* keep=1 *) sysface_safe_ff #(.KIND('+str(kind)+')) boundary_'+str(index)+'(.C(ck),.D('+d+'),.E(1\'b0),.R(1\'b0),.Q('+q+'));');index+=1
     con=[]
     for name,p in ports.items():
         if name=='ck':con.append('.ck(ck)');continue
