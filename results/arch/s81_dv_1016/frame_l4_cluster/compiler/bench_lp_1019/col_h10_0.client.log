@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       admits   478 GB (avail 443, growth 109, headroom 0, waiters 1/288 GB) load 66/128 running 25 disk 597 GB 
+ot-run: ot-epyc5       admits   583 GB (avail 591, growth 183, headroom 0, waiters 0/0 GB) load 102/128 running 23 disk 1570 GB 
+ot-run: ot-epyc6       admits   954 GB (avail 746, growth 79, headroom 0, waiters 0/0 GB) load 55/128 running 14 disk 6465 GB 
+ot-run: ot-epyc7       admits  1209 GB (avail 897, growth 43, headroom 0, waiters 0/0 GB) load 61/96 running 18 disk 6630 GB 
+ot-run: ot-epyc8       admits  1319 GB (avail 984, growth 61, headroom 0, waiters 0/0 GB) load 60/128 running 8 disk 579 GB 
+ot-run: ot-pve1        admits   117 GB (avail 106, growth 24, headroom 0, waiters 0/0 GB) load 15/28 running 8 disk 1231 GB 
+ot-run: ot-agidock128  admits    45 GB (avail 42, growth 11, headroom 0, waiters 0/0 GB) load 29/64 running 6 disk 190 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-770091-1792405989 after 1 s
+=== SET=plan
+  [plan] FRAME_BENCH PASS col_h10 rows=6 words=10 complete_at_root=2 partials=8 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0
+PASS frame col_h10
+RC SET=plan 0
+=== SET=each
+  [0] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [2] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [3] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [4] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [6] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [7] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [8] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [9] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [11] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [12] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [13] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [14] FRAME_BENCH PASS col_h10 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+FRAME_SET col_h10 MUT=0 set=each pass=12 fail=0
+PASS frame col_h10
+RC SET=each 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-770091-1792405989): exit 0

@@ -1,0 +1,19 @@
+LP_LOCKSTEP PASS MUT=0 compared=340 cycles=200 warm=29
+LP_MISMATCH port=z cycle=30 flat=2b landed=b0
+LP_MISMATCH port=z cycle=31 flat=ff landed=c5
+LP_MISMATCH port=z cycle=32 flat=4b landed=68
+LP_MISMATCH port=z cycle=33 flat=65 landed=9a
+LP_MISMATCH port=z cycle=34 flat=4d landed=59
+LP_LOCKSTEP FAIL MUT=1 mismatches=169 of 340
+LP_MISMATCH port=z cycle=30 flat=2b landed=2a
+LP_MISMATCH port=z cycle=31 flat=ff landed=fe
+LP_MISMATCH port=z cycle=32 flat=4b landed=a9
+LP_MISMATCH port=z cycle=33 flat=65 landed=83
+LP_MISMATCH port=z cycle=34 flat=4d landed=0c
+LP_LOCKSTEP FAIL MUT=2 mismatches=170 of 340
+LP_MISMATCH port=z cycle=30 flat=2b landed=2a
+LP_MISMATCH port=z cycle=31 flat=ff landed=fe
+LP_MISMATCH port=z cycle=32 flat=4b landed=38
+LP_MISMATCH port=z cycle=33 flat=65 landed=63
+LP_MISMATCH port=z cycle=34 flat=4d landed=4b
+LP_LOCKSTEP FAIL MUT=4 mismatches=170 of 340

@@ -1,0 +1,19 @@
+{
+ "summary": {
+  "words": 12,
+  "rows": 6,
+  "complete_rows_at_root": 2,
+  "plan_exact": false,
+  "partial_words": 10,
+  "errors": 6,
+  "end": "END edges=3063 ret_words=12 xo_checked=3061 fault=4"
+ },
+ "errors": [
+  "COVERAGE row 5 segments [1, 2, 3] of 4",
+  "PLAN_MISMATCH predicted 6 ret words, got 12; first diff ((365, 2, (2, 0, 4), 1157593452, 0), (359, 1, (0, 2, 4), 3353960651, 0))",
+  "FAULT edge 323 status 11 lx 0",
+  "FAULT edge 324 status 11 lx 0",
+  "FAULT edge 325 status 11 lx 0",
+  "FAULT edge 326 status 11 lx 0"
+ ]
+}

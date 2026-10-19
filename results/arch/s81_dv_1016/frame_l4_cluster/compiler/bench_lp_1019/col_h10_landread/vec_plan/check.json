@@ -1,0 +1,20 @@
+{
+ "summary": {
+  "words": 10,
+  "rows": 6,
+  "complete_rows_at_root": 2,
+  "plan_exact": false,
+  "partial_words": 8,
+  "errors": 7,
+  "end": "END edges=3063 ret_words=10 xo_checked=3061 fault=0"
+ },
+ "errors": [
+  "MISMATCH edge 371 row 2 lo 0 k 2 n 4 got 478a9920/0 want 478937c1/0",
+  "MISMATCH edge 372 row 3 lo 0 k 2 n 4 got 48459576/0 want 4845254c/0",
+  "MISMATCH edge 379 row 4 lo 0 k 1 n 4 got c786bbaa/0 want c76943eb/0",
+  "MISMATCH edge 380 row 5 lo 0 k 1 n 4 got 467e157d/0 want 467cafa7/0",
+  "MISMATCH edge 386 row 4 lo 2 k 1 n 4 got 4774a339/0 want 4774a8f0/0",
+  "MISMATCH edge 387 row 5 lo 2 k 1 n 4 got c77d13c7/0 want c784d5b9/0",
+  "PLAN_MISMATCH predicted 10 ret words, got 10; first diff ((371, 2, (0, 2, 4), 1200175041, 0), (371, 2, (0, 2, 4), 1200265504, 0))"
+ ]
+}

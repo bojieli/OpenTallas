@@ -1,0 +1,47 @@
+{
+ "top": "lpt_top",
+ "sources": [
+  "tools/landed_parent/test/internal_reset/top.sv"
+ ],
+ "child_sources": [
+  "tools/landed_parent/test/internal_reset/child.sv"
+ ],
+ "out_dir": "tools/landed_parent/test/internal_reset/gen",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_net": "reset_local",
+ "reset_pins": [
+  "rs",
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "r0",
+   "insts": [
+    "ur",
+    "u0",
+    "uf"
+   ]
+  },
+  {
+   "name": "r1",
+   "insts": [
+    "u1"
+   ]
+  }
+ ],
+ "reschedule": true,
+ "mut_child": "u0",
+ "bench": {
+  "cycles": 200,
+  "reset_cycles": 16
+ },
+ "preserve_clock_ports": [
+  "xk"
+ ]
+}

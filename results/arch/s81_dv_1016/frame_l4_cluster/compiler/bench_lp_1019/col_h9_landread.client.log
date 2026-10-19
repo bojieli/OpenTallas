@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   478 GB (avail 443, growth 109, headroom 0, waiters 1/288 GB) load 66/128 running 25 disk 597 GB 
+ot-run: ot-epyc5       admits   583 GB (avail 591, growth 183, headroom 0, waiters 0/0 GB) load 102/128 running 23 disk 1570 GB 
+ot-run: ot-epyc6       admits   954 GB (avail 746, growth 79, headroom 0, waiters 0/0 GB) load 55/128 running 14 disk 6465 GB 
+ot-run: ot-epyc7       admits  1209 GB (avail 897, growth 43, headroom 0, waiters 0/0 GB) load 61/96 running 18 disk 6630 GB 
+ot-run: ot-epyc8       admits  1319 GB (avail 984, growth 61, headroom 0, waiters 0/0 GB) load 60/128 running 8 disk 579 GB 
+ot-run: ot-pve1        admits   117 GB (avail 106, growth 24, headroom 0, waiters 0/0 GB) load 15/28 running 8 disk 1231 GB 
+ot-run: ot-agidock128  admits    44 GB (avail 42, growth 11, headroom 0, waiters 0/0 GB) load 29/64 running 6 disk 190 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-770860-1792405990 after 1 s
+=== SET=plan
+  [plan] FRAME_BENCH FAIL col_h9 errors=11 words=14 rows=6
+FRAME_SET col_h9 MUT=landread set=plan pass=0 fail=1
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=landread col_h9
+RC SET=plan 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-770860-1792405990): exit 0
