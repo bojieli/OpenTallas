@@ -59,6 +59,11 @@ endmodule
 '''
 
 
+def block_clock(table, master, region):
+    """Use the physical master's declared domain, including peer-clock ports."""
+    return table['masters'][master].get('clock_port', f'ck_{region}')
+
+
 def region_of(bl, pitch):
     g = bl['group']
     if g.startswith('cl'):
@@ -277,7 +282,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # ------------------------------------------------------------------ netlist
     v = ['// S81-DV REAL-VIEW bound die top (tools/s81_dv/dv_bind.py) -- strict die_port_bind gates it',
          'module dv_die (']
-    io = [f'  input wire ck_{r}' for r in regions] + ['  input wire rst_n']
+    io = [f'  input wire ck_{r}' for r in regions] + [f'  input wire {p}' for p in sorted(T.get('clock_domains', {}))] + ['  input wire rst_n']
     for bl in blocks:
         m = M[bl['master']]
         for tp in m.get('top_ports', []):
@@ -337,10 +342,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             v.append(f'  {bl["master"]} u_{n} ({", ".join(cs)});')
             continue
         mod = m.get('inst_module', {}).get(n, m['module'])
-        cs = [f'.{m["clk"]}(ck_{r})'] + [f'.{x}(ck_{r})' for x in m.get('clk_extra', [])]
+        bc_ = block_clock(T, bl['master'], r)
+        cs = [f'.{m["clk"]}({bc_})'] + [f'.{x}({bc_})' for x in m.get('clk_extra', [])]
         for cp in m.get('clk_peer', []):     # a port clocked by a peer block's root (e.g. ckh = the PHY clock)
             pb_ = [b for b in blocks if b['master'] == cp['master']]
-            cs.append(f".{cp['port']}(ck_{reg[pb_[0]['name']]})")
+            cs.append(f".{cp['port']}({block_clock(T, cp['master'], reg[pb_[0]['name']])})")
         cs += abut_conn.get(n, []) + peer_conn.get(n, [])
         for cport, lanes in ckin.get(n, {}).items():
             wd_ = rtl_widths.get(mod, {}).get(cport, max(lanes) + 1)
