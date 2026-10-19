@@ -1,0 +1,3 @@
+case neg_drift done: 1 fails so far
+MU_OPSEG_FAIL mut 26: neg_drift: required fault not raised at ~18651 (opf log [])
+{"mut": 26, "cases": ["neg_drift"], "emb_t": null, "res_skew": 0, "neg_drift": {"want_edge": 18651, "opf": [], "raised": false}, "verdict": "FAIL"}

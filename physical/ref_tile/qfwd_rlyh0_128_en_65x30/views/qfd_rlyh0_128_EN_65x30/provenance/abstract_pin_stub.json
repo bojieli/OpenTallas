@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_rlyh0_128_EN_65x30.lef",
-    "sha256": "9992804ac534ba85460dc407ca595fc147f60bac310d9a56f18c2bf261be584c"
+    "sha256": "b069e54577a97a6495aa1e4fc02bdc9080f9b18dacce77c54caeed7ad0b2aaed"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_128_en_65x30-c1-c5db0537c/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_128_en_65x30-f1-fc2236d82/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_128_en_65x30-c1-c5db0537c/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_128_en_65x30-c1-c5db0537c/record/views/qfd_rlyh0_128_EN_65x30/provenance/raw/qfd_rlyh0_128_EN_65x30.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_128_en_65x30-c1-c5db0537c/record/views/qfd_rlyh0_128_EN_65x30/provenance/qfd_rlyh0_128_EN_65x30.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_128_en_65x30-f1-fc2236d82/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_128_en_65x30-f1-fc2236d82/record/views/qfd_rlyh0_128_EN_65x30/provenance/raw/qfd_rlyh0_128_EN_65x30.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_128_en_65x30-f1-fc2236d82/record/views/qfd_rlyh0_128_EN_65x30/provenance/qfd_rlyh0_128_EN_65x30.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 27 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: eb; pockets: 29 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_128_en_65x30-c1-c5db0537c/record/views/qfd_rlyh0_128_EN_65x30/provenance/qfd_rlyh0_128_EN_65x30.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfwd_rlyh0_128_en_65x30-f1-fc2236d82/record/views/qfd_rlyh0_128_EN_65x30/provenance/qfd_rlyh0_128_EN_65x30.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_rlyh0_128_EN_65x30 64.776 x 30.216: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 260 blocked-above 0 blocked-same 0; clock ck insertion 126 ps; pockets M5 0 (closed)",
+    "summary": "qfd_rlyh0_128_EN_65x30 64.776 x 30.216: PG M5 VDD 23 stripes (92% spread, 100% cov) / VSS 23 stripes (92% spread, 100% cov); strap M6; face pins 260 blocked-above 0 blocked-same 0; clock ck insertion 131 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_rlyh0_128_EN_65x30",
       "W": 64.776,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 260,
         "blocked_above": 0,
-        "covered_below": 13,
+        "covered_below": 97,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 126.41,
-          "min_ps": 100.86
+          "max_ps": 131.34,
+          "min_ps": 101.69
         }
       },
       "pockets": {
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 27
+          "added": 29
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qfd_rlyh0_128_EN_65x30.lef",
-    "sha256": "7b2613ffe8b7b927b06428bf04630c092b9ae4e4aff07d53e32f8e2efe47955d"
+    "sha256": "f7dfccdfae7eb4e31bc6356e06e563cd485cf070273765d510c63c8c6770cb86"
   }
 }

@@ -38,7 +38,9 @@ module tb_idx_vm_share2_r_lockstep;
  reg [135:0] p_rq=0;
  always @(negedge clk)begin
   #4;
-  if(checking)begin if(d_vmrq!==p_rq)begin errors++;e_rq++;if(first_err<0)first_err=cyc;end end
+  // AD3-HBM-SHARE2 10-18: bank request data is don't-care under valid 0 (the bank samples it only under valid); the valid
+  // bit of every bank and the data of every VALID request are compared exactly.
+  if(checking)begin for(integer g=0;g<8;g=g+1)if(d_vmrq[g*17+16]!==p_rq[g*17+16]||(p_rq[g*17+16]&&d_vmrq[g*17+:16]!==p_rq[g*17+:16]))begin errors++;e_rq++;if(first_err<0)first_err=cyc;end end
   p_rq=r_vmrq;
  end
  always @(posedge clk)begin

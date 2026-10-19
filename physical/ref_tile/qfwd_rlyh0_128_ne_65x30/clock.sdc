@@ -43,7 +43,13 @@ if {[llength [get_ports -quiet ck_o]]} {
   set ot_fl_wp [expr {[llength [get_ports -quiet ckf]] ? "ckf" : "ck_s"}]
   if {[llength [get_ports -quiet $ot_fl_wp]]} {
     create_clock -name lane_ckf -period $ot_fl_T [get_ports $ot_fl_wp]
-    set_propagated_clock [get_clocks lane_ckf]
+    # QK-LAND600 10-18: lane_ckf is propagated only once the tree exists (post-CTS / sign-off: core_clk already
+    # propagated, or ::ot_ref_pre_cts 0), as every other clock.  Propagating it PRE-CTS timed the landh0 ring through the
+    # single unbuffered hop-0 ICGx1 driving all 4 x W + 13 ring clock pins (W 600: 2,419 sinks, 15.5 ns slew, 1.5 ns
+    # clk->Q): the PREROUTE_MARGIN -857..-988 ps of all four qfwd_landh0_600 kits was this artifact, not logic.
+    if {!([info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts) || [get_property $ot_fl_ck is_propagated]} {
+      set_propagated_clock [get_clocks lane_ckf]
+    }
     set ot_fl_in [get_ports -quiet {a[*] ea[*] ea en[*] en}]
     if {[llength $ot_fl_in]} {
       unset_input_delay $ot_fl_in
@@ -51,8 +57,28 @@ if {[llength [get_ports -quiet ck_o]]} {
       # (OT_BH_LAUNCH_MIN_PS + OT_BH_TILE_HOLD_UNC_PS, 25 + 25; the forwarded edge is the reference, no tree term)
       set ot_fl_c [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]
       set ot_fl_u [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
+      # QK-LANDH548 10-18: the min credits the lane tree's own insertion L_min at the ring write flops, exactly as the
+      # core_clk die hold budget (io_ref_skew.sdc OT_BH: input min = L_min + C + U).  Without the L term every routed
+      # landing padded its data inputs by the whole lane_ckf insertion (548 b: 8-11 hold BUFx2 per a[*] pin, ~200 ps;
+      # landh_548_EN a[253] arrives 405 ps, native capture S + R_lane 245 / landh0_548_EW 272, en 351, > 190 on 549
+      # pins) and the die's T/2 forwarded hop paid them in setup.  The data is safe without the pads: a landh lane
+      # input is launched on the sender's ckf rise = this ckf FALL (half-cycle hop: T/2 hold margin), a landh0 input on
+      # the source root whose ck_s pin the die delivers at phi - R (native rule), so data at the pin is >= L + C late.
+      # Pre-CTS (ideal lane clock) L = 0: unchanged.  Override OT_FL_LMIN_CREDIT=0.
+      set ot_fl_l 0.0
+      if {[get_property [get_clocks lane_ckf] is_propagated] &&
+          !([info exists ::env(OT_FL_LMIN_CREDIT)] && $::env(OT_FL_LMIN_CREDIT) eq "0")} {
+        catch {sta::worst_slack_cmd max}
+        set ot_fl_lv {}
+        foreach p [all_registers -clock [get_clocks lane_ckf] -clock_pins] {
+          set a [get_property $p arrival_min_rise]
+          if {[string is double -strict $a]} { lappend ot_fl_lv $a }
+        }
+        if {[llength $ot_fl_lv]} { set ot_fl_l [tcl::mathfunc::min {*}$ot_fl_lv] }
+      }
       set_input_delay -max [expr {0.2 * $ot_fl_T}] -clock lane_ckf $ot_fl_in
-      set_input_delay -min [expr {$ot_fl_c + $ot_fl_u}] -clock lane_ckf $ot_fl_in
+      set_input_delay -min [expr {$ot_fl_l + $ot_fl_c + $ot_fl_u}] -clock lane_ckf $ot_fl_in
+      puts "OT_FWD_LANE: lane inputs min = L_min $ot_fl_l + C $ot_fl_c + U $ot_fl_u (lane_ckf ring write flops)"
     }
     set_false_path -from [get_clocks lane_ckf] -to $ot_fl_ck
     set_false_path -from $ot_fl_ck -to [get_clocks lane_ckf]

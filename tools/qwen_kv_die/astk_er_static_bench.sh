@@ -15,7 +15,7 @@ S=$R/rtl/qwen_sys/split_20261014
 SRC="$R/rtl/test/qwen_kv_die/tb_qkd_astk_strip_er_st.sv $S/qkd_astk_strip_er_st.sv $S/qkd_astk_er_tap_st.sv $S/qkd_astk_strip_st.sv
  $S/qkd_astk_static_leaves.sv $R/rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv
  $S/qkd_astk_cal_gen.sv $S/qkd_astk_native_stack_w4_gen.sv $S/qkd_astk_native_er_service_w.sv
- $R/rtl/hdc/ot_hdc_delay.sv $R/rtl/hdc/ot_hdc_fp32_add_lat.sv $R/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv
+ $R/rtl/qwen_sys/split_20261014/qkd_astk_phys.sv $R/rtl/hdc/ot_hdc_delay.sv $R/rtl/hdc/ot_hdc_fp32_add_lat.sv $R/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv
  $R/rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv $R/rtl/hdc/ot_hdc_sfu.sv $R/rtl/hdc/ot_hdc_prefix.sv $R/rtl/hdc/ot_hdc_fastfp.sv
  $R/rtl/hdc/ot_hdc_fp32_mul_lat.sv $M/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v
  $M/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v"

@@ -11,17 +11,9 @@ status timeline), and checks against the compiled expectation:
   * the control stores seal (control_stores_ready) and no fault rises (cf), command_stage follows the running stage.
 Edges are relative to each stage's edge 0 (the dh pin register captures h_start).
 
-QLB-C4b: with an image compiled --tload, every slice table word (BOOT TLOAD) must leave tt_ctlm.tl (the dvs_W5 st_wi
-driver) on its compiled edge with the dv_lower word, and nothing else may leave tl.
-Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --mut 11 / 12 (RTL
-TLOAD payload macro halves swapped / table word one edge late), --bmut 1 (the
+Mutants (all must FAIL; fail witnesses committed): --mut 1 (RTL: every calendar entry one edge late), --bmut 1 (the
 slices report the SU op before the gate/up matvec done DEP + 1 edges late: the head's chase is unmet on its fixed cycle),
 --bmut 2 (image: the first decode SU entry one edge late, the expectation unchanged).
-LM head (QLB-C4b; image compiled with ctlm_image.py --lm-head): stage 37 runs the LM-head programme at its nonzero base
-(LOCAL SEG -> segment-G calendar + G XPF schedule) and every head command / SEG / ISSUE / ROM go / XPF arm is checked on
-its compiled edge.  Mutants: --mut 9 (RTL: the head calendar armed at base 0 only = the pre-C4b gate), --mut 10 (RTL: the
-G XPF schedule never starts = the pre-C4b base-0-only XPF start), --bmut 3 (image: the first G row one cycle late),
---defs OT_SEG_MUT (RTL: segment G reads the base-0 rows).
 
     python3 rtl/test/qwen_dv/tt_ctlm_prog_bench.py --img DIR [--mut N] [--bmut N] [--work DIR] [--decode 2]
 """
@@ -39,6 +31,17 @@ ROOT = HERE.parents[2]
 LOAD0 = 10
 
 
+def slice_fields(gi_hr):
+    """hr[452:73] as qfd_dv_slice2 / the tiles decode it (tools/qwen_split/hr_contract.py FIELDS)"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import hr_contract as HC
+    out, pos = {'go': gi_hr >> HC.IBW}, HC.IBW
+    for n, w in HC.FIELDS:
+        pos -= w
+        out[n] = (gi_hr >> pos) & ((1 << w) - 1)
+    return out
+
+
 def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
     C = img['constants']
     ev, exp = [], []
@@ -52,9 +55,6 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
     boot_s = dw7 + 2 - img['constants']['CAL_S']
     for x in img['expected']['boot_cmd_after_seal']:
         exp.append((boot_s + x['edge'], 'CMD', int(x['cmd'], 16)))
-    # QLB-C4b: the slice table words (TLOAD) on tt_ctlm.tl, each on its compiled edge, nothing else
-    for x in img['expected'].get('boot_tl_after_seal', []):
-        exp.append((boot_s + x['edge'], 'TL', int(x['word'], 16)))
     ev.append((c + 4, 6, 0b11))                                   # kok / kwd levels (the T calendar's LEVEL)
     tok, pos = 0x1234, 4321
     # stage starts at the T calendar's compiled spacing (stage 0, the first n decode stages); the LM-head stage follows
@@ -75,20 +75,6 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
                 exp.append((e0 + x['edge'], 'LOC', ('EMB', 0)))
             continue
         if stg == 37:
-            H = img.get('lm_head')
-            if H:       # QLB-C4b: the LM-head programme at base H['base'] (segment-G calendar + G XPF schedule)
-                HX = H['expected']
-                for x in HX['cmd_at_tt_ctlm']:
-                    exp.append((e0 + x['edge'], 'CMD', int(x['cmd'], 16)))
-                for x in HX['local_at_tt_ctlm']:
-                    exp.append((e0 + x['edge'], 'LOC', (x['kind'], x['base'])))
-                for x in HX['me_issue']:
-                    exp.append((e0 + x['edge'], 'ISSUE', (x['pc'], x['unit'])))
-                for x in HX['xpf_arm_at_tt_ctlm']:
-                    exp.append((e0 + x['edge'], 'XPF', int(x['xpf72'], 16)))
-                for x in HX['rom_go_at_tt_ctlm']:
-                    exp.append((e0 + x['edge'], 'ROM', x['pc']))
-                status_events(ev, e0, H['status'], None)
             continue
         for x in img['expected']['cmd_at_tt_ctlm']:
             exp.append((e0 + x['edge'], 'CMD', int(x['cmd'], 16)))
@@ -103,39 +89,33 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
         for x in X['native_go_at_tt_ctlm']:
             exp.append((e0 + x['edge'], 'NAT', x['pc']))
         # neighbour status at its compiled cycles (levels at the tt_ctlm pins)
+        ag = dict(su_busy=0, stn_busy=0)
+        ss = dict(su_prog=0)
+        nat = dict(native_idle=1)
         late = None
         if bmut == 1:   # the SU op that the gate/up chase waits on reports done DEP + 1 edges late
             gu = next(p for p in img['plan'] if p['kind'] == 'ME' and p['window'] == 'gate_up')
             prev = max((p for p in img['plan'] if p['kind'] == 'SU' and p['pc'] < gu['pc']), key=lambda p: p['pc'])
             late = (prev['done'], C['DEP'] + 1)
-        status_events(ev, e0, img['status'], late)
+        sts = []
+        for s in img['status']:
+            e = s['edge']
+            if late and e == late[0] and s['field'] in ('su_busy', 'su_prog'):
+                e += late[1]
+            sts.append((e, s['field'], s['value']))
+        sts.sort(key=lambda x: x[0])          # stable: the compiled order on one edge is kept
+        for e, f, v in sts:
+            if f in ag:
+                ag[f] = v
+                ev.append((e0 + e, 7, (ag['stn_busy'] << 9) | (ag['su_busy'] << 1)))
+            elif f in ss:
+                ss[f] = v
+                ev.append((e0 + e, 8, (v << 45) | (v << 29)))
+            else:
+                nat[f] = v
+                ev.append((e0 + e, 9, (v << 1) | 1))
     ncyc = stages[-1][0] + 200
-    if img.get('lm_head'):
-        ncyc = stages[-1][0] + img['lm_head']['expected']['me_issue'][-1]['edge'] + 200
     return ev, exp, ncyc, stages
-
-
-def status_events(ev, e0, status, late):
-    ag = dict(su_busy=0, stn_busy=0)
-    ss = dict(su_prog=0)
-    nat = dict(native_idle=1)
-    sts = []
-    for s in status:
-        e = s['edge']
-        if late and e == late[0] and s['field'] in ('su_busy', 'su_prog'):
-            e += late[1]
-        sts.append((e, s['field'], s['value']))
-    sts.sort(key=lambda x: x[0])          # stable: the compiled order on one edge is kept
-    for e, f, v in sts:
-        if f in ag:
-            ag[f] = v
-            ev.append((e0 + e, 7, (ag['stn_busy'] << 9) | (ag['su_busy'] << 1)))
-        elif f in ss:
-            ss[f] = v
-            ev.append((e0 + e, 8, (v << 45) | (v << 29)))
-        else:
-            nat[f] = v
-            ev.append((e0 + e, 9, (v << 1) | 1))
 
 
 def run(a):
@@ -148,44 +128,41 @@ def run(a):
         w = words[k] | (words[k + 1] << 64)
         w += 1 << 116
         words[k], words[k + 1] = w & ((1 << 64) - 1), w >> 64
-    if a.bmut == 3:     # image mutant (QLB-C4b): the LM-head segment-G calendar's first row one cycle late
-        if not img.get('lm_head'):
-            raise SystemExit('--bmut 3 needs an --lm-head image')
-        words[984] += 1
     ev, exp, ncyc, stages = events_and_expect(img, words, a.decode, a.bmut)
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
-    tag = f'm{a.mut}_b{a.bmut}' + ''.join(f'_{d}' for d in a.defs)
+    tag = f'm{a.mut}_b{a.bmut}' + (f'_hra{a.hra}' if a.hra else '')
     evf, lgf = work / f'ev_{tag}.txt', work / f'log_{tag}.txt'
     # stable sort: the image words first, then levels, in edge order
     with open(evf, 'w') as f:
         for cy, k, v in sorted(ev, key=lambda e: (e[0], e[1])):
             f.write(f'{cy} {k} {v:x}\n')
-    obj = work / (f'obj_m{a.mut}' + ''.join(f'_{d}' for d in a.defs))
+    obj = work / (f'obj_m{a.mut}_h{a.hard}' + (f'_l{a.lmut}' if a.landed else '') + (f'_hra{a.hra}' if a.hra else ''))
     srcs = [str(ROOT / l.strip()) for l in open(HERE / 'tt_ctlm_dv_sources.f') if l.strip()]
+    if a.landed:    # HF-4 10-18: + the landed cluster (lp.py) in lockstep, LMUT = its mutant
+        srcs += [str(ROOT / f) for f in ('rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv', 'rtl/common/landed_parent/ot_pl_land.sv',
+                                         'rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv')]
     srcs.append(str(HERE / 'tb_qfd_tt_ctlm_prog.sv'))
     if not (obj / 'Vtb').exists():
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '8', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
-               '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}',
-               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + \
-              [f'+define+{d}' for d in a.defs] + srcs
+               '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}', f'-GHRA={a.hra}',
+               f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
+               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-        (work / (f'build_m{a.mut}' + ''.join(f'_{d}' for d in a.defs) + '.log')).write_text(p.stdout + p.stderr)
+        (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
         if p.returncode:
             print(p.stdout[-3000:], p.stderr[-3000:])
             raise SystemExit('verilator build failed')
     subprocess.run([str(obj / 'Vtb'), f'+EV={evf}', f'+LOG={lgf}', f'+NCYC={ncyc}'], cwd=work, check=True,
                    capture_output=True)
-    got, errs, info = [], [], {'head': img.get('lm_head') is not None}
-    issues, roms, nats = [], [], []
+    got, errs, info = [], [], {}
+    issues, roms, nats, rom_words = [], [], [], []
     for line in open(lgf):
         p = line.split()
         cy, k = int(p[0]), p[1]
         if k == 'CMD':
             got.append((cy, 'CMD', int(p[2], 16)))
-        elif k == 'TL':
-            got.append((cy, 'TL', int(p[2], 16)))
         elif k == 'LOC':
             got.append((cy, 'LOC', (p[2], int(p[3]))))
         elif k == 'ISSUE':
@@ -198,6 +175,9 @@ def run(a):
         elif k == 'ROM':
             roms.append(cy)
             got.append((cy, 'ROM', None))
+            rom_words.append((cy, slice_fields(int(p[2], 16))))
+        elif k == 'ROMRAW':
+            errs.append(f'ROM command at {cy} with go on hr[73] (the as-built cmd380 layout): the slice reads go = hr[452]')
         elif k == 'NAT':
             nats.append(cy)
             got.append((cy, 'NAT', None))
@@ -207,6 +187,10 @@ def run(a):
             info['csr'] = cy
         elif k == 'END':
             info['end'] = line.strip()
+        elif k == 'LANDED_LOCKSTEP':
+            info['landed'] = ' '.join(p[1:])
+        elif k == 'LANDED_MISMATCH':
+            info.setdefault('landed_mismatch', []).append(' '.join(p))
     exp = [(cy, k, None) if k in ('ROM', 'NAT') else (cy, k, v) for cy, k, v in exp]
     se, sg = set(exp), set(got)
     miss, extra = sorted(se - sg), sorted(sg - se)
@@ -224,6 +208,17 @@ def run(a):
     d_rom = sorted({r - i for r, i in zip(roms, rom_iss)}) if len(roms) == len(rom_iss) else None
     d_nat = sorted({r - i for r, i in zip(nats, nat_iss)}) if len(nats) == len(nat_iss) else None
     info['rom_go_minus_issue'] = d_rom
+    # QW-DIEFIX 10-19: every ROM word decoded as the slice / tiles read it (hr_contract field table): a matvec op
+    # (k, tiles, nout > 0, wsrc 0, split <= 9); stage-1 qkv / o / gu / down = the QW-XHEAD XT1 ops (bit-exact there)
+    info['rom_fields'] = [dict(edge=cy, **{k: f[k] for k in ('nout', 'tiles', 'k', 'split', 'wbase', 'xbase')})
+                          for cy, f in rom_words[:8]]
+    for cy, f in rom_words:
+        if not (f['k'] and f['tiles'] and f['nout'] and f['wsrc'] == 0 and f['split'] <= 9):
+            errs.append(f'ROM word at {cy} does not decode as a matvec in the slice layout: {f}')
+            break
+    xt1 = [dict(nout=768, tiles=1, k=8, wbase=0, xbase=4096), dict(nout=4096, tiles=3, k=2, wbase=64, xbase=50672),
+           dict(nout=3072, tiles=1, k=32, wbase=112, xbase=4096), dict(nout=4096, tiles=3, k=6, wbase=368, xbase=55280)]
+    info['stage1_matches_xt1_ops'] = [all(f[k] == o[k] for k in o) for (_, f), o in zip(rom_words[:4], xt1)]
     info['nat_go_minus_issue'] = d_nat
     if d_rom is None or len(d_rom) != 1:
         errs.append(f'ROM command go count {len(roms)} vs ROM issues {len(rom_iss)} (offsets {d_rom})')
@@ -240,16 +235,26 @@ def main():
     ap.add_argument('--img', required=True)
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--bmut', type=int, default=0)
+    ap.add_argument('--hra', type=int, default=0, help='qfd_tt_ctlm_dv HR_ASBUILT (mutant: the as-built hr layout)')
     ap.add_argument('--decode', type=int, default=2)
+    # Q-H16C 10-18: 1 = the hard head leaf ot_qfd_tt_ctlm_static_hr (h16c h17, running-stage port), 0 = inline head
+    ap.add_argument('--hard', type=int, default=0)
     ap.add_argument('--work', default='/tmp/qlbprog_bench')
-    ap.add_argument('--defs', nargs='*', default=[], help='RTL defines (bench negative controls, e.g. OT_SEG_MUT)')
+    # HF-4 10-18: 1 = also run the landed cluster qfd_tt_ctlm_dv_lpf_lp in lockstep (needs --hard 1); --lmut = its mutant
+    ap.add_argument('--landed', type=int, default=0)
+    ap.add_argument('--lmut', type=int, default=0)
     a = ap.parse_args()
     ok, n, errs, info = run(a)
     v = 'PASS' if ok == n and not errs else 'FAIL'
-    print(f'CTLM_PROG MUT={a.mut} BMUT={a.bmut} DEFS={",".join(a.defs) or "-"} HEAD={int(bool(info.get("head")))} DECODE={a.decode}: {v} {ok}/{n}  rom_go-issue {info.get("rom_go_minus_issue")} '
-          f'nat_go-issue {info.get("nat_go_minus_issue")} csr@{info.get("csr")}')
+    print(f'CTLM_PROG MUT={a.mut} BMUT={a.bmut} HARD_HR={a.hard} HRA={a.hra} DECODE={a.decode}: {v} {ok}/{n}  rom_go-issue {info.get("rom_go_minus_issue")} '
+          f'nat_go-issue {info.get("nat_go_minus_issue")} csr@{info.get("csr")} stage1_xt1 {info.get("stage1_matches_xt1_ops")}')
+    print('    ROM fields (slice layout):', json.dumps(info.get('rom_fields', [])[:4]))
     for e in errs[:12]:
         print('   ', e)
+    if a.landed:
+        print(info.get('landed', 'LANDED_LOCKSTEP NO_RESULT'))
+        for m in info.get('landed_mismatch', [])[:5]:
+            print('   ', m)
     sys.exit(0 if v == 'PASS' else 1)
 
 

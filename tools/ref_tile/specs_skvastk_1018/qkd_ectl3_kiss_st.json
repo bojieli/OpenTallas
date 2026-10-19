@@ -1,0 +1,234 @@
+{
+ "name": "qkd_ectl3_kiss_st",
+ "top": "qkd_ectl3_kiss_st",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv"
+ ],
+ "defines": [
+  "KVD_ECTLK_HARD"
+ ],
+ "hard_define": "KVD_ECTLK_HARD",
+ "params": {},
+ "clock": "entries",
+ "clock_port": "ck[0]",
+ "clock_ports": [
+  "ck[0]",
+  "ck[1]",
+  "ck[2]"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 725.76,
+  "h": 261.36,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_static_ectla_k3/views/qkd_static_ectla_kiss",
+   "count": 1,
+   "inst": "u_a",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ectl_b_tp8_direct_pg16/views/qkd_ectl_b_tp8_direct",
+   "count": 1,
+   "inst": "u_b",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ectl_c_st/views/qkd_ectl_c_st",
+   "count": 1,
+   "inst": "u_c",
+   "at": [
+    561.6,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "kgo",
+   "epoch",
+   "layer",
+   "fault",
+   "req_valid",
+   "req_t",
+   "req_v",
+   "req_epoch",
+   "req_layer",
+   "rsp_valid",
+   "rsp_data",
+   "rsp_t",
+   "rsp_v",
+   "rsp_epoch",
+   "rsp_layer"
+  ],
+  "E": [
+   "si",
+   "so"
+  ],
+  "S": [
+   "t0",
+   "e0",
+   "e1",
+   "s0",
+   "s1",
+   "rst_n",
+   "cfg"
+  ],
+  "N": [
+   "t1",
+   "e2",
+   "e3",
+   "s2",
+   "s3",
+   "ck"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_kv_ectl3_kiss_st_1018/qkd_ectl3_kiss_st.tcl",
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Parent is wires only (assign-only t0 / t1 concatenation); the hard children own every registered endpoint and the ECTL static calendar constants count their boundary edges (QK_ISSUE_AGE / ROW_RETURN_LAT / HXK); a parent pin register would shift the fixed-cycle K issue / row return. Parent wires are part of the die hop budget."
+ },
+ "slot_change_request": "S-KVASTK 2026-10-18: the die ECTL slot (kv_die ECTL 648 x 129.6, A | B | C abutted) no longer holds the frame: A k3 is 172.8 x 194.4 (ECTLA-2 re-aspect). Hardened frame = 725.76 x 261.36 (children on the 43.2 lattice with >= 20 um channels). KV die lead (KV-WIRE2 / KV-PLAN4): re-grant the ectl_<st>_<g> slots at this outline or bind the children directly (kv_expand frame plan).",
+ "structural_change": "S-KVASTK 2026-10-18: the static ECTL frame qkd_ectl3_kiss_st (die master qkd_ectlk x32) hardened as a WIRES-ONLY cluster of its three CLOSED views: A qkd_static_ectla_kiss (qkd_static_ectla_k3-r3-828d82516, CRITICAL), B qkd_ectl_b_tp8_direct (pg16 view: STATIC_QK 1 / RRL 21 / HXK 13 = the frame's die parameters; the base kit view is at the module defaults STATIC_QK 0 / RRL 9 / HXK 0 and would be functionally wrong here), C qkd_ectl_c_st (qkd_ectl_c_st-v1-f88e1e2c0). Children bottom-aligned on the 43.2 lattice (A x 43.2, B x 259.2, C x 561.6; y 43.2) so A.rs_o / B.rs_i and B.x_i / C.x_b keep their grant y (straight 43-um seams); C.x_a -> A.x_i (52 b) crosses B on M6. No parent logic (assign-only concatenation of t0 / t1), so no std-cell band. Exact io_tcl: every frame pin is the straight projection of its child pin (C's t0_q / t1_q / si / so runs spread in bit order to <= 5.3/um). Clock: three ENTRIES ck[0..2] on the N face straight above each child's ck pin (die delivers phi - R_i per entry; no parent tree). RTL: `ifndef KVD_ECTLK_HARD keeps the parameter overrides for simulation; the hard path instantiates the views without overrides (textbook_lint hard_child_params).",
+ "job": {
+  "owner": "Claude:KV-ECTL4 10-18",
+  "branch": "claude/kv-ectl4-1018",
+  "tag": "e4",
+  "purpose": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): the die binds this frame #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)) (one K round trip for all 32 frames, kv_k_rt_eq request-chain pads; QK = RL + 11 is the exact minimum: QK 90 fails SRAM row mismatch, bench_witness_ectl4/k_rule_qk90.log) and grants the 725.76 x 261.36 slot (kv_die OT_KV_ECTL_ST_FRAME, kit pins). The children must be the views re-hardened at those values: A qkd_static_ectla_k4 (RESPONSE_LAT 80 / QK 91), B qkd_ectl_b_tp8_direct_rt80, C qkd_ectl_c_st_rt80 (ROW_RETURN_LAT 87 / QK 91): same outlines and pin plans as k3 / pg16 / c_st, so this gate (on the k3 / pg16 / c_st views) is the frame geometry; swap the children views to the rt80 views when they close. | ",
+  "benches": [
+   {
+    "name": "ectl_kiss_st_k_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS ectl_kiss_st_k RL 80 QK 91 mut 0: 36 layers",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_pass.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_layer_mutant",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "request identity",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_mut5_layer.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_late_landing_mutant",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k8 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "late landing response faulted",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_mut8_late.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_qk_minus1_mutant",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k9 9",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "consume slot",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/k_mut9_qkm1.log"
+   },
+   {
+    "name": "ectl3_kiss_st_lockstep_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: RL 80 QK 91",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/l_pass.log"
+   },
+   {
+    "name": "ectl_c_st_fault_mutant_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/l_mut1.log"
+   },
+   {
+    "name": "ectl_c_st_q_mutant_die",
+    "cmd": "RL=80 QK=91 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4/l_mut2.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/qkd_ectl_b_tp8_direct_pg16/views/qkd_ectl_b_tp8_direct",
+   "physical/ref_tile/qkd_ectl_c_st/views/qkd_ectl_c_st",
+   "physical/ref_tile/qkd_static_ectla_k3/views/qkd_static_ectla_kiss",
+   "results/arch/qwen_kv_ectl3_kiss_st_1018",
+   "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4",
+   "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_kv_die/ectl3_kiss_st_pins.py",
+   "tools/qwen_static_kv"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl3_kiss_st/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl3_kiss_st"
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "kv_ectl4": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): the die binds this frame #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)) (one K round trip for all 32 frames, kv_k_rt_eq request-chain pads; QK = RL + 11 is the exact minimum: QK 90 fails SRAM row mismatch, bench_witness_ectl4/k_rule_qk90.log) and grants the 725.76 x 261.36 slot (kv_die OT_KV_ECTL_ST_FRAME, kit pins). The children must be the views re-hardened at those values: A qkd_static_ectla_k4 (RESPONSE_LAT 80 / QK 91), B qkd_ectl_b_tp8_direct_rt80, C qkd_ectl_c_st_rt80 (ROW_RETURN_LAT 87 / QK 91): same outlines and pin plans as k3 / pg16 / c_st, so this gate (on the k3 / pg16 / c_st views) is the frame geometry; swap the children views to the rt80 views when they close.",
+ "purpose": "KV-ECTL4 2026-10-18 (coordinator 0gs (d)): the die binds this frame #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91)) (one K round trip for all 32 frames, kv_k_rt_eq request-chain pads; QK = RL + 11 is the exact minimum: QK 90 fails SRAM row mismatch, bench_witness_ectl4/k_rule_qk90.log) and grants the 725.76 x 261.36 slot (kv_die OT_KV_ECTL_ST_FRAME, kit pins). The children must be the views re-hardened at those values: A qkd_static_ectla_k4 (RESPONSE_LAT 80 / QK 91), B qkd_ectl_b_tp8_direct_rt80, C qkd_ectl_c_st_rt80 (ROW_RETURN_LAT 87 / QK 91): same outlines and pin plans as k3 / pg16 / c_st, so this gate (on the k3 / pg16 / c_st views) is the frame geometry; swap the children views to the rt80 views when they close. | "
+}

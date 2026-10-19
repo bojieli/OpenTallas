@@ -146,8 +146,9 @@ class Die:
             k = self.strap(ld[lk], 'k') if lk in ld else None
             e = self.E.get(lk, {}).get('E')
             n = len(st.get(lk, []))
-            # half-cycle stations: one T/2 each; landing: last station -> o = E + 1 edges (ot_s81_land contract)
-            age = (math.ceil(n / 2) + e + 1) if lk in ld else n / 2
+            # half-cycle stations: one T/2 each; landing: last station -> o = K + 1 edges (ot_s81_land contract, gate
+            # calendar R0 = G + N mod 2).  S81-LBGAP/G8: the die.v K strap (bundle age), E only when no strap is bound
+            age = (math.ceil(n / 2) + (k if k is not None else e) + 1) if lk in ld else n / 2
             self.links[lk] = dict(stations=n, landing=ld.get(lk), K=k, E=e, src=src, dst=dst, age_edges=age,
                                   land_master=self.inst[ld[lk]]['master'] if lk in ld else None)
 
@@ -405,6 +406,7 @@ class Prog:
         self.gunit_rows = []
         self.svc = []
         self.notes = []
+        self.mu_ctx = False          # MU-S81/TOK: the layer's first V command carries the user context (context 1)
 
     def template(self, name, payload):
         if payload in self.templates:
@@ -480,7 +482,9 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
           for k in range(5)]
     tx = prog.template(f'{which}.XFIN_GO', ctl_payload(smask, 1, 0, xfin_go(eps)))
     t = t0
-    prog.vrow(eng, t, th, what=f'{which} HLOAD {sl}')
+    # MU-S81/TOK (--mu-ctx, default off = byte-identical): the HLOAD beat carries the user's context header
+    # body[159:108] = {user 10, pos 21, tok 21} (seq_host context 1; HLOAD's template leaves those bits 0)
+    prog.vrow(eng, t, th, ctx=1 if prog.mu_ctx else 0, what=f'{which} HLOAD {sl}' + (' +ctx' if prog.mu_ctx else ''))
     prog.events.append(dict(cycle=t + lat, inst=sl, port=cp['entry_port'],
                             dir='in', kind='CTL', tag=f'{which}.HLOAD', payload=f'template {th}'))
     t += BEAT['hload_slot']
@@ -533,7 +537,7 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, mu_ctx=False):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -541,6 +545,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
     sched = layer_schedule(tree, layer, wl)
     sl = sl if sl.startswith('u_') else f'u_{sl}'
     prog = Prog(die)
+    prog.mu_ctx = mu_ctx
     low = []
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
@@ -615,6 +620,38 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
     return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub)
 
 
+# ================================================================================================= multi-user (MU-S81)
+# MU-S81 10-18: the layer programme is ONE per-stage programme for every user (the shift lemma: user k = the reference
+# schedule shifted by k slots, tools/s81_dv/dv_mu_calendar.py).  What changes per slot is data, not the calendar rows:
+# the V-command context body {user 10, pos 21, tok 21} (dsdv_seq_host context 1 = body[159:108]) and the per-user HBM
+# region bases the svc job words carry (WB window ring, SB compressed rows, IKB index keys) on the user's group copy.
+MU_LAYER_GROUP = {'L0': 'S000', 'L2': 'S002', 'L14': 'S020', 'L20': 'S029'}
+
+
+def mu_ctx_body(user, pos, tok=0):
+    """dsdv_seq_host V context 1: body[159:108] = {user 10, pos 21, tok 21} (seq_host header, arg [8:7] = 1)"""
+    assert 0 <= user < 1 << 10 and 0 <= pos < 1 << 21 and 0 <= tok < 1 << 21
+    return ((user << 42) | (pos << 21) | tok) << 108
+
+
+def mu_slot_tables(cal, layer, pos0=0):
+    """per-slot rows of this layer's stage group from a dv_mu_calendar record: {slot, user, kind, copy, local, start,
+    pos0, stride, wb/sb/ikb, ctx_body (hex)}; the latency user is slot 0 on copy A"""
+    gid = MU_LAYER_GROUP[layer]
+    tab = cal['tables'][gid]
+    stride = cal['pos']['stride']
+    slot_of = {s_['user']: s_['slot'] for s_ in cal['slots']}
+    rows = []
+    for r in tab['rows']:
+        p0 = pos0                       # every user starts its own context at pos0 (per-user KV state)
+        rows.append(dict(slot=slot_of[r['user']], **r, pos0=p0, stride=stride,
+                         ctx_body=f"{mu_ctx_body(r['user'], p0):040x}"))
+    assert rows and rows[0]['user'] == 0 and rows[0]['copy'] == 'A' and rows[0]['start'] == min(x['start'] for x in rows)
+    return dict(schema='opentallas.s81_dv.mu_slots.v1', layer=layer, group=gid, mode=cal['mode'],
+                period=cal['period'], slot=cal['slot'], copies=tab['copies'], users_per_copy=tab['users_per_copy'],
+                lemma=cal['lemma']['brute_force']['result'], rows=rows)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--layer', required=True, choices=list(LAYERS) + list(SPECIAL))
@@ -623,9 +660,19 @@ def main(argv=None):
     ap.add_argument('--die-ref', default=DIE_REF)
     ap.add_argument('--die-src', default=None, help='an extracted die-ref tree (else git archive of --die-ref)')
     ap.add_argument('--workload', default=None, choices=('ar', 'mtp'))
+    ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
+    ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     a = ap.parse_args(argv)
+    if a.mu_cal:
+        t = mu_slot_tables(json.loads(Path(a.mu_cal).read_text()), a.layer)
+        Path(a.out, 'prog').mkdir(parents=True, exist_ok=True)
+        Path(a.out, 'prog/mu_slots.json').write_text(json.dumps(t, indent=1) + '\n')
+        print(f"MU {a.layer} {t['group']}: {len(t['rows'])} slots, copies {t['copies']} {t['users_per_copy']}, "
+              f"lemma {t['lemma']}")
+        if a.layer not in LAYERS:
+            return
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload)
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, mu_ctx=a.mu_ctx)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

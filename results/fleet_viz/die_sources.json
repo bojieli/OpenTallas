@@ -112,6 +112,34 @@
  ],
  "aliases": {},
  "supersede": {
+  "dsfd_bf_col_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_col_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_fp_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_seg_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_red_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_lane4_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_v41_bf_lane4r_cl": {
+   "by": "ot_v41_bf_col (compact199)",
+   "reason": "leaf of dsfd_bf_col_cl (ot_v41_bf_col_cl); 0 inst in the S81 frame RTL (frames bind dsfd_bf_col = ot_v41_bf_col compact199); COORD 0ja option A (compact199 re-route) chosen, the _cl column is the unused fallback | COORD 10-19 (ROOT-LANDEDHC); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
   "ot_s81_kp4_dec": {
    "by": "ot_pdie_serdes",
    "reason": "kp4 decoder is a child of the SerDes PHY-digital parent (S81 p4l)"
@@ -307,6 +335,34 @@
   "qkd_seq_st": {
    "by": "qkd_seq_static",
    "reason": "kvs14b kit bind v2"
+  },
+  "ot_hgi_sm_xload_cl2_ctlw": {
+   "by": "ot_hgi_sm_xload_cl2_ctlx",
+   "reason": "0 inst in d4g GEN2 pb0; ctlx = ctlw EGRESS_SPLIT 1, die-connected ports (AD-HBM-SUK) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_s81_kp4_deca": {
+   "by": "ot_s81_kp4_dec",
+   "reason": "two-tile r33 sub-tile; streaming kp4_dec binds dsyn/ddly/dchn/dout; 0 inst in p4l3 (AD-S81-LINK, 4757cba8a) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_s81_kp4_decb": {
+   "by": "ot_s81_kp4_dec",
+   "reason": "as ot_s81_kp4_deca (AD-S81-LINK) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_s81_su_sm": {
+   "by": "ot_s81_su_sms",
+   "reason": "no module, 0 inst in p4l; SU head = ot_s81_su_sms (smq + smh{smhq,smhr}) in dsdv_svc_rs (AD-S81-SVC) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_hbm_idx_rootctl_static": {
+   "by": "ot_hbm_idx_rootctl_static_am",
+   "reason": "idx pair rebind (264-b argmax_m); H-D4G binds _am r4 in GEN2b (AD-HBM-IDXK) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "ot_hbm_argmax_static_sw_vm": {
+   "by": "ot_hbm_argmax_static_sw_vm_r2",
+   "reason": "idx pair rebind with rootctl_static_am; r2 CLOSED 3ba44f68e (AD-HBM-IDXK) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
+  },
+  "qkd_astk_strip_s": {
+   "by": "qkd_astk_strip_er_die",
+   "reason": "0 inst in kvs14p port_bind_v2; 4 x qkd_astk_strip_er_die (AD-KV-ASTK) | COORD 0ix 10-19 (HOURLY-ROOT); source_evidence in ~/claude-takeover-20261007/superseded_elements.json"
   }
  },
  "alias_rules": [

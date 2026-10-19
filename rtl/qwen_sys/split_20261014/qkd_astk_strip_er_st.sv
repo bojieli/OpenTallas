@@ -24,6 +24,7 @@
 
 module qkd_astk_strip_er_st #(
     parameter integer RL = 1,
+    parameter integer DISTRIBUTED_ER = 0,
     parameter integer Z_STRIDE = 4,
     parameter integer N = 4
 ) (
@@ -58,10 +59,16 @@ module qkd_astk_strip_er_st #(
         assign esi[64*e +: 64] = si[633*e+569 +: 64];
         assign com[16*e +: 16] = si[633*e+537 +: 16];
     end endgenerate
+    generate if (DISTRIBUTED_ER) begin : g_er_chain
+        qkd_astk_er_chain_st #(.N(N), .RL(RL)) u_er (.ck(ck_er), .rst_n(rst_n), .read_v(read_v), .read_addr(read_addr),
+            .eso_v(eso_v), .aso(aso), .esi(esi), .com(com), .response_v(response_v), .response_addr(response_addr),
+            .response_data(response_data), .fault(er_fault));
+    end else begin : g_er_star
     qkd_astk_er_tap_st #(.N(N), .ERL(3)) u_er (.ck(ck_er), .rst_n(rst_n), .read_v(read_v), .read_addr(read_addr),
         .eso_v_lo(eso_v[3:0]), .eso_v_hi(eso_v[7:4]), .aso_lo(aso[0 +: 52]), .aso_hi(aso[52 +: 52]),
         .esi_lo(esi[0 +: 256]), .esi_hi(esi[256 +: 256]), .com_lo(com[0 +: 64]), .com_hi(com[64 +: 64]),
         .response_v(response_v), .response_addr(response_addr), .response_data(response_data), .fault(er_fault));
+    end endgenerate
     qkd_astk_strip_st #(.RL(RL), .Z_STRIDE(Z_STRIDE)) u_strip (.ck_c(ck_c), .ck_z(ck_z), .ck_x(ck_x), .ck_e(ck_e),
         .ck_r(ck_r), .rst_n(rst_n), .st(st), .aq(aq), .am(am), .cal(cal), .ap(ap), .af(af), .lt(lt), .so(so_s), .si(si));
 endmodule

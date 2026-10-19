@@ -33,7 +33,14 @@
 module ot_s81_retn_static #(
     parameter integer WIN = 2,           // sibling window, edges (>= 1)
     parameter integer RST = 1,           // output register stages (wire reach), as ot_v41_retn_w17w10
-    parameter integer MUT = 0            // bench mutants only: 1 window off by one, 2 forward slot +1, 3 fault blind
+    parameter integer MUT = 0,           // bench mutants only: 1 window off by one, 2 forward slot +1, 3 fault blind
+    // DLR (S81U-CAP4 2026-10-17, default 0 = the shift form, netlist unchanged for every existing node tile): the two
+    // AL-deep side-band lanes (q_asb + u_asb, q_fsb + u_fsb: (34+SW) + (66+SW) bits x 6 registers) as cycle-exact
+    // register-file delay lines ot_hdc_delay_rf D = AL + 1 (input register = the old q_*sb, N = AL - 1 rows written once
+    // and read through the N:1 mux, output register), so no zero-logic flop -> flop hop is left in them.  Same flop count,
+    // same edges.  Why: s81sl_cap_tr route 9df7f8153 (3 nodes, 6,200 sinks) NEEDS_RTL FF hold -6.37 ps; all 188 violators
+    // are flop -> INV -> flop pass hops (93 of them in u_fsb / u_asb), capture clock 14 ps after launch, ECO 7,489 cells.
+    parameter integer DLR = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -210,17 +217,26 @@ module ot_s81_retn_static #(
     localparam integer FWD_WAIT = (MUT == 2) ? 2 : 1;        // a forward issues at age WIN: one edge in the calendar
     localparam [SW:0] WIN1 = WIN + 1;
     wire [SW:0] add_wait = WIN1 - add_age;                     // sum: early + WIN + 6 = issue + 5 + (WIN + 1 - age)
-    wire [32+1+SW:0] add_sb, add_sbq;
+    wire [32+1+SW:0] add_sb, add_sbq, asb_rf;
     reg  [32+1+SW:0] q_asb;
     always @(posedge clk) q_asb <= {add_t, add_e, add_wait};
-    assign add_sb = q_asb;
-    ot_hdc_delay #(.W(34 + SW), .D(AL)) u_asb (.clk(clk), .rst_n(rst_n), .d(add_sb), .q(add_sbq));
-    wire [65+SW:0] fw_sb, fw_sbq;
+    assign add_sb = (DLR != 0) ? asb_rf : q_asb;
+    ot_hdc_delay #(.W(34 + SW), .D((DLR != 0) ? 0 : AL)) u_asb (.clk(clk), .rst_n(rst_n), .d(add_sb), .q(add_sbq));
+    wire [65+SW:0] fw_sb, fw_sbq, fsb_rf;
     localparam [SW:0] FWW = FWD_WAIT;
     reg  [65+SW:0] q_fsb;
     always @(posedge clk) q_fsb <= {fw_t, fw_d, fw_e, FWW};
-    assign fw_sb = q_fsb;
-    ot_hdc_delay #(.W(66 + SW), .D(AL)) u_fsb (.clk(clk), .rst_n(rst_n), .d(fw_sb), .q(fw_sbq));
+    assign fw_sb = (DLR != 0) ? fsb_rf : q_fsb;
+    ot_hdc_delay #(.W(66 + SW), .D((DLR != 0) ? 0 : AL)) u_fsb (.clk(clk), .rst_n(rst_n), .d(fw_sb), .q(fw_sbq));
+    generate if (DLR != 0) begin : g_dlr   // q_*sb + D = AL shift == rf D = AL + 1 (q_*sb unused, removed by synthesis)
+        ot_hdc_delay_rf #(.W(34 + SW), .D(AL + 1)) u_asb_rf (.clk(clk), .rst_n(rst_n), .d({add_t, add_e, add_wait}),
+                                                            .q(asb_rf));
+        ot_hdc_delay_rf #(.W(66 + SW), .D(AL + 1)) u_fsb_rf (.clk(clk), .rst_n(rst_n), .d({fw_t, fw_d, fw_e, FWW}),
+                                                            .q(fsb_rf));
+    end else begin : g_shl
+        assign asb_rf = '0;
+        assign fsb_rf = '0;
+    end endgenerate
     reg [AL-1:0] fv;
     always @(posedge clk or negedge rst_n) if (!rst_n) fv <= '0; else fv <= {fv[AL-2:0], q_fwd};
     wire fwd_v5 = fv[AL-1];

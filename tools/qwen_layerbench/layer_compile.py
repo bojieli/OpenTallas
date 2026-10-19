@@ -109,6 +109,22 @@ def bundle_ages(tables):
     return out
 
 
+def kv_codec_edges(tile_rtl):
+    """Read the implemented codec from the source-pinned attention tile, never an environment default."""
+    tile = re.search(r'module\s+qkd_kvs_attn\b(.*?)endmodule', tile_rtl, re.S)
+    if not tile:
+        raise SystemExit('layer_compile: qkd_kvs_attn tile not found')
+    inst = re.search(r'qkd_native_attention_programme\s*#\((.*?)\)\s*u_attn\s*\(', tile.group(1), re.S)
+    if not inst:
+        raise SystemExit('layer_compile: qkd_kvs_attn native attention programme not found')
+    land = re.search(r'\.LAND\(([^)]+)\)', inst.group(1))
+    # The historical programme has no LAND override and its RTL default is zero.
+    value = land.group(1).strip() if land else '0'
+    if value not in ('0', '1'):
+        raise SystemExit(f'layer_compile: unsupported attention LAND value {value!r}')
+    return 1 + int(value)
+
+
 def kv_programme_constants(kv_commit):
     t = git_show(kv_commit, 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv')
     m = re.search(r'qkd_attn_cal_gen\s*#\(([^)]*(?:\([^)]*\)[^)]*)*)\)\s*u_attn_cal', t)
@@ -118,7 +134,7 @@ def kv_programme_constants(kv_commit):
     rx, se, st = int(prm['RX_CMD']), int(prm['SERVICE_END']), int(prm['STRETCH'])
     if st != 1:
         raise SystemExit(f'layer_compile: qkd_attn_cal_gen STRETCH {st}: only the STRETCH = 1 TX_FIRST law is known')
-    return dict(RX_CMD=rx, SERVICE_END=se, STRETCH=st, TX_FIRST=rx + 2 + se - 31,
+    return dict(RX_CMD=rx, SERVICE_END=se, STRETCH=st, TX_FIRST=rx + 2 + se - 31, KV_CODEC=kv_codec_edges(t),
                 source=f'{kv_commit}:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal',
                 law='TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)')
 
@@ -156,9 +172,9 @@ def compile_stages(ba):
     return {k: ba[b]['age'] for k, b in STAGE_OF.items()}
 
 
-def txd_of(S):
+def txd_of(S, kv_codec=KV_CODEC):
     raw_c = [S['CS_TXS'] + N59_TX + S['SC_TX'], 1, 1, S['CS_X3S'] + N59_X3 + 1 + S['SC_X3']]
-    raw_k = [S['KS_TXS'] + KV_CODEC + S['SK_TXP'], 2, 1, 1]
+    raw_k = [S['KS_TXS'] + kv_codec + S['SK_TXP'], 2, 1, 1]
     return dict(C=raw_c, K=raw_k), {e: [x + p for x, p in zip(v, PINREG_EXT[e])] for e, v in (('C', raw_c), ('K', raw_k))}
 
 
@@ -260,8 +276,8 @@ def main(argv=None):
                                  lanes=[f"{m['bus']}: stages {m['stages']} age {m['age']}" for m in b['members']],
                                  fix=f'land the whole bundle at age {b["age"]} (pad the shorter members) or re-plan the seam'))
     S = compile_stages(ba)
-    raw, txd = txd_of(S)
     kvp = kv_programme_constants(a.kv_commit)
+    raw, txd = txd_of(S, kv_codec=kvp['KV_CODEC'])
     hard = rtl_txdp(a.compute_commit, a.compute_params)
     for e in ('C', 'K'):
         if hard[e] != txd[e]:

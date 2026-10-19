@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_attn-g3-477f1e3ba bench bench_attn_mut3 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_attn-g3-477f1e3ba log cl/bench_attn_mut3.a1b1.log captured 2026-10-18T23:15:59-07:00
+# fail_regex '^KVS_TILE FAIL tile=attn .* mut=3 '
+MISMATCH t=3 out prg
+MISMATCH t=3 child u_attn_root.request_layer
+MISMATCH t=3 child u_attn_root.q_beat
+MISMATCH t=4 out prg
+MISMATCH t=4 child u_attn_root.request_layer
+KVS_TILE FAIL tile=attn edges=4000 checks=179865 errors=11863 mut=3 (removed child u_attn)

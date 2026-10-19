@@ -77,20 +77,32 @@ module ot_hbm_idx_vm_share2_leaf_r #(parameter integer MUT = 0)(
     reg  [513:0] a_rr, b_rr;                // per-face response flops
     assign {a_rr1, a_rr0} = a_rr;
     assign {b_rr1, b_rr0} = b_rr;
-    // owner select from the pins (the compiler books each bank/edge for at most one client; a double booking issues nothing)
+    // AD3-HBM-SHARE2 10-18 (native FAIL fix of view r2-a1d3f7d2c: capture a_rq/b_rq[16]/[33] 186-207 > 190, data bits 122-145):
+    // the valid pins no longer meet the OTHER face's valid before fanning out to the data select. Each client's data is
+    // gated by ITS OWN valid only (AND-OR, a-side gates sit by the a pins' path, b-side by the b pins'); the bank valid is
+    // a_v XOR b_v (one gate). The compiler books each bank/edge for at most one client: a double booking issues NOTHING
+    // (valid 0, fault as before); only the data bits under that valid-0 request differ (a|b instead of 0), and the bank
+    // samples request data only under valid (ot_vms_bank_static: r_active / selected_read gate rd_decode and its fault).
     reg [33:0] rq_d; reg [3:0] issue;
     always @* begin
         rq_d = 34'd0; issue = 4'd0;
         for (integer k = 0; k < 2; k = k + 1) begin
-            if ((a_rq[17*k+16] && !b_rq[17*k+16]) || (MUT == 2 && a_rq[17*k+16])) begin rq_d[17*k +: 17] = a_rq[17*k +: 17]; issue[2*k] = 1'b1; end
-            else if (b_rq[17*k+16] && !a_rq[17*k+16]) begin rq_d[17*k +: 17] = b_rq[17*k +: 17]; issue[2*k+1] = 1'b1; end
+            rq_d[17*k +: 16] = (a_rq[17*k +: 16] & {16{a_rq[17*k+16]}}) | (b_rq[17*k +: 16] & {16{b_rq[17*k+16]}});
+            rq_d[17*k+16]    = (MUT == 2) ? (a_rq[17*k+16] | b_rq[17*k+16]) : (a_rq[17*k+16] ^ b_rq[17*k+16]);
+            issue[2*k]       = a_rq[17*k+16] && (!b_rq[17*k+16] || MUT == 2);
+            issue[2*k+1]     = b_rq[17*k+16] && !a_rq[17*k+16];
         end
     end
+    // local reset release at the rst_n pin (AD3-HBM-SHARE2 10-18, native capture rule; r2 rst_n capture 280 > 190): rst_n
+    // lands on ONE async-clear flop (assert async, release synchronous one edge later); every other flop clears from rst_q.
+    // No operation edge changes (requests start long after release).
+    reg rst_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
     reg [33:0] rq_q;                        // vm_rq output flops (reset: idle on the bank face out of reset)
     reg [3:0]  own [0:7];                   // per bank b: {b, a} at [2b +: 2]; own[0] = booking of the vm_rq flop edge
     reg        dbl_q;                       // double booking seen at the pins (flop), fault sticky one edge later
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rq_q <= 34'd0; dbl_q <= 1'b0; fault <= 1'b0; for (integer d = 0; d < 8; d = d + 1) own[d] <= 4'd0; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin rq_q <= 34'd0; dbl_q <= 1'b0; fault <= 1'b0; for (integer d = 0; d < 8; d = d + 1) own[d] <= 4'd0; end
         else begin
             rq_q <= rq_d;
             own[0] <= issue;
@@ -107,8 +119,8 @@ module ot_hbm_idx_vm_share2_leaf_r #(parameter integer MUT = 0)(
             a_rr[257*k +: 256] <= vm_rr[257*k +: 256];
             b_rr[257*k +: 256] <= vm_rr[257*k +: 256];
         end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin a_rr[256] <= 1'b0; a_rr[513] <= 1'b0; b_rr[256] <= 1'b0; b_rr[513] <= 1'b0; end
+    always @(posedge clk or negedge rst_q)
+        if (!rst_q) begin a_rr[256] <= 1'b0; a_rr[513] <= 1'b0; b_rr[256] <= 1'b0; b_rr[513] <= 1'b0; end
         else for (integer k = 0; k < 2; k = k + 1) begin
             a_rr[257*k+256] <= vm_rr[257*k+256] && ((MUT == 3) ? o[2*k+1] : o[2*k]);
             b_rr[257*k+256] <= vm_rr[257*k+256] && ((MUT == 3) ? o[2*k]   : o[2*k+1]);

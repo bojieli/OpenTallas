@@ -366,7 +366,19 @@ if {[dict size $ot_ir_todo]} {
 if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" && [info exists ::ot_ir_moved] && [dict size $::ot_ir_moved]} {
   if {[catch {
     set ot_pf_seen [dict create]; set ot_pf_pins {}
-    foreach port [all_inputs -no_clocks] {
+    # PF-HOLDPAD (NATIVE-REF 2026-10-18): the pin-flop search of physical/qwen_die_masters/pinflop_ref.tcl (single-load
+    # hold-pad chains past hop 3, hard-child clock pins at + internal insertion) when that file is reachable (the
+    # shipped {CL} copy beside this one, the repo / job source tree); else the original 3-hop search below
+    if {[info procs ot_pf_lib_ins] eq ""} {
+      set ot_pf_here [expr {[catch {file dirname [file normalize [info script]]} d] ? "." : $d}]
+      foreach ot_pf_f [list $ot_pf_here/pinflop_ref.tcl $ot_pf_here/../qwen_die_masters/pinflop_ref.tcl \
+                         $ot_pf_here/../physical/qwen_die_masters/pinflop_ref.tcl /src/physical/qwen_die_masters/pinflop_ref.tcl] {
+        if {[file readable $ot_pf_f]} { source $ot_pf_f; break }
+      }
+    }
+    set ot_pf_new [expr {[info procs ot_pf_lib_ins] ne ""}]
+    if {$ot_pf_new} { set ot_pf_pins [ot_pf_clks [all_inputs -no_clocks]]; puts "OT_IOREF_PF search: pinflop_ref.tcl (hold-pad chains, hard children)" }
+    foreach port [expr {$ot_pf_new ? {} : [all_inputs -no_clocks]}] {
       set nets [get_nets -quiet [get_full_name $port]]
       for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} {
         set next {}
@@ -400,7 +412,7 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
       set vs {}
       foreach p $ot_pf_pins {
         if {[lsearch -exact [lmap c [get_property $p clocks] {get_full_name $c}] $rc] < 0} continue
-        set v [ot_ir_arr $p $rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend vs $v }
+        set v [ot_ir_arr $p $rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend vs [expr {$ot_pf_new ? $v + [ot_pf_ins $p max] : $v}] }
       }
       if {[llength $vs]} { set s 0.0; foreach v $vs { set s [expr {$s + $v}] }; dict set ot_pf_m $rc [list [expr {$s / [llength $vs]}] [llength $vs]] }
     }

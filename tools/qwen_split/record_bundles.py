@@ -203,7 +203,10 @@ def audit_rows(rows, bmap, source=''):
                             E=None if r is None else r.get('E'), K=None if r is None else r.get('K'),
                             basis=None if r is None else r.get('E_basis_audit'))
         cyc = sorted({v['cycles'] for v in mem.values()})
-        ks = sorted({v['K'] for v in mem.values() if v['kind'] == 'fwd'}, key=str)
+        # QK-LANDEN / RLYH0-EN 10-19: every forwarded member (hop-0 en registered) carries K + 1 for the SAME arrival edge:
+        # compare the source-epoch K (K - lane_groups.hop0_en_reg)
+        ks = sorted({(v['K'] - LG.hop0_en_reg(v)) % 8 if v['K'] is not None else None
+                     for v in mem.values() if v['kind'] == 'fwd'}, key=str)
         ok = len(cyc) == 1 and len(ks) <= 1
         out[b] = dict(cycles=cyc, consistent=ok, members=mem)
         if not ok:
@@ -272,7 +275,9 @@ def rows_from_netlist(die_v, lanes=None):
             if r is not None and r.get('E') is not None:
                 E, basis = int(r['E']), f'E from {Path(lanes).name}'
             elif L['K'] is not None:
-                E, basis = int(L['K']), 'E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8)'
+                # QK-LANDEN / RLYH0-EN 10-19: every forwarded landing is strapped K = E + 1 (hop-0 en registered)
+                E = (int(L['K']) - LG.hop0_en_reg(L)) % 8
+                basis = 'E = landing K straps (no fwd_lanes record: G = R0 assumed, E < 8; K - 1: hop-0 en registered)'
             else:
                 problems.append(f'{bid}: landing K straps not on tie cells'); continue
             rows[bid] = dict(bid=bid, n=L['n'], E=E, K=L['K'], E_basis_audit=basis)
@@ -565,8 +570,10 @@ def main():
             if ln:
                 ks = dict(CONN.findall(ln))
                 K = sum((1 << q) for q in range(3) if ks.get(f'k{q}', '').endswith('_hi'))
-            lat[bid] = dict(bundle=b, frames=int(m.group(1)) if m else 0, K=K,
-                            lane_cycles=(K + 1) if K is not None else 0)
+            nf = int(m.group(1)) if m else 0
+            # QK-LANDEN / RLYH0-EN 10-19: every forwarded landing is strapped K = E + 1 -> its cycles are K (not K + 1)
+            lat[bid] = dict(bundle=b, frames=nf, K=K,
+                            lane_cycles=(K + 1 - LG.hop0_en_reg({'n': nf})) if K is not None else 0)
         rec = dict(schema='opentallas.qwen_split.record_bundle_slice.v1', out=str(a.out), members=lat)
         print(json.dumps(rec))
         return 0

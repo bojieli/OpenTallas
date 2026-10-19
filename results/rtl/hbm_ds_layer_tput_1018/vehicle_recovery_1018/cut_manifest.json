@@ -1,0 +1,3098 @@
+{
+  "source_rev": "92accd203",
+  "scope": "GEN2b early pre-relay bound netlist; not die physical qualification",
+  "die_sha256": "5cf6964a3bcd4b889001cdb853c88cc4d060e0125ffe0477240f781cc374a396",
+  "contract_sha256": "d715cbf89b71a82bd2c2ffb7819305fdb12293d85c257f620ae73e9b529d3224",
+  "cuts": {
+    "sw": {
+      "instance_count": 332,
+      "die_instance_count": 1214,
+      "masters": [
+        "hbfd_rly_1136_EW",
+        "hbfd_rly_1136_WE",
+        "hbfd_rly_136_EW",
+        "hbfd_rly_136_NS",
+        "hbfd_rly_136_WE",
+        "hbfd_rly_304_EW",
+        "hbfd_rly_304_WE",
+        "hbfd_rly_48_EW",
+        "hbfd_rly_48_NS",
+        "hbfd_rly_48_SN",
+        "hbfd_rly_48_WE",
+        "hbfd_rly_624_EW",
+        "hbfd_rly_624_WE",
+        "hfd_ckgen",
+        "hfd_hgi_vm_calendar_f20",
+        "hfd_hgi_vms_glue_sw_t",
+        "hfd_vms_bank_native_q0_faces",
+        "ot_hbm3e_phy_rc_e8p5",
+        "ot_hbm_accel_smh_attn",
+        "ot_hbm_fault_leaf",
+        "ot_hbm_fault_leaf_n8_s0",
+        "ot_hbm_hc_bankq0_static",
+        "ot_hbm_hc_bankq_ft_static",
+        "ot_hbm_hc_bankq_static",
+        "ot_hbm_hc_qhub_static",
+        "ot_hbm_host_cfg_leaf_sw",
+        "ot_hbm_idx_qctl_static",
+        "ot_hbm_idx_query_static",
+        "ot_hbm_idx_score_quarter_static",
+        "ot_hbm_idx_vm_query_static_n12",
+        "ot_hbm_idx_vm_share2_static",
+        "ot_hbm_pc_refresh_cfg",
+        "ot_hbm_sm_vm_wr_q_t_lanes4",
+        "ot_hbm_static_cfg_collar",
+        "ot_hbm_su_bridge_release_s",
+        "ot_hbm_su_programme_pslice_c5",
+        "ot_hbm_su_static_cxport_dl",
+        "ot_hbm_su_static_cxport_ij",
+        "ot_hbm_su_static_cxport_rc",
+        "ot_hbm_su_static_pgslice_lg",
+        "ot_hbm_su_static_qcore",
+        "ot_hbm_su_static_sfustore_hw",
+        "ot_hbm_su_stree_leaf",
+        "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+        "ot_hbm_svc_sm_group_id",
+        "ot_hbm_svc_sm_xcal_t",
+        "ot_hbm_svc_stack_fault",
+        "ot_hbm_svc_vm_kshare_splitstrap",
+        "ot_hbm_svc_vmdel_lane_n",
+        "ot_hbm_svc_wb_kport_q",
+        "ot_hbm_svc_wbw_copy",
+        "ot_hbm_xp_aq_tree13_fmt",
+        "ot_hfd_coll_q3_hard_v8x",
+        "ot_hgi_coll_gq_issue",
+        "ot_hgi_coll_gq_land",
+        "ot_hgi_coll_inj_copy",
+        "ot_hgi_coll_inj_idx_join_rg",
+        "ot_hgi_coll_kq_share2",
+        "ot_hgi_coll_ring_b_stop",
+        "ot_hgi_coll_tkm_m_tp192",
+        "ot_hgi_dma_back_static_vp4_banks_cp",
+        "ot_hgi_sfu_core_split3",
+        "ot_hgi_sfu_lg_pair_tap_leaf",
+        "ot_hgi_sfu_lg_pair_tap_leaf_term",
+        "ot_hgi_sfu_programme_store_r10",
+        "ot_hgi_sm_xload_cl2_bdring",
+        "ot_hgi_sm_xload_cl2_bfqg",
+        "ot_hgi_sm_xload_cl2_ctlx",
+        "ot_hgi_sm_xload_xq_pegress",
+        "ot_static_cmd_target"
+      ],
+      "summary": {
+        "in:central:col_idx": {
+          "ports": 5,
+          "bits": 1806
+        },
+        "in:central:ep_S0": {
+          "ports": 4,
+          "bits": 615
+        },
+        "in:central:ep_S1": {
+          "ports": 4,
+          "bits": 615
+        },
+        "in:central:hb_argmax": {
+          "ports": 1,
+          "bits": 338
+        },
+        "in:central:hb_idx__ctl": {
+          "ports": 3,
+          "bits": 2530
+        },
+        "in:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2184
+        },
+        "in:central:hc_eng": {
+          "ports": 15,
+          "bits": 3348
+        },
+        "in:central:host_cp_ingress": {
+          "ports": 9,
+          "bits": 320
+        },
+        "in:central:str_C": {
+          "ports": 1,
+          "bits": 164
+        },
+        "in:central:su_prog": {
+          "ports": 6,
+          "bits": 348
+        },
+        "in:die_pin": {
+          "ports": 2,
+          "bits": 2
+        },
+        "in:quadrant_NW": {
+          "ports": 3,
+          "bits": 2784
+        },
+        "in:quadrant_SE": {
+          "ports": 43,
+          "bits": 12515
+        },
+        "out:central:col_idx": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:col_su": {
+          "ports": 6,
+          "bits": 6
+        },
+        "out:central:ep_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S0": {
+          "ports": 7,
+          "bits": 1253
+        },
+        "out:central:ep_S1": {
+          "ports": 7,
+          "bits": 1270
+        },
+        "out:central:ep_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_argmax": {
+          "ports": 3,
+          "bits": 550
+        },
+        "out:central:hb_idx__ctl": {
+          "ports": 13,
+          "bits": 2743
+        },
+        "out:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__nwsh": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__selector": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xq_N": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xq_S": {
+          "ports": 3,
+          "bits": 308
+        },
+        "out:central:hb_idx__xqr": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hc_eng": {
+          "ports": 10,
+          "bits": 78
+        },
+        "out:central:host_N": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_ingress": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_rxs": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_ep": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_status": {
+          "ports": 14,
+          "bits": 76
+        },
+        "out:central:lk_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:str_C": {
+          "ports": 3,
+          "bits": 50
+        },
+        "out:central:su_prog": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:vm_status4": {
+          "ports": 3,
+          "bits": 21
+        },
+        "out:quadrant_NE": {
+          "ports": 6,
+          "bits": 6
+        },
+        "out:quadrant_NW": {
+          "ports": 9,
+          "bits": 2790
+        },
+        "out:quadrant_SE": {
+          "ports": 141,
+          "bits": 12942
+        }
+      },
+      "slice_sha256": "8206d36f47fcbc1a0f01d86decb89d295258bf255e1e3fb1fc825833f92e9530",
+      "boundary_sha256": "499beebb2e5699c2667aa1d6080503f60a82f1a3a0578ae19c45ae77104676de",
+      "instances": [
+        "calendar_SW",
+        "cic_SW",
+        "cij_SW",
+        "col_sfu_SW",
+        "cp_svg_SW0",
+        "cp_svg_SW1",
+        "cp_svg_SW2",
+        "cp_svg_SW3",
+        "cp_svg_SW4",
+        "cp_svg_SW5",
+        "cp_svg_SW6",
+        "cp_svg_SW7",
+        "ctl_SW_p00",
+        "ctl_SW_p01",
+        "ctl_SW_p02",
+        "ctl_SW_p03",
+        "ctl_SW_p04",
+        "ctl_SW_p05",
+        "ctl_SW_p06",
+        "ctl_SW_p07",
+        "ctl_SW_p08",
+        "ctl_SW_p09",
+        "ctl_SW_p10",
+        "ctl_SW_p11",
+        "ctl_SW_p12",
+        "ctl_SW_p13",
+        "ctl_SW_p14",
+        "ctl_SW_p15",
+        "ctl_SW_p16",
+        "ctl_SW_p17",
+        "ctl_SW_p18",
+        "ctl_SW_p19",
+        "ctl_SW_p20",
+        "ctl_SW_p21",
+        "ctl_SW_p22",
+        "ctl_SW_p23",
+        "ctl_SW_p24",
+        "ctl_SW_p25",
+        "ctl_SW_p26",
+        "ctl_SW_p27",
+        "ctl_SW_p28",
+        "ctl_SW_p29",
+        "ctl_SW_p30",
+        "ctl_SW_p31",
+        "cxdl_SW0",
+        "cxdl_SW1",
+        "cxdl_SW2",
+        "cxdl_SW3",
+        "cxij_SW",
+        "cxrc_SW",
+        "epcal_SW",
+        "fcx_SW",
+        "fl_SW0",
+        "fl_SW1",
+        "fl_SW2",
+        "fl_SW3",
+        "fr_SW",
+        "fs_SW",
+        "hb_ckgen",
+        "hb_coll_SW",
+        "hb_dbk_SW",
+        "hb_idx__op_SW",
+        "hb_idx__q_SW",
+        "hb_idx__qctl_SW",
+        "hb_idx__s_SW",
+        "hb_vms_SW",
+        "hc_SW",
+        "hc_SW0",
+        "hc_SW1",
+        "hc_SW2",
+        "hc_SW3",
+        "hcb_SW0",
+        "hcb_SW1",
+        "hcb_SW2",
+        "hcb_SW3",
+        "hcb_SW4",
+        "hcb_SW5",
+        "hcb_SW6",
+        "hcb_SW7",
+        "hcollb_SW",
+        "hcollgi_SW",
+        "hcollgl_SW",
+        "hcollks_SW",
+        "hcollrs_SW",
+        "hcx_SW_0",
+        "hcx_SW_1",
+        "hcx_SW_2",
+        "hidxr_SW_rq",
+        "hidxr_SW_rr0",
+        "hidxr_SW_rr1",
+        "hidxr_SW_rr2",
+        "hleaf_SW",
+        "pgp_SW",
+        "phy_SW",
+        "refcfg_SW",
+        "sfault_SW",
+        "sfr_SW0_b00",
+        "sfr_SW0_b01",
+        "sfr_SW0_b02",
+        "sfr_SW0_b03",
+        "sfr_SW0_b04",
+        "sfr_SW0_b05",
+        "sfr_SW0_b06",
+        "sfr_SW0_b07",
+        "sfr_SW0_b08",
+        "sfr_SW0_b09",
+        "sfr_SW0_b10",
+        "sfr_SW0_b11",
+        "sfr_SW0_b12",
+        "sfr_SW0_b13",
+        "sfr_SW0_f00",
+        "sfr_SW0_f01",
+        "sfr_SW0_f02",
+        "sfr_SW0_f03",
+        "sfr_SW0_f04",
+        "sfr_SW0_f05",
+        "sfr_SW0_f06",
+        "sfr_SW0_f07",
+        "sfr_SW0_f08",
+        "sfr_SW0_f09",
+        "sfr_SW0_f10",
+        "sfr_SW0_f11",
+        "sfr_SW0_f12",
+        "sfr_SW0_f13",
+        "sfr_SW1_b00",
+        "sfr_SW1_b01",
+        "sfr_SW1_b02",
+        "sfr_SW1_b03",
+        "sfr_SW1_b04",
+        "sfr_SW1_b05",
+        "sfr_SW1_b06",
+        "sfr_SW1_b07",
+        "sfr_SW1_b08",
+        "sfr_SW1_b09",
+        "sfr_SW1_b10",
+        "sfr_SW1_b11",
+        "sfr_SW1_b12",
+        "sfr_SW1_b13",
+        "sfr_SW1_f00",
+        "sfr_SW1_f01",
+        "sfr_SW1_f02",
+        "sfr_SW1_f03",
+        "sfr_SW1_f04",
+        "sfr_SW1_f05",
+        "sfr_SW1_f06",
+        "sfr_SW1_f07",
+        "sfr_SW1_f08",
+        "sfr_SW1_f09",
+        "sfr_SW1_f10",
+        "sfr_SW1_f11",
+        "sfr_SW1_f12",
+        "sfr_SW1_f13",
+        "sfr_SW2_b00",
+        "sfr_SW2_b01",
+        "sfr_SW2_b02",
+        "sfr_SW2_b03",
+        "sfr_SW2_b04",
+        "sfr_SW2_b05",
+        "sfr_SW2_b06",
+        "sfr_SW2_b07",
+        "sfr_SW2_b08",
+        "sfr_SW2_b09",
+        "sfr_SW2_b10",
+        "sfr_SW2_b11",
+        "sfr_SW2_b12",
+        "sfr_SW2_b13",
+        "sfr_SW2_f00",
+        "sfr_SW2_f01",
+        "sfr_SW2_f02",
+        "sfr_SW2_f03",
+        "sfr_SW2_f04",
+        "sfr_SW2_f05",
+        "sfr_SW2_f06",
+        "sfr_SW2_f07",
+        "sfr_SW2_f08",
+        "sfr_SW2_f09",
+        "sfr_SW2_f10",
+        "sfr_SW2_f11",
+        "sfr_SW2_f12",
+        "sfr_SW2_f13",
+        "sfr_SW3_b00",
+        "sfr_SW3_b01",
+        "sfr_SW3_b02",
+        "sfr_SW3_b03",
+        "sfr_SW3_b04",
+        "sfr_SW3_b05",
+        "sfr_SW3_b06",
+        "sfr_SW3_b07",
+        "sfr_SW3_b08",
+        "sfr_SW3_b09",
+        "sfr_SW3_b10",
+        "sfr_SW3_b11",
+        "sfr_SW3_b12",
+        "sfr_SW3_b13",
+        "sfr_SW3_f00",
+        "sfr_SW3_f01",
+        "sfr_SW3_f02",
+        "sfr_SW3_f03",
+        "sfr_SW3_f04",
+        "sfr_SW3_f05",
+        "sfr_SW3_f06",
+        "sfr_SW3_f07",
+        "sfr_SW3_f08",
+        "sfr_SW3_f09",
+        "sfr_SW3_f10",
+        "sfr_SW3_f11",
+        "sfr_SW3_f12",
+        "sfr_SW3_f13",
+        "sfu_SW0",
+        "sfu_SW1",
+        "sfu_SW2",
+        "sfu_SW3",
+        "sfucore_SW",
+        "sfup_SW",
+        "sfus_SW",
+        "sm_SW0",
+        "sm_SW1",
+        "sm_SW2",
+        "sm_SW3",
+        "sm_SW4",
+        "sm_SW5",
+        "sm_SW6",
+        "sm_SW7",
+        "smw_SW",
+        "std_SW_00a",
+        "std_SW_00b",
+        "std_SW_01a",
+        "std_SW_01b",
+        "std_SW_02a",
+        "std_SW_02b",
+        "std_SW_03a",
+        "std_SW_03b",
+        "std_SW_04a",
+        "std_SW_04b",
+        "std_SW_05a",
+        "std_SW_05b",
+        "std_SW_06a",
+        "std_SW_06b",
+        "std_SW_07a",
+        "std_SW_07b",
+        "std_SW_08a",
+        "std_SW_08b",
+        "std_SW_09a",
+        "std_SW_09b",
+        "std_SW_10a",
+        "std_SW_10b",
+        "std_SW_11a",
+        "std_SW_11b",
+        "std_SW_12a",
+        "std_SW_12b",
+        "std_SW_13a",
+        "std_SW_13b",
+        "stl_SW",
+        "stu_SW_00",
+        "stu_SW_01",
+        "stu_SW_02",
+        "stu_SW_03",
+        "stu_SW_04",
+        "stu_SW_05",
+        "stu_SW_06",
+        "stu_SW_07",
+        "stu_SW_08",
+        "stu_SW_09",
+        "stu_SW_10",
+        "stu_SW_11",
+        "stu_SW_12",
+        "stu_SW_13",
+        "su_SW0",
+        "su_SW1",
+        "su_SW2",
+        "su_SW3",
+        "subr_SW",
+        "sucore_SW",
+        "svg_SW0",
+        "svg_SW1",
+        "svg_SW2",
+        "svg_SW3",
+        "svg_SW4",
+        "svg_SW5",
+        "svg_SW6",
+        "svg_SW7",
+        "tkm_SW",
+        "vmb_SW0",
+        "vmb_SW1",
+        "vmb_SW2",
+        "vmb_SW3",
+        "vmb_SW4",
+        "vmb_SW5",
+        "vmb_SW6",
+        "vmb_SW7",
+        "vmdel_SW0",
+        "vmdel_SW1",
+        "vmdel_SW2",
+        "vmdel_SW3",
+        "vmdel_SW4",
+        "vmdel_SW5",
+        "vmdel_SW6",
+        "vmdel_SW7",
+        "vmfc_SW",
+        "vmks_SW0",
+        "vmks_SW1",
+        "vmks_SW2",
+        "vmks_SW3",
+        "vmks_SW4",
+        "vmks_SW5",
+        "vmks_SW6",
+        "vmks_SW7",
+        "wbc_SW",
+        "wbk_SW",
+        "xc_SW0",
+        "xc_SW1",
+        "xc_SW2",
+        "xc_SW3",
+        "xc_SW4",
+        "xc_SW5",
+        "xc_SW6",
+        "xc_SW7",
+        "xl_SW_aqhi",
+        "xl_SW_aqlo",
+        "xl_SW_ctl",
+        "xq_SW_p0_bd",
+        "xq_SW_p0_bfq0",
+        "xq_SW_p0_bfq1",
+        "xq_SW_p0_bfq2",
+        "xq_SW_p0_bfq3",
+        "xq_SW_p0_eg",
+        "xq_SW_p1_bd",
+        "xq_SW_p1_bfq0",
+        "xq_SW_p1_bfq1",
+        "xq_SW_p1_bfq2",
+        "xq_SW_p1_bfq3",
+        "xq_SW_p1_eg"
+      ]
+    },
+    "se": {
+      "instance_count": 258,
+      "die_instance_count": 1214,
+      "masters": [
+        "hbfd_rly_1136_EW",
+        "hbfd_rly_1136_WE",
+        "hbfd_rly_136_EW",
+        "hbfd_rly_136_NS",
+        "hbfd_rly_136_WE",
+        "hbfd_rly_304_EW",
+        "hbfd_rly_304_WE",
+        "hbfd_rly_48_EW",
+        "hbfd_rly_48_NS",
+        "hbfd_rly_48_SN",
+        "hbfd_rly_48_WE",
+        "hbfd_rly_624_EW",
+        "hbfd_rly_624_WE",
+        "hfd_ckgen",
+        "hfd_hgi_vm_calendar_f20",
+        "hfd_hgi_vms_static_SE_glue",
+        "hfd_vms_bank_native_q0_faces",
+        "ot_hbm_fault_leaf",
+        "ot_hbm_fault_leaf_n8_s0",
+        "ot_hbm_hc_bankq0_static",
+        "ot_hbm_hc_bankq_ft_static",
+        "ot_hbm_hc_bankq_static",
+        "ot_hbm_hc_qhub_static",
+        "ot_hbm_host_cfg_leaf_se2",
+        "ot_hbm_idx_qctl_static",
+        "ot_hbm_idx_query_static",
+        "ot_hbm_idx_score_quarter_static",
+        "ot_hbm_idx_vm_query_static_n12",
+        "ot_hbm_idx_vm_share2_static",
+        "ot_hbm_pc_refresh_cfg",
+        "ot_hbm_sm_vm_wr_q_t_lanes4",
+        "ot_hbm_static_cfg_collar",
+        "ot_hbm_su_bridge_release_s",
+        "ot_hbm_su_programme_pslice_c5",
+        "ot_hbm_su_static_cxport_dl",
+        "ot_hbm_su_static_cxport_ij",
+        "ot_hbm_su_static_cxport_rc",
+        "ot_hbm_su_static_pgslice_lg",
+        "ot_hbm_su_static_qcore",
+        "ot_hbm_su_static_sfustore_hw",
+        "ot_hbm_su_stree_leaf",
+        "ot_hbm_svc_stack_fault",
+        "ot_hbm_svc_vmdel_lane_n",
+        "ot_hbm_svc_wb_kport_q",
+        "ot_hbm_svc_wbw_copy",
+        "ot_hbm_xp_aq_tree13_fmt",
+        "ot_hfd_coll_q2_hard_v8g",
+        "ot_hgi_coll_gq_issue",
+        "ot_hgi_coll_gq_land",
+        "ot_hgi_coll_inj_copy",
+        "ot_hgi_coll_inj_idx_join_rg",
+        "ot_hgi_coll_kq_share2",
+        "ot_hgi_coll_ring_b_stop",
+        "ot_hgi_dma_back_static_vp4_banks_cp",
+        "ot_hgi_sfu_core_split3",
+        "ot_hgi_sfu_lg_pair_tap_leaf",
+        "ot_hgi_sfu_lg_pair_tap_leaf_term",
+        "ot_hgi_sfu_programme_store_r10",
+        "ot_hgi_sm_xload_cl2_bdring",
+        "ot_hgi_sm_xload_cl2_bfqg",
+        "ot_hgi_sm_xload_cl2_ctlx",
+        "ot_hgi_sm_xload_xq_pegress"
+      ],
+      "summary": {
+        "in:central:col_idx": {
+          "ports": 8,
+          "bits": 1809
+        },
+        "in:central:col_su": {
+          "ports": 3,
+          "bits": 3
+        },
+        "in:central:ep_S3": {
+          "ports": 4,
+          "bits": 615
+        },
+        "in:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2184
+        },
+        "in:central:hc_eng": {
+          "ports": 18,
+          "bits": 3351
+        },
+        "in:central:host_cp_ingress": {
+          "ports": 9,
+          "bits": 320
+        },
+        "in:central:str_C": {
+          "ports": 1,
+          "bits": 164
+        },
+        "in:central:su_prog": {
+          "ports": 6,
+          "bits": 348
+        },
+        "in:die_pin": {
+          "ports": 2,
+          "bits": 2
+        },
+        "in:quadrant_NE": {
+          "ports": 3,
+          "bits": 2784
+        },
+        "in:quadrant_SW": {
+          "ports": 135,
+          "bits": 12936
+        },
+        "out:central:col_idx": {
+          "ports": 8,
+          "bits": 281
+        },
+        "out:central:col_su": {
+          "ports": 9,
+          "bits": 282
+        },
+        "out:central:ep_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S3": {
+          "ports": 7,
+          "bits": 640
+        },
+        "out:central:hb_argmax": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__ctl": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__nwsh": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__selector": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xq_N": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xq_S": {
+          "ports": 3,
+          "bits": 308
+        },
+        "out:central:hb_idx__xqr": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hc_eng": {
+          "ports": 19,
+          "bits": 398
+        },
+        "out:central:host_N": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_ingress": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_rxs": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_ep": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_status": {
+          "ports": 17,
+          "bits": 86
+        },
+        "out:central:lk_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:str_C": {
+          "ports": 3,
+          "bits": 50
+        },
+        "out:central:su_prog": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:vm_status4": {
+          "ports": 3,
+          "bits": 21
+        },
+        "out:quadrant_NE": {
+          "ports": 9,
+          "bits": 2790
+        },
+        "out:quadrant_NW": {
+          "ports": 6,
+          "bits": 6
+        },
+        "out:quadrant_SW": {
+          "ports": 49,
+          "bits": 12521
+        }
+      },
+      "slice_sha256": "4176de6e284768380de809236d4a146dfeb00c41a2b3b9ad35bc14b319fccab5",
+      "boundary_sha256": "2ff46cfaa839cf52538aed7f6b4df7b4609fc57c4e2d564d6e60542ca7fbbe8a",
+      "instances": [
+        "calendar_SE",
+        "cic_SE",
+        "cij_SE",
+        "col_sfu_SE",
+        "cxdl_SE0",
+        "cxdl_SE1",
+        "cxdl_SE2",
+        "cxdl_SE3",
+        "cxij_SE",
+        "cxrc_SE",
+        "epcal_SE",
+        "fcx_SE",
+        "fl_SE0",
+        "fl_SE1",
+        "fl_SE2",
+        "fl_SE3",
+        "fr_SE",
+        "fs_SE",
+        "hb_ckgen",
+        "hb_coll_SE",
+        "hb_dbk_SE",
+        "hb_idx__op_SE",
+        "hb_idx__q_SE",
+        "hb_idx__qctl_SE",
+        "hb_idx__s_SE",
+        "hb_vms_SE",
+        "hc_SE",
+        "hc_SE0",
+        "hc_SE1",
+        "hc_SE2",
+        "hc_SE3",
+        "hcb_SE0",
+        "hcb_SE1",
+        "hcb_SE2",
+        "hcb_SE3",
+        "hcb_SE4",
+        "hcb_SE5",
+        "hcb_SE6",
+        "hcb_SE7",
+        "hcollb_SE",
+        "hcollgi_SE",
+        "hcollgl_SE",
+        "hcollks_SE",
+        "hcollrs_SE",
+        "hcx_SE_0",
+        "hcx_SE_1",
+        "hcx_SE_2",
+        "hidxr_SE_rq",
+        "hidxr_SE_rr0",
+        "hidxr_SE_rr1",
+        "hidxr_SE_rr2",
+        "hleaf_SE",
+        "pgp_SE",
+        "refcfg_SE",
+        "sfault_SE",
+        "sfr_SE0_b00",
+        "sfr_SE0_b01",
+        "sfr_SE0_b02",
+        "sfr_SE0_b03",
+        "sfr_SE0_b04",
+        "sfr_SE0_b05",
+        "sfr_SE0_b06",
+        "sfr_SE0_b07",
+        "sfr_SE0_b08",
+        "sfr_SE0_b09",
+        "sfr_SE0_b10",
+        "sfr_SE0_b11",
+        "sfr_SE0_b12",
+        "sfr_SE0_b13",
+        "sfr_SE0_f00",
+        "sfr_SE0_f01",
+        "sfr_SE0_f02",
+        "sfr_SE0_f03",
+        "sfr_SE0_f04",
+        "sfr_SE0_f05",
+        "sfr_SE0_f06",
+        "sfr_SE0_f07",
+        "sfr_SE0_f08",
+        "sfr_SE0_f09",
+        "sfr_SE0_f10",
+        "sfr_SE0_f11",
+        "sfr_SE0_f12",
+        "sfr_SE0_f13",
+        "sfr_SE1_b00",
+        "sfr_SE1_b01",
+        "sfr_SE1_b02",
+        "sfr_SE1_b03",
+        "sfr_SE1_b04",
+        "sfr_SE1_b05",
+        "sfr_SE1_b06",
+        "sfr_SE1_b07",
+        "sfr_SE1_b08",
+        "sfr_SE1_b09",
+        "sfr_SE1_b10",
+        "sfr_SE1_b11",
+        "sfr_SE1_b12",
+        "sfr_SE1_b13",
+        "sfr_SE1_f00",
+        "sfr_SE1_f01",
+        "sfr_SE1_f02",
+        "sfr_SE1_f03",
+        "sfr_SE1_f04",
+        "sfr_SE1_f05",
+        "sfr_SE1_f06",
+        "sfr_SE1_f07",
+        "sfr_SE1_f08",
+        "sfr_SE1_f09",
+        "sfr_SE1_f10",
+        "sfr_SE1_f11",
+        "sfr_SE1_f12",
+        "sfr_SE1_f13",
+        "sfr_SE2_b00",
+        "sfr_SE2_b01",
+        "sfr_SE2_b02",
+        "sfr_SE2_b03",
+        "sfr_SE2_b04",
+        "sfr_SE2_b05",
+        "sfr_SE2_b06",
+        "sfr_SE2_b07",
+        "sfr_SE2_b08",
+        "sfr_SE2_b09",
+        "sfr_SE2_b10",
+        "sfr_SE2_b11",
+        "sfr_SE2_b12",
+        "sfr_SE2_b13",
+        "sfr_SE2_f00",
+        "sfr_SE2_f01",
+        "sfr_SE2_f02",
+        "sfr_SE2_f03",
+        "sfr_SE2_f04",
+        "sfr_SE2_f05",
+        "sfr_SE2_f06",
+        "sfr_SE2_f07",
+        "sfr_SE2_f08",
+        "sfr_SE2_f09",
+        "sfr_SE2_f10",
+        "sfr_SE2_f11",
+        "sfr_SE2_f12",
+        "sfr_SE2_f13",
+        "sfr_SE3_b00",
+        "sfr_SE3_b01",
+        "sfr_SE3_b02",
+        "sfr_SE3_b03",
+        "sfr_SE3_b04",
+        "sfr_SE3_b05",
+        "sfr_SE3_b06",
+        "sfr_SE3_b07",
+        "sfr_SE3_b08",
+        "sfr_SE3_b09",
+        "sfr_SE3_b10",
+        "sfr_SE3_b11",
+        "sfr_SE3_b12",
+        "sfr_SE3_b13",
+        "sfr_SE3_f00",
+        "sfr_SE3_f01",
+        "sfr_SE3_f02",
+        "sfr_SE3_f03",
+        "sfr_SE3_f04",
+        "sfr_SE3_f05",
+        "sfr_SE3_f06",
+        "sfr_SE3_f07",
+        "sfr_SE3_f08",
+        "sfr_SE3_f09",
+        "sfr_SE3_f10",
+        "sfr_SE3_f11",
+        "sfr_SE3_f12",
+        "sfr_SE3_f13",
+        "sfu_SE0",
+        "sfu_SE1",
+        "sfu_SE2",
+        "sfu_SE3",
+        "sfucore_SE",
+        "sfup_SE",
+        "sfus_SE",
+        "smw_SE",
+        "std_SE_00a",
+        "std_SE_00b",
+        "std_SE_01a",
+        "std_SE_01b",
+        "std_SE_02a",
+        "std_SE_02b",
+        "std_SE_03a",
+        "std_SE_03b",
+        "std_SE_04a",
+        "std_SE_04b",
+        "std_SE_05a",
+        "std_SE_05b",
+        "std_SE_06a",
+        "std_SE_06b",
+        "std_SE_07a",
+        "std_SE_07b",
+        "std_SE_08a",
+        "std_SE_08b",
+        "std_SE_09a",
+        "std_SE_09b",
+        "std_SE_10a",
+        "std_SE_10b",
+        "std_SE_11a",
+        "std_SE_11b",
+        "std_SE_12a",
+        "std_SE_12b",
+        "std_SE_13a",
+        "std_SE_13b",
+        "stl_SE",
+        "stu_SE_00",
+        "stu_SE_01",
+        "stu_SE_02",
+        "stu_SE_03",
+        "stu_SE_04",
+        "stu_SE_05",
+        "stu_SE_06",
+        "stu_SE_07",
+        "stu_SE_08",
+        "stu_SE_09",
+        "stu_SE_10",
+        "stu_SE_11",
+        "stu_SE_12",
+        "stu_SE_13",
+        "su_SE0",
+        "su_SE1",
+        "su_SE2",
+        "su_SE3",
+        "subr_SE",
+        "sucore_SE",
+        "vmb_SE0",
+        "vmb_SE1",
+        "vmb_SE2",
+        "vmb_SE3",
+        "vmb_SE4",
+        "vmb_SE5",
+        "vmb_SE6",
+        "vmb_SE7",
+        "vmdel_SE0",
+        "vmdel_SE1",
+        "vmdel_SE2",
+        "vmdel_SE3",
+        "vmdel_SE4",
+        "vmdel_SE5",
+        "vmdel_SE6",
+        "vmdel_SE7",
+        "vmfc_SE",
+        "wbc_SE",
+        "wbk_SE",
+        "xl_SE_aqhi",
+        "xl_SE_aqlo",
+        "xl_SE_ctl",
+        "xq_SE_p0_bd",
+        "xq_SE_p0_bfq0",
+        "xq_SE_p0_bfq1",
+        "xq_SE_p0_bfq2",
+        "xq_SE_p0_bfq3",
+        "xq_SE_p0_eg",
+        "xq_SE_p1_bd",
+        "xq_SE_p1_bfq0",
+        "xq_SE_p1_bfq1",
+        "xq_SE_p1_bfq2",
+        "xq_SE_p1_bfq3",
+        "xq_SE_p1_eg"
+      ]
+    },
+    "nw": {
+      "instance_count": 340,
+      "die_instance_count": 1214,
+      "masters": [
+        "hbfd_rly_1136_EW",
+        "hbfd_rly_1136_WE",
+        "hbfd_rly_136_EW",
+        "hbfd_rly_136_SN",
+        "hbfd_rly_136_WE",
+        "hbfd_rly_304_EW",
+        "hbfd_rly_304_WE",
+        "hbfd_rly_48_EW",
+        "hbfd_rly_48_NS",
+        "hbfd_rly_48_SN",
+        "hbfd_rly_48_WE",
+        "hbfd_rly_624_EW",
+        "hbfd_rly_624_NS",
+        "hbfd_rly_624_SN",
+        "hbfd_rly_624_WE",
+        "hfd_ckgen",
+        "hfd_hgi_vm_calendar_f20",
+        "hfd_hgi_vms_glue_nw_t",
+        "hfd_vms_bank_native_q0_faces",
+        "hfd_vms_wq2_merge",
+        "ot_hbm3e_phy_rc_e8p5",
+        "ot_hbm_accel_smh_attn",
+        "ot_hbm_fault_leaf",
+        "ot_hbm_fault_leaf_n8_s0",
+        "ot_hbm_hc_bankq0_static",
+        "ot_hbm_hc_bankq_ft_static",
+        "ot_hbm_hc_bankq_static",
+        "ot_hbm_hc_qhub_static",
+        "ot_hbm_host_cfg_leaf_nw",
+        "ot_hbm_idx_qctl_static",
+        "ot_hbm_idx_query_static",
+        "ot_hbm_idx_score_quarter_static",
+        "ot_hbm_idx_vm_query_static_n12",
+        "ot_hbm_idx_vm_share2_static",
+        "ot_hbm_pc_refresh_cfg",
+        "ot_hbm_sm_vm_wr_q_t_lanes4",
+        "ot_hbm_static_cfg_collar",
+        "ot_hbm_su_bridge_release_s",
+        "ot_hbm_su_programme_pslice_c5",
+        "ot_hbm_su_static_cxport_dl",
+        "ot_hbm_su_static_cxport_ij",
+        "ot_hbm_su_static_cxport_rc",
+        "ot_hbm_su_static_pgslice_lg",
+        "ot_hbm_su_static_qcore",
+        "ot_hbm_su_static_sfustore_hw",
+        "ot_hbm_su_stree_leaf",
+        "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+        "ot_hbm_svc_sm_group_id",
+        "ot_hbm_svc_sm_xcal_t",
+        "ot_hbm_svc_stack_fault",
+        "ot_hbm_svc_vm_kshare_splitstrap",
+        "ot_hbm_svc_vmdel_lane_n",
+        "ot_hbm_svc_wb_kport_q",
+        "ot_hbm_svc_wbw_copy",
+        "ot_hbm_xp_aq_tree13_fmt",
+        "ot_hfd_coll_q2_hard_v8g",
+        "ot_hgi_coll_gq_issue",
+        "ot_hgi_coll_gq_land",
+        "ot_hgi_coll_inj_copy",
+        "ot_hgi_coll_inj_idx_join_rg",
+        "ot_hgi_coll_kq_share2",
+        "ot_hgi_coll_ring_b_stop",
+        "ot_hgi_dma_back_static_vp4_banks_cp",
+        "ot_hgi_qdq_host_split",
+        "ot_hgi_sfu_core_split3",
+        "ot_hgi_sfu_lg_pair_tap_leaf",
+        "ot_hgi_sfu_lg_pair_tap_leaf_term",
+        "ot_hgi_sfu_programme_store_r10",
+        "ot_hgi_sm_xload_cl2_bdring",
+        "ot_hgi_sm_xload_cl2_bfqg",
+        "ot_hgi_sm_xload_cl2_ctlx",
+        "ot_hgi_sm_xload_xq_pegress",
+        "ot_static_cmd_target"
+      ],
+      "summary": {
+        "in:central:col_idx": {
+          "ports": 5,
+          "bits": 1806
+        },
+        "in:central:ep_N0": {
+          "ports": 4,
+          "bits": 615
+        },
+        "in:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2184
+        },
+        "in:central:hb_idx__nwsh": {
+          "ports": 3,
+          "bits": 4248
+        },
+        "in:central:hc_eng": {
+          "ports": 15,
+          "bits": 3348
+        },
+        "in:central:host_cp_ingress": {
+          "ports": 9,
+          "bits": 320
+        },
+        "in:central:str_C": {
+          "ports": 1,
+          "bits": 164
+        },
+        "in:central:su_prog": {
+          "ports": 6,
+          "bits": 348
+        },
+        "in:die_pin": {
+          "ports": 2,
+          "bits": 2
+        },
+        "in:quadrant_NE": {
+          "ports": 43,
+          "bits": 12515
+        },
+        "in:quadrant_SW": {
+          "ports": 3,
+          "bits": 2784
+        },
+        "out:central:col_idx": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:col_su": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:ep_N0": {
+          "ports": 7,
+          "bits": 640
+        },
+        "out:central:ep_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_argmax": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__ctl": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__nwsh": {
+          "ports": 12,
+          "bits": 2330
+        },
+        "out:central:hb_idx__selector": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xq_N": {
+          "ports": 3,
+          "bits": 308
+        },
+        "out:central:hb_idx__xq_S": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xqr": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hc_eng": {
+          "ports": 10,
+          "bits": 78
+        },
+        "out:central:host_N": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_ingress": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_rxs": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_ep": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_status": {
+          "ports": 14,
+          "bits": 78
+        },
+        "out:central:lk_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:str_C": {
+          "ports": 3,
+          "bits": 50
+        },
+        "out:central:su_prog": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:vm_status4": {
+          "ports": 3,
+          "bits": 21
+        },
+        "out:quadrant_NE": {
+          "ports": 141,
+          "bits": 12942
+        },
+        "out:quadrant_SE": {
+          "ports": 6,
+          "bits": 6
+        },
+        "out:quadrant_SW": {
+          "ports": 9,
+          "bits": 2790
+        }
+      },
+      "slice_sha256": "866ccabd0ce3a6659a00e19dd9482d51481d72b560e6d5d122e61c07ea49e3e3",
+      "boundary_sha256": "d4601d2b753de9d38d6743cbeafb4cb2f5c0c0ec19bdd1fc4a3dabcd804a31da",
+      "instances": [
+        "calendar_NW",
+        "cic_NW",
+        "cij_NW",
+        "col_sfu_NW",
+        "cp_svg_NW0",
+        "cp_svg_NW1",
+        "cp_svg_NW2",
+        "cp_svg_NW3",
+        "cp_svg_NW4",
+        "cp_svg_NW5",
+        "cp_svg_NW6",
+        "cp_svg_NW7",
+        "ctl_NW_p00",
+        "ctl_NW_p01",
+        "ctl_NW_p02",
+        "ctl_NW_p03",
+        "ctl_NW_p04",
+        "ctl_NW_p05",
+        "ctl_NW_p06",
+        "ctl_NW_p07",
+        "ctl_NW_p08",
+        "ctl_NW_p09",
+        "ctl_NW_p10",
+        "ctl_NW_p11",
+        "ctl_NW_p12",
+        "ctl_NW_p13",
+        "ctl_NW_p14",
+        "ctl_NW_p15",
+        "ctl_NW_p16",
+        "ctl_NW_p17",
+        "ctl_NW_p18",
+        "ctl_NW_p19",
+        "ctl_NW_p20",
+        "ctl_NW_p21",
+        "ctl_NW_p22",
+        "ctl_NW_p23",
+        "ctl_NW_p24",
+        "ctl_NW_p25",
+        "ctl_NW_p26",
+        "ctl_NW_p27",
+        "ctl_NW_p28",
+        "ctl_NW_p29",
+        "ctl_NW_p30",
+        "ctl_NW_p31",
+        "cxdl_NW0",
+        "cxdl_NW1",
+        "cxdl_NW2",
+        "cxdl_NW3",
+        "cxij_NW",
+        "cxrc_NW",
+        "epcal_NW",
+        "fcx_NW",
+        "fl_NW0",
+        "fl_NW1",
+        "fl_NW2",
+        "fl_NW3",
+        "fr_NW",
+        "fs_NW",
+        "hb_ckgen",
+        "hb_coll_NW",
+        "hb_dbk_NW",
+        "hb_idx__op_NW",
+        "hb_idx__q_NW",
+        "hb_idx__qctl_NW",
+        "hb_idx__s_NW",
+        "hb_quant_NW",
+        "hb_vms_NW",
+        "hc_NW",
+        "hc_NW0",
+        "hc_NW1",
+        "hc_NW2",
+        "hc_NW3",
+        "hcb_NW0",
+        "hcb_NW1",
+        "hcb_NW2",
+        "hcb_NW3",
+        "hcb_NW4",
+        "hcb_NW5",
+        "hcb_NW6",
+        "hcb_NW7",
+        "hcollb_NW",
+        "hcollgi_NW",
+        "hcollgl_NW",
+        "hcollks_NW",
+        "hcollrs_NW",
+        "hcx_NW_0",
+        "hcx_NW_1",
+        "hcx_NW_2",
+        "hidxr_NW_rq",
+        "hidxr_NW_rr0",
+        "hidxr_NW_rr1",
+        "hidxr_NW_rr2",
+        "hleaf_NW",
+        "pgp_NW",
+        "phy_NW",
+        "refcfg_NW",
+        "sfault_NW",
+        "sfr_NW0_b00",
+        "sfr_NW0_b01",
+        "sfr_NW0_b02",
+        "sfr_NW0_b03",
+        "sfr_NW0_b04",
+        "sfr_NW0_b05",
+        "sfr_NW0_b06",
+        "sfr_NW0_b07",
+        "sfr_NW0_b08",
+        "sfr_NW0_b09",
+        "sfr_NW0_b10",
+        "sfr_NW0_b11",
+        "sfr_NW0_b12",
+        "sfr_NW0_b13",
+        "sfr_NW0_f00",
+        "sfr_NW0_f01",
+        "sfr_NW0_f02",
+        "sfr_NW0_f03",
+        "sfr_NW0_f04",
+        "sfr_NW0_f05",
+        "sfr_NW0_f06",
+        "sfr_NW0_f07",
+        "sfr_NW0_f08",
+        "sfr_NW0_f09",
+        "sfr_NW0_f10",
+        "sfr_NW0_f11",
+        "sfr_NW0_f12",
+        "sfr_NW0_f13",
+        "sfr_NW1_b00",
+        "sfr_NW1_b01",
+        "sfr_NW1_b02",
+        "sfr_NW1_b03",
+        "sfr_NW1_b04",
+        "sfr_NW1_b05",
+        "sfr_NW1_b06",
+        "sfr_NW1_b07",
+        "sfr_NW1_b08",
+        "sfr_NW1_b09",
+        "sfr_NW1_b10",
+        "sfr_NW1_b11",
+        "sfr_NW1_b12",
+        "sfr_NW1_b13",
+        "sfr_NW1_f00",
+        "sfr_NW1_f01",
+        "sfr_NW1_f02",
+        "sfr_NW1_f03",
+        "sfr_NW1_f04",
+        "sfr_NW1_f05",
+        "sfr_NW1_f06",
+        "sfr_NW1_f07",
+        "sfr_NW1_f08",
+        "sfr_NW1_f09",
+        "sfr_NW1_f10",
+        "sfr_NW1_f11",
+        "sfr_NW1_f12",
+        "sfr_NW1_f13",
+        "sfr_NW2_b00",
+        "sfr_NW2_b01",
+        "sfr_NW2_b02",
+        "sfr_NW2_b03",
+        "sfr_NW2_b04",
+        "sfr_NW2_b05",
+        "sfr_NW2_b06",
+        "sfr_NW2_b07",
+        "sfr_NW2_b08",
+        "sfr_NW2_b09",
+        "sfr_NW2_b10",
+        "sfr_NW2_b11",
+        "sfr_NW2_b12",
+        "sfr_NW2_b13",
+        "sfr_NW2_f00",
+        "sfr_NW2_f01",
+        "sfr_NW2_f02",
+        "sfr_NW2_f03",
+        "sfr_NW2_f04",
+        "sfr_NW2_f05",
+        "sfr_NW2_f06",
+        "sfr_NW2_f07",
+        "sfr_NW2_f08",
+        "sfr_NW2_f09",
+        "sfr_NW2_f10",
+        "sfr_NW2_f11",
+        "sfr_NW2_f12",
+        "sfr_NW2_f13",
+        "sfr_NW3_b00",
+        "sfr_NW3_b01",
+        "sfr_NW3_b02",
+        "sfr_NW3_b03",
+        "sfr_NW3_b04",
+        "sfr_NW3_b05",
+        "sfr_NW3_b06",
+        "sfr_NW3_b07",
+        "sfr_NW3_b08",
+        "sfr_NW3_b09",
+        "sfr_NW3_b10",
+        "sfr_NW3_b11",
+        "sfr_NW3_b12",
+        "sfr_NW3_b13",
+        "sfr_NW3_f00",
+        "sfr_NW3_f01",
+        "sfr_NW3_f02",
+        "sfr_NW3_f03",
+        "sfr_NW3_f04",
+        "sfr_NW3_f05",
+        "sfr_NW3_f06",
+        "sfr_NW3_f07",
+        "sfr_NW3_f08",
+        "sfr_NW3_f09",
+        "sfr_NW3_f10",
+        "sfr_NW3_f11",
+        "sfr_NW3_f12",
+        "sfr_NW3_f13",
+        "sfu_NW0",
+        "sfu_NW1",
+        "sfu_NW2",
+        "sfu_NW3",
+        "sfucore_NW",
+        "sfup_NW",
+        "sfus_NW",
+        "sm_NW0",
+        "sm_NW1",
+        "sm_NW2",
+        "sm_NW3",
+        "sm_NW4",
+        "sm_NW5",
+        "sm_NW6",
+        "sm_NW7",
+        "smw_NW",
+        "std_NW_00a",
+        "std_NW_00b",
+        "std_NW_01a",
+        "std_NW_01b",
+        "std_NW_02a",
+        "std_NW_02b",
+        "std_NW_03a",
+        "std_NW_03b",
+        "std_NW_04a",
+        "std_NW_04b",
+        "std_NW_05a",
+        "std_NW_05b",
+        "std_NW_06a",
+        "std_NW_06b",
+        "std_NW_07a",
+        "std_NW_07b",
+        "std_NW_08a",
+        "std_NW_08b",
+        "std_NW_09a",
+        "std_NW_09b",
+        "std_NW_10a",
+        "std_NW_10b",
+        "std_NW_11a",
+        "std_NW_11b",
+        "std_NW_12a",
+        "std_NW_12b",
+        "std_NW_13a",
+        "std_NW_13b",
+        "stl_NW",
+        "stu_NW_00",
+        "stu_NW_01",
+        "stu_NW_02",
+        "stu_NW_03",
+        "stu_NW_04",
+        "stu_NW_05",
+        "stu_NW_06",
+        "stu_NW_07",
+        "stu_NW_08",
+        "stu_NW_09",
+        "stu_NW_10",
+        "stu_NW_11",
+        "stu_NW_12",
+        "stu_NW_13",
+        "su_NW0",
+        "su_NW1",
+        "su_NW2",
+        "su_NW3",
+        "subr_NW",
+        "sucore_NW",
+        "svg_NW0",
+        "svg_NW1",
+        "svg_NW2",
+        "svg_NW3",
+        "svg_NW4",
+        "svg_NW5",
+        "svg_NW6",
+        "svg_NW7",
+        "vmb_NW0",
+        "vmb_NW1",
+        "vmb_NW2",
+        "vmb_NW3",
+        "vmb_NW4",
+        "vmb_NW5",
+        "vmb_NW6",
+        "vmb_NW7",
+        "vmdel_NW0",
+        "vmdel_NW1",
+        "vmdel_NW2",
+        "vmdel_NW3",
+        "vmdel_NW4",
+        "vmdel_NW5",
+        "vmdel_NW6",
+        "vmdel_NW7",
+        "vmfc_NW",
+        "vmks_NW0",
+        "vmks_NW1",
+        "vmks_NW2",
+        "vmks_NW3",
+        "vmks_NW4",
+        "vmks_NW5",
+        "vmks_NW6",
+        "vmks_NW7",
+        "vmm_NW0",
+        "vmm_NW1",
+        "vmm_NW2",
+        "vmm_NW3",
+        "vmm_NW4",
+        "vmm_NW5",
+        "vmm_NW6",
+        "vmm_NW7",
+        "wbc_NW",
+        "wbk_NW",
+        "xc_NW0",
+        "xc_NW1",
+        "xc_NW2",
+        "xc_NW3",
+        "xc_NW4",
+        "xc_NW5",
+        "xc_NW6",
+        "xc_NW7",
+        "xl_NW_aqhi",
+        "xl_NW_aqlo",
+        "xl_NW_ctl",
+        "xq_NW_p0_bd",
+        "xq_NW_p0_bfq0",
+        "xq_NW_p0_bfq1",
+        "xq_NW_p0_bfq2",
+        "xq_NW_p0_bfq3",
+        "xq_NW_p0_eg",
+        "xq_NW_p1_bd",
+        "xq_NW_p1_bfq0",
+        "xq_NW_p1_bfq1",
+        "xq_NW_p1_bfq2",
+        "xq_NW_p1_bfq3",
+        "xq_NW_p1_eg"
+      ]
+    },
+    "ne": {
+      "instance_count": 258,
+      "die_instance_count": 1214,
+      "masters": [
+        "hbfd_rly_1136_EW",
+        "hbfd_rly_1136_WE",
+        "hbfd_rly_136_EW",
+        "hbfd_rly_136_SN",
+        "hbfd_rly_136_WE",
+        "hbfd_rly_304_EW",
+        "hbfd_rly_304_WE",
+        "hbfd_rly_48_EW",
+        "hbfd_rly_48_NS",
+        "hbfd_rly_48_SN",
+        "hbfd_rly_48_WE",
+        "hbfd_rly_624_EW",
+        "hbfd_rly_624_WE",
+        "hfd_ckgen",
+        "hfd_hgi_vm_calendar_f20",
+        "hfd_hgi_vms_static_NE_glue",
+        "hfd_vms_bank_native_q0_faces",
+        "ot_hbm_fault_leaf",
+        "ot_hbm_fault_leaf_n8_s0",
+        "ot_hbm_hc_bankq0_static",
+        "ot_hbm_hc_bankq_ft_static",
+        "ot_hbm_hc_bankq_static",
+        "ot_hbm_hc_qhub_static",
+        "ot_hbm_host_cfg_leaf_ne2",
+        "ot_hbm_idx_qctl_static",
+        "ot_hbm_idx_query_static",
+        "ot_hbm_idx_score_quarter_static",
+        "ot_hbm_idx_vm_query_static_n12",
+        "ot_hbm_idx_vm_share2_static",
+        "ot_hbm_pc_refresh_cfg",
+        "ot_hbm_sm_vm_wr_q_t_lanes4",
+        "ot_hbm_static_cfg_collar",
+        "ot_hbm_su_bridge_release_s",
+        "ot_hbm_su_programme_pslice_c5",
+        "ot_hbm_su_static_cxport_dl",
+        "ot_hbm_su_static_cxport_ij",
+        "ot_hbm_su_static_cxport_rc",
+        "ot_hbm_su_static_pgslice_lg",
+        "ot_hbm_su_static_qcore",
+        "ot_hbm_su_static_sfustore_hw",
+        "ot_hbm_su_stree_leaf",
+        "ot_hbm_svc_stack_fault",
+        "ot_hbm_svc_vmdel_lane_n",
+        "ot_hbm_svc_wb_kport_q",
+        "ot_hbm_svc_wbw_copy",
+        "ot_hbm_xp_aq_tree13_fmt",
+        "ot_hfd_coll_q2_hard_v8g",
+        "ot_hgi_coll_gq_issue",
+        "ot_hgi_coll_gq_land",
+        "ot_hgi_coll_inj_copy",
+        "ot_hgi_coll_inj_idx_join_rg",
+        "ot_hgi_coll_kq_share2",
+        "ot_hgi_coll_ring_b_stop",
+        "ot_hgi_dma_back_static_vp4_banks_cp",
+        "ot_hgi_sfu_core_split3",
+        "ot_hgi_sfu_lg_pair_tap_leaf",
+        "ot_hgi_sfu_lg_pair_tap_leaf_term",
+        "ot_hgi_sfu_programme_store_r10",
+        "ot_hgi_sm_xload_cl2_bdring",
+        "ot_hgi_sm_xload_cl2_bfqg",
+        "ot_hgi_sm_xload_cl2_ctlx",
+        "ot_hgi_sm_xload_xq_pegress"
+      ],
+      "summary": {
+        "in:central:col_idx": {
+          "ports": 5,
+          "bits": 1806
+        },
+        "in:central:ep_N2": {
+          "ports": 4,
+          "bits": 615
+        },
+        "in:central:hb_argmax": {
+          "ports": 1,
+          "bits": 1
+        },
+        "in:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2184
+        },
+        "in:central:hc_eng": {
+          "ports": 15,
+          "bits": 3348
+        },
+        "in:central:host_cp_ingress": {
+          "ports": 9,
+          "bits": 320
+        },
+        "in:central:str_C": {
+          "ports": 1,
+          "bits": 164
+        },
+        "in:central:su_prog": {
+          "ports": 6,
+          "bits": 348
+        },
+        "in:die_pin": {
+          "ports": 2,
+          "bits": 2
+        },
+        "in:quadrant_NW": {
+          "ports": 135,
+          "bits": 12936
+        },
+        "in:quadrant_SE": {
+          "ports": 3,
+          "bits": 2784
+        },
+        "out:central:col_idx": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:col_su": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:ep_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_N2": {
+          "ports": 7,
+          "bits": 640
+        },
+        "out:central:ep_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:ep_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_argmax": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__ctl": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:hb_idx__link": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__nwsh": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__selector": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xq_N": {
+          "ports": 3,
+          "bits": 308
+        },
+        "out:central:hb_idx__xq_S": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hb_idx__xqr": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:hc_eng": {
+          "ports": 10,
+          "bits": 78
+        },
+        "out:central:host_N": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_ingress": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_cp_rxs": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_ep": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:host_status": {
+          "ports": 17,
+          "bits": 75
+        },
+        "out:central:lk_N0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_N2": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S0": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S1": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:lk_S3": {
+          "ports": 2,
+          "bits": 2
+        },
+        "out:central:str_C": {
+          "ports": 3,
+          "bits": 50
+        },
+        "out:central:su_prog": {
+          "ports": 3,
+          "bits": 3
+        },
+        "out:central:vm_status4": {
+          "ports": 3,
+          "bits": 21
+        },
+        "out:quadrant_NW": {
+          "ports": 49,
+          "bits": 12521
+        },
+        "out:quadrant_SE": {
+          "ports": 9,
+          "bits": 2790
+        },
+        "out:quadrant_SW": {
+          "ports": 6,
+          "bits": 6
+        }
+      },
+      "slice_sha256": "cb32b3fa612741329922af595d9465e51cba6eceb88c79988dd55f179a801880",
+      "boundary_sha256": "4bba1dc61c4128ff8a6f1edf411388e0f901e0156eedd2aa9e9e8a970454646f",
+      "instances": [
+        "calendar_NE",
+        "cic_NE",
+        "cij_NE",
+        "col_sfu_NE",
+        "cxdl_NE0",
+        "cxdl_NE1",
+        "cxdl_NE2",
+        "cxdl_NE3",
+        "cxij_NE",
+        "cxrc_NE",
+        "epcal_NE",
+        "fcx_NE",
+        "fl_NE0",
+        "fl_NE1",
+        "fl_NE2",
+        "fl_NE3",
+        "fr_NE",
+        "fs_NE",
+        "hb_ckgen",
+        "hb_coll_NE",
+        "hb_dbk_NE",
+        "hb_idx__op_NE",
+        "hb_idx__q_NE",
+        "hb_idx__qctl_NE",
+        "hb_idx__s_NE",
+        "hb_vms_NE",
+        "hc_NE",
+        "hc_NE0",
+        "hc_NE1",
+        "hc_NE2",
+        "hc_NE3",
+        "hcb_NE0",
+        "hcb_NE1",
+        "hcb_NE2",
+        "hcb_NE3",
+        "hcb_NE4",
+        "hcb_NE5",
+        "hcb_NE6",
+        "hcb_NE7",
+        "hcollb_NE",
+        "hcollgi_NE",
+        "hcollgl_NE",
+        "hcollks_NE",
+        "hcollrs_NE",
+        "hcx_NE_0",
+        "hcx_NE_1",
+        "hcx_NE_2",
+        "hidxr_NE_rq",
+        "hidxr_NE_rr0",
+        "hidxr_NE_rr1",
+        "hidxr_NE_rr2",
+        "hleaf_NE",
+        "pgp_NE",
+        "refcfg_NE",
+        "sfault_NE",
+        "sfr_NE0_b00",
+        "sfr_NE0_b01",
+        "sfr_NE0_b02",
+        "sfr_NE0_b03",
+        "sfr_NE0_b04",
+        "sfr_NE0_b05",
+        "sfr_NE0_b06",
+        "sfr_NE0_b07",
+        "sfr_NE0_b08",
+        "sfr_NE0_b09",
+        "sfr_NE0_b10",
+        "sfr_NE0_b11",
+        "sfr_NE0_b12",
+        "sfr_NE0_b13",
+        "sfr_NE0_f00",
+        "sfr_NE0_f01",
+        "sfr_NE0_f02",
+        "sfr_NE0_f03",
+        "sfr_NE0_f04",
+        "sfr_NE0_f05",
+        "sfr_NE0_f06",
+        "sfr_NE0_f07",
+        "sfr_NE0_f08",
+        "sfr_NE0_f09",
+        "sfr_NE0_f10",
+        "sfr_NE0_f11",
+        "sfr_NE0_f12",
+        "sfr_NE0_f13",
+        "sfr_NE1_b00",
+        "sfr_NE1_b01",
+        "sfr_NE1_b02",
+        "sfr_NE1_b03",
+        "sfr_NE1_b04",
+        "sfr_NE1_b05",
+        "sfr_NE1_b06",
+        "sfr_NE1_b07",
+        "sfr_NE1_b08",
+        "sfr_NE1_b09",
+        "sfr_NE1_b10",
+        "sfr_NE1_b11",
+        "sfr_NE1_b12",
+        "sfr_NE1_b13",
+        "sfr_NE1_f00",
+        "sfr_NE1_f01",
+        "sfr_NE1_f02",
+        "sfr_NE1_f03",
+        "sfr_NE1_f04",
+        "sfr_NE1_f05",
+        "sfr_NE1_f06",
+        "sfr_NE1_f07",
+        "sfr_NE1_f08",
+        "sfr_NE1_f09",
+        "sfr_NE1_f10",
+        "sfr_NE1_f11",
+        "sfr_NE1_f12",
+        "sfr_NE1_f13",
+        "sfr_NE2_b00",
+        "sfr_NE2_b01",
+        "sfr_NE2_b02",
+        "sfr_NE2_b03",
+        "sfr_NE2_b04",
+        "sfr_NE2_b05",
+        "sfr_NE2_b06",
+        "sfr_NE2_b07",
+        "sfr_NE2_b08",
+        "sfr_NE2_b09",
+        "sfr_NE2_b10",
+        "sfr_NE2_b11",
+        "sfr_NE2_b12",
+        "sfr_NE2_b13",
+        "sfr_NE2_f00",
+        "sfr_NE2_f01",
+        "sfr_NE2_f02",
+        "sfr_NE2_f03",
+        "sfr_NE2_f04",
+        "sfr_NE2_f05",
+        "sfr_NE2_f06",
+        "sfr_NE2_f07",
+        "sfr_NE2_f08",
+        "sfr_NE2_f09",
+        "sfr_NE2_f10",
+        "sfr_NE2_f11",
+        "sfr_NE2_f12",
+        "sfr_NE2_f13",
+        "sfr_NE3_b00",
+        "sfr_NE3_b01",
+        "sfr_NE3_b02",
+        "sfr_NE3_b03",
+        "sfr_NE3_b04",
+        "sfr_NE3_b05",
+        "sfr_NE3_b06",
+        "sfr_NE3_b07",
+        "sfr_NE3_b08",
+        "sfr_NE3_b09",
+        "sfr_NE3_b10",
+        "sfr_NE3_b11",
+        "sfr_NE3_b12",
+        "sfr_NE3_b13",
+        "sfr_NE3_f00",
+        "sfr_NE3_f01",
+        "sfr_NE3_f02",
+        "sfr_NE3_f03",
+        "sfr_NE3_f04",
+        "sfr_NE3_f05",
+        "sfr_NE3_f06",
+        "sfr_NE3_f07",
+        "sfr_NE3_f08",
+        "sfr_NE3_f09",
+        "sfr_NE3_f10",
+        "sfr_NE3_f11",
+        "sfr_NE3_f12",
+        "sfr_NE3_f13",
+        "sfu_NE0",
+        "sfu_NE1",
+        "sfu_NE2",
+        "sfu_NE3",
+        "sfucore_NE",
+        "sfup_NE",
+        "sfus_NE",
+        "smw_NE",
+        "std_NE_00a",
+        "std_NE_00b",
+        "std_NE_01a",
+        "std_NE_01b",
+        "std_NE_02a",
+        "std_NE_02b",
+        "std_NE_03a",
+        "std_NE_03b",
+        "std_NE_04a",
+        "std_NE_04b",
+        "std_NE_05a",
+        "std_NE_05b",
+        "std_NE_06a",
+        "std_NE_06b",
+        "std_NE_07a",
+        "std_NE_07b",
+        "std_NE_08a",
+        "std_NE_08b",
+        "std_NE_09a",
+        "std_NE_09b",
+        "std_NE_10a",
+        "std_NE_10b",
+        "std_NE_11a",
+        "std_NE_11b",
+        "std_NE_12a",
+        "std_NE_12b",
+        "std_NE_13a",
+        "std_NE_13b",
+        "stl_NE",
+        "stu_NE_00",
+        "stu_NE_01",
+        "stu_NE_02",
+        "stu_NE_03",
+        "stu_NE_04",
+        "stu_NE_05",
+        "stu_NE_06",
+        "stu_NE_07",
+        "stu_NE_08",
+        "stu_NE_09",
+        "stu_NE_10",
+        "stu_NE_11",
+        "stu_NE_12",
+        "stu_NE_13",
+        "su_NE0",
+        "su_NE1",
+        "su_NE2",
+        "su_NE3",
+        "subr_NE",
+        "sucore_NE",
+        "vmb_NE0",
+        "vmb_NE1",
+        "vmb_NE2",
+        "vmb_NE3",
+        "vmb_NE4",
+        "vmb_NE5",
+        "vmb_NE6",
+        "vmb_NE7",
+        "vmdel_NE0",
+        "vmdel_NE1",
+        "vmdel_NE2",
+        "vmdel_NE3",
+        "vmdel_NE4",
+        "vmdel_NE5",
+        "vmdel_NE6",
+        "vmdel_NE7",
+        "vmfc_NE",
+        "wbc_NE",
+        "wbk_NE",
+        "xl_NE_aqhi",
+        "xl_NE_aqlo",
+        "xl_NE_ctl",
+        "xq_NE_p0_bd",
+        "xq_NE_p0_bfq0",
+        "xq_NE_p0_bfq1",
+        "xq_NE_p0_bfq2",
+        "xq_NE_p0_bfq3",
+        "xq_NE_p0_eg",
+        "xq_NE_p1_bd",
+        "xq_NE_p1_bfq0",
+        "xq_NE_p1_bfq1",
+        "xq_NE_p1_bfq2",
+        "xq_NE_p1_bfq3",
+        "xq_NE_p1_eg"
+      ]
+    }
+  },
+  "source_resolution": {
+    "rev": "92accd203",
+    "masters": 97,
+    "modules": 441,
+    "files": 266,
+    "blackboxes": [
+      "ot_hbm3e_phy_rc_e8p5"
+    ],
+    "missing": {},
+    "ambiguous": {
+      "ot_hbm_pll_bb": {
+        "chosen": "rtl/hbm_accel/control/tb_hfd_ckgen.sv",
+        "all": [
+          "rtl/hbm_accel/control/ot_hbm_pll_bb.sv",
+          "rtl/hbm_accel/control/tb_hfd_ckgen.sv"
+        ],
+        "near": "rtl/hbm_accel/control/hfd_ckgen.sv"
+      },
+      "ot_sram_1r1w_1024x256_m2_r2c2": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+          "rtl/hbm_accel/epilogue/tb_hbm_accel_clock_loops.sv",
+          "rtl/test/full_sm_service/sram_models.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv"
+      },
+      "ot_hdc_fp32_add_lat": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "all": [
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv"
+      },
+      "ot_hdc_lzc32": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+        "all": [
+          "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_pbst_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp.sv"
+      },
+      "ot_hdc_w11_cut": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "all": [
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+      },
+      "ot_hdc_ksadd_k": {
+        "chosen": "rtl/hdc/ot_hdc_prefix.sv",
+        "all": [
+          "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+          "rtl/hdc/ot_hdc_prefix.sv",
+          "rtl/test/ot_hdc_prefix_sim.sv",
+          "rtl/test/sim_hdc_prefix_beh.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+      },
+      "ot_sram_1r1w_64x512_m1_r2c2": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+        ],
+        "near": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv"
+      },
+      "ot_sram_1r1w_128x256_m1_r2c2": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+          "physical/s81_pq_hier/pinned/rtl/ot_sram_1r1w_128x256_m1_r2c2.sv",
+          "rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv",
+          "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+          "rtl/model/ot_hbm_hc_operand_sram_sim.sv",
+          "rtl/test/full_sm_service/sram_models.sv",
+          "rtl/test/hbm_c0_connected_20261003/r2/tb.sv",
+          "rtl/test/hbm_c0_connected_20261003/r3/tb.sv",
+          "rtl/test/hbm_c0_connected_20261003/tb.sv"
+        ],
+        "near": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv"
+      },
+      "ot_rst_relay": {
+        "chosen": "rtl/lib/ot_rst_relay.sv",
+        "all": [
+          "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+          "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+          "rtl/lib/ot_rst_relay.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv"
+      },
+      "ot_gpu_fadd": {
+        "chosen": "rtl/gpu/ot_gpu_fadd.sv",
+        "all": [
+          "rtl/gpu/ot_gpu_fadd.sv",
+          "rtl/test/full_sm_service/arithmetic_blackboxes.sv",
+          "rtl/test/tb_h4_hbm_rf_shared_context.sv"
+        ],
+        "near": "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv"
+      },
+      "ot_hdc_delay": {
+        "chosen": "rtl/hdc/ot_hdc_delay.sv",
+        "all": [
+          "physical/hbm_native_fence_banks_1014/ot_hdc_delay.sv",
+          "physical/hbm_native_fence_clocked_1014/ot_hdc_delay.sv",
+          "physical/hbm_native_fence_pinret_1014/ot_hdc_delay.sv",
+          "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_delay.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_delay.sv",
+          "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_delay.sv",
+          "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_delay.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_delay.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_delay.sv",
+          "rtl/hdc/ot_hdc_delay.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_delay.sv"
+        ],
+        "near": "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
+      },
+      "ot_hdc_vline": {
+        "chosen": "rtl/hdc/ot_hdc_sfu.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_sfu.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_sfu.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_sfu.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_sfu.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_sfu.sv",
+          "rtl/hdc/ot_hdc_sfu.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_sfu.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_fdiv.sv"
+      },
+      "ot_hdc_qmul_lat": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_fp32_mul_lat": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv",
+          "rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+      },
+      "ot_hdc_mul24_rows": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+        "all": [
+          "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_pbst_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      },
+      "ot_hdc_mul24_rows_k": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "all": [
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      },
+      "ot_hdc_mul_kcp48": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "all": [
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      },
+      "ot_hdc_fp32_mul_lat5i": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv",
+          "rtl/test/sim_hdc_fp32_lat_tops.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      },
+      "ot_hdc_fp32_mul_lat4": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv",
+          "rtl/test/sim_hdc_fp32_lat_tops.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      },
+      "ot_hdc_fp32_mul_fast": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+        "all": [
+          "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_pbst_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/test/sim_hdc_v41x_fastfp_dpi.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      },
+      "ot_hdc_mul24_sum": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+        "all": [
+          "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_pbst_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp.sv"
+      },
+      "ot_hdc_ksa": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+        "all": [
+          "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_pbst_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp.sv"
+      },
+      "ot_hfd_qmul_l6r": {
+        "chosen": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+        "all": [
+          "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+        ],
+        "near": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+      },
+      "ot_hdc_fp32_mul_f12_l6r": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_f12.sv",
+        "all": [
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "rtl/hdc/ot_hdc_fp32_f12.sv"
+        ],
+        "near": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+      },
+      "ot_hdc_fp32_mul_f12": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_f12.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "rtl/hdc/ot_hdc_fp32_f12.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_f12.sv"
+      },
+      "ot_hdc_inc_k": {
+        "chosen": "rtl/hdc/ot_hdc_prefix.sv",
+        "all": [
+          "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_prefix.sv",
+          "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+          "rtl/hdc/ot_hdc_prefix.sv",
+          "rtl/test/ot_hdc_prefix_sim.sv",
+          "rtl/test/sim_hdc_prefix_beh.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      },
+      "ot_hdc_f12_cut": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_f12.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+          "rtl/hdc/ot_hdc_fp32_f12.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fp32_f12.sv"
+      },
+      "ot_hdc_kge": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_sram_1r1w_256x256_m2_r2c2": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+          "rtl/test/hbm_rf_visibility/scale_sram_model.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+        ],
+        "near": "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv"
+      },
+      "ot_reset_sync": {
+        "chosen": "rtl/lib/ot_reset_sync.sv",
+        "all": [
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/lib/ot_reset_sync.sv",
+          "physical/ref_tile/val_good_clt6/src/rtl/lib/ot_reset_sync.sv",
+          "physical/s81_fe_fcc_pipe/rtl/dsfd_vm_fcc.sv",
+          "physical/s81_fe_fcn_cmdpipe/rtl/dsfd_vm_fcn.sv",
+          "physical/s81_fe_fcn_onehot/rtl/dsfd_vm_fcn.sv",
+          "physical/s81_fe_fcn_sumpipe/rtl/dsfd_vm_fcn.sv",
+          "physical/s81_fe_fcn_xgos/rtl/dsfd_vm_fcn.sv",
+          "rtl/lib/ot_reset_sync.sv"
+        ],
+        "near": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv"
+      },
+      "ot_v41_csa": {
+        "chosen": "rtl/v41rom/ot_v41_bterm.sv",
+        "all": [
+          "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm.sv",
+          "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bterm.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm.sv",
+          "rtl/v41rom/ot_v41_bterm.sv"
+        ],
+        "near": "rtl/v41rom/ot_v41_bterm2.sv"
+      },
+      "ot_hdc_bmul": {
+        "chosen": "rtl/hdc/ot_hdc_fpu.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_fpu.sv",
+          "rtl/hdc/ot_hdc_fpu.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv"
+        ],
+        "near": "rtl/gpu/ot_gpu_tc_col.sv"
+      },
+      "ot_sram_1r1w_32x546_m1": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v"
+        ],
+        "near": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv"
+      },
+      "ot_sram_1r1w2c_64x546_m1": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v"
+        ],
+        "near": "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv"
+      },
+      "ot_hdc_sinkhorn": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv"
+      },
+      "ot_hdc_sk_quot": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+      },
+      "ot_hdc_sk_csa": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+      },
+      "ot_hdc_sk_mul": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+      },
+      "ot_hdc_sk_cadd": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+      },
+      "ot_hdc_sk_seed": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+      },
+      "ot_hdc_sk_sq_rom": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+      },
+      "ot_hdc_sk_recip_rom": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sk_arith.sv"
+      },
+      "ot_hdc_sk_add": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+      },
+      "ot_hdc_sk_norm": {
+        "chosen": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+        "all": [
+          "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv"
+        ],
+        "near": "rtl/hdc/v41/ot_hdc_sinkhorn.sv"
+      },
+      "ot_hdc_v41x_fdiv": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_v41x_exp": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_kadd": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_qadd_lat": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_fp32_add_lat3": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "all": [
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/test/sim_hdc_fp32_lat_tops.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      },
+      "ot_hdc_fp32_add_lat4i": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "all": [
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "rtl/test/sim_hdc_fp32_lat_tops.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      },
+      "ot_hdc_fp32_add_fast": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp.sv",
+        "all": [
+          "physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_hgi_qw_dec_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_pbst_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_nhb_zh_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_ktree_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/ot_qkh_lane8_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/qfd_sp_band_lanes_q4_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/test/sim_hdc_v41x_fastfp_dpi.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv"
+      },
+      "ot_hdc_fdiv": {
+        "chosen": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+          "rtl/hdc/v41/ot_hdc_fdiv.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fdiv.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_v41x_vline": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+        "all": [
+          "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv"
+      },
+      "ot_hdc_v41x_addtree": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+        "all": [
+          "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+      },
+      "ot_hdc_fsqrt": {
+        "chosen": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+          "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+          "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+          "rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fsqrt.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv"
+      },
+      "ot_hdc_v41x_rsqrt": {
+        "chosen": "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv"
+      },
+      "ot_hdc_v41x_ins": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+          "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_hdc_kinc": {
+        "chosen": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+          "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_su12_sfu": {
+        "chosen": "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+          "rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv"
+      },
+      "ot_hdc_delay_ring": {
+        "chosen": "rtl/hdc/ot_hdc_delay_ring.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv",
+          "rtl/hdc/ot_hdc_delay_ring.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv"
+      },
+      "ot_dsrom_fdiv_f12": {
+        "chosen": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+          "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv"
+      },
+      "ot_sram_1rw_64x128_m1": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1_bb.v"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"
+      },
+      "ot_sram_1r1w_512x256_m1_r2c2": {
+        "chosen": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+        "all": [
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+          "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+          "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+          "rtl/hbm_accel/epilogue/tb_hbm_accel_clock_loops.sv"
+        ],
+        "near": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv"
+      },
+      "ot_hdc_v41x_hcp_lanes": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+        "all": [
+          "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+          "rtl/test/tb_hgi_hc_bank_control_static.sv",
+          "rtl/test/tb_hgi_hc_bank_shell_control_static.sv",
+          "rtl/test/tb_hgi_hc_bank_shell_shared_control_static.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv"
+      },
+      "top": {
+        "chosen": "physical/s81_pq_return_delay/fixture/top.v",
+        "all": [
+          "physical/s81_pq_return_delay/fixture/top.v",
+          "rtl/test/gpu_sys/repro_verilator_threads_blkseq.sv"
+        ],
+        "near": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv"
+      },
+      "BUFx2_ASAP7_75t_R": {
+        "chosen": "physical/hbm_native_fence_banks_1014/min_delay_cells_model.sv",
+        "all": [
+          "physical/hbm_native_fence_banks_1014/min_delay_cells_model.sv",
+          "physical/hbm_native_fence_clocked_1014/min_delay_cells_model.sv",
+          "physical/hbm_native_fence_pinret_1014/min_delay_cells_model.sv",
+          "rtl/test/s81/min_delay_cells_model.sv"
+        ],
+        "near": "physical/s81_pq_return_delay/fixture/top.v"
+      },
+      "ot_sram_1r1w_32x128_m1": {
+        "chosen": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+        "all": [
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+          "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
+        ],
+        "near": "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv"
+      },
+      "ot_hdc_fmul": {
+        "chosen": "rtl/hdc/ot_hdc_fpu.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fpu.sv",
+          "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_fpu.sv",
+          "rtl/hdc/ot_hdc_fpu.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv"
+        ],
+        "near": "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv"
+      },
+      "ot_hdc_fp32_mul_pipe": {
+        "chosen": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "all": [
+          "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv"
+        ],
+        "near": "rtl/hdc/ot_hdc_fpu.sv"
+      },
+      "ot_hdc_v41x_bf16": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+        "all": [
+          "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hbm_idx_chunk_rt.sv"
+      },
+      "ot_hdc_v41x_csa": {
+        "chosen": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+        "all": [
+          "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+          "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv"
+        ],
+        "near": "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv"
+      }
+    }
+  },
+  "limitations": [
+    "Generated cuts preserve actual on-chip instance text from early bound die.v; not simulation results.",
+    "GEN2b early netlist has no landing/relay stages and is not final die timing evidence.",
+    "No layer or measured cycle term exists yet. sw5 and sw5e top verilation still live; preserve objects.",
+    "SE/NW/NE need scheduled boundary replays before a useful functional run. Empty replay idle smoke cannot qualify exactness."
+  ]
+}

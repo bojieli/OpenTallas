@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+TRACE c15 localstart0 rq1 rs0 captured0 slot0
+[586000] %Fatal: tb_qkd_static_k_issuer.sv:133: Assertion failed in tb_qkd_static_k_issuer.unnamedblk4: late landing response faulted (RL 80 + 1)
+%Error: /srv/opentallas-scratch/claude/kv-ectl4/wt-5236207f0/rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:133: Verilog $stop
+Aborting...
+FAIL ectl_kiss_st_k RL 80 QK 91 mut 8: 0 layers
+rc=1

@@ -29,29 +29,29 @@
    ],
    "feedthrough": [],
    "depth": 4,
-   "reg_sinks": 1440,
+   "reg_sinks": 1442,
    "async_reset": false
   },
   "i_ctl": {
    "dir": "input",
-   "width": 1117,
+   "width": 1118,
    "domains": [
     "ck"
    ],
    "feedthrough": [],
    "depth": 4,
-   "reg_sinks": 144439,
+   "reg_sinks": 144732,
    "async_reset": false
   },
   "o_pc": {
    "dir": "output",
-   "width": 779,
+   "width": 780,
    "domains": [
     "ck"
    ],
    "from_inputs": [],
    "depth": 0,
-   "reg_sources": 779
+   "reg_sources": 780
   },
   "i_g": {
    "dir": "input",

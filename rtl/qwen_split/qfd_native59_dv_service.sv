@@ -99,28 +99,50 @@ module qfd_native59_dv_service #(
  // (Q beat 0 >= 2 edges after the CMD, i.e. one idle link slot), which the compiled calendar does not reserve.
  wire vm_q_epoch,vm_q_start;
  wire q_open=(MUT==4)?vm_q_start:request_slot;
- reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;
- reg[16383:0]qbuf_n;reg[511:0]qseen_n;reg q_in_bad;reg[23:0]qa;reg[8:0]qe;
- always @*begin
-  qbuf_n=qbuf;qseen_n=qseen;q_in_bad=0;qa=0;qe=0;
-  if(dd_q)begin
-   if(!qctx||qlock||begin_slot)q_in_bad=1;
-   for(l=0;l<8;l=l+1)if(dd_mask[l])begin
-    qa=p_dd[345+24*l+:24];qe=qa[8:0]^((MUT==1)?9'd1:9'd0);
-    if(|qa[23:9])q_in_bad=1;
-    if(qseen_n[qe])q_in_bad=1;
-    qseen_n[qe]=1'b1;qbuf_n[32*qe+:32]=p_dd[89+32*l+:32];
-   end
+ // Decoded constant-index form (S-QWCOL 10-18): the n1c gate's synthesis smoke timed out (2700 s, yosys SHARE on the
+ // 8 x 16384-b runtime $shift writes + the 512-b $shiftx read).  Same function as the per-lane loop it replaces: each
+ // lane l decodes its element qe_l once; seat e takes the data of the HIGHEST hitting lane (the old loop's last write
+ // wins); q_in_bad = a hit on a seat already seen this epoch, or two lanes of one word on the same seat.
+ wire[16383:0]qbuf_n;wire[511:0]qseen_n,qdup;
+ wire[71:0]qe_all;wire[7:0]qhit_any,qhi_bad;
+ genvar gl,ge;
+ generate
+  for(gl=0;gl<8;gl=gl+1)begin:g_qlane
+   assign qe_all[9*gl+:9]=p_dd[345+24*gl+:9]^((MUT==1)?9'd1:9'd0);
+   assign qhit_any[gl]=dd_q&&dd_mask[gl];
+   assign qhi_bad[gl]=qhit_any[gl]&&(|p_dd[345+24*gl+9+:15]);
   end
- end
+  for(ge=0;ge<512;ge=ge+1)begin:g_qseat
+   wire[7:0]hit;
+   for(gl=0;gl<8;gl=gl+1)begin:g_h
+    assign hit[gl]=qhit_any[gl]&&(qe_all[9*gl+:9]==ge);
+   end
+   assign qbuf_n[32*ge+:32]=hit[7]?p_dd[89+32*7+:32]:hit[6]?p_dd[89+32*6+:32]:hit[5]?p_dd[89+32*5+:32]:
+                             hit[4]?p_dd[89+32*4+:32]:hit[3]?p_dd[89+32*3+:32]:hit[2]?p_dd[89+32*2+:32]:
+                             hit[1]?p_dd[89+32*1+:32]:hit[0]?p_dd[89+32*0+:32]:qbuf[32*ge+:32];
+   assign qseen_n[ge]=qseen[ge]|(|hit);
+   assign qdup[ge]=(qseen[ge]&&(|hit))||(|(hit&(hit-8'd1)));
+  end
+ endgenerate
+ wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||(|qhi_bad)||(|qdup);
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin qseen<=0;qctx<=0;qlock<=0;end
   else if(begin_slot)begin qseen<=0;qctx<=1;qlock<=0;end
   else begin qseen<=qseen_n;if(q_open)qlock<=1;end
  always @(posedge ck)if(!begin_slot)qbuf<=qbuf_n;
  wire q_committed=qctx&&(&qseen);
- wire q_miss=p_qs&&!(&qseen[16*p_qb+:16]);
- wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qbuf[512*p_qb+:512]}:524'd0;
+ // beat read as a decoded AND-OR over the 32 constant beats (no runtime part-select)
+ wire[511:0]qrow_t[0:32];wire[32:0]qfull_t;
+ assign qrow_t[0]=512'd0;assign qfull_t[0]=1'b0;
+ genvar gb;
+ generate for(gb=0;gb<32;gb=gb+1)begin:g_qbeat
+  wire sel=(p_qb==gb);
+  assign qrow_t[gb+1]=qrow_t[gb]|({512{sel}}&qbuf[512*gb+:512]);
+  assign qfull_t[gb+1]=qfull_t[gb]|(sel&&(&qseen[16*gb+:16]));
+ end endgenerate
+ wire[511:0]qrow=qrow_t[32];wire qrow_full=qfull_t[32];
+ wire q_miss=p_qs&&!qrow_full;
+ wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qrow}:524'd0;
  wire export_control_fault;
  qfd_native59_q_export_control u_qexport_control(
  .ck(ck),.rst_n(rst_n),.begin_slot(begin_slot),.request_slot(request_slot),.q_committed(q_committed),

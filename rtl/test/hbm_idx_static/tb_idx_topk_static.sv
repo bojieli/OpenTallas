@@ -4,9 +4,16 @@
 // static hub, ring stops, replay, status). The engine reads through read group 4 (IDX) and writes through
 // packet client 4 ('idx' record, cq338/cr274). The calendar (rslot/bank_enable/wslot/response_enable) is the
 // compiler image cal.mem from tools/hbm_idx_topk_static_vectors.py; this bench never derives it from the DUT.
+// PIN_IN 1 (VEH-TOPKFIX 10-19): the slice banks carry literal input pin flops (BANK_PIN_IN 1 = the d4g
+// hfd_vms_bank_native_q0_faces timing), the engine runs PIN_IN 1 and reads through the rootctl read-group share
+// (ot_hbm_idx_vm_share_static PIN_IN 1, as ot_hbm_idx_rootctl_static_pin wires it); SMUT = share mutant.
+// PIN_IN 1 binds the strapped native physical banks (ot_vms_bank_native_physical: the die's q0 bank RTL; the
+// behavioural ot_vms_bank_static has no pin flops).
 // Checks: every done/fault edge, every output sector (incl. untouched neighbour words), slice status 0.
 module tb_idx_topk_static;
     parameter integer MUT = 0;
+    parameter integer PIN_IN = 0;
+    parameter integer SMUT = 0;
     localparam integer NE = 16384, NPRE = 4096, NCHK = 1024, NREC = 64;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0;
@@ -23,13 +30,21 @@ module tb_idx_topk_static;
     reg go = 0; reg [3:0] k = 0; reg order = 0, a_mirror = 0, has_r = 0; reg [19:0] n = 0, m = 0;
     reg [17:0] a_base = 0, a_str = 0, o_base = 0, o_str = 0, r_base = 0, r_str = 0;
     wire [135:0] vm_rq; wire [337:0] cq; wire [1:0] cq_seq; wire busy, done, fault;
-    ot_hbm_idx_topk_static #(.MUT(MUT)) dut(.clk(clk), .rst_n(rst_n), .sid(2'd0), .go(go), .k(k), .order(order),
+    wire [135:0] e_rq; wire [2055:0] e_rr; wire share_fault;
+    generate if (PIN_IN != 0) begin : g_share
+        ot_hbm_idx_vm_share_static #(.MUT(SMUT), .PIN_IN(PIN_IN)) share(.clk_pair({4{clk}}), .rst_n(rst_n),
+            .index_rq(136'd0), .topk_rq(e_rq), .argmax_rq(136'd0), .vm_rq(vm_rq), .vm_rr(rr[4*2056 +: 2056]),
+            .index_rr(), .topk_rr(e_rr), .argmax_rr(), .fault(share_fault));
+    end else begin : g_direct
+        assign vm_rq = e_rq; assign e_rr = rr[4*2056 +: 2056]; assign share_fault = 1'b0;
+    end endgenerate
+    ot_hbm_idx_topk_static #(.MUT(MUT), .PIN_IN(PIN_IN)) dut(.clk(clk), .rst_n(rst_n), .sid(2'd0), .go(go), .k(k), .order(order),
         .n(n), .m(m), .a_mirror(a_mirror), .a_base(a_base), .a_str(a_str), .o_mirror(1'b0), .o_base(o_base),
-        .o_str(o_str), .has_r(has_r), .r_base(r_base), .r_str(r_str), .vm_rq(vm_rq), .vm_rr(rr[4*2056 +: 2056]),
+        .o_str(o_str), .has_r(has_r), .r_base(r_base), .r_str(r_str), .vm_rq(e_rq), .vm_rr(e_rr),
         .cq(cq), .cq_seq(cq_seq), .cr(cr_all[1*274 +: 274]), .busy(busy), .done(done), .fault(fault));
     assign rq = {vm_rq, rq_bench[4*136-1:0]};   // IDX is the top read group (4 of 0..4)
     always @* begin cq_all = 0; cq_all[1*338 +: 338] = cq; client_seq = 0; client_seq[2 +: 2] = cq_seq; end
-    hfd_hgi_vms_static_SW slice(.clk_bank({8{clk}}), .clk_hub(clk), .clk_ring({2{clk}}), .clk_replay(clk), .rst_n(rst_n),
+    hfd_hgi_vms_static_SW #(.STRAP_BANKS(PIN_IN != 0 ? 1 : 0), .BANK_PIN_IN(PIN_IN)) slice(.clk_bank({8{clk}}), .clk_hub(clk), .clk_ring({2{clk}}), .clk_replay(clk), .rst_n(rst_n),
         .cq(cq_all), .cr(cr_all), .client_seq(client_seq), .response_enable(response_enable), .response_seq(response_seq),
         .bank_enable(bank_enable), .bank_client(bank_client), .hub_ring_enable(2'd0), .hub_ring_client(4'd0),
         .rslot_v(rslot_v), .wslot_v(wslot_v), .rslot(rslot), .wslot(wslot), .rq(rq), .rr(rr),
@@ -57,9 +72,9 @@ module tb_idx_topk_static;
             if (done) dones = dones + 1;
             if (fault) faults = faults + 1;
         end
-        if (bank_status !== 144'd0 || hub_status !== 3'd0 || ring_fault !== 3'd0) begin
+        if (bank_status !== 144'd0 || hub_status !== 3'd0 || ring_fault !== 3'd0 || share_fault !== 1'b0) begin
             errors = errors + 1;
-            if (errors < 10) $display("SLICE STATUS ecnt %0d bank %h hub %b", ecnt - base, bank_status, hub_status);
+            if (errors < 10) $display("SLICE STATUS ecnt %0d bank %h hub %b share %b", ecnt - base, bank_status, hub_status, share_fault);
         end
     end
     integer i, e, b, rec_i;
@@ -123,7 +138,7 @@ module tb_idx_topk_static;
             rq_bench[(1*8+b)*17 +: 17] = {1'b1, chk[i][271:256]};
             rslot_v[b] = 1; rslot[b*3 +: 3] = 3'd1;
             @(negedge clk); rq_bench = 0; rslot_v = 0; rslot = 0;
-            repeat (6) @(negedge clk);
+            repeat (6 + PIN_IN) @(negedge clk);
             if (rr[(1*8+b)*257 +: 257] !== {1'b1, chk[i][255:0]}) begin
                 errors = errors + 1;
                 if (errors < 20) $display("VM MISMATCH sector %h got %h expected %h", chk[i][271:256], rr[(1*8+b)*257 +: 256],
@@ -131,7 +146,7 @@ module tb_idx_topk_static;
             end
             checked = checked + 1;
         end
-        $display("IDX_TOPK_STATIC MUT%0d records%0d dones%0d faults%0d sectors_checked%0d errors%0d schedule_edges%0d", MUT, nrec,
+        $display("IDX_TOPK_STATIC PIN_IN%0d SMUT%0d MUT%0d records%0d dones%0d faults%0d sectors_checked%0d errors%0d schedule_edges%0d", PIN_IN, SMUT, MUT, nrec,
                  dones, faults, checked, errors, last);
         if (errors != 0 || checked != nchk || dones + faults != nrec) $fatal(1, "static TOPK on actual SW slice mismatch");
         $finish;
