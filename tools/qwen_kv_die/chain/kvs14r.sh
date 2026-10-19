@@ -55,6 +55,12 @@ if [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ]; then
   say "CLK UNMEASURED DIAGNOSTIC (R=0): $(cat $R/libs/CLK_UNMEASURED_DIAGNOSTIC | head -c 300) -- NOT A DIE RESULT"
   echo "CLK_UNMEASURED_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
 fi
+# KVR-LANDLAG 10-19: landed crossings vs compiled ages (kvsys_prep kv-check; only OT_KV_LAND_LAG_DIAG=1 lets a FAIL through)
+if [ -s $R/LAND_LAG_DIAGNOSTIC ]; then
+  say "LAND_LAG DIAGNOSTIC: $(head -c 400 $R/LAND_LAG_DIAGNOSTIC) -- NOT A DIE RESULT"
+  echo "LAND_LAG_DIAGNOSTIC_ONLY" >> $R/NOT_A_DIE_RESULT
+fi
+say "LAND_LAG: $(tail -1 $R/land_lag.log 2>/dev/null | head -c 400)"
 say "D2DS VIEW: $(grep -m1 'OT_KV_D2DS_VIEW' $R/prep.log | head -c 300)"
 say "BUNDLE_EQ: $(grep -m1 -i 'bundle' $R/prep.log | head -c 400)"
 say "prep done: $(tail -1 $R/prep.log | head -c 300)"
@@ -82,6 +88,7 @@ export OT_CORNERS="tt ff" OT_DCC_CORNERS="tt ff"
 unset OT_BIND_DIAGNOSTIC
 [ -s $R/FWD_UNLANDED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ -s $R/libs/CLK_UNMEASURED_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
+[ -s $R/LAND_LAG_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"
 # a refused launch gate (native bind / RELAY_CHECK) stops die_chain before GRT: re-run once stamped DIAGNOSTIC so the GRT /
