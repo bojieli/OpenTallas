@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_pv_rs_hd_f",
- "enable": false,
- "reason": "HKV-PVRS2 10-19 rev f2: the RTL registers EVERY input at its pin (stage 1: one flop per bit, anchored at the pin by io_flop_at_pins) and every output is a flop (stage 2: the f1 half-local select stage); a flow pin register would add a third edge. Header = 2 edges pin to pin, pv_trunk_gen --rs-hd f counts RS_D = 1 + 2 + J0 (+1 vs f1, owner rule 10-15 register every tile pin; f1 native capture FAIL a1v[19] 253.1 > 190)"
-}

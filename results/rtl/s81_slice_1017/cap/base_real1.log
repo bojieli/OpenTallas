@@ -1,7 +1,0 @@
-SLCAP rows 1280 written_ok 1280 bad_writes 0 missing 0 arrivals 7446/7446 arr_mismatch 0 fault 0 fcause 0000
-SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min 43 max 84 mean 60.44
-PASS
-- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap.sv:134: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 11us; walltime 0.169 s; speed 64.341 us/s
-- Verilator: cpu 0.169 s on 1 threads; allocated 15 MB

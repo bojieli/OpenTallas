@@ -1,9 +1,0 @@
-{
-  "branch": "codex/qwen-host-integrate-1013",
-  "source_hashes": {
-    "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "36a310d43df175fab68c93e69a598055f7b130459019ebb2a89fd364cef5f6e9",
-    "tools/qwen_host/native_fixture.py": "6f9f26156498e5ad592619312a12e2cbe329dca55d597e946df6cdf2a473c727"
-  },
-  "map": "stack=t[8:7], PC={q,t[2:0]}, sec={layer,v,g,t6,t13:9,t5:3}; ingest preserves addr[6:5]",
-  "scope": "SOURCE_OWNERSHIP_AUDIT; NOT_PHYSICAL_HBM_QUALIFICATION"
-}

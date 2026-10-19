@@ -1,7 +1,0 @@
-PROG MUX 0 MU 1 starts CFG 431 words
-PROG FAULT 330 code 3
-PROG TIMEOUT launch0=-1 hsp=41/41 cfp=431/431 kmu=0/1
-- /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:135: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 4ms; walltime 12.757 s; speed 313.550 us/s
-- Verilator: cpu 12.756 s on 1 threads; allocated 8 MB

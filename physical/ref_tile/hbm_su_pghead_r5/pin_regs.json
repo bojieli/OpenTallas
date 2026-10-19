@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_programme_pghead",
- "enable": false,
- "reason": "ot_hbm_su_programme_pghead is itself the configuration pin stage of the cluster (= the pslice c_* stage): cfg inputs land on c_we/c_bank/c_row/c_data registers, l_fault on FREG 1 pin registers, l_valid on the sticky check; every output leaves from an OREG 1 export register (o_we decoded into one flop per column) or the fault register; rst_n drives only ot_rst_relay (NATIVE-FIX3 10-18). A kit flop stage would add an edge the leaf timing contract does not price."
-}

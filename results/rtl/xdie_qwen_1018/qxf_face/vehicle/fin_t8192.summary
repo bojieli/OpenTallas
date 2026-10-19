@@ -1,5 +1,0 @@
-fin_t8192 expect=PASS got=PASS -> OK
-    XQ_FIN layer 1 T 8192: pvfin beat0 at root age 1745 = PV 880 + max(P0 741, P1 741, R 848) + 17 -> 1745 | programme tx_first 1750
-    XQ_E C2K_cmd_issue_to_land=28 C2K_q31_issue_to_land=29 C2K_q_first_issue_to_last_land=61 K2C_r31_issue_to_land=28 K2C_r0_issue_to_land=28 K2C_r_first_issue_to_last_land=59 KVN_k3_issue_to_land=18 roundtrip_cmd_issue_to_r31_land=1835 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=2
-    XQ_CFG C_REAL=0 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=2 period=6837 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=0 layers=35
-    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault

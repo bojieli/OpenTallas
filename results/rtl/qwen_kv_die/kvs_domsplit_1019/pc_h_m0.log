@@ -1,7 +1,0 @@
-SIM Verilator 5.050 2026-07-01 rev v5.050
-KVS_DOMSPLIT PASS tile=pc_h edges=2000 checks=109835 active_out=17931 split_ports=6 child_inputs=42 forced=52 landed_bits=0 landed_changes=0 errors=0 mut=0 vs=unsplit_tile
-- /srv/opentallas-scratch/claude/kv-domsplit/bench1/bench/pc_h_m0/tb.sv:310: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 4us; walltime 0.198 s; speed 20.279 us/s
-- Verilator: cpu 0.100 s on 1 threads; allocated 7 MB
-

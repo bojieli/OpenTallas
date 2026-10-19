@@ -1,9 +1,0 @@
-    input wire [0:0] ck,
-    input wire [0:0] e_en,
-    output wire [0:0] flt,
-    input wire [0:0] rs,
-    input wire [546:0] rx_d,
-    input wire [0:0] rx_v,
-    input wire [1:0] x_cr,
-    output wire [1303:0] x_d,
-    output wire [1:0] x_v

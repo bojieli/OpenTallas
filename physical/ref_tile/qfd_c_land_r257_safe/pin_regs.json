@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_c_land_r257_safe",
- "enable": false,
- "reason": "ring capture flops and registered read output are the landed bank endpoint; adding input stages changes the priced ring window"
-}

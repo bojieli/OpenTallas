@@ -1,7 +1,0 @@
-QXF-SEAMK 10-18 F6 xdie vehicle (rtl/test/qwen_split/run_xdie_exchange.sh, fleet ot-epyc5, Verilator 5.050)
-netlist_k expect=FAIL got=FAIL -> OK          kvs14c as netlisted K 9,11,9,8,9,6,11 (rx_record fault at the CMD)  [xdie_f6 @b2f1f228b]
-netlist_k_beq expect=PASS got=PASS -> OK      kvs14c after the generator's bundle pads K 11,11,9,9,9,11,11; C2K 28 K2C 28 roundtrip 1835  [xdie_f6]
-vk expect=PASS got=PASS -> OK                 (PLAN, unchanged)  [xdie_f6]
-vk_attn_d2d expect=PASS got=PASS -> OK        OT_KV_ATTN_AT_D2D seam K 1,1,0,0,0,0,0 (C 2): C2K 18 K2C 17 roundtrip 1814 (-21/layer vs 1835)  [xdie_f6d @8ee4ba4de]
-mut_attn_d2d_torn expect=FAIL got=FAIL -> OK  K 0,1,0,0,0,0,0 (rx_record torn at the new spot)  [xdie_f6d]
-fail regex (mutants): '^XQ_FAIL|KV producer/consumer fault'

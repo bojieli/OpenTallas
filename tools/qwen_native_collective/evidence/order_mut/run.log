@@ -1,7 +1,0 @@
-MISMATCH die=0 msg=0 word=0 mode=0
-MISMATCH die=2 msg=0 word=0 mode=0
-MISMATCH die=4 msg=0 word=0 mode=0
-MISMATCH die=6 msg=0 word=0 mode=0
-TP8COLL dies=8 latu=14 lats=40 msgs=2 words=256 gap=0 skew=0 inject=-1 mismatches=2456 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 first=21 last=883
-FAIL
-- rtl/test/tb_coll_tp8_provider.sv:192: Verilog $finish

@@ -1,5 +1,0 @@
-MEM sectors=8300
-FAULT sm_schedule cycle 985
-[827916000] %Fatal: tb_hbm_svg_rel_sm.sv:85: Assertion failed in tb_hbm_svg_rel_sm: sm schedule_fault
-%Error: /srv/opentallas-scratch/claude/hbm-smbudget-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:85: Verilog $stop
-Aborting...

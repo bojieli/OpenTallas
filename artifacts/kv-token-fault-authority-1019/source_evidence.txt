@@ -1,0 +1,311 @@
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv SHA256 3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce
+5: // Metadata/valid comparison only sets fault. It never gates or moves an event.
+7:  input wire ck,rst_n,
+14:  output wire [1024:0] rs,output reg fault
+17:  (* keep *) reg rn;
+18:  always @(posedge ck) rn<=rst_n;
+20:  // rs[0] is rv_q&&!vv_q (bit-identical to the former rs[0]<=rsp_valid&&!rsp_v: same edge, same rn clear).
+25:  always @(posedge ck or negedge rn)
+26:   if(!rn)begin go_q<=0;active<=0;ep<=0;ly<=0;end
+34:  always @(posedge ck or negedge rn)
+35:   if(!rn)req_valid<=0;
+52:  always @(posedge ck or negedge rn)
+53:   if(!rn)begin ev<=0;bad_rq<=0;fault<=0;rv_q<=0;vv_q<=0;end
+58:       (rv_q&&!vv_q&&returned!=ident[RESPONSE_LAT]))fault<=1;
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv SHA256 59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9
+11:     input  wire          ck, rst_n,
+20:     output wire          fault
+24:     // ECTLA-3 2026-10-17 (FLOW-HOLD flop-first): the rst_n pin lands on a pin flop; the ECTL A body's reset relay
+27:     (* keep *) reg rst_q;
+28:     always @(posedge ck) rst_q <= rst_n;
+30:         .ck(ck), .rst_n(rst_q), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(t0_row), .t1_row(t1_row), .x_i(x_i), .rs_o(rs_o));
+32:         .ck(ck), .rst_n(rst_n), .kgo(kgo), .epoch(epoch), .layer(layer), .rq(rq),
+35:         .rs(rs), .fault(fault));
+43: // Each region also takes its own reset entry (die standard: regional reset): rst_n -> ECTL A body, rst_k -> issuer
+44: // (the issuer re-registers it, rn, as before).
+47:     input  wire          ck, ck_k, rst_n, rst_k,
+56:     output wire          fault
+61:         .ck(ck), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(t0_row), .t1_row(t1_row), .x_i(x_i), .rs_o(rs_o));
+63:         .ck(ck_k), .rst_n(rst_k), .kgo(kgo), .epoch(epoch), .layer(layer), .rq(rq),
+66:         .rs(rs), .fault(fault));
+71:     input  wire [2:0]    ck, input wire rst_n, input wire [4:0] cfg,
+79:     output wire          fault,
+87:         .ck(ck[0]), .ck_k(ck[0]), .rst_n(rst_n), .rst_k(rst_n),
+90:         .ck(ck[0]), .rst_n(rst_n),
+94:         .t0_row(a0), .t1_row(a1), .x_i(x_ca), .rs_o(rs_ab), .fault(fault));
+95:     qkd_ectl_b_tp8_direct #(.STATIC_QK(1), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(RRL), .HXK(HXK)) u_b (.ck(ck[1]), .rst_n(rst_n), .cfg(cfg), .t0_row(b0), .t1_row(b1), .t0_cl(c0), .t1_cl(c1), .rs_i(rs_ab), .x_i(x_cb));
+96:     qkd_ectl_c_tp8_direct #(.STATIC_QK(1), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(RRL), .HXK(HXK)) u_c (.ck(ck[2]), .rst_n(rst_n), .cfg(cfg), .si(si), .so(so), .e0(e0), .e1(e1), .e2(e2), .e3(e3), .s0(s0),
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv SHA256 18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f
+8: //                       si = si[632:0] (633 b), so = {fault, so[411:0]} (413 b) -- the ABI of qkd_astk_strip_st /
+22: // Mutants (`KVD_ECSTMUT): 1 = so fault bit taken from k_done; 2 = q word taken one si bit low (si[536:25] -> {si[535:25], 0}).
+28:     input  wire [2:0]    ck, input wire rst_n, input wire [4:0] cfg,
+36:     output wire          fault,
+54:         .ck(ck[0]), .rst_n(rst_n), .cfg(cfg), .kgo(kgo), .epoch(epoch), .layer(layer),
+57:         .t0_row(a0), .t1_row(a1), .x_i(x_ca), .rs_o(rs_ab), .fault(fault));
+63:         .ck(ck[1]), .rst_n(rst_n), .cfg(cfg), .t0_row(b0), .t1_row(b1), .t0_cl(c0), .t1_cl(c1), .rs_i(rs_ab), .x_i(x_cb));
+69:         .ck(ck[2]), .rst_n(rst_n), .cfg(cfg), .si(si), .so(so), .e0(e0), .e1(e1), .e2(e2), .e3(e3), .s0(s0),
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv SHA256 53891da3cd0c05419fe2af48052a09bd978094971e2065196c99a56cfde0e072
+11: //   schedule: any request seen while it is invalid sets the sticky fault (an unloaded die cfg reads 0 -> invalid).
+18:     input wire ck, rst_n,
+26:     output reg fault
+32:     (* keep *) reg rst_q;
+33:     always @(posedge ck) rst_q <= rst_n;
+34:     wire rn = rst_q;
+47:     always @(posedge ck or negedge rn) if (!rn) pr_v_q <= 1'b0; else pr_v_q <= pr_valid;
+53:         always @(posedge ck or negedge rn) if (!rn) qv[w] <= 1'b0; else qv[w] <= qv[w-1];
+59:     always @(posedge ck or negedge rn)
+60:         if (!rn) begin vq0_valid <= 1'b0; vq1_valid <= 1'b0; end
+67:         always @(posedge ck or negedge rn) if (!rn) sv[w] <= 1'b0; else sv[w] <= sv[w-1];
+77:     always @(posedge ck or negedge rn)
+78:         if (!rn) begin slot_q <= 1'b0; val_q <= 2'b0; end
+97:     always @(posedge ck or negedge rn)
+98:         if (!rn) begin out_valid <= 1'b0; fault <= 1'b0; end
+99:         else begin out_valid <= slot_q; if (bad) fault <= 1'b1; end
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv SHA256 91c6bf59fd71bdb11a62c78ebed59901c8ca3100135f00928e8954936096cc6a
+31:     input  wire          rst_n,
+33:     input  wire [411:0]  so,        // engine so[411:0] (er / sc / lmax); the engine fault so[424] is sf
+49:     (* keep *) reg rn_q;
+50:     always @(posedge ck) rn_q <= rst_n;
+64:     (* keep *) reg [7:0]   eqc;                        // the four leaves' {fault, v}
+65:     always @(posedge ck or negedge rn_q)
+66:         if (!rn_q) begin so_q[0] <= 1'b0; so_q[13] <= 1'b0; so_q[424] <= 1'b0; qq[0] <= 1'b0; qq[15] <= 1'b0; qq[536:534] <= 3'd0; xq[10:0] <= 11'd0;
+81:     always @(posedge ck or negedge rn_q)
+82:         if (!rn_q) begin schedule_age<=0; schedule_active<=0; end
+108:     wire         quiet = stl == 8'd0;
+115:     wire trig = STATIC_SCHEDULE ? static_trigger : (quiet && ((Q == 3'd0) ? (!a_busy && go[a_sg] && !gone[a_sg]) : tokd[5]));
+117:     always @(posedge ck or negedge rn_q) if (!rn_q) tb_sr <= {DT{1'b0}}; else tb_sr <= start ? {DT{1'b0}} : {tb_sr[DT-2:0], trig};
+119:     qkd_astk_seq_s u_sa (.ck(ck), .rn(rn_q), .start(start), .trig(trig), .T(T), .S(S), .v(a_v), .g(a_g), .gam(a_gam), .k(a_k),
+121:     qkd_astk_seq_s u_sb (.ck(ck), .rn(rn_q), .start(start), .trig(trig_b), .T(T), .S(S), .v(b_v), .g(b_g), .gam(b_gam), .k(b_k),
+138:     always @(posedge ck or negedge rn_q)
+139:         if (!rn_q) begin a_v1 <= 1'b0; xa[0] <= 1'b0; xa[66] <= 1'b0; xa[132] <= 1'b0; xa[198] <= 1'b0; end
+164:     always @(posedge ck or negedge rn_q) if (!rn_q) jv_q <= 1'b0; else jv_q <= b_v;
+173:     ot_hdc_delay #(.W(521), .D(ADD_LAT - 1 - ((`KVD_STMUT == 4) ? 1 : 0))) u_row (.clk(ck), .rst_n(rn_q), .d({row_m, tag_q}), .q(jd));
+181:         ot_hdc_fp32_add_lat_nr #(.LAT(ADD_LAT)) u_chain (.clk(ck), .rst_n(rn_q), .valid_in(jv_q), .a(ja_q), .b(jb_q),
+187:     wire         j_bad = quiet && ((b_v != e_v) || (eqc[2] != e_v) || (eqc[4] != e_v) || (eqc[6] != e_v) || (!first && (b_v != zq[0] || (b_v && {zq[10:7], zq[6:3], zq[2]} != {b_gam, b_k, b_g}))));
+189:     wire         r_me = rq[0] && rq[8:6] == Q && quiet;
+215:     always @(posedge ck or negedge rn_q)
+216:         if (!rn_q) begin mc0 <= 3'd0; mc1 <= 3'd0; cyc8 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; tok1 <= 1'b0; f <= 1'b0;
+220:             tokd <= {tokd[4:0], zq[1] && quiet};
+225:                 (STATIC_SCHEDULE && trig && (!quiet || !go[0] || a_sg)) ||
+238:     always @(posedge ck or negedge rn_q)
+239:         if (!rn_q) xdq <= 32'd0;
+244:     always @(posedge ck or negedge rn_q)
+245:         if (!rn_q) begin sio[0] <= 1'b0; sio[18] <= 1'b0; sio[568:537] <= 32'd0; end
+248:     // ---- return chain: score count, running maximum, fault ----------------------------------------------------------------
+271:     always @(posedge ck or negedge rn_q)
+272:         if (!rn_q) xo[10:0] <= 11'd0;
+281:         if (rn_q && j_bad) $display("AKDBG %m t=%0t join: b_v=%b e_v=%b%b%b%b zq.v=%b tags %h vs %h", $time, b_v, eqc[0], eqc[2], eqc[4], eqc[6], zq[0], zq[10:2], {b_gam, b_k, b_g});
+284:         if (so_q[424]) $display("AKDBG %m t=%0t ENGINE fault", $time);
+285:         if (e_f) $display("AKDBG %m t=%0t exp fault", $time);
+293:     input  wire          rn,
+321:     always @(posedge ck or negedge rn)
+322:         if (!rn) begin act <= 1'b0; sg <= 1'b0; v <= 1'b0; gm <= 5'd0; kk <= 4'd0; end
+337:     input  wire          rst_n,
+343:     (* keep *) reg rn_q;
+344:     always @(posedge ck) rn_q <= rst_n;
+346:     always @(posedge ck or negedge rn_q) if (!rn_q) xq[0] <= 1'b0; else xq[0] <= xa[0];
+350:     ot_hdc_delay #(.W(2), .D(ADD_LAT + XD), .RESET(1)) u_tag (.clk(ck), .rst_n(rn_q), .d(xq[1:0]), .q({posD, vD}));
+355:     ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_sub (.clk(ck), .rst_n(rn_q), .valid_in(pv1),
+357:     ot_qwen_nearhbm_exp_p #(.LA(SFU_LA), .LM(SFU_LM)) u_exp (.clk(ck), .rst_n(rn_q), .v(vo), .x(x), .y(e), .vo(xvo), .fault(xf));
+359:     always @(posedge ck or negedge rn_q)
+360:         if (!rn_q) begin f <= 1'b0; xe[1:0] <= 2'b00; end
+373:     input  wire          rst_n,
+379:     output reg           af,
+389:     (* keep *) reg rn_q;
+390:     always @(posedge ck) rn_q <= rst_n;
+402:     always @(posedge ck or negedge rn_q)
+403:         if (!rn_q) begin aq_q[0] <= 1'b0; aq_q[21] <= 1'b0; am_q[0] <= 1'b0; xq[10:0] <= 11'd0; pxq[0] <= 1'b0; pyq[0] <= 1'b0;
+412:     always @(posedge ck or negedge rn_q)
+413:         if (!rn_q) begin schedule_age<=0; schedule_active<=0; end
+469:     wire         quiet = stl == 7'd0;
+470:     wire         pv_v = pxq[0] && pyq[0] && quiet;
+471:     wire         pv_bad = quiet && ((pxq[0] != pyq[0]) || (pv_v && pxq[6:1] != pyq[6:1]));
+472:     wire         z_in = zq[0] && quiet;
+485:     always @(posedge ck or negedge rn_q)
+486:         if (!rn_q) begin
+488:             mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; zovf <= 1'b0; f <= 1'b0; af <= 1'b0; zp <= 16'd0;
+494:             af <= f | (quiet && (xq[0] | fx_q | fy_q | fz_q)) | zovf;
+537:         if (rn_q && pv_bad) $display("AKDBG %m t=%0t P.V lanes apart: x %b beat %0d g %b, y %b beat %0d g %b", $time, pxq[0], pxq[5:1], pxq[6], pyq[0], pyq[5:1], pyq[6]);
+539:         if (xq[0] | fx_q | fy_q | fz_q) $display("AKDBG %m t=%0t fault in: chain %b x %b y %b z %b", $time, xq[0], fx_q, fy_q, fz_q);
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv SHA256 4fbd413253eb872ed0c7fef5757c9861526ee5cef779f1cc39aa1171f3a7ab2f
+11:  input wire ck, rst_n,
+24:  output reg fault,
+69:  always @(posedge ck or negedge rst_n)
+70:   if(!rst_n) begin
+72:    pv_q<=0; pf_q<=0; eso_q<=0; next_v<=0; aso<=0; response_v<=0; fault<=0;
+79:    if(pf_q || collide || (unseen && `KVD_ERMUT!=1) || eso_q) fault<=1;
+82:     if(pv_q[k] && dv[5][k] && da[5][11*k+3+:3]==owner_q) fault<=1;
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv SHA256 fd39915dbb763e020efe704a168b132d60227f5e79fe1ab59ec7d47e2bac460f
+2: // RTL-BUILD-KV/FAULT 2026-10-18 (lanes/RTL-BUILD-KV.md P7): the root of the attention service-unit fault tree, beside the
+4: // (NF = ND + NC/2 = 10), which the face folds as |unit_fault into service_fault (sticky per its sources, never a stall).
+6: // Static die sources (kv_static_die.py, OT_KV_STATIC_DIE=1) -- every one a registered fault flop of a real unit:
+7: //   d[0..3]  astk_<WS|WN|ES|EN>.af   ASTK stack faults (fork of the existing af_<st> bus to the sequencer)
+8: //   d[4]     ahub.hf                  attention hub fault (fork of the hf bus to the sequencer)
+9: //   d[5..6]  pvw_<0|1>.pf            PV pair faults (qkd_pvw_die_t fault)
+10: //   d[7]     pvfin.ff                 PV final join fault (slot / beat / epoch / rz-late window, adder / multiplier flags)
+12: //            (qkd_kv_cfault_node af in each qkd_kvs_grp / _h: {up, vport f, ECTL kiss kf}, slot 0 -> 7), i.e. the
+23:     input  wire                  rst_n,
+36:     always @(posedge ck or negedge rst_n)
+37:         if (!rst_n) begin dq <= 0; cq <= 0; end
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv SHA256 0c7d8895ffda7ddcb6b4a65a4e6d019e2c2bd3dfe01fae479da5f640311b0b10
+17: // service_fault, the same RESULT_RELAY face relay.
+48:  input wire ck,rst_n,
+63:  output wire result_done,output wire service_fault,
+71:  reg rf;                          // sticky result fault (CAL_PIPE: result_fault = rf | the landed beat check)
+90:  always @(posedge ck or negedge rst_n)begin
+91:   if(!rst_n)begin emitting<=0;rbeat<=0;done_r<=0;rf<=0;l_win<=0;res_t<=16'hffff;fv_d<=0;cp_sq<=0;end
+101:     l_win<=in_win;if(f_chk)rf<=1;
+116:  // 8 levels); result_fault = rf | f_chk is the original sticky flop edge for edge
+117:  wire f_chk=CAL_PIPE!=0&&((fv_d!=l_win)||(fv_d&&(fb_d!=l_boff||l_fe!=l_ep)));
+118:  assign result_fault=rf|f_chk;
+122:   assign {result_valid,result_beat,result_data,result_epoch,result_layer,result_done,service_fault}=face;
+125:   always @(posedge ck or negedge rst_n)
+126:    if(!rst_n)begin for(integer j=0;j<RESULT_RELAY;j=j+1)rl[j]<=0;end
+128:   assign {result_valid,result_beat,result_data,result_epoch,result_layer,result_done,service_fault}=rl[RESULT_RELAY-1];
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv SHA256 156f10c8b7857c5ba7572898a4c6ebe3014c145f87e5f68756572ab406babf93
+47:  input wire ck,rst_n,
+84:  always @(posedge ck or negedge rst_n)begin
+85:   if(!rst_n)begin boot_count<=0;running<=0;start_qk<=0;start_pv<=0;age<=0;ep<=0;layer<=0;ctx<=0;cal<=0;
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv SHA256 fad363ca77041ced22707c5fe0062af288d95316db4450eeb76f2940b2108bf9
+14: //   F_DLY < 1 or D_QK / D_RL / F_DLY above their bound parameters (now upper bounds) set the sticky fault on go.
+38: // fault (sticky): a go with T outside 1..8192.  Static schedule: no ready/credit; the compiler places go >= LAT edges
+45: //   end = tx_first + 34 (constant).  fault also rises (sticky) when the context does not fit the slot (R < P0, i.e.
+60:  input wire ck,rst_n,
+69:  output reg fault
+86:  always @(posedge ck or negedge rst_n)if(!rst_n)v1<=0;else v1<=go;
+91:  always @(posedge ck or negedge rst_n)if(!rst_n)v2<=0;else v2<=v1;
+101:  always @(posedge ck or negedge rst_n)if(!rst_n)v3<=0;else v3<=v2;
+118:  always @(posedge ck or negedge rst_n)if(!rst_n)v4<=0;else v4<=v3;
+128:  always @(posedge ck or negedge rst_n)if(!rst_n)v5<=0;else v5<=v4;
+136:  always @(posedge ck or negedge rst_n)if(!rst_n)v6<=0;else v6<=v5;
+143:  always @(posedge ck or negedge rst_n)if(!rst_n)v7<=0;else v7<=v6;
+153:  always @(posedge ck or negedge rst_n)if(!rst_n)v8<=0;else v8<=v7;
+160:  always @(posedge ck or negedge rst_n)if(!rst_n)v9<=0;else v9<=v8;
+169:  always @(posedge ck or negedge rst_n)begin
+170:   if(!rst_n)begin done<=0;valid<=0;fault<=0;cal<=0;rx_cmd<=16'(RX_CMD);tx_first<=0;end_age<=0;cal_epoch<=0;end
+176:     if(f9||(STRETCH!=0&&(r9[16]||r9[15:0]<p09))||(STRETCH!=0&&cfg_bad))fault<=1;
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/qkd_ahub_static_dw.sv SHA256 15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b
+27: // Faults (sticky until the next start, OR-ed into hf): export slot not after rz_publish (rz late), rz_publish outside a
+28: // pass, an unmeetable slot (target < 1 or beyond the 16-bit age), and the hub's own fault.
+40:     input  wire          rst_n,
+61:     // export to pvfin.fr and the die hub fault
+65:     output reg           fault
+86:     always @(posedge ck or negedge rst_n)
+87:         if (!rst_n) start <= 1'b0; else start <= hs_start;
+105:     always @(posedge ck or negedge rst_n) begin
+106:         if (!rst_n) begin active <= 1'b0; published <= 1'b0; age <= 16'd0; fr_valid <= 1'b0; xf <= 1'b0; end
+126:     always @(posedge ck or negedge rst_n)
+127:         if (!rst_n) fault <= 1'b0; else fault <= xf || hub_fault;
+133: // hf -> seq.hf / the attention fault tree.  ONE clock entry ck (the parent builds its own tree over its children).
+145:     input  wire          rst_n,
+163:     output wire          hf
+169:     // KV-AHUBDW 10-18 (pin rules): (a) synced regional resets: the rst_n port drives ONLY the 2-flop synchroniser of
+172:     // rst_n pins, 6 the reciprocal leaf's rst_n pin.  Release = 2 + 2 edges after the port (no consumer counts from it).
+175:     // (am, fr, hf) leaves a flop.  (c) the sealed ot_qkd_ahub_static_die_cal is composed here child by child (same
+179:     ot_rst_pipe #(.REGIONS(7), .STAGES(2)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+198:         .ck(ck), .rst_n(rr[0]), .hs_start(hs_start), .hs_ep(hs_ep), .hs_layer(hs_layer), .hs_ctx(hs_ctx),
+202:         .fault(hf));
+211:         .clk(ck), .rst_n(rr[1]), .start(start), .active_layer_parity(layer[0]), .request_epoch(epoch),
+218:         .rz4(rz_vector), .fault(hub_fault));
+224:         ot_nhb_zh u_zh (.clk(ck), .rst_n(rr[2 + a]), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]),
+231:     ot_qkh_recip_leaf u_recip (.clk(ck), .rst_n(rr[6]), .v(rx[32]), .x(rx[31:0]), .y(ryt[31:0]), .vo(ryt[32]),
+232:                                .fault(ryt[33]));
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv SHA256 11469d4501702bb4d7af5ee86889fdf3ec31901302615da0cf4fca7fe3a349e4
+37: // sticky fault and stops the command.  No ready / credit signal exists (static cycle schedule).
+49:  input wire ck,rst_n,
+55:  output reg fault
+59:  always @(posedge ck or negedge rst_n)
+60:   if(!rst_n)begin start_q<=0;p0v_q<=0;p1v_q<=0;rzv_q<=0;end
+96:   ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add(.clk(ck),.rst_n(rst_n),.valid_in(add_slot&&!fault),
+98:   ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul(.clk(ck),.rst_n(rst_n),.valid_in(mul_slot&&!fault),
+104:  always @(posedge ck or negedge rst_n)begin
+105:   if(!rst_n)begin active<=0;age<=0;ep<=0;P0<=16'hffff;P1<=16'hffff;RA<=16'hffff;MUL_AGE<=16'hffff;fault<=0;
+110:     if(active||cal_bad)begin fault<=1;active<=0;end
+112:    end else if(active&&!fault)begin
+114:     if(bad)begin fault<=1;active<=0;end
+121:    end else if(!active&&(p0v_q||p1v_q||rzv_q))fault<=1;
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv SHA256 6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc
+9: // request_valid} through a launch flop (+1 edge on ks_prg; request_valid is fault-gated combinationally, so the
+12:  input wire ck,rst_n,
+29:  input wire result_done,service_fault,
+31:  output wire busy,output wire fault,output wire [15:0] age,
+48:  qkd_native59_descriptor_producer_ld producer(.ck(ck),.rst_n(rst_n),.issue(issue),
+51:   .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
+53:  qkd_native59_descriptor_producer producer(.ck(ck),.rst_n(rst_n),.issue(issue),
+56:   .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
+59:   .load(load),.command(command),.command_tag(command_tag),.fault(ctl_fault),
+61:   .rst_n(rst_n),
+95:   .service_fault(service_fault|producer_fault),
+99:  assign fault=ctl_fault|producer_fault;
+103:   always @(posedge ck or negedge rst_n)if(!rst_n)begin prg_rv<=0;prg_qv<=0;end else begin prg_rv<=request_valid;prg_qv<=q_valid;end
+114: // land in plain flops with the issue edge, tag / descriptor load on issue & !fault, and the check runs on the landed copy:
+115: //   descriptor_valid = iss_l & !bad_l,  fault = f_r | (iss_l & bad_l)
+116: // = the original's outputs edge for edge; tag / descriptor differ only on a faulting issue (then fault holds, no load).
+118:  input wire ck,rst_n,issue,authority_valid,
+123:  output reg [58:0] tag,output wire fault
+132:  assign fault=f_r||(iss_l&&bad_l);
+133:  always @(posedge ck or negedge rst_n)
+134:   if(!rst_n)begin iss_l<=0;f_r<=0;descriptor<=0;tag<=0;end
+136:    iss_l<=issue&&!fault;f_r<=fault;
+137:    if(issue&&!fault)begin descriptor<=NATIVE59;tag<={authority_epoch,authority_stage,authority_token,authority_position[12:0],6'd0};end
+
+SOURCE srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv SHA256 cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a
+10: // word {q_ready 0, done, fault, busy 0, ready} (qkd_native_status_word).
+13: // the fault OR gating tx_valid AFTER its flop and the run/age update).  LAND=1 (opt-in, die knob OT_KV_ATTN_LAND):
+15: //    the landed copy and the outputs are corrected combinationally -- rx_valid / rx fields / fault / fault_cause /
+18: //  * the run edge updates busy / age / loaded independently of fault (fault still sets local_fault): differs only
+19: //    after fault is set, when every tile output it could touch is fault-gated (tx_valid, request_valid, q_valid).
+20: // MUT (bench, LAND=1): 4 = the TX launch flop drops the fault gate; 5 / 6 = codec MUT 3 / 4 (qkd_native_attention_record_ld).
+25:  input wire ck,rst_n,
+44:  input wire result_done,service_fault,
+46:  output reg busy,output wire fault,output reg [15:0] age
+50:  qkd_native59_command_guard guard(.ck(ck),.rst_n(rst_n),.command_valid(load),
+55:   .native_position(pos),.native_epoch(ep),.native_layer(layer),.fault(guard_fault),.fault_cause());
+60:  wire run_ok=(LAND!=0)?(loaded&&!busy):!(!loaded||busy||fault);
+66:  always @(posedge ck or negedge rst_n)begin
+67:   if(!rst_n)begin loaded<=0;loading<=0;local_fault<=0;busy<=0;age<=0;cal<=0;rx_cmd<=0;tx_first<=0;last<=0;end
+78:     if(!loaded||busy||fault)local_fault<=1;
+98:  // STATUS (age TX_FIRST+33): the namespace word {q_ready, done, fault, busy, ready} (QXF-LINK F2; was 512'd0, which the
+103:  always @(posedge ck or negedge rst_n)
+104:   if(!rst_n)done_seen<=0;
+108:  qkd_native_status_word u_status(.q_ready(1'b0),.done(done_seen),.fault(fault),.busy(1'b0),.ready(done_seen&&!fault),.word(status_data));
+112:  qkd_native_attention_record_ld #(.MUT(MUT==5?3:(MUT==6?4:0))) codec(.ck(ck),.rst_n(rst_n),
+120:   .rx_epoch(),.rx_layer(),.rx_beat(rx_beat),.rx_data(rx_data),.fault(record_fault),.fault_cause());
+122:  qkd_native_attention_record codec(.ck(ck),.rst_n(rst_n),
+130:   .rx_epoch(),.rx_layer(),.rx_beat(rx_beat),.rx_data(rx_data),.fault(record_fault),.fault_cause());
+136:  always @(posedge ck or negedge rst_n)
+137:   if(!rst_n)begin ls_slot<=0;ls_exp<=0;ls_kb<=0;ls_ekb<=0;end
+142:  always @(posedge ck or negedge rst_n)begin
+143:   if(!rst_n)begin q_valid<=0;q_beat<=0;q_data<=0;slot_fault<=0;end
+145:    q_valid<=!fault&&rx_valid&&rx_kind==2;q_beat<=rx_beat;q_data<=rx_data;
+152:   always @(posedge ck or negedge rst_n)if(!rst_n)tx_v_l<=0;else tx_v_l<=codec_tx_valid&&(MUT==4||!fault);
+156:   assign tx_valid=codec_tx_valid&&!fault;assign tx_payload=codec_tx_payload;
+158:  assign request_valid=rx_valid&&rx_kind==1&&!fault;
+160:  assign fault=local_fault||guard_fault||record_fault||slot_fault_o||service_fault;
+168: // With bad = the check of edge e, evaluated on the landed copy after e, and f_r / c_r = fault / fault_cause of the
+170: //   fault = f_r | bad,  fault_cause = f_r ? c_r : {rx_record_bad, tx_record_bad, rx_time_bad, tx_time_bad},
+171: //   tx_valid = (tx_event & !fault)@e & !bad,  rx_valid = rx_event@e & !f_r & !bad
+172: // = the original's values edge for edge (it sets fault / cause on e when bad and holds both after; valids only when
+174: // loads on tx_event & !fault (the original also requires !bad: differs only on the bad edge, after which fault holds
+177: // checked against the CURRENT expectation (one edge misaligned); 4 = fault shows the deferred check one edge late
+178: // (fault = f_r: the gating the landing must preserve).
+183:     input wire ck,rst_n,
+203:     output reg fault,output reg [3:0] fault_cause
+236:         fault=f_r|((MUT==4)?1'b0:bad);
+242:     always @(posedge ck or negedge rst_n)begin
+243:         if(!rst_n)begin
+248:             f_r<=f_r|bad;c_r<=fault_cause;txv_r<=tx_event&&!fault;
+254:         if(tx_event&&!fault)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};

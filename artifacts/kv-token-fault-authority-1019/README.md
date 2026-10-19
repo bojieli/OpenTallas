@@ -1,0 +1,17 @@
+# G7 WSQK fault initialization authority audit
+
+Read-only audit of the archived exact G7 WSQK cut. No RTL, live fixture, job, or simulation changed. All 57 explicitly listed selected RTL sources retrieved from the frozen source tree match `previous_frozen_files.json`; `source_hashes.json` records every comparison. Cut SHA256: `eb75139931390368b0c74320092e5221851b6fe8b616f3f62d5b35251caa0c1f`.
+
+The existing partial verdict checks eight ECTL issuer faults, four V-port faults, and one strip control fault. Their effective resets all sit behind one ordinary source-clock sample: ECTL `u_a.u_k.rn`, V-port `rn` aliasing `rst_q`, strip control `rn_q`. These sampled resets have no declared initialization. A monitor may establish local fault-storage authority by observing the actual top reset low on that producer's actual rising clock edge, then checking after NBA. After that event the monitor stays armed through idle; it must not use `trace_on`, programme A0, `active`, `kgo`, or transaction-valid masks. The generated template gives exact top reset and clock expressions without referencing inside hierarchical blocks. It is a source-audit template, uninstalled and untested.
+
+This rule proves local checker initialization only. It does not prove that all unreset incoming payload or validity relays become correct before source fault checks run. Any fault raised after the source-reset event must remain a failure, including a startup fault. Unknown effective reset and unresolved producer startup remain HOLD. Source-state initial correctness must not be inferred from simulator two-state initialization.
+
+`fault_inventory.json` records 19 rows: 13 selected partial probes, three shared diagnostic families, two absent PV-pair placeholders, and one selected source omitted from the existing partial verdict. `source_evidence.txt` carries exact reset/fault lines with source hashes.
+
+The omitted source is `n_astk_WS__er_fault`: owner 7 accumulates the distributed e-read chain's faults. The real `qkd_astk_fault_join` combines it with `af_s` into `n_af_WS`, while existing `KVA_STK_F` probes only `af_s`. This is a verdict inventory gap. Its inclusion requires the parent to extend the checker with the same actual source-reset authority and a causal witness; this packet does not silently change the existing verdict.
+
+Programme, face result/service, root local/I/O, calendar, PV-final, hub and aggregate unit faults are present but diagnostic-only in this partial cut: omitted stacks and PV pairs leave incomplete inputs. The programme fault also includes service fault; service fault includes all ten aggregate unit bits. They cannot be promoted to a full integrated PASS through masking. `KVA_PW0_F` and `KVA_PW1_F` are literal zero macros because those producers are absent, and have no real source/reset authority.
+
+The aggregate lane map is exact: bits 0..3 are WS/WN/ES/EN strip faults, bit 4 hub, bits 5..6 PV pairs, bit 7 PV-final, bit 8 OR of W stack K/V collectors and bit 9 OR of E stack collectors. The WSQK cut selects only the WS strip, eight ECTLs and four V ports. A cleared local aggregate register is not proof that omitted upstream producers exist.
+
+No new token-cycle, numerical, throughput, native-reset, physical-phase, or release qualification claim is made. Exact live programme and original failure evidence remain unchanged. The parent owns integration, malformed-first-authoritative-edge witness, hierarchical-reference legality and any subsequent fleet run.

@@ -1,0 +1,349 @@
+{
+  "schema": "opentallas.token_fault_authority.v1",
+  "scope": "G7 WSQK cut only; read-only source audit, no simulation or live changes",
+  "cut_sha256": "eb75139931390368b0c74320092e5221851b6fe8b616f3f62d5b35251caa0c1f",
+  "verdict": "SOURCE_INVENTORY_ONLY; runtime tag implementation and source startup safety unproved",
+  "rows": [
+    {
+      "instance": "ectl_WS_0",
+      "line": 21601,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_0 (.rsp_valid(n_krs_WS_0__r2[0]), .rsp_data(n_krs_WS_0__r2[1024:1]), .rsp_t(n_krs_WS_0__r2[1038:1025]), .rsp_v(n_krs_WS_0__r2[1039]), .rsp_epoch(n_krs_WS_0__r2[1055:1040]), .rsp_layer(n_krs_WS_0__r2[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_0[632:0]), .so(n_el_WS_0[412:0]), .t0(n_tp_WS_0_0[1558:0]), .e1(n_te_WS_0_1[15:0]), .s1(n_tsr_WS_0_1[33:0]), .e0(n_te_WS_0_0[15:0]), .s0(n_tsr_WS_0_0[33:0]), .t1(n_tp_WS_0_1[1558:0]), .e2(n_te_WS_0_2[15:0]), .s2(n_tsr_WS_0_2[33:0]), .e3(n_te_WS_0_3[15:0]), .s3(n_tsr_WS_0_3[33:0]), .req_valid(n_krq_WS_0[0]), .req_t(n_krq_WS_0[14:1]), .req_v(n_krq_WS_0[15]), .req_epoch(n_krq_WS_0[31:16]), .req_layer(n_krq_WS_0[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c0__r26__pinfix2[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__r26__pinfix1[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__r26__pinfix1[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__r26__pinfix1[22:17]), .fault(n_ks_afk_WS_0[0]), .rst_n(n_rrs_n_rst_die_t0__m_0__g0_s14[0]));",
+      "rst_n": "n_rrs_n_rst_die_t0__m_0__g0_s14[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_0.fault",
+      "effective_reset": "dut.ectl_WS_0.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t0__m_0__g0_s14[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_1",
+      "line": 21822,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_1 (.rsp_valid(n_krs_WS_1__r1__pinfix1[0]), .rsp_data(n_krs_WS_1__r1__pinfix1[1024:1]), .rsp_t(n_krs_WS_1__r1__pinfix1[1038:1025]), .rsp_v(n_krs_WS_1__r1__pinfix1[1039]), .rsp_epoch(n_krs_WS_1__r1__pinfix1[1055:1040]), .rsp_layer(n_krs_WS_1__r1__pinfix1[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_1[632:0]), .so(n_el_WS_1[412:0]), .t0(n_tp_WS_1_0[1558:0]), .e1(n_te_WS_1_1[15:0]), .s1(n_tsr_WS_1_1[33:0]), .e0(n_te_WS_1_0[15:0]), .s0(n_tsr_WS_1_0[33:0]), .t1(n_tp_WS_1_1[1558:0]), .e2(n_te_WS_1_2[15:0]), .s2(n_tsr_WS_1_2[33:0]), .e3(n_te_WS_1_3[15:0]), .s3(n_tsr_WS_1_3[33:0]), .req_valid(n_krq_WS_1[0]), .req_t(n_krq_WS_1[14:1]), .req_v(n_krq_WS_1[15]), .req_epoch(n_krq_WS_1[31:16]), .req_layer(n_krq_WS_1[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c1__r20__pinfix1[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f0__r20[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f0__r20[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f0__r20[22:17]), .fault(n_ks_afk_WS_1[0]), .rst_n(n_rrs_n_rst_die_t1__m_0__g0_s31[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g0_s31[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_1.fault",
+      "effective_reset": "dut.ectl_WS_1.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g0_s31[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_2",
+      "line": 22043,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_2 (.rsp_valid(n_krs_WS_2__r3[0]), .rsp_data(n_krs_WS_2__r3[1024:1]), .rsp_t(n_krs_WS_2__r3[1038:1025]), .rsp_v(n_krs_WS_2__r3[1039]), .rsp_epoch(n_krs_WS_2__r3[1055:1040]), .rsp_layer(n_krs_WS_2__r3[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_2[632:0]), .so(n_el_WS_2[412:0]), .t0(n_tp_WS_2_0[1558:0]), .e1(n_te_WS_2_1[15:0]), .s1(n_tsr_WS_2_1[33:0]), .e0(n_te_WS_2_0[15:0]), .s0(n_tsr_WS_2_0[33:0]), .t1(n_tp_WS_2_1[1558:0]), .e2(n_te_WS_2_2[15:0]), .s2(n_tsr_WS_2_2[33:0]), .e3(n_te_WS_2_3[15:0]), .s3(n_tsr_WS_2_3[33:0]), .req_valid(n_krq_WS_2[0]), .req_t(n_krq_WS_2[14:1]), .req_v(n_krq_WS_2[15]), .req_epoch(n_krq_WS_2[31:16]), .req_layer(n_krq_WS_2[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c2__r12__pinfix2[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f1__r13[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f1__r13[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f1__r13[22:17]), .fault(n_ks_afk_WS_2[0]), .rst_n(n_rrs_n_rst_die_t1__m_0__g0_s11[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g0_s11[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_2.fault",
+      "effective_reset": "dut.ectl_WS_2.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g0_s11[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_3",
+      "line": 22264,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_3 (.rsp_valid(n_krs_WS_3__r6__pinfix1[0]), .rsp_data(n_krs_WS_3__r6__pinfix1[1024:1]), .rsp_t(n_krs_WS_3__r6__pinfix1[1038:1025]), .rsp_v(n_krs_WS_3__r6__pinfix1[1039]), .rsp_epoch(n_krs_WS_3__r6__pinfix1[1055:1040]), .rsp_layer(n_krs_WS_3__r6__pinfix1[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_3[632:0]), .so(n_el_WS_3[412:0]), .t0(n_tp_WS_3_0[1558:0]), .e1(n_te_WS_3_1[15:0]), .s1(n_tsr_WS_3_1[33:0]), .e0(n_te_WS_3_0[15:0]), .s0(n_tsr_WS_3_0[33:0]), .t1(n_tp_WS_3_1[1558:0]), .e2(n_te_WS_3_2[15:0]), .s2(n_tsr_WS_3_2[33:0]), .e3(n_te_WS_3_3[15:0]), .s3(n_tsr_WS_3_3[33:0]), .req_valid(n_krq_WS_3[0]), .req_t(n_krq_WS_3[14:1]), .req_v(n_krq_WS_3[15]), .req_epoch(n_krq_WS_3[31:16]), .req_layer(n_krq_WS_3[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c3__r5__pinfix2[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f2__r6[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f2__r6[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f2__r6[22:17]), .fault(n_ks_afk_WS_3[0]), .rst_n(n_rrs_n_rst_die_t2__m_0__g2_s5[0]));",
+      "rst_n": "n_rrs_n_rst_die_t2__m_0__g2_s5[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_3.fault",
+      "effective_reset": "dut.ectl_WS_3.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t2__m_0__g2_s5[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_4",
+      "line": 22485,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_4 (.rsp_valid(n_krs_WS_4__r14[0]), .rsp_data(n_krs_WS_4__r14[1024:1]), .rsp_t(n_krs_WS_4__r14[1038:1025]), .rsp_v(n_krs_WS_4__r14[1039]), .rsp_epoch(n_krs_WS_4__r14[1055:1040]), .rsp_layer(n_krs_WS_4__r14[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_4[632:0]), .so(n_el_WS_4[412:0]), .t0(n_tp_WS_4_0[1558:0]), .e1(n_te_WS_4_1[15:0]), .s1(n_tsr_WS_4_1[33:0]), .e0(n_te_WS_4_0[15:0]), .s0(n_tsr_WS_4_0[33:0]), .t1(n_tp_WS_4_1[1558:0]), .e2(n_te_WS_4_2[15:0]), .s2(n_tsr_WS_4_2[33:0]), .e3(n_te_WS_4_3[15:0]), .s3(n_tsr_WS_4_3[33:0]), .req_valid(n_krq_WS_4[0]), .req_t(n_krq_WS_4[14:1]), .req_v(n_krq_WS_4[15]), .req_epoch(n_krq_WS_4[31:16]), .req_layer(n_krq_WS_4[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c4__r32__pinfix2[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f3__r32__pinfix1[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f3__r32__pinfix1[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f3__r32__pinfix1[22:17]), .fault(n_ks_afk_WS_4[0]), .rst_n(n_rrs_n_rst_die_t0__m_0__g0_s35[0]));",
+      "rst_n": "n_rrs_n_rst_die_t0__m_0__g0_s35[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_4.fault",
+      "effective_reset": "dut.ectl_WS_4.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t0__m_0__g0_s35[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_5",
+      "line": 22706,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_5 (.rsp_valid(n_krs_WS_5__r24[0]), .rsp_data(n_krs_WS_5__r24[1024:1]), .rsp_t(n_krs_WS_5__r24[1038:1025]), .rsp_v(n_krs_WS_5__r24[1039]), .rsp_epoch(n_krs_WS_5__r24[1055:1040]), .rsp_layer(n_krs_WS_5__r24[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_5[632:0]), .so(n_el_WS_5[412:0]), .t0(n_tp_WS_5_0[1558:0]), .e1(n_te_WS_5_1[15:0]), .s1(n_tsr_WS_5_1[33:0]), .e0(n_te_WS_5_0[15:0]), .s0(n_tsr_WS_5_0[33:0]), .t1(n_tp_WS_5_1[1558:0]), .e2(n_te_WS_5_2[15:0]), .s2(n_tsr_WS_5_2[33:0]), .e3(n_te_WS_5_3[15:0]), .s3(n_tsr_WS_5_3[33:0]), .req_valid(n_krq_WS_5[0]), .req_t(n_krq_WS_5[14:1]), .req_v(n_krq_WS_5[15]), .req_epoch(n_krq_WS_5[31:16]), .req_layer(n_krq_WS_5[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c5__r25__pinfix2[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f4__r25__pinfix1[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f4__r25__pinfix1[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f4__r25__pinfix1[22:17]), .fault(n_ks_afk_WS_5[0]), .rst_n(n_rrs_n_rst_die_t1__m_0__g0_s55[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g0_s55[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_5.fault",
+      "effective_reset": "dut.ectl_WS_5.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g0_s55[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_6",
+      "line": 22927,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_6 (.rsp_valid(n_krs_WS_6__r35__pinfix1[0]), .rsp_data(n_krs_WS_6__r35__pinfix1[1024:1]), .rsp_t(n_krs_WS_6__r35__pinfix1[1038:1025]), .rsp_v(n_krs_WS_6__r35__pinfix1[1039]), .rsp_epoch(n_krs_WS_6__r35__pinfix1[1055:1040]), .rsp_layer(n_krs_WS_6__r35__pinfix1[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_6[632:0]), .so(n_el_WS_6[412:0]), .t0(n_tp_WS_6_0[1558:0]), .e1(n_te_WS_6_1[15:0]), .s1(n_tsr_WS_6_1[33:0]), .e0(n_te_WS_6_0[15:0]), .s0(n_tsr_WS_6_0[33:0]), .t1(n_tp_WS_6_1[1558:0]), .e2(n_te_WS_6_2[15:0]), .s2(n_tsr_WS_6_2[33:0]), .e3(n_te_WS_6_3[15:0]), .s3(n_tsr_WS_6_3[33:0]), .req_valid(n_krq_WS_6[0]), .req_t(n_krq_WS_6[14:1]), .req_v(n_krq_WS_6[15]), .req_epoch(n_krq_WS_6[31:16]), .req_layer(n_krq_WS_6[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c6__r18__pinfix2[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f5__r19[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f5__r19[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f5__r19[22:17]), .fault(n_ks_afk_WS_6[0]), .rst_n(n_rrs_n_rst_die_t1__m_0__g0_s40[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g0_s40[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_6.fault",
+      "effective_reset": "dut.ectl_WS_6.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g0_s40[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "ectl_WS_7",
+      "line": 23148,
+      "source": "  qkd_ectl3_kiss_st #(.RESPONSE_LAT(80), .QK_ISSUE_AGE(91), .HXK(13), .MUT(0)) ectl_WS_7 (.rsp_valid(n_krs_WS_7__r18[0]), .rsp_data(n_krs_WS_7__r18[1024:1]), .rsp_t(n_krs_WS_7__r18[1038:1025]), .rsp_v(n_krs_WS_7__r18[1039]), .rsp_epoch(n_krs_WS_7__r18[1055:1040]), .rsp_layer(n_krs_WS_7__r18[1061:1056]), .ck({n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}), .si(n_eq_WS_7[632:0]), .so(n_el_WS_7[412:0]), .t0(n_tp_WS_7_0[1558:0]), .e1(n_te_WS_7_1[15:0]), .s1(n_tsr_WS_7_1[33:0]), .e0(n_te_WS_7_0[15:0]), .s0(n_tsr_WS_7_0[33:0]), .t1(n_tp_WS_7_1[1558:0]), .e2(n_te_WS_7_2[15:0]), .s2(n_tsr_WS_7_2[33:0]), .e3(n_te_WS_7_3[15:0]), .s3(n_tsr_WS_7_3[33:0]), .req_valid(n_krq_WS_7[0]), .req_t(n_krq_WS_7[14:1]), .req_v(n_krq_WS_7[15]), .req_epoch(n_krq_WS_7[31:16]), .req_layer(n_krq_WS_7[37:32]), .cfg(n_ks_kvs_hroot_WS__o_c7__r12__pinfix1[4:0]), .kgo(n_ks_kvs_hroot_WS__o_kg__f6__r12[0]), .epoch(n_ks_kvs_hroot_WS__o_kg__f6__r12[16:1]), .layer(n_ks_kvs_hroot_WS__o_kg__f6__r12[22:17]), .fault(n_ks_afk_WS_7[0]), .rst_n(n_rrs_n_rst_die_t2__m_0__g2_s19[0]));",
+      "rst_n": "n_rrs_n_rst_die_t2__m_0__g2_s19[0]",
+      "clock": "{n_clk_core_WS[0], n_clk_core_WS[0], n_clk_core_WS[0]}",
+      "probe": "dut.ectl_WS_7.fault",
+      "effective_reset": "dut.ectl_WS_7.u_a.u_k.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No kgo/active/rsp-valid mask.",
+      "fault_origin": "qkd_static_k_issuer.fault, sticky rn reset",
+      "extra": "rn is one ordinary posedge sample of the top rst_n; do not assume power-up rn=0.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t2__m_0__g2_s19[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "vport_WS_0",
+      "line": 25268,
+      "source": "  qkd_pv16_vport_b #(.MUT(0), .DQ(15), .RT(31)) vport_WS_0 (.out_valid(n_pvin_WS_0[0]), .out_t(n_pvin_WS_0[14:1]), .out_epoch(n_pvin_WS_0[30:15]), .out_v_lo(n_pvin_WS_0[542:31]), .out_v_hi(n_pvin_WS_0[1054:543]), .ck(n_clk_core_WS[0]), .vq0_valid(n_pvvq_WS_0_0[0]), .vq0_t(n_pvvq_WS_0_0[14:1]), .vq1_valid(n_pvvq_WS_0_1[0]), .vq1_t(n_pvvq_WS_0_1[14:1]), .cfg_age(n_ks_kvs_ctl__dcfg__age_vport__0_16__r69[15:0]), .in0_valid(n_pvrs_WS_0_0__pinfix1[0]), .in0_vflag(n_pvrs_WS_0_0__pinfix1[1]), .in0_t(n_pvrs_WS_0_0__pinfix1[15:2]), .in0_epoch(n_pvrs_WS_0_0__pinfix1[31:16]), .in0_d(n_pvrs_WS_0_0__pinfix1[1055:32]), .in1_valid(n_pvrs_WS_0_1__pinfix3[0]), .in1_vflag(n_pvrs_WS_0_1__pinfix3[1]), .in1_t(n_pvrs_WS_0_1__pinfix3[15:2]), .in1_epoch(n_pvrs_WS_0_1__pinfix3[31:16]), .in1_d(n_pvrs_WS_0_1__pinfix3[1055:32]), .fault(n_ks_afv_WS_0[0]), .pr_valid(n_pvrq_WS_0__r47[0]), .pr_t(n_pvrq_WS_0__r47[14:1]), .rst_n(n_rrs_n_rst_die_t1__m_0__g0_s43[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g0_s43[0]",
+      "clock": "n_clk_core_WS[0]",
+      "probe": "dut.vport_WS_0.fault",
+      "effective_reset": "dut.vport_WS_0.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No slot/pr-valid/active mask.",
+      "fault_origin": "qkd_pv16_vport_b.fault, sticky rn reset",
+      "extra": "rn aliases rst_q, one ordinary posedge sample of top rst_n.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g0_s43[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "vport_WS_1",
+      "line": 25269,
+      "source": "  qkd_pv16_vport_b #(.MUT(0), .DQ(15), .RT(31)) vport_WS_1 (.out_valid(n_pvin_WS_1[0]), .out_t(n_pvin_WS_1[14:1]), .out_epoch(n_pvin_WS_1[30:15]), .out_v_lo(n_pvin_WS_1[542:31]), .out_v_hi(n_pvin_WS_1[1054:543]), .ck(n_clk_core_WS[0]), .vq0_valid(n_pvvq_WS_1_0[0]), .vq0_t(n_pvvq_WS_1_0[14:1]), .vq1_valid(n_pvvq_WS_1_1[0]), .vq1_t(n_pvvq_WS_1_1[14:1]), .cfg_age(n_ks_kvs_ctl__dcfg__age_vport__16_16__r61[15:0]), .in0_valid(n_pvrs_WS_1_0__pinfix1[0]), .in0_vflag(n_pvrs_WS_1_0__pinfix1[1]), .in0_t(n_pvrs_WS_1_0__pinfix1[15:2]), .in0_epoch(n_pvrs_WS_1_0__pinfix1[31:16]), .in0_d(n_pvrs_WS_1_0__pinfix1[1055:32]), .in1_valid(n_pvrs_WS_1_1__pinfix3[0]), .in1_vflag(n_pvrs_WS_1_1__pinfix3[1]), .in1_t(n_pvrs_WS_1_1__pinfix3[15:2]), .in1_epoch(n_pvrs_WS_1_1__pinfix3[31:16]), .in1_d(n_pvrs_WS_1_1__pinfix3[1055:32]), .fault(n_ks_afv_WS_1[0]), .pr_valid(n_pvrq_WS_1__r56[0]), .pr_t(n_pvrq_WS_1__r56[14:1]), .rst_n(n_rrs_n_rst_die_t1__m_0__g0_s1[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g0_s1[0]",
+      "clock": "n_clk_core_WS[0]",
+      "probe": "dut.vport_WS_1.fault",
+      "effective_reset": "dut.vport_WS_1.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No slot/pr-valid/active mask.",
+      "fault_origin": "qkd_pv16_vport_b.fault, sticky rn reset",
+      "extra": "rn aliases rst_q, one ordinary posedge sample of top rst_n.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g0_s1[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "vport_WS_2",
+      "line": 25270,
+      "source": "  qkd_pv16_vport_b #(.MUT(0), .DQ(15), .RT(31)) vport_WS_2 (.out_valid(n_pvin_WS_2[0]), .out_t(n_pvin_WS_2[14:1]), .out_epoch(n_pvin_WS_2[30:15]), .out_v_lo(n_pvin_WS_2[542:31]), .out_v_hi(n_pvin_WS_2[1054:543]), .ck(n_clk_core_WS[0]), .vq0_valid(n_pvvq_WS_2_0[0]), .vq0_t(n_pvvq_WS_2_0[14:1]), .vq1_valid(n_pvvq_WS_2_1[0]), .vq1_t(n_pvvq_WS_2_1[14:1]), .cfg_age(n_rly_ks_kvs_ctl__dcfg__age_vport__32_16_76__s0_y2__o[15:0]), .in0_valid(n_pvrs_WS_2_0__pinfix1[0]), .in0_vflag(n_pvrs_WS_2_0__pinfix1[1]), .in0_t(n_pvrs_WS_2_0__pinfix1[15:2]), .in0_epoch(n_pvrs_WS_2_0__pinfix1[31:16]), .in0_d(n_pvrs_WS_2_0__pinfix1[1055:32]), .in1_valid(n_pvrs_WS_2_1__pinfix3[0]), .in1_vflag(n_pvrs_WS_2_1__pinfix3[1]), .in1_t(n_pvrs_WS_2_1__pinfix3[15:2]), .in1_epoch(n_pvrs_WS_2_1__pinfix3[31:16]), .in1_d(n_pvrs_WS_2_1__pinfix3[1055:32]), .fault(n_ks_afv_WS_2[0]), .pr_valid(n_pvrq_WS_2__r41[0]), .pr_t(n_pvrq_WS_2__r41[14:1]), .rst_n(n_rrs_n_rst_die_t0__m_0__g0_s21[0]));",
+      "rst_n": "n_rrs_n_rst_die_t0__m_0__g0_s21[0]",
+      "clock": "n_clk_core_WS[0]",
+      "probe": "dut.vport_WS_2.fault",
+      "effective_reset": "dut.vport_WS_2.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No slot/pr-valid/active mask.",
+      "fault_origin": "qkd_pv16_vport_b.fault, sticky rn reset",
+      "extra": "rn aliases rst_q, one ordinary posedge sample of top rst_n.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t0__m_0__g0_s21[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "vport_WS_3",
+      "line": 25271,
+      "source": "  qkd_pv16_vport_b #(.MUT(0), .DQ(15), .RT(31)) vport_WS_3 (.out_valid(n_pvin_WS_3[0]), .out_t(n_pvin_WS_3[14:1]), .out_epoch(n_pvin_WS_3[30:15]), .out_v_lo(n_pvin_WS_3[542:31]), .out_v_hi(n_pvin_WS_3[1054:543]), .ck(n_clk_core_WS[0]), .vq0_valid(n_pvvq_WS_3_0[0]), .vq0_t(n_pvvq_WS_3_0[14:1]), .vq1_valid(n_pvvq_WS_3_1[0]), .vq1_t(n_pvvq_WS_3_1[14:1]), .cfg_age(n_ks_kvs_ctl__dcfg__age_vport__48_16__r54[15:0]), .in0_valid(n_pvrs_WS_3_0__pinfix1[0]), .in0_vflag(n_pvrs_WS_3_0__pinfix1[1]), .in0_t(n_pvrs_WS_3_0__pinfix1[15:2]), .in0_epoch(n_pvrs_WS_3_0__pinfix1[31:16]), .in0_d(n_pvrs_WS_3_0__pinfix1[1055:32]), .in1_valid(n_pvrs_WS_3_1__pinfix3[0]), .in1_vflag(n_pvrs_WS_3_1__pinfix3[1]), .in1_t(n_pvrs_WS_3_1__pinfix3[15:2]), .in1_epoch(n_pvrs_WS_3_1__pinfix3[31:16]), .in1_d(n_pvrs_WS_3_1__pinfix3[1055:32]), .fault(n_ks_afv_WS_3[0]), .pr_valid(n_pvrq_WS_3__r63[0]), .pr_t(n_pvrq_WS_3__r63[14:1]), .rst_n(n_rrs_n_rst_die_t2__m_0__g2_s22[0]));",
+      "rst_n": "n_rrs_n_rst_die_t2__m_0__g2_s22[0]",
+      "clock": "n_clk_core_WS[0]",
+      "probe": "dut.vport_WS_3.fault",
+      "effective_reset": "dut.vport_WS_3.rn",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed effective reset assertion; then monitor continuously. No slot/pr-valid/active mask.",
+      "fault_origin": "qkd_pv16_vport_b.fault, sticky rn reset",
+      "extra": "rn aliases rst_q, one ordinary posedge sample of top rst_n.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t2__m_0__g2_s22[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "astk_WS__u_strip_u_strip_u_ctl",
+      "line": 21377,
+      "source": "  qkd_astk_ctl_s astk_WS__u_strip_u_strip_u_ctl (.af(n_astk_WS__af_s[0]), .am(n_rly_pinfix_am_WS_r6_0__s0_y2__o[35:0]), .ap(n_ap_WS[42:0]), .aq({n_rly_aq_WS_73__s1_y2_p0_0__o[11:0], n_rly_aq_WS_73__s0_y2_c1__o[527:0]}), .cal(n_rly_ks_acal_WS_43__s0_y2_p8_26__o[31:0]), .ck(n_clk_core_WS[0]), .fz(n_astk_WS__u_strip_u_strip_zf[4]), .lt(n_astk_WS__lt[20:0]), .qo(n_astk_WS__u_strip_u_strip_cq[571:0]), .rst_n(n_rrs_n_rst_die_t1__m_0__g1_s180[0]), .st({1'b0, 1'b0}), .xi(n_astk_WS__u_strip_u_strip_cx[266:0]), .zi(n_astk_WS__u_strip_u_strip_czi[137:0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g1_s180[0]",
+      "clock": "n_clk_core_WS[0]",
+      "probe": "dut.n_astk_WS__af_s[0]",
+      "effective_reset": "dut.astk_WS__u_strip_u_strip_u_ctl.rn_q",
+      "class_": "selected_partial_verdict",
+      "qualifier": "Observed rn_q assertion; then continuously monitor af. No quiet/start mask.",
+      "fault_origin": "qkd_astk_ctl_s.af",
+      "extra": "af itself is recomputed each edge; local f is sticky; quiet is source logic, not a checker authorization signal.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g1_s180[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    },
+    {
+      "instance": "kvs_attn",
+      "line": 25272,
+      "source": "  qkd_kvs_attn kvs_attn (.acal_WS(n_ks_acal_WS[47:0]), .acal_WN(n_ks_acal_WN[47:0]), .acal_ES(n_ks_acal_ES[47:0]), .acal_EN(n_ks_acal_EN[47:0]), .ck(n_clk_core_c[0]), .ufh(n_hf__f0__r34[0]), .ufs_WS(n_af_WS__f0__r38[0]), .ufs_WN(n_af_WN__f0__r7__pinfix1[0]), .ufs_ES(n_af_ES__f0__r46[0]), .ufs_EN(n_af_EN__f0__r20__pinfix1[0]), .i_ctl(n_ks_kvs_ctl__o_attn__r5[108:0]), .attn__tx_valid(n_ks_kvs_attn__attn__tx_valid[0]), .attn__tx_payload(n_ks_kvs_attn__attn__tx_payload[547:0]), .d2d__rx_payload(n_ks_d2d_kv__rx_payload__r10[547:0]), .d2d__att_tx_slot(n_ks_d2d_kv__att_tx_slot__r7__pinfix1[0]), .d2d__att_tx_kind(n_ks_d2d_kv__att_tx_kind__r7__pinfix1[3:0]), .d2d__att_tx_beat(n_ks_d2d_kv__att_tx_beat__r7__pinfix1[4:0]), .pvst(n_ks_pvst[30:0]), .pvfst(n_ks_pvfst[64:0]), .fin(n_ks_pvfin__r44__pinfix1[533:0]), .ahs(n_ks_ahs[164:0]), .prg(n_ks_prg[536:0]), .arh(n_ks_arh[7:0]), .ufk_WS(n_ks_afe_WS__r43[0]), .ufk_WN(n_ks_afe_WN__r9[0]), .ufk_ES(n_ks_afe_ES__r54[0]), .ufk_EN(n_ks_afe_EN__r22__pinfix1[0]), .ufp0(n_ks_af_ufp0__r36[0]), .ufp1(n_ks_af_ufp1__pinfix1[0]), .uff(n_ks_af_uff__r34[0]), .rst_n(n_rrs_n_rst_die_t0_0__g4_s15[0]), .d2d__srx(n_seqst_rx__f0__r8__beq3[521:0]));",
+      "rst_n": "n_rrs_n_rst_die_t0_0__g4_s15[0]",
+      "clock": "n_clk_core_c[0]",
+      "probes": [
+        "dut.kvs_attn.w_attn__fault",
+        "dut.kvs_attn.w_attn_face__result_fault",
+        "dut.kvs_attn.w_attn_face__service_fault",
+        "dut.kvs_attn.w_attn_root__local_fault",
+        "dut.kvs_attn.w_attn_root__io_fault",
+        "dut.kvs_attn.w_attn_cal__fault",
+        "dut.kvs_attn.w_afr__unit_fault[9:0]"
+      ],
+      "effective_reset": "dut.kvs_attn.rst_n",
+      "class_": "diagnostic_only_partial_cut",
+      "qualifier": "HOLD for full authority: omitted upstream producer inventory/relay initialization must be composed. Never promote to qualified zero.",
+      "extra": "The module-local reset is sufficient for local fault storage initialization, not validity of omitted external producers."
+    },
+    {
+      "instance": "pvfin",
+      "line": 25273,
+      "source": "  qkd_pv_fin_s #(.ADD_LAT(7), .MUL_LAT(6), .SKEW(1), .MUT(0)) pvfin (.ck(n_clk_core_c[0]), .out_valid(n_ks_pvfin[0]), .out_beat(n_ks_pvfin[5:1]), .out_epoch(n_ks_pvfin[21:6]), .out_data(n_ks_pvfin[533:22]), .p0_valid(n_ks_pvp0__r1[0]), .p0_beat(n_ks_pvp0__r1[5:1]), .p0_epoch(n_ks_pvp0__r1[21:6]), .p0_data(n_ks_pvp0__r1[533:22]), .rz_valid(n_ks_ahfr[0]), .rz_epoch(n_ks_ahfr[16:1]), .rz(n_ks_ahfr[144:17]), .fault(n_ks_af_uff[0]), .rst_n(n_rrs_n_rst_die_t8__m_0__g3_s9[0]), .start(n_ks_pvfst__r39__pinfix1__beq1[0]), .epoch(n_ks_pvfst__r39__pinfix1__beq1[16:1]), .cal(n_ks_pvfst__r39__pinfix1__beq1[64:17]), .p1_valid(n_ks_pvp1__r1__beq1[0]), .p1_beat(n_ks_pvp1__r1__beq1[5:1]), .p1_epoch(n_ks_pvp1__r1__beq1[21:6]), .p1_data(n_ks_pvp1__r1__beq1[533:22]));",
+      "rst_n": "n_rrs_n_rst_die_t8__m_0__g3_s9[0]",
+      "clock": "n_clk_core_c[0]",
+      "probes": [
+        "dut.pvfin.fault"
+      ],
+      "effective_reset": "dut.pvfin.rst_n",
+      "class_": "diagnostic_only_partial_cut",
+      "qualifier": "HOLD for full authority: omitted upstream producer inventory/relay initialization must be composed. Never promote to qualified zero.",
+      "extra": "The module-local reset is sufficient for local fault storage initialization, not validity of omitted external producers."
+    },
+    {
+      "instance": "ahub",
+      "line": 23158,
+      "source": "  qkd_ahub_static_dw #(.Z_IN_STRIDE(4)) ahub (.ap0(n_ap_WS__r6[42:0]), .am0(n_am_WS[35:0]), .ap1(n_ap_WN__r7[42:0]), .am1(n_am_WN[35:0]), .ap2(n_ap_ES__r7[42:0]), .am2(n_am_ES[35:0]), .ap3(n_ap_EN__r8[42:0]), .am3(n_am_EN[35:0]), .ck(n_clk_core_c[0]), .hf(n_hf[0]), .hs_start(n_ks_ahs__r46[0]), .hs_ep(n_ks_ahs__r46[16:1]), .hs_layer(n_ks_ahs__r46[22:17]), .hs_ctx(n_ks_ahs__r46[36:23]), .hs_cal_lo(n_ks_ahs__r46[148:37]), .hs_cal_r(n_ks_ahs__r46[164:149]), .fr_valid(n_ks_ahfr[0]), .fr_epoch(n_ks_ahfr[16:1]), .fr_rz(n_ks_ahfr[144:17]), .rst_n(n_rrs_n_rst_die_t8__m_0__g3_s6[0]));",
+      "rst_n": "n_rrs_n_rst_die_t8__m_0__g3_s6[0]",
+      "clock": "n_clk_core_c[0]",
+      "probes": [
+        "dut.ahub.hf"
+      ],
+      "effective_reset": "dut.ahub.rr[0]",
+      "class_": "diagnostic_only_partial_cut",
+      "qualifier": "HOLD for full authority: omitted upstream producer inventory/relay initialization must be composed. Never promote to qualified zero.",
+      "extra": "The module-local reset is sufficient for local fault storage initialization, not validity of omitted external producers."
+    },
+    {
+      "probe": "`KVA_PW0_F",
+      "class_": "absent_literal_zero",
+      "effective_reset": null,
+      "qualifier": "No authority; macro is 1'b0 because PV pair is absent."
+    },
+    {
+      "probe": "`KVA_PW1_F",
+      "class_": "absent_literal_zero",
+      "effective_reset": null,
+      "qualifier": "No authority; macro is 1'b0 because PV pair is absent."
+    },
+    {
+      "instance": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner",
+      "line": 21170,
+      "source": "  qkd_astk_er_owner_st astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner (.aso(n_astk_WS__u_strip_aso[103:91]), .ck(n_clk_core_WS[0]), .com(n_eq_WS_7[552:537]), .esi(n_eq_WS_7[632:569]), .eso_v(n_el_WS_7[0]), .fault(n_astk_WS__er_fault[0]), .next_addr(n_astk_WS__u_strip_g_er_chain_u_er_req_out_7_[47:4]), .next_v(n_astk_WS__u_strip_g_er_chain_u_er_req_out_7_[3:0]), .owner_id({1'b1, 1'b1, 1'b1}), .prev_addr(n_astk_WS__u_strip_g_er_chain_u_er_rsp_7_[47:4]), .prev_data(n_astk_WS__u_strip_g_er_chain_u_er_rsp_7_[303:48]), .prev_fault(n_astk_WS__u_strip_g_er_chain_u_er_rsp_7_[304]), .prev_v(n_astk_WS__u_strip_g_er_chain_u_er_rsp_7_[3:0]), .read_addr(n_astk_WS__u_strip_g_er_chain_u_er_req_7_[47:4]), .read_v(n_astk_WS__u_strip_g_er_chain_u_er_req_7_[3:0]), .response_addr(n_astk_WS__response_addr[43:0]), .response_data(n_pve_WS[255:0]), .response_v(n_astk_WS__response_v[3:0]), .rst_n(n_rrs_n_rst_die_t1__m_0__g1_s171[0]));",
+      "rst_n": "n_rrs_n_rst_die_t1__m_0__g1_s171[0]",
+      "clock": "n_clk_core_WS[0]",
+      "probe": "dut.n_astk_WS__er_fault[0]",
+      "effective_reset": "dut.astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.rst_n",
+      "class_": "selected_source_omitted_from_existing_partial_verdict",
+      "qualifier": "Observed source reset assertion then continuously monitor. Final owner accumulates previous chain faults.",
+      "extra": "qkd_astk_fault_join combines this with af_s into n_af_WS; existing KVA_STK_F uses af_s alone.",
+      "derivable_authority_event": {
+        "clock": "dut.n_clk_core_WS[0]",
+        "condition": "dut.n_rrs_n_rst_die_t1__m_0__g1_s171[0] === 1'b0",
+        "effect": "After NBA of this edge the effective sampled reset is low and local fault storage has been reset.",
+        "wait_edges_after_event": 0,
+        "continuous_after_event": true
+      }
+    }
+  ],
+  "arming_rule": "At each producer clock, record an actual assertion of its effective reset. Sample after NBA (e.g. opposite edge). After this event monitor faults continuously, including idle, without trace_on/A0/active/valid masking. Unknown effective reset or unresolved upstream startup is HOLD. Separate monitor initialization authority from source input initialization correctness.",
+  "hierarchy_access": "Internal effective reset references are exact source names. Existing hierarchical build prohibits refs inside hier blocks: parent must expose or derive matched tags without changing RTL; availability is HOLD until checked."
+}

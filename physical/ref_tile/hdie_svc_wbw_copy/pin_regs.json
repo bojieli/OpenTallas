@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_svc_wbw_copy",
- "enable": false,
- "reason": "RTL registers every pin: wbw_v/wbw_base/wbw_total land in pin flops pv/pb/pt; every o_wbw_* bit leaves from its own per-sink output register qv/qb/qt (keep); a kit pin-register stage would add an unpriced third edge to the compiled WBW_COPY_LAT=2"
-}

@@ -1,1 +1,0 @@
-source /src/physical/ref_tile/dsfd_vm_static_relay128_b4_native_option/clock_entry.sdc

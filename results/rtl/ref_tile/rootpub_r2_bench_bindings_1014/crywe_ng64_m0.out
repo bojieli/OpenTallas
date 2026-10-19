@@ -1,6 +1,0 @@
-golden_L0_L2 PASS 0 / 2000 fault 0 cyc 4325
-stress_0 PASS 0 / 2000 fault 0 cyc 4325
-stress_1 PASS 0 / 2000 fault 0 cyc 4325
-/srv/opentallas-scratch/claude/rootpub-r2/src_a7343353d/tools/s81_suhc/hc_gate.py:365: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
-  rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
-RUN ng64_dpi_m0_a0_hier2_cp0_cs4_ls0 pass

@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/srv/opentallas-scratch/tmp/boole-edt-component-20261005-r2.py", line 5, in <module>
-    spec=importlib.util.spec_from_file_location('edt',root/'tools/dft/edt_pattern_encode.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
-                                                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~^^^
-  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
-  File "<frozen importlib._bootstrap_external>", line 892, in get_code
-  File "<frozen importlib._bootstrap_external>", line 950, in get_data
-FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas/repos/boole-scan-edt-0ba7b2ac3/tools/dft/edt_pattern_encode.py'

@@ -1,5 +1,0 @@
-region audit: 374 register edges, 77 seam crossings (28316 b) over 26 region pairs (2 diagonal)
-FAIL R1 u_land_leg_3_1b_0_r clocked by ck_c3r3 but sits in {'c2r2'} at [1711.348, 3899.6]
-FAIL R5 landing leg_3_1b_0: ring on ck_c3r3 / read on ck_c3r3, contract c3r3 -> c2r2
-FAIL R5 landing leg_3_1b_0: 1 other c3r3 -> c2r2 crossings (the multicycle SDC would cover them): ['land_leg_3_1b_0']
-REGION_AUDIT_FAIL 3

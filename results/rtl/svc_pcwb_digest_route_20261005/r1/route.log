@@ -1,7 +1,0 @@
-view=asap7 corner=TT block=ot_hbm_accel_stream_pc_wb_digest top=ot_hbm_accel_stream_pc_wb_digest purpose=signoff_target
-  synth: cells=30154 area=4242.578 um2 seq_area=1845.129 um2 macros=0
-  pnr:   wirelength=182256 um vias=409340 DRC=0 antenna_nets=0 Fmax=1058.75 MHz
-  drv:   max_slew=0 max_cap=0 max_fanout=0
-  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
-  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
-  wrote /srv/opentallas-scratch/jobs/euclid-svc-pcwb-digest-route-r1/physical.json

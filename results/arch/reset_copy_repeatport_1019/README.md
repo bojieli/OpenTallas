@@ -1,9 +1,0 @@
-# Repeated multi-bit reset port: real Yosys regression
-
-Physical/common_flow/ot_rst_copies.py generated a spaced `{ copy copy }` port expression for an input whose every bit used one relay copy. Native Yosys script argument splitting passed only `{` to connect -port, causing canonicalization failure. SH source24a308d12 actually hit this at top relay266loads; original failed snapshot090122 is retained on ot-epyc8.
-
-The fix creates a named vector, aliases each bit to the chosen same-phase reset copy, then connects the port to that one-token vector name. These aliases add no state or logic. Existing per-bit proof of identical flop type/D/clock/reset still controls admission; mixed-family ports remain fixed and differing copies remain refused. Reset release edges and max-load policy are unchanged.
-
-10 Python tests PASS, including the new repeated2-bit input regression. Real fleet Yosys0.68+post (pinned ORFS image16470cea1d...) runs tiny3-copy/three2-bit-input RTL: old helper script fails parsing `{` as expected; fixed script passes check -assert. Four-edge SAT with asserted initial reset proves original and redistributed outputs identical, including assertion/release transitions. A tied-low alias-bit mutant builds but SAT correctly fails (trigger1 at edge3). Logs, generated scripts and concrete counterexample are committed here. This verifies this mechanism; it does not qualify SH timing or placement.
-
-Reproduce on fleet through ot-run: stage this directory, copy the repository's physical/common_flow/ot_rst_copies.py as fixed.py, then run bash run.sh in openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29. old.py is the exact pre-fix fixture from24a308d12 for the real parser-negative witness. Expected final line RESET_MULTIBIT_REAL_YOSYS_PASS.

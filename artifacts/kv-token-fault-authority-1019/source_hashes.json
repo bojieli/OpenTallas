@@ -1,0 +1,344 @@
+[
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+    "sha256": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+    "previous_sha256": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+    "sha256": "ac82a332b6d239f6b2029d86cddfc08919eb78c7a905c43b443ebb24d74b33b7",
+    "previous_sha256": "ac82a332b6d239f6b2029d86cddfc08919eb78c7a905c43b443ebb24d74b33b7",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+    "sha256": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42",
+    "previous_sha256": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/lib/ot_rst_relay.sv",
+    "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "previous_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv",
+    "sha256": "19a5df2da296db86699d5568fdd81cfc060e1f0f46405b6cda956ac7ff0ec74c",
+    "previous_sha256": "19a5df2da296db86699d5568fdd81cfc060e1f0f46405b6cda956ac7ff0ec74c",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv",
+    "sha256": "8071479f93d9990fb474ba740a777b04fc7b7ea7621f159b5b1928d724b34c1b",
+    "previous_sha256": "8071479f93d9990fb474ba740a777b04fc7b7ea7621f159b5b1928d724b34c1b",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv",
+    "sha256": "cf1ecf2603053f9cb2972ac4638f72df1346b8a8002d0558f903017ac6ba68db",
+    "previous_sha256": "cf1ecf2603053f9cb2972ac4638f72df1346b8a8002d0558f903017ac6ba68db",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+    "sha256": "619bca27a2d97c78d6f955e3f2a963bad19f1f00d8c12b15680ba21669fb5c62",
+    "previous_sha256": "619bca27a2d97c78d6f955e3f2a963bad19f1f00d8c12b15680ba21669fb5c62",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+    "sha256": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+    "previous_sha256": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_split/qfd_fwd_lane.sv",
+    "sha256": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+    "previous_sha256": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_cg.sv",
+    "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "previous_sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+    "sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "previous_sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+    "sha256": "11469d4501702bb4d7af5ee86889fdf3ec31901302615da0cf4fca7fe3a349e4",
+    "previous_sha256": "11469d4501702bb4d7af5ee86889fdf3ec31901302615da0cf4fca7fe3a349e4",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "previous_sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "previous_sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "previous_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+    "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "previous_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+    "sha256": "53891da3cd0c05419fe2af48052a09bd978094971e2065196c99a56cfde0e072",
+    "previous_sha256": "53891da3cd0c05419fe2af48052a09bd978094971e2065196c99a56cfde0e072",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+    "sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+    "previous_sha256": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+    "sha256": "6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc",
+    "previous_sha256": "6c6f1e0178d6f0def903fd9f85c96c8450e331f78e2399b496516c17eac46acc",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+    "sha256": "cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a",
+    "previous_sha256": "cdbf22798ae606880ecfcba24ab56220d3c253b3e4148f21ebdd2559ab35113a",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+    "sha256": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "previous_sha256": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+    "sha256": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+    "previous_sha256": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
+    "sha256": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
+    "previous_sha256": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv",
+    "sha256": "156f10c8b7857c5ba7572898a4c6ebe3014c145f87e5f68756572ab406babf93",
+    "previous_sha256": "156f10c8b7857c5ba7572898a4c6ebe3014c145f87e5f68756572ab406babf93",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv",
+    "sha256": "0c7d8895ffda7ddcb6b4a65a4e6d019e2c2bd3dfe01fae479da5f640311b0b10",
+    "previous_sha256": "0c7d8895ffda7ddcb6b4a65a4e6d019e2c2bd3dfe01fae479da5f640311b0b10",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+    "sha256": "fd39915dbb763e020efe704a168b132d60227f5e79fe1ab59ec7d47e2bac460f",
+    "previous_sha256": "fd39915dbb763e020efe704a168b132d60227f5e79fe1ab59ec7d47e2bac460f",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv",
+    "sha256": "fad363ca77041ced22707c5fe0062af288d95316db4450eeb76f2940b2108bf9",
+    "previous_sha256": "fad363ca77041ced22707c5fe0062af288d95316db4450eeb76f2940b2108bf9",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+    "sha256": "18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f",
+    "previous_sha256": "18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv",
+    "sha256": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+    "previous_sha256": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv",
+    "sha256": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+    "previous_sha256": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+    "sha256": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "previous_sha256": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+    "sha256": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+    "previous_sha256": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+    "sha256": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+    "previous_sha256": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_delay.sv",
+    "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "previous_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st.sv",
+    "sha256": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+    "previous_sha256": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+    "sha256": "197468906d50384682c695a399ae755de3a8dc66db32d8f9275382d2f48b1325",
+    "previous_sha256": "197468906d50384682c695a399ae755de3a8dc66db32d8f9275382d2f48b1325",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+    "sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+    "previous_sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+    "sha256": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+    "previous_sha256": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+    "sha256": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
+    "previous_sha256": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+    "sha256": "91c6bf59fd71bdb11a62c78ebed59901c8ca3100135f00928e8954936096cc6a",
+    "previous_sha256": "91c6bf59fd71bdb11a62c78ebed59901c8ca3100135f00928e8954936096cc6a",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+    "sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df",
+    "previous_sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/ot_hdc_sfu.sv",
+    "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "previous_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+    "sha256": "4fbd413253eb872ed0c7fef5757c9861526ee5cef779f1cc39aa1171f3a7ab2f",
+    "previous_sha256": "4fbd413253eb872ed0c7fef5757c9861526ee5cef779f1cc39aa1171f3a7ab2f",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+    "sha256": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b",
+    "previous_sha256": "15c402899c814a44f48e54cf4bd562419a831357f21d1078b6b3abf64e450a6b",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qkd_ahub_static_cal_gen.sv",
+    "sha256": "88ebd7162acaebaaf55d1c370fecc4de84172850ed8eb45d6278572a30e54302",
+    "previous_sha256": "88ebd7162acaebaaf55d1c370fecc4de84172850ed8eb45d6278572a30e54302",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/lib/ot_rst_pipe.sv",
+    "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+    "previous_sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv",
+    "sha256": "6653404863ded7cb9a859973113bcff00ddec1ef933396b26cd9513b9026f061",
+    "previous_sha256": "6653404863ded7cb9a859973113bcff00ddec1ef933396b26cd9513b9026f061",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+    "sha256": "31f136f38313d488735b1d3e7f359667dba23136a255d9c771f7b8ab0a46af49",
+    "previous_sha256": "31f136f38313d488735b1d3e7f359667dba23136a255d9c771f7b8ab0a46af49",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_nhb_tiles.sv",
+    "sha256": "c4a400dfcada2f15c6ed1b32c93474bb71c20d7c98c9bc0f94c6092f19a44fa4",
+    "previous_sha256": "c4a400dfcada2f15c6ed1b32c93474bb71c20d7c98c9bc0f94c6092f19a44fa4",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv",
+    "sha256": "417c81bbb813810131301371991cc93b8844c51fc44e0a7e7e75b8352dad9dd5",
+    "previous_sha256": "417c81bbb813810131301371991cc93b8844c51fc44e0a7e7e75b8352dad9dd5",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+    "sha256": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+    "previous_sha256": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+    "sha256": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+    "previous_sha256": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+    "sha256": "ba98603800741f246c45a86e2f9ab0f3b6a29b05cbca72dd0720b456d2ff11ed",
+    "previous_sha256": "ba98603800741f246c45a86e2f9ab0f3b6a29b05cbca72dd0720b456d2ff11ed",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv",
+    "sha256": "bf404eba5181b25abd165133247a700a701dd1dc92afb6aae3b33d17abe8df41",
+    "previous_sha256": "bf404eba5181b25abd165133247a700a701dd1dc92afb6aae3b33d17abe8df41",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+    "sha256": "70a431f04f9260f0354d7db127745149d55305951e96c5cd667ff01fb711b7bf",
+    "previous_sha256": "70a431f04f9260f0354d7db127745149d55305951e96c5cd667ff01fb711b7bf",
+    "match": true
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+    "sha256": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421",
+    "previous_sha256": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421",
+    "match": true
+  }
+]

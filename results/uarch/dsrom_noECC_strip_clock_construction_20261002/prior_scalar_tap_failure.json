@@ -1,7 +1,0 @@
-{
-  "verdict": "FAIL_INCOMPLETE_UPPER_PLANE_SCALAR_CLOCK_TAP",
-  "prior_model_sha256": "b9cea55766b6971f15fe6e781c33328e44bd4df07db21001ab482e7a9e7a1215",
-  "cause": "Original scalar clock leaf input projection beyond the existing bank0 M7 spine endpoint; extra lower access charged but vertical spine extension initially missing.",
-  "physical_measurement": false,
-  "fix": "Extend emitted physical M7 segment and charge exact added layer wire capacitance; add independent projection containment test."
-}

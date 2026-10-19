@@ -1,9 +1,0 @@
-# S81-MISC 10-18 fleet bench (ot-run --mem 2 --threads 1, iverilog): python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_512 --variant mut_naive, source branch claude/s81-misc-1018
-ot-run: ot-epyc5       admits  1394 GB (avail 1033, growth 55, headroom 0, waiters 0/0 GB) load 42/128 running 10 disk 2315 GB 
-ot-run: ot-epyc4       admits   406 GB (avail 535, growth 251, headroom 0, waiters 0/0 GB) load 31/128 running 18 disk 120 GB 
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1863908-1792371753 after 0 s
-mut_naive FAIL sweep 0/36 slip-fault 4 {'dL0_wrap/w512': [0, 1], 'dL_halfT/w512': [4], 'dL_T_wrap_age1/w512': [7, 8], 'dL_2T_wrap_16hop/w512': [17, 18]}
-BENCH PASS /tmp/s81misc512/run/dsfd_dvland_512_mut_naive/bench.json
-LAND_BENCH FAIL dsfd_dvland_512 mut_naive D=4 KW=3 sweep 0/36 slip-fault 4/4 latency {'dL0_wrap/w512': [0, 1], 'dL_halfT/w512': [4], 'dL_T_wrap_age1/w512': [7, 8], 'dL_2T_wrap_16hop/w512': [17, 18]}
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1863908-1792371753): exit 1

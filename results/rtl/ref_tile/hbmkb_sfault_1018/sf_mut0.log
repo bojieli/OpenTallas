@@ -1,8 +1,0 @@
-# HBM-KITS-B/SFAULT 2026-10-18 ot-epyc4 Verilator 5.050: bash rtl/hbm_accel/loader/service_native/run_stack_fault_bench.sh OUT 0 6 16 4 8
-495fc743252a90d77c812a73936703ec4f4aeb42fb6e0c3309c3b1c31a73ff51  rtl/hbm_accel/loader/service_native/tb_hbm_svc_stack_fault.sv
-1e75a28bc9b76c70735d26fe940d48b319f8e64587ef1cfae8dde19b069d37e7  rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv
-3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1  rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv
-489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd  rtl/lib/ot_reset_sync.sv
-Verilator 5.050 2026-07-01 rev v5.050
-PASS tb_hbm_svc_stack_fault MUT=0 OWN_W=6 NPC=16 NG=4 ND=8 errors=0 checks=8
-EXIT 0

@@ -1,4 +1,0 @@
-  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/test_prepare_topk_station_caller_fence.py", line 71
-    with self.subTest(runtime=runtime):self.assertEqual(len(observed),64 if runtime==512 else256)
-                                                                      ^^^^^^^^^^^^^^^^^^
-SyntaxError: expected 'else' after 'if' expression

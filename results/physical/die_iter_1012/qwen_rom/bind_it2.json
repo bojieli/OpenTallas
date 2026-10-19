@@ -1,8 +1,0 @@
-{
- "qfd_crom_g": {"view": "physical/qwen_die_masters/views/qfd_crom_g_a", "clk": "clk",
-   "ports": {"ra": ["crom_addr", "crom_re", "crom_stage"], "rq": ["crom_q", "fault"]}},
- "qfd_su_cbuf_g": {"view": "physical/qwen_die_masters/views/qfd_su_cbuf_g_b", "clk": "clk",
-   "ports": {"sa": ["crom_addr", "crom_re", "crom_stage"], "sq": ["crom_q"], "fa": ["f_addr", "f_re", "f_stage"], "fq": ["f_q", "f_fault"]}},
- "qfd_d2d_rom": {"view": "physical/qwen_die_masters/views/qfd_d2d_rom_b", "clk": "clk",
-   "ports": {"ar": ["ar_d"], "dc": ["dc_d"], "dh": ["dh_d"], "eq": ["eq_d", "eq_v"], "x3": ["x3_d"], "ea": ["ea_addr", "ea_kind", "ea_v"]}}
-}
