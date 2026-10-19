@@ -29,11 +29,24 @@
 //   dst = 4'hE       LOCAL (no slice answers dst 14; the word does not leave this block):
 //                      kind 1 EMB  -> emb_start pulse (embedding row consumed for the current token)
 //                      kind 2 SEG  -> ME program segment start, program base [15:4]
+//                      kind 3 TLOAD -> one DV slice stream TABLE word on `tl` (W5 st_wi; QLB-C4b 10-18, the die load
+//                                   path of the slice PROG / CROM / BTAB stores, qfd_dv_stream kinds 1..3):
+//                                   [9:4] PW block row r (payload = PW 16r .. 16r+15, PW 16r+i in payload[64i +: 64],
+//                                   ONE read of both store macros at row r), [12:10] stream kind (1 CROM, 2 BTAB,
+//                                   3 PROG), [16:13] dst slice, [20:17] src, [44:21] eaddr, [72:45] tag, [111:73] 0.
+//                                   tl = {1, kind, dst, src, eaddr, tag, payload} is a register loaded 2 edges after
+//                                   the issue edge (store read pipeline), for one edge; zero otherwise ("no word").
+//                                   The block read takes the store read port on the issue edge's next edge: the fetch
+//                                   read decided on the issue edge is suppressed (the compiler spaces TLOAD entries
+//                                   >= 2 edges and models the fetch: ctlm_image.py cal_model).  FAULT: kind 0 / 4..7,
+//                                   [111:73] != 0, a block inside the ME programme rows, the entry area or the ME
+//                                   control rows (>= 976).
 //                      other kinds FAULT
 //   otherwise        forwarded on `cmd` (W5 cmd_wi) on its issue edge: SU / STN / ROOT / PORTS / STREAM / AMAX /
 //                    SETID and every collective (XC, kind 0).  su_issue / xc_issue mark SU and XC issues.
 // OUTPUT TIMING: `cmd` and the local pulses are registers loaded on the issue edge (S + T_k).
-// MUT (bench only): 1 = every entry fires one edge late; 2 = entry word halves swapped; 3 = BOOT segment never starts.
+// MUT (bench only): 1 = every entry fires one edge late; 2 = entry word halves swapped; 3 = BOOT segment never starts;
+//   4 = TLOAD payload macro halves swapped; 5 = TLOAD word leaves one edge late.
 // =====================================================================================================================
 module qfd_dv_cmd_cal #(
     parameter integer MUT = 0,
@@ -57,6 +70,7 @@ module qfd_dv_cmd_cal #(
     output reg           su_issue,
     output reg  [8:0]    su_pidx,
     output reg           xc_issue,
+    output reg  [1087:0] tl,                        // TLOAD stream table word (W5 st_wi), one edge, else 0
     output reg  [75:0]   program_obs,
     output reg  [68:0]   descriptor_obs,
     output wire          image_ready,
@@ -110,11 +124,13 @@ module qfd_dv_cmd_cal #(
             program_obs <= {ob_v, ob_full, ob_addr, ob_data};
             descriptor_obs <= {dw_v2, 1'b1, dw_a2, dw_d2};
         end
-    // store read port (issue side)
+    // store read port (issue side; TLOAD block reads take it on their own edge, see ENTRY KINDS)
     reg          rce_q, rbank_q; reg [5:0] rrow_q;
+    reg          tl_rce_q, tl_v2, tl_v3; reg [5:0] tl_row_q; reg [63:0] tl_ctl_q, tl_ctl2, tl_ctl3; reg [1023:0] tl_pay3;
     wire [511:0] rd [0:1];
     generate for (g = 0; g < 2; g = g + 1) begin : g_m
-        ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in(rce_q && (rbank_q == g[0])), .r_addr_in(rrow_q), .rd_out(rd[g]),
+        ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(ck), .r_ce_in((rce_q && (rbank_q == g[0])) || tl_rce_q),
+            .r_addr_in(tl_rce_q ? tl_row_q : rrow_q), .rd_out(rd[g]),
             .w_ce_in(m_ce[g]), .w_addr_in(pw_row2), .wd_in(m_data[512*g +: 512]), .w_mask_in(m_mask[512*g +: 512]),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     end endgenerate
@@ -137,7 +153,8 @@ module qfd_dv_cmd_cal #(
     reg         rd_v, rd_bank; reg [2:0] rd_n, r_n_q;
     wire [9:0]  waddr = base + {f_idx[8:0], 1'b0};
     wire [2:0]  f_n = (f_rem >= 10'd4) ? 3'd4 : f_rem[2:0];
-    wire        can_read = running && f_rem != 10'd0 && ({1'b0, fifo_n} + {1'b0, infl} + 5'd4 <= 5'd8);
+    wire        tl_fire;
+    wire        can_read = running && f_rem != 10'd0 && ({1'b0, fifo_n} + {1'b0, infl} + 5'd4 <= 5'd8) && !tl_fire;
     // the up-to-4 entries of the word that answers this edge
     wire [511:0] rw = rd[rd_bank];
     reg  [127:0] ent [0:3];
@@ -161,6 +178,13 @@ module qfd_dv_cmd_cal #(
     wire        h_go = hc[0], h_loc = hc[115:112] == 4'hE;
     wire [2:0]  h_kind = hc[3:1];
     wire        pop = fire;
+    // TLOAD (LOCAL kind 3): block row / header / checks
+    assign      tl_fire = fire && !go && h_go && h_loc && h_kind == 3'd3;
+    wire [5:0]  tl_row = hc[9:4];
+    wire [2:0]  tl_kind = hc[12:10];
+    wire [10:0] tl_lo = {1'b0, tl_row, 4'd0}, tl_hi = tl_lo + 11'd16;
+    wire        tl_bad = tl_kind == 3'd0 || tl_kind[2] || hc[111:73] != 39'd0 || {4'd0, tl_row} < meta_rows ||
+                         tl_row >= 6'd61 || (tl_lo < {1'b0, base} + {1'b0, nent, 1'b0} && tl_hi > {1'b0, base});
     wire [2:0]  push_n = rd_v ? rd_n : 3'd0;
 
     always @(posedge ck or negedge rst_n) begin
@@ -173,6 +197,8 @@ module qfd_dv_cmd_cal #(
             rce_q <= 1'b0; rbank_q <= 1'b0; rrow_q <= 6'd0; r_n_q <= 3'd0; rd_v <= 1'b0; rd_bank <= 1'b0; rd_n <= 3'd0;
             cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; loc_base <= 12'd0;
             su_issue <= 1'b0; su_pidx <= 9'd0; xc_issue <= 1'b0;
+            tl <= 1088'd0; tl_rce_q <= 1'b0; tl_v2 <= 1'b0; tl_v3 <= 1'b0; tl_row_q <= 6'd0;
+            tl_ctl_q <= 64'd0; tl_ctl2 <= 64'd0; tl_ctl3 <= 64'd0; tl_pay3 <= 1024'd0;
         end else begin
             sealed_d <= sealed;
             done <= 1'b0;
@@ -230,10 +256,21 @@ module qfd_dv_cmd_cal #(
             end
             // ---------------- issue register (one word an edge)
             cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0;
+            // TLOAD pipeline: issue edge (read decision) -> macro read -> tl register (-> +1 edge under MUT 5)
+            tl_rce_q <= tl_fire; tl_v2 <= tl_rce_q; tl_v3 <= tl_v2;
+            if (tl_fire) begin
+                tl_row_q <= tl_row;
+                tl_ctl_q <= {1'b1, tl_kind, hc[16:13], hc[20:17], hc[44:21], hc[72:45]};
+            end
+            tl_ctl2 <= tl_ctl_q; tl_ctl3 <= tl_ctl2;
+            tl_pay3 <= (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]};
+            if (MUT == 5) tl <= tl_v3 ? {tl_ctl3, tl_pay3} : 1088'd0;
+            else          tl <= tl_v2 ? {tl_ctl2, (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]}} : 1088'd0;
             if (fire && !go && h_go) begin
                 if (h_loc) begin
                     if (h_kind == 3'd1) loc_emb <= 1'b1;
                     else if (h_kind == 3'd2) begin loc_seg <= 1'b1; loc_base <= hc[15:4]; end
+                    else if (h_kind == 3'd3) begin if (tl_bad) fault <= 1'b1; end
                     else fault <= 1'b1;
                 end else begin
                     cmd <= hc;

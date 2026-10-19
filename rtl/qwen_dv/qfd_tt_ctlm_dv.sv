@@ -15,6 +15,9 @@
 //   hr[452:0]  -> W5 hr_wi   {go, ib 379 (me_array order: qfd_dv_hr_pack), xpf 72, v}: one register (+1 edge on ib and xpf vs b2; the compiler's ib / XPF
 //                             calendars count it, XPF_TRANSPORT_EDGES included)
 //   cmd[115:0] -> W5 cmd_wi  the static command calendar qfd_dv_cmd_cal (SETID at boot, every slice / XC command)
+//   tl[1087:0] -> W5 st_wi   (QLB-C4b 10-18; MU-QW-DIE 10-19 ported into qfd_dv_cmd_cal_mu) the slice stream TABLE words
+//                             (kinds 1..3: PROG / CROM / BTAB) played by the calendar's LOCAL TLOAD entries from blocks of
+//                             this installed image (the only load path of the slice tables on the die).  A register, one edge.
 //   ss5[106:0] <- W5 ss_wo, ag5[9:0] <- W5 ag_wo (pin registers): the DV status that replaces seq_su's xs / dc sources.
 //              Q-DIEPLAN6 10-17: widened to the Q-SLICE 2f8b7015b contract (ss 107 = {ar_land, tok_val 32, <74 b>},
 //              ag 10 = {stn_busy, <9 b>}) and closes the Q-CTLM gaps: G9b dc nval = ss tok_val latched with tok_v;
@@ -102,7 +105,8 @@
 //   No port change.  New macro in the cluster: 1 x ot_rom_4096x72_m8 (leaf image).  Bench rtl/test/mu_qwen_seq/
 //   mu_opseg_bench.py.  MUT (bench only): 21 u_cal range ignored; 22 collision not flagged; 23 filler result written to
 //   the next filler's bank; 24 / 25 / 26 -> leaf MUT 4 (entry one edge late) / 5 (re-anchor every L0) / 6 (no drift check);
-//   27 context record never loaded (banks start at 0: the pre-0ka hardware); 28 record of user u loaded into user
+//   30 / 31 -> calendar MUT 4 / 5 (TLOAD payload halves swapped / table word one edge late; QLB-C4b's 9 / 10 -- 9 is
+//   HARD_HR's here);  27 context record never loaded (banks start at 0: the pre-0ka hardware); 28 record of user u loaded into user
 //   (u mod (NU-1)) + 1; 29 record not checked (a bad tag loads and does not fault).
 // =====================================================================================================================
 module qfd_tt_ctlm_dv #(
@@ -145,6 +149,7 @@ module qfd_tt_ctlm_dv #(
     // ---------------- W5 slice (qfd_dv_slice2_w dn face)
     output wire [452:0]  hr,
     output wire [115:0]  cmd,
+    output wire [1087:0] tl,
     input  wire [106:0]  ss5,
     input  wire [9:0]    ag5,
     // ---------------- embedding provider
@@ -213,13 +218,13 @@ module qfd_tt_ctlm_dv #(
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     // MUT 1..3 -> the calendar's MUT; MUT 16 (bench only, NU > 1) -> the calendar's UFOLD-off mutant
-    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21) ? MUT : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
+    qfd_dv_cmd_cal_mu #(.MUT((MUT >= 1 && MUT <= 3) ? MUT : (MUT == 16 || MUT == 21) ? MUT : (MUT == 30) ? 4 : (MUT == 31) ? 5 : 0), .LAST_STAGE(LAST_STAGE), .NU(NU),
         .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (
         .ck(ck), .rst_n(rst_n),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
         .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(l_first),
-        .start_cnt(l_cnt), .cmd(cmd), .cmd_user(c_user), .loc_emb(c_emb),
+        .start_cnt(l_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),
         .loc_seg(c_seg), .loc_base(c_base),
         .su_issue(c_su), .su_pidx(c_pidx), .xc_issue(c_xc), .program_obs(cal_program_obs),
         .descriptor_obs(cal_descriptor_obs), .image_ready(c_ready), .running(c_run), .running_u(c_run_u), .done(c_done),

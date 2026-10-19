@@ -22,7 +22,7 @@ Checks (PASS needs all):
   the XC, then one word every RX_STRIDE edges, results = f(tag, k) (tag carries the user); each word lands at the slice's
   PORTS ar_base + 16 k (ar_k reset by PORTS, as qfd_dv_slice2) and must land at user(tag)'s own region + 16 k;
   C6 busy4 sets fault_code[0];  C7 coll4 sets fault_code[1].
-Mutants (--mut, each must FAIL): 11 relocation/tag from the wrong user, 12 per-user base dropped, 13 old one-in-flight
+Mutants (--mut, each must FAIL): 4 TLOAD payload halves swapped, 5 TLOAD word one edge late (C1 lockstep / C8), 11 relocation/tag from the wrong user, 12 per-user base dropped, 13 old one-in-flight
 rule, 14 start-while-busy not faulted, 15 a start freezes every playhead (the single calendar's global gating).
 """
 import argparse, json, os, re, subprocess, sys
@@ -56,6 +56,15 @@ def ports(ar, dd, em): return F(go=(0, 1, 1), kind=(1, 3, 4), ar=(4, 24, ar), dd
 def xc(seg, words, mode=0): return F(go=(0, 1, 1), kind=(1, 3, 0), sub=(4, 2, 0), mode=(6, 1, mode), words=(7, 16, words), tag=(23, 32, seg), dst=(112, 4, 15))
 def loc_emb():        return F(go=(0, 1, 1), kind=(1, 3, 1), dst=(112, 4, 14))
 def loc_seg(b):       return F(go=(0, 1, 1), kind=(1, 3, 2), base=(4, 12, b), dst=(112, 4, 14))
+def tload(row, kind, dst, src, ea, tag):   # MU-QW-DIE 10-19: LOCAL kind 3 TLOAD (QLB-C4b), block row = PW 16 row .. +15
+    return F(go=(0, 1, 1), kind=(1, 3, 3), row=(4, 6, row), tk=(10, 3, kind), tdst=(13, 4, dst), tsrc=(17, 4, src),
+             ea=(21, 24, ea), tag=(45, 28, tag), dst=(112, 4, 14))
+TL_ROW = 60
+TLOADS = [(TL_ROW, 3, 5, 1, 0x10, 7), (TL_ROW, 1, 9, 2, 0x123, 0xABCDE)]
+def tl_word(row, kind, dst, src, ea, tag, pw):
+    ctl = (1 << 63) | (kind << 60) | (dst << 56) | (src << 52) | (ea << 28) | tag
+    pay = sum(pw[16 * row + i] << (64 * i) for i in range(16))
+    return (ctl << 1024) | pay
 def setid():          return F(go=(0, 1, 1), kind=(1, 3, 7), dst=(112, 4, 15))
 
 
@@ -68,7 +77,7 @@ SEGS = {
         (3000, loc_seg(0x10)), (4620, ports(AR_REG[1], 0x2000, 0x3000)), (4900, su(6)), (5000, su(7))],
     0: [(8, loc_emb()), (12, su(8)), (20, su(9))],                               # token start (stage 0)
     2: [(8, stn(0x180)), (16, loc_seg(0x20)), (24, xc(2, 1, mode=1))],          # LM head (stage 37)
-    3: [(4, setid()), (8, su(10))],                                             # BOOT
+    3: [(4, setid()), (8, su(10)), (12, tload(*TLOADS[0])), (14, tload(*TLOADS[1]))],   # BOOT (+ 2 TLOAD, QLB-C4b)
 }
 
 
@@ -88,6 +97,8 @@ def image():
     pw = [0] * 1024
     for e, v in enumerate(entries):
         pw[BASE + 2 * e] = v & ((1 << 64) - 1); pw[BASE + 2 * e + 1] = v >> 64
+    for i in range(16):                    # the TLOAD block (above the entry area, below the control rows)
+        pw[16 * TL_ROW + i] = (0x9E3779B97F4A7C15 * (i + 1)) & ((1 << 64) - 1)
     dw = [(0x43414c44 << 32) | (BASE << 16) | nent] + [(desc[s][0] << 16) | desc[s][1] for s in range(4)] + [0, 0, 0]
     return pw, dw
 
@@ -132,6 +143,7 @@ def run(work, exe, name, events, ncyc):
         c, k = int(p[0]), p[1]
         if k in ('CMD', 'SUI', 'SEG'): out['ev'].append((c, k, int(p[2]), int(p[3], 16)))
         elif k in ('XCI', 'EMB', 'DONE'): out['ev'].append((c, k, int(p[2]), 0))
+        elif k == 'TL': out.setdefault('tl', []).append((c, int(p[2]), int(p[3], 16)))
         elif k == 'FAULT': out['faults'].append((c, p[2]))
         elif k == 'END': out['end'] = (int(p[2]), p[3]); out['mism'] = int(p[4])
     return out
@@ -254,6 +266,13 @@ def main():
     lerr, nland = landing_model(got)
     if lerr: fails.append(f'C5 landing: {len(lerr)} errors, first {lerr[:3]}')
     if nland != 4 * NPER * 2 * AR_WORDS: fails.append(f'C5 landed {nland} words, want {4 * NPER * 2 * AR_WORDS}')
+    # C8 (MU-QW-DIE 10-19) TLOAD: every image seal plays the BOOT TLOAD words on tl (user 0), payload = the PW block
+    pw_img, _ = image()
+    want_tl = [tl_word(*t, pw_img) for t in TLOADS]
+    for n, loads in (('lock', 2), ('mu4', 1)):
+        g = [w for c, u, w in res[n].get('tl', [])]
+        if g != want_tl * loads:
+            fails.append(f'C8 {n} TLOAD words {len(g)} != expected {len(want_tl) * loads} (or payload / header differs)')
     # C6 / C7 negative scenarios
     fc = lambda r: r['end'][1] if r['end'] else '000000'
     if fc(res['busy4'])[-1] != '1': fails.append(f"C6 busy4 restart not faulted (fault_code {fc(res['busy4'])})")

@@ -15,21 +15,21 @@ module tb_qfd_tt_ctlm_dv_lpf_eq;
     wire [75:0] a_program_obs, b_program_obs; wire a_csr, b_csr, a_lcv, b_lcv; wire [17:0] a_nt, b_nt, a_np, b_np;
     wire [5:0] a_cs, b_cs; wire [75:0] a_cpo, b_cpo; wire [68:0] a_cdo, b_cdo; wire a_cir, b_cir; wire [55:0] a_dc, b_dc;
     wire [379:0] a_nc, b_nc; wire [452:0] a_hr, b_hr; wire [115:0] a_cmd, b_cmd; wire a_es, b_es; wire [17:0] a_et, b_et;
-    wire a_cf, b_cf;
+    wire a_cf, b_cf; wire [1087:0] a_tl, b_tl;
     qfd_tt_ctlm_dv #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .HARD_HR(1), .MUT(DMUT), .NU(NU), .OPSEG(OPSEG)) u_a (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .dh_user(dh_user), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(a_program_obs), .control_stores_ready(a_csr),
         .layer_context_v(a_lcv), .native_tok(a_nt), .native_pos(a_np), .command_stage(a_cs), .cal_program_obs(a_cpo),
         .cal_descriptor_obs(a_cdo), .cal_image_ready(a_cir), .dc(a_dc), .native_cmd(a_nc), .native_ret(native_ret),
-        .hr(a_hr), .cmd(a_cmd), .ss5(ss5), .ag5(ag5), .emb_start(a_es), .emb_token(a_et), .cf(a_cf));
+        .hr(a_hr), .cmd(a_cmd), .tl(a_tl), .ss5(ss5), .ag5(ag5), .emb_start(a_es), .emb_token(a_et), .cf(a_cf));
     qfd_tt_ctlm_dv_lpf #(.XPF_TRANSPORT_EDGES(20), .STAGE_ME(1), .NU(NU), .OPSEG(OPSEG)) u_b (.ck(ck), .rst_n(rst_n),
         .pw(pw), .dh(dh), .dh_user(dh_user), .kok(kok), .kwd(kwd), .fab(fab), .program_obs(b_program_obs), .control_stores_ready(b_csr),
         .layer_context_v(b_lcv), .native_tok(b_nt), .native_pos(b_np), .command_stage(b_cs), .cal_program_obs(b_cpo),
         .cal_descriptor_obs(b_cdo), .cal_image_ready(b_cir), .dc(b_dc), .native_cmd(b_nc), .native_ret(native_ret),
-        .hr(b_hr), .cmd(b_cmd), .ss5(ss5), .ag5(ag5), .emb_start(b_es), .emb_token(b_et), .cf(b_cf));
-    wire [2047:0] va = {a_program_obs, a_csr, a_lcv, a_nt, a_np, a_cs, a_cpo, a_cdo, a_cir, a_dc, a_nc, a_hr, a_cmd, a_es, a_et, a_cf};
-    wire [2047:0] vb = {b_program_obs, b_csr, b_lcv, b_nt, b_np, b_cs, b_cpo, b_cdo, b_cir, b_dc, b_nc, b_hr, b_cmd, b_es, b_et, b_cf};
+        .hr(b_hr), .cmd(b_cmd), .tl(b_tl), .ss5(ss5), .ag5(ag5), .emb_start(b_es), .emb_token(b_et), .cf(b_cf));
+    wire [3135:0] va = {a_tl, a_program_obs, a_csr, a_lcv, a_nt, a_np, a_cs, a_cpo, a_cdo, a_cir, a_dc, a_nc, a_hr, a_cmd, a_es, a_et, a_cf};
+    wire [3135:0] vb = {b_tl, b_program_obs, b_csr, b_lcv, b_nt, b_np, b_cs, b_cpo, b_cdo, b_cir, b_dc, b_nc, b_hr, b_cmd, b_es, b_et, b_cf};
     integer cyc, bad, nc, act, act_nc, act_cmd, act_hr;
-    reg [2047:0] vprev;
+    reg [3135:0] vprev;
     task rnd; begin
         pw = {$urandom, $urandom, $urandom}; dh = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
         // stage starts / program writes sparse enough that the calendar and head run segments, not only faults

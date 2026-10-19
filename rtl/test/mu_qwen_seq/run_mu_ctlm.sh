@@ -9,7 +9,7 @@
 #   lp    rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp_bench.sh (regenerated, NU 4, random dh_user): audit PASS, unland FAIL, MUT 0
 #         PASS, 1 / 2 FAIL (MUT 4 = late u_hr reset, not observable: HF-4 waiver, reported as INFO)
 #   eq    rtl/qwen_dv/lp/tb_qfd_tt_ctlm_dv_lpf_eq.sv NU 4 random dh_user: OPSEG 0 DMUT 0 PASS, 5 / 6 FAIL; OPSEG 1 DMUT 0 PASS, 5 / 29 FAIL
-#   seq   rtl/test/mu_qwen_seq/run_mu_seq.sh (qfd_dv_cmd_cal_mu, UFOLD default 0): mut 0 PASS, 11..15 FAIL
+#   seq   rtl/test/mu_qwen_seq/run_mu_seq.sh (qfd_dv_cmd_cal_mu, UFOLD default 0): mut 0 PASS, 4 5 11..15 FAIL
 set -u
 D=$(cd "$(dirname "$0")" && pwd); R=$(cd "$D/../../.." && pwd); W=${1:?WORK}; shift; mkdir -p "$W"; W=$(cd "$W" && pwd)
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}

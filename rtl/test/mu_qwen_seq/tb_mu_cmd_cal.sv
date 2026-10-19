@@ -15,10 +15,11 @@ module tb_mu_cmd_cal;
     reg pw_v = 0, dw_v = 0, start = 0; reg [9:0] pw_addr = 0; reg [63:0] pw_data = 0, dw_data = 0; reg [2:0] dw_addr = 0;
     reg [5:0] stage = 0; reg [UB-1:0] start_user = 0;
     wire [115:0] cmd; wire [UB-1:0] cmd_user, done_user; wire loc_emb, loc_seg, su_issue, xc_issue, image_ready, running, done, fault;
+    wire [1087:0] tl, r_tl;
     wire [11:0] loc_base; wire [8:0] su_pidx; wire [75:0] pobs; wire [68:0] dobs; wire [NU-1:0] running_u; wire [5:0] fcode;
     qfd_dv_cmd_cal_mu #(.MUT(MUT), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE)) dut (.ck(ck), .rst_n(rst_n),
         .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .dw_v(dw_v), .dw_addr(dw_addr), .dw_data(dw_data),
-        .start(start), .stage(stage), .start_user(start_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .cmd_user(cmd_user), .loc_emb(loc_emb),
+        .start(start), .stage(stage), .start_user(start_user), .start_rng(1'b0), .start_first(10'd0), .start_cnt(10'd0), .cmd(cmd), .tl(tl), .cmd_user(cmd_user), .loc_emb(loc_emb),
         .loc_seg(loc_seg), .loc_base(loc_base), .su_issue(su_issue), .su_pidx(su_pidx), .xc_issue(xc_issue),
         .program_obs(pobs), .descriptor_obs(dobs), .image_ready(image_ready), .running(running), .running_u(running_u),
         .done(done), .done_user(done_user), .fault(fault), .fault_code(fcode));
@@ -27,7 +28,7 @@ module tb_mu_cmd_cal;
     wire [75:0] r_pobs; wire [68:0] r_dobs;
     generate if (LOCKSTEP != 0) begin : g_ref
         qfd_dv_cmd_cal u_ref (.ck(ck), .rst_n(rst_n), .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .dw_v(dw_v),
-            .dw_addr(dw_addr), .dw_data(dw_data), .start(start), .stage(stage), .cmd(r_cmd), .loc_emb(r_emb),
+            .dw_addr(dw_addr), .dw_data(dw_data), .start(start), .stage(stage), .cmd(r_cmd), .tl(r_tl), .loc_emb(r_emb),
             .loc_seg(r_seg), .loc_base(r_base), .su_issue(r_sui), .su_pidx(r_pidx), .xc_issue(r_xci),
             .program_obs(r_pobs), .descriptor_obs(r_dobs), .image_ready(r_ir), .running(r_run), .done(r_done),
             .fault(r_fault));
@@ -47,14 +48,15 @@ module tb_mu_cmd_cal;
             if (cmd != 116'd0) $fdisplay(lg, "%0d CMD %0d %h", cyc, cmd_user, cmd);
             if (su_issue) $fdisplay(lg, "%0d SUI %0d %h", cyc, cmd_user, su_pidx);
             if (xc_issue) $fdisplay(lg, "%0d XCI %0d", cyc, cmd_user);
+            if (tl != 1088'd0) $fdisplay(lg, "%0d TL %0d %h", cyc, cmd_user, tl);
             if (loc_emb) $fdisplay(lg, "%0d EMB %0d", cyc, cmd_user);
             if (loc_seg) $fdisplay(lg, "%0d SEG %0d %h", cyc, cmd_user, loc_base);
             if (done) $fdisplay(lg, "%0d DONE %0d", cyc, done_user);
             if (fault && !flt_l) $fdisplay(lg, "%0d FAULT %b", cyc, fcode);
             flt_l = fault;
             if (LOCKSTEP != 0) begin
-                if ({cmd, loc_emb, loc_seg, loc_base, su_issue, su_pidx, xc_issue, pobs, dobs, image_ready, running, done, fault} !==
-                    {r_cmd, r_emb, r_seg, r_base, r_sui, r_pidx, r_xci, r_pobs, r_dobs, r_ir, r_run, r_done, r_fault}) begin
+                if ({tl, cmd, loc_emb, loc_seg, loc_base, su_issue, su_pidx, xc_issue, pobs, dobs, image_ready, running, done, fault} !==
+                    {r_tl, r_cmd, r_emb, r_seg, r_base, r_sui, r_pidx, r_xci, r_pobs, r_dobs, r_ir, r_run, r_done, r_fault}) begin
                     mism = mism + 1;
                     if (mism <= 20) $fdisplay(lg, "%0d MISMATCH", cyc);
                 end
