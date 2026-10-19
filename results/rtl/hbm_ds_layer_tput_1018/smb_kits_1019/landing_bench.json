@@ -1,0 +1,20 @@
+{
+ "source_commit": "eac39e281",
+ "host": "ot-agidock128",
+ "simulator": "Icarus g2012",
+ "production_shape": {
+  "LBANKS": 4,
+  "sectors_each_block": 272,
+  "ordinal_bank": 3,
+  "landed_sectors_per_block": 34,
+  "FIFO_depth": 8,
+  "FIFO_payload": 285
+ },
+ "positive": "PASS tx136 reads136 completes4 fault0",
+ "mutants": {
+  "1": "FAIL1079, synchronous head prefetch missing",
+  "2": "FAIL1052, wrong SRAM slot"
+ },
+ "scenario": "Each block first fills8FIFOentries under stop, then drains contiguous burst before regular streaming; reserve/epoch/count/duplicate checks retained; actual256x256 landing SRAM read back for all136words",
+ "scope": "Storage-only source composition, not native boundary or fullservice qualification"
+}

@@ -1,0 +1,4 @@
+SVG_LANDING_SRAM FAIL mut=1 errors=1079 tx=136 reads=136 completes=4 fault=1
+FATAL: rtl/test/hbm_accel/svg_rel/tb_svg_landing_sram.sv:44: landing mismatch
+       Time: 473712  Scope: tb_svg_landing_sram
+MUT=1 RC=1
