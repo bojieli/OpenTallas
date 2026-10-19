@@ -25,6 +25,22 @@ def contract(rd_lat, rq_relays, rr_relays, bank='hfd_vms_bank_native_q0_faces', 
     return dict(instances=I, edges=E)
 
 
+def share_contract(vm_rt, op_param, op_lanes, ctl='ot_hbm_idx_rootctl_static_am'):
+    """IDX root share (registered am share, VM_RT) on one faces bank (rq4/rr4) + the n12 SW reader behind it
+    (op_lanes relay stages each way between op.vm_rq -> ctl.index_rq and ctl.index_rr -> op.vm_rr)."""
+    I = {'ctl': dict(master=ctl, params={'VM_RT': vm_rt}, ports={p: {} for p in ('vm_rq', 'vm_rr', 'index_rq', 'index_rr')}),
+         'op': dict(master='ot_hbm_idx_vm_query_static_n12', params={'VM_RT_EXTRA': op_param}, ports={'vm_rq': {}, 'vm_rr': {}}),
+         'vmb0': dict(master='hfd_vms_bank_native_q0_faces', params={}, ports={'rq4': {}, 'rr4': {}})}
+    E = [dict(source=['ctl', 'vm_rq', 0, 17], sink=['vmb0', 'rq4', 0, 17]), dict(source=['vmb0', 'rr4', 0, 257], sink=['ctl', 'vm_rr', 0, 257])]
+    for d, (src, dst, w) in enumerate(((('op', 'vm_rq'), ('ctl', 'index_rq'), 17), (('ctl', 'index_rr'), ('op', 'vm_rr'), 257))):
+        prev = src
+        for k in range(op_lanes):
+            r = f'l{d}_{k}'; I[r] = dict(master='hbfd_rly_48_WE', params={}, ports={'i': {}, 'o': {}})
+            E.append(dict(source=[prev[0], prev[1], 0, w], sink=[r, 'i', 0, w])); prev = (r, 'o')
+        E.append(dict(source=[prev[0], prev[1], 0, w], sink=[dst[0], dst[1], 0, w]))
+    return dict(instances=I, edges=E)
+
+
 def status(c):
     rows, s = L.check(c)
     r = [x for x in rows if x['client'] == 'xl'][0]
@@ -42,6 +58,14 @@ def test():
     assert status(c)[0] == 'PASS'
     c['instances']['xl']['params']['RD_LAT'] = [10, 12]
     assert status(c)[0] == 'FAIL'
+    # IDX root share (HBM-BANKLAT-IDX): VM_RT 1 on the faces bank, n12 right behind it -> n13 (VEH-TOPKFIX2); lanes add
+    def op(c):
+        rows, _ = L.check(c)
+        return [(x['status'], x.get('want')) for x in rows if x['client'] in ('ctl', 'op')]
+    assert op(share_contract(1, 5, 0)) == [('PASS', 1), ('PASS', 5)]
+    assert op(share_contract(1, 4, 0)) == [('PASS', 1), ('FAIL', 5)]
+    assert op(share_contract(1, 9, 2)) == [('PASS', 1), ('PASS', 9)]
+    assert op(share_contract(0, 4, 0))[0] == ('FAIL', 1)
     print('test_d4g_bank_latency PASS')
 
 

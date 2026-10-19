@@ -64,8 +64,11 @@ RULES = {
 }
 # downstream clients of a share: (share master, share request port) -> (client param, RTL default, ref value, ref lanes, why)
 SHARE_PORTS = {
-    ('ot_hbm_idx_rootctl_static_am', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 2, 'n12 SW behind the registered share: 2 fixed edges'),
-    ('ot_hbm_idx_rootctl_static_am_pin', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 2, 'n12 SW behind the registered share'),
+    # n12 VM_RT_EXTRA 4 = 2 shell pins + the registered share's 2 pin flops (index_rq pin, vm_rr leaf pin; n12 header), so
+    # its reference has NO die lane to the share (ref lanes 0; HBM-BANKLAT-IDX 10-19: was 2, which under-counted by 2 and
+    # disagreed with VEH-TOPKFIX2's n13 at VM_RT 1).
+    ('ot_hbm_idx_rootctl_static_am', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 0, 'n12 SW behind the registered share: its 2 pins'),
+    ('ot_hbm_idx_rootctl_static_am_pin', 'index_rq'): ('VM_RT_EXTRA', 4, 4, 0, 'n12 SW behind the registered share'),
     ('ot_hbm_idx_rootctl_static_am', 'argmax_rq'): ('VMX', 5, 5, 0, 'argmax r2 VMX 5 behind rootctl_am (argmax_m)'),
     ('ot_hbm_idx_rootctl_static_am_pin', 'argmax_rq'): ('VMX', 5, 5, 0, 'argmax r2 VMX behind rootctl_am_pin'),
     ('ot_hbm_idx_vm_share2_static', 'a_rq'): ('VM_RT', 0, 0, 0, 'face A of a share2 captures n+8 (+VM_RT)'),
@@ -73,7 +76,9 @@ SHARE_PORTS = {
     ('ot_hbm_idx_vm_share2_static_r', 'a_rq'): ('VM_RT', 0, 0, 0, 'face A of a share2_r captures n+10 (+VM_RT)'),
     ('ot_hbm_idx_vm_share2_static_r', 'b_rq'): ('VM_RT', 0, 0, 0, 'face B of a share2_r captures n+10 (+VM_RT)'),
 }
-# per-master overrides of the downstream param name (the n12 reader keeps VM_RT_EXTRA behind a share2 too)
+# per-master overrides of the downstream param name (the n12 reader keeps VM_RT_EXTRA behind a share2 too: the
+# combinational share2 face adds no edge, so its 2 reference die edges count as ref lanes). Applied only where the share
+# port's own entry names a different param (a share port written for that client keeps its own reference).
 DOWN_PARAM = {'ot_hbm_idx_vm_query_static_n12': ('VM_RT_EXTRA', 4, 4, 2)}
 INFO_MASTERS = re.compile(r'^(hfd_hgi_vms|hfd_hgi_vm_calendar|hfd_vms_wq2_merge|ot_hbm_svc_vmdel|ot_hgi_coll_kq_share2|'
                           r'ot_hbm_sm_vm_wr_q)')
@@ -221,6 +226,8 @@ def check(c):
         want = ref + need - ref_rt
         row.update(have=have, want=want)
         if have != want:
+            if isinstance(have, int) and have > want:
+                row['pad_to_param'] = f'die pads every bank lane of {ci} +{have - want} (param budget {have} > lanes {want})'
             row['bad'].append(f'{ci}.{pname} = {have}, bank contract + lanes need {want} '
                               f'(ref {ref} at round trip {ref_rt}; actual {need} = bank {BANK_RD if kind == "rd" else BANK_WR}'
                               f' + pin {ps[0]["pin"]} + lanes)')
@@ -237,7 +244,7 @@ def check(c):
                 continue
             ci, cp = d[0], d[1]
             cm = I[ci]['master']
-            if cm in DOWN_PARAM:
+            if cm in DOWN_PARAM and DOWN_PARAM[cm][0] != pname:
                 pname, dflt, ref, ref_lanes = DOWN_PARAM[cm]
             lq, nq = G.lane_latency(hq)
             rport = {'index_rq': 'index_rr', 'argmax_rq': 'argmax_m', 'a_rq': 'a_rr', 'b_rq': 'b_rr'}[sport]
@@ -252,6 +259,8 @@ def check(c):
             row.update(have=have, want=want, lanes=lq + lr, share_excess=ex)
             if have != want:
                 row['status'] = 'FAIL'
+                if isinstance(have, int) and have > want:
+                    row['pad_to_param'] = f'die pads the {ci} <-> {si} lanes +{have - want} (param budget {have})'
                 row['bad'].append(f'{ci}.{pname} = {have}, need {want} (ref {ref} + share {si} excess {ex} + lanes '
                                   f'{lq}+{lr} - ref lanes {ref_lanes})')
             rows.append(row)

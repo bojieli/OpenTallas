@@ -1,0 +1,6 @@
+ot-run: ot-epyc6       admits   756 GB (avail 738, growth 208, headroom 0, waiters 0/0 GB) load 10/128 running 11 disk 6709 GB 
+ot-run: ot-epyc7       admits  1091 GB (avail 887, growth 124, headroom 0, waiters 0/0 GB) load 69/96 running 31 disk 6797 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-48006-1792402254 after 0 s
+CASE n12_dir_m3 IDX_VM_QUERY_N12_LAT MUT3 via_ctl0 vmrt171 dut170 ctl0 bank_lanes168..168 commits514 reads514 blocks0 quant0 errors0 fault1 share_fault0 firstblock-79 IDX_VM_QUERY_N12_LAT FAIL FATAL: rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv:125: n12 at the d4g budget: query/weight/quant/latency mismatch        Time: 6410000000  Scope: tb_vm_query_n12_lat 
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-48006-1792402254): exit 1
