@@ -1,0 +1,269 @@
+{
+ "schema": "opentallas.hbm_mtp_next_1018.d1.v1",
+ "lane": "HBM-MTP deliverable 1 (sizing study, design only, outside release closure)",
+ "date": "2026-10-18",
+ "composer": "MTP-AREA (Claude), last of the three sub-agents",
+ "branches": {
+  "stats": "claude/hbm-mtp-stats-1018@c26488f3c",
+  "model": "claude/hbm-mtp-model-1018@c3a96760b",
+  "area": "claude/hbm-mtp-area-1018@edc5b8dfa"
+ },
+ "inputs": {
+  "stats": "results/arch/hbm_mtp_next_1018/stats/summary.json",
+  "area_measured": "results/arch/hbm_mtp_next_1018/sm_area/summary.json",
+  "area_composed": "results/arch/hbm_mtp_next_1018/area_composed.json",
+  "model": "results/arch/hbm_mtp_next_1018/model/summary.json",
+  "model_rerun": "hgi_sim.hbm_plane_model --from-run model/run.json --area area_composed.json (timing unchanged: area does not enter the schedule; run.json was timed with the measured MTP-STATS stats)"
+ },
+ "die_basis_mm2": 641.83,
+ "table": [
+  {
+   "P": 1,
+   "die_added_mm2": 0.0,
+   "die_mm2": 641.8,
+   "die_added_mm2_bdc_only_variant": 0.0,
+   "ds_ar": 1905.4,
+   "ds_mtp": 1694.3,
+   "ds_mtp_kv_lower": null,
+   "ds_mtp_union_p90": null,
+   "ds_users_agg": 1905.4,
+   "qwen_ar": 946.2,
+   "qwen_dflash16_pub": 459.5,
+   "qwen_dflash16_meas": 209.7,
+   "qwen_users_agg": 946.2,
+   "ds_mtp_per_die_mm2": 2.64,
+   "ds_mtp_gain_per_added_mm2_vs_prev": null,
+   "qwen_dflash16_step_over_ar": 16.495,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    4
+   ]
+  },
+  {
+   "P": 2,
+   "die_added_mm2": 34.56,
+   "die_mm2": 676.4,
+   "die_added_mm2_bdc_only_variant": 16.58,
+   "ds_ar": 1905.4,
+   "ds_mtp": 3142.8,
+   "ds_mtp_kv_lower": 3288.8,
+   "ds_mtp_union_p90": 3063.1,
+   "ds_users_agg": 3060.3,
+   "qwen_ar": 946.2,
+   "qwen_dflash16_pub": 874.3,
+   "qwen_dflash16_meas": 399.1,
+   "qwen_users_agg": 1734.2,
+   "ds_mtp_per_die_mm2": 4.646,
+   "ds_mtp_gain_per_added_mm2_vs_prev": 41.91,
+   "qwen_dflash16_step_over_ar": 8.669,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    4
+   ]
+  },
+  {
+   "P": 4,
+   "die_added_mm2": 101.11,
+   "die_mm2": 742.9,
+   "die_added_mm2_bdc_only_variant": 47.2,
+   "ds_ar": 1905.4,
+   "ds_mtp": 3363.5,
+   "ds_mtp_kv_lower": 3597.8,
+   "ds_mtp_union_p90": 3272.3,
+   "ds_users_agg": 4365.3,
+   "qwen_ar": 946.2,
+   "qwen_dflash16_pub": 1465.9,
+   "qwen_dflash16_meas": 669.1,
+   "qwen_users_agg": 2971.4,
+   "ds_mtp_per_die_mm2": 4.527,
+   "ds_mtp_gain_per_added_mm2_vs_prev": 3.32,
+   "qwen_dflash16_step_over_ar": 5.17,
+   "qwen_dflash16_record_head_slots": [
+    8,
+    6
+   ]
+  },
+  {
+   "P": 6,
+   "die_added_mm2": 167.64,
+   "die_mm2": 809.5,
+   "die_added_mm2_bdc_only_variant": 77.79,
+   "ds_ar": 1905.4,
+   "ds_mtp": 3519.3,
+   "ds_mtp_kv_lower": 3841.7,
+   "ds_mtp_union_p90": 3419.6,
+   "ds_users_agg": 5153.7,
+   "qwen_ar": 946.2,
+   "qwen_dflash16_pub": 1758.1,
+   "qwen_dflash16_meas": 802.5,
+   "qwen_users_agg": 3898.6,
+   "ds_mtp_per_die_mm2": 4.348,
+   "ds_mtp_gain_per_added_mm2_vs_prev": 2.34,
+   "qwen_dflash16_step_over_ar": 4.311,
+   "qwen_dflash16_record_head_slots": [
+    12,
+    8
+   ]
+  },
+  {
+   "P": 8,
+   "die_added_mm2": 234.51,
+   "die_mm2": 876.3,
+   "die_added_mm2_bdc_only_variant": 108.72,
+   "ds_ar": 1905.4,
+   "ds_mtp": 3519.3,
+   "ds_mtp_kv_lower": 3841.7,
+   "ds_mtp_union_p90": 3419.6,
+   "ds_users_agg": 5710.4,
+   "qwen_ar": 946.2,
+   "qwen_dflash16_pub": 2442.8,
+   "qwen_dflash16_meas": 1115.0,
+   "qwen_users_agg": 4619.2,
+   "ds_mtp_per_die_mm2": 4.016,
+   "ds_mtp_gain_per_added_mm2_vs_prev": 0.0,
+   "qwen_dflash16_step_over_ar": 3.103,
+   "qwen_dflash16_record_head_slots": [
+    16,
+    8
+   ]
+  }
+ ],
+ "knee": {
+  "ds_single_user_mtp": "P=2: 1694 -> 3143 tok/s (+86%) for +34.6 mm2 (+5.4% die); P=4/6 add only +7%/+12% more for +101/+168 mm2; P=8 = P=6 for DS (no gamma-7 drafter)",
+  "qwen_dflash_and_users": "keep rising to P=8 (DFlash b16 pub 874/1466/1758/2443 at P=2/4/6/8 = 0.92/1.55/1.86/2.58 x AR; measured tau 3.656: 399/669/803/1115, crosses AR only at P=8; users agg x1.8/3.1/4.1/4.9 over AR)",
+  "cheaper_variant": "bdc-only lanes (BF16 column kept single-lane) costs 16.6/47.2/77.8/108.7 mm2 at P=2/4/6/8, but loses the multi-query attention lanes (ATT feature, 189k verify cycles at P=6): not re-timed"
+ },
+ "area_breakdown_P6": {
+  "bdc_logic": 36.66,
+  "bf16_column_logic_est": 89.85,
+  "x_store": 39.85,
+  "non_sm_estimate": 1.278
+ },
+ "rtl_change_list": [
+  {
+   "unit": "SM",
+   "owner": "H-SM",
+   "change": "P accumulator lanes per MAC column: each HBM weight word / BDC line broadcast to P lanes (P x MAC, same 99 B/cycle/SM HBM share, SMEM and VM ports); SM.MATVEC slot field (HGI-1 spec 6.7 param [4:2] = N - 1, widen to 4 b for N <= 16) + per-slot x base; P x-slot stores; per-lane result publish (slot-major)",
+   "verify_cycles_saved_P6": 554112.8,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "ATT",
+   "owner": "H-SM (SM attention)",
+   "change": "KV-line-stationary multi-query attention: P query slots a SM engine, each KV line streamed once and applied to the lanes whose top-k mask selects it (per-line lane mask from the N IDX top-k lists + window rule), per-lane QK / PV accumulators, fixed spans (first access, dispatch, publish, cross-SM merge) once a record",
+   "verify_cycles_saved_P6": 189092.8,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "FUSED",
+   "owner": "H-SU (FUSED)",
+   "change": "FUSED.HC_PRE_NORM / HC_POST row field N on the LL lanes: gain sectors kept across rows, two r slots (row p+1 phase A over row p's tail), per-row scalar set; MEASURED II 197 (P6 RTL)",
+   "verify_cycles_saved_P6": 201983.3,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "HC",
+   "owner": "H-SU (HC)",
+   "change": "HC.HC_MIX N rows streamed against stationary mix weights (HCP x6 mode II 250) + Sinkhorn x 3 units (II 634 / 3)",
+   "verify_cycles_saved_P6": 284081.6,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "COLL",
+   "owner": "H-COLL",
+   "change": "COLL ROW_GATHER / TOPK_MERGE / kv gather / ARGMAX_MERGE take N rows (one message train, endpoint / crossing / tail once); shared ALL_GATHER / GROUP_REDUCE_MCAST carry N x payload; ring AG flits x N (d4g adders unchanged per record)",
+   "verify_cycles_saved_P6": 163834.0,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "IDX",
+   "owner": "H-IDX",
+   "change": "IDX.INDEX N queries over ONE key stream (N x 4,096-word query store), IDX.TOPK heap row reset, verify expert-UNION record (384-b union bitmap, per-expert lane lists for the grouped GEMM)",
+   "verify_cycles_saved_P6": 63743.0,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "SU_DMA",
+   "owner": "H-SU / H-DIE / H-IDX",
+   "change": "row counters in SU.VOP (indexed + un-indexed), SFU chains, DMA.KVWB_DS (N rows, window ring 256 slots: +128 HBM rows a layer), position-addressed DMA.LOAD rows, FUSED.QDQ, ARGMAX.LOCAL",
+   "verify_cycles_saved_P6": 38732.0,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "VM",
+   "owner": "H-DIE",
+   "change": "VM capacity: N resident verify / user columns (h + PRE): + (N - 1) x ~30k words (N = 6: ~+150k words, VM 2^18 -> ~2^18.9; 4 quadrant slices); else per-layer column swaps",
+   "verify_cycles_saved_P6": 37139.7,
+   "saved_basis": "P = 6 headline verify with this feature removed (ds|abl_*), cycles a DSpark step"
+  },
+  {
+   "unit": "ISA",
+   "owner": "H-ISA",
+   "change": "record header row count N (all units) + per-row descriptor stride; CTL.TOKX (k completion beats, SPEC_GAP Q-MTP-1)",
+   "verify_cycles_saved_P6": null,
+   "saved_basis": "not separately ablated"
+  },
+  {
+   "unit": "DRAFT",
+   "owner": "H-MTP",
+   "change": "DSpark draft on the same die: dsa / dsb / dhead as R = 5-row records (no new unit), SEED of the next step scheduled with the verify head (joint S2 schedule), Markov / demb serial",
+   "verify_cycles_saved_P6": null,
+   "saved_basis": "not separately ablated"
+  }
+ ],
+ "open": [
+  "tcc (BF16 column) P=6/8 syntheses still running (linear estimate used; P<=4 exactly linear)",
+  "KV top-512 position overlap unmeasured (headline = upper bound; kv-lower bracket shown)",
+  "HBM capacity for P users x 1M KV not checked",
+  "non-SM unit area = model item estimates, not synthesised",
+  "timing: synthesis-only; broadcast fan-out needs a registered per-lane-group tree (+1 cycle at P>=4)"
+ ],
+ "owner_decision": "choose P (and whether BF16 column lanes are included) before D2 RTL",
+ "qwen_dflash_check_1018": {
+  "lane": "HBM-MTP-QCHK (10-18)",
+  "errors_found": [
+   "verify/draft SM passes: the DFlash programme was always emitted in the as-built 8-slot SM records (param [4:2] 3 b) and 4-slot LM-head passes, and the P-lane rule then charged ceil(8/P) line passes a record: P=4 and P=6 both paid 4 weight passes for 16 positions (should be 4 and 3) and every head paid 4 passes at any P; P=8 alone dropped to 2 passes, hence +2% P4->P6 then +41% at P8",
+   "ATT pass merging: the group index was read from the tag .g<s0>, which carries the first SLOT (0,4,8,12), so j % P merged nothing at P=2/4 and merged the wrong groups at P=6/8"
+  ],
+  "fix": "compiler record-size choice R in {P, 2P, 8, 16} (SM slot field 4 b per the ISA/SM change list; SM record cost ceil(R/P) line passes, ceil(B/R) per-pass records) and head pass PH in {16,8,6,4}, largest fitting the P-lane VM (2^18 + (P-1) x 30k words, TP4 map, conservative); slot count read from the x descriptor rows; ATT group index = slot / 4. P=1 unchanged (as built). tools/hgi_sim/hbm_plane_model.py, dflash.VM_WORDS",
+  "chosen_record_and_head_slots": {
+   "1": [
+    8,
+    4
+   ],
+   "2": [
+    8,
+    4
+   ],
+   "4": [
+    8,
+    6
+   ],
+   "6": [
+    12,
+    8
+   ],
+   "8": [
+    16,
+    8
+   ]
+  },
+  "step_over_ar_b16": {
+   "1": 16.495,
+   "2": 8.669,
+   "4": 5.17,
+   "6": 4.311,
+   "8": 3.103
+  },
+  "checks": {
+   "draft_cost": "charged per PASS (drafter weights 5 BF16 layers re-read ceil(R/P) x a record), not per position: P=8 drafter SM ~0.28M cycles (0.22 AR step)",
+   "verify_passes": "P=8 verify weights 1.745M = 2.00 x AR's 0.898M (ceil(16/8) = 2); P=6 3 line passes, P=4 4",
+   "tau": "tok/s = tau x clk / step; tau = accepted tokens a step incl. the bonus token (published 8.01 MATH-500 B200; measured 3.656 our 264-turn cycle-weighted); same tau at every P (block fixed at 16)",
+   "per_position_costs": "P=8 step 3.93M cycles = 3.10 AR steps: target weights 2 passes 1.75M, drafter ~0.28M, LM heads 4 passes 0.31M (15 draft + 16 verify slots, 8 a pass), and per-position work that P lanes do not amortise: TP all-reduce of 16 x H payload 0.46M (AR 0.10M; 64 B/cycle serialisation ESTIMATE, the largest priced term), softmax over 8K scores x 16 slots 0.36M (AR 0.04M), per-slot norms 0.17M, attention 0.23M (AR 0.09M), argmax 0.07M; non-SM work sits on the layer dependency chain (SM busy 2.33M of 3.93M)",
+   "moe_union": "none (dense Qwen3-8B)",
+   "kv_8k": "verify reads the 8K FP8 context once per P-lane ATT pass (P groups of 4 slots) plus the block rows; drafter context BF16 once",
+   "same_pipeline": "AR and DFlash use the same d4g cost chain (Q.d4g_added + relay knob + TP-8 sm_s/bw_s + COLL flit adders); DFlash swaps in dflash_timing for ATT (identical formula with B + C rows), all-reduce (+256 cycles per further 4,096 words) and TOKX; P=1 reproduces the earlier 20.92M step exactly"
+  },
+  "conclusion": "the +2%/+41% shape was a modelling error (fixed). DFlash below AR is NOT an error: with the published tau it beats AR from P=4 (1.55x) to P=8 (2.58x); with our measured tau 3.656 a 16-position step costs 3.1-5.2 AR steps, so it reaches AR only at P=8 (1.18x)"
+ }
+}
