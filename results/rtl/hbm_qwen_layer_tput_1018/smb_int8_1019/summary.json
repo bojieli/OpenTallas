@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.hbm_smb_int8.v1",
+ "lane": "SMB-INT8 (HBM-SMBUDGET, coord decision 0jx item 2)",
+ "question": "does the d4g die SM (ot_hbm_accel_smh_attn) have a usable INT8 path for Qwen fmt-3 SM.MATVEC?",
+ "answer": "YES: the opt-in fixed-calendar adapter ot_smh_static_int8 (real ot_hbm_accel_int8_line converter, 1ce966147) existed but was not instantiated in the die master; now wired behind ot_hbm_accel_smh_attn #(.ENABLE_INT8) (default 0 = unchanged). command[116] marks a packed 128-code line; the two widened BF16 lines reach the static front 2 and 3 cycles later and issue as ordinary fmt-0 lines.",
+ "exactness": "INT8 codes exact in BF16; BF16xBF16 products exact in FP32; the SM's fmt-0 chunk8 csum == hgi_sim.lib.sm_int8 (fmt-3 golden, raw FP32 sums). Row scale applied after the reduction by the SU consumer (qwen_compiler row_scale_qkv/o/gu/down, head_scale), not the SM. Captured O reproduced by lib.sm_int8 and by V.csum on the widened image for every record; the compiler checks every packed line (first 256/op) widened by a converter model == the fmt-0 lines.",
+ "fixture": "Qwen3-8B D4G8 L0 (qwen_d4g_proof.run_stage, position 8191, proof PASS), rank-0 die, captured by qwen_sm_mv_kv.py: kv/sm_mv.json (npz on ot-epyc5:/srv/opentallas-scratch/claude/smb-int8/kv/L0, sha in json)",
+ "bench": "Verilator 5.050, ot-epyc5, GEN2b bundle swx2b master files + this tree's ot_hbm_accel_smh_attn (ENABLE_INT8 1) + ot_smh_static_int8 + ot_hbm_accel_int8_line; tb_hbm_smh_attn -DOT_SMH_ATTN_INT8",
+ "positive_sm0_busiest_SM": {
+  "qkv": {"m_die": 768, "K": 4096, "rows_sm": 48, "bf16_lines": 3072, "packed_int8_lines": 1536, "measured_first_packet_to_last_result": 3206, "priced_d4g8": 3418.6, "verdict": "PASS"},
+  "o":   {"m_die": 4096, "K": 512, "rows_sm": 256, "bf16_lines": 2048, "packed_int8_lines": 1024, "measured_first_packet_to_last_result": 2161, "priced_d4g8": 2394.6, "verdict": "PASS"},
+  "gu":  {"m_die": 3072, "K": 4096, "rows_sm": 192, "bf16_lines": 12288, "packed_int8_lines": 6144, "measured_first_packet_to_last_result": 12422, "priced_d4g8": 12634.6, "verdict": "PASS"},
+  "down":{"m_die": 2048, "K": 3072, "rows_sm": 128, "bf16_lines": 6144, "packed_int8_lines": 3072, "measured_first_packet_to_last_result": 6278, "priced_d4g8": 6490.6, "verdict": "PASS"},
+  "layer_sum_measured": 24067, "layer_sum_priced": 24938.4,
+  "note": "standalone op incl. ~134-cycle drain; every op within price (lines + 346.6 overhead); the INT8 issue rate (64 codes/cycle/SM, one packed line per two edges) is exactly the rate the d4g Qwen price charges"
+ },
+ "witnesses_must_fail": {
+  "wbit (arithmetic: code bit 0 of the first packed line)": "FAIL acc row 0 40bf3d9e vs 40bec71e",
+  "sign (arithmetic: converter OT_INT8_MUT_SIGN build)": "FAIL 96 bad rows",
+  "nopkt (schedule: one packed line + its mark withheld)": "FAIL schedule_fault cycle 865",
+  "late (schedule: one packed line a cycle late)": "FAIL ot_smh_static_int8 overlap assertion ($fatal)"
+ },
+ "avoided_cost_bf16_widened_image": {
+  "model": "fmt-0 BF16 image = 2x HBM bytes; the SM would be HBM-bound at 99 B/cycle/SM instead of issue-bound at 64 B/cycle (128 B BF16 line per cycle > 99): SM.MATVEC line part x 128/99 = 1.293 (overhead 346.6/op unchanged), from results/rtl/hbm_qwen_layer_tput_1018/static_schedule.json d4g8",
+  "per_layer_extra_cycles": 6899, "head_extra_cycles": 22253,
+  "token_cycles_int8": 1263524, "token_cycles_bf16_image": 1534144,
+  "tok_s_int8": 949.7, "tok_s_bf16_image": 782.2, "delta": "-17.6 %"
+ },
+ "area_estimate_int8_adapter": "per SM: ~2.7k flops (converter a_data 1088 + m_data 1088 + high-half codes 512 + tags/valids ~34) + 64 x (8-bit magnitude/priority-encode/shift) lanes + 1099-bit 2:1 packet mux; x16 SM / die. No closed physical view of ot_smh_static_int8 exists (estimate only).",
+ "open": "coverage run --all (every row of the die per record) still running: ot-epyc5:/srv/opentallas-scratch/claude/smb-int8/unit/out/L0_all.{log,json}; default-off regression (sm_mv_unit DS L00 k4 smoke with this tree's smh_attn at default params): ot-epyc5:/srv/opentallas-scratch/claude/smb-int8/reg/out/regress_default.{log,json}"
+}
