@@ -1,0 +1,112 @@
+{
+  "status": "MODEL_BEFORE_PARTITION_AND_GATE",
+  "source_commit": "70917e45c",
+  "core_owner": "seam_source",
+  "configuration": {
+    "SU_LT": 1,
+    "HD_W130": 1,
+    "MU_NU": 4,
+    "kc_bits": [
+      66,
+      59
+    ],
+    "required_mutants": [
+      14,
+      15
+    ]
+  },
+  "outline_um": [
+    2462.376,
+    2591.976
+  ],
+  "storage": {
+    "new_macros": 5,
+    "macro": "ot_sram_1r1w_32x546_m1",
+    "w_um": 177.768,
+    "h_um": 81.0,
+    "area_um2": 71996.04,
+    "ports_per_macro": {
+      "reads_per_edge": 1,
+      "writes_per_edge": 1
+    },
+    "origins_grid_um": 43.2,
+    "pin_face_channel_um_min": 20
+  },
+  "regional_cut": {
+    "core": "VM/control/reducer",
+    "lane_regions": 8,
+    "lane_persistent_boundary": "qfd_dv_su8_entries g_lane[].g_tile_dv",
+    "boundary_existing_RD": 2,
+    "GBW_bits": 500,
+    "per_lane_operand_bits": 160,
+    "per_lane_addresses_bits": 96,
+    "per_lane_return_control_bits": 11,
+    "per_lane_return_data_bits": 291,
+    "replica_count": 8,
+    "shared_resource_arbitration": false,
+    "native_sram_bandwidth": "one 32-bit result per A/B/C operand per lane per core edge; one 256-bit weight row shared per vector; one 64-bit C-ROM result per lane per edge",
+    "required_sustained_vectors_per_edge": 1,
+    "existing_memory_read_latency_edges": 8,
+    "candidate_delta_edges": {
+      "mirror": 0,
+      "storage": 0,
+      "SU_crossings": {
+        "status": "PREDICTION_NOT_QUALIFIED",
+        "control": 1,
+        "read_roundtrip": 4,
+        "result_return": 1,
+        "total": 6,
+        "separate_root_argmax_delta": 1
+      }
+    },
+    "cannot_gate_until": [
+      "SU/VM loops have actual landed crossings and priced latency",
+      "safe core production/mutants pass",
+      "reset copy retention and load limits measured",
+      "native hard-child matching views exist or flatten real RTL",
+      "synthesis area for remaining glue determines band utilization",
+      "full stream phase/reset test and complete SU production prove predicted +6",
+      "new ML5/RD2 hard head native view closed or flatten real RTL",
+      "MU VM address capacity resolved with source programme owner",
+      "forwarded clock inverter/hop entry retention and native compensated phase proof"
+    ],
+    "existing_hard_head_ML_inner": 7,
+    "candidate_hard_head_ML_inner": 11,
+    "candidate_transport": {
+      "kind": "forwarded payload halfcycle hops then destination local D4 ring",
+      "hops": [
+        1,
+        3
+      ],
+      "chunk_bits": 24,
+      "crossing_edges": 3,
+      "ring_K": {
+        "1_hop": 2,
+        "3_hops": 1
+      },
+      "reset_epoch_contract": "falling-edge source reset_epoch then separate writer/read release leaves; two extra boot edges, roots compensate to same logical epoch; actual TT/FF phase+reset proof required",
+      "source_destination_phase_error_ps_max": 80,
+      "hop_reach_um_max": 405,
+      "per_lane_payload_bits": {
+        "control_addr": 344,
+        "response": 416,
+        "request": 125,
+        "result": 177
+      },
+      "native_constraints": "all paths timed; preserve 60+residual setup/25+residual hold and quarterT data envelope; no MCP/falsepath",
+      "unqualified_even_hop_reason": "half-phase writer reset epoch differs and needs separate proof; unsupported",
+      "reset_boot_delta_edges": 2
+    }
+  },
+  "known_blockers": {
+    "old_E_core_root_includes_all_SU": true,
+    "old_wh_root_sinks": 174000,
+    "old_reset_async_sinks": 54000,
+    "old_lpf_ring_data_storage": "audit every crossing <=300bits so 4slot ring <=1200data bits; no large flopdelay exemption",
+    "old_hard_views": [
+      "qfd_dv_lane_h standin",
+      "ot_qfd_xs_leaf M5 standin"
+    ]
+  },
+  "geometry_method": "Preserve native child pins; 43.2 lattice origins, >=20um macro pin-face channels, std-cell bands within each landed region. Use actual synth area, no guessed compact outline."
+}
