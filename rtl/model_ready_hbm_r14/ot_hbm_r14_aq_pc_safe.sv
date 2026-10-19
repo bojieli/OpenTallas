@@ -186,15 +186,21 @@ module ot_hbm_r14_aq_pc_safe #(
     else if (open[kb]) keys[kb] = 7'd112;
     else keys[kb] = (prot ? 7'd32 + 7'(d) : 7'(3'd5 - d)) + (aok_busy[kb] ? 7'd64 : 7'd0);
   end
-  reg [6:0] bk1, bk2, bk3, bkey, rkey; reg [4:0] bs1, bs2, bs3, bsel;   // bkey/rkey: key of bsel / of rb (trace)
-  always @(posedge clk or negedge rst_n)
-    if (!rst_n) begin bk1 <= 127; bs1 <= 0; bk2 <= 127; bs2 <= 0; bk3 <= 127; bs3 <= 0; bsel <= 0; bkey <= 127; end
-    else begin : amin
-      reg [6:0] mk; reg [4:0] mi;
-      mk = keys[0]; mi = 0;
-      for (integer i = 1; i < 32; i = i + 1) if (keys[i] < mk) begin mk = keys[i]; mi = 5'(i); end
-      bk1 <= mk; bs1 <= mi; bk2 <= bk1; bs2 <= bs1; bk3 <= bk2; bs3 <= bs2; bsel <= bs3; bkey <= bk3;
+  reg[6:0] rkey;wire[6:0]bkey;wire[4:0]bsel;
+  // Balanced registered tournament: one 7-bit comparison per stage. The old
+  // 32-way serial priority reduction followed by three delay flops is removed.
+  wire[6:0]rk[0:5][0:31];wire[4:0]rs[0:5][0:31];
+  for(genvar k=0;k<32;k=k+1)begin:K0 assign rk[0][k]=keys[k];assign rs[0][k]=5'(k);end
+  for(genvar l=0;l<5;l=l+1)begin:KL
+    for(genvar k=0;k<(16>>l);k=k+1)begin:KP
+      reg[6:0]key_q;reg[4:0]sel_q;
+      always @(posedge clk or negedge rst_n)if(!rst_n)begin key_q<=127;sel_q<=0;end
+      else if(rk[l][2*k]<=rk[l][2*k+1])begin key_q<=rk[l][2*k];sel_q<=rs[l][2*k];end
+      else begin key_q<=rk[l][2*k+1];sel_q<=rs[l][2*k+1];end
+      assign rk[l+1][k]=key_q;assign rs[l+1][k]=sel_q;
     end
+  end
+  assign bkey=rk[5][0];assign bsel=rs[5][0];
   // ---- column: the head entry, strictly in order --------------------------------------------------------------------
   wire [31:0] hb_oh = 32'b1 << hb;
   wire [31:0] pre_fl = (c_v && c_op == PRE) ? c_oh : 32'b0;
