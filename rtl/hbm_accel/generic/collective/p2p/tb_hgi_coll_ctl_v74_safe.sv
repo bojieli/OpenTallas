@@ -12,10 +12,10 @@
 // Mutants (must FAIL): MUT 1 VM_RT = LAT-1 (one short), MUT 2 VM_RT = 0 (the closed v5 leaf / today), MUT 3 lanes NOT
 // padded (VM_RT = LAT but each bank answers at its raw lane latency).
 module tb_hgi_coll_ctl_v74_safe;
- parameter integer LAT = 74, MUT = 0,SHAPE=0;
+ parameter integer LAT = 74, MUT = 0,SHAPE=0,DENSE=0;
  localparam integer VM_RT = (MUT == 1) ? LAT - 1 : (MUT == 2) ? 0 : LAT;
- localparam integer NOPS = 600;
- reg clk = 0; always #0.5 clk = ~clk;
+ localparam integer NOPS = DENSE?2048:600;
+ reg clk = 0; always #0.416 clk = ~clk;
  reg rst_n = 0;
  integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
  // per-bank raw die lanes (GEN2c-like spread), padded on the request side to LAT
@@ -87,7 +87,7 @@ ot_hgi_coll_ctl_v5_core
   repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
   for (integer t = 0; t < NOPS; t = t + 1) begin
    inst = 0;
-   if ($urandom % 4 != 0) begin
+   if (DENSE || $urandom % 4 != 0) begin
     integer perm [0:7]; reg [131:0] m;
     for (integer b = 0; b < 8; b = b + 1) perm[b] = b;
     for (integer b = 7; b > 0; b = b - 1) begin integer r, x; r = $urandom % (b + 1); x = perm[b]; perm[b] = perm[r]; perm[r] = x; end

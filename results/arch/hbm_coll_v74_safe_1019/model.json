@@ -94,7 +94,11 @@
     "max_reach_per_edge_um": 405,
     "macro_lattice_um": 43.2,
     "single_std_band": true,
-    "known_blocker": "current legacy SRAM macros may require real compiler pin-access variants; no cosmetic LEF edit"
+    "known_blocker": "current legacy SRAM macros may require real compiler pin-access variants; no cosmetic LEF edit",
+    "legacy_macro_face_density_per_um": {
+      "128x256": 8.63705391040243,
+      "32x128": 7.722533457827575
+    }
   },
   "qualification_required": [
     "full NPT2/SOLO1 and NPT1/SOLO0 golden miter",
@@ -103,5 +107,21 @@
     "synthesis retained reset/address fanout",
     "actual macro escape and measured area/slot pricing",
     "critical PNG ROOT review before submit"
-  ]
+  ],
+  "measured_component": {
+    "verilator": "5.050",
+    "shapes": [
+      "NPT1/SOLO0",
+      "NPT2/SOLO1"
+    ],
+    "functional_pairs_each": 1792,
+    "wrong_budget_and_lane_mutants_rejected": 6,
+    "production_dense_requests_each": 2048,
+    "production_dense_pairs_each": 8192,
+    "production_II_edges": 1,
+    "compiler_price_II_edges": 1,
+    "deviation_percent": 0,
+    "added_external_edges": 0,
+    "scope": "protocol leaf plus unchanged complete VM assembly; not die/token/physical qualification"
+  }
 }
