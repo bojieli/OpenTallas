@@ -39,6 +39,7 @@ def gen(t, ck1):
     code = ('import sys, json; sys.path.insert(0, %r); import kv_static_die as S; T = S.all_tiles(); k_ = %r; d = T[k_] if k_ else next(v for v in T.values() if v["kind"] == %r); '
             'I = S.ins(); txt = S.module_text(d, %r); '
             'print(json.dumps(dict(rtl=S.RTL_FILE, text=txt, src=S.sources(), '
+            'delays=(S.kit_delays(d) if hasattr(S, "kit_delays") else dict(out={}, child={})), '
             'ports=[(p, v["dir"], v["width"], v["cls"]) for p, v in d["ports"].items()], '
             'children=[(S.cluster_of(n)[2], I[n]["module"], [(p, v["width"]) for p, v in S.spec(n).items() '
             'if v["direction"] != "output"]) for n in d["members"]])))') % (str(HERE), INST[t], t, MASTER[t])
@@ -82,6 +83,18 @@ def mutate(txt, mut):
                         new = new.replace('\x00A', f'.{pa}({eb})', 1)
                         lines[i] = new
                         return '\n'.join(lines), None, f'swapped .{pa}({ea}) <-> .{pb}({eb})'
+    if mut == 4:                       # KV-GRPREACH: the down chain one relay short (o_dn from the next-to-last hop)
+        for i, ln in enumerate(lines):
+            m = re.match(r'\s*assign o_dn = w_ftd__q(\d+);$', ln)
+            if m and int(m.group(1)) > 0:
+                lines[i] = ln.replace(f'w_ftd__q{m.group(1)}', f'w_ftd__q{int(m.group(1)) - 1}')
+                return '\n'.join(lines), None, 'o_dn relay chain one stage short'
+    if mut == 5:                       # KV-GRPREACH: u_cf1 fault legs bypass their leg registers
+        for i, ln in enumerate(lines):
+            m = re.search(r'\.fault_in\((w_cfl__q\d+)\)', ln)
+            if m:
+                lines[i] = ln.replace(m.group(0), '.fault_in(w_cfl__a)')
+                return '\n'.join(lines), None, 'u_cf1 leg registers bypassed'
     if mut == 3:
         assigns = '\n'.join(ln for ln in lines if ln.strip().startswith('assign '))
         for i, ln in enumerate(lines):
@@ -98,6 +111,8 @@ def main():
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--edges', type=int, default=2000)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--sim', default=os.environ.get('KVS_SIM', 'iverilog'), choices=('iverilog', 'verilator'))
+    ap.add_argument('--threads', type=int, default=4)
     a = ap.parse_args()
     t = a.tile
     out = Path(a.out)
@@ -123,6 +138,20 @@ def main():
         raise SystemExit('kvs_tile_bench: the kit top must have one clock port per domain (ck [, hck])')
     for p, w in outs:
         L.append(f'  wire [{w - 1}:0] o__{p}, n__{p};')
+    # KV-GRPREACH: kit-added edges (kv_static_die.kit_delays): kit slice [msb:lsb] at edge t == die-bound tile at t - D
+    dl = new.get('delays') or dict(out={}, child={})
+    dout = {p: v for p, v in dl['out'].items()}
+    dch = {tuple(k.split('.', 1)): v for k, v in dl['child'].items()}
+    hist = []                                   # (history name, reference expr, width, depth)
+    for p, w in outs:
+        for hi, lo, D, *_src in dout.get(p, []):
+            hist.append((f'h__{p}_{lo}', f'o__{p}[{hi}:{lo}]', hi - lo + 1, D))
+    for (loc, pin), D in dch.items():
+        cw = next(w_ for l_, mod_, ps_ in new['children'] if l_ == loc for p_, w_ in ps_ if p_ == pin)
+        hist.append((f'h__c_{loc}_{pin}', f'u_old.u_{loc}.{pin}', cw, D))
+    for hn, ex, hw, D in hist:
+        L.append(f'  reg [{hw - 1}:0] {hn} [0:{D - 1}];')
+    dmax = max([0] + [h[3] for h in hist])
     L.append('  old_tile u_old (' + ', '.join(
         f'.{p}({"ck" if c == "clock" else (p if d == "input" else "o__" + p)})' for p, d, w, c in po) + ');')
     L.append('  new_tile u_new (' + ', '.join(
@@ -157,14 +186,40 @@ def main():
             L.append(f'      f_{n} = {rnd(ow[n] + 1)};')
     L.append('      #0.5;')
     L.append('      if (t > 2) begin')
+    def cmp(ref, got, what, D):
+        gate = f'if (t > {2 + D + 2}) ' if D else ''
+        return (f'        {gate}begin chk = chk + 1; if ({ref} !== {got}) begin bad = bad + 1; '
+                f'if (bad < 6) $display("MISMATCH t=%0d {what}", t); end end')
     for p, w in outs:
-        L.append(f'        chk = chk + 1; if (o__{p} !== n__{p}) begin bad = bad + 1; '
-                 f'if (bad < 6) $display("MISMATCH t=%0d out {p}", t); end')
+        segs, cur = [], w - 1                   # undelayed slices + delayed slices of output p
+        for sg in sorted(dout.get(p, []), reverse=True):
+            hi, lo, D = sg[:3]
+            if cur > hi:
+                segs.append((cur, hi + 1, 0, None))
+            segs.append((hi, lo, D, sg[3] if len(sg) > 3 else None))
+            cur = lo - 1
+        if cur >= 0:
+            segs.append((cur, 0, 0, None))
+        for hi, lo, D, src in segs:
+            o_ = f'o__{p}' if (hi, lo) == (w - 1, 0) else f'o__{p}[{hi}:{lo}]'
+            got = f'n__{p}' if (hi, lo) == (w - 1, 0) else f'n__{p}[{hi}:{lo}]'
+            if D and src in frc:
+                # a delayed CHILD-OUTPUT wire is forced (same value, both tiles) in phase B: delayed in A, direct in B
+                L.append(f'        if (!phb) ' + cmp(f'h__{p}_{lo}[{D - 1}]', got, f'out {p}[{hi}:{lo}] D={D}', D).lstrip())
+                L.append(f'        if (phb && t > {a.edges + D + 2}) ' + cmp(o_, got, f'out {p}[{hi}:{lo}] B', 0).lstrip())
+                continue
+            ref = f'h__{p}_{lo}[{D - 1}]' if D else o_
+            L.append(cmp(ref, got, f'out {p}' + (f'[{hi}:{lo}] D={D}' if D else ''), D))
         L.append(f'        if (n__{p} != 0) act = act + 1;')
     for loc, p, w in cin:
-        L.append(f'        chk = chk + 1; if (u_old.u_{loc}.{p} !== u_new.u_{loc}.{p}) begin bad = bad + 1; '
-                 f'if (bad < 6) $display("MISMATCH t=%0d child u_{loc}.{p}", t); end')
+        D = dch.get((loc, p), 0)
+        ref = f'h__c_{loc}_{p}[{D - 1}]' if D else f'u_old.u_{loc}.{p}'
+        L.append(cmp(ref, f'u_new.u_{loc}.{p}', f'child u_{loc}.{p}' + (f' D={D}' if D else ''), D))
     L.append('      end')
+    for hn, ex, hw, D in hist:                  # shift after the compare: h[k] = reference k + 1 edges ago
+        for k in reversed(range(1, D)):
+            L.append(f'      {hn}[{k}] = {hn}[{k - 1}];')
+        L.append(f'      {hn}[0] = {ex};')
     L.append('    end')
     L.append(f'    if (bad == 0) $display("KVS_TILE PASS tile={t} edges={2 * a.edges} checks=%0d active_out=%0d '
              f'outs={len(outs)} child_inputs={len(cin)} forced={len(frc)} errors=0 mut={a.mut} vs=die_bound_tile", chk, act);')
@@ -181,14 +236,24 @@ def main():
     cl = json.loads(subprocess.check_output([sys.executable, '-c', code], cwd=ROOT,
                                             env=dict(os.environ, OT_KV_STATIC_DIE='1', OT_KV_TILE_KITS='1')))
     srcs = sorted((set(old['src']) | set(new['src']) | set(cl)) - {old['rtl'], new['rtl']})
-    cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'), str(out / 'tiles.sv')] + \
-        [s for s in srcs] + ['-Y', '.sv'] + [x for d in sorted({str(Path(s).parent) for s in srcs}) for x in ('-y', d)]
+    dirs = sorted({str(Path(s).parent) for s in srcs})
+    if a.sim == 'verilator':
+        # KV-KITS-ATTN 10-18: the closure daemon's pinned Verilator (5.050, PATH set by the loop / kvs_tile_bench.sh)
+        cmd = ['verilator', '--binary', '--timing', '-j', str(a.threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
+               '-Wno-TIMESCALEMOD', '--top-module', 'tb_kvs_tile', '-Mdir', str(out / 'obj'), '-o', 'sim',
+               str(out / 'tb.sv'), str(out / 'tiles.sv')] + list(srcs) + ['+libext+.sv+.v'] + [x for d in dirs for x in ('-y', d)]
+        run = [str(out / 'obj' / 'sim')]
+        print('SIM ' + subprocess.run(['verilator', '--version'], capture_output=True, text=True).stdout.strip())
+    else:
+        cmd = ['iverilog', '-g2012', '-o', str(out / 'sim'), '-s', 'tb_kvs_tile', str(out / 'tb.sv'),
+               str(out / 'tiles.sv')] + list(srcs) + ['-Y', '.sv'] + [x for d in dirs for x in ('-y', d)]
+        run = ['vvp', '-n', str(out / 'sim')]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode:
         print(r.stdout[-3000:], r.stderr[-3000:])
         print(f'KVS_TILE FAIL tile={t} build mut={a.mut} ')
         return 2
-    r = subprocess.run(['vvp', '-n', str(out / 'sim')], capture_output=True, text=True, cwd=ROOT)
+    r = subprocess.run(run, capture_output=True, text=True, cwd=ROOT)
     print(r.stdout[-4000:])
     line = [ln for ln in r.stdout.splitlines() if ln.startswith('KVS_TILE ')]
     if not line:

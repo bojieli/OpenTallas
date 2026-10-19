@@ -297,11 +297,11 @@ def spec(S, kind):
         outline=dict(w=W, h=H, exact=True), layer_cap='M5', macros=sram_macros(S, kind, pins, rng, W, H), pins=pins,
         pin_ranges=rng,
         route=dict(pd=0.5, threads=8, peak_ram_gb=32 if kind.startswith(('grp', 'pc')) else 16, hold_margin_ns=0.03,
-                   macro_halo_um=5.4),
+                   macro_halo_um=5.4, io_hold_margin_ns=0.03),     # >= 0.025 (10-18 KITS rule: ~22 ps lost to sign-off)
         recipe=3, purpose=purpose,
-        job=dict(owner='Claude:KV-INTEG2', branch='claude/kv-integ2-kits-1018', tag=TAG, purpose=purpose,
+        job=dict(owner='Claude:KV-INTEG2', branch=os.environ.get('KVS_KIT_BRANCH', 'claude/kv-integ2-kits-1018'), tag=TAG, purpose=purpose,
                  benches=benches(kind), extra_paths=['rtl', 'tools/qwen_kv_die', 'results/arch', OUT,
-                                                     WIT, SRAM],
+                                                     os.environ.get('KVS_KIT_RES', WIT), SRAM],
                  views_to=f'physical/ref_tile/{kit}/views', record_to=f'results/rtl/ref_tile/{kit}'),
         pin_regs=dict(enable=False, reason=(
             'Generated wires-only composition of the static join: every edge age (die_ages.json, kv_static_ages) is priced '
@@ -357,14 +357,17 @@ def benches(kind):
     canonical faces) against the die-bound tile of the same design point without OT_KV_TILE_KITS; mutants = wiring faults
     of the KIT TOP (1 dropped child wire, 2 swapped equal-width child inputs, 3 missing child).  The children's own
     behaviour is qualified by their own benches (MUTANTS above are child-level and kept for reference only)."""
-    sh = f'bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{kind}_m{{M}} {kind} {{M}}'
+    # KV-GRPREACH 10-18: Verilator 5.050 (the daemon's pin, KVS_SIM=verilator); grp / grp_h add mutant 4 (down relay chain
+    # one stage short) and 5 (u_cf1 leg registers bypassed): the kit-added edges are checked, not assumed
+    sh = f'KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {{RUN}}/bench/{kind}_m{{M}} {kind} {{M}}'
+    wit = os.environ.get('KVS_KIT_RES', WIT)
     b = [dict(name=f'{kind}_lockstep', cmd=sh.replace('{M}', '0'), expect='pass', threads=4, peak_ram_gb=8,
-              needs=['iverilog'], pass_regex=rf'^KVS_TILE PASS tile={kind} .* errors=0 mut=0',
-              min_count_regex=r'checks=(\d+)', pass_witness=f'{WIT}/{kind}_m0.log')]
-    for n in (1, 2, 3):
+              needs=['verilator'], pass_regex=rf'^KVS_TILE PASS tile={kind} .* errors=0 mut=0',
+              min_count_regex=r'checks=(\d+)', pass_witness=f'{wit}/{kind}_m0.log')]
+    for n in (1, 2, 3) + ((4, 5) if kind in ('grp', 'grp_h') else ()):
         b.append(dict(name=f'{kind}_mut{n}', cmd=sh.replace('{M}', str(n)), expect='fail', threads=4, peak_ram_gb=8,
-                      needs=['iverilog'], pass_regex=rf'^KVS_TILE PASS tile={kind} ',
-                      fail_regex=rf'^KVS_TILE FAIL tile={kind} .* mut={n} ', fail_witness=f'{WIT}/{kind}_m{n}.log'))
+                      needs=['verilator'], pass_regex=rf'^KVS_TILE PASS tile={kind} ',
+                      fail_regex=rf'^KVS_TILE FAIL tile={kind} .* mut={n} ', fail_witness=f'{wit}/{kind}_m{n}.log'))
     return b
 
 

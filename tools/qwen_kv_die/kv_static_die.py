@@ -70,6 +70,17 @@ KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
 KIT_KINDS = ('grp', 'grp_h', 'pc', 'pc_h', 'hroot')
+# KV-GRPREACH 10-18 (textbook_lint wire_reach REFUSE of qkd_kvs_grp_k1 / qkd_kvs_grp_h_k1: 795 / 543 stages > 500 um).  The
+# group tile is 1,185.84 um tall and the FANFOLD neighbour chains run THROUGH it: the down word (i_ctl N -> o_dn S, 271 b)
+# and the up gathers (i_up S -> o_ctl N, 126 b) were pure wires, so every die chain hop was ~1.2 mm + the 324-um gap with
+# the die planner counting only the gap (pin registers assumed).  Under the kit design point every through word now takes
+# GRP_FT registered relays inside the tile (qkd_static_kv_hop: input pin flop at the entry face, GRP_FT - 2 mid-tile
+# relays, output pin flop at the exit face; 4 -> three ~395-um hops <= the 405-um plan reach, and the die gap hop is the
+# 324-um gap alone).  The group's own consumers still read i_ctl at the pin (their ages are unchanged).  The 4-leg
+# fault OR u_cf1 (legs from i_pc0..3, spread over the full W face) takes GRP_CF1_LEG registers per leg beside its pin.
+# The added edges are compiler-priced: record()['grp_chain'] (per chain slot) + kit_delays() (the lockstep bench).
+GRP_FT = int(os.environ.get('OT_KV_GRP_FT_RELAY', '4')) if KITS else 0
+GRP_CF1_LEG = int(os.environ.get('OT_KV_GRP_CF1_LEG', '2')) if KITS else 0
 RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') + '.sv')
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
@@ -803,14 +814,153 @@ def module_text(t, name):
     L.append(');')
     for pn, w, bname, off in t.get('packed', []):
         L.append(f'    wire [{w - 1}:0] {pn} = {bname}[{off + w - 1}:{off}];')
-    L += t['wires']
-    L += t['body']
+    xw, xb, xe = _kit_relays(t)
+    L += t['wires'] + xw
+    L += [_cf1_leg_sub(t, x) for x in t['body']] + xb
     for pn, v in t['ports'].items():
         if v['dir'] == 'output':
-            L.append(f'    assign {pn} = {v["expr"]};')
+            L.append(f'    assign {pn} = {xe.get(pn, v["expr"])};')
     L.append('endmodule')
     txt = '\n'.join(L) + '\n'
     return txt
+
+
+def _hops(pre, a, w, n):
+    """n chained qkd_static_kv_hop registers on `a` (w bits): (wires, body, last q)"""
+    W_, B_, prev = [f'    wire [{w - 1}:0] {pre}__a = {a};'], [], f'{pre}__a'
+    for k in range(n):
+        W_.append(f'    wire [{w - 1}:0] {pre}__q{k};')
+        B_.append(f'    qkd_static_kv_hop #(.W({w})) u_{pre[2:]}{k} (.ck(ck), .rst_n(rst_n), .a({prev}), .b({pre}__q{k}));')
+        prev = f'{pre}__q{k}'
+    return W_, B_, prev
+
+
+_CF1 = re.compile(r'(\bu_cf1 \(.*?\.fault_in\()(\{[^()]*\})(\))')
+
+
+def _cf1_leg_sub(t, line):
+    if not (GRP_CF1_LEG and t['kind'] in ('grp', 'grp_h')):
+        return line
+    return _CF1.sub(lambda m_: m_.group(1) + f'w_cfl__q{GRP_CF1_LEG - 1}' + m_.group(3), line)
+
+
+def _kit_relays(t):
+    """KV-GRPREACH: the group tile's through-word relays + the u_cf1 leg registers (extra wires, body, output exprs)"""
+    xw, xb, xe = [], [], {}
+    if t['kind'] not in ('grp', 'grp_h'):
+        return xw, xb, xe
+    P = t['ports']
+    if GRP_FT and 'o_dn' in P:
+        w_, b_, q = _hops('w_ftd', P['o_dn']['expr'], P['o_dn']['width'], GRP_FT)
+        xw += w_
+        xb += b_
+        xe['o_dn'] = q
+    if GRP_FT and 'i_up' in P:
+        m_ = re.fullmatch(r'\{i_up\[(\d+):0\], (.*)\}', P['o_ctl']['expr'], re.S)
+        if not m_:
+            raise ValueError(f'kv_static_die GRP_FT: {t["inst"]} o_ctl is not {{i_up[..], own}}: {P["o_ctl"]["expr"][:80]}')
+        w_, b_, q = _hops('w_ftu', f'i_up[{m_.group(1)}:0]', int(m_.group(1)) + 1, GRP_FT)
+        xw += w_
+        xb += b_
+        xe['o_ctl'] = '{' + q + ', ' + m_.group(2) + '}'
+    if GRP_CF1_LEG:
+        legs = [m_.group(2) for x in t['body'] for m_ in [_CF1.search(x)] if m_]
+        if len(legs) != 1:
+            raise ValueError(f'kv_static_die GRP_CF1_LEG: {t["inst"]} has {len(legs)} u_cf1 fault_in connections')
+        w_, b_, _q = _hops('w_cfl', legs[0], legs[0].count(',') + 1, GRP_CF1_LEG)
+        xw += w_
+        xb += b_
+    return xw, xb, xe
+
+
+def kit_delays(t):
+    """KV-GRPREACH: edges the kit tile adds vs the die-bound (non-kit) tile of the same design point, for the lockstep
+    bench: out {port: [[msb, lsb, edges]]}, child {'<loc>.<pin>': edges}"""
+    out, child = {}, {}
+    if t['kind'] not in ('grp', 'grp_h'):
+        return dict(out=out, child=child)
+    P = t['ports']
+    wd = {pn: v['width'] for pn, v in P.items()}
+    for x in t['wires']:
+        m_ = re.match(r'\s*wire \[(\d+):0\] (\w+)', x)
+        if m_:
+            wd[m_.group(2)] = int(m_.group(1)) + 1
+    # per-bit edge delay of every output (LSB first): the kit-added registers on its sources
+    src_d = {'w_cf1__fault': GRP_CF1_LEG}
+    for pn, v in P.items():
+        if v['dir'] != 'output':
+            continue
+        if pn == 'o_dn':
+            bits = [(GRP_FT, 'i_ctl')] * v['width']
+        else:
+            bits = [(GRP_FT, s) if (s == 'i_up' and GRP_FT) else (src_d.get(s, 0), s) for s in _expr_bits(v['expr'], wd)]
+            if len(bits) != v['width']:
+                raise ValueError(f'kit_delays: {t["inst"]}.{pn} expands to {len(bits)} bits, port is {v["width"]}')
+        segs, lo = [], 0          # [msb, lsb, edges, source] (source: the tile input or the child-output wire delayed)
+        for i in range(1, len(bits) + 1):
+            if i == len(bits) or bits[i] != bits[lo]:
+                if bits[lo][0]:
+                    segs.append([i - 1, lo, bits[lo][0], bits[lo][1]])
+                lo = i
+        if segs:
+            out[pn] = segs
+    if GRP_CF1_LEG:
+        child['cf1.fault_in'] = GRP_CF1_LEG
+    return dict(out=out, child=child)
+
+
+def _expr_bits(e, wd):
+    """source name of every bit of a Verilog concatenation expression (LSB first): {a, b[3:0], 4{c}}"""
+    e = e.strip()
+    if e.startswith('{') and e.endswith('}'):
+        inner = e[1:-1].strip()
+        m_ = re.fullmatch(r'(\d+)\s*(\{.*\})', inner, re.S)
+        if m_:
+            return _expr_bits(m_.group(2), wd) * int(m_.group(1))
+        parts, dep, cur = [], 0, ''
+        for ch in inner:
+            if ch in '{[':
+                dep += 1
+            elif ch in '}]':
+                dep -= 1
+            if ch == ',' and dep == 0:
+                parts.append(cur)
+                cur = ''
+            else:
+                cur += ch
+        parts.append(cur)
+        bits = []
+        for p_ in reversed(parts):
+            bits += _expr_bits(p_, wd)
+        return bits
+    m_ = re.fullmatch(r'(\w+)\[(\d+):(\d+)\]', e)
+    if m_:
+        return [m_.group(1)] * (int(m_.group(2)) - int(m_.group(3)) + 1)
+    m_ = re.fullmatch(r'(\w+)\[(\d+)\]', e)
+    if m_:
+        return [m_.group(1)]
+    m_ = re.fullmatch(r"(\d+)'[bdh]\w+", e)
+    if m_:
+        return ['const'] * int(m_.group(1))
+    return [e] * wd[e]
+
+
+def grp_chain():
+    """KV-GRPREACH: compiler record of the group chains' in-tile relays.  Chain position j (0 = the root's neighbour,
+    slot 7; 7 = the chain head grp_h, slot 0): the down word reaches group j GRP_FT * j edges later than without the
+    relays (+ the die relay stages, relay_stages.json), and group j's own up gather reaches the root GRP_FT * j edges
+    later; every group's own consumers of i_ctl are unchanged (they read the pin).  u_cf1's fault leaves +GRP_CF1_LEG."""
+    if not (GRP_FT or GRP_CF1_LEG):
+        return None
+    pos = {j: 7 - j for j in range(8)} if FANFOLD else None
+    return dict(tile_down_edges=GRP_FT, tile_up_edges=GRP_FT, cf1_leg_edges=GRP_CF1_LEG,
+                added_down_edges_by_chain_pos={j: GRP_FT * j for j in range(8)},
+                added_up_edges_by_chain_pos={j: GRP_FT * j for j in range(8)},
+                chain_pos_to_slot=pos, rtl='rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv',
+                flops_per_grp=GRP_FT * (271 + 126) + 4 * GRP_CF1_LEG,
+                note='down chain: kvs_hroot_<st>.o_ch0 -> slot 7 -> ... -> slot 0 (grp_h); compiler: the programme_to_groups '
+                     'age of a group at chain position j is the die relay stages + GRP_FT * j (the chain is no longer one '
+                     'edge for all 32 groups); per-group calendars (lcal / fcal cfg) must take the per-position lead')
 
 
 def rel(T, S):
@@ -2004,6 +2154,7 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
+                **({'grp_chain': grp_chain()} if grp_chain() else {}),
                 **({'astk_eread': astk_eread(m)} if ASTK_ST else {}),
                 **{k: v for k, v in m.get('static_die', {}).items()})
 
