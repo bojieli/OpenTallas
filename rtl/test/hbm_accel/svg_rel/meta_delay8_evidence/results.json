@@ -1,0 +1,64 @@
+{
+  "source_commit": "6be681462",
+  "rtl_commit": "54f8a3172",
+  "model_before_rtl_commit": "0cba629bd",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv": "d8e207d2f8e66b2b3c765315220f3e54e312f0e3df2f879b466dea2fb6dbf17a",
+    "rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv": "6b4b6aa214dd295fb9e057b85307b97f8b440f6d4955f663d4b5df2114cc2fdb",
+    "rtl/test/hbm_accel/svg_rel/meta_delay8_evidence/meta_delay7_reference.sv": "8db66ea4b120fbf86859669a0ab52e022ffc8075562719cba6bd83cfefeb5d8d",
+    "rtl/test/hbm_accel/svg_rel/run_svg_meta_delay.sh": "1dabbfba5c49fdc1bceef491928f3e06c6e11fb7a09d6bf6982fd94a8ce2898d",
+    "tools/hbm_layer_vehicle/xcal_mapped_census.py": "77ec5cbc89c02ccf029050e4e1f3b0c845036e123b054421adff5e0b3f080d86",
+    "rtl/test/hbm_accel/svg_rel/meta_delay8_evidence/load_audit.py": "0b21a8fb45f11777c99a9400f08c5a12814ee990998dc81ac23cec2dab8072a2"
+  },
+  "tool": "Verilator5.050; ORFS RVT TT target833.333ps; flatten module and instance keep hierarchy after ABC without opt_merge",
+  "physical_claim": false,
+  "reset_and_clock_qualification": "OPEN existing frontend scope; raw125 not waived; no hidden reset landing or cold-admission change",
+  "delays": {
+    "7": {
+      "std_area_um2": 194.16186,
+      "direct_max_data_control": 12,
+      "collapsed_max_data_control": 15,
+      "raw_reset_direct": 119,
+      "raw_reset_collapsed": 125,
+      "clock_ff_sinks": 369,
+      "ff_types": {
+        "DFFHQNx1_ASAP7_75t_R": 280,
+        "DFFASRHQNx1_ASAP7_75t_R": 89
+      },
+      "actual_distinct_pointer_ffs": 54,
+      "output_ff_bits": 35,
+      "unknown": {},
+      "source_sha256": {
+        "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv": "d8e207d2f8e66b2b3c765315220f3e54e312f0e3df2f879b466dea2fb6dbf17a"
+      },
+      "mapped_sha256": "4d61ed9b0f046e8bedb0d86d6e3065b8cd73e1c9c7eb80eeca924576acb3eb2a",
+      "functional_checks": 2111,
+      "occupied_async_reset_phases": 8,
+      "default_original_miter": "PASS",
+      "wrongslot_mutant": "FAIL expected"
+    },
+    "8": {
+      "std_area_um2": 194.7888,
+      "direct_max_data_control": 13,
+      "collapsed_max_data_control": 15,
+      "raw_reset_direct": 119,
+      "raw_reset_collapsed": 125,
+      "clock_ff_sinks": 369,
+      "ff_types": {
+        "DFFHQNx1_ASAP7_75t_R": 280,
+        "DFFASRHQNx1_ASAP7_75t_R": 89
+      },
+      "actual_distinct_pointer_ffs": 54,
+      "output_ff_bits": 35,
+      "unknown": {},
+      "source_sha256": {
+        "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv": "d8e207d2f8e66b2b3c765315220f3e54e312f0e3df2f879b466dea2fb6dbf17a"
+      },
+      "mapped_sha256": "3cbd99e539b31639e43b0a7531e1361ca6cd660518c0ae8e5efddde7a25d0116",
+      "functional_checks": 2111,
+      "occupied_async_reset_phases": 8,
+      "default_original_miter": "not applicable",
+      "wrongslot_mutant": "FAIL expected"
+    }
+  }
+}

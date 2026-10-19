@@ -1,0 +1,8 @@
+Verilator 5.050 2026-07-01 rev v5.050
+META_FAIL D=7 q=4740c696d gold=23a0634b6
+META_DEFAULT_MITER_FAIL q=4740c696d ref=23a0634b6
+META_FAIL D=7 q=0e818d2da gold=4740c696d
+META_FAIL D=7 mut=1 errors=4072
+[21030000] %Fatal: tb_svg_meta_delay7.sv:34: Assertion failed in tb_svg_meta_delay7
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv:34: Verilog $stop
+Aborting...

@@ -1,0 +1,49 @@
+{
+  "sources": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svg_meta_delay7.sv",
+    "rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv",
+    "rtl/test/hbm_accel/svg_rel/meta_delay8_evidence/meta_delay7_reference.sv"
+  ],
+  "top": "tb_svg_meta_delay7",
+  "clock_port": "clk",
+  "simulator": "Verilator5.050",
+  "cases": [
+    {
+      "params": {
+        "D": 7,
+        "MUT": 0
+      },
+      "expected": "PASS",
+      "witness": "d7_mut0.log",
+      "regex": "META_PASS D=7"
+    },
+    {
+      "params": {
+        "D": 7,
+        "MUT": 1
+      },
+      "expected": "FAIL",
+      "witness": "d7_mut1.log",
+      "regex": "META_FAIL D=7"
+    },
+    {
+      "params": {
+        "D": 8,
+        "MUT": 0
+      },
+      "expected": "PASS",
+      "witness": "d8_mut0.log",
+      "regex": "META_PASS D=8"
+    },
+    {
+      "params": {
+        "D": 8,
+        "MUT": 1
+      },
+      "expected": "FAIL",
+      "witness": "d8_mut1.log",
+      "regex": "META_FAIL D=8"
+    }
+  ],
+  "scope": "component only; no gate"
+}

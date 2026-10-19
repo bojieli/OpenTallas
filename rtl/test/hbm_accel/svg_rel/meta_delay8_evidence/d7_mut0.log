@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+META_PASS D=7 checks=2111 async_checks=8 occupied_reset_phases=ff
+- rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.001 s; speed 16.633 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

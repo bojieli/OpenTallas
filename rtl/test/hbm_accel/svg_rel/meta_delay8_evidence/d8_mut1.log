@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+META_FAIL D=8 q=4740c696d gold=23a0634b6
+META_FAIL D=8 q=0e818d2da gold=4740c696d
+META_FAIL D=8 q=1d031a5b5 gold=0e818d2da
+META_FAIL D=8 mut=1 errors=2028
+[21030000] %Fatal: tb_svg_meta_delay7.sv:34: Assertion failed in tb_svg_meta_delay7
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_meta_delay7.sv:34: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1509640-1792431199): exit 0
