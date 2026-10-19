@@ -164,8 +164,10 @@ def ports_job(S, outdir):
 
 
 # ------------------------------------------------------------------------------------------- specs
-def faces(S, kind, W, H):
-    """{face: [ports in the die's along-face order]}, pin_ranges {port: [lo, hi]} for ports >= 32 b (die spread)"""
+def faces(S, kind, W, H, narrow=False):
+    """{face: [ports in the die's along-face order]}, pin_ranges {port: [lo, hi]} for ports >= 32 b (die spread); narrow:
+    every port gets its own slot (TW2-KVGRP: the balanced pin placer spreads a range-less port over its WHOLE face, so the
+    x__est -> y__est__0_1 pass wire grew to 586 um, textbook wire_reach REFUSE)"""
     t = S.all_tiles()[rep(S, kind)]
     mst = S.KIND_MASTER[kind]
     F = {f: [] for f in 'NSEW'}
@@ -181,6 +183,8 @@ def faces(S, kind, W, H):
             span = (L - 4.0) * t['ports'][p]['width'] / tot
             if t['ports'][p]['width'] >= 32:
                 rng[p] = [round(pos + 0.5, 2), round(pos + span - 0.5, 2)]
+            elif narrow:
+                rng[p] = [round(pos + 0.05, 2), round(pos + span - 0.05, 2)]
             pos += span
     return {f: v for f, v in F.items() if v}, rng, t
 
@@ -274,7 +278,7 @@ def spec(S, kind):
     kit = f'{mst}_{TAG}'
     fw, fh = FRAMES[kind]
     W, H = down(fw), down(fh)
-    pins, rng, t = faces(S, kind, W, H)
+    pins, rng, t = faces(S, kind, W, H, narrow=kind in ('grp', 'grp_h'))
     pj = json.loads((ROOT / OUT / f'{kind}_ports.json').read_text())
     P = pj['ports']
     tp = t['ports']
