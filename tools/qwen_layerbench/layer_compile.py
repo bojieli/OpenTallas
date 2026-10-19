@@ -269,6 +269,10 @@ def main(argv=None):
     ap.add_argument('--n59-land-edges', type=int, default=8,
                     help='qfd_native59_dv_service LAND_EDGES the die binds (dv2f14bn: default 8; see gaps)')
     ap.add_argument('--gz-over', type=int, default=4_000_000, help='write a compiled table gzipped above this many bytes')
+    ap.add_argument('--kv-static-model', help='HKV-DIE2: CASE/static_model.json (kv_die.py case): recompute the KV static '
+                    'parameters (hub AP_OFS/FR_OFS, ASTK e_after_header, attention fault latencies, seq KVN bundle) on '
+                    '--kv-stages and FAIL a finding where they disagree (tools/qwen_kv_die/kv_static_params.py)')
+    ap.add_argument('--kv-fwd-lanes', help='RUN/fwd_lanes.json: landed lane ages for buses whose netlist age is not a stage count')
     a = ap.parse_args(argv)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     findings, gaps = [], []
@@ -400,6 +404,16 @@ def main(argv=None):
         rep = DRC.check(DRS.load(a.compute_stages if short == 'compute' else a.kv_stages), DRS.load(p))
         write_json(rs / f'relay_check_{short}.json', rep)
         checks[short] = dict(verdict=rep['verdict'], fails=rep['fails'], stage_diffs=rep['stage_diffs'], schedule=p.name)
+    ksp = None
+    if a.kv_static_model:                        # HKV-DIE2 10-19: stage-derived KV static parameters on THIS kv table
+        sys.path.insert(0, str(ROOT / 'tools/qwen_kv_die'))
+        import kv_static_params as KSP
+        ksp = KSP.run(json.load(open(a.kv_static_model)), docs['qwen_kv'],
+                      json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None)
+        write_json(out / 'kv_static_params.json', ksp)
+        for f in ksp['fails']:
+            findings.append(dict(id=f'KV_STATIC_PARAMS {f["id"]}', severity='FAIL', owner='KV die lead (HKV-DIE)',
+                                 what=f['what'], **({'fix': f['fix']} if f.get('fix') else {})))
     write_json(out / 'findings.json', dict(findings=findings, gaps=gaps, relay_check=checks, bundles=ba))
     # ------------------------------------------------------------------ manifest
     files = sorted(p for p in out.rglob('*') if p.is_file() and p.name != 'manifest.json')
@@ -414,6 +428,10 @@ def main(argv=None):
                            L0=dict(X=X['L0'], start=pc['program']['layers'][0]['start']),
                            head='no D2D traffic (compute-only; terminal RESULT is in the token run segment 1); ME programme = gap'),
                stages=S, txd=txd, kv_programme=kvp, relay_check={k: v['verdict'] for k, v in checks.items()},
+               **({'kv_static_params': dict(status=ksp['status'], table_digest=ksp['table_digest'],
+                                            ahub_ages=ksp['params'].get('ahub_ages'), seq_kvn=ksp['params'].get('seq_kvn'),
+                                            attn_fault_lane_max=(ksp['params'].get('attn_fault') or {}).get('lane_latency_max'))}
+                  if ksp else {}),
                findings=[f['id'] for f in findings], gaps=len(gaps),
                files={str(p.relative_to(out)): sha(p) for p in files})
     write_json(out / 'manifest.json', man)
