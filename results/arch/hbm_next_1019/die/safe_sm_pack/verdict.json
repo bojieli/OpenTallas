@@ -1,0 +1,69 @@
+{
+ "status": "PASS",
+ "rectangles": 45,
+ "baseline_children": 34,
+ "new_dualclk": 4,
+ "new_pad": 7,
+ "outline_um": [
+  630.72,
+  2203.2
+ ],
+ "halo_um": 10.8,
+ "hard_area_um2": 755363.08944,
+ "hard_fill": 0.5435822085683588,
+ "problems": [],
+ "frame_cases": [
+  {
+   "tile_um": [
+    630.72,
+    2203.2
+   ],
+   "die_um": [
+    23891.84,
+    32120.0
+   ],
+   "die_mm2": 767.4059007999999,
+   "reticle_fit": true
+  },
+  {
+   "tile_um": [
+    630.72,
+    2246.4
+   ],
+   "die_um": [
+    23891.84,
+    32465.600000000002
+   ],
+   "die_mm2": 775.6629207040002,
+   "reticle_fit": true
+  },
+  {
+   "tile_um": [
+    630.72,
+    2289.6
+   ],
+   "die_um": [
+    23891.84,
+    32811.2
+   ],
+   "die_mm2": 783.9199406079999,
+   "reticle_fit": true
+  },
+  {
+   "tile_um": [
+    673.92,
+    2203.2
+   ],
+   "die_um": [
+    25274.239999999998,
+    32120.0
+   ],
+   "die_mm2": 811.8085887999999,
+   "reticle_fit": true
+  }
+ ],
+ "scope": "rectangle/lattice/halo feasibility only; not timing/pin/clock/gate qualification",
+ "att_increment_mm2": 69.215,
+ "att_raw_additive_floor_mm2": 836.6209008,
+ "att_note": "Additive area is not a packed frame. ATT432x432 and new VM475.2x280.8 need actual die-level packing; no frame-fit claim from additive area."
+}
