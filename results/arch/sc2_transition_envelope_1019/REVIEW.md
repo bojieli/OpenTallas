@@ -116,8 +116,9 @@ upper 564.522796 ps fits the same common [0,1000] ps downstream-check rectangle.
 The swapped run deliberately bypasses the refusing preflight solely to prove
 that native min/max mappings change; its timing result is not accepted. Native
 capture setup/hold mappings are inspected on both sides as well as the data arc.
-Earlier missing-LEF, long-stdout serialization, and Python module-shadowing
-diagnostics are retained; corrected terminal probes pass. No job remains live.
+An initial missing-LEF error is recorded in the tool transcript. Long-stdout
+serialization and Python module-shadowing diagnostics are retained as files;
+corrected terminal probes pass. No job remains live.
 
 ## Coherent next implementation boundary
 
