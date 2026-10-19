@@ -61,7 +61,7 @@ module ot_hgi_coll_ring_ag_ctln #(
     // lane faces (state-capture lanes + add lanes)
     output wire [279:0] pin0_q, pin1_q,
     output wire carry_write0, carry_write1,
-    output wire acc_we,
+    output wire acc_we,  // = acc_we_o
     output wire [2:0] acc_tag,
     input wire [255:0] state_tx, acc_rr,
     input wire [7:0] av,
@@ -148,12 +148,16 @@ module ot_hgi_coll_ring_ag_ctln #(
     end
     // acc write timeline (dedicated copy of the core's pv/pt shift: v1 acc_we/acc_tag values)
     (* keep = "true" *) reg [LAT-1:0] aw;
+    wire acc_we_o; assign acc_we = acc_we_o;
     (* keep = "true" *) reg [2:0] at [0:LAT-1];
     always @(posedge clk or negedge rn[1]) begin
         if(!rn[1])aw<=0;else aw<={aw[LAT-2:0],add_v_q};
     end
     always @(posedge clk) begin at[0]<=add_tag_q;for(integer i=1;i<LAT;i=i+1)at[i]<=at[i-1];end
-    assign acc_we=aw[LAT-1];assign acc_tag=at[LAT-1];
+    // r5b: acc_we pin = a dedicated copy flop of aw[LAT-1] (r5b probe: launch 233, the shared flop also feeds hz/hz_rr/aw_d)
+    wire aw_last=aw[LAT-1];
+    ot_hgi_coll_ring_cp_ff u_awo(.clk(clk),.d(aw[LAT-2]),.q(acc_we_o));
+    assign acc_tag=at[LAT-1];
     // ---- unchanged closed control body in the core frame ----
     wire core_fault;wire [279:0] p0_unused,p1_unused;wire [1:0] cw_unused;wire aw_unused;wire [2:0] at_unused;
     ot_hgi_coll_ring_ag_ctl #(.NT(NT),.LAT(LAT),.AG(AG),.MUT_TAG(MUT_TAG),.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC)) u_core(
@@ -171,12 +175,12 @@ module ot_hgi_coll_ring_ag_ctln #(
         .rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.ag_v(ag_v),.ag_src(ag_src),.ag_tag(ag_tag),.ag_d(ag_d),.fault(core_fault));
     // ---- boundary checks moved here (fault only; never gate or repair timing) ----
     reg aw_d;
-    wire hz = MUT_HZ!=1 && rd_tx_l && (tx_acc_l ? (acc_we && acc_tag==tx_tag_l) : (lp_we_q && lp_tag_q==tx_tag_l));
-    wire hz_rr = MUT_HZ!=2 && rd_rr_l && acc_we && acc_tag==rr_tag_l;   // r5: acc write of the rr tag at the lane read edge
+    wire hz = MUT_HZ!=1 && rd_tx_l && (tx_acc_l ? (aw_last && acc_tag==tx_tag_l) : (lp_we_q && lp_tag_q==tx_tag_l));
+    wire hz_rr = MUT_HZ!=2 && rd_rr_l && aw_last && acc_tag==rr_tag_l;   // r5: acc write of the rr tag at the lane read edge
     always @(posedge clk or negedge rn[1]) begin
         if(!rn[1])begin fault<=0;aw_d<=0;end
         else begin
-            aw_d<=acc_we;
+            aw_d<=aw_last;
             if(core_fault || hz || hz_rr || av_q!={8{aw_d}})fault<=1;
         end
     end
