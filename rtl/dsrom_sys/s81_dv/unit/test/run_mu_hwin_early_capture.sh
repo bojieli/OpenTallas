@@ -24,7 +24,7 @@ run() {
   --Mdir "$case_dir/obj" -o tb > "$case_dir/build.log" 2>&1
  for seed in ${RUN_SEEDS:-1 19 313}; do
   local rc=0
-  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=${SIM_RESET_PHASE:-0} > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
+  "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=${SIM_RESET_PHASE:-0} +rx_shift=${SIM_RX_SHIFT:--1} > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
   if [[ "$expected" == FAIL:* ]]; then
     [[ $rc -ne 0 ]]; grep -q "${expected#FAIL:}" "$case_dir/run_seed$seed.log"
   elif [[ "$expected" == REJECT:* ]]; then
@@ -181,6 +181,11 @@ sweep)
  for ns in $(seq "${SWEEP_LOW:-2}" "${SWEEP_HIGH:-47}"); do
   run uniform_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256
   run nonuniform_short_ns$ns tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=$ns +define+MIN_D +define+SWEEP256 +define+NONUNIFORM_GAPS +define+SHORT_RL
+  for shift in 0 1; do for seed in 1 19 313; do
+   log="$O/nonuniform_short_ns$ns/run_seed${seed}_rxshift${shift}.log"
+   "$O/nonuniform_short_ns$ns/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +rx_shift=$shift > "$log" 2>&1
+   grep -q '^MUWIN RX_EXPIRED PASS' "$log"
+  done;done
  done
  ;;
 calendar_mutants)

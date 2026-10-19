@@ -83,7 +83,7 @@ ROUNDS=4, T0=1000+32*NS;
       DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
 `endif
     end
-    integer first_cfg_fault=-1;
+    integer first_cfg_fault=-1, first_rx_fault=-1;
     reg ck = 0, rst_n = 0;
     always #0.5 ck = ~ck;
     integer cyc = 0, errs = 0, i, e, nfire = 0, nexp = 0;
@@ -244,6 +244,27 @@ ROUNDS=4, T0=1000+32*NS;
     // slot attributes: land = slot[0], ab = slot[1]
     function automatic [1:0] att(input integer sl); att = {sl[0] ? 1'b1 : 1'b0, sl[1] ? 1'b1 : 1'b0}; endfunction
     integer stc [0:NU*ROUNDS-1]; integer stu [0:NU*ROUNDS-1]; integer stp [0:NU*ROUNDS-1]; integer nst = 0;
+`ifdef SHORT_RL
+    // Independent model: accepted pin capture N becomes outstanding by N+2 and
+    // retires at B=N+RL. RX pins land into rt_q at their capture edge, and are
+    // checked against the post-edge table: B-1 accepts, B/B+1 are expired.
+    integer rx_shift=-1,rx_model_s,rx_sent=0;
+    initial begin
+       if($value$plusargs("rx_shift=%d",rx_shift)) begin end
+       if(rx_shift < -1 || rx_shift > 1) $fatal(1,"RX_MODEL shift must be -1,0,+1");
+    end
+    always @(posedge ck) begin
+       #0.1;
+       mu_rt=0;
+       if(rst_n) for(rx_model_s=0;rx_model_s<nst;rx_model_s=rx_model_s+1)
+          if(cyc==stc[rx_model_s]+RL+rx_shift) begin
+             mu_rt={{1'b1,10'(stu[rx_model_s]),21'(stp[rx_model_s])},
+                    {1'b1,10'(stu[rx_model_s]),21'(stp[rx_model_s])}};
+             rx_sent=rx_sent+2;
+             $display("RX_MODEL input%0d born%0d boundary%0d shift%0d user%0d pos%0d",cyc,stc[rx_model_s]+2,stc[rx_model_s]+RL,rx_shift,stu[rx_model_s],stp[rx_model_s]);
+          end
+    end
+`endif
     integer kconst = -1;
     task automatic cfg(input [25:0] w); begin f_mc = w; @(posedge ck); #0.1; f_mc = 0;
 `ifndef FAST_CFG
@@ -260,6 +281,7 @@ ROUNDS=4, T0=1000+32*NS;
     integer s, d, hit, port; reg [1:0] aa; reg [33:0] want_c; reg [10:0] want_r;
     always @(posedge ck) if (rst_n) begin
         if(wf[1] && first_cfg_fault<0) first_cfg_fault=cyc;
+        if(wf[0] && first_rx_fault<0) first_rx_fault=cyc;
         for(port=0;port<4;port=port+1) begin
             want_c=0; want_r=0;
             for(e=0;e<NE;e=e+1) for(s=0;s<nst;s=s+1)
@@ -334,9 +356,14 @@ ROUNDS=4, T0=1000+32*NS;
                 f_ks = {1'b1, 10'(u), 21'd0, 21'(r)};
                 stc[nst] = cyc; stu[nst] = u; stp[nst] = r; nst = nst + 1;
                 // RX tag of an outstanding start (the previous user), on both returning end slices
+`ifndef SHORT_RL
                 if (nst > 1) mu_rt = {{1'b1, 10'(stu[nst-2]), 21'(stp[nst-2])}, {1'b1, 10'(stu[nst-2]), 21'(stp[nst-2])}};
                 if (BADRT && r == 2 && u == 3) mu_rt[31:0] = {1'b1, 10'd77, 21'd5};
-                @(posedge ck); #0.1; f_ks = 0; mu_rt = 0;
+`endif
+                @(posedge ck); #0.1; f_ks = 0;
+`ifndef SHORT_RL
+                mu_rt = 0;
+`endif
             end
         repeat (RL + 100) @(posedge ck);
         for(j=0;j<nst;j=j+1) for(e=0;e<NE;e=e+1) if(KD[e]==0 || att(stu[j])/2) nexp=nexp+1;
@@ -354,6 +381,15 @@ ROUNDS=4, T0=1000+32*NS;
             $display("MUWIN COLLISION PASS");
         else $display("MUWIN COLLISION FAIL");
 `else
+`ifdef SHORT_RL
+        if(rx_sent!=2*nst)$fatal(1,"RX_MODEL lost return tags actual%0d expected%0d",rx_sent,2*nst);
+        if(rx_shift>=0) begin
+           $display("RX_MODEL first_fault%0d expected%0d",first_rx_fault,stc[0]+RL+rx_shift+3);
+           if(errs==0 && nfire==nexp && hmf==0 && wf==2'b01 && first_rx_fault==stc[0]+RL+rx_shift+3)
+              $display("MUWIN RX_EXPIRED PASS");
+           else $display("MUWIN RX_EXPIRED FAIL");
+        end else
+`endif
         if (BADRT) begin
             if (wf[0] && mf[2] && hmf == 4'd0) $display("MUWIN BADRT PASS (fault raised)"); else $display("MUWIN BADRT FAIL (no fault)");
         end else if (errs == 0 && nfire == nexp && mf == 4'd0) $display("MUWIN PASS");
