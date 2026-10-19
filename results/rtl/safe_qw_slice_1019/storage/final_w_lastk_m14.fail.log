@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   950 GB (avail 769, growth 104, headroom 0, waiters 0/0 GB) load 66/128 running 29 disk 286 GB 
+ot-run: ot-epyc5       admits   881 GB (avail 725, growth 109, headroom 0, waiters 0/0 GB) load 63/128 running 16 disk 1174 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_final
+ot-run: -> ot-epyc5
+bench2 (k) MUT=14: FAIL 128/512
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    L8 kc3 scaled: 128/128 mismatches, first [0] got 0x4035a8e7 exp 0xc0a68dd6
+    L7 gate/up kc2: 256/256 mismatches, first [0] got 0xbf7d9b88 exp 0x4217096f
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1556628-1792423752): exit 1
