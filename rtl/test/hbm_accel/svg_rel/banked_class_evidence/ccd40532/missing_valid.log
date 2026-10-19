@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+BANKED_CLASS_PROFILE_PASS SVG=1 PREL=0 checked=1218 magic=0 inject=0
+BANKED_CLASS_PROFILE_PASS SVG=1 PREL=1 checked=1218 magic=0 inject=2
+BANKED_CLASS_PROFILE_PASS SVG=0 PREL=0 checked=1218 magic=528 inject=0
+BANKED_CLASS_PROFILE_PASS SVG=0 PREL=1 checked=1218 magic=530 inject=0
+BANKED_CLASS PASS modes0..7 mrel format nativefaultedge1 profiles4
+- rtl/test/hbm_accel/svg_rel/tb_banked_class.sv:81: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.025 s; speed 629.809 us/s
+- Verilator: cpu 0.025 s on 1 threads; allocated 8 MB
