@@ -5700,5 +5700,28 @@
     "actual production full frame/context-role manifest absent",
     "LP landed bank-publication and accepted sample times unbound",
     "same-clock token/epoch embedding fetch-fill-consume-release composition absent"
-  ]
+  ],
+  "qualified_old_profile_LP_component": {
+    "receipt_commit": "20bcf3ba4",
+    "receipt_sha256": "3db95d285c75106f1b6a68925fdaf138109a759876ca184402a42883567086cc",
+    "source": "7abc51ffe",
+    "edge_ledger": {
+      "definitions": "input/command/bank = synchronous sample; publication = post-edge output value",
+      "accepted_offer_to_actual_bank_sample": 6,
+      "external_INIT_sample_to_actual_user0_bank_sample": 4,
+      "external_INIT_sample_to_raw_GI_EMB_publication": 66,
+      "external_INIT_sample_to_external_LP_EMB_publication": 69,
+      "external_INIT_sample_to_provider_command_sample": 70
+    },
+    "scope": [
+      "Actual receiver and qualified identity candidate, real D4/K2 input/output LP primitives and exact three-ROM GI source c11f8ddb0",
+      "Same source/destination reset-depth bindings; functional regional clocks tied",
+      "Head/ME/nativeprovider excluded; release1850 diagnostic only",
+      "Old public programme fixture, not new CALR10 typed-companion assembly",
+      "No production phase/FIRST/cap1-SYSFACE/ABI/physical timing adoption"
+    ],
+    "generated_LP_sha256": "3c89201569155f1c83a5202a033030e596b3f0b28650bc2e5c1ebf36c50ae3c4",
+    "new_CALR10_typed_assembly_bound": false,
+    "production_samples_bound": false
+  }
 }

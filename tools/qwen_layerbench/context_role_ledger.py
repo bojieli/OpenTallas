@@ -58,8 +58,16 @@ def build(admission,frame,cold,sources):
 def main():
     ap=argparse.ArgumentParser()
     for key in ('admission','frame','cold','out'):ap.add_argument('--'+key,type=Path,required=True)
+    ap.add_argument('--lp-component',type=Path)
     a=ap.parse_args();paths={k:getattr(a,k) for k in ('admission','frame','cold')}
     d={k:json.loads(gzip.decompress(p.read_bytes()) if p.suffix=='.gz' else p.read_bytes()) for k,p in paths.items()}
-    out=build(**d,sources=paths);a.out.write_text(json.dumps(out,indent=2)+'\n')
+    out=build(**d,sources=paths)
+    if a.lp_component:
+        q=json.loads(a.lp_component.read_bytes())
+        assert q['INIT_publication_predicate']=='dut.init_u0_q && dut.d_start && dut.d_stage == 0 && dut.s_user == 0'
+        out['qualified_old_profile_LP_component']=dict(receipt_commit='20bcf3ba4',receipt_sha256=sha(a.lp_component),
+          source=q['source'],edge_ledger=q['edge_ledger'],scope=q['scope'],
+          generated_LP_sha256=q['generated_LP_source_sha256'],new_CALR10_typed_assembly_bound=False,production_samples_bound=False)
+    a.out.write_text(json.dumps(out,indent=2)+'\n')
     print('CONTEXT_STATIC_ROLE_LEDGER',out['role_count'],'roles; production false; publication timestamps null')
 if __name__=='__main__':main()
