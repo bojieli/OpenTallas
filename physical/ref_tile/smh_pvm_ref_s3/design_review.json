@@ -1,13 +1,13 @@
 {
   "source_model": "results/arch/hbm_pvm_safe2_1019/mirror_geometry_mapped/model.json",
   "status": "MODEL ONLY; no physical adoption",
-  "pins": "Actual1585signalcontacts trackPASS,792/793 perface<=5.153/um. External routepatch/via/PG/DRC OPEN",
-  "reach": "Same302.4square and band, allregisteredsignals; actual measured-net reach OPEN",
+  "pins": "Fourtrack.192um signalpitch onNfullface;7macro-coneinput rangesN86.4..259.2; all1585macrocontacts trackPASS and<=5.153/um. IO/PG/via/DRCaccess remainsOPEN",
+  "reach": "Source-bound actualmacrocone+fullfaceIOregister model385.152ummax inclFFfootprint; runtime8437cell+546tiehardfences, seveninputrangesN86.4..259.2. Freshplacedcoordinatevalidator beforeCTS mandatory; route detours OPEN",
   "fanout": "ActualASAP7synth+OpenDB allnonclockdriversmax25 afterstandardtie-repair;16same-depthresetcopies391coarseloadsmax25. All835constantbindings exact. SourceproofPASS; placement/nativephysical open",
   "depth": "Inherited actualsynth390.1ps; geometry changes clock access only, no datapath edits",
   "storage": "Real64x512macro with same repair/clocks/behavior; full newPG/contact/RC/Lib; no transistor/GDSclaim",
   "floorplan": "R18043.2lattice; soleNband actualcore[2.16,229.23,300.24,300.24],actualOpenDBstd9023.13918um2=>42.63%. Actualplacedrows/cells aftergate stillowed",
   "clock": "Mirrorcontact(214.476,196.332),32.898um fromnewsoleband; oldclock519.859psslew failurepreserved. NativeTT/FFspread/setup/holdandparentreferenceOPEN",
   "schedule": "No addeddataedge; samepricedSAFE2 pub+1 foldcontract, staticII unchanged",
-  "qualification": "Nativeactualmacroexact240/tight192+4mutantsPASSexpected; same2stageresetcopy sourceproof+actualall-drivercensusPASS. Modelgeometryreview outstanding; no physicalgate/adoption"
+  "qualification": "Source/helperhashfccb, actualmacro6benches17e0, resetphaseSAT+2mutantsb117, typedregionmechanism+unknowninputnegativePASS. Source/model qualified for floorplan/globalplace characterization; actualcoords/nativeSTA/DRC stillOPEN"
 }

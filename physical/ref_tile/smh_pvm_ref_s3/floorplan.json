@@ -78,6 +78,8 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
   "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
   "physical/ref_tile/smh_pvm_ref_s3/one_north_band.tcl",
+  "physical/ref_tile/smh_pvm_ref_s3/macro_regions.tcl",
+  "physical/ref_tile/smh_pvm_ref_s3/validate_macro_regions.tcl",
   "physical/ref_tile/smh_pvm_ref_s3/kit.env",
   "physical/ref_tile/smh_pvm_ref_s3/clock.sdc",
   "physical/ref_tile/smh_pvm_ref_s3/signoff.sdc",

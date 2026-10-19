@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.pvm_region_mechanism_1019.v1",
+  "unit": "ot-epyc4:oth-ubuntu-4096571-1792431202",
+  "positive": "actualmappedDB runtimegraph builds8437cell44.30%cone fence +546constantties51.19%fence; serializedEXCLUSIVEregions+PHYSICAL_CLUSTERgroupsreloadwithexactmembership/type",
+  "negative": "actualtag_d14 meaningfulcontrolinput removedfromexpectedset: FAILunmodeled macro-cone boundaryport; noautowaiver",
+  "scope": "Connectivity/DBregionmechanism only; no cells placed, no CTS/route/native timingqualification",
+  "padding": "ActualpinnedORFSMake CELL_PAD_IN_SITES_GLOBAL_PLACEMENT=0 and DETAIL=0;44.30% fitsPD.50",
+  "evidence_sha256": {
+    "region_readback.tcl": "dbf554933fc143b57e76583b3dffe17e05bac65b30dea10c24ff75293f4f90ad",
+    "critical_area.tcl": "4d8276ef0fa8bd67986ff563c52224151e7eb11bff867cbda6f057d26a5209a1",
+    "region_group_roundtrip.log": "0e6da2f66d1a082432a63e7bcae4b34adb31fe907157bbf875bd88a6f4529b6d",
+    "run_region_proofs.sh": "24a3ab5082e60fa7f1b0ad91a3ade17301a6efcc92bd1aa518ca4202ee030e4d",
+    "region_group_unknownport_mut.log": "f669ab838b3e4a34529b03c7886e50831aaec062dc842fb9c9fbb442d40ef947",
+    "macro_cones.tcl": "6fb036f1e82973f1d6ac4d113cc79bbb54079b0cd2d30c8518e8f559e1df95c3",
+    "region_mechanism.tcl": "b971b3af8df320280be720203a2be31221b6d290976494e1aaa4a203c7727a92",
+    "macro_regions_unknownport_mut.tcl": "1483710a2066a5e9e0610fed22e46910caff2af1dfb1a7bf9756c367b78bf3b7"
+  }
+}
