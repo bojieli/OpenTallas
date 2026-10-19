@@ -2948,7 +2948,9 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
   "physical/rom_host_ingest/rtl/dsfd_host.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv"
  ],
  "child_views": {
   "ot_s81_su_smq": {
@@ -5283,5 +5285,6 @@
     "source": "land plan max lane E"
    }
   ]
- }
+ },
+ "rtl_files_note_die8": "S81-DIE8 10-18: explicit RTL of record for duplicated module names that main made ambiguous (die_port_bind G6 ambiguous_children): ot_s81ph_coll_lane / dsfd_coll_lane_w/e = s81_ph/coll/ot_s81ph_coll_lane.sv (head/pipeline/reset are older candidate variants; S81-LINKTO CH_BOARD lands in this file), ot_hdc_fsqrt = rtl/hdc/v41/ot_hdc_fsqrt.sv (S81 selections pin it; prefix_round variants are HBM tile sources)"
 }
