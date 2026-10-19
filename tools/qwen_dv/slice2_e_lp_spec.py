@@ -103,7 +103,8 @@ def main():
                               "CRITICAL prefix, no REVIEW/submit."),
         "job": {"owner": "Claude:OWN-QWEN/SLICE-E", "branch": "claude/ownq-slicee-1018", "tag": "lp1", "submit": False,
                 "purpose": "qfd_dv_slice2_e landed parent pathfinding (critical: gate only, COORD-REVIEW-QUEUE)",
-                "hold_merge": "OWN-QWEN/SLICE-E diagnostic: lane_h + xs_leaf stand-ins", "benches": []},
+                "hold_merge": "OWN-QWEN/SLICE-E diagnostic: lane_h + xs_leaf stand-ins",
+                "extra_paths": ["results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"], "benches": []},
     }
     out = ROOT / KD / "spec.json"
     out.parent.mkdir(parents=True, exist_ok=True)

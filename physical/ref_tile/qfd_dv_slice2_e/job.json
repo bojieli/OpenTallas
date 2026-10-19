@@ -8,7 +8,10 @@
  "peak_ram_gb": 192,
  "source": {
   "branch": "claude/ownq-slicee-1018",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"
+  ]
  },
  "stages": {
   "bench": [

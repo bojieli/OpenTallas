@@ -1522,6 +1522,9 @@
   "submit": false,
   "purpose": "qfd_dv_slice2_e landed parent pathfinding (critical: gate only, COORD-REVIEW-QUEUE)",
   "hold_merge": "OWN-QWEN/SLICE-E diagnostic: lane_h + xs_leaf stand-ins",
+  "extra_paths": [
+   "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf"
+  ],
   "benches": []
  },
  "io_flop_at_pins": {
