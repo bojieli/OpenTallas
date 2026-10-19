@@ -25,14 +25,20 @@
 //               -> xfin s port, 15 words kind-major then leaf, s_i = (kind * 4 + j) * 5 + leaf (kind 0 hh, 1 kk, 2 dd);
 //               eg's gates (one per copy) -> all 5 leaves' g ports.  A triple while the previous one serialises, a
 //               partial leaf set or mixed copies, or an ENG triple against a norm collection is a sticky fault.
-// Faults (sticky; checks only, they never reschedule): two CTLs / two RDs / two lo beats in a cycle, an RD or a row write into
+// Faults (sticky; checks only, they never reschedule; XR6: terms registered, flag visible 1 cycle after the event): two CTLs / two RDs / two lo beats in a cycle, an RD or a row write into
 // a busy leaf unpacker, a partial set that is partial or overlaps the collection, two injections in one ci slot, an RD to
 // leaf > 4, a CTL target > 5, two relayed SC beats in a cycle, a lo beat in the send-config cycle (it would be dropped), the ENG faults above.
 // Bench: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv (tools/s81_slice/xr_bench.sh); mutants OT_S81SL_XR_MUT_*.
 // Every input lands in a flop; every output leaves a flop.  HB = 1 builds the C3 variant (band port B, attention).
 // ---------------------------------------------------------------------------------------------------------------------
+`ifdef OT_S81SL_XR_FOREG
+`define OT_S81SL_XR_FOREG_DEF 1
+`else
+`define OT_S81SL_XR_FOREG_DEF 0
+`endif
 module ot_s81sl_xr #(
     parameter integer HB = 0,
+    parameter integer FOREG = 0,          // XR6 fallback: dedicated fault output flop (+1 more fault-visibility cycle)
     parameter integer W  = 1104,
     parameter integer V  = 276
 ) (
@@ -359,15 +365,35 @@ module ot_s81sl_xr #(
         g_c <= egc_c; g_d <= egd_c;
     end
     // ---------------------------------------------------------------- faults
+    // XR6 (S81-SAFE-FIX/XR1 10-19, SAFE item 4): the 297c9bfab --cts gate failed TT setup -110.6 ps on erun -> the
+    // one-cycle 20-term fault OR -> fault / its pin_reg_split launch copy (~470 ps of wire across the pin-bound 311x395
+    // outline).  The terms are now registered per source region (fa input/RD, fb partial/ENG collector, fc send/inject;
+    // KEPT, each beside its own sources) and the sticky flag ORs three flops: fault is visible 1 cycle later
+    // (FOREG = 1: one more dedicated output flop, +2; no pin_reg_split needed).  Fault is a sticky check, never a
+    // schedule input (header): 0 data cycles, 0 token-rate change.
+    (* keep *) reg fa; (* keep *) reg fb; (* keep *) reg fc; reg fcore;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) fault <= 1'b0;
-        else fault <= fault | f1 | ucol | ((|pv) && pv != 5'b11111) | ((|pv) && prun) | (vct && (pk_go || sc_rel)) |
-                      (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) |
-                      ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun);
+        if (!rs_o) begin fa <= 1'b0; fb <= 1'b0; fc <= 1'b0; end
+        else begin
+            fa <= f1 | ucol;
+            fb <= ((|pv) && pv != 5'b11111) | ((|pv) && prun) | ebad | ((|ev_c) && (erun || prun || (|pv))) |
+                  ((|pv) && erun);
+            fc <= (vct && (pk_go || sc_rel)) | (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1));
+        end
+    generate if (FOREG != 0) begin : g_foreg
+        always @(posedge clk or negedge rs_o)
+            if (!rs_o) begin fcore <= 1'b0; fault <= 1'b0; end
+            else begin fcore <= fcore | fa | fb | fc; fault <= fcore; end
+    end else begin : g_fdirect
+        always @(posedge clk or negedge rs_o)
+            if (!rs_o) fault <= 1'b0;
+            else fault <= fault | fa | fb | fc;
+        always @(*) fcore = 1'b0;
+    end endgenerate
 endmodule
 
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.
-module ot_s81sl_xr1 (
+module ot_s81sl_xr1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
     input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
@@ -381,7 +407,7 @@ module ot_s81sl_xr1 (
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
     wire [1103:0] bo_unused;
-    ot_s81sl_xr #(.HB(0)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+    ot_s81sl_xr #(.HB(0), .FOREG(FOREG)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1104{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
         .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
@@ -389,7 +415,7 @@ module ot_s81sl_xr1 (
         .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
 endmodule
 
-module ot_s81sl_xr3 (
+module ot_s81sl_xr3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
     input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
@@ -403,7 +429,7 @@ module ot_s81sl_xr3 (
     output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
-    ot_s81sl_xr #(.HB(1)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+    ot_s81sl_xr #(.HB(1), .FOREG(FOREG)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
         .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
