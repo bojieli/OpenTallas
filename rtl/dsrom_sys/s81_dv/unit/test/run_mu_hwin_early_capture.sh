@@ -27,13 +27,39 @@ run() {
   "$case_dir/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed > "$case_dir/run_seed$seed.log" 2>&1 || rc=$?
   if [[ "$expected" == FAIL:* ]]; then
     [[ $rc -ne 0 ]]; grep -q "${expected#FAIL:}" "$case_dir/run_seed$seed.log"
+  elif [[ "$expected" == REJECT:* ]]; then
+    [[ $rc -eq 0 ]]; grep -q '^ERR' "$case_dir/run_seed$seed.log"; grep -q "${expected#REJECT:}" "$case_dir/run_seed$seed.log"
   else
     [[ $rc -eq 0 ]]; grep -q "$expected" "$case_dir/run_seed$seed.log"
   fi
  done
 }
+case "${2:-initial}" in
+initial)
 RUN_SEEDS=1 run original_assert_repro tb_dsdv_mu_hwin_early_capture 'FAIL:event boot count differs event0' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+ANCHOR_ONLY_REPRO +define+ORIGINAL_ASSERT_REPRO +define+DSDV_MU_POINTER_ASSERT
 RUN_SEEDS=1 run guarded_assert_corruption tb_dsdv_mu_hwin_early_capture 'FAIL:event boot count differs event0' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+ANCHOR_ONLY_REPRO +define+ASSERT_CORRUPT
 run ns2_ev1 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D
 run ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D
 printf '%s\n' 'EARLY_CAPTURE_INITIAL PASS'
+ ;;
+wrapper)
+ for width in 2 32; do run width$width tb_dsdv_mu_mem_early_capture 'EC_MEM PASS' +define+EC_WIDTH=$width; done
+ for mut in 1 2 3 4; do RUN_SEEDS=1 run mechanism_mut$mut tb_dsdv_mu_mem_early_capture 'FAIL:EC_MEM IDENTITY' +define+EC_MUT=$mut; done
+ ;;
+matrix)
+ run base tb_dsdv_mu_hwin_early_capture '^MUWIN PASS'
+ run fast_cfg tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+FAST_CFG +define+MIN_D
+ run min_d tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+MIN_D
+ run badd tb_dsdv_mu_hwin_early_capture '^MUWIN BADD PASS' +define+BAD_D
+ run badd_high tb_dsdv_mu_hwin_early_capture '^MUWIN BADD_HIGH PASS' +define+BAD_D_HIGH
+ run collision tb_dsdv_mu_hwin_early_capture '^MUWIN COLLISION PASS' +define+COLLIDE_EVENTS
+ run badrt tb_dsdv_mu_hwin_early_capture '^MUWIN BADRT PASS' +define+BADRT=1
+ run headcompare tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+HEAD_COMPARE
+ for mut in 3 4; do RUN_SEEDS=1 run old_mut$mut tb_dsdv_mu_hwin_early_capture 'REJECT:^MUWIN FAIL' +define+WMUT=$mut; done
+ run ns2_collision tb_dsdv_mu_hwin_early_capture '^MUWIN COLLISION PASS' +define+NSLOT_TEST=2 +define+NEV=2 +define+MIN_D +define+COLLIDE_EVENTS
+ run ns2_illegal_original tb_dsdv_mu_hwin_early_capture '^MUWIN FAIL' +define+NSLOT_TEST=2 +define+MIN_D
+ run s256_ns2 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+MIN_D +define+SWEEP256
+ run s256_ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D +define+SWEEP256
+ ;;
+*) echo 'unknown phase' >&2; exit 64;;
+esac

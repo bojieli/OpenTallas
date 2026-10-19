@@ -1,10 +1,14 @@
 `timescale 1ns/1ps
 module tb_dsdv_mu_mem_early_capture;
+`ifndef EC_WIDTH
+`define EC_WIDTH 63
+`endif
+ localparam integer W=`EC_WIDTH, S=(W+7)/8;
  reg ck=0; always #0.5 ck=~ck;
  reg [7:0] rst_n=0; reg we=0; reg [5:0] wa=0,ra=0,next_ra=0;
  reg [62:0] wd=0; wire [62:0] oldq,newq;
- dsdv_mu_mem #(.W(63)) anchor(.ck(ck),.rst_n(rst_n),.we(we),.wa(wa),.wd(wd),.ra(ra),.q(oldq));
- dsdv_mu_mem_early_capture #(.W(63)) dut(.ck(ck),.rst_n(rst_n),.we(we),.wa(wa),.wd(wd),.ra_current(ra),.ra_next(next_ra),.q(newq));
+ dsdv_mu_mem #(.W(W)) anchor(.ck(ck),.rst_n(rst_n[S-1:0]),.we(we),.wa(wa),.wd(wd[W-1:0]),.ra(ra),.q(oldq));
+ dsdv_mu_mem_early_capture #(.W(W)) dut(.ck(ck),.rst_n(rst_n[S-1:0]),.we(we),.wa(wa),.wd(wd[W-1:0]),.ra_current(ra),.ra_next(next_ra),.q(newq));
  integer i,checks=0; reg compare=0;
  always @(posedge ck) ra<=next_ra;
  always @(negedge ck) if(compare) begin
