@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+ovl_mut_collide OK (mutant fails)
+N59MU_FAIL ovl_mut_collide
+N59MU_FAULT first at cycle 853 op 4 user 0
+N59MU_ERR cycle 854 op 4: user-0 dr word != NU 1
+N59MU_ERR cycle 855 op 4: user-0 dr word != NU 1
+N59MU_ERR cycle 856 op 4: user-0 dr word != NU 1
+N59MU_FAIL errors=230 tag_errors=0 first_fault=853 records u0..3 99/33/33/0
+N59MU_BENCH_EXIT 1
+STAGE_RC 1

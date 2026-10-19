@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+mut6_seq OK (mutant fails)
+N59MU_FAIL mut6_seq
+N59MU_ERR cycle 2527 op 10: KVN x3 identity epoch / token
+N59MU_ERR cycle 2528 op 10: KVN x3 identity epoch / token
+N59MU_ERR cycle 2529 op 10: KVN x3 identity epoch / token
+N59MU_ERR cycle 2530 op 10: KVN x3 identity epoch / token
+N59MU_FAIL errors=77 tag_errors=33 first_fault=2573 records u0..3 165/99/66/33
+N59MU_BENCH_EXIT 1
+STAGE_RC 1
