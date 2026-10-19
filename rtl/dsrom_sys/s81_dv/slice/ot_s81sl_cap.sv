@@ -91,7 +91,10 @@ module ot_s81sl_cap #(
             .cfg_v(cfg_v), .cfg_d(cfg_d),
             .cw_s_v(cw_s_v), .cw_s_a(cw_s_a), .cw_s_d(cw_s_d), .cw_n_v(cw_n_v), .cw_n_a(cw_n_a), .cw_n_d(cw_n_d),
             .fault(fault));
-    end else begin : g_mut
+    end
+`ifndef OT_HARD_CHILDREN
+    // bench mutants only (the hardened build defines OT_HARD_CHILDREN: hard views carry no parameters)
+    else begin : g_mut
         ot_s81sl_cap_tr #(.MUT(MUT_W)) u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_w),
             .o_v(w_v), .o_t(w_t), .o_d(w_d), .o_e(w_e), .fault(w_f));
         ot_s81sl_cap_tr #(.MUT(MUT_E)) u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e),
@@ -101,7 +104,14 @@ module ot_s81sl_cap #(
             .cfg_v(cfg_v), .cfg_d(cfg_d),
             .cw_s_v(cw_s_v), .cw_s_a(cw_s_a), .cw_s_d(cw_s_d), .cw_n_v(cw_n_v), .cw_n_a(cw_n_a), .cw_n_d(cw_n_d),
             .fault(fault));
-    end endgenerate
+    end
+`endif
+    endgenerate
+`ifdef OT_HARD_CHILDREN
+`ifndef SYNTHESIS
+    initial if (MUT != 0) $fatal(1, "ot_s81sl_cap: OT_HARD_CHILDREN build is MUT = 0 only");
+`endif
+`endif
 `ifndef SYNTHESIS
     initial if (WIN != 2) $fatal(1, "ot_s81sl_cap: the hardened leaves are built at WIN = 2");
 `endif
