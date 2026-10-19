@@ -1,0 +1,16 @@
+{
+  "top": "ot_hbm_idx_topk_link_static_p",
+  "params": {
+    "SAFE_RING": 1,
+    "SAFE_CARRY": 1,
+    "SAFE_COPIES": 1
+  },
+  "sources": [
+    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+  ],
+  "clock_ports": [
+    "clk",
+    "clk_mem"
+  ]
+}

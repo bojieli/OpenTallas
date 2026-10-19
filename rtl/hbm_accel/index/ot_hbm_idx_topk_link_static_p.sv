@@ -73,8 +73,39 @@
  end
 endmodule
 
+// Local distribution is real logic and survives ABC as distinct retained modules.
+(* keep_hierarchy *) module ot_hbm_idx_link_inv #(parameter integer ID=0)(input wire d,output wire q);
+ assign q=~d;
+endmodule
+(* keep_hierarchy *) module ot_hbm_idx_link_dist #(parameter integer W=1,N=1,ID=0)(input wire[W-1:0]d,output wire[N*W-1:0]q);
+ generate if(N<=16)begin:leaf
+  for(genvar n=0;n<N;n=n+1)begin:copy
+   for(genvar b=0;b<W;b=b+1)begin:bit_copy
+    wire dn;
+    ot_hbm_idx_link_inv #(.ID(ID*10000+n*W+b)) a(.d(d[b]),.q(dn));
+    ot_hbm_idx_link_inv #(.ID(ID*10000+n*W+b+5000)) z(.d(dn),.q(q[n*W+b]));
+   end
+  end
+ end else begin:tree
+  localparam integer K=(N+15)/16;
+  wire[K*W-1:0]branch;
+  ot_hbm_idx_link_dist #(.W(W),.N(K),.ID(ID+1)) trunk(.d(d),.q(branch));
+  for(genvar g=0;g<K;g=g+1)begin:group
+   localparam integer L=(N-g*16<16)?N-g*16:16;
+   ot_hbm_idx_link_dist #(.W(W),.N(L),.ID(ID+100+g)) twig(.d(branch[g*W+:W]),.q(q[g*16*W+:L*W]));
+  end
+ end endgenerate
+endmodule
+(* keep_hierarchy *) module ot_hbm_idx_link_copy #(parameter integer W=1,ID=0,RESET=0)(input wire clk,rst_n,input wire[W-1:0]d,output reg[W-1:0]q);
+ generate if(RESET)begin:r
+  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<=d;
+ end else begin:n
+  always @(posedge clk)q<=d;
+ end endgenerate
+endmodule
+
 module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,parameter integer CW=4,
-                                 parameter integer RW=36,parameter integer NC=1)(
+                                 parameter integer RW=36,parameter integer NC=1,parameter integer SLICES=1)(
  input wire[NA*RW-1:0]a,input wire[NC*CW-1:0]na,input wire[NB*RW-1:0]b,output wire[(NA+NB)*RW-1:0]y
 );
  // y = a | (b shifted up by na slots). Slots of a at/above na are zero by construction.
@@ -85,19 +116,22 @@ module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,p
  genvar i,q;
  for(i=0;i<CW;i=i+1)begin:sh
   for(q=0;q<N;q=q+1)begin:sl
-   localparam integer C=(q*NC)/N;
+   localparam integer SLW=RW/SLICES;
+   for(genvar z=0;z<SLICES;z=z+1)begin:slice
+   localparam integer C=(SLICES==1)?(q*NC)/N:q*SLICES+z;
    localparam integer SH=(1<<i);
    if(q>=SH)begin:mv
-    assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?st[i*W+(q-SH)*RW+:RW]:st[i*W+q*RW+:RW];
+    assign st[(i+1)*W+q*RW+z*SLW+:SLW]=na[C*CW+i]?st[i*W+(q-SH)*RW+z*SLW+:SLW]:st[i*W+q*RW+z*SLW+:SLW];
    end else begin:lo
-    assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?{RW{1'b0}}:st[i*W+q*RW+:RW];
+    assign st[(i+1)*W+q*RW+z*SLW+:SLW]=na[C*CW+i]?{SLW{1'b0}}:st[i*W+q*RW+z*SLW+:SLW];
+   end
    end
   end
  end
  assign y=st[CW*W+:W]|{{(NB*RW){1'b0}},a};
 endmodule
 
-module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,parameter integer SW=6,parameter integer NC=1)(
+module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,parameter integer SW=6,parameter integer NC=1,parameter integer SLICES=1)(
  input wire[N*RW-1:0]x,input wire[NC*SW-1:0]s,output wire[N*RW-1:0]y
 );
  // rotate up by s slots: y slot p = x slot (p-s) mod N. Stage i output slot p uses select copy p*NC/N (NC identical
@@ -108,15 +142,18 @@ module ot_hbm_idx_link_p_rot #(parameter integer N=64,parameter integer RW=36,pa
  genvar i,p;
  for(i=0;i<SW;i=i+1)begin:rt
   for(p=0;p<N;p=p+1)begin:sl
-   localparam integer C=(p*NC)/N;
+   localparam integer SLW=RW/SLICES;
+   for(genvar z=0;z<SLICES;z=z+1)begin:slice
+   localparam integer C=(SLICES==1)?(p*NC)/N:p*SLICES+z;
    localparam integer PS=(p+N-((1<<i)%N))%N;
-   assign st[(i+1)*W+p*RW+:RW]=s[C*SW+i]?st[i*W+PS*RW+:RW]:st[i*W+p*RW+:RW];
+   assign st[(i+1)*W+p*RW+z*SLW+:SLW]=s[C*SW+i]?st[i*W+PS*RW+z*SLW+:SLW]:st[i*W+p*RW+z*SLW+:SLW];
+   end
   end
  end
  assign y=st[SW*W+:W];
 endmodule
 
-module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter integer SAFE_RING=0,parameter integer SAFE_CARRY=0)(
+module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter integer SAFE_RING=0,parameter integer SAFE_CARRY=0,parameter integer SAFE_COPIES=0)(
  input wire clk,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,input wire[4*64-1:0]lane_vc,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -189,41 +226,80 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
  // registered counts + kept region copies of the merge selects (S2 pair merge: count of group 2p, 4 copies per pair;
  // S2 quad merge: count of pair 2q, 8 copies per quad)
  reg s1_v;reg[8*8*RW-1:0]s1_gc;reg[4*5-1:0]s1_pcnt;
- (* keep *) reg[4*4*4-1:0]s1_nac;              // pair p copy c at [(p*4+c)*4]
- (* keep *) reg[2*8*5-1:0]s1_nqc;              // quad q copy c at [(q*8+c)*5]
+ localparam integer PN=SAFE_COPIES?48:4,QN=SAFE_COPIES?96:8,HN=SAFE_COPIES?192:1,TN=SAFE_COPIES?192:16;
+ wire[4*PN*4-1:0]s1_nac;              // pair p copy c at [(p*4+c)*4]
+ wire[2*QN*5-1:0]s1_nqc;              // quad q copy c at [(q*8+c)*5]
  // ---------------- S2 (pair merge + quad merge, every select from a register)
  wire[4*16*RW-1:0]pm;
  for(p=0;p<4;p=p+1)begin:pair
-  ot_hbm_idx_link_p_merge #(.NA(8),.NB(8),.CW(4),.RW(RW),.NC(4)) mg(.a(s1_gc[(2*p)*8*RW+:8*RW]),.na(s1_nac[p*16+:16]),
+  ot_hbm_idx_link_p_merge #(.NA(8),.NB(8),.CW(4),.RW(RW),.NC(PN),.SLICES(SAFE_COPIES?3:1)) mg(.a(s1_gc[(2*p)*8*RW+:8*RW]),.na(s1_nac[p*PN*4+:PN*4]),
    .b(s1_gc[(2*p+1)*8*RW+:8*RW]),.y(pm[p*16*RW+:16*RW]));
  end
  wire[2*32*RW-1:0]qm;wire[2*6-1:0]qcnt;
  for(p=0;p<2;p=p+1)begin:quad
-  ot_hbm_idx_link_p_merge #(.NA(16),.NB(16),.CW(5),.RW(RW),.NC(8)) mg(.a(pm[(2*p)*16*RW+:16*RW]),.na(s1_nqc[p*40+:40]),
+  ot_hbm_idx_link_p_merge #(.NA(16),.NB(16),.CW(5),.RW(RW),.NC(QN),.SLICES(SAFE_COPIES?3:1)) mg(.a(pm[(2*p)*16*RW+:16*RW]),.na(s1_nqc[p*QN*5+:QN*5]),
    .b(pm[(2*p+1)*16*RW+:16*RW]),.y(qm[p*32*RW+:32*RW]));
   assign qcnt[p*6+:6]={1'b0,s1_pcnt[(2*p)*5+:5]}+{1'b0,s1_pcnt[(2*p+1)*5+:5]};
  end
  reg s2_v;reg[2*32*RW-1:0]s2_qm;reg[2*6-1:0]s2_qcnt;
  // ---------------- S3
- wire[64*RW-1:0]cm;
- ot_hbm_idx_link_p_merge #(.NA(32),.NB(32),.CW(6),.RW(RW)) mh(.a(s2_qm[0+:32*RW]),.na(s2_qcnt[0+:6]),
+ wire[64*RW-1:0]cm;wire[HN*6-1:0]half_select;
+ ot_hbm_idx_link_p_merge #(.NA(32),.NB(32),.CW(6),.RW(RW),.NC(HN),.SLICES(SAFE_COPIES?3:1)) mh(.a(s2_qm[0+:32*RW]),.na(half_select),
   .b(s2_qm[32*RW+:32*RW]),.y(cm));
  wire[6:0]ccnt={1'b0,s2_qcnt[0+:6]}+{1'b0,s2_qcnt[6+:6]};
  reg s3_v;reg[64*RW-1:0]s3_c;reg[6:0]s3_n;
  // ---------------- S4 (loop)
  reg[9:0]total;reg fault_c;
  wire[9:0]total_nx=s3_v?(total+{3'd0,s3_n}):(clr3?10'd0:total);
- (* keep *) reg[16*6-1:0]trep;                 // r2: 16 region copies of total[5:0] for the rotate selects
+ wire[TN*6-1:0]trep;                 // r2: 16 region copies of total[5:0] for the rotate selects
  wire[2:0]fill=total[2:0];
  wire[6:0]f0=total[9:3];
  wire[6:0]nsum={4'd0,fill}+s3_n;
  wire[64*RW-1:0]rot;
- ot_hbm_idx_link_p_rot #(.N(64),.RW(RW),.SW(6),.NC(16)) rr(.x(s3_c),.s(trep),.y(rot));
+ ot_hbm_idx_link_p_rot #(.N(64),.RW(RW),.SW(6),.NC(TN),.SLICES(SAFE_COPIES?3:1)) rr(.x(s3_c),.s(trep),.y(rot));
  wire[63:0]mk0=(s3_n[6])?{64{1'b1}}:((64'd1<<s3_n[5:0])-64'd1);
  wire[63:0]mk;
  ot_hbm_idx_link_p_rot #(.N(64),.RW(1),.SW(6),.NC(1)) rm(.x(mk0),.s(trep[0+:6]),.y(mk));
  reg s4_v;reg[64*RW-1:0]s4_r;reg[63:0]s4_m;reg[2:0]s4_fill;reg[3:0]s4_nf;reg[6:0]s4_f0;
  (* keep *) reg[8*3-1:0]s4_fillc,s4_f0c;      // r3: per-bank copies of fill / f0[2:0] for the ring-W slot selects
+ generate if(SAFE_COPIES)begin:local_selects
+  wire[TN-1:0]trst;
+  ot_hbm_idx_link_dist #(.W(1),.N(TN),.ID(10)) resets(.d(rst_n),.q(trst));
+  wire[TN*6-1:0]td;
+  ot_hbm_idx_link_dist #(.W(6),.N(TN),.ID(20)) tdrive(.d(total_nx[5:0]),.q(td));
+  for(genvar c=0;c<TN;c=c+1)begin:rotate
+   ot_hbm_idx_link_copy #(.W(6),.ID(c),.RESET(1)) r(.clk(clk),.rst_n(trst[c]),.d(td[c*6+:6]),.q(trep[c*6+:6]));
+  end
+  for(genvar a=0;a<4;a=a+1)begin:pair
+   wire[PN*4-1:0]d;
+   ot_hbm_idx_link_dist #(.W(4),.N(PN),.ID(100+a)) drive(.d(gcnt[2*a*4+:4]),.q(d));
+   for(genvar c=0;c<PN;c=c+1)begin:local_copy
+    ot_hbm_idx_link_copy #(.W(4),.ID(1000+a*PN+c)) r(.clk(clk),.rst_n(1'b1),.d(d[c*4+:4]),.q(s1_nac[(a*PN+c)*4+:4]));
+   end
+  end
+  for(genvar a=0;a<2;a=a+1)begin:quad
+   wire[QN*5-1:0]d;
+   ot_hbm_idx_link_dist #(.W(5),.N(QN),.ID(200+a)) drive(.d(pcnt[2*a*5+:5]),.q(d));
+   for(genvar c=0;c<QN;c=c+1)begin:local_copy
+    ot_hbm_idx_link_copy #(.W(5),.ID(2000+a*QN+c)) r(.clk(clk),.rst_n(1'b1),.d(d[c*5+:5]),.q(s1_nqc[(a*QN+c)*5+:5]));
+   end
+  end
+  wire[HN*6-1:0]hd;
+  wire[5:0]hn={1'b0,s1_pcnt[0+:5]}+{1'b0,s1_pcnt[5+:5]};
+  ot_hbm_idx_link_dist #(.W(6),.N(HN),.ID(300)) hdrive(.d(hn),.q(hd));
+  for(genvar c=0;c<HN;c=c+1)begin:half
+   ot_hbm_idx_link_copy #(.W(6),.ID(3000+c)) r(.clk(clk),.rst_n(1'b1),.d(hd[c*6+:6]),.q(half_select[c*6+:6]));
+  end
+ end else begin:legacy_selects
+  reg[4*PN*4-1:0]pa;reg[2*QN*5-1:0]qa;reg[TN*6-1:0]ta;
+  integer k;
+  always @(posedge clk)begin
+   for(k=0;k<4;k=k+1)pa[k*PN*4+:PN*4]<={PN{gcnt[2*k*4+:4]}};
+   for(k=0;k<2;k=k+1)qa[k*QN*5+:QN*5]<={QN{pcnt[2*k*5+:5]}};
+  end
+  always @(posedge clk or negedge rst_n)if(!rst_n)ta<=0;else ta<={TN{total_nx[5:0]}};
+  assign s1_nac=pa;assign s1_nqc=qa;assign trep=ta;assign half_select=s2_qcnt[0+:6];
+ end endgenerate
  // ---------------- S5 (write formation) + ring register W
  reg[64*RW-1:0]wr;
  reg[8*RW-1:0]partial_flit;
@@ -251,10 +327,10 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
  reg[7:0]we_r;reg[47:0]wa_r;reg[8*288-1:0]wd_r;
  // ---------------- registers
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin s1_v<=0;s2_v<=0;s3_v<=0;s4_v<=0;we_r<=0;total<=0;trep<=0;fault_c<=0;end
+  if(!rst_n)begin s1_v<=0;s2_v<=0;s3_v<=0;s4_v<=0;we_r<=0;total<=0;fault_c<=0;end
   else begin
    s1_v<=ingest_v;s2_v<=s1_v;s3_v<=s2_v;s4_v<=s3_v;we_r<=we_c;
-   total<=total_nx;trep<={16{total_nx[5:0]}};
+   total<=total_nx;
    if(s3_v)begin
     if({1'b0,total}+{4'd0,s3_n}>11'd512)fault_c<=1;
    end
@@ -266,8 +342,6 @@ module ot_hbm_idx_topk_link_static_p_core #(parameter integer MUT=0,parameter in
  integer pp;
  always @(posedge clk)begin
   s1_gc<=gc;s1_pcnt<=pcnt;
-  for(pp=0;pp<4;pp=pp+1)s1_nac[pp*16+:16]<={4{gcnt[(2*pp)*4+:4]}};
-  for(pp=0;pp<2;pp=pp+1)s1_nqc[pp*40+:40]<={8{pcnt[(2*pp)*5+:5]}};
   s2_qm<=qm;s2_qcnt<=qcnt;
   s3_c<=cm;s3_n<=ccnt;
   s4_r<=rot;s4_m<=mk&{64{s3_v}};s4_fill<=fill;s4_nf<=nsum[6:3];s4_f0<=f0;
@@ -323,7 +397,7 @@ endmodule
 // PIN-REGISTERED TILE (owner rule 19:50 PT 10-15): die master ot_hbm_idx_topk_link_static_p. Every data input and
 // every output passes ONE kept flop at the pin (+1/+1 edge, as the historical shell); rst_n enters a 2-flop release
 // synchroniser on clk. Port list identical to ot_hbm_idx_topk_link_static (drop-in); outputs = historical +5 edges.
-module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE_RING=0,parameter integer SAFE_CARRY=0)(
+module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE_RING=0,parameter integer SAFE_CARRY=0,parameter integer SAFE_COPIES=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -352,7 +426,7 @@ module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer
   for(vj=0;vj<64;vj=vj+1)begin vrep[vj]<=selected_line[vj*37];vrep[64+vj]<=selected_line[vj*37];vrep[128+vj]<=selected_line[vj*37];end
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT),.SAFE_RING(SAFE_RING),.SAFE_CARRY(SAFE_CARRY)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_p_core #(.MUT(MUT),.SAFE_RING(SAFE_RING),.SAFE_CARRY(SAFE_CARRY),.SAFE_COPIES(SAFE_COPIES)) core(.clk(clk),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.lane_vc(lane_vc),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule
