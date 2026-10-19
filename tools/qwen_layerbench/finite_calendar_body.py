@@ -9,6 +9,7 @@ provider phase, head constants or cap1 programme merely because it packs.
 import hashlib,json
 from pathlib import Path
 from calendar_rom_image import emit
+from table_load_contract import contract, RANGE_TO_LOADER_SAMPLE, LOADER_FIRST_PAYLOAD, LOADER_LAST_PAYLOAD, LOADER_PORT_RESERVATION
 ORDER=('embed','decode','head','boot','init')
 
 def compile_body(segments, source):
@@ -31,6 +32,17 @@ def compile_body(segments, source):
             if not 1<=d<=4095 or not 0<=c<1<<116:raise ValueError('invalid source command/delta')
             entries.append(d<<116|c);last=t
         ranges[seg]=dict(first=first,count=len(entries)-first)
+    # Explicit caller-selected preloads; each one-entry range is four-aligned.
+    # There is no inferred readiness and no implicit install on a stage start.
+    preloads={}
+    for stage in range(1,37):
+        while len(entries)%4:entries.append(1<<116)
+        first=len(entries)
+        entries.append((8<<116)|(14<<112)|(stage<<4)|9)
+        preloads[stage]=dict(first=first,count=1,load_sample_after_start=RANGE_TO_LOADER_SAMPLE,
+                            first_word_after_start=RANGE_TO_LOADER_SAMPLE+LOADER_FIRST_PAYLOAD,
+                            last_word_after_start=RANGE_TO_LOADER_SAMPLE+LOADER_LAST_PAYLOAD,
+                            read_reservation_end_after_start=RANGE_TO_LOADER_SAMPLE+LOADER_PORT_RESERVATION)
     if not 0<len(entries)<=1023:raise ValueError('ten-bit calendar overflow')
     words=[0]*4096
     for i,e in enumerate(entries):words[i//4]|=e<<(128*(i%4))
@@ -42,7 +54,7 @@ def compile_body(segments, source):
     rec=dict(schema='opentallas.qwen.playhead-calendar.v1',source=source,
              source_sha256=hashlib.sha256(canonical).hexdigest(),entries=len(entries),
              rows=(len(entries)+3)//4,entry_count_bits=10,physical_macros=2,descriptor=descriptor,
-             ranges=ranges,fetch_capture_extra_edges=1,
+             ranges=ranges,preload_ranges=preloads,table_load_timing=contract(),fetch_capture_extra_edges=1,
              production_bound=False,qualification='source calendar playback only; actual cap1/phase/head payload bindings required')
     return rec,words
 
@@ -51,4 +63,6 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--input',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
     a=ap.parse_args();doc=json.loads(a.input.read_text())
     rec,words=compile_body(doc['segments'],doc['source']);emit(a.out,rec,words)
+    (a.out/'dw.hex').write_text(''.join(f'{x:016x}\n' for x in rec['descriptor']))
+    (a.out/'preload_first.hex').write_text(''.join(f"{rec['preload_ranges'][i]['first']:03x}\n" for i in range(1,37)))
 if __name__=='__main__':main()

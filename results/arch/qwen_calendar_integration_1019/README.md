@@ -23,3 +23,41 @@ BOUNDARY_RELOC remains0. Physical source, clock, preload/lifetime joins and
 actual production receiver/body installation remain open.
 
 All four users play all four segments on exact edges; count1024 and invalid explicit ranges reject. Legacy NU1 lockstep/NU4 regression passes with zero mismatches and1536 landed words.
+
+The next source step adds TABLE_ROM=0 by default and a registered LOCALkind4
+load event carrying explicit stage1..36/user. The emitted image has36 aligned
+one-entry ranges (first868 through1008),1009 total entries. Callers select a
+range explicitly; ordinary stage starts do not infer a table installation.
+The registered event is sampled by the loader one edge later. Loader output
+is first+3/last+90 from that input sample. The bench waits a fixed103 edges
+from explicit range start and then reads the native SRAMs, independent of done.
+
+Actual calendar→four-ROM loader→22-SRAM VM at slice0 passes149640 native reads
+in465155 cycles,36stages×4users. Every installation re-reads all resident
+users, plus the clearly synthetic common-head sentinel. Exact sample traces
+produce144 source-bound windows:93 reserved edges each,13392 total.
+The manifest c63242abc11b880c741bd7556138529dab331b21579231b7ba9b53c7435cee92
+is the same compact manifest checked against the full released checkpoint.
+Compiler collision/lifetime/early-window mutations all reject.
+Native loader wrong-userMUT2 fails a PROG read; actual overlapping loads fault;
+reading the last CROM row before the fixed window completes fails against the
+same target SRAM. No credits, dynamic ready or waiting for done is added.
+This proves the minimum source-bound table transport/retention mechanism.
+Numerical consumers, full cap1 host metadata/receiver acceptance, whole-frame
+admission and provider/clock binding remain separate obligations.
+
+The shared timing source is tools/qwen_layerbench/table_load_contract.py;
+both finite-calendar emitter and table-window validator import it.
+witness/fixed_load_pricing.json enumerates all144 affected loads with range
+start, command output, loader input, payload interval, final VM write,
+read bound, actual read/retirement edges and both reservation intervals.
+The103-edge interval has range-start origin; the93-edge interval has loader
+input origin nine edges later. The larger caller interval adds9 front edges
+and1 tail edge. Thus aggregate caller reservation is14832 vs13392 loader-port
+edges:1440 origin-expansion edges,360 per user across36 loads. Actual table
+write-port occupancy delta is0. This is not a measured token slowdown.
+Production critical-path delta is explicitly null until an actual dependency/
+overlap schedule binds. In this diagnostic sweep, user0 first read is loader+96
+(range+105), including two bench driver edges after the103-edge reservation.
+Other first-owned-user read offsets732/1368/2004 include the deliberate native
+resident-bank reread sweep. Those testbench reads are not the production layer.

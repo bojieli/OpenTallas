@@ -1,0 +1,5 @@
+CALENDAR_TABLE_NATIVE_JOIN_PASS reads=149640 cycles=465155 target_read_age=2 all36 all4 retention shared_head_guard=1
+- ../src/rtl/test/qwen_dv/tb_qfd_dv_calendar_table_join.sv:125: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 1.305 s; speed 3.566 ms/s
+- Verilator: cpu 1.304 s on 1 threads; allocated 10 MB

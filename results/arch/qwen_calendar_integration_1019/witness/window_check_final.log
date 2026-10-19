@@ -1,0 +1,4 @@
+WINDOW_MUTANT_REJECT collision table write-port collision
+WINDOW_MUTANT_REJECT lifetime install overwrites live user table
+WINDOW_MUTANT_REJECT early bad count or late table installation
+ACTUAL_CALENDAR_WINDOWS_PASS {'schema': 'opentallas.qwen.static-table-load-windows.v1', 'windows': 144, 'manifest_sha256': 'c63242abc11b880c741bd7556138529dab331b21579231b7ba9b53c7435cee92', 'windows_sha256': '3ddd7e2aa6708c46a37e73a6e858292029c1314fcda36b56a828025bd153861c', 'write_port_reserved_edges': 13392, 'per_user_36stage_edges': 3348, 'qualification': 'STATIC CERTIFICATE ONLY; actual calendar/consumer source required'}

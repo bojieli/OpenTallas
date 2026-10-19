@@ -77,6 +77,7 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
     parameter integer BOUNDARY_RELOC = 0,         // opt-in actual local ROOT/BTAB/STREAM joins; no XPF qualification
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
+    parameter integer TABLE_ROM = 0,                // opt-in LOCAL4 explicit table-load pulse
     parameter integer CALENDAR_ROM = 0,             // opt-in CALR/two-ROM calendar; +1 fetch edge
     parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
 ) (
@@ -102,6 +103,9 @@ module qfd_dv_cmd_cal_mu #(
     output reg           su_issue,
     output reg  [8:0]    su_pidx,
     output reg           xc_issue,
+    output reg           table_load,
+    output reg [5:0]     table_stage,
+    output reg [1:0]     table_user,
     output reg  [1087:0] tl,                        // TLOAD stream table word (W5 st_wi), one edge, else 0
     output reg  [75:0]   program_obs,
     output reg  [68:0]   descriptor_obs,
@@ -394,6 +398,7 @@ module qfd_dv_cmd_cal_mu #(
             rce_q <= {NU{1'b0}}; rbank_q <= {NU{1'b0}}; rd_v <= {NU{1'b0}}; rd_bank <= {NU{1'b0}};
             cmd <= 116'd0; cmd_user <= {UB{1'b0}}; loc_emb <= 1'b0; loc_seg <= 1'b0; loc_base <= 12'd0;
             su_issue <= 1'b0; su_pidx <= 9'd0; xc_issue <= 1'b0;
+            table_load <= 0; table_stage <= 0; table_user <= 0;
             tl <= 1088'd0; tl_rce_q <= 1'b0; tl_v2 <= 1'b0; tl_v3 <= 1'b0; tl_row_q <= 6'd0;
             tl_ctl_q <= 64'd0; tl_ctl2 <= 64'd0; tl_ctl3 <= 64'd0; tl_pay3 <= 1024'd0;
         end else begin
@@ -470,7 +475,7 @@ module qfd_dv_cmd_cal_mu #(
             if (d_any) begin done <= 1'b1; done_user <= d_u; end
             if (NU > 1 && d_col) begin fault <= 1'b1; fault_code[3] <= 1'b1; end
             // ---------------- issue register (one word an edge, all playheads)
-            cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0;
+            cmd <= 116'd0; loc_emb <= 1'b0; loc_seg <= 1'b0; su_issue <= 1'b0; xc_issue <= 1'b0; table_load <= 0;
             // TLOAD pipeline: issue edge -> macro read -> tl register (-> +1 edge under MUT 5)
             tl_rce_q <= tl_fire; tl_v2 <= tl_rce_q; tl_v3 <= tl_v2;
             if (tl_fire) begin
@@ -488,6 +493,13 @@ module qfd_dv_cmd_cal_mu #(
                 if (i_loc) begin
                     if (i_kind == 3'd1) loc_emb <= 1'b1;
                     else if (i_kind == 3'd2) begin loc_seg <= 1'b1; loc_base <= ic[15:4]; end
+                    else if (i_kind == 3'd4 && TABLE_ROM != 0 && CALENDAR_ROM != 0) begin
+                        if (ic[111:10] != 0 || ic[9:4] < 1 || ic[9:4] > 36) begin
+                            fault <= 1'b1; fault_code[4] <= 1'b1;
+                        end else begin
+                            table_load <= 1; table_stage <= ic[9:4]; table_user <= 2'(ru);
+                        end
+                    end
                     else if (i_kind == 3'd3) begin if (tl_bad) begin fault <= 1'b1; fault_code[4] <= 1'b1; end end
                     else begin fault <= 1'b1; fault_code[4] <= 1'b1; end
                 end else begin

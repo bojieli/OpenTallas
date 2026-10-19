@@ -1,12 +1,43 @@
 {
   "scope": "default-off finite calendar into actual cal_mu scheduler",
-  "calendar_roms": {"count": 2, "native": "ot_rom_4096x266_m8", "entries_per_read": 4, "entry_bits": 128},
+  "calendar_roms": {
+    "count": 2,
+    "native": "ot_rom_4096x266_m8",
+    "entries_per_read": 4,
+    "entry_bits": 128
+  },
   "entry_count_bits": 10,
   "calendar_capacity_entries": 1023,
   "fetch_extra_edges_vs_sram": 1,
   "legacy_default": 0,
-  "tables": {"ROMs_per_slice": 4, "slices": 12, "read_slots_per_stage_user": 88, "reserved_edges": 93},
+  "tables": {
+    "ROMs_per_slice": 4,
+    "slices": 12,
+    "read_slots_per_stage_user": 88,
+    "reserved_edges": 93
+  },
   "runtime_flow_control": false,
   "physical_adoption": false,
-  "open": ["actual cap1 body", "head/finalnorm payload", "provider phase", "native physical timing", "full token"]
+  "open": [
+    "actual cap1 body",
+    "head/finalnorm payload",
+    "provider phase",
+    "native physical timing",
+    "full token"
+  ],
+  "preload_command": {
+    "default": 0,
+    "kept_output_state_bits": 9,
+    "added_calendar_to_loader_edges": 1,
+    "fixed_reads": 88,
+    "command_to_last_word_edges": 91,
+    "command_to_native_table_read_min_edges": 93,
+    "runtime_wait": false,
+    "caller_range_reserved_edges": 103,
+    "loader_write_port_reserved_edges": 93,
+    "write_port_occupancy_delta_edges": 0,
+    "critical_path_delta": null
+  },
+  "fixed_load_contract_source": "tools/qwen_layerbench/table_load_contract.py",
+  "fixed_load_contract_sha256": "55a03b2309beb19eb2de0654412a49ac93e272299b70a131c1b133e50f341a3d"
 }

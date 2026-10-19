@@ -1,0 +1,3350 @@
+{
+  "contract": {
+    "schema": "opentallas.qwen.fixed-table-load-timing.v1",
+    "qualification": "component bounds only; production event composition unbound",
+    "read_slots": 88,
+    "loader_origin": "start input sample",
+    "loader_first_payload": 3,
+    "loader_last_payload": 90,
+    "loader_last_vm_write": 91,
+    "loader_first_read_sample_bound": 92,
+    "target_read_age": 2,
+    "loader_write_port_reserved_edges": 93,
+    "range_origin": "explicit cal_mu range start input sample",
+    "range_command_output": 8,
+    "range_loader_input": 9,
+    "range_first_payload": 12,
+    "range_last_payload": 99,
+    "range_loader_reservation_end": 102,
+    "range_reserved_edges": 103,
+    "range_extra_front_edges": 9,
+    "range_extra_tail_edges": 1,
+    "actual_table_write_port_delta_edges": 0,
+    "production_critical_path_delta": null
+  },
+  "windows_sha256": "3ddd7e2aa6708c46a37e73a6e858292029c1314fcda36b56a828025bd153861c",
+  "loads": [
+    {
+      "user": 0,
+      "stage": 1,
+      "range_start": 1117,
+      "command_output": 1125,
+      "loader_input": 1126,
+      "first_payload": 1129,
+      "last_payload": 1216,
+      "last_vm_write": 1217,
+      "first_read_bound": 1218,
+      "loader_port_interval": [
+        1126,
+        1219
+      ],
+      "caller_reservation_interval": [
+        1117,
+        1220
+      ],
+      "measured_first_read": 1222,
+      "measured_last_read": 7786,
+      "measured_retirement": 7787,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 1,
+      "range_start": 2458,
+      "command_output": 2466,
+      "loader_input": 2467,
+      "first_payload": 2470,
+      "last_payload": 2557,
+      "last_vm_write": 2558,
+      "first_read_bound": 2559,
+      "loader_port_interval": [
+        2467,
+        2560
+      ],
+      "caller_reservation_interval": [
+        2458,
+        2561
+      ],
+      "measured_first_read": 3199,
+      "measured_last_read": 11671,
+      "measured_retirement": 11672,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 1,
+      "range_start": 4435,
+      "command_output": 4443,
+      "loader_input": 4444,
+      "first_payload": 4447,
+      "last_payload": 4534,
+      "last_vm_write": 4535,
+      "first_read_bound": 4536,
+      "loader_port_interval": [
+        4444,
+        4537
+      ],
+      "caller_reservation_interval": [
+        4435,
+        4538
+      ],
+      "measured_first_read": 5812,
+      "measured_last_read": 15556,
+      "measured_retirement": 15557,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 1,
+      "range_start": 7048,
+      "command_output": 7056,
+      "loader_input": 7057,
+      "first_payload": 7060,
+      "last_payload": 7147,
+      "last_vm_write": 7148,
+      "first_read_bound": 7149,
+      "loader_port_interval": [
+        7057,
+        7150
+      ],
+      "caller_reservation_interval": [
+        7048,
+        7151
+      ],
+      "measured_first_read": 9061,
+      "measured_last_read": 19441,
+      "measured_retirement": 19442,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 2,
+      "range_start": 10297,
+      "command_output": 10305,
+      "loader_input": 10306,
+      "first_payload": 10309,
+      "last_payload": 10396,
+      "last_vm_write": 10397,
+      "first_read_bound": 10398,
+      "loader_port_interval": [
+        10306,
+        10399
+      ],
+      "caller_reservation_interval": [
+        10297,
+        10400
+      ],
+      "measured_first_read": 10402,
+      "measured_last_read": 20782,
+      "measured_retirement": 20783,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 2,
+      "range_start": 13546,
+      "command_output": 13554,
+      "loader_input": 13555,
+      "first_payload": 13558,
+      "last_payload": 13645,
+      "last_vm_write": 13646,
+      "first_read_bound": 13647,
+      "loader_port_interval": [
+        13555,
+        13648
+      ],
+      "caller_reservation_interval": [
+        13546,
+        13649
+      ],
+      "measured_first_read": 14287,
+      "measured_last_read": 24667,
+      "measured_retirement": 24668,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 2,
+      "range_start": 16795,
+      "command_output": 16803,
+      "loader_input": 16804,
+      "first_payload": 16807,
+      "last_payload": 16894,
+      "last_vm_write": 16895,
+      "first_read_bound": 16896,
+      "loader_port_interval": [
+        16804,
+        16897
+      ],
+      "caller_reservation_interval": [
+        16795,
+        16898
+      ],
+      "measured_first_read": 18172,
+      "measured_last_read": 28552,
+      "measured_retirement": 28553,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 2,
+      "range_start": 20044,
+      "command_output": 20052,
+      "loader_input": 20053,
+      "first_payload": 20056,
+      "last_payload": 20143,
+      "last_vm_write": 20144,
+      "first_read_bound": 20145,
+      "loader_port_interval": [
+        20053,
+        20146
+      ],
+      "caller_reservation_interval": [
+        20044,
+        20147
+      ],
+      "measured_first_read": 22057,
+      "measured_last_read": 32437,
+      "measured_retirement": 32438,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 3,
+      "range_start": 23293,
+      "command_output": 23301,
+      "loader_input": 23302,
+      "first_payload": 23305,
+      "last_payload": 23392,
+      "last_vm_write": 23393,
+      "first_read_bound": 23394,
+      "loader_port_interval": [
+        23302,
+        23395
+      ],
+      "caller_reservation_interval": [
+        23293,
+        23396
+      ],
+      "measured_first_read": 23398,
+      "measured_last_read": 33778,
+      "measured_retirement": 33779,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 3,
+      "range_start": 26542,
+      "command_output": 26550,
+      "loader_input": 26551,
+      "first_payload": 26554,
+      "last_payload": 26641,
+      "last_vm_write": 26642,
+      "first_read_bound": 26643,
+      "loader_port_interval": [
+        26551,
+        26644
+      ],
+      "caller_reservation_interval": [
+        26542,
+        26645
+      ],
+      "measured_first_read": 27283,
+      "measured_last_read": 37663,
+      "measured_retirement": 37664,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 3,
+      "range_start": 29791,
+      "command_output": 29799,
+      "loader_input": 29800,
+      "first_payload": 29803,
+      "last_payload": 29890,
+      "last_vm_write": 29891,
+      "first_read_bound": 29892,
+      "loader_port_interval": [
+        29800,
+        29893
+      ],
+      "caller_reservation_interval": [
+        29791,
+        29894
+      ],
+      "measured_first_read": 31168,
+      "measured_last_read": 41548,
+      "measured_retirement": 41549,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 3,
+      "range_start": 33040,
+      "command_output": 33048,
+      "loader_input": 33049,
+      "first_payload": 33052,
+      "last_payload": 33139,
+      "last_vm_write": 33140,
+      "first_read_bound": 33141,
+      "loader_port_interval": [
+        33049,
+        33142
+      ],
+      "caller_reservation_interval": [
+        33040,
+        33143
+      ],
+      "measured_first_read": 35053,
+      "measured_last_read": 45433,
+      "measured_retirement": 45434,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 4,
+      "range_start": 36289,
+      "command_output": 36297,
+      "loader_input": 36298,
+      "first_payload": 36301,
+      "last_payload": 36388,
+      "last_vm_write": 36389,
+      "first_read_bound": 36390,
+      "loader_port_interval": [
+        36298,
+        36391
+      ],
+      "caller_reservation_interval": [
+        36289,
+        36392
+      ],
+      "measured_first_read": 36394,
+      "measured_last_read": 46774,
+      "measured_retirement": 46775,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 4,
+      "range_start": 39538,
+      "command_output": 39546,
+      "loader_input": 39547,
+      "first_payload": 39550,
+      "last_payload": 39637,
+      "last_vm_write": 39638,
+      "first_read_bound": 39639,
+      "loader_port_interval": [
+        39547,
+        39640
+      ],
+      "caller_reservation_interval": [
+        39538,
+        39641
+      ],
+      "measured_first_read": 40279,
+      "measured_last_read": 50659,
+      "measured_retirement": 50660,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 4,
+      "range_start": 42787,
+      "command_output": 42795,
+      "loader_input": 42796,
+      "first_payload": 42799,
+      "last_payload": 42886,
+      "last_vm_write": 42887,
+      "first_read_bound": 42888,
+      "loader_port_interval": [
+        42796,
+        42889
+      ],
+      "caller_reservation_interval": [
+        42787,
+        42890
+      ],
+      "measured_first_read": 44164,
+      "measured_last_read": 54544,
+      "measured_retirement": 54545,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 4,
+      "range_start": 46036,
+      "command_output": 46044,
+      "loader_input": 46045,
+      "first_payload": 46048,
+      "last_payload": 46135,
+      "last_vm_write": 46136,
+      "first_read_bound": 46137,
+      "loader_port_interval": [
+        46045,
+        46138
+      ],
+      "caller_reservation_interval": [
+        46036,
+        46139
+      ],
+      "measured_first_read": 48049,
+      "measured_last_read": 58429,
+      "measured_retirement": 58430,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 5,
+      "range_start": 49285,
+      "command_output": 49293,
+      "loader_input": 49294,
+      "first_payload": 49297,
+      "last_payload": 49384,
+      "last_vm_write": 49385,
+      "first_read_bound": 49386,
+      "loader_port_interval": [
+        49294,
+        49387
+      ],
+      "caller_reservation_interval": [
+        49285,
+        49388
+      ],
+      "measured_first_read": 49390,
+      "measured_last_read": 59770,
+      "measured_retirement": 59771,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 5,
+      "range_start": 52534,
+      "command_output": 52542,
+      "loader_input": 52543,
+      "first_payload": 52546,
+      "last_payload": 52633,
+      "last_vm_write": 52634,
+      "first_read_bound": 52635,
+      "loader_port_interval": [
+        52543,
+        52636
+      ],
+      "caller_reservation_interval": [
+        52534,
+        52637
+      ],
+      "measured_first_read": 53275,
+      "measured_last_read": 63655,
+      "measured_retirement": 63656,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 5,
+      "range_start": 55783,
+      "command_output": 55791,
+      "loader_input": 55792,
+      "first_payload": 55795,
+      "last_payload": 55882,
+      "last_vm_write": 55883,
+      "first_read_bound": 55884,
+      "loader_port_interval": [
+        55792,
+        55885
+      ],
+      "caller_reservation_interval": [
+        55783,
+        55886
+      ],
+      "measured_first_read": 57160,
+      "measured_last_read": 67540,
+      "measured_retirement": 67541,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 5,
+      "range_start": 59032,
+      "command_output": 59040,
+      "loader_input": 59041,
+      "first_payload": 59044,
+      "last_payload": 59131,
+      "last_vm_write": 59132,
+      "first_read_bound": 59133,
+      "loader_port_interval": [
+        59041,
+        59134
+      ],
+      "caller_reservation_interval": [
+        59032,
+        59135
+      ],
+      "measured_first_read": 61045,
+      "measured_last_read": 71425,
+      "measured_retirement": 71426,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 6,
+      "range_start": 62281,
+      "command_output": 62289,
+      "loader_input": 62290,
+      "first_payload": 62293,
+      "last_payload": 62380,
+      "last_vm_write": 62381,
+      "first_read_bound": 62382,
+      "loader_port_interval": [
+        62290,
+        62383
+      ],
+      "caller_reservation_interval": [
+        62281,
+        62384
+      ],
+      "measured_first_read": 62386,
+      "measured_last_read": 72766,
+      "measured_retirement": 72767,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 6,
+      "range_start": 65530,
+      "command_output": 65538,
+      "loader_input": 65539,
+      "first_payload": 65542,
+      "last_payload": 65629,
+      "last_vm_write": 65630,
+      "first_read_bound": 65631,
+      "loader_port_interval": [
+        65539,
+        65632
+      ],
+      "caller_reservation_interval": [
+        65530,
+        65633
+      ],
+      "measured_first_read": 66271,
+      "measured_last_read": 76651,
+      "measured_retirement": 76652,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 6,
+      "range_start": 68779,
+      "command_output": 68787,
+      "loader_input": 68788,
+      "first_payload": 68791,
+      "last_payload": 68878,
+      "last_vm_write": 68879,
+      "first_read_bound": 68880,
+      "loader_port_interval": [
+        68788,
+        68881
+      ],
+      "caller_reservation_interval": [
+        68779,
+        68882
+      ],
+      "measured_first_read": 70156,
+      "measured_last_read": 80536,
+      "measured_retirement": 80537,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 6,
+      "range_start": 72028,
+      "command_output": 72036,
+      "loader_input": 72037,
+      "first_payload": 72040,
+      "last_payload": 72127,
+      "last_vm_write": 72128,
+      "first_read_bound": 72129,
+      "loader_port_interval": [
+        72037,
+        72130
+      ],
+      "caller_reservation_interval": [
+        72028,
+        72131
+      ],
+      "measured_first_read": 74041,
+      "measured_last_read": 84421,
+      "measured_retirement": 84422,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 7,
+      "range_start": 75277,
+      "command_output": 75285,
+      "loader_input": 75286,
+      "first_payload": 75289,
+      "last_payload": 75376,
+      "last_vm_write": 75377,
+      "first_read_bound": 75378,
+      "loader_port_interval": [
+        75286,
+        75379
+      ],
+      "caller_reservation_interval": [
+        75277,
+        75380
+      ],
+      "measured_first_read": 75382,
+      "measured_last_read": 85762,
+      "measured_retirement": 85763,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 7,
+      "range_start": 78526,
+      "command_output": 78534,
+      "loader_input": 78535,
+      "first_payload": 78538,
+      "last_payload": 78625,
+      "last_vm_write": 78626,
+      "first_read_bound": 78627,
+      "loader_port_interval": [
+        78535,
+        78628
+      ],
+      "caller_reservation_interval": [
+        78526,
+        78629
+      ],
+      "measured_first_read": 79267,
+      "measured_last_read": 89647,
+      "measured_retirement": 89648,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 7,
+      "range_start": 81775,
+      "command_output": 81783,
+      "loader_input": 81784,
+      "first_payload": 81787,
+      "last_payload": 81874,
+      "last_vm_write": 81875,
+      "first_read_bound": 81876,
+      "loader_port_interval": [
+        81784,
+        81877
+      ],
+      "caller_reservation_interval": [
+        81775,
+        81878
+      ],
+      "measured_first_read": 83152,
+      "measured_last_read": 93532,
+      "measured_retirement": 93533,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 7,
+      "range_start": 85024,
+      "command_output": 85032,
+      "loader_input": 85033,
+      "first_payload": 85036,
+      "last_payload": 85123,
+      "last_vm_write": 85124,
+      "first_read_bound": 85125,
+      "loader_port_interval": [
+        85033,
+        85126
+      ],
+      "caller_reservation_interval": [
+        85024,
+        85127
+      ],
+      "measured_first_read": 87037,
+      "measured_last_read": 97417,
+      "measured_retirement": 97418,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 8,
+      "range_start": 88273,
+      "command_output": 88281,
+      "loader_input": 88282,
+      "first_payload": 88285,
+      "last_payload": 88372,
+      "last_vm_write": 88373,
+      "first_read_bound": 88374,
+      "loader_port_interval": [
+        88282,
+        88375
+      ],
+      "caller_reservation_interval": [
+        88273,
+        88376
+      ],
+      "measured_first_read": 88378,
+      "measured_last_read": 98758,
+      "measured_retirement": 98759,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 8,
+      "range_start": 91522,
+      "command_output": 91530,
+      "loader_input": 91531,
+      "first_payload": 91534,
+      "last_payload": 91621,
+      "last_vm_write": 91622,
+      "first_read_bound": 91623,
+      "loader_port_interval": [
+        91531,
+        91624
+      ],
+      "caller_reservation_interval": [
+        91522,
+        91625
+      ],
+      "measured_first_read": 92263,
+      "measured_last_read": 102643,
+      "measured_retirement": 102644,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 8,
+      "range_start": 94771,
+      "command_output": 94779,
+      "loader_input": 94780,
+      "first_payload": 94783,
+      "last_payload": 94870,
+      "last_vm_write": 94871,
+      "first_read_bound": 94872,
+      "loader_port_interval": [
+        94780,
+        94873
+      ],
+      "caller_reservation_interval": [
+        94771,
+        94874
+      ],
+      "measured_first_read": 96148,
+      "measured_last_read": 106528,
+      "measured_retirement": 106529,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 8,
+      "range_start": 98020,
+      "command_output": 98028,
+      "loader_input": 98029,
+      "first_payload": 98032,
+      "last_payload": 98119,
+      "last_vm_write": 98120,
+      "first_read_bound": 98121,
+      "loader_port_interval": [
+        98029,
+        98122
+      ],
+      "caller_reservation_interval": [
+        98020,
+        98123
+      ],
+      "measured_first_read": 100033,
+      "measured_last_read": 110413,
+      "measured_retirement": 110414,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 9,
+      "range_start": 101269,
+      "command_output": 101277,
+      "loader_input": 101278,
+      "first_payload": 101281,
+      "last_payload": 101368,
+      "last_vm_write": 101369,
+      "first_read_bound": 101370,
+      "loader_port_interval": [
+        101278,
+        101371
+      ],
+      "caller_reservation_interval": [
+        101269,
+        101372
+      ],
+      "measured_first_read": 101374,
+      "measured_last_read": 111754,
+      "measured_retirement": 111755,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 9,
+      "range_start": 104518,
+      "command_output": 104526,
+      "loader_input": 104527,
+      "first_payload": 104530,
+      "last_payload": 104617,
+      "last_vm_write": 104618,
+      "first_read_bound": 104619,
+      "loader_port_interval": [
+        104527,
+        104620
+      ],
+      "caller_reservation_interval": [
+        104518,
+        104621
+      ],
+      "measured_first_read": 105259,
+      "measured_last_read": 115639,
+      "measured_retirement": 115640,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 9,
+      "range_start": 107767,
+      "command_output": 107775,
+      "loader_input": 107776,
+      "first_payload": 107779,
+      "last_payload": 107866,
+      "last_vm_write": 107867,
+      "first_read_bound": 107868,
+      "loader_port_interval": [
+        107776,
+        107869
+      ],
+      "caller_reservation_interval": [
+        107767,
+        107870
+      ],
+      "measured_first_read": 109144,
+      "measured_last_read": 119524,
+      "measured_retirement": 119525,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 9,
+      "range_start": 111016,
+      "command_output": 111024,
+      "loader_input": 111025,
+      "first_payload": 111028,
+      "last_payload": 111115,
+      "last_vm_write": 111116,
+      "first_read_bound": 111117,
+      "loader_port_interval": [
+        111025,
+        111118
+      ],
+      "caller_reservation_interval": [
+        111016,
+        111119
+      ],
+      "measured_first_read": 113029,
+      "measured_last_read": 123409,
+      "measured_retirement": 123410,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 10,
+      "range_start": 114265,
+      "command_output": 114273,
+      "loader_input": 114274,
+      "first_payload": 114277,
+      "last_payload": 114364,
+      "last_vm_write": 114365,
+      "first_read_bound": 114366,
+      "loader_port_interval": [
+        114274,
+        114367
+      ],
+      "caller_reservation_interval": [
+        114265,
+        114368
+      ],
+      "measured_first_read": 114370,
+      "measured_last_read": 124750,
+      "measured_retirement": 124751,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 10,
+      "range_start": 117514,
+      "command_output": 117522,
+      "loader_input": 117523,
+      "first_payload": 117526,
+      "last_payload": 117613,
+      "last_vm_write": 117614,
+      "first_read_bound": 117615,
+      "loader_port_interval": [
+        117523,
+        117616
+      ],
+      "caller_reservation_interval": [
+        117514,
+        117617
+      ],
+      "measured_first_read": 118255,
+      "measured_last_read": 128635,
+      "measured_retirement": 128636,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 10,
+      "range_start": 120763,
+      "command_output": 120771,
+      "loader_input": 120772,
+      "first_payload": 120775,
+      "last_payload": 120862,
+      "last_vm_write": 120863,
+      "first_read_bound": 120864,
+      "loader_port_interval": [
+        120772,
+        120865
+      ],
+      "caller_reservation_interval": [
+        120763,
+        120866
+      ],
+      "measured_first_read": 122140,
+      "measured_last_read": 132520,
+      "measured_retirement": 132521,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 10,
+      "range_start": 124012,
+      "command_output": 124020,
+      "loader_input": 124021,
+      "first_payload": 124024,
+      "last_payload": 124111,
+      "last_vm_write": 124112,
+      "first_read_bound": 124113,
+      "loader_port_interval": [
+        124021,
+        124114
+      ],
+      "caller_reservation_interval": [
+        124012,
+        124115
+      ],
+      "measured_first_read": 126025,
+      "measured_last_read": 136405,
+      "measured_retirement": 136406,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 11,
+      "range_start": 127261,
+      "command_output": 127269,
+      "loader_input": 127270,
+      "first_payload": 127273,
+      "last_payload": 127360,
+      "last_vm_write": 127361,
+      "first_read_bound": 127362,
+      "loader_port_interval": [
+        127270,
+        127363
+      ],
+      "caller_reservation_interval": [
+        127261,
+        127364
+      ],
+      "measured_first_read": 127366,
+      "measured_last_read": 137746,
+      "measured_retirement": 137747,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 11,
+      "range_start": 130510,
+      "command_output": 130518,
+      "loader_input": 130519,
+      "first_payload": 130522,
+      "last_payload": 130609,
+      "last_vm_write": 130610,
+      "first_read_bound": 130611,
+      "loader_port_interval": [
+        130519,
+        130612
+      ],
+      "caller_reservation_interval": [
+        130510,
+        130613
+      ],
+      "measured_first_read": 131251,
+      "measured_last_read": 141631,
+      "measured_retirement": 141632,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 11,
+      "range_start": 133759,
+      "command_output": 133767,
+      "loader_input": 133768,
+      "first_payload": 133771,
+      "last_payload": 133858,
+      "last_vm_write": 133859,
+      "first_read_bound": 133860,
+      "loader_port_interval": [
+        133768,
+        133861
+      ],
+      "caller_reservation_interval": [
+        133759,
+        133862
+      ],
+      "measured_first_read": 135136,
+      "measured_last_read": 145516,
+      "measured_retirement": 145517,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 11,
+      "range_start": 137008,
+      "command_output": 137016,
+      "loader_input": 137017,
+      "first_payload": 137020,
+      "last_payload": 137107,
+      "last_vm_write": 137108,
+      "first_read_bound": 137109,
+      "loader_port_interval": [
+        137017,
+        137110
+      ],
+      "caller_reservation_interval": [
+        137008,
+        137111
+      ],
+      "measured_first_read": 139021,
+      "measured_last_read": 149401,
+      "measured_retirement": 149402,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 12,
+      "range_start": 140257,
+      "command_output": 140265,
+      "loader_input": 140266,
+      "first_payload": 140269,
+      "last_payload": 140356,
+      "last_vm_write": 140357,
+      "first_read_bound": 140358,
+      "loader_port_interval": [
+        140266,
+        140359
+      ],
+      "caller_reservation_interval": [
+        140257,
+        140360
+      ],
+      "measured_first_read": 140362,
+      "measured_last_read": 150742,
+      "measured_retirement": 150743,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 12,
+      "range_start": 143506,
+      "command_output": 143514,
+      "loader_input": 143515,
+      "first_payload": 143518,
+      "last_payload": 143605,
+      "last_vm_write": 143606,
+      "first_read_bound": 143607,
+      "loader_port_interval": [
+        143515,
+        143608
+      ],
+      "caller_reservation_interval": [
+        143506,
+        143609
+      ],
+      "measured_first_read": 144247,
+      "measured_last_read": 154627,
+      "measured_retirement": 154628,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 12,
+      "range_start": 146755,
+      "command_output": 146763,
+      "loader_input": 146764,
+      "first_payload": 146767,
+      "last_payload": 146854,
+      "last_vm_write": 146855,
+      "first_read_bound": 146856,
+      "loader_port_interval": [
+        146764,
+        146857
+      ],
+      "caller_reservation_interval": [
+        146755,
+        146858
+      ],
+      "measured_first_read": 148132,
+      "measured_last_read": 158512,
+      "measured_retirement": 158513,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 12,
+      "range_start": 150004,
+      "command_output": 150012,
+      "loader_input": 150013,
+      "first_payload": 150016,
+      "last_payload": 150103,
+      "last_vm_write": 150104,
+      "first_read_bound": 150105,
+      "loader_port_interval": [
+        150013,
+        150106
+      ],
+      "caller_reservation_interval": [
+        150004,
+        150107
+      ],
+      "measured_first_read": 152017,
+      "measured_last_read": 162397,
+      "measured_retirement": 162398,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 13,
+      "range_start": 153253,
+      "command_output": 153261,
+      "loader_input": 153262,
+      "first_payload": 153265,
+      "last_payload": 153352,
+      "last_vm_write": 153353,
+      "first_read_bound": 153354,
+      "loader_port_interval": [
+        153262,
+        153355
+      ],
+      "caller_reservation_interval": [
+        153253,
+        153356
+      ],
+      "measured_first_read": 153358,
+      "measured_last_read": 163738,
+      "measured_retirement": 163739,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 13,
+      "range_start": 156502,
+      "command_output": 156510,
+      "loader_input": 156511,
+      "first_payload": 156514,
+      "last_payload": 156601,
+      "last_vm_write": 156602,
+      "first_read_bound": 156603,
+      "loader_port_interval": [
+        156511,
+        156604
+      ],
+      "caller_reservation_interval": [
+        156502,
+        156605
+      ],
+      "measured_first_read": 157243,
+      "measured_last_read": 167623,
+      "measured_retirement": 167624,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 13,
+      "range_start": 159751,
+      "command_output": 159759,
+      "loader_input": 159760,
+      "first_payload": 159763,
+      "last_payload": 159850,
+      "last_vm_write": 159851,
+      "first_read_bound": 159852,
+      "loader_port_interval": [
+        159760,
+        159853
+      ],
+      "caller_reservation_interval": [
+        159751,
+        159854
+      ],
+      "measured_first_read": 161128,
+      "measured_last_read": 171508,
+      "measured_retirement": 171509,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 13,
+      "range_start": 163000,
+      "command_output": 163008,
+      "loader_input": 163009,
+      "first_payload": 163012,
+      "last_payload": 163099,
+      "last_vm_write": 163100,
+      "first_read_bound": 163101,
+      "loader_port_interval": [
+        163009,
+        163102
+      ],
+      "caller_reservation_interval": [
+        163000,
+        163103
+      ],
+      "measured_first_read": 165013,
+      "measured_last_read": 175393,
+      "measured_retirement": 175394,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 14,
+      "range_start": 166249,
+      "command_output": 166257,
+      "loader_input": 166258,
+      "first_payload": 166261,
+      "last_payload": 166348,
+      "last_vm_write": 166349,
+      "first_read_bound": 166350,
+      "loader_port_interval": [
+        166258,
+        166351
+      ],
+      "caller_reservation_interval": [
+        166249,
+        166352
+      ],
+      "measured_first_read": 166354,
+      "measured_last_read": 176734,
+      "measured_retirement": 176735,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 14,
+      "range_start": 169498,
+      "command_output": 169506,
+      "loader_input": 169507,
+      "first_payload": 169510,
+      "last_payload": 169597,
+      "last_vm_write": 169598,
+      "first_read_bound": 169599,
+      "loader_port_interval": [
+        169507,
+        169600
+      ],
+      "caller_reservation_interval": [
+        169498,
+        169601
+      ],
+      "measured_first_read": 170239,
+      "measured_last_read": 180619,
+      "measured_retirement": 180620,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 14,
+      "range_start": 172747,
+      "command_output": 172755,
+      "loader_input": 172756,
+      "first_payload": 172759,
+      "last_payload": 172846,
+      "last_vm_write": 172847,
+      "first_read_bound": 172848,
+      "loader_port_interval": [
+        172756,
+        172849
+      ],
+      "caller_reservation_interval": [
+        172747,
+        172850
+      ],
+      "measured_first_read": 174124,
+      "measured_last_read": 184504,
+      "measured_retirement": 184505,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 14,
+      "range_start": 175996,
+      "command_output": 176004,
+      "loader_input": 176005,
+      "first_payload": 176008,
+      "last_payload": 176095,
+      "last_vm_write": 176096,
+      "first_read_bound": 176097,
+      "loader_port_interval": [
+        176005,
+        176098
+      ],
+      "caller_reservation_interval": [
+        175996,
+        176099
+      ],
+      "measured_first_read": 178009,
+      "measured_last_read": 188389,
+      "measured_retirement": 188390,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 15,
+      "range_start": 179245,
+      "command_output": 179253,
+      "loader_input": 179254,
+      "first_payload": 179257,
+      "last_payload": 179344,
+      "last_vm_write": 179345,
+      "first_read_bound": 179346,
+      "loader_port_interval": [
+        179254,
+        179347
+      ],
+      "caller_reservation_interval": [
+        179245,
+        179348
+      ],
+      "measured_first_read": 179350,
+      "measured_last_read": 189730,
+      "measured_retirement": 189731,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 15,
+      "range_start": 182494,
+      "command_output": 182502,
+      "loader_input": 182503,
+      "first_payload": 182506,
+      "last_payload": 182593,
+      "last_vm_write": 182594,
+      "first_read_bound": 182595,
+      "loader_port_interval": [
+        182503,
+        182596
+      ],
+      "caller_reservation_interval": [
+        182494,
+        182597
+      ],
+      "measured_first_read": 183235,
+      "measured_last_read": 193615,
+      "measured_retirement": 193616,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 15,
+      "range_start": 185743,
+      "command_output": 185751,
+      "loader_input": 185752,
+      "first_payload": 185755,
+      "last_payload": 185842,
+      "last_vm_write": 185843,
+      "first_read_bound": 185844,
+      "loader_port_interval": [
+        185752,
+        185845
+      ],
+      "caller_reservation_interval": [
+        185743,
+        185846
+      ],
+      "measured_first_read": 187120,
+      "measured_last_read": 197500,
+      "measured_retirement": 197501,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 15,
+      "range_start": 188992,
+      "command_output": 189000,
+      "loader_input": 189001,
+      "first_payload": 189004,
+      "last_payload": 189091,
+      "last_vm_write": 189092,
+      "first_read_bound": 189093,
+      "loader_port_interval": [
+        189001,
+        189094
+      ],
+      "caller_reservation_interval": [
+        188992,
+        189095
+      ],
+      "measured_first_read": 191005,
+      "measured_last_read": 201385,
+      "measured_retirement": 201386,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 16,
+      "range_start": 192241,
+      "command_output": 192249,
+      "loader_input": 192250,
+      "first_payload": 192253,
+      "last_payload": 192340,
+      "last_vm_write": 192341,
+      "first_read_bound": 192342,
+      "loader_port_interval": [
+        192250,
+        192343
+      ],
+      "caller_reservation_interval": [
+        192241,
+        192344
+      ],
+      "measured_first_read": 192346,
+      "measured_last_read": 202726,
+      "measured_retirement": 202727,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 16,
+      "range_start": 195490,
+      "command_output": 195498,
+      "loader_input": 195499,
+      "first_payload": 195502,
+      "last_payload": 195589,
+      "last_vm_write": 195590,
+      "first_read_bound": 195591,
+      "loader_port_interval": [
+        195499,
+        195592
+      ],
+      "caller_reservation_interval": [
+        195490,
+        195593
+      ],
+      "measured_first_read": 196231,
+      "measured_last_read": 206611,
+      "measured_retirement": 206612,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 16,
+      "range_start": 198739,
+      "command_output": 198747,
+      "loader_input": 198748,
+      "first_payload": 198751,
+      "last_payload": 198838,
+      "last_vm_write": 198839,
+      "first_read_bound": 198840,
+      "loader_port_interval": [
+        198748,
+        198841
+      ],
+      "caller_reservation_interval": [
+        198739,
+        198842
+      ],
+      "measured_first_read": 200116,
+      "measured_last_read": 210496,
+      "measured_retirement": 210497,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 16,
+      "range_start": 201988,
+      "command_output": 201996,
+      "loader_input": 201997,
+      "first_payload": 202000,
+      "last_payload": 202087,
+      "last_vm_write": 202088,
+      "first_read_bound": 202089,
+      "loader_port_interval": [
+        201997,
+        202090
+      ],
+      "caller_reservation_interval": [
+        201988,
+        202091
+      ],
+      "measured_first_read": 204001,
+      "measured_last_read": 214381,
+      "measured_retirement": 214382,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 17,
+      "range_start": 205237,
+      "command_output": 205245,
+      "loader_input": 205246,
+      "first_payload": 205249,
+      "last_payload": 205336,
+      "last_vm_write": 205337,
+      "first_read_bound": 205338,
+      "loader_port_interval": [
+        205246,
+        205339
+      ],
+      "caller_reservation_interval": [
+        205237,
+        205340
+      ],
+      "measured_first_read": 205342,
+      "measured_last_read": 215722,
+      "measured_retirement": 215723,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 17,
+      "range_start": 208486,
+      "command_output": 208494,
+      "loader_input": 208495,
+      "first_payload": 208498,
+      "last_payload": 208585,
+      "last_vm_write": 208586,
+      "first_read_bound": 208587,
+      "loader_port_interval": [
+        208495,
+        208588
+      ],
+      "caller_reservation_interval": [
+        208486,
+        208589
+      ],
+      "measured_first_read": 209227,
+      "measured_last_read": 219607,
+      "measured_retirement": 219608,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 17,
+      "range_start": 211735,
+      "command_output": 211743,
+      "loader_input": 211744,
+      "first_payload": 211747,
+      "last_payload": 211834,
+      "last_vm_write": 211835,
+      "first_read_bound": 211836,
+      "loader_port_interval": [
+        211744,
+        211837
+      ],
+      "caller_reservation_interval": [
+        211735,
+        211838
+      ],
+      "measured_first_read": 213112,
+      "measured_last_read": 223492,
+      "measured_retirement": 223493,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 17,
+      "range_start": 214984,
+      "command_output": 214992,
+      "loader_input": 214993,
+      "first_payload": 214996,
+      "last_payload": 215083,
+      "last_vm_write": 215084,
+      "first_read_bound": 215085,
+      "loader_port_interval": [
+        214993,
+        215086
+      ],
+      "caller_reservation_interval": [
+        214984,
+        215087
+      ],
+      "measured_first_read": 216997,
+      "measured_last_read": 227377,
+      "measured_retirement": 227378,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 18,
+      "range_start": 218233,
+      "command_output": 218241,
+      "loader_input": 218242,
+      "first_payload": 218245,
+      "last_payload": 218332,
+      "last_vm_write": 218333,
+      "first_read_bound": 218334,
+      "loader_port_interval": [
+        218242,
+        218335
+      ],
+      "caller_reservation_interval": [
+        218233,
+        218336
+      ],
+      "measured_first_read": 218338,
+      "measured_last_read": 228718,
+      "measured_retirement": 228719,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 18,
+      "range_start": 221482,
+      "command_output": 221490,
+      "loader_input": 221491,
+      "first_payload": 221494,
+      "last_payload": 221581,
+      "last_vm_write": 221582,
+      "first_read_bound": 221583,
+      "loader_port_interval": [
+        221491,
+        221584
+      ],
+      "caller_reservation_interval": [
+        221482,
+        221585
+      ],
+      "measured_first_read": 222223,
+      "measured_last_read": 232603,
+      "measured_retirement": 232604,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 18,
+      "range_start": 224731,
+      "command_output": 224739,
+      "loader_input": 224740,
+      "first_payload": 224743,
+      "last_payload": 224830,
+      "last_vm_write": 224831,
+      "first_read_bound": 224832,
+      "loader_port_interval": [
+        224740,
+        224833
+      ],
+      "caller_reservation_interval": [
+        224731,
+        224834
+      ],
+      "measured_first_read": 226108,
+      "measured_last_read": 236488,
+      "measured_retirement": 236489,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 18,
+      "range_start": 227980,
+      "command_output": 227988,
+      "loader_input": 227989,
+      "first_payload": 227992,
+      "last_payload": 228079,
+      "last_vm_write": 228080,
+      "first_read_bound": 228081,
+      "loader_port_interval": [
+        227989,
+        228082
+      ],
+      "caller_reservation_interval": [
+        227980,
+        228083
+      ],
+      "measured_first_read": 229993,
+      "measured_last_read": 240373,
+      "measured_retirement": 240374,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 19,
+      "range_start": 231229,
+      "command_output": 231237,
+      "loader_input": 231238,
+      "first_payload": 231241,
+      "last_payload": 231328,
+      "last_vm_write": 231329,
+      "first_read_bound": 231330,
+      "loader_port_interval": [
+        231238,
+        231331
+      ],
+      "caller_reservation_interval": [
+        231229,
+        231332
+      ],
+      "measured_first_read": 231334,
+      "measured_last_read": 241714,
+      "measured_retirement": 241715,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 19,
+      "range_start": 234478,
+      "command_output": 234486,
+      "loader_input": 234487,
+      "first_payload": 234490,
+      "last_payload": 234577,
+      "last_vm_write": 234578,
+      "first_read_bound": 234579,
+      "loader_port_interval": [
+        234487,
+        234580
+      ],
+      "caller_reservation_interval": [
+        234478,
+        234581
+      ],
+      "measured_first_read": 235219,
+      "measured_last_read": 245599,
+      "measured_retirement": 245600,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 19,
+      "range_start": 237727,
+      "command_output": 237735,
+      "loader_input": 237736,
+      "first_payload": 237739,
+      "last_payload": 237826,
+      "last_vm_write": 237827,
+      "first_read_bound": 237828,
+      "loader_port_interval": [
+        237736,
+        237829
+      ],
+      "caller_reservation_interval": [
+        237727,
+        237830
+      ],
+      "measured_first_read": 239104,
+      "measured_last_read": 249484,
+      "measured_retirement": 249485,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 19,
+      "range_start": 240976,
+      "command_output": 240984,
+      "loader_input": 240985,
+      "first_payload": 240988,
+      "last_payload": 241075,
+      "last_vm_write": 241076,
+      "first_read_bound": 241077,
+      "loader_port_interval": [
+        240985,
+        241078
+      ],
+      "caller_reservation_interval": [
+        240976,
+        241079
+      ],
+      "measured_first_read": 242989,
+      "measured_last_read": 253369,
+      "measured_retirement": 253370,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 20,
+      "range_start": 244225,
+      "command_output": 244233,
+      "loader_input": 244234,
+      "first_payload": 244237,
+      "last_payload": 244324,
+      "last_vm_write": 244325,
+      "first_read_bound": 244326,
+      "loader_port_interval": [
+        244234,
+        244327
+      ],
+      "caller_reservation_interval": [
+        244225,
+        244328
+      ],
+      "measured_first_read": 244330,
+      "measured_last_read": 254710,
+      "measured_retirement": 254711,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 20,
+      "range_start": 247474,
+      "command_output": 247482,
+      "loader_input": 247483,
+      "first_payload": 247486,
+      "last_payload": 247573,
+      "last_vm_write": 247574,
+      "first_read_bound": 247575,
+      "loader_port_interval": [
+        247483,
+        247576
+      ],
+      "caller_reservation_interval": [
+        247474,
+        247577
+      ],
+      "measured_first_read": 248215,
+      "measured_last_read": 258595,
+      "measured_retirement": 258596,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 20,
+      "range_start": 250723,
+      "command_output": 250731,
+      "loader_input": 250732,
+      "first_payload": 250735,
+      "last_payload": 250822,
+      "last_vm_write": 250823,
+      "first_read_bound": 250824,
+      "loader_port_interval": [
+        250732,
+        250825
+      ],
+      "caller_reservation_interval": [
+        250723,
+        250826
+      ],
+      "measured_first_read": 252100,
+      "measured_last_read": 262480,
+      "measured_retirement": 262481,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 20,
+      "range_start": 253972,
+      "command_output": 253980,
+      "loader_input": 253981,
+      "first_payload": 253984,
+      "last_payload": 254071,
+      "last_vm_write": 254072,
+      "first_read_bound": 254073,
+      "loader_port_interval": [
+        253981,
+        254074
+      ],
+      "caller_reservation_interval": [
+        253972,
+        254075
+      ],
+      "measured_first_read": 255985,
+      "measured_last_read": 266365,
+      "measured_retirement": 266366,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 21,
+      "range_start": 257221,
+      "command_output": 257229,
+      "loader_input": 257230,
+      "first_payload": 257233,
+      "last_payload": 257320,
+      "last_vm_write": 257321,
+      "first_read_bound": 257322,
+      "loader_port_interval": [
+        257230,
+        257323
+      ],
+      "caller_reservation_interval": [
+        257221,
+        257324
+      ],
+      "measured_first_read": 257326,
+      "measured_last_read": 267706,
+      "measured_retirement": 267707,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 21,
+      "range_start": 260470,
+      "command_output": 260478,
+      "loader_input": 260479,
+      "first_payload": 260482,
+      "last_payload": 260569,
+      "last_vm_write": 260570,
+      "first_read_bound": 260571,
+      "loader_port_interval": [
+        260479,
+        260572
+      ],
+      "caller_reservation_interval": [
+        260470,
+        260573
+      ],
+      "measured_first_read": 261211,
+      "measured_last_read": 271591,
+      "measured_retirement": 271592,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 21,
+      "range_start": 263719,
+      "command_output": 263727,
+      "loader_input": 263728,
+      "first_payload": 263731,
+      "last_payload": 263818,
+      "last_vm_write": 263819,
+      "first_read_bound": 263820,
+      "loader_port_interval": [
+        263728,
+        263821
+      ],
+      "caller_reservation_interval": [
+        263719,
+        263822
+      ],
+      "measured_first_read": 265096,
+      "measured_last_read": 275476,
+      "measured_retirement": 275477,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 21,
+      "range_start": 266968,
+      "command_output": 266976,
+      "loader_input": 266977,
+      "first_payload": 266980,
+      "last_payload": 267067,
+      "last_vm_write": 267068,
+      "first_read_bound": 267069,
+      "loader_port_interval": [
+        266977,
+        267070
+      ],
+      "caller_reservation_interval": [
+        266968,
+        267071
+      ],
+      "measured_first_read": 268981,
+      "measured_last_read": 279361,
+      "measured_retirement": 279362,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 22,
+      "range_start": 270217,
+      "command_output": 270225,
+      "loader_input": 270226,
+      "first_payload": 270229,
+      "last_payload": 270316,
+      "last_vm_write": 270317,
+      "first_read_bound": 270318,
+      "loader_port_interval": [
+        270226,
+        270319
+      ],
+      "caller_reservation_interval": [
+        270217,
+        270320
+      ],
+      "measured_first_read": 270322,
+      "measured_last_read": 280702,
+      "measured_retirement": 280703,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 22,
+      "range_start": 273466,
+      "command_output": 273474,
+      "loader_input": 273475,
+      "first_payload": 273478,
+      "last_payload": 273565,
+      "last_vm_write": 273566,
+      "first_read_bound": 273567,
+      "loader_port_interval": [
+        273475,
+        273568
+      ],
+      "caller_reservation_interval": [
+        273466,
+        273569
+      ],
+      "measured_first_read": 274207,
+      "measured_last_read": 284587,
+      "measured_retirement": 284588,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 22,
+      "range_start": 276715,
+      "command_output": 276723,
+      "loader_input": 276724,
+      "first_payload": 276727,
+      "last_payload": 276814,
+      "last_vm_write": 276815,
+      "first_read_bound": 276816,
+      "loader_port_interval": [
+        276724,
+        276817
+      ],
+      "caller_reservation_interval": [
+        276715,
+        276818
+      ],
+      "measured_first_read": 278092,
+      "measured_last_read": 288472,
+      "measured_retirement": 288473,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 22,
+      "range_start": 279964,
+      "command_output": 279972,
+      "loader_input": 279973,
+      "first_payload": 279976,
+      "last_payload": 280063,
+      "last_vm_write": 280064,
+      "first_read_bound": 280065,
+      "loader_port_interval": [
+        279973,
+        280066
+      ],
+      "caller_reservation_interval": [
+        279964,
+        280067
+      ],
+      "measured_first_read": 281977,
+      "measured_last_read": 292357,
+      "measured_retirement": 292358,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 23,
+      "range_start": 283213,
+      "command_output": 283221,
+      "loader_input": 283222,
+      "first_payload": 283225,
+      "last_payload": 283312,
+      "last_vm_write": 283313,
+      "first_read_bound": 283314,
+      "loader_port_interval": [
+        283222,
+        283315
+      ],
+      "caller_reservation_interval": [
+        283213,
+        283316
+      ],
+      "measured_first_read": 283318,
+      "measured_last_read": 293698,
+      "measured_retirement": 293699,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 23,
+      "range_start": 286462,
+      "command_output": 286470,
+      "loader_input": 286471,
+      "first_payload": 286474,
+      "last_payload": 286561,
+      "last_vm_write": 286562,
+      "first_read_bound": 286563,
+      "loader_port_interval": [
+        286471,
+        286564
+      ],
+      "caller_reservation_interval": [
+        286462,
+        286565
+      ],
+      "measured_first_read": 287203,
+      "measured_last_read": 297583,
+      "measured_retirement": 297584,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 23,
+      "range_start": 289711,
+      "command_output": 289719,
+      "loader_input": 289720,
+      "first_payload": 289723,
+      "last_payload": 289810,
+      "last_vm_write": 289811,
+      "first_read_bound": 289812,
+      "loader_port_interval": [
+        289720,
+        289813
+      ],
+      "caller_reservation_interval": [
+        289711,
+        289814
+      ],
+      "measured_first_read": 291088,
+      "measured_last_read": 301468,
+      "measured_retirement": 301469,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 23,
+      "range_start": 292960,
+      "command_output": 292968,
+      "loader_input": 292969,
+      "first_payload": 292972,
+      "last_payload": 293059,
+      "last_vm_write": 293060,
+      "first_read_bound": 293061,
+      "loader_port_interval": [
+        292969,
+        293062
+      ],
+      "caller_reservation_interval": [
+        292960,
+        293063
+      ],
+      "measured_first_read": 294973,
+      "measured_last_read": 305353,
+      "measured_retirement": 305354,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 24,
+      "range_start": 296209,
+      "command_output": 296217,
+      "loader_input": 296218,
+      "first_payload": 296221,
+      "last_payload": 296308,
+      "last_vm_write": 296309,
+      "first_read_bound": 296310,
+      "loader_port_interval": [
+        296218,
+        296311
+      ],
+      "caller_reservation_interval": [
+        296209,
+        296312
+      ],
+      "measured_first_read": 296314,
+      "measured_last_read": 306694,
+      "measured_retirement": 306695,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 24,
+      "range_start": 299458,
+      "command_output": 299466,
+      "loader_input": 299467,
+      "first_payload": 299470,
+      "last_payload": 299557,
+      "last_vm_write": 299558,
+      "first_read_bound": 299559,
+      "loader_port_interval": [
+        299467,
+        299560
+      ],
+      "caller_reservation_interval": [
+        299458,
+        299561
+      ],
+      "measured_first_read": 300199,
+      "measured_last_read": 310579,
+      "measured_retirement": 310580,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 24,
+      "range_start": 302707,
+      "command_output": 302715,
+      "loader_input": 302716,
+      "first_payload": 302719,
+      "last_payload": 302806,
+      "last_vm_write": 302807,
+      "first_read_bound": 302808,
+      "loader_port_interval": [
+        302716,
+        302809
+      ],
+      "caller_reservation_interval": [
+        302707,
+        302810
+      ],
+      "measured_first_read": 304084,
+      "measured_last_read": 314464,
+      "measured_retirement": 314465,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 24,
+      "range_start": 305956,
+      "command_output": 305964,
+      "loader_input": 305965,
+      "first_payload": 305968,
+      "last_payload": 306055,
+      "last_vm_write": 306056,
+      "first_read_bound": 306057,
+      "loader_port_interval": [
+        305965,
+        306058
+      ],
+      "caller_reservation_interval": [
+        305956,
+        306059
+      ],
+      "measured_first_read": 307969,
+      "measured_last_read": 318349,
+      "measured_retirement": 318350,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 25,
+      "range_start": 309205,
+      "command_output": 309213,
+      "loader_input": 309214,
+      "first_payload": 309217,
+      "last_payload": 309304,
+      "last_vm_write": 309305,
+      "first_read_bound": 309306,
+      "loader_port_interval": [
+        309214,
+        309307
+      ],
+      "caller_reservation_interval": [
+        309205,
+        309308
+      ],
+      "measured_first_read": 309310,
+      "measured_last_read": 319690,
+      "measured_retirement": 319691,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 25,
+      "range_start": 312454,
+      "command_output": 312462,
+      "loader_input": 312463,
+      "first_payload": 312466,
+      "last_payload": 312553,
+      "last_vm_write": 312554,
+      "first_read_bound": 312555,
+      "loader_port_interval": [
+        312463,
+        312556
+      ],
+      "caller_reservation_interval": [
+        312454,
+        312557
+      ],
+      "measured_first_read": 313195,
+      "measured_last_read": 323575,
+      "measured_retirement": 323576,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 25,
+      "range_start": 315703,
+      "command_output": 315711,
+      "loader_input": 315712,
+      "first_payload": 315715,
+      "last_payload": 315802,
+      "last_vm_write": 315803,
+      "first_read_bound": 315804,
+      "loader_port_interval": [
+        315712,
+        315805
+      ],
+      "caller_reservation_interval": [
+        315703,
+        315806
+      ],
+      "measured_first_read": 317080,
+      "measured_last_read": 327460,
+      "measured_retirement": 327461,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 25,
+      "range_start": 318952,
+      "command_output": 318960,
+      "loader_input": 318961,
+      "first_payload": 318964,
+      "last_payload": 319051,
+      "last_vm_write": 319052,
+      "first_read_bound": 319053,
+      "loader_port_interval": [
+        318961,
+        319054
+      ],
+      "caller_reservation_interval": [
+        318952,
+        319055
+      ],
+      "measured_first_read": 320965,
+      "measured_last_read": 331345,
+      "measured_retirement": 331346,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 26,
+      "range_start": 322201,
+      "command_output": 322209,
+      "loader_input": 322210,
+      "first_payload": 322213,
+      "last_payload": 322300,
+      "last_vm_write": 322301,
+      "first_read_bound": 322302,
+      "loader_port_interval": [
+        322210,
+        322303
+      ],
+      "caller_reservation_interval": [
+        322201,
+        322304
+      ],
+      "measured_first_read": 322306,
+      "measured_last_read": 332686,
+      "measured_retirement": 332687,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 26,
+      "range_start": 325450,
+      "command_output": 325458,
+      "loader_input": 325459,
+      "first_payload": 325462,
+      "last_payload": 325549,
+      "last_vm_write": 325550,
+      "first_read_bound": 325551,
+      "loader_port_interval": [
+        325459,
+        325552
+      ],
+      "caller_reservation_interval": [
+        325450,
+        325553
+      ],
+      "measured_first_read": 326191,
+      "measured_last_read": 336571,
+      "measured_retirement": 336572,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 26,
+      "range_start": 328699,
+      "command_output": 328707,
+      "loader_input": 328708,
+      "first_payload": 328711,
+      "last_payload": 328798,
+      "last_vm_write": 328799,
+      "first_read_bound": 328800,
+      "loader_port_interval": [
+        328708,
+        328801
+      ],
+      "caller_reservation_interval": [
+        328699,
+        328802
+      ],
+      "measured_first_read": 330076,
+      "measured_last_read": 340456,
+      "measured_retirement": 340457,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 26,
+      "range_start": 331948,
+      "command_output": 331956,
+      "loader_input": 331957,
+      "first_payload": 331960,
+      "last_payload": 332047,
+      "last_vm_write": 332048,
+      "first_read_bound": 332049,
+      "loader_port_interval": [
+        331957,
+        332050
+      ],
+      "caller_reservation_interval": [
+        331948,
+        332051
+      ],
+      "measured_first_read": 333961,
+      "measured_last_read": 344341,
+      "measured_retirement": 344342,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 27,
+      "range_start": 335197,
+      "command_output": 335205,
+      "loader_input": 335206,
+      "first_payload": 335209,
+      "last_payload": 335296,
+      "last_vm_write": 335297,
+      "first_read_bound": 335298,
+      "loader_port_interval": [
+        335206,
+        335299
+      ],
+      "caller_reservation_interval": [
+        335197,
+        335300
+      ],
+      "measured_first_read": 335302,
+      "measured_last_read": 345682,
+      "measured_retirement": 345683,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 27,
+      "range_start": 338446,
+      "command_output": 338454,
+      "loader_input": 338455,
+      "first_payload": 338458,
+      "last_payload": 338545,
+      "last_vm_write": 338546,
+      "first_read_bound": 338547,
+      "loader_port_interval": [
+        338455,
+        338548
+      ],
+      "caller_reservation_interval": [
+        338446,
+        338549
+      ],
+      "measured_first_read": 339187,
+      "measured_last_read": 349567,
+      "measured_retirement": 349568,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 27,
+      "range_start": 341695,
+      "command_output": 341703,
+      "loader_input": 341704,
+      "first_payload": 341707,
+      "last_payload": 341794,
+      "last_vm_write": 341795,
+      "first_read_bound": 341796,
+      "loader_port_interval": [
+        341704,
+        341797
+      ],
+      "caller_reservation_interval": [
+        341695,
+        341798
+      ],
+      "measured_first_read": 343072,
+      "measured_last_read": 353452,
+      "measured_retirement": 353453,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 27,
+      "range_start": 344944,
+      "command_output": 344952,
+      "loader_input": 344953,
+      "first_payload": 344956,
+      "last_payload": 345043,
+      "last_vm_write": 345044,
+      "first_read_bound": 345045,
+      "loader_port_interval": [
+        344953,
+        345046
+      ],
+      "caller_reservation_interval": [
+        344944,
+        345047
+      ],
+      "measured_first_read": 346957,
+      "measured_last_read": 357337,
+      "measured_retirement": 357338,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 28,
+      "range_start": 348193,
+      "command_output": 348201,
+      "loader_input": 348202,
+      "first_payload": 348205,
+      "last_payload": 348292,
+      "last_vm_write": 348293,
+      "first_read_bound": 348294,
+      "loader_port_interval": [
+        348202,
+        348295
+      ],
+      "caller_reservation_interval": [
+        348193,
+        348296
+      ],
+      "measured_first_read": 348298,
+      "measured_last_read": 358678,
+      "measured_retirement": 358679,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 28,
+      "range_start": 351442,
+      "command_output": 351450,
+      "loader_input": 351451,
+      "first_payload": 351454,
+      "last_payload": 351541,
+      "last_vm_write": 351542,
+      "first_read_bound": 351543,
+      "loader_port_interval": [
+        351451,
+        351544
+      ],
+      "caller_reservation_interval": [
+        351442,
+        351545
+      ],
+      "measured_first_read": 352183,
+      "measured_last_read": 362563,
+      "measured_retirement": 362564,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 28,
+      "range_start": 354691,
+      "command_output": 354699,
+      "loader_input": 354700,
+      "first_payload": 354703,
+      "last_payload": 354790,
+      "last_vm_write": 354791,
+      "first_read_bound": 354792,
+      "loader_port_interval": [
+        354700,
+        354793
+      ],
+      "caller_reservation_interval": [
+        354691,
+        354794
+      ],
+      "measured_first_read": 356068,
+      "measured_last_read": 366448,
+      "measured_retirement": 366449,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 28,
+      "range_start": 357940,
+      "command_output": 357948,
+      "loader_input": 357949,
+      "first_payload": 357952,
+      "last_payload": 358039,
+      "last_vm_write": 358040,
+      "first_read_bound": 358041,
+      "loader_port_interval": [
+        357949,
+        358042
+      ],
+      "caller_reservation_interval": [
+        357940,
+        358043
+      ],
+      "measured_first_read": 359953,
+      "measured_last_read": 370333,
+      "measured_retirement": 370334,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 29,
+      "range_start": 361189,
+      "command_output": 361197,
+      "loader_input": 361198,
+      "first_payload": 361201,
+      "last_payload": 361288,
+      "last_vm_write": 361289,
+      "first_read_bound": 361290,
+      "loader_port_interval": [
+        361198,
+        361291
+      ],
+      "caller_reservation_interval": [
+        361189,
+        361292
+      ],
+      "measured_first_read": 361294,
+      "measured_last_read": 371674,
+      "measured_retirement": 371675,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 29,
+      "range_start": 364438,
+      "command_output": 364446,
+      "loader_input": 364447,
+      "first_payload": 364450,
+      "last_payload": 364537,
+      "last_vm_write": 364538,
+      "first_read_bound": 364539,
+      "loader_port_interval": [
+        364447,
+        364540
+      ],
+      "caller_reservation_interval": [
+        364438,
+        364541
+      ],
+      "measured_first_read": 365179,
+      "measured_last_read": 375559,
+      "measured_retirement": 375560,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 29,
+      "range_start": 367687,
+      "command_output": 367695,
+      "loader_input": 367696,
+      "first_payload": 367699,
+      "last_payload": 367786,
+      "last_vm_write": 367787,
+      "first_read_bound": 367788,
+      "loader_port_interval": [
+        367696,
+        367789
+      ],
+      "caller_reservation_interval": [
+        367687,
+        367790
+      ],
+      "measured_first_read": 369064,
+      "measured_last_read": 379444,
+      "measured_retirement": 379445,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 29,
+      "range_start": 370936,
+      "command_output": 370944,
+      "loader_input": 370945,
+      "first_payload": 370948,
+      "last_payload": 371035,
+      "last_vm_write": 371036,
+      "first_read_bound": 371037,
+      "loader_port_interval": [
+        370945,
+        371038
+      ],
+      "caller_reservation_interval": [
+        370936,
+        371039
+      ],
+      "measured_first_read": 372949,
+      "measured_last_read": 383329,
+      "measured_retirement": 383330,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 30,
+      "range_start": 374185,
+      "command_output": 374193,
+      "loader_input": 374194,
+      "first_payload": 374197,
+      "last_payload": 374284,
+      "last_vm_write": 374285,
+      "first_read_bound": 374286,
+      "loader_port_interval": [
+        374194,
+        374287
+      ],
+      "caller_reservation_interval": [
+        374185,
+        374288
+      ],
+      "measured_first_read": 374290,
+      "measured_last_read": 384670,
+      "measured_retirement": 384671,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 30,
+      "range_start": 377434,
+      "command_output": 377442,
+      "loader_input": 377443,
+      "first_payload": 377446,
+      "last_payload": 377533,
+      "last_vm_write": 377534,
+      "first_read_bound": 377535,
+      "loader_port_interval": [
+        377443,
+        377536
+      ],
+      "caller_reservation_interval": [
+        377434,
+        377537
+      ],
+      "measured_first_read": 378175,
+      "measured_last_read": 388555,
+      "measured_retirement": 388556,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 30,
+      "range_start": 380683,
+      "command_output": 380691,
+      "loader_input": 380692,
+      "first_payload": 380695,
+      "last_payload": 380782,
+      "last_vm_write": 380783,
+      "first_read_bound": 380784,
+      "loader_port_interval": [
+        380692,
+        380785
+      ],
+      "caller_reservation_interval": [
+        380683,
+        380786
+      ],
+      "measured_first_read": 382060,
+      "measured_last_read": 392440,
+      "measured_retirement": 392441,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 30,
+      "range_start": 383932,
+      "command_output": 383940,
+      "loader_input": 383941,
+      "first_payload": 383944,
+      "last_payload": 384031,
+      "last_vm_write": 384032,
+      "first_read_bound": 384033,
+      "loader_port_interval": [
+        383941,
+        384034
+      ],
+      "caller_reservation_interval": [
+        383932,
+        384035
+      ],
+      "measured_first_read": 385945,
+      "measured_last_read": 396325,
+      "measured_retirement": 396326,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 31,
+      "range_start": 387181,
+      "command_output": 387189,
+      "loader_input": 387190,
+      "first_payload": 387193,
+      "last_payload": 387280,
+      "last_vm_write": 387281,
+      "first_read_bound": 387282,
+      "loader_port_interval": [
+        387190,
+        387283
+      ],
+      "caller_reservation_interval": [
+        387181,
+        387284
+      ],
+      "measured_first_read": 387286,
+      "measured_last_read": 397666,
+      "measured_retirement": 397667,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 31,
+      "range_start": 390430,
+      "command_output": 390438,
+      "loader_input": 390439,
+      "first_payload": 390442,
+      "last_payload": 390529,
+      "last_vm_write": 390530,
+      "first_read_bound": 390531,
+      "loader_port_interval": [
+        390439,
+        390532
+      ],
+      "caller_reservation_interval": [
+        390430,
+        390533
+      ],
+      "measured_first_read": 391171,
+      "measured_last_read": 401551,
+      "measured_retirement": 401552,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 31,
+      "range_start": 393679,
+      "command_output": 393687,
+      "loader_input": 393688,
+      "first_payload": 393691,
+      "last_payload": 393778,
+      "last_vm_write": 393779,
+      "first_read_bound": 393780,
+      "loader_port_interval": [
+        393688,
+        393781
+      ],
+      "caller_reservation_interval": [
+        393679,
+        393782
+      ],
+      "measured_first_read": 395056,
+      "measured_last_read": 405436,
+      "measured_retirement": 405437,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 31,
+      "range_start": 396928,
+      "command_output": 396936,
+      "loader_input": 396937,
+      "first_payload": 396940,
+      "last_payload": 397027,
+      "last_vm_write": 397028,
+      "first_read_bound": 397029,
+      "loader_port_interval": [
+        396937,
+        397030
+      ],
+      "caller_reservation_interval": [
+        396928,
+        397031
+      ],
+      "measured_first_read": 398941,
+      "measured_last_read": 409321,
+      "measured_retirement": 409322,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 32,
+      "range_start": 400177,
+      "command_output": 400185,
+      "loader_input": 400186,
+      "first_payload": 400189,
+      "last_payload": 400276,
+      "last_vm_write": 400277,
+      "first_read_bound": 400278,
+      "loader_port_interval": [
+        400186,
+        400279
+      ],
+      "caller_reservation_interval": [
+        400177,
+        400280
+      ],
+      "measured_first_read": 400282,
+      "measured_last_read": 410662,
+      "measured_retirement": 410663,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 32,
+      "range_start": 403426,
+      "command_output": 403434,
+      "loader_input": 403435,
+      "first_payload": 403438,
+      "last_payload": 403525,
+      "last_vm_write": 403526,
+      "first_read_bound": 403527,
+      "loader_port_interval": [
+        403435,
+        403528
+      ],
+      "caller_reservation_interval": [
+        403426,
+        403529
+      ],
+      "measured_first_read": 404167,
+      "measured_last_read": 414547,
+      "measured_retirement": 414548,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 32,
+      "range_start": 406675,
+      "command_output": 406683,
+      "loader_input": 406684,
+      "first_payload": 406687,
+      "last_payload": 406774,
+      "last_vm_write": 406775,
+      "first_read_bound": 406776,
+      "loader_port_interval": [
+        406684,
+        406777
+      ],
+      "caller_reservation_interval": [
+        406675,
+        406778
+      ],
+      "measured_first_read": 408052,
+      "measured_last_read": 418432,
+      "measured_retirement": 418433,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 32,
+      "range_start": 409924,
+      "command_output": 409932,
+      "loader_input": 409933,
+      "first_payload": 409936,
+      "last_payload": 410023,
+      "last_vm_write": 410024,
+      "first_read_bound": 410025,
+      "loader_port_interval": [
+        409933,
+        410026
+      ],
+      "caller_reservation_interval": [
+        409924,
+        410027
+      ],
+      "measured_first_read": 411937,
+      "measured_last_read": 422317,
+      "measured_retirement": 422318,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 33,
+      "range_start": 413173,
+      "command_output": 413181,
+      "loader_input": 413182,
+      "first_payload": 413185,
+      "last_payload": 413272,
+      "last_vm_write": 413273,
+      "first_read_bound": 413274,
+      "loader_port_interval": [
+        413182,
+        413275
+      ],
+      "caller_reservation_interval": [
+        413173,
+        413276
+      ],
+      "measured_first_read": 413278,
+      "measured_last_read": 423658,
+      "measured_retirement": 423659,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 33,
+      "range_start": 416422,
+      "command_output": 416430,
+      "loader_input": 416431,
+      "first_payload": 416434,
+      "last_payload": 416521,
+      "last_vm_write": 416522,
+      "first_read_bound": 416523,
+      "loader_port_interval": [
+        416431,
+        416524
+      ],
+      "caller_reservation_interval": [
+        416422,
+        416525
+      ],
+      "measured_first_read": 417163,
+      "measured_last_read": 427543,
+      "measured_retirement": 427544,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 33,
+      "range_start": 419671,
+      "command_output": 419679,
+      "loader_input": 419680,
+      "first_payload": 419683,
+      "last_payload": 419770,
+      "last_vm_write": 419771,
+      "first_read_bound": 419772,
+      "loader_port_interval": [
+        419680,
+        419773
+      ],
+      "caller_reservation_interval": [
+        419671,
+        419774
+      ],
+      "measured_first_read": 421048,
+      "measured_last_read": 431428,
+      "measured_retirement": 431429,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 33,
+      "range_start": 422920,
+      "command_output": 422928,
+      "loader_input": 422929,
+      "first_payload": 422932,
+      "last_payload": 423019,
+      "last_vm_write": 423020,
+      "first_read_bound": 423021,
+      "loader_port_interval": [
+        422929,
+        423022
+      ],
+      "caller_reservation_interval": [
+        422920,
+        423023
+      ],
+      "measured_first_read": 424933,
+      "measured_last_read": 435313,
+      "measured_retirement": 435314,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 34,
+      "range_start": 426169,
+      "command_output": 426177,
+      "loader_input": 426178,
+      "first_payload": 426181,
+      "last_payload": 426268,
+      "last_vm_write": 426269,
+      "first_read_bound": 426270,
+      "loader_port_interval": [
+        426178,
+        426271
+      ],
+      "caller_reservation_interval": [
+        426169,
+        426272
+      ],
+      "measured_first_read": 426274,
+      "measured_last_read": 436654,
+      "measured_retirement": 436655,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 34,
+      "range_start": 429418,
+      "command_output": 429426,
+      "loader_input": 429427,
+      "first_payload": 429430,
+      "last_payload": 429517,
+      "last_vm_write": 429518,
+      "first_read_bound": 429519,
+      "loader_port_interval": [
+        429427,
+        429520
+      ],
+      "caller_reservation_interval": [
+        429418,
+        429521
+      ],
+      "measured_first_read": 430159,
+      "measured_last_read": 440539,
+      "measured_retirement": 440540,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 34,
+      "range_start": 432667,
+      "command_output": 432675,
+      "loader_input": 432676,
+      "first_payload": 432679,
+      "last_payload": 432766,
+      "last_vm_write": 432767,
+      "first_read_bound": 432768,
+      "loader_port_interval": [
+        432676,
+        432769
+      ],
+      "caller_reservation_interval": [
+        432667,
+        432770
+      ],
+      "measured_first_read": 434044,
+      "measured_last_read": 444424,
+      "measured_retirement": 444425,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 34,
+      "range_start": 435916,
+      "command_output": 435924,
+      "loader_input": 435925,
+      "first_payload": 435928,
+      "last_payload": 436015,
+      "last_vm_write": 436016,
+      "first_read_bound": 436017,
+      "loader_port_interval": [
+        435925,
+        436018
+      ],
+      "caller_reservation_interval": [
+        435916,
+        436019
+      ],
+      "measured_first_read": 437929,
+      "measured_last_read": 448309,
+      "measured_retirement": 448310,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 35,
+      "range_start": 439165,
+      "command_output": 439173,
+      "loader_input": 439174,
+      "first_payload": 439177,
+      "last_payload": 439264,
+      "last_vm_write": 439265,
+      "first_read_bound": 439266,
+      "loader_port_interval": [
+        439174,
+        439267
+      ],
+      "caller_reservation_interval": [
+        439165,
+        439268
+      ],
+      "measured_first_read": 439270,
+      "measured_last_read": 449650,
+      "measured_retirement": 449651,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 35,
+      "range_start": 442414,
+      "command_output": 442422,
+      "loader_input": 442423,
+      "first_payload": 442426,
+      "last_payload": 442513,
+      "last_vm_write": 442514,
+      "first_read_bound": 442515,
+      "loader_port_interval": [
+        442423,
+        442516
+      ],
+      "caller_reservation_interval": [
+        442414,
+        442517
+      ],
+      "measured_first_read": 443155,
+      "measured_last_read": 453535,
+      "measured_retirement": 453536,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 35,
+      "range_start": 445663,
+      "command_output": 445671,
+      "loader_input": 445672,
+      "first_payload": 445675,
+      "last_payload": 445762,
+      "last_vm_write": 445763,
+      "first_read_bound": 445764,
+      "loader_port_interval": [
+        445672,
+        445765
+      ],
+      "caller_reservation_interval": [
+        445663,
+        445766
+      ],
+      "measured_first_read": 447040,
+      "measured_last_read": 457420,
+      "measured_retirement": 457421,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 35,
+      "range_start": 448912,
+      "command_output": 448920,
+      "loader_input": 448921,
+      "first_payload": 448924,
+      "last_payload": 449011,
+      "last_vm_write": 449012,
+      "first_read_bound": 449013,
+      "loader_port_interval": [
+        448921,
+        449014
+      ],
+      "caller_reservation_interval": [
+        448912,
+        449015
+      ],
+      "measured_first_read": 450925,
+      "measured_last_read": 461305,
+      "measured_retirement": 461306,
+      "measured_first_read_slack_vs_bound": 1912
+    },
+    {
+      "user": 0,
+      "stage": 36,
+      "range_start": 452161,
+      "command_output": 452169,
+      "loader_input": 452170,
+      "first_payload": 452173,
+      "last_payload": 452260,
+      "last_vm_write": 452261,
+      "first_read_bound": 452262,
+      "loader_port_interval": [
+        452170,
+        452263
+      ],
+      "caller_reservation_interval": [
+        452161,
+        452264
+      ],
+      "measured_first_read": 452266,
+      "measured_last_read": 462646,
+      "measured_retirement": 462647,
+      "measured_first_read_slack_vs_bound": 4
+    },
+    {
+      "user": 1,
+      "stage": 36,
+      "range_start": 455410,
+      "command_output": 455418,
+      "loader_input": 455419,
+      "first_payload": 455422,
+      "last_payload": 455509,
+      "last_vm_write": 455510,
+      "first_read_bound": 455511,
+      "loader_port_interval": [
+        455419,
+        455512
+      ],
+      "caller_reservation_interval": [
+        455410,
+        455513
+      ],
+      "measured_first_read": 456151,
+      "measured_last_read": 463282,
+      "measured_retirement": 463283,
+      "measured_first_read_slack_vs_bound": 640
+    },
+    {
+      "user": 2,
+      "stage": 36,
+      "range_start": 458659,
+      "command_output": 458667,
+      "loader_input": 458668,
+      "first_payload": 458671,
+      "last_payload": 458758,
+      "last_vm_write": 458759,
+      "first_read_bound": 458760,
+      "loader_port_interval": [
+        458668,
+        458761
+      ],
+      "caller_reservation_interval": [
+        458659,
+        458762
+      ],
+      "measured_first_read": 460036,
+      "measured_last_read": 463918,
+      "measured_retirement": 463919,
+      "measured_first_read_slack_vs_bound": 1276
+    },
+    {
+      "user": 3,
+      "stage": 36,
+      "range_start": 461908,
+      "command_output": 461916,
+      "loader_input": 461917,
+      "first_payload": 461920,
+      "last_payload": 462007,
+      "last_vm_write": 462008,
+      "first_read_bound": 462009,
+      "loader_port_interval": [
+        461917,
+        462010
+      ],
+      "caller_reservation_interval": [
+        461908,
+        462011
+      ],
+      "measured_first_read": 463921,
+      "measured_last_read": 464554,
+      "measured_retirement": 464555,
+      "measured_first_read_slack_vs_bound": 1912
+    }
+  ],
+  "aggregate": {
+    "loads": 144,
+    "loader_port_reserved_edges": 13392,
+    "caller_reserved_edges": 14832,
+    "origin_expansion_edges": 1440,
+    "loader_port_delta_edges": 0,
+    "per_user_origin_expansion_edges": 360,
+    "critical_path_delta": null,
+    "reason": "nine frontedges plus one tail; no production overlap/dependency graph bound"
+  }
+}
