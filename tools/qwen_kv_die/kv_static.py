@@ -112,6 +112,10 @@ if MU:
     # stage table + the compiled GAP[4][36] block (boot image MU form, kv_static_boot_join.BOOT_MU dispatcher)
     ROLES['layer_programme'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv',
                                 'qkd_static_kv_layer_programme_mu', 1)
+    # MU-KV-PROG 10-19: the ownership calendar is the one lprg consumer in qkd_kvs_ctl with per-TOKEN state (a go while its
+    # window is active faults); its _mu successor re-arms the window per user token start (results/rtl/mu_qwen_1018/kvprog)
+    ROLES['ownership'] = ('rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv', 'qkd_static_kv_ownership_calendar_mu', 1)
+    MU_DEPS.append(S + 'qkd_static_kv_ownership.sv')
 # return-train beat record (qkd_embedding_static_return_head / _hop capture_record, unpacked by join4), MSB first
 EMB_RECORD = (('emb_beat_epoch', 16), ('emb_beat_scale', 1), ('emb_beat_half', 1), ('emb_beat_word', 6),
               ('emb_beat_token', 18), ('emb_beat_data', 256))
@@ -441,7 +445,7 @@ def template(root=ROOT):
     params={
         'layer_programme':dict(MUT=0,**({'MU':1} if MU else {})),'attention_programme':dict(MUT=0,LAND=1 if __import__('os').environ.get('OT_KV_ATTN_LAND','0')=='1' else 0),
         'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
-        'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
+        'ownership':dict(MUT=0,**({'MU':1} if MU else {})),'drain_guard':dict(MUT=0),
         'pc_path':dict(MU=1 if MU else 0),'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
         'k_issuer':dict(RESPONSE_LAT=None,MUT=0),
