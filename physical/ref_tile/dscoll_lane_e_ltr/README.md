@@ -14,7 +14,7 @@ Fix (RTL parameter SAFE, default 1 on the tile tops, 0 = previous netlist for ot
 - rx beat landing: reset only on its flag bits lr[0], lr[513], lr[514]; 512 beat bits plain registers;
 - ot_s81ph_link_ep DNR 1: frame data registers in reset-free processes (consumers are qualified by tp_v/xp_v/rr_v/rg_v);
 - ot_link_credit_rx RREP 70: read pointer kept per 8-bit slice of the 553-bit landing word (70 x 3 ot_s81ph_keep_ff).
-Kit: reset_landing {enable, stages 2} (rs lands at the N face in 2 ck flops), route.io_hold_margin_ns 0.03.
+Kit: reset_landing {enable, stages 2} (rs lands at the core-facing side in 2 ck flops), route.io_hold_margin_ns 0.03.
 Bench (Verilator 5.050, tools/xdie_s81/kit_bench.sh on the TOKEN-XDIE-S81 vehicle, SAFE tile tops):
 pass 1,380/1,380 beats bit-exact, 0 late, 0 timeouts (maxlate -2 vs -3 before = the +1 RTL reset-release edge);
 mutants board400 FAIL (late 1,212, 24 timeouts) and chb0 FAIL (late 444, 120 timeouts), identical to the gate_g5 witnesses.
@@ -24,7 +24,7 @@ Witnesses: results/rtl/s81sf_coll_1019/.
 1 Pins: PASS by RTL (rx -> lr landing flops; lo_v/lo_d -> credit-rx landing v_q/d_q, lo_r registered; li_v/li_d from the
   credit-tx sender flops, li_r captured; tx = registered gearbox beat; flt flops; chb -> ep ch_b_q; tf = forwarded clock).
   Kit pin_regs stay off (reason in spec: +1 cycle per pin would move the measured cross-die landing).  reset_landing 2: FIXED.
-2 Reach: tile 432 x 336.96 um; judged by the gate wire_reach check (no relays needed at this size).
+2 Reach: tile 475.2 x 561.6 um; judged by the gate wire_reach check (no relays needed at this size).
 3 Fanout: FIXED (reset per-consumer relay copies; data registers reset-free; rp kept per 8-bit slice).  Gate textbook
   high_fanout is the check.
 4 Depth: WAIVED-with-reason: textbook estimate u_ep snd -> in_ready ~648 ps / 17 levels (pre-existing); the lt route
@@ -32,9 +32,23 @@ Witnesses: results/rtl/s81sf_coll_1019/.
 5 Storage: replay buffer / receive FIFO in 10 SRAM macros.  WAIVED-with-reason: the LCR landing FIFO is 8 x 553 flops
   (4.4 kb), depth fixed by the credit loop and read through 70 local 8:1 slices (RREP); an SRAM would add read latency on
   the core face.
-6 Floorplan: outline/macros = frozen CLOSED cxea3 geometry (COORD 0id decision): macros on the 0.432 grid (not the 43.2
-  lattice), std cells in several channels, W rx/tx/tf partial-face cluster (6.7 pins/um 10-13 plan) -> coordinator review.
-  Aspect 1.28; fill ~0.43.
+6 Floorplan: FIXED (COORD 07:21): 475.2 x 561.6 um; SRAM origins (43.2,259.2) x
+  (43.2,129.6,302.4,388.8,475.2), all exactly on 43.2 um lattice. Macro orientation R0 W / MY E;
+  E swaps the columns (not an exact reflected origin: the 174.12um macro width is not a 43.2 multiple).
+  Minimum macro channel 41.88um horizontally /56.664um vertically (>20um).
+  Only std-cell rows y216..259.2 survive place.tcl, giving one full-width central band (~20,342um2),
+  prior synthesized area 10,495.7um2 =>51.6% band utilisation before CTS and repair.
+  Outer rx/tx cover the full height (515/276.48=1.86 and512/276.48=1.85 pins/um); tf at the top.
+  Core-face lo_d 553/208.44=2.65 and li_d553/285.12=1.94 pins/um; clock/reset/chb beside band.
+  Aspect1.18; total fill23.3% (space buys lattice-safe channels; row density is51.6%).
 7 Clock: spine (432 um tile, below the ~1 mm regional-root threshold); pin-flop spread <= 80 TT+FF judged by the --cts gate
   (HF-3b: 28.6 / 32.0 ps); io_hold_margin 0.03: PASS.  15.5k sinks on one root = guidance WARN only.
 8 Schedule: static; 0 data cycles; reset release +3 edges (2 landing + 1 relay) handed to MU-DIE-S81 INBOX.
+
+## S81-COLL-GEOM 10-19
+Outline and outer-face pin plan change handed to MU-DIE-S81 INBOX. No data-cycle change; reset +3 as above.
+Clock moved to core-facing E (W tile) / W (E tile), y237.6 beside the only register band. Reach and TT/FF timing/spread
+remain measured gate checks; this geometry is a review candidate, not accepted closure evidence.
+Row pruning is deliberately before tapcell/global placement; no hard blockage covers macro endcaps.
+
+Regenerate using `python3 physical/dscoll_cx/regen_safe_coll.py` (installs the row-band hook after ref_tile gen).

@@ -26,8 +26,8 @@
   "rs"
  ],
  "outline": {
-  "w": 432.0,
-  "h": 336.96
+  "w": 475.2,
+  "h": 561.6
  },
  "macros": [
   {
@@ -35,100 +35,110 @@
    "count": 1,
    "inst": "*u_rb.g_sram.g_t?0?.u_m",
    "at": [
-    226.368,
-    49.68
+    259.2,
+    43.2
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_rb.g_sram.g_t?1?.u_m",
    "at": [
-    226.368,
-    101.52
+    259.2,
+    129.6
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_rb.g_sram.g_t?2?.u_m",
    "at": [
-    226.368,
-    153.36
+    259.2,
+    302.4
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_rb.g_sram.g_t?3?.u_m",
    "at": [
-    226.368,
-    205.2
+    259.2,
+    388.8
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_rb.g_sram.g_t?4?.u_m",
    "at": [
-    226.368,
-    257.04
+    259.2,
+    475.2
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_fifo.g_sram.g_t?0?.u_m",
    "at": [
-    31.968,
-    49.68
+    43.2,
+    43.2
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_fifo.g_sram.g_t?1?.u_m",
    "at": [
-    31.968,
-    101.52
+    43.2,
+    129.6
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_fifo.g_sram.g_t?2?.u_m",
    "at": [
-    31.968,
-    153.36
+    43.2,
+    302.4
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_fifo.g_sram.g_t?3?.u_m",
    "at": [
-    31.968,
-    205.2
+    43.2,
+    388.8
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "count": 1,
    "inst": "*u_fifo.g_sram.g_t?4?.u_m",
    "at": [
-    31.968,
-    257.04
+    43.2,
+    475.2
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "at_exact": true
   }
  ],
  "pins": {
@@ -144,9 +154,7 @@
    "li_v",
    "li_r",
    "li_d",
-   "flt"
-  ],
-  "N": [
+   "flt",
    "ck",
    "rs",
    "chb"
@@ -161,10 +169,10 @@
   "io_hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Claude:S81-SAFE-FIX/COLL",
-  "branch": "claude/s81sf-coll-1019",
-  "tag": "sf",
-  "purpose": "S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 row dsfd_coll_lane_w: items 3/1/7): structural fix of the reset / select fan-out on the HF-3 ltr kit (cxea3 geometry, E exact MY mirror). RTL SAFE 1 (tile-top default): the single reset synchroniser flop u.rst_s[1] drove 6,837 loads (939 async clears + ~5,750 rst-gated hold enables of the ep frame data) -> ot_rst_relay 5 kept per-consumer copies, rx beat landing reset only on its 3 flag bits, ot_s81ph_link_ep DNR 1 (frame data registers reset-free), LCR landing read pointer rp (4,426 loads) kept per 8-bit slice (ot_link_credit_rx RREP 70). Kit: reset_landing 2 stages at the N face, io_hold_margin 0.03, tf forwarded-clock SDC (HF-3b). 0 data cycles; reset release +3 edges. ",
+  "owner": "Codex:S81-COLL-GEOM",
+  "branch": "codex/s81-coll-geom-1019",
+  "tag": "geom",
+  "purpose": "COORD 07:21 safe geometry: 43.2um SRAM origins, full-face outer pins <=6/um, one north std-cell band, central core-face clock beside register mass. S81-SAFE-FIX/COLL (10-19, SAFE-AUDIT-S81 row dsfd_coll_lane_w: items 3/1/7): structural fix of the reset / select fan-out on the HF-3 ltr kit (cxea3 geometry, E exact MY mirror). RTL SAFE 1 (tile-top default): the single reset synchroniser flop u.rst_s[1] drove 6,837 loads (939 async clears + ~5,750 rst-gated hold enables of the ep frame data) -> ot_rst_relay 5 kept per-consumer copies, rx beat landing reset only on its 3 flag bits, ot_s81ph_link_ep DNR 1 (frame data registers reset-free), LCR landing read pointer rp (4,426 loads) kept per 8-bit slice (ot_link_credit_rx RREP 70). Kit: reset_landing 2 stages at the N face, io_hold_margin 0.03, tf forwarded-clock SDC (HF-3b). 0 data cycles; reset release +3 edges. ",
   "views_to": "physical/ref_tile/dscoll_lane_e_ltr/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_e_ltr",
   "benches": [
@@ -229,17 +237,57 @@
   "physical/dscoll_cx/sram_edge_strip.tcl"
  ],
  "pin_ranges": {
-  "chb": [
-   281.88,
-   284.04
+  "rx": [
+   2.16,
+   278.64
+  ],
+  "tx": [
+   280.8,
+   557.28
+  ],
+  "tf": [
+   558.36,
+   560.52
+  ],
+  "lo_d": [
+   2.16,
+   210.6
+  ],
+  "lo_v": [
+   211.68,
+   212.76
+  ],
+  "lo_r": [
+   213.84,
+   214.92
+  ],
+  "li_d": [
+   264.6,
+   549.72
+  ],
+  "li_v": [
+   550.8,
+   551.88
+  ],
+  "li_r": [
+   552.96,
+   554.04
+  ],
+  "flt": [
+   555.12,
+   560.52
   ],
   "ck": [
-   276.12,
-   278.28
+   236.52,
+   238.68
   ],
   "rs": [
-   270.36,
-   272.52
+   242.28,
+   244.44
+  ],
+  "chb": [
+   230.76,
+   232.92
   ]
  },
  "sdc_extra": [
@@ -250,5 +298,17 @@
   "stages": 2,
   "clock": "ck",
   "reason": "S81-SAFE-FIX/COLL 10-19 (owner safe-design checklist item 1, ROOT-RST): rs lands at its N face in 2 plain ck flops (rs__ot_rl0 -> rs__ot_rl1) before the lane's own 2-flop synchroniser + 1 relay stage (ot_rst_relay, 5 kept per-consumer copies); reset release = 2 + 2 + 1 = 5 edges after rs (was 2), a scheduled constant; data latency unchanged"
+ },
+ "std_area_um2": 10495.7,
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "why": "ROOT approved safe lattice/channel geometry475.2x561.6: 43.2um lattice plus >=20um pin-face channels forces86.4um row pitch. One central full-width standard-cell band216..259.2 keeps register reach short. Overall fill23.3%; prior synthesis10495.7um2 / band20341.999um2 =51.6%. Final gate visual review still required.",
+   "lattice_um": 43.2,
+   "min_channel_um": 41.88,
+   "std_band_util": 0.516
+  }
+ },
+ "slot_change_request": {
+  "reason": "ROOT accepted required safe-geometry outline475.2x561.6 vs432x336.96; MU-DIE-S81 must update plan slot and core-face clock/reset/chb plus full-face rx/tx pins before bind."
  }
 }
