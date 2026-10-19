@@ -403,6 +403,10 @@ def main():
     ap.add_argument('--outline-override', default='',
                     help='H-DIE-R7: CELL=WxH[,CELL=WxH] coordinator tile outlines for SYNTH cells (overrides grant/kit/area; '
                          'still grown if pin-bound)')
+    ap.add_argument('--prior-place', type=Path, default=None,
+                    help='DIE-HBM-LEAD 10-19: run.tcl of the GEN the relay/landing layer was planned on: every unplaced '
+                         'non-relay block keeps its R0 home there (placed BEFORE lane rows) when the spot is still free; '
+                         'without it rows slide into the generated homes and big blocks find no free area (GEN2c case_a)')
     ap.add_argument('--slot-map', default='',
                     help='inst=slot[,inst=slot..]: die-side contract slot retarget (H-DIE-R6; same as an H-NETLIST slot_override layer)')
     ap.add_argument('--replan-chains', default='',
@@ -661,6 +665,24 @@ def main():
         else:
             continue
         put_near(n, (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2, f'region {s}', region=reg, halo=0.0)
+    # 2b DIE-HBM-LEAD 10-19: prior homes (the relay layer's planning basis) before lane rows
+    prior_kept, prior_lost = [], []
+    if a.prior_place:
+        for m_ in re.finditer(r'place_inst -name (\S+) -location \{([-\d.]+) ([-\d.]+)\} -orientation (\S+)',
+                              a.prior_place.read_text()):
+            n_, x_, y_, o_ = m_.group(1), float(m_.group(2)), float(m_.group(3)), m_.group(4)
+            if n_ not in cell_of or n_ in pl or o_ != 'R0' or I[n_]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land', 'hbfd_rrl')):
+                continue
+            if 'lane row' in I[n_].get('note', '') or re.search(r'home \(', I[n_].get('note', '')):
+                continue
+            w_, h_ = size[cell_of[n_]]
+            r_ = occ.find(x_ + w_ / 2, y_ + h_ / 2, w_, h_, HALO, (x_ - HALO - 4 * CELL, y_ - HALO - 4 * CELL, x_ + w_ + HALO + 4 * CELL, y_ + h_ + HALO + 4 * CELL))
+            if r_ is None:
+                prior_lost.append(n_); continue
+            put(n_, r_[0], r_[1], 'R0', f'prior home ({a.prior_place.parent.name})', HALO)
+            homes[n_] = dict(rule=f'prior home ({a.prior_place.parent.name})', target=[x_, y_], at=[r_[0], r_[1]], dist_um=0.0)
+            prior_kept.append(n_)
+        print('prior homes kept', len(prior_kept), 'lost', len(prior_lost), prior_lost[:20], flush=True)
     # 3a H-RELAY 10-17 (S81-DV lane model): LANE ROWS.  A relay station = one row of T lane tiles abutted ACROSS the
     # travel direction at a FIXED site (relay layer note 'lane row <id> <t>/<T> <flow>; site (x, y) um' = row centre).
     # The row is placed as a unit: exact site, else slid along the travel axis (the hop slack, <= LANE_SLIDE um), else
@@ -1124,6 +1146,7 @@ def main():
                                  die_repeaters_step.config('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
                                                            max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
+    manifest['prior_place'] = dict(src=str(a.prior_place) if a.prior_place else None, kept=len(prior_kept), lost=prior_lost)
     manifest['slot_map'] = slot_map; manifest['replanned_chain_relays'] = dict(regex=a.replan_chains, n=len(replanned))
     manifest['outline_override'] = a.outline_override
     manifest['d4b_homes'] = bool(a.d4b_homes)
