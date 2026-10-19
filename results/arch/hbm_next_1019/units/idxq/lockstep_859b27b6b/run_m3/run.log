@@ -1,0 +1,13 @@
+SCOREBAD cyc1016 q0 lane0 new{005f8 4072 1} old{005f8 4075 1}
+SCOREBAD cyc1016 q0 lane1 new{005f9 3dd6 1} old{005f9 bf08 1}
+SCOREBAD cyc1016 q0 lane2 new{005fa 3fcd 1} old{005fa 4024 1}
+SCOREBAD cyc1016 q0 lane3 new{005fb bfe7 1} old{005fb c03b 1}
+SCOREBAD cyc1016 q0 lane4 new{005fc bfb9 1} old{005fc 3e8c 1}
+SCOREBAD cyc1016 q0 lane5 new{005fd 3f83 1} old{005fd bfb7 1}
+SCOREBAD cyc1016 q0 lane6 new{005fe 4038 1} old{005fe 3fb5 1}
+IDXQ_LOCKSTEP rows2 pitch232 chainNew6 mut3 errors10938 oracle_errors0 scores_new10912 scores_old10912 records_old1024 flits_new128 flits_old128 live_beats old171 new171 row_beats old342 new342 fault_old0 fault_new1 status0 | edges from start: key old219 new221 tx old1184 new1192 done old1543 new1551
+IDXQ_ROWS_CYCLES rows2 pitch232 new_done_edge1551 old_done_edge1543
+[22700000000] %Fatal: tb_hnx_idxq_lockstep.sv:181: Assertion failed in tb_hnx_idxq_lockstep.unnamedblk14: IDXQ_LOCKSTEP FAIL: IDXN quad vs stack mismatch
+%Error: rtl/hbm_next/idxq/tb/tb_hnx_idxq_lockstep.sv:181: Verilog $stop
+Aborting...
+RUN_RC=1
