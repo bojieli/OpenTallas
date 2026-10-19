@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.safe_source_contract.prototype.v1",
+  "scope": "source-prototype-only",
+  "top": "ot_hbm_idx_topk_link_static_p",
+  "max_allowed": 32,
+  "verdict": "FAIL",
+  "unphysicalized_literals": [
+    "literal:0",
+    "literal:1"
+  ],
+  "literal_load_excess": [
+    "literal:0",
+    "literal:1"
+  ],
+  "boundary_qualification": "not-qualified; input/output records require owner review",
+  "source_to_netlist_equivalence": "not-proved; hashes identify supplied artifacts only",
+  "max_loads": 5896,
+  "max_nonliteral_loads": 1757,
+  "counts": {
+    "cells": 145228,
+    "drivers": 151720,
+    "logical_endpoints": 373127,
+    "roles": {
+      "comb": 121688,
+      "ff": 23532,
+      "macro": 4096,
+      "static": 2,
+      "input": 2402
+    }
+  },
+  "physical_load_qualification": "not-qualified; open outputs do not imply zero physical input capacitance",
+  "diagnostic_scope": "Native strict REFUSED bus; independently expanded exact native macro buses for diagnosis only, not production qualification",
+  "provenance": {
+    "mapped_sha256": "6aafe33bacb8ca1464ee6c9bd1ad3fb2b622e52cd6336600b1adea413cbf8684",
+    "libraries": {
+      "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019/census/AO.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+      "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019/census/OA.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+      "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019/census/SIMPLE.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019/census/INVBUF.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+      "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019/census/SEQ.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "/srv/opentallas-scratch/claude/codex-hidx-safe-copies-r3-1019/macro_tt.lib": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879"
+    },
+    "audit_sha256": "00441972b61d9045ca6e2b0273006b7ac9273561d53bed32c282db4611369328",
+    "strict_native": {
+      "verdict": "REFUSED",
+      "error": "unsupported bus in ot_sram_1r1w_64x512_m1_r2c2"
+    }
+  },
+  "max_by_role": {
+    "ff": 1757,
+    "comb": 1757,
+    "macro": 1,
+    "input": 25,
+    "static": 5896
+  },
+  "violations_by_role": {
+    "comb": 1272,
+    "ff": 1221
+  }
+}
