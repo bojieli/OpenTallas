@@ -1,5 +1,5 @@
 {
- "name": "dsdv_gunit_l5-g3-02cb9f68d",
+ "name": "dsdv_gunit_l5-g3-78374d345",
  "block": "dsdv_gunit_l5",
  "ref_tile": true,
  "owner": "Claude:S81U-GUNIT3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81u-gunit3-1017",
-  "commit": "02cb9f68d",
+  "commit": "78374d345",
   "extra_paths": [
    "rtl/dsrom_sys/s81_dv/unit",
    "rtl/hdc",
@@ -35,19 +35,19 @@
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
     "expect": "pass",
     "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
-    "pass_witness": "results/rtl/s81_dv_units_1017/gunit6/exact.log",
-    "min_count_regex": "^MUT=0: GUNIT PASS cases=(\\d+) ",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "pass_witness": "results/rtl/s81_dv_units_1017/gunit6/exact.log",
+    "min_count_regex": "^MUT=0: GUNIT PASS cases=(\\d+) "
    },
    {
     "name": "gunit_mut8",
     "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
     "expect": "fail",
     "fail_regex": "^MUT=8: GUNIT FAIL ",
-    "fail_witness": "results/rtl/s81_dv_units_1017/gunit6/mut8.log",
     "threads": 6,
-    "peak_ram_gb": 24
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_dv_units_1017/gunit6/mut8.log"
    }
   ],
   "calibrate": {
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-g3-02cb9f68d"
+   "to": "results/rtl/ref_tile/dsdv_gunit_l5/dsdv_gunit_l5-g3-78374d345"
   }
  ],
  "cycles_added": 0,
