@@ -519,10 +519,12 @@ def landed_raw_tcl(spec, root):
 
 def landed_sdc(spec, root):
     """Landing multicycles (LANDING-CONTRACT L5, lp.py Pm.sdc): ring u_lpl_<n>_w -> read u_lpl_<n>_r -setup E -hold D-1.
-    Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical)."""
+    Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical).
+    HBM-PGSTREAM-B 10-19: plus seam_window_sdc (opt-in "seam_windows" of a related_pll_ratio leaf; '' without it)."""
     rec = landed_record(spec, root)
+    seam = seam_window_sdc(spec)
     if rec is None:
-        return ""
+        return seam
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
     # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
@@ -553,7 +555,82 @@ def landed_sdc(spec, root):
               f"  set_multicycle_path -setup {E} -from $ot_lf -to $ot_lt",
               f"  set_multicycle_path -hold {D - 1} -from $ot_lf -to $ot_lt", "}",
               'puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"']
-    return "\n".join(o) + "\n"
+    return "\n".join(o) + "\n" + seam
+
+
+SEAM_WINDOW_KEYS = {'name', 'launch', 'capture', 'from', 'setup_q', 'hold_q', 'why'}
+
+
+def seam_windows(spec):
+    """HBM-PGSTREAM-B 10-19 (coordinator 07:11, CLOCKING STANDARD 10-18 landed crossings): validated "seam_windows" of a
+    related_pll_ratio multiple_cts_roots LEAF tile.  A banked 3:4 seam INSIDE one tile (bank written on one root, read
+    on the other at a fixed calendar edge, no handshake) is a landed crossing, not an ordinary related-clock path: STA's
+    default related window is the nearest edge pair (1 VCO tick q = core period / 3) less the distinct-entry reserve,
+    while the static calendar guarantees setup >= setup_q * q and rewrite-after-read >= hold_q * q (measured by the
+    bench window checker).  Each entry:
+      name     identifier;  launch / capture  two different clock_ports (the bank root, the reader root);
+      from     cell glob patterns of the BANK registers (launch root), e.g. "*u_bq.rq_b0*";
+      setup_q  >= 2 (VCO ticks from the bank write edge to its read edge);  hold_q >= 2 (read edge to rewrite edge);
+      why      the calendar the windows come from.
+    None for every spec without the key (all existing kits)."""
+    sw = spec.get('seam_windows')
+    if sw is None:
+        return None
+    if not (native_leaf(spec) and spec.get('kind') == 'tile' and spec.get('clock') == 'multiple_cts_roots'
+            and spec.get('clock_data_paths') == 'related_pll_ratio'):
+        raise ValueError('seam_windows requires a multiple_cts_roots leaf tile under related_pll_ratio')
+    ports = list(spec.get('clock_ports') or [])
+    if not isinstance(sw, list) or not sw:
+        raise ValueError('seam_windows must be a nonempty list')
+    names = set()
+    for w in sw:
+        if not isinstance(w, dict) or set(w) != SEAM_WINDOW_KEYS:
+            raise ValueError(f'seam_windows entry needs exactly {sorted(SEAM_WINDOW_KEYS)}')
+        if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', str(w['name'])) or w['name'] in names:
+            raise ValueError(f'seam_windows: invalid or duplicate name {w["name"]!r}')
+        names.add(w['name'])
+        if w['launch'] not in ports or w['capture'] not in ports or w['launch'] == w['capture']:
+            raise ValueError(f'seam_windows {w["name"]}: launch / capture must be two different clock_ports')
+        if (not isinstance(w['from'], list) or not w['from']
+                or any(not isinstance(x, str) or not re.fullmatch(r'[A-Za-z0-9_.*]+', x) or '*' not in x[:1] for x in w['from'])):
+            raise ValueError(f'seam_windows {w["name"]}: "from" must be cell globs [A-Za-z0-9_.*] starting with *')
+        for k in ('setup_q', 'hold_q'):
+            if type(w[k]) is not int or not 2 <= w[k] <= 12:
+                raise ValueError(f'seam_windows {w["name"]}: {k} must be an integer 2..12 VCO ticks (landed: >= 2q)')
+        if not isinstance(w['why'], str) or not w['why'].strip():
+            raise ValueError(f'seam_windows {w["name"]}: why (the calendar) is required')
+    return sw
+
+
+def seam_window_sdc(spec):
+    """Seam-window constraints (see seam_windows): per window, from the bank registers to every register of the reader
+    root, set_max_delay setup_q * q and set_min_delay -hold_q * q with clock latency INCLUDED (OpenSTA path delay to a
+    register check: required = window + capture latency + inter-clock uncertainty - setup, launch edge time removed),
+    so the sign-off reserve (setup 150/210, hold 100 between different entries) still applies on top of the calendar
+    window.  q is read from core_clk (period / 3), so the route SDC (route period) and signoff.sdc (sign-off period)
+    scale alike.  Fail closed: a window whose patterns match no cell is an error.  The gate's cross_clock check sees
+    these as declared (max_delay / min_delay); their slack is ordinary sign-off timing.  '' without the key."""
+    sw = seam_windows(spec)
+    if sw is None:
+        return ''
+    ports = list(spec['clock_ports'])
+    o = [f'# ---- seam windows (landed 3:4 crossings inside this leaf, {len(sw)} windows; q = core period / 3)',
+         'set ot_sw_q [expr {[get_property [get_clocks core_clk] period] / 3.0}]']
+    for w in sw:
+        pats = ' '.join(w['from'])
+        o += [f'# {w["name"]}: {w["launch"]} -> {w["capture"]} setup {w["setup_q"]}q hold {w["hold_q"]}q ({w["why"]})',
+              'set ot_sw_f {}',
+              f'foreach ot_sw_p {{{pats}}} {{',
+              '  set ot_sw_c [get_cells -quiet $ot_sw_p]',
+              '  if {![llength $ot_sw_c]} { set ot_sw_c [get_cells -quiet -hierarchical $ot_sw_p] }',
+              '  set ot_sw_f [concat $ot_sw_f $ot_sw_c]', '}',
+              f'if {{![llength $ot_sw_f]}} {{ error "OT_SEAM_WINDOW: {w["name"]} bank patterns match no cell" }}',
+              f'set ot_sw_t [get_clocks ot_entry_{ports.index(w["capture"])}]',
+              f'set_max_delay [expr {{{w["setup_q"]} * $ot_sw_q}}] -from $ot_sw_f -to $ot_sw_t',
+              f'set_min_delay [expr {{-{w["hold_q"]} * $ot_sw_q}}] -from $ot_sw_f -to $ot_sw_t',
+              f'puts "OT_SEAM_WINDOW {w["name"]} cells=[llength $ot_sw_f] setup_ps=[expr {{{w["setup_q"]} * $ot_sw_q}}] '
+              f'hold_ps=[expr {{{w["hold_q"]} * $ot_sw_q}}]"']
+    return '\n'.join(o) + '\n'
 
 
 def domains(spec):
