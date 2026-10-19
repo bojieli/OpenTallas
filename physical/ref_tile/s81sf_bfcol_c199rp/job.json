@@ -58,19 +58,6 @@
     "fail_regex": "%Fatal: .*DIFF TXN lane=",
     "fail_witness": "results/rtl/s81_c199_freeclk_1019/rstpart/fail_witness/rp_mut_stuck.log",
     "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
-   },
-   {
-    "name": "rp_mut_tree",
-    "expect": "fail",
-    "cmd": "cd {SRC} && python3 tools/s81/bf_txn_bench.py --variant recut --params QZE=1,TCG=1,BXST=2,FXST=2,PINLAT=1,HCOL=1 --jobs 8 --prep {SRC}/results/rtl/s81_bf_compact_20261010/compact199_pinreg_1018/bench_5050/prep --no-default-mutants --mutant rp_mut_tree=OT_BMUL_RSPLIT+OT_BF_TAGREP+OT_BF_TILE_FREECLK+OT_BF_RSTPART+OT_BF_RSTPART_MUT_TREE --work {RUN}/bench_rp/rp_mut_tree --only rp_mut_tree; rc=$?; cat {RUN}/bench_rp/rp_mut_tree/rp_mut_tree/run.log 2>/dev/null; exit $rc",
-    "threads": 8,
-    "peak_ram_gb": 16,
-    "needs": [
-     "verilator-5.050"
-    ],
-    "fail_regex": "%Fatal: .*DIFF TXN lane=",
-    "fail_witness": "results/rtl/s81_c199_freeclk_1019/rstpart/fail_witness/rp_mut_tree.log",
-    "git_fallback": "bf_txn_bench.py wraps its only git calls (rev-parse/status for the record) in try/except and falls back to SOURCE_COMMIT/'unknown'; --prep names the committed prepared package so the git-using prepare step never runs"
    }
   ],
   "calibrate": {

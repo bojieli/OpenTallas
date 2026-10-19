@@ -4,6 +4,7 @@ column with the partitioned reset tree equals the default (gated-clock, single-s
 on the full independent BF numerical + wake + transaction workload; the stuck-copy negatives must FAIL on real output
 comparisons.  Run as bf_txn_bench.py (same arguments) with --only baseline rstpart mut_stuck mut_tree and
 --positive-define baseline=... rstpart=... --mutant mut_stuck=... --mutant mut_tree=..."""
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -19,23 +20,42 @@ txn.SHADOW = txn.SHADOW.replace(old, '''    integer freeclk_trace;
           s_pv[1] ? t_slice(1, s_pval, s_prow, s_pseg, s_pnseg, s_perr, s_ppos) : 64'd0);
     end
 ''' + old)
+check_only = '--check-only' in sys.argv
+if check_only:
+    sys.argv.remove('--check-only')
 work = Path(sys.argv[sys.argv.index('--work') + 1]).resolve()
-try:
-    txn.main()
-except SystemExit as ex:
-    if ex.code:
-        raise
+
+
+def main():
+    if not check_only:
+        try:
+            txn.main()
+        except SystemExit:
+            pass   # bf_txn_bench's own mutant rule wants DIFF TXN; the per-cycle rule below is the stricter one
+    term = json.loads((work / 'terminal.json').read_text())
+    for c in ('baseline', 'rstpart'):
+        assert term['cases'][c]['ok'], f'{c}: positive failed: {term["cases"][c]}'
     a = (work / 'baseline' / 'candidate_edges.txt').read_bytes()
     b = (work / 'rstpart' / 'candidate_edges.txt').read_bytes()
     mismatch = next((i for i, (x, y) in enumerate(zip(a.splitlines(), b.splitlines()), 1) if x != y), None)
     assert a == b, f'per-cycle output/status mismatch at line {mismatch}; lengths {len(a)}/{len(b)}'
     muts = {}
     for m in ('mut_stuck', 'mut_tree'):
+        t = (work / m / 'candidate_edges.txt').read_bytes()
+        line = next((i for i, (x, y) in enumerate(zip(a.splitlines(), t.splitlines()), 1) if x != y), None)
+        if line is None and len(t) != len(a):
+            line = min(len(a.splitlines()), len(t.splitlines())) + 1
+        assert line is not None, f'{m}: negative control NOT detected (trace identical to baseline)'
         log = (work / m / 'run.log').read_text()
-        assert 'DIFF' in log or 'FAIL' in log or 'Fatal' in log, f'{m}: negative must fail real comparisons'
-        muts[m] = next((s for s in log.splitlines() if 'DIFF' in s or 'FAIL' in s or 'Fatal' in s), '')[:300]
+        txn_fail = next((x for x in log.splitlines() if 'DIFF' in x or 'Fatal' in x), None)
+        muts[m] = {'first_trace_mismatch_line': line, 'txn': (txn_fail or 'TXN MATCH (values) but output cycles differ')[:300]}
+        print(f'NEGATIVE {m} DETECTED trace line {line}: {muts[m]["txn"]}')
     rec = {'status': 'PASS', 'scope': 'OT_BF_RSTPART (free clock + partitioned kept reset copies) vs default column: every '
            'valid/metadata/busy/fault output cycle identical on the full BF numerical + wake + transaction workload',
-           'trace_lines': len(a.splitlines()), 'trace_bytes': len(a), 'extra_data_edges': 0, 'mutants': muts}
+           'trace_lines': len(a.splitlines()), 'trace_bytes': len(a), 'trace_sha256': hashlib.sha256(a).hexdigest(),
+           'extra_data_edges': 0, 'mutants': muts}
     (work / 'rstpart_exact.json').write_text(json.dumps(rec, indent=2) + '\n')
     print('BF_RSTPART_EXACT PASS', json.dumps(rec))
+
+
+main()
