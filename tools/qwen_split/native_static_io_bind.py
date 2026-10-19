@@ -59,6 +59,59 @@ CORE_CLOCKS = (['clk'] + [f'clk_pfold{k}' for k in range(4)] + [f'clk_xfold{k}' 
                [f'clk_pring{k}' for k in range(2)] + [f'clk_sring{k}' for k in range(5)] +
                [f'clk_rring{k}' for k in range(2)])
 OPEN_INPUTS = ('cmd_v', 'cmd_mode', 'cmd_words', 'cmd_tag', 'pkg_s', 'die_ps')
+# Q-DIE11-COLL 10-18 (HANDOFF 0ea item 3): the PHY side of each SerDes face runs on that SerDes PHY's own FDI clock.
+# qfd_coll_static_face (eleven roots per face, index f*11+k): k0 cal_ck, k1 cal_lck, k2 tx_wck, k3 tx_rck, k4 rx_wck,
+# k5 rx_rck, k6..10 codec_ck[0..4].  Core-side roots (k0, k2, k5) stay on clk_coll; the link-side roots (calendar
+# link half, TX CDC read, RX CDC write, codec controller + four SRAM banks: k1, k3, k4, k6..10) of SerDes face s
+# (production face 2+s) and that PHY's clk pin form trunk clk_serdes<s> (root clk_rx.pll_serdes<s>).  The source
+# programme (rtl/rom/ot_coll_static_linkcal.sv, tb_coll_tp8_static_links lck) makes the link roots MESOCHRONOUS with
+# the core root (same PLL, same 833.3-ps period, fixed phase): records cross only through the static CDC SRAM with
+# its 2-flop publication synchroniser, 1-bit calendar tokens are related-clock timed paths, so STA keeps them related
+# (no asynchronous group).  The UCIe faces 0/1 are NOT moved: in SIX_FIVE mode their codecs feed qfd_ucie_static_share
+# and the gearbox core side (gearbox_core_ck, 1.2 GHz); the UCIe FDI clock reaches only fdi_ck / fdi_rx_ck.
+# OT_SPLIT_COLL_PHY_CLOCKS=1 enables it; the default is on for the DV plan (OT_SPLIT_DV set), off otherwise so older
+# plans regenerate byte-identically.
+_E = __import__('os').environ
+PHY_CLOCKS = _E.get('OT_SPLIT_COLL_PHY_CLOCKS', '1' if _E.get('OT_SPLIT_DV') else '0') == '1'
+FACE_CORE_SLOTS = (0, 2, 5)
+FACE_LINK_SLOTS = (1, 3, 4, 6, 7, 8, 9, 10)
+FACE_CODEC_CTL = 6
+
+
+def serdes_face_bits(s, slots=FACE_LINK_SLOTS):
+    """face_ck bit indices of SerDes s (production face 2+s) for the given per-face root slots."""
+    return [(2 + s) * 11 + k for k in slots]
+
+
+def phy_clock_bits():
+    return {b for s in range(3) for b in serdes_face_bits(s)}
+
+
+def related_pins(ports, phy_clocks):
+    """Per-port (per-bit) capture / launch clock of every data pin of the production collective, from its RTL:
+    serdes_* bits of SerDes s -> face (2+s) codec controller root face_ck[(2+s)*11+6]; shared_tx / shared_tx_valid ->
+    fdi_ck (gearbox FDI TX registers); shared_rx -> fdi_rx_ck (rxp pin register); shared_rx_valid -> fdi_ck (pv_q);
+    ucie_up -> face 0 codec controller face_ck[6]; everything else (command / payload / out / fault / straps) -> clk.
+    Only emitted with phy_clocks (the stand-in Liberty otherwise relates every pin to clk[0], byte-identical)."""
+    if not phy_clocks:
+        return {}
+    ctl = [f'face_ck[{serdes_face_bits(s, (FACE_CODEC_CTL,))[0]}]' for s in range(3)]
+    rel = {}
+    for p in ('serdes_tx', 'serdes_rx'):
+        rel[p] = [ctl[k // FW_S] for k in range(3 * FW_S)]
+    for p in ('serdes_tx_valid', 'serdes_rx_valid', 'serdes_up'):
+        rel[p] = list(ctl)
+    rel.update(shared_tx=['fdi_ck'] * FW_U, shared_tx_valid=['fdi_ck'], shared_rx=['fdi_rx_ck'] * FW_U,
+               shared_rx_valid=['fdi_ck'], ucie_up=['face_ck[6]'])
+    for p, bits in rel.items():
+        if p not in ports or ports[p][0] != len(bits):
+            raise ValueError(f'{MASTER}.{p}: related-clock map does not match the RTL port width')
+    # die-level slice aliases (port_join: srx0 / stx1 / serdes_up2 ...) carry the same per-bit clocks, so a kit that
+    # splits a bus across faces keeps its related clocks (the stand-in Liberty is written from the LEF port names)
+    for a, (real, idx) in _aliases(ports).items():
+        if real in rel:
+            rel[a] = [rel[real][k] for k in idx]
+    return rel
 
 
 def _aliases(ports):
@@ -75,8 +128,9 @@ def _aliases(ports):
     return a
 
 
-def core_clock_pins(ports):
-    return (CORE_CLOCKS + [f'face_ck{k}' for k in range(ports['face_ck'][0])] +
+def core_clock_pins(ports, phy_clocks=False):
+    skip = phy_clock_bits() if phy_clocks else set()
+    return (CORE_CLOCKS + [f'face_ck{k}' for k in range(ports['face_ck'][0]) if k not in skip] +
             [f'relay_ck{k}' for k in range(ports['relay_ck'][0])] + ['gearbox_core_ck'])
 
 
@@ -151,21 +205,32 @@ def apply(model):
                 (f'serdes{s}_up', 'coll_fdi', 1, [(n, 'tx_up'), ('io_collective', f'serdes_up{s}')])]
     # clocks: the 1.2 GHz core roots on one trunk (domain 'stream'), the 1 GHz FDI roots + every PHY on the FDI
     # trunk (die_sta_libs domain 'ucie'); the 6:5 relation is inside the collective (root rational-clock contract)
-    new += [('clk_coll', 'clock_trunk', 1, [('clk_rx', 'pll_coll')] + [('io_collective', p) for p in core_clock_pins(ports)]),
+    if PHY_CLOCKS and ports['face_ck'][0] != 55:
+        raise ValueError(f'{MASTER}: OT_SPLIT_COLL_PHY_CLOCKS expects 5 faces x 11 roots, got face_ck {ports["face_ck"][0]}')
+    new += [('clk_coll', 'clock_trunk', 1, [('clk_rx', 'pll_coll')] +
+             [('io_collective', p) for p in core_clock_pins(ports, PHY_CLOCKS)]),
             ('clk_ucie', 'clock_trunk', 1, [('clk_rx', 'pll_ucie')] + [('io_collective', p) for p in fdi_clock_pins(ports)] +
-             [(n, 'clk') for n in ('io_ucie',) + SERDES_INST])]
+             [(n, 'clk') for n in ('io_ucie',) + (() if PHY_CLOCKS else SERDES_INST)])]
+    if PHY_CLOCKS:
+        # each SerDes PHY's FDI clock and the link-side roots of its face: one trunk per PHY (see FACE_LINK_SLOTS)
+        new += [(f'clk_serdes{s}', 'clock_trunk', 1, [('clk_rx', f'pll_serdes{s}')] +
+                 [('io_collective', f'face_ck{b}') for b in serdes_face_bits(s)] + [(n, 'clk')])
+                for s, n in enumerate(SERDES_INST)]
     if 'blk_ck' in ports:
         # These are actual 200 MHz clock inputs, not 1.2 GHz roots with a
         # pessimistic timing annotation. Their common-PLL implementation and
         # physical phase delivery remain explicit integration obligations.
         new.append(('clk_coll_blk', 'clock_trunk', 1, [('clk_rx', 'pll_coll_blk')] +
                     [('io_collective', f'blk_ck{k}') for k in range(ports['blk_ck'][0])]))
-    model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll')] + new
+    model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll', 'clk_serdes0', 'clk_serdes1',
+                                                       'clk_serdes2')] + new
     # These retained production PHY paths run on the actual 1 GHz FDI roots
     # above. Legacy instance domains (serial_0p9 / link_serdes) are not their
     # clock contract after replacing the collective with its native RTL.
+    # With PHY_CLOCKS a SerDes bus relay takes its own PHY's FDI clock (clk_serdes<s>), never the UCIe root.
     model.setdefault('relay_clock_by_bus', {}).update(
-        {b: 'clk_ucie' for b, c, _, _ in new if c == 'coll_fdi'})
+        {b: (f'clk_serdes{b[6]}' if PHY_CLOCKS and b.startswith('serdes') else 'clk_ucie')
+         for b, c, _, _ in new if c == 'coll_fdi'})
     split = model.setdefault('port_split', {})
     split[MASTER] = dict(cd=[('in_data', 512), ('in_last', 1), ('in_mode', 1), ('in_tag', 32), ('in_valid', 1)],
                          cc=[('out_data', 512), ('out_last', 1), ('out_rank', 3), ('out_err', 1), ('out_valid', 1)])
@@ -197,8 +262,10 @@ def apply(model):
                row=[dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in row],
                row_span_um=[round(lo_x, 4), round(hi_x, 4)],
                historical_row={n: dict(zip(('x', 'y', 'w', 'h', 'm'), q)) for n, q in old.items()},
-               clock_roots=dict(core=len(core_clock_pins(ports)), fdi=len(fdi_clock_pins(ports)),
-                                total=len(core_clock_pins(ports)) + len(fdi_clock_pins(ports))),
+               clock_roots=dict(core=len(core_clock_pins(ports, PHY_CLOCKS)), fdi=len(fdi_clock_pins(ports)),
+                                total=len(core_clock_pins(ports, PHY_CLOCKS)) + len(fdi_clock_pins(ports)),
+                                **(dict(serdes_link={f'clk_serdes{s}': [f'face_ck{b}' for b in serdes_face_bits(s)]
+                                                     for s in range(3)}) if PHY_CLOCKS else {})),
                open_inputs=dict(cmd_v_mode_words_tag='collective command producer absent from the compute graph '
                                 '(static controller ABI has no 50-bit command output): Q-control / Q-COLL',
                                 pkg_s_die_ps='die identity needs package strap bumps (a constant is wrong for 7 of 8 dies)',
@@ -208,6 +275,11 @@ def apply(model):
                            'adds no relay on class coll_fdi',
                unread_outputs=sorted(p for p, (n, d) in ports.items() if d == 'output' and p not in connected),
                qualified=False)
+    if PHY_CLOCKS:
+        rec.update(phy_clocks=dict(env='OT_SPLIT_COLL_PHY_CLOCKS', core_slots=list(FACE_CORE_SLOTS),
+                                   link_slots=list(FACE_LINK_SLOTS), mode='mesochronous related (same PLL, 833.3 ps)',
+                                   ucie_faces='face 0/1 link side = gearbox core side (clk_coll); FDI = fdi_ck/fdi_rx_ck'),
+                   related_pins=related_pins(ports, True))
     model['native_static_io_bind'] = rec
     return rec
 

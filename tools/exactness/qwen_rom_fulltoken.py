@@ -46,6 +46,9 @@ HOST = ROOT / "tools/runtime/qwen_baseline_ar_stream4/qwen_rom_rt_w12_stream4_fu
 VERILATOR = os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
 FIX = Path("/srv/opentallas-scratch")
 IMG = Path("/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1")  # links re-pointed 10-08 to scratch-overflow/claude/layer-parallel-sim
+# TOKEN-PASS-QWEN 10-18: QWEN_FX_IMG overrides the stage image root (images restored from the pinned prep npz,
+# tools/exactness/w12_layer_restore.py + tools/qwen_tokpass/w12_head_restore.py; the EPYC1 tree is gone)
+IMG = Path(os.environ.get("QWEN_FX_IMG", IMG))
 # Durable fixture tree (KEEP STATUS.md in every dir; literal path so tools/fleet/fleet_sweep.py protects it).  The
 # TP4 gold and the KV history were deleted by the fleet sweeper on 2026-10-07 and regenerated 2026-10-08
 # (tools/exactness/regen_fixtures.sh): the gold on the local GPU, verified file by file against the committed
@@ -106,6 +109,8 @@ if os.environ.get("QROM_LAT"):
     COLL = [f"-GLAT={int(os.environ['QROM_LAT'])}" if g == "-GLAT=339" else g for g in COLL]
 VFLAGS = ["--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
           "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN"]
+# TOKEN-PASS-QWEN 10-18: extra Verilator flags (e.g. --unroll-count for the fleet NBA-loop guard)
+VFLAGS += os.environ.get("QROM_VFLAGS_EXTRA", "").split()
 
 
 def sha(p):

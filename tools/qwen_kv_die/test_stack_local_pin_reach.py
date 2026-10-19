@@ -9,7 +9,7 @@ class ActualBitReach(unittest.TestCase):
         b=K.F.Master('b',10,300,5,'test');b.face('word',capture_bits,'W','M4',150,capture_pitch)
         insts=[SimpleNamespace(name='a',master='a',x=0,y=0,w=10,h=300,orient='R0'),
                SimpleNamespace(name='b',master='b',x=30,y=0,w=10,h=300,orient=orient)]
-        return dict(insts=insts,buses=[('seam','stack_local',200,[('a','word'),('b','word')])]),{'a':a,'b':b}
+        return dict(insts=insts,die=dict(w=100,h=400),buses=[('seam','stack_local',200,[('a','word'),('b','word')])]),{'a':a,'b':b}
     def test_unequal_pitch_exposes_hidden_end_bit(self):
         m,masters=self.model()
         self.assertEqual(abs(K.pin_xy(m['insts'][0],masters['a'],'word')[0]-

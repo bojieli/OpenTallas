@@ -184,7 +184,8 @@ def lower_partitioned(source, out, parts=4, line_bits=9688, start_depth=2, unifo
     (out/'part_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
-def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mut_pc_col=None, mut_tpl_col=None):
+def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mut_pc_col=None, mut_tpl_col=None,
+                  resident_edges=None):
     """HBM-SU r5 2026-10-17 (opt-in, --columns): one quarter's command line (line_bits) lowered for the per-column
     cluster ot_hbm_su_programme_pslice_c5: column c (bits [256c, 256c+256)) is its own producer (lower() with
     line_bits 256, index_pack 16: 16 edges of 16-bit dictionary indices per index row), config bank = col_bits*c +
@@ -193,16 +194,22 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
     out.mkdir(parents=True,exist_ok=True)
     rows=[int(t,16) for t in source.read_text().split()]
     assert rows and all(0<=r<1<<line_bits for r in rows)
+    if resident_edges is not None:
+        assert len(rows)<=resident_edges<=65535, 'programme exceeds resident producer capacity'
     ref=lower(source,out/'ref',line_bits=line_bits,param_prefix='REF')
     cols=(line_bits+255)//256; lines=[]; lines_mut=[]; per=[]
     for c in range(cols):
         d=out/f'col{c}'; d.mkdir(parents=True,exist_ok=True)
         (d/'source.mem').write_text(''.join(f'{(r>>(256*c))&((1<<256)-1):064x}\n' for r in rows))
         m=lower(d/'source.mem',d,line_bits=256,param_prefix=f'COL{c}',index_pack=16)
-        db=m['dictionary_banks'][0]; ib=m['index_banks']
+        db=m['dictionary_banks'][0]; image_ib=m['index_banks']
+        ib=(resident_edges+2047)//2048 if resident_edges is not None else image_ib
         leaf=min(x for x in leaf_caps if x>=db)
         assert ib+leaf<col_bits-1, 'local bank id 31 is the reject code'
         own=[(int(l[:4],16),int(l[4:6],16),l[6:]) for l in (d/'config.mem').read_text().split()]
+        # Dictionary bases belong to the instantiated producer, not the current
+        # short programme. Unused index banks still occupy physical bank IDs.
+        own=[(b if b<image_ib else b+ib-image_ib,r,w) for b,r,w in own]
         for b,r,w in own: lines.append(f'{col_bits*c+b:04x}{r:02x}{w}\n')
         mo=own
         if mut_pc_col==c:  # MUT: this column's packed index table one edge late == its PC offset by one
@@ -215,7 +222,7 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
         if mut_tpl_col==c:  # MUT: first dictionary word of this column flipped in bit 0
             mo=[(b,r,(f'{int(w,16)^1:064x}' if (b==ib and r==0) else w)) for b,r,w in mo]
         for b,r,w in mo: lines_mut.append(f'{col_bits*c+b:04x}{r:02x}{w}\n')
-        per.append(dict(column=c,index_banks=ib,dictionary_banks=db,leaf_dictionary_banks=leaf,
+        per.append(dict(column=c,index_banks=ib,image_index_banks=image_ib,dictionary_banks=db,leaf_dictionary_banks=leaf,
                         leaf='ot_hbm_su_programme_pgcol_s' if leaf==leaf_caps[0] else 'ot_hbm_su_programme_pgcol_l',
                         dictionary_entries=m['dictionary_entries'][0],writes=len(own)))
     (out/'config.mem').write_text(''.join(lines))
@@ -226,11 +233,52 @@ def lower_columns(source, out, line_bits=2422, leaf_caps=(3,13), col_bits=32, mu
         f'localparam integer CL_SB={line_bits}, CL_NC={cols}, CL_EDGES={len(rows)}, CL_WRITES={len(lines)};\n'
         f'localparam [32*CL_NC-1:0] CL_CAP={{'+','.join("32'd"+str(x) for x in reversed(cap))+'};\n')
     man=dict(schema='opentallas.hbm.su_programme.columns.v1',qualified=False,source=str(source),source_sha256=sha(source),
-             edges=len(rows),line_bits=line_bits,columns=per,config_transactions=len(lines),
+             edges=len(rows),resident_edges=resident_edges,line_bits=line_bits,columns=per,config_transactions=len(lines),
              cluster_macros=sum(p['index_banks']+p['leaf_dictionary_banks'] for p in per),
              reference_macros=ref['total_macros'],bank_numbering=f'{col_bits} x column + local bank',
              mut_pc_col=mut_pc_col,mut_tpl_col=mut_tpl_col)
     (out/'cols_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
+    return man
+
+def lower_root5(source, out, parts=4, line_bits=9688, part_banks=320, col_bits=32, mut_q=None, start_depth=2):
+    """HBM-RTL5 2026-10-18 (opt-in, --root5): whole-SU line lowered for ot_hbm_su_programme_root_h5 + PARTS per-column
+    clusters ot_hbm_su_programme_pslice_c5 (pgp_<q>): quarter k = lower_columns() of line bits [k*SB,(k+1)*SB) in
+    out/q<k>, host config bank = part_banks*k + col_bits*column + local.  Also lowers the r4 reference (root_h 4 x 98 +
+    pslice_q4, lower_partitioned) into out/ref4 so the whole-programme bench can run both on one host stimulus.
+    mut_q: quarter whose column 3 index (PC offset) and column 2 dictionary word are mutated in config_mut.mem."""
+    assert line_bits%parts==0
+    sb=line_bits//parts; cols=(sb+255)//256
+    assert col_bits*cols<=part_banks and part_banks*parts<65536
+    out.mkdir(parents=True,exist_ok=True)
+    rows=[int(t,16) for t in source.read_text().split()]
+    lines=[]; lines_mut=[]; caps=[]; per=[]
+    for k in range(parts):
+        d=out/f'q{k}'; d.mkdir(parents=True,exist_ok=True)
+        (d/'source.mem').write_text(''.join(f'{(r>>(k*sb))&((1<<sb)-1):0{(sb+3)//4}x}\n' for r in rows))
+        m=lower_columns(d/'source.mem',d,line_bits=sb,col_bits=col_bits,
+                        mut_pc_col=3 if mut_q==k else None,mut_tpl_col=2 if mut_q==k else None)
+        caps.append([c['dictionary_banks'] for c in m['columns']]); per.append(m)
+        for src,dst in (('config.mem',lines),('config_mut.mem',lines_mut)):
+            for l in (d/src).read_text().split():
+                dst.append(f'{part_banks*k+int(l[:4],16):04x}{l[4:]}\n')
+    # one cluster leaf layout for every quarter (one pgp_<q> master): leaf choice per column must agree
+    leaves=[[c['leaf'] for c in m['columns']] for m in per]
+    assert all(l==leaves[0] for l in leaves), f'quarter leaf layouts differ: {leaves}'
+    cap=[max(c[i] for c in caps) for i in range(cols)]
+    (out/'config.mem').write_text(''.join(lines)); (out/'config_mut.mem').write_text(''.join(lines_mut))
+    (out/'expected.mem').write_text(''.join(f'{r:0{(line_bits+3)//4}x}\n' for r in rows))
+    ref=lower_partitioned(source,out/'ref4',parts,line_bits,start_depth)
+    (out/'root5_params.svh').write_text(
+        f'localparam integer R5_PARTS={parts}, R5_SB={sb}, R5_NC={cols}, R5_EDGES={len(rows)}, R5_WRITES={len(lines)}, '
+        f'R5_PART_BANKS={part_banks};\n'
+        f'localparam [32*R5_NC-1:0] R5_CAP={{'+','.join("32'd"+str(x) for x in reversed(cap))+'};\n')
+    man=dict(schema='opentallas.hbm.su_programme.root5.v1',qualified=False,source=str(source),source_sha256=sha(source),
+             edges=len(rows),line_bits=line_bits,parts=parts,slice_bits=sb,columns=cols,part_banks=part_banks,
+             bank_numbering=f'{part_banks} x part + {col_bits} x column + local bank',leaves=leaves[0],
+             dictionary_caps_per_quarter=caps,config_transactions=len(lines),
+             reference=dict(parts=ref['parts'],slice_macros=ref['slice_macros'],config_transactions=ref['config_transactions']),
+             mut_q=mut_q)
+    (out/'root5_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
     return man
 
 def main():
@@ -244,7 +292,11 @@ def main():
     p.add_argument('--mut-pc-slice',type=int)
     p.add_argument('--columns',action='store_true',help='opt-in: per-column cluster lowering of one quarter line')
     p.add_argument('--mut-pc-col',type=int); p.add_argument('--mut-tpl-col',type=int)
+    p.add_argument('--root5',action='store_true',help='opt-in: root_h5 + 4 per-column clusters (whole SU line)')
+    p.add_argument('--mut-q',type=int)
     a=p.parse_args()
+    if a.root5:
+        print(json.dumps(lower_root5(a.source,a.out,line_bits=a.line_bits,mut_q=a.mut_q,start_depth=a.start_depth),indent=2)); return
     if a.columns:
         print(json.dumps(lower_columns(a.source,a.out,a.line_bits,mut_pc_col=a.mut_pc_col,mut_tpl_col=a.mut_tpl_col),
                          indent=2)); return

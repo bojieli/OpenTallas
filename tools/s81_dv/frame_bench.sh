@@ -17,6 +17,8 @@
 # L4=1 (S81-LAND2): bench the successor <MASTER>_l4 (tools/s81_dv/frame_l4.py: column FIFO dsfd_cfifo_crs4, per-lane
 #   landings) through its bench wrapper <MASTER>_l4_b with lane strap K = LK (default 2); MUT=xlane re-derives the
 #   successor with lanes 1 / 2 swapped (frame_l4.py --mutant xlane).  The vectors and the check are the base master's.
+#   L4 drives the lanes as the die does (tb TB_FWD_GATE: hop-0 gate opened at the frame reset release, lane ck_f + data
+#   LDLY whole periods late, default 0) and the plan set predicts the crs4 calendar (--land-e LK: x_shift = LK - 6).
 set -u
 O=$1; MASTER=${2:-col_h9}; MUT=${3:-0}; SET=${SET:-each}
 mkdir -p $O
@@ -28,7 +30,9 @@ if [ "${L4:-0}" = 1 ]; then
     [ -f $O/rtl/${MASTER}_l4.sv ] || python3 tools/s81_dv/frame_l4.py --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
     FR=$(realpath $O)/rtl; fi
   TOPF="$FR/${MASTER}_l4_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv"
-  DFR=${MASTER}_l4_b; SFX=_l4; VFLAGS="${VFLAGS:-} -DLK=${LK:-2}"
+  # col_h9_MX_l4 = the col_h9_l4 RTL in a mirrored-placement wrapper: build both, vectors / check are col_h9's
+  case $MASTER in *_MX) TOPF="$TOPF $FR/${MASTER%_MX}_l4.sv"; VMASTER=${MASTER%_MX};; esac
+  DFR=${MASTER}_l4_b; SFX=_l4; VFLAGS="${VFLAGS:-} -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"; LANDE="--land-e ${LK:-2}"
 elif [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame; else
   [ -f $O/rtl/$MASTER.sv ] || python3 tools/s81_dv/frame_wrap.py emit --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
   FR=$(realpath $O)/rtl; fi
@@ -40,13 +44,16 @@ if [ ! -x $O/obj/Vtb_s81dv_frame ]; then
     || { echo "BUILD_FAILED"; grep -m8 -E "%Error" $O/build.log; tail -n 4 $O/build.log; exit 3; }
 fi
 if [ "$SET" = all ] || [ "$SET" = plan ]; then KS="$SET"; else
-  KS=$(python3 -c "import sys; sys.path.insert(0, 'tools/s81_dv'); import frame_bench as B; print(' '.join(map(str, B.frame_pairs('$MASTER')[0])))"); fi
+  KS=$(python3 -c "import sys; sys.path.insert(0, 'tools/s81_dv'); import frame_bench as B; print(' '.join(map(str, B.frame_pairs('${VMASTER:-$MASTER}')[0])))") \
+    || { echo "BENCH_SETUP_FAILED frame_pairs $MASTER"; exit 4; }; fi
+# fail closed (LANDFIX-SQ/F 10-18): an empty vector set ran nothing -- never a pass, never a caught mutant
+[ -n "$KS" ] || { echo "BENCH_SETUP_FAILED no vector sets for $MASTER"; exit 4; }
 npass=0; nfail=0
 for k in $KS; do
   VD=$O/vec_$k
   if [ "$k" = all ]; then A="--rows ${ROWS:-8} --mats ${MATS:-1} --K ${KK:-2048}"
-  elif [ "$k" = plan ]; then A="--plan --nseg ${NSEG:-4} --K ${KK:-2048}"; else A="--rows ${ROWS:-1} --mats ${MATS:-4} --K ${KK:-1024} --only $k"; fi
-  [ -f $VD/meta.json ] || python3 tools/s81_dv/frame_bench.py gen --master $MASTER --out $VD --seed ${SEED:-1} $A \
+  elif [ "$k" = plan ]; then A="--plan --nseg ${NSEG:-4} --K ${KK:-2048} ${LANDE:-}"; else A="--rows ${ROWS:-1} --mats ${MATS:-4} --K ${KK:-1024} --only $k"; fi
+  [ -f $VD/meta.json ] || python3 tools/s81_dv/frame_bench.py gen --master ${VMASTER:-$MASTER} --out $VD --seed ${SEED:-1} $A \
      --cycles ${CYC:-3000} > $O/gen_$k.log 2>&1 || { echo "BENCH_SETUP_FAILED gen $k"; tail -n 3 $O/gen_$k.log; exit 4; }
   $O/obj/Vtb_s81dv_frame $(cat $VD/ARGS) > $O/run_$k.log 2>&1
   if python3 tools/s81_dv/frame_bench.py check --dir $VD --log $O/run_$k.log > $O/check_$k.log 2>&1; then npass=$((npass+1))

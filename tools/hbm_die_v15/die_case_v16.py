@@ -42,6 +42,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
+import placement_coverage
+from grant_slot_bind import resolve_slot
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
@@ -352,6 +354,8 @@ def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
+    ap.add_argument('--require-explicit-placement', action='store_true',
+                    help='refuse absent homes and generic centroid fallback; source-complete release admission')
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     ap.add_argument('--die-repeaters', action='store_true',
@@ -508,12 +512,7 @@ def main():
 
     # ---------------- outlines of SYNTH cells ----------------
     def eslot(n):
-        s = I[n].get('slot')
-        if s:
-            return s
-        if n in slots or (n in P and isinstance(P[n], dict) and 'x' in P[n]):
-            return n
-        return None
+        return resolve_slot(n, I[n], slots, P, slot_map.get(n))
     slot_users = defaultdict(list)
     for n in inst:
         s = eslot(n)
@@ -731,7 +730,7 @@ def main():
 
     def centre(n):
         v = pl[n]; return v['x'] + v['w'] / 2, v['y'] + v['h'] / 2
-    is_rly = lambda n: I[n]['master'].startswith('hbfd_rly')
+    is_rly = lambda n: I[n]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land'))
     # 4 remaining blocks by connectivity: compact660_v5 plan blocks are reserved for their owners, so a generated home
     # goes to free die area outside every plan block (corner voids beside the LK/EP column, channels) -- never squeezed
     # into a band (H-DIE 01:30 request)
@@ -957,6 +956,20 @@ def main():
             continue
         cap = {f: 0.9 * (w if f in 'NS' else h) / 0.048 for f in 'NSEW'}
         want = {}
+        # H-D4G GEN2 10-18 (SFU-K9PIN / HANDOFF 0gj): a grant slot's synth_pin_bind pins the stand-in to its kit's pin plan --
+        # faces {port: face} (master-local, so every orientation of the shared abstract matches the hardened block) and
+        # windows [{ports, face, local_um [lo, hi]}] that pack those ports inside the window (pins/um <= the cap).
+        spb = gsl.get('synth_pin_bind') or {}
+        pb_face = dict(spb.get('faces', {}))
+        pb_win = {}
+        for wd in spb.get('windows', []):
+            for p_ in wd['ports']:
+                pb_face[p_] = wd['face']; pb_win[p_] = (wd['face'], float(wd['local_um'][0]), float(wd['local_um'][1]))
+        if spb:
+            miss = sorted(p_ for p_ in pb_face if p_ not in ports[c])
+            if miss:
+                raise SystemExit(f'{c}: synth_pin_bind names ports the master lacks {miss[:6]}')
+            flags[c] = 'synth_pin_bind'
         clockish = set(p for d_ in clk.values() for p in [re.sub(r'\[\d+\]$', '', x) for x in d_.get(rep, [])])
         insts_c = [n for n in V[c]['instances'] if n in pl] if a.compact_pins else [rep]
         for p, b in ports[c].items():
@@ -980,9 +993,29 @@ def main():
             px = sum(pxs) / len(pxs); py = sum(pys) / len(pys)
             sc = {'E': px / w, 'W': -px / w, 'N': py / h, 'S': -py / h}
             order = sorted(sc, key=lambda f: -sc[f])
+            if p in pb_face:
+                order = [pb_face[p]] + [f for f in order if f != pb_face[p]]
             along = (px if order[0] in 'NS' else py)
             want[p] = (order, along, b)
+        for p in pb_face:
+            if p in want and want[p][0][0] != pb_face[p]:      # peer-less port: still the kit face
+                want[p] = ([pb_face[p]] + [f for f in want[p][0] if f != pb_face[p]], want[p][1], want[p][2])
+        win_pins = []                                          # window ports: placed first (they own their tracks)
+        for wd in spb.get('windows', []):
+            f_, lo_w, hi_w = wd['face'], float(wd['local_um'][0]), float(wd['local_um'][1])
+            ps_ = [p_ for p_ in wd['ports'] if p_ in want]
+            tot_w = sum(ports[c][p_] for p_ in ps_)
+            if a.max_pin_density and tot_w / (hi_w - lo_w) > a.max_pin_density:
+                raise SystemExit(f'{c}: synth_pin_bind window {f_} {lo_w}-{hi_w} holds {tot_w} pins > {a.max_pin_density}/um')
+            x_ = lo_w
+            for p_ in ps_:
+                ln_ = (hi_w - lo_w) * ports[c][p_] / tot_w
+                win_pins.append((p_, dirs[c][p_], f_, x_, x_ + ln_, ports[c][p_], 0, ports[c][p_] > 1)); x_ += ln_
+            for p_ in ps_:
+                del want[p_]
         faces = {f: [] for f in 'NSEW'}; usedc = {f: 0 for f in 'NSEW'}
+        for wp in win_pins:
+            usedc[wp[2]] += wp[5]
         for p, (order, along, b) in sorted(want.items(), key=lambda kv: -kv[1][2]):
             base, left = 0, b      # a bus that does not fit its preferred face continues on the next face (bit slices)
             for f in order + [max(usedc, key=lambda f: cap[f] - usedc[f])]:
@@ -997,12 +1030,12 @@ def main():
                 raise SystemExit(f'{c}: pins do not fit ({b} b of {p})')
             if base != b or len([1 for f in faces for x in faces[f] if x[1] == p]) > 1:
                 flags.setdefault(c, 'bus_split_over_faces')
-        pinlist = []
+        pinlist = list(win_pins)
         for f, L in faces.items():
             if not L:
                 continue
             Lf = w if f in 'NS' else h
-            tot = sum(k for _, _, _, k in L)
+            tot = sum(k for _, _, _, k in L) + sum(wp[5] for wp in win_pins if wp[2] == f)
             PIN_STEP = max(PIN_STEP0, 1.0 / a.max_pin_density) if a.max_pin_density else PIN_STEP0
             if a.max_pin_density and tot / (0.9 * Lf) > a.max_pin_density:
                 pin_density_over.append(dict(cell=c, face=f, pins=tot, face_um=round(Lf, 2),
@@ -1038,13 +1071,18 @@ def main():
         if ko:
             carved[c] = ko
         face_report[c] = {f: sum(x[3] for x in L) for f, L in fp.items()}
+        for wp in win_pins:
+            face_report[c][wp[2]] = face_report[c].get(wp[2], 0) + wp[5]
 
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
     exposed = C.get('exposed_inputs', {})
+    # Legacy contract layers sometimes preserved the exposed-input keys as a list.  That is not a numerical
+    # summary; retain unknown counts in the diagnostic label instead of crashing after all placement work.
+    exposed_summary = exposed if isinstance(exposed, dict) else {}
     manifest = dict(schema='opentallas.hbm_v16.die_case.v1',
-                    label=f"NOT_A_DIE_RESULT (source contract has {exposed.get('ports', 'unknown')} exposed "
-                          f"input ports / {exposed.get('bits', 'unknown')} b; SYNTH views are estimates; "
+                    label=f"NOT_A_DIE_RESULT (source contract has {exposed_summary.get('ports', 'unknown')} exposed "
+                          f"input ports / {exposed_summary.get('bits', 'unknown')} b; SYNTH views are estimates; "
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags, reticle=RETICLE,
                     excluded_cells=excluded, excluded_instances=out_inst,
@@ -1056,6 +1094,13 @@ def main():
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
                     routed_view_qualification='All routed candidates are source/native UNBOUND; matching ports alone cannot qualify them.',
                     placement=pl, sm_mx_s_quadrant=sm_mx, carved_feedthrough=carved, in_carved_channel=in_channel, corners='setup TT, hold FF (owner option B); SS not run')
+    placement_gate = placement_coverage.audit(manifest, C)
+    manifest['placement_coverage'] = placement_gate
+    (out / 'placement_coverage.json').write_text(json.dumps(placement_gate, indent=1) + '\n')
+    print('placement_coverage', json.dumps({k: v for k, v in placement_gate.items() if k != 'rows'}), flush=True)
+    if a.require_explicit_placement and placement_gate['verdict'] != 'PASS':
+        (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
+        raise SystemExit('PLACEMENT_COVERAGE_FAIL: give every actual source instance an explicit legal home')
     # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
     # A source path alone cannot establish lineage after another branch changes a view.
     digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -1365,7 +1410,7 @@ puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'
             schema='opentallas.die_hold_budget.masters.v1', design='hbm', paths_cap=a.paths,
             diagnostic=sorted(c for c, k in kinds.items() if k.startswith('SYNTH') or 'DIAGNOSTIC' in k),
             real=sorted(c for c, k in kinds.items() if not (k.startswith('SYNTH') or 'DIAGNOSTIC' in k)),
-            relay=sorted(c for c in kinds if V[c]['master'].startswith('hbfd_rly')),
+            relay=sorted(c for c in kinds if V[c]['master'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land'))),
             launch_source={c: ('SYNTH ETM (ideal clocks, no wires): hold DIAGNOSTIC' if k.startswith('SYNTH') else 'routed view ETM clk->out min')
                            for c, k in sorted(kinds.items())},
             classify=f'python3 tools/die_hold_budget.py classify --report out/hold_links_ff.rpt --masters hold_budget_masters.json '
@@ -1386,8 +1431,10 @@ echo $? > $D/out/run.exit
     for f_ in ('die_clock_tree.py', 'neighbour_skew_gate.py'):
         shutil.copy(ROOT / 'tools/hbm_die_v15' / f_, out / 'dcc' / 'hbm_die_v15' / f_)
     with open(out / 'run.sh', 'a') as f_:
+        # HBM-LANDING 10-18 (CLOCK-AUDIT): the gate judges TT AND FF.  This session defines corners tt ff, so the dump's
+        # arr_min column is the FF arrival (min over both corners) and arr_max the TT one (--ff-from-min); no FF = NO_FF.
         f_.write('[ -s $D/out/die_clock_dump.tsv ] && python3 -I $D/dcc/hbm_die_v15/neighbour_skew_gate.py --run $D/out '
-                 f'--near-um {a.clock_near_um} --budget-ps 80 --out $D/out/neighbour_skew_gate.json > $D/out/neighbour_skew_gate.log 2>&1\n')
+                 f'--near-um {a.clock_near_um} --budget-ps 80 --ff-from-min --require-ff --out $D/out/neighbour_skew_gate.json > $D/out/neighbour_skew_gate.log 2>&1\n')
     if a.hold_budget == 'die':   # classifier beside the case (fleet hosts run the case dir, not the repo)
         shutil.copy(ROOT / 'tools/die_hold_budget.py', out / 'die_hold_budget.py')
         with open(out / 'run.sh', 'a') as f_:
@@ -1424,7 +1471,7 @@ def render(out, man, P, W, H, trees=None):
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b:
             ax.add_patch(Rectangle((b['x'], b['y']), b['w'], b['h'], fill=False, lw=0.3, ls='--', color='0.5'))
-    col = lambda v: ('tab:green' if v['m'].startswith('hbfd_rly') else
+    col = lambda v: ('tab:green' if v['m'].startswith(('hbfd_rly', 'hbfd_lh', 'hbfd_land')) else
                      'tab:gray' if 'phy' in v['m'] else
                      'tab:red' if 'OVERFLOW' in v['rule'] else
                      'tab:purple' if v['rule'].startswith(('centroid', 'next to', 'no placed')) else

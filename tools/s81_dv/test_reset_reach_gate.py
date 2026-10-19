@@ -44,3 +44,11 @@ def test_diag_records(monkeypatch):
     g = r['summary']['reach_gate']
     assert g['reach_gate'] == 'FAIL_DIAG' and g['kinds'].get('sink_unreachable', 0) >= 1
     assert any(e['pin'] == 'l0[0].rs' for e in g['first'])
+
+
+def test_narrow_strip_reaches(monkeypatch):
+    # S81-DIE5: a 20-um block-free strip between two blocks (a slice-column margin) holds reset stations: a lane station
+    # 1.4 mm up the strip is reachable (p4j failed 727 sinks this way)
+    blocks = [dict(name='l', x=0.0, y=400.0, w=990.0, h=1600.0), dict(name='r', x=1010.0, y=400.0, w=990.0, h=1600.0)]
+    r = run(blocks, {'l0': [(1000.0, 1800.0)]}, monkeypatch, None)
+    assert r['summary']['reach_gate']['reach_gate'] == 'PASS'

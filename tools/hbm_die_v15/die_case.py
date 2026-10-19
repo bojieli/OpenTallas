@@ -20,7 +20,7 @@ free area only): stream 833.333 ps (SM clk, group stream/bank clocks) and hbm 10
 clocks; HBM3E controller CK/2 = 1.024 ns, the r14 timing basis).  stream <-> hbm cross only inside the group's async FIFOs:
 the domains are asynchronous (set_clock_groups), as the RTL.  Setup TT, hold FF, 60/25 ps uncertainty.
 """
-import argparse, json, re, shutil, sys
+import argparse, json, os, re, shutil, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -31,6 +31,7 @@ import clock_sites
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
+import abstract_pin_windows as APW  # noqa: E402
 
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
 PLAN = ROOT / 'results/arch/hbm_die_v15/compact660_v5/compact.P.json'
@@ -121,12 +122,13 @@ def _minus(rects, keepout):
     return rects
 
 
-def synth_lef(name, w, h, pins, path, keepout=()):
+def synth_lef(name, w, h, pins, path, keepout=(), pin_window=None):
     """Abstract of a SYNTH view: real outline, pins at the given (face, lo, hi) spans, every bit on a track (M5 N/S at
     x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels)."""
     L = ['VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f'MACRO {name}', '  CLASS BLOCK ;',
          f'  FOREIGN {name} 0 0 ;', f'  SIZE {w:.3f} BY {h:.3f} ;', '  SYMMETRY X Y ;']
     used = defaultdict(set)
+    sig = []                                      # (bit, layer, rect) for the pin-access windows
     for (pn, d, face, lo, hi, nb, base, bus) in pins:
         ln = (hi - lo)
         for k in range(nb):
@@ -148,11 +150,20 @@ def synth_lef(name, w, h, pins, path, keepout=()):
             L += [f'  PIN {bit}', f'    DIRECTION {d.upper()} ;',
                   '    USE CLOCK ;' if re.search(r'clk', pn) else '    USE SIGNAL ;', '    PORT', f'      LAYER {lay} ;',
                   f'      RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;', '    END', f'  END {bit}']
+            sig.append((bit, lay, r))
     # die-owned feedthrough column / row (grant reserved_channels, H-SM 10-16 owner 07:30): no OBS on M1-M6 there, so the
     # die places relays / clock repeaters and routes through; the rest of the outline stays OBS M1-M5 as before
     ko = [(c['x_um'][0], c['y_um'][0], c['x_um'][1], c['y_um'][1]) for c in keepout]
     obs = _minus([(0.0, 0.0, w, h)], ko)
-    L += ['  OBS'] + [f'    LAYER M{k} ;\n' + '\n'.join(f'    RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;' for r in obs)
+    # ROOT-0440 10-18 (Q-DIE11 class: a fully obstructed abstract makes the GRT gcells along its pin faces capacity 0 on
+    # the pin layers -> Qwen GRT overflow 72k-747k): pin_window > 0 (default env OT_ABS_PIN_WINDOW_UM, 0 = previous LEF
+    # byte for byte) keeps a pin-access window per face pin cluster free of OBS on M4..M5 (tools/abstract_pin_windows.py);
+    # M1-M3 stay obstructed.  The hardened block must keep the windows free on M4-M5.
+    if pin_window is None:
+        pin_window = float(os.environ.get('OT_ABS_PIN_WINDOW_UM', '0') or 0)
+    win = APW.windows(w, h, sig, pin_window, 4, 5) if pin_window > 0 and sig else {}
+    per = {k: ([q for r in obs for q in APW.minus_rect(r, win[k])] if win.get(k) else obs) for k in range(1, 6)}
+    L += ['  OBS'] + [f'    LAYER M{k} ;\n' + '\n'.join(f'    RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;' for r in per[k])
                       for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
     Path(path).write_text('\n'.join(L) + '\n')
 

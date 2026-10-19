@@ -30,7 +30,12 @@ class Ages(unittest.TestCase):
             for gr in range(8):
                 q = A.stages(SRC, f'krq_{st}_{gr}')[0]
                 s = A.stages(SRC, f'krs_{st}_{gr}')[0]
-                self.assertEqual(self.ages['k_issuer'][f'ki_{st}_{gr}']['RESPONSE_LAT'], 8 + q + s)
+                ki = self.ages['k_issuer'][f'ki_{st}_{gr}']
+                self.assertEqual(ki['natural_response_lat'], 8 + q + s)
+                # KV-ECTL4: every frame padded (request chain) to the one K round trip of the hardened ECTL children
+                self.assertEqual(ki['RESPONSE_LAT'], A.K_RT_BUDGET)
+                self.assertEqual(ki['request_pad'], A.K_RT_BUDGET - (8 + q + s))
+                self.assertGreaterEqual(ki['request_pad'], 0)
 
     def test_qk_issue_age_is_minimal_for_the_slowest_group(self):
         age = self.ages['qk']['QK_ISSUE_AGE']
@@ -50,6 +55,17 @@ class Ages(unittest.TestCase):
     def test_phase_profile_is_legal_for_the_rtl(self):
         p = self.ages['phase_launch']
         self.assertTrue(0 <= p['PH0'] < 768 and 0 < p['SAFE_LOW_U'] <= p['SAFE_HIGH_U'] < 768 and 6 <= p['META_HOLD_CORE'] <= 255)
+
+
+    def test_fwd_overlay_takes_the_landed_age_both_ways(self):
+        # KVR-FWDAGE 10-19: a landed bus takes ceil(landed - 1) = E + 1 even when that is FEWER edges than its relay plan
+        src = dict(buses=[dict(bid='ap_WS_3', stages=14), dict(bid='kc_WN_1', stages=1), dict(bid='aq_c_2', stages=5)])
+        fl = dict(lanes=[dict(stations=[f'rly_ap_WS_3_0__s{j}' for j in range(15)], landed=10),
+                         dict(stations=['rly_kc_WN_1_0__s0'], landed=4)], plain_added_stages={'aq_c_2': 1})
+        out, landed = A.fwd_overlay(src, fl)
+        st = {b['bid']: b['stages'] for b in out['buses']}
+        self.assertEqual(st, {'ap_WS_3': 9, 'kc_WN_1': 3, 'aq_c_2': 6})
+        self.assertEqual(landed['ap_WS_3'], (14, 9))
 
 
 if __name__ == '__main__':

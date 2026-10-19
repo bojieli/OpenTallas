@@ -23,6 +23,8 @@ die_cfg_join  (K-12, coordinator 0da (d): functional config straps rejected; boo
     diecfg.cfg_we / cfg_addr / cfg_data <- boot.diecfg_we / diecfg_addr / diecfg_data
     boot.diecfg_sealed / diecfg_fault   <- diecfg.sealed / fault
     ectl_a_<st>_<g>.cfg                 <- diecfg.ectl_a_cfg[5i +: 5], i = 8*stack + g   (replaces the identity strap)
+    (RTL-BUILD-KV/FAULT P8: CAP=1 = the capability word; diecfg.fused_program_capability -> attention_programme and
+     attn_root, kv_static_attn_join.capability_join)
   die joins: ECTL B / C cfg of group i <- diecfg.ectl_b_cfg / ectl_c_cfg[5i +: 5]; reset region r dly <-
   diecfg.rst_dly[8r +: 8] (qkd_rst_region roots of kv_die, D - d_r loaded by the HOST in pass 1; die_cfg_image()).
 
@@ -134,9 +136,9 @@ def die_cfg_join(graph, root=K.ROOT, boot='boot', name='diecfg', nrst=B.DIE_CFG_
     if boot not in ins:
         raise ValueError('boot_join first')
     bpar = ins[boot]['parameters']
-    if bpar.get('DIECFG') != 1 or bpar.get('NRST') != nrst:
-        raise ValueError(f'dispatcher DIECFG=1 / NRST={nrst} required, have {bpar}')
-    c, _ = B._add(graph, ins, name, DCFG, dict(NRST=nrst, MUT=0), root)
+    if bpar.get('DIECFG') != 1 or bpar.get('NRST') != nrst or bpar.get('DIECAP') != 1:
+        raise ValueError(f'dispatcher DIECFG=1 / NRST={nrst} / DIECAP=1 required, have {bpar}')
+    c, _ = B._add(graph, ins, name, DCFG, dict(NRST=nrst, CAP=1, MUT=0), root)
     bound = []
 
     def bind(i, port, items):
@@ -170,14 +172,22 @@ def die_cfg_join(graph, root=K.ROOT, boot='boot', name='diecfg', nrst=B.DIE_CFG_
     return bound, joins
 
 
-def die_cfg_image(ectl_a, ectl_b, ectl_c, dly):
-    """The dispatcher target-10 image (64-bit words, address = index) for qkd_kv_die_cfg: 32 ECTL words, len(dly) reset
-    words, then the seal.  ectl_*: 32 five-bit values (group 8*stack+g); dly: one 8-bit value per reset region."""
+def die_cfg_image(ectl_a, ectl_b, ectl_c, dly, capability, ages=None):
+    """The dispatcher target-10 image (64-bit words, address = index) for qkd_kv_die_cfg CAP=1: 32 ECTL words, len(dly) reset
+    words, the capability word (data[0] = the fused attention-programme capability, RTL-BUILD-KV/FAULT P8), then the seal.
+    ectl_*: 32 five-bit values (group 8*stack+g); dly: one 8-bit value per reset region; capability: 0 / 1.
+    KV-BOOTAGE 10-19: ages = the 19 static-schedule age words (kv_bootage.image_ages(...)['words']) for qkd_kv_die_cfg_a
+    AGES=1, placed between the capability word and the seal."""
+    if capability not in (0, 1):
+        raise ValueError('capability is one bit')
     if not (len(ectl_a) == len(ectl_b) == len(ectl_c) == 32):
         raise ValueError('32 ECTL groups required')
     if any(not 0 <= v < 32 for v in (*ectl_a, *ectl_b, *ectl_c)) or any(not 0 <= v < 256 for v in dly):
         raise ValueError('field out of range')
-    words = [a | (b << 5) | (c << 10) for a, b, c in zip(ectl_a, ectl_b, ectl_c)] + list(dly) + [DIE_CFG_SEAL]
+    if ages is not None and (len(ages) != 19 or any(not 0 <= v < (1 << 32) for v in ages)):
+        raise ValueError('ages: 19 words of <= 32 bits (kv_bootage.words_of)')
+    words = [a | (b << 5) | (c << 10) for a, b, c in zip(ectl_a, ectl_b, ectl_c)] + list(dly) + [capability] + \
+        list(ages or []) + [DIE_CFG_SEAL]
     if len(words) > 256:
         raise ValueError('image exceeds the 8-bit die cfg address')
     return words

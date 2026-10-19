@@ -54,6 +54,14 @@ RS_T0 = (0, 1)                   # column-0 trunk: CT V lanes 0 / 1 (their free 
 RS_T1 = ('e0', 'e1')             # column-1 trunk: two lanes in the E side lane (the column-1 joins' y pins face E)
 RS_W = 258                       # part word: [255:0] data, [256] V, [257] T
 RS_NQ, RS_DQ = 2, 256
+# KV-KITS/NATIVE 10-18: native-pin leaves (default; --rs-legacy = the r1 leaves byte-exact): the inject select registered
+# at its pin (qkd_rlyi_258s, s driven one T-chain edge earlier) and the header's T0 V / T selects replicated by the last
+# strip relays' spare bits (qkd_pv_rs_hd_r, RS_KV V copies per half + 1 T copy); same schedule, 0 cycles
+RS_KV = 32
+# HKV-PVRS2 10-19: header register stages pin to pin per --rs-hd.  f = qkd_pv_rs_hd_f rev f2: every input REGISTERED AT ITS
+# PIN (f1 native capture FAIL a1v[19] 253.1 > 190 on 38 data pins: one stage, select copies far from the a?v pins), then
+# the half-local select stage -> 2 edges; r / legacy = one stage.  rs_d = 1 + RS_HD_D + J0 (beat 0 at out_age + rs_d).
+RS_HD_D = dict(r=1, f=2)
 RS_EW = 86.4                     # E side lane (column-1 result trunk), two 43.2-um lattice steps: frame 1468.8 -> 1555.2
 LEAF_LEF = dict(
     ot_qwen_tp8_pv_slice_t=RT / 'qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t/ot_qwen_tp8_pv_slice_t.lef',
@@ -681,7 +689,8 @@ class Gen:
         T0: node j outputs packet 0 in cycle v0 + 1 + j; column s injects at node j_s in cycle v0 + j_s + s.  T1: its head
         (column 8) samples y_valid DL8 cycles late, so node j outputs packet 8 in v8 + DL8 + 1 + j; column s injects in
         v8 + DL8 + j_s + s - 8.  DL8 = 8 + J0 - J1 puts packet 8 at the header 8 cycles behind packet 0.  The header
-        registers packet s -> rs_* in cycle v0 + 2 + J0 + s (RS_D = 2 + J0)."""
+        registers packet s -> rs_* in cycle v0 + 1 + HD + J0 + s (RS_D = 1 + HD + J0; HD = header stages, RS_HD_D: 1, or 2
+        for qkd_pv_rs_hd_f rev f2 whose input pin registers sample T / out_epoch at v0 + 1 + J0 exactly as before)."""
         J0, J1 = len(self.rs_tr[0]) - 1, len(self.rs_tr[1]) - 1
         if Dcol[8] != Dcol[0]:
             raise ValueError('result trunk: the two head columns 0 / 8 must share their static age')
@@ -701,21 +710,31 @@ class Gen:
                     if (s - (0 if c == 0 else 8)) > 35:
                         raise ValueError(f'result trunk: column {s} pad beyond one qkd_rlys_36')
         assert sorted(node) == list(range(32))
-        rs_d = 2 + J0
+        hd_d = self.rs_hd_d()
+        rs_d = 1 + hd_d + J0
         t_hd = 1 + J0
         if t_hd + 1 > flag_d:
             raise ValueError(f'result trunk: T reaches the header at v0 + {t_hd} >= busy drop (FLAG_D {flag_d})')
         return dict(J0=J0, J1=J1, d8=d8, node_of_col=node, inject_cycle_vs_out_age=inj, y_ready_vs_out_age=ready,
-                    rs_d=rs_d, t_header=t_hd, hold_after_out_age=max(inj.values()))
+                    rs_d=rs_d, header_stages=hd_d, t_header=t_hd, hold_after_out_age=max(inj.values()))
+
+    def rs_hd_d(self):
+        """register stages of the header leaf pin to pin (RS_HD_D; the legacy qkd_pv_rs_hd is one stage)"""
+        return RS_HD_D[getattr(self.a, 'rs_hd', 'r')] if getattr(self.a, 'rs_native', True) else 1
 
     def rs_cells(self):
         for name, d in self.st.items():
             if not d.get('kind'):
                 continue
             (s, (x, y)), = d['reps']
-            m = dict(inj=f'qkd_rlyi_{RS_W}', rly='qkd_rlys_296', dl='qkd_rlys_36', hd='qkd_pv_rs_hd')[d['kind']]
+            m = self.rs_mods()[d['kind']]
             w, h = (STD | RS_STD)[s]
             self.cells[f'u_{name}_r0'] = (m, x, y, w, h, 'R0')
+
+    def rs_mods(self):
+        n = getattr(self.a, 'rs_native', True)
+        return dict(inj=f'qkd_rlyi_{RS_W}' + ('s' if n else ''), rly='qkd_rlys_296', dl='qkd_rlys_36',
+                    hd='qkd_pv_rs_hd' + (f"_{getattr(self.a, 'rs_hd', 'r')}" if n else ''))
 
     def rs_pin(self, name, pin, i):
         """pin model of a custom station (relay standards: their views; new leaves: spread over the kit spec faces)"""
@@ -731,17 +750,26 @@ class Gen:
             if pin == 'b':
                 return x + w, y + h * (i + 0.5) / RS_W
             return x, y + h * (2 * i + (pin == 'y') + 0.5) / (2 * RS_W)
+        if pin in ('a0v', 'a1v', 'a0t', 'a1t'):           # native header: V / T copies beside a<q>[256] (S face)
+            k = RS_DQ + RS_W * int(pin[1])
+            return x + w * (k + 0.5) / (2 * RS_NQ * RS_W), y
         if pin[0] in 'ab' and pin[1:].isdigit():         # header: S face a0 a1 (T0) b0 b1 (T1); N face ep then o
             k = i + RS_W * (int(pin[1]) + (RS_NQ if pin[0] == 'b' else 0))
             return x + w * (k + 0.5) / (2 * RS_NQ * RS_W), y
         k = i + (16 if pin == 'o' else 0)
         return x + w * (k + 0.5) / 550, y + h
 
-    def rs_selsrc(self, c, s):
-        """pin driving column s's inject select: its trunk head's y_valid (via DL8 for T1), else its delay line"""
+    def rs_selsrc(self, c, s, j=None, pre=False):
+        """pin driving column s's inject select: its trunk head's y_valid (via DL8 for T1), else its delay line.  pre (native
+        qkd_rlyi_258s s pin, non-head j): one edge earlier -- tap n - 2, or the delay line's own source for n = 1"""
         if s == 0 or (s == 8 and self.rs_d8 == 0):
             return self.tpin(f'u_s{s}_j', 'y_valid')
-        return self.rs_pin(f'DL{s}', 'b', (self.rs_d8 if s == 8 else s - (0 if c == 0 else 8)) - 1)
+        n = self.rs_d8 if s == 8 else s - (0 if c == 0 else 8)
+        if pre and j:
+            if n >= 2:
+                return self.rs_pin(f'DL{s}', 'b', n - 2)
+            return self.rs_pin(f'T{c}Q0_{j - 1}', 'b', RS_W - 1)
+        return self.rs_pin(f'DL{s}', 'b', n - 1)
 
     def rs_hops(self, bout):
         hops = []
@@ -750,7 +778,10 @@ class Gen:
                 for q in range(RS_NQ):
                     nm = f'T{c}Q{q}_{j}'
                     if kd == 'inj':
-                        hops.append((_d(self.rs_selsrc(c, s), self.rs_pin(nm, 's', 0)), f'sel{s}->{nm}', 's'))
+                        nat = getattr(self.a, 'rs_native', True) and j > 0
+                        hops.append((_d(self.rs_selsrc(c, s, j, pre=nat), self.rs_pin(nm, 's', 0)), f'sel{s}->{nm}', 's'))
+                        if nat:      # y[256] keeps the same-cycle select (tap n - 1)
+                            hops.append((_d(self.rs_selsrc(c, s), self.rs_pin(nm, 'y', RS_DQ)), f'selv{s}->{nm}', 'yv'))
                         for i in range(RS_DQ):
                             hops.append((_d(self.tpin(f'u_s{s}_j', f'y[{RS_DQ * q + i}]'), self.rs_pin(nm, 'y', i)),
                                          f's{s}j->{nm}', 'y'))
@@ -770,6 +801,12 @@ class Gen:
                 pn = f'{"ab"[c]}{q}'
                 for i in range(RS_W):
                     hops.append((_d(self.rs_pin(f'T{c}Q{q}_{J}', 'b', i), self.rs_pin('RH', pn, i)), f'T{c}Q{q}_{J}->RH', pn))
+                if c == 0 and getattr(self.a, 'rs_native', True):     # V / T copies: prev node -> spare relay bits -> header
+                    for i in range(RS_KV):
+                        src = self.rs_pin(f'T0Q{q}_{J - 1}', 'b', RS_DQ + (i == RS_KV - 1))
+                        hops.append((_d(src, self.rs_pin(f'T0Q{q}_{J}', 'a', RS_W + i)), f'T0Q{q}_{J - 1}->T0Q{q}_{J}x', 'x'))
+                        hops.append((_d(self.rs_pin(f'T0Q{q}_{J}', 'b', RS_W + i), self.rs_pin('RH', f'a{q}' + 'vt'[i == RS_KV - 1], 0)),
+                                     f'T0Q{q}_{J}x->RH', 'x'))
         for k in range(16):
             hops.append((_d(self.tpin('u_ctl', f'out_epoch[{k}]'), self.rs_pin('RH', 'ep', k)), 'ctl->RH', 'ep'))
         for i in range(534):
@@ -778,7 +815,9 @@ class Gen:
         return hops
 
     def rs_emit(self):
-        L = [' wire[31:0] rs_sel;']
+        nat = getattr(self.a, 'rs_native', True)
+        M = self.rs_mods()
+        L = [' wire[31:0] rs_sel;'] + ([' wire[31:0] rs_sp;   // native inject select pins: one edge before rs_sel (s_r == rs_sel)'] if nat else [])
         yq = lambda s, q: f'out_leaf[{512 * s + RS_DQ * q + RS_DQ - 1}:{512 * s + RS_DQ * q}]'   # noqa: E731
         vec = {}
         for c in range(2):
@@ -789,12 +828,20 @@ class Gen:
                 if kd == 'inj':
                     if s == head and not (c == 1 and self.rs_d8):
                         L.append(f' assign rs_sel[{s}]=yv_w[{s}];')
+                        if nat:
+                            L.append(f' assign rs_sp[{s}]=rs_sel[{s}];   // head: a = y, the select is a don\'t-care')
                     else:
                         dl = f'w_DL{s}'
                         src = f'yv_w[{s}]' if s == head else tb[0]
                         n = self.rs_d8 if s == head else s - head
                         L.append(f' qkd_rlys_36 u_DL{s}_r0 (.ck({ck}), .a({{{dl}[34:0], {src}}}), .b({dl}));')
                         L.append(f' assign rs_sel[{s}]=' + (f'(RS_MUT==1)?{dl}[{n}]:{dl}[{n - 1}];' if s == 5 else f'{dl}[{n - 1}];'))
+                        if nat:
+                            pre = (lambda k: src if k < 0 else f'{dl}[{k}]')   # noqa: E731
+                            if s == head:
+                                L.append(f' assign rs_sp[{s}]=rs_sel[{s}];   // head: a = y, the select is a don\'t-care')
+                            else:
+                                L.append(f' assign rs_sp[{s}]=' + (f'(RS_MUT==1)?{pre(n - 1)}:{pre(n - 2)};' if s == 5 else f'{pre(n - 2)};'))
                 for q in range(RS_NQ):
                     nm = f'T{c}Q{q}_{j}'
                     if kd == 'inj':
@@ -802,13 +849,21 @@ class Gen:
                             a_ = y_ = f'{{rs_sel[{s}], rs_sel[{s}], {yq(s, q)}}}'
                         else:
                             a_, y_ = vec[(c, q)], f'{{{tb[q]}, rs_sel[{s}], {yq(s, q)}}}'
-                        L.append(f' qkd_rlyi_{RS_W} u_{nm}_r0 (.ck({ck}), .s(rs_sel[{s}]), .a({a_}), .y({y_}), .b(w_{nm}));')
+                        L.append(f' {M["inj"]} u_{nm}_r0 (.ck({ck}), .s({"rs_sp" if nat else "rs_sel"}[{s}]), .a({a_}), .y({y_}), .b(w_{nm}));')
                         vec[(c, q)], tb[q] = f'w_{nm}', f'w_{nm}[{RS_W - 1}]'
+                    elif nat and c == 0 and j == len(self.rs_tr[0]) - 1:   # last T0 relay: spare bits carry V / T copies
+                        v_ = vec[(c, q)].split('[')[0]
+                        L.append(f" qkd_rlys_296 u_{nm}_r0 (.ck({ck}), .a({{{{{296 - RS_W - RS_KV}{{1'b0}}}}, {v_}[{RS_W - 1}], "
+                                 f"{{{RS_KV - 1}{{{v_}[{RS_DQ}]}}}}, {vec[(c, q)]}}}), .b(w_{nm}));")
+                        vec[(c, q)], tb[q] = f'w_{nm}[{RS_W - 1}:0]', f'w_{nm}[{RS_W - 1}]'
                     else:
                         L.append(f" qkd_rlys_296 u_{nm}_r0 (.ck({ck}), .a({{{{{296 - RS_W}{{1'b0}}}}, {vec[(c, q)]}}}), .b(w_{nm}));")
                         vec[(c, q)], tb[q] = f'w_{nm}[{RS_W - 1}:0]', f'w_{nm}[{RS_W - 1}]'
-        L.append(' qkd_pv_rs_hd u_RH_r0 (.ck(col_clk[32]), ' +
-                 ''.join(f'.{"ab"[c]}{q}({vec[(c, q)]}), ' for c in range(2) for q in range(RS_NQ)) +
+        J0 = len(self.rs_tr[0]) - 1
+        cp = ''.join(f'.a{q}v(w_T0Q{q}_{J0}[{RS_W + RS_KV - 2}:{RS_W}]), .a{q}t(w_T0Q{q}_{J0}[{RS_W + RS_KV - 1}]), '
+                     for q in range(RS_NQ)) if nat else ''
+        L.append(f' {M["hd"]} ' + (f'#(.KV({RS_KV})) ' if nat else '') + 'u_RH_r0 (.ck(col_clk[32]), ' +
+                 ''.join(f'.{"ab"[c]}{q}({vec[(c, q)]}), ' for c in range(2) for q in range(RS_NQ)) + cp +
                  '.ep(out_epoch), .o_valid(rs_valid), .o_beat(rs_beat), .o_epoch(rs_epoch), .o_data(rs_data));')
         return L
 
@@ -975,6 +1030,12 @@ def main(argv=None):
     ap.add_argument('--mut-station', default='K1c0g0', help='the station TRUNK_MUT=1 replaces by a wire (bench negative control)')
     ap.add_argument('--no-place', action='store_true', help='structure only: emit the RTL, skip placement / hop checks')
     ap.add_argument('--no-rtrunk', dest='rtrunk', action='store_false', help='KV-RTRUNK: omit the 512-b result trunk (rs_*)')
+    ap.add_argument('--rs-legacy', dest='rs_native', action='store_false',
+                    help='KV-KITS/NATIVE: the r1 result-trunk leaves (qkd_rlyi_258 / qkd_pv_rs_hd, native capture FAIL on their selects)')
+    ap.add_argument('--rs-hd', choices=('r', 'f'), default='f',
+                    help='AD3-KV-RSHD 10-18: native header leaf: r = qkd_pv_rs_hd_r (cross-half V AND selects, native capture '
+                         'FAIL 259.9), f = qkd_pv_rs_hd_f (half-local selects; rev f2 HKV-PVRS2 10-19: input pin registers, '
+                         'header 2 edges -> RS_D + 1)')
     ap.add_argument('--rs-inj-y', type=float, default=320.0, help='inject stations: centre y in the block row (block-relative)')
     ap.add_argument('--rs-r1-y', type=float, default=500.0, help='first relay of a row pitch: centre y (block-relative)')
     ap.add_argument('--rs-r2-y', type=float, default=92.0, help='second relay: centre y relative to the next block row')
@@ -1031,7 +1092,7 @@ def main(argv=None):
             lane='KV-RTRUNK 2026-10-17', ports=dict(rs_valid=1, rs_beat=5, rs_epoch=16, rs_data=512),
             bundle_lsb_first=['rs_valid', 'rs_beat', 'rs_epoch', 'rs_data'], width=534,
             beat_age='beat b (= column b) leaves rs_* at pair age out_age + RS_D + b (b = 0..31, consecutive edges)',
-            rs_d=rs['rs_d'], nodes=dict(t0=rs['J0'] + 1, t1=rs['J1'] + 1), head_pad_dl8=rs['d8'],
+            rs_d=rs['rs_d'], header_stages=rs['header_stages'], nodes=dict(t0=rs['J0'] + 1, t1=rs['J1'] + 1), head_pad_dl8=rs['d8'],
             lanes=dict(t0=list(RS_T0), t1=list(RS_T1)), e_side_lane_um=g.EW, half_word_bits=RS_W,
             node_of_col=rs['node_of_col'], inject_cycle_vs_out_age=rs['inject_cycle_vs_out_age'],
             y_ready_vs_out_age=rs['y_ready_vs_out_age'], header_t_cycle_vs_out_age=rs['t_header'],
@@ -1041,12 +1102,14 @@ def main(argv=None):
                                f'far beyond {rs["hold_after_out_age"]} edges; the header samples out_epoch at T '
                                f'(out_age + {rs["t_header"]}) < the busy drop (out_age + FLAG_D {flag_d})'),
             flops=dict(trunk=RS_W * sum(d.get('kind') in ('inj', 'rly') for d in g.st.values()),
-                       delay_lines=36 * sum(d.get('kind') == 'dl' for d in g.st.values()), header=534 + 5 + 16),
-            tiles={f'qkd_rlyi_{RS_W}': sum(d.get('kind') == 'inj' for d in g.st.values()),
+                       delay_lines=36 * sum(d.get('kind') == 'dl' for d in g.st.values()), header=534 + 5 + 16,
+                       **(dict(select_regs=sum(d.get('kind') == 'inj' for d in g.st.values()), vt_copies=RS_NQ * RS_KV)
+                          if a.rs_native else {})),
+            tiles={g.rs_mods()['inj']: sum(d.get('kind') == 'inj' for d in g.st.values()),
                    'qkd_rlys_296': sum(d.get('kind') == 'rly' for d in g.st.values()),
-                   'qkd_rlys_36': sum(d.get('kind') == 'dl' for d in g.st.values()), 'qkd_pv_rs_hd': 1},
-            new_leaves={f'qkd_rlyi_{RS_W}': f'physical/ref_tile/qkd_rlyi_{RS_W} (gate pending)',
-                        'qkd_pv_rs_hd': 'physical/ref_tile/qkd_pv_rs_hd (gate pending)',
+                   'qkd_rlys_36': sum(d.get('kind') == 'dl' for d in g.st.values()), g.rs_mods()['hd']: 1},
+            new_leaves={g.rs_mods()['inj']: f'physical/ref_tile/{g.rs_mods()["inj"]}' + ('' if a.rs_native else ' (gate pending)'),
+                        g.rs_mods()['hd']: f'physical/ref_tile/{g.rs_mods()["hd"]}' + ('' if a.rs_native else ' (gate pending)'),
                         'rtl': 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv'},
             face_pin=dict(face='N', x=round(hd[1] + hd[3] / 2, 3) if hd else None, y=round(g.FH, 3)),
             worst_hops=[dict(um=round(h[0], 1), hop=h[1], key=h[2]) for h in sorted(rsh, reverse=True)[:20]],

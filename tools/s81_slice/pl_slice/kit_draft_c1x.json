@@ -1,0 +1,755 @@
+{
+ "name": "s81dv_slice_lp_c1",
+ "top": "ot_s81sl_slice_c1x_lp",
+ "kind": "cluster",
+ "status": "DRAFT -- NOT GATEABLE: 31 of 46 hard children lack a current closed view on main (15 closed: vq, rxsf, rxsb x 5; vs x 5 pending its op14 re-close; xfin stale pre-ENG; cap_tr only on its closure-record branch; vp, vn, ve, vsw, xr1, eg, cap_rt, xg none). CRITICAL prefix s81dv_slice: no REVIEW.json / submit.",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv (ot_s81sl_leaf / ot_s81sl_rly)"
+ ],
+ "params": {
+  "DLK0": 1,
+  "DLK1": 1,
+  "DLK2": 4,
+  "DLK3": 1,
+  "DLK4": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_C",
+ "clock_ports": [
+  "ck_C",
+  "ck_L0",
+  "ck_L1",
+  "ck_L3",
+  "ck_L4"
+ ],
+ "sdc_extra": "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sdc",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1252.8,
+  "h": 5702.4,
+  "exact": true,
+  "note": "1252.8 x 5702.4 (7.14 mm2) from the CURRENT sub-leaf kit outlines (vp 604.8x734.4 + vn/ve column per leaf band 1252.8 x 1036.8; centre band 518.4). The die plan slot is 950 x 4600 (4.37 mm2): it does NOT hold the sub-leaf kits -> die lane (S81-DIE6) must re-slot or the leaf kits shrink."
+ },
+ "regions": {
+  "L0": {
+   "box": [
+    0,
+    4665.599999999999,
+    1252.8,
+    5702.4
+   ],
+   "clock_entry": "beside vp/vn register mass, band centre"
+  },
+  "L1": {
+   "box": [
+    0,
+    3628.7999999999997,
+    1252.8,
+    4665.599999999999
+   ]
+  },
+  "C": {
+   "box": [
+    0,
+    2073.6,
+    1252.8,
+    3628.7999999999997
+   ],
+   "note": "leaf 2 band + centre band (xr1 / xfin / eg / cap / xg) + every relay, landing ring (dn) and read (up); 1.25 x 1.56 mm: largest region; split L2 out only if the per-region FF spread fails (then L0 / L4 flights cross two bands > E = 2 reach)"
+  },
+  "L3": {
+   "box": [
+    0,
+    1036.8,
+    1252.8,
+    2073.6
+   ]
+  },
+  "L4": {
+   "box": [
+    0,
+    0,
+    1252.8,
+    1036.8
+   ]
+  }
+ },
+ "landings_placement": "ot_pl_land_w of dn_l<k> on the C edge facing leaf k, ot_pl_land_r beside leaf k's facing edge (and the reverse for up_l<k>); keep the read mux (sel from the reader counter) beside the RING so only W + AW bits cross the band (bank = D x W = 4 x 594 / 668 b otherwise). Flight L0 / L4: one leaf band (1.04 mm) inside E T = 1.67 ns at the measured 600-750 um per cycle repeated reach.",
+ "pins": "unassigned: unclosed cluster parent -> die tools assign (top-down-pin-assignment); all ports are region C (port offsets 0).",
+ "children": [
+  {
+   "inst": "*u_lf4.u_vq",
+   "module": "ot_s81sl_vq",
+   "region": "L4",
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "status": "CLOSED view on main (check it matches the 0e748d81f vq RTL)",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "size": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "inst": "*u_lf4.u_vs",
+   "module": "ot_s81sl_vs",
+   "region": "L4",
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "status": "view on main from s81sl_vs-b571a8c2c; RTL-BUILD vs op14 regate/submit pending -> re-take when that closes",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "size": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "inst": "*u_lf4.u_rxsf",
+   "module": "dsfd_su_t_rxsf",
+   "region": "L4",
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "status": "CLOSED view on main",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf4.u_rxsb",
+   "module": "dsfd_su_t_rxsb",
+   "region": "L4",
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "status": "CLOSED view on main",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf4.u_vsw",
+   "module": "ot_s81sl_vsw",
+   "region": "L4",
+   "view": null,
+   "status": "MISSING (s81sl_vsw-s81sl_vsw-e516a9bda submitted 10-18 05:03, not closed); size from its kit TBD",
+   "at": [
+    820.8,
+    43.2
+   ],
+   "size": null
+  },
+  {
+   "inst": "*u_lf4.u_vp",
+   "module": "ot_s81sl_vp",
+   "region": "L4",
+   "view": null,
+   "status": "MISSING (cluster kit 604.8 x 734.4 with 16 hcpl; no closed view)",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "size": [
+    604.8,
+    734.4
+   ]
+  },
+  {
+   "inst": "*u_lf4.u_vn",
+   "module": "ot_s81sl_vn",
+   "region": "L4",
+   "view": null,
+   "status": "MISSING (kit 356.4^2; no closed view)",
+   "at": [
+    691.2,
+    259.2
+   ],
+   "size": [
+    356.4,
+    356.4
+   ]
+  },
+  {
+   "inst": "*u_lf4.u_ve",
+   "module": "ot_s81sl_ve",
+   "region": "L4",
+   "view": null,
+   "status": "MISSING (kit 345.6^2; gate pending)",
+   "at": [
+    691.2,
+    648.0
+   ],
+   "size": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_vq",
+   "module": "ot_s81sl_vq",
+   "region": "L3",
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "status": "CLOSED view on main (check it matches the 0e748d81f vq RTL)",
+   "at": [
+    43.2,
+    1080.0
+   ],
+   "size": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_vs",
+   "module": "ot_s81sl_vs",
+   "region": "L3",
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "status": "view on main from s81sl_vs-b571a8c2c; RTL-BUILD vs op14 regate/submit pending -> re-take when that closes",
+   "at": [
+    259.2,
+    1080.0
+   ],
+   "size": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_rxsf",
+   "module": "dsfd_su_t_rxsf",
+   "region": "L3",
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "status": "CLOSED view on main",
+   "at": [
+    475.2,
+    1080.0
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_rxsb",
+   "module": "dsfd_su_t_rxsb",
+   "region": "L3",
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "status": "CLOSED view on main",
+   "at": [
+    648.0,
+    1080.0
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_vsw",
+   "module": "ot_s81sl_vsw",
+   "region": "L3",
+   "view": null,
+   "status": "MISSING (s81sl_vsw-s81sl_vsw-e516a9bda submitted 10-18 05:03, not closed); size from its kit TBD",
+   "at": [
+    820.8,
+    1080.0
+   ],
+   "size": null
+  },
+  {
+   "inst": "*u_lf3.u_vp",
+   "module": "ot_s81sl_vp",
+   "region": "L3",
+   "view": null,
+   "status": "MISSING (cluster kit 604.8 x 734.4 with 16 hcpl; no closed view)",
+   "at": [
+    43.2,
+    1296.0
+   ],
+   "size": [
+    604.8,
+    734.4
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_vn",
+   "module": "ot_s81sl_vn",
+   "region": "L3",
+   "view": null,
+   "status": "MISSING (kit 356.4^2; no closed view)",
+   "at": [
+    691.2,
+    1296.0
+   ],
+   "size": [
+    356.4,
+    356.4
+   ]
+  },
+  {
+   "inst": "*u_lf3.u_ve",
+   "module": "ot_s81sl_ve",
+   "region": "L3",
+   "view": null,
+   "status": "MISSING (kit 345.6^2; gate pending)",
+   "at": [
+    691.2,
+    1684.8
+   ],
+   "size": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_vq",
+   "module": "ot_s81sl_vq",
+   "region": "C",
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "status": "CLOSED view on main (check it matches the 0e748d81f vq RTL)",
+   "at": [
+    43.2,
+    2116.8
+   ],
+   "size": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_vs",
+   "module": "ot_s81sl_vs",
+   "region": "C",
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "status": "view on main from s81sl_vs-b571a8c2c; RTL-BUILD vs op14 regate/submit pending -> re-take when that closes",
+   "at": [
+    259.2,
+    2116.8
+   ],
+   "size": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_rxsf",
+   "module": "dsfd_su_t_rxsf",
+   "region": "C",
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "status": "CLOSED view on main",
+   "at": [
+    475.2,
+    2116.8
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_rxsb",
+   "module": "dsfd_su_t_rxsb",
+   "region": "C",
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "status": "CLOSED view on main",
+   "at": [
+    648.0,
+    2116.8
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_vsw",
+   "module": "ot_s81sl_vsw",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (s81sl_vsw-s81sl_vsw-e516a9bda submitted 10-18 05:03, not closed); size from its kit TBD",
+   "at": [
+    820.8,
+    2116.8
+   ],
+   "size": null
+  },
+  {
+   "inst": "*u_lf2.u_vp",
+   "module": "ot_s81sl_vp",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (cluster kit 604.8 x 734.4 with 16 hcpl; no closed view)",
+   "at": [
+    43.2,
+    2332.8
+   ],
+   "size": [
+    604.8,
+    734.4
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_vn",
+   "module": "ot_s81sl_vn",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (kit 356.4^2; no closed view)",
+   "at": [
+    691.2,
+    2332.8
+   ],
+   "size": [
+    356.4,
+    356.4
+   ]
+  },
+  {
+   "inst": "*u_lf2.u_ve",
+   "module": "ot_s81sl_ve",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (kit 345.6^2; gate pending)",
+   "at": [
+    691.2,
+    2721.6
+   ],
+   "size": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_vq",
+   "module": "ot_s81sl_vq",
+   "region": "L1",
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "status": "CLOSED view on main (check it matches the 0e748d81f vq RTL)",
+   "at": [
+    43.2,
+    3672.0
+   ],
+   "size": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_vs",
+   "module": "ot_s81sl_vs",
+   "region": "L1",
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "status": "view on main from s81sl_vs-b571a8c2c; RTL-BUILD vs op14 regate/submit pending -> re-take when that closes",
+   "at": [
+    259.2,
+    3672.0
+   ],
+   "size": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_rxsf",
+   "module": "dsfd_su_t_rxsf",
+   "region": "L1",
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "status": "CLOSED view on main",
+   "at": [
+    475.2,
+    3672.0
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_rxsb",
+   "module": "dsfd_su_t_rxsb",
+   "region": "L1",
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "status": "CLOSED view on main",
+   "at": [
+    648.0,
+    3672.0
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_vsw",
+   "module": "ot_s81sl_vsw",
+   "region": "L1",
+   "view": null,
+   "status": "MISSING (s81sl_vsw-s81sl_vsw-e516a9bda submitted 10-18 05:03, not closed); size from its kit TBD",
+   "at": [
+    820.8,
+    3672.0
+   ],
+   "size": null
+  },
+  {
+   "inst": "*u_lf1.u_vp",
+   "module": "ot_s81sl_vp",
+   "region": "L1",
+   "view": null,
+   "status": "MISSING (cluster kit 604.8 x 734.4 with 16 hcpl; no closed view)",
+   "at": [
+    43.2,
+    3888.0
+   ],
+   "size": [
+    604.8,
+    734.4
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_vn",
+   "module": "ot_s81sl_vn",
+   "region": "L1",
+   "view": null,
+   "status": "MISSING (kit 356.4^2; no closed view)",
+   "at": [
+    691.2,
+    3888.0
+   ],
+   "size": [
+    356.4,
+    356.4
+   ]
+  },
+  {
+   "inst": "*u_lf1.u_ve",
+   "module": "ot_s81sl_ve",
+   "region": "L1",
+   "view": null,
+   "status": "MISSING (kit 345.6^2; gate pending)",
+   "at": [
+    691.2,
+    4276.8
+   ],
+   "size": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_vq",
+   "module": "ot_s81sl_vq",
+   "region": "L0",
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "status": "CLOSED view on main (check it matches the 0e748d81f vq RTL)",
+   "at": [
+    43.2,
+    4708.8
+   ],
+   "size": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_vs",
+   "module": "ot_s81sl_vs",
+   "region": "L0",
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "status": "view on main from s81sl_vs-b571a8c2c; RTL-BUILD vs op14 regate/submit pending -> re-take when that closes",
+   "at": [
+    259.2,
+    4708.8
+   ],
+   "size": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_rxsf",
+   "module": "dsfd_su_t_rxsf",
+   "region": "L0",
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "status": "CLOSED view on main",
+   "at": [
+    475.2,
+    4708.8
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_rxsb",
+   "module": "dsfd_su_t_rxsb",
+   "region": "L0",
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "status": "CLOSED view on main",
+   "at": [
+    648.0,
+    4708.8
+   ],
+   "size": [
+    140.4,
+    140.4
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_vsw",
+   "module": "ot_s81sl_vsw",
+   "region": "L0",
+   "view": null,
+   "status": "MISSING (s81sl_vsw-s81sl_vsw-e516a9bda submitted 10-18 05:03, not closed); size from its kit TBD",
+   "at": [
+    820.8,
+    4708.8
+   ],
+   "size": null
+  },
+  {
+   "inst": "*u_lf0.u_vp",
+   "module": "ot_s81sl_vp",
+   "region": "L0",
+   "view": null,
+   "status": "MISSING (cluster kit 604.8 x 734.4 with 16 hcpl; no closed view)",
+   "at": [
+    43.2,
+    4924.8
+   ],
+   "size": [
+    604.8,
+    734.4
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_vn",
+   "module": "ot_s81sl_vn",
+   "region": "L0",
+   "view": null,
+   "status": "MISSING (kit 356.4^2; no closed view)",
+   "at": [
+    691.2,
+    4924.8
+   ],
+   "size": [
+    356.4,
+    356.4
+   ]
+  },
+  {
+   "inst": "*u_lf0.u_ve",
+   "module": "ot_s81sl_ve",
+   "region": "L0",
+   "view": null,
+   "status": "MISSING (kit 345.6^2; gate pending)",
+   "at": [
+    691.2,
+    5313.6
+   ],
+   "size": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "inst": "*u_xr",
+   "module": "ot_s81sl_xr1",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (xr1 --cts gate FAIL clock_rule TT 135 / FF 120, OWNERS-S81/XR2)",
+   "at": [
+    43.2,
+    3153.6
+   ],
+   "size": [
+    345.6,
+    432.0
+   ]
+  },
+  {
+   "inst": "*u_xf",
+   "module": "ot_s81dv_xfin",
+   "region": "C",
+   "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
+   "status": "STALE: main view is pre-ENG (181.44^2); ENG kit 345.6^2 CRITICAL gate pending",
+   "at": [
+    432.0,
+    3153.6
+   ],
+   "size": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "inst": "*u_eg",
+   "module": "ot_s81sl_eg",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (s81sl_eg-v1-fbb651e33 submitted, not closed)",
+   "at": [
+    820.8,
+    3153.6
+   ],
+   "size": [
+    259.2,
+    259.2
+   ]
+  },
+  {
+   "inst": "*u_cap.*tr*",
+   "module": "ot_s81sl_cap (tr leaf)",
+   "region": "C",
+   "view": null,
+   "status": "cap_tr CLOSED on origin/codex/closure-record-s81sl_cap_tr-s81sl_cap_tr-0ecc0c258 (not on main)",
+   "at": [
+    1123.2,
+    3153.6
+   ],
+   "size": [
+    90.72,
+    86.4
+   ]
+  },
+  {
+   "inst": "*u_cap.*rt*",
+   "module": "ot_s81sl_cap (rt leaf)",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (cap_rt gate 3 pending)",
+   "at": [
+    820.8,
+    3456.0
+   ],
+   "size": [
+    259.2,
+    116.64
+   ]
+  },
+  {
+   "inst": "*u_xg",
+   "module": "ot_s81sl_xg",
+   "region": "C",
+   "view": null,
+   "status": "MISSING (no kit: rstop + xs; size TBD)",
+   "at": null,
+   "size": null
+  }
+ ]
+}
