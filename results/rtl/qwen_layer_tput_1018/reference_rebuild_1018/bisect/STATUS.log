@@ -6,3 +6,6 @@
 2026-10-18 17:59:34 [A] runL3 rc=1 wall_s=18745 {"mode": "L3", "exact": false, "cycles": null, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 49152, "kv_mismatches": 6144}
 2026-10-18 18:00:54 [B2] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 unroll=0
 2026-10-18 18:00:54 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 unroll=0
+2026-10-18 18:07:42 [B2] build rc=1 wall_s=408
+2026-10-18 18:07:57 [B1] build rc=1 wall_s=423
+2026-10-18 19:05:28 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) unroll=0

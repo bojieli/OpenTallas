@@ -1,0 +1,109 @@
+make: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die/Vot_hdc_fmul__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 11.629 MB sources in 97 modules, into 0.193 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.117 s (elab=0.027, cvt=0.009, bld=0.000); cpu 0.117 s on 1 threads; allocated 67.387 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die/Vot_hdc_qadd_7__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 11.629 MB sources in 97 modules, into 0.283 MB in 6 C++ files needing 0.001 MB
+- Verilator: Walltime 0.124 s (elab=0.021, cvt=0.028, bld=0.000); cpu 0.124 s on 1 threads; allocated 67.383 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die/Vot_hdc_vstream_lane_6__hierMkArgs.f
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 11.789 MB sources in 98 modules, into 14.874 MB in 19 C++ files needing 0.030 MB
+- Verilator: Walltime 2.979 s (elab=0.058, cvt=2.703, bld=0.000); cpu 2.978 s on 1 threads; allocated 415.387 MB
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -f /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die/Vdie__hierMkArgs.f
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:618:22: Replication of more that --replication-limit 8192 is suspect: 49152
+                                                                                                        : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_ctrl'
+  618 |     assign vx_addr = '0;    
+      |                      ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:621:19: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                        : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_ctrl'
+  621 |     assign xl_d = '0;    
+      |                   ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:626:25: Replication of more that --replication-limit 8192 is suspect: 24576
+                                                                                                        : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_ctrl'
+  626 |     assign vw_me_data = '0;    
+      |                         ^~
+%Warning-SELRANGE: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/rom/ot_qwen_tp_seq_w12.sv:161:70: Selection index out of range: 65:48 outside 63:0
+                                                                                                          : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.seq'
+  161 |                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
+      |                                                                      ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:995:17: Replication of more that --replication-limit 8192 is suspect: 1572864
+                                                                                                        : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core'
+  995 |         .wrom_q('0),
+      |                 ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:1001:18: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                         : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core'
+ 1001 |         .scale_q('0),
+      |                  ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:1064:15: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                         : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core'
+ 1064 |         .vx_q('0),
+      |               ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv:1068:16: Replication of more that --replication-limit 8192 is suspect: 24576
+                                                                                                         : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core'
+ 1068 |         .t_lvl('0),
+      |                ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_w12_matvec.sv:869:32: Replication of more that --replication-limit 8192 is suspect: 24576
+                                                                                                             : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_me.u_top'
+  869 |         assign lvl_h = {GI*W*32{1'b0}};
+      |                                ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_w12_matvec.sv:914:29: Replication of more that --replication-limit 8192 is suspect: 98304
+                                                                                                             : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_me.u_top'
+  914 |         assign lfault = {G*W{1'b0}};
+      |                             ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_me_array_w12.sv:340:66: Replication of more that --replication-limit 8192 is suspect: 786432
+                                                                                                               : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_me'
+  340 |         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q({GT*W*8{1'b0}}),
+      |                                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_me_array_w12.sv:342:50: Replication of more that --replication-limit 8192 is suspect: 3145728
+                                                                                                               : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_me'
+  342 |         .kv_re(kv_re), .kv_addr(), .kv_q({GT*W*32{1'b0}}),
+      |                                                  ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/build/qwen_missing_part/bldB2/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv:202:57: Replication of more that --replication-limit 8192 is suspect: 1572864
+                                                                                                                                                         : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar'
+  202 |         .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+      |                                                         ^
+%Warning-CMPCONST: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Comparison is constant due to limited range
+                                                                                                        : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_ctrl.u_dyn_tiles_split'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+                   ... For warning description see https://verilator.org/warn/CMPCONST?v=5.050
+                   ... Use "/* verilator lint_off CMPCONST */" and lint_on around source to disable this message.
+%Warning-UNSIGNED: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:211:33: Comparison is constant due to unsigned arithmetic
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  211 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                                 ^~
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+%Warning-CMPCONST: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:211:23: Comparison is constant due to limited range
+                                                                                                                            : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.u_hbm.stk[3].u_ctl.on.pc[31].u'
+  211 |       wire ahead = (S >= k && S <= last) || next_posted;
+      |                       ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 12.605 MB sources in 99 modules, into 1702.414 MB in 1162 C++ files needing 1238.085 MB
+- Verilator: Walltime 356.298 s (elab=1.889, cvt=326.249, bld=0.000); cpu 356.123 s on 1 threads; allocated 34003.891 MB
+/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die: loops_checked=689 INPLACE_NBA_LOOPS=4
+  INPLACE_NBA_LOOP x1 ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__u_hbm__DOT__t_rd_sectors
+  INPLACE_NBA_LOOP x1 kvw_ce
+  INPLACE_NBA_LOOP x1 st_rsp_stall
+  INPLACE_NBA_LOOP x1 ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__u_kv__DOT__unnamedblk5__DOT__n
+VERILATOR_NBA_GUARD FAIL: Verilator applied non-blocking loop writes in place (non-unrolled NBA loop miscompile). Raise --unroll-count above the largest NBA loop trip count or rewrite the loop. Simulation results from this model are invalid.
+make[1]: *** [/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die/Vdie_hier.mk:68: hier_launch_verilator] Error 86
+make[1]: Leaving directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2'
+make: *** [Vdie_hier.mk:72: Vdie.mk] Error 2
+make: Leaving directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die'
+%Error: make -C /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die -f Vdie_hier.mk  -j 1  hier_verilation exited with 2
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --cc -O3 -Wno-fatal -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-PINMISSING -Wno-LATCH -Wno-MULTIDRIVEN -I/srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc -I/srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/kv --top-module ot_qwen_rom_rt_die_w12_stream4_tagged_ar --prefix Vdie --Mdir /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/die -GG=6144 -GNW=18 -GSNW=18 -GQWEN_FULLSHAPE=1 -GME_IDLE_GATE=1 -GD=4 -GSW=64 -GLV=7 -GSCALE_LOCAL=0 -GMEM_EXTRA=1 -GSMIN=7 -GSMAX=11 -GTCUT=7 -GBD=41 -GXVM=1 -GNWS=5 -GTWS=38 -GORD=7 -GREAL_MEM=1 -GENABLE_AR256=1 -GNSTK=4 -GSCALE_BANKS=13 -GCROM_WORDS=1048576 -GHBM_LAYERS=36 -GEMBED_ROM=1 -GFILL_LAT=8 -GNRD=256 -GLKA=512 -GWBW=4 -GHBM_PHASE=0 -GHBM_PULLIN=16 -GBASELINE_AR=1 /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/public.vlt /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_qwen_rom_core.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/ot_hdc_vstream_rt.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_fpu.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_sfu.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_sfu_q.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_reduce.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_reduce_q.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_matvec.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_stream.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_vstream_lane.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_vreduce.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_vstream.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/proto/ot_fp32_add_rne_pipe.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/proto/ot_fp32_mul_rne_pipe.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_dyn_ttiles.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_qwen_int8_arith.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_cg.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_me_array_w12.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_w12_matvec.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_w12_arith.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_rt_rom_bank.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/ot_qwen_rt_embed_rom.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/rom/ot_rom_pkg_link.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/rom/ot_rom_pkg_ctrl.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/rtl/rom/ot_qwen_tp_seq_w12.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/build/qwen_missing_part/bldB2/ot_qwen_rom_rt_die_w12_stream4.sv /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcA/build/qwen_missing_part/bldB2/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv --hierarchical /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB2/gen/hier.vlt
