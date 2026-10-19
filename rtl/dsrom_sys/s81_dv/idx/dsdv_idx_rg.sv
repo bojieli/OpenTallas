@@ -622,7 +622,10 @@ module dsdv_idx_rg #(
     reg [15:0]    r_w; reg [15:0] r_lv; reg [255:0] r_s; reg r_f;
     wire          r_take;
     reg           a_done;
-    wire          sq_pop = (sq_n != 0) && !(a_v && a_done);
+    // a finished word moves to r when r is free or taken this cycle; the NEXT word starts assembling in the same cycle,
+    // so a word of 2 scores (gather: up to 2 keys a region a word) still meets the next slot 2 cycles later
+    wire          a_mv = a_v && a_done && (!r_v || r_take);
+    wire          sq_pop = (sq_n != 0) && !(a_v && a_done && !a_mv);
     always @(posedge ck or negedge rn)
         if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
                        r_v <= 1'b0; end
@@ -643,7 +646,7 @@ module dsdv_idx_rg #(
                     a_f <= a_f | t[16]; a_done <= t[17];
                 end
             end
-            if (a_v && a_done && (!r_v || r_take)) begin
+            if (a_mv) begin
                 r_v <= 1'b1; r_w <= a_w; r_lv <= a_lv; r_s <= a_s; r_f <= a_f;
                 if (!sq_pop) a_v <= 1'b0;
             end else if (r_take) r_v <= 1'b0;
