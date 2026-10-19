@@ -76,7 +76,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire i_rdy;
     reg sticky;
     localparam integer QW=$clog2(QD);
-    reg[QW-1:0]wp,rp,ep;reg[QW:0]count,unposted;
+    reg[QW-1:0]wp,rp,ep;reg[QW:0]count;
+    (* keep="true",dont_touch="true" *) reg[QW:0]unposted,unposted_aq;
     // Address successors are computed before column eligibility arrives.
     // cv_cfg/posted selects a registered address, never a conditional carry chain.
     (* keep="true",dont_touch="true" *) reg[QW-1:0]rp_plus1,ep_plus1;
@@ -104,7 +105,15 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     wire[319:0]head={queue_head,head_wdata},push={queue_post,256'b0};
     wire push_read=!push[319];
     wire enqueue=unposted!=0 && (!push_read || read_reserved<RQ) && !sticky;
+    wire enqueue_aq=unposted_aq!=0&&(!push_read||read_reserved<RQ)&&!sticky;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
+    wire[QW:0]unposted_next=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
+    always @(posedge clk or negedge lrst_n)
+      if(!lrst_n)unposted_aq<=0;else unposted_aq<=unposted_next;
+`ifndef SYNTHESIS
+    always @(negedge clk)if(lrst_n&&unposted_aq!==unposted)
+      $fatal(1,"BW_CFG_UNPOSTED_REGION_MISMATCH");
+`endif
     // One arithmetic cone feeds kept same-edge count captures. At22 regions
     // the shared next-count bus drives23 D pins per bit, including count.
     wire[QW:0]queue_count_next=count+(accepted?6'(length):6'd0)-(cv_cfg?6'd1:6'd0);
@@ -336,7 +345,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
-        .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
+        .wr_v(enqueue_aq),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
         .col_we(cwe),.col_aq(caq),.dbg_held());
     wire sticky_next=sticky||(i_v&&!legal)||kfront_fault||
       (cv_cfg&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||
@@ -360,7 +369,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
             if((i_v&&!legal)||kfront_fault)sticky<=1;
             if(accepted)wp<=wp+QW'(length);
             count<=queue_count_next;
-            unposted<=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
+            unposted<=unposted_next;
             read_reserved<=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
             pending_count<=pending_count+(column_read?6'd1:6'd0)-(ret_v?6'd1:6'd0);
             response_count<=response_count+(ret_v?6'd1:6'd0)-(response_take?6'd1:6'd0);
