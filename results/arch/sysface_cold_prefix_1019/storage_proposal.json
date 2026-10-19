@@ -21,7 +21,8 @@
       "x": 43.2,
       "y": 43.2,
       "w": 18.36,
-      "h": 20.79
+      "h": 20.79,
+      "source_inst": "g_sram_cal.u_cal_t.lo"
     },
     {
       "inst": "calT_1",
@@ -29,7 +30,8 @@
       "x": 86.4,
       "y": 43.2,
       "w": 18.36,
-      "h": 20.79
+      "h": 20.79,
+      "source_inst": "g_sram_cal.u_cal_t.hi"
     },
     {
       "inst": "calL_0",
@@ -37,7 +39,8 @@
       "x": 129.60000000000002,
       "y": 43.2,
       "w": 18.36,
-      "h": 20.79
+      "h": 20.79,
+      "source_inst": "g_sram_cal.u_cal_l.lo"
     },
     {
       "inst": "calL_1",
@@ -45,7 +48,8 @@
       "x": 172.8,
       "y": 43.2,
       "w": 18.36,
-      "h": 20.79
+      "h": 20.79,
+      "source_inst": "g_sram_cal.u_cal_l.hi"
     },
     {
       "inst": "calE_0",
@@ -53,7 +57,8 @@
       "x": 216.0,
       "y": 43.2,
       "w": 18.36,
-      "h": 20.79
+      "h": 20.79,
+      "source_inst": "g_sram_cal.u_cal_e.lo"
     },
     {
       "inst": "calE_1",
@@ -61,7 +66,8 @@
       "x": 259.20000000000005,
       "y": 43.2,
       "w": 18.36,
-      "h": 20.79
+      "h": 20.79,
+      "source_inst": "g_sram_cal.u_cal_e.hi"
     }
   ],
   "ROMs": [
@@ -71,7 +77,8 @@
       "x": 43.2,
       "y": 86.4,
       "w": 38.016,
-      "h": 62.91
+      "h": 62.91,
+      "source_inst": "u_rom"
     },
     {
       "inst": "C_TX",
@@ -79,7 +86,8 @@
       "x": 129.6,
       "y": 86.4,
       "w": 38.016,
-      "h": 62.91
+      "h": 62.91,
+      "source_inst": "g_ovl.u_cseq.u_tx_rom"
     },
     {
       "inst": "C_RX",
@@ -87,7 +95,8 @@
       "x": 216,
       "y": 86.4,
       "w": 38.016,
-      "h": 62.91
+      "h": 62.91,
+      "source_inst": "g_ovl.u_cseq.u_rx_rom"
     }
   ],
   "extra_raw_sram_um2": 2290.2264,
@@ -103,10 +112,14 @@
   "standard_band_um2": 9013.939199999999,
   "reset_split_maxloads": 32,
   "remaining": [
-    "sourceboundsharedprefixandordinaryconsumer ledger",
-    "SRAMcalendarimplementation/exactdt1burst/wrap/reloadmutants",
-    "actualsynthesisareaandfullstd-bandutil",
-    "finaldiegrant/new9macroPNGreview",
-    "nativeTTFF/parentclockboundary"
-  ]
+    "source-bound production prefix and ordinary/filler consumer ledger",
+    "generated control-safe profile native reset/enable/fanout census and full exact equivalence",
+    "actual technology synthesis area and full standard-band utilization",
+    "actual die slot grant and new nine-macro PNG review",
+    "native TT/FF and parent clock/transport phase"
+  ],
+  "component_cycle_equivalence_receipt": "results/rtl/sysface_sram_parent_1019/receipt.json",
+  "enabled_cold_component_receipt": "results/rtl/sysface_cold_selector_1019/receipt.json",
+  "macro_census_receipt": "results/rtl/sysface_sram_parent_1019/census.json",
+  "component_cycle_delta_qualified": true
 }
