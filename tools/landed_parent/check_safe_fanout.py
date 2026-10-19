@@ -21,17 +21,21 @@ def check(path):
             assert any(net in targets for net in ('read_oh', 'write_oh')), (name, 'selectors disappeared')
             assert max(targets.values()) <= 32, (name, targets)
             report[name] = dict(target_max_loads=targets, cells=len(module['cells']))
-        if 'ot_pl_land_chunk_' in name:
+        roles = {}
+        for suffix in ('_w', '_r'):
             locals_ = [cell for cell in module.get('cells', {}).values()
-                       if 'ot_pl_land_local_' in cell['type']]
+                       if 'ot_pl_land_local' + suffix in cell['type']]
             if not locals_:
                 continue
-            # Physical vld bits have separate writers/consumers per chunk. No
-            # shared chunk0 valid word is allowed to fan out over the wide bus.
+            # Wrappers flatten, so inspect the actual surviving local instances
+            # in their parent rather than relying on wrapper module names.
             bits = [bit for cell in locals_ for bit in cell['connections']['vld']]
-            assert len(set(bits)) == len(bits), (name, 'shared physical validity bits')
-            assert set(bits) == set(module['ports']['vld']['bits']), (name, 'missing chunk validity')
-            report[name] = dict(chunks=len(locals_), physical_valid_bits=len(bits))
+            assert len(set(bits)) == len(bits), (name, suffix, 'shared physical validity bits')
+            roles[suffix] = set(bits)
+            report.setdefault(name, {})['writer' if suffix == '_w' else 'reader'] = dict(
+                chunks=len(locals_), physical_valid_bits=len(bits))
+        if set(roles) == {'_w', '_r'}:
+            assert roles['_w'] == roles['_r'], (name, 'missing chunk validity')
     assert report, 'no safe landing modules found'
     return report
 
