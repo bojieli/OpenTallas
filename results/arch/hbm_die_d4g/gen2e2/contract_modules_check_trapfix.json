@@ -1,0 +1,20 @@
+{
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/net/pre_relay.json",
+ "rev": "6f783d0a1",
+ "masters": 101,
+ "modules_walked": 564,
+ "static_assert_modules": [
+  "OT_SFU_CHAIN_HARD_VIEW_IS_MLAT6_ALAT6_DDIV21_DENR1_DRING4_K1",
+  "ot_hbm_su_reduce_static_requires_AW10",
+  "ot_hdc_fp32_add_lat_CUTS_must_match_LAT",
+  "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT",
+  "ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT",
+  "ot_hdc_v41x_vec_lane_ALAT_must_be_3_to_7_and_at_most_MLAT",
+  "ot_hdc_v41x_vec_lane_c12_OPR_0_1_DDIV_19_21_SIDEX_0_3",
+  "ot_hgi_static_ring_requires_NT8_LAT4_to_8",
+  "ot_sfu_store_requires_actual_supported_SRAM_geometry",
+  "ot_su_response_offset_must_be_0_to_4"
+ ],
+ "missing": {},
+ "source_files_not_tracked": []
+}

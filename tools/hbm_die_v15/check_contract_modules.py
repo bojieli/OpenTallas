@@ -66,6 +66,10 @@ def main():
     for n, i in c["instances"].items():
         masters.setdefault(i["master"], (i.get("source"), i.get("rtl_deps", [])))
     missing, asserts, seen, tracked_src = {}, {}, set(), set(files)
+    # elaboration traps: an undefined module that is only ever instantiated with an EMPTY port list (`NAME u_trap ();`,
+    # inside a generate-if on illegal parameters) stops elaboration on purpose; it is a static assert, not missing RTL.
+    # Any instantiation of the name WITH ports anywhere keeps it a real (missing) module.
+    portless, ported, undefined = set(), set(), {}
     stack = [(m, m) for m in masters]
     src_missing = sorted({s for s, d in masters.values() for s in [s] + list(d) if s and s not in tracked_src})
     while stack:
@@ -74,10 +78,7 @@ def main():
             continue
         seen.add(mod)
         if mod not in defs:
-            if re.search(r"_(must|requires)_|_requires$", mod):
-                asserts.setdefault(mod, set()).add(root)   # static elaboration-assert module (never defined on purpose)
-            else:
-                missing.setdefault(mod, set()).add(root)
+            undefined.setdefault(mod, set()).add(root)
             continue
         for m in inst_re.finditer(body[mod]):
             sub, inst = m.group(1), m.group(2)
@@ -85,7 +86,13 @@ def main():
                 continue   # keywords, system tasks, ASAP7 standard cells (physical library, not RTL)
             if sub not in defs and not re.search(r"\b" + re.escape(sub) + r"\s*(?:#|\w)", body[mod]):
                 continue
+            (portless if re.match(r"\s*\)\s*;", body[mod][m.end():]) else ported).add(sub)
             stack.append((sub, root))
+    for mod, roots in undefined.items():
+        if re.search(r"_(must|requires)_|_requires$", mod) or (mod in portless and mod not in ported):
+            asserts.setdefault(mod, set()).update(roots)   # static elaboration-assert module (never defined on purpose)
+        else:
+            missing.setdefault(mod, set()).update(roots)
     # names that look like instantiations but are e.g. function calls / types are only reported if never defined
     out = dict(contract=a.contract, rev=git("rev-parse", "--short=9", a.rev).strip(), masters=len(masters),
                modules_walked=len(seen), static_assert_modules=sorted(asserts), missing={k: sorted(v) for k, v in sorted(missing.items())},
