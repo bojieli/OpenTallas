@@ -1,0 +1,457 @@
+{
+  "source_commit": "0e6795834",
+  "merged_main_commit": "3fd57606f",
+  "collected_at": "2026-10-19T07:55:55-07:00",
+  "verilator": "5.050",
+  "counts": {
+    "AS EXPECTED": 39,
+    "PENDING": 5
+  },
+  "rows": [
+    {
+      "leg": "amix_F0",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu1_ag.out"
+      ],
+      "client": "clients/legs/amix_F0.log"
+    },
+    {
+      "leg": "amix_F1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F1_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F1_nu1_ag.out"
+      ],
+      "client": "clients/legs/amix_F1.log"
+    },
+    {
+      "leg": "amix_F2",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F2_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F2_nu1_ag.out"
+      ],
+      "client": "clients/legs/amix_F2.log"
+    },
+    {
+      "leg": "amix_FACES1",
+      "expect": "PASS",
+      "status": "PENDING",
+      "actual": "Existing fleet job still active; no terminal behavioral verdict",
+      "evidence": [],
+      "client": "clients/legs/amix_FACES1.log"
+    },
+    {
+      "leg": "amix_FACES4",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "FACES_mut0_nu4.out: FACES MUT=0: PASS; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/FACES_mut0_nu4.out"
+      ],
+      "client": "clients/legs/amix_FACES4.log"
+    },
+    {
+      "leg": "amix_G0",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F0_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F0_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F0_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu4_ag.out",
+        "evidence/runs/amix/runs/F0_nu4_m_s21.out",
+        "evidence/runs/amix/runs/F0_nu4_m_s22.out",
+        "evidence/runs/amix/runs/F0_nu4_n.out"
+      ],
+      "client": "clients/legs/amix_G0.log"
+    },
+    {
+      "leg": "amix_G1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F1_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F1_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F1_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F1_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F1_nu4_ag.out",
+        "evidence/runs/amix/runs/F1_nu4_m_s21.out",
+        "evidence/runs/amix/runs/F1_nu4_m_s22.out",
+        "evidence/runs/amix/runs/F1_nu4_n.out"
+      ],
+      "client": "clients/legs/amix_G1.log"
+    },
+    {
+      "leg": "amix_G2",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F2_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F2_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F2_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F2_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F2_nu4_ag.out",
+        "evidence/runs/amix/runs/F2_nu4_m_s21.out",
+        "evidence/runs/amix/runs/F2_nu4_m_s22.out",
+        "evidence/runs/amix/runs/F2_nu4_n.out"
+      ],
+      "client": "clients/legs/amix_G2.log"
+    },
+    {
+      "leg": "amix_H1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu1_h.out: bench2 (h) MUT=0: PASS 12/12; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu1_h.out"
+      ],
+      "client": "clients/legs/amix_H1.log"
+    },
+    {
+      "leg": "amix_H4",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_h.out: bench2 (h) MUT=0: PASS 12/12; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu4_h.out"
+      ],
+      "client": "clients/legs/amix_H4.log"
+    },
+    {
+      "leg": "amix_N0",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_n_am7_f0.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1",
+      "evidence": [
+        "evidence/runs/amix/runs/NEG_n_am7_f0.out"
+      ],
+      "client": "clients/legs/amix_N0.log"
+    },
+    {
+      "leg": "amix_N1",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_n_am7_f1.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1",
+      "evidence": [
+        "evidence/runs/amix/runs/NEG_n_am7_f1.out"
+      ],
+      "client": "clients/legs/amix_N1.log"
+    },
+    {
+      "leg": "amix_N2",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_n_am7_f2.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1",
+      "evidence": [
+        "evidence/runs/amix/runs/NEG_n_am7_f2.out"
+      ],
+      "client": "clients/legs/amix_N2.log"
+    },
+    {
+      "leg": "coll_mu_bi",
+      "expect": "PASS, cases>0",
+      "status": "PENDING",
+      "actual": "Existing fleet job still active; no terminal behavioral verdict",
+      "evidence": [],
+      "client": "clients/legs/coll_mu_bi.log"
+    },
+    {
+      "leg": "coll_mu_bi_mut_rank",
+      "expect": "negative-control PASS, cases>0, expected FAIL witnessed",
+      "status": "AS EXPECTED",
+      "actual": "coll_mu_bi_mut_rank.out: case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=61432 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378",
+      "evidence": [
+        "evidence/out/coll_mu_bi_mut_rank.out"
+      ],
+      "client": "clients/legs/coll_mu_bi_mut_rank.log"
+    },
+    {
+      "leg": "coll_mu_bi_mut_rlat",
+      "expect": "negative-control PASS, cases>0, expected FAIL witnessed",
+      "status": "AS EXPECTED",
+      "actual": "coll_mu_bi_mut_rlat.out: case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=61432 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378",
+      "evidence": [
+        "evidence/out/coll_mu_bi_mut_rlat.out"
+      ],
+      "client": "clients/legs/coll_mu_bi_mut_rlat.log"
+    },
+    {
+      "leg": "coll_mu_bi_neg_overlap",
+      "expect": "negative-control PASS, cases>0, expected FAIL witnessed",
+      "status": "AS EXPECTED",
+      "actual": "coll_mu_bi_neg_overlap.out: case mu_window_neg_overlap kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=59384 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=59392 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378",
+      "evidence": [
+        "evidence/out/coll_mu_bi_neg_overlap.out"
+      ],
+      "client": "clients/legs/coll_mu_bi_neg_overlap.log"
+    },
+    {
+      "leg": "ctlm_mu",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "ctlm_mu.out: MU_CTLM BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/ctlm_mu.out"
+      ],
+      "client": "clients/legs/ctlm_mu.log"
+    },
+    {
+      "leg": "ctlm_nsl12",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "PENDING",
+      "actual": "Existing fleet job still active; no terminal behavioral verdict",
+      "evidence": [],
+      "client": "clients/legs/ctlm_nsl12.log"
+    },
+    {
+      "leg": "ctlm_rest",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "ctlm_rest.out: MU_CTLM BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/ctlm_rest.out"
+      ],
+      "client": "clients/legs/ctlm_rest.log"
+    },
+    {
+      "leg": "head",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "head.out: user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2; overall rc=0",
+      "evidence": [
+        "evidence/out/head.out"
+      ],
+      "client": "clients/legs/head.log"
+    },
+    {
+      "leg": "host",
+      "expect": "MU1 PASS; cm1-4/hm1-4/rm1-2 FAIL; 13 MU0 benches identical",
+      "status": "AS EXPECTED",
+      "actual": "host.out:   tb_qkd_host_prompt_ue identical; # exit 0",
+      "evidence": [
+        "evidence/out/host.out"
+      ],
+      "client": "clients/legs/host.log"
+    },
+    {
+      "leg": "hroot",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "hroot.out: MU_HROOT tb_mu_lprg_lockstep_s2 rc=0: PASS MU_LPRG_LOCKSTEP seed=1234 mu0_cmp=5102 mu1_cmp=5098 events=807 (MU0 == original; MU1 user 0 gap 0 == original); # exit 0",
+      "evidence": [
+        "evidence/out/hroot.out"
+      ],
+      "client": "clients/legs/hroot.log"
+    },
+    {
+      "leg": "kv",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "kv.out: MU_KV tb_mu_kv_writer_rows rc=0: PASS MU_KV_WRITE_ROWS users4 x layers36 x positions8192 (stage-interleaved) words4718592 sectors9437184 unique alias0 inverse{user,layer,pos,kind,dim}+raw exact; MU1 == plain writer outside row[9:8]; MU0 wrapper == plain writer; # exit 0",
+      "evidence": [
+        "evidence/out/kv.out"
+      ],
+      "client": "clients/legs/kv.log"
+    },
+    {
+      "leg": "opseg_mut",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "opseg_mut.out: MU_OPSEG BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/opseg_mut.out"
+      ],
+      "client": "clients/legs/opseg_mut.log"
+    },
+    {
+      "leg": "opseg_pass",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "opseg_pass.out: MU_OPSEG BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/opseg_pass.out"
+      ],
+      "client": "clients/legs/opseg_pass.log"
+    },
+    {
+      "leg": "sl_DHUSER",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "dhuser_fieldmap.out: seq_dh field map OK (h_start [42], stage [41:36]); dhuser_mut1.out: TB_DHUSER FAIL MUT=1 3494 mismatches; # exit 0; dhuser_mut2_slip.out: TB_DHUSER FAIL slip not detected (det -1); # exit 0; dhuser_mut3.out: TB_DHUSER FAIL MUT=3 349 mismatches; # exit 0; dhuser_pass_s11.out: TB_DHUSER PASS MUT=0; # exit 0; dhuser_pass_s7.out: TB_DHUSER PASS MUT=0; # exit 0; dhuser_slip_pass.out: TB_DHUSER PASS slip detected 2 h_starts after the slip (NU1 err 0); # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/dhuser_fieldmap.out",
+        "evidence/runs/adopt_slice/runs/dhuser_mut1.out",
+        "evidence/runs/adopt_slice/runs/dhuser_mut2_slip.out",
+        "evidence/runs/adopt_slice/runs/dhuser_mut3.out",
+        "evidence/runs/adopt_slice/runs/dhuser_pass_s11.out",
+        "evidence/runs/adopt_slice/runs/dhuser_pass_s7.out",
+        "evidence/runs/adopt_slice/runs/dhuser_slip_pass.out"
+      ],
+      "client": "clients/legs/sl_DHUSER.log"
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap16",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap16.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap16.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap16.log"
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap20",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap20.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap20.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap20.log"
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap24",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap24.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap24.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap24.log"
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap30",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap30.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap30.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap30.log"
+    },
+    {
+      "leg": "sl_FACES_mut11_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "PENDING",
+      "actual": "Existing fleet job still active; no terminal behavioral verdict",
+      "evidence": [],
+      "client": "clients/legs_r3/sl_FACES_mut11_nu4.log"
+    },
+    {
+      "leg": "sl_FACES_mut12_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "PENDING",
+      "actual": "Existing fleet job still active; no terminal behavioral verdict",
+      "evidence": [],
+      "client": "clients/legs_r3/sl_FACES_mut12_nu4.log"
+    },
+    {
+      "leg": "sl_NEG_i_mut11_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_i_mut11_nu4.out: bench2 (i) MUT=11: FAIL 1/3; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_i_mut11_nu4.out"
+      ],
+      "client": "clients/legs/sl_NEG_i_mut11_nu4.log"
+    },
+    {
+      "leg": "sl_NEG_j_mut12_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_j_mut12_nu4.out: bench2 (j) MUT=12: FAIL 1/3; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_j_mut12_nu4.out"
+      ],
+      "client": "clients/legs/sl_NEG_j_mut12_nu4.log"
+    },
+    {
+      "leg": "sl_NEG_m_am1",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am1.out: bench2 (m) MUT=0: FAIL 7/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am1.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am1.log"
+    },
+    {
+      "leg": "sl_NEG_m_am2",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am2.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am2.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am2.log"
+    },
+    {
+      "leg": "sl_NEG_m_am2_e",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am2_e.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am2_e.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am2_e.log"
+    },
+    {
+      "leg": "sl_NEG_m_am3",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am3.out: bench2 (m) MUT=0: FAIL 6/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am3.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am3.log"
+    },
+    {
+      "leg": "sl_NEG_m_am4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am4.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am4.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am4.log"
+    },
+    {
+      "leg": "sl_NEG_m_am6_rootnoclr",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am6_rootnoclr.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am6_rootnoclr.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am6_rootnoclr.log"
+    },
+    {
+      "leg": "sl_NEG_m_gap12_stnpend",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_gap12_stnpend.out: bench2 (m) MUT=0: FAIL 1/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_gap12_stnpend.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_gap12_stnpend.log"
+    },
+    {
+      "leg": "sl_NEG_m_nu1_w",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_nu1_w.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_nu1_w.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_nu1_w.log"
+    },
+    {
+      "leg": "tok",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "tok.out: MU_TOK_SMOKE BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/tok.out"
+      ],
+      "client": "clients/legs/tok.log"
+    }
+  ]
+}
