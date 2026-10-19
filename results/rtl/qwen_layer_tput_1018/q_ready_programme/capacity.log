@@ -1,0 +1,8 @@
+CAPACITY base480 meta30 nent248 ready1 fault0 fc00
+CAPACITY base480 meta30 nent249 ready0 fault1 fc10
+CAPACITY base480 meta30 nent390 ready0 fault1 fc10
+QREADY_CAPACITY_PASS limit248 actual390_seal_fault_bit4
+- rtl/test/qwen_dv/qready/tb_qready_capacity.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 870ns; walltime 0.002 s; speed 400.023 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

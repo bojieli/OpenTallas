@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.qwen.qready_capacity_rtl.v1",
+ "source_commit": "0d4c9808fe7d2370185a4313e831b6f59f7a2f75",
+ "parameters": {
+  "NU": 4,
+  "CTX_DW": 1,
+  "UFOLD": 1,
+  "UVM_STRIDE": 4096,
+  "PIDX_STRIDE": 128,
+  "UTAG_LSB": 6
+ },
+ "source_sha256": {
+  "rtl/test/qwen_dv/qready/tb_qready_capacity.sv": "d8abacaf9eeb2a053c705c49f79f2926f45675e573b7e30cdb313b53afc3dc7d",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv": "88ad20d6f0af4d13be25832e1c642adbe0482780e88c7af1e5f86701a185f53f",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+ },
+ "verdict": "PASS",
+ "measured": {
+  "meta_rows": 30,
+  "base": 480,
+  "maximum_entries": 248,
+  "positive248": {
+   "image_ready": 1,
+   "fault": 0
+  },
+  "negative249": {
+   "image_ready": 0,
+   "fault_code": "0x10"
+  },
+  "actual390": {
+   "image_ready": 0,
+   "fault_code": "0x10"
+  }
+ },
+ "fleet_unit": "oth-ubuntu-1546858-1792423445",
+ "scope": "Header/store capacity seal; no execution or full-layer throughput claim"
+}
