@@ -1,0 +1,19 @@
+# AHUB same-edge face-copy source preflight
+
+This optional native source repairs the 35 AM flip-flops that each drove four public outputs in source `483ac4ba8`. Each AM output now owns its own kept same-master, same-D, same-clock/reset/polarity flip-flop. The original source, wrapper, benches and failure records remain unchanged. Select the alternate native file with `face_bench.sh`; compile only one native implementation at a time because both implement the same fixed-profile module interface.
+
+Supported profile: actual GEN7 AP offsets `[-40,-40,-38,-39]`, FR `-7`, Z stride `4`, RX/RS/WF relays `1`, RY relay `2`. The generator accepts only mapped source SHA256 `1256f2546a0985710857f13bf72269408c07e355349c7a3f2385e1992203f3da` and the exact profile token. It assigns each output endpoint a distinct source copy before recursively solving all upstream input/reset load counts to a fixed point at 24. Five hard children are unchanged.
+
+The independently reparsed and resynthesized netlist contains 3420 FFs versus 3315 previously: exactly 105 additional AM copies. Clock sinks rise from 3320 to 3425 including five hard children. Standard-cell area increases from 1575.675180 to 1611.148320 square micrometres (+35.473140). All nonclock buffer-transparent source loads, including D/reset input loads, remain at most 24; primary reset input loads remain two. The independent checker compares every full cell equation and state D/clock/reset/set tuple to the original, preserves output polarity, and rejects unrecorded state initialization. These mapped sources have no explicit initialization; reset/common-capture establishes correspondence.
+
+The complete signal-port ledger has 627 signal ports, 645 FF endpoint occurrences and 645 distinct boundary FFs: the historical 623 public FF roles plus 22 additional kept start-input copies. Four AM bit-1 outputs remain exact constants. Per-source necessary endpoint-distance lower bounds pass after the split. The old shared AM output witness required at least 457.392 micrometres from one FF to a port rectangle, above the 405 limit.
+
+Full actual-shape program/calendar and valid-payload output miter passes seven programs, 680 Z words and 32 result beats per program on Verilator 5.050. Occupied/poisoned reset phases 1,256,700,1350,1700 pass with the bench's explicit 80-edge hold/drain fixture. The upstream-provider-stale phase1350 negative still fails with 13480 errors. This is intentionally retained; it does not qualify production POR, AHUB source clear or relay drain.
+
+The causal witnesses cover state D, clock, reset and set corruption, unsupported profile/source hash, merging two equivalent AM output identities, a real emitted AM-copy D corruption, sticky-reset disconnection, and unsupported-profile runtime refusal.
+
+This packet is source preflight only. The old physical failure remains immutable. Internal D/reset reach, placement occupancy, clock spread/insertion, real root/reset phase and production admission remain open. In particular a fanout bound does not establish face-to-core wire reach. No placement, CTS, GRT, route, gate, review or submit was launched.
+
+Checklist: pins **fixed/source-proven** with unique boundary identities; reach **OPEN** (necessary boundary lower bounds only); fanout **PASS** <=24 through transparent cells; logic depth **OPEN** (unchanged equations); storage **unchanged**; floorplan **OPEN/reprice** using new area and boundary count; clock **OPEN** +105 sinks; schedule **unchanged** (same-edge copies, no calendar/event changes).
+
+One initial D-tie-zero behavioral mutant escaped the seven vectors because its selected AM bit did not exercise the opposite value. That escaped log is retained. The replacement D inversion exercises the output mismatch causally; the independent all-equation correspondence checker catches D corruption regardless of calendar activity.

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-ahub-face-copy-1019/tools/qwen_kv_die/ahub_safe/verify_faces.py", line 100, in <module>
+    assert rt not in output_owners,('merged public face FF identities',output_owners.get(rt),(po,bi),rt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('merged public face FF identities', ('am0', 9), ('am1', 9), ('cell', 'safe_c7840', 'QN', 0))
