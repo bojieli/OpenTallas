@@ -1,0 +1,127 @@
+{
+  "status": "pre-RTL model; no physical qualification",
+  "release": {
+    "SW": {
+      "NPT": 2,
+      "SOLO": 1,
+      "VM_RT": 74,
+      "ROWS": 256
+    },
+    "NE_SE_NW": {
+      "NPT": 1,
+      "SOLO": 0,
+      "VM_RT": 74,
+      "ROWS": 256
+    }
+  },
+  "clock": {
+    "period_ps": 833.333,
+    "native_roots": "existing clk_control per leaf; same-domain macros",
+    "signoff": "TT setup / FF hold; no data exceptions"
+  },
+  "storage": [
+    {
+      "name": "vm_meta_valid",
+      "width": 140,
+      "depth_edges": 83,
+      "macro": "128x256_1r1w",
+      "read_B_per_edge": 17.5,
+      "write_B_per_edge": 17.5,
+      "post_meta_edge": 1
+    },
+    {
+      "name": "vm_select_early",
+      "width": 24,
+      "depth_edges": 74,
+      "macro": "128x256_1r1w",
+      "read_B_per_edge": 3,
+      "write_B_per_edge": 3
+    },
+    {
+      "name": "vm_select_late",
+      "width": 24,
+      "depth_edges": 9,
+      "macro": "32x128_1r1w",
+      "read_B_per_edge": 3,
+      "write_B_per_edge": 3
+    },
+    {
+      "name": "injection",
+      "width": 68,
+      "depth_edges": 12,
+      "macro": "32x128_1r1w",
+      "read_B_per_edge": 8.5,
+      "write_B_per_edge": 8.5
+    }
+  ],
+  "mechanism": {
+    "MAC_per_cycle": 0,
+    "communication": "unchanged production ports; input164b VM and68b injection each edge",
+    "replicas": 4,
+    "issue_II": 1,
+    "added_data_edges": 0,
+    "select_taps_edges": [
+      74,
+      83
+    ],
+    "meta_edges": 84,
+    "valid_edges": 83,
+    "storage_reset": "counter warmup masks unknown SRAM content; data storage never reset",
+    "fanout": "pointer/address/reset copies per macro; each address bit<=32 sinks before mapping census"
+  },
+  "legacy_delay_bits": {
+    "VM": 13744,
+    "injection": 816,
+    "total_per_leaf": 14560
+  },
+  "programme": {
+    "existing_implementation": "issuer_v7 on main: six256x256 plus four256x64 metadata macros; no new flop implementation",
+    "rows_required_ARGMAX": 212,
+    "capacity": 256,
+    "init_requirement": "four stable edges; target drains53"
+  },
+  "floorplan": {
+    "status": "UNPRICED until source-pinned macro face geometry and synthesis; do not gate",
+    "provisional_outline_um": [
+      345.6,
+      345.6
+    ],
+    "old_diagnostic_outline_um": [
+      108,
+      280.8
+    ],
+    "full_face_signal_density_limit_per_um": 6,
+    "max_reach_per_edge_um": 405,
+    "macro_lattice_um": 43.2,
+    "single_std_band": true,
+    "known_blocker": "current legacy SRAM macros may require real compiler pin-access variants; no cosmetic LEF edit",
+    "legacy_macro_face_density_per_um": {
+      "128x256": 8.63705391040243,
+      "32x128": 7.722533457827575
+    }
+  },
+  "qualification_required": [
+    "full NPT2/SOLO1 and NPT1/SOLO0 golden miter",
+    "wrong slot/stale reset/off-by-one read mutants",
+    "production II1 sustained trace",
+    "synthesis retained reset/address fanout",
+    "actual macro escape and measured area/slot pricing",
+    "critical PNG ROOT review before submit"
+  ],
+  "measured_component": {
+    "verilator": "5.050",
+    "shapes": [
+      "NPT1/SOLO0",
+      "NPT2/SOLO1"
+    ],
+    "functional_pairs_each": 1792,
+    "wrong_budget_and_lane_mutants_rejected": 6,
+    "production_dense_requests_each": 2048,
+    "production_dense_pairs_each": 8192,
+    "production_II_edges": 1,
+    "compiler_price_II_edges": 1,
+    "deviation_percent": 0,
+    "added_external_edges": 0,
+    "scope": "protocol leaf plus unchanged complete VM assembly; not die/token/physical qualification"
+  }
+}

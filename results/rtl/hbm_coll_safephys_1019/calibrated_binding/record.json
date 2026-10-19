@@ -1,0 +1,118 @@
+{
+  "schema": "opentallas.hbm_coll_safephys_1019.v1",
+  "source_commit": "6325606c8",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv": "e028ef761fd49cac532824e7ad1a6705b59cd548878a3844dbdabcbcfca01428",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv": "98a6cbdc55203a26469c18a7b6208fd807beb0a3f9b1baef5b60fc6a3a32011c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv": "ba22af7639ffd2352a47b7f8a9d84c2eb292db03261f3fa567fcd9334bf78fa6",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv": "b0076b995a784e723581b08d0d083d0ac5088b1f5e490ff6b4dbfe97bdb694bd",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_iter_safephys.sv": "5167d1a82631f70178e0f7f1cd6bf2e06eff771197e1c8aa33eb1a2ef20e0d72",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_fixed_delay_sram_safephys.sv": "a7b170add0ce514a19fc1f6782fb8c7fde2ec0cb57f7732e6147d8560f3b094b",
+    "tools/run_hbm_coll_safephys_proofs_1019.sh": "96eac99948d99063f670299e3eb34381b179e14116b8294ac3490f7ac83cc50a",
+    "tools/hbm_coll_safe_census_1019.py": "3f9e490083e0ba0fa99b91ea6f71a0ca3052df9a7337ddbffd210af7d265f4e8"
+  },
+  "evidence": [
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/iter0.log",
+      "expected": "PASS",
+      "sha256": "a7ea65e450e9ec90a555bfbd393451fb7a8dbc3c85f647c01f34fef522e85164"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/iter1.log",
+      "expected": "FAIL",
+      "sha256": "d9b7615c439d1d6f5cc9ef1a33e1c18eaacdcc7a905c4b82b07ace1ecd2ee4e9"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/iter2.log",
+      "expected": "FAIL",
+      "sha256": "bfc2c26ab7479f3e81abc5fecdb5bce6902b471c1f9f6315e8ea69a097800772"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/mech0.log",
+      "expected": "PASS",
+      "sha256": "0be6bf2d1f7d39fc2f70e4d44ee8907c5635094c66ed53261c5d211ad9cd0658"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/mech1.log",
+      "expected": "FAIL",
+      "sha256": "8abcef49258f781cac147cd715def65cb62a31cc45d315be3c566fa28d18e00b"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/mech2.log",
+      "expected": "FAIL",
+      "sha256": "b9ee10813c8f7d095787aaad45f9fb194d188dac5c07eb7e1bace7ae2a8762a2"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/mech3.log",
+      "expected": "FAIL",
+      "sha256": "f6ecae8feec15f0e543c4a332464ca34a9dae7a30f13b73b34eadfdb252a9bd1"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/mech4.log",
+      "expected": "FAIL",
+      "sha256": "4ec1d6b76967b82c178a1e021865af9f363a9d8ec2b44a46e1c5a5533f317a74"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s0dense.log",
+      "expected": "PASS",
+      "sha256": "123f5118250bcca1f963844e410c91edad53c5c893a27a00c25bb3344e519cb6"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s0m0.log",
+      "expected": "PASS",
+      "sha256": "a1a456bf1af7a7988ba71f8b5f334615bc9e10295307df2a3d6c93dff6e6f45b"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s0m1.log",
+      "expected": "FAIL",
+      "sha256": "f5de5a2cf8c3efcb3f871274edf4ddbb60fa94f8bafc1fe4db43bce5800c1140"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s0m2.log",
+      "expected": "FAIL",
+      "sha256": "bf20c2101cb5616f760cd48074b5c62664faaf3d086907dd89e21ac144927992"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s0m3.log",
+      "expected": "FAIL",
+      "sha256": "527ea1c8cc10f3f2e7c543a05cbd883f783f82fbf517f20e12a3baa12ae91aff"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s1dense.log",
+      "expected": "PASS",
+      "sha256": "68c36f94a7e56e3ad4a65aa65fd2c539189d43553a47adc25c81d6217a559da1"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s1m0.log",
+      "expected": "PASS",
+      "sha256": "9bf861ad4afda3eca2bdd86954e9631538b14dfdd04fc5886116e70b0382d9e8"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s1m1.log",
+      "expected": "FAIL",
+      "sha256": "f5de5a2cf8c3efcb3f871274edf4ddbb60fa94f8bafc1fe4db43bce5800c1140"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s1m2.log",
+      "expected": "FAIL",
+      "sha256": "bf20c2101cb5616f760cd48074b5c62664faaf3d086907dd89e21ac144927992"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/calibrated_binding/s1m3.log",
+      "expected": "FAIL",
+      "sha256": "527ea1c8cc10f3f2e7c543a05cbd883f783f82fbf517f20e12a3baa12ae91aff"
+    }
+  ],
+  "production_shapes": [
+    "NLINK1/NPT1/SOLO0",
+    "NLINK2/NPT2/SOLO1"
+  ],
+  "VM_RT": 74,
+  "SAFE_DELAY": 1,
+  "external_edge_delta": 0,
+  "arithmetic_order_delta": 0,
+  "cadence": "II1, dense8192pairs/2048requests each shape",
+  "census": "ActualASAP7std3794.59/3894.32,4macros19369.881; allfunctionalnonreset<=16. Internalrst_l155/164 OPENSAFE32; stdarea beforetiefanoutrepair, no floorplan/cadenceadoption.",
+  "qualification": "Functional/census only; actual ASAP7 mapped area, native binding, macro access, geometry, clock and timing remain OPEN",
+  "physical_qualified": false
+}

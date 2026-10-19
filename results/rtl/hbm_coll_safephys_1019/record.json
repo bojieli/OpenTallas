@@ -1,0 +1,136 @@
+{
+  "schema": "opentallas.hbm_coll_safephys_1019.v1",
+  "source_commit": "1864a26c1ad509cdecb355e18e666aa85d04f1e0",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv": "e028ef761fd49cac532824e7ad1a6705b59cd548878a3844dbdabcbcfca01428",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv": "98a6cbdc55203a26469c18a7b6208fd807beb0a3f9b1baef5b60fc6a3a32011c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv": "90190c6e457a06fe1c2e5627fa1bfed36e649a7cfcaa554e92ab171b5bb95d63",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_v74_safephys.sv": "b0076b995a784e723581b08d0d083d0ac5088b1f5e490ff6b4dbfe97bdb694bd",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_iter_safephys.sv": "5167d1a82631f70178e0f7f1cd6bf2e06eff771197e1c8aa33eb1a2ef20e0d72",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_fixed_delay_sram_safephys.sv": "a7b170add0ce514a19fc1f6782fb8c7fde2ec0cb57f7732e6147d8560f3b094b",
+    "tools/run_hbm_coll_safephys_proofs_1019.sh": "8578e1fc061311d63219be2364b12d9d9631ce9ef269c678004e5539dcb03fb1",
+    "tools/hbm_coll_safe_census_1019.py": "5d3a4a5d1e9ce7e642935d9c465b06f42001be3ecb60ae170dfb19e60e828e7a"
+  },
+  "evidence": [
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/iter0.log",
+      "expected": "PASS",
+      "witness": "PASS",
+      "sha256": "50634a88654f88d1406f873952a1318ab6f5eb227cd8da596334d98ba1c58eaa"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/iter1.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "d9b7615c439d1d6f5cc9ef1a33e1c18eaacdcc7a905c4b82b07ace1ecd2ee4e9"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/iter2.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "bfc2c26ab7479f3e81abc5fecdb5bce6902b471c1f9f6315e8ea69a097800772"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/mech0.log",
+      "expected": "PASS",
+      "witness": "PASS",
+      "sha256": "ddab10f9bddf8d8f9393fc3dec915b765f334527d28bfddef515a986b74a5d34"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/mech1.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "8abcef49258f781cac147cd715def65cb62a31cc45d315be3c566fa28d18e00b"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/mech2.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "b9ee10813c8f7d095787aaad45f9fb194d188dac5c07eb7e1bace7ae2a8762a2"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/mech3.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "f6ecae8feec15f0e543c4a332464ca34a9dae7a30f13b73b34eadfdb252a9bd1"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/mech4.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "4ec1d6b76967b82c178a1e021865af9f363a9d8ec2b44a46e1c5a5533f317a74"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s0dense.log",
+      "expected": "PASS",
+      "witness": "PASS",
+      "sha256": "5aa8438bb5ec1bb5866d8de387df52091840a15ec944d3f3687df5696d46044e"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s0m0.log",
+      "expected": "PASS",
+      "witness": "PASS",
+      "sha256": "d5c5c8e0dacd6d7a5a7a8de7e80c4d0a85da3ae6f32175caae2ff1fda634b6a7"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s0m1.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "f5de5a2cf8c3efcb3f871274edf4ddbb60fa94f8bafc1fe4db43bce5800c1140"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s0m2.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "bf20c2101cb5616f760cd48074b5c62664faaf3d086907dd89e21ac144927992"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s0m3.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "527ea1c8cc10f3f2e7c543a05cbd883f783f82fbf517f20e12a3baa12ae91aff"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s1dense.log",
+      "expected": "PASS",
+      "witness": "PASS",
+      "sha256": "0a09bb15a43483cd242368da7b116bcfdf40f9e1c0ab5f572834a1cf5892ec29"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s1m0.log",
+      "expected": "PASS",
+      "witness": "PASS",
+      "sha256": "923f4790989d9b3c8ccf851e1140160e1bc4fdc83c1570605883b09e744af22c"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s1m1.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "f5de5a2cf8c3efcb3f871274edf4ddbb60fa94f8bafc1fe4db43bce5800c1140"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s1m2.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "bf20c2101cb5616f760cd48074b5c62664faaf3d086907dd89e21ac144927992"
+    },
+    {
+      "log": "results/rtl/hbm_coll_safephys_1019/s1m3.log",
+      "expected": "FAIL",
+      "witness": "Assertion failed",
+      "sha256": "527ea1c8cc10f3f2e7c543a05cbd883f783f82fbf517f20e12a3baa12ae91aff"
+    }
+  ],
+  "production_shapes": [
+    "NLINK1/NPT1/SOLO0",
+    "NLINK2/NPT2/SOLO1"
+  ],
+  "VM_RT": 74,
+  "SAFE_DELAY": 1,
+  "external_edge_delta": 0,
+  "arithmetic_order_delta": 0,
+  "cadence": "II1, dense8192pairs/2048requests each shape",
+  "census": "ABC generic-gates:3335/3433FF,4SRAM,reset164,maxnonclock/nonresetfanout32",
+  "qualification": "Functional/census only; actual ASAP7 mapped area, native binding, macro access, geometry, clock and timing remain OPEN",
+  "physical_qualified": false
+}

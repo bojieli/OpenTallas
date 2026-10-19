@@ -1,0 +1,354 @@
+{
+  "schema": "opentallas.hbm_coll_pin_budget_1019.v1",
+  "release": "VM_RT74/NLINK1and2/ROWS256 programmeissuer remains6x256x256+4x256x64",
+  "macro_census": {
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+      "size_um": [
+        94.824,
+        41.04
+      ],
+      "area_um2": 3891.57696,
+      "contacts": {
+        "W": 410,
+        "E": 409
+      },
+      "density_per_face_um": {
+        "W": 9.990253411306043,
+        "E": 9.965886939571151
+      },
+      "R0": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "R180": {
+        "orient": "R180",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 819,
+            "max_offset_nm": 24.0
+          }
+        }
+      },
+      "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+      "pin_geometry": {
+        "M4": {
+          "preferred_direction": "H",
+          "pin_width_nm": [
+            24,
+            24
+          ],
+          "min_width_nm": 24,
+          "below_min_width": 0,
+          "pin_area_nm2": [
+            576,
+            576
+          ],
+          "min_area_nm2": 2000,
+          "below_min_area": 819,
+          "pins_on_macro_edge": 819,
+          "same_layer_obs_min_gap_nm": 48,
+          "same_layer_obs_overlap_or_within_spacing": 0,
+          "adjacent_layer_obs_covers_pin": {
+            "M5": 0,
+            "M3": 819
+          },
+          "pin_centre_steps_nm": [
+            96
+          ],
+          "pref_track_pitch_nm": 48
+        }
+      }
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+      "size_um": [
+        94.824,
+        80.472
+      ],
+      "area_um2": 7630.676928,
+      "contacts": {
+        "W": 410,
+        "E": 409
+      },
+      "density_per_face_um": {
+        "W": 5.094939854856348,
+        "E": 5.0825131722835275
+      },
+      "R0": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "R180": {
+        "orient": "R180",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 819,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "sha256": "7e3734cd8e6619daf31061405df22e3be70b42181faacec4a36af2e03a7da9a4",
+      "pin_geometry": {
+        "M4": {
+          "preferred_direction": "H",
+          "pin_width_nm": [
+            24,
+            24
+          ],
+          "min_width_nm": 24,
+          "below_min_width": 0,
+          "pin_area_nm2": [
+            576,
+            576
+          ],
+          "min_area_nm2": 2000,
+          "below_min_area": 819,
+          "pins_on_macro_edge": 819,
+          "same_layer_obs_min_gap_nm": 48,
+          "same_layer_obs_overlap_or_within_spacing": 0,
+          "adjacent_layer_obs_covers_pin": {
+            "M5": 0,
+            "M3": 819
+          },
+          "pin_centre_steps_nm": [
+            192
+          ],
+          "pref_track_pitch_nm": 48
+        }
+      }
+    },
+    "ot_sram_1r1w_32x128_m1": {
+      "size_um": [
+        51.408,
+        20.79
+      ],
+      "area_um2": 1068.77232,
+      "contacts": {
+        "W": 199,
+        "E": 198
+      },
+      "density_per_face_um": {
+        "W": 9.571909571909572,
+        "E": 9.523809523809524
+      },
+      "R0": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "R180": {
+        "orient": "R180",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 397,
+            "max_offset_nm": 18.0
+          }
+        }
+      },
+      "sha256": "eaeda6a04d73124db159a54e0160ad4f5f72cc35375732b9b7d7a4c2bf42cbc9",
+      "pin_geometry": {
+        "M4": {
+          "preferred_direction": "H",
+          "pin_width_nm": [
+            24,
+            24
+          ],
+          "min_width_nm": 24,
+          "below_min_width": 0,
+          "pin_area_nm2": [
+            576,
+            576
+          ],
+          "min_area_nm2": 2000,
+          "below_min_area": 397,
+          "pins_on_macro_edge": 397,
+          "same_layer_obs_min_gap_nm": 48,
+          "same_layer_obs_overlap_or_within_spacing": 0,
+          "adjacent_layer_obs_covers_pin": {
+            "M5": 0,
+            "M3": 397
+          },
+          "pin_centre_steps_nm": [
+            96
+          ],
+          "pref_track_pitch_nm": 48
+        }
+      }
+    },
+    "ot_sram_1r1w_32x128_m1_p192_rc": {
+      "size_um": [
+        51.408,
+        39.96
+      ],
+      "area_um2": 2054.26368,
+      "contacts": {
+        "W": 199,
+        "E": 198
+      },
+      "density_per_face_um": {
+        "W": 4.97997997997998,
+        "E": 4.954954954954955
+      },
+      "R0": {
+        "orient": "R0",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "R180": {
+        "orient": "R180",
+        "origin_nm": [
+          43200,
+          43200
+        ],
+        "layers": {
+          "M4": {
+            "pins": 397,
+            "offtrack": 0,
+            "max_offset_nm": 0.0
+          }
+        }
+      },
+      "sha256": "382d89f3b087fbf3a10552a3363c7346228bdfcc9d923245ac1093c0551db9fe",
+      "pin_geometry": {
+        "M4": {
+          "preferred_direction": "H",
+          "pin_width_nm": [
+            24,
+            24
+          ],
+          "min_width_nm": 24,
+          "below_min_width": 0,
+          "pin_area_nm2": [
+            576,
+            576
+          ],
+          "min_area_nm2": 2000,
+          "below_min_area": 397,
+          "pins_on_macro_edge": 397,
+          "same_layer_obs_min_gap_nm": 48,
+          "same_layer_obs_overlap_or_within_spacing": 0,
+          "adjacent_layer_obs_covers_pin": {
+            "M5": 0,
+            "M3": 397
+          },
+          "pin_centre_steps_nm": [
+            192
+          ],
+          "pref_track_pitch_nm": 48
+        }
+      }
+    }
+  },
+  "delay_ring_macros": {
+    "128x256_p192_mir": 2,
+    "32x128_p192_rc": 2
+  },
+  "new_delay_macro_area_um2": 19369.881216,
+  "original_bound_delay_macro_area_um2": 9920.69856,
+  "per_leaf_area_delta_um2": 9449.182656,
+  "repair_contract": "128x256 retains2spare rows/2spare columns, singleclock1R1W, same core+behavior+latency;32x128 retainszero repairspares",
+  "small_macro_provenance": "7a2ff3761152362393140fa3122442935ca3d2ca physicalgeometry unchanged; oldp192 Liberty immutable; distinct_rc complete recalibration",
+  "small_macro_exact_extra_lead_um": 22.880836739420737,
+  "small_macro_timing_delta_vs_7a2": {
+    "tt": {
+      "clk_to_q_ps": 4.366807828829906,
+      "setup_ps": 4.366807828829881,
+      "min_period_ps": 8.733615657659755,
+      "min_pulse_ps": 3.493446263063902,
+      "pin_cap_ff": 4.083657337068116,
+      "clk_cap_ff": 4.083657337068116,
+      "out_slew_intrinsic_ps": 4.366807828829877,
+      "read_energy_fj": 256.12698818091224,
+      "write_energy_fj": 256.12698818091224,
+      "hold_ps": 0.0
+    },
+    "ss": {
+      "clk_to_q_ps": 6.425718787300809,
+      "setup_ps": 6.425718787300802,
+      "min_period_ps": 12.851437574601619,
+      "min_pulse_ps": 5.140575029840647,
+      "pin_cap_ff": 4.083657337068116,
+      "clk_cap_ff": 4.083657337068116,
+      "out_slew_intrinsic_ps": 6.425718787300802,
+      "read_energy_fj": 207.46286042653895,
+      "write_energy_fj": 207.46286042653892,
+      "hold_ps": 0.0
+    },
+    "ff": {
+      "clk_to_q_ps": 3.231477211420355,
+      "setup_ps": 3.231477211420348,
+      "min_period_ps": 6.4629544228406814,
+      "min_pulse_ps": 2.585181769136284,
+      "pin_cap_ff": 4.083657337068116,
+      "clk_cap_ff": 4.083657337068116,
+      "out_slew_intrinsic_ps": 3.231477211420348,
+      "read_energy_fj": 309.9136556989039,
+      "write_energy_fj": 309.9136556989038,
+      "hold_ps": 0.0
+    }
+  },
+  "lead_bound": "Longest physical M4 contactlead fromcompact core:macroheight-coreheight; length-specific0.38RC+actualcalibrateddriverR*C, not arbitrary delay. No localterminaldriver/repeatedcore was previously modeled.",
+  "RTL_bound": true,
+  "data_edge_delta": 0,
+  "compiler_claim": "Complete calibrated analytical LEF/PG/contact/RC/Lib/behavioral abstract; no transistorGDS",
+  "still_open": [
+    "actualASAP7standardcellarea for3335/3433FF shapes",
+    "actualnewmacrobehavior+nativebinding",
+    "actualexternalpatch/via/PG/DRC escape",
+    "floorplan/slot fromactualarea,1band/lattice/reach/reset/clocks/nativeTTsetupFFhold",
+    "releaseparentv8 propagation after rootreview"
+  ],
+  "physical_qualified": false
+}

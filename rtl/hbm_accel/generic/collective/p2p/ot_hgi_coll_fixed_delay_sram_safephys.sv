@@ -1,0 +1,47 @@
+// Warm flag is advanced one internal edge; data output age is unchanged.
+`timescale 1ns/1ps
+`default_nettype none
+// Fixed schedule delay, II=1. The macro read ends at a local full-cycle
+// capture; no SRAM-Q -> output pin combinational path. D counts captures,
+// exactly as reference q[0:D-1]. SRAM contents are never reset or assumed zero.
+module ot_hgi_coll_fixed_delay_sram_safephys #(
+ parameter integer W=140,D=83,MUT_SLOT=0,MUT_RESET=0
+)(input wire clk,rst_n,input wire [W-1:0] din,output wire [W-1:0] dout);
+ localparam integer SMALL=(D<=32 && W<=128),DEPTH=SMALL?32:128,AW=SMALL?5:7,MW=SMALL?128:256;
+ reg [W-1:0] in_q;
+ reg [AW-1:0] wp;
+ reg [7:0] filled;
+ localparam integer REGIONS=(W+31)/32;
+
+ wire [AW-1:0] ra=wp-AW'(D-3)+(MUT_SLOT!=0?AW'(1):AW'(0));
+ wire [MW-1:0] rd;
+ wire [MW-1:0] wd={{(MW-W){1'b0}},in_q};
+ generate if(SMALL)begin:g_small
+ ot_sram_1r1w_32x128_m1_p192_rc u_mem(.clk(clk),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd),
+  .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(wd),.w_mask_in({MW{1'b1}}));
+ end else begin:g_large
+ ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_mem(.clk(clk),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(rd),
+  .w_ce_in(1'b1),.w_addr_in(wp),.wd_in(wd),.w_mask_in({MW{1'b1}}),
+  .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+ end endgenerate
+ always @(posedge clk)in_q<=din;
+ for(genvar g=0;g<REGIONS;g=g+1)begin:g_local
+  localparam integer CW=(W-g*32>=32)?32:W-g*32;
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_capture_local_safephys #(.W(CW),.MUT_RESET(MUT_RESET)) u_capture(
+   .clk(clk),.rst_n(rst_n),.warm_d(filled>=D-2),.din(rd[g*32+:CW]),.dout(dout[g*32+:CW]));
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin wp<=0;filled<=0;end
+  else begin wp<=wp+1'b1;if(filled<D)filled<=filled+1'b1;end
+ end
+ initial begin if(D<4 || D>DEPTH || W>MW)$fatal(1,"illegal fixed-delay shape");end
+endmodule
+`default_nettype wire
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_capture_local_safephys #(parameter integer W=32,MUT_RESET=0)(
+ input wire clk,rst_n,warm_d,input wire[W-1:0]din,output reg[W-1:0]dout);
+ reg warm;
+ always @(posedge clk or negedge rst_n)if(!rst_n)warm<=0;else warm<=warm_d;
+ always @(posedge clk)dout<=(warm||MUT_RESET!=0)?din:{W{1'b0}};
+endmodule

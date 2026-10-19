@@ -66,7 +66,7 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  // select and the source metadata are delayed VM_RT more edges (vm_valid_pipe / vm_select_pipe / vm_meta_pipe), and
  // vm_sel_d = the select delayed VM_RT edges feeds the assembly slices (their own 9-stage pipe then lands on the
  // capture edge). VM_RT 0 = the V7 leaf, edge- and bit-identical (vm_sel_d tied 0, unused by the v5 wrappers).
- parameter integer VM_RT=0
+ parameter integer VM_RT=0,SAFE_DELAY=0
 )(
  input wire clk_control,rst_n,
  input wire [1535:0] inst,
@@ -198,6 +198,27 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  wire [0:0] r_rr_local=p_ring[54 +: 1];
  wire [2:0] r_rr_local_tag=p_ring[55 +: 3];
 
+ wire [65:0] inj_meta_safe;wire [1:0] inj_valid_safe;
+ wire [131:0] vm_meta_safe;wire [23:0] vm_select_late_safe,vm_select_early_safe;wire [7:0] vm_valid_safe;
+ wire [65:0] inj_meta_in;
+ for(genvar j=0;j<2;j=j+1)begin:g_injmeta_in
+ assign inj_meta_in[j*33+:33]={p_inj_meta[j*33+16+:17],16'(p_inj_meta[j*33+:16]+m_idx)};
+ end
+ generate if(SAFE_DELAY!=0)begin:g_safe_delay
+ wire [139:0] vm_mv;wire [67:0] inj_mv;reg [131:0] vm_meta_q;
+ ot_hgi_coll_fixed_delay_sram #(.W(140),.D(9+VM_RT)) u_vm(.clk(clk_control),.rst_n(rst_n),.din({p_vm_meta,{p_vm_rq[135],p_vm_rq[118],p_vm_rq[101],p_vm_rq[84],p_vm_rq[67],p_vm_rq[50],p_vm_rq[33],p_vm_rq[16]}}),.dout(vm_mv));
+ ot_hgi_coll_fixed_delay_sram #(.W(24),.D(VM_RT)) u_se(.clk(clk_control),.rst_n(rst_n),.din(p_vm_pair_select),.dout(vm_select_early_safe));
+ ot_hgi_coll_fixed_delay_sram #(.W(24),.D(9)) u_sl(.clk(clk_control),.rst_n(rst_n),.din(vm_select_early_safe),.dout(vm_select_late_safe));
+ ot_hgi_coll_fixed_delay_sram #(.W(68),.D(INJLAT)) u_inj(.clk(clk_control),.rst_n(rst_n),.din({inj_meta_in,p_inj_rd}),.dout(inj_mv));
+ always @(posedge clk_control)vm_meta_q<=vm_mv[139:8];
+ assign vm_meta_safe=vm_meta_q;assign vm_valid_safe=vm_mv[7:0];
+ assign inj_meta_safe=inj_mv[67:2];assign inj_valid_safe=inj_mv[1:0];
+ end else begin:g_legacy_delay
+ assign vm_meta_safe=vm_meta_pipe[9+VM_RT];assign vm_valid_safe=vm_valid_pipe[8+VM_RT];
+ assign vm_select_late_safe=vm_select_pipe[8+VM_RT];
+ if(VM_RT>0)assign vm_select_early_safe=vm_select_pipe[VM_RT-1];else assign vm_select_early_safe=0;
+ assign inj_meta_safe=inj_meta_pipe[INJLAT-1];assign inj_valid_safe=inj_valid_pipe[INJLAT-1];
+ end endgenerate
  reg [1:0] inj_valid_pipe[0:INJLAT-1];
  reg [65:0] inj_meta_pipe[0:INJLAT-1];
  reg [131:0] vm_meta_pipe[0:9+VM_RT];
@@ -234,26 +255,28 @@ module ot_hgi_coll_q_static_ctl_v5 #(
    inj_idx_pin[j*16+:16]<=p_inj_idx[j*16+:16]+m_idx;
    for(integer h=0;h<2;h=h+1)
     inj_addr_pin[j*80+h*40+:40]<=ks_inj_addr[j*80+h*40+:40];
-   inj_meta_pipe[0][j*33+:33]<={p_inj_meta[j*33+16+:17],
+   if(SAFE_DELAY==0)inj_meta_pipe[0][j*33+:33]<={p_inj_meta[j*33+16+:17],
      16'(p_inj_meta[j*33+:16]+m_idx)};
   end
-  for(integer j=1;j<INJLAT;j=j+1)inj_meta_pipe[j]<=inj_meta_pipe[j-1];
+  if(SAFE_DELAY==0)for(integer j=1;j<INJLAT;j=j+1)inj_meta_pipe[j]<=inj_meta_pipe[j-1];
   for(integer j=0;j<4;j=j+1)begin
    delivery_obase_pin[j*40+:40]<=ks_del[j*40+:40];
    rgx_addr_pin[j*40+:40]<=ks_rgx[j*40+:40];
   end
+  if(SAFE_DELAY==0)begin
   vm_meta_pipe[0]<=p_vm_meta;
   for(integer j=1;j<10+VM_RT;j=j+1)vm_meta_pipe[j]<=vm_meta_pipe[j-1];
   vm_select_pipe[0]<=p_vm_pair_select;
   for(integer j=1;j<9+VM_RT;j=j+1)vm_select_pipe[j]<=vm_select_pipe[j-1];
+  end
   for(integer b=0;b<8;b=b+1)
    vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+m_vm;
  end
  always @(posedge clk_control or negedge rst_n)begin
   if(!rst_n)begin
    protocol_fault<=0;cycles<=0;arg_active<=0;wr_sequence_overflow<=0;rd_sequence_overflow<=0;rx_sequence_overflow<=0;inj_req_pin<=0;vm_assembled_v<=0;vm_raw_valid<=0;
-   for(integer j=0;j<INJLAT;j=j+1)inj_valid_pipe[j]<=0;
-   for(integer j=0;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=0;
+   if(SAFE_DELAY==0)for(integer j=0;j<INJLAT;j=j+1)inj_valid_pipe[j]<=0;
+   if(SAFE_DELAY==0)for(integer j=0;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=0;
    dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;
    lk_wr_v_e<=0;lp_we_e<=0;lp_tag_e<=0;tkm_done_slot_e<=0;arg_active_e<=0;arg_start_e<=0;
    for(integer b=0;b<8;b=b+1)vm_req_valid[b]<=0;
@@ -265,25 +288,25 @@ module ot_hgi_coll_q_static_ctl_v5 #(
    arg_active_e<=arg_active;arg_start_e<=a_arg_start;
    inj_req_pin<=p_inj_rd;
    for(integer b=0;b<8;b=b+1)vm_raw_valid[b]<=vm_rv[b];
-   inj_valid_pipe[0]<=p_inj_rd;
-   for(integer j=1;j<INJLAT;j=j+1)inj_valid_pipe[j]<=inj_valid_pipe[j-1];
+   if(SAFE_DELAY==0)inj_valid_pipe[0]<=p_inj_rd;
+   if(SAFE_DELAY==0)for(integer j=1;j<INJLAT;j=j+1)inj_valid_pipe[j]<=inj_valid_pipe[j-1];
    for(integer b=0;b<8;b=b+1)begin
     vm_req_valid[b]<=p_vm_rq[b*17+16];
-    vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
+    if(SAFE_DELAY==0)vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
 `ifdef OT_COLL_V7_MUT_OBS_NOALIGN
     if(vm_raw_valid[b]!=vm_valid_pipe[7+VM_RT][b])protocol_fault<=1;   // mutant: observed captured, expected not delayed
 `else
-    if(vm_raw_valid[b]!=vm_valid_pipe[8+VM_RT][b])protocol_fault<=1;
+    if(vm_raw_valid[b]!=vm_valid_safe[b])protocol_fault<=1;
 `endif
    end
-   for(integer j=1;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
+   if(SAFE_DELAY==0)for(integer j=1;j<9+VM_RT;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
    for(integer j=0;j<4;j=j+1)begin
-    vm_assembled_v[j]<=vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+:3]] &&
-                        vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+3+:3]] &&
-                        vm_select_pipe[8+VM_RT][j*6+:3]!=vm_select_pipe[8+VM_RT][j*6+3+:3];
-    if(vm_select_pipe[8+VM_RT][j*6+:3]!=vm_select_pipe[8+VM_RT][j*6+3+:3] &&
-       vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+:3]] !=
-       vm_raw_valid[vm_select_pipe[8+VM_RT][j*6+3+:3]])protocol_fault<=1;
+    vm_assembled_v[j]<=vm_raw_valid[vm_select_late_safe[j*6+:3]] &&
+                        vm_raw_valid[vm_select_late_safe[j*6+3+:3]] &&
+                        vm_select_late_safe[j*6+:3]!=vm_select_late_safe[j*6+3+:3];
+    if(vm_select_late_safe[j*6+:3]!=vm_select_late_safe[j*6+3+:3] &&
+       vm_raw_valid[vm_select_late_safe[j*6+:3]] !=
+       vm_raw_valid[vm_select_late_safe[j*6+3+:3]])protocol_fault<=1;
 
    end
    for(integer k=0;k<NPT;k=k+1)begin
@@ -321,11 +344,11 @@ module ot_hgi_coll_q_static_ctl_v5 #(
 
   end
  end
- assign inj_source_v=inj_valid_pipe[INJLAT-1];
- assign inj_source_meta=inj_meta_pipe[INJLAT-1];
- assign vm_source_meta=vm_meta_pipe[9+VM_RT];
+ assign inj_source_v=inj_valid_safe;
+ assign inj_source_meta=inj_meta_safe;
+ assign vm_source_meta=vm_meta_safe;
  if(VM_RT==0)begin:g_sel0 assign vm_sel_d=24'd0;end
- else begin:g_seld assign vm_sel_d=vm_select_pipe[VM_RT-1];end   // = the d3 select delayed VM_RT edges (flop Q)
+ else begin:g_seld assign vm_sel_d=vm_select_early_safe;end   // = the d3 select delayed VM_RT edges (flop Q)
  for(genvar k=0;k<NPT;k=k+1)assign held_epoch[k*8+:8]=link_epoch[k];
 endmodule
 // V6: VM read-data assembly leaf (moved out of the protocol leaf: 2,048 data bits in and out made that leaf pin-bound,

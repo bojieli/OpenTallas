@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.hbm_coll_mapped_sizing_1019.v1",
+  "RTL_source": "6325606c8",
+  "shapes": {
+    "n1s0": {
+      "std_area_um2": 3794.59,
+      "macro_area_um2": 19369.9,
+      "hardports": 2656,
+      "macros": 4,
+      "actual_functional_nonreset_loads": "All<=16 (none above16 incomplete actualport census)",
+      "internal_reset_loads": 155,
+      "SAFE_reset32_qualified": false
+    },
+    "n2s1": {
+      "std_area_um2": 3894.32,
+      "macro_area_um2": 19369.9,
+      "hardports": 2713,
+      "macros": 4,
+      "actual_functional_nonreset_loads": "All<=16 (none above16 incomplete actualport census)",
+      "internal_reset_loads": 164,
+      "SAFE_reset32_qualified": false
+    }
+  },
+  "scope": "ASAP7 actual make synth/1_synth.odb only; no floorplan/CTS/gate",
+  "wrapper": "OT_PIN_REGS1 genericphysical wrapper for conservative sizing; nativecore already capturesinst/start d3. Physicalwrapper +1IOage NOT yetreconciled with targetnativeABI; no physicalzeroedgeclaim",
+  "reset": "Sourceinternalrst_l155/164 remainsOPEN underSAFE~32; genericwrapper16sameagecopyfamilydoesnotdistribute internalreset",
+  "followup": "16kept identicalfinalrst_l copies atsameasyncassert/posedgeD1 age; explicitfamily+proven synthtransform, resetageSAT/mutants, actual<=32 thenfresharea. Reconcile nativeboundaryage before realslot; registeredwideW/E ports need oneband/hop405 model; no slot from incidentalPVMconfig",
+  "constants": "Raw923/932HIGH+580LOW shared ties; actualper-sinkrepair/sourcevalueequivalence must be separate from functionalfanout; macroexternalPG/via/DRC stillOPEN",
+  "physical_qualified": false,
+  "evidence_sha256": {
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n2s1/config.mk": "25653c9a3ccf79cfb35c6f50092af190c76fa5f435bf1dcf9ee83487f0bd424e",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n2s1/n2s1.log": "fac6af35e9fa753bdeee430b9644b747311c8648cf638376b6d6ad45e462d63c",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n2s1/ot_rst_copies.tsv": "4fbcdb8bb8b9ed26af99391fd00847b754012eea3cf804a1e7af90f212de462d",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n2s1/actual_fanout.tsv": "671e2a2ddaa957f311103872f2b6d9cd462d308d35ade3f0efebcc1ffc53c873",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n2s1/1_synth.json": "3a6bc51c18e076e75802a580acea1bd2ac018aaad076ee41ab056a798af705ba",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n2s1/synth_stat.txt": "b1a00341c582635973a8c576c181665e00dcdbcba181ebb52c9a4227313cd819",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n1s0/config.mk": "aebc57716f4eb696b37c1be5b2fd17a0cb777a7608ef8b7a08b6966d687ddc2e",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n1s0/n1s0.log": "7ed3aca58c1a6f2dab0df04ce9a370a925638db238a37d8b6b31c2b0f8c0bd19",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n1s0/ot_rst_copies.tsv": "4fbcdb8bb8b9ed26af99391fd00847b754012eea3cf804a1e7af90f212de462d",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n1s0/actual_fanout.tsv": "9afc1f0001abe2458af9f6e144ae8318dcf3243967b2c6ce084cb36cc783c028",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n1s0/1_synth.json": "9c1dbfe5b87a473bd9d54d65c497cac47322a4090fdbcb94b0642dbf4dfe3328",
+    "results/arch/hbm_coll_safephys_1019/mapped_sizing/n1s0/synth_stat.txt": "feca23e3e222ed64b903480305fc2925daed81c7dad30d1b55f0ee07d34a7758"
+  }
+}

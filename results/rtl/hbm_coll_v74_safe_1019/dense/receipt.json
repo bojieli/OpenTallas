@@ -1,0 +1,20 @@
+{
+  "host": "ot-epyc8",
+  "unit": "oth-ubuntu-2233381-1792426073",
+  "verilator": "5.050",
+  "sources": {
+    "ot_hfd_coll_q_hard_v5.sv": "b4cdbc8dab527f1c3b87afcc03222eb0483b12756e8c2da08c9e57e3382e6fda",
+    "ot_hgi_coll_ctl_v5.sv": "1d8ed16095d5ae0a7a690f796542664f2335ca519b7e7584c7b599777a7c4eae",
+    "ot_hgi_coll_slice_v7.sv": "49b48b96f1f7451ddd27ea5a31d74a88e6f3240a1ec617ca4e2d71acef114361",
+    "ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "ot_hgi_coll_fixed_delay_sram.sv": "ef516e90e2eeb9a260fbe186a4884536f2bd57bd650bf3aa8490b812a536434e",
+    "tb_hgi_coll_ctl_v74_safe.sv": "d6f7cd0c5aacd39df8d892b6bac0d1744596087b09cc2ec0ec24c41be0670f51",
+    "ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "rtl_commit": "1b1cfe5c0",
+  "bench_commit": "9e823c4ad",
+  "source_mutation_during_job": false,
+  "functional": "PASS",
+  "physical": "not run"
+}

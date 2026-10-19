@@ -1,0 +1,17 @@
+read_verilog -defer -sv -D SYNTHESIS rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv rtl/hdc/ot_hdc_prefix.sv rtl/lib/ot_rst_relay.sv
+read_verilog -lib -sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v
+chparam -set VM_RT 74 -set SAFE_DELAY 1 ot_hgi_coll_ctl_v5r_n1s0_safephys
+hierarchy -check -top ot_hgi_coll_ctl_v5r_n1s0_safephys
+proc
+opt
+memory_dff
+memory_collect
+opt_clean
+write_json ../n1s0_hier/retained.json
+flatten
+techmap
+opt
+abc -g simple
+opt_clean
+write_json ../n1s0_hier/mapped.json
+stat
