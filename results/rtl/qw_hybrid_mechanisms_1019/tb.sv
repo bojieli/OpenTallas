@@ -16,6 +16,7 @@ module tb;
  integer aliasmode=0;
  integer ws=0,rs=0,wa=0,ra=0,warm=0,checks=0,accepted=0,rejects=0;
  integer stamp[0:7];reg [452:0] history[0:7];
+ reg expectedff=0,expectedsf=0,pendingeligible=0;
  reg pending=0;reg [452:0] pendingdata=0;reg pendingvalid=0;
  reg lastsv=0;reg [452:0] lastso=0;
  reg [452:0] consumed=0;reg consumedvalid=0;
@@ -24,6 +25,7 @@ module tb;
  begin
   wrst=1;rrst=1;#2;
   if(fv||sv||fo!=0||so!=0)$fatal(1,"ASYNC_RESET");
+  expectedff=0;expectedsf=0;pendingeligible=0;
   ws=0;rs=0;wa=0;ra=0;warm=0;pending=0;pendingvalid=0;pendingdata=0;lastsv=0;lastso=0;
   for(integer i=0;i<8;i++)stamp[i]=-100000;
   wrst=0;rrst=0;#2;
@@ -36,26 +38,30 @@ module tb;
   wc=1;#1;wc=0;ws=ws+1;
  end endtask
  task rstep;
- integer target,slot;reg ok;reg [452:0] data;reg allwritten;
+ integer target,slot;reg ok,eligible;reg [452:0] data;reg allwritten;
  begin
   #3;
-  if(rs<2)begin ok=0;data=0;end
+  if(rs<2)begin ok=0;eligible=0;data=0;end
   else begin
    target=ra-k;slot=((target%8)+8)%8;allwritten=1;
    for(integer i=0;i<8;i++)if(stamp[i]<0)allwritten=0;
-   ok=re && allwritten && warm>=((k==0)?16:k) && ((stamp[slot]&15)==(target&15));
+   eligible=re && allwritten && warm>=((k==0)?16:k);
+   ok=eligible && ((stamp[slot]&15)==(target&15));
    data=ok?history[slot]:0;
    // Absolute identity is distinct from four-bit equality; stale alias is rejected as a lifecycle violation.
    if(ok && stamp[slot]!=target)begin rejects++;if(aliasmode)$fatal(1,"LIFECYCLE_ALIAS target=%0d actual=%0d",target,stamp[slot]);$display("LIFECYCLE_REJECT target=%0d actual=%0d K=%0d",target,stamp[slot],k);end
   end
+  if(eligible && !ok)expectedff=1;
+  if(pending && pendingeligible && !pendingvalid)expectedsf=1;
   rc=1;#1;
   checks++;
+  if(ff!==expectedff || sf!==expectedsf)$fatal(1,"FAULT_IDENTITY");
   if(consumedvalid!==lastsv || (lastsv && consumed!==lastso))$fatal(1,"CONSUMER_NBA");
   if(fv!==ok || (ok && fo!==data[9:0]))$fatal(1,"FF_IDENTITY K=%0d R=%0d",k,ra);
   if(sv!==(pending && pendingvalid) || (sv && so!==pendingdata))$fatal(1,"SRAM_IDENTITY K=%0d R=%0d",k,ra);
   if(ok)accepted++;
   lastsv=sv;lastso=so;
-  if(rs>=2)begin pending=re;pendingvalid=ok;pendingdata=data;if(re)begin ra++;if(warm<16)warm++;end end
+  if(rs>=2)begin pending=re;pendingvalid=ok;pendingeligible=eligible;pendingdata=data;if(re)begin ra++;if(warm<16)warm++;end end
   else begin pending=0;pendingvalid=0;end
   rc=0;rs++;
  end endtask
