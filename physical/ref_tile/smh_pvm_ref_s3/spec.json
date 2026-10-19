@@ -218,5 +218,6 @@
  ],
  "pin_order_waiver": {
   "sum": "Channel-routed standalone PVM arithmetic input, not an abutted bit-matched neighbour face. Shared N86.4..259.2 envelope constrains actual macro reach; overlaps other real input groups and does not specify a die joint. Any later abutted integration needs a separate exact bit-order contract."
- }
+ },
+ "io_tcl": "physical/ref_tile/smh_pvm_ref_s3/io_exact.tcl"
 }

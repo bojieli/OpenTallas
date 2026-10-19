@@ -103,6 +103,7 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/sram_edge_guard.tcl",
   "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/ref_tile/smh_pvm_ref_s3/io_exact.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/ref_tile/smh_pvm_ref_s3/pre_gpl.tcl",
