@@ -1,0 +1,81 @@
+ot-run: ot-epyc4       admits   939 GB (avail 771, growth 113, headroom 0, waiters 0/0 GB) load 71/128 running 30 disk 412 GB 
+ot-run: ot-epyc5       admits   806 GB (avail 677, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 19 disk 564 GB 
+ot-run: ot-epyc6       admits   364 GB (avail 368, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 23 disk 563 GB 
+ot-run: ot-epyc7       admits   894 GB (avail 710, growth 85, headroom 0, waiters 0/0 GB) load 66/96 running 21 disk 502 GB 
+ot-run: ot-epyc8       admits  1043 GB (avail 844, growth 113, headroom 0, waiters 0/0 GB) load 85/128 running 28 disk 566 GB 
+ot-run: ot-pve1        admits    50 GB (avail 53, growth 18, headroom 0, waiters 0/0 GB) load 46/28 running 6 disk 1198 GB 
+ot-run: ot-agidock128  admits    98 GB (avail 81, growth 13, headroom 0, waiters 0/0 GB) load 17/64 running 11 disk 48 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2814994-1792423495 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PIN_SUSTAIN window=1 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=1 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=2 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=2 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=3 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=3 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=4 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=4 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=5 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=5 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=6 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=6 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=7 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=7 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=8 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=8 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=9 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=9 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=10 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=10 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=11 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=11 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=12 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=12 sectors=16 HBM_edges=16
+SVG_BOUNDARY PASS mut=0 errors=0 tx=413 reads=408 completes=12 stalls=307 max_burst=23
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_boundary.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.007 s; speed 189.217 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB
+MUT=0 RC=0
+Verilator 5.050 2026-07-01 rev v5.050
+ADMISSION_FAIL used=3
+RESERVATION_INVARIANT_FAIL used=0 outstanding=4
+ADMISSION_FAIL used=0
+RESERVATION_INVARIANT_FAIL used=0 outstanding=4
+ADMISSION_FAIL used=0
+RESERVATION_INVARIANT_FAIL used=0 outstanding=4
+ADMISSION_FAIL used=0
+PIN_SUSTAIN window=1 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=2 sectors=16 HBM_edges=22
+CORE_SUSTAIN window=1 sectors=16 HBM_edges=65
+PIN_SUSTAIN window=3 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=4 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=5 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=6 sectors=16 HBM_edges=20
+CORE_SUSTAIN window=2 sectors=16 HBM_edges=41
+PIN_SUSTAIN window=7 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=8 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=9 sectors=16 HBM_edges=20
+PIN_SUSTAIN window=10 sectors=16 HBM_edges=20
+CORE_SUSTAIN window=3 sectors=16 HBM_edges=61
+PIN_SUSTAIN window=11 sectors=16 HBM_edges=22
+PIN_SUSTAIN window=12 sectors=16 HBM_edges=24
+SVG_BOUNDARY FAIL mut=1 errors=4050 tx=413 reads=408 completes=0 stalls=120 max_burst=12
+[1224312] %Fatal: tb_svg_landing_boundary.sv:103: Assertion failed in tb_svg_landing_boundary: boundary mismatch
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_boundary.sv:103: Verilog $stop
+Aborting...
+MUT=1 RC=1
+Verilator 5.050 2026-07-01 rev v5.050
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+EVENT_FAIL
+[10000000] %Fatal: tb_svg_landing_boundary.sv:105: Assertion failed in tb_svg_landing_boundary: BOUNDARY_TIMEOUT
+%Error: rtl/test/hbm_accel/svg_rel/tb_svg_landing_boundary.sv:105: Verilog $stop
+Aborting...
+MUT=2 RC=1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2814994-1792423495): exit 0

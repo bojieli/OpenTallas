@@ -1,0 +1,31 @@
+SOURCE_REVISION=72be5e25a
+Verilator 5.050 2026-07-01 rev v5.050
+PIN_SUSTAIN window=1 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=1 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=2 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=2 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=3 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=3 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=4 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=4 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=5 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=5 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=6 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=6 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=7 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=7 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=8 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=8 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=9 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=9 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=10 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=10 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=11 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=11 sectors=16 HBM_edges=16
+PIN_SUSTAIN window=12 sectors=16 HBM_edges=16
+CORE_SUSTAIN window=12 sectors=16 HBM_edges=16
+SVG_BOUNDARY PASS mut=0 errors=0 tx=413 reads=408 completes=12 stalls=307 max_burst=23
+- rtl/test/hbm_accel/svg_rel/tb_svg_landing_boundary.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.007 s; speed 189.217 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB
