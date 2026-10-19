@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc6       admits  1132 GB (avail 902, growth 110, headroom 0, waiters 0/0 GB) load 38/128 running 28 disk 5761 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1541295-1792442128 after 0 s
+{"summary": {"FF": {"extra": 278, "roots_copied": 114}, "COMB": {"extra": 323, "roots_copied": 76}, "TIE": {"extra": 1, "roots_copied": 1}}, "history": [{"iteration": 0, "extra": 584, "maximum": 73, "changed": 185}, {"iteration": 1, "extra": 601, "maximum": 73, "changed": 10}, {"iteration": 2, "extra": 602, "maximum": 73, "changed": 1}, {"iteration": 3, "extra": 602, "maximum": 73, "changed": 0}]}
+WRITER_RAW_START_COLLISION t=95000000000000 configured=0 active=0 fault=0 row= 0 accepted_cfg=0
+PASS real source collision is reachable and rejected start remains inactive
+tb_collision.sv:18: $finish called at 120000000000000 (1ps)
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1541295-1792442128): exit 0

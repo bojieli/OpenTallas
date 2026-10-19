@@ -1,0 +1,1622 @@
+{
+  "schema": "kv_ctl_native_copy_demand_fixedpoint.v1",
+  "odb_sha256": "fcbc77429404faa5ab91981c1901b93dfb43f5b254bc0992e0d9cdd38460af0a",
+  "method": "Each copied native instance reproduces every nonclock input pin. Transparent endpoints already collapsed. All outputs of an instance use maximum copy multiplicity. Monotonic synchronous iteration to <=32 sinks per root copy.",
+  "qualification": "Native graph capacity model only; duplicated combinational logic may merge. Source functional state realization, reset equivalence, clock loads and physical costs are NOT proven.",
+  "converged": true,
+  "iterations": [
+    {
+      "iteration": 0,
+      "extra": 584,
+      "maximum": 73,
+      "changed": 185
+    },
+    {
+      "iteration": 1,
+      "extra": 601,
+      "maximum": 73,
+      "changed": 10
+    },
+    {
+      "iteration": 2,
+      "extra": 602,
+      "maximum": 73,
+      "changed": 1
+    },
+    {
+      "iteration": 3,
+      "extra": 602,
+      "maximum": 73,
+      "changed": 0
+    }
+  ],
+  "summary": {
+    "FF": {
+      "extra": 278,
+      "roots_copied": 114
+    },
+    "COMB": {
+      "extra": 323,
+      "roots_copied": 76
+    },
+    "TIE": {
+      "extra": 1,
+      "roots_copied": 1
+    }
+  },
+  "copies": [
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[10\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 39,
+      "expanded_pin_demand": 39,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[11\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 40,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[12\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 40,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[13\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 40,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[14\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 42,
+      "expanded_pin_demand": 42,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[15\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 42,
+      "expanded_pin_demand": 42,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[16\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 38,
+      "expanded_pin_demand": 38,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[17\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[18\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 41,
+      "expanded_pin_demand": 41,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[19\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 41,
+      "expanded_pin_demand": 41,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[1\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[20\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[21\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[22\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[23\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[24\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 43,
+      "expanded_pin_demand": 43,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[25\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 42,
+      "expanded_pin_demand": 42,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[26\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 38,
+      "expanded_pin_demand": 38,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[27\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 46,
+      "expanded_pin_demand": 46,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[28\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 43,
+      "expanded_pin_demand": 43,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[29\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 45,
+      "expanded_pin_demand": 45,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[2\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[30\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[3\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[4\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[5\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 40,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[6\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[7\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 34,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[8\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 42,
+      "expanded_pin_demand": 42,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.data_q\\[9\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 40,
+      "total_copies": 2
+    },
+    {
+      "driver": "boot__boot_pr__ot_q\\[67\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 40,
+      "total_copies": 2
+    },
+    {
+      "driver": "boot__boot_pr__ot_q\\[69\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.epoch_q\\[0\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 66,
+      "expanded_pin_demand": 67,
+      "total_copies": 3
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.epoch_q\\[1\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 108,
+      "expanded_pin_demand": 109,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.ix\\[0\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 10,
+      "expanded_pin_demand": 119,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[11\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 128,
+      "expanded_pin_demand": 128,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wprg.ld$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 325,
+      "expanded_pin_demand": 325,
+      "total_copies": 11
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[0\\]$_DFFE_PN0N_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 68,
+      "expanded_pin_demand": 68,
+      "total_copies": 3
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[1\\]$_DFFE_PN0N_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 69,
+      "expanded_pin_demand": 69,
+      "total_copies": 3
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[2\\]$_DFFE_PN0N_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 75,
+      "expanded_pin_demand": 75,
+      "total_copies": 3
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.c_wait\\[3\\]$_DFFE_PN0N_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 74,
+      "expanded_pin_demand": 74,
+      "total_copies": 3
+    },
+    {
+      "driver": "boot__boot_pr__ot_q\\[70\\]$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 39,
+      "expanded_pin_demand": 39,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c1$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c2$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c3$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c4$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c5$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c6$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c7$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c8$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c9$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c10$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c11$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c12$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c13$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c14$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c15$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c16$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c17$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 51,
+      "expanded_pin_demand": 51,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c18$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c19$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c20$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c21$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c22$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c23$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c24$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c25$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c26$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c27$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c28$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c29$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c30$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c31$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c32$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c33$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c34$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c35$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c36$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c37$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c38$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 58,
+      "total_copies": 2
+    },
+    {
+      "driver": "ot_rrs__rst_n__ot_rlv__c39$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 52,
+      "expanded_pin_demand": 173,
+      "total_copies": 6
+    },
+    {
+      "driver": "rst_n__ot_rl1$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 55,
+      "total_copies": 2
+    },
+    {
+      "driver": "rst_n__ot_rl0$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 84,
+      "total_copies": 3
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.sync_q\\[1\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 12,
+      "expanded_pin_demand": 61,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_dcfg.pr_n$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 173,
+      "expanded_pin_demand": 173,
+      "total_copies": 6
+    },
+    {
+      "driver": "u_ot_pr_core.u_boot.g_mu.g_we$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 147,
+      "expanded_pin_demand": 147,
+      "total_copies": 5
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c1$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 199,
+      "expanded_pin_demand": 199,
+      "total_copies": 7
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c2$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 199,
+      "expanded_pin_demand": 199,
+      "total_copies": 7
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_fanr_g_rc_rsv__c3$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 171,
+      "expanded_pin_demand": 203,
+      "total_copies": 7
+    },
+    {
+      "driver": "u_ot_pr_core.u_fanr.rs_q$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 193,
+      "expanded_pin_demand": 193,
+      "total_copies": 7
+    },
+    {
+      "driver": "u_ot_pr_core.u_fanr.ph1$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 1033,
+      "expanded_pin_demand": 1050,
+      "total_copies": 33
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c0$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 206,
+      "expanded_pin_demand": 206,
+      "total_copies": 7
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c1$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 226,
+      "expanded_pin_demand": 226,
+      "total_copies": 8
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c2$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 226,
+      "expanded_pin_demand": 234,
+      "total_copies": 8
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_lprg_rnv__c3$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 171,
+      "expanded_pin_demand": 203,
+      "total_copies": 7
+    },
+    {
+      "driver": "u_ot_pr_core.w_lprg__fault$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 165,
+      "expanded_pin_demand": 193,
+      "total_copies": 7
+    },
+    {
+      "driver": "u_ot_pr_core.u_lprg.wq$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 38,
+      "expanded_pin_demand": 42,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_oobs.rn$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_own.g_mu.rn$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 303,
+      "expanded_pin_demand": 303,
+      "total_copies": 10
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_wprg_g_rc_rpv__c1$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 137,
+      "expanded_pin_demand": 137,
+      "total_copies": 5
+    },
+    {
+      "driver": "ot_rrs__u_ot_pr_core_u_wprg_g_rc_rpv__c2$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 134,
+      "expanded_pin_demand": 144,
+      "total_copies": 5
+    },
+    {
+      "driver": "u_ot_pr_core.u_wprg.reset_pin_n$_DFF_P_/QN",
+      "kind": "FF",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "original_fanout": 131,
+      "expanded_pin_demand": 131,
+      "total_copies": 5
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.slot$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 8,
+      "expanded_pin_demand": 117,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[0\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 187,
+      "expanded_pin_demand": 190,
+      "total_copies": 6
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[1\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 84,
+      "expanded_pin_demand": 84,
+      "total_copies": 3
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[2\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 256,
+      "expanded_pin_demand": 256,
+      "total_copies": 8
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[3\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 256,
+      "expanded_pin_demand": 256,
+      "total_copies": 8
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[4\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 129,
+      "expanded_pin_demand": 129,
+      "total_copies": 5
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[5\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 128,
+      "expanded_pin_demand": 128,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[6\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 129,
+      "expanded_pin_demand": 129,
+      "total_copies": 5
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[7\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 128,
+      "expanded_pin_demand": 128,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[8\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 129,
+      "expanded_pin_demand": 129,
+      "total_copies": 5
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[9\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 128,
+      "expanded_pin_demand": 128,
+      "total_copies": 4
+    },
+    {
+      "driver": "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[10\\]$_DFF_PN0_/QN",
+      "kind": "FF",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "original_fanout": 129,
+      "expanded_pin_demand": 129,
+      "total_copies": 5
+    },
+    {
+      "driver": "_44676_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 57,
+      "total_copies": 2
+    },
+    {
+      "driver": "_44733_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 76,
+      "expanded_pin_demand": 78,
+      "total_copies": 3
+    },
+    {
+      "driver": "_44849_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 64,
+      "expanded_pin_demand": 64,
+      "total_copies": 2
+    },
+    {
+      "driver": "_44851_/Y",
+      "kind": "COMB",
+      "master": "AND2x2_ASAP7_75t_R",
+      "original_fanout": 66,
+      "expanded_pin_demand": 66,
+      "total_copies": 3
+    },
+    {
+      "driver": "_44931_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 64,
+      "expanded_pin_demand": 64,
+      "total_copies": 2
+    },
+    {
+      "driver": "_44971_/Y",
+      "kind": "COMB",
+      "master": "AO21x1_ASAP7_75t_R",
+      "original_fanout": 71,
+      "expanded_pin_demand": 73,
+      "total_copies": 3
+    },
+    {
+      "driver": "_45268_/Y",
+      "kind": "COMB",
+      "master": "AND4x1_ASAP7_75t_R",
+      "original_fanout": 193,
+      "expanded_pin_demand": 197,
+      "total_copies": 7
+    },
+    {
+      "driver": "_45479_/Y",
+      "kind": "COMB",
+      "master": "OR3x1_ASAP7_75t_R",
+      "original_fanout": 572,
+      "expanded_pin_demand": 572,
+      "total_copies": 18
+    },
+    {
+      "driver": "_47091_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47092_/Y",
+      "kind": "COMB",
+      "master": "OR5x1_ASAP7_75t_R",
+      "original_fanout": 62,
+      "expanded_pin_demand": 62,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47139_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47145_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 63,
+      "expanded_pin_demand": 63,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47175_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 63,
+      "expanded_pin_demand": 63,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47221_/Y",
+      "kind": "COMB",
+      "master": "OR2x2_ASAP7_75t_R",
+      "original_fanout": 2336,
+      "expanded_pin_demand": 2336,
+      "total_copies": 73
+    },
+    {
+      "driver": "_47285_/Y",
+      "kind": "COMB",
+      "master": "AND5x1_ASAP7_75t_R",
+      "original_fanout": 43,
+      "expanded_pin_demand": 43,
+      "total_copies": 2
+    },
+    {
+      "driver": "_48356_/Y",
+      "kind": "COMB",
+      "master": "AND4x1_ASAP7_75t_R",
+      "original_fanout": 120,
+      "expanded_pin_demand": 120,
+      "total_copies": 4
+    },
+    {
+      "driver": "_48511_/Y",
+      "kind": "COMB",
+      "master": "OR3x1_ASAP7_75t_R",
+      "original_fanout": 110,
+      "expanded_pin_demand": 110,
+      "total_copies": 4
+    },
+    {
+      "driver": "_48654_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 1024,
+      "expanded_pin_demand": 1024,
+      "total_copies": 32
+    },
+    {
+      "driver": "_52573_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 41,
+      "expanded_pin_demand": 41,
+      "total_copies": 2
+    },
+    {
+      "driver": "_52675_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 46,
+      "expanded_pin_demand": 46,
+      "total_copies": 2
+    },
+    {
+      "driver": "_52769_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 60,
+      "expanded_pin_demand": 60,
+      "total_copies": 2
+    },
+    {
+      "driver": "_52889_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 44,
+      "expanded_pin_demand": 44,
+      "total_copies": 2
+    },
+    {
+      "driver": "_53055_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 152,
+      "expanded_pin_demand": 152,
+      "total_copies": 5
+    },
+    {
+      "driver": "_53202_/Y",
+      "kind": "COMB",
+      "master": "OR3x1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "_53400_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 171,
+      "expanded_pin_demand": 171,
+      "total_copies": 6
+    },
+    {
+      "driver": "_53608_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 119,
+      "expanded_pin_demand": 119,
+      "total_copies": 4
+    },
+    {
+      "driver": "_53750_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 4,
+      "expanded_pin_demand": 64,
+      "total_copies": 2
+    },
+    {
+      "driver": "_53751_/Y",
+      "kind": "COMB",
+      "master": "NOR2x1_ASAP7_75t_R",
+      "original_fanout": 644,
+      "expanded_pin_demand": 644,
+      "total_copies": 21
+    },
+    {
+      "driver": "_53825_/Y",
+      "kind": "COMB",
+      "master": "NOR2x1_ASAP7_75t_R",
+      "original_fanout": 644,
+      "expanded_pin_demand": 644,
+      "total_copies": 21
+    },
+    {
+      "driver": "_53901_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 644,
+      "expanded_pin_demand": 644,
+      "total_copies": 21
+    },
+    {
+      "driver": "_53976_/Y",
+      "kind": "COMB",
+      "master": "NOR2x1_ASAP7_75t_R",
+      "original_fanout": 644,
+      "expanded_pin_demand": 644,
+      "total_copies": 21
+    },
+    {
+      "driver": "_56539_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 41,
+      "expanded_pin_demand": 41,
+      "total_copies": 2
+    },
+    {
+      "driver": "_56615_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "_56686_/Y",
+      "kind": "COMB",
+      "master": "OR4x1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "_56689_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 33,
+      "expanded_pin_demand": 33,
+      "total_copies": 2
+    },
+    {
+      "driver": "_56757_/Y",
+      "kind": "COMB",
+      "master": "OR4x1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "_56760_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 33,
+      "expanded_pin_demand": 33,
+      "total_copies": 2
+    },
+    {
+      "driver": "_56834_/Y",
+      "kind": "COMB",
+      "master": "AND4x1_ASAP7_75t_R",
+      "original_fanout": 141,
+      "expanded_pin_demand": 146,
+      "total_copies": 5
+    },
+    {
+      "driver": "_57024_/Y",
+      "kind": "COMB",
+      "master": "AND4x1_ASAP7_75t_R",
+      "original_fanout": 48,
+      "expanded_pin_demand": 48,
+      "total_copies": 2
+    },
+    {
+      "driver": "_57129_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "_57230_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 36,
+      "expanded_pin_demand": 36,
+      "total_copies": 2
+    },
+    {
+      "driver": "_57459_/Y",
+      "kind": "COMB",
+      "master": "OR4x1_ASAP7_75t_R",
+      "original_fanout": 54,
+      "expanded_pin_demand": 54,
+      "total_copies": 2
+    },
+    {
+      "driver": "_57546_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 33,
+      "expanded_pin_demand": 33,
+      "total_copies": 2
+    },
+    {
+      "driver": "_57648_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "_67711_/Y",
+      "kind": "COMB",
+      "master": "OR3x1_ASAP7_75t_R",
+      "original_fanout": 144,
+      "expanded_pin_demand": 154,
+      "total_copies": 5
+    },
+    {
+      "driver": "_68326_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 69,
+      "expanded_pin_demand": 69,
+      "total_copies": 3
+    },
+    {
+      "driver": "_68363_/Y",
+      "kind": "COMB",
+      "master": "NAND3x1_ASAP7_75t_R",
+      "original_fanout": 100,
+      "expanded_pin_demand": 100,
+      "total_copies": 4
+    },
+    {
+      "driver": "_68463_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 72,
+      "expanded_pin_demand": 72,
+      "total_copies": 3
+    },
+    {
+      "driver": "_68487_/Y",
+      "kind": "COMB",
+      "master": "AND5x1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "_68490_/Y",
+      "kind": "COMB",
+      "master": "AND2x2_ASAP7_75t_R",
+      "original_fanout": 37,
+      "expanded_pin_demand": 37,
+      "total_copies": 2
+    },
+    {
+      "driver": "_68650_/Y",
+      "kind": "COMB",
+      "master": "AND2x2_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 34,
+      "total_copies": 2
+    },
+    {
+      "driver": "_68652_/Y",
+      "kind": "COMB",
+      "master": "AND5x1_ASAP7_75t_R",
+      "original_fanout": 35,
+      "expanded_pin_demand": 35,
+      "total_copies": 2
+    },
+    {
+      "driver": "_68746_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 144,
+      "expanded_pin_demand": 144,
+      "total_copies": 5
+    },
+    {
+      "driver": "_69051_/Y",
+      "kind": "COMB",
+      "master": "NAND3x1_ASAP7_75t_R",
+      "original_fanout": 138,
+      "expanded_pin_demand": 138,
+      "total_copies": 5
+    },
+    {
+      "driver": "_69195_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 97,
+      "expanded_pin_demand": 97,
+      "total_copies": 4
+    },
+    {
+      "driver": "_69504_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 144,
+      "expanded_pin_demand": 144,
+      "total_copies": 5
+    },
+    {
+      "driver": "_69697_/Y",
+      "kind": "COMB",
+      "master": "OR5x1_ASAP7_75t_R",
+      "original_fanout": 79,
+      "expanded_pin_demand": 79,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69781_/Y",
+      "kind": "COMB",
+      "master": "OR5x1_ASAP7_75t_R",
+      "original_fanout": 69,
+      "expanded_pin_demand": 69,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69794_/Y",
+      "kind": "COMB",
+      "master": "OR5x1_ASAP7_75t_R",
+      "original_fanout": 68,
+      "expanded_pin_demand": 68,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69803_/Y",
+      "kind": "COMB",
+      "master": "OAI21x1_ASAP7_75t_R",
+      "original_fanout": 119,
+      "expanded_pin_demand": 119,
+      "total_copies": 4
+    },
+    {
+      "driver": "_69812_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 72,
+      "expanded_pin_demand": 72,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69828_/Y",
+      "kind": "COMB",
+      "master": "AOI21x1_ASAP7_75t_R",
+      "original_fanout": 55,
+      "expanded_pin_demand": 55,
+      "total_copies": 2
+    },
+    {
+      "driver": "_69830_/Y",
+      "kind": "COMB",
+      "master": "NOR2x1_ASAP7_75t_R",
+      "original_fanout": 66,
+      "expanded_pin_demand": 66,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69837_/Y",
+      "kind": "COMB",
+      "master": "AO21x1_ASAP7_75t_R",
+      "original_fanout": 85,
+      "expanded_pin_demand": 85,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69842_/Y",
+      "kind": "COMB",
+      "master": "NAND3x1_ASAP7_75t_R",
+      "original_fanout": 70,
+      "expanded_pin_demand": 70,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69852_/Y",
+      "kind": "COMB",
+      "master": "AND5x1_ASAP7_75t_R",
+      "original_fanout": 76,
+      "expanded_pin_demand": 76,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69858_/Y",
+      "kind": "COMB",
+      "master": "OR2x2_ASAP7_75t_R",
+      "original_fanout": 90,
+      "expanded_pin_demand": 90,
+      "total_copies": 3
+    },
+    {
+      "driver": "_69863_/Y",
+      "kind": "COMB",
+      "master": "OA21x2_ASAP7_75t_R",
+      "original_fanout": 51,
+      "expanded_pin_demand": 51,
+      "total_copies": 2
+    },
+    {
+      "driver": "_69867_/Y",
+      "kind": "COMB",
+      "master": "OR3x1_ASAP7_75t_R",
+      "original_fanout": 63,
+      "expanded_pin_demand": 63,
+      "total_copies": 2
+    },
+    {
+      "driver": "_70588_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 40,
+      "expanded_pin_demand": 42,
+      "total_copies": 2
+    },
+    {
+      "driver": "_70617_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 91,
+      "expanded_pin_demand": 91,
+      "total_copies": 3
+    },
+    {
+      "driver": "_45478_/Y",
+      "kind": "COMB",
+      "master": "NAND2x1_ASAP7_75t_R",
+      "original_fanout": 2,
+      "expanded_pin_demand": 51,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47402_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 34,
+      "total_copies": 2
+    },
+    {
+      "driver": "_77811_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 34,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47405_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 34,
+      "total_copies": 2
+    },
+    {
+      "driver": "_47404_/Y",
+      "kind": "COMB",
+      "master": "AND3x1_ASAP7_75t_R",
+      "original_fanout": 34,
+      "expanded_pin_demand": 34,
+      "total_copies": 2
+    },
+    {
+      "driver": "u_ot_pr_core.u_fanr.ph1$_DFF_PN0__4891/H",
+      "kind": "TIE",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "original_fanout": 1,
+      "expanded_pin_demand": 33,
+      "total_copies": 2
+    }
+  ],
+  "native_copy_area_um2": {
+    "FF": 91.47491999999995,
+    "COMB": 29.641139999999993,
+    "TIE": 0.04374
+  },
+  "native_copy_total_area_um2": 121.15979999999995,
+  "extra_clock_pin_contacts_by_native_net": {
+    "ck": 278
+  },
+  "extra_async_pin_contacts_by_native_net": {
+    "rst_n__ot_rlc\\[38\\]": 49,
+    "net6911": 3,
+    "u_ot_pr_core.u_wprg.g_rc.rc_q\\[1\\]": 10,
+    "net6011": 10,
+    "u_ot_pr_core.u_lprg.rnv\\[2\\]": 8,
+    "net5516": 2,
+    "net5517": 2,
+    "net5518": 2,
+    "net5519": 2,
+    "rst_n__ot_rl1\\[0\\]": 1,
+    "net6923": 1,
+    "por_n__ot_rlc\\[0\\]": 5,
+    "net3735": 5,
+    "rst_n__ot_rlc\\[37\\]": 4,
+    "net3323": 4,
+    "u_ot_pr_core.u_fanr.g_rc.rc_q\\[2\\]": 32,
+    "net4890": 32,
+    "u_ot_pr_core.u_lprg.rnv\\[3\\]": 7,
+    "net7014": 6,
+    "net5640": 1,
+    "u_ot_pr_core.u_wrn.u_wrn.u_writer.g_rst.u_rst.relay_q\\[0\\]\\[0\\]": 3,
+    "net6990": 3,
+    "net6909": 5,
+    "net6912": 2,
+    "net6913": 7,
+    "net6914": 7,
+    "net6915": 4,
+    "net6916": 3,
+    "net6917": 4,
+    "net6918": 3,
+    "net6919": 4,
+    "net6920": 3,
+    "net6910": 4
+  },
+  "price_scope": "Exact existing master area, not resynthesis area or power. FF master clock contacts included by net. No Liberty caps or kept-copy realization claimed."
+}

@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc6       admits  1103 GB (avail 876, growth 103, headroom 0, waiters 0/0 GB) load 37/128 running 29 disk 5761 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1536985-1792442090 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"schema": "kv_ctl_all_driver_native_census.v1", "odb": "/input/results/asap7/opentallas_qkd_kvs_ctl_asap7_ref_gate/base/3_2_place_iop.odb", "odb_sha256": "fcbc77429404faa5ab91981c1901b93dfb43f5b254bc0992e0d9cdd38460af0a", "method": "all FF/comb/input/tie/macro output drivers; BUF/INV/HB-transparent unique native endpoint pins; clocks/PG excluded", "cells": 79962, "summary": {"COMB": {"roots": 21149, "maximum": 2336, "unsafe": 74}, "FF": {"roots": 17394, "maximum": 1033, "unsafe": 111}, "INPUT": {"roots": 1729, "maximum": 13, "unsafe": 0}, "MACRO": {"roots": 584, "maximum": 4, "unsafe": 0}, "TIE": {"roots": 7029, "maximum": 1, "unsafe": 0}}}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1536985-1792442090): exit 0

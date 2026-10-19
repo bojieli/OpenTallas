@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc6       admits  1164 GB (avail 910, growth 96, headroom 0, waiters 0/0 GB) load 34/128 running 26 disk 5761 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-ctl-safe-model-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1556239-1792442230 after 0 s
+{
+  "verdict": "PASS",
+  "reachable_abstract_states": 15,
+  "edges": 1920,
+  "invariants": [
+    "configured implies no pending table write",
+    "ld implies preceding macro read was collision-free"
+  ],
+  "abstraction": "Arbitrary early seal and arbitrary table validity; arbitrary completion and initial macro read data. More permissive than exact next_cfg and table checks. Reset clears control, never initializes macro Q.",
+  "scope": "Control noninterference for arbitrary collided read Q only. Assumes writes themselves remain correct and one-edge read NBA semantics; physical dualclock contract remains OPEN."
+}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1556239-1792442230): exit 0
