@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 D = 'rtl/hbm_accel/loader/service_native/'
 SOURCES = [D+'ot_hbm_svc_kr_ready_bridge.sv', D+'ot_hbm_svc_ring_h9b.sv',
  'rtl/test/hbm_accel/svg_rel/tb_hbm_kr_ready_bridge.sv']
-FAIL_REGEX = r'KR_BRIDGE_DATA_MISMATCH'
+FAIL_REGEX = r'KR_BRIDGE_(?:DATA_MISMATCH|LATENCY_FAIL)'
 
 
 def main():
