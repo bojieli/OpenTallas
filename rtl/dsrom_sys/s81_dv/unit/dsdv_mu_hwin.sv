@@ -66,7 +66,12 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
     localparam integer COPY_RBASE=MEM_EVENT_RBASE+NEV*MEM_EVENT_STRIDE;
     localparam integer SEL_RBASE=COPY_RBASE+NEV*7+NRT*NC_REC;
     localparam integer COPY_END=SEL_RBASE+NEP*NEV*4+NEP;
-    localparam integer RESET_REGIONS=COPY_END+1+((RAW_SELECT!=0)?NEP*NEV:0);
+    localparam integer RESET_EXTRA=COPY_END+1+((RAW_SELECT!=0)?NEP*NEV:0);
+    localparam integer SLOT_RG=(NSLOT+23)/24, C_RG=(NEP*34+23)/24, R_RG=(NEP*11+23)/24;
+    localparam integer RTIME_BASE=RESET_EXTRA, ROUT_BASE=RTIME_BASE+3;
+    localparam integer RPTR_BASE=ROUT_BASE+C_RG+R_RG, RCTRL_BASE=RPTR_BASE+6*SLOT_RG+1;
+    localparam integer RWRITE_BASE=RCTRL_BASE+6, RLM_BASE=RWRITE_BASE+4*SLOT_RG;
+    localparam integer RESET_REGIONS=RLM_BASE+NEV*SLOT_RG;
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // Payload pin flops sample every edge; valid pins are asynchronously held by their
     // landed reset, so the reset does not enter a synchronous data cone.
@@ -294,8 +299,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         assign table_empty=~(|vld);
     end endgenerate
     wire idle = !armed && table_empty;
-    always @(posedge ck or negedge rn)
-        if(!rn) evld<={NEV{1'b0}};
+    always @(posedge ck or negedge rr[RCTRL_BASE+5])
+        if(!rr[RCTRL_BASE+5]) evld<={NEV{1'b0}};
         else if(wv && idle && mw_q[22:21]==2'd1) evld[esel]<=1'b1;
     integer k4;
     // event-row config + entry payload (no reset: written before arming / at the staged record that sets vld)
@@ -323,8 +328,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
         assign rec_slot[ws]=id_we[ws][3];
         for(wc=0;wc<4;wc=wc+1) begin:g_copy
             (* keep *) reg we_r; assign id_we[ws][wc]=we_r;
-            always @(posedge ck or negedge rr[MEM_RBASE+7+NC_REC+wc])
-                if(!rr[MEM_RBASE+7+NC_REC+wc]) we_r<=1'b0; else we_r<=rec && ss[ws];
+            always @(posedge ck or negedge rr[RWRITE_BASE+wc*SLOT_RG+ws/24])
+                if(!rr[RWRITE_BASE+wc*SLOT_RG+ws/24]) we_r<=1'b0; else we_r<=rec && ss[ws];
         end
     end endgenerate
     // Parallel RX identity fields have one reset-distinct payload copy per <=16 entries.
@@ -431,9 +436,11 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+7*ce+3]) lw_r<=SI'(NSLOT-1);
             else if(cfg_gap_r && idle_event[ce] && gn!=SJ'(NSLOT))
                 lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
-        always @(posedge ck or negedge rr[COPY_RBASE+7*ce+4])
-            if(!rr[COPY_RBASE+7*ce+4]) lm_r<={1'b1,{(NSLOT-1){1'b0}}};
-            else begin lm_r<={NSLOT{1'b0}}; lm_r[lw_r]<=1'b1; end
+        for(genvar lb=0;lb<NSLOT;lb=lb+1) begin:g_limit_reset
+            always @(posedge ck or negedge rr[RLM_BASE+ce*SLOT_RG+lb/24])
+                if(!rr[RLM_BASE+ce*SLOT_RG+lb/24]) lm_r[lb]<=(lb==NSLOT-1);
+                else lm_r[lb]<=(lw_r==SI'(lb));
+        end
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+5])
             if(!rr[COPY_RBASE+7*ce+5]) arm_r<=1'b0;
             else if(st && !arm_r && !hcfg_bad) arm_r<=1'b1;
@@ -450,54 +457,74 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 16, 
             if(!rr[COPY_RBASE+NEV*7+rcg]) rt_r<=31'd0;
             else rt_r<=mu_rt[32*(rcg/NC_REC)+:31];
     end endgenerate
-    // The former shared reset drove690flops. Time96, outputs180, pointers~206,
-    // control~213 now have independent same-edge reset relays; no added schedule cycle.
-    wire rtime=rr[NEV+ID_C+1], rptr=rr[NEV+ID_C+2], rout=rr[NEV+ID_C+3];
-    always @(posedge ck or negedge rtime)
-        if(!rtime) begin tm<=32'd0; tm1<=32'd1; tm2<=32'd2; end
-        else begin tm<=tm1; tm1<=tm2; tm2<=tm2+32'd1; end
-    always @(posedge ck or negedge rout)
-        if(!rout) begin c_q<={NEP*34{1'b0}}; rc_q<={NEP*11{1'b0}}; end
-        else begin c_q<=c_n; rc_q<=rc_n; end
-    always @(posedge ck or negedge rptr)
-        if(!rptr) begin
-            slb<=SI'(0); rpb<=SI'(0); gxb<=SI'(0); sl<=OH0; rp<=OH0; vld<={NSLOT{1'b0}};
-            gx<=OH0; gm<={NSLOT{1'b0}}; lm<={1'b1,{(NSLOT-1){1'b0}}};
-        end else begin
-            lm<={NSLOT{1'b0}}; lm[lw]<=1'b1;
-            if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) begin
-                gm<={NSLOT{1'b0}}; gm[gn[SI-1:0]]<=1'b1;
-            end
-            if(armed && ph==cg) begin
-                sl<=rot(sl,lm); slb<=((|(sl&lm)) || sl[NSLOT-1])?SI'(0):slb+1'b1;
-                gx<=gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
-            end
-            if(st && !armed && !hcfg_bad) begin
-                gx<=gxn; gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
-            end
-            if(radv) begin rp<=rot(rp,lm); rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1; end
-            vld<=(vld & ~(due?rp:{NSLOT{1'b0}})) | rec_slot;
+    // Every relay below releases on the same original third edge. Word and
+    // pointer slices carry independent reset pins, each with at most32 sinks.
+    always @(posedge ck or negedge rr[RTIME_BASE]) if(!rr[RTIME_BASE]) tm<=0; else tm<=tm1;
+    always @(posedge ck or negedge rr[RTIME_BASE+1]) if(!rr[RTIME_BASE+1]) tm1<=1; else tm1<=tm2;
+    always @(posedge ck or negedge rr[RTIME_BASE+2]) if(!rr[RTIME_BASE+2]) tm2<=2; else tm2<=tm2+32'd1;
+    generate for(genvar ob=0;ob<NEP*34;ob=ob+1) begin:g_output_reset
+        always @(posedge ck or negedge rr[ROUT_BASE+ob/24])
+            if(!rr[ROUT_BASE+ob/24]) c_q[ob]<=0; else c_q[ob]<=c_n[ob];
+    end
+    for(genvar ob=0;ob<NEP*11;ob=ob+1) begin:g_replay_output_reset
+        always @(posedge ck or negedge rr[ROUT_BASE+C_RG+ob/24])
+            if(!rr[ROUT_BASE+C_RG+ob/24]) rc_q[ob]<=0; else rc_q[ob]<=rc_n[ob];
+    end
+    for(genvar pb=0;pb<NSLOT;pb=pb+1) begin:g_pointer_reset
+        wire step_slot=armed && ph==cg;
+        wire step_gap=step_slot || (st && !armed && !hcfg_bad);
+        wire [NSLOT-1:0] sl_next=rot(sl,lm),rp_next=rot(rp,lm);
+        always @(posedge ck or negedge rr[RPTR_BASE+pb/24])
+            if(!rr[RPTR_BASE+pb/24]) sl[pb]<=(pb==0); else if(step_slot) sl[pb]<=sl_next[pb];
+        always @(posedge ck or negedge rr[RPTR_BASE+SLOT_RG+pb/24])
+            if(!rr[RPTR_BASE+SLOT_RG+pb/24]) rp[pb]<=(pb==0); else if(radv) rp[pb]<=rp_next[pb];
+        always @(posedge ck or negedge rr[RPTR_BASE+2*SLOT_RG+pb/24])
+            if(!rr[RPTR_BASE+2*SLOT_RG+pb/24]) gx[pb]<=(pb==0); else if(step_gap) gx[pb]<=gxn[pb];
+        always @(posedge ck or negedge rr[RPTR_BASE+3*SLOT_RG+pb/24])
+            if(!rr[RPTR_BASE+3*SLOT_RG+pb/24]) gm[pb]<=0;
+            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) gm[pb]<=(gn[SI-1:0]==SI'(pb));
+        always @(posedge ck or negedge rr[RPTR_BASE+4*SLOT_RG+pb/24])
+            if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm[pb]<=(pb==NSLOT-1); else lm[pb]<=(lw==SI'(pb));
+        always @(posedge ck or negedge rr[RPTR_BASE+5*SLOT_RG+pb/24])
+            if(!rr[RPTR_BASE+5*SLOT_RG+pb/24]) vld[pb]<=0; else vld[pb]<=(vld[pb] && !(due && rp[pb])) || rec_slot[pb];
+    end endgenerate
+    always @(posedge ck or negedge rr[RPTR_BASE+6*SLOT_RG])
+        if(!rr[RPTR_BASE+6*SLOT_RG]) begin slb<=0;rpb<=0;gxb<=0;end
+        else begin
+            if(armed && ph==cg) slb<=((|(sl&lm)) || sl[NSLOT-1])?SI'(0):slb+1'b1;
+            if((armed && ph==cg) || (st && !armed && !hcfg_bad))
+                gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
+            if(radv) rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1;
         end
+    always @(posedge ck or negedge rr[RCTRL_BASE])
+        if(!rr[RCTRL_BASE]) ph<=0;
+        else if(st && !armed && !hcfg_bad) ph<=1;
+        else if(armed) ph<=(ph==cg)?24'd0:ph+24'd1;
+    always @(posedge ck or negedge rr[RCTRL_BASE+1])
+        if(!rr[RCTRL_BASE+1]) cs<=0;
+        else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT) && (gn==0 || mc_q[23:0]<cs)) cs<=mc_q[23:0];
+    always @(posedge ck or negedge rr[RCTRL_BASE+2])
+        if(!rr[RCTRL_BASE+2]) crl<=0; else if(mc_q[25] && idle && mc_q[24]) crl<=mc_q[23:0];
+    always @(posedge ck or negedge rr[RCTRL_BASE+3])
+        if(!rr[RCTRL_BASE+3]) crm<=24'hffffff; else if(mc_q[25] && idle && mc_q[24]) crm<=mc_q[23:0]-24'd1;
+    always @(posedge ck or negedge rr[RCTRL_BASE+4])
+        if(!rr[RCTRL_BASE+4]) cg<=0;
+        else if((armed && ph==cg) || (st && !armed && !hcfg_bad)) cg<=ng;
     always @(posedge ck or negedge rn)
         if(!rn) begin
-            armed<=1'b0; ph<=24'd0; cs<=24'd0; crl<=24'd0; crm<=24'hffffff;
-            t_wf<=2'd0; gn<={SJ{1'b0}}; lw<=SI'(NSLOT-1); cg<=24'd0;
+            armed<=1'b0;
+            t_wf<=2'd0; gn<={SJ{1'b0}}; lw<=SI'(NSLOT-1);
             rec_q<=1'b0; h_rfr<=1'b0; fq0<=1'b0; fq1<=1'b0;
         end else begin
             if(mc_q[25] && idle) begin
-                if(mc_q[24]) begin crl<=mc_q[23:0]; crm<=mc_q[23:0]-24'd1; end
-                else if(gn!=SJ'(NSLOT)) begin
+                if(!mc_q[24] && gn!=SJ'(NSLOT)) begin
                     gn<=gn+1'b1;
-                    if(gn==0 || mc_q[23:0]<cs) cs<=mc_q[23:0];
                     lw<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
                 end
             end
-            if(armed) begin
-                if(ph==cg) begin ph<=24'd0; cg<=ng; end else ph<=ph+24'd1;
-            end
             if(st && !armed) begin
                 if(bad_d) t_wf[1]<=1'b1;
-                if(!hcfg_bad) begin armed<=1'b1; ph<=24'd1; cg<=ng; end
+                if(!hcfg_bad) armed<=1'b1;
             end
             rec_q<=rec;
             h_rfr<=!radv && !(|(rp&rec_slot));
