@@ -1,0 +1,310 @@
+{
+  "verdict": "MODEL ONLY / production binding and native closure HOLD",
+  "frozen_source_commit": "ff05d759bd0370d41fa671b755233e91670f7fe0",
+  "real_profile_reference": "77fc3afbc (binding still missing; not inherited from generic cold fixture)",
+  "semantic_endpoint": {
+    "native": "core/f2940.D",
+    "semantic": "u_record.u_context.fault",
+    "rx_field": "rx_payload[142] in reserved [511:142] zero test",
+    "generic_path_gates": 27,
+    "native_measured_levels": 28,
+    "native_measured_depth_ps": 833.5,
+    "native_measured_tt_setup_ps": -57.92388790837322
+  },
+  "age_neutral_candidate": {
+    "default": false,
+    "form": "balance sixteen bad-receive predicates, remove redundant sticky fault from receive bad term, balance final six fault causes",
+    "new_state_bits": 0,
+    "new_clock_pins": 0,
+    "new_reset_loads": 0,
+    "source_edges_added": 0,
+    "schedule_shift_edges": 0,
+    "exact_semantic_join_primitives": {
+      "bad_receive_2input_OR": 15,
+      "receive_AND": 1,
+      "final_fault_2input_OR": 5
+    },
+    "includes_existing_predicate_costs": false,
+    "reserved_bit_abstract_path_upper_bound_levels": 17,
+    "native_logic_delta_area_fanout_and_timing": null,
+    "four_state_equivalence": null,
+    "note": "17 is model binary-tree gate depth from reserved bit only, not native depth or setup prediction. Other predicate/frontier paths must be checked."
+  },
+  "same_edge_publication_candidate": {
+    "new_2input_OR_publications": 1,
+    "new_state_bits": 0,
+    "new_clock_pins": 0,
+    "new_pg_terminals": 2,
+    "new_publication_loads": [
+      20,
+      19
+    ],
+    "untouched_existing_publication_loads": 1,
+    "upstream_g11450_native_loads_before_after": [
+      2,
+      3
+    ],
+    "upstream_fault_ff_native_loads_before_after": [
+      5,
+      6
+    ],
+    "mapped_native_result": null,
+    "conditional_same_OR2x6_bare_area_um2": 0.17495999999999637,
+    "actual_mapped_added_area_um2": null,
+    "warning": "Old g11452 equality is not proof that 39 native sinks were partitioned. Keep distinct source ownership and inspect every final native sink."
+  },
+  "full_input_pipeline_fallback": {
+    "default": false,
+    "source_input_fields": {
+      "rx_record": 548,
+      "receive_slot": 1,
+      "rx_v": 1,
+      "program_begin_v": 1,
+      "program_ready": 1,
+      "installed_fusedcap": 1,
+      "program_epoch": 16,
+      "program_digest": 64,
+      "head_context_v": 1,
+      "head_stage": 6,
+      "head_token": 18,
+      "head_position": 18,
+      "native_active": 1
+    },
+    "input_snapshot_bits": 677,
+    "max_input_capture_bandwidth_bits_per_cycle": 677,
+    "native_tracks_required_and_available": null,
+    "existing_receiver_state_bits": 145,
+    "stage_valid_kept_copies": 10,
+    "stage_valid_max_semantic_loads": 15,
+    "valid_native_select_pin_reserve_per_bit": 2,
+    "stage_valid_max_reserved_native_loads": 30,
+    "new_state_bits": 687,
+    "added_clock_pins": 687,
+    "added_async_reset_loads": 10,
+    "new_outer_state_enable_mux_bits": 145,
+    "source_edges_added": 1,
+    "first_context_accept_fault_visibility_shift_edges": 1,
+    "private_context_holdings_count": 1,
+    "scope": "Retimes all context RX inputs and all 145 state transitions; not just predicate. Does not retime auth/commit join or schedule automatically.",
+    "native_ff_prices": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.37908,
+        "clock_cap_fF": 0.462899
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "clock_cap_fF": 0.474736
+      }
+    },
+    "bare_ff_area_um2": 201.204,
+    "bare_clock_input_cap_fF": 326.025262,
+    "cts_wire_buffer_reset_ties_mux_area": null,
+    "output_polarity_inversion_and_tie_cost": null,
+    "added_2pin_native_pg_terminals": 1374,
+    "clock_energy_fJ_at_0p7V_per_cycle_access_only": 159.75237837999998,
+    "new_tt_ff_setup_hold_ps": null,
+    "production_su_token_delta_edges": null,
+    "reset_control": "677 payload flops unreset; ten distinct valid flops reset with actual context reset. First valid update only after captured operands. Existing reset priority preserved; extra native set ties/reset leaf ownership require inventory.",
+    "critical_blocker": "Context outputs/fault/epoch invalidation now one edge later while BEGIN/native_active and all consumers remain live elsewhere. Bind producer calendar, cancellation and first-use before RTL."
+  },
+  "geometry": {
+    "measured_macro_origins": [
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+        "master": "ot_rom_4096x72_m8",
+        "inst": "*m13704",
+        "idx": 0,
+        "x": 43.2,
+        "y": 86.4,
+        "w": 38.016,
+        "h": 62.91,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+        "master": "ot_rom_4096x72_m8",
+        "inst": "*m13438",
+        "idx": 0,
+        "x": 129.6,
+        "y": 86.4,
+        "w": 38.016,
+        "h": 62.91,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+        "master": "ot_rom_4096x72_m8",
+        "inst": "*m13437",
+        "idx": 0,
+        "x": 216.0,
+        "y": 86.4,
+        "w": 38.016,
+        "h": 62.91,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+        "master": "ot_sram_1r1w_64x16_m1",
+        "inst": "*m13444",
+        "idx": 0,
+        "x": 43.2,
+        "y": 43.2,
+        "w": 18.36,
+        "h": 20.79,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+        "master": "ot_sram_1r1w_64x16_m1",
+        "inst": "*m13443",
+        "idx": 0,
+        "x": 86.4,
+        "y": 43.2,
+        "w": 18.36,
+        "h": 20.79,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+        "master": "ot_sram_1r1w_64x16_m1",
+        "inst": "*m13442",
+        "idx": 0,
+        "x": 129.6,
+        "y": 43.2,
+        "w": 18.36,
+        "h": 20.79,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+        "master": "ot_sram_1r1w_64x16_m1",
+        "inst": "*m13441",
+        "idx": 0,
+        "x": 172.8,
+        "y": 43.2,
+        "w": 18.36,
+        "h": 20.79,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+        "master": "ot_sram_1r1w_64x16_m1",
+        "inst": "*m13440",
+        "idx": 0,
+        "x": 216.0,
+        "y": 43.2,
+        "w": 18.36,
+        "h": 20.79,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      {
+        "kind": "macro",
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+        "master": "ot_sram_1r1w_64x16_m1",
+        "inst": "*m13439",
+        "idx": 0,
+        "x": 259.2,
+        "y": 43.2,
+        "w": 18.36,
+        "h": 20.79,
+        "orient": "R0",
+        "offtrack": 0
+      }
+    ],
+    "halo_um": 5.4,
+    "lower_band_y_um": [
+      2.16,
+      37.800000000000004
+    ],
+    "final_soft_reference_um2": 7266.0,
+    "warning": "Old y=41.04 band crosses the actual 5.4um SRAM halo. Correct top is37.8. Native OBS/layers and PG access still HOLD.",
+    "options": [
+      {
+        "outline_um": [
+          302.4,
+          172.8
+        ],
+        "band_xy_um": [
+          2.16,
+          2.16,
+          300.23999999999995,
+          37.800000000000004
+        ],
+        "band_area_um2": 10623.5712,
+        "existing_final_soft_occupancy": 0.6839507980141367,
+        "outline_area_delta_um2": 0.0,
+        "outline_area_delta_fraction": 0.0,
+        "full_outline_manhattan_diameter_um": 475.2,
+        "far_corner_to_band_center_manhattan_um": 304.02,
+        "whole_boundary_to_band_corner_bound_um": 470.87999999999994,
+        "all_endpoints_after_move": null,
+        "clock_insertion_spread_after_move_ps": null
+      },
+      {
+        "outline_um": [
+          324.0,
+          172.8
+        ],
+        "band_xy_um": [
+          2.16,
+          2.16,
+          321.84,
+          37.800000000000004
+        ],
+        "band_area_um2": 11393.3952,
+        "existing_final_soft_occupancy": 0.6377379062564247,
+        "outline_area_delta_um2": 3732.480000000004,
+        "outline_area_delta_fraction": 0.07142857142857162,
+        "full_outline_manhattan_diameter_um": 496.8,
+        "far_corner_to_band_center_manhattan_um": 314.82,
+        "whole_boundary_to_band_corner_bound_um": 492.47999999999996,
+        "all_endpoints_after_move": null,
+        "clock_insertion_spread_after_move_ps": null
+      },
+      {
+        "outline_um": [
+          345.6,
+          172.8
+        ],
+        "band_xy_um": [
+          2.16,
+          2.16,
+          343.44,
+          37.800000000000004
+        ],
+        "band_area_um2": 12163.219200000001,
+        "existing_final_soft_occupancy": 0.5973747476326003,
+        "outline_area_delta_um2": 7464.960000000008,
+        "outline_area_delta_fraction": 0.14285714285714302,
+        "full_outline_manhattan_diameter_um": 518.4000000000001,
+        "far_corner_to_band_center_manhattan_um": 325.62,
+        "whole_boundary_to_band_corner_bound_um": 514.08,
+        "all_endpoints_after_move": null,
+        "clock_insertion_spread_after_move_ps": null
+      }
+    ],
+    "pipeline_bare_ff_only_occupancy_345p6": 0.6139167499340963,
+    "actual_native_pin_reach_after_relocation_um": null,
+    "contact_pitch_nm": 96,
+    "local_contact_density_per_um": 10.416666666666666,
+    "pg_unbound_original": 29314,
+    "ss_ff_clock_and_route_validation": null
+  },
+  "finite_model_checks": 73728
+}

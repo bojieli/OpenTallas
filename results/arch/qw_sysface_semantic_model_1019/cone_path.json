@@ -1,0 +1,419 @@
+[
+  {
+    "net": "n184",
+    "gate": null,
+    "semantic": [
+      "g_accepted_ctx.u_observer.offer_record[142]",
+      "rx_payload[142]",
+      "u_record.rx_record[142]",
+      "u_record.u_auth.rx_record[142]",
+      "u_record.u_context.rx_record[142]"
+    ]
+  },
+  {
+    "net": "n11695",
+    "gate": {
+      "id": "g10380",
+      "kind": 3,
+      "inputs": {
+        "A": "n184",
+        "B": "n185",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$15189[47]"
+    ]
+  },
+  {
+    "net": "n12269",
+    "gate": {
+      "id": "g10584",
+      "kind": 3,
+      "inputs": {
+        "A": "n11695",
+        "B": "n11697",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19203[0]",
+      "$auto$simplemap.cc:189:logic_reduce$21175[19]"
+    ]
+  },
+  {
+    "net": "n12271",
+    "gate": {
+      "id": "g9748",
+      "kind": 3,
+      "inputs": {
+        "A": "n12269",
+        "B": "n12270",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19296[0]"
+    ]
+  },
+  {
+    "net": "n12407",
+    "gate": {
+      "id": "g9794",
+      "kind": 3,
+      "inputs": {
+        "A": "n12271",
+        "B": "n12274",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19343[0]"
+    ]
+  },
+  {
+    "net": "n12430",
+    "gate": {
+      "id": "g9817",
+      "kind": 3,
+      "inputs": {
+        "A": "n12407",
+        "B": "n12408",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19367[0]"
+    ]
+  },
+  {
+    "net": "n12442",
+    "gate": {
+      "id": "g9829",
+      "kind": 3,
+      "inputs": {
+        "A": "n12430",
+        "B": "n12431",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19380[0]"
+    ]
+  },
+  {
+    "net": "n12448",
+    "gate": {
+      "id": "g9835",
+      "kind": 3,
+      "inputs": {
+        "A": "n12442",
+        "B": "n12443",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19387[0]"
+    ]
+  },
+  {
+    "net": "n12451",
+    "gate": {
+      "id": "g9838",
+      "kind": 3,
+      "inputs": {
+        "A": "n12448",
+        "B": "n12449",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19391"
+    ]
+  },
+  {
+    "net": "n12452",
+    "gate": {
+      "id": "g9839",
+      "kind": 3,
+      "inputs": {
+        "A": "n12451",
+        "B": "n12450",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$simplemap.cc:189:logic_reduce$19393"
+    ]
+  },
+  {
+    "net": "n13221",
+    "gate": {
+      "id": "g10960",
+      "kind": 2,
+      "inputs": {
+        "A": "n12452",
+        "B": "1'b0",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$eq$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:46$569_Y"
+    ]
+  },
+  {
+    "net": "n13464",
+    "gate": {
+      "id": "g11439",
+      "kind": 0,
+      "inputs": {
+        "A": "n13463",
+        "B": "n13221",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_and$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:46$570_Y"
+    ]
+  },
+  {
+    "net": "n13465",
+    "gate": {
+      "id": "g11440",
+      "kind": 0,
+      "inputs": {
+        "A": "n13464",
+        "B": "n13222",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_and$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:46$572_Y"
+    ]
+  },
+  {
+    "net": "n13466",
+    "gate": {
+      "id": "g11441",
+      "kind": 0,
+      "inputs": {
+        "A": "n13465",
+        "B": "n13223",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_and$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:46$574_Y"
+    ]
+  },
+  {
+    "net": "n13468",
+    "gate": {
+      "id": "g11442",
+      "kind": 0,
+      "inputs": {
+        "A": "n13466",
+        "B": "n13467",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_and$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:46$576_Y"
+    ]
+  },
+  {
+    "net": "n6351",
+    "gate": {
+      "id": "g11443",
+      "kind": 0,
+      "inputs": {
+        "A": "n13468",
+        "B": "n13224",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "u_record.u_context.structure_ok"
+    ]
+  },
+  {
+    "net": "n6352",
+    "gate": {
+      "id": "g4043",
+      "kind": 2,
+      "inputs": {
+        "A": "n6351",
+        "B": "1'b0",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$auto$rtlil.cc:3504:NotGate$35116"
+    ]
+  },
+  {
+    "net": "n13471",
+    "gate": {
+      "id": "g11447",
+      "kind": 3,
+      "inputs": {
+        "A": "n6353",
+        "B": "n6352",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_or$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:56$590_Y"
+    ]
+  },
+  {
+    "net": "n13472",
+    "gate": {
+      "id": "g11448",
+      "kind": 3,
+      "inputs": {
+        "A": "n13471",
+        "B": "n6344",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_or$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:56$592_Y"
+    ]
+  },
+  {
+    "net": "n13473",
+    "gate": {
+      "id": "g11449",
+      "kind": 3,
+      "inputs": {
+        "A": "n13472",
+        "B": "n14600",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_or$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:56$594_Y"
+    ]
+  },
+  {
+    "net": "n13474",
+    "gate": {
+      "id": "g11450",
+      "kind": 3,
+      "inputs": {
+        "A": "n13473",
+        "B": "n14604",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_or$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:56$596_Y"
+    ]
+  },
+  {
+    "net": "n7685",
+    "gate": {
+      "id": "g11451",
+      "kind": 3,
+      "inputs": {
+        "A": "n13474",
+        "B": "n5301",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$logic_or$rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv:56$597_Y"
+    ]
+  },
+  {
+    "net": "n7686",
+    "gate": {
+      "id": "g5330",
+      "kind": 3,
+      "inputs": {
+        "A": "n7684",
+        "B": "n7685",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$procmux$3916_Y"
+    ]
+  },
+  {
+    "net": "n7687",
+    "gate": {
+      "id": "g12964",
+      "kind": 1,
+      "inputs": {
+        "A": "n7684",
+        "B": "n7686",
+        "S": "n593"
+      }
+    },
+    "semantic": [
+      "$procmux$3918_Y"
+    ]
+  },
+  {
+    "net": "n7688",
+    "gate": {
+      "id": "g5331",
+      "kind": 3,
+      "inputs": {
+        "A": "n7687",
+        "B": "n5133",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$procmux$3920_Y"
+    ]
+  },
+  {
+    "net": "n7689",
+    "gate": {
+      "id": "g12965",
+      "kind": 1,
+      "inputs": {
+        "A": "n7687",
+        "B": "n7688",
+        "S": "n9824"
+      }
+    },
+    "semantic": [
+      "$procmux$3922_Y"
+    ]
+  },
+  {
+    "net": "n7691",
+    "gate": {
+      "id": "g5332",
+      "kind": 3,
+      "inputs": {
+        "A": "n7689",
+        "B": "n7690",
+        "S": "1'b0"
+      }
+    },
+    "semantic": [
+      "$procmux$3924_Y"
+    ]
+  },
+  {
+    "net": "n5300",
+    "gate": {
+      "id": "g12966",
+      "kind": 1,
+      "inputs": {
+        "A": "n7689",
+        "B": "n7691",
+        "S": "n13479"
+      }
+    },
+    "semantic": [
+      "$flatten\\u_record.\\u_context.$0\\fault[0:0]"
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "parameters": {
+    "COLD_PREFIX": 1,
+    "COLD_START_OFS": 2000,
+    "CTX_ACCEPTED": 1,
+    "MU": 1,
+    "OVL": 1,
+    "OVL_AW": 12,
+    "OVL_FIRST_OFS": 20000,
+    "SRAM_CAL": 1
+  },
+  "production_origin_bound": false,
+  "profile": "cold",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v": "674cf8d04bc6a926f2a784688be1ca96b80d077f519670ab8102438b0eaf2d14",
+    "rtl/qwen_split/qfd_sys_face.sv": "0bd5c4948524c78b948f7eb88b09d435d494897228c221e708db142574640ac2",
+    "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv": "47dcb86af69604092ab294721f22a1b00fb7774f3f10ea78e22f01bc022421dd",
+    "rtl/qwen_split/qfd_sys_face_record_port.sv": "08d47453a7f0d8f52838b477a82058fb183831a05f0adedd9487ce4c163a9fd9",
+    "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv": "94f59024db39f4250ad15e07ae4ec85f099c8e13a9cb1d556d7d6cd5ab063b9f",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv": "5ed298078d7e2592628e0d70b64129254731664a3601b13efb6a8af2d0bd68a1",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sram.sv": "e5c085a512b0d0ec23f2a3772480c660f2628c4e152d6a444418c6bc1fcfc5b4",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv": "a1be7be2441e149a90d7a4365789df89b1d3f7cc5bfe0b808bb8c34f5b9ded2c",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "82bb11f1151e044dae4e1bfe3dad7d9128dabdf2bb2fe51b723061db9fa4e369",
+    "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl.sv": "b388f9eb36f8c3609b525a59212e8c32479cfe12c9b37dd915dd86381cf5c8a1",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291"
+  },
+  "supported_parameters": {
+    "COLD_PREFIX": 1,
+    "COLD_START_OFS": 2000,
+    "CTX_ACCEPTED": 1,
+    "MU": 1,
+    "OVL": 1,
+    "OVL_AW": 12,
+    "OVL_FIRST_OFS": 20000,
+    "SRAM_CAL": 1
+  }
+}
