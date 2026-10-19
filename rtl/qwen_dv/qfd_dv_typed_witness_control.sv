@@ -1,6 +1,12 @@
 `timescale 1ns/1ps
 // Isolated SOURCE vehicle, not instantiated by production wrappers.
 // Template is one1742-bit block. Future growth beyond2kb requires native SRAM.
+// Install contract: PW0 restarts loading; PW400..438 must arrive once, in order;
+// all-copy authentication asserted while loading is an EARLY-AUTH fault; seal only
+// after the final record with matching digest/epoch/fusedcap. Any later loss of
+// profile/auth invalidates the template (idle) or faults (active context).
+// The 13-bit context cycle faults at 8191 only while witnesses are outstanding;
+// a completed context holds its cycle until retirement (long stage periods).
 module qfd_dv_typed_witness_control #(
  parameter integer ENABLE=0,GROUPS=13,TEMPLATE_BITS=134,
  parameter[63:0] PROFILE_DIGEST=64'h198f7708b478a667,
@@ -52,6 +58,11 @@ module qfd_dv_typed_witness_control #(
   end else if(ENABLE!=0)begin
    group_complete<=0;
    if(active!=0&&!profile_ok)fault<=1;
+   if(loading&&all_copies_authenticated)fault<=1; // early authentication
+   if(active==0&&!pending&&sealed&&!all_copies_authenticated)begin
+    // authentication/profile withdrawn while idle: template must be reinstalled
+    sealed<=0;loaded_complete<=0;loaded<=0;
+   end
    if(pw_v)begin
     if(active!=0||pending)fault<=1;
     else if(pw_addr==0)begin loaded<=0;next_pw<=0;record_index<=0;part<=0;loading<=1;loaded_complete<=0;sealed<=0;end
@@ -76,15 +87,17 @@ module qfd_dv_typed_witness_control #(
      end
     end
    end
-   if(loaded_complete&&all_copies_authenticated&&!fault)begin
+   if(loaded_complete&&!sealed&&all_copies_authenticated&&!fault)begin
     if(!profile_ok)fault<=1;else sealed<=1;
    end
+   if(sealed&&all_copies_authenticated&&!profile_ok)fault<=1; // authenticated other profile
    if(start_v)begin
     if(!sealed||fault||!profile_ok||active[start_user]||start_stage<1||start_stage>36)fault<=1;
     else begin active[start_user]<=1;cycle[start_user]<=0;stage[start_user]<=start_stage;epoch[start_user]<=start_epoch;next_group[start_user]<=0;end
    end
    for(u=0;u<4;u=u+1)if(active[u])begin
-    if(cycle[u]==8191)fault<=1;else cycle[u]<=cycle[u]+1'b1;
+    if(cycle[u]!=8191)cycle[u]<=cycle[u]+1'b1;
+    else if(!all_witnesses_complete[u])fault<=1;
    end
    // One FF template lookup port; request -> cache publication+1 -> use+2.
    pending<=pick;

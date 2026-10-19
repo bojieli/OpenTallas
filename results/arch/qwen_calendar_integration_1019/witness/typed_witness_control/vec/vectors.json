@@ -1,0 +1,44 @@
+{
+ "records": 13,
+ "witnesses": 114,
+ "mutants": [
+  "missing",
+  "late",
+  "early",
+  "duplicate",
+  "wrong_user",
+  "wrong_slice",
+  "wrong_stage",
+  "wrong_epoch",
+  "wrong_pidx",
+  "retire_early",
+  "retire_no_mexpf",
+  "digest",
+  "profile_epoch",
+  "header",
+  "zero_mask",
+  "nonzero_pad",
+  "skip_pw",
+  "dup_pw",
+  "early_auth",
+  "auth_drop_active",
+  "pw_while_active",
+  "start_before_seal",
+  "double_start",
+  "bad_stage",
+  "stray_after_complete",
+  "auth_drop_idle",
+  "observer_slice"
+ ],
+ "user_offsets": [
+  0,
+  16,
+  32,
+  168
+ ],
+ "nominal_expect": {
+  "completions": 65,
+  "retired": 5,
+  "starts": 5
+ }
+}

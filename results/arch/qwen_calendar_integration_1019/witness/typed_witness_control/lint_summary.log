@@ -1,0 +1,9 @@
+      1 Warning-WIDTHEXPAND: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:77:42: Operator NEQ expects 64 bits on the LHS, but LHS's SEL generates 58 bits.
+      1 Warning-WIDTHEXPAND: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:70:31: Operator ADD expects 32 or 10 bits on the RHS, but RHS's VARREF 'next_pw' generates 6 bits.
+      1 Warning-PROCASSINIT: src/rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv:9:9: Procedural assignment to declaration with initial value: 'ck'
+      1 Warning-BLKSEQ: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:76:19: Blocking assignment '=' in sequential logic process
+      1 Warning-BLKSEQ: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:120:40: Blocking assignment '=' in sequential logic process
+      1 Warning-BLKSEQ: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:120:30: Blocking assignment '=' in sequential logic process
+      1 Warning-BLKSEQ: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:117:9: Blocking assignment '=' in sequential logic process
+      1 Warning-BLKSEQ: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:115:13: Blocking assignment '=' in sequential logic process
+      1 Warning-BLKSEQ: src/rtl/qwen_dv/qfd_dv_typed_witness_control.sv:113:11: Blocking assignment '=' in sequential logic process

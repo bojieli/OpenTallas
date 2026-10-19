@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.qwen.typed-witness-control-source-receipt.v1",
+ "verdict": "PASS",
+ "scope": "isolated default-off SOURCE vehicle (controller + typed SU observer); not instantiated in CTLM/SYSFACE; no physical/production/FIRST claim",
+ "fleet_unit": "oth-ubuntu-1918148-1792434562 (ot-epyc5)",
+ "verilator": "5.050",
+ "sources_sha256": {
+  "rtl/qwen_dv/qfd_dv_typed_witness_control.sv": "a71f3a383332610bc2be3975503eadb7e2c8cc46d73afc45762171058aa74953",
+  "rtl/qwen_dv/qfd_dv_typed_su_observer.sv": "7b2dac2c2a1f75b1af928f09f0821b90a43df7c7a21fe2681c5046604f48a339",
+  "rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv": "31f1c4c9ac67974b8c946410f1c5610f13ec844c7cb4001b9b3f487f02fe23b5",
+  "tools/qwen_layerbench/typed_witness_control_vectors.py": "e0822b91ac8570d6213418f5bab2eaf1a25e5fc2dc950731d7262ba28f9d0ad6",
+  "results/arch/qwen_calendar_integration_1019/witness/witness_template_packet/model_pw.hex": "6a8549d158c7879189833f438b5cdd2574b868430d33140b71da300efc3d1525"
+ },
+ "nominal": {
+  "templates": 13,
+  "witnesses_per_stage": 114,
+  "contexts_live_max": 4,
+  "user_start_offsets": [
+   0,
+   16,
+   32,
+   168
+  ],
+  "stage_starts": 5,
+  "group_completions": 65,
+  "retirements": 5,
+  "context_reuse_after_retire": true,
+  "long_period_retire_after_8191_cycles": true,
+  "fault": 0
+ },
+ "legacy_ENABLE0": "outputs zero, fault 0 on nominal stimulus",
+ "mutants_failing": 27,
+ "mutant_names": [
+  "missing",
+  "late",
+  "early",
+  "duplicate",
+  "wrong_user",
+  "wrong_slice",
+  "wrong_stage",
+  "wrong_epoch",
+  "wrong_pidx",
+  "retire_early",
+  "retire_no_mexpf",
+  "digest",
+  "profile_epoch",
+  "header",
+  "zero_mask",
+  "nonzero_pad",
+  "skip_pw",
+  "dup_pw",
+  "early_auth",
+  "auth_drop_active",
+  "pw_while_active",
+  "start_before_seal",
+  "double_start",
+  "bad_stage",
+  "stray_after_complete",
+  "auth_drop_idle",
+  "observer_slice"
+ ],
+ "rtl_fixes_vs_67e556d10": [
+  "auth withdrawal while sealed+idle invalidates template (reinstall required)",
+  "authentication asserted while loading = EARLY-AUTH fault",
+  "authenticated foreign profile while sealed = fault",
+  "13-bit context cycle saturates after all witnesses complete; fault at 8191 only while outstanding (stage periods >8191 cycles)",
+  "seal evaluated once"
+ ],
+ "ff_census_declared": {
+  "templates_13x134": 1742,
+  "pw_partial": 128,
+  "loader_ctl(loaded13,next_pw6,rec_idx4,part2,flags3)": 28,
+  "fault": 1,
+  "context(active4,cycle52,stage24,epoch64,next_group16)": 160,
+  "cache_8x134": 1072,
+  "seen_8x12": 96,
+  "cache_valid": 8,
+  "lookup_pipe(pending1,user2,slot1,group4,stage6,epoch16,rr2)": 32,
+  "completion_out": 7
+ },
+ "ff_total_declared": 3274,
+ "ff_plus_typed_observer17": 3291,
+ "model_baseline_FF_total": 3288,
+ "model_with_held_user": 3305,
+ "cycle_price": {
+  "SU_issue_added_cycles": 0,
+  "observation_latency": "issue -> observation +1 -> check +2 (no ready/permission path)",
+  "retire_earliest": "start + last_due(5522) + 3 cycles; compiler must place context retirement (with ME/XPF final read) no earlier",
+  "template_prefetch": "first base 26 >= start+2; next template fetched only when a slot frees; compiler must keep group g+2 base > completion(g)+2 (holds for WTN1: worst slack group3 last due 468 -> group5 base 554 = 86 cycles)",
+  "install_added_PW": 0,
+  "install_note": "39 useful PW400..438 replace zeros in the already transmitted 1024-PW image; seal at auth+1",
+  "per_token_cycles_added": 0
+ },
+ "install_obligations": [
+  "calcopy receiver must deassert all_copies_authenticated before a new install's PW0 (else EARLY-AUTH fault)"
+ ],
+ "safe_design_checklist": {
+  "1_pins": "OPEN: isolated component, no pin regs/reset landing yet (parent must land)",
+  "2_reach": "n/a until placed",
+  "3_fanout": "OPEN: cycle[u] feeds 8x12 due adders/comparators (>32 loads) - needs kept replicas or precomputed per-slot due at cache load",
+  "4_depth": "OPEN: per-cycle 13b add+compare+16b tuple compare+96-way OR to fault unmapped; register match vector one stage if >600ps",
+  "5_storage": "PASS by ROOT choice: 1742-bit template <=2048 hard guard; growth must go to SRAM",
+  "6_floorplan": "n/a (no gate)",
+  "7_clock": "n/a (no gate)",
+  "8_schedule": "PASS: static, no backpressure; costs above"
+ },
+ "open": [
+  "instantiate in CTLM/SYSFACE replacing GI su_obs",
+  "bind retire to real ME/XPF final read",
+  "all ME/XPF physical-copy authentication",
+  "mapped synthesis FF/area/timing census",
+  "production FIRST/phase/head payload"
+ ]
+}

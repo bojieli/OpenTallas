@@ -1,0 +1,9 @@
+TWC_FIRST_FAULT edge=1166 ctl=1 obs=0
+TWC_RETIRE_EARLY edge=12167 user=0
+TWC_RETIRE_EARLY edge=26800 user=3
+TWC_SUMMARY en=1 fault=1 obs_fault=0 ready_seen=1 ready_end=0 completions=39 retired=0 starts=6 max_live=3 active_end=0000 first_fault=1166 edges=26821
+TWC_RESULT_FAULT
+- src/rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 0.011 s; speed 4.730 ms/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
