@@ -318,10 +318,10 @@
   "macro_halo_um": 5.4,
   "pin_balance": {
    "group_max": 1,
-   "h": "M2",
+   "h": "M4",
    "v": "M3"
   },
-  "pin_h": "M2",
+  "pin_h": "M4",
   "pin_v": "M3"
  },
  "job": {
@@ -623,7 +623,7 @@
  },
  "raw_memory_note": "Six64x512 SRAMs plus three4096x72 OPROMs; all nine exact named ck_core sinks; h16c contract unchanged.",
  "fill_reason": {
-  "pin_bound": "777.6um external slot width retained;432um height fits three SRAM rows on43.2 lattice with51.84um row channels and N/S51.84/43.2um face bands. Six SRAMs+hard h16c+ROM139975um2 and historicalstd12246um2 give45.3% totalfill; actual successorstd area must replace estimate before finalgate."
+  "pin_bound": "Actualr5 source-equivalent synthesis std9983.71um2 + hard144757.70 /outline335923.2 =46.06% totalfill. The footprint is bounded by sixSRAM rows, threeROM clearances, realsharedchannel and2992 registered IOs; postreset/repair actualstd must be reported separately."
  },
  "mu_note": "MU-DQ-CTLMKIT 10-19: (1) leaf ROM u_gi.g_op.u_leaf.g_op.u_rom (38.0 x 62.9) at (43.2, 259.2) R0 on the 43.2 lattice, core region, above the calendar SRAM stack (43.2..198.8; 60.4 um channel, pins on its W face like the SRAMs, facing the calendar glue strip), raw-memory sink of ck_core like the SRAMs; (2) tl[1087:0] (one TLOAD table word, else 0) on the S face x 432.0-655.3 (4.9 pins/um) left of cmd (the die's W5 st_wi beside cmd_wi), landed core->hr like cmd; (3) dh_user[1:0] on the N face x 662.0 (gap between native_cmd and command_stage); die GEN ties it 0 (OPSEG mode). Die obligation: re-place tl / dh_user pins with the die top-down pin assignment.",
  "landed_raw_detach": true,
@@ -665,5 +665,6 @@
  "post_stage_audits": [
   "physical/common_flow/audit_same_edge_reset_copies.tcl"
  ],
- "landing_direct_residual_ps": 150
+ "landing_direct_residual_ps": 150,
+ "std_area_um2": 9983.71
 }

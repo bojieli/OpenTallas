@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.pin_plan_inventory.v1",
- "source": "clk2 actualODB plus integrated a85a00ce9 ctx/FCTX/INIT ABI; single M3 N/S and M2 E/W compatible track phase",
+ "source": "Actualclk2 ports +unifiedctx/INIT, actualplatformtrackgrid: M3 N/S, M4 E; M2 nonuniform rowgrid excluded.",
  "pins": 2992,
- "pitch_um": 0.216,
+ "pitch_um": 0.192,
  "grants": [
   [
    "tl[0]",
@@ -17838,117 +17838,117 @@
   ],
   [
    "emb_start",
-   "M2",
+   "M4",
    "E",
-   412.065
+   412.044
   ],
   [
    "emb_token[0]",
-   "M2",
+   "M4",
    "E",
-   412.281
+   412.236
   ],
   [
    "emb_token[1]",
-   "M2",
+   "M4",
    "E",
-   412.497
+   412.428
   ],
   [
    "emb_token[2]",
-   "M2",
+   "M4",
    "E",
-   412.713
+   412.62
   ],
   [
    "emb_token[3]",
-   "M2",
+   "M4",
    "E",
-   412.929
+   412.812
   ],
   [
    "emb_token[4]",
-   "M2",
+   "M4",
    "E",
-   413.145
+   413.004
   ],
   [
    "emb_token[5]",
-   "M2",
+   "M4",
    "E",
-   413.361
+   413.196
   ],
   [
    "emb_token[6]",
-   "M2",
+   "M4",
    "E",
-   413.577
+   413.388
   ],
   [
    "emb_token[7]",
-   "M2",
+   "M4",
    "E",
-   413.793
+   413.58
   ],
   [
    "emb_token[8]",
-   "M2",
+   "M4",
    "E",
-   414.009
+   413.772
   ],
   [
    "emb_token[9]",
-   "M2",
+   "M4",
    "E",
-   414.225
+   413.964
   ],
   [
    "emb_token[10]",
-   "M2",
+   "M4",
    "E",
-   414.441
+   414.156
   ],
   [
    "emb_token[11]",
-   "M2",
+   "M4",
    "E",
-   414.657
+   414.348
   ],
   [
    "emb_token[12]",
-   "M2",
+   "M4",
    "E",
-   414.873
+   414.54
   ],
   [
    "emb_token[13]",
-   "M2",
+   "M4",
    "E",
-   415.089
+   414.732
   ],
   [
    "emb_token[14]",
-   "M2",
+   "M4",
    "E",
-   415.305
+   414.924
   ],
   [
    "emb_token[15]",
-   "M2",
+   "M4",
    "E",
-   415.521
+   415.116
   ],
   [
    "emb_token[16]",
-   "M2",
+   "M4",
    "E",
-   415.737
+   415.308
   ],
   [
    "emb_token[17]",
-   "M2",
+   "M4",
    "E",
-   415.953
+   415.5
   ],
   [
    "init_u0",
@@ -17956,5 +17956,10 @@
    "N",
    775.017
   ]
- ]
+ ],
+ "pitch_um_by_face": {
+  "N": 0.216,
+  "S": 0.216,
+  "E": 0.192
+ }
 }

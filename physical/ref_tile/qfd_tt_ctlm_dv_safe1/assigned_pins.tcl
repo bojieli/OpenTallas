@@ -1,4 +1,4 @@
-# Safe1: actualclk2 scalarports plus ctx_x129/mu_fault, legal M2/M3 phase; pitch0.216um (4.63pins/um).
+# Safe1: actualclk2 scalarports plus ctx_x129/mu_fault, actualuniformM3 N/S0.216 and M4 E0.192; M2rowgrid deliberatelyexcluded.
 source /src/physical/common_flow/assigned_pin_exact.tcl
 ot_assigned_pin_exact {ag5[0]} M3 S 581.049000
 ot_assigned_pin_exact {ag5[1]} M3 S 581.265000
@@ -656,25 +656,25 @@ ot_assigned_pin_exact {dh[99]} M3 N 681.057000
 ot_assigned_pin_exact {dh[9]} M3 N 661.617000
 ot_assigned_pin_exact {dh_user[0]} M3 N 605.889000
 ot_assigned_pin_exact {dh_user[1]} M3 N 606.105000
-ot_assigned_pin_exact {emb_start} M2 E 412.065000
-ot_assigned_pin_exact {emb_token[0]} M2 E 412.281000
-ot_assigned_pin_exact {emb_token[10]} M2 E 414.441000
-ot_assigned_pin_exact {emb_token[11]} M2 E 414.657000
-ot_assigned_pin_exact {emb_token[12]} M2 E 414.873000
-ot_assigned_pin_exact {emb_token[13]} M2 E 415.089000
-ot_assigned_pin_exact {emb_token[14]} M2 E 415.305000
-ot_assigned_pin_exact {emb_token[15]} M2 E 415.521000
-ot_assigned_pin_exact {emb_token[16]} M2 E 415.737000
-ot_assigned_pin_exact {emb_token[17]} M2 E 415.953000
-ot_assigned_pin_exact {emb_token[1]} M2 E 412.497000
-ot_assigned_pin_exact {emb_token[2]} M2 E 412.713000
-ot_assigned_pin_exact {emb_token[3]} M2 E 412.929000
-ot_assigned_pin_exact {emb_token[4]} M2 E 413.145000
-ot_assigned_pin_exact {emb_token[5]} M2 E 413.361000
-ot_assigned_pin_exact {emb_token[6]} M2 E 413.577000
-ot_assigned_pin_exact {emb_token[7]} M2 E 413.793000
-ot_assigned_pin_exact {emb_token[8]} M2 E 414.009000
-ot_assigned_pin_exact {emb_token[9]} M2 E 414.225000
+ot_assigned_pin_exact {emb_start} M4 E 412.044000
+ot_assigned_pin_exact {emb_token[0]} M4 E 412.236000
+ot_assigned_pin_exact {emb_token[10]} M4 E 414.156000
+ot_assigned_pin_exact {emb_token[11]} M4 E 414.348000
+ot_assigned_pin_exact {emb_token[12]} M4 E 414.540000
+ot_assigned_pin_exact {emb_token[13]} M4 E 414.732000
+ot_assigned_pin_exact {emb_token[14]} M4 E 414.924000
+ot_assigned_pin_exact {emb_token[15]} M4 E 415.116000
+ot_assigned_pin_exact {emb_token[16]} M4 E 415.308000
+ot_assigned_pin_exact {emb_token[17]} M4 E 415.500000
+ot_assigned_pin_exact {emb_token[1]} M4 E 412.428000
+ot_assigned_pin_exact {emb_token[2]} M4 E 412.620000
+ot_assigned_pin_exact {emb_token[3]} M4 E 412.812000
+ot_assigned_pin_exact {emb_token[4]} M4 E 413.004000
+ot_assigned_pin_exact {emb_token[5]} M4 E 413.196000
+ot_assigned_pin_exact {emb_token[6]} M4 E 413.388000
+ot_assigned_pin_exact {emb_token[7]} M4 E 413.580000
+ot_assigned_pin_exact {emb_token[8]} M4 E 413.772000
+ot_assigned_pin_exact {emb_token[9]} M4 E 413.964000
 ot_assigned_pin_exact {fab} M3 N 700.065000
 ot_assigned_pin_exact {hr[0]} M3 S 608.265000
 ot_assigned_pin_exact {hr[100]} M3 S 629.865000

@@ -16,7 +16,7 @@
   429.84
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 9983.71,
  "layer_contract": {
   "children": {
    "ot_qfd_tt_ctlm_static_hr": "M5"
@@ -209,8 +209,8 @@
   [
    "WARN",
    "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+   "fill 46% = (macros/children 144758 + std 9984) / outline 335923 um2 (pin-bound: Actualr5 source-equivalent synthesis std9983.71um2 + hard144757.70 /outline335923.2 =46.06% totalfill. The footprint is bounded by sixSRAM rows, threeROM clearances, realsharedchannel and2992 registered IOs; postreset/repair actualstd must be reported separately.)",
+   ""
   ]
  ],
  "referenced": [
