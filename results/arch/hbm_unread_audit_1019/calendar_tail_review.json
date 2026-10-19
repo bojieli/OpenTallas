@@ -1,0 +1,1433 @@
+{
+ "schema": "opentallas.calendar_tail_review_1019.v1",
+ "manifest_adopted": false,
+ "bit_count": 1045,
+ "proof": [
+  {
+   "instance": "epcal_NE",
+   "used_payload_range": [
+    0,
+    18
+   ],
+   "unused_capacity_range": [
+    19,
+    186
+   ],
+   "consumers": [
+    "ep_N2"
+   ]
+  },
+  {
+   "instance": "epcal_NW",
+   "used_payload_range": [
+    0,
+    18
+   ],
+   "unused_capacity_range": [
+    19,
+    186
+   ],
+   "consumers": [
+    "ep_N0"
+   ]
+  },
+  {
+   "instance": "epcal_SE",
+   "used_payload_range": [
+    0,
+    18
+   ],
+   "unused_capacity_range": [
+    19,
+    186
+   ],
+   "consumers": [
+    "ep_S3"
+   ]
+  },
+  {
+   "instance": "epcal_SW",
+   "used_payload_range": [
+    0,
+    37
+   ],
+   "unused_capacity_range": [
+    38,
+    186
+   ],
+   "consumers": [
+    "ep_S0",
+    "ep_S1"
+   ]
+  },
+  {
+   "instance": "vmfc_NE",
+   "used_payload_range": [
+    0,
+    88
+   ],
+   "unused_capacity_range": [
+    89,
+    186
+   ],
+   "consumers": [
+    "vmdel_NE0",
+    "vmdel_NE1",
+    "vmdel_NE2",
+    "vmdel_NE3",
+    "vmdel_NE4",
+    "vmdel_NE5",
+    "vmdel_NE6",
+    "vmdel_NE7",
+    "vmks_NW4",
+    "vmks_NW5",
+    "vmks_NW6",
+    "vmks_NW7"
+   ]
+  },
+  {
+   "instance": "vmfc_NW",
+   "used_payload_range": [
+    0,
+    88
+   ],
+   "unused_capacity_range": [
+    89,
+    186
+   ],
+   "consumers": [
+    "vmdel_NW0",
+    "vmdel_NW1",
+    "vmdel_NW2",
+    "vmdel_NW3",
+    "vmdel_NW4",
+    "vmdel_NW5",
+    "vmdel_NW6",
+    "vmdel_NW7",
+    "vmks_NW0",
+    "vmks_NW1",
+    "vmks_NW2",
+    "vmks_NW3"
+   ]
+  },
+  {
+   "instance": "vmfc_SE",
+   "used_payload_range": [
+    0,
+    88
+   ],
+   "unused_capacity_range": [
+    89,
+    186
+   ],
+   "consumers": [
+    "vmdel_SE0",
+    "vmdel_SE1",
+    "vmdel_SE2",
+    "vmdel_SE3",
+    "vmdel_SE4",
+    "vmdel_SE5",
+    "vmdel_SE6",
+    "vmdel_SE7",
+    "vmks_SW4",
+    "vmks_SW5",
+    "vmks_SW6",
+    "vmks_SW7"
+   ]
+  },
+  {
+   "instance": "vmfc_SW",
+   "used_payload_range": [
+    0,
+    88
+   ],
+   "unused_capacity_range": [
+    89,
+    186
+   ],
+   "consumers": [
+    "vmdel_SW0",
+    "vmdel_SW1",
+    "vmdel_SW2",
+    "vmdel_SW3",
+    "vmdel_SW4",
+    "vmdel_SW5",
+    "vmdel_SW6",
+    "vmdel_SW7",
+    "vmks_SW0",
+    "vmks_SW1",
+    "vmks_SW2",
+    "vmks_SW3"
+   ]
+  }
+ ],
+ "candidates": [
+  {
+   "instance": "epcal_NE",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "bank_enable",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "response_seq",
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "bank_enable",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "response_seq",
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "bank_enable",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "response_seq",
+   "unread_ranges": [
+    [
+     4,
+     9
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 19-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "bank_client",
+   "unread_ranges": [
+    [
+     5,
+     23
+    ]
+   ],
+   "bit_count": 19,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "hub_ring_client",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "hub_ring_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "rslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "wslot_v",
+   "unread_ranges": [
+    [
+     0,
+     7
+    ]
+   ],
+   "bit_count": 8,
+   "reason": "Universal187 capacity tail above fully connected 38-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_NW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SE",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "lg_local_read",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "lg_local_write",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "replay_enable",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "replay_source",
+   "unread_ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "bit_count": 1,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "ring_tx_enable",
+   "unread_ranges": [
+    [
+     0,
+     1
+    ]
+   ],
+   "bit_count": 2,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "ring_tx_source",
+   "unread_ranges": [
+    [
+     0,
+     5
+    ]
+   ],
+   "bit_count": 6,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "rslot",
+   "unread_ranges": [
+    [
+     8,
+     23
+    ]
+   ],
+   "bit_count": 16,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "wslot",
+   "unread_ranges": [
+    [
+     0,
+     23
+    ]
+   ],
+   "bit_count": 24,
+   "reason": "Universal187 capacity tail above fully connected 89-bit custom payload; not semantic use of universal port names",
+   "allowlist_candidate": true,
+   "root_review_required": true
+  }
+ ],
+ "evidence": {
+  "universal_slice_map": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+  "source_sha256": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b",
+  "historical_generator": "tools/hbm_die_v15/complete_host_targets_2330.py explicitly keeps high outputs unused; original vmfc W89",
+  "current_contract_sha256": "2a2bc994f067e2eb43522341bea025809cbb3222cd7cd8e3c57b96b0bf81a032"
+ },
+ "limitation": "Intended overprovisioning only: W187 hardware does not reject nonzero custom-unused tail. Compiler tail-zero image evidence not included. calendar_v/done and all actual payload bits excluded. Root review required before adoption."
+}
