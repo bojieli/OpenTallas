@@ -1,9 +1,0 @@
-    input wire [0:0] ck,
-    input wire [35:0] f_hep,
-    input wire [0:0] f_hpg,
-    input wire [0:0] f_vrq,
-    input wire [1024:0] f_vrs,
-    input wire [0:0] rst,
-    output wire [1:0] t_flt,
-    output wire [514:0] t_hp,
-    output wire [24:0] t_vrq

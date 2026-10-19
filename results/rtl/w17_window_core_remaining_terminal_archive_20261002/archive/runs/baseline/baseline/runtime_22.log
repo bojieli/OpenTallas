@@ -1,5 +1,0 @@
-ACTUAL_CORE_CANCEL_PASS cut=PREFIX prefix=16 qe=1 terminal=16 vm=16 capture=16 blocks=0 acceptedWR=0 faultcycle=41 localACKcycle=50 suppressed=0 sinkWords=512 frozenFrames=0
-- /tmp/opentallas-core-guard-frontend-result-20261002-r1/baseline/sources/tb.sv:1374: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 53ns; walltime 2.993 s; speed 17.544 ns/s
-- Verilator: cpu 2.992 s on 1 threads; allocated 173 MB

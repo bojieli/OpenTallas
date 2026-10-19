@@ -1,4 +1,0 @@
-RESULT tp_seq REG_CDATA=1 N=2 ENABLE_AR256=1 SEED=1 cycles=100000 c_fire=0 vm_re=0 done_cycles=0 mismatches=0
-[200007000] %Fatal: tb_tp_seq_rnext.sv:89: Assertion failed in tb_qwen_tp_seq_rnext_lockstep: return packet/state mismatch or vacuous trace
-%Error: rtl/test/hbm_accel_qwen/fmax/tb_tp_seq_rnext.sv:89: Verilog $stop
-Aborting...

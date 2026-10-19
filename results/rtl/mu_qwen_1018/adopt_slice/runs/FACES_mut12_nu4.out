@@ -1,9 +1,0 @@
-# case FACES_mut12_nu4 host ot-epyc5 2026-10-19T02:05:01-07:00 commit a540f1f9f481ce632e987da1d733d9a941216717
-GATHER tokens 5007 5007 5007 5007 (want 2007)
-FACES MU_NU=4
-FACES MUT=12: FAIL 1
-- rtl/test/qwen_dv/tb_qfd_dv2_faces.sv:98: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 162ns; walltime 0.791 s; speed 204.714 ns/s
-- Verilator: cpu 0.767 s on 1 threads; allocated 83 MB
-# exit 0

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kv_grp_ctl",
- "enable": false,
- "reason": "two clock domains (ck / hck): synthesis pin registers take one clock. Every output is flop-driven in the RTL (boot_cdc sink_*/applied/fault, phase *_h/fault/idle, drain drained/fault); phase and drain inputs land on capture flops (go_q / meta_q, idle_meta / fault_meta / *_q); boot cfg_* enters the FIFO storage flops and the write-pointer logic (boot-only path). A wrapper edge on the phase inputs would move the compiled HBM launch edge."
-}

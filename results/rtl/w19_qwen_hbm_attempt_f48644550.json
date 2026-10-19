@@ -1,8 +1,0 @@
-{
-  "status": "fail",
-  "stage": "RTL elaboration",
-  "source_commit": "f48644550",
-  "reason": "Existing main SMQ_SRC omits ot_hdc_ksadd_k dependency; Icarus exit 35",
-  "log_sha256": "064de863ca5cae2d7209dc838967a3db0cfe301ece1313d51c84be3b0bce0056",
-  "next_action": "Export immutable W13 000ba089 SMQ source snapshot and its passing prefix equivalence proof, as existing W19 V41 gate does; do not modify W13 files"
-}

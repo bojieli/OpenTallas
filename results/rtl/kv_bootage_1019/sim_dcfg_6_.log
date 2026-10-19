@@ -1,8 +1,0 @@
-ERROR closed outputs differ
-ERROR successor not sealed / faulted
-ERROR age outputs != image words
-KVBA_DCFG FAIL mut=6 checks=20 errors=3 negatives=3/3
-- /srv/opentallas-scratch/claude/kv-bootage/src/rtl/test/kv_bootage_1019/tb_kvba_dcfg.sv:75: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 938ns; walltime 0.000 s; speed 6.688 ms/s
-- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

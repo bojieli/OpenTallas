@@ -1,6 +1,0 @@
-STATS reads=6144 landed=6144 front_puts=6144 ring_returns=6144 acts=48/48/48/48 nonkv_acts=0 row_field_held_edges=22548 act_bad=0 disjoint_bad=0 rest_mism=0 po_mism=0 checks=253428 faults a:00000 b:00000
-PASS MU_KV_READ_ROWS users4 layers3 pc13 acts 48/48/48/48 row=64+l+256u exact, users disjoint, all other outputs lockstep with MU0
-- rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv:151: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 25us; walltime 1.433 s; speed 17.680 us/s
-- Verilator: cpu 1.403 s on 1 threads; allocated 24 MB

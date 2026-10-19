@@ -1,7 +1,0 @@
-MISMATCH cyc=45 xline=1 me_e=0 ctl=0 face=0
-FAIL qfd_vm_xtree first=45 bad=1470 of 2956 XMUT=1
-- rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xtree.sv:201: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 6us; walltime 5.437 s; speed 1.104 us/s
-- Verilator: cpu 5.436 s on 1 threads; allocated 16 MB
-maxrss_kb=12732 wall=5.43
