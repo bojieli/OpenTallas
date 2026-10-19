@@ -42,6 +42,7 @@ module ot_hnx_hc_qeng #(
     // die relay classes side by side, 1136 + 624 + 304 = 2,064 b (2,049 used: {lane fault, 64 chunk sums}; 15 spare
     // bits tied low), ot_hbm_rly = the hbfd_rly_{1136,624,304}_<flow> masters (reset: rs, released 3 edges later).
     parameter integer XRLY = 0,
+    parameter integer SIREG = 0,                 // HUB-SAFE 10-19: centre chunk-sum pin register (ot_hnx_hc_qcen SIREG)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -73,7 +74,7 @@ module ot_hnx_hc_qeng #(
     // ------------------------------------------------------------------ centre
     wire [7:0] rb, wf; wire [12:0] wc_w, wc_n, wc_e, wc_s; wire [2048:0] s_c;
     wire bd_v, bd_ss; wire [6:0] bd_nv; wire [9:0] bd_wa, bd_xa;
-    ot_hnx_hc_qcen #(.K(K), .DRLY(DRLY), .TLA(TLA), .MUT((MUT == 3 || MUT == 4) ? MUT : 0)) u_cen (
+    ot_hnx_hc_qcen #(.K(K), .DRLY(DRLY), .TLA(TLA), .SIREG(SIREG), .MUT((MUT == 3 || MUT == 4 || MUT == 5) ? MUT : 0)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(x_wave_v), .x_beat(x_wave_beat), .x_word(x_wave_word), .s_i(s_c), .wfault_i(wf), .rst_b(rb),

@@ -13,6 +13,11 @@
 #       e0 MUT 0: N = 1,2,3,4,6,8 -> HC_ENG PASS each; HC_MIX_CYCLES(N) -> further-row II
 #       e4 MUT 4 (quarter-0 tree pairs (0,2),(1,3)), N 4 -> HC_ENG FAIL (fail witness)
 #       e1 MUT 1 (quarter-0 bank-3 rotation), N 4      -> HC_ENG FAIL (fail witness)
+#  3. HUB-SAFE 10-19 (kit hnx_hcq_hub_safe_1019): the same ring lockstep with the centre's chunk-sum PIN REGISTER
+#     (ot_hnx_hc_qcen SIREG 1, +define+HC_SIREG=1; zero added edges, so the root's fixed ps edge and every golden time
+#     are unchanged):
+#       s0 MUT 0: N = 1,2,3,4,6,8 -> HC_ENG PASS each, same HC_MIX_CYCLES as e0
+#       s5 MUT 5 (SIREG landing without the leaf-valid delay), N 4 -> HC_ENG FAIL (fail witness)
 set -u
 B=$(pwd); O=$(realpath -m "${1:?OUT}"); ST=${2:?STAGE}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -62,12 +67,13 @@ case $ST in
   qm9) qbuild q_m9 "$NS -GMUT=9"; exit 0;;
 esac
 # ---- HC_MIX N-row cases
-case $ST in e0) NL="1 2 3 4 6 8";; *) NL="4";; esac
+case $ST in e0|s0) NL="1 2 3 4 6 8";; *) NL="4";; esac
+case $ST in s*) SR=1;; *) SR=0;; esac
 for n in $NL; do python3 tools/rtl_hbm_hc_eng_static_gate.py --run $O/cases_$ST/n$n --split --npos $n --raw0 167 --rs 104 > $O/cases_${ST}_n$n.log 2>&1 || V "vector gen n$n FAILED"; done
 ebuild(){ # tag mut cases...
   local t=$1 m=$2; shift 2; local d=$O/obj_$t; rm -rf $d
   verilator --binary --timing --hierarchical -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
-    --top-module tb_hnx_hc_eng4 +define+MUT=$m +define+OT_FP_DATA_NORST +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 \
+    --top-module tb_hnx_hc_eng4 +define+MUT=$m +define+OT_FP_DATA_NORST +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_SIREG=$SR \
     -Mdir $d -o V$t rtl/hbm_next/hc/tb/tb_hnx_hc_eng4_hier.vlt "${ESRC[@]}" > $O/build_$t.log 2>&1
   V "build $t rc=$? bin=$( [ -x $d/V$t ] && echo ok || echo MISSING)"
   for c in "$@"; do
@@ -78,12 +84,13 @@ ebuild(){ # tag mut cases...
   wait; rm -rf $d
   local np=0 nc=$#
   for c in "$@"; do grep -q '^HC_ENG PASS' $O/run_${t}_$c/run.log && np=$((np+1)); done
-  [ $np = $nc ] && V "HNX_HC_RING MUT=$m PASS $np/$nc" || V "HNX_HC_RING MUT=$m FAIL $np/$nc (HC_ENG FAIL)"
-  if [ $t = e0 ]; then
+  local tg="HNX_HC_RING"; [ $SR = 1 ] && tg="HNX_HC_RING SIREG=1"
+  [ $np = $nc ] && V "$tg MUT=$m PASS $np/$nc" || V "$tg MUT=$m FAIL $np/$nc (HC_ENG FAIL)"
+  if [ $t = e0 ] || [ $t = s0 ]; then
     V "HNX_HC_ROW_II $(python3 - $O <<'PY'
 import re, sys, glob
 pts = []
-for f in glob.glob(sys.argv[1] + '/run_e0_n*/run.log'):
+for f in glob.glob(sys.argv[1] + '/run_[es]0_n*/run.log'):
     m = re.search(r'npos=(\d+).*HC_MIX_CYCLES=(\d+)', open(f).read())
     if m: pts.append((int(m.group(1)), int(m.group(2))))
 pts.sort(); n = len(pts)
@@ -95,5 +102,6 @@ PY
 )"
   fi
 }
-case $ST in e0) ebuild e0 0 n1 n2 n3 n4 n6 n8;; e4) ebuild e4 4 n4;; e1) ebuild e1 1 n4;; esac
+case $ST in e0) ebuild e0 0 n1 n2 n3 n4 n6 n8;; e4) ebuild e4 4 n4;; e1) ebuild e1 1 n4;;
+  s0) ebuild s0 0 n1 n2 n3 n4 n6 n8;; s5) ebuild s5 5 n4;; esac
 V "done"

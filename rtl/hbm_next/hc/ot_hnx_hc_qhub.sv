@@ -16,7 +16,8 @@ module ot_hnx_hc_qhub #(
     parameter integer TLA = 7,
     parameter integer RD_CAPTURE = 23,
     parameter integer GATHER_PHASE = 23,
-    parameter integer DONE_LAT = 19
+    parameter integer DONE_LAT = 19,
+    parameter integer SIREG = 0      // HUB-SAFE 10-19 (kit hnx_hcq_hub_safe_1019): 1 = s_i pin register, 0 edges (ot_hnx_hc_qcen)
 )(
     input  wire           clk, rst_n,
     // ---- hc_<q> (ot_hnx_hc_q)
@@ -65,7 +66,7 @@ module ot_hnx_hc_qhub #(
         .gathered_mix_data(gathered_mix_data), .gather_done(gather_done), .result_v(result_v),
         .result_position(result_position), .result(result), .program_active(program_active),
         .program_done(program_done), .fault(hcq_fault));
-    ot_hnx_hc_qcen #(.K(K), .DRLY(DRLY), .TLA(TLA)) u_cen (
+    ot_hnx_hc_qcen #(.K(K), .DRLY(DRLY), .TLA(TLA), .SIREG(SIREG)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),

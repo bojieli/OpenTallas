@@ -11,11 +11,18 @@
 //            for bit the aligned 64-leaf subtree of the 256-leaf csum tree (as ot_hnx_hc_qeng).
 //   reset    ot_rst_relay, 9 regions: rst_b[k] -> bank k (each bank relays again), region 8 = this centre.
 //   fault    sticky: rx order, ingest (unsolicited / missing / wrong word / bad event), any bank's residual check.
-// MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3).
+// MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3),
+//   5 = SIREG landing without the leaf-valid delay (the tree consumes the chunk sums one edge early).
+// SIREG (HUB-SAFE 10-19, kit hnx_hcq_hub_safe_1019; default 0 = the n2 form bit for bit): 1 = the 2,049-b chunk-sum
+// input s_i lands in a PIN REGISTER (safe-design item 1: before, s_i drove the level-1 adders' A1 decode/compare logic
+// straight from the port).  Zero added edges: the level-1 adders run one cut shorter (LAT TLA-1 = 6, the standard LAT-6
+// cuts A, B, C: only the D cut after the sentinel LZC goes; ot_hdc_fp32_add_lat is bit-identical for every cut choice),
+// the leaf valid and the lane-fault pipe move one edge to match, so ps_v / ps / ps_f leave on the SAME edge as SIREG 0.
 module ot_hnx_hc_qcen #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
+    parameter integer SIREG = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -35,6 +42,7 @@ module ot_hnx_hc_qcen #(
     localparam integer LM = 8, LA = 7, SOR = 1, ML = 2, NVW = 7, LT = 6;
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
     initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    initial if (SIREG != 0 && (SIREG != 1 || TLA != 7)) $fatal(1, "SIREG 1 needs TLA 7 (level-1 adders run LAT 6)");
 
     wire [8:0] rn;
     ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
@@ -116,15 +124,25 @@ module ot_hnx_hc_qcen #(
     end
     assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
 
+    // SIREG: the chunk-sum pin register (no reset: data and the lane-fault bit, qualified by the leaf valid below)
+    wire [2048:0] s_l;
+    if (SIREG != 0) begin : g_sireg
+        reg [2048:0] s_q;
+        always @(posedge clk) s_q <= s_i;
+        assign s_l = s_q;
+    end else begin : g_sidir
+        assign s_l = s_i;
+    end
     // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY edges ago
-    localparam integer VD = SB + DRLY;
+    localparam integer SID = (SIREG != 0 && MUT != 5) ? 1 : 0;   // MUT 5: landing without the valid delay
+    localparam integer VD = SB + DRLY + SID;
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
     wire [64*32-1:0] lv0;
     for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
         localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
-        assign lv0[i*32 +: 32] = s_i[SRC*32 +: 32];
+        assign lv0[i*32 +: 32] = s_l[SRC*32 +: 32];
     end
     wire [63*32-1:0] nd; wire [62:0] nv, ne;
     for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
@@ -136,19 +154,22 @@ module ot_hnx_hc_qcen #(
             end else begin : g_up
                 assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
             end
-            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
+            // SIREG: level 1 runs one cut shorter (LAT TLA - 1 = 6: the standard LAT-6 cuts A, B, C; only the D cut inside
+            // B2 goes); other levels unchanged
+            ot_hdc_fp32_add_lat #(.LAT((l == 1 && SIREG != 0) ? TLA - 1 : TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
                 .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
             assign ne[OFF + i] = nv[OFF + i] && (|e);
         end
     end
     localparam integer RT = 62;
-    reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_i[W*32] && leaf_v};
+    localparam integer LFD = LT * TLA - ((SIREG != 0) ? 1 : 0);   // the lane-fault pipe matches the tree depth
+    reg [LFD-1:0] lfd;
+    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LFD-2:0], s_l[W*32] && leaf_v};
     always @(posedge clk or negedge rc) begin
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin
             ps_v <= nv[RT];
-            ps_f <= lfd[LT*TLA-1] || (|ne);
+            ps_f <= lfd[LFD-1] || (|ne);
             if (ing_fault || rx_fault || (|wf_q)) fault <= 1'b1;
         end
     end

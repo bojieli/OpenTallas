@@ -17,6 +17,9 @@
 // 164, table 165; F20 cfg rows, descriptor, launch); the x_wave link is XW_BEATS (default 4): beat b of wave n sits on
 // the pins at t == T + 4n - 3 + b (the whole wave at T + 4n in the XW_BEATS=1 form). Sources are driven at negedge
 // from the programme edge counter t (equivalent to a combinational function of t, no array sensitivity).
+`ifndef HC_SIREG
+`define HC_SIREG 0
+`endif
 module tb_hnx_hc_eng4;
     localparam integer K = 20480;
     reg clk = 0; always #1 clk = ~clk;
@@ -66,7 +69,7 @@ module tb_hnx_hc_eng4;
         .program_active(pa), .program_done(pd), .fault(fault));
     genvar gqi;
     for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_q
-        ot_hnx_hc_qeng #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY)) u_q (
+        ot_hnx_hc_qeng #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .SIREG(`HC_SIREG)) u_q (
             .clk(clk), .rst_n(rst_n),
             .d_v(qd_v[gqi]), .d_ss(qd_ss[gqi]), .d_nv(qd_nv[gqi*7 +: 7]), .d_wa(qd_wa[gqi*10 +: 10]), .d_xa(qd_xa[gqi*10 +: 10]),
             .i_v(qi_v[gqi]), .i_kind(qi_kind[gqi]), .i_slot(qi_slot[gqi*2 +: 2]), .i_lo(qi_lo[gqi*5 +: 5]),
