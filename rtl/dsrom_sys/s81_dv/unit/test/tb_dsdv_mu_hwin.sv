@@ -31,10 +31,12 @@ module tb_dsdv_mu_hwin;
     localparam integer RL = NS * S - S / 2 - 3;
     localparam integer NE = NEV;
     integer DK [0:NE-1], KD [0:NE-1], EP [0:NE-1];        // D / kind / endpoint per event
-    integer cfg_e; initial for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) begin DK[cfg_e]=20+13*cfg_e; KD[cfg_e]=(cfg_e%3==2); EP[cfg_e]=cfg_e%4; end
+    integer cfg_e; initial begin
+      for(cfg_e=0;cfg_e<NE;cfg_e=cfg_e+1) begin DK[cfg_e]=20+13*cfg_e; KD[cfg_e]=(cfg_e%3==2); EP[cfg_e]=cfg_e%4; end
 `ifdef COLLIDE_EVENTS
-    initial begin #0; DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0]; end
+      DK[1]=DK[0]; KD[1]=0; EP[1]=EP[0];
 `endif
+    end
     integer first_cfg_fault=-1;
     reg ck = 0, rst_n = 0;
     always #0.5 ck = ~ck;
