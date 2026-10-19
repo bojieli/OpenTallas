@@ -1,0 +1,17 @@
+# Source-pinned CTRL dual-clock SRAM timing obligations
+
+Candidate RTL is efe223a42, byte-identical on the full controller bench source set through physical source8a9d1473c. The behavioral receipts do not qualify the inherited finite crossing SDC, native clocks or macro escape. TT setup and FF hold must pass under the current owner rule. SS values remain sensitivity diagnostics.
+
+| Arc | Actual clock ownership and required proof |
+| --- | --- |
+| Request data/address/write-enable into u_q SRAM | Stream clk launches and SRAM wclk captures. Ordinary same-root setup/hold must be timed; no MCP or false path. |
+| Response data/address/write-enable into u_r SRAM | HBM ckh launches and SRAM wclk captures. Ordinary same-root setup/hold must be timed. |
+| SRAM next-head read address/read-enable | Read-domain rbin/rgray and old wg_r2 determine next address/have_next; request uses ckh, response uses clk. Full ordinary same-root path, including pop logic. |
+| SRAM rd_out to visible controller capture | Request output and holding register use ckh; response output and stream output register use clk. Registered SRAM read then capture on the next consuming edge, checked cycle-exact. Ordinary same-root setup/hold. |
+| Write Gray pointer to first read synchronizer | Asynchronous metadata crossing; no deterministic phase-specific setup window may be inferred from a finite max_delay alone. Existing two-stage synchronizer and inherited max/min wire budget still need the designated CDC audit and actual per-root native references. No data-path waiver is asserted. |
+| Read Gray pointer to first write synchronizer | Same explicit CDC obligation. First-stage sampling, Gray bus skew and second-stage resolution/native timing must be audited; no arbitrary setup mask or ordinary data exception. |
+| Reset release | Each FIFO domain uses its own existing synchronizer and two-stage release. Actual native per-root reset recovery/removal and copied-reset fanout remain physical obligations. |
+
+Source-level stability argument (conditional on the Gray synchronization contract, not a physical CDC signoff): at read edge A the first synchronizer may observe a new write pointer, at B the second captures it, and at C the old second-stage value can enable the first SRAM read. The write predates that read by at least two read periods, apart from native clock/clock-to-Q/setup effects that must be bounded physically. The visible consumer captures the prior registered head on its pop edge while SRAM fetches the next head. After a pop, the old slot cannot be reused until the read pointer traverses both write-domain synchronizer stages; the writer therefore remains conservative about occupied slots. Assertions forbid active write/read of the same physical address, and the empty-read mutant triggers a real collision. An asynchronous sampling phase is never treated as an extra pipeline edge.
+
+Primitive tests use832/900ps clocks for5us. Their187.2ns relative-edge calendar repeats26times per case; phases0/180/720ps exercise different startup/reset trajectories. This is simulation coverage, not formal metastability/native phase proof. The full32PC controller has the same measured6.95/5.26 nominal-cks crossings as the pinned flop baseline. Native mean/spread, source-pinned setup/hold windows and approved constraints for every selected actual root remain OPEN until the fresh physical probe and constraint audit finish.
