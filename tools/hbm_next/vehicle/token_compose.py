@@ -142,8 +142,32 @@ def main():
     s600, s950 = (grid["5"]["II"][x]["VM"]["grown"]["mu_step_cycles"] for x in ("600", "950"))
     slope = (s950 - s600) / 350.0
     ii_floor = 600 + (CLK / 1000.0 - s600) / slope if slope > 0 else None
+    # MTP step vs II (L5, grown) between 250 and 600 -> the II that still meets the MTP target
+    m250, m600 = (grid["5"]["II"][x]["VM"]["grown"]["mtp_step_cycles"] for x in ("250", "600"))
+    mslope = (m600 - m250) / 350.0
+    ii_mtp = 250 + (tau * CLK / TARGETS["ds_mtp"] - m250) / mslope if mslope > 0 else None
+    # physical latency adders of the P = 4 die not in the D1 model: paid once a record on the record's first access.
+    # Bounds: 0 (hidden under the record's own stream / interleaved chains) .. every record serial on the critical path.
+    adders = [dict(term="SM_HBM link 2.88 -> 5.25 bit-weighted relay stages (DIE f4c_t5, results/arch/hbm_next_1019/"
+                        "die/README.md; PROG 10-19 00:21)", cycles_per_record=round((5.25 - 2.88) / 2, 3),
+                   note="half-cycle forwarded hops: +2.37 stages = +1.19 cycles a SM record"),
+              dict(term="SM4 registered per-lane-group weight broadcast tree at P >= 4 (sm_area README)",
+                   cycles_per_record=1.0, note="+1 cycle a SM record; also paid by AR unless the P = 1 path bypasses it")]
+    per_rec = sum(x["cycles_per_record"] for x in adders)
+    recs = dict(ar=d1["ds|AR"]["records"], mtp_verify=d1["ds|MTP|P4"]["records"], mu4=d1["ds|MU|P4"]["records"])
+    base = dict(ar=L5["ar_cycles"], mtp_step=hp["mtp_step_cycles"], mu4=hp["mu_step_cycles"])
+    upper = {k: base[k if k != "mtp_step" else "mtp_step"] + per_rec * recs["mtp_verify" if k == "mtp_step" else k]
+             for k in base}
+    phys = dict(adders=adders, cycles_per_record=per_rec, records_upper_bound=recs,
+                rule="upper bound = every record (not only SM) serial on the critical path; lower bound = 0",
+                headline_bounds=dict(
+                    ar_tok_s=[tok(upper["ar"]), tok(base["ar"])],
+                    mtp_tok_s=[round(tau * CLK / upper["mtp_step"], 1), round(tau * CLK / base["mtp_step"], 1)],
+                    mu_agg_tok_s=[tok(upper["mu4"], 4), tok(base["mu4"], 4)],
+                    mu_per_user_tok_s=[tok(upper["mu4"]), tok(base["mu4"])]))
     out = dict(
         schema="opentallas.hbm_next_1019.veh.token_composition.v1", lane="HBM-NEXT-VEH", date="2026-10-19",
+        physical_adders=phys,
         rule=__doc__, clk_hz=CLK, tau_mtp=tau, targets=TARGETS,
         status="PRICED composition with measured unit terms; NO layer measured in RTL yet (vehicle runs pending)",
         headline=dict(point=head, knobs="COLL L = 5 (adopted), HC row II 600 (target, UNITS gate), VM grown",
@@ -151,7 +175,9 @@ def main():
         d4g_reproduction=dict(model_self_check=g["self_check"], ar_repro=(json.loads(a.ar_repro.read_text())
                                                                           if a.ar_repro else None)),
         grid=table, hc_row_cost=dict(by_II_L5_grown=hc_cost, mu_step_cycles_per_II_cycle=round(slope, 1),
-                                     ii_for_1000_per_user=round(ii_floor, 0) if ii_floor else None),
+                                     ii_for_1000_per_user=round(ii_floor, 0) if ii_floor else None,
+                                     mtp_step_cycles_per_II_cycle=round(mslope, 1),
+                                     ii_for_mtp_target=round(ii_mtp, 0) if ii_mtp else None),
         fifth_coll_lane=dict(ar=[L4["ar_tok_s"], L5["ar_tok_s"]],
                              mtp_II600=[L4["II"]["600"]["VM"]["grown"]["ds_mtp_tok_s"], hp["ds_mtp_tok_s"]],
                              mu_agg_II600=[L4["II"]["600"]["VM"]["grown"]["mu_agg_tok_s"], hp["mu_agg_tok_s"]],
