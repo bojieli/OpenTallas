@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81sl_capc_p1-20261019-082227",
+  "source_commit": "snapshot-sha256:2107d4f37ec07496aeb66db9c0135258c5c42641cbce6484a86047413e9e0ead",
+  "files": [
+    {
+      "path": "src/physical/ref_tile/s81sl_capc_p1/spec.json",
+      "sha256": "1655bc4d0e8e126f016417c2cf3745d61b11de2357c76b8da8b907bee241c8b5"
+    },
+    {
+      "path": "native_probe.tcl",
+      "sha256": "a90154d4e66d5178f9293f502c77ac36cd722e90a8d57dd0b55a9bfaed6d5108"
+    },
+    {
+      "path": "native_probe_ff.tcl",
+      "sha256": "60315030e01017996b762cb3833edfc77dfaad29127c304db8d6c62f76e7a5b7"
+    },
+    {
+      "path": "routes/gate/work/orfs/native_probe_tt.lib",
+      "sha256": "a59c39d5c6f17551214609ea18f74a7c7316fda409dafea9c8f1b3ac6baf0340"
+    },
+    {
+      "path": "routes/gate/work/orfs/native_probe_ff.lib",
+      "sha256": "de513b995377c9a2f666df1cfdf9fdd5c90045a074392648b8c2abab020b7ab9"
+    },
+    {
+      "path": "routes/gate/work/orfs/results/asap7/opentallas_ot_s81sl_cap_p1_asap7_ref_gate/base/4_1_cts.odb",
+      "sha256": "e6d151db4927f382a7effe733e96d205b5b8d9a58a807dfef78e9418dad32940"
+    }
+  ]
+}
