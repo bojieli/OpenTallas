@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """HBM-KITS-C/VMGLUE 2026-10-18 (g2): lockstep equivalence bench of the VM hub-glue TILE masters
-(rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv: reset-light _lt children, parallel hub demultiplex, regional
+(rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv: g3 pipelined _lt children (HH-3 10-19), reset-light, parallel hub demultiplex, regional
 reset relay, per-lane ring / per-bank ports, one landing / relay stage on every bank-side port) against their CONTRACT
-reference <tile>_ref (hfd_hgi_vms_glue_tiles_ref.sv: the UNCHANGED historical glue ot_vms_slice_static_glue with
-COMMIT_DELAY 8 behind one delay stage per bank-side port, at the historical flat ports).
+reference <tile>_ref (hfd_hgi_vms_glue_tiles_ref.sv: the UNCHANGED historical children wired as
+ot_vms_slice_static_glue with the g3 edges as explicit 1-edge delays, COMMIT_DELAY 8, behind one delay stage per
+bank-side port, at the historical flat ports).
 The testbench drives both with the same random inputs on EVERY port (flat buses; the tile's per-lane / per-bank ports
 are wired by slice arithmetic computed here, independent of the generator's concatenations), re-asserts rst_n for 8
 edges every 128 edges (re-arms the sticky faults; proves the reset-light payload flush), and compares EVERY output bit
@@ -13,6 +14,7 @@ The historical glue == the full slice (per bank port wiring, banks hoisted) is t
 Mutants (must FAIL):  --mut rmut  tile MUT 1 (ring-stop egress flit bit flipped)
                       --mut land  tile MUT 3 (eg not landed: the contract's +1 edge on egress missing)
                       --mut sid   (SE / NE) the tile strap gets the OTHER E quadrant's sid
+                      --mut g3    tile MUT 4 (hub pq without the g3 face-group edge: the contract's +1 on pq missing)
     vms_glue_tile_equiv.py --quadrant SW|NW|SE|NE --out DIR [--mut rmut|land|sid] [--cycles N]
 """
 import argparse, sys
@@ -45,7 +47,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--quadrant', required=True, choices=list(KEY))
     ap.add_argument('--out', required=True, type=Path)
-    ap.add_argument('--mut', choices=('rmut', 'land', 'sid'))
+    ap.add_argument('--mut', choices=('rmut', 'land', 'sid', 'g3'))
     ap.add_argument('--cycles', type=int, default=4000)
     a = ap.parse_args(); q = a.quadrant; k = KEY[q]; c = G.M[k]
     if a.mut == 'sid' and q not in SID:
@@ -53,7 +55,7 @@ def main():
     rp = G.ref_ports(k, c); tp = G.ports(k, c)
     ins = [(n, w) for n, d, w in rp if d == 'input' and n not in ('clk', 'rst_n', 'sid')]
     outs = [(n, w) for n, d, w in rp if d == 'output']
-    mut = dict(rmut=1, land=3).get(a.mut, 0)
+    mut = dict(rmut=1, land=3, g3=4).get(a.mut, 0)
     T = ['`timescale 1ns/1ps', 'module tb_vms_glue_lt;', '  reg clk = 0; always #0.5 clk = ~clk;', '  reg rst_n;']
     T += [f'  reg {G.w(wd)}{n};' for n, wd in ins]
     T += [f'  wire {G.w(wd)}a_{n}, b_{n};' for n, wd in outs]

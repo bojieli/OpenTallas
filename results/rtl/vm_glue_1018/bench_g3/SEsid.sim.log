@@ -1,0 +1,10 @@
+MISMATCH cyc 6 cw_out
+MISMATCH cyc 7 cw_out
+MISMATCH cyc 7 ccw_out
+MISMATCH cyc 9 ccw_out
+MISMATCH cyc 9 mirror_busy
+VMS_GLUE_LT_EQUIV SE FAIL checks=33768 errors=3802
+- /srv/opentallas-scratch/claude/hh3_g3/out2/SEsid/tb_vms_glue_lt.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.013 s; speed 309.304 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

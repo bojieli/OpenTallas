@@ -37,6 +37,8 @@
    "ccw_in_l1",
    "cw_in_h",
    "cw_out_h",
+   "ring_tx_enable",
+   "ring_tx_source",
    "clk",
    "rst_n",
    "ccw_out_h",
@@ -120,8 +122,6 @@
    "bank_client",
    "hub_ring_enable",
    "hub_ring_client",
-   "ring_tx_enable",
-   "ring_tx_source",
    "replay_enable",
    "replay_source",
    "hub_status",
@@ -170,154 +170,162 @@
  "pin_ranges": {
   "cw_in_l6": [
    4.32,
-   52.292
+   52.248
   ],
   "cw_out_l6": [
-   52.292,
-   100.263
+   52.248,
+   100.177
   ],
   "ccw_out_l6": [
-   100.263,
-   148.235
+   100.177,
+   148.105
   ],
   "ccw_in_l6": [
-   148.235,
-   196.206
+   148.105,
+   196.034
   ],
   "cw_in_l7": [
-   196.206,
-   244.178
+   196.034,
+   243.962
   ],
   "cw_out_l7": [
-   244.178,
-   292.149
+   243.962,
+   291.891
   ],
   "ccw_out_l7": [
-   292.149,
-   340.121
+   291.891,
+   339.819
   ],
   "ccw_in_l7": [
-   340.121,
-   388.092
+   339.819,
+   387.747
   ],
   "cw_in_l0": [
-   388.092,
-   436.064
+   387.747,
+   435.676
   ],
   "cw_out_l0": [
-   436.064,
-   484.035
+   435.676,
+   483.604
   ],
   "ccw_out_l0": [
-   484.035,
-   532.007
+   483.604,
+   531.533
   ],
   "ccw_in_l0": [
-   532.007,
-   579.978
+   531.533,
+   579.461
   ],
   "cw_in_l1": [
-   579.978,
-   627.95
+   579.461,
+   627.39
   ],
   "cw_out_l1": [
-   627.95,
-   675.921
+   627.39,
+   675.318
   ],
   "ccw_out_l1": [
-   675.921,
-   723.893
+   675.318,
+   723.246
   ],
   "ccw_in_l1": [
-   723.893,
-   771.864
+   723.246,
+   771.175
   ],
   "cw_in_h": [
-   771.864,
-   774.645
+   771.175,
+   773.953
   ],
   "cw_out_h": [
-   774.645,
-   777.426
+   773.953,
+   776.732
+  ],
+  "ring_tx_enable": [
+   776.732,
+   777.079
+  ],
+  "ring_tx_source": [
+   777.079,
+   778.121
   ],
   "clk": [
-   777.426,
-   777.6
+   778.121,
+   778.295
   ],
   "rst_n": [
-   777.6,
-   777.774
+   778.295,
+   778.468
   ],
   "ccw_out_h": [
-   777.774,
-   780.555
+   778.468,
+   781.247
   ],
   "ccw_in_h": [
-   780.555,
-   783.336
+   781.247,
+   784.025
   ],
   "cw_in_l2": [
-   783.336,
-   831.307
+   784.025,
+   831.954
   ],
   "cw_out_l2": [
-   831.307,
-   879.279
+   831.954,
+   879.882
   ],
   "ccw_out_l2": [
-   879.279,
-   927.25
+   879.882,
+   927.81
   ],
   "ccw_in_l2": [
-   927.25,
-   975.222
+   927.81,
+   975.739
   ],
   "cw_in_l3": [
-   975.222,
-   1023.193
+   975.739,
+   1023.667
   ],
   "cw_out_l3": [
-   1023.193,
-   1071.165
+   1023.667,
+   1071.596
   ],
   "ccw_out_l3": [
-   1071.165,
-   1119.136
+   1071.596,
+   1119.524
   ],
   "ccw_in_l3": [
-   1119.136,
-   1167.108
+   1119.524,
+   1167.453
   ],
   "cw_in_l4": [
-   1167.108,
-   1215.079
+   1167.453,
+   1215.381
   ],
   "cw_out_l4": [
-   1215.079,
-   1263.051
+   1215.381,
+   1263.309
   ],
   "ccw_out_l4": [
-   1263.051,
-   1311.022
+   1263.309,
+   1311.238
   ],
   "ccw_in_l4": [
-   1311.022,
-   1358.994
+   1311.238,
+   1359.166
   ],
   "cw_in_l5": [
-   1358.994,
-   1406.965
+   1359.166,
+   1407.095
   ],
   "cw_out_l5": [
-   1406.965,
-   1454.937
+   1407.095,
+   1455.023
   ],
   "ccw_out_l5": [
-   1454.937,
-   1502.908
+   1455.023,
+   1502.952
   ],
   "ccw_in_l5": [
-   1502.908,
+   1502.952,
    1550.88
   ],
   "b0_xq": [
@@ -518,126 +526,118 @@
   ],
   "cr": [
    4.32,
-   106.528
+   106.767
   ],
   "client_seq": [
-   106.528,
-   107.647
+   106.767,
+   107.889
   ],
   "response_enable": [
-   107.647,
-   108.207
+   107.889,
+   108.45
   ],
   "response_seq": [
-   108.207,
-   109.326
+   108.45,
+   109.571
   ],
   "bank_enable": [
-   109.326,
-   110.818
+   109.571,
+   111.067
   ],
   "bank_client": [
-   110.818,
-   113.802
+   111.067,
+   114.058
   ],
   "hub_ring_enable": [
-   113.802,
-   114.175
+   114.058,
+   114.432
   ],
   "hub_ring_client": [
-   114.175,
-   114.921
-  ],
-  "ring_tx_enable": [
-   114.921,
-   115.294
-  ],
-  "ring_tx_source": [
-   115.294,
-   116.413
+   114.432,
+   115.18
   ],
   "replay_enable": [
-   116.413,
-   116.6
+   115.18,
+   115.367
   ],
   "replay_source": [
-   116.6,
-   116.786
+   115.367,
+   115.554
   ],
   "hub_status": [
-   116.786,
-   117.346
+   115.554,
+   116.115
   ],
   "mirror_busy": [
-   117.346,
-   117.719
+   116.115,
+   116.488
   ],
   "vmstat": [
-   117.719,
-   121.262
+   116.488,
+   120.04
   ],
   "ring_fault": [
-   121.262,
-   121.822
+   120.04,
+   120.601
   ],
   "b6_xq": [
-   121.822,
-   173.299
+   120.601,
+   172.199
   ],
   "b6_xq2": [
-   173.299,
-   224.776
+   172.199,
+   223.796
   ],
   "b6_eg": [
-   224.776,
-   276.253
+   223.796,
+   275.394
   ],
   "b6_pq": [
-   276.253,
-   329.409
+   275.394,
+   328.674
   ],
   "b6_pr": [
-   329.409,
-   379.021
+   328.674,
+   378.402
   ],
   "b6_status": [
-   379.021,
-   382.378
+   378.402,
+   381.767
   ],
   "b6_xq_done": [
-   382.378,
-   382.564
+   381.767,
+   381.954
   ],
   "b6_xq2_done": [
-   382.564,
-   382.751
+   381.954,
+   382.141
   ],
   "b7_xq": [
-   382.751,
-   434.228
+   382.141,
+   433.738
   ],
   "b7_xq2": [
-   434.228,
-   485.705
+   433.738,
+   485.336
   ],
   "b7_eg": [
-   485.705,
-   537.182
+   485.336,
+   536.933
   ],
   "b7_pq": [
-   537.182,
-   590.338
+   536.933,
+   590.213
   ],
   "b7_pr": [
-   590.338,
-   639.95
+   590.213,
+   639.941
   ],
   "b7_status": [
-   639.95,
-   643.307
+   639.941,
+   643.306
   ],
   "b7_xq_done": [
-   643.307,
+   643.306,
    643.493
   ],
   "b7_xq2_done": [
@@ -663,18 +663,18 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static: the historical glue, reset-light, parallel hub demultiplex), the 8 banks are die-level instances. Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock, rst_n -> ot_rst_relay 4 regions, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 edge each way, reset release +3 (lockstep bench vs <tile>_ref).",
+ "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref).",
  "pin_density_per_um": {
-  "E": 5.75,
+  "E": 5.76,
   "W": 3.62,
   "N": 5.43,
-  "S": 5.36
+  "S": 5.35
  },
  "job": {
-  "owner": "Claude HBM-KITS-C/VMGLUE 1018",
-  "branch": "claude/vm-glue-1018",
-  "tag": "g2",
-  "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static: the historical glue, reset-light, parallel hub demultiplex), the 8 banks are die-level instances. Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock, rst_n -> ot_rst_relay 4 regions, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 edge each way, reset release +3 (lockstep bench vs <tile>_ref).",
+  "owner": "Claude HOURLY-HBM/HH-3 1019",
+  "branch": "claude/vm-glue-g3-1018",
+  "tag": "g3",
+  "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref).",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/lib",
@@ -693,7 +693,7 @@
     ],
     "pass_regex": "^VMS_GLUE_LT_EQUIV SW PASS checks=[1-9][0-9]* errors=0$",
     "min_count_regex": "VMS_GLUE_LT_EQUIV SW PASS checks=(\\d+)",
-    "pass_witness": "results/rtl/vm_glue_1018/bench_g2/SWpos.sim.log"
+    "pass_witness": "results/rtl/vm_glue_1018/bench_g3/SWpos.sim.log"
    },
    {
     "name": "mut_rmut_sw",
@@ -705,7 +705,7 @@
      "verilator"
     ],
     "fail_regex": "^VMS_GLUE_LT_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SWrmut.sim.log"
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g3/SWrmut.sim.log"
    },
    {
     "name": "mut_land_sw",
@@ -717,7 +717,19 @@
      "verilator"
     ],
     "fail_regex": "^VMS_GLUE_LT_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
-    "fail_witness": "results/rtl/vm_glue_1018/bench_g2/SWland.sim.log"
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g3/SWland.sim.log"
+   },
+   {
+    "name": "mut_g3_sw",
+    "cmd": "bash tools/hbm_die_v16/run_vms_glue_tile_equiv.sh SW g3 {RUN}/bench",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^VMS_GLUE_LT_EQUIV SW FAIL checks=[0-9]+ errors=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/vm_glue_1018/bench_g3/SWg3.sim.log"
    }
   ],
   "views_to": "physical/ref_tile/hfd_hgi_vms_glue_sw/views"

@@ -1,18 +1,27 @@
 `timescale 1ns/1ps
 `default_nettype none
 // HBM-KITS-C/VMGLUE 2026-10-18: physical successors of the VM hub-glue logic for the hardened glue tiles
-// (hfd_hgi_vms_glue_{sw,e,nw}_t, gen_vms_glue_tiles.py).  Port-for-port and edge-for-edge the same behaviour as
-//   ot_vms_rstop_static  -> ot_vms_rstop_lt   only valid / control state is reset; payload registers are plain flops
-//   ot_vms_rcl_static    -> ot_vms_rcl_lt     (same)
-//   ot_vms_hub_static    -> ot_vms_hub_lt     the bank / ring response demultiplex is a parallel tag decode + AND-OR
-//                                             tree and a 10-input population count (the historical loop built a
-//                                             10-deep chain of slot muxes: 24-35 levels reg->reg)
-//   ot_vms_slice_static_glue -> hfd_vms_glue_core_lt   the same wiring, one tile clock, one regional reset per child
-// The historical modules stay untouched (other compositions and the bench reference use them).
+// (hfd_hgi_vms_glue_{sw,e,nw}_t, gen_vms_glue_tiles.py).
+// g3 (HOURLY-HBM/HH-3 10-19, AD-HBM-VMSGLUE "STRUCTURAL FIX = g3"): the g2 --cts gates failed setup structurally
+// (E WNS -1979 ps, ~25k endpoints): single-cycle broadcast / gather across the 648 x 1555 um lane-banded tile.  g3
+// pipelines exactly those edges; every change is a whole-edge shift the contract reference states
+// (hfd_hgi_vms_glue_tiles_ref.sv, built from the UNCHANGED historical children):
+//   ot_vms_rstop_lt  every input except xq_done lands on a plain stage A; stage B = the historical stop registers, with
+//                    the tx control (enable / source) and the header decode (own / kind) replicated per lane band and
+//                    every flit / eject bit computed in its band (ring transit +1, eject +1, tx control 1 edge earlier,
+//                    mirror egress / hub injection / replay return / WACK +1); rce lane-OR = registered 2-level tree
+//                    (band pairs -> centre): rce +1 more.  == historical stop with D1 on its inputs and D1 on rce.
+//   ot_vms_rcl_lt    replay select replicated per 36-b slice of the rce mux (no edge change).
+//   ot_vms_hub_lt    request scatter registered per bank face group (E 0-3 / N 4,5 / S 6,7): pq +1; bank responses
+//                    land plain, the per-group hit decode + AND-OR + popcount + checks are registered beside the face,
+//                    final OR / bookkeeping next edge: pr -> cr +1; response_enable / response_seq +1 (slot reuse
+//                    after a response +1).  == historical hub with D1 on pr / response_enable / response_seq, D1 on pq.
+//   hfd_vms_glue_core_lt  7 reset regions (hub, CW, CCW, replay + status, hub face groups E / N / S).
+// g2 notes (still true): only valid / control state is reset; payload registers are plain flops; the hub response
+// demultiplex is a parallel tag decode + AND-OR + popcount (no 10-deep slot-mux chain).
 // Reset-light equivalence: every payload register without a reset is either overwritten on every edge from reset-held
-// logic (flit / xq / rce / cco / hq / ri ... are zero while the valid and enable state is held in reset) or read only
-// under a reset valid bit; after >= 5 edges of reset the port behaviour equals the fully reset original
-// (tools/hbm_die_v16/vms_glue_tile_equiv.py checks it in lockstep with periodic resets).
+// logic or read only under a reset valid bit; after >= 5 edges of reset the port behaviour equals the fully reset
+// reference (tools/hbm_die_v16/vms_glue_tile_equiv.py checks it in lockstep with periodic resets).
 module ot_vms_rstop_lt #(
     parameter integer PHYSICAL_RING=1,
     parameter integer COMMIT_DELAY=5,
@@ -24,10 +33,10 @@ module ot_vms_rstop_lt #(
     input wire tx_enable,
     input wire [2:0] tx_source,
     input wire [2223:0] l_in,
-    output reg [2223:0] l_out,
+    output wire [2223:0] l_out,
     input wire [289:0] pi,
     input wire [8*276-1:0] eg,
-    output reg [8*276-1:0] xq,
+    output wire [8*276-1:0] xq,
     input wire [7:0] xq_done,
     output reg [287:0] rce,
     input wire [265:0] ri,
@@ -39,102 +48,144 @@ module ot_vms_rstop_lt #(
     output reg mirror_busy,
     output reg fault
 );
-    // payload (plain flops) + valid bits (reset)
-    reg [2222:0] in_d;  reg in_v;
-    reg [288:0] pi_d;   reg pi_v;
-    reg [2207:0] eg_d;  reg [7:0] eg_v;
-    reg [264:0] ri_d;   reg ri_v;
-    wire [2223:0] in_q={in_v,in_d};
-    wire [289:0] pi_q={pi_v,pi_d};
-    wire [265:0] ri_q={ri_v,ri_d};
-    reg [2207:0] eg_q;
-    always @* for(integer b=0;b<8;b=b+1) eg_q[b*276+:276]={eg_v[b],eg_d[b*276+:275]};
+    // ---- stage A: plain landing of every input except xq_done (g3: +1 edge on every stop input) ----
+    reg [2223:0] a_l; reg [289:0] a_pi; reg [2207:0] a_eg; reg [265:0] a_ri;
+    reg [2:0] a_wki, a_src; reg a_en, a_dr, a_ack; reg [1:0] a_me;
+    always @(posedge clk) begin
+        a_l<=l_in; a_pi<=pi; a_eg<=eg; a_ri<=ri; a_wki<=wki; a_src<=tx_source; a_en<=tx_enable;
+        a_dr<=dir; a_ack<=ack_i; a_me<=sid;
+    end
+    // ---- stage B, header / control band: the historical stop registers (same reset set) ----
+    reg [14:0] h_d; reg h_v;                 // l_in[2222:2208] / [2223]
+    reg [288:0] pi_d; reg pi_v;
+    reg [264:0] ri_d; reg ri_v;
+    reg [7:0] ev;
     reg [2:0] wki_q, source_q;
-    reg enable_q;
+    reg enable_q, dr, ack_q;
     reg [1:0] me;
-    reg dr;
-    reg ack_q;
-    reg [COMMIT_DELAY-1:0] commit_v;
-    reg [7:0] commit_mask [0:COMMIT_DELAY-1];
-    reg [1:0] commit_src [0:COMMIT_DELAY-1];
-    reg [15:0] outstanding;
-    wire [1:0] kind=in_q[2222:2221];
-    wire own=in_q[2223] && in_q[2217+int'(me)];
-    wire [3:0] rest=in_q[2220:2217] & ~(4'b1 << me);
-    wire transit=in_q[2223] && (|rest);
-    reg [7:0] lanes, ev;
-    reg [2:0] bank;
-    reg [274:0] lane;
-    reg [2223:0] flit;
-    reg [3:0] dest;
+    reg [7:0] lanes;                         // lane valid bits (plain, as the historical in_d)
+    always @(posedge clk) begin
+        h_d<=a_l[2222:2208]; pi_d<=a_pi[288:0]; ri_d<=a_ri[264:0];
+        for(integer b=0;b<8;b=b+1) lanes[b]<=a_l[b*276+275];
+    end
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin h_v<=0;pi_v<=0;ri_v<=0;ev<=0;wki_q<=0;source_q<=0;enable_q<=0;dr<=0;ack_q<=0;me<=0; end
+        else begin
+            h_v<=a_l[2223];pi_v<=a_pi[289];ri_v<=a_ri[265];wki_q<=a_wki;source_q<=a_src;enable_q<=a_en;
+            dr<=a_dr;ack_q<=a_ack;me<=a_me;
+            for(integer b=0;b<8;b=b+1) ev[b]<=a_eg[b*276+275];
+        end
+    wire [1:0] kind=h_d[14:13];
+    wire own=h_v && h_d[9+int'(me)];
+    wire [3:0] rest=h_d[12:9] & ~(4'b1 << me);
+    wire transit=h_v && (|rest);
     wire [1:0] rank={me[1],me[1]^me[0]};
     wire [1:0] r1=rank+2'd1, r2=rank+2'd2, r3=rank+2'd3;
     wire [1:0] d1=(PHYSICAL_RING!=0) ? {r1[1],r1[1]^r1[0]} : me+2'd1;
     wire [1:0] d2=(PHYSICAL_RING!=0) ? {r2[1],r2[1]^r2[0]} : me+2'd2;
     wire [1:0] d3=(PHYSICAL_RING!=0) ? {r3[1],r3[1]^r3[0]} : me+2'd3;
+    wire [3:0] dest=dr ? (4'b1 << d3) : ((4'b1 << d1)|(4'b1 << d2));
+    reg [15:0] fh;                            // flit header [2223:2208]
     always @* begin
-        lanes='0; ev='0; bank='0; lane='0;
-        for(integer b=0;b<8;b=b+1) begin
-            lanes[b]=in_q[b*276+275]; ev[b]=eg_q[b*276+275];
-            if(lanes[b]) begin bank=3'(b); lane=lane | in_q[b*276+:275]; end
-        end
-        dest=dr ? (4'b1 << d3) : ((4'b1 << d1)|(4'b1 << d2));
-        flit='0;
+        fh='0;
         if(enable_q) case(source_q)
-            0: begin flit=in_q; flit[2223]=transit; flit[2220:2217]=rest; end
-            1: begin
-                flit[2223]=pi_q[289]; flit[2222:2221]=0;
-                flit[2220:2217]=pi_q[288:285]; flit[2216:2215]=me;
-                flit[2214:2211]=pi_q[284:281]; flit[2210:2209]=pi_q[280:279]; flit[2208]=pi_q[278];
-                for(integer b=0;b<8;b=b+1) if(pi_q[277:275]==3'(b))
-                    flit[b*276+:276]={1'b1,pi_q[274:264],pi_q[255:0],pi_q[263:256]};
-            end
-            2: begin flit[2223]=|ev; flit[2222:2221]=1; flit[2220:2217]=dest;
-                flit[2216:2215]=me; flit[2207:0]=eg_q; end
-            3: begin flit[2223]=ri_q[265]; flit[2222:2221]=2;
-                flit[2220:2217]=4'b1<<ri_q[264:263]; flit[2216:2215]=me;
-                flit[2214:2211]=ri_q[262:259]; flit[2210:2209]=ri_q[258:257];
-                flit[2208]=ri_q[256]; flit[263:8]=ri_q[255:0]; end
-            4: begin flit[2223]=wki_q[2]; flit[2222:2221]=3;
-                flit[2220:2217]=4'b1<<wki_q[1:0]; flit[2216:2215]=me; end
-            default: flit='0;
+            0: fh={transit,h_d[14:13],rest,h_d[8:0]};
+            1: fh={pi_v,2'd0,pi_d[288:285],me,pi_d[284:281],pi_d[280:279],pi_d[278]};
+            2: fh={|ev,2'd1,dest,me,7'd0};
+            3: fh={ri_v,2'd2,4'b1<<ri_d[264:263],me,ri_d[262:259],ri_d[258:257],ri_d[256]};
+            4: fh={wki_q[2],2'd3,4'b1<<wki_q[1:0],me,7'd0};
+            default: fh='0;
         endcase
-        if(MUT==1 && flit[2223] && flit[2222:2221]==1) flit[8]=~flit[8];
     end
-    // payload: no reset (zero while the valid / enable state below is held in reset)
+    wire mut_hit=(MUT==1) && fh[15] && fh[14:13]==2'd1;
+    // ---- stage B, lane bands: per band k its own copy of the tx control and of the header decode (own / kind),
+    //      the lane data, the egress lane and the hub-injection lane; every flit / eject bit is band-local ----
+    wire [7:0] lv;                            // band valid bits (for the rce tree)
+    wire [7:0] own_kind0;
+    wire [275:0] lane_q [0:7];
+    for(genvar b=0;b<8;b=b+1) begin : band
+        (* keep = "true", dont_touch = "true" *) reg en_b;
+        (* keep = "true", dont_touch = "true" *) reg [2:0] src_b;
+        (* keep = "true", dont_touch = "true" *) reg own_b;
+        (* keep = "true", dont_touch = "true" *) reg [1:0] kind_b;
+        (* keep = "true", dont_touch = "true" *) reg [277:0] pi_b;   // pi[277:0] (bank select + lane payload)
+        reg [275:0] ln;
+        reg [274:0] eg_d; reg eg_v;
+        always @(posedge clk) begin
+            ln<=a_l[b*276+:276]; eg_d<=a_eg[b*276+:275]; kind_b<=a_l[2222:2221]; pi_b<=a_pi[277:0];
+        end
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n) begin en_b<=0; src_b<=0; own_b<=0; eg_v<=0; end
+            else begin
+                en_b<=a_en; src_b<=a_src; eg_v<=a_eg[b*276+275];
+                own_b<=a_l[2223] && a_l[2217+int'(a_me)];
+            end
+        reg [275:0] fl;
+        always @* begin
+            fl='0;
+            if(en_b) case(src_b)
+                0: fl=ln;
+                1: if(pi_b[277:275]==3'(b)) fl={1'b1,pi_b[274:264],pi_b[255:0],pi_b[263:256]};
+                2: fl={eg_v,eg_d};
+                3: if(b==0) fl[263:8]=ri_d[255:0];
+                default: fl='0;
+            endcase
+            if(b==0 && mut_hit) fl[8]=~fl[8];
+        end
+        reg [275:0] lo, xo;
+        always @(posedge clk) begin
+            lo<=fl;
+            xo<=(own_b && kind_b==2'd1) ? ln : 276'd0;
+        end
+        assign l_out[b*276+:276]=lo;
+        assign xq[b*276+:276]=xo;
+        assign lv[b]=ln[275];
+        assign own_kind0[b]=own_b && kind_b==2'd0;
+        assign lane_q[b]=ln;
+    end
+    // ---- rce: registered 2-level lane-OR tree (band pairs, then centre): +1 edge vs the historical eject ----
+    reg [274:0] pl [0:3]; reg [1:0] pv [0:3]; reg [9:0] ph;
     always @(posedge clk) begin
-        in_d<=l_in[2222:0]; pi_d<=pi[288:0]; ri_d<=ri[264:0];
-        for(integer b=0;b<8;b=b+1) eg_d[b*276+:275]<=eg[b*276+:275];
-        l_out<=flit;
-        xq<='0; rce<='0; cco<='0;
-        if(own) case(kind)
-            0: rce<={1'b1,in_q[2216:2215],in_q[2214:2211],in_q[2210:2209],in_q[2208],bank,lane[274:264],lane[7:0],lane[263:8]};
-            1: xq<=in_q[2207:0];
-            2: cco<={1'b1,in_q[2214:2211],in_q[2210:2209],in_q[2208],in_q[263:8]};
-            default: ;
-        endcase
-        commit_mask[0]<=lanes; commit_src[0]<=in_q[2216:2215];
+        for(integer p=0;p<4;p=p+1) begin
+            pl[p]<=own_kind0[2*p] ? ((lv[2*p] ? lane_q[2*p][274:0] : 275'd0) | (lv[2*p+1] ? lane_q[2*p+1][274:0] : 275'd0)) : 275'd0;
+            pv[p]<=own_kind0[2*p] ? {lv[2*p+1],lv[2*p]} : 2'd0;
+        end
+        ph<=(own && kind==2'd0) ? {1'b1,h_d[8:0]} : 10'd0;
+    end
+    reg [274:0] lor; reg [2:0] bnk;
+    always @* begin
+        lor=(pl[0]|pl[1])|(pl[2]|pl[3]); bnk=0;
+        for(integer p=0;p<4;p=p+1) if(pv[p]!=0) bnk={2'(p),pv[p][1]};
+    end
+    reg [15:0] lo_h;
+    assign l_out[2223:2208]=lo_h;
+    always @(posedge clk) begin
+        lo_h<=fh;
+        rce<=ph[9] ? {ph,bnk,lor[274:264],lor[7:0],lor[263:8]} : 288'd0;
+        cco<=(own && kind==2'd2) ? {1'b1,h_d[6:0],lane_q[0][263:8]} : 264'd0;
+    end
+    // ---- control: commit / WACK / mirror accounting / faults (the historical logic on the header band) ----
+    reg [COMMIT_DELAY-1:0] commit_v;
+    reg [7:0] commit_mask [0:COMMIT_DELAY-1];
+    reg [1:0] commit_src [0:COMMIT_DELAY-1];
+    reg [15:0] outstanding;
+    always @(posedge clk) begin
+        commit_mask[0]<=lanes; commit_src[0]<=h_d[8:7];
         for(integer t=1;t<COMMIT_DELAY;t=t+1) begin commit_mask[t]<=commit_mask[t-1]; commit_src[t]<=commit_src[t-1]; end
     end
-    // valid / control state: regional reset
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            in_v<=0;pi_v<=0;eg_v<='0;ri_v<=0;wki_q<='0;
-            source_q<=0;enable_q<=0;me<=0;dr<=0;ack_q<=0;
             ack_o<=0;wko<='0;commit_v<='0;outstanding<=0;mirror_busy<=0;fault<=0;
         end else begin
-            in_v<=l_in[2223];pi_v<=pi[289];ri_v<=ri[265];wki_q<=wki;
-            for(integer b=0;b<8;b=b+1) eg_v[b]<=eg[b*276+275];
-            source_q<=tx_source;enable_q<=tx_enable;me<=sid;dr<=dir;ack_q<=ack_i;
             ack_o<=own && kind==3;
             if(own && kind==0 && $countones(lanes)!=1) fault<=1;
             if((transit && (!enable_q || source_q!=0)) ||
-               (pi_q[289] && (!enable_q || source_q!=1)) ||
+               (pi_v && (!enable_q || source_q!=1)) ||
                ((|ev) && (!enable_q || source_q!=2)) ||
-               (ri_q[265] && (!enable_q || source_q!=3)) ||
+               (ri_v && (!enable_q || source_q!=3)) ||
                (wki_q[2] && (!enable_q || source_q!=4)) ||
                (enable_q && source_q>4) ||
-               (in_q[2223] && in_q[2220:2217]==0)) fault<=1;
+               (h_v && h_d[12:9]==0)) fault<=1;
             commit_v[0]<=own && kind==1;
             for(integer t=1;t<COMMIT_DELAY;t=t+1) commit_v[t]<=commit_v[t-1];
             wko<=0;
@@ -142,7 +193,7 @@ module ot_vms_rstop_lt #(
                 if((xq_done & commit_mask[COMMIT_DELAY-1]) != commit_mask[COMMIT_DELAY-1]) fault<=1;
                 else wko<={1'b1,commit_src[COMMIT_DELAY-1]};
             end
-            outstanding<=outstanding + ((flit[2223] && source_q==2)?(dr?16'd1:16'd2):16'd0) - (ack_q?16'd1:16'd0);
+            outstanding<=outstanding + ((fh[15] && source_q==2)?(dr?16'd1:16'd2):16'd0) - (ack_q?16'd1:16'd0);
             mirror_busy<=outstanding!=0;
             if(ack_q && outstanding==0) fault<=1;
         end
@@ -168,7 +219,13 @@ module ot_vms_rcl_lt #(parameter integer MUT=0) (
     reg [336:0] hq_d; reg hq_v;
     reg [264:0] ri0_d,ri1_d; reg ri0_v,ri1_v;
     assign hq={hq_v,hq_d}; assign ri0={ri0_v,ri0_d}; assign ri1={ri1_v,ri1_d};
-    wire [287:0] e=select_q?b:a;
+    // g3: the replay select is replicated per 36-b slice of the 288-b rce mux (one copy beside each slice)
+    wire [287:0] e;
+    for(genvar i=0;i<8;i=i+1) begin : sel
+        (* keep = "true", dont_touch = "true" *) reg s_q;
+        always @(posedge clk or negedge rst_n) if(!rst_n) s_q<=0; else s_q<=rx_source;
+        assign e[i*36+:36]=s_q?b[i*36+:36]:a[i*36+:36];
+    end
     wire [14:0] sec={e[274]?2'b00:me,e[273:264],e[277:275]};
     wire [31:0] addr={11'b0,e[274],sec,5'b0};
     wire [15:0] tag={6'b0,~select_q,e[286:285],e[284:281],e[280:279],e[278]};
@@ -201,9 +258,11 @@ endmodule
 module ot_vms_hub_lt #(
     parameter integer NC=4,
     parameter integer PHYSICAL_RING=1,
-    parameter integer CW=(NC<1)?1:$clog2(NC+1)
+    parameter integer CW=(NC<1)?1:$clog2(NC+1),
+    parameter integer MUT=0             // bench only: 4 = pq from the hub centre without the face-group edge
 )(
     input wire clk, rst_n,
+    input wire [2:0] rst_f,             // g3: reset leaves of the three bank face groups (E 0-3 / N 4,5 / S 6,7)
     input wire [1:0] sid,
     input wire [(NC+1)*338-1:0] cq,
     input wire [(NC+1)*2-1:0] client_seq,
@@ -244,10 +303,10 @@ module ot_vms_hub_lt #(
     reg [289:0] cw_next,ccw_next;
     reg [2:0] fault;
     reg [N*274-1:0] cr_payload;
-    reg [8*285-1:0] pq_payload;
+    wire [8*285-1:0] pq_payload;   // g3: built per face group (req_grp)
     reg [288:0] cw_payload,ccw_payload;
     reg [N-1:0] cr_valid;
-    reg [7:0] pq_valid;
+    wire [7:0] pq_valid;
     reg cw_valid,ccw_valid;
     for(genvar g=0;g<N;g=g+1) begin : client_output
         assign cr[g*274+:274]={cr_valid[g],cr_payload[g*274+:273]};
@@ -258,7 +317,7 @@ module ot_vms_hub_lt #(
     assign cwi={cw_valid,cw_payload};
     assign cci={ccw_valid,ccw_payload};
     always @(posedge clk) begin
-        cr_payload<=cr_next; pq_payload<=pq_next;
+        cr_payload<=cr_next;
         cw_payload<=cw_next[288:0]; ccw_payload<=ccw_next[288:0];
     end
     reg [N-1:0] issued_local,issued_cw,issued_ccw;
@@ -284,32 +343,36 @@ module ot_vms_hub_lt #(
     function automatic ccw_needed(input [337:0] q,input integer c);
         ccw_needed=(c!=NC)&&((q[324]&&q[336])||(!q[324]&&q[323:322]==previous_sid));
     endfunction
+    // g3: bank responses and the response enables land on a plain stage first (pr -> cr +1, re / rseq +1)
+    reg [N-1:0] re_a; reg [N*2-1:0] rseq_a;
     always @(posedge clk) begin
         qr<=cq; sq<=client_seq; bc<=bank_client; cs<=cw_client;
-        ccs<=ccw_client; me<=sid; br<=pr; rr0<=cco0; rr1<=cco1; rseq<=response_seq;
+        ccs<=ccw_client; me<=sid; br<=pr; rr0<=cco0; rr1<=cco1; re_a<=response_enable; rseq_a<=response_seq; rseq<=rseq_a;
     end
     reg [N-1:0] qvalid;
-    reg [7:0] bvalid;
+    reg [7:0] bvalid;   // g3: = br valid bits (plain landing; the face-group partial registers carry the reset)
     reg rvalid0,rvalid1;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            qvalid<='0; bvalid<='0; rvalid0<=0; rvalid1<=0;
+            qvalid<='0; rvalid0<=0; rvalid1<=0;
             be<=0; ce<=0; cce<=0; re<=0;
         end else begin
             for(integer c=0;c<N;c=c+1) qvalid[c]<=cq[c*338+337];
-            for(integer b=0;b<8;b=b+1) bvalid[b]<=pr[b*266+265];
             rvalid0<=cco0[263]; rvalid1<=cco1[263];
-            be<=bank_enable; ce<=cw_enable; cce<=ccw_enable; re<=response_enable;
+            be<=bank_enable; ce<=cw_enable; cce<=ccw_enable; re<=re_a;
         end
     end
-    // ---- response demultiplex (parallel): source s = {valid, client4, seq2, we, data256}
+    // ---- response demultiplex, g3: per bank face group the hit decode + AND-OR + popcount + source checks are
+    //      registered beside the face (from the plain landing br), the ring returns (cco) decode at the hub; the
+    //      final OR / sum / slot checks run on the next edge.  Source s = {valid, client4, seq2, we, data256}.
+    always @* for(integer b=0;b<8;b=b+1) bvalid[b]=br[b*266+265];
     wire [NS*264-1:0] rpf;
     for(genvar s=0;s<8;s=s+1) begin : rsp_bank
         assign rpf[s*264+:264]={bvalid[s],br[s*266+260+:4],br[s*266+256+:2],br[s*266+264],br[s*266+:256]};
     end
     assign rpf[8*264+:264]={rvalid0,rr0[262:0]};
     assign rpf[9*264+:264]={rvalid1,rr1[262:0]};
-    // hit[(s*N+c)*4+k]: source s returns client c slot k this edge (a tag client >= N hits nothing: it faults)
+    // hit[(s*N+c)*4+k]: source s returns client c slot k (a tag client >= N hits nothing: it faults)
     wire [NS*N*4-1:0] hit;
     for(genvar s=0;s<NS;s=s+1) begin : rsp_hit
         for(genvar c=0;c<N;c=c+1) begin : rsp_hit_c
@@ -318,32 +381,82 @@ module ot_vms_hub_lt #(
             end
         end
     end
-    wire [N*4*256-1:0] ret_f;   // returned_data[c][k]
-    wire [N*4*3-1:0] arr_f;     // arrivals[c][k] (3-bit wrap, as the historical counter)
-    for(genvar c=0;c<N;c=c+1) begin : rsp_slot_c
-        for(genvar k=0;k<4;k=k+1) begin : rsp_slot_k
-            wire [NS-1:0] h;
-            for(genvar s=0;s<NS;s=s+1) begin : rsp_or
-                assign h[s]=hit[(s*N+c)*4+k];
-            end
-            wire [255:0] t01=({256{h[0]}}&rpf[0*264+:256])|({256{h[1]}}&rpf[1*264+:256]);
-            wire [255:0] t23=({256{h[2]}}&rpf[2*264+:256])|({256{h[3]}}&rpf[3*264+:256]);
-            wire [255:0] t45=({256{h[4]}}&rpf[4*264+:256])|({256{h[5]}}&rpf[5*264+:256]);
-            wire [255:0] t67=({256{h[6]}}&rpf[6*264+:256])|({256{h[7]}}&rpf[7*264+:256]);
-            wire [255:0] t89=({256{h[8]}}&rpf[8*264+:256])|({256{h[9]}}&rpf[9*264+:256]);
-            assign ret_f[(c*4+k)*256+:256]=((t01|t23)|(t45|t67))|t89;
-            wire [1:0] p0=2'(h[0])+2'(h[1]), p1=2'(h[2])+2'(h[3]), p2=2'(h[4])+2'(h[5]),
-                       p3=2'(h[6])+2'(h[7]), p4=2'(h[8])+2'(h[9]);
-            wire [2:0] q0=3'(p0)+3'(p1), q1=3'(p2)+3'(p3);
-            assign arr_f[(c*4+k)*3+:3]=(q0+q1)+3'(p4);
-        end
-    end
     wire [NS-1:0] src_bad;      // a valid return for a client >= N, or bank tag bits 3:2 non-zero
     for(genvar s=0;s<NS;s=s+1) begin : rsp_bad
         if(s<8) begin : g_b
             assign src_bad[s]=(rpf[s*264+263] && int'(rpf[s*264+259+:4])>=N) || (bvalid[s] && br[s*266+258+:2]!=0);
         end else begin : g_r
             assign src_bad[s]=rpf[s*264+263] && int'(rpf[s*264+259+:4])>=N;
+        end
+    end
+    // face group g: banks [GL(g) .. GH(g)]
+    wire [3*N*4-1:0] g_h, g_w1, g_w0;
+    wire [3*N*4*3-1:0] g_a;
+    wire [3*N*4*256-1:0] g_d;
+    wire [2:0] g_bad;
+    for(genvar g=0;g<3;g=g+1) begin : rsp_grp
+        localparam integer GL=(g==0)?0:(g==1)?4:6, GH=(g==0)?3:(g==1)?5:7;
+        reg [N*4-1:0] h_q, w1_q, w0_q; reg [N*4*3-1:0] a_q; reg bad_q;
+        reg [N*4*256-1:0] d_q;
+        reg [N*4-1:0] h_n, w1_n, w0_n; reg [N*4*3-1:0] a_n; reg [N*4*256-1:0] d_n; reg bad_n;
+        always @* begin
+            h_n='0; w1_n='0; w0_n='0; a_n='0; d_n='0; bad_n=0;
+            for(integer s=GL;s<=GH;s=s+1) begin
+                bad_n=bad_n|src_bad[s];
+                for(integer ck=0;ck<N*4;ck=ck+1) if(hit[s*N*4+ck]) begin
+                    h_n[ck]=1'b1;
+                    if(rpf[s*264+256]) w1_n[ck]=1'b1; else w0_n[ck]=1'b1;
+                    a_n[ck*3+:3]=a_n[ck*3+:3]+3'd1;
+                    d_n[ck*256+:256]=d_n[ck*256+:256]|rpf[s*264+:256];
+                end
+            end
+        end
+        always @(posedge clk) d_q<=d_n;
+        always @(posedge clk or negedge rst_f[g])
+            if(!rst_f[g]) begin h_q<='0; w1_q<='0; w0_q<='0; a_q<='0; bad_q<=0; end
+            else begin h_q<=h_n; w1_q<=w1_n; w0_q<=w0_n; a_q<=a_n; bad_q<=bad_n; end
+        assign g_h[g*N*4+:N*4]=h_q; assign g_w1[g*N*4+:N*4]=w1_q; assign g_w0[g*N*4+:N*4]=w0_q;
+        assign g_a[g*N*4*3+:N*4*3]=a_q; assign g_d[g*N*4*256+:N*4*256]=d_q; assign g_bad[g]=bad_q;
+    end
+    wire [N*4*256-1:0] ret_f;   // returned_data[c][k]
+    wire [N*4*3-1:0] arr_f;     // arrivals[c][k] (3-bit wrap, as the historical counter)
+    wire [N*4-1:0] hit_any, hit_w1, hit_w0;
+    for(genvar ck=0;ck<N*4;ck=ck+1) begin : rsp_fin
+        wire h8=hit[(8*N*4)+ck], h9=hit[(9*N*4)+ck];
+        assign ret_f[ck*256+:256]=(g_d[ck*256+:256]|g_d[(N*4+ck)*256+:256])|(g_d[(2*N*4+ck)*256+:256]|
+            (({256{h8}}&rpf[8*264+:256])|({256{h9}}&rpf[9*264+:256])));
+        assign arr_f[ck*3+:3]=(g_a[ck*3+:3]+g_a[(N*4+ck)*3+:3])+(g_a[(2*N*4+ck)*3+:3]+(3'(h8)+3'(h9)));
+        assign hit_any[ck]=g_h[ck]|g_h[N*4+ck]|g_h[2*N*4+ck]|h8|h9;
+        assign hit_w1[ck]=g_w1[ck]|g_w1[N*4+ck]|g_w1[2*N*4+ck]|(h8&rpf[8*264+256])|(h9&rpf[9*264+256]);
+        assign hit_w0[ck]=g_w0[ck]|g_w0[N*4+ck]|g_w0[2*N*4+ck]|(h8&!rpf[8*264+256])|(h9&!rpf[9*264+256]);
+    end
+    // ---- request scatter, g3: per bank face group a registered copy of the hub request state; the bank request
+    //      is built beside the face (+1 edge on pq vs the historical hub)
+    for(genvar g=0;g<3;g=g+1) begin : req_grp
+        localparam integer GL=(g==0)?0:(g==1)?4:6, GH=(g==0)?3:(g==1)?5:7;
+        (* keep = "true", dont_touch = "true" *) reg [N*338-1:0] qr_g;
+        (* keep = "true", dont_touch = "true" *) reg [N*2-1:0] sq_g;
+        (* keep = "true", dont_touch = "true" *) reg [N-1:0] qv_g;
+        (* keep = "true", dont_touch = "true" *) reg [7:0] be_g;
+        (* keep = "true", dont_touch = "true" *) reg [8*CW-1:0] bc_g;
+        (* keep = "true", dont_touch = "true" *) reg [1:0] me_g;
+        always @(posedge clk) begin qr_g<=qr; sq_g<=sq; qv_g<=qvalid; be_g<=be; bc_g<=bc; me_g<=me; end
+        for(genvar b=GL;b<=GH;b=b+1) begin : bank
+            reg [284:0] nx;
+            always @* begin : build
+                integer c; reg [337:0] q;
+                nx='0; c=int'(bc_g[b*CW+:CW]); q='0;
+                if(be_g[b] && c<N) begin
+                    q=qr_g[c*338+:338];
+                    if(qv_g[c] && ((c==NC)||q[324]||(q[323:322]==me_g)) && q[311:309]==3'(b))
+                        nx={1'b1,q[336],q[324],q[321:312],q[303:48],wordmask(q),4'(c),2'b00,sq_g[c*2+:2]};
+                end
+            end
+            reg [283:0] pp; reg pv;
+            wire [284:0] nq=(MUT==4) ? pq_next[b*285+:285] : nx;
+            always @(posedge clk) pp<=nq[283:0];
+            always @(posedge clk or negedge rst_f[g]) if(!rst_f[g]) pv<=1'b0; else pv<=nq[284];
+            assign pq_payload[b*285+:285]={1'b0,pp}; assign pq_valid[b]=pv;
         end
     end
     always @* begin : route
@@ -392,9 +505,9 @@ module ot_vms_hub_lt #(
             if(q[335:325]!=0||q[308:304]!=0||(q[324]&&q[323:322]!=0)||(c==NC&&!q[324]&&q[323:322]!=me)) fault[2]=1;
             for(integer w=0;w<8;w=w+1) if(q[336]&&q[16+4*w+:4]!={4{wm[w]}}) fault[1]=1;
         end
-        if(|src_bad) fault[0]=1;
-        for(integer s=0;s<NS;s=s+1) for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1)
-            if(hit[(s*N+c)*4+k] && (!active[c][k] || writes[c][k]!=rpf[s*264+256])) fault[0]=1;
+        if((|g_bad)||src_bad[8]||src_bad[9]) fault[0]=1;
+        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1)
+            if((hit_any[c*4+k] && !active[c][k]) || (hit_w1[c*4+k] && !writes[c][k]) || (hit_w0[c*4+k] && writes[c][k])) fault[0]=1;
         for(c=0;c<N;c=c+1) begin
             for(k=0;k<4;k=k+1) if(arr_f[(c*4+k)*3+:3]!=0)
                 if({1'b0,seen[c][k]}+{1'b0,arr_f[(c*4+k)*3+:3]}>{1'b0,expected[c][k]}) fault[0]=1;
@@ -408,12 +521,11 @@ module ot_vms_hub_lt #(
     end
     always @(posedge clk or negedge rst_n) begin : state
         if(!rst_n) begin
-            pq_valid<=0; cr_valid<=0; cw_valid<=0; ccw_valid<=0; status<=0;
+            cr_valid<=0; cw_valid<=0; ccw_valid<=0; status<=0;
             for(integer c=0;c<N;c=c+1) for(integer k=0;k<4;k=k+1) begin
                 active[c][k]<=0; seen[c][k]<=0; expected[c][k]<=0; writes[c][k]<=0;
             end
         end else begin
-            for(integer b=0;b<8;b=b+1) pq_valid[b]<=pq_next[b*285+284];
             for(integer c=0;c<N;c=c+1) cr_valid[c]<=cr_next[c*274+273];
             cw_valid<=cw_next[289]; ccw_valid<=ccw_next[289];
             status<=status|fault;
@@ -441,7 +553,8 @@ module ot_vms_hub_lt #(
 endmodule
 
 // ot_vms_slice_static_glue (gen_vms_hoist.py) wiring with the _lt children, ONE tile clock and one regional reset per
-// child (rst_n[0] hub, [1] CW stop, [2] CCW stop, [3] replay + status: ot_rst_relay copies in the tile top).
+// child (rst_n[0] hub, [1] CW stop, [2] CCW stop, [3] replay + status, [6:4] hub bank face groups E / N / S (g3):
+// ot_rst_relay copies in the tile top).
 module hfd_vms_glue_core_lt #(
     parameter integer NC=0,
     parameter integer CW=((NC+1)>1)?$clog2(NC+1):1,
@@ -449,7 +562,7 @@ module hfd_vms_glue_core_lt #(
     parameter integer RMUT=0
 )(
     input wire clk,
-    input wire [3:0] rst_n,
+    input wire [6:0] rst_n,
     input wire [1:0] sid,
     input wire [((NC>0)?NC:1)*338-1:0] cq,
     output wire [((NC>0)?NC:1)*274-1:0] cr,
@@ -491,8 +604,8 @@ module hfd_vms_glue_core_lt #(
     wire [265:0] ri0,ri1;
     wire [2:0] wk01,wk10;
     wire ack01,ack10;
-    ot_vms_hub_lt #(.NC(NC),.CW(CW)) u_hub(
-        .clk(clk),.rst_n(rst_n[0]),.sid(sid),.cq(hcq),.cr(hcr),
+    ot_vms_hub_lt #(.NC(NC),.CW(CW),.MUT(RMUT)) u_hub(
+        .clk(clk),.rst_n(rst_n[0]),.rst_f(rst_n[6:4]),.sid(sid),.cq(hcq),.cr(hcr),
         .client_seq(client_seq),.response_enable(response_enable),.response_seq(response_seq),
         .bank_enable(bank_enable),.bank_client(bank_client),
         .cw_enable(hub_ring_enable[0]),.cw_client(hub_ring_client[0+:CW]),

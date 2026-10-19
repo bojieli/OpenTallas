@@ -11,8 +11,8 @@
 // Tile top = hfd_vms_glue_core_lt (hfd_hgi_vms_glue_lt.sv: the glue wiring with reset-light ring stops / replay and the
 // parallel hub response demultiplex) plus
 //   (1) ONE tile clock clk (clk_hub / clk_ring[1:0] / clk_replay are the same stream clock on the same edge);
-//   (2) ONE reset port rst_n -> ot_rst_relay, 4 regional copies (hub | CW stop | CCW stop | replay + status): release
-//       +3 edges after the port (SYNC 2 + TREE 1), assertion asynchronous;
+//   (2) ONE reset port rst_n -> ot_rst_relay, 7 regional copies (hub | CW stop | CCW stop | replay + status | hub bank
+//       face groups E / N / S, g3): release +3 edges after the port (SYNC 2 + TREE 1), assertion asynchronous;
 //   (3) per-bank ports b<k>_* (a port sits on ONE face, next to its bank) and per-LANE ring ports
 //       <cw_in|cw_out|ccw_in|ccw_out>_l<k> (flit bits [k*276 +: 276], the bank-k lane) + _h (header bits [2223:2208]), so
 //       the ring face is laid out in lane bands beside the bank faces (vms_glue_kit_specs.py);
@@ -22,12 +22,17 @@
 //       it: COMMIT_DELAY 5 + 1 (bank pin) + 2 (tile xq relay + xq_done landing) = 8 (the historical BANK_PIN_IN knob).
 //   (5) E quadrants: the slice id is a strap pin, ONE master serves SE (1, R0) and NE (3, MX); E = NC 0 glue
 //       (hfd_hgi_vms_static_{SE,NE}_glue, the d4g binding since l4_idx_quad).
-// COMPILER CONTRACT (vs the historical glue at the same ports): every bank-side input is consumed 1 edge later and every
-// bank-side output appears 1 edge later (bank round trip pq -> pr +2, eject xq -> xq_done check +2 = COMMIT_DELAY 8, the
-// WACK / commit fault edge +2 after the eject, mirror egress eg -> ring tx slot +1, bank_status -> vmstat +1); ring,
-// client, control ports unchanged; reset release +3 edges.  <tile>_ref states exactly that (tools/hbm_die_v16/
-// vms_glue_tile_equiv.py runs tile vs ref in lockstep).
-// Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break).
+// COMPILER CONTRACT (vs the historical glue at the same ports), g2 part: every bank-side input is consumed 1 edge later
+// and every bank-side output appears 1 edge later (eject xq -> xq_done check = COMMIT_DELAY 8, bank_status -> vmstat +1);
+// reset release +3 edges.  g3 part (HOURLY-HBM/HH-3 10-19, hfd_hgi_vms_glue_lt.sv header): each ring stop consumes every
+// input except xq_done 1 edge later (ring transit +1 per hub, eject xq / cco +1, tx_enable / tx_source issued 1 edge
+// earlier relative to the flit, hub -> ring injection +1, replay return ri +1, WACK / ack +1, mirror egress +1 more) and its
+// rce leaves 1 edge later again (lane-OR tree: rce -> replay -> hq +2); the hub drives pq 1 edge later and consumes pr,
+// response_enable and response_seq 1 edge later (bank round trip pq -> pr -> cr +4 in all with the g2 pin stages; slot
+// reuse after a response +1).  <tile>_ref states exactly that with the UNCHANGED historical children and explicit
+// 1-edge delays (hfd_vms_glue_core_g3_ref); tools/hbm_die_v16/vms_glue_tile_equiv.py runs tile vs ref in lockstep.
+// Tile parameter MUT (bench only, default 0): 1 ring-stop flit mutant, 3 eg not landed (contract break), 4 hub pq
+// without the g3 face-group edge (contract break).
 module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     input wire clk,
     input wire rst_n,
@@ -149,9 +154,9 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 4 region copies); release +3 edges
-    wire [3:0] rr;
-    ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    // regional reset: the port drives only the relay (2 sync + 7 region copies); release +3 edges
+    wire [6:0] rr;
+    ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -239,7 +244,7 @@ module hfd_hgi_vms_glue_sw_t #(parameter integer MUT=0) (
     always @(posedge clk) bank_status_r <= bank_status_p;
     assign bank_status_p = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
     assign bank_status_c = bank_status_r;
-    hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(2),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : 0)) u_core (
         .clk(clk),
         .rst_n(rr),
         .sid(2'd0),
@@ -393,9 +398,9 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 4 region copies); release +3 edges
-    wire [3:0] rr;
-    ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    // regional reset: the port drives only the relay (2 sync + 7 region copies); release +3 edges
+    wire [6:0] rr;
+    ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -483,7 +488,7 @@ module hfd_hgi_vms_glue_e_t #(parameter integer MUT=0) (
     always @(posedge clk) bank_status_r <= bank_status_p;
     assign bank_status_p = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
     assign bank_status_c = bank_status_r;
-    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : 0)) u_core (
         .clk(clk),
         .rst_n(rr),
         .sid(sid),
@@ -644,9 +649,9 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     output wire [18:0] vmstat,
     output wire [2:0] ring_fault
 );
-    // regional reset: the port drives only the relay (2 sync + 4 region copies); release +3 edges
-    wire [3:0] rr;
-    ot_rst_relay #(.REGIONS(4),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    // regional reset: the port drives only the relay (2 sync + 7 region copies); release +3 edges
+    wire [6:0] rr;
+    ot_rst_relay #(.REGIONS(7),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     // ring buses: lane k = flit bits [k*276 +: 276], header = [2223:2208]
     wire [2223:0] cw_in;
     assign cw_in = {cw_in_h, cw_in_l7, cw_in_l6, cw_in_l5, cw_in_l4, cw_in_l3, cw_in_l2, cw_in_l1, cw_in_l0};
@@ -749,7 +754,7 @@ module hfd_hgi_vms_glue_nw_t #(parameter integer MUT=0) (
     assign bank_status_m[107:90] = {bank_status_c[107] | bk_flt_c[5], bank_status_c[106:90]};
     assign bank_status_m[125:108] = {bank_status_c[125] | bk_flt_c[6], bank_status_c[124:108]};
     assign bank_status_m[143:126] = {bank_status_c[143] | bk_flt_c[7], bank_status_c[142:126]};
-    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : 0)) u_core (
+    hfd_vms_glue_core_lt #(.NC(0),.COMMIT_DELAY(8),.RMUT((MUT == 1) ? 1 : (MUT == 4) ? 4 : 0)) u_core (
         .clk(clk),
         .rst_n(rr),
         .sid(2'd2),
