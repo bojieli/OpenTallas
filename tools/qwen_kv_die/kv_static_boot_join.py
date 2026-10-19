@@ -70,6 +70,8 @@ def boot_join(graph, root=K.ROOT, name='boot'):
     # the PC chain root (fanr) and join4_cal (emb_join) (kv_static_programme.es_cfg_words; bench run_es_cfg_boot.sh)
     # RTL-BUILD-KV/FAULT 10-18 (P8): DIECAP=1 -> target 10 carries the die cfg capability word (qkd_kv_die_cfg CAP=1)
     params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1, ESCFG=1, DIECAP=1)
+    if K.MU:   # KV-CTL mu2 10-19: setup_ready registered 2 edges (SRQ=2) in the MU release kvs_ctl (p1 in->out -698 ps)
+        params['SRQ'] = 2
     pp = K.ports(spec, params)
     ins = {i['name']: i for i in graph['instances']}
     if name in ins:

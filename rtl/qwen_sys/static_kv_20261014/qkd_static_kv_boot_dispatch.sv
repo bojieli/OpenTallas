@@ -41,7 +41,7 @@
 // MUT 7: target-12 address with pc and reg swapped; MUT 8: target-13 segment 1 dropped (bench mutants).
 // RTL-BUILD-KV/FAULT 10-18 (P8): DIECAP=1 = the die cfg's capability word (qkd_kv_die_cfg CAP=1: word 32+NRST, data[0] =
 // the fused attention-programme capability): target 10 is 32 + NRST + 2 words.  DIECAP=0 = unchanged.
-module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0)(
+module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -69,7 +69,21 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer D
  // Registered HOST output is consumed one edge later by the real cfg inputs.
  // Final ISA readiness remains tied to the actual loader, so a new BEGIN drops
  // setup_ready immediately even after the first successful setup.
- assign setup_ready=(&installed)&&((MUT==3)||(&sink_applied))&&(&local_configured)&&isa_seen&&boot_image_ready&&boot_image_target==0&&!boot_image_fault&&!sink_fault&&!fault&&((DIECFG==0)||diecfg_sealed)&&((LINKCFG==0)||linkcfg_done)&&((ESCFG==0)||(es12_done&&es13_done));
+ // KV-CTL mu2 10-19: SRQ=2 (MU release view of qkd_kvs_ctl; SRQ=0 = unchanged) = setup_ready exactly 2 edges after
+ // the combinational term: stage 1 registers the internal reduction (160 applied + installed + local + seals) and the
+ // pin terms separately, stage 2 ANDs them.  p1-d7af727c1: boot_image_target pin -> setup_ready pin was a -698 ps
+ // in->out path.  setup_ready is a boot status (HOST reads it before go), not a production edge.
+ wire setup_int=(&installed)&&((MUT==3)||(&sink_applied))&&(&local_configured)&&isa_seen&&!sink_fault&&!fault&&((DIECFG==0)||diecfg_sealed)&&((LINKCFG==0)||linkcfg_done)&&((ESCFG==0)||(es12_done&&es13_done));
+ wire setup_ext=boot_image_ready&&boot_image_target==0&&!boot_image_fault;
+ wire setup_c=setup_int&&setup_ext;
+ generate if(SRQ==0)begin:g_sr0 assign setup_ready=setup_c; end
+ else begin:g_sr2
+  reg sr_int_q,sr_ext_q,sr_q;
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)begin sr_int_q<=0;sr_ext_q<=0;sr_q<=0;end
+   else begin sr_int_q<=setup_int;sr_ext_q<=setup_ext;sr_q<=sr_int_q&&sr_ext_q;end
+  assign setup_ready=sr_q;
+ end endgenerate
  integer group_index,pc_index;
  // target 10 (DIECFG): the pre-boot die configuration image, only before anything else is installed
  wire t10=(DIECFG!=0)&&boot_image_target==10;

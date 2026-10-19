@@ -70,7 +70,13 @@ endmodule
 // A failing guard makes this execution invalid/aborted, with both ownership
 // paths disabled; it cannot extend or resume the compiled timeline. Reset is
 // required to clear the fault or replace the sealed exceptional boot image.
-module qkd_static_kv_ownership_calendar #(parameter integer MUT = 0) (
+// KV-CTL mu2 10-19: PIPE=1 (MU release view of qkd_kvs_ctl; PIPE=0 = unchanged): the 32-group drain reduction gets
+// its own register stage (drained_all_q = &drained_q one edge later), so the enter / leave guards observe the
+// group drain one edge EARLIER relative to the compiled roots (compiler: QUIET / drain window +1 ck before enter and
+// leave), and the root - k compare offsets are captured with the root words (enter_m / leave_m / deadline_m; roots are
+// static once sealed: a write while configured / active faults).  Every other edge is unchanged.  Reason: p1-d7af727c1
+// TT reg2reg -487 ps = drained_q -> wire -> 32-AND -> 32-b subtract/compare -> bad -> enable of ~140 root flops.
+module qkd_static_kv_ownership_calendar #(parameter integer MUT = 0, parameter integer PIPE = 0) (
     input wire ck, rst_n,
     input wire cfg_we, input wire [1:0] cfg_addr, input wire [31:0] cfg_data,
     input wire go,
@@ -94,9 +100,14 @@ module qkd_static_kv_ownership_calendar #(parameter integer MUT = 0) (
         else begin we_q <= cfg_we; go_q <= go; host_q <= host_quiet; upstream_q <= upstream_quiet; end
     end
     reg [31:0] enter_root, leave_root, deadline_root;
+    reg [31:0] enter_m, leave_m, deadline_m;   // PIPE: root - k, captured with the root word
+    reg drained_all_q;                         // PIPE: &drained_q, one edge later
+    always @(posedge ck) drained_all_q <= &drained_q;
+    wire drained_ok = (PIPE != 0) ? drained_all_q : (&drained_q);
     reg [2:0] written;
-    wire enter_now = active && cycle == enter_root - ((MUT == 1) ? 32'd2 : 32'd1);
-    wire leave_now = active && cycle == leave_root - 32'd1;
+    wire enter_now = active && cycle == ((PIPE != 0) ? enter_m : enter_root - ((MUT == 1) ? 32'd2 : 32'd1));
+    wire leave_now = active && cycle == ((PIPE != 0) ? leave_m : leave_root - 32'd1);
+    wire deadline_now = cycle == ((PIPE != 0) ? deadline_m : deadline_root - 32'd1);
     reg [7:0] bad;
     always @* begin
         bad = 0;
@@ -105,8 +116,8 @@ module qkd_static_kv_ownership_calendar #(parameter integer MUT = 0) (
             (written != 3'b111 || data_q != 32'h514b564d || enter_root < 3 ||
              leave_root <= enter_root || deadline_root <= leave_root)) bad[1] = 1;
         if (go_q && (!configured || active || we_q)) bad[2] = 1;
-        if (enter_now && (!host_q || !upstream_q || !(&drained_q))) bad[3] = 1;
-        if (leave_now && MUT != 2 && (!upstream_q || !(&drained_q))) bad[4] = 1;
+        if (enter_now && (!host_q || !upstream_q || !drained_ok)) bad[3] = 1;
+        if (leave_now && MUT != 2 && (!upstream_q || !drained_ok)) bad[4] = 1;
         if ((|fault_q) && MUT != 3) bad[5] = 1;
     end
     always @(posedge ck or negedge rn) begin
@@ -114,15 +125,16 @@ module qkd_static_kv_ownership_calendar #(parameter integer MUT = 0) (
             native_mode <= 0; ownership_valid <= 0; native_reserved <= 0; active <= 0;
             done <= 0; configured <= 0; cycle <= 0; fault <= 0; fault_code <= 0;
             enter_root <= 0; leave_root <= 0; deadline_root <= 0; written <= 0;
+            enter_m <= 0; leave_m <= 0; deadline_m <= 0;
         end else if (fault || (|bad)) begin
             fault <= 1; fault_code <= fault_code | bad;
             ownership_valid <= 0; native_reserved <= 1; active <= 0; done <= 0;
         end else begin
             done <= 0;
             if (we_q) case (addr_q)
-                0: begin enter_root <= data_q; written[0] <= 1; end
-                1: begin leave_root <= data_q; written[1] <= 1; end
-                2: begin deadline_root <= data_q; written[2] <= 1; end
+                0: begin enter_root <= data_q; enter_m <= data_q - ((MUT == 1) ? 32'd2 : 32'd1); written[0] <= 1; end
+                1: begin leave_root <= data_q; leave_m <= data_q - 32'd1; written[1] <= 1; end
+                2: begin deadline_root <= data_q; deadline_m <= data_q - 32'd1; written[2] <= 1; end
                 3: begin configured <= 1; ownership_valid <= 1; end
             endcase
             if (go_q) begin cycle <= 0; active <= 1; native_mode <= 0; native_reserved <= 1; end
@@ -130,7 +142,7 @@ module qkd_static_kv_ownership_calendar #(parameter integer MUT = 0) (
                 cycle <= cycle + 1;
                 if (enter_now) native_mode <= 1;
                 if (leave_now) native_mode <= 0;
-                if (cycle == deadline_root - 1) begin active <= 0; done <= 1; native_reserved <= 0; end
+                if (deadline_now) begin active <= 0; done <= 1; native_reserved <= 0; end
             end
         end
     end

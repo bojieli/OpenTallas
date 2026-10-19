@@ -1,0 +1,3 @@
+rtl/test/mu_qwen_1018/tb_kv_ctl_mu2_lockstep.sv
+rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv
+rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv
