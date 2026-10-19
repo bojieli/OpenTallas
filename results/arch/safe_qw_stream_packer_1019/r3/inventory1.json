@@ -1,0 +1,770 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_stream_packer",
+  "cells": 35984,
+  "issues": [],
+  "register_outputs_over32": [],
+  "driven_nets_over32_count": 136,
+  "highest_fanout_nets": [
+    {
+      "bit": 2,
+      "loads": 6456,
+      "names": [
+        "ck",
+        "g_open_copy.g_leaf[0].u_q.ck",
+        "g_open_copy.g_leaf[1].u_q.ck"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3,
+      "loads": 2278,
+      "names": [
+        "rst_n",
+        "g_open_copy.g_leaf[0].u_q.rst_n",
+        "g_open_copy.g_leaf[1].u_q.rst_n"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 13293,
+      "loads": 1108,
+      "names": [
+        "g_open_copy.g_leaf[0].u_q.we",
+        "g_open_copy.g_leaf[1].u_q.we",
+        "$ne$rtl/qwen_dv/qfd_dv_stream_packer.sv:146$744_Y"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$16554",
+        "type": "$_OR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 1126,
+      "loads": 1092,
+      "names": [
+        "pe",
+        "sw_i[1087]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 2214,
+      "loads": 1092,
+      "names": [
+        "pw",
+        "se_i[1087]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 35243,
+      "loads": 1078,
+      "names": [
+        "ie",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:163$755_Y[1080]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:163$755_Y[1081]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:163$755_Y[1082]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:163$755_Y[1083]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$8938",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 35247,
+      "loads": 1078,
+      "names": [
+        "iw",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:164$757_Y[1080]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:164$757_Y[1081]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:164$757_Y[1082]",
+        "$ternary$rtl/qwen_dv/qfd_dv_stream_packer.sv:164$757_Y[1083]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$8939",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 35238,
+      "loads": 1052,
+      "names": [
+        "te"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$13298",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 23710,
+      "loads": 1051,
+      "names": [
+        "xw"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14434",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 23715,
+      "loads": 1051,
+      "names": [
+        "xe"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:256:simplemap_logbin$14428",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 6949,
+      "loads": 1041,
+      "names": [
+        "$0\\emit[0:0]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$45889",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 23580,
+      "loads": 68,
+      "names": [
+        "g_open_copy.g_leaf[0].u_q.complete",
+        "g_open_copy.g_leaf[1].u_q.complete",
+        "$procmux$6489_Y"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:157:simplemap_reduce$16623",
+        "type": "$_AND_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14620,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[0]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50493",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14623,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[1]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50494",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14625,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[2]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50495",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14627,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[3]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50496",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14629,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[4]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50497",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14631,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[5]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50498",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14633,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[6]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50499",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14635,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[7]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50500",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14637,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[8]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50501",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14639,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[9]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50502",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14641,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[10]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50503",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14643,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[11]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50504",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14645,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[12]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50505",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14647,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[13]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50506",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14649,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[14]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50507",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14651,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[15]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50508",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14653,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[16]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50687",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14656,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[17]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50688",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14658,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[18]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50689",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14660,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[19]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50690",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14662,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[20]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50691",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14664,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[21]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50692",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14666,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[22]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50693",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14668,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[23]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50694",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14670,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[24]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50695",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14672,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[25]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50696",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14674,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[26]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50697",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 14676,
+      "loads": 64,
+      "names": [
+        "g_static.lane_data[27]"
+      ],
+      "driver": {
+        "cell": "$auto$simplemap.cc:106:simplemap_bitop$50698",
+        "type": "$_XOR_"
+      },
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "$auto$ff.cc:337:slice$50233",
+      "pin": "D",
+      "bit": 11228,
+      "generic_levels": 28,
+      "names": [
+        "$0\\fault[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6783",
+      "pin": "D",
+      "bit": 11275,
+      "generic_levels": 21,
+      "names": [
+        "nb[15]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6799",
+      "pin": "D",
+      "bit": 11307,
+      "generic_levels": 21,
+      "names": [
+        "nb[31]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6815",
+      "pin": "D",
+      "bit": 11339,
+      "generic_levels": 21,
+      "names": [
+        "nb[47]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6831",
+      "pin": "D",
+      "bit": 11371,
+      "generic_levels": 21,
+      "names": [
+        "nb[63]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6847",
+      "pin": "D",
+      "bit": 11403,
+      "generic_levels": 21,
+      "names": [
+        "nb[79]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6863",
+      "pin": "D",
+      "bit": 11435,
+      "generic_levels": 21,
+      "names": [
+        "nb[95]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6879",
+      "pin": "D",
+      "bit": 11467,
+      "generic_levels": 21,
+      "names": [
+        "nb[111]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6895",
+      "pin": "D",
+      "bit": 11499,
+      "generic_levels": 21,
+      "names": [
+        "nb[127]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6911",
+      "pin": "D",
+      "bit": 11531,
+      "generic_levels": 21,
+      "names": [
+        "nb[143]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6927",
+      "pin": "D",
+      "bit": 11563,
+      "generic_levels": 21,
+      "names": [
+        "nb[159]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6943",
+      "pin": "D",
+      "bit": 11595,
+      "generic_levels": 21,
+      "names": [
+        "nb[175]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6959",
+      "pin": "D",
+      "bit": 11627,
+      "generic_levels": 21,
+      "names": [
+        "nb[191]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6975",
+      "pin": "D",
+      "bit": 11659,
+      "generic_levels": 21,
+      "names": [
+        "nb[207]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6991",
+      "pin": "D",
+      "bit": 11691,
+      "generic_levels": 21,
+      "names": [
+        "nb[223]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7007",
+      "pin": "D",
+      "bit": 11723,
+      "generic_levels": 21,
+      "names": [
+        "nb[239]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7023",
+      "pin": "D",
+      "bit": 11755,
+      "generic_levels": 21,
+      "names": [
+        "nb[255]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7039",
+      "pin": "D",
+      "bit": 11787,
+      "generic_levels": 21,
+      "names": [
+        "nb[271]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7055",
+      "pin": "D",
+      "bit": 11819,
+      "generic_levels": 21,
+      "names": [
+        "nb[287]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7071",
+      "pin": "D",
+      "bit": 11851,
+      "generic_levels": 21,
+      "names": [
+        "nb[303]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7087",
+      "pin": "D",
+      "bit": 11883,
+      "generic_levels": 21,
+      "names": [
+        "nb[319]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7103",
+      "pin": "D",
+      "bit": 11915,
+      "generic_levels": 21,
+      "names": [
+        "nb[335]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7119",
+      "pin": "D",
+      "bit": 11947,
+      "generic_levels": 21,
+      "names": [
+        "nb[351]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7135",
+      "pin": "D",
+      "bit": 11979,
+      "generic_levels": 21,
+      "names": [
+        "nb[367]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7151",
+      "pin": "D",
+      "bit": 12011,
+      "generic_levels": 21,
+      "names": [
+        "nb[383]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7167",
+      "pin": "D",
+      "bit": 12043,
+      "generic_levels": 21,
+      "names": [
+        "nb[399]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7183",
+      "pin": "D",
+      "bit": 12075,
+      "generic_levels": 21,
+      "names": [
+        "nb[415]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7199",
+      "pin": "D",
+      "bit": 12107,
+      "generic_levels": 21,
+      "names": [
+        "nb[431]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7215",
+      "pin": "D",
+      "bit": 12139,
+      "generic_levels": 21,
+      "names": [
+        "nb[447]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$7231",
+      "pin": "D",
+      "bit": 12171,
+      "generic_levels": 21,
+      "names": [
+        "nb[463]"
+      ]
+    }
+  ],
+  "scope": "Generic synthesis before ABC/physical buffers. Primitive levels are not TT ps; native macro clk-to-Q/setup, mapped logic, placement/route and retained replicas require separate proof. Clock/reset boundary loads retained and labeled, not counted as data-fanout failures.",
+  "netlist_sha256": "bcdf6208241cdc86ca508880953c3e0dbda0dd75b92b39adcda02856b460c8e0"
+}

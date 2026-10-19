@@ -1,0 +1,99 @@
+{
+  "copy_cells": [
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[0].u_q.$auto$ff.cc:337:slice$53710",
+      "loads": 22,
+      "connections": {
+        "C": [
+          2
+        ],
+        "D": [
+          26006
+        ],
+        "E": [
+          25773
+        ],
+        "Q": [
+          9169
+        ],
+        "R": [
+          3
+        ]
+      }
+    },
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[1].u_q.$auto$ff.cc:337:slice$53712",
+      "loads": 17,
+      "connections": {
+        "C": [
+          2
+        ],
+        "D": [
+          26007
+        ],
+        "E": [
+          25773
+        ],
+        "Q": [
+          9294
+        ],
+        "R": [
+          3
+        ]
+      }
+    },
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[2].u_q.$auto$ff.cc:337:slice$6760",
+      "loads": 24,
+      "connections": {
+        "C": [
+          2
+        ],
+        "D": [
+          26008
+        ],
+        "E": [
+          25773
+        ],
+        "Q": [
+          9348
+        ],
+        "R": [
+          3
+        ]
+      }
+    },
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[3].u_q.$auto$ff.cc:337:slice$53708",
+      "loads": 22,
+      "connections": {
+        "C": [
+          2
+        ],
+        "D": [
+          26009
+        ],
+        "E": [
+          25773
+        ],
+        "Q": [
+          9215
+        ],
+        "R": [
+          3
+        ]
+      }
+    }
+  ],
+  "retained_copy_count": 4,
+  "max_register_Q_loads": 24,
+  "register_count": 6458,
+  "ck_source_bits": [
+    2
+  ],
+  "rst_source_bits": [
+    3
+  ],
+  "combinational_ASAP7_area_um2": null,
+  "note": "Real TT combinational mapping only; FF primitives generic, reset unpartitioned. Physical binding/clock/reach/STA remain open."
+}

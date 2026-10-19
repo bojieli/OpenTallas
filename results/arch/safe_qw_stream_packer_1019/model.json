@@ -24,13 +24,14 @@
     "valid_bitmap": 64,
     "beat_tags": 32,
     "new_pipeline_state": 0,
-    "note": "Two distinct <=1024-bit one-beat snapshots, no indexed >2kb memory, no added delay lines."
+    "note": "Two distinct <=1024-bit one-beat snapshots, no indexed >2kb memory, no added delay lines.",
+    "same_edge_control_replicas": 4
   },
   "cost": {
     "slot_decoders": 512,
     "data_mask_bits": 8192,
     "priority_exclusion_terms_max_per_slot": 7,
-    "new_state_bits": 0,
+    "new_state_bits": 4,
     "replica_count": 1,
     "area_and_slot_fit": "Requires actual mapped census; no physical admission or estimated area claim."
   },
@@ -46,5 +47,13 @@
     "Priority and duplicate-fault mutants.",
     "Actual generic and mapped census; same-edge producer replicas needed before any physical gate if fanout >32.",
     "Reset integration by seam_source; geometry/native clock/reach/PG remain unqualified."
-  ]
+  ],
+  "refinement_before_build": {
+    "open_copies": 4,
+    "added_state_bits": 4,
+    "added_edges": 0,
+    "source_decode": "two3-bit onehot factors,8-way each,64static slot combinations",
+    "purpose": "Reduce source address/enable fanout and xopen65; retention is not assumed and must be measured.",
+    "actual_mapped_reason": "R3 two32-slot copies generic<=32 but actualABC39/45, so four16-slot retained copies before next build."
+  }
 }

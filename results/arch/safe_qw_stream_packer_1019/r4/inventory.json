@@ -1,0 +1,799 @@
+{
+  "status": "GENERIC_DIAGNOSTIC_NOT_MAPPED_TIMING_OR_FANOUT_QUALIFICATION",
+  "top": "qfd_dv_stream_packer",
+  "cells": 23343,
+  "issues": [],
+  "register_outputs_over32": [],
+  "driven_nets_over32_count": 137,
+  "highest_fanout_nets": [
+    {
+      "bit": 2,
+      "loads": 6458,
+      "names": [
+        "ck",
+        "g_open_copy.g_leaf[0].u_q.ck",
+        "g_open_copy.g_leaf[1].u_q.ck",
+        "g_open_copy.g_leaf[2].u_q.ck",
+        "g_open_copy.g_leaf[3].u_q.ck"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 3,
+      "loads": 2280,
+      "names": [
+        "rst_n",
+        "g_open_copy.g_leaf[0].u_q.rst_n",
+        "g_open_copy.g_leaf[1].u_q.rst_n",
+        "g_open_copy.g_leaf[2].u_q.rst_n",
+        "g_open_copy.g_leaf[3].u_q.rst_n"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 1126,
+      "loads": 2120,
+      "names": [
+        "pe",
+        "sw_i[1087]",
+        "$abc$54368$sw_i[1087]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 20566,
+      "loads": 2097,
+      "names": [
+        "$abc$54368$new_n21722"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$65918",
+        "type": "AOI21xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 25773,
+      "loads": 1109,
+      "names": [
+        "g_open_copy.g_leaf[0].u_q.we",
+        "g_open_copy.g_leaf[1].u_q.we",
+        "g_open_copy.g_leaf[2].u_q.we",
+        "g_open_copy.g_leaf[3].u_q.we",
+        "$ne$rtl/qwen_dv/qfd_dv_stream_packer.sv:146$744_Y"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$71049",
+        "type": "INVx1_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 2214,
+      "loads": 1107,
+      "names": [
+        "pw",
+        "se_i[1087]",
+        "$abc$54368$se_i[1087]"
+      ],
+      "driver": null,
+      "register_output": false
+    },
+    {
+      "bit": 22672,
+      "loads": 1076,
+      "names": [
+        "$abc$54368$new_n23826"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$68022",
+        "type": "NOR2xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 23792,
+      "loads": 1076,
+      "names": [
+        "$abc$54368$new_n24916"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$69112",
+        "type": "NOR2xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 25827,
+      "loads": 1041,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$71095",
+        "type": "NOR2xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 17938,
+      "loads": 1029,
+      "names": [
+        "$abc$54368$new_n19606"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$63802",
+        "type": "NOR3xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 17963,
+      "loads": 1026,
+      "names": [
+        "$abc$54368$new_n19631"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$63827",
+        "type": "NAND3xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 17946,
+      "loads": 528,
+      "names": [
+        "$abc$54368$new_n19614"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$63810",
+        "type": "NAND2xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 17945,
+      "loads": 514,
+      "names": [
+        "$abc$54368$new_n19613"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$63809",
+        "type": "AOI21xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 10781,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13407"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57603",
+        "type": "AND5x1_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 10866,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13492"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57688",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 10887,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13513"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57709",
+        "type": "AND2x2_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11039,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13664"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57860",
+        "type": "XOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11060,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13684"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57880",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11081,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13704"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57900",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11290,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13904"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58100",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11303,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n13916"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58112",
+        "type": "AND2x2_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 24884,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n26008"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$70204",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 24885,
+      "loads": 64,
+      "names": [
+        "$abc$54368$new_n26009"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$70205",
+        "type": "XOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11151,
+      "loads": 62,
+      "names": [
+        "$abc$54368$new_n13771"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57967",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11102,
+      "loads": 61,
+      "names": [
+        "$abc$54368$new_n13724"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57920",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11157,
+      "loads": 61,
+      "names": [
+        "$abc$54368$new_n13777"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57973",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11243,
+      "loads": 61,
+      "names": [
+        "$abc$54368$new_n13859"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58055",
+        "type": "XOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11305,
+      "loads": 61,
+      "names": [
+        "$abc$54368$new_n13918"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58114",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11334,
+      "loads": 61,
+      "names": [
+        "$abc$54368$new_n13945"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58141",
+        "type": "AOI21xp33_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 10961,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13587"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57783",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11066,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13690"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57886",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11122,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13743"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57939",
+        "type": "XOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11234,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13850"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58046",
+        "type": "XOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11256,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13871"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58067",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11265,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13880"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58076",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11283,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13897"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58093",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11047,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n13671"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$57867",
+        "type": "XOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 24876,
+      "loads": 60,
+      "names": [
+        "$abc$54368$new_n26000"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$70196",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11188,
+      "loads": 59,
+      "names": [
+        "$abc$54368$new_n13806"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58002",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    },
+    {
+      "bit": 11217,
+      "loads": 59,
+      "names": [
+        "$abc$54368$new_n13834"
+      ],
+      "driver": {
+        "cell": "$abc$54368$auto$blifparse.cc:397:parse_blif$58030",
+        "type": "XNOR2xp5_ASAP7_75t_R"
+      },
+      "register_output": false
+    }
+  ],
+  "highest_generic_stage_depth": [
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[0].u_q.$auto$ff.cc:337:slice$53710",
+      "pin": "D",
+      "bit": 26006,
+      "generic_levels": 11,
+      "names": [
+        "$flatten\\g_open_copy.g_leaf[0].u_q.$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6482_Y",
+        "$flatten\\g_open_copy.g_leaf[0].u_q.$abc$54364$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6482_Y"
+      ]
+    },
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[1].u_q.$auto$ff.cc:337:slice$53712",
+      "pin": "D",
+      "bit": 26007,
+      "generic_levels": 11,
+      "names": [
+        "$flatten\\g_open_copy.g_leaf[1].u_q.$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6485_Y",
+        "$flatten\\g_open_copy.g_leaf[1].u_q.$abc$54362$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6485_Y"
+      ]
+    },
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[2].u_q.$auto$ff.cc:337:slice$6760",
+      "pin": "D",
+      "bit": 26008,
+      "generic_levels": 11,
+      "names": [
+        "$flatten\\g_open_copy.g_leaf[2].u_q.$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6488_Y",
+        "$flatten\\g_open_copy.g_leaf[2].u_q.$abc$71246$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6488_Y"
+      ]
+    },
+    {
+      "cell": "$flatten\\g_open_copy.g_leaf[3].u_q.$auto$ff.cc:337:slice$53708",
+      "pin": "D",
+      "bit": 26009,
+      "generic_levels": 11,
+      "names": [
+        "$flatten\\g_open_copy.g_leaf[3].u_q.$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6491_Y",
+        "$flatten\\g_open_copy.g_leaf[3].u_q.$abc$54366$logic_not$rtl/qwen_dv/qfd_dv_stream_packer.sv:202$6491_Y"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$45981",
+      "pin": "D",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$50259",
+      "pin": "D",
+      "bit": 25746,
+      "generic_levels": 10,
+      "names": [
+        "$0\\fault[0:0]",
+        "$abc$54368$0\\fault[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6778",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6779",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6780",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6781",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6782",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6783",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6784",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6785",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6786",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6787",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6788",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6789",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6790",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6791",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6792",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6793",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6794",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6795",
+      "pin": "D",
+      "bit": 17931,
+      "generic_levels": 10,
+      "names": [
+        "nb[1]",
+        "$abc$54368$nb[1]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6795",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6796",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6797",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6798",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6799",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    },
+    {
+      "cell": "$auto$ff.cc:337:slice$6800",
+      "pin": "E",
+      "bit": 25827,
+      "generic_levels": 10,
+      "names": [
+        "$0\\emit[0:0]",
+        "$abc$54368$0\\emit[0:0]"
+      ]
+    }
+  ],
+  "scope": "Actual ASAP7 TT ABC combinational mapping; sequential primitives remain generic. No STA/physical/native-flop qualification.",
+  "netlist_sha256": "c85b34a1524c45aba4cb89cdf271c37f1673f8a56cdd81b2233ba1a6d9870b0f"
+}
