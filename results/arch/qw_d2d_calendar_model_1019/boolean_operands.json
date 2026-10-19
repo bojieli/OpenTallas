@@ -1,0 +1,1529 @@
+[
+  {
+    "root": "_52679_/Y",
+    "copies": 2,
+    "actual_native_master": "NAND2x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "u_core.u_end.u_link.u_ctl.v1$_DFF_PN0_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "u_core.u_end.u_link.u_ctl.v1$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_52682_/Y",
+    "copies": 2,
+    "actual_native_master": "OR2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "u_core.u_end.u_link.u_ctl.cmd_wv$_DFF_PN0_/QN",
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.u_link.u_ctl.cmd_wv$_DFF_PN0_/QN",
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_31344_/Y",
+    "copies": 16,
+    "actual_native_master": "NAND2x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_31343_/Y",
+      "u_core.u_end.u_txcal.ev_port\\[0\\]$_DFFE_PN0P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.u_txcal.ev_port\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.ev_port\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.ev_port\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.ev_v$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_31802_/Y",
+    "copies": 3,
+    "actual_native_master": "AND3x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_32411_/Y",
+    "copies": 2,
+    "actual_native_master": "NOR2x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_31826_/Y",
+      "_32410_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "u_core.u_end.u_txcal.cnt\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[10\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[11\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[12\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[13\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[5\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[6\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[7\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[8\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[9\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cur\\[17\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_32415_/Y",
+    "copies": 2,
+    "actual_native_master": "OR3x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_31783_/Y",
+      "_31786_/Y",
+      "_31826_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "u_core.u_end.u_txcal.cnt\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[10\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[11\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[12\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[13\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[5\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[6\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[7\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[8\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cnt\\[9\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.cur\\[17\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.rep\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_33111_/Y",
+    "copies": 3,
+    "actual_native_master": "AND3x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_33721_/Y",
+    "copies": 2,
+    "actual_native_master": "NOR2x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_33091_/Y",
+      "_33146_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[10\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[11\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[12\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[13\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[5\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[6\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[7\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[8\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[9\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cur\\[17\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_33726_/Y",
+    "copies": 2,
+    "actual_native_master": "OR2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_33146_/Y",
+      "_33725_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.u_end.end_fault$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_link.u_ctl.epoch_abort$_DFF_PN0_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[10\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[11\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[12\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[13\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[5\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[6\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[7\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[8\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cnt\\[9\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.cur\\[17\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[0\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[1\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[2\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[3\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.rep\\[4\\]$_DFFE_PN0P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_37687_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_37785_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_37857_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_37928_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38000_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_37999_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38070_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_37999_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38140_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_37999_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38210_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_37999_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38282_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_38281_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38352_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_38281_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38427_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_38281_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38523_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_38281_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38594_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_38593_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38664_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_38593_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38734_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_38593_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38804_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_38593_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38876_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_38875_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_38946_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_38875_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39016_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_38875_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39086_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_38875_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39162_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_39161_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39258_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_39161_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39328_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_39161_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39398_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_39161_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39469_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_39468_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39539_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_39468_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39609_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_39468_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39679_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_39468_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39750_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37686_/Y",
+      "_39749_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39820_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37784_/Y",
+      "_39749_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39890_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37856_/Y",
+      "_39749_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_39960_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37927_/Y",
+      "_39749_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_rx_we$_DFF_P_/QN",
+      "u_core.u_end.u_rxcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40032_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_40031_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40129_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_40128_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40200_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_40199_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40272_/Y",
+    "copies": 2,
+    "actual_native_master": "AND4x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_40271_/Y",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40342_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37999_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40412_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37999_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40482_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37999_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40552_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_37999_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40622_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38281_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40692_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38281_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40767_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38281_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40863_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38281_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_40933_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38593_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41003_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38593_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41073_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38593_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41143_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38593_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41213_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38875_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41283_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38875_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41353_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38875_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41423_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_38875_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41498_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39161_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41594_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39161_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41664_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39161_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41734_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39161_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41804_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39468_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41874_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39468_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_41944_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39468_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_42014_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39468_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_42084_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39749_/Y",
+      "_40031_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_42154_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39749_/Y",
+      "_40128_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_42224_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39749_/Y",
+      "_40199_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_42294_/Y",
+    "copies": 2,
+    "actual_native_master": "AND2x2_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "_39749_/Y",
+      "_40271_/Y"
+    ],
+    "state_port_macro_tie_leaves": [
+      "c_cfg_addr\\[0\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[1\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[2\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[3\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[4\\]$_DFF_P_/QN",
+      "c_cfg_addr\\[5\\]$_DFF_P_/QN",
+      "c_cfg_tx_we$_DFF_P_/QN",
+      "u_core.u_end.u_txcal.running$_DFF_PN0_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  },
+  {
+    "root": "_51768_/Y",
+    "copies": 5,
+    "actual_native_master": "NOR2x1_ASAP7_75t_R",
+    "immediate_native_operands": [
+      "u_core.g_eb\\[5\\].u_eb/q$_DFF_PN0_/QN",
+      "u_core.u_reset_regions.rst_n\\[2\\]$_DFF_P_/QN"
+    ],
+    "state_port_macro_tie_leaves": [
+      "u_core.g_eb\\[5\\].u_eb/q$_DFF_PN0_/QN",
+      "u_core.u_reset_regions.rst_n\\[2\\]$_DFF_P_/QN"
+    ],
+    "source_realization_status": "HOLD: identify equation and every live operand, keep genuine logic, verify truth coverage and new native mapped pins"
+  }
+]
