@@ -44,56 +44,90 @@
       {
         "M5_full_wire_track_count": 3,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 201
       },
       {
         "M5_full_wire_track_count": 2,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 201
       },
       {
         "M5_full_wire_track_count": 2,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 201
       },
       {
         "M5_full_wire_track_count": 2,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 201
       },
       {
         "M5_full_wire_track_count": 3,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 201
       }
     ],
     "VSS": [
       {
         "M5_full_wire_track_count": 3,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 202
       },
       {
         "M5_full_wire_track_count": 2,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 202
       },
       {
         "M5_full_wire_track_count": 2,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 202
       },
       {
         "M5_full_wire_track_count": 2,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 202
       },
       {
         "M5_full_wire_track_count": 3,
         "min_M6_full_wire_crossings_all_origin_phases": 202,
-        "via_enclosure": "OWED actual technology VIA56 and parent strap selection"
+        "via_enclosure": "Actual default VIA56 M5 enclosure fits PG rectangle; parent strap/PDN/obstructions/DRC not qualified",
+        "min_VIA56_centers_all_M6_origin_phases": 202
       }
     ]
   },
-  "pg_network": "OWED: dv_rvcase has no PDN/globalconnect generation; this checks potential metal-track access only"
+  "pg_network": "OWED: dv_rvcase has no PDN/globalconnect generation; this checks potential metal-track access only",
+  "technology_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+  "manufacturing_grid_um": 0.001,
+  "tracks_source": "tools/s81_dv/dv_rvcase.py run.tcl explicit make_tracks, which overrides technology LEF offsets",
+  "VIA56_default": {
+    "M5_RECT": [
+      -0.012,
+      -0.027,
+      0.012,
+      0.027
+    ],
+    "M6_RECT": [
+      -0.023,
+      -0.016,
+      0.023,
+      0.016
+    ],
+    "V5_RECT": [
+      -0.012,
+      -0.016,
+      0.012,
+      0.016
+    ]
+  },
+  "VIA56_local_access": "Actual default M5 enclosure fits each PG rectangle on >=2 M5 track centers; all4M6 phase classes retain>=201 via centers. Fullstrap/PDN/DRC connectivity remains OWED."
 }

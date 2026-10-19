@@ -1,0 +1,110 @@
+{
+  "scope": "LOWER_BOUND_GEOMETRY_REPLAY_OF_OLD_RESET_NETLIST_NOT_NEW_TOPOLOGY",
+  "edges_checked": 5183,
+  "unmodeled_root_or_other": 3,
+  "over405": 1003,
+  "max_lower_bound_um": 5107.624,
+  "first20": [
+    {
+      "src": "st_rs_34_42_2",
+      "dst": "st_rsg_rs_34_42_2_cl3N_0",
+      "minimum_rect_distance_um": 5107.624
+    },
+    {
+      "src": "st_rs_5_13",
+      "dst": "st_rsg_rs_5_13_cl0S_0",
+      "minimum_rect_distance_um": 4713.912
+    },
+    {
+      "src": "st_rs_74_13",
+      "dst": "st_rsg_rs_74_13_cl7S_0",
+      "minimum_rect_distance_um": 4660.936
+    },
+    {
+      "src": "st_rs_34_13_2",
+      "dst": "st_rsg_rs_34_13_2_cl3S_0",
+      "minimum_rect_distance_um": 4648.888
+    },
+    {
+      "src": "st_rsg_rs_45_42_1_cl4N_0",
+      "dst": "st_rsg_rs_45_42_1_cl4N_1",
+      "minimum_rect_distance_um": 4544.104
+    },
+    {
+      "src": "st_rsg_rs_74_42_cl7N_1",
+      "dst": "st_rsg_rs_74_42_cl7N_2",
+      "minimum_rect_distance_um": 4544.104
+    },
+    {
+      "src": "st_rsg_rs_5_42_cl0N_8",
+      "dst": "st_rsg_rs_5_42_cl0N_9",
+      "minimum_rect_distance_um": 4467.976
+    },
+    {
+      "src": "st_rs_15_25",
+      "dst": "st_rsg_rs_15_25_void1_0",
+      "minimum_rect_distance_um": 4303.912
+    },
+    {
+      "src": "st_rs_34_29",
+      "dst": "st_rsg_rs_34_29_void3_0",
+      "minimum_rect_distance_um": 4281.048
+    },
+    {
+      "src": "st_rs_10_47_1",
+      "dst": "st_rsg_rs_10_47_1_cl0N_0",
+      "minimum_rect_distance_um": 4155.893
+    },
+    {
+      "src": "st_rs_0_38",
+      "dst": "st_rsg_rs_0_38_edge0_0",
+      "minimum_rect_distance_um": 3537.832
+    },
+    {
+      "src": "st_rs_45_33_3",
+      "dst": "st_rsg_rs_45_33_3_void4_0",
+      "minimum_rect_distance_um": 3233.08
+    },
+    {
+      "src": "st_rsg_rs_64_42_cl6N_7",
+      "dst": "st_rsg_rs_64_42_cl6N_8",
+      "minimum_rect_distance_um": 3187.096
+    },
+    {
+      "src": "st_rsg_rs_54_42_2_cl5N_6",
+      "dst": "st_rsg_rs_54_42_2_cl5N_7",
+      "minimum_rect_distance_um": 3083.128
+    },
+    {
+      "src": "st_rs_45_25_2",
+      "dst": "st_rsg_rs_45_25_2_void4_0",
+      "minimum_rect_distance_um": 2970.264
+    },
+    {
+      "src": "st_rs_15_42",
+      "dst": "st_rsg_rs_15_42_cl1N_0",
+      "minimum_rect_distance_um": 2964.568
+    },
+    {
+      "src": "st_rs_15_13",
+      "dst": "st_rsg_rs_15_13_cl1S_0",
+      "minimum_rect_distance_um": 2958.52
+    },
+    {
+      "src": "st_rs_64_42",
+      "dst": "st_rsg_rs_64_42_cl6N_0",
+      "minimum_rect_distance_um": 2956.392
+    },
+    {
+      "src": "st_rs_64_13",
+      "dst": "st_rsg_rs_64_13_cl6S_0",
+      "minimum_rect_distance_um": 2949.96
+    },
+    {
+      "src": "st_rs_54_42_2",
+      "dst": "st_rsg_rs_54_42_2_cl5N_0",
+      "minimum_rect_distance_um": 2922.328
+    }
+  ],
+  "remaining": "Regenerate graph from physically legalized actual-pin nodes, then regenerate coherent reset and gate calendars; no reach pass/adoption."
+}

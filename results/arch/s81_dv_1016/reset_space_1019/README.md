@@ -10,7 +10,7 @@ existing north whitespace (north frame clearance256.56um). Service gaps grow43.2
 using151.2um of existing whitespace on each side; no estimated service reservation
 is shrunk. Redistributing16um from column3E to4W opens the central reset corridor.
 The four top host lanes use40um pitch rather than50um, with actual relay-body bands
-checked. Every payload hop remains<=403.1um; no block/band/body overlap is reported.
+checked. Every modeled coordinate payload hop remains<=404.9um; no block/band/body overlap is reported.
 
 ROOT-approved prospective SerDes dimensions518.4x3844.8um enter all eight MU1 slots.
 Array/lane translation259.2um and width growth518.4um give32486.9x25000um.
@@ -32,7 +32,7 @@ BLOCK origin lattice, distinct from the43.2um hardened-child placement rule.
 
 PG rectangles each admit2-3 complete M5 routing wires and at least202 M6 wire
 crossings across every origin phase. This is potential metal access only:
-actual VIA56 enclosure, selected straps and parent PDN connection remain owed.
+The actual technology default VIA56 M5 enclosure fits at least two legal M5 centers per stripe and201 M6 crossings across all origin phases. Selected straps, local DRC and parent PDN connection remain owed.
 The die-case pilot currently has no PDN generation. No PG-fit claim is made.
 
 **This is not a bound reset network.** A405um displacement bound does not prove
@@ -58,3 +58,20 @@ The diagnostic reset probe uses `reset_space_probe.py` with the saved exact LEF
 sizes, first-failure place_hints, original plan and combined plan; saved gate
 trees are read only. `lattice_probe.py` runs in the ORFS image with the exact reset
 LEF mounted at `/reset.lef`; `lattice_probe.log` preserves the actual fleet check.
+
+Actual old-netlist replay confirms the missing reset physical proof. On the new
+legal bodies,1003/5183 reset-to-reset connections exceed405um even by minimum
+LEF-rectangle distance, max5107.624um. The original planned bodies already have
+456/5183 such edges (max5130.392um), especially gate-calendar chains placed near
+an endpoint while their reset leaf is far away. Three root/other edges are
+excluded. These are failures, not newly accepted reach budgets.
+
+A directed lower-bound .o-to-.i graph initially reaches4635/5184 bodies. Inserting
+45 additional legal R0 bodies connects5228/5229 with maximum selected rectangle
+distance404.933um and maximum depth213. One isolated candidate remains. This is
+only a connectivity experiment: it has not proved both .i and .rs pin access,
+all real sinks, root synchronizer placement, new calendar chains, or routed
+paths. The .rs pin is a separate physical load of the same reset net. The isolated
+candidate may be removed only after all real sinks are served by the rebuilt
+graph. Existing orientation hints include reflections, but the current writer
+uses R0 and the LEF declares no symmetry; no reflection credit is taken here.
