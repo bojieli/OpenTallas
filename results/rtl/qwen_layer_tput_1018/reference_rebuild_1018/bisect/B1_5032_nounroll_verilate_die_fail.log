@@ -1,0 +1,5 @@
+%Error: /srv/opentallas-scratch/claude/lb2qc-ref-1018/srcR/rtl/hdc/ot_qwen_me_array_w12.sv:352:9: Loop unrolling took too long; probably this is an infinite loop,  or use /*verilator unroll_full*/, or set --unroll-count above 3075
+                                                                                                : ... note: In instance 'ot_qwen_rom_rt_die_w12_stream4_tagged_ar.core.u_me'
+  352 |         for (c = 0; c < GT; c = c + 1) begin : g_xq
+      |         ^~~
+%Error: Exiting due to 1 error(s)

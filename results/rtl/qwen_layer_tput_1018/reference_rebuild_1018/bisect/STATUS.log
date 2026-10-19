@@ -9,3 +9,9 @@
 2026-10-18 18:07:42 [B2] build rc=1 wall_s=408
 2026-10-18 18:07:57 [B1] build rc=1 wall_s=423
 2026-10-18 19:05:28 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) unroll=0
+2026-10-18 19:15:02 [B1] build rc=1 wall_s=574
+2026-10-18 22:45:08 [B1] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) (/usr/bin/verilator) unroll=0
+2026-10-18 22:45:08 [B0] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.050 2026-07-01 rev v5.050 (/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator.real) unroll=0
+2026-10-18 22:45:09 [B1] build rc=1 wall_s=1 hier_verilator=
+2026-10-18 22:47:08 [B1u] start src 30b6440b5a8177168bc245e6feba1b9cda6c37a9 host ot-epyc5 mode L0 verilator Verilator 5.032 2025-01-01 rev (Debian 5.032-1) (/usr/bin/verilator) unroll=8192
+2026-10-18 22:47:10 [B1u] build rc=1 wall_s=2 hier_verilator=VM_HIER_VERILATOR := /usr/bin/verilator

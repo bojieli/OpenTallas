@@ -1,0 +1,7 @@
+make: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB1u/die'
+make[1]: Entering directory '/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB1u'
+/usr/bin/verilator -f /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB1u/die/Vot_hdc_qadd_7__hierMkArgs.f
+%Error: Parameters from the command line were not found in the design: BASELINE_AR BD CROM_WORDS D EMBED_ROM ENABLE_AR256 FILL_LAT G HBM_LAYERS HBM_PHASE HBM_PULLIN LKA LV MEM_EXTRA ME_IDLE_GATE NRD NSTK NW NWS ORD QWEN_FULLSHAPE REAL_MEM SCALE_BANKS SCALE_LOCAL SMAX SMIN SNW SW TCUT TWS WBW XVM
+%Error: Exiting due to 1 error(s)
+%Error: make -C /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB1u/die -f Vdie_hier.mk  -j 1  hier_verilation exited with 2
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /usr/bin/verilator_bin --cc -O3 -Wno-fatal -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-PINMISSING -Wno-LATCH -Wno-MULTIDRIVEN --unroll-count 8192 -I/srv/opentallas-scratch/claude/lb2qc-ref-1018/srcR/rtl/hdc -I/srv/opentallas-scratch/claude/lb2qc-ref-1018/srcR/rtl/hdc/kv --top-module ot_qwen_rom_rt_die_w12_stream4_tagged_ar --prefix Vdie --Mdir /srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB1u/die -GG=6144 -GNW=18 -GSNW=18 -GQWEN_FULLSHAPE=1 -GME_IDLE_GATE=1 -GD=4 -GSW=64 -GLV=7 -GSCALE_LOCAL=0 -GMEM_EXTRA=1 -GSMIN=7 

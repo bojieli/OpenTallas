@@ -1,0 +1,6 @@
+slice_smoke: /srv/opentallas-scratch/claude/lb2qc-1018/smoke_fix/tb_qwc_slice_colW5.sv: 30 inputs (9 clock, 4 reset), 36 outputs
+SMOKE_PASS qwc_slice_colW5 MUT=0 edges 5048
+RESET_DET ports 36 nondet 0 undeclared_nondet 0
+SMOKE_RESET_DETERMINISTIC qwc_slice_colW5 (every output, except the declared SMOKE_UNRESET_OK ones listed in reset_det_m0.txt)
+SMOKE_RESULT PASS qwc_slice_colW5 MUT=0
+exit 0
