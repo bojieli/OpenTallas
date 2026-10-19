@@ -1,0 +1,40 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+REF_TILE spine: child insertion targets 
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 1979 sinks 15713 cells 3964 leaf arrival 359.7..558.6 ps (spread 198.9) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 1979 sinks 15713 cells 7927 leaf arrival 496.7..557.9 ps (spread 61.2) pad 65.2 / 14.0 ps
+OT_SPINE iter 2 (fine) leaves 1979 sinks 15713 cells 9879 leaf arrival 516.9..557.9 ps (spread 41.0) pad 65.2 / 3.0 ps
+OT_SPINE iter 3 (fine) leaves 1979 sinks 15713 cells 21094 leaf arrival 540.7..713.8 ps (spread 173.1) pad 65.2 / 16.4 ps
+OT_SPINE iter 4 (fine) leaves 1979 sinks 15713 cells 29812 leaf arrival 674.6..769.1 ps (spread 94.5) pad 65.2 / 16.6 ps
+OT_SPINE iter 5 (fine) leaves 1979 sinks 15713 cells 36145 leaf arrival 738.3..798.8 ps (spread 60.5) pad 65.2 / 16.8 ps
+OT_SPINE iter 6 (fine) leaves 1979 sinks 15713 cells 39333 leaf arrival 768.8..825.1 ps (spread 56.3) pad 65.2 / 16.9 ps
+OT_SPINE iter 7 (fine) leaves 1979 sinks 15713 cells 42188 leaf arrival 794.8..859.1 ps (spread 64.3) pad 65.2 / 17.0 ps
+OT_SPINE iter 8 (fine) leaves 1979 sinks 15713 cells 45931 leaf arrival 828.0..902.2 ps (spread 74.2) pad 65.2 / 17.1 ps
+OT_SPINE iter 9 (fine) leaves 1979 sinks 15713 cells 50663 leaf arrival 870.6..1006.4 ps (spread 135.8) pad 65.2 / 17.5 ps
+Error: cts.tcl, 36 OT_SPINE: no legal site near 471006 257310
+Elapsed time: 1:53:29.55[h:]min:sec. CPU time: user 6943.55 sys 67.66 (102%). Peak memory: 1544892KB.

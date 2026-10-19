@@ -1,0 +1,47 @@
+{
+  "status": "FAILED_LEGACY_GEOMETRY_NO_ADOPTION",
+  "source": "c531449dfa4bf1fc9be9baefe2f06c729dad632f",
+  "head_evidence_geometry": "c40222d38 retained separately; exactgate consumedsource remainsc531",
+  "W": {
+    "gate": "FAIL4fail8warn",
+    "original_CTS_failure": "OT_SPINE nolegal site471006257310 after50663clockcells/135.8psspread",
+    "GRT_RC": 137,
+    "GRT_context": "ROOT-authorized exactstop ofautomaticallyrepeatedfailedCTS; NOT newroutefailure",
+    "stop_receipt_commit": "23f631825",
+    "children_and_local_runner": "allended; P1containersuntouched"
+  },
+  "E": {
+    "gate": "FAIL4fail8warn",
+    "terminal_CTS_failure": "DPL2overlap+2padding: input3137/input3238 BUFx3 withhold51748 BUFx2",
+    "GRT_RC": 2
+  },
+  "geometry": {
+    "paid_um": [
+      475.2,
+      561.6
+    ],
+    "macros": 10,
+    "lattice_um": 43.2,
+    "signal_clock_pins": 2144,
+    "pin_geometry_allvalid": true,
+    "synth_std_um2": 9943,
+    "macro_um2": 51776.3,
+    "actual_single_band_occupancy_proved": false
+  },
+  "SAFE": {
+    "1_pins": "dataregistered/resetlanding retained, all2144signalclockpinsaccessible; nativeunavailable",
+    "2_reach": "notqualified; no completedCTS/placedreachproof",
+    "3_fanout": "sourceunsafe controls remain; no newwaiver",
+    "4_depth": "616.8psestimate fails600ps target; no completedtiming",
+    "5_storage": "FAIL runtime553x8credit4424bitfloparray plusgearbox4x595=2380bit; successor required",
+    "6_geometry": "macro43.2lattice/475.2x561.6 explicit; actualsingleband/fullrowproofabsent; oldfillhelperfailure retained, nopin_boundloophole",
+    "7_clock": "FAIL CTS; no measuredvalidnativepinspread/insertion; intermediate135.8ps oldWspine notclosure",
+    "8_schedule": "legacydataedgesunchanged; no newrate/compileractivation"
+  },
+  "PNGs_viewed": [
+    "physical/ref_tile/dscoll_lane_w_ltr/gate_layout/floorplan.png",
+    "physical/ref_tile/dscoll_lane_e_ltr/gate_layout/floorplan.png"
+  ],
+  "no_REVIEW_submit": true,
+  "parent_slot_escape": "unproved; later561.6reserveprospectiveonly"
+}

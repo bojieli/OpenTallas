@@ -1,0 +1,29 @@
+GATE WARN fill: fill 23% = (macros/children 51776 + std 10496) / outline 266872 um2 (lattice/channel-bound: ROOT approved safe lattice/channel geometry475.2x561.6: 43.2um lattice plus >=20um pin-face channels forces86.4um row pitch. One central full-width standard-cell band216..259.2 keeps register reach short. Overall fill23.3%; prior synthesis10495.7um2 / band20341.999um2 =51.6%. Final gate visual review still required.)
+GATE INFO pin_regs: pin registers opted out: the lane RTL already registers every data pin (rx -> lr pin flops; tx = the gearbox's registered beat; LCR 1 core faces = ot_link_credit_rx landing flops for lo_v/lo_d and its registered credit pulse lo_r, ot_link_credit_tx sender flops for li_v/li_d with li_r captured; flt flops; chb registered in 
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['ck', 'rs', 'chb', 'tf', 'lo_v', 'lo_r']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO pin_fit: pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)
+GATE WARN pin_order: bit order not judged for 13 abutted port(s) with an unresolved width (rx, tx, tf, lo_v); the route places them in chunks of 32  -> FIX: add route.pin_balance {group_max 1, h, v} (disjoint per-port pin_ranges on the face); for a face that abuts an R180 / MX / MY neighbour mirror the range and list the port in pin_order_desc; check the die joint with tools/hier_contract/abutted_joint_audit.py; or name a channel-routed port in pin_order_waiver {port: reason}
+GATE INFO remote: ot-run selected ot-epyc8 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dscoll_lane_w_ltr_20261019-075813.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dscoll_lane_w_ltr_20261019-075813.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_ltr-20261019-075813
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 153 s (gate total 10570 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2144, 'pin_rectangles': 2144, 'pin_track_checked': 2144, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 9fafe5dc8ed4367402b774cb3877f21fb81073c9689ddd8bc7007c2ac7f2d9ab
+GATE INFO util: synthesized std area 9943 um2 + macros 51776 in core 262412: util 5% (std-cell density 4.9% of placeable 201642 um2; total fill 23.5%)
+GATE INFO textbook: WARN dsfd_coll_lane_w cells 70,528 flops 15,702 depth 616.8 ps util 0.2355 reach 0.0 um (2.1 s)
+GATE WARN textbook.clock_domain: clock root port ck: 15,702 flops > 15,000 on one root (+0 ICGs, 10 macro clock pins; e.g. rs__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.logic_depth: reg->reg stage u_ot_pr_core.u.u_ep.snd[0]$_DFF_PN0_ -> u_ot_pr_core.u.u_ep.in_ready$_DFF_PN1_/D: ~617 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.clock_guidance: clock root port:ck: 15,712 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 15,712 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 8 (fine) leaves 1979 sinks 15713 cells 45931 leaf arrival 828.0..902.2 ps (spread 74.2) pad 65.2 / 17.1 ps
+GATE INFO clock_spine: OT_SPINE iter 9 (fine) leaves 1979 sinks 15713 cells 50663 leaf arrival 870.6..1006.4 ps (spread 135.8) pad 65.2 / 17.5 ps
+GATE WARN clock_rule: root port:ck: 15,712 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 15,712 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE FAIL remote_script: remote script completed with exit 1  -> FIX: read the original terminal log and fix the reported failure
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-coll-geom-1019/physical/ref_tile/dscoll_lane_w_ltr/gate_layout/floorplan.png
+GATE FAIL fill: fill 23% = (hard macros 51776.3 + synthesized std cells 10017.6) / outline 266872.3 um2; pin demand per face: S 0 pins over 0.0/475.2 um (0%), N 0 pins over 0.0/475.2 um (0%), W 1116 pins over 340.4/561.6 um (61%), E 1204 pins over 399.6/561.6 um (71%) (< 35%)  -> FIX: shrink the outline / regroup the macros, or record "fill_reason": {"pin_bound": "<why the perimeter, not the area, sets the outline>"} if the pin demand above shows the edges are full
+GATE FAIL trial_route: trial global route produced no congestion table (GATE_GRT_RC=137)  -> FIX: read the remote grt.log
+PRE_ROUTE_GATE: FAIL (4 fail, 8 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81-coll-geom-1019/physical/ref_tile/dscoll_lane_w_ltr/source_binding_history/3698d76be0b0446e190483d0c722946aa960507a439ff0fa36df4e61ea1992af.json
+GATE: dscoll_lane_w_ltr/gate_result.json written (exact staged source binding; commit it with the kit)
