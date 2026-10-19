@@ -1,0 +1,274 @@
+{
+ "schema": "opentallas.qwen.clock_pg_inventory.v1",
+ "odb": "/work/floorplan_ck.odb",
+ "actual_die_um": [
+  0.0,
+  0.0,
+  31730.376,
+  24288.824
+ ],
+ "actual_row_derived_core_um": [
+  0.0,
+  0.0,
+  31730.346,
+  24288.66
+ ],
+ "physical_rows": 1855,
+ "horizontal_row_length_um": 26258.310000000147,
+ "actual_supply_special_shapes": {
+  "VDD": {
+   "M5": 1784,
+   "VIA": 10018951,
+   "M6": 47834,
+   "M8": 81836,
+   "M2": 1065,
+   "M1": 1065,
+   "M9": 3490,
+   "M3": 1780
+  },
+  "VSS": {
+   "M5": 1715,
+   "VIA": 10010104,
+   "M6": 47971,
+   "M8": 83259,
+   "M2": 1096,
+   "M1": 1096,
+   "M9": 3490,
+   "M3": 1711
+  }
+ },
+ "total_supply_special_shapes": 20308247,
+ "total_instantiated_master_pg_shapes": 124697,
+ "largest_master_pg_shape_contributions": [
+  [
+   "qfd_rst_rep_p8",
+   {
+    "instance_count": 5245,
+    "master_pg_shapes": 8,
+    "instantiated_pg_shapes": 41960,
+    "by_layer": {
+     "M5": 8
+    }
+   }
+  ],
+  [
+   "TIELOx1_ASAP7_75t_R",
+   {
+    "instance_count": 18181,
+    "master_pg_shapes": 2,
+    "instantiated_pg_shapes": 36362,
+    "by_layer": {
+     "M1": 2
+    }
+   }
+  ],
+  [
+   "qfd_rst_rep",
+   {
+    "instance_count": 4437,
+    "master_pg_shapes": 8,
+    "instantiated_pg_shapes": 35496,
+    "by_layer": {
+     "M5": 8
+    }
+   }
+  ],
+  [
+   "ot_qfd_serdes_112g_x12_phy_s597",
+   {
+    "instance_count": 3,
+    "master_pg_shapes": 1932,
+    "instantiated_pg_shapes": 5796,
+    "by_layer": {
+     "M4": 1932
+    }
+   }
+  ],
+  [
+   "ot_qfd_ucie_x64_phy",
+   {
+    "instance_count": 1,
+    "master_pg_shapes": 647,
+    "instantiated_pg_shapes": 647,
+    "by_layer": {
+     "M4": 647
+    }
+   }
+  ],
+  [
+   "qfd_landh0_1_EW_65x30",
+   {
+    "instance_count": 8,
+    "master_pg_shapes": 46,
+    "instantiated_pg_shapes": 368,
+    "by_layer": {
+     "M5": 46
+    }
+   }
+  ],
+  [
+   "qfd_landh_1_EN_65x30",
+   {
+    "instance_count": 8,
+    "master_pg_shapes": 46,
+    "instantiated_pg_shapes": 368,
+    "by_layer": {
+     "M5": 46
+    }
+   }
+  ],
+  [
+   "qfd_rlyh_1_SN_65x30",
+   {
+    "instance_count": 90,
+    "master_pg_shapes": 4,
+    "instantiated_pg_shapes": 360,
+    "by_layer": {
+     "M7": 2,
+     "M8": 2
+    }
+   }
+  ],
+  [
+   "TIEHIx1_ASAP7_75t_R",
+   {
+    "instance_count": 152,
+    "master_pg_shapes": 2,
+    "instantiated_pg_shapes": 304,
+    "by_layer": {
+     "M1": 2
+    }
+   }
+  ],
+  [
+   "qfd_landh_1_NS_65x30",
+   {
+    "instance_count": 6,
+    "master_pg_shapes": 46,
+    "instantiated_pg_shapes": 276,
+    "by_layer": {
+     "M5": 46
+    }
+   }
+  ],
+  [
+   "qfd_c_b16_dv",
+   {
+    "instance_count": 48,
+    "master_pg_shapes": 4,
+    "instantiated_pg_shapes": 192,
+    "by_layer": {
+     "M7": 2,
+     "M8": 2
+    }
+   }
+  ],
+  [
+   "qfd_d2d_static",
+   {
+    "instance_count": 1,
+    "master_pg_shapes": 176,
+    "instantiated_pg_shapes": 176,
+    "by_layer": {
+     "M5": 176
+    }
+   }
+  ],
+  [
+   "qfd_landh0_1_NE_65x30",
+   {
+    "instance_count": 3,
+    "master_pg_shapes": 46,
+    "instantiated_pg_shapes": 138,
+    "by_layer": {
+     "M5": 46
+    }
+   }
+  ],
+  [
+   "qfd_embedding_word_provider",
+   {
+    "instance_count": 1,
+    "master_pg_shapes": 96,
+    "instantiated_pg_shapes": 96,
+    "by_layer": {
+     "M5": 96
+    }
+   }
+  ],
+  [
+   "qfd_sys_face",
+   {
+    "instance_count": 1,
+    "master_pg_shapes": 96,
+    "instantiated_pg_shapes": 96,
+    "by_layer": {
+     "M5": 96
+    }
+   }
+  ],
+  [
+   "qfd_landh_1_NE_65x30",
+   {
+    "instance_count": 2,
+    "master_pg_shapes": 46,
+    "instantiated_pg_shapes": 92,
+    "by_layer": {
+     "M5": 46
+    }
+   }
+  ],
+  [
+   "qfd_rlyh_520_NS_91x30",
+   {
+    "instance_count": 22,
+    "master_pg_shapes": 4,
+    "instantiated_pg_shapes": 88,
+    "by_layer": {
+     "M7": 2,
+     "M8": 2
+    }
+   }
+  ],
+  [
+   "qfd_rlyh_548_SN_95x60",
+   {
+    "instance_count": 21,
+    "master_pg_shapes": 4,
+    "instantiated_pg_shapes": 84,
+    "by_layer": {
+     "M7": 2,
+     "M8": 2
+    }
+   }
+  ],
+  [
+   "qfd_rlyh_453_NS_80x30",
+   {
+    "instance_count": 21,
+    "master_pg_shapes": 4,
+    "instantiated_pg_shapes": 84,
+    "by_layer": {
+     "M7": 2,
+     "M8": 2
+    }
+   }
+  ],
+  [
+   "qfd_rlyh_116_NS_65x30",
+   {
+    "instance_count": 19,
+    "master_pg_shapes": 4,
+    "instantiated_pg_shapes": 76,
+    "by_layer": {
+     "M7": 2,
+     "M8": 2
+    }
+   }
+  ]
+ ],
+ "clock_cells": 0,
+ "power_qualified": false,
+ "timing_qualified": false,
+ "production_admitted": false
+}
