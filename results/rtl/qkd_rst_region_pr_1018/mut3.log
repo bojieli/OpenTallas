@@ -1,0 +1,8 @@
+ERR original mismatch cyc=607 got=000 want=111
+ERR late release region 0 cyc 612 (calendar 612)
+ERR late release region 1 cyc 667 (calendar 667)
+ERR late release region 2 cyc 727 (calendar 727)
+ERR original mismatch cyc=1019 got=000 want=001
+RST_REGION_PR_FAIL errors=5
+FATAL: rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr

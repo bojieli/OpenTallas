@@ -44,12 +44,15 @@ class KvjfJoin(unittest.TestCase):
 
     def test_die_cfg_image(self):
         a = [(g << 2) | s for s in range(4) for g in range(8)]     # the template's identity values, now boot-loaded
-        w = F.die_cfg_image(a, a, a, list(range(B.DIE_CFG_NRST)))
-        self.assertEqual(len(w), 32 + B.DIE_CFG_NRST + 1)
+        w = F.die_cfg_image(a, a, a, list(range(B.DIE_CFG_NRST)), 1)
+        self.assertEqual(len(w), 32 + B.DIE_CFG_NRST + 2)      # + the capability word (RTL-BUILD-KV/FAULT P8)
         self.assertEqual(w[-1], 0x514b564443464731)
+        self.assertEqual(w[-2], 1)
+        with self.assertRaises(ValueError):
+            F.die_cfg_image(a, a, a, [0], 2)
         self.assertEqual(w[9], a[9] | (a[9] << 5) | (a[9] << 10))
         with self.assertRaises(ValueError):
-            F.die_cfg_image(a, a, a[:31], [0])
+            F.die_cfg_image(a, a, a[:31], [0], 1)
 
     def test_vport_join_checked(self):
         self.assertEqual(F.vport_join_check(self.g), 32)

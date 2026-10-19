@@ -43,6 +43,8 @@ SPEC (JSON; paths relative to the repo root):
   bench          {cycles, reset_cycles, sim: iverilog|verilator, drive: {port: verilog expr}}   drive: the lockstep
                  stimulus of that input each cycle (default $urandom; the expr may use the tb's `cyc`): a valid
                  configuration so the mutants are observable.  LP_VFLAGS (env) adds verilator flags in the bench.
+  mut_child      child whose reset run MUT 4 lengthens (default: the first child with a reset pin); pick one whose state
+                 outlives the reset (a sticky flag / counter): a pure pipeline register forgets a late reset in one edge
 
 PRE-SCHEDULED CROSSINGS (ot_pl_hop, PL-TP192 10-18).  A flat parent whose children talk BOTH ways across a seam (a
 systolic chain: insertion down, readout up) is a cross-region loop: no offset solution.  Its own static calendar can
@@ -620,6 +622,11 @@ class Parent:
     def mut_child(self, P):
         kids = [ins["inst"] for ins in self.insts
                 if any(pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items())]
+        want = self.S.get("mut_child")       # a child whose late reset is observable after warm-up (state that outlives
+        if want:                             # the reset, e.g. a sticky flag); a pure pipeline child forgets it in 1 edge
+            if want not in kids:
+                raise SystemExit(f"mut_child {want} is not a child with a reset pin on {self.rst}: {kids}")
+            return want
         return kids[0] if kids else None
 
     def sdc(self, P, top_lp):

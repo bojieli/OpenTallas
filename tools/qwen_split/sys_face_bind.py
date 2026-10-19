@@ -18,12 +18,22 @@ import os
 from pathlib import Path
 
 from qwen_split.source_pin_plan import rtl_ports
+from qwen_split.closed_view import enabled as view_enabled, install_master as view_install, view_frame
 
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_sys_face'
 SOURCE = 'rtl/qwen_split/qfd_sys_face.sv'
 INST = 'sys_face'
-WH = (302.4, 216.0)
+WH_HIST = (302.4, 216.0)
+
+
+def _wh():
+    """Q-DIE11b 10-18: the slot is the CLOSED view's outline (rs3 259.2 x 129.6) when one exists, as static_link_bind /
+    res_train_bind do (the view is the physical truth; top-down pins on a 302.4 x 216 frame no longer match it)"""
+    vf = view_frame(MASTER) if view_enabled() else None
+    return (vf[0], vf[1]) if vf is not None else WH_HIST
+
+
 PROV_MASTER = 'qfd_embedding_word_provider'
 PROV_SOURCE = 'rtl/qwen_split/qfd_embedding_word_provider.sv'
 BUMP = 'qfd_sigbump'
@@ -104,6 +114,7 @@ def apply(model):
     by['embed_prov'].master = PROV_MASTER
     Inst = type(by['seq_su'])
     ref = by['native59']
+    WH = _wh()
     # provisional sites (place() re-sites them on the final homes)
     model['insts'].append(Inst(INST, MASTER, ref.x, ref.y, WH[0], WH[1], 'R0', kind=getattr(ref, 'kind', None),
                                region=getattr(ref, 'region', None), domain=getattr(ref, 'domain', None)))
@@ -199,6 +210,7 @@ def place(model, homes_named=()):
         if INST not in homes_named:
             # default (die lead 10-16 00:4x): the free lower spine, just south of native59 / embed_prov (the provider row
             # face is the widest bus, 0.6 kb); OT_SPLIT_SYSFACE_XY=x,y (um, centre) overrides
+            WH = _wh()
             tx, ty = emb.x + emb.w / 2, min(nat.y, emb.y) - WH[1] / 2 - 21.6
             if os.environ.get('OT_SPLIT_SYSFACE_XY'):
                 tx, ty = (float(v) for v in os.environ['OT_SPLIT_SYSFACE_XY'].split(','))
@@ -227,7 +239,11 @@ def install_masters(M, model, Master, partition_master):
     from qwen_split.native_graph_bind import assign_pins, peer_map
     by = {i.name: i for i in model['insts']}
     peers = peer_map(model)
-    assign_pins(M, model, Master, by[INST], MASTER, SOURCE, peers, partition_master)
+    if view_enabled() and view_frame(MASTER) is not None:
+        # Q-DIE11b 10-18: every die port on the closed view's own pin (fails closed on a port without one)
+        view_install(M, model, Master, by[INST], MASTER, rtl_ports(ROOT / SOURCE, MASTER), partition_master)
+    else:
+        assign_pins(M, model, Master, by[INST], MASTER, SOURCE, peers, partition_master)
     if BUMP not in M:
         q = Master(BUMP, BUMP_WH, BUMP_WH, 3, 'package signal bump receiver (hard-macro model)')
         q.ports['o'] = ('pins', 1, 'N', 'M5', [round(.012 + round((BUMP_WH / 2 - .012) / .048) * .048, 4)], 1)

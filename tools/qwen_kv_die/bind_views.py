@@ -263,8 +263,14 @@ def main(argv=None):
     if a.split:
         KV._set_geometry(True)
     recs = {}
+    et_ = (a.case / 'elements.lef').read_text()
     for v in a.view:
         mst, d = v.split('=', 1)
+        # KV-CASE2 10-18: the static die (OT_KV_STATIC_DIE=1) has no qkd_cdc_wleaf / qkd_kvwq_* masters (re-bound to
+        # the static masters): a view offered for a master this die does not instantiate is recorded, never bound
+        if not re.search(rf'^MACRO {re.escape(mst)}\s*$', et_, re.M):
+            recs[mst] = dict(bound=False, absent=True, reason='master not instantiated in this die case', view=d)
+            continue
         recs[mst] = bind(a.case, a.libs, mst, (ROOT / d) if not Path(d).is_absolute() else Path(d))
     bound = {m for m, r in recs.items() if r.get('bound')}
     rec = dict(schema='opentallas.qwen_kv_die_views.v1', views=recs, bound=sorted(bound), share=share(a.case, bound))

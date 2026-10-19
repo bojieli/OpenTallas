@@ -157,9 +157,11 @@ FC_SPECS = "tools/ref_tile/specs_hbmrly_fc"
 # NATIVE-FIX3 2026-10-18: masters whose rs pin goes through the registered reset relay (ot_hbm_rly RS_RELAY=1) although
 # W <= 256: the routed 136 NS/SN views failed native capture on rs (194-211 ps, NATIVE-3: rs drove all 136 stage clears)
 # HBM-NATIVE5/RLY4 2026-10-18: + the BASE 136 NS / SN masters (routed v1 views: rs capture 195.9 / 224.4 ps, owners HBM
-# native audit claude/owners-hbm-native-1018), bound in the d4g GEN1 lane chains
+# native audit claude/owners-hbm-native-1018), bound in the d4g GEN1 lane chains; + EW / WE: once their HB2 output-stage
+# re-kit fixed launch (186.8 / 183.1), the CTS probe measured rs capture 191.8 / 215.5 ps (rs became the worst input)
 RS_RELAY_MASTERS = {"hbfd_rly_136_NS_fc", "hbfd_rly_136_SN_fc", "hbfd_rly_136_NS_fc_f2", "hbfd_rly_136_NS_fc_f3",
-                    "hbfd_rly_136_SN_fc_f2", "hbfd_rly_136_SN_fc_f4", "hbfd_rly_136_NS", "hbfd_rly_136_SN"}
+                    "hbfd_rly_136_SN_fc_f2", "hbfd_rly_136_SN_fc_f4", "hbfd_rly_136_NS", "hbfd_rly_136_SN",
+                    "hbfd_rly_136_EW", "hbfd_rly_136_WE"}
 
 
 def rs_relay_param(m: str) -> str:
