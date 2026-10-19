@@ -61,5 +61,16 @@ matrix)
  run s256_ns2 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+MIN_D +define+SWEEP256
  run s256_ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D +define+SWEEP256
  ;;
+stress)
+ run reset_ns2 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=2 +define+NEV=1 +define+MIN_D +define+OCCUPIED_RESET_STRESS
+ for phase in 1 2 3 4 5 6 7 8 90 93; do
+  for seed in 1 19 313; do
+   log="$O/reset_ns2/run_seed${seed}_phase${phase}.log"
+   "$O/reset_ns2/obj/tb" +verilator+rand+reset+2 +verilator+seed+$seed +reset_phase=$phase > "$log" 2>&1
+   grep -q '^MUWIN PASS' "$log"
+  done
+ done
+ run reset_ns47 tb_dsdv_mu_hwin_early_capture '^MUWIN PASS' +define+NSLOT_TEST=47 +define+MIN_D +define+OCCUPIED_RESET_STRESS
+ ;;
 *) echo 'unknown phase' >&2; exit 64;;
 esac

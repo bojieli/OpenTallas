@@ -204,7 +204,7 @@ ROUNDS=4, T0=1000+32*NS;
         kconst=2;
         if(ku[31]) $display("KU c%0d user %0d pos %0d",cyc,ku[30:21],ku[20:0]);
     end
-    integer r, u, q, j;
+    integer r, u, q, j, traffic_t0=T0, reset_phase=0;
     initial begin
         repeat (4) @(posedge ck); #0.1; rst_n = 1; repeat (4) @(posedge ck); #0.1;
         cfg({1'b1, 1'b0, 24'(S)}); cfg({1'b1, 1'b1, 24'(RL)});
@@ -213,10 +213,35 @@ ROUNDS=4, T0=1000+32*NS;
             wcfg({1'b1, 1'b0, 1'b0, 2'd1, 21'(DK[q])});
             for (j = 0; j < NS; j = j + 1) wcfg({1'b1, 1'b0, 1'b0, 2'd2, 9'd0, att(j), 10'(j)});
         end
-        while (cyc < T0) begin @(posedge ck); #0.1; end
+`ifdef OCCUPIED_RESET_STRESS
+        // Distinct restart scenario: old outstanding generation is canceled by actual async reset.
+        // Existing fixed-date checker observes its outputs until reset; no extra warmup is added.
+        if($value$plusargs("reset_phase=%d",reset_phase)) begin end
+        while(cyc<T0) begin @(posedge ck); #0.1; end
+        f_ks={1'b1,10'd0,21'd0,21'd99};
+        stc[0]=cyc;stu[0]=0;stp[0]=99;nst=1;
+        @(posedge ck);#0.1;f_ks=0;
+        repeat(reset_phase) begin @(posedge ck);#0.1;end
+        @(negedge ck);#0.17;rst_n=0; f_mc=0;f_mw=0;mu_rt=0;nst=0;
+        #0.01;
+        if({mu_c,mu_rc,wf,anchor_c,anchor_rc,anchor_wf}!==0)
+           $fatal(1,"EARLY_RESET async assertion did not clear outputs");
+        repeat(4) @(posedge ck);#0.1;rst_n=1;
+        repeat(4) @(posedge ck);#0.1;
+        cfg({1'b1,1'b0,24'(S)});cfg({1'b1,1'b1,24'(RL)});
+        for(q=0;q<NE;q=q+1) begin
+           wcfg({1'b1,1'b0,1'b0,2'd0,10'd0,2'(EP[q]),1'(KD[q]),3'd0,5'(q)});
+           wcfg({1'b1,1'b0,1'b0,2'd1,21'(DK[q])});
+           for(j=0;j<NS;j=j+1) wcfg({1'b1,1'b0,1'b0,2'd2,9'd0,att(j),10'(j)});
+        end
+        // New epoch dates are the actual new starts, retaining original D+2/D+3 gold.
+        traffic_t0=cyc+1; nfire=0;errs=0;first_cfg_fault=-1;
+        $display("EARLY_RESET phase%0d restart_start%0d",reset_phase,traffic_t0);
+`endif
+        while (cyc < traffic_t0) begin @(posedge ck); #0.1; end
         for (r = 0; r < ROUNDS; r = r + 1)
             for (u = 0; u < NU; u = u + 1) begin
-                while (cyc < T0 + (r * NS + u) * S) begin @(posedge ck); #0.1; end
+                while (cyc < traffic_t0 + (r * NS + u) * S) begin @(posedge ck); #0.1; end
                 f_ks = {1'b1, 10'(u), 21'd0, 21'(r)};
                 stc[nst] = cyc; stu[nst] = u; stp[nst] = r; nst = nst + 1;
                 // RX tag of an outstanding start (the previous user), on both returning end slices
