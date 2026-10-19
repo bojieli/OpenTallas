@@ -1,0 +1,106 @@
+{
+ "schema": "qw_tok_blocker_matrix/1",
+ "lane": "QW-TOK (under LEAD-QW), 10-19",
+ "die_of_record": {
+  "compute": "dv2f18dh2 (src 0d4c9808f, GEN PASS, bind PASS; chain DEAD at die clock spine, LEAD-QW)",
+  "kv": "no KV release chain PASS (MU-DIE-KV2; GEN7 4db097403 diagnostic terminated 10:25)"
+ },
+ "composition": "token = sum over 36 layers of measured per-stage pieces on the dv2f18dh2 source + compiled_L1 static schedule (results/rtl/qwen_layer_tput_1018/compiled_L1) + measured D2D exchange per layer + head; a full shipped-dimension token in one RTL sim is ~14 days, not attempted",
+ "stages": [
+  {
+   "stage": "S0 embedding fetch/consume (SYSFACE EMB)",
+   "1u": "BLOCKED",
+   "4u": "BLOCKED",
+   "missing": "physical arm2 MODEL untested, bank-role/phase unbound (native3 rows PASS)",
+   "owner": "QW-SYSFACE"
+  },
+  {
+   "stage": "S1 programme/calendar store (PW, CALR)",
+   "1u": "BLOCKED",
+   "4u": "BLOCKED",
+   "missing": "QReady capacity rerun on CALENDAR_ROM=1 (390 entries); controller not instantiated in CTLM/SYSFACE; SAFE 3/4 fanout/depth open",
+   "owner": "QW-F16PROG2 (queued)",
+   "compiler_constraints": "retire >= start+last_due (5522+3); template prefetch slack min 86 cycles"
+  },
+  {
+   "stage": "S2 column matvec (XT1 slice: QKV/O/GU/down on real TP8 L0 ROMs)",
+   "1u": "RUNNABLE (QW-TOK xt1dh2, MU_NU 1)",
+   "4u": "RUNNABLE (QW-TOK xt1dh2, MU_NU 4)",
+   "missing": "stand-ins: hr/x driven at slice pins (no tt_ctlm, no die relays), one near cluster",
+   "owner": "QW-TOK"
+  },
+  {
+   "stage": "S3 TP8 stage cuts L0/L1 (resid/SiLU/GU/QKV/QK)",
+   "1u": "PASS (Codex d47ceb7b1 + 416cd1a11, 11 cuts)",
+   "4u": "OPEN",
+   "missing": "full-layer joins (embedding/head/context), L1 resid2 needs next-layer norm",
+   "owner": "CODEX-QW-STAGES (handed back) -> LEAD-QW"
+  },
+  {
+   "stage": "S4 Q-ready -> native59 -> D2D CMD/Q",
+   "1u": "BLOCKED",
+   "4u": "BLOCKED",
+   "missing": "W5.dd_wo->native59.dd_i age 20 (26 frames/E19/K2); sysface q_slot/beat age 2; production PW/DW + 512 Q writes/32 slots absent",
+   "owner": "QW-N59 + QW-SYSFACE (QW-QREADY evidence 1f01732c3)"
+  },
+  {
+   "stage": "S5 compute<->KV D2D exchange (netlisted seam, image TXDP C[8,3,1,10] K[21,4,3,3])",
+   "1u": "PASS 10-19 QW-TOK xdie_dh2: pair/t8192/phy9/l0/l0_phy9/gen_txdp PASS 35 layers bit-exact, every landing on compiled cycle; 6 pair mutants + old C/K GEN TXDP FAIL",
+   "4u": "BLOCKED",
+   "missing": "4u: d2d_cal_image_mu.svh in dv2f18dh2 src stale (C[8,3,1,9] CS_X3S 2, K[23]) vs bound C[8,3,1,10]/K21; MU.D2D.OVL halt-rewind/Q-ready bound owed",
+   "owner": "MU-DIE-QW2 / MU-D2D-OVL",
+   "measured_cycles": {
+    "C2K_q_first_issue_to_last_land": 63,
+    "K2C_r_first_issue_to_last_land": 62,
+    "roundtrip_cmd_issue_to_r31_land": 1840,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "KVN_k3_issue_to_land": 20,
+    "X": 7,
+    "period": 6842
+   },
+   "standins": "KV side kvs14c kvs_attn LAND=0 + d2ds frame (no KV release GEN), PHY model, outer stimuli; KV seam 11,11,9,9,9,9,9 = kvs14r-mu BUNDLE_EQ (pre-GEN7)"
+  },
+  {
+   "stage": "S5b compute D2D endpoint 4 users (qfd_native59_dv_service NU4)",
+   "1u": "n/a",
+   "4u": "PASS 10-19 QW-TOK n59mu_dh2: 4 users 14 ops every beat tagged {seq,user}, user0==NU1 on 1434 edges; ret_bad faults; mut5/mut6 FAIL; NU1 regression 5/5",
+   "missing": "component only (no KV die, no die relays)",
+   "owner": "QW-TOK"
+  },
+  {
+   "stage": "S6 KV attention (QK/PV on KV die)",
+   "1u": "BLOCKED",
+   "4u": "BLOCKED",
+   "missing": "no KV release GEN/chain; TXDP K 22 (compiler on GEN7 table) vs bound 21 (F2); QK strip u1/u4 autocases live (Codex 1818281)",
+   "owner": "MU-DIE-KV2"
+  },
+  {
+   "stage": "S7 TP8 all-reduce (AR tag framer)",
+   "1u": "BLOCKED",
+   "4u": "BLOCKED",
+   "missing": "AR tag framer / coll_mu_bi unexpected in MU regression",
+   "owner": "QW-COLL / QW-MUREG"
+  },
+  {
+   "stage": "S8 LM head + argmax (MU_NU 4)",
+   "1u": "BLOCKED",
+   "4u": "BLOCKED",
+   "missing": "needs last-layer TP8 gold + head ring; QW-HEAD queued (agent cap)",
+   "owner": "QW-HEAD"
+  },
+  {
+   "stage": "S9 MU admission/context",
+   "1u": "n/a",
+   "4u": "PARTIAL",
+   "missing": "MU-DQ-CTXADMIT GI PASS 0877475d8 (component); not bound into the die token",
+   "owner": "QW-MUREG"
+  },
+  {
+   "stage": "S10 golds",
+   "1u": "PARTIAL",
+   "4u": "PARTIAL",
+   "missing": "per-user golds L0-L2 users 1-3 only (B5); TP4 vs TP8 P.V split numerics",
+   "owner": "LEAD-QW (COORD numerics)"
+  }
+ ]
+}
