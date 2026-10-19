@@ -6,9 +6,7 @@
 # the halo covers the row-end endcaps and fails detailed placement (DPL-0004 / DPL-0033, ref gate 2026-10-11).
 set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-# The ot_pin_regs.tcl wrapper (pin_regs / reset_landing, ROOT-RST 2026-10-19) puts the RTL top under instance
-# u_ot_pr_core: that prefix is stripped too, so the spec's RTL instance names stay valid in wrapped kits.
-proc ot_ref_strip {n} { set n [string map {\\ {}} $n]; if {[string first u_ot_pr_core. $n] == 0 || [string first u_ot_pr_core/ $n] == 0} { set n [string range $n 13 end] }; return $n }
+proc ot_ref_strip {n} { return [string map {\\ {}} $n] }
 set ot_ref_by {}
 set ot_ref_l {}
 foreach i [$b getInsts] { if {[[$i getMaster] isBlock]} { lappend ot_ref_l [list [ot_ref_strip [$i getName]] $i] } }
@@ -16,6 +14,10 @@ foreach p [lsort -dictionary -index 0 $ot_ref_l] {
   set i [lindex $p 1]; dict lappend ot_ref_by [[$i getMaster] getName] $i
 }
 set ot_ref_used {}
+proc ot_ref_wrapped_match {sp n} {
+  if {![regsub {^u_ot_pr_core[./]} $n {} c]} { return 0 }
+  return [expr {$sp eq $c || [string match $sp $c]}]
+}
 proc ot_ref_pick {by master pat} {
   upvar ot_ref_used used
   if {![dict exists $by $master]} { error "ref_tile place: no instance of $master in the netlist" }
@@ -24,7 +26,7 @@ proc ot_ref_pick {by master pat} {
     if {[lsearch -exact $used $n] >= 0} continue
     set sp [ot_ref_strip $pat]
     # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
-    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n] && ![ot_ref_wrapped_match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
