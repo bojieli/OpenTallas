@@ -26,11 +26,12 @@ module tb_svg_landing_sram;
  initial begin
   idle(4);hbm_rst_n=1;stream_rst_n=1;idle(16);
   for(b=0;b<4;b=b+1)begin
-   @(negedge stream_clk);reserve_v=1;reserve_bank=2'(b);reserve_epoch=16'(b+7);@(negedge stream_clk);reserve_v=0;idle(3);
+   @(negedge stream_clk);reserve_v=1;reserve_bank=2'(b);reserve_epoch=16'(b+7);@(negedge stream_clk);reserve_v=0;stop=1;idle(3);
    for(r=0;r<34;r=r+1)begin
     @(negedge hbm_clk);while(!in_ready)@(negedge hbm_clk);
     in_data={11'(3+8*r),2'(b),16'(b+7),pattern(b,r)};in_v=1;
     @(negedge hbm_clk);in_v=0;tx=tx+1;
+    if(r==7)begin @(negedge stream_clk);stop=0;end
    end
    idle(12);
   end
