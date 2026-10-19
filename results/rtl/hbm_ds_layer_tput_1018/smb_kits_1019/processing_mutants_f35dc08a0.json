@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.svg-processing-whole-mutants.v1",
+  "source_commit": "f35dc08a0",
+  "leaf_source": "48fa0a785",
+  "metadata_delay": 8,
+  "prefetch_margin": 22,
+  "positive": "pending; standalone negative verdicts do not qualify composition",
+  "mutants": [
+    {
+      "name": "early",
+      "parameter": "SMB_RETURN_MUT=2",
+      "only_leaf_mutation": "ot_hbm_svg_group_read_meta MUT1, one capture early",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "fault_cycle": 401,
+      "fault_scope": "feed CDC return path; issuer/cache/programme/feedconsumer fault bits0",
+      "evidence": "processing_early_f35dc08a0.json"
+    },
+    {
+      "name": "late",
+      "parameter": "SMB_RETURN_MUT=4",
+      "only_leaf_mutation": "ot_hbm_svg_group_read_meta MUT2, one capture late",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "fault_cycle": 402,
+      "fault_scope": "feed CDC return path; issuer/cache/programme/feedconsumer fault bits0",
+      "evidence": "processing_late_f35dc08a0.json"
+    }
+  ],
+  "causality": "Both faults occur before first fixed GO. Exact child leaf component records independently show early/late metadata errors; whole monitor reports CDC fault but does not separately print internal alignment/cache/pair sticky bits.",
+  "physical_claim": "NONE"
+}
