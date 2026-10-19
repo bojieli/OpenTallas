@@ -1,0 +1,42 @@
+ot-run: ot-epyc4       admits   990 GB (avail 780, growth 87, headroom 0, waiters 0/0 GB) load 124/128 running 31 disk 365 GB 
+ot-run: ot-epyc5       admits   800 GB (avail 622, growth 62, headroom 0, waiters 0/0 GB) load 55/128 running 8 disk 1014 GB 
+ot-run: ot-epyc6       admits   764 GB (avail 648, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 25 disk 6011 GB 
+ot-run: ot-epyc7       admits   925 GB (avail 740, growth 92, headroom 0, waiters 0/0 GB) load 34/96 running 19 disk 6437 GB 
+ot-run: ot-epyc8       admits  1158 GB (avail 924, growth 113, headroom 0, waiters 0/0 GB) load 40/128 running 30 disk 265 GB 
+ot-run: ot-pve1        admits   141 GB (avail 111, growth 8, headroom 0, waiters 0/0 GB) load 29/28 running 4 disk 1196 GB 
+ot-run: ot-agidock128  admits    97 GB (avail 81, growth 13, headroom 0, waiters 0/0 GB) load 16/64 running 9 disk 269 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3232271-1792431476 after 0 s
+B4_LAND PASS cases24 twoBootOrders repeatReset widths150/152/154/153/139/138 phases0/0.2T totalreceiverage4 addedcapture3 checks14376
+- rtl/test/qwen_coll_b4/tb_land_b4.sv:66: Verilog $finish
+B4_LAND_AGE W154 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W154 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W154 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W154 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W153 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W152 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W150 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W153 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W152 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W150 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W153 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W152 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W150 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W153 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W152 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W150 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W138 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W138 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W138 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W138 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W139 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W139 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W139 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W139 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.028 s; speed 211.465 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB
+B4_LAND MUTANT_CAUGHT rsel rc=1
+B4_LAND MUTANT_CAUGHT naive rc=1
+B4_LAND MUTANT_CAUGHT encomb rc=1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3232271-1792431476): exit 0

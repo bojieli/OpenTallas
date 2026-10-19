@@ -1,0 +1,1 @@
+Fleet ot-epyc8, immutable source1866aaeee native B4 core LU65/LS390. Rank mutant1328 mismatches; early-read mutant1024 mismatches on AR256w. Both bench exits1 with actual case exact=false and nonzero mismatches; validating wrapper exits0. No build-failure-as-mutant inference. These are standalone core receipts, not actual SU/MU finite-body source/compiler proof.

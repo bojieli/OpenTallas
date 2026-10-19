@@ -1,0 +1,29 @@
+B4_LAND PASS cases24 twoBootOrders repeatReset widths150/152/154/153/139/138 phases0/0.2T totalreceiverage4 addedcapture3 checks14376
+- rtl/test/qwen_coll_b4/tb_land_b4.sv:66: Verilog $finish
+B4_LAND_AGE W154 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W154 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W154 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W154 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W153 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W152 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W150 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W153 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W152 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W150 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W153 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W152 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W150 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W153 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W152 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W150 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W138 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W138 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W138 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W138 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W139 ORDER1 PH2 K1 totalreceiverage4 addedovercapture3 first025 first1345 checks599 errors0
+B4_LAND_AGE W139 ORDER0 PH2 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+B4_LAND_AGE W139 ORDER1 PH0 K1 totalreceiverage4 addedovercapture3 first026 first1346 checks599 errors0
+B4_LAND_AGE W139 ORDER0 PH0 K1 totalreceiverage4 addedovercapture3 first031 first1351 checks599 errors0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.028 s; speed 211.465 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB

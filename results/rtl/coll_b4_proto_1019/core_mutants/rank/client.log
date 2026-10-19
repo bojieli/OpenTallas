@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   992 GB (avail 782, growth 87, headroom 0, waiters 0/0 GB) load 118/128 running 31 disk 366 GB 
+ot-run: ot-epyc5       admits   770 GB (avail 626, growth 87, headroom 0, waiters 0/0 GB) load 49/128 running 7 disk 1014 GB 
+ot-run: ot-epyc6       admits   809 GB (avail 680, growth 113, headroom 0, waiters 0/0 GB) load 27/128 running 17 disk 6019 GB 
+ot-run: ot-epyc7       admits   963 GB (avail 752, growth 78, headroom 0, waiters 0/0 GB) load 36/96 running 16 disk 6459 GB 
+ot-run: ot-epyc8       admits  1224 GB (avail 947, growth 91, headroom 0, waiters 0/0 GB) load 31/128 running 21 disk 271 GB 
+ot-run: ot-pve1        admits   143 GB (avail 112, growth 8, headroom 0, waiters 0/0 GB) load 24/28 running 4 disk 1196 GB 
+ot-run: ot-agidock128  admits    98 GB (avail 81, growth 13, headroom 0, waiters 0/0 GB) load 12/64 running 8 disk 270 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1579048-1792431306 after 0 s
+case qwen_ar_256w kind=pos latu=65 lats=390 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=1328 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 compiled_span=833
+COLL_TP8S FAIL mutant=OT_TP8S_MUT_RANK failed=qwen_ar_256w
+B4_CORE_MUTANT_CAUGHT OT_TP8S_MUT_RANK mismatches=1328 fault=00000000
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1579048-1792431306): exit 0
