@@ -1,0 +1,93 @@
+{
+ "scope": "SF7 whole-block native census (ORFS synth, ASAP7, real SRAM blackbox), pickup_all_roots (BUF/INV/HB transparent, full sink count)",
+ "design": "qfd_d2d_static_ovl_sf7",
+ "roots": 31788,
+ "unsafe_over_32": 2,
+ "unsafe_non_tie": 0,
+ "unsafe_by_kind": {
+  "tie": 2
+ },
+ "max_loads_by_kind": {
+  "ff": 32,
+  "comb": 32,
+  "tie": 1256,
+  "input": 22,
+  "macro": 1
+ },
+ "tie_note": "TIEHI/TIELO constant nets (SRAM w_mask / cr_* constants, constant payload bits); ORFS floorplan repair_tie_fanout gives every tie load its own tie cell, so no placed net keeps >1 load; checked again in the gate floorplan ODB",
+ "top_non_tie": [
+  {
+   "root": "_39324_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_39328_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_39516_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_39521_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_43079_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_43083_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_43230_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_43235_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "_56463_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "u_core.u_end.u_rxcal.g_adv\\[0\\].u_a/_0_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "u_core.u_end.u_rxcal.g_adv\\[1\\].u_a/_0_/Y",
+   "kind": "comb",
+   "loads": 32
+  },
+  {
+   "root": "u_core.u_end.u_rxcal.g_adv\\[7\\].u_a/_0_/Y",
+   "kind": "comb",
+   "loads": 32
+  }
+ ],
+ "baseline_sf6s": {
+  "unsafe": 221,
+  "ff": 147,
+  "comb": 72,
+  "tie": 2
+ },
+ "cost": {
+  "ff": 11764,
+  "ff_sf6s": 11555,
+  "soft_um2": 6085.17,
+  "soft_sf6s_um2": 5911.49,
+  "macros": 4
+ }
+}

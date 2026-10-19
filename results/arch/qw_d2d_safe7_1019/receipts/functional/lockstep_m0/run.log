@@ -1,0 +1,12 @@
+STATUS_TRUTH inputs=00 slot=0000000000000000
+STATUS_TRUTH inputs=10 slot=0000000000000000
+STATUS_TRUTH inputs=11 slot=1111111111111111
+STATUS_TRUTH inputs=01 slot=0000000000000000
+SF6U_USEFUL_AND_COVER h0=1111 h1=1011
+STATUS_HALT_COVERAGE halt=11 joint_truth=01111111 raw_slot_while_halted=0
+STATUS_COVERAGE truth=1111 one=ffff zero=ffff
+SFEQ_PASS loopback=21 cycles=200000 slots=7174 fdi_tx=9730 rx_v=3742 abort_cycles=21674 epochs=99 results=2910 bank0_hits=15334 seg1_starts=498 resets=2
+- rtl/test/qwen_split/tb_qfd_d2d_sf7_equiv.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 4.670 s; speed 85.646 us/s
+- Verilator: cpu 4.670 s on 1 threads; allocated 7 MB
