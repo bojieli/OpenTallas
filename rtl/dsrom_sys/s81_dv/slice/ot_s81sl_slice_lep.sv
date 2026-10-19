@@ -285,11 +285,13 @@ module ot_s81sl_lep_core #(
         (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
         wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
         wire stamp_local;
+        if(8*fc<TG+33 && 8*(fc+1)>TG) begin:g_stamp_active
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
         (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(window_count),.ring(1'b1),.stamp(stamp_local));
 `else
         (* keep=1 *) ot_s81sl_lep_stamp u_stamp(.count(window_count),.ring(rov_r),.stamp(stamp_local));
 `endif
+        end else begin:g_stamp_unused assign stamp_local=1'b0;end
         always @(posedge clk or negedge rr[FRAME_RSTBASE+fc])
           if(!rr[FRAME_RSTBASE+fc]) begin rov_r<=0;ph_r<=0;pk_r<=0;kevent_r<=0;end
           else begin
