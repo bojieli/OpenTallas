@@ -47,7 +47,7 @@ def main():
         sdc = model.sdc(plan, 'lpt_top_lp')
         assert 'ot_pl_land_chunk_w' in rtl and '.CHUNK_BITS(24)' in rtl
         assert 'set_multicycle_path' not in sdc and 'set_false_path' not in sdc
-        assert '0.75 * $ot_lp_per' in sdc and '25.0' in sdc
+        assert '120.0 + 0.75 * $ot_lp_per' in sdc and '85.0' in sdc
         assert lp.audit(safe, rtl)['ok']
         assert not lp.audit(safe, model.emit(model.plan(mut_unland=True), 'lpt_top_lp')[0])['ok']
         try:
@@ -67,19 +67,21 @@ module tb;
   initial begin #0.125; forever #0.5 cr=~cr; end
   reg [1072:0] data=0;
   wire [4291:0] a,b;
-  wire [11:0] ae,be; wire[3:0] av,bv;
+  wire [11:0] ae,be; wire[3:0] av; wire[4*((1073+23)/24)-1:0] bv;
   wire[1072:0] ar,br;
   ot_pl_land_w #(.W(1073)) wa(cw,rsi,data,a,ae,av);
   ot_pl_land_chunk_w #(.W(1073),.CHUNK_BITS(24)) wb(cw,rsi,data,b,be,bv);
   ot_pl_land_r #(.W(1073)) ra(cr,rsi,a,ae,av,ar);
   ot_pl_land_chunk_r #(.W(1073),.CHUNK_BITS(24)) rb(cr,rsi,b,be,bv,br);
-  integer t,j,checks=0;
+  integer t,j,c,checks=0;
   initial begin
     for(t=0;t<2000;t=t+1) begin
       @(negedge cw); rsi=!(t<8 || (t>=900 && t<908));
       for(j=0;j<1073;j=j+1) data[j]=$random;
       #0.01;
-      if(a!==b || ae!==be || av!==bv) $fatal(1,"CHUNK_BANK_MISMATCH t%0d",t);
+      if(a!==b || ae!==be) $fatal(1,"CHUNK_BANK_MISMATCH t%0d",t);
+      for(c=0;c<(1073+23)/24;c=c+1)
+        if(av!==bv[4*c+:4]) $fatal(1,"CHUNK_VALID_MISMATCH t%0d c%0d",t,c);
       checks=checks+1;
     end
     $display("SAFE_LP RING_EQ PASS bank_checks%0d",checks); $finish;

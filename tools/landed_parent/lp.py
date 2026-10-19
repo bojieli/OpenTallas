@@ -701,13 +701,14 @@ class Parent:
             wt = width_text(rng)
             primitive = "ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land"
             cp = f", .CHUNK_BITS({self.chunk_bits})" if self.chunk_bits else ""
+            vld_hi = f"{D}*((({wt})+{self.chunk_bits}-1)/{self.chunk_bits})-1" if self.chunk_bits else str(D - 1)
             decl = rng or ""
             out = f"{net}__l_{r}" if "dst_inst" not in Ld else f"{net}__l_{Ld['dst_inst']}"
             g = Ld.get("ring_of", n)
             w(f"    // ---- LANDING {n}: {net} {s} -> {r}, {Ld['width']} b ({', '.join(Ld['readers'])})"
               + (f" -- reads ring {g}" if g != n else ""))
             if g == n:
-                w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{D - 1}:0] lpl_{n}_vld;"
+                w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
                 w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
@@ -823,14 +824,14 @@ class Parent:
         if P["lands"] and self.direct_timing:
             o.append("# D4/E2 directly timed landing: supported compensated phase +/-0.75T; "
                      "sample age1.25..2.75T, overwrite gap>=1.25T.")
-            o.append("# Conservative quarter-T setup envelope; ordinary60ps/25ps remains charged. No data exceptions.")
+            o.append(f"# Conservative quarter-T setup envelope; ordinary60ps/25ps plus residual{res}ps remains charged. No data exceptions.")
             pairs = sorted({(L["src_region"], L["dst_region"]) for L in P["lands"]})
             for a, b in pairs:
                 for f_, t_ in ((a, b), (b, a)):
                     o.append(f"set_clock_uncertainty -setup -from [get_clocks {clk[f_]}] "
-                             f"-to [get_clocks {clk[t_]}] [expr {{60.0 + 0.75 * $ot_lp_per}}]")
+                             f"-to [get_clocks {clk[t_]}] [expr {{{60 + res}.0 + 0.75 * $ot_lp_per}}]")
                     o.append(f"set_clock_uncertainty -hold -from [get_clocks {clk[f_]}] "
-                             f"-to [get_clocks {clk[t_]}] 25.0")
+                             f"-to [get_clocks {clk[t_]}] {25 + res}.0")
         for p in self.mod["ports"]:
             n = p["name"]
             if n in self.ck or n in self.static or n == self.rst:
@@ -853,11 +854,13 @@ class Parent:
         flops_land = sum((self.D * L["width"] + self.D + (self.AW + 1) + 1 if L.get("ring_of", L["name"]) == L["name"] else 0)
                          + L["width"] + (self.AW + 1) + 2 for L in P["lands"])
         if self.chunk_bits:
-            # Every extra kept chunk owns writer/read counters. Vld and assertion
-            # epoch outputs are shared from chunk0; data storage is unchanged.
+            # Every extra kept chunk owns writer/read counters and physical valid
+            # bits. Only assertion epoch tags are shared; data storage is unchanged.
             flops_land += sum((math.ceil(L["width"] / self.chunk_bits) - 1) *
-                              ((self.AW + 2 if L.get("ring_of", L["name"]) == L["name"] else 0) + self.AW + 3)
+                              ((self.D + self.AW + 2 if L.get("ring_of", L["name"]) == L["name"] else 0) + self.AW + 3)
                               for L in P["lands"])
+            flops_land += sum(math.ceil(L["width"] / self.chunk_bits) * self.D *
+                              (2 if L.get("ring_of", L["name"]) == L["name"] else 1) for L in P["lands"])
         flops_pad = sum(eval_width(self.rng(n), self.env) * k for (n, _), k in P["pads"].items())
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
@@ -881,7 +884,7 @@ class Parent:
                     f"({self.E} - {self.D}) T + t_hold < dL < {self.E} T - t_cq - t_setup at TT and FF"),
             landings=[dict(L, ring=f"u_lpl_{L.get('ring_of', L['name'])}_w (ck_{L['src_region']})",
                            read=f"u_lpl_{L['name']}_r (ck_{L['dst_region']})", added_edges=self.A,
-                           sdc=("direct related-root quarter-T setup envelope, hold25ps" if self.direct_timing else f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
+                           sdc=(f"direct related-root quarter-T setup envelope, setup60+res{S.get('residual_ps', 60)}ps, hold25+res" if self.direct_timing else f"set_multicycle_path -setup {self.E} / -hold {self.D - 1} -from u_lpl_{L.get('ring_of', L['name'])}_w.* "
                                f"-to u_lpl_{L['name']}_r.*"))
                       for L in P["lands"]],
             pads=[dict(net=n, reader=i, stages=k) for (n, i), k in sorted(P["pads"].items())],
