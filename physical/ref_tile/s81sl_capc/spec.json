@@ -128,6 +128,10 @@
   "record_to": "results/rtl/ref_tile/s81sl_capc"
  },
  "child_clock_ref": "boundary",
+ "hard_define": "OT_HARD_CHILDREN",
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
  "macros": [],
  "inter": [],
  "io_flop_at_pins": {
