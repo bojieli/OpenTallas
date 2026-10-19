@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_tt_ctlm_dv_lpf_lp",
+ "enable": false,
+ "reason": "the RTL lands it: lp.py regional reset runs (rst_n -> u_lpr_root 1 flop on ck_core -> u_lpr_core / u_lpr_hr 2 flops per region -> u_lprc_* per child; port net has one sink, reset depth 3 proven by the landed lockstep bench)"
+}
