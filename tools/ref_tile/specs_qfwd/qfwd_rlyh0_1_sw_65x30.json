@@ -72,16 +72,16 @@
   "macro_halo_um": 5.4
  },
  "assigned_pin_source": {
-  "file": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/gen1/pins/qfd_rlyh0_1_SW_65x30.json",
+  "file": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/kits_f2/pins/qfd_rlyh0_1_SW_65x30.json",
   "note": "die-assigned faces of the Qwen compute die GEN (OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins",
   "owner": "Q-DIE11-RLY"
  },
- "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 1-b forwarded-clock lane frame qfd_rlyh0_1_SW_65x30: hop-0 station (inverting ICG on the source root) (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_1 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap.",
+ "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 1-b forwarded-clock lane frame qfd_rlyh0_1_SW_65x30: hop-0 station (ICG on the source root, rising capture, inverted ck_o) (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_1 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap.",
  "job": {
-  "owner": "Claude:Q-DIE11-RLY",
-  "branch": "claude/q-die11-rly-1018",
-  "tag": "f1",
-  "purpose": "Qwen compute die forwarded half-cycle lane frame qfd_rlyh0_1_SW_65x30 (hop-0 station (inverting ICG on the source root), 1 b)",
+  "owner": "Claude:Q-DIE11b-RLY",
+  "branch": "claude/q-die11b-rly-1018",
+  "tag": "f2",
+  "purpose": "Qwen compute die forwarded half-cycle lane frame qfd_rlyh0_1_SW_65x30 (hop-0 station (ICG on the source root, rising capture, inverted ck_o), 1 b)",
   "benches": [
    {
     "name": "lint",
@@ -109,19 +109,7 @@
     "cmd": "bash tools/qwen_split/bench_fwd_lane.sh full {RUN}/bench_full 1",
     "expect": "fail",
     "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/w1_full.log",
-    "threads": 2,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "noinv_mutant",
-    "cmd": "bash tools/qwen_split/bench_fwd_lane.sh noinv {RUN}/bench_noinv 1",
-    "expect": "fail",
-    "fail_regex": "FWD_BENCH FAIL",
-    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench/w1_noinv.log",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2/w1_full.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
@@ -136,7 +124,7 @@
    "rtl/qwen_split/qfd_fwd_lane.sv",
    "rtl/hdc",
    "tools/qwen_split",
-   "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench"
+   "results/arch/qwen_split_compute_1014/q_die11_rly_1018/bench_r2"
   ]
  }
 }

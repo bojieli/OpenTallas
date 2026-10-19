@@ -1,0 +1,509 @@
+{
+ "name": "qfd_coll_face_s1",
+ "top": "qfd_coll_static_face",
+ "kind": "cluster",
+ "sources": [
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_static_transport.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "FW": 546,
+  "PHY": 339,
+  "L": 376,
+  "R": 0,
+  "PEER_R": 0,
+  "KC": 4,
+  "KW": 2,
+  "TOK_REG": 1
+ },
+ "clock_port": "cal_ck",
+ "clock_ports": [
+  "cal_ck",
+  "tx_wck",
+  "rx_rck",
+  "cal_lck",
+  "tx_rck",
+  "rx_wck",
+  "codec_ck[0]",
+  "codec_ck[1]",
+  "codec_ck[2]",
+  "codec_ck[3]",
+  "codec_ck[4]"
+ ],
+ "clock": "hybrid_entries",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "peer_slot"
+   ],
+   "outputs": [
+    "cdc_fault"
+   ]
+  },
+  "txw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_wck"
+   ],
+   "inputs": [
+    "tx_slot",
+    "tx_valid",
+    "tx_data"
+   ],
+   "outputs": []
+  },
+  "rxr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_rck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rx_valid",
+    "rx_data"
+   ]
+  },
+  "lcal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_lck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "phy_tx_slot",
+    "phy_rx_slot"
+   ]
+  },
+  "txr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_rck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rxw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_wck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec_ck[0]"
+   ],
+   "inputs": [
+    "phy_up",
+    "phy_rx_valid",
+    "phy_rx"
+   ],
+   "outputs": [
+    "phy_tx_valid",
+    "phy_tx",
+    "epoch_abort",
+    "fault_cause"
+   ]
+  },
+  "codec1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec_ck[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec_ck[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec_ck[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec_ck[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "outline": {
+  "w": 950.4,
+  "h": 388.8
+ },
+ "recipe": 2,
+ "macros": [],
+ "pins": {
+  "W": [
+   "tx_slot",
+   "peer_slot",
+   "tx_valid",
+   "tx_data",
+   "rx_valid",
+   "rx_data",
+   "cdc_fault",
+   "epoch_abort",
+   "fault_cause"
+  ],
+  "E": [
+   "phy_up",
+   "phy_tx_valid",
+   "phy_tx",
+   "phy_rx_valid",
+   "phy_rx",
+   "phy_tx_slot",
+   "phy_rx_slot"
+  ],
+  "N": [
+   "cal_ck",
+   "tx_wck",
+   "rx_rck",
+   "cal_lck",
+   "tx_rck",
+   "rx_wck",
+   "codec_ck",
+   "rst_n"
+  ],
+  "S": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "TOK_REG=1: every face input has exactly one pin register in its owning root (tx_slot/tx_valid/tx_data on tx_wck, peer_slot on cal_ck; calendar crossing delays shortened by the same edge, bench latency still exactly L=376), phy_rx/phy_rx_valid/phy_up are captured by the codec pin registers (codec_ck[0]); every output is a register (rx_* CDC o_* on rx_rck, phy_tx* codec on codec_ck[0], phy_*_slot calendar on cal_lck, cdc_fault cal_ck, epoch_abort/fault_cause codec). A synthesized second register would change the compiled latency."
+ },
+ "structural_change": "NEW face cluster (Q-DIE11-COLL 10-18, HANDOFF 0ea item 3; DRAFT until child qfd_coll_bank137 closes): first hardened face of the compute-die io_collective (qfd_collective_static_io_production -> qfd_collective_static_io -> 5 x qfd_coll_static_face). SerDes1 profile FW546 PHY339 L376 R0 PEER_R0, TOK_REG=1 (opt-in core-side face pin registers on cal_ck, compensated calendar; default 0 keeps the production face byte-identical). Hard children: 2 x closed qfd_static_ch546 (TX/RX static CDC), 4 x qfd_coll_bank137 (codec banks). Own CTS roots cal_ck (core calendar + pin regs), cal_lck and codec_ck[0] (link calendar, codec control = the SerDes PHY FDI clock on the die, trunk clk_serdes<s>); entries tx_wck/rx_rck (core) and tx_rck/rx_wck/codec_ck[1..4] (link) clock only their children. A multiple_cts_roots leaf (gate a3b6f888e) is impossible: CTS roots must reach only standard-cell clock pins and every CDC/bank root also clocks a macro.",
+ "slot_change_request": "NEW leaf inside the io_collective column next to its SerDes PHY FDI window; outline provisional (this gate sizes it); Q-DIE11 die lead grants the slot.",
+ "job": {
+  "owner": "Claude:Q-DIE11-COLL",
+  "branch": "claude/q-die11-coll-1018",
+  "tag": "c1",
+  "purpose": "Harden the SerDes1 collective face as a cluster of the closed static CDC channel and codec bank leaves, link roots on the PHY FDI clock (HANDOFF 0ea item 3); submit after qfd_coll_bank137 closes",
+  "benches": [
+   {
+    "name": "coll_face_pass",
+    "cmd": "HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+    "pass_witness": "results/rtl/qwen_coll_face_1018/face_hard_pass.log",
+    "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
+   },
+   {
+    "name": "coll_face_mut_rx_early",
+    "cmd": "HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
+    "fail_witness": "results/rtl/qwen_coll_face_1018/face_hard_mut1.log"
+   },
+   {
+    "name": "coll_face_mut_cdc_latency",
+    "cmd": "HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
+    "fail_witness": "results/rtl/qwen_coll_face_1018/face_hard_mut2.log"
+   },
+   {
+    "name": "coll_face_mut_phy_long",
+    "cmd": "HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
+    "fail_witness": "results/rtl/qwen_coll_face_1018/face_hard_mut3.log"
+   },
+   {
+    "name": "coll_face_mut_bank_hit",
+    "cmd": "HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m4 4",
+    "expect": "fail",
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/rtl/qwen_coll_face_1018/face_hard_mut4.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_coll_bank137/views",
+   "physical/ref_tile/qfd_static_ch546/views",
+   "results/rtl/qwen_coll_face_1018",
+   "rtl/test/run_coll_static_face.sh",
+   "rtl/test/tb_coll_static_face.sv"
+  ],
+  "views_to": "physical/ref_tile/qfd_coll_face_s1/views",
+  "record_to": "results/rtl/ref_tile/qfd_coll_face_s1"
+ },
+ "pin_ranges": {
+  "tx_slot": [
+   14.0,
+   15.0
+  ],
+  "peer_slot": [
+   15.6,
+   16.6
+  ],
+  "tx_valid": [
+   17.2,
+   18.2
+  ],
+  "tx_data": [
+   20.0,
+   165.0
+  ],
+  "cdc_fault": [
+   166.0,
+   168.0
+  ],
+  "epoch_abort": [
+   168.6,
+   169.6
+  ],
+  "fault_cause": [
+   170.2,
+   174.2
+  ],
+  "rx_valid": [
+   175.0,
+   176.0
+  ],
+  "rx_data": [
+   178.0,
+   325.0
+  ],
+  "phy_up": [
+   14.0,
+   15.0
+  ],
+  "phy_tx_slot": [
+   15.6,
+   16.6
+  ],
+  "phy_tx_valid": [
+   17.2,
+   18.2
+  ],
+  "phy_tx": [
+   20.0,
+   170.0
+  ],
+  "phy_rx_slot": [
+   171.0,
+   172.0
+  ],
+  "phy_rx_valid": [
+   172.6,
+   173.6
+  ],
+  "phy_rx": [
+   175.0,
+   325.0
+  ],
+  "cal_ck": [
+   250.0,
+   251.0
+  ],
+  "tx_wck": [
+   254.32,
+   255.32
+  ],
+  "rx_rck": [
+   258.64,
+   259.64
+  ],
+  "cal_lck": [
+   262.96,
+   263.96
+  ],
+  "tx_rck": [
+   267.28,
+   268.28
+  ],
+  "rx_wck": [
+   271.59999999999997,
+   272.59999999999997
+  ],
+  "codec_ck": [
+   275.91999999999996,
+   293.19999999999993
+  ],
+  "rst_n": [
+   297.52,
+   298.52
+  ]
+ },
+ "clock_cts_roots": [
+  "cal_ck",
+  "cal_lck",
+  "codec_ck[0]"
+ ],
+ "hard_define": "OT_QFD_FACE_HARD",
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+   "count": 1,
+   "inst": "*u_tx",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+   "count": 1,
+   "inst": "*u_rx",
+   "at": [
+    129.6,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?0?*u_store",
+   "at": [
+    388.8,
+    0.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?1?*u_store",
+   "at": [
+    388.8,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?2?*u_store",
+   "at": [
+    648.0,
+    0.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "count": 1,
+   "inst": "*g_bank?3?*u_store",
+   "at": [
+    648.0,
+    172.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pg_layer": "M7"
+}

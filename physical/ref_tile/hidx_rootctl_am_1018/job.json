@@ -1,13 +1,13 @@
 {
- "name": "hidx_rootctl_am_1018-r4-COMMIT",
+ "name": "hidx_rootctl_am_1018-pg1-COMMIT",
  "block": "ot_hbm_idx_rootctl_static_am",
  "ref_tile": true,
- "owner": "Claude:HBM-IDXAM2",
+ "owner": "Claude:LEAD2-HBM/L2H-IDX",
  "purpose": "r3 (lane HBM-IDXAM2 10-18): r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps / 3,621 endpoints at CTS. Classified (TT STA on the r2 4_cts.odb with link_budget_consistent.sdc): 2,194 port-to-port combinational endpoints (index_rq/argmax_rq -> vm_rq, vm_rr -> index_rr, sf/lf -> fault, selected_v -> ingest_v) at -570..-815 = STRUCTURAL (in-max 518.7 + out-max 518.7 of 773 ps); wire reach / wide select into and out of TOPK and the share (vm_rr -> merge -240 x510, vm_rr -> TOPK capture -85/-246, cq/busy -231/-245 from engine flops ~235 um from the face, topk_go -> 200 descriptor enables -139). Not logic depth, not one high-fanout net. Fix = registered boundary: share ot_hbm_idx_vm_share_static_amr (request pin flops, vm_rr pin flops in the leaves, owner tap n+8, ARGMAX 4-edge chain -> 2-stage OR tree so ARGMAX port-to-port edges are UNCHANGED), TOPK command/result pin flops + engine RT_EXTRA 1 / ACK 13, ingest_v predicted from the root's own sel_op stream (SEL_LAT 4, selected_v checked -> fault), fault/share_fault pin flops. Latency: INDEX rq +1 / rr +1 (SW operand reader n+12), ARGMAX +0, TOPK go +1 / row +1 / writes +1 / done +1, fault +1, share_fault +1. Base r2: d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hbm-idxam2-1018",
+  "branch": "claude/l2h-idx-pg-rootctl-1019",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
@@ -202,7 +202,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hidx_rootctl_am_1018/hidx_rootctl_am_1018-r4-COMMIT"
+   "to": "results/rtl/ref_tile/hidx_rootctl_am_1018/hidx_rootctl_am_1018-pg1-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -213,7 +213,10 @@
  "merge_target": null,
  "structural_change": "r3 (lane HBM-IDXAM2 10-18): r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps / 3,621 endpoints at CTS. Classified (TT STA on the r2 4_cts.odb with link_budget_consistent.sdc): 2,194 port-to-port combinational endpoints (index_rq/argmax_rq -> vm_rq, vm_rr -> index_rr, sf/lf -> fault, selected_v -> ingest_v) at -570..-815 = STRUCTURAL (in-max 518.7 + out-max 518.7 of 773 ps); wire reach / wide select into and out of TOPK and the share (vm_rr -> merge -240 x510, vm_rr -> TOPK capture -85/-246, cq/busy -231/-245 from engine flops ~235 um from the face, topk_go -> 200 descriptor enables -139). Not logic depth, not one high-fanout net. Fix = registered boundary: share ot_hbm_idx_vm_share_static_amr (request pin flops, vm_rr pin flops in the leaves, owner tap n+8, ARGMAX 4-edge chain -> 2-stage OR tree so ARGMAX port-to-port edges are UNCHANGED), TOPK command/result pin flops + engine RT_EXTRA 1 / ACK 13, ingest_v predicted from the root's own sel_op stream (SEL_LAT 4, selected_v checked -> fault), fault/share_fault pin flops. Latency: INDEX rq +1 / rr +1 (SW operand reader n+12), ARGMAX +0, TOPK go +1 / row +1 / writes +1 / done +1, fault +1, share_fault +1. Base r2: d4g argmax r2 binding (coordinator 0gl (3), lane HBM-IDXAM 10-18): ot_hbm_idx_rootctl_static with the share = ot_hbm_idx_vm_share_static_am (8:1 ARGMAX sector select + 4-edge equal-latency OR chain in the 4 bank-pair leaves): argmax face 2,056 b -> one 264-b word {lane valid8, data256} for ot_hbm_argmax_static_sw_vm_r2 (closed r3). One clock pin (the 8 IDX ctl clock nets were the same stream clock; tile < 0.5 mm), rst_n -> ot_rst_relay 3 regions. First hardening of idx_ctl (no view existed: GEN0/GEN1 bound SYNTH). Slot change for H-D4G-GEN2: 300x260 -> 475.2x259.2 (N index face 2,192 pins and S VM face 2,192 pins at 4.6/um; E argmax 400 + cq/cr 614 at 3.9/um; W control/TOPK 478).",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "r3 c6073c492 pin-registered boundary (vm_share_static_amr, TOPK/fault pin flops) after r2 hidx_rootctl_am_1018-r2-0385e1977 EARLY_FAIL_SETUP -577.7 ps (2,194 port-to-port comb faces); r3 gate WARN setup +80.8 / GRT 0; io_hold_margin 0.025 (KITS rule 10-18)"
+  "kind": "flow_failure",
+  "failed_job": "hidx_rootctl_am_1018-r4-49a5acb8f",
+  "failure": "PG_HOLD unbound PG terms; daemon PG final-connect fix (runtime 8cbc); closure revoked NOT BINDABLE by LEAD2-HBM/L2H-IDX, timing history retained",
+  "why": "PG_HOLD unbound PG terms; daemon PG final-connect fix",
+  "vs": "hidx_rootctl_am_1018-r4-49a5acb8f"
  }
 }

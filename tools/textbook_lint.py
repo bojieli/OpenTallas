@@ -63,6 +63,10 @@ THRESHOLDS = {
     "hf_port_refuse": 2048,        # REFUSE: a non-reset port drives > N loads (closed max 813; smh_tile_eg xs_a1 4,107)
     "hf_reset_refuse": 8000,       # REFUSE: reset-named net (closed max 4,964: mtp_p2_prefix_path rst_n port)
     "hf_refuse": 50000,            # REFUSE: any other net (closed max 33,346)
+    # reset_landing (ROOT-RST 2026-10-19): a reset INPUT port must land in a pin register stage (2 registered stages at
+    # the face, then equal-depth fan-out); its own net (through BUF / INV) may reach at most this many sinks: 1 = the
+    # landing flop's D, 2 = an async-assert synchroniser's two reset pins.  Over it the port is an unregistered reset tree.
+    "rst_land_max": 2,             # WARN + REFUSE tier (the pre_route_gate enforces it; the route-time lint only WARNs)
     # boundary (logic levels: non-BUF/INV cells)
     "bnd_levels": 3,               # WARN
     "bnd_in_levels_refuse": 9,     # REFUSE input->register (closed max 7; failing 10-17)
@@ -140,8 +144,13 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 a failed job that was never admitted gives none), optional "failure" (what failed).  The daemon's
 #                 earlyoom retry (main a1f06d7f2) and lanes resubmitting after an OOM / harness crash use it
 #                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
+#   pin_order     (REFILL-0400/PO-LINK 2026-10-19, pin_order rule c81a8f458) the closed view's own bus bit order is
+#                 chunk-scrambled on an abutted joint: "source" (the COMMITTED abutted-joint audit hand-off / JSON naming
+#                 the block), "fix"; same RTL, outline and pin faces; the new kit.env carries an ordered layout
+#                 (OT_PIN_BALANCE_H from route.pin_balance, or PINEX=0 from an exact io_tcl) and the closed kit did not
+#                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch", "native_capture", "native_spread", "flow_failure")
+                       "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -316,6 +325,9 @@ def is_reset_net(label, net, T=None, port=True):
     return base in decl or re.sub(r"\[.*$", "", str(net)) in decl
 SEQ_CLK_PINS = {"CLK"}
 ASYNC_PINS = {"RESET", "SET", "RESETN", "SETN"}
+# reset_landing port names: the rst_port_fanout PORT_RE spelling (rst / arst / prst / reset [_n|_ni|_i|_b]) plus por;
+# stricter than RST_RE (no 'rsv' / '_x' suffixes: S81 rsv_* reservation-station data ports are not resets)
+RST_LAND_RE = re.compile(r"(^|_)(p?a?rst|reset|por)(_?n|_ni|_i|_b)?$", re.I)
 
 # ASAP7 75t cell delay weights (ps, TT, typical fan-out; calibrated so that the closed validation blocks' worst stage
 # sits at <= ~700 ps). The exact numbers matter less than the ratio failing / closed.
@@ -803,6 +815,99 @@ def bufinv_fanout(g, A, x, clk, limit=10_000_000):
     return tot + ports, ff, ex
 
 
+def reset_sinks(g, A, x):
+    """sinks of reset net x through BUF / INV trees: (total load pins incl. output ports, flops, macros, example)"""
+    kind, loads = A["kind"], A["loads"]
+    tot = ff = mac = 0
+    stack, seen, ex = [x], {x}, None
+    while stack:
+        y = stack.pop()
+        for ci, pn, _ in loads.get(y, ()):
+            if kind[ci] == "buf":
+                for z in _out_nets(g, A, ci):
+                    if z not in seen:
+                        seen.add(z)
+                        stack.append(z)
+                continue
+            tot += 1
+            ff += kind[ci] == "ff"
+            mac += kind[ci] == "macro"
+            ex = ex or f"{g.cells[ci][1]}/{pn}"
+    tot += sum(len(A["out_ports"].get(y, ())) for y in seen)
+    return tot, ff, mac, ex
+
+
+def balanced_reset_proof(g, A, port, net, profile):
+    """Opt-in mapped proof, never a threshold waiver: exactly two plain-FF levels.
+
+    The source-pinned profile supplies exact counts; the actual netlist proves
+    data, clock, polarity, depth and all fanouts. Unprofiled designs retain the
+    existing <=2 root-sink rule. BUF/INV paths are counted with exact polarity on both publication edges.
+    """
+    def fail(why):
+        return {"pass": False, "reason": why}
+    if not isinstance(profile, dict) or profile.get('schema') != 'opentallas.ref_tile.reset_landing.v1':
+        return fail('missing/foreign profile')
+    if profile.get('enable') is not True or profile.get('stages') != 2:
+        return fail('profile must enable exactly two edges')
+    f = (profile.get('first_copies') or {}).get(port)
+    l = (profile.get('copies') or {}).get(port)
+    if (not isinstance(f,int) or isinstance(f,bool) or not 1<=f<=32 or
+            not isinstance(l,int) or isinstance(l,bool) or not 1<=l<=32*f):
+        return fail('invalid exact first/final counts')
+    cp=profile.get('clock');clock=[x for n,(d,x) in g.ports.items() if n==cp and d=='input']
+    if len(clock)!=1:return fail('missing literal clock port')
+    first=set();last=set();qfirst=set();qlast=set();master=None
+    def terminals(q):
+        stack=[(q,0)];seen=set();ends=[];ports=0
+        while stack:
+            y,inv=stack.pop()
+            if (y,inv) in seen:continue
+            seen.add((y,inv));ports+=len(A['out_ports'].get(y,()))
+            for ci,pn,_ in A['loads'].get(y,()):
+                if A['kind'][ci]=='buf':
+                    neg=bool(re.match(r'^(INV|CKINV)',g.cells[ci][0]))
+                    for z in _out_nets(g,A,ci):stack.append((z,inv^neg))
+                else:ends.append((ci,pn,y,inv))
+        return ends,ports
+    def plain(ci,pn,d):
+        nonlocal master
+        typ,_,pins=g.cells[ci]
+        if (A['kind'][ci]!='ff' or not re.fullmatch(r'DFFHQNx[0-9]+_ASAP7_75t_[RSL]',typ)
+                or pn!='D' or pins.get('D')!=[d] or pins.get('CLK')!=clock):
+            return False
+        if any(k in pins for k in ASYNC_PINS) or set(pins)-{'CLK','D','QN','Q'}:
+            return False
+        if master is None:master=typ
+        return typ==master and len(list(_out_nets(g,A,ci)))==1
+    if A['out_ports'].get(net):return fail('reset input also exported')
+    for ci,pn,_ in A['loads'].get(net,()):
+        if not plain(ci,pn,net):return fail('root reaches non-identical/plain first D')
+        first.add(ci);qfirst.update(_out_nets(g,A,ci))
+    if len(first)!=f:return fail('stale first count')
+    first_max=0
+    for q in qfirst:
+        if A['out_ports'].get(q):return fail('first stage also exported')
+        children,ports=terminals(q);first_max=max(first_max,len(children))
+        if ports:return fail('first stage also exported through buffers')
+        if len(children)>32:return fail('first output exceeds32')
+        for ci,pn,d,inv in children:
+            # ASAP7 DFFHQN exposes inverted Q; exactly one net inversion restores
+            # the logical first-stage value at every final-stage D.
+            if ci in first or inv!=1 or not plain(ci,pn,d):return fail('first reaches non-identical/plain final D or wrong polarity')
+            last.add(ci);qlast.update(_out_nets(g,A,ci))
+    if len(last)!=l:return fail('stale final count')
+    final_max=0
+    for q in qlast:
+        ends,ports=terminals(q);n=len(ends)+ports;final_max=max(final_max,n)
+        if n>32:return fail('final output exceeds32')
+        if ports:return fail('final stage exported outside declared core')
+        if any(ci in first|last for ci,_,_,_ in ends):return fail('extra landing stage/feedback')
+        if any(inv!=1 for _,_,_,inv in ends):return fail('wrong final reset publication polarity')
+    return {"pass":True,"first":f,"final":l,"root_loads":f,
+            "first_max_loads":first_max,"final_max_loads":final_max,"edges":2}
+
+
 def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
     T = th
     A = build(g, dump)
@@ -883,6 +988,38 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
                                          "loads / ~100 um) or pipeline the broadcast"))
     if bad:
         F["high_fanout"] = bad[:12] + ([f"... {len(bad) - 12} more"] if len(bad) > 12 else [])
+
+    # ---- 2b. reset landing (ROOT-RST 2026-10-19): the worst capture / setup path of qkd_hr_core_order (host_rst_n 386.9),
+    # qkd_kvs_attn (rst_n 383.3), qkd_astk_rly_296 (277.4) and ot_s81_kp4_dec (rst_n 648 ps through 11 buffers, TT -70)
+    # started at a reset INPUT that reached its flops / hard children through a buffer tree.  The standard: the port
+    # lands in a register at the face (ref_tile "reset_landing": 2 registered stages, ot_pin_regs.tcl OT_RST_LAND), then
+    # fans out at equal depth; reset release latency is a scheduled constant.
+    decl = declared_resets(T)
+    land, bad = [], []
+    for b, (dd, x) in sorted(g.ports.items()):
+        if dd != "input" or x in clk or x <= 3:
+            continue
+        base = re.sub(r"\[.*$", "", b)
+        if base not in decl and not RST_LAND_RE.search(base):
+            continue
+        tot, ff, mac, ex = reset_sinks(g, A, x)
+        land.append({"port": b, "sinks": tot, "flops": ff, "macros": mac})
+        profile = T.get('_balanced_reset_profile')
+        if profile and base in (profile.get('first_copies') or {}):
+            proof=balanced_reset_proof(g,A,base,x,profile)
+            land[-1]['balanced_proof']=proof
+            if proof['pass']:
+                continue
+            bad.append(f"reset port {b}: balanced landing refused: {proof['reason']}")
+        if tot > T["rst_land_max"]:
+            bad.append(f"reset port {b}: {tot:,} sinks ({ff:,} flops, {mac} hard-child / macro pins, e.g. {ex}) reached "
+                       f"without a landing register (> {T['rst_land_max']}): land it at the face in 2 registered stages "
+                       f"(ref_tile \"reset_landing\": {{\"enable\": true}}, or RTL rst_l0 -> rst_l1 per region), then "
+                       f"fan out at equal depth")
+    M["reset_landing"] = land
+    if bad:
+        F["reset_landing"] = bad[:12]
+        RF["reset_landing"] = list(bad[:12])
 
     # ---- levels / weights for 3 and 4
     ncell = len(g.cells)
@@ -1309,6 +1446,9 @@ def run(netlist_path, dump_path, th=None, top=None, mode="warn", waive=(), refus
             dump = json.load(f)
     g, top = flatten(mods, top)
     del mods
+    profile=T.get('_balanced_reset_profile')
+    if profile and profile.get('top')!=top:
+        raise ValueError('balanced reset profile top does not match actual netlist')
     res = analyse(g, dump, T)
     res["top"] = top
     res["netlist"] = netlist_path
@@ -1568,6 +1708,7 @@ def main(argv=None):
     c = sub.add_parser("check")
     c.add_argument("--netlist", required=True)
     c.add_argument("--dump")
+    c.add_argument("--balanced-reset-profile", help="source-bound reset_landing.json; exact mapped two-edge/count/clock/load proof")
     c.add_argument("--top")
     c.add_argument("--out")
     c.add_argument("--mode", choices=("warn", "refuse"), default="warn")
@@ -1587,6 +1728,11 @@ def main(argv=None):
         return rtl_main(a)
     mode, th, waive, rc = a.mode, parse_set(a.set), list(a.waive), tuple(x for x in a.refuse_checks.split(",") if x)
     clock = None
+    if a.balanced_reset_profile:
+        try:
+            with open(a.balanced_reset_profile) as f:th['_balanced_reset_profile']=json.load(f)
+        except (OSError,ValueError) as ex:
+            print(f'textbook_lint: invalid balanced reset profile: {ex}');return 2
     if a.cfg:
         try:
             with open(a.cfg) as f:
@@ -1615,6 +1761,9 @@ def main(argv=None):
     M = res["metrics"]
     print(f"textbook_lint: {res['verdict']} {res['top']} cells {res['cells']:,} flops {res['flops']:,} "
           f"depth {M.get('depth_ps')} ps util {M.get('util')} reach {M.get('reach_worst_um')} um ({res['seconds']} s)")
+    if "reset_landing" in M:
+        print("textbook_lint: INFO reset_landing " + json.dumps({"max": res["thresholds"]["rst_land_max"],
+                                                                "ports": M["reset_landing"][:64]}, separators=(",", ":")))
     cr = res["clock_rule"]
     print(f"textbook_lint: INFO clock_roots max_root_sinks={cr['max_root_sinks']} root={cr['root']} "
           f"rule={'PASS' if cr['ok'] else ('CLOSED_STANDS' if cr['closed_stands'] else 'FAIL')}: {cr['text']}"[:600])

@@ -103,12 +103,13 @@ class SourceBindingTest(unittest.TestCase):
                 if (cmd[0] == 'ssh' and 'ot-heavy' in cmd[-1]) or (cmd[0] == 'ot-run' and '--' in cmd):
                     out = ('GATE_SOURCE_ARCHIVE_SHA256=' + hashlib.sha256(staged['archive']).hexdigest() + '\n'
                            'GATE_FLOW_RC=0 GATE_FLOW_S=1\nGATE_IOP_RC=0\nGATE_CTS_RC=0\n'
-                           'GATE_CK_RC=0\nGATE_DONE\n'
+                           'GATE_CK_RC=0\nGATE_DONE\nGATE_SCRIPT_RC=0\nGATE_TB_RC=0\n'
+                           'GATE_TB textbook_lint: PASS probe cells 1 flops 1\n'
                            'GATE_TB textbook_lint: INFO clock_roots max_root_sinks=48000 root=port:clk\n'
                            'GATE_CK tt insertion all 210.0..280.0 ps\n')
                     return subprocess.CompletedProcess(cmd, 0, out.encode(), b'')
                 return subprocess.CompletedProcess(cmd, 0, b'', b'')
-            spec = {'name': 'probe', 'top': 'probe', 'kind': 'tile', 'clock_port': 'clk', 'route': {'pd': .5}}
+            spec = {'name': 'probe', 'top': 'probe', 'kind': 'tile', 'clock': 'cts', 'clock_port': 'clk', 'route': {'pd': .5}}
             with patch.object(PG, 'ROOT', root), patch.object(PG, 'DAEMON_TREE', daemon), patch.object(PG, 'SHIP_HELPERS', ()), \
                     patch.object(PG, 'referenced_closure', return_value=({'kit/input.v'}, set(), set())), \
                     patch.object(PG.subprocess, 'run', side_effect=run), patch.object(PG.HO, 'HELPERS', ()):
@@ -121,7 +122,8 @@ class SourceBindingTest(unittest.TestCase):
                 # numbers remain diagnostic and cannot qualify a gate PASS.
                 self.assertEqual(g.verdict, 'FAIL')
                 self.assertEqual([i['check'] for i in g.items if i['severity'] != 'INFO'],
-                                 ['floorplan.pin_geometry', 'layout_images'])
+                                 ['floorplan.pin_geometry', 'clock_rule', 'layout_images'])
+                self.assertEqual(next(i for i in g.items if i['check']=='clock_rule')['severity'], 'WARN')
 
     def test_recovery_requires_full_manifest_log_script_and_staged_bytes(self):
         import hashlib
@@ -168,7 +170,7 @@ class SourceBindingTest(unittest.TestCase):
 
     def test_remote_script_verifies_archive_before_extracting(self):
         script = PG.REMOTE_SH.format(R='/tmp/test', ARCHIVE_SHA256='a' * 64, COMMIT='snapshot-sha256:abc', CAP=1,
-                                    KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk',
+                                    KIT='kit', IMG='unused', RC='', TBX='', BRP='', TOP='test', CTS=0, PGM=1, CLK='clk',
                                     TRIAL=0, GRTX='', CLKS='clk', STEP_CAP=1)
         self.assertLess(script.index('sha256sum'), script.index('tar -xzf'))
         self.assertIn('GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL', script)

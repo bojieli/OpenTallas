@@ -45,8 +45,12 @@ P=$OUT/pass1; EB=$P/orfs/results/asap7/$D/base; mkdir -p $EB
 cp "$OB/$SDC_NAME" "$EB/6_final.sdc"; [ "$SDC_NAME" = 6_final.sdc ] || cp "$OB/$SDC_NAME" "$EB/$SDC_NAME"
 orun() {
   local log=$1 tcl=$2; shift 2
+  local pg_args=()
+  if [ "${OT_PG_STRICT:-0}" = 1 ]; then
+    pg_args=(-e OT_PG_STRICT=1 -e OT_PG_HELPER=/cl/native_pg_binding.tcl)
+  fi
   docker run --rm -v $RB:/in:ro -v $(dirname $SPEF):/inspef:ro -v $OB:/ob:ro -v $P:/p -v $PWD:/src:ro -v $CLD:/cl:ro \
-    -e OT_MACROS="${MS# }" -e OT_VT="RVT LVT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-TT} "$@" $IMG bash -lc \
+    -e OT_MACROS="${MS# }" -e OT_VT="RVT LVT" -e OT_CL=/cl -e OT_SETUP_LIB=${SETUP_LIB:-TT} "${pg_args[@]}" "$@" $IMG bash -lc \
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/$tcl" > $log 2>&1
 }
 echo "OT_VTSWAP input $RB/$DB spef $SPEF target ${TARGET:-10} cap ${CAP_PCT:-2.0}% drc0 $DRC0" | tee -a $OUT/eco.log
@@ -58,7 +62,10 @@ for c in ss ff; do
 done
 { cat $P/eff_ss.sdc; echo 'set_false_path -hold -to [all_clocks]'; } > $P/mode_ss.sdc
 { cat $P/eff_ff.sdc; echo 'set_false_path -setup -to [all_clocks]'; } > $P/mode_ff.sdc
-orun $P/eco_vtswap.log vtswap_eco.tcl -e OT_DB=/in/$DB -e OT_SDC_SS=/p/mode_ss.sdc -e OT_SDC_FF=/p/mode_ff.sdc \
+# LOST-CLOSED (ROOT-1130): VTSWAP_LIST = a closed attempt's vtswap_cells.txt; those cells go LVT first (re-route re-apply)
+RL=""; if [ -n "${VTSWAP_LIST:-}" ] && [ -s "$VTSWAP_LIST" ]; then cp "$VTSWAP_LIST" $P/reapply_cells.txt; RL=/p/reapply_cells.txt
+  echo "OT_VTSWAP reapply list $VTSWAP_LIST ($(wc -l < $P/reapply_cells.txt) cells)" | tee -a $OUT/eco.log; fi
+orun $P/eco_vtswap.log vtswap_eco.tcl -e OT_VTSWAP_LIST=$RL -e OT_DB=/in/$DB -e OT_SDC_SS=/p/mode_ss.sdc -e OT_SDC_FF=/p/mode_ff.sdc \
   -e OT_SPEF=/inspef/$(basename $SPEF) -e OT_OUT=/p/orfs/results/asap7/$D/base -e OT_TARGET=${TARGET:-10} \
   -e OT_CAP_PCT=${CAP_PCT:-2.0} -e OT_ROUNDS=${ROUNDS:-60} -e OT_BAND=${BAND:-4} -e OT_HOLD_FLOOR=${HOLD_FLOOR:-2} -e OT_THREADS=${THREADS:-8} || true
 cat $P/eco_vtswap.log | grep -v "^\[WARNING STA-1212\]" >> $OUT/eco.log

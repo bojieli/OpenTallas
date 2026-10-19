@@ -1,0 +1,124 @@
+{
+ "name": "hgi_xp_aq_bypass13_1018",
+ "top": "ot_hgi_xp_aq_bypass13",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2p.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "pins": {
+  "S": [
+   "x"
+  ],
+  "N": [
+   "q",
+   "e",
+   "y",
+   "vo",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "v",
+   "fp4"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "outline": {
+  "w": 183.6,
+  "h": 64.8
+ },
+ "job": {
+  "owner": "Claude:HBM-COLLQ",
+  "branch": "claude/hbm-collq-1018",
+  "tag": "p1",
+  "purpose": "PRE-QUANTISED bypass beside each x-load quantiser tile (x_fmt 3, QBG)",
+  "structural_change": "new PRE bypass tile (13-edge delay line, q = x[255:0], e = x[263:256]-127, range fault): ports and pin faces identical to the CLOSED ot_hbm_xp_aq_tree13 (W clk/rst_n/v/fp4, S x, N q/e/y/vo/fault) so it drops beside each quantiser on the same l_d_o source; 183.6 wide like tree13, height 64.8 (3.4k flops; pin-limited: S 1,024 x pins 5.6/um, N 780 4.2/um)",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh",
+   "rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_preq.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2p.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/hgi_sim/xload_preq_vectors_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/rtl/hbm_collq_xl_1018"
+  ],
+  "benches": [
+   {
+    "name": "xload_preq_exact",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh {RUN}/bench/xload_preq_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "XLOAD_PREQ PASS cases=([0-9]+)",
+    "min_count": 8
+   },
+   {
+    "name": "xload_preq_mut7",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh {RUN}/bench/xload_preq_mut7 7",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "XLOAD_PREQ FAIL [0-9]+",
+    "fail_witness": "results/rtl/hbm_collq_xl_1018/bench_witness/xload_preq_mut7.log"
+   },
+   {
+    "name": "xload_preq_mut8",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh {RUN}/bench/xload_preq_mut8 8",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "XLOAD_PREQ FAIL [0-9]+",
+    "fail_witness": "results/rtl/hbm_collq_xl_1018/bench_witness/xload_preq_mut8.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_xp_aq_bypass13_1018/views",
+  "record_to": "results/rtl/ref_tile/hgi_xp_aq_bypass13_1018"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "layer_cap": "M5",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: x[263:0] lands in sd[0], q/e/vo/fault/y are flop Q; x[1023:264] and fp4 are unused data bits (fp4 only feeds the fault flop) kept for port identity with ot_hbm_xp_aq_tree13"
+ },
+ "structural_change": "new PRE bypass tile (13-edge delay line, q = x[255:0], e = x[263:256]-127, range fault): ports and pin faces identical to the CLOSED ot_hbm_xp_aq_tree13 (W clk/rst_n/v/fp4, S x, N q/e/y/vo/fault) so it drops beside each quantiser on the same l_d_o source; 183.6 wide like tree13, height 64.8 (3.4k flops; pin-limited: S 1,024 x pins 5.6/um, N 780 4.2/um)"
+}

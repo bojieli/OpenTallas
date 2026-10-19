@@ -20,9 +20,12 @@ EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
-              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py")
+              "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
+              "tools/ref_tile/measured_band_fill.py")
 # Non-Python source read by an imported generator and embedded in its kit.
-PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",)}
+PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",),
+           "tools/ref_tile/clock_entry_constraints.py": ("physical/common_flow/clock_family.tcl",),
+           "tools/closure_loop/ck_insertion.py": ("physical/common_flow/clock_family.tcl",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
 SCAN = (".tcl", ".sdc", ".sh", ".env", ".mk", ".cfg", ".f")    # flow scripts: every repo path they name is consumed
 HDL = (".v", ".sv", ".svh", ".vh")
@@ -178,7 +181,7 @@ def consumed_record(paths, entries, basis):
 
 
 def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None,
-             gate=None):
+             gate=None, pg_strict=False):
     """Match immutable staged contents against the requested route source and current tool overlay.
 
     clock: the gate result's "clock" record.  With it, drift made only by RELAXING-ONLY rule commits
@@ -193,6 +196,11 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         return False, "missing immutable source snapshot; legacy result is unqualified"
     if frozen_recovery and not route_overlay:
         return False, "frozen helper recovery requires executed overlay verification"
+    HO = overlay_module()
+    try:
+        HO.validate_pg_policy(binding.get("route_overlay_plan"), pg_strict=pg_strict)
+    except ValueError as ex:
+        return False, str(ex)
     entries = binding.get("files")
     if not entries or canonical_digest(entries) != binding.get("manifest_sha256"):
         return False, "source manifest missing or digest mismatch"
@@ -217,7 +225,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                     return False, "original gate executed-helper verification missing or mismatched"
                 effective = HO.committed_frozen_payloads(root, frozen)
             else:
-                current, effective = HO.capture_plan(daemon, root, paths=paths)
+                current, effective = HO.capture_plan(daemon, root, paths=paths, pg_strict=pg_strict)
         except (OSError, ValueError, subprocess.SubprocessError) as ex:
             return False, f"cannot resolve effective route helpers: {ex}"
         if frozen and not frozen_recovery:
@@ -355,7 +363,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                                and (r["kind"] == "relaxing" or r.get("applies"))})))
             if rows:
                 needs = sorted({n for r in rows for n in r.pop("needs")})
-                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root)
+                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root, pg_strict=pg_strict)
                 if req_ok:
                     relaxed = rows
                     binding["relaxing_rule_allowlist"] = dict(
@@ -457,7 +465,7 @@ def child_flop_reference_macros(root, kit):
     return out
 
 
-def relaxed_rule_requirement(needs, clock, gate=None, root=None):
+def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=None):
     """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
     clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
     native audit.
@@ -466,6 +474,15 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
     is unchanged); a gate that ran it must show overflow 0.  Without the gate result the strict refusal stands."""
     rows = []
     for n in needs:
+        if n == "pg_strict":
+            # Only SB.validate's typed policy, checked against the immutable frozen
+            # plan before drift classification, can scope this tightening away.
+            ok = type(pg_strict) is bool and not pg_strict
+            text = ("default job: strict PG tightening does not apply" if ok else
+                    "strict job requires a current strict gate" if pg_strict is True else
+                    "authoritative typed PG policy unavailable")
+            rows.append(dict(requires=n, ok=ok, pg_strict=pg_strict, text="pg_strict: " + text))
+            continue
         if n == "trial_grt":
             tr = gate.get("trial_route") if isinstance(gate, dict) else None
             if not isinstance(gate, dict):
@@ -477,6 +494,24 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
                 ovf = tr.get("overflow") if isinstance(tr, dict) else None
                 rows.append(dict(requires=n, ok=ovf == 0, overflow=ovf,
                                  text=f"trial_grt: gate trial GRT overflow {ovf}" + ("" if ovf == 0 else " (FAIL)")))
+            continue
+        if n == "reset_landing":
+            # ROOT-RST 10-19: the gate FAILS a reset input reaching > rst_land_max sinks without a landing register.  A
+            # gate result without a "reset_landing" record predates the rule and stays valid (a fresh gate of the same
+            # kit judges it); a gate that ran it must show no unlanded reset port (or the kit's recorded waiver).
+            rl = gate.get("reset_landing") if isinstance(gate, dict) else None
+            if not isinstance(gate, dict):
+                rows.append(dict(requires=n, ok=False, text="reset_landing: no gate result to judge"))
+            elif rl is None:
+                rows.append(dict(requires=n, ok=True, predates=True,
+                                 text="reset_landing: gate predates the reset-landing rule (no reset_landing record): kept"))
+            else:
+                ok = bool(rl.get("ok")) if isinstance(rl, dict) else False
+                over = (rl.get("over") if isinstance(rl, dict) else None) or []
+                rows.append(dict(requires=n, ok=ok, over=over,
+                                 text="reset_landing: " + ("every reset input landed" if ok and not over else
+                                                           "waived by the kit" if ok else
+                                                           f"unlanded reset input(s) {over[:4]} (FAIL)")))
             continue
         if n == "child_flop_basis":
             bases = [(clock or {}).get(f"{c}_pin_spread_basis") for c in ("tt", "ff")] if isinstance(clock, dict) else []
@@ -512,6 +547,67 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
             rows.append(dict(requires=n, ok=ok, text="landed_cluster_roots: " + (
                 "multi-root kit without hard children: unchanged" if ok else
                 "multi-root cluster gated before the per-root child-flop rule (or spec unreadable): re-gate")))
+            continue
+        if n == "child_pin_access":
+            # ROOT-RULETAG 10-19: b7918e979 (KV-ECTL5) added child_lint (i) pin access (a hard-child pin with a same-layer
+            # OBS rect closer than the wide-metal spacing FAILs) and the matching ref_tile gen refusal.  The pre-route gate
+            # runs child_lint only on spec "children", so a gate is unchanged when the kit has no hard children or none of
+            # its child view LEFs has such a pin (the detector itself, abstract_pin_stub.pin_spacing_violations, decides).
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            base = Path(root or Path(__file__).resolve().parents[2])
+            try:
+                sp = json.loads((base / "physical" / "ref_tile" / str(kit) / "spec.json").read_text())
+                views = [str(c["view"]) for c in (sp.get("children") or [])]
+                import importlib.util
+                spec_ = importlib.util.spec_from_file_location(
+                    "ot_aps_ruletag", base / "tools" / "hier_contract" / "abstract_pin_stub.py")
+                aps = importlib.util.module_from_spec(spec_)
+                spec_.loader.exec_module(aps)
+                bad = {}
+                for v in views:
+                    name = Path(v.rstrip("/")).name
+                    t = (base / v / f"{name}.lef").read_text(errors="replace")
+                    if re.search(r"\n[ \t]*OBS[ \t]*(?=\n)", t):
+                        k = len(aps.pin_spacing_violations(t))
+                        if k:
+                            bad[name] = k
+            except Exception as ex:  # noqa: BLE001 -- unreadable spec / view / detector: strict
+                rows.append(dict(requires=n, ok=False, text=f"child_pin_access: cannot judge ({type(ex).__name__}): re-gate"))
+                continue
+            rows.append(dict(requires=n, ok=not bad, children=len(views), violations=bad,
+                             text="child_pin_access: " + (
+                                 "no hard children: the gate runs no child_lint, verdict unchanged" if not views else
+                                 f"{len(views)} hard-child view(s), 0 pin-access violations: child_lint (i) passes"
+                                 if not bad else f"hard-child pin-access violations {dict(list(bad.items())[:3])}: re-gate")))
+            continue
+        if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract"):
+            # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
+            # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
+            kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
+            try:
+                sp = json.loads((Path(root or Path(__file__).resolve().parents[2]) / "physical" / "ref_tile" / str(kit)
+                                 / "spec.json").read_text())
+                if not isinstance(sp, dict):
+                    raise ValueError("spec is not an object")
+            except (OSError, ValueError, TypeError):
+                rows.append(dict(requires=n, ok=False, text=f"{n}: kit spec unreadable (re-gate)"))
+                continue
+            if n == "rc_cal_spine_hold":
+                hit = sp.get("kind") == "cluster" and sp.get("clock", "spine") == "spine"
+                rows.append(dict(requires=n, ok=not hit, text="rc_cal_spine_hold: " + (
+                    "spine cluster: gate CTS hold repair ran with the calibrated RC, re-gate" if hit else
+                    "no spine: gate CTS never applied the calibrated hold RC, verdict unchanged")))
+            elif n == "single_clock_contract":
+                hit = bool(sp.get("single_clock_contract"))
+                rows.append(dict(requires=n, ok=not hit, text="single_clock_contract: " + (
+                    "kit carries single_clock_contract: ot_single_clock_check now runs in MM sync, re-gate" if hit else
+                    "no single_clock_contract: ot_single_clock_check is never defined, verdict unchanged")))
+            else:
+                hit = bool((sp.get("reset_landing") or {}).get("first_copies")) if isinstance(sp.get("reset_landing"),
+                                                                                             dict) else False
+                rows.append(dict(requires=n, ok=not hit, text="balanced_reset_profile: " + (
+                    "kit declares reset_landing.first_copies: the balanced proof applies, re-gate" if hit else
+                    "no reset_landing.first_copies: textbook_lint checks unchanged")))
             continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})

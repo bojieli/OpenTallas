@@ -13,17 +13,12 @@
   "rst_n"
  ],
  "outline": {
-  "w": 315.36,
-  "h": 324.0
+  "w": 302.4,
+  "h": 302.4
  },
  "pins": {
   "W": [
-   "uop_d1",
-   "busy_d3",
-   "done_d3",
-   "start_d3",
-   "tap_iteration",
-   "tap_steps"
+   "uop_d1"
   ],
   "N": [
    "clk_control",
@@ -35,9 +30,14 @@
    "done",
    "fault",
    "uop_v",
-   "uop_pc"
+   "uop_pc",
+   "busy_d3",
+   "done_d3",
+   "start_d3"
   ],
   "S": [
+   "tap_iteration",
+   "tap_steps",
    "busy_d2",
    "start_d2"
   ]
@@ -50,27 +50,30 @@
    "count": 1,
    "inst": "u_issuer.g_mem[0].u_bank.u_sram",
    "at": [
-    81.0,
-    23.76
-   ]
+    86.4,
+    43.2
+   ],
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
    "inst": "u_issuer.g_mem[1].u_bank.u_sram",
    "at": [
-    81.0,
-    123.12
-   ]
+    86.4,
+    121.008
+   ],
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
    "inst": "u_issuer.g_mem[2].u_bank.u_sram",
    "at": [
-    81.0,
-    222.48
-   ]
+    86.4,
+    198.816
+   ],
+   "at_exact": true
   }
  ],
  "children": [],
@@ -80,17 +83,20 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 32
+  }
  },
  "pin_regs": {
   "enable": false,
-  "reason": "V6: raw busy/done/fault/uop_v/uop_pc and tap_iteration are flop Q (programme-target feedback at host_v4 edges); uop_d1 (to the uop pipe leaf) and busy_d2/start_d2 (protocol leaf) / busy_d3/done_d3/start_d3 (others) are the leaf's own delay flops; tap_steps is the bank face flop AND uop_v captured by the protocol leaf's pin flops; cfg/start/start_pc land in control flops. A synthesis pin stage would add edges the V6 schedule and bench do not carry."
+  "reason": "COLLPIN 10-18 (coordinator 0gd): the issuer's input pins cfg/start/start_pc are registered IN RTL (ot_hgi_coll_issuer_m PIN_REGS=1: cfg_q/cfgv_q/start_q/start_pc_q, +1 issue edge, lockstep SH 5); a synthesis pin stage would add a second edge. Outputs: raw done/fault/uop_v/uop_pc and tap_iteration are flop Q; raw busy = busy_c | start_q (two flops, one OR: keeps the programme target's occupancy edge identical); uop_d1/busy_d2/start_d2/busy_d3/done_d3/start_d3 are the leaf's own delay flops; tap_steps is the bank face flop AND uop_v. rst_n loads ONE synchroniser flop (rst_l)."
  },
  "job": {
-  "owner": "Claude:H-NETLIST/COLL-CTL-1045",
-  "branch": "claude/hnl-coll-ctl-1045",
-  "tag": "c1045",
-  "purpose": "H-NETLIST/COLL hard_v6 leaf ot_hgi_coll_issuer_m: ot_hgi_coll_static_issuer_v6 (pre-decoded per-row loop counts: successor load = one 64:1 read; registered current-row fields; decision = one 32b flop compare) with 3 x ot_sram_1r1w_64x512_m1_r2c2, uop_v mask, ONE 1,536-b output bank (d1; d2/d3 in ot_hgi_coll_uop_pipe). Every-edge miter vs the original issuer (PASS 3.72M checks, programme constraint: no start on the edge after a meta write), q2 lockstep (SH=4).",
+  "owner": "Claude:H-D4G5/COLLPIN",
+  "branch": "claude/hd4g5-collpin",
+  "tag": "ciss",
+  "purpose": "OWNERS-HBM/COLL-ISS + H-D4G5/COLLPIN 10-18: input pin registers (cfg/start/start_pc, +1 issue edge, SH 5; exported busy covers the pin edge); d4g COLL engine hard child ot_hgi_coll_issuer_m (q2_hard_v5 x3, q3_hard_v7x x1; never routed): V6b issuer (3 x ot_sram_1r1w_64x512_m1_r2c2 + one 1,536-b d1 bank), rst_n -> one synchroniser flop; 302.4 square, abutted SRAM stack on the 43.2 lattice, one std-cell band, full W face for the 1,536-b stream. H-NETLIST/COLL hard_v6 leaf ot_hgi_coll_issuer_m: ot_hgi_coll_static_issuer_v6 (pre-decoded per-row loop counts: successor load = one 64:1 read; registered current-row fields; decision = one 32b flop compare) with 3 x ot_sram_1r1w_64x512_m1_r2c2, uop_v mask, ONE 1,536-b output bank (d1; d2/d3 in ot_hgi_coll_uop_pipe). Every-edge miter vs the original issuer (PASS 3.72M checks, programme constraint: no start on the edge after a meta write), q2 lockstep (SH=5) incl. scen8 occupancy edge.",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/lib/ot_rst_relay.sv",
@@ -121,7 +127,33 @@
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED nomask",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/mut_nomask.log"
+   },
+   {
+    "name": "hard_v5_q2_mut_issnopin",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_issnopin q2 issnopin",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED issnopin",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/mut_issnopin.log"
+   },
+   {
+    "name": "hard_v5_q2_mut_issnohold",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_issnohold q2 issnohold",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HCOLL_Q_HARD_V5_MUTANT_REJECTED issnohold",
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/mut_issnohold.log"
    },
    {
     "name": "issuer_v6_miter_pos",
@@ -144,10 +176,86 @@
     "peak_ram_gb": 12,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hcoll_v5_issuer/witness_1018/miter_reload.log"
    }
   ],
   "views_to": "physical/ref_tile/hcoll_v5_issuer/views",
   "record_to": "results/rtl/ref_tile/hcoll_v5_issuer"
- }
+ },
+ "pin_ranges": {
+  "uop_d1": [
+   3.0,
+   299.4
+  ],
+  "clk_control": [
+   3.0,
+   16.321
+  ],
+  "rst_n": [
+   16.321,
+   29.643
+  ],
+  "cfg": [
+   29.643,
+   152.865
+  ],
+  "start": [
+   152.865,
+   166.187
+  ],
+  "start_pc": [
+   166.187,
+   186.169
+  ],
+  "busy": [
+   186.169,
+   199.49
+  ],
+  "done": [
+   199.49,
+   212.811
+  ],
+  "fault": [
+   212.811,
+   226.133
+  ],
+  "uop_v": [
+   226.133,
+   239.454
+  ],
+  "uop_pc": [
+   239.454,
+   259.436
+  ],
+  "busy_d3": [
+   259.436,
+   272.757
+  ],
+  "done_d3": [
+   272.757,
+   286.079
+  ],
+  "start_d3": [
+   286.079,
+   299.4
+  ],
+  "tap_iteration": [
+   3.0,
+   77.1
+  ],
+  "tap_steps": [
+   77.1,
+   280.875
+  ],
+  "busy_d2": [
+   280.875,
+   290.137
+  ],
+  "start_d2": [
+   290.137,
+   299.4
+  ]
+ },
+ "floorplan_note": "COLL-ISS 10-18: 302.4 x 302.4 (7 x 43.2 lattice, square). 3 SRAMs as ONE abutted N-S stack (no pins on the N/S macro faces; pitch 77.808 = height + 0.024) with origin (86.4, 43.2) on the 43.2 lattice; logic faces (rd_out/clk/addr) W -> one contiguous std-cell band W of the stack wrapping the top/bottom/E margins (no slivers between macros); per-port pin_ranges over full faces + route.pin_balance: W = uop_d1 only (1,536 over 296 um = 5.2/um), N = issuer control + clk_control at the W end (beside the register band), S = protocol-leaf taps (122)."
 }
