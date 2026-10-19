@@ -8,7 +8,7 @@ NEGATIVE={1:['ADD_INPUT_ID'],2:['ADD_INPUT_ID','GLOBAL_FRAGMENT_CONSUMER_ID'],3:
 def audit(path,mut):
  text=path.read_text();failures=re.findall(r'Assertion failed[^\n]*|%Error[^\n]*',text)
  if mut:
-  matches=[p for p in NEGATIVE[mut]if p in text]
+  matches=[p for p in NEGATIVE[mut]if any('Assertion failed'in f and p in f for f in failures)]
   return dict(verdict='SUPPORT_CAUSAL_FAIL'if matches and 'STATION_CAUSAL_SUPPORT_PASS'not in text else'UNQUALIFIED_NEGATIVE',station_mut=mut,witnesses=matches,failures=failures,native_capture_binding='PENDING')
  def kv(line):return dict(re.findall(r'([A-Za-z_]+)=([^ ]+)',line))
  ins={};outs={};pin={};held={};dupes=[];roots=[]
