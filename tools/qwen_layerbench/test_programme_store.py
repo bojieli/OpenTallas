@@ -1,6 +1,7 @@
 import unittest
 
 import programme_store as P
+import table_user_programme as U
 
 
 def manifest():
@@ -64,6 +65,34 @@ class StoreTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'1024'): P.encode(1,0,f'{1<<1024:x}')
         with self.assertRaisesRegex(ValueError,'finite'): P.read_rows(37,0)
         with self.assertRaisesRegex(ValueError,'user'): P.relocate_word(0,4)
+
+    def test_compact_btab_reserves_shared_head(self):
+        bases=[0,272,344,416];occupied=set(range(72,272))
+        for u in range(4):
+            for addr in range(0,72,4):
+                first=P.relocate_word(P.encode(2,addr,'a5'),u,btab_bases=bases)>>1027
+                for word in range(first,first+4):
+                    self.assertNotIn(word,occupied);occupied.add(word)
+        self.assertEqual(len(occupied),488)
+        self.assertLess(max(occupied),512)
+        m=manifest();m['parameters'].pop('BTAB_WORD_STRIDE');m['parameters']['BTAB_WORD_BASES']=bases
+        P.logical_images(m)
+        m['stages'][0]['slices'][0]['btab'][0]['addr']=72
+        with self.assertRaisesRegex(ValueError,'shared head'):P.logical_images(m)
+
+    def test_instruction_address_bounds_and_arithmetic_fields(self):
+        f={k:0 for k,_ in U.FIELDS};f.update(nin=128,nout=1,a=800,asi=1,
+            bsrc=1,b=768,bsi=1,ma=1,mc=1,ad=2,dst=1,d=960,dsi=1,
+            imm1=0x3f800000,imm2=0x358637bd)
+        word=U.pack(f);out,proof=U.relocate(word,3)
+        got=U.unpack(out)
+        self.assertEqual(got['a'],800+3*4096);self.assertEqual(got['b'],768+3*2048)
+        for key in f:
+            if key not in ('a','b','c','d','rb'):self.assertEqual(f[key],got[key])
+        f['a']=1471
+        with self.assertRaisesRegex(ValueError,'compact VM'):U.relocate(U.pack(f),1)
+        f['a']=800;f['b']=2047
+        with self.assertRaisesRegex(ValueError,'compact CROM'):U.relocate(U.pack(f),1)
 
 
 if __name__=='__main__': unittest.main()
