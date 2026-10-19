@@ -19,7 +19,7 @@ set -e
 python3 - <<'PY'
 import json
 from pathlib import Path
-b=Path('../bench')
+b=Path('../bench_sram')
 r={d.name:json.loads((d/'check_result.json').read_text()) for d in b.iterdir() if (d/'check_result.json').exists()}
 print('SUITE',r)
 assert len(r)==4 and r['legacy']['pass_'] and r['indexed13']['pass_'] and not r['indexed13_corrupt']['pass_'] and not r['indexed13_early']['pass_']
