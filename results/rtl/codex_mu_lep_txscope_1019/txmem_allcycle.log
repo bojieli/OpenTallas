@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-epyc8       admits  1192 GB (avail 927, growth 93, headroom 0, waiters 0/0 GB) load 38/128 running 26 disk 359 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-lep-txscope-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1819762-1792427016 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+TXMEM_EQ PASS checks4518 W553 depth512 OLDread+hold+forward
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_txmem.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.036 s; speed 125.767 us/s
+- Verilator: cpu 0.036 s on 1 threads; allocated 7 MB
+Verilator 5.050 2026-07-01 rev v5.050
+TXMEM mismatch cycle514 re1
+TXMEM mismatch cycle1833 re1
+TXMEM mismatch cycle1991 re1
+TXMEM mismatch cycle3340 re1
+TXMEM_EQ FAIL errors12 checks4518
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_txmem.sv:27: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.035 s; speed 127.747 us/s
+- Verilator: cpu 0.035 s on 1 threads; allocated 7 MB
+TXMEM_MUTANT_DETECTED
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1819762-1792427016): exit 0
