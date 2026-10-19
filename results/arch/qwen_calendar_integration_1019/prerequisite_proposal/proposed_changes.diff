@@ -1,0 +1,59 @@
+PROPOSAL ONLY. Interface-level diff; intentionally not an apply-ready RTL patch.
+Actual dependency events must be measured/derived before filling graph nodes.
+No production source was modified.
+
+--- tools/qwen_layerbench/ctlm_image.py (compile_image/me_rows/xpf_ev)
++++ proposed private source-graph emitter
+- rows = me_rows(plan, C)
++ graph.require_complete_source_provenance()
++ rows = me_rows(graph.head_issue_plan(), graph.local_axis('head'))
+- first_edge = pp['done'] - 16
+- first_edge = pp['at'] + a.su_first_write
++ first_edge = graph.first_actual_capture(record.producer_transaction,
++                                         record.consumer_resource)
++ graph.prove_all_operand_dependencies(rows)
++ graph.prove_fixed_resource_availability(rows)
++ # CALR body, status/END/SEG/stop and XPF rows use this same graph.
++ # Reject unresolved KV latency, source epoch, or axis conversion.
+
+--- rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv (private issue metadata)
++++ proposed private CALR source transaction
++ # At the existing issue capture: source_entry <= actual_ROM_entry_address.
++ # Carry the 10-bit tag with identical valid/data through every real stage.
++ # At actual consumer acceptance, capture handle and tag atomically.
++ # Existing compact arithmetic programme index remains unchanged.
+
+--- rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv (private monitor)
++++ proposed private transaction observation
+- .su_issue(monitor_su[15]), .su_pc(monitor_su[11:0])
++ # Replace user0-only monitor with real issued transaction observation.
++ # producer12 = {accepted_context_user2, accepted_source_entry10}.
++ # Carry corresponding 40-bit handle in separately priced capture stages.
+
+--- rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv
++++ proposed opt-in transaction schedule
++ # Private cfg ABI: same 188 bits only when one actual producer transaction
++ # covers the complete required epoch for this exact selected XPF head.
++ # Retain duplicate seal, wrong-cycle, repeated issue, stop-completeness faults.
++ # Compare captured handle as well as producer12.
++ # Reject multi-producer epoch unless explicit transaction coverage list is
++ # generated, sized, allocated, and stored; no representative-PC exception.
+
+--- rtl/hdc/ot_qwen_w12_matvec.sv
++++ proposed private reader identity
++ # Capture handle on go && ready. Track final request per actual active group.
++ # Carry final mark through MEM_PIPE until the last operand capture.
++ # Return {valid,handle} only after all active groups have captured operands.
+
+--- rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
++++ proposed private XPF ownership
++ # Capture handle and producer transaction at actual descriptor/tap ownership.
++ # Two descriptor epochs each retain handle until every leaf's last capture.
++ # Pipeline final markers along the exact REQ/leaf/QD paths, not busy&&last.
+
+--- tools/qwen_layerbench/calendar_rom_image.py (emit)
++++ proposed canonical serialization
+- independently format expected and physical output artifacts
++ serialize the same packed logical rows to canonical 512-bit text and both
++ actual 266-bit physical payloads; emit all identities in one source manifest
++ # Actual old expected.hex must decode equal before calling change text-only.

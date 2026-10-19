@@ -1,0 +1,50 @@
+{
+  "scope": "MODEL ONLY; no RTL or execution grant",
+  "ME_rows": [
+    {
+      "pc": 11,
+      "dependency_end": 664,
+      "gap": 8,
+      "legacy_edge": 543,
+      "diagnostic_edge": 672,
+      "diagnostic_head_cycle": 669,
+      "qualified": false
+    },
+    {
+      "pc": 12,
+      "dependency_end": 2451,
+      "gap": 8,
+      "legacy_edge": 2232,
+      "diagnostic_edge": 2459,
+      "diagnostic_head_cycle": 2456,
+      "qualified": false
+    },
+    {
+      "pc": 16,
+      "dependency_end": 3617,
+      "gap": 8,
+      "legacy_edge": 3883,
+      "diagnostic_edge": 3625,
+      "diagnostic_head_cycle": 3622,
+      "qualified": false
+    },
+    {
+      "pc": 20,
+      "dependency_end": 4439,
+      "gap": 8,
+      "legacy_edge": 4567,
+      "diagnostic_edge": 4447,
+      "diagnostic_head_cycle": 4444,
+      "qualified": false
+    }
+  ],
+  "source_transaction_identity_cases": 1624,
+  "causal_refusals": 10,
+  "base_minimum_logical_state": 1670,
+  "transaction_tag_minimum_extra": 20,
+  "conditional_minimum_with_two_tag_captures": 1690,
+  "whole_parent_state": null,
+  "native_phase": null,
+  "first_use": null,
+  "source_timing_qualified": false
+}
