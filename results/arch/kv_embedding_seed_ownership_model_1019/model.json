@@ -68,5 +68,17 @@
     "SU_latency": null,
     "MU_rate": null,
     "RTL_inventory": null
-  }
+  },
+  "M2_relative_equations_packet": "ff2b2fac2",
+  "M2_relative_equations": [
+    "I=S+ISS+2",
+    "R=S+RET+2",
+    "I<er_sample<=R",
+    "CAP=RET+1",
+    "TRN>CAP",
+    "next_issue>R",
+    "join4_sample=J+3+off",
+    "inner_join=join4_sample+1",
+    "rowtx_capture=join4_sample+2"
+  ]
 }
