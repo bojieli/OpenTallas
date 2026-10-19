@@ -16,6 +16,7 @@
 //      previous epoch (op_epoch-1) -> the KV ot_qwen_d2d_status_rx epoch16 header check must fault (LAYERBENCH 10-18).
 module tb_qwen_d2d_program;
     `include "program_params.svh"
+    `include "txdp.svh"   // QXF-LINK F4: the masters' TXDP from the same compile (d2d_link_calendar.py)
     wire integer qs = P_QS;
     wire integer rs = P_RS + (lay == 0 ? P_RDELTA : 0);
     wire integer re = P_RE + (lay == 0 ? P_RDELTA : 0);
@@ -127,7 +128,7 @@ module tb_qwen_d2d_program;
     end
     localparam integer LEAD = 2 * PR, XL = TXL + PHY + 4 * PR,
                        XS = TXL + PHY + 2 * PR;   // compute STATUS codec is inside the master: no slot/payload pin flops
-    qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0), .PR(PR)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0), .PR(PR), .TXDP(QFD_D2D_TXDP)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(DRV ? q_c_tx : cfg_c_tx), .cfg_rx_we(DRV ? q_c_rx : cfg_c_rx), .cfg_addr(DRV ? q_c_a : {cfg_hi, cfg_a}),
         .cfg_data(DRV ? q_c_d : cfg_dc), .cal_start(DRV ? q_c_cs : cstart), .cal_seg(DRV ? q_c_sg : cseg),
         .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
@@ -143,7 +144,7 @@ module tb_qwen_d2d_program;
         .result_gen(2'(lay)), .result_token(18'(lay * 1001)), .result_value(32'(lay * 77)), .result_cycles(32'(lay * 1052)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0), .PR(PR)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0), .PR(PR), .TXDP(QKD_D2D_TXDP)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(DRV ? q_k_tx : cfg_k_tx), .cfg_rx_we(DRV ? q_k_rx : cfg_k_rx), .cfg_addr(DRV ? q_k_a : {cfg_hi, cfg_a}),
         .cfg_data(DRV ? q_k_d : cfg_dk), .cal_start(DRV ? q_k_cs : cstart), .cal_seg(DRV ? q_k_sg : cseg),
         .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
@@ -184,10 +185,14 @@ module tb_qwen_d2d_program;
     wire [3:0] c_q_kind = crel == qs ? 4'd1 : 4'd2;
     wire [4:0] c_q_beat = crel == qs ? 5'd0 : 5'(crel - (qs+1));
     wire [511:0] c_q_data = crel == qs ? {493'd0, 5'd0, 13'(lay * 7 + 5), 1'b1} : word(lay, 2, crel - (qs+1));
+    // KV STATUS word from the producers' encoder (qkd_native_status_word, the one qkd_native_attention_static_ctl uses;
+    // QXF-LINK F2: the literal 5'b01001 here hid that the real producer sent 0): done 1, ready 1
+    wire [511:0] st_word;
+    qkd_native_status_word u_st_word (.q_ready(1'b0), .done(1'b1), .fault(1'b0), .busy(1'b0), .ready(1'b1), .word(st_word));
     wire k_r_ev = lay >= 0 && (rel >= rs && rel < rs+32 || rel == re);
     wire [3:0] k_r_kind = rel == re ? 4'd4 : 4'd3;
     wire [4:0] k_r_beat = rel == re ? 5'd0 : 5'(rel - rs);
-    wire [511:0] k_r_data = rel == re ? {507'd0, 5'b01001} : word(lay, 3, rel - rs);
+    wire [511:0] k_r_data = rel == re ? st_word : word(lay, 3, rel - rs);
     wire ca_rv, ka_rv, ca_f, ka_f; wire [3:0] ca_rk, ka_rk, ca_fc, ka_fc; wire [15:0] ca_re, ka_re; wire [5:0] ca_rl, ka_rl;
     wire [4:0] ca_rb, ka_rb; wire [511:0] ca_rd, ka_rd;
     qkd_native_attention_record #(.KV_SIDE(0)) u_ca (.ck(ck), .rst_n(rst_n & ~c_eb),
@@ -255,7 +260,7 @@ module tb_qwen_d2d_program;
         if (ca_rv) begin
             if (!((rel - 3 - XL >= rs && rel - 3 - XL < rs+32) || rel - 3 - XL == re)) begin
                 errs = errs + 1; $display("ERR compute rx at unplanned rel %0d", rel); end
-            else if (ca_rd !== (rel - 3 - XL == re ? {507'd0, 5'b01001} : word(lay, 3, rel - 3 - XL - rs))) begin
+            else if (ca_rd !== (rel - 3 - XL == re ? st_word : word(lay, 3, rel - 3 - XL - rs))) begin
                 errs = errs + 1; $display("ERR compute rx data rel %0d", rel); end
             else if (aborted_layer != lay) frames_kc = frames_kc + 1;
         end

@@ -80,6 +80,97 @@ for ph in (1, 2, 3, 4, 5):
     CASES[f"d50_base_phase{ph}"] = BASE + D50 + ["--lats", "376", "--fdi-phase", str(ph)]
     CASES[f"d50_rec_phase{ph}"] = REC + ["--lats", "376", "--fdi-phase", str(ph)]
 
+# Q-COLLCAL 10-18: the REAL forwarded lanes (rtl/qwen_split/qfd_fwd_lane.sv, N / K straps per port and direction) of the
+# next Qwen compute GEN in place of the fixed delays, and the calendar LX0..2 the GEN emits (case/coll_lane_latency.json;
+# the bench takes LX from it).  Inputs results/rtl/q_collcal_1018/gen_*/coll_lane_latency.json = tools/qwen_split/
+# lane_groups.py emit on the dv2f14bhd GEN lanes (frames unchanged by the bus-group fix): gen_bhd (estimate E, LX 10/0/9),
+# gen_bhd_lp (+ the dv2f14bg land plan bhd/final.sh takes, LX 11/0/10), gen_bhd_asbuilt (the netlist as generated today).
+RLB = BASE + D50 + ["--tok-reg", "1"]
+QC = "results/rtl/q_collcal_1018"
+for g_ in ("gen_bhd", "gen_bhd_lp"):
+    J_ = ["--real-lanes", f"{QC}/{g_}/coll_lane_latency.json"]
+    CASES.update({
+        f"rl_{g_}_ls376": RLB + J_ + ["--lats", "376"],
+        f"rl_{g_}_ls376_tok0": BASE + D50 + J_ + ["--lats", "376"],
+        f"rl_{g_}_seqsu": RLB + J_ + ["--lats", "376", "--seqsu"],
+        f"rl_{g_}_unit": ["--six-five", "--relays", "5", "0", "0", "5", "--latu", "53", "--lats", "376", "--tok-reg", "1"] + D50 + J_,
+        # negatives: the qtp8 fixed-delay calendar (lane = E, not E + 1), no calendar LX, the as-built valid K (skew),
+        # the land plan's residual K (E_sta instead of the total E), the collective mutants
+        f"rl_{g_}_lx707": RLB + J_ + ["--lats", "376", "--lx", "7", "0", "7", "--expect-fail"],
+        f"rl_{g_}_lx000": RLB + J_ + ["--lats", "376", "--lx", "0", "0", "0", "--expect-fail"],
+        f"rl_{g_}_mut_rank": RLB + J_ + ["--lats", "376", "--mutant-define", "OT_TP8S_MUT_RANK", "--only", "qwen_ar_256w|qwen_layer_2x256w$", "--expect-fail"],
+        f"rl_{g_}_mut_rxearly": RLB + J_ + ["--lats", "376", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
+        f"rl_{g_}_seqsu_tokmut": RLB + J_ + ["--lats", "376", "--seqsu", "--plusarg", "TOKMUT=1", "--expect-fail"],
+    })
+    for ls_ in (377, 378, 380):
+        CASES[f"rl_{g_}_ls{ls_}"] = RLB + J_ + ["--lats", str(ls_)]
+CASES["rl_gen_bhd_skew"] = RLB + ["--real-lanes", f"{QC}/gen_bhd/coll_lane_latency.json", "--real-lanes-override", "KTV2=6", "--lats", "376", "--expect-fail"]
+CASES["rl_gen_bhd_lp_residualk"] = RLB + ["--real-lanes", f"{QC}/gen_bhd_lp/coll_lane_latency.json", "--real-lanes-override",
+                                          "KT2=2", "KTV2=3", "KR2=3", "KRV2=2", "--lats", "376", "--expect-fail"]
+CASES["rl_asbuilt_lx000"] = RLB + ["--real-lanes", f"{QC}/gen_bhd_asbuilt/coll_lane_latency.json", "--lx", "0", "0", "0", "--lats", "376", "--expect-fail"]
+
+# Q-COLLCAL-RL 10-18 (Q.STA.GEN.6 bench): the FIRST GEN that ran the Q-COLLCAL code = netlist-only compute GEN dv2f14bq
+# (claude/qlb-gen-1018 @9634b2b0d; ot-epyc4 qlb-gen-1018/dv2f14bq/out/case/coll_lane_latency.json copied, LX 10/0/9,
+# port 2 K tx/txv 6/6 rx/rxv 5/5).  PASS = as built at LS 376; negatives = the qtp8 fixed-delay calendar LX 7/0/7 and a
+# port-2 TX valid K one off its data K (KTV2=7; this GEN already has KTV2=6 = KT2, so the bhd KTV2=6 mutant is as built here).
+QR = "results/rtl/qcollcal_rl_1018/gen_dv2f14bq/coll_lane_latency.json"
+CASES.update({
+    "rl_dv2f14bq_ls376": RLB + ["--real-lanes", QR, "--lats", "376"],
+    "rl_dv2f14bq_lx707": RLB + ["--real-lanes", QR, "--lats", "376", "--lx", "7", "0", "7", "--expect-fail"],
+    "rl_dv2f14bq_ktv2skew": RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "376", "--expect-fail"],
+})
+
+# Q-COLLCAL-RL batch 2: rl_dv2f14bq_ls376 FAILED (mismatches 0, every die cdc bit 11 = face f2 = SerDes port 0 RX xfifo
+# r_fault; port 2 face clean) -> the GEN LX0 10 is off for port 0: sweep LX0 with LX1/LX2 as emitted (0 / 9)
+for lx0_ in (8, 9, 11, 12):
+    CASES[f"rl_dv2f14bq_lx0_{lx0_}"] = RLB + ["--real-lanes", QR, "--lats", "376", "--lx", str(lx0_), "0", "9"]
+
+# batch 3: LX0 10 is the best point (8/9/11/12 add mismatches + abort); the port 0 RX valid lane is N 2 vs its data lane N 3
+# (same K 2) -> diagnostic: equal the valid lane to the data lane (NRV0=3) / the other way (NR0=2)
+CASES["rl_dv2f14bq_nrv0_3"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NRV0=3", "--lats", "376"]
+CASES["rl_dv2f14bq_nr0_2"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NR0=2", "--lats", "376"]
+# batch 4: NRV0/NR0 equalised still FAIL (data exact, cdc bit 11 only) -> port 2 TX valid lane N 10 vs data N 8 (K 6/6)
+CASES["rl_dv2f14bq_ntv2_8"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NTV2=8", "--lats", "376"]
+CASES["rl_dv2f14bq_nofwd_fixed"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "NTV2=8", "NRV0=3", "--lats", "376"]
+# batch 5: lane N equalisation does not clear cdc bit 11 (port 0 RX read fault, data exact) -> does the calendar need LS > 376
+for ls_ in (378, 380, 384, 390):
+    CASES[f"rl_dv2f14bq_ls{ls_}"] = RLB + ["--real-lanes", QR, "--lats", str(ls_)]
+# batch 6: LS 378..390 PASS -> LS 377 bound + the negatives at the passing LS 378 (discriminating witnesses)
+CASES["rl_dv2f14bq_ls377"] = RLB + ["--real-lanes", QR, "--lats", "377"]
+CASES["rl_dv2f14bq_ls378_lx707"] = RLB + ["--real-lanes", QR, "--lats", "378", "--lx", "7", "0", "7", "--expect-fail"]
+CASES["rl_dv2f14bq_ls378_ktv2skew"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "378", "--expect-fail"]
+# batch 7: LS 377 PASS (376 FAIL) = the price on dv2f14bq; negatives at the priced point
+CASES["rl_dv2f14bq_ls377_lx707"] = RLB + ["--real-lanes", QR, "--lats", "377", "--lx", "7", "0", "7", "--expect-fail"]
+CASES["rl_dv2f14bq_ls377_ktv2skew"] = RLB + ["--real-lanes", QR, "--real-lanes-override", "KTV2=7", "--lats", "377", "--expect-fail"]
+
+# Q-COLLCAL3 10-18 (DRIVE-1800): the calendar is COMPILED from the lanes (--lats cal = tools/qwen_split/lane_groups.
+# collective_calendar: LS = max_j KC + KW + 17 + PS + LX_j + RS_j + RS_peer(j); dv2f14bq 377, dv2f14bi 378), not hand-set.
+# Per GEN: PASS at cal, FAIL at cal-1 (the compiled value is the minimum), mutants lx707 / KTV2 skew at cal FAIL.
+QI = "results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json"
+for g_, j_, kv_ in (("dv2f14bq", QR, 7), ("dv2f14bi", QI, 6)):   # kv_ = port 2 TX valid K one off its data K (as built 6 / 7)
+    J_ = ["--real-lanes", j_]
+    CASES.update({
+        f"cal_{g_}": RLB + J_ + ["--lats", "cal"],
+        f"cal_{g_}_seqsu": RLB + J_ + ["--lats", "cal", "--seqsu"],
+        f"cal_{g_}_minus1": RLB + J_ + ["--lats", "cal-1", "--expect-fail"],
+        f"cal_{g_}_lx707": RLB + J_ + ["--lats", "cal", "--lx", "7", "0", "7", "--expect-fail"],
+        f"cal_{g_}_ktv2skew": RLB + J_ + ["--real-lanes-override", f"KTV2={kv_}", "--lats", "cal", "--expect-fail"],
+        f"cal_{g_}_mut_rxearly": RLB + J_ + ["--lats", "cal", "--mutant-define", "OT_LCAL_MUT_RX_EARLY", "--expect-fail"],
+    })
+
+# MU-QWEN 10-18: 4-user compiled calendar on the dv2f14bi collective (LS = calendar 378): every user's all-reduce at its
+# compiled cycle (overlapping epochs), the latency user's commands alone (identity), one filler command moved onto the
+# previous command's issue window (must FAIL: engine calendar fault), and the RLAT mutant on the MU window (must FAIL).
+_MU = ["--mu-cal", "results/rtl/mu_qwen_1018/coll/mu_cal.json"]
+_MUB = CASES["cal_dv2f14bi"] + _MU
+CASES.update({
+    "mu_bi": _MUB + ["--only", "mu_window($|_ref)"],
+    "mu_bi_neg_overlap": _MUB + ["--only", "mu_window_neg_overlap", "--expect-fail"],
+    "mu_bi_mut_rlat": _MUB + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RLAT", "--expect-fail"],
+    "mu_bi_mut_rank": _MUB + ["--only", "^mu_window$", "--mutant-define", "OT_TP8S_MUT_RANK", "--expect-fail"],
+})
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "list":
         print("\n".join(CASES))

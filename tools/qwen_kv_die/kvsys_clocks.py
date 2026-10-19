@@ -115,7 +115,8 @@ def main(argv=None):
                 if pin not in leaves[mst].get('tt', {}):
                     raise ValueError(f'{inst}/{pin}: bound view {mst} has no measured clock pin {pin}')
             else:
-                if port not in E.CLOCKS and not mst.startswith('ot_'):
+                # KV-CLOCK 10-18: a hop-0 landing (qkd_landsh0_*) takes the SOURCE root on ck_s (kv_fwd_lanes.py)
+                if port not in E.CLOCKS and not mst.startswith('ot_') and not (mst.startswith('qkd_landsh0_') and port == 'ck_s'):
                     raise ValueError(f'{inst}/{port}: clock net {net} on a non-clock port')
                 leaves.setdefault(mst, {c: {} for c in CORNERS})
                 for c in CORNERS:

@@ -1,0 +1,129 @@
+{
+ "name": "qfwd_rlyr_1_ew_65x30",
+ "top": "qfd_rlyr_1_EW_65x30",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_fwd_lane.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "ckf",
+ "reset_ports": [],
+ "outline": {
+  "w": 64.776,
+  "h": 30.216,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "a"
+  ],
+  "W": [
+   "b"
+  ],
+  "N": [
+   "ckf",
+   "ck_o"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "forwarded_clock": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (as the coordinator-approved S81 relays): a lane frame is one flip-flop per bit between its pins (station) or the ring + its registered output (landing); a flow pin register would add a stage the die calendar does not price"
+ },
+ "sdc_extra": [
+  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl"
+ ],
+ "boundary_tcl": [
+  "physical/qwen_fwd_lane/fwd_lane_clocks.tcl"
+ ],
+ "route": {
+  "pd": 0.45,
+  "threads": 2,
+  "peak_ram_gb": 6,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "assigned_pin_source": {
+  "file": "results/arch/qwen_split_compute_1014/qh16c_rst_1018/class_pins/qfd_rlyr_1_EW_65x30.json",
+  "note": "die-assigned faces of the Qwen compute die GEN (OT_SPLIT_FWD_LANES=1); centre area pins moved to the free face; the die adopts the view pins",
+  "owner": "Q-DIE11-RLY"
+ },
+ "structural_change": "Q-DIE11-RLY 10-18 (coordinator HANDOFF 0ea item 1, LANDING-CONTRACT): 1-b forwarded-clock lane frame qfd_rlyr_1_EW_65x30: reset-lane half-cycle station (inverted ck_o) (rtl/qwen_split/qfd_fwd_lane.sv); replaces the regional-root qfd_rly_1 relay of the same die frame and faces. Recipe 4 flop-first, hold_budget die, M5 cap. Q-H16C 10-18 RESET-LANE CLASS MASTER (tools/qwen_split/fwd_lane_classes.py RST_FAMS): the 8 dv2f14bi forwarded reset-lane frames (qfd_rlyr0_/rlyr_/rlyrl_, 1 b, not classed by QK-FWD) -> 6 classes (rlyr_1_NW = MY of NE; rlyrl_1_ES / WS = MX / R180 of EN); behavioural bench tools/qwen_split/bench_fwd_rst_lane.sh (fixed latency from geometry, 6 lanes n = 1..27).",
+ "job": {
+  "owner": "Claude:Q-H16C",
+  "branch": "claude/qh16c-rst-1018",
+  "tag": "r1",
+  "purpose": "Qwen compute die forwarded half-cycle lane frame qfd_rlyr_1_EW_65x30 (reset-lane half-cycle station (inverted ck_o), 1 b)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_rlyr_1_EW_65x30 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fwd_rst_lane_exact",
+    "cmd": "bash tools/qwen_split/bench_fwd_rst_lane.sh pass {RUN}/bench_p qfd_rlyr0_1_EW_65x30 qfd_rlyr_1_EW_65x30 qfd_rlyrl_1_EW_65x30",
+    "expect": "pass",
+    "pass_regex": "RST_BENCH PASS 0 errors in [0-9]+ checks",
+    "pass_witness": "results/arch/qwen_split_compute_1014/qh16c_rst_1018/bench/qfwd_rlyr_1_ew_65x30_pass.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "full_mutant",
+    "cmd": "bash tools/qwen_split/bench_fwd_rst_lane.sh full {RUN}/bench_full qfd_rlyr0_1_EW_65x30 qfd_rlyr_1_EW_65x30 qfd_rlyrl_1_EW_65x30",
+    "expect": "fail",
+    "fail_regex": "RST_BENCH FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/qh16c_rst_1018/bench/qfwd_rlyr_1_ew_65x30_full.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfwd_rlyr_1_ew_65x30/views",
+  "record_to": "results/rtl/ref_tile/qfwd_rlyr_1_ew_65x30",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "rtl/qwen_split/qfd_fwd_lane.sv",
+   "rtl/hdc",
+   "tools/qwen_split",
+   "results/arch/qwen_split_compute_1014/qh16c_rst_1018/bench"
+  ]
+ }
+}

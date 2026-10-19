@@ -17,8 +17,15 @@ CLS = [(r'^phy_', 'phy'), (r'^ctl_', 'ctl'), (r'^svg_', 'svg'), (r'^sm_', 'sm'),
        (r'^hc_eng$', 'hc_eng'), (r'^hc_(SW|SE|NW|NE)$', 'hc_q'), (r'^hc_', 'hc_leaf'),
        (r'^su_prog$', 'su_prog'), (r'^sucore_', 'su_qcore'), (r'^sucx_', 'su_cx'), (r'^subr_', 'su_bridge'), (r'^su_', 'su_pg'),
        (r'^hb_coll_', 'coll'), (r'^cij_', 'coll_inj'), (r'^hb_dbk_', 'dma_back'), (r'^wbk_', 'wb_kport'),
-       (r'^hb_(idx|argmax)$', 'idx'), (r'^hb_quant', 'quant'), (r'^xl_', 'xload'), (r'^(lk|ep)_', 'link'),
-       (r'^host_', 'host'), (r'^col_', 'collar'), (r'^sfault_', 'stack_fault')]
+       (r'^hb_(idx(?:__.*)?|argmax)$', 'idx'), (r'^hb_quant', 'quant'), (r'^xl_', 'xload'), (r'^(lk|ep)_', 'link'),
+       (r'^(host_|hleaf_)', 'host'), (r'^col_', 'collar'), (r'^sfault_', 'stack_fault'),
+       # d4g quadrant services and die transport (GEN2). These are tile pins, never top ports.
+       (r'^vmb_', 'vm_bank'), (r'^(vmm_|xq_)', 'vm_merge'), (r'^hidxr_', 'rly_idx'),
+       (r'^hcx_', 'rly_hc'), (r'^hcb_', 'hc_leaf'), (r'^hcoll', 'coll'),
+       (r'^(cxdl_|cxij_|cxrc_|fcx_)', 'su_cx'), (r'^pgp_', 'su_prog'),
+       (r'^tkm_', 'topk_merge'), (r'^cic_', 'coll_inj'), (r'^refcfg_', 'refresh_cfg'),
+       (r'^wbc_', 'wb_kport'), (r'^(std_|stu_|stl_|str_)', 'scalar_tree'),
+       (r'^(fl_|fs_|fr_)', 'fault_tree'), (r'^l[0-9]+_', 'die_transport')]
 # owner of a class (intra-class paths); a cross-class path is a die-level interface: H-DIE + both owners
 CLS_OWNER = dict(phy='H-DIE', ctl='H-DIE', svg='H-DIE', sm='H-SM', clktree='H-DIE', ckgen='H-DIE-CKGEN', xcal='H-SM',
                  vmks='H-VM', vmdel='H-VM', cmdtgt='H-NETLIST', rly_sfu='H-DIE', rly_ring='H-DIE', vm_lg='H-VM',
@@ -26,7 +33,10 @@ CLS_OWNER = dict(phy='H-DIE', ctl='H-DIE', svg='H-DIE', sm='H-SM', clktree='H-DI
                  su_sfustore='H-SU', sfu_leaf='H-SU', hc_eng='H-HCENG', hc_q='H-HCENG', hc_leaf='H-HCENG',
                  su_prog='H-SU', su_qcore='H-SU', su_cx='H-SU', su_bridge='H-SU', su_pg='H-SU', coll='H-COLL',
                  coll_inj='H-COLL', dma_back='H-HARDEN', wb_kport='H-HARDEN', idx='H-IDX', quant='H-XL', xload='H-XL',
-                 link='H-HOST', host='H-HOST', collar='H-NETLIST', stack_fault='H-DIE', port='H-DIE')
+                 link='H-HOST', host='H-HOST', collar='H-NETLIST', stack_fault='H-DIE', port='H-DIE',
+                 vm_bank='H-VM', vm_merge='H-VM', rly_idx='H-DIE', rly_hc='H-DIE',
+                 topk_merge='H-IDX', refresh_cfg='H-HARDEN', scalar_tree='H-SU',
+                 fault_tree='H-DIE', die_transport='H-DIE')
 
 
 def owner(k):
@@ -52,7 +62,7 @@ def cls(name):
     for r, c in CLS:
         if re.match(r, inst):
             return c
-    return 'port'
+    return 'unclassified_tile' if '/' in name else 'port'
 
 
 def load(p):
@@ -68,7 +78,10 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('--json')
     a = ap.parse_args()
     res = {}
-    for corner, fn in (('tt_setup', 'paths_tt_max.txt'), ('ff_hold', 'paths_ff_min.txt')):
+    corners = [('tt_setup', 'paths_tt_max.txt'), ('ff_hold', 'paths_ff_min.txt')]
+    if any((Path(a.out) / ('paths_ss_max.txt' + suffix)).exists() for suffix in ('', '.gz')):
+        corners.append(('ss_setup_sensitivity', 'paths_ss_max.txt'))
+    for corner, fn in corners:
         p = Path(a.out) / fn
         if not p.exists():
             p = Path(str(p) + '.gz')

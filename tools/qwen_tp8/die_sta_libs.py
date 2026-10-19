@@ -247,7 +247,8 @@ def main():
     lef = {k: q for k, q in lef.items() if k not in skip}
     stubs = {mst: {p: [d, 0, set()] for p, d in ports.items()} for mst, ports in dirs.items()}
     for corner in ('tt', 'ff', 'ss'):
-        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks)
+        E.write_lib(corner, lef, stubs, out / f'qfd_elements_{corner}.lib', clock_ports=declared_clocks,
+                    related_pins=contract.get('related_pins'))
     views['assumed'] = sorted(lef)
     views['assumed_clock_insertion'] = {m: 'ideal zero-insertion assumption, no measured boundary evidence'
                                        for m in dirs if m not in leaves}

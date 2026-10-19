@@ -1,0 +1,7 @@
+pair_mut_result_bit expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1745 = PV 651 + max(P0 245, P1 245, R 1077) + 17 -> 1745 | programme tx_first 1750
+    XQ_ERR cyc 29961 layer 5 rel 2419: RESULT beat != golden at the compute consumer
+    XQ_E C2K_cmd_issue_to_land=28 C2K_q31_issue_to_land=29 C2K_q_first_issue_to_last_land=61 K2C_r31_issue_to_land=33 K2C_r0_issue_to_land=33 K2C_r_first_issue_to_last_land=64 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1840 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=14 K2C_status_issue_to_land=29
+    XQ_CFG C_REAL=1 K_REAL=3 QGAP=0 PHY=5 TXL=6 X=5 period=6840 stages C 2,2,2,2,0,2 K 11,11,9,9,9,11,11 MUT=9 layers=35
+    XQ_FAIL errors=1
+    XQ_ERR cyc 29961 layer 5 rel 2419: RESULT beat != golden at the compute consumer

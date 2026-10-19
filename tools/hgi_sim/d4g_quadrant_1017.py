@@ -204,6 +204,26 @@ def ag_cycles(B, r_hop, D=0.0, nominal=True, rings=1):
     return best, F
 
 
+# HBM-COLLQ (10-18): MEASURED gather-master span (rtl ot_hgi_coll_gq, bench tb_hgi_coll_gq, compiler model
+# tools/hgi_sim/collq_gather_1018.py, constants results/arch/hbm_die_d4g/collq/collq_schedule.json):
+#   launch -> fire 3 edges; fire -> last bank write = 1 + 3 ((K-1) >> 1) + ((K-1) & 1) + 38, K = ceil(F / R), F = the
+#   quadrant slice in 256-b flits (QBG: codes + exponent words).  The 38 fixed edges = VM read + quantiser/payload +
+#   merge register + ring inject + 3 ring hops (2 edges each, r = 0 in the bench) + publish capture/kq/write; the die
+#   adds 3 x COLL_RING relay stages (3 hops).  Opt-in knob ag_collq (cut-through as the ring model: the issue part
+#   can overlap the off-die delivery D; the fixed part never does).
+COLLQ_FIRE_FROM_LAUNCH = 3
+COLLQ_FIXED = 38
+# every ISA ring-A command (COLL engine reductions, merges, slice deliveries through the v8x/v8g parent) passes the gather
+# master's ring-A MERGE register: +2 edges vs the v5 parent (knob ra_extra on every non-gather COLL record)
+COLLQ_RA_EXTRA = 2
+
+
+def collq_span(F, R):
+    """(issue part, fixed part) of the gather-master span in edges for F flits a quadrant over R rings"""
+    K = max(1, -(-F // R))
+    return 1 + 3 * ((K - 1) >> 1) + ((K - 1) & 1), COLLQ_FIRE_FROM_LAUNCH + COLLQ_FIXED
+
+
 def qbg_ok(r):
     """the C1 record qualifies for quantize-before-gather (QBG_TAGS) and its quadrant slices are 32-block aligned"""
     tag = r.tag or ""
@@ -262,8 +282,15 @@ def d4g_added(r, c, kn):
             B = B // VM_WORD_B + B // VM_WORD_B // QBG_BLOCK   # QBG: E4M3 codes + 1 exponent byte a 32-block
         f1 = max(1, math.ceil(wire / kn["G1"] / 64))
         D = S.deliver(f1, kn["G1"], kn["lanes"])
-        ag, _ = ag_cycles(B, kn["r_hop"], D, kn["nominal"], kn.get("rings", 1))
+        if kn.get("ag_collq"):
+            F = -(-B // NQ // RING_FLIT_B)
+            ser, fixed = collq_span(F, kn.get("rings", 1))
+            ag = (max(0.0, ser - D) if kn["nominal"] else ser) + fixed + 3 * kn["r_hop"]
+        else:
+            ag, _ = ag_cycles(B, kn["r_hop"], D, kn["nominal"], kn.get("rings", 1))
         add += min(ag, 3 * D) if kn.get("allow_mcast", True) else ag
+    if kn.get("ra_extra") and r.unit == "COLL" and cl != "C1" and c > 0:
+        add += kn["ra_extra"]
     if "XQT" in on:
         sut = getattr(r, "sut", None)
         if r.unit == "SU" and isinstance(sut, dict) and sut.get("red"):

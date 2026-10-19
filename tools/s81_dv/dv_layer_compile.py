@@ -42,7 +42,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 
-DIE_REF = 'origin/claude/s81-die6-1018'
+DIE_REF = 'origin/main'   # p4l bind9 / plan / land plan / unit RTL of record (main 711fb3da3+ = die7 77083deda; byte-identical to die6 3923ae6de)
 DIE_PATHS = ['results/arch/s81_dv_1016/bind9', 'results/arch/s81_dv_1016/p4l', 'results/arch/s81_dv_1016/landing/p4l',
              'tools/s81_dv', 'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv', 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv',
              'rtl/dsrom_sys/s81_dv/slice', 'rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv']
@@ -58,9 +58,19 @@ SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=
 # a V SOUTH command leaves vo_s at v_cmd_to_vo + vo_s_land (V north on vo_n unchanged).
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
-# tb_s81sl_beat (results/rtl/s81_slice_1017/beat/bt_base: SLBEAT go_to_partial=111 rstd_to_y0=18 rstd_to_xq=47, PASS);
-# the bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 (the compiler keeps the proven slots).
-BEAT = dict(go_to_partial=111, rstd_to_y0=18, rstd_to_xq=47, hload_slot=40, gain_slot=20)
+# TOK-S81-GAPS/CTL (10-19, measured on the G8 cut_3S_ctl L0 replay: every S-line CTL word +5 vs this model, vo_n on time):
+# a CTL beat on a slice's V pin reaches its tier line out pins 6 edges later, not RSTOP_HOP: rstop iv (1) -> dl_vb (2) ->
+# xr vb (3) -> xr ci_r (4, v_ctl re-inject) -> rstop ci_q (5) -> ro_e / ro_w (6) (ot_s81sl_rstop + ot_s81sl_xr).
+V_CTL_INJECT = 6
+# dsdv_bk_sel rung transit vi -> vo: 3 edges since S81-TILES8/bk (10-18: one 276-b relay per input direction inside the
+# cluster, u_rn on vi_n; was ot_dsdv_vstop's 2).
+BKSEL_TRANSIT = 3
+# tb_s81sl_beat on the current vp (S81-SLICE NORMR, Verilator 5.050): results/rtl/s81_slice_1017/beat/g_b37 (op 7 NORMR,
+# hc_pre = G-unit leaf row R: SLBEAT go_to_partial=115 rstd_to_y0=18 rstd_to_xq=59 post_cmd_to_last_hw=63, PASS) and g_b37i
+# (op 5 NORM imm: go_to_partial=112); mutants g_mni (NORMR ignores the row) / g_mpl (old POST row order) FAIL.  (Was the
+# pre-NORMR bt_base: 111 / 18 / 47.)  The bench's proven command spacing HLOAD -> GAIN 40, GAIN -> NORM 20 is kept.
+BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_xq=59, post_cmd_to_last_hw=63,
+            hload_slot=40, gain_slot=20)
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 XFIN = dict(dl=4, collector=5, last_partial_to_rstd=234, rstd_to_xq_ring=59 + 16 + 4)
@@ -148,9 +158,20 @@ class Die:
             k = self.strap(ld[lk], 'k') if lk in ld else None
             e = self.E.get(lk, {}).get('E')
             n = len(st.get(lk, []))
-            # half-cycle stations: one T/2 each; landing: last station -> o = E + 1 edges (ot_s81_land contract)
-            age = (math.ceil(n / 2) + e + 1) if lk in ld else n / 2
-            self.links[lk] = dict(stations=n, landing=ld.get(lk), K=k, E=e, src=src, dst=dst, age_edges=age,
+            # half-cycle stations: one T/2 each; landing: last station -> o = K + 1 edges (ot_s81_land contract, gate
+            # calendar R0 = G + N mod 2).  S81-LBGAP/G8: the die.v K strap (bundle age), E only when no strap is bound
+            internal = None
+            row = self.E.get(lk, {})
+            if lk not in ld and row.get('cls') == 'x_frame':
+                match = re.fullmatch(r'.+_l(\d+)', lk)
+                receiver = 'u_' + row['dst'].split('.')[0]
+                strap = self.strap(receiver, 'lk') if receiver in self.inst else None
+                if match and strap is not None:
+                    k = (strap >> (3 * int(match.group(1)))) & 7
+                    internal = receiver
+            age = (math.ceil(n / 2) + (k if k is not None else e) + 1) if lk in ld or internal else n / 2
+            self.links[lk] = dict(stations=n, landing=ld.get(lk), internal_landing=internal, K=k, E=e,
+                                  src=src, dst=dst, age_edges=age,
                                   land_master=self.inst[ld[lk]]['master'] if lk in ld else None)
 
     def unlanded(self):
@@ -237,7 +258,7 @@ def vp_cmd(op, a0=0, a1=0, n=0, imm=0):
     return (op & 0xF) | (a0 & 0x3FF) << 4 | (a1 & 0x3FF) << 14 | (n & 0xFF) << 24 | (imm & ((1 << 128) - 1)) << 32
 
 
-VP = dict(GAIN=1, POST=2, HLOAD=3, HSTORE=4, NORM=5, RDOUT=6)
+VP = dict(GAIN=1, POST=2, HLOAD=3, HSTORE=4, NORM=5, RDOUT=6, NORMR=7)
 
 
 def xfin_go(eps32, eng=False, eng_scale=0):
@@ -314,9 +335,15 @@ def layer_schedule(tree, layer, workload='ar'):
     deps = [dict(src=e[0] if isinstance(e, list) else e.get('src'), dst=e[1] if isinstance(e, list) else e.get('dst'))
             for e in doc['edges']]
     deps = [d for d in deps if d['src'] in ids and d['dst'] in ids]
-    span = max(o['end'] for o in ops) - min(0.0, min(o['start'] for o in ops))
+    # S81-L20 10-19: the layer span runs from the layer entry (t0 = 0) to the layer exit.  Off-path prefetches that
+    # start before the entry (the Engram E<L>.* chain, which the token runs during EARLIER layers) are NOT part of the
+    # layer: they were counted here before (span = max end - min start), which priced AR L14 at 318,272.6 cycles
+    # (Engram lead_flit -290,190.7) instead of 28,081.9.  The prefetch lead is reported separately.
+    span = max(o['end'] for o in ops)
+    prefetch_lead = -min(0.0, min(o['start'] for o in ops))
     crit = sum(o['cycles'] for o in ops if o['critical'])
-    return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1), ops=ops, deps=deps,
+    return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1),
+                prefetch_lead=round(prefetch_lead, 1), ops=ops, deps=deps,
                 price_source='tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve')
 
 
@@ -324,10 +351,14 @@ def layer_schedule(tree, layer, workload='ar'):
 # SPEC.md section 3 (DV dataflow per layer type) + the unit contracts.  status: LOWERED (this compiler emits the unit
 # programme), PARTIAL (programme emitted, a named field is runtime data with no on-die path), GAP (no unit contract /
 # encoder for this op on the DV die yet: the precise missing piece is named).
-GAP_NORM_PRE = ('ot_s81sl_vp', 'c_d[159:32] (OP_NORM imm = hc_pre coefficients)',
-                'NORM takes hc_pre only as the command immediate; dsdv_gunit_l5 delivers the 24 HC coefficients as six '
-                'leaf-store row writes (CTL target 5, rows R..R+5) and no vp op loads hc_pre from a leaf-store row '
-                '(POST reads post/comb rows only), so a boot-loaded CTL template cannot carry the runtime coefficients')
+GAP_NORM_PRE = ('ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)', '16-slice norm composition',
+                'hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 '
+                'PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE '
+                'slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed')
+GAP_QNORM = ('tools/s81_dv/frame_return_plan.py + xfin over 4 slices', 'q_lora (qa) rows -> vn h copy 0',
+             'q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows '
+             'are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice '
+             'xfin composition is not compiled')
 GAP_XS_ROM = ('ot_s81sl_xs', 'calendar / phase / stream ROMs (OT_ROM_DIR images)',
               'no DV field placement compiler: the stream / phase / calendar ROM images exist only for the c26l hub '
               'stage catalog (results/rtl/dsrom_recovery_20261004/immutable_fullcatalog, 81 stages); the DV rule '
@@ -342,15 +373,36 @@ GAP_HEAD = ('head die (separate die type)', 'no netlist in the p4l DV bind',
             'head.* / draft.* / token.return run on the head dies (LM head 129,280 rows, argmax, MTP draft heads); the '
             'p4l DV die does not contain them, so their programme needs the head-die netlist of record and RTL (not in '
             'results/fleet_viz/die_sources.json), then this compiler targets it the same way')
+GAP_KV_UNIT = ('p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs',
+               'SPEC section 2 slice SU lanes "KV 32" (RMSNorm -> RoPE -> FP8 QDQ, D 512)',
+               'TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs '
+               'ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm '
+               '(4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: '
+               'kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision '
+               'owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows '
+               'to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it')
 OPMAP = [
     (r'^(head\.|draft\.|token\.return)', 'head die', 'GAP', GAP_HEAD),
     (r'attn\.(cmp\.wk|idx\.q)$', 'frames (cfg7) + slice xs / cap (compressor / indexer projections)', 'GAP', GAP_XS_ROM),
     (r'attn\.cmp\.(k_norm\..*|norm\..*|k_rope_qdq|row_qdq|pool)$', 'slice vn / vs (compressor norms, QDQ, pool)', 'GAP',
-     ('ot_s81sl_vs', 'SU op codes 8..15 (s_d)', 'no compiler encoder for the vs SU op words yet')),
-    (r'attn\.(idx\.(newkey|score|topk_local|topk_merge|topk_final)|cand\..*|gather)$',
-     'bk units dsdv_bk_sel / dsdv_bk_col (index scan, top-k, candidate merge, sparse gather) + svc', 'GAP',
-     ('dsdv_bk_sel / dsdv_bk_col', 'bk job / HBM index rows', 'no compiler ABI for the bk index-select / collect jobs '
-      '(rtl/dsrom_sys/s81_dv/unit/bk/test/run_bk_bench.sh drives them directly)')),
+     GAP_KV_UNIT),
+    # TOK-S81-GAPS/IDX 10-18: topk_local / topk_final / cand.* are lowered by layer_prog/lower_bk.py (bk_sel job);
+    # what stays here has NO unit on the p4l3 die (bind_p4l3_g8 masters: no index scan, no mix4)
+    (r'attn\.idx\.score$', 'DV index scan (none on the die)', 'GAP',
+     ('bind_p4l3_g8 (no index-score unit)', 'HBM index-key scan q.k -> BF16 scores -> u_bk_sel vi_s',
+      'no DV unit computes the indexer scores: dsdv_svc_rs (x16) has attention (svc_att / svc_sx / su_sms) only, the '
+      'hub-era scan dsfd_svc_idx (rtl/dsrom_sys/s81_ph/svc) is not instantiated; the scan must also emit BK-format beats '
+      '(lower_bk GAPS producer).  Rate: 131,072 scores / die at the 276-b rung = 8 scores / edge -> >= 16,388 edges')),
+    (r'attn\.idx\.newkey$', 'svc_rs HBM index-key append (none on the die)', 'GAP',
+     ('dsdv_svc_rs', 's_j job (index-key row write)', 'no svc job writes the new index key row into the HBM index '
+      'cache (dsdv_svc_rs job table: attention window / own row only); the key itself (idx.q . wk path) is a slice op')),
+    (r'attn\.(idx\.topk_merge)$', 'TP4 collective of the local selections (end-slice lep)', 'GAP',
+     ('u_s_4S rstop V receive -> end-slice lep', 'bk_sel egress kind 5 words', 'no path carries the bk_sel IDX words to '
+      'an end slice for the cross-die merge (lower_bk GAPS consumer); collective owned by TOKEN-XDIE-S81')),
+    (r'attn\.gather$', 'selected-row gather (svc HBM read by index; bk_col frame merge)', 'GAP',
+     ('dsdv_svc_rs / dsdv_bk_col', 'svc row-read job by index list + bk_col frames', 'no svc job reads HBM rows by a '
+      'runtime index list, and nothing produces bk_col frames on the column-1 rung; the 512 selected rows (fixture '
+      'attn.gather 512 x 512) would also cost >= 2 V beats per 512-b word at the rung (bk_col ingress + egress)')),
     (r'^eng\.(lead_flit|hash|hbm_read)$', 'svc_rs HBM service (Engram rows) + lep stage hop', 'GAP',
      ('dsdv_svc_rs', 's_j job (Engram row read)', 'svc job ABI for the Engram HBM row read is not documented as a compiler '
       'ABI; Engram table image belongs to the fixtures')),
@@ -361,10 +413,8 @@ OPMAP = [
      'frames (cfg7 programme) + slice xs (is_d phase start) + slice cap (cfg_d)', 'GAP', GAP_XS_ROM),
     (r'\.(a_allgather|out_allreduce|router_allgather|combine_allreduce|rows_allgather)$',
      'end-slice lep link endpoints + ring (cross-die)', 'GAP', GAP_XDIE),
-    (r'attn\.q_norm\.|attn\.q_quant$', 'slice vn/vq over 4 adjacent slices (q_lora norm, xfin)', 'PARTIAL', GAP_NORM_PRE),
-    (r'attn\.(q_rope|kv_rope_qdq|kv_norm\..*)$', 'slice vs SU ops (RoPE / QDQ)', 'GAP',
-     ('ot_s81sl_vs', 'SU op codes 8..15 (s_d)', 'no compiler encoder for the vs SU op words yet (tools/s81_slice/vs_gold.py '
-      'drives the leaf bench only); RoPE tables / positions are runtime context (seq_host context splice 1/2)')),
+    (r'attn\.q_norm\.|attn\.q_quant$', 'slice vn/vq over 4 adjacent slices (q_lora norm, xfin)', 'PARTIAL', GAP_QNORM),
+    (r'attn\.(q_rope|kv_rope_qdq|kv_norm\..*)$', 'KV RMSNorm -> RoPE -> FP8 QDQ (no die unit)', 'GAP', GAP_KV_UNIT),
     (r'attn\.(window_load|own_row_write|scores|max|exp|den|sink|normalize|pv)$',
      'svc_rs HBM service + ot_s81_su_sm attention (svc jobs, engine 4)', 'GAP',
      ('dsdv_svc_rs / dsdv_svc_att', 's_j job {arg 24, tag {slot, op 7}}',
@@ -383,10 +433,44 @@ OPMAP = [
      ('ot_s81sl_vp', 'POST a0 (coefficient rows) / a1 (y rows)', 'POST is a static template; the coefficient rows are '
       'written by the gunit L5 CTL rows (target 5) at their scheduled edge')),
     (r'substage_hop\d+$|head\.hop$', 'end-slice lep stage hop (h ring to the edge link)', 'GAP', GAP_XDIE),
+    (r'^eng\.knorm$', 'Engram key RMSNorm (no die unit)', 'GAP', GAP_KV_UNIT),
     (r'eng\.', 'slice vs op 14 ENG + ve + xfin ENG + eg (Engram mix)', 'GAP',
      ('ot_s81sl_vs', 'op 14 REDUCE / ADD words (tb_s81sl_slice_eng)', 'encoder exists only inside the slice bench; HBM '
       'Engram rows via svc not lowered')),
 ]
+
+
+# ================================================================================================= family lowerings
+# LB2-S81/CC (10-18): each unit family lowers its ops in tools/s81_dv/layer_prog/lower_<family>.py:
+#   OPS = [regex ...];  lower(die, op, ctx) -> dict(status, unit, insts, gap, rows, templates, gunit_rows, svc_jobs,
+#   files, events, bench).  A family result replaces the OPMAP row for the ops it claims; it may report LOWERED only
+#   with a committed unit / slice bench (bench = its results dir, check.json PASS + a mutant fail witness).
+def family_lowerings():
+    import importlib.util
+    out = []
+    for f in sorted((ROOT / 'tools/s81_dv/layer_prog').glob('lower_*.py')):
+        spec = importlib.util.spec_from_file_location(f.stem, f)
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        out.append((f.stem[len('lower_'):], m))
+    return out
+
+
+def bench_ok(rel):
+    """a family's LOWERED claim needs its committed bench: check.json with pass true and >= 1 failing mutant witness"""
+    if not rel:
+        return False, 'no bench'
+    d = ROOT / rel
+    c = d / 'check.json'
+    if not c.exists():
+        return False, f'{rel}/check.json missing'
+    j = json.loads(c.read_text())
+    if not j.get('pass'):
+        return False, f'{rel}/check.json pass != true'
+    muts = j.get('mutants') or []
+    if not any(m.get('failed') and m.get('witness') and (ROOT / m['witness']).exists() for m in muts):
+        return False, f'{rel}: no failing mutant with a committed witness'
+    return True, rel
 
 
 def op_unit(op):
@@ -407,25 +491,59 @@ class Prog:
         self.gunit_rows = []
         self.svc = []
         self.notes = []
+        self.mu_ctx = False          # MU-S81/TOK: the layer's first V command carries the user context (context 1)
+        self.files = {}
+        self.port_valid = []         # [{inst, ports, bit}]: the valid bit of a lane bundle (LB2-S81/EVENTS strict check)
 
     def template(self, name, payload):
         if payload in self.templates:
             return self.templates.index(payload)
-        assert len(self.templates) < NOPS, 'CTL template table full (128)'
+        # TOK-S81-GAPS (10-18): the table is per JOB (128 x 186 b, re-booted with each job's calendar over the host lane:
+        # dsdv_seq_host 0x13, a write is legal while no job is held).  The layer's table is virtual here; finish() boots
+        # only the templates a job's rows use, re-indexed (row 'tix' = the global index), and split_jobs cuts on both
+        # budgets.  ctl_templates.json / events keep the global index.
+        assert len(self.templates) < 1024, 'CTL template table: > 1024 distinct beats in one layer'
         self.templates.append(payload)
         self.tnames.append(name)
         return len(self.templates) - 1
 
+    def absorb(self, fam, op, r):
+        """merge one family lowering into the die programme: CTL templates are re-indexed into the shared table and
+        V-row args re-pointed (arg[6:0] = the family's template index), gunit job args likewise (arg[6:0])"""
+        remap = {i: self.template(f'{fam}.{n}', p) for i, (n, p) in enumerate(r.get('templates', []))}
+        for row in r.get('rows', []):
+            row = dict(row)
+            if row['eng'] in (ENG['VN'], ENG['VS'], ENG['GUNIT']) and remap and not row.get('raw_arg'):
+                row['tix'] = remap[row['arg'] & 0x7F]
+                row['arg'] = (row['arg'] & ~0x7F) | (row['tix'] & 0x7F)
+            row.setdefault('done', row['issue'] + SEQ['done_v'])
+            row['what'] = f"{op['id']}: {row.get('what', '')}"
+            self.rows.append(row)
+        self.gunit_rows += [tuple(x) for x in r.get('gunit_rows', [])]
+        self.svc += r.get('svc_jobs', [])
+        self.port_valid += [d for d in r.get('port_valid', []) if d not in self.port_valid]
+        # family events name the family's own template index ('template N'): re-point them into the shared table
+        # (LB2-S81/EVENTS: was copied unmapped -- right only while the family's templates came first)
+        for e in r.get('events', []):
+            e = dict(e)
+            for f in ('payload', 'carried_by'):
+                m = re.match(r'template (\d+)(.*)$', str(e.get(f, '')))
+                if m and e['kind'] in ('CTL', 'VS') and remap:
+                    e[f] = f'template {remap[int(m.group(1))]}{m.group(2)}'
+            self.events.append(e)
+        self.files.update(r.get('files', {}))
+
     def vrow(self, eng, issue, tix, ctx=0, what=''):
         assert eng in (ENG['VN'], ENG['VS'])
-        self.rows.append(dict(eng=eng, issue=issue, done=issue + SEQ['done_v'], arg=(tix & 0x7F) | (ctx & 3) << 7,
+        self.rows.append(dict(eng=eng, issue=issue, done=issue + SEQ['done_v'], arg=(tix & 0x7F) | (ctx & 3) << 7, tix=tix,
                               what=what))
 
 
 def ctl_path(die, sl):
     """seq_host vo_n / vo_s -> the slice's control plane: per-hop edges (contract model, asserted by the bench).
     V north reaches s_4N (tvN_seqhost), V south bk_sel then s_4S (tvS_seqhost, tvS_bk_sel); the column-4 slice
-    re-injects on its tier line both ways, rstop 2 edges a stop + the xr / xrE link ages between slices."""
+    re-injects on its tier line both ways (V pin -> line out V_CTL_INJECT edges through xr), rstop 2 edges a stop + the
+    xr / xrE link ages between slices."""
     info = die.slices()[sl]
     sid = info['sid']
     tier = 'N' if sl.endswith('N') else 'S'
@@ -446,10 +564,14 @@ def ctl_path(die, sl):
         path.append(dict(at=f'{lk} landed' if L else f'{lk} (abutted, no station / landing)', link=lk, edge=t,
                          stations=L['stations'] if L else 0, E=L['E'] if L else None))
         if where == 'u_seqhost.vo_s':
-            t += 2                                   # bk_sel rung transit: ot_dsdv_vstop forward 2 edges (dsdv_bk_g)
-    # the column-4 slice: rstop V deliver -> line inject (2 edges), then one stop per column
-    t += RSTOP_HOP
+            t += BKSEL_TRANSIT                       # bk_sel rung transit: relay u_rn + ot_dsdv_vstop (dsdv_bk_sel)
+    # the column-4 slice: V pin -> control plane -> line out (V_CTL_INJECT edges), then one stop per column.  An event edge
+    # is the slice's landed CTL pin + RSTOP_HOP (dv_cut_replay PIN_OFFSET), so the column-4 slice's own event is vi + 2.
+    t_vi = t
+    t += V_CTL_INJECT
     path.append(dict(at=f'{entry} line inject', edge=t))
+    if col == 4:
+        t = t_vi + RSTOP_HOP
     step = -1 if col < 4 else 1
     c = 4
     while c != col:
@@ -464,12 +586,12 @@ def ctl_path(die, sl):
         c = nxt
     port = 'ri_e' if col < 4 else ('ri_w' if col > 4 else 'vi')
     return dict(slice=sl, sid=sid, entry_port=port, edges=t, path=path, model='contract (dsdv_seq_host header + '
-                'ot_s81_land E + 1 + half-cycle stations + rstop 2/stop); the bench asserts the arrival edge')
+                'ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)')
 
 
 def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
     """slice-local hc_pre + RMSNorm + act-quant on ONE slice (the beat bench's proven sequence, issued through the
-    seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORM per leaf (a1 = global beat 5 sid + k, n = 3:
+    seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORMR per leaf (a0 = G-unit row R, a1 = global beat 5 sid + k, n = 3:
     q + BF16 family) -> xfin go (eps).  The partial / rstd / XQ edges follow from the unit latencies."""
     s = die.slices()[sl]
     sid, smask = s['sid'], 1 << s['sid']
@@ -478,11 +600,21 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     lat = cp['edges']
     th = prog.template(f'{which}.HLOAD', ctl_payload(smask, 0, 0x1F, vp_cmd(VP['HLOAD'], a0=r_h)))
     tg = prog.template(f'{which}.GAIN', ctl_payload(smask, 0, 0x1F, vp_cmd(VP['GAIN'], a0=r_gain)))
-    tn = [prog.template(f'{which}.NORM.k{k}', ctl_payload(smask, 0, 1 << k, vp_cmd(VP['NORM'], a1=5 * sid + k, n=3, imm=0)))
+    # HC pre is produced by the PREVIOUS sublayer, while post/comb are current.
+    # This is the model's delayed-pre contract (run_layer: cx['pre'], then a_pre).
+    # Distinct GU rows retain the previous ffn pre during the next attn HC job.
+    GU_ROWS = dict(family_lowerings())['gu'].GU_ROWS
+    is_ffn = which.endswith('ffn')
+    r_pre = GU_ROWS['attn' if is_ffn else 'ffn']
+    pre_source = 'attn.hc.coef_row0' if is_ffn else 'entry.previous_ffn.hc.coef_row0'
+    tn = [prog.template(f'{which}.NORMR.k{k}', ctl_payload(smask, 0, 1 << k, vp_cmd(VP['NORMR'], a0=r_pre, a1=5 * sid + k,
+                                                                                   n=3)))
           for k in range(5)]
     tx = prog.template(f'{which}.XFIN_GO', ctl_payload(smask, 1, 0, xfin_go(eps)))
     t = t0
-    prog.vrow(eng, t, th, what=f'{which} HLOAD {sl}')
+    # MU-S81/TOK (--mu-ctx, default off = byte-identical): the HLOAD beat carries the user's context header
+    # body[159:108] = {user 10, pos 21, tok 21} (seq_host context 1; HLOAD's template leaves those bits 0)
+    prog.vrow(eng, t, th, ctx=1 if prog.mu_ctx else 0, what=f'{which} HLOAD {sl}' + (' +ctx' if prog.mu_ctx else ''))
     prog.events.append(dict(cycle=t + lat, inst=sl, port=cp['entry_port'],
                             dir='in', kind='CTL', tag=f'{which}.HLOAD', payload=f'template {th}'))
     t += BEAT['hload_slot']
@@ -490,31 +622,126 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=t + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.GAIN',
                             payload=f'template {tg}'))
     t += BEAT['gain_slot']
+    # A local ffn consumes attn's emitted coefficient. Attn consumes the entry
+    # previous-ffn row, whose producer/transfer has NOT yet been bound by this
+    # layer compiler. Never wait for current attn HC or call an absent entry
+    # producer ready. The smoke calendar remains diagnostic until it is bound.
+    rows_out = [e['cycle'] for e in prog.events if e.get('tag') == pre_source
+                and e.get('port') == ('vo_n' if sl.endswith('N') else 'vo_s')]
+    dep_shift, row_land = 0, None
+    if rows_out:
+        tier = 'N' if sl.endswith('N') else 'S'
+        head = SEQ['v_cmd_to_vo'] + (die.links.get(f'tv{tier}_seqhost') or {}).get('age_edges', 0)
+        gl = (die.links.get(f'tv{tier}_gunit') or {}).get('age_edges', 0)
+        row_land = max(rows_out) + gl + (lat - head)
+        need = row_land + 1 - lat                    # issue edge whose CTL beat reaches the slice after the row
+        if need > t:
+            dep_shift, t = need - t, need
     # one CTL beat a cycle (two CTL beats in one cycle are a sticky fault in xr); the 5 NORMs go on 5 edges
     go = []
     for k in range(5):
-        prog.vrow(eng, t + k, tn[k], what=f'{which} NORM leaf {k} {sl} (imm = hc_pre: RUNTIME, see gap)')
+        prog.vrow(eng, t + k, tn[k], what=f'{which} NORMR leaf {k} {sl} (hc_pre = leaf row {r_pre})')
         prog.events.append(dict(cycle=t + k + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL',
-                                tag=f'{which}.NORM.k{k}', payload=f'template {tn[k]}; imm hc_pre RUNTIME'))
+                                tag=f'{which}.NORMR.k{k}', payload=f'template {tn[k]}; hc_pre leaf row {r_pre}'))
         go.append(t + k + lat)
     prog.vrow(eng, t + 5, tx, what=f'{which} XFIN_GO {sl}')
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
-    last_partial = go[-1] + BEAT['go_to_partial'] + XFIN['dl'] + XFIN['collector']
+    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
+    gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '
+             'exchanges among all 16 slices whose beat cycles follow from every slice\'s go edge: the words need the '
+             '16-slice norm composition (lower_norm on every slice + the snake / all-gather schedule), not compiled')
     prog.events.append(dict(cycle=last_partial, inst=sl, port='(xfin NX exchange out: ro_e / ro_w / vo)', dir='out',
-                            kind='NX', tag=f'{which}.partial_roots', payload='golden-subtree roots (fixture)', plan_only=True))
+                            kind='NX', tag=f'{which}.partial_roots', payload='golden-subtree roots (fixture)', plan_only=True,
+                            gap=gap16))
     prog.events.append(dict(cycle=xq, inst=sl, port='ro_e / ro_w', dir='out', kind='XQ', tag=f'{which}.x_allgather',
-                            payload='act-quant x beats of the slice (fixture: golden FP8 codes)', plan_only=True))
+                            payload='act-quant x beats of the slice (fixture: golden FP8 codes)', plan_only=True, gap=gap16))
     return dict(slice=sl, sid=sid, ctl_latency=cp, t_issue0=t0, last_partial=last_partial, rstd=rstd, xq_at_ring=xq,
-                end=xq, templates=[th, tg] + tn + [tx])
+                end=xq, templates=[th, tg] + tn + [tx], hc_pre_row=r_pre, hc_pre_row_land=row_land, dep_shift=dep_shift,
+                hc_pre_source=pre_source, hc_pre_source_event_present=bool(rows_out), hc_pre_source_bound=False,
+                qualification='PARTIAL: previous-sublayer pre row must have a source-bound producer and transfer')
+
+
+def row_ctl_events(die, prog):
+    """LB2-S81/EVENTS: every V calendar row (engine VN / VS) puts its CTL template on the slice control plane: the beat
+    arrives at each slice of its slice mask (on the engine's tier) at issue + ctl_path edges, on the ctl_path entry port.
+    Families that already state the arrival (norm smoke, vpx legs) must agree with this derivation (asserted); rows
+    whose family states only the unit-side effect (vs: the s_d command, slice-internal) get their CTL event here, and
+    the internal event records the arrival it rides on.  Returns the number of CTL events added."""
+    have = {}
+    for e in prog.events:
+        if e['kind'] == 'CTL' and e['dir'] == 'in':
+            have.setdefault((e['inst'], int(e['payload'].split()[1].rstrip(';'))), []).append(e['cycle'])
+    sid_of = {v['sid']: k for k, v in die.slices().items()}
+    added, paths = 0, {}
+    arrive = {}
+    for r in prog.rows:
+        if r['eng'] not in (ENG['VN'], ENG['VS']):
+            continue
+        ti = r.get('tix', r['arg'] & 0x7F)
+        mask = prog.templates[ti] & 0xFFFF
+        tier = 'N' if r['eng'] == ENG['VN'] else 'S'
+        for sid in range(16):
+            sl = sid_of.get(sid)
+            if not (mask >> sid) & 1 or sl is None or not sl.endswith(tier):
+                continue
+            cp = paths.setdefault(sl, ctl_path(die, sl))
+            c = r['issue'] + cp['edges']
+            arrive[(r['issue'], ti, sl)] = c
+            got = have.get((sl, ti), [])
+            if got:
+                assert c in got, f'CTL template {ti} at {sl}: family arrival {got} != row issue {r["issue"]} + path ' \
+                                 f'{cp["edges"]} = {c}'
+                continue
+            prog.events.append(dict(cycle=c, inst=sl, port=cp['entry_port'], dir='in', kind='CTL',
+                                    tag=f"{prog.tnames[ti]}", payload=f'template {ti}', from_row=r['issue']))
+            have.setdefault((sl, ti), []).append(c)
+            added += 1
+    for e in prog.events:
+        if e['kind'] == 'VS' and e.get('carried_by'):
+            ti = int(e['carried_by'].split()[1])
+            sl = e['inst'].split('.')[0]
+            e['ctl_at'] = arrive.get((e.get('issue', e['cycle']), ti, sl))
+            if e['ctl_at'] is None:
+                e['why'] = f'no calendar row issues template {ti} to {sl} at {e.get("issue")}'
+    return added
+
+
+class CalendarFull(Exception):
+    pass
+
+
+def split_jobs(prog, cap=NOPS - 2):
+    """a layer whose calendar exceeds one ot_dsdv_fixed_issue job (NOPS rows incl. KIT / END) runs as consecutive jobs:
+    rows cut in issue order, each job's issue / done rebased to its first issue (the host re-boots the next calendar
+    after END: the reload is a host-lane cost the price must carry, reported in calendar.json)"""
+    rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
+    jobs, chunks, cur, used = [], [], [], set()
+    for r in rows:                    # cut on the row budget AND the per-job template budget (TOK-S81-GAPS)
+        t = {r['tix']} if 'tix' in r else set()
+        if cur and (len(cur) >= cap or len(used | t) > NOPS):
+            chunks.append(cur)
+            cur, used = [], set()
+        cur.append(r)
+        used |= t
+    if cur:
+        chunks.append(cur)
+    for k, ch in enumerate(chunks):
+        t0 = ch[0]['issue']
+        jp = Prog(prog.die)
+        jp.templates, jp.tnames, jp.gunit_rows = prog.templates, prog.tnames, (prog.gunit_rows if k == 0 else [])
+        jp.virtual = True
+        jp.rows = [dict(r, issue=r['issue'] - t0, done=(r['done'] - t0) if r['done'] else 0) for r in ch]
+        jobs.append((t0, jp))
+    return jobs
 
 
 def finish(prog, stage=0, kit_lead=20):
     """KIT / END rows + the host boot stream (length, BEGIN, rows, SEAL, templates, gunit rows)"""
-    rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
+    rows = [dict(r) for r in sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))]
     seen = {}
     for r in rows:   # one command per engine per edge (fixed_issue code 9 duplicate issue)
         key = (r['eng'], r['issue'])
@@ -524,18 +751,28 @@ def finish(prog, stage=0, kit_lead=20):
     rows.append(dict(eng=ENG['KIT'], issue=max(0, endage - kit_lead), done=0, arg=0, what='KIT'))
     rows.append(dict(eng=ENG['END'], issue=endage, done=0, arg=0, what='END'))
     if len(rows) > NOPS:
-        raise SystemExit(f'calendar {len(rows)} rows > NOPS {NOPS}: split the layer into jobs')
+        raise CalendarFull(len(rows))
+    tsel = list(range(len(prog.templates)))
+    if len(prog.templates) > NOPS or getattr(prog, 'virtual', False):
+        tsel = sorted({r['tix'] for r in rows if 'tix' in r})
+        if len(tsel) > NOPS:
+            raise CalendarFull(f'{len(tsel)} templates')
+        loc = {g: i for i, g in enumerate(tsel)}
+        for r in rows:
+            if 'tix' in r:
+                r['arg'] = (r['arg'] & ~0x7F) | loc[r['tix']]
+    prog.job_templates = tsel
     hs = [csr_len(len(rows)), csr_pw(0, pw_header(len(rows), stage))]
     for i, r in enumerate(rows):
         r['row76'] = pack_row(r['done'], r['issue'], r['eng'], r['arg'])
         hs += [csr_pw(a, d) for a, d in pw_row_words(i, r['row76'])]
     hs.append(csr_pw(0, pw_header(len(rows), stage, seal=True)))
-    hs += [csr_template(i, p) for i, p in enumerate(prog.templates)]
+    hs += [csr_template(i, prog.templates[g]) for i, g in enumerate(tsel)]
     hs += [csr_gunit(a, d) for a, d in prog.gunit_rows]
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False):
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -543,13 +780,30 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
     sched = layer_schedule(tree, layer, wl)
     sl = sl if sl.startswith('u_') else f'u_{sl}'
     prog = Prog(die)
+    prog.mu_ctx = mu_ctx
     low = []
+    fams = family_lowerings()
+    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
-        low.append(dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
-                        gap=dict(module=gap[0], port=gap[1], missing=gap[2]) if gap and st != 'LOWERED' else None))
+        rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
+                   gap=dict(module=gap[0], port=gap[1], missing=gap[2]) if gap and st != 'LOWERED' else None)
+        for fam, m in fams:
+            if not any(re.search(rx, o['op']) for rx in m.OPS):
+                continue
+            r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start']))))
+            st = r.get('status', 'GAP')
+            if st == 'LOWERED':
+                ok, why = bench_ok(r.get('bench'))
+                if not ok:
+                    st, r['gap'] = 'PARTIAL', dict(module=f'lower_{fam}', port='bench', missing=why)
+            rec.update(unit=r.get('unit', unit), status=st, family=fam, insts=r.get('insts', []), bench=r.get('bench'),
+                       gap=r.get('gap') if st != 'LOWERED' else None)
+            prog.absorb(fam, o, r)
+            break
+        low.append(rec)
     sub = None
-    if layer != 'head':
+    if layer != 'head' and not any(x.get('family') for x in low if x['op'].endswith('attn.quant')):
         qop = next((o for o in sched['ops'] if o['op'] in ('attn.quant', 'mtp.attn.quant') or o['op'].endswith('attn.quant')), None)
         if qop is not None:
             sub = lower_norm_smoke(die, prog, sl, t0=int(qop['start']), which=qop['op'].rsplit('.', 1)[0] or 'attn')
@@ -564,22 +818,49 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
                    status='GAP', gaps=[dict(zip(('module', 'port', 'missing'), GAP_FRAME_PLACE)),
                                         dict(zip(('module', 'port', 'missing'), GAP_XS_ROM))])
         (out / 'prog/frame_cfg7' / f'{f}.json').write_text(json.dumps(rec, indent=1) + '\n')
+    n_row_ctl = row_ctl_events(die, prog)
     files = {}
+    for rel, text in prog.files.items():
+        (out / rel).parent.mkdir(parents=True, exist_ok=True)
+        (out / rel).write_text(text)
     if prog.rows:
-        rows, hs, endage = finish(prog)
-        (out / 'prog/host_boot.memh').write_text(memh(hs, 515))
-        files['prog/host_boot.memh'] = len(hs)
+        try:
+            jobs = [(0, prog, finish(prog))]
+        except CalendarFull:
+            jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
+        # TOK-S81-GAPS/CTL (10-19): the svc job tag is {issuer context slot, calendar row index} (dsdv_seq_host j_o =
+        # {v, arg, cd[83] slot, cd[6:0] op}; ot_dsdv_fixed_issue OP_BASE 0), known only once the calendar is sorted;
+        # the q-frame headers and the SVCJ words carry it (lower_svc tag_rule).  G8 cut_3S_ctl L0: s_j left with tag
+        # 0x5c (row 92) against the compiled 0x00.  Re-lower once with the final tag (row order does not depend on it).
+        need = {(k & 1) << 7 | i for k, (_, _, (rows, _, _)) in enumerate(jobs) for i, r in enumerate(rows)
+                if r['eng'] == ENG['SVC']}
+        assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
+        if need and need != {svc_tag} and prog.svc:
+            return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
+                                 svc_tag=need.pop())
+        cal = []
+        for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
+            jd = '' if len(jobs) == 1 else f'job{k}/'
+            (out / 'prog' / jd).mkdir(parents=True, exist_ok=True)
+            (out / f'prog/{jd}host_boot.memh').write_text(memh(hs, 515))
+            files[f'prog/{jd}host_boot.memh'] = len(hs)
+            cal.append(dict(job=k, layer_issue0=t0, nops=len(rows), end_age=endage, host_words=len(hs),
+                            templates=list(jp.job_templates),
+                            reload_edges=len(hs) * HOST_SLOT,
+                            rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'],
+                                       row76=f"{r['row76']:019x}", what=r['what']) for i, r in enumerate(rows)]))
         (out / 'prog/calendar.json').write_text(json.dumps(dict(
-            schema='opentallas.s81_dv.calendar.v1', nops=len(rows), stage=0, end_age=endage,
-            rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'], row76=f"{r['row76']:019x}",
-                       what=r['what']) for i, r in enumerate(rows)]), indent=1) + '\n')
+            schema='opentallas.s81_dv.calendar.v2', jobs=len(cal), stage=0, rows_total=len(prog.rows),
+            note='one ot_dsdv_fixed_issue job holds NOPS = 128 rows incl. KIT / END; more rows = consecutive jobs, '
+                 'each re-booted over the host lane after the previous END (reload_edges = host words x HOST_SLOT)',
+            nops=cal[0]['nops'], end_age=cal[0]['end_age'], rows=cal[0]['rows'], job=cal), indent=1) + '\n')
     (out / 'prog/ctl_templates.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.ctl_templates.v1', n=len(prog.templates),
         templates=[dict(i=i, name=n, payload186=f'{p:047x}', beat=f'{ctl_line_beat(p):053x}')
                    for i, (n, p) in enumerate(zip(prog.tnames, prog.templates))]), indent=1) + '\n')
     (out / 'prog/gunit_rows.json').write_text(json.dumps(dict(rows=[dict(a=a, d=f'{d:064x}') for a, d in prog.gunit_rows],
-                                                             note='none lowered (HC / router GAP)'), indent=1) + '\n')
-    (out / 'prog/svc_jobs.json').write_text(json.dumps(dict(jobs=prog.svc, note='none lowered (attention / HBM GAP)'),
+                                                             note=f'{len(prog.gunit_rows)} rows'), indent=1) + '\n')
+    (out / 'prog/svc_jobs.json').write_text(json.dumps(dict(jobs=prog.svc, note=f'{len(prog.svc)} jobs'),
                                                        indent=1) + '\n')
     stat = {}
     for x in low:
@@ -593,7 +874,11 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
                     'scheduled event (op schedule span below = the priced critical slice)',
         price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source']),
         ops=sched['ops'], deps=sched['deps'], smoke=sub, events=sorted(prog.events, key=lambda e: e['cycle']),
-        links=links), indent=1) + '\n')
+        event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
+                    '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
+                    'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
+                    'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),
@@ -617,6 +902,38 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None):
     return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub)
 
 
+# ================================================================================================= multi-user (MU-S81)
+# MU-S81 10-18: the layer programme is ONE per-stage programme for every user (the shift lemma: user k = the reference
+# schedule shifted by k slots, tools/s81_dv/dv_mu_calendar.py).  What changes per slot is data, not the calendar rows:
+# the V-command context body {user 10, pos 21, tok 21} (dsdv_seq_host context 1 = body[159:108]) and the per-user HBM
+# region bases the svc job words carry (WB window ring, SB compressed rows, IKB index keys) on the user's group copy.
+MU_LAYER_GROUP = {'L0': 'S000', 'L2': 'S002', 'L14': 'S020', 'L20': 'S029'}
+
+
+def mu_ctx_body(user, pos, tok=0):
+    """dsdv_seq_host V context 1: body[159:108] = {user 10, pos 21, tok 21} (seq_host header, arg [8:7] = 1)"""
+    assert 0 <= user < 1 << 10 and 0 <= pos < 1 << 21 and 0 <= tok < 1 << 21
+    return ((user << 42) | (pos << 21) | tok) << 108
+
+
+def mu_slot_tables(cal, layer, pos0=0):
+    """per-slot rows of this layer's stage group from a dv_mu_calendar record: {slot, user, kind, copy, local, start,
+    pos0, stride, wb/sb/ikb, ctx_body (hex)}; the latency user is slot 0 on copy A"""
+    gid = MU_LAYER_GROUP[layer]
+    tab = cal['tables'][gid]
+    stride = cal['pos']['stride']
+    slot_of = {s_['user']: s_['slot'] for s_ in cal['slots']}
+    rows = []
+    for r in tab['rows']:
+        p0 = pos0                       # every user starts its own context at pos0 (per-user KV state)
+        rows.append(dict(slot=slot_of[r['user']], **r, pos0=p0, stride=stride,
+                         ctx_body=f"{mu_ctx_body(r['user'], p0):040x}"))
+    assert rows and rows[0]['user'] == 0 and rows[0]['copy'] == 'A' and rows[0]['start'] == min(x['start'] for x in rows)
+    return dict(schema='opentallas.s81_dv.mu_slots.v1', layer=layer, group=gid, mode=cal['mode'],
+                period=cal['period'], slot=cal['slot'], copies=tab['copies'], users_per_copy=tab['users_per_copy'],
+                lemma=cal['lemma']['brute_force']['result'], rows=rows)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--layer', required=True, choices=list(LAYERS) + list(SPECIAL))
@@ -625,9 +942,20 @@ def main(argv=None):
     ap.add_argument('--die-ref', default=DIE_REF)
     ap.add_argument('--die-src', default=None, help='an extracted die-ref tree (else git archive of --die-ref)')
     ap.add_argument('--workload', default=None, choices=('ar', 'mtp'))
+    ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
+    ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
+    ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
     a = ap.parse_args(argv)
+    if a.mu_cal:
+        t = mu_slot_tables(json.loads(Path(a.mu_cal).read_text()), a.layer)
+        Path(a.out, 'prog').mkdir(parents=True, exist_ok=True)
+        Path(a.out, 'prog/mu_slots.json').write_text(json.dumps(t, indent=1) + '\n')
+        print(f"MU {a.layer} {t['group']}: {len(t['rows'])} slots, copies {t['copies']} {t['users_per_copy']}, "
+              f"lemma {t['lemma']}")
+        if a.layer not in LAYERS:
+            return
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload)
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

@@ -28,11 +28,11 @@ import d2d_link_calendar as L   # noqa: E402
 
 RX_CMD, SERVICE_END = 2, 1777            # kvs14c qkd_kvs_attn u_attn_cal parameters (qkd_kvs_tiles_hroot_ff_k.sv @ f05f9338f)
 TX_FIRST = RX_CMD + 2 + SERVICE_END - 31  # qkd_attn_cal_gen STRETCH=1: constant
-N59_TX = 2      # qfd_native59_dv_service: tx_slot pin -> native_tx_v (pin register + qkd_native_attention_record register)
-N59_X3 = 2      # kv_x3_slot pin -> x3 (pin register + qfd_kvn_static_transport register)
+N59_TX = L.N59_TX   # qfd_native59_dv_service: tx_slot pin -> native_tx_v (pin register + qkd_native_attention_record register)
+N59_X3 = L.N59_X3   # kv_x3_slot pin -> x3 (pin register + qfd_kvn_static_transport register)
 N59_RX_DR = 4   # native_rx pins -> dr_o (pin register, codec register, vm_write register, dr_o register)
 N59_LAND = 8    # qfd_native59_dv_service LAND_EDGES default (dr_o -> slice VM write commit, compiler constant)
-KV_CODEC = 1    # qkd_native_attention_static_ctl codec: age-slot event -> tx_valid register
+KV_CODEC = L.KV_CODEC   # qkd_native_attention_static_ctl codec: age-slot event -> tx_valid register
 
 
 def layer_msgs_gap(w, txl, phy, st_ofs, gap):
@@ -64,10 +64,19 @@ def main():
                     help='CS_TXS,CS_RXV,CS_RXP,CS_X3S,SC_TX,SC_X3 / KS_RXV,KS_RXP,KS_TXS,KS_TXK,KS_TXB,SK_TXV,SK_TXP')
     ap.add_argument('--txd-override', default=None, help='MUTANT: compile with these raw TXD C ports 0..3 (e.g. 1,1,1,2)')
     ap.add_argument('--no-extend', action='store_true', help='MUTANT: compile the priced attn_kv window (X = 0)')
+    ap.add_argument('--layer', default='L1_35', choices=('L1_35', 'L0'),
+                    help='decode-layer windows (L1..L35) or the token-run L0 windows (QXF-LINK F7: priced attn_kv 2,038 '
+                         'carries 222 edges of per-token KV adders no RTL element implements; the compiled window is the '
+                         'implemented KV service, X < 0)')
+    ap.add_argument('--masters-txdp', default=None,
+                    help='MUTANT: TXDP the die masters are built with, C0..3/K0..3 (default: the compiled TXDP; '
+                         'e.g. the r4..r9 hard-wired 3,3,1,4/3,4,3,3)')
     ap.add_argument('--c-real', type=int, default=1, help='1: qfd_native59_dv_service is the compute producer/consumer')
     ap.add_argument('--k-real', type=int, default=1, help='1/2: the kvs_attn programme is the KV producer/consumer')
-    ap.add_argument('--qgap', type=int, default=1,
-                    help='idle link slots between CMD and Q beat 0 (native59: CMD -> Q export needs 2 edges, i.e. 1 gap)')
+    ap.add_argument('--qgap', type=int, default=0,
+                    help='idle link slots between CMD and Q beat 0: 0 = the compiler law (d2d_link_calendar layer_msgs, Q beat b '
+                         'at q0 + 1 + b; native59 opens its Q window on the request edge since QXF-LINK F1); 1 = the pre-fix '
+                         'native59 requirement (negative witness only)')
     a = ap.parse_args()
     cs, ks = a.stages.split('/')
     CS_TXS, CS_RXV, CS_RXP, CS_X3S, SC_TX, SC_X3 = map(int, cs.split(','))
@@ -76,17 +85,27 @@ def main():
         CS_TXS = CS_RXV = CS_RXP = CS_X3S = SC_TX = SC_X3 = 0
     if not a.k_real:
         KS_RXV = KS_RXP = KS_TXS = KS_TXK = KS_TXB = SK_TXV = SK_TXP = 0
-    raw_c = [CS_TXS + N59_TX + SC_TX, 1, 1, CS_X3S + N59_X3 + 1 + SC_X3] if a.c_real else [1, 1, 1, 2]
-    raw_k = [KS_TXS + KV_CODEC + SK_TXP, 2, 1, 1]
+    # producer TXD from the die stages: the compiler law (d2d_link_calendar.producer_txd, QXF-LINK F4); the component
+    # codec at an unreal end has raw 1 (KVN 2) and no seam
+    S = dict(CS_TXS=CS_TXS, CS_RXV=CS_RXV, CS_RXP=CS_RXP, CS_X3S=CS_X3S, SC_TX=SC_TX, SC_X3=SC_X3, KS_RXV=KS_RXV,
+             KS_RXP=KS_RXP, KS_TXS=KS_TXS, KS_TXK=KS_TXK, KS_TXB=KS_TXB, SK_TXV=SK_TXV, SK_TXP=SK_TXP)
+    law = L.producer_txd(S)
+    raw_c = law['C'] if a.c_real else [1, 1, 1, 2]
+    raw_k = law['K']
     if a.txd_override:
         raw_c = [int(x) for x in a.txd_override.split(',')]
-    ext = {'C': [2, 2, 0, 2], 'K': [2, 2, 2, 2]}            # --pinreg (die masters PR = 1)
+    ext = L.PINREG_EXT                                       # --pinreg (die masters PR = 1)
     txd = {'C': [x + e for x, e in zip(raw_c, ext['C'])], 'K': [x + e for x, e in zip(raw_k, ext['K'])]}
+    if a.masters_txdp:
+        mc, mk = a.masters_txdp.split('/')
+        mtx = {'C': [int(x) for x in mc.split(',')], 'K': [int(x) for x in mk.split(',')]}
+    else:
+        mtx = txd
     txl_p, phy_p, phy_c = a.txl + 2, a.phy + 2, a.phy + 2
     # priced windows (the same pass d2d_link_calendar --profile program runs)
     _, lay = L.program_profile(txl_p, phy_p, a.token_path, host_stages=0, st_ofs=40, handoff=a.link_handoff)
-    w = [lay['windows']['L1_35'][k] for k in ('rmsnorm1', 'qkv', 'qknorm_rope', 'attn_kv')]
-    period = next(l['cycles'] for l in lay['layers'] if l['id'] == 'L1')
+    w = [lay['windows'][a.layer][k] for k in ('rmsnorm1', 'qkv', 'qknorm_rope', 'attn_kv')]
+    period = next(l['cycles'] for l in lay['layers'] if l['id'] == ('L1' if a.layer == 'L1_35' else 'L0'))
     q0 = sum(w[:3])
     arr_cmd = q0 + txd['C'][0] - 1 + a.txl + phy_c          # compile_seg arrival (ofs 0)
     t_cmd_prog = arr_cmd + 2 + KS_RXV                       # CMD at the programme rx pins = programme age RX_CMD
@@ -135,11 +154,16 @@ def main():
              CS_TXS=CS_TXS, CS_RXV=CS_RXV, CS_RXP=CS_RXP, CS_X3S=CS_X3S, SC_TX=SC_TX, SC_X3=SC_X3,
              KS_RXV=KS_RXV, KS_RXP=KS_RXP, KS_TXS=KS_TXS, KS_TXK=KS_TXK, KS_TXB=KS_TXB, SK_TXV=SK_TXV, SK_TXP=SK_TXP)
     for k, v in P.items():
-        if v < 0:
+        if v < 0 and k != 'P_X':      # X < 0: the priced window is longer than the implemented service (L0, F7)
             raise SystemExit(f'{k} = {v} < 0')
     with open(f'{a.out}/xdie_params.svh', 'w') as f:
         f.write(''.join(f'localparam integer {k} = {v};\n' for k, v in P.items()))
-    rec = dict(schema='opentallas.xdie_qwen_exchange_cal.v1', c_real=a.c_real, k_real=a.k_real, qgap=a.qgap, txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=True, ofs=0,
+        # the die masters' TXDP (compiler output; a mutant may build the masters with another vector)
+        f.write(f"localparam [31:0] P_TXDP_C = 32'h{L.txdp_word(mtx['C']):08x};\n"
+                f"localparam [31:0] P_TXDP_K = 32'h{L.txdp_word(mtx['K']):08x};\n")
+    with open(f'{a.out}/txdp.svh', 'w') as f:
+        f.write(L.txdp_svh(txd, f'xdie_exchange_cal.py stages {a.stages} c_real {a.c_real} k_real {a.k_real}'))
+    rec = dict(schema='opentallas.xdie_qwen_exchange_cal.v1', layer=a.layer, masters_txdp=mtx, c_real=a.c_real, k_real=a.k_real, qgap=a.qgap, txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=True, ofs=0,
                txd=txd, raw_txd=dict(C=raw_c, K=raw_k), stages=a.stages, entries={k: len(v) for k, v in imgs.items()},
                windows_priced=dict(zip(('rmsnorm1', 'qkv', 'qknorm_rope', 'attn_kv'), w)), attn_extend_X=X,
                layer_period=period, layer_period_compiled=period + X, span=span, messages=table,

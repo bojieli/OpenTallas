@@ -30,7 +30,12 @@ class Ages(unittest.TestCase):
             for gr in range(8):
                 q = A.stages(SRC, f'krq_{st}_{gr}')[0]
                 s = A.stages(SRC, f'krs_{st}_{gr}')[0]
-                self.assertEqual(self.ages['k_issuer'][f'ki_{st}_{gr}']['RESPONSE_LAT'], 8 + q + s)
+                ki = self.ages['k_issuer'][f'ki_{st}_{gr}']
+                self.assertEqual(ki['natural_response_lat'], 8 + q + s)
+                # KV-ECTL4: every frame padded (request chain) to the one K round trip of the hardened ECTL children
+                self.assertEqual(ki['RESPONSE_LAT'], A.K_RT_BUDGET)
+                self.assertEqual(ki['request_pad'], A.K_RT_BUDGET - (8 + q + s))
+                self.assertGreaterEqual(ki['request_pad'], 0)
 
     def test_qk_issue_age_is_minimal_for_the_slowest_group(self):
         age = self.ages['qk']['QK_ISSUE_AGE']

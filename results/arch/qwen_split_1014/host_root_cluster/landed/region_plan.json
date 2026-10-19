@@ -1,0 +1,26 @@
+{
+ "lane": "PL-KVHOST (PARENTS-LANDED) 2026-10-18",
+ "parent": "qkd_hr_cluster (KV host-root cluster, 950.4 x 648.0 um; prefix qkd_host_root CRITICAL)",
+ "rtl": "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cluster.v (KV-HOSTCL-REGEN fleet gen 04:41, ot-epyc5; ctrl_completion_fault 1 b; stage-2 cluster_gate benches NOT yet run)",
+ "proposal": "one clock region per clock FAMILY; zero landed crossings; core family kept as ONE region (<1 mm) with a neighbour-matched boundary (child insertion match or parent compensation), judged per linked child pair at child flops TT and FF <= 80",
+ "regions": {
+  "core": {"clock_port": "ck_core", "insts": ["u_core_rx (rx_class_admission_rr)", "u_core_tx", "u_core_guard", "u_core_queue", "u_core_order", "u_core_peer", "u_core_prompt", "core faces of u_cdc_pc / u_cdc_host / u_ingest_qm"], "extent_um": "~950 x ~430 (middle + N bands)"},
+  "phy": {"clock_ports": ["ck_phy_fam", "ck_phy[7:0]"], "insts": ["8x qfd_link_adp128 (S band 864 x 129.6)", "u_rank__u_phy__u_pad", "phy face of u_cdc_pc"], "note": "ONE family net with 9 entries (gen_tb ties them to one level); adp TT 236.6 vs pad 188.2 = 48 ps < 100; furthest adp ~430 um from pad"},
+  "host": {"clock_port": "ck_host", "insts": ["host faces of u_cdc_host / u_ingest_qm"]},
+  "ingest": {"clock_port": "ck_ingest", "insts": ["ingest face of u_ingest_qm"]}
+ },
+ "cross_region": "every cross-region net is a cross-FAMILY net through the 4 CDC leaves (cdc_host core|host, cdc_pc core|phy, ingest_qm core|host|ingest afifos): stays CDC, never landed. Same-family cross-region nets: 0. Landings: 0. Pads: 0.",
+ "why_not_landed_core_split": {
+  "trigger": "core-family child insertions differ > 100 ps: peer TT 472.7 / FF 398.7 (kv-cdc2-peer regate 05:24, gate FAIL) and prompt p3 TT 438.7 (p4 gate pending) vs rx 219.5/179.1, tx 199.6/163.8, guard 210.9, queue 213.2, order 276.7 (TT, kit gate_result.json)",
+  "core_hi=peer+prompt": "81 nets, 5,080 b landed (~25.4k ring flops), 8 cross-region 2-cycles (cdc_pc, guard x2, queue, tx x2, rx x2) -> lp.py cannot keep the flat schedule; compiler re-schedule + credit RTT cover for every loop (core_split_peer_prompt.{log,json})",
+  "core_hi=peer": "97 nets, 5,407 b, 6 loops (core_split_peer_only.log)",
+  "conclusion": "every core child talks both ways with peer and prompt; any core split lands ~5 kb on 6-8 loops inside a <1 mm parent. Rejected (closure first; only significant gains)."
+ },
+ "boundary_match_options": {
+  "A_preferred": "re-close peer (23.4k sinks, 472.7 TT) and prompt (p4 bnd_branch) to TT insertion within ~100 ps of the 200-277 group (target <= ~300 TT): then the core family is within 100 ps and needs nothing at the parent",
+  "B_parent_compensation": "else delay the ck_core entry of the low-insertion core children so entry + child insertion matches peer per linked pair. TT adds vs peer 472.7: tx +273, guard +262, queue +260, rx +253, order +196, prompt +34 (p3). Check FF: tx 163.8 + 273/1.2 ~= 391 vs peer 398.7 (~8 ps) -- clock buffers track across corners; gate must confirm per pair at TT and FF <= 80 (cts_native_probe --relative-to)",
+  "unknown": "core-face insertions of cdc_pc / cdc_host / ingest_qm (not closed yet) must land in the same window"
+ },
+ "compiler": {"port_offsets": "all 0 (no landings, no pads, no reset re-timing)", "child_offsets": "all 0", "added_edges": 0, "reset_RB": "unchanged (existing per-child regional reset relays)"},
+ "die_obligations": ["ck_phy[7:0] and ck_phy_fam are ONE phy-family net: the die delivers the 9 entries phase-matched so each linked adp_i <-> pad / cdc_pc pair is <= 80 at TT and FF at the child flops", "ck_core / ck_host / ck_ingest: one entry each, beside each family's register mass"]
+}

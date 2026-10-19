@@ -67,9 +67,78 @@ def test_override_raises_the_current_rtl_share(tmp_path):
 
 
 def test_committed_outputs_match():
-    o, _ = tc.run([], [])
+    o, _ = tc.run()                                   # default = discovery of every record
     for d, wls in o.items():
         ref = json.loads((tc.OUT / f'{d}.json').read_text())['workloads']
         for wl, w in wls.items():
             assert w.get('tok_s') == ref[wl].get('tok_s')
             assert w.get('by_grade') == ref[wl].get('by_grade')
+
+
+# ---------------------------------------------------------------- ROOT-TOKTOOL 10-18: discovery + O_meas never assumed
+def _w(p, doc):
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(doc))
+
+
+def test_discovery_finds_every_family_without_a_path_list(tmp_path):
+    tcb = {'token_compose': {'terms': [{'design': 'qwen_rom', 'slot': 'x', 'cycles': 1.0, 'grade': 'priced'}]}}
+    _w(tmp_path / 'results/rtl/s81_layer_tput_1018/record.json', {'token_compose': {'terms': []}})     # TOKEN-PASS top
+    _w(tmp_path / 'results/rtl/hbm_ds_layer_tput_1019/slice_sw/run_ds_l0/record.json', tcb)          # LB2 per-layer, deep
+    _w(tmp_path / 'results/rtl/hbm_ds_layer_tput_1019/fixtures/L00/manifest.json', {'a': 1})         # not a record
+    _w(tmp_path / 'results/rtl/xdie_qwen_1018/record.json', {'schema': 'x'})                          # XDIE top, no block
+    _w(tmp_path / 'results/rtl/xdie_qwen_1018/pair_r1/record.json', tcb)                              # XDIE sub-record
+    _w(tmp_path / 'results/rtl/xdie_qtp8_1018/runs/c1/record.json', {'case': 1})                      # case record, no block
+    got = dict(tc.discover_records(tmp_path))
+    assert got == {'results/rtl/s81_layer_tput_1018/record.json': 'pass',
+                   'results/rtl/hbm_ds_layer_tput_1019/slice_sw/run_ds_l0/record.json': 'pass',
+                   'results/rtl/xdie_qwen_1018/record.json': 'xdie',
+                   'results/rtl/xdie_qwen_1018/pair_r1/record.json': 'xdie'}
+
+
+def test_default_run_reads_the_committed_records():
+    rels = {r for r, _ in tc.discover_records()}
+    assert 'results/rtl/xdie_qwen_1018/pair_r2/record.json' in rels
+    assert 'results/rtl/xdie_s81_1018/record.json' in rels
+    o, seen = tc.run()
+    used = {s['record'] for s in seen if s['used']}
+    assert {'results/rtl/xdie_s81_1018/record.json', 'results/rtl/xdie_qwen_1018/pair_r2/record.json'} <= used
+    assert {s['record'] for s in seen} == rels
+    for d, wls in o.items():                          # no two records silently fight over one slot
+        for w in wls.values():
+            assert not any('replaces_override_from' in u for u in w.get('overrides_used', []))
+
+
+def test_exchange_override_without_o_meas_is_rejected(tmp_path):
+    base, _ = tc.run([], [])
+    rec = tmp_path / 'record.json'
+    _w(rec, {'token_compose': {'terms': [{'design': 'qwen_rom', 'workload': 'ar', 'slot': 'Lc.xdie.d2d_attention',
+                                          'E': [{'grade': 'measured-current-RTL', 'E': 70.0}]}]}})   # no O, no O_source
+    o, seen = tc.run([str(rec)], [])
+    assert seen[0]['used'] is False and seen[0]['rejected'][0]['slot'] == 'Lc.xdie.d2d_attention'
+    assert o['qwen_rom']['ar']['T_token_cycles'] == base['qwen_rom']['ar']['T_token_cycles']
+    _w(rec, {'token_compose': {'terms': [{'design': 'qwen_rom', 'workload': 'ar', 'slot': 'Lc.xdie.d2d_attention',
+                                          'E': [{'grade': 'measured-current-RTL', 'E': 70.0}], 'O': 0.0, 'O_source': ' '}]}})
+    assert tc.run([str(rec)], [])[1][0]['used'] is False                                           # empty O_source
+
+
+def test_o_ref_reads_o_meas_from_the_schedule(tmp_path):
+    _w(tmp_path / 'schedule.json', {'exchanges': [{'O_meas': 30.0}]})
+    rec = tmp_path / 'record.json'
+    _w(rec, {'token_compose': {'terms': [{'design': 'qwen_rom', 'workload': 'ar', 'slot': 'Lc.xdie.d2d_attention',
+                                          'E': [{'grade': 'measured-current-RTL', 'E': 70.0}],
+                                          'O_ref': {'record': 'schedule.json', 'pointer': 'exchanges.0.O_meas'}}]}})
+    o, seen = tc.run([str(rec)], [])
+    assert seen[0]['used'] is True
+    t = [t for t in o['qwen_rom']['ar']['terms'] if t['slot'] == 'Lc.xdie.d2d_attention']
+    assert t[0]['O'] == 30.0 and t[0]['cycles'] == pytest.approx(40.0) and 'exchanges.0.O_meas' in t[0]['O_source']
+
+
+def test_two_records_on_one_slot_are_reported(tmp_path):
+    a, b = tmp_path / 'a.json', tmp_path / 'b.json'
+    for p, c in ((a, 100.0), (b, 200.0)):
+        _w(p, {'token_compose': {'terms': [{'design': 'qwen_rom', 'workload': 'ar', 'slot': 'head.die', 'cycles': c,
+                                            'grade': 'measured-current-RTL'}]}})
+    o, _ = tc.run([str(a), str(b)], [])
+    u = o['qwen_rom']['ar']['overrides_used']
+    assert u[-1]['replaces_override_from'] == [u[0]['record']]

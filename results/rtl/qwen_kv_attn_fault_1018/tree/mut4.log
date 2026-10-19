@@ -1,0 +1,17 @@
+BAD cycle 1721: unit_fault 0001000000 expected 0000100000
+BAD cycle 1754: unit_fault 0000100000 expected 0001000000
+phase 1: 56 single faults, max path latency 25 edges
+BAD cycle 3450: unit_fault 0001000000 expected 0000100000
+BAD cycle 3485: unit_fault 0000100000 expected 0001000000
+BAD cycle 5153: unit_fault 0001000000 expected 0000100000
+BAD cycle 5187: unit_fault 0000100000 expected 0001000000
+BAD cycle 6824: unit_fault 0001000000 expected 0000100000
+BAD cycle 6857: unit_fault 0000100000 expected 0001000000
+BAD cycle 8460: unit_fault 0001000000 expected 0000100000
+BAD cycle 8496: unit_fault 0000100000 expected 0001000000
+phase 2: 1540 pairs
+phase 3: 20000 random cycles
+phase 4: 8 held fault sets
+FAIL attn_fault_tree mut4 errors749 checks70985
+FATAL: rtl/test/qwen_static_kv/tb_qkd_attn_fault_tree.sv:162: 
+       Time: 711156000  Scope: tb_qkd_attn_fault_tree

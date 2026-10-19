@@ -17,9 +17,11 @@ programme + qkd_attn_cal_gen + qkd_attn_service_root + qkd_attn_result_face):
   Remaining opens (die joins, KVJ-G2): attn_face.f_valid / f_data / f_epoch <- the PV final join
   ot_qwen_tp8_pv256_finalize_static_cal out_valid / out_data / out_epoch; attn_face.unit_fault <- the 10 sticky
   service-unit faults (stacks, hub, PV pairs, finalize, V request, e-read identity, rz-late, K identity, legacy pv,
-  stack); attn_root.fused_program_capability <- the boot image capability bit (as attention_programme's).
+  stack); attn_root.fused_program_capability <- the boot image capability bit (as attention_programme's): RTL-BUILD-KV/FAULT
+  10-18 capability_join = the die cfg capability word (qkd_kv_die_cfg CAP=1).
 Bench + mutants: tools/qwen_kv_die/attn_result_face_gate.py.  Never a die netlist.
 """
+import os
 import kv_static as K
 import kv_static_boot_join as B
 import kv_static_kvjf_join as F
@@ -45,8 +47,10 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
     ins, width_of, ep = F._ctx(graph, root)
     if prog not in ins:
         raise ValueError(f'template instance {prog} missing')
-    r = F._add_unpriced(graph, ins, rname, ROOT_M, dict(PV_LEAD=None, MUT=0), root)
-    f = (F._add_unpriced(graph, ins, fname, FACE_S_M, dict(NF=NF, RESULT_RELAY=None, F_DLY=None, MUT=0), root) if stream else
+    # KV-ATTNKIT 10-18: OT_KV_ATTN_LAND -> CAL_PIPE=1 (kv_static_die.ATTN_LAND)
+    cp = 1 if os.environ.get('OT_KV_ATTN_LAND', '0') == '1' else 0
+    r = F._add_unpriced(graph, ins, rname, ROOT_M, dict(PV_LEAD=None, CAL_PIPE=cp, MUT=0), root)
+    f = (F._add_unpriced(graph, ins, fname, FACE_S_M, dict(NF=NF, RESULT_RELAY=None, F_DLY=None, CAL_PIPE=cp, MUT=0), root) if stream else
          F._add_unpriced(graph, ins, fname, FACE_M, dict(NF=NF, RESULT_RELAY=None, MUT=0), root))
     p = ins[prog]
     bound = []
@@ -70,7 +74,10 @@ def attention_result_join(graph, root=K.ROOT, prog='attention_programme', rname=
 CALGEN_M = ('rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv', 'qkd_attn_cal_gen')
 # KVJ-G2b 10-17: the die image's STRETCH=1 parameters (kv_static_programme die report: profile die, d_qk = QK_ISSUE_AGE 62 -
 # 34, d_rl = RL 95 - 19, service_end 1777, compiled_rx_cmd 2; G3S2 = the v1.4.3 staged head ingress)
-CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=28, D_RL=76, SERVICE_END=1777, MUT=0)
+# KV-ECTL4 10-18: D_QK = the die's QK_ISSUE_AGE (K_RT_BUDGET + 11, one K round trip for every ECTL frame) - 34
+import kv_static_ages as _AGES   # noqa: E402
+CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=_AGES.K_RT_BUDGET + _AGES.QK_WRITE_BEFORE_READ - _AGES.QK_ISSUE_AGE_KIT,
+                D_RL=76, SERVICE_END=1777, MUT=0)
 PROG_FROM_CALGEN = (('compiled_calendar', 'cal'), ('compiled_rx_cmd', 'rx_cmd'), ('compiled_tx_first', 'tx_first'),
                     ('compiled_end', 'end_age'))
 
@@ -101,8 +108,35 @@ def cal_gen_join(graph, root=K.ROOT, prog='attention_programme', lp='layer_progr
     return bound
 
 
+CAP_CONSUMERS = ('attention_programme', 'attn_root')
+
+
+def capability_join(graph, root=K.ROOT, cfg='diecfg'):
+    """RTL-BUILD-KV/FAULT 10-18 (P8): the boot image's fused attention-programme capability bit has a real producer: the
+    die cfg's capability word (qkd_kv_die_cfg CAP=1, pre-boot target 10 word 32 + NRST, POR-held, 0 until sealed) ->
+    attention_programme.fused_program_capability (registered there into capability_q) and
+    attn_root.fused_program_capability (checked on every request: 0 -> local_fault).  A configuration net: static after
+    the seal, no production path launches from it."""
+    ins, width_of, ep = F._ctx(graph, root)
+    if cfg not in ins or ins[cfg]['parameters'].get('CAP') != 1:
+        raise ValueError(f'{cfg}: qkd_kv_die_cfg CAP=1 required')
+    bound = []
+    for n in CAP_CONSUMERS:
+        if n not in ins:
+            raise ValueError(f'{n} missing')
+        if ins[n]['inputs'].get('fused_program_capability', 0) is not None:
+            raise ValueError(f'{n}.fused_program_capability already bound')
+        B._bind(ins[n], 'fused_program_capability', [ep(cfg, 'fused_program_capability')], width_of)
+        bound.append(f'{n}.fused_program_capability')
+    graph.setdefault('joins_added', []).append(dict(producer=f'{cfg}.fused_program_capability', bound_inputs=len(bound),
+        owner_note='RTL-BUILD-KV/FAULT 10-18 (P8): boot-loaded capability word of the die cfg (target 10) -> attention '
+        'programme + service root (replaces the open boot-image capability bit)'))
+    return bound
+
+
 def build(root=K.ROOT):
     graph, bound = F.build(root)
     bound += attention_result_join(graph, root)
     bound += cal_gen_join(graph, root)
+    bound += capability_join(graph, root)
     return graph, bound

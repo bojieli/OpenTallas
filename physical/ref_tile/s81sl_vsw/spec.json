@@ -1,0 +1,235 @@
+{
+ "name": "s81sl_vsw",
+ "top": "ot_s81sl_vsw",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_la*u_m",
+   "at": [
+    107.568,
+    71.28
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_lb*u_m",
+   "at": [
+    107.568,
+    112.368
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_v",
+   "i_d",
+   "i_w",
+   "i_lim"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "o_v",
+   "o_d",
+   "o_f"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice (SU lane engine, helper S81-SLICE-SU); flop-first pins, die hold budget. OWNERS-S81/VSW 10-18: kit carried from the uncommitted s81sl-su-1017 worktree onto claude/rtl-build-s81-1018 (vsw RTL byte-identical to dd0d065b8; pins already flop-first in/out + ot_rst_relay, no cycle change); benches through vs/vp ports re-run on this RTL (MUT 0 L0/L2 PASS, MUT 1-6 FAIL, witnesses committed).",
+ "job": {
+  "owner": "Claude:OWNERS-S81/VSW",
+  "branch": "claude/owners-s81-vsw-1018",
+  "tag": "s81sl_vsw",
+  "purpose": "OWNERS-S81/VSW: slice hub SW lane (one hub ot_s81_su_swl, child of ot_s81sl_leaf in ot_s81sl_slice) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/s81_slice",
+   "tools/s81_suhc/hc_gate.py",
+   "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/rtl_hdc_v41_blockdot_campaign.py",
+   "tools/dsrom_su_swiglu.py",
+   "results/rtl/owners_s81_vsw_1018"
+  ],
+  "benches": [
+   {
+    "name": "slvs_exact",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_exact 0 L0",
+    "expect": "pass",
+    "pass_regex": "^PASS vs MUT=0 L0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_exact_L2",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_exact_L2 0 L2",
+    "expect": "pass",
+    "pass_regex": "^PASS vs MUT=0 L2$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut1",
+    "note": "mutant 1: SW weight",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut1 1 L0",
+    "expect": "fail",
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=1 L0$",
+    "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m1_L0.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut2",
+    "note": "mutant 2: RB bias",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut2 2 L0",
+    "expect": "fail",
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=2 L0$",
+    "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m2_L0.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut3",
+    "note": "mutant 3: QR inverse",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut3 3 L0",
+    "expect": "fail",
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=3 L0$",
+    "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m3_L0.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut4",
+    "note": "mutant 4: MOE early BF16 partials",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut4 4 L0",
+    "expect": "fail",
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=4 L0$",
+    "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m4_L0.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut5",
+    "note": "mutant 5: QB halves",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut5 5 L0",
+    "expect": "fail",
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=5 L0$",
+    "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m5_L0.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slvs_mut6",
+    "note": "mutant 6: RA row shift",
+    "cmd": "bash tools/s81_slice/vs_bench.sh {RUN}/slvs_mut6 6 L0",
+    "expect": "fail",
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=6 L0$",
+    "fail_witness": "results/rtl/owners_s81_vsw_1018/witness_m6_L0.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_vsw/views",
+  "record_to": "results/rtl/ref_tile/s81sl_vsw"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE-SU): every data input lands in a flop at the pin (the *_c / *_q capture flops) and every output is a flop; recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "util": 0.52,
+ "std_area_um2": 14200,
+ "pin_ranges": {
+  "i_v": [
+   6.48,
+   9.273
+  ],
+  "i_d": [
+   9.273,
+   173.359
+  ],
+  "i_w": [
+   173.359,
+   195.759
+  ],
+  "i_lim": [
+   195.759,
+   218.16
+  ],
+  "o_v": [
+   6.48,
+   11.749
+  ],
+  "o_d": [
+   11.749,
+   212.891
+  ],
+  "o_f": [
+   212.891,
+   218.16
+  ]
+ },
+ "macro_note": "the two SRAM wait lines abutted N-S against the pin-free E face, their W-face pins toward the lane logic (gate 1: centred macros split the core, TT clock spread 121 ps)",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

@@ -1,0 +1,10 @@
+RR_MISMATCH cyc1317 bank7 dA_v1 refA_v0 dB_v0 refB_v0 dataA_eq0 dataB_eq0
+RR_MISMATCH cyc1318 bank7 dA_v0 refA_v0 dB_v0 refB_v0 dataA_eq0 dataB_eq0
+RR_MISMATCH cyc1326 bank2 dA_v1 refA_v0 dB_v0 refB_v0 dataA_eq0 dataB_eq0
+RR_MISMATCH cyc1327 bank2 dA_v0 refA_v0 dB_v0 refB_v0 dataA_eq0 dataB_eq0
+RR_MISMATCH cyc1340 bank5 dA_v1 refA_v0 dB_v0 refB_v0 dataA_eq0 dataB_eq0
+RR_MISMATCH cyc1349 bank0 dA_v1 refA_v0 dB_v0 refB_v0 dataA_eq0 dataB_eq0
+IDX_VM_SHARE2R MUT2 checked2062 a_reads5446 b_reads5427 dbl84 errors209 (rq84 rr125 f0 st0) first_err1309 ref_fault1 dut_fault1 leaves4 SRAMs48
+[23350000] %Fatal: tb_idx_vm_share2_r_lockstep.sv:82: Assertion failed in tb_idx_vm_share2_r_lockstep: registered share2 lockstep
+%Error: rtl/test/hbm_idx_static/tb_idx_vm_share2_r_lockstep.sv:82: Verilog $stop
+Aborting...

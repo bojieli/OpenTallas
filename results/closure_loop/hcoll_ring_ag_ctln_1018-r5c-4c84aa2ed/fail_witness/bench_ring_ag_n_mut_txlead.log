@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_ring_ag_ctln_1018-r5c-4c84aa2ed bench bench_ring_ag_n_mut_txlead host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hcoll_ring_ag_ctln_1018-r5c-4c84aa2ed log cl/bench_ring_ag_n_mut_txlead.a1b1.log captured 2026-10-18T22:49:33-07:00
+# fail_regex 'RING_AG_N MUTANT txlead FAILED'
+RING_AG_N LOCK mismatch t=26 cw 0 ccw 1 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=29 cw 1 ccw 1 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=39 cw 0 ccw 1 rr 1/1 ag 00/00
+RING_AG_N LOCK mismatch t=42 cw 1 ccw 0 rr 0/0 ag 10/10
+RING_AG_N LOCK mismatch t=43 cw 1 ccw 0 rr 0/0 ag 10/10
+RING_AG_N LOCK mismatch t=53 cw 0 ccw 1 rr 1/1 ag 01/01
+RING_AG_N LOCK mismatch t=58 cw 0 ccw 1 rr 0/0 ag 00/00
+RING_AG_N LOCK mismatch t=60 cw 1 ccw 0 rr 0/0 ag 00/00
+RING_AG_N MUTANT txlead FAILED

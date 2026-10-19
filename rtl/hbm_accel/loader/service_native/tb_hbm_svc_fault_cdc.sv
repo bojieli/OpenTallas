@@ -23,8 +23,10 @@ module tb_hbm_svc_fault_cdc;
  always @(negedge rd_clk)if(wr_rst_n&&rd_rst_n&&rd_underflow)$fatal(1,"STATUS unexpected underflow");
  initial begin
   repeat(3)@(negedge wr_clk);wr_rst_n=1;rd_rst_n=1;
-  // Transient error on the first source edge, before FIFO online handshake:
-  // the source pending latch must remember it, independent of clock ratio.
+  // Transient error on the first source edge after the source-side reset release (QF-SFAULT 10-18: the sender now
+  // clears from its own wr_clk ot_reset_sync, 2 edges), still before the FIFO online handshake: the source pending
+  // latch must remember it, independent of clock ratio.
+  repeat(2)@(negedge wr_clk);if(dut.ready!==1'b0)$fatal(1,"STATUS transient not before FIFO online");
   src_fault=1;@(negedge wr_clk);src_fault=0;wait_fault();
   rd_rst_n=0;#(RD_HALF/3);if(dst_fault!==0)$fatal(1,"STATUS destination reset did not clear");
   repeat(3)@(negedge rd_clk);rd_rst_n=1;quiet();

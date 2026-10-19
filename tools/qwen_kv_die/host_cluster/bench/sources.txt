@@ -103,3 +103,14 @@ rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv
 rtl/lib/ot_rst_relay.sv
 rtl/qwen_sys/host_20261013/qkd_host_tx_class_rr.sv
 rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_axi_packet_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_control_prompt_observed_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_csr_service_pins_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_ctl_service_pins_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_fullcontrol_observed_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_hc_station_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_if_pins_observed_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_loader_target_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_program_rx_target_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_prompt_capture_pins_rr.sv
+rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_record_port_rr.sv

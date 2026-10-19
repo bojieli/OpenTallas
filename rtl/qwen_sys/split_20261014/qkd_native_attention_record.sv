@@ -76,3 +76,14 @@ module qkd_native_attention_record #(
         end
     end
 endmodule
+
+// QXF-LINK 2026-10-18 (TOKEN-XDIE-QWEN F2): the kind-4 NATIVE_STATUS data word, ONE encoder for every producer and bench.
+// Layout = the shared548 namespace (tools/qwen_kv_die/static_record_namespace.py kind 4):
+//   data[4:0] = {q_ready, done, fault, busy, ready}, data[511:5] = 0 (the codec's legal() check).
+// The compute consumer (qfd_native59_record_endpoint) completes on done (data[3]) and faults on fault (data[2]).
+module qkd_native_status_word(
+    input wire q_ready,done,fault,busy,ready,
+    output wire [511:0] word
+);
+    assign word={507'd0,q_ready,done,fault,busy,ready};
+endmodule

@@ -13,8 +13,14 @@
 //   reset : rst_n drives only ot_rst_relay (4 regions = the 4 SRAM columns; async assert, release +3 clk edges);
 //   pins  : flop-first -- the identity-check bits {re/we, a[23:18], a[15:14], a[6:4], a[3:0]} are pin registered
 //           before the compare (the bank pin-registers row/data/valid), so FAULT rises one edge later (n+2, was n+1).
+//   r2 (HBM-SFUHW 10-18; r1 route NEEDS_RTL TT -102.29 / FF -42.33): (a) read capture beside each SRAM (lane bank
+//           ot_hbm_su_sfustore_hw_bank = pinned_bank READERS 1 + rd_cap after the word mux; shared pinned_bank untouched):
+//           vi_q n+3 (was n+2) -- COMPILER: the sfus read latency is +1 edge; write commit n+1 unchanged;
+//           (b) qid fanout replicated per lane (qid_l, one pair beside each lane's check flops) and the identity
+//           compare registered per lane (bad_l) -- fault timing unchanged (n+2), the 16-lane OR moves to fault's D.
 // No queue, ready or arbitration.  MUT (bench, must FAIL): 1 vi_q of lane n from bank n^1; 2 write row bits swapped;
-// 3 lane n's check reads lane n^1's registered check bits.
+// 3 lane n's check reads lane n^1's registered check bits; 4 read capture dropped (vi_q n+2); 5 lanes 8..15 compare
+// against a bit-swapped qid replica.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_sfustore_hw #(parameter integer MUT=0)(
  input wire clk, rst_n,
@@ -81,6 +87,7 @@ module ot_hbm_su_static_sfustore_hw #(parameter integer MUT=0)(
  always @(posedge clk) qid_q<=qid;
  wire [16*16-1:0] chk_r, chk_w;         // per lane {valid, a[23:18], a[15:14], a[6:4], a[3:0]} at the pin
  wire [15:0] bad;
+ reg [15:0] bad_l;                      // per-lane registered identity compare (replaces the single bad_q)
  for(genvar n=0;n<16;n=n+1)begin:g_bank
   wire [23:0] ra=vi_addr[24*n+:24], wa=kv_waddr[24*n+:24];
   wire [8:0] rrow={ra[17:16],ra[13:7]};
@@ -93,16 +100,45 @@ module ot_hbm_su_static_sfustore_hw #(parameter integer MUT=0)(
   assign chk_r[16*n+:16]={re_q,ra_q}; assign chk_w[16*n+:16]={we_q,wa_q};
   wire [15:0] cr=(MUT==3)?chk_r[16*(n^1)+:16]:chk_r[16*n+:16];
   wire [15:0] cw=(MUT==3)?chk_w[16*(n^1)+:16]:chk_w[16*n+:16];
-  assign bad[n]=(cr[15]&&(cr[14:9]!=0||cr[3:0]!=4'(n)||cr[6:4]!=3'd0||cr[8:7]!=qid_q))||
-                (cw[15]&&(cw[14:9]!=0||cw[3:0]!=4'(n)||cw[6:4]!=3'd0||cw[8:7]!=qid_q));
-  ot_hbm_su_static_pinned_bank #(.READERS(1),.RB(9)) u_bank(.clk(clk),.rst_n(rst_r[n/4]),.clk_rd(clk),
-   .clk_ws(clk),.clk_macro(clk),.read_v(vi_re[n]),.read_addr(rrow),.read_data(q[32*n+:32]),
-   .read_return(),.write_v(kv_we[n]),.write_addr(wrow),.write_data(kv_wdata[32*n+:32]));
+  reg [1:0] qid_l;                      // per-lane qid replica (static strap; settles 2 edges after power-up)
+  always @(posedge clk) qid_l<=(MUT==5&&n>=8)?{qid_q[0],qid_q[1]}:qid_q;
+  assign bad[n]=(cr[15]&&(cr[14:9]!=0||cr[3:0]!=4'(n)||cr[6:4]!=3'd0||cr[8:7]!=qid_l))||
+                (cw[15]&&(cw[14:9]!=0||cw[3:0]!=4'(n)||cw[6:4]!=3'd0||cw[8:7]!=qid_l));
+  always @(posedge clk or negedge rst_r[n/4])
+   if(!rst_r[n/4]) bad_l[n]<=1'b0; else bad_l[n]<=bad[n];
+  ot_hbm_su_sfustore_hw_bank #(.RD_CAP(MUT==4?0:1)) u_bank(.clk(clk),.rst_n(rst_r[n/4]),
+   .read_v(vi_re[n]),.read_addr(rrow),.read_data(q[32*n+:32]),
+   .write_v(kv_we[n]),.write_addr(wrow),.write_data(kv_wdata[32*n+:32]));
   assign vi_q[32*n+:32]=(MUT==1)?q[32*(n^1)+:32]:q[32*n+:32];
  end
- reg bad_q;
  always @(posedge clk or negedge rst_r[0])
-  if(!rst_r[0])begin bad_q<=1'b0; fault<=1'b0; end
-  else begin bad_q<=|bad; if(bad_q) fault<=1'b1; end
+  if(!rst_r[0]) fault<=1'b0;
+  else if(|bad_l) fault<=1'b1;
+endmodule
+
+// Lane bank of the hard tile: ot_hbm_su_static_pinned_bank #(READERS 1, RB 9, PIN_RST 0, one clock) -- same pin
+// registers (sample n, SRAM n+1), same instance names (a_pin/wa_pin/wd_pin/r_pin/w_pin/read_data, u_data =
+// ot_hbm_su_static_replicated_bank) -- plus RD_CAP: rd_cap registers the SRAM word-mux output beside the macro's
+// W-face rd_out pins, then read_data: read data n+3 (n+2 with RD_CAP 0, the pinned_bank timing).
+module ot_hbm_su_sfustore_hw_bank #(parameter integer RD_CAP=1)(
+ input wire clk, rst_n,
+ input wire read_v, input wire [8:0] read_addr, output reg [31:0] read_data,
+ input wire write_v, input wire [8:0] write_addr, input wire [31:0] write_data
+);
+ reg r_pin, w_pin; reg [8:0] a_pin, wa_pin; reg [31:0] wd_pin;
+ wire [31:0] raw_data;
+ always @(posedge clk) begin a_pin<=read_addr; wa_pin<=write_addr; wd_pin<=write_data; end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin r_pin<=1'b0; w_pin<=1'b0; end
+  else begin r_pin<=read_v; w_pin<=write_v; end
+ if(RD_CAP!=0) begin:g_rd_cap
+  reg [31:0] rd_cap;
+  always @(posedge clk) begin rd_cap<=raw_data; read_data<=rd_cap; end
+ end else begin:g_rd_direct
+  always @(posedge clk) read_data<=raw_data;
+ end
+ ot_hbm_su_static_replicated_bank #(.READERS(1),.RB(9),.MUT_COHERENCE(0)) u_data(
+  .clk(clk),.clk_macro(clk),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
+  .write_v(w_pin),.write_addr(wa_pin),.write_data(wd_pin));
 endmodule
 `default_nettype wire

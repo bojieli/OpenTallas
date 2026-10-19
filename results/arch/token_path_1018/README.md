@@ -46,6 +46,14 @@ TOKEN-XDIE (multi-die co-sim) records land; the composition method itself does n
 | HBM d4g, DeepSeek | MTP | 3,258.7 | 3,258.7 | 368,245 | 0.0 | 0.0 | 0.0 | 100.0 |
 | HBM d4g, Qwen (TP8) | AR | 930.9 | 946.2 (-1.61%) | 1,289,008 | 6.9 | 0.0 | 0.1 | 93.0 |
 
+**MU.S81.SCANCHK (10-18):** the DS ROM rows now charge the index scan at p4l's real 1 HBM stack a die (the 10-09
+DAG and the p4l price charged the 10-04 4-stack reader): AR 1,243.0 -> **1,186.4**, MTP 3,806.2 -> **3,454.7**
+(`results/arch/s81_scanchk_1018/`, ledger S81.SCAN_STACKS_P4L proposed).
+**S81-SCAND (10-18, option D adopted, coordinator 0iq):** the full-scan keys are spread over k = 3 TP4 stages, and the
+reader term is the measured 1-stack reader at the per-die key count. The legs and the merge are priced. Result:
+AR **1,224.1**, MTP **3,711.7**. The ledger row is now MTP 2.76 %, within the unit limit
+(`results/arch/s81_scand_1018/`).
+
 Qwen ROM MTP is AR-only by owner decision (10-05 AR_MODE). The HBM MTP rows are priced only: the owner parked HBM
 MTP (recorded, not blocking).
 
@@ -94,9 +102,12 @@ on claude/xdie-hbm-1018.
 
 ## Override records (how the grades rise)
 
-By default the tool reads `results/rtl/*_layer_tput_1018/record.json` and `results/rtl/xdie_*_1018/record.json`, or
-the files given with `--pass-records` / `--xdie-records`. A record that carries a `token_compose` block replaces base
-terms by slot:
+By default the tool reads EVERY record by discovery, with no path list (`--list-records` prints them):
+every `results/rtl/*_layer_tput_*/**/*.json` (TOKEN-PASS, LAYERBENCH, LB2 per-layer layer-bench records) and every
+`results/rtl/xdie_*/**/*.json` (TOKEN-XDIE, e.g. `xdie_qwen_1018/pair_r1/record.json`) that carries a `token_compose`
+block, each family's top-level `record.json` (listed even without a block), and any committed `results/**/*.json` with
+a block. `--pass-records` / `--xdie-records` replace discovery with exactly the given files (what-ifs). A record that
+carries a `token_compose` block replaces base terms by slot:
 
 ```json
 {"token_compose": {"terms": [
@@ -107,7 +118,11 @@ terms by slot:
    "O_source": "dv2f14 compiler schedule issue cycles"}]}}
 ```
 
-- A term gives either `cycles` (a layer term) or `E` parts plus `O` and `O_source` (an exchange). `n` defaults to
+- A term gives either `cycles` (a layer term) or `E` parts plus O_meas (an exchange). O_meas is never assumed: give
+  `O` with a non-empty `O_source` naming the compiler schedule / calendar it was read from, or
+  `"O_ref": {"record": "<path, repo- or record-relative; omit = this record>", "pointer": "a.b.0.c"}`. An exchange
+  term without either is rejected (listed under `records_seen[].rejected`) and the base term is kept.
+- Two records that replace the same slot are reported in `overrides_used[].replaces_override_from` (the later path wins). `n` defaults to
   the multiplicity of the slot it replaces.
 - Slots are listed in `<design>.json` `terms[].slot`, for example `L14.die`, `L2.xdie.96x512 index TOPK_MERGE`,
   `Lc.xdie.tp_allreduce`, `L0.xdie.L0.attn.out_allreduce`.

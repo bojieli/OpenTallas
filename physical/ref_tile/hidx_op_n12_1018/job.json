@@ -1,0 +1,205 @@
+{
+ "name": "hidx_op_n12_1018-n12-COMMIT",
+ "block": "ot_hbm_idx_vm_query_static_n12",
+ "ref_tile": true,
+ "owner": "Claude:HBM-IDXAM3",
+ "purpose": "Coordinator 0hk (10-18): ONE IDX operand-reader master for hb_idx__op_{SW,SE,NW,NE} capturing the VM round trip at n+12 (core VM_RT_EXTRA 4): tile pin flops 2 + registered share amr on SW / 2 die relay stages on SE/NW/NE (H-D4G-GEN2). Same ports, pins and outline as the CLOSED n+10 master hidx_op_r4 (216x108, recipe 4); only the face depth D 10 -> 12. Bench run_vm_query_n12.sh on actual VM banks with 1/1 relays: MUT0 PASS, MUT1-7 FAIL (data, n+11, n+13, n+10 master, rq relay).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-idxam2-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+   "rtl/hdc/ot_hdc_delay_rf.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "rtl/test/hbm_idx_static/tb_vm_query_n12.sv",
+   "rtl/test/hbm_idx_static/run_vm_query_n12.sh",
+   "tools/hbm_idx_static_query_vectors.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_vm_query_static_n12 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm_query_n12_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn0 0",
+    "expect": "pass",
+    "pass_regex": "^IDX_VM_QUERY_N12 MUT0 rq_rly1 rr_rly1 commits514 reads514 blocks128 quant32 errors0 fault0 ",
+    "pass_witness": "results/rtl/hbm_idxam3_1018/vqnrun0.log",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn1 1",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT1 .*errors[1-9][0-9]* fault0 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun1.log",
+    "note": "weight word",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut2",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn2 2",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT2 .*errors[1-9][0-9]* fault0 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun2.log",
+    "note": "query word",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut3",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn3 3",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT3 .*quant31 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun3.log",
+    "note": "query index",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn4 4",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT4 .*blocks0 quant0 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun4.log",
+    "note": "vm_rr relay removed (n+11)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut5",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn5 5",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT5 .*blocks0 quant0 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun5.log",
+    "note": "extra vm_rr relay (n+13)",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut6",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn6 6",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT6 .*errors[1-9][0-9]* fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun6.log",
+    "note": "n+10 master on the n+12 path",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "vm_query_n12_mut7",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query_n12.sh {RUN}/vqn7 7",
+    "expect": "fail",
+    "fail_regex": "^IDX_VM_QUERY_N12 MUT7 .*blocks0 quant0 errors0 fault1 ",
+    "fail_witness": "results/rtl/hbm_idxam3_1018/vqnrun7.log",
+    "note": "vm_rq relay removed",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_op_n12_1018/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_op_n12_1018/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_op_n12_1018 --out {RUN}/record/views/ot_hbm_idx_vm_query_static_n12  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_op_n12_1018/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_op_n12_1018/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_op_n12_1018/hidx_op_n12_1018-n12-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new master ot_hbm_idx_vm_query_static_n12 (VM face n+12; ot_hbm_idx_vm_query_static unchanged)"
+}

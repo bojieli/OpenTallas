@@ -1,0 +1,22 @@
+f2_vk_status_legacy expect=FAIL got=FAIL -> OK
+    XQ_ERR cyc 2619 layer 1 rel 2437: STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}
+    XQ_ERR cyc 7016 layer 1 rel 6834: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7016 layer 1 rel 6834: an exchange event never happened
+    XQ_ERR cyc 9456 layer 2 rel 2437: STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}
+    XQ_ERR cyc 13853 layer 2 rel 6834: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 13853 layer 2 rel 6834: an exchange event never happened
+    XQ_ERR cyc 16293 layer 3 rel 2437: STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}
+    XQ_ERR cyc 20690 layer 3 rel 6834: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 20690 layer 3 rel 6834: an exchange event never happened
+    XQ_ERR cyc 23130 layer 4 rel 2437: STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}
+    XQ_ERR cyc 27527 layer 4 rel 6834: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 27527 layer 4 rel 6834: an exchange event never happened
+    XQ_ERR cyc 29967 layer 5 rel 2437: STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}
+    XQ_ERR cyc 34364 layer 5 rel 6834: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 34364 layer 5 rel 6834: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=28 C2K_q31_issue_to_land=29 C2K_q_first_issue_to_last_land=61 K2C_r31_issue_to_land=28 K2C_r0_issue_to_land=28 K2C_r_first_issue_to_last_land=59 KVN_k3_issue_to_land=18 roundtrip_cmd_issue_to_r31_land=1835 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=-2436
+    XQ_CFG C_REAL=0 K_REAL=1 QGAP=0 PHY=5 TXL=6 X=2 period=6837 stages C 0,0,0,0,0,0 K 11,11,9,9,9,11,11 MUT=7 layers=35
+    XQ_FAIL errors=105
+    XQ_ERR cyc 2619 layer 1 rel 2437: STATUS word != namespace {q_ready 0, done 1, fault 0, busy 0, ready 1}
+    XQ_ERR cyc 7016 layer 1 rel 6834: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7016 layer 1 rel 6834: an exchange event never happened

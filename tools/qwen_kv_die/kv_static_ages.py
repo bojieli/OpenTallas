@@ -38,6 +38,12 @@ LANDING_SEG_LAT = 8      # qkd_static_kv_landing_seg header: request -> response
 ISSUER_RING_EXTRA = 7    # kv_static.validate_native_edges / static_qk_calendar: ECTL ROW_RETURN_LAT = RESPONSE_LAT + 7
 QK_WRITE_BEFORE_READ = 11  # static_qk_calendar.compile_calendar: write 7 + (seg + 2) + s < read age - 1 + s
 QK_ISSUE_AGE_KIT = 34    # template / attn_calendar QK_CONSUME (the bench-measured ECTL A age)
+# KV-ECTL4 2026-10-18 (coordinator 0gs (d)): ONE K round trip for all 32 ECTL frames (qkd_ectl3_kiss_st's hardened
+# children carry RESPONSE_LAT / ROW_RETURN_LAT / QK_ISSUE_AGE as RTL parameters): the die pads each frame's K request
+# chain to K_RT_BUDGET (kv_k_rt_eq.py) and fails when a natural round trip exceeds it.  Budget 80: kvs14q-8503e0c89
+# measured 8 + krq + krs = 12..70 on the 648 x 129.6 slots; the 725.76 x 261.36 frame adds 131.76 um a row engine; the
+# margin keeps the hardened children valid across plan iterations.  QK_ISSUE_AGE = budget + QK_WRITE_BEFORE_READ.
+K_RT_BUDGET = int(__import__('os').environ.get('OT_KV_K_RT', '80'))
 VPORT_RT_LANDING = 9     # qkd_pv16_vport r5/r6: RT = abutted landing seg -> vport 9 (KVJ-F b4d7accd4 tb_static_landing_vport:
                          # 'landing 8 + relays' faults every slot; kv_die VPORT_RT_SEG = 9) + request / return relays
 REACH_WIDE_UM = 340     # kvs13l4 OT_KV_REACH_W 36:400,296:370,100000:340 (words > 296 b)
@@ -89,12 +95,24 @@ def derive(src):
             out['k_issuer'][f'ki_{st}_{g}'] = dict(RESPONSE_LAT=r, request_relays=q, response_relays=s, landing_seg=LANDING_SEG_LAT,
                                                    cls=cls, buses=ids)
     worst = max(rl.values())
+    natural = [min(rl.values()), worst]
+    if worst > K_RT_BUDGET:
+        raise SystemExit(f'K round trip {worst} > K_RT_BUDGET {K_RT_BUDGET}: move the ECTL frames or raise the budget and '
+                         're-harden the qkd_ectl3_kiss_st children')
+    # KV-ECTL4: every frame padded to the budget (kv_k_rt_eq): one RESPONSE_LAT, one ROW_RETURN_LAT, one QK age
+    for k_ in out['k_issuer']:
+        out['k_issuer'][k_].update(RESPONSE_LAT=K_RT_BUDGET, natural_response_lat=out['k_issuer'][k_]['RESPONSE_LAT'],
+                                   request_pad=K_RT_BUDGET - out['k_issuer'][k_]['RESPONSE_LAT'])
+    rl = {k_: K_RT_BUDGET for k_ in rl}
+    worst = K_RT_BUDGET
     qk_age = max(QK_ISSUE_AGE_KIT, worst + QK_WRITE_BEFORE_READ)
     for (st, g), r in rl.items():
         out['ectla'][f'ectl_a_{st}_{g}'] = dict(ROW_RETURN_LAT=r + ISSUER_RING_EXTRA, QK_ISSUE_AGE=qk_age, cls='DERIVED')
-    out['qk'] = dict(response_lat_range=[min(rl.values()), worst], QK_ISSUE_AGE=qk_age, QK_ISSUE_AGE_kit=QK_ISSUE_AGE_KIT,
+    out['qk'] = dict(response_lat_range=[min(rl.values()), worst], natural_response_lat_range=natural, k_rt_budget=K_RT_BUDGET,
+                     QK_ISSUE_AGE=qk_age, QK_ISSUE_AGE_kit=QK_ISSUE_AGE_KIT,
                      row_latency_for_calendar=worst + 2, rule='QK_ISSUE_AGE >= max RESPONSE_LAT + 11 (static_qk_calendar write-before-read); '
-                     'one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it')
+                     'one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it; '
+                     'KV-ECTL4: every frame K round trip padded to K_RT_BUDGET on its request chain (kv_k_rt_eq.py)')
     # ---- PV16 V ports ----
     vt = src['pv144']['vport_timing']
     if not vt.get('r6', {}).get('W_equal'):
@@ -195,13 +213,45 @@ def apply(graph, ages):
     return left
 
 
+def lane_bid(station):
+    """the die bus id of a lane's station (rly_<bid>_<k>__s<j>; pin-repair chains rly_pinfix_<bid>_r<i>_<k>)"""
+    import re
+    n = re.sub(r'__s\d+$', '', station)
+    n = re.sub(r'^rly_', '', n).rsplit('_', 1)[0]
+    return re.sub(r'_r\d+$', '', re.sub(r'^pinfix_', '', n))
+
+
+def fwd_overlay(src, fl):
+    """KV-CLOCK: stage counts of the landed buses -> their landed latency (static: a fixed number of core edges)"""
+    import copy
+    worst = {}
+    for L in fl['lanes']:
+        b = lane_bid(L['stations'][-1])
+        lat = math.ceil(L['landed'] - 1)             # landed counts the block flop; a plan stage count does not
+        worst[b] = max(worst.get(b, 0), lat)
+    out, landed = copy.deepcopy(src), {}
+    for b in out['buses']:
+        if b['bid'] in worst and worst[b['bid']] > b['stages']:
+            landed[b['bid']] = (b['stages'], worst[b['bid']])
+            b['stages'] = worst[b['bid']]
+    return out, landed
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--source', type=Path, default=ROOT / SOURCE)
     ap.add_argument('--out', type=Path, default=ROOT / OUT_DIR / 'die_ages.json')
     ap.add_argument('--template-out', type=Path, help='also write the priced static-join template here')
+    ap.add_argument('--fwd-lanes', type=Path, help='KV-CLOCK 10-18: RUN/fwd_lanes.json (kv_fwd_lanes.py); every landed bus '
+                    'takes its landed latency (worst lane of the bus: 1 + (n-2)/2 + 1 + E stages, the block flop excluded)')
     a = ap.parse_args()
-    ages = derive(json.loads(a.source.read_text()))
+    src = json.loads(a.source.read_text())
+    if a.fwd_lanes:
+        src, landed = fwd_overlay(src, json.loads(a.fwd_lanes.read_text()))
+        print(json.dumps(dict(fwd_landed_buses=len(landed), added_stages=sum(v[1] - v[0] for v in landed.values()))))
+    ages = derive(src)
+    if a.fwd_lanes:
+        ages['fwd_landed'] = {k: dict(stages_relay=v[0], stages_landed=v[1]) for k, v in sorted(landed.items())}
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(ages, indent=1) + '\n')
     if a.template_out:

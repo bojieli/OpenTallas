@@ -13,8 +13,22 @@
 # unchanged (identical copies of the same register); only the folding is undone.  keep_hierarchy leaf modules
 # (ot_sc_rep_ff, ot_qwen_lrst_ff, ...) were the RTL-side workaround and remain valid.  Opt out: OT_KEEP_REGS=0 in the
 # route environment (run_abi3_physical.py / hbm_accel_smh_physical.py then omit SYNTH_CANONICALIZE_TCL).
-if {[info exists ::env(OT_PIN_REGS)] && $::env(OT_PIN_REGS) eq "1"} {
+if {([info exists ::env(OT_PIN_REGS)] && $::env(OT_PIN_REGS) eq "1") || ([info exists ::env(OT_RST_LAND)] && $::env(OT_RST_LAND) eq "1")} {
   source [file join [file dirname [file normalize [info script]]] ot_pin_regs.tcl]
+}
+# OT_FSM_NONE_WIRES (ROOT-FSMCDC 2026-10-18, tools/ref_tile/cdc_fsm_guard.py): wire base names of the registers a reviewed
+# CDC lint tagged; fsm_encoding "none" keeps yosys fsm from re-encoding them into auto-named flops (u_wb.req_lane ->
+# 80 _NNN_ flops, lanes/HBM-WBK.md), so the CDC SDC finds them by their RTL names.  Plain, mem2reg element
+# (B[i]) and generate-scoped (blk.B) wires in every module; function unchanged.
+if {[info exists ::env(OT_FSM_NONE_WIRES)] && [string trim $::env(OT_FSM_NONE_WIRES)] ne ""} {
+  set ot_fn_pats {}
+  foreach b $::env(OT_FSM_NONE_WIRES) {
+    if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $b]} { error "OT_FSM_NONE_WIRES: not a wire base name: $b" }
+    lappend ot_fn_pats "w:$b" "w:$b\[\[\]*" "w:*.$b" "w:*.$b\[\[\]*"
+  }
+  yosys select -set ot_fn {*}$ot_fn_pats
+  yosys setattr -set fsm_encoding {"none"} @ot_fn
+  puts "OT_FSM_NONE: fsm_encoding none on wires named [join $::env(OT_FSM_NONE_WIRES) {, }]"
 }
 yosys proc
 yosys select -set ot_kw {*}{w:* a:keep %i}

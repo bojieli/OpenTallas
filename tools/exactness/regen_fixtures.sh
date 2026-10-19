@@ -17,8 +17,8 @@ set -u -o pipefail
 SRC=${SRC:-$(cd "$(dirname "$0")/../.." && pwd)}
 COMMIT=${COMMIT:-$(cat "$SRC/SOURCE_COMMIT" 2>/dev/null || echo unknown)}
 L=${L:-/home/ubuntu/exactness-fixtures/qwen_p8191}
-F=/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191
-FX=/srv/opentallas-scratch/claude/exactness/fixtures
+FX=${OT_EXACTNESS_FIXTURES:-/srv/opentallas-scratch/claude/exactness/fixtures}   # benches.json fixtures.root_env (INF.10)
+F=$FX/qwen_p8191
 W=/srv/opentallas/scratch-overflow/claude/hbm-accel-qwen-token
 GEN=ot-epyc1tb
 HOSTS="ot-epyc1tb ot-epyc2"

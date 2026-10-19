@@ -120,3 +120,69 @@ def test_zero_ideal_clocks_are_diagnostic():
     assert r['verdict'] in ('DIAGNOSTIC', 'FAIL')
     r2 = D.classify(D.parse((HERE / 'etm_ff.rpt').read_text()))
     assert r2['counts']['ideal_clock_links'] == 0      # ideal clocks carrying plan latencies stay judged
+
+
+DEEP = """Startpoint: n59 (rising edge-triggered flip-flop clocked by stream)
+Endpoint: d2d (rising edge-triggered flip-flop clocked by stream__early)
+Path Group: stream__early
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock stream (rise edge)
+   0.0    0.0   clock source latency
+   0.0    0.0 ^ n59/ck[0] (shallow_tile)
+  48.4   48.4 ^ n59/q[0] (shallow_tile)
+  63.2  111.6 ^ d2d/d[0] (deep_tile)
+        111.6   data arrival time
+
+   0.0    0.0   clock stream__early (rise edge)
+{LAT} {LAT}   clock source latency
+   0.0 {LAT} ^ d2d/ck (deep_tile)
+  25.0 -317.7   inter-clock uncertainty
+   0.0 -317.7   clock reconvergence pessimism
+ 258.5  -59.2   library hold time
+        -59.2   data required time
+-------------------------------------------------------
+        -59.2   data required time
+       -111.6   data arrival time
+-------------------------------------------------------
+        170.8   slack (MET)
+"""
+
+
+def test_declared_insertion_judges_skew_at_child_flops(tmp_path):
+    """Q-DIE13: a deep tile tapped early by its measured insertion matches its neighbour at the flops"""
+    ins = {'deep_tile': {'ck': 342.7}, 'shallow_tile': {'ck[0]': 0.0}}
+    tapped = D.parse(DEEP.replace('{LAT}', '-342.7'))
+    assert tapped[0]['src_lat_launch'] == 0.0 and tapped[0]['src_lat_capture'] == -342.7
+    assert D.classify(tapped)['counts']['skew_fail_links'] == 1              # judged at the pins: 343 > 80
+    r = D.classify(tapped, insertion=ins)
+    assert r['counts']['skew_fail_links'] == 0 and r['counts']['tap_mismatch_links'] == 0 and r['verdict'] == 'PASS'
+    assert r['params']['skew_at'].startswith('child flops')
+    # the same tile NOT tapped early: boundary delta 0, but its flops see the full 343 ps -> still a skew FAIL
+    flat = D.parse(DEEP.replace('{LAT}', '   0.0'))
+    r = D.classify(flat, insertion=ins)
+    assert r['counts']['skew_fail_links'] == 1 and r['counts']['tap_mismatch_links'] == 1 and r['verdict'] == 'FAIL'
+    # CLI: insertion_ps from views.json at the ff corner
+    v = tmp_path / 'views.json'
+    v.write_text(json.dumps({'real': {'deep_tile': {}, 'shallow_tile': {}}, 'hard_macro': {}, 'assumed': [],
+                             'insertion_ps': {'deep_tile': {'tt': {'ck': 420.7}, 'ff': {'ck': 342.7}}}}))
+    rp = tmp_path / 'r.rpt'; rp.write_text(DEEP.replace('{LAT}', '-342.7'))
+    out = tmp_path / 'o.json'
+    D.main(['classify', '--report', str(rp), '--out', str(out), '--qwen-views', str(v)])
+    assert json.loads(out.read_text())['verdict'] == 'PASS'
+
+
+def test_tap_mismatch_fails_even_when_pair_skew_cancels():
+    # Two equally mistapped tiles have zero pair skew; that cannot validate the
+    # declaration that the physical clock taps compensate their measured insertion.
+    p = _path('a', 'b', 'deep', 'deep', 20.0, delta=0.0)
+    p.update(src_lat_launch=-300.0, src_lat_capture=-300.0,
+             start_clock_pin='a/ck', end_clock_pin='b/ck')
+    r = D.classify([p], insertion={'deep': {'ck': 342.7}})
+    assert r['counts']['skew_fail_links'] == 0
+    assert r['counts']['tap_mismatch_links'] == 1
+    assert r['verdict'] == 'FAIL'
+    p.update(src_lat_launch=-342.7, src_lat_capture=-342.7)
+    assert D.classify([p], insertion={'deep': {'ck': 342.7}})['verdict'] == 'PASS'

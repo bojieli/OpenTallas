@@ -7,6 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kv_static_programme as C
+import kv_static_ages as A_  # noqa: E402
 
 ROOT = C.ROOT
 
@@ -70,7 +71,7 @@ class Programme(unittest.TestCase):
             for k in keys.split(','):
                 want[int(k)] = int(n)
         # KVJ-G2b: the DIECFG / LINKCFG / ESCFG targets (conditional word counts in the dispatcher)
-        want.update({10: 32 + 43 + 1, 11: 66, 12: 1024, 13: 8})
+        want.update({10: 32 + 43 + 2, 11: 66, 12: 1024, 13: 8})
         import program_target_frames as PTF
         self.assertEqual({t: PTF.TARGET_WORDS[t] for t in range(10, 14)}, {t: want[t] for t in range(10, 14)})
         for r in (self.comp, self.die):
@@ -133,7 +134,9 @@ class Programme(unittest.TestCase):
     def test_token_period_is_padded_and_every_launch_is_legal(self):
         ph = self.die['phase']
         self.assertEqual(ph['token_period_core'] % 768, 0)
-        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 169)
+        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600
+        self.assertEqual(ph['token_period_core'], 249600)
+        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 211)
         self.assertEqual((ph['token_phases'], ph['launches'], ph['outside_window'], ph['hold_conflicts']), (1, 108, [], []))
         # the unpadded period visits all 768 phases: no compiled launch holds at every one of them
         self.assertEqual(ph['unpadded_counterfactual']['token_phases'], 768)
@@ -147,7 +150,7 @@ class Programme(unittest.TestCase):
 
     def test_ectla_qk_issue_age_and_attention_control(self):
         pt = C.priced_template(self.die['profile'])
-        self.assertEqual((pt['ectla'], pt['QK_ISSUE_AGE'], pt['unpriced_left']), (32, 62, []))
+        self.assertEqual((pt['ectla'], pt['QK_ISSUE_AGE'], pt['unpriced_left']), (32, A_.K_RT_BUDGET + 11, []))
         ctl = self.die['attention']['control']
         self.assertGreaterEqual(ctl['cal_gen']['first_issue_token_cycle'] - ctl['cal_gen']['go_token_cycle'], C.CAL_GEN_LAT)
         self.assertGreater(ctl['service_root']['pv_start_min'], 0)

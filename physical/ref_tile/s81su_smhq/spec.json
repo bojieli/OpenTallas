@@ -110,11 +110,11 @@
    "f"
   ]
  },
- "structural_change": "S81U-SMH2 (10-17): the g2 single per-head cluster s81su_smh (1,037 x 769 um, ONE clock pin: TT insertion 1.04-1.29 ns, spread 249 ps; setup -646 ps rst_in unregistered to 26 children, -330 ps one relay -> a lane 1 mm away) is split into regional clusters: 4 lane quads (this kit, x4 per head: lanes 4q..4q+3 + divide pairs 2q, 2q+1, which read only those operand lanes) + 1 root s81su_smhr. Own clock pin beside the S register band, own registered reset relay (rst_in loads = 2 synchroniser flops), every inter-cluster hop registered at both ends (SRL stations split across the hop: same cycles as ot_s81_su_smh). Deepest child 395 um from the pin face (was 741).",
+ "structural_change": "S81U-SMH2 (10-17): the g2 single per-head cluster s81su_smh (1,037 x 769 um, ONE clock pin: TT insertion 1.04-1.29 ns, spread 249 ps; setup -646 ps rst_in unregistered to 26 children, -330 ps one relay -> a lane 1 mm away) is split into regional clusters: 4 lane quads (this kit, x4 per head: lanes 4q..4q+3 + divide pairs 2q, 2q+1, which read only those operand lanes) + 1 root s81su_smhr. Own clock pin beside the S register band, own registered reset relay (rst_in loads = 2 synchroniser flops), every inter-cluster hop registered at both ends (SRL stations split across the hop: same cycles as ot_s81_su_smh). Deepest child 395 um from the pin face (was 741). SMHKP4 10-18: the closed 65b8808ea view failed the native audit (capture 442 > 190 on all 341 inputs) because the GRT-stage io_ref re-reference lost the input pin flops (port -> INHOLD driver -> HB2 pad -> CTS hold buffers = more than the 3-hop pin-flop search) and fell back to the first register, the hard child clock pin g_l[0].u_sml/ck (TT 360 ps vs the pin flops 612 ps): input min delay ~250 ps early, so GRT hold repair padded every input by ~250 ps (3,756 hold buffers). The inputs ARE registered at the pins (OT_IOFLOP 340 input flops fixed at their pins; no cycle change needed). Fix: refglob u_t* names the tap input pin-flop group (median reference) at every stage.",
  "why_floorplan": "2x2 lanes (pitch 172.8, 36.7-um channels) + the 2 divide pairs stacked E of them (pitch 129.6), all on the 43.2 lattice; ~800 pins on the S face (1.5 pins/um) toward the slice's central tap/root band, clk at the S band = the cluster's flop mass (SRL stations + pin flops); 527 x 426 um (1.24:1), 0.224 mm2; the svc slice places 4 quads (MY/MX) around the tap ot_s81_su_smq and the root.",
  "job": {
   "owner": "Claude:OWNERS-S81/SMH",
-  "branch": "claude/smh-1018",
+  "branch": "claude/smhkp4-1018",
   "tag": "s81su_smhq",
   "purpose": "S81U-SMH2: lane-quad regional cluster (x4 per head) of the S81-DV per-head SM subtree (bench: tools/s81_su_sm/sms_bench.sh SMT=1; su_gate.py run --hier --smu with OT_SU_VDEFS=-DSU_SMU_T).",
   "extra_paths": [
@@ -156,7 +156,15 @@
     "fail_regex": "^SMS FAIL MUT=5 errors=[1-9]",
     "fail_witness": "results/rtl/s81_dv_1016/su_sm/smh1018_smt_m5/run.log"
    }
-  ]
+  ],
+  "reroute_reason": {
+   "kind": "native_capture",
+   "source": "results/arch/smhkp4_1018/native_closed_views.json",
+   "cell": "dsfd_su_t_smhq",
+   "vs": "s81su_smhq-s81su_smhq-65b8808ea",
+   "why": "SMHKP4 10-18 (lanes/S81-SMHKP4.md): native capture 441.9 > 190 on all 341 inputs: GRT io_ref pin-flop search (3 hops) lost the input pin flops behind INHOLD driver + HB2 pad + CTS hold buffers and fell back to the hard-child clock pin g_l[0].u_sml/ck (~250 ps early) -> 3,756 GRT hold buffers ~250 ps per input",
+   "fix": "refglob u_t* names the tap input pin-flop group as the IO reference at every stage (same RTL, outline, pins); gate WARN 0 fail spread 27.7/21.3, GRT 0"
+  }
  },
  "child_clock_ref": "boundary",
  "why_clock": "SMH 10-18: clock = balanced spine with child-insertion leaf targets from each child's ROUTED boundary-register insertion (child_clock_ref boundary), so the glue pin flops and the children's pin flops tick together. cfg_q and f are now registered at the pin, so no raw child clock pin is a pin flop (g1 spread 240 ps).",
@@ -173,5 +181,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "refglob": "u_t*"
 }

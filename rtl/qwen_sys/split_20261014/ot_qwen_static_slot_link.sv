@@ -141,7 +141,12 @@ module ot_qwen_static_slot_link #(
     wire [4*BW-1:0] rd;
     wire issue_write=wr_v && !epoch_abort && !epoch_begin;
     for(genvar b=0;b<4;b=b+1)begin:g_bank
+`ifdef OT_QFD_FACE_HARD
+        // hardened face cluster (qfd_coll_face_*): the bank is the closed 64x137 leaf view (W=137 = BW, MUT 0)
+        ot_qkvd_llr_replay_sram_leaf u_store(
+`else
         ot_qkvd_llr_replay_sram_leaf #(.W(BW),.MUT(MUT==3 && b==0)) u_store(
+`endif
             .ck(ck[b+1]),.we(issue_write),.wa(wr_slot),.ra(rd_slot),
             .din(wd[b*BW+:BW]),.dout(rd[b*BW+:BW]));
     end

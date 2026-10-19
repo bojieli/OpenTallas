@@ -72,6 +72,10 @@ VIEWS = dict(
     **{f'qkd_rlys_{w_}': f'{RT}/qkd_rlys_{w_}/views/qkd_rlys_{w_}' for w_ in (1, 36, 296)},
     # KV-RTRUNK 10-17: the pair's result-trunk leaves (kits physical/ref_tile/qkd_rlyi_258 / qkd_pv_rs_hd; views = their gates)
     qkd_rlyi_258=f'{RT}/qkd_rlyi_258/views/qkd_rlyi_258', qkd_pv_rs_hd=f'{RT}/qkd_pv_rs_hd/views/qkd_pv_rs_hd',
+    # KV-KITS/NATIVE 10-18: their native-pin successors (pv_trunk_gen default; r1 views fail native capture on the selects)
+    qkd_rlyi_258s=f'{RT}/qkd_rlyi_258s/views/qkd_rlyi_258s', qkd_pv_rs_hd_r=f'{RT}/qkd_pv_rs_hd_r/views/qkd_pv_rs_hd_r',
+    # AD3-KV-RSHD 10-18: the header's half-local-select successor (pv_trunk_gen --rs-hd f; _r fails native capture 259.9)
+    qkd_pv_rs_hd_f=f'{RT}/qkd_pv_rs_hd_f/views/qkd_pv_rs_hd_f',
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -86,7 +90,8 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')},
            ot_qwen_tp8_pv_wide_ctl_t='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv',
            **{f'qkd_rlys_{w_}': 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv' for w_ in (1, 36, 296)},
-           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd')})
+           **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r',
+                                                                     'qkd_pv_rs_hd_f')})
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
 SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
                              ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
@@ -231,7 +236,7 @@ def elaborate(mod, file, leaf, parameters=None):
             if cm.group(1) in leaf:
                 params[cm.group(1)] |= set(re.findall(r'\.(\w+)\s*\(', cm.group(2)))
     chp = ''.join(f'chparam -set {k_} {int(v_)} {mod}\n' for k_, v_ in sorted((parameters or {}).items())) \
-        if (subs or mod == 'qkd_pvw_die_t') else ''
+        if parameters else ''
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         (td / 'stubs.v').write_text('\n'.join(stub_text(m_, leaf[m_]['ports'], params[m_]) for m_ in leaf))
@@ -317,12 +322,17 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--only', default='')
+    ap.add_argument('--astk-static', action='store_true', help='expand only the actual RL3 static ASTK source, with native leaf views')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
-    K._set_geometry(True)
+    K._set_geometry(True, reserve_native_astk=a.astk_static)
     case, libs = a.run / 'case_kv', a.run / 'libs'
     FR = frames()
+    if a.astk_static:
+        import kv_astk_expand as ASTK
+        FR = ASTK.configure(K, VIEWS, RTL, SUBLEVELS)
+        ASTK.require_views(ROOT)
     only = [x for x in a.only.split(',') if x] or list(FR)
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
@@ -388,6 +398,8 @@ def main(argv=None):
         if mst not in jcache:
             jcache[mst] = elaborate(b['module'], b['file'], leaf, b.get('parameters'))
         J = jcache[mst]
+        if 'prepare' in spec:
+            spec['plan'] = spec['prepare'](J, leaf, *fsize[mst])
         rtl_w = {p: len(v['bits']) for p, v in J['ports'].items()}
         conns = parse_conns(body)
         dpw = {p: len(net_bits(e, wires)) for p, e in conns}
@@ -548,6 +560,9 @@ def main(argv=None):
     views.setdefault('expanded', {}).update({f: r['module'] for f, r in rep['frames'].items()})
     (libs / 'views.json').write_text(json.dumps(views, indent=1) + '\n')
     rep['leaves'] = {m_: dict(view=leaf[m_]['view'], rtl=RTL[m_]) for m_ in sorted(used_leaf)}
+    if a.astk_static:
+        rep['source_sha256'] = ASTK.provenance(ROOT)
+        rep['profile'] = dict(RL=3, Z_STRIDE=4, measured_Z_start_age=1016, fault_join_edges=1)
     if standin:
         rep['standin'] = standin
     rep['instances_removed'] = len(drop_inst)

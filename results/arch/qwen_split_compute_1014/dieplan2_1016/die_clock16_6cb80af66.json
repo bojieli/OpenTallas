@@ -1,0 +1,450 @@
+{
+ "schema": "opentallas.qcluster.die_clock16.v1",
+ "lane": "Q-CLUSTER16",
+ "branch": "claude/qcluster16-1018",
+ "master": "qfd_c_b16_dv",
+ "owner_decision": "0ei 10-18: 16-region clock split of c_b16 (one region per A0 ROM-leaf tile)",
+ "die_obligations": [
+  "drop 16 regional clocks per cluster instance (dv2r8f: 48 instances -> 768 regional clock drops), each at its centre area pin (M7, cluster coordinates below; the face pins in the contract only seed the cluster IO placer)",
+  "neighbour-matched delivery: for every communicating region pair below (inside the cluster) the arrival at the child flops differs by <= 80 ps at TT AND FF; the die compensates each drop by the region's measured insertion (insertion_ps, filled from the cluster gate)",
+  "boundary ports are timed against the region that holds their pin register (port_domains); the die's neighbour links into / out of the cluster land or match against THAT region's clock (LANDING-CONTRACT)",
+  "regional reset: unchanged (rst_n pin register in c0r0, equal-depth tree, 19 edges)"
+ ],
+ "compiler": {
+  "added_edges_per_link": 0,
+  "note": "the split re-binds clocks only: every seam crossing is the same single registered hop as in the 8-region fabric (lockstep vs be7b9ff15 bit- and cycle-exact on every port)",
+  "latency_edges": {
+   "tap": {
+    "0": 3,
+    "1": 7,
+    "2": 11,
+    "3": 15
+   },
+   "bco": 17,
+   "rs_fabric": 35,
+   "rs_i_to_rs_o": 17,
+   "reset": 19
+  }
+ },
+ "clocks": {
+  "c0r0": {
+   "pin": "ck_c0r0",
+   "centre_pin_um": [
+    43.2,
+    669.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "0_0"
+   ],
+   "fabric_flops": 2598,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c0r1": {
+   "pin": "ck_c0r1",
+   "centre_pin_um": [
+    43.2,
+    1965.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "0_1"
+   ],
+   "fabric_flops": 2076,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c0r2": {
+   "pin": "ck_c0r2",
+   "centre_pin_um": [
+    43.2,
+    3261.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "0_2"
+   ],
+   "fabric_flops": 2072,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c0r3": {
+   "pin": "ck_c0r3",
+   "centre_pin_um": [
+    43.2,
+    4557.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "0_3"
+   ],
+   "fabric_flops": 2066,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c1r0": {
+   "pin": "ck_c1r0",
+   "centre_pin_um": [
+    1185.84,
+    669.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "1_0"
+   ],
+   "fabric_flops": 9778,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c1r1": {
+   "pin": "ck_c1r1",
+   "centre_pin_um": [
+    1185.84,
+    1965.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "1_1"
+   ],
+   "fabric_flops": 6690,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c1r2": {
+   "pin": "ck_c1r2",
+   "centre_pin_um": [
+    1185.84,
+    3261.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "1_2"
+   ],
+   "fabric_flops": 8746,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c1r3": {
+   "pin": "ck_c1r3",
+   "centre_pin_um": [
+    1185.84,
+    4557.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "1_3"
+   ],
+   "fabric_flops": 4634,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c2r0": {
+   "pin": "ck_c2r0",
+   "centre_pin_um": [
+    1259.28,
+    669.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "2_0"
+   ],
+   "fabric_flops": 5687,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c2r1": {
+   "pin": "ck_c2r1",
+   "centre_pin_um": [
+    1259.28,
+    1965.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "2_1"
+   ],
+   "fabric_flops": 5164,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c2r2": {
+   "pin": "ck_c2r2",
+   "centre_pin_um": [
+    1259.28,
+    3261.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "2_2"
+   ],
+   "fabric_flops": 4646,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c2r3": {
+   "pin": "ck_c2r3",
+   "centre_pin_um": [
+    1259.28,
+    4557.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "2_3"
+   ],
+   "fabric_flops": 4126,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c3r0": {
+   "pin": "ck_c3r0",
+   "centre_pin_um": [
+    2401.92,
+    669.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "3_0"
+   ],
+   "fabric_flops": 4140,
+   "tile_entry_pins": 35,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c3r1": {
+   "pin": "ck_c3r1",
+   "centre_pin_um": [
+    2401.92,
+    1965.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "3_1"
+   ],
+   "fabric_flops": 7730,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c3r2": {
+   "pin": "ck_c3r2",
+   "centre_pin_um": [
+    2401.92,
+    3261.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "3_2"
+   ],
+   "fabric_flops": 5156,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  },
+  "c3r3": {
+   "pin": "ck_c3r3",
+   "centre_pin_um": [
+    2401.92,
+    4557.6
+   ],
+   "layer": "M7",
+   "tiles": [
+    "3_3"
+   ],
+   "fabric_flops": 3094,
+   "tile_entry_pins": 39,
+   "insertion_ps": {
+    "TT": null,
+    "FF": null
+   }
+  }
+ },
+ "communicating_pairs": {
+  "c0r0-c0r1": {
+   "links": 2,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c0r0-c1r0": {
+   "links": 4,
+   "bits": 1543,
+   "diagonal": false
+  },
+  "c0r1-c0r2": {
+   "links": 2,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c0r1-c1r1": {
+   "links": 2,
+   "bits": 1028,
+   "diagonal": false
+  },
+  "c0r2-c0r3": {
+   "links": 2,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c0r2-c1r2": {
+   "links": 2,
+   "bits": 1028,
+   "diagonal": false
+  },
+  "c0r3-c1r3": {
+   "links": 2,
+   "bits": 1028,
+   "diagonal": false
+  },
+  "c1r0-c1r1": {
+   "links": 3,
+   "bits": 1544,
+   "diagonal": false
+  },
+  "c1r0-c2r0": {
+   "links": 4,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c1r1-c1r2": {
+   "links": 2,
+   "bits": 1030,
+   "diagonal": false
+  },
+  "c1r1-c2r1": {
+   "links": 3,
+   "bits": 516,
+   "diagonal": false
+  },
+  "c1r2-c1r3": {
+   "links": 3,
+   "bits": 1544,
+   "diagonal": false
+  },
+  "c1r2-c2r2": {
+   "links": 3,
+   "bits": 516,
+   "diagonal": false
+  },
+  "c1r3-c2r3": {
+   "links": 3,
+   "bits": 516,
+   "diagonal": false
+  },
+  "c2r0-c2r1": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  },
+  "c2r0-c3r0": {
+   "links": 3,
+   "bits": 1029,
+   "diagonal": false
+  },
+  "c2r0-c3r1": {
+   "links": 1,
+   "bits": 514,
+   "diagonal": true
+  },
+  "c2r1-c2r2": {
+   "links": 4,
+   "bits": 1545,
+   "diagonal": false
+  },
+  "c2r1-c3r1": {
+   "links": 4,
+   "bits": 2056,
+   "diagonal": false
+  },
+  "c2r2-c2r3": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  },
+  "c2r2-c3r2": {
+   "links": 3,
+   "bits": 1542,
+   "diagonal": false
+  },
+  "c2r2-c3r3": {
+   "links": 1,
+   "bits": 514,
+   "diagonal": true
+  },
+  "c2r3-c3r3": {
+   "links": 4,
+   "bits": 2056,
+   "diagonal": false
+  },
+  "c3r0-c3r1": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  },
+  "c3r1-c3r2": {
+   "links": 4,
+   "bits": 1545,
+   "diagonal": false
+  },
+  "c3r2-c3r3": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  }
+ },
+ "seam_crossings": 73,
+ "seam_crossing_bits": 27286,
+ "port_domains": {
+  "bco0": "ck_c0r3",
+  "bc1": "ck_c1r0",
+  "rs": "ck_c1r0",
+  "rs_i": "ck_c1r3",
+  "bco1": "ck_c1r3",
+  "bc2": "ck_c2r0",
+  "rs_o": "ck_c2r0",
+  "bco2": "ck_c2r3",
+  "bc3": "ck_c3r0",
+  "bco3": "ck_c3r3"
+ },
+ "core_region_ports": "c0r0 (core_clk): bc0, rst_n, far, cid, tie_hi / tie_lo"
+}

@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_astk_er_owner_st-v1-7fc9f17f8 bench bench_er_chain_m3 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qkd_astk_er_owner_st-v1-7fc9f17f8 log cl/bench_er_chain_m3.a1b1.log captured 2026-10-18T23:58:50-07:00
+# fail_regex '^FAIL qkd_astk_er_chain_st errors='
+FAIL data cycle=43 port=1 addr=008 got=abcde12300100001 expected=abcde12300100000
+FAIL data cycle=43 port=2 addr=010 got=abcde12300200001 expected=abcde12300200000
+FAIL data cycle=43 port=3 addr=018 got=abcde12300300001 expected=abcde12300300000
+FAIL data cycle=44 port=0 addr=009 got=abcde12300100000 expected=abcde12300100001
+FAIL data cycle=44 port=1 addr=011 got=abcde12300200002 expected=abcde12300200001
+FAIL qkd_astk_er_chain_st errors=1984

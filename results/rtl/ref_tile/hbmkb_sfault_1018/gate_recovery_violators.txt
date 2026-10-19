@@ -1,0 +1,24 @@
+# HBM-KITS-B/SFAULT 10-18: gate 20261018-180235 (ot-agidock128) CTS db 4_1_cts.odb, signoff.sdc, TT placement RC.
+# Gate verdict WARN (GRT overflow 0, pin-flop spread TT 2.6 / FF 2.6 ps), but path_classes reg->reg -241.3 ps:
+# ALL 13 violators are cross-domain reset RECOVERY checks (stream_clk 833.333 vs hbm_clk 1024, no common period,
+# 150 ps inter-clock uncertainty, edges 6.7 ps apart). The async_gray_fifo profile keeps recovery/removal timed
+# (async_gray_fifo_constraints.py ot_ag_async_control) and has no bounded admission for reset crossings, unlike
+# gray_fifo_cdc_constraints.py rule (c) (cross-family async control only into an ot_reset_sync pipe, max_delay dest-60).
+VIOL -241.3 u_srst.reset_pipe[1] -> u_ow.sent/RESETN                         (fault_cdc both_reset, NO synchroniser: RTL defect)
+VIOL -241.2 u_srst.reset_pipe[1] -> u_ca.pending/RESETN                      (same)
+VIOL -241.1 u_srst.reset_pipe[1] -> u_ow.u_status.u_wr_reset.reset_pipe[0]/RESETN (FIFO reset_sync input: profile gap)
+VIOL -241.0 u_srst.reset_pipe[1] -> u_pc.sent/RESETN                         (RTL defect)
+VIOL -240.9 u_srst.reset_pipe[1] -> u_ca.sent/RESETN                         (RTL defect)
+VIOL -240.6 u_srst.reset_pipe[1] -> u_ow.pending/RESETN                      (RTL defect)
+VIOL -240.5 u_srst.reset_pipe[1] -> u_ca.u_status.u_wr_reset.reset_pipe[1]/RESETN (profile gap)
+VIOL -240.5 u_srst.reset_pipe[1] -> u_pc.pending/RESETN                      (RTL defect)
+VIOL -240.0 u_hrst.reset_pipe[1] -> u_ca.dst_fault(sticky)/RESETN            (RTL defect)
+VIOL -240.0 u_hrst.reset_pipe[1] -> u_pc.dst_fault(sticky)/RESETN            (RTL defect)
+VIOL -239.9 u_hrst.reset_pipe[1] -> u_ca.u_status.u_rd_reset.reset_pipe[1]/RESETN (profile gap)
+VIOL -239.9 u_hrst.reset_pipe[1] -> u_ow.u_status.u_rd_reset.reset_pipe[0]/RESETN (profile gap)
+VIOL -239.4 u_hrst.reset_pipe[1] -> u_ow.dst_fault(sticky)/RESETN            (RTL defect)
+# Fix needed (both outside this kit, so NOT submitted):
+#  1. ot_hbm_svc_fault_cdc (reviewed, fingerprinted in async_gray_fifo_constraints.SOURCES): pending/sent reset from a
+#     wr_clk ot_reset_sync of both_reset, sticky from a rd_clk ot_reset_sync (new source hash; vm_kshare/sm4pc share it).
+#  2. async_gray_fifo profile: admit cross-domain async control only into ot_reset_sync pipe stages, bounded
+#     set_max_delay -ignore_clock_latency <dest period - 60> + set_min_delay 0 (as gray_fifo_cdc_constraints rule c).
