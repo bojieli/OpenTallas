@@ -328,7 +328,8 @@
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r10_cl/fail_witness/split_mutant_flip.log"
    },
    {
     "name": "split_mutant_early",
@@ -339,7 +340,8 @@
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r10_cl/fail_witness/split_mutant_early.log"
    },
    {
     "name": "split_mutant_chain",
@@ -350,7 +352,8 @@
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r10_cl/fail_witness/split_mutant_chain.log"
    },
    {
     "name": "split_mutant_noshift",
@@ -361,7 +364,8 @@
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r10_cl/fail_witness/split_mutant_noshift.log"
    },
    {
     "name": "split_mutant_rowskew",
@@ -372,7 +376,8 @@
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r10_cl/fail_witness/split_mutant_rowskew.log"
    }
   ]
  },
