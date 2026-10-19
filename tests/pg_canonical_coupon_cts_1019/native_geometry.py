@@ -16,7 +16,8 @@ for i in b.getInsts():
   for p in mt.getMPins():
    for g in p.getGeometry():
     assert not g.isVia()
-    r=odb.Rect(g.xMin(),g.yMin(),g.xMax(),g.yMax());i.getTransform().apply(r)
+    # Use the native returned Rect type (the image exposes two Python Rect wrappers).
+    r=g.getBox();i.getTransform().apply(r)
     entry['geometry'].append({'layer':g.getTechLayer().getName(),'box':box(r)})
   terms.append(entry)
   if entry['role'] in ('POWER','GROUND'):pg.append(entry)
